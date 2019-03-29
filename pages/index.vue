@@ -1,7 +1,6 @@
 <template>
-	<div>
-		<h1>Index</h1>
-    <button @click="logout" class="self-center rounded-lg p-2 font-bold" style="background-color: #FFDA3A;">Sign Out</button>
+	<div class="flex-1 flex flex-col">
+    <nuxt-child/>
 	</div>
 </template>
 
@@ -17,16 +16,6 @@
         }
       } catch (err) {
         console.log('index asyncData pages index err', err)
-      }
-    },
-
-    methods: {
-      logout() {
-        this.$axios.post('/api/v1/logout').finally(() => {
-          this.$auth.logout().then(() => {
-            this.$router.push('/sign-in')
-          })
-        })
       }
     }
   }

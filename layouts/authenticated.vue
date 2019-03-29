@@ -2,8 +2,8 @@
   <div class="w-screen h-screen relative flex flex-col">
 
   	<!-- LOGOUT MODAL -->
-  	<div class="h-full w-full flex flex-col absolute" :style="`z-index: ${showLogoutModal ? 100 : -100}; opacity: ${showLogoutModal ? 1 : 0};`" style="opacity: .5; transition: .8s;">
-	  	<div class="flex flex-col self-center py-2 px-24 rounded-lg" style="background-color: #FFDA3A;">
+  	<div class="h-full w-full flex flex-col absolute" :style="`z-index: ${showLogoutModal ? 100 : -100}; opacity: ${showLogoutModal ? 1 : 0};`">
+	  	<div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
 	  		<div>
 	  			<span class="text-sm p-2">Proceed to sign-out?</span>
 	  		</div>
@@ -18,16 +18,18 @@
   	<div class="w-full flex-1 flex">
 
   		<!-- SIDEBAR -->
-  		<div class="flex flex-col pt-16 h-full" style="background-color: #2C2F38; transition: .8s;" :style="`width: ${sideBarOpen ? 'auto' : '0'}; min-width: ${sideBarOpen ? '180px' : '0'}`">
-  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" style="transition: .4s;" :class="`${activeTab === 'dashboard' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/">Dashboard</nuxt-link>
-  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" style="transition: .4s;" :class="`${activeTab === 'roles' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/roles">Roles</nuxt-link>
+  		<div class="flex flex-col pt-16 h-full bg-charade" style="transition: .8s;" :style="`width: ${sideBarOpen ? 'auto' : '0'}; min-width: ${sideBarOpen ? '180px' : '0'}`">
+  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'dashboard' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/">Dashboard</nuxt-link>
+  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'roles' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/roles">Roles</nuxt-link>
+  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'professions' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/professions">Professions</nuxt-link>
+  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'qualifications' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/qualifications">Qualifications</nuxt-link>
   			<button class="text-xs px-6 py-4 border-l-4 text-white border-transparent flex whitespace-no-wrap" @click="showLogoutModal = true">Sign out</button>
   		</div>
   		<!-- SIDEBAR -->
 
-  		<div class="flex-1 flex flex-col" style="background-color: #505561;">
+  		<div class="w-full flex flex-col bg-trout relative">
   			<!-- HEADER -->
-  			<div class="flex justify-between text-sm text-white p-2">
+  			<div class="flex justify-between text-sm text-white py-2 px-6">
   				<button class="text-white" @click="toggleSideBar">
 						<img src="~/assets/images/hbg.png">
   				</button>
@@ -66,6 +68,14 @@
 					return 'roles'
 				}
 
+				if (this.$route.name.includes('professions')) {
+					return 'professions'
+				}
+
+				if (this.$route.name.includes('qualifications')) {
+					return 'qualifications'
+				}
+
 				if (this.$route.name.includes('index')) {
 					return 'dashboard'
 				}
@@ -74,7 +84,6 @@
 
 		methods: {
 			toggleSideBar() {
-				console.log('toggleSideBar')
 				this.sideBarOpen = !this.sideBarOpen
 			},
 
@@ -92,12 +101,22 @@
 </script>
 
 <style>
-	.page-enter-active, .page-leave-active {
-	  transition: .5s ease;
+	.page-enter {
+		transform: translateX(120px);
+	  opacity: 0;
 	}
 
-	.page-enter, .page-leave-to {
-		transform: translateX(100px);
+	.page-enter-active {
+	  transition: .8s ease;
+	}
+
+	.subpage-enter, .subpage-fade-leave-active {
+		transform: translateX(120px);
 	  opacity: 0;
+	}
+
+	.subpage-enter-active, .subpage-fade-leave-to {
+	  transition: .8s ease;
+	  z-index: 100;
 	}
 </style>

@@ -38,6 +38,14 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    {
+      src: '@/plugins/vue-svgicon.js',
+      ssr: true
+    },
+    {
+      src: '@/plugins/moment.js',
+      ssr: true
+    }
   ],
 
   /*

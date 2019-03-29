@@ -127,6 +127,13 @@ let colors = {
   'pink-light': '#fa7ea8',
   'pink-lighter': '#ffbbca',
   'pink-lightest': '#ffebef',
+
+  'sunglow': '#FFC72C',
+  'waterloo': '#7B8396',
+  'waterloo-light': '#9ba2b1',
+  'trout': '#505561',
+  'charade': '#2C2F38'
+
 }
 
 module.exports = {
