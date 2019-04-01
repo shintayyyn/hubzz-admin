@@ -1,8 +1,8 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
 
-		<div>
-			<nuxt-link to="/qualifications/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+<!-- 		<div>
+			<nuxt-link to="/users/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
 		</div>
 
 		<div class="flex py-2">
@@ -13,7 +13,7 @@
 				</button>
 			</div>
 			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark">Go</button>
-		</div>
+		</div> -->
 
 		<!-- TABLE -->
 		<div style="width: 800px;">
@@ -23,17 +23,17 @@
 				<div class="flex my-2">
 					<div style="width: 30%;">
 						<div class="flex text-white text-xs p-4">
-							<strong>Name</strong>
+							<strong>Email</strong>
+						</div>
+					</div>
+					<div style="width: 25%;">
+						<div class="flex text-white text-xs p-4">
+							<strong>Roles</strong>
 						</div>
 					</div>
 					<div style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
 							<strong>Created At</strong>
-						</div>
-					</div>
-					<div style="width: 25%;">
-						<div class="flex text-white text-xs p-4">
-							<strong>Updated At</strong>
 						</div>
 					</div>
 					<div style="width: 20%;">
@@ -45,20 +45,24 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(qualification, index) in qualifications" :key="`qualification-${index}`" :to="`/qualifications/${qualification._id}`" class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2">
+				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="`/users/${user._id}`" class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2">
 					<div style="width: 30%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ qualification.name }}</span>
+							<span>{{ user.email }}</span>
 						</div>
 					</div>
 					<div style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ $moment(qualification.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
+							<span v-if="user.roles">
+								<div v-for="role in user.roles">
+									<span>{{ role.name }}</span>
+								</div>
+							</span>
 						</div>
 					</div>
 					<div style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ qualification.updatedAt }}</span>
+							<span>{{ $moment(user.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
 						</div>
 					</div>
 					<div style="width: 20%;">
@@ -83,21 +87,21 @@
   export default {
   	async asyncData({ app }) {
   		try {
-  			let response = await app.$axios.get(`/api/v1/qualifications`)
+  			let response = await app.$axios.get(`/api/v1/users`)
 
-  			const qualifications = response.data.data.qualifications
+  			const users = response.data.data.users
 
   			return {
-  				qualifications
+  				users
   			}
   		} catch (err) {
-  			console.log('index qualifications index asyncData err', err)
+  			console.log('index users index asyncData err', err)
   		}
   	},
 
   	data() {
   		return {
-  			qualifications: []
+  			users: []
   		}
   	}
   }

@@ -7,6 +7,10 @@ import pkg from './package'
 export default {
   mode: 'universal',
 
+  env: {
+    API_URL: process.env.API_URL
+  },
+
   /*
   ** Headers of the page
   */
@@ -38,6 +42,10 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    {
+      src: '@/plugins/socket-io',
+      ssr: false
+    },
     {
       src: '@/plugins/vue-svgicon.js',
       ssr: true

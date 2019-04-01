@@ -12,6 +12,7 @@
       try {
         if (!store.$auth.loggedIn) {
           redirect('/sign-in')
+          
           return
         }
       } catch (err) {

@@ -20,6 +20,7 @@
   		<!-- SIDEBAR -->
   		<div class="flex flex-col pt-16 h-full bg-charade" style="transition: .8s;" :style="`width: ${sideBarOpen ? 'auto' : '0'}; min-width: ${sideBarOpen ? '180px' : '0'}`">
   			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'dashboard' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/">Dashboard</nuxt-link>
+  			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'users' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/users">Users</nuxt-link>
   			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'roles' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/roles">Roles</nuxt-link>
   			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'professions' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/professions">Professions</nuxt-link>
   			<nuxt-link class="text-xs px-6 py-4 no-underline border-l-4" :class="`${activeTab === 'qualifications' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`" to="/qualifications">Qualifications</nuxt-link>
@@ -63,6 +64,9 @@
 
 		computed: {
 			activeTab() {
+				if (this.$route.name.includes('users')) {
+					return 'users'
+				}
 
 				if (this.$route.name.includes('roles')) {
 					return 'roles'
@@ -90,11 +94,9 @@
       logout() {
       	this.showLogoutModal = false
 
-        this.$axios.post('/api/v1/logout').finally(() => {
-          this.$auth.logout().then(() => {
-            this.$router.push('/sign-in')
-          })
-        })
+      	this.$store.dispatch('logout').catch((err) => {
+      		console.log('err', err)
+      	})
       }
 		}
 	}

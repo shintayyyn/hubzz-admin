@@ -1,34 +1,64 @@
 <template>
   <div class="h-full w-full flex flex-col overflow-auto xl:justify-center">
 
-    <div class="flex justify-center items-start" style="height: 600px;">
+    <div class="flex justify-center items-start relative">
 
-      <div class="flex flex-col px-10 py-6 m-4 rounded-lg shadow-lg" style="width: 600px; background-color: #55565A;">
-        <div class="relative">
-          <label class="text-white">Email address</label>
-          <span v-show="emailErrorMessage && !showEmailFocus" class="text-white bg-red absolute pin-r p-1 text-xs">{{ emailErrorMessage }}</span>
+    	<div v-if="loginErrorMessage" class="absolute rounded-lg bg-red p-2 flex items-center justify-between" style="width: 520px;">
+    		<div class="flex-1 flex justify-center items-center">
+	    		<svgicon name="exclamation-circle-solid" height="24" width="24" class="text-white fill-current"/>
+	    		<span class="text-white px-4">{{ loginErrorMessage }}</span>
+    		</div>
+    		<button class="text-white p-2" @click="loginErrorMessage = ''">
+    			<svgicon name="times-solid" height="24" width="24" class="text-white fill-current"/>
+    		</button>
+    	</div>
+
+      <div class="flex flex-col px-10 py-6 pt-16 m-4 rounded-lg shadow-lg" style="width: 600px; background-color: #55565A;">
+        <div class="flex flex-wrap justify-between">
+          <label class="text-white text-sm my-1 py-1">Email address</label>
+          <div class="m-1 flex-auto flex justify-end">
+            <span class="text-xs bg-red p-1 text-white" v-if="emailErrorMessage && !showEmailFocus">{{ emailErrorMessage }}</span>
+          </div>
         </div>
         <input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="email" @keyup.enter="login" :class="showEmailFocus ? 'border-yellow-dark' : emailErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showEmailFocus = true" @blur="showEmailFocus = false, checkEmail()">
 
-        <div class="relative">
-          <label class="text-white">Password</label>
-          <span v-show="passwordErrorMessage && !showPasswordFocus" class="text-white bg-red absolute pin-r p-1 text-xs">{{ passwordErrorMessage }}</span>
+        <div class="flex flex-wrap justify-between">
+          <label class="text-white text-sm my-1 py-1">Password</label>
+          <div class="m-1 flex-auto flex justify-end">
+            <span class="text-xs bg-red p-1 text-white" v-if="passwordErrorMessage && !showPasswordFocus">{{ passwordErrorMessage }}</span>
+          </div>
         </div>
         <input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="password" @keyup.enter="login" :class="showPasswordFocus ? 'border-yellow-dark' : passwordErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showPasswordFocus = true" @blur="showPasswordFocus = false, checkPassword()">
 
-        <button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;">Sign In</button>
+        <button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="!loggingIn">Sign-in</button>
+        <button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="loggingIn">Loading...</button>
       </div>
-
     </div>
 
   </div>
 </template>
 
 <script>
+  import isEmail from 'validator/lib/isEmail'
+
 	export default {
+    async asyncData({ store, redirect }) {
+      try {
+        if (store.$auth.loggedIn) {
+          redirect('/')
+          
+          return
+        }
+      } catch (err) {
+        console.log('sign-in asyncData err', err)
+      }
+    },
+
 		data() {
 			return {
 				loggingIn: false,
+
+				loginErrorMessage: '',
 
 				email: '',
 				password: '',
@@ -43,11 +73,13 @@
 
 		methods: {
 			checkEmail() {
-				if (this.email.trim() === '') {
-					this.emailErrorMessage = 'Required'
-				} else {
-					this.emailErrorMessage = ''
-				}
+        if (!this.email) {
+          this.emailErrorMessage = 'Required'
+        } else if (!isEmail(this.email)) {
+          this.emailErrorMessage = 'Please enter a valid email address.'
+        } else {
+          this.emailErrorMessage = ''
+        }
 			},
 
 			checkPassword() {
@@ -59,37 +91,34 @@
 			},
 
 			login() {
-				const data = {
-					email: this.email,
-					password: this.password
+				this.checkEmail()
+
+				this.checkPassword()
+
+				if (this.emailErrorMessage || this.passwordErrorMessage) {
+					return
 				}
 
 				this.loggingIn = true
 
-	      this.$axios.post('/api/v1/login', data).then((response) => {
-	        const token = response.data.data.token.token
+				this.$store.dispatch('login', {
+					email: this.email,
+					password: this.password
+				}).catch((err) => {
+					let loginErrorMessage = 'Something Went Wrong'
 
-	        this.$axios.setToken(token, 'Bearer')
-
-	        this.$auth.$storage.setUniversal('_token.local', 'Bearer ' + token)
-
-	        this.$auth.fetchUser().then(() => {
-	          this.$router.push('/')
-	        })
-	      }).catch((err) => {
-					console.log('login err', err.response || err)
-
-					let errMessage = 'Something went wrong!'
-
-					if (err && err.response && err.response.data && err.response.data.message) {
-						errMessage = err.response.data.message
+					if (err && err.message) {
+						loginErrorMessage = err.message
 					}
 
-					console.log('errMessage', errMessage)
-					// this.$swal('Failed', errMessage, 'error')
-	      }).finally(() => {
+					if (err && err.response && err.response.data && err.response.data.data && err.response.data.data.message) {
+						loginErrorMessage = err.response.data.data.message
+					}
+
+					this.loginErrorMessage = loginErrorMessage
+				}).finally(() => {
        		this.loggingIn = false
-	      })
+				})
 			}
 		}
 	}
