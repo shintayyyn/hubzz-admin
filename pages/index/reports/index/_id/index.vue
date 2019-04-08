@@ -6,7 +6,7 @@
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
-      <div class="flex p-6">
+      <div class="flex p-4">
         <div class="flex sm-6">
           <div class="w-3/5">
             <div class="relative">
@@ -23,21 +23,26 @@
             </div>
           </div>
           <div class="w-1/5">
-            <div class="text-xs text-white p-2 mx-1">Filter by Status</div>
-          </div>
-          <div class="w-1/5">
             <select
               class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
             >
-              <option>All</option>
+              <option>Filter by..</option>
               <option>Paid</option>
               <option>Not Paid</option>
             </select>
           </div>
+          <div class="w-1/5">
+            <button
+              class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark py-1 px-4 rounded inline-flex items-center"
+            >
+              <i class="material-icons p-2" style="font-size:18px; ">cloud_download</i>
+              <span>Download CSV</span>
+            </button>
+          </div>
         </div>
       </div>
-      <div class="p-2">
-        <table class="text-left text-xs w-50">
+      <div class="p-1">
+        <table class="text-left text-xs w-50 ml-3">
           <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
             <tr class="flex w-full mb-4">
               <th class="p-1 w-full">Practice</th>

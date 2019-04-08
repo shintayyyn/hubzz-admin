@@ -63,7 +63,7 @@
           v-for="(practice, index) in practices"
           :key="`practice-${index}`"
           :to="`/practices/${practices._id}`"
-          class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+          class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2"
         >
           <div style="width: 20%;">
             <div class="flex text-white text-xs p-4">

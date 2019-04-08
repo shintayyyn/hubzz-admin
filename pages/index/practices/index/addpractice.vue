@@ -8,26 +8,33 @@
         </nuxt-link>
       </div>
       <!-- HEADER -->
-      <div class="text-sm text-white py-2 px-6">
-        <h2>Add Practice</h2>
-      </div>
-      <div
-        class="flex items-center pd-4 border-b-2 border-grey-light focus-within:border-teal"
-        style="width: 400px;"
-      >
-        <div class="flex flex-col">
-          <input
-            class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            type="text"
-            placeholder="Jane Doe"
-            aria-label="Full name"
-          >
+
+      <div class="flex flex-wrap overflow-hidden p-6 text-base text-white py-2">
+        <div class="w-full overflow-hidden">
+          <div class="pb-4">
+            <strong>Add Practice</strong>
+          </div>
         </div>
-      </div>
-      <div class="self-end">
-        <button
-          class="inline-flex py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
-        >Save</button>
+        <div class="w-full">
+          <div
+            class="flex items-center pd-4 border-b-2 border-grey-light focus-within:border-teal"
+            style="width: 400px;"
+          >
+            <input
+              class="bg-transparent border-none w-full text-white mr-3 py-1 leading-tight focus:outline-none"
+              type="text"
+              placeholder="Search for practice by name, etc."
+              aria-label="Full name"
+            >
+          </div>
+        </div>
+        <div class="w-full overflow-hidden">
+          <div class="self-end">
+            <button
+              class="inline-flex py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+            >Search</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

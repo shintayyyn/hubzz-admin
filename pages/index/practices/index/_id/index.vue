@@ -142,7 +142,7 @@
           </b-tab>
           <!--TAB 3-->
           <b-tab title="Sessions" :title-link-class="linkClass(2)">
-            <div class="p-1">
+            <div>
               <b-tabs pills v-model="sessionTabs">
                 <b-tab title="Available" :title-link-class="linkClass2(0)" active>
                   <div class="flex text-white text-xs p-4">
@@ -165,14 +165,89 @@
                   </div>
                 </b-tab>
                 <b-tab title="Unfilled" :title-link-class="linkClass2(4)">
-                  <div class="flex text-white text-xs p-4">
-                    <span>Not available</span>
+                  <div class="flex text-white text-xs p-1">
+                    <div class="w-full overflow-hidden">
+                      <div class="flex flex-col">
+                        <!-- HEADER -->
+                        <div class="flex">
+                          <div style="width: 25%;">
+                            <div class="flex text-white text-xs p-2">
+                              <strong>Job Number</strong>
+                            </div>
+                          </div>
+                          <div style="width: 33%;">
+                            <div class="flex text-white text-xs p-2">
+                              <strong>Practice/Surgery</strong>
+                            </div>
+                          </div>
+                          <div style="width: 22%">
+                            <div class="flex text-white text-xs p-2">
+                              <strong>Title</strong>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-2">
+                              <strong>Created</strong>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-2">
+                              <strong>From</strong>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-2">
+                              <strong>To</strong>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- HEADER -->
+
+                        <!-- BODY -->
+                        <nuxt-link
+                          v-for="(unfilled, index) in unfilleds"
+                          :key="`unfilled-${index}`"
+                          :to="`/practices/_id/unfilled`"
+                          class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+                        >
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-4">
+                              <span>{{ unfilled.jobNum }}</span>
+                            </div>
+                          </div>
+                          <div style="width: 30%;">
+                            <div class="flex text-white text-xs p-4">
+                              <span>{{ unfilled.practice }}</span>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-4">
+                              <span>{{ unfilled.title }}</span>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-4">
+                              <span>{{ unfilled.created }}</span>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-4">
+                              <span>{{ unfilled.from }}</span>
+                            </div>
+                          </div>
+                          <div style="width: 20%;">
+                            <div class="flex text-white text-xs p-4">
+                              <span>{{ unfilled.to }}</span>
+                            </div>
+                          </div>
+                        </nuxt-link>
+                        <!-- BODY -->
+                      </div>
+                    </div>
                   </div>
                 </b-tab>
                 <b-tab title="Cancelled" :title-link-class="linkClass2(5)">
-                  <div class="flex text-white text-xs p-4">
-                    <span>Not available</span>
-                  </div>
+                  <div class="flex text-white text-xs p-4"></div>
                 </b-tab>
                 <b-tab title="Declined" :title-link-class="linkClass2(6)">
                   <div class="flex text-white text-xs p-4">
@@ -378,6 +453,24 @@ export default {
           title: "Direct Debit",
           fileSize: "46.67 kB",
           lastUploadDate: "1/23/2019"
+        }
+      ],
+      unfilleds: [
+        {
+          jobNum: "H0000000252",
+          practice: "OLDHAM FAMILY PRACTICE",
+          title: "qwe",
+          created: "18/03/2019",
+          from: "20/03/2019",
+          to: "20/03/2019"
+        },
+        {
+          jobNum: "H0000000252",
+          practice: "OLDHAM FAMILY PRACTICE",
+          title: "qwe",
+          created: "18/03/2019",
+          from: "20/03/2019",
+          to: "20/03/2019"
         }
       ]
     };
