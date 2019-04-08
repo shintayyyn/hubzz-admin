@@ -15,11 +15,11 @@
           />
         </nuxt-link>
         <button
-          class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex mr-4"
+          class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
         >
           <i class="material-icons -mt-1" style="font-size:20px;">save</i>Save
         </button>
-        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex">
+        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
           <i class="material-icons -mt-1" style="font-size:20px;">remove_red_eye</i>Download
         </button>
       </div>

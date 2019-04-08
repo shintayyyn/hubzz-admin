@@ -39,24 +39,9 @@
         >Compliance</nuxt-link>
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
-          :class="`${activeTab === 'practices' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
-          to="/practices"
-        >Practices</nuxt-link>
-        <nuxt-link
-          class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'locums' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/locums"
         >Locums</nuxt-link>
-        <nuxt-link
-          class="text-xs px-6 py-4 no-underline border-l-4"
-          :class="`${activeTab === 'reports' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
-          to="/reports"
-        >Reports</nuxt-link>
-        <nuxt-link
-          class="text-xs px-6 py-4 no-underline border-l-4"
-          :class="`${activeTab === 'billing' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
-          to="/billing"
-        >Billing</nuxt-link>
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'roles' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
