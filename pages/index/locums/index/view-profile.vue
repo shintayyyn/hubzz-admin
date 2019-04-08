@@ -1,6 +1,6 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div style="width: calc(100% - 140px);" class="flex-1 flex-col self-end bg-trout">
+    <div style="width: calc(100% - 70px);" class="flex-1 flex-col self-end bg-trout">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/compliances/select-locum" class="text-white hover:text-yellow-dark p-1">
@@ -15,7 +15,7 @@
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="mx-6">
+      <div class="ml-6">
         <div class="flex">
           <button
             @click="profileTab = true, jobTab = false"
@@ -128,7 +128,7 @@
             <nuxt-link
               v-for="(job, index) in jobs"
               :key="`compliance-${index}`"
-              :to="`/compliances/select-locum`"
+              :to="`/locum/`"
               class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
               <div style="width: 20%;">

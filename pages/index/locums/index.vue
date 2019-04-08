@@ -54,7 +54,7 @@
         <nuxt-link
           v-for="(locum, index) in locums"
           :key="`locum-${index}`"
-          :to="`/locums/${locum._id}`"
+          :to="`/locums/view-profile`"
           class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
           <div style="width: 20%;">

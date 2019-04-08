@@ -16,7 +16,8 @@
       <!-- BODY -->
       <nuxt-link
         :to="`/compliances/select-locum/view-profile`"
-        class="flex sm:w-1/2 no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mx-6 mt-10 shadow"
+        class="flex lg:w-1/2 no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mx-6 mt-10 shadow"
+        style="position:relative; cursor: pointer;"
       >
         <div class="flex-row">
           <div class="inline-flex text-xs m-4">
@@ -35,12 +36,13 @@
           </div>
           <div>
             <i
-              class="material-icons inline-flex right p-2 absolute"
+              class="material-icons inline-flex right p-2 absolute -mt-20"
               style="color:white; font-size:30px; right: 0"
             >chevron_right</i>
           </div>
         </div>
       </nuxt-link>
+
       <div
         class="flex flex-row sm:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3"
       >
