@@ -53,7 +53,7 @@
         <nuxt-link
           v-for="(billing, index) in billings"
           :key="`billing-${index}`"
-          :to="`/billing/${billing._id}`"
+          :to="`/billing/addinvoice`"
           class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
           <div style="width: 14%;">

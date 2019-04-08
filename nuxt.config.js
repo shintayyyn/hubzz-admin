@@ -59,7 +59,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     'nuxt-material-design-icons',
-    'bootstrap-vue/nuxt'
+    // 'bootstrap-vue/nuxt'
   ],
   /*
   ** Axios module configuration
