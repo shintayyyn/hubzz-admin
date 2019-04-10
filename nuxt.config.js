@@ -18,10 +18,7 @@ export default {
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
-      {
-        rel: 'icon', type: 'image/x-icon', href: '/favicon.ico',
-        // rel: 'stylesheet', href: 'https://fonts.googleapis.com/icon?family=Material+Icons'
-      }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
     ]
   },
 
@@ -59,6 +56,10 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     'nuxt-material-design-icons',
+    // ['nuxt-google-maps-module', {
+    //   /* module options */
+    //   key: 'GOOGLE MAPS KEY',
+    // }],
     // 'bootstrap-vue/nuxt'
   ],
   /*

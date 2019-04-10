@@ -8,33 +8,8 @@
     </div>-->
 
     <!-- TABLE -->
-    <div style="width: 800px;">
+    <div>
       <div class="flex flex-col">
-        <!-- HEADER -->
-        <!-- <div class="flex my-2">
-          <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Name</strong>
-            </div>
-          </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Created At</strong>
-            </div>
-          </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Updated At</strong>
-            </div>
-          </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Actions</strong>
-            </div>
-          </div>
-        </div>-->
-        <!-- HEADER -->
-
         <!-- BODY -->
         <nuxt-link
           v-for="(qualification, index) in qualifications"

@@ -8,7 +8,7 @@
         </nuxt-link>
       </div>
       <!-- HEADER -->
-      <div class="flex flex-col rounded-lg p-6" style="width: 800px;">
+      <div class="flex flex-col rounded-lg pl-6" style="width: 800px;">
         <div class="w-full overflow-hidden">
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
@@ -184,7 +184,7 @@
         </div>
         <!--TAB 3-->
         <div v-if="tab3">
-          <div class="flex flex-col rounded-lg p-6" style="width: 800px;">
+          <div class="flex flex-col rounded-lg" style="width: 800px;">
             <div class="w-full overflow-hidden">
               <div class="flex flex-wrap -mx-1 overflow-hidden">
                 <div class="my-1 px-1 overflow-hidden">
@@ -580,21 +580,6 @@ export default {
       ]
     };
   },
-  methods: {
-    linkClass(idx) {
-      if (this.practiceTabs === idx) {
-        return ["bg-secondary", "text-xs"];
-      } else {
-        return ["bg-transparent", "text-light", "text-xs"];
-      }
-    },
-    linkClass2(idx) {
-      if (this.sessionTabs === idx) {
-        return ["bg-secondary", "text-xs"];
-      } else {
-        return ["bg-transparent", "text-light", "text-xs"];
-      }
-    }
-  }
+  methods: {}
 };
 </script>

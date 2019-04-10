@@ -34,6 +34,16 @@
         >Dashboard</nuxt-link>
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'compliances' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/compliances"
+        >Compliance</nuxt-link>
+        <nuxt-link
+          class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'locums' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/locums"
+        >Locums</nuxt-link>
+        <nuxt-link
+          class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'roles' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/roles"
         >Roles</nuxt-link>
@@ -49,19 +59,9 @@
         >Qualifications</nuxt-link>
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
-          :class="`${activeTab === 'compliance' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
-          to="/compliance"
-        >Compliance</nuxt-link>
-        <nuxt-link
-          class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'practices' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/practices"
         >Practices</nuxt-link>
-        <nuxt-link
-          class="text-xs px-6 py-4 no-underline border-l-4"
-          :class="`${activeTab === 'locums' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
-          to="/locums"
-        >Locums</nuxt-link>
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'reports' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
@@ -78,9 +78,9 @@
         >
           Sign out
           <i
-            class="material-icons"
-            style="color:#FFC72C; padding: 0 5px; font-size:18px; "
-          >&#xE8AC;</i>
+            class="material-icons m-2 -mt-1"
+            style="color:#FFC72C; font-size:21.zpx;"
+          >power_settings_new</i>
         </button>
       </div>
       <!-- SIDEBAR -->
@@ -119,33 +119,39 @@ export default {
 
   computed: {
     activeTab() {
-      if (this.$route.name.includes("roles")) {
+      if (this.$route.name && this.$route.name.includes("compliances")) {
+        return "compliances";
+      }
+
+      if (this.$route.name && this.$route.name.includes("practices")) {
+        return "practices";
+      }
+
+      if (this.$route.name && this.$route.name.includes("locums")) {
+        return "locums";
+      }
+
+      if (this.$route.name && this.$route.name.includes("reports")) {
+        return "reports";
+      }
+
+      if (this.$route.name && this.$route.name.includes("billing")) {
+        return "billing";
+      }
+
+      if (this.$route.name && this.$route.name.includes("roles")) {
         return "roles";
       }
 
-      if (this.$route.name.includes("professions")) {
+      if (this.$route.name && this.$route.name.includes("professions")) {
         return "professions";
       }
-      if (this.$route.name.includes("qualifications")) {
+
+      if (this.$route.name && this.$route.name.includes("qualifications")) {
         return "qualifications";
       }
 
-      if (this.$route.name.includes("compliance")) {
-        return "compliance";
-      }
-      if (this.$route.name.includes("practices")) {
-        return "practices";
-      }
-      if (this.$route.name.includes("locums")) {
-        return "locums";
-      }
-      if (this.$route.name.includes("reports")) {
-        return "reports";
-      }
-      if (this.$route.name.includes("billing")) {
-        return "billing";
-      }
-      if (this.$route.name.includes("index")) {
+      if (this.$route.name && this.$route.name.includes("index")) {
         return "dashboard";
       }
     }

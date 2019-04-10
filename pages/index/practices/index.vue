@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
     <div class="flex flex-wrap overflow-hidden">
-      <div class="w-1/3 overflow-hidden">
+      <div class="w-1/2 overflow-hidden">
         <div class="flex py-2">
           <div class="relative">
             <input
@@ -17,16 +17,17 @@
           >Go</button>
         </div>
       </div>
-      <div class="w-1/3 overflow-hidden pl-24">
+
+      <div class="w-1/2 overflow-hidden">
         <nuxt-link
           to="/practices/addpractice"
-          class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+          class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow float-right"
         >Add Practice</nuxt-link>
       </div>
     </div>
 
     <!-- TABLE -->
-    <div style="width: 800px;">
+    <div>
       <div class="flex flex-col">
         <!-- HEADER -->
         <div class="flex my-2">
@@ -85,7 +86,7 @@
               <span>{{ practice.expires }}</span>
             </div>
           </div>
-          <div style="width: 20%; padding-top:15px">
+          <div style="width: 20%; padding-top:6px">
             <div
               class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-full shadow"
             >
@@ -151,6 +152,7 @@ export default {
         }
       ]
     };
-  }
+  },
+  methods: {}
 };
 </script>
