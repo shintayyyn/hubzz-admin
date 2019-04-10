@@ -1,6 +1,6 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div style="width: calc(100% - 140px);" class="flex-1 flex-col self-end bg-trout">
+    <div style="width: calc(100% - 140px);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/compliances/select-locum" class="text-white hover:text-yellow-dark p-1">
@@ -16,20 +16,20 @@
       <!-- BODY -->
 
       <div class="mx-6">
-        <div class="flex">
+        <div>
           <button
             @click="profileTab = true, jobTab = false"
-            class="inline-flex rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
+            class="rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
           >Profile</button>
           <button
             @click="jobTab = true, profileTab = false"
-            class="inline-flex rounded-lg border-2 border-transparent text-xs text-white p-3 focus:bg-waterloo"
+            class="rounded-lg border-2 border-transparent text-xs text-white p-3 focus:bg-waterloo"
           >Jobs</button>
         </div>
 
-        <div class="flex mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo shadow">
+        <div class="flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo">
           <div v-if="profileTab" class="inline-flex m-4">
-            <div class="text-grey mx-10">
+            <div class="text-grey mx-5">
               <p class="m-2">Name</p>
               <p class="m-2 text-white">Ms Marie Rochelle RN</p>
               <p class="m-2 mt-5 mr-20">Email address</p>

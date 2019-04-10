@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
+  <div class="flex-1 flex flex-col py-2 px-6">
     <div class="flex justify-between">
       <div class="flex py-2">
         <div class="relative">
@@ -40,65 +40,63 @@
     </div>
 
     <!-- TABLE -->
-    <div style="w-full">
-      <div class="flex flex-col">
-        <!-- HEADER -->
-        <div class="flex my-2">
-          <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Locum</strong>
-            </div>
-          </div>
-          <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Profession</strong>
-            </div>
-          </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Last file uploaded</strong>
-            </div>
-          </div>
-          <div style="width: %;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Status</strong>
-            </div>
+    <div class>
+      <!-- HEADER -->
+      <div class="flex my-2">
+        <div style="width: 30%;">
+          <div class="flex text-white text-xs p-4">
+            <strong>Locum</strong>
           </div>
         </div>
-        <!-- HEADER -->
-
-        <!-- BODY -->
-        <nuxt-link
-          v-for="(compliance, index) in compliances"
-          :key="`compliance-${index}`"
-          :to="`/compliances/select-locum`"
-          class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
-        >
-          <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
-              <span>{{ compliance.name }}</span>
-            </div>
+        <div style="width: 30%;">
+          <div class="flex text-white text-xs p-4">
+            <strong>Profession</strong>
           </div>
-          <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
-              <span>{{ compliance.profession }}</span>
-            </div>
+        </div>
+        <div style="width: 25%;">
+          <div class="flex text-white text-xs p-4">
+            <strong>Last file uploaded</strong>
           </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
-              <span>{{ compliance.lastFileUpload }}</span>
-            </div>
+        </div>
+        <div style="width: %;">
+          <div class="flex text-white text-xs p-4">
+            <strong>Status</strong>
           </div>
-          <div style="width: 7%;">
-            <div
-              class="inline-flex text-white text-xs mt-2 py-2 p-5 border border-white rounded-full"
-            >
-              <span>{{ compliance.status }}</span>
-            </div>
-          </div>
-        </nuxt-link>
-        <!-- BODY -->
+        </div>
       </div>
+      <!-- HEADER -->
+
+      <!-- BODY -->
+      <nuxt-link
+        v-for="(compliance, index) in compliances"
+        :key="`compliance-${index}`"
+        :to="`/compliances/select-locum`"
+        class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+      >
+        <div style="width: 30%;">
+          <div class="flex text-white text-xs p-4">
+            <span>{{ compliance.name }}</span>
+          </div>
+        </div>
+        <div style="width: 30%;">
+          <div class="flex text-white text-xs p-4">
+            <span>{{ compliance.profession }}</span>
+          </div>
+        </div>
+        <div style="width: 25%;">
+          <div class="flex text-white text-xs p-4">
+            <span>{{ compliance.lastFileUpload }}</span>
+          </div>
+        </div>
+        <div style="width: 7%;">
+          <div
+            class="inline-flex text-white text-xs mt-2 py-2 p-5 border border-white rounded-full"
+          >
+            <span>{{ compliance.status }}</span>
+          </div>
+        </div>
+      </nuxt-link>
+      <!-- BODY -->
     </div>
     <!-- TABLE -->
 

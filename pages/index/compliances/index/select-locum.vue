@@ -44,7 +44,7 @@
       </nuxt-link>
 
       <div
-        class="flex flex-row sm:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3"
+        class="flex flex-row lg:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3"
       >
         <p class="m-4 text-grey">GMC / NMC Number</p>
         <p class="m-4">7283917</p>
@@ -56,7 +56,7 @@
         >Rejected</button>
       </div>
       <div
-        class="flex flex-row sm:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3"
+        class="flex flex-row lg:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3"
       >
         <p class="m-4 text-grey">MPL / NPL Number</p>
         <p class="m-4">6301928</p>
@@ -69,8 +69,8 @@
       </div>
       <!-- BODY -->
       <!-- TABLE -->
-      <div style="sm:w-1/2 ">
-        <div class="flex sm:w-1/2 flex-col mx-6">
+      <div style="lg:w-1/2 ">
+        <div class="flex lg:w-1/2 flex-col mx-6">
           <!-- HEADER -->
           <div class="flex my-2">
             <div style="width: 25%;">

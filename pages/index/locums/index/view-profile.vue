@@ -1,9 +1,9 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div style="width: calc(100% - 70px);" class="flex-1 flex-col self-end bg-trout">
+    <div style="width: calc(100% - 70px);" class="self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/compliances/select-locum" class="text-white hover:text-yellow-dark p-1">
+        <nuxt-link to="/locums" class="text-white hover:text-yellow-dark p-1">
           <svgicon
             name="arrow-left-solid"
             height="22"
@@ -15,21 +15,21 @@
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="ml-6">
-        <div class="flex">
+      <div class="mx-6">
+        <div>
           <button
             @click="profileTab = true, jobTab = false"
-            class="inline-flex rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
+            class="rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
           >Profile</button>
           <button
             @click="jobTab = true, profileTab = false"
-            class="inline-flex rounded-lg border-2 border-transparent text-xs text-white p-3 focus:bg-waterloo"
+            class="rounded-lg border-2 border-transparent text-xs text-white p-3 focus:bg-waterloo"
           >Jobs</button>
         </div>
 
-        <div class="flex mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo shadow">
+        <div class="flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo">
           <div v-if="profileTab" class="inline-flex m-4">
-            <div class="text-grey mx-10">
+            <div class="text-grey mx-5">
               <p class="m-2">Name</p>
               <p class="m-2 text-white">Ms Marie Rochelle RN</p>
               <p class="m-2 mt-5 mr-20">Email address</p>
@@ -87,83 +87,81 @@
           </div>
         </div>
         <!-- TABLE -->
-        <div style="w-full">
-          <div v-if="jobTab" class="flex flex-col">
-            <!-- HEADER -->
-            <div class="flex my-2">
-              <div style="width: 20%;">
-                <div class="flex text-white text-xs p-4">
-                  <strong>Job number</strong>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
-                  <strong>Practice / Surgery</strong>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
-                  <strong>Title</strong>
-                </div>
-              </div>
-              <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
-                  <strong>From</strong>
-                </div>
-              </div>
-              <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
-                  <strong>To</strong>
-                </div>
-              </div>
-              <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
-                  <strong>Created</strong>
-                </div>
+        <div v-if="jobTab">
+          <!-- HEADER -->
+          <div class="flex my-2 text-white text-xs p-4">
+            <div style="width: 20%;">
+              <div class="inline-flex">
+                <strong>Job number</strong>
               </div>
             </div>
-            <!-- HEADER -->
-
-            <!-- BODY -->
-            <nuxt-link
-              v-for="(job, index) in jobs"
-              :key="`compliance-${index}`"
-              :to="`/locum/`"
-              class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
-            >
-              <div style="width: 20%;">
-                <div class="flex text-white text-xs p-4">
-                  <span>{{ job.number }}</span>
-                </div>
+            <div style="width: 15%;">
+              <div class="inline-flex">
+                <strong>Practice / Surgery</strong>
               </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
-                  <span>{{ job.practice }}</span>
-                </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="inline-flex">
+                <strong>Title</strong>
               </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
-                  <span>{{ job.title }}</span>
-                </div>
+            </div>
+            <div style="width: 16%;">
+              <div class="inline-flex">
+                <strong>From</strong>
               </div>
-              <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
-                  <span>{{ job.from }}</span>
-                </div>
+            </div>
+            <div style="width: 16%;">
+              <div class="inline-flex">
+                <strong>To</strong>
               </div>
-              <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
-                  <span>{{ job.to }}</span>
-                </div>
+            </div>
+            <div style="width: 16%;">
+              <div class="inline-flex">
+                <strong>Created</strong>
               </div>
-              <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
-                  <span>{{ job.createdAt }}</span>
-                </div>
-              </div>
-            </nuxt-link>
-            <!-- BODY -->
+            </div>
           </div>
+          <!-- HEADER -->
+
+          <!-- BODY -->
+          <nuxt-link
+            v-for="(job, index) in jobs"
+            :key="`compliance-${index}`"
+            :to="`/compliances/select-locum`"
+            class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+          >
+            <div style="width: 20%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ job.number }}</span>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ job.practice }}</span>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ job.title }}</span>
+              </div>
+            </div>
+            <div style="width: 16%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ job.from }}</span>
+              </div>
+            </div>
+            <div style="width: 16%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ job.to }}</span>
+              </div>
+            </div>
+            <div style="width: 16%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ job.createdAt }}</span>
+              </div>
+            </div>
+          </nuxt-link>
+          <!-- BODY -->
         </div>
         <!-- TABLE -->
       </div>
