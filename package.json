@@ -27,7 +27,9 @@
     "nuxt-material-design-icons": "^1.0.4",
     "validator": "^10.11.0",
     "vue": "^2.6.10",
-    "vue-clickaway": "^2.2.2"
+    "vue-clickaway": "^2.2.2",
+    "vue-google-maps": "^0.1.21",
+    "vue2-google-maps": "^0.10.6"
   },
   "devDependencies": {
     "autoprefixer": "^8.6.4",

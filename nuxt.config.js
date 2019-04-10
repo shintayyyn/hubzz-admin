@@ -45,7 +45,12 @@ export default {
     {
       src: '@/plugins/moment.js',
       ssr: true
+    },
+    {
+      src: "~/plugins/google-maps",
+      ssr: true
     }
+
   ],
 
   /*
@@ -92,7 +97,11 @@ export default {
     /*
     ** You can extend webpack config here
     */
+    transpile: [/^vue2-google-maps($|\/)/],
     extend(config, ctx) {
-    }
-  }
+
+    },
+    vendor: ["vue2-google-maps"]
+  },
+
 }
