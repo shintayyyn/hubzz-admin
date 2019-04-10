@@ -15,8 +15,8 @@
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="mx-6">
-        <div>
+      <div class="mx-6 overflow-auto">
+        <div class="flex">
           <button
             @click="profileTab = true, jobTab = false"
             class="rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
@@ -27,7 +27,9 @@
           >Jobs</button>
         </div>
 
-        <div class="flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo">
+        <div
+          class="flex xs:flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo shadow"
+        >
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="text-grey mx-5">
               <p class="m-2">Name</p>
