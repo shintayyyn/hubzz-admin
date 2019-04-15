@@ -2,7 +2,7 @@
   <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
 
     <div>
-      <nuxt-link to="/professions/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+      <nuxt-link :to="{ path: `/compliance_documents/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
     </div>
 
     <div class="flex py-2">
@@ -21,29 +21,19 @@
 
         <!-- HEADER -->
         <div class="flex my-2">
-          <div style="width: 50%;">
+          <div style="width: 100%;">
             <div class="flex text-white text-xs p-4">
               <strong>Name</strong>
-            </div>
-          </div>
-          <div style="width: 50%;">
-            <div class="flex text-white text-xs p-4">
-              <strong>Category</strong>
             </div>
           </div>
         </div>
         <!-- HEADER -->
 
         <!-- BODY -->
-        <nuxt-link v-for="(profession, index) in professions" :key="`profession-${index}`" :to="`/professions/${profession.id}`" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2">
-          <div style="width: 50%;">
+        <nuxt-link v-for="(complianceDocument, index) in complianceDocuments" :key="`complianceDocument-${index}`" :to="{ path: `/compliance_documents/${complianceDocument.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2">
+          <div style="width: 100%;">
             <div class="flex text-white text-xs p-4">
-              <span>{{ profession.name }}</span>
-            </div>
-          </div>
-          <div style="width: 50%;">
-            <div class="flex text-white text-xs p-4">
-              <span>{{ profession.profession_category ? profession.profession_category.name : null }}</span>
+              <span>{{ complianceDocument.name }}</span>
             </div>
           </div>
         </nuxt-link>
@@ -60,8 +50,8 @@
       <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
     </div>
     <!-- PAGINATION -->
-
-    <nuxt-child/>
+    
+    <nuxt-child @updateComplianceDocument="updateComplianceDocument" @deleteComplianceDocument="deleteComplianceDocument" @createComplianceDocument="createComplianceDocument"/>
 
   </div>
 </template>
@@ -93,9 +83,9 @@
           params.search = search
         }
 
-        const getUsersCountPromise = app.$axios.get(`/api/v1/professions/count`, { params })
+        const getUsersCountPromise = app.$axios.get(`/api/v1/compliance_documents/count`, { params })
 
-        const getUsersPromise = app.$axios.get(`/api/v1/professions`, { params })
+        const getUsersPromise = app.$axios.get(`/api/v1/compliance_documents`, { params })
 
         let response = null
 
@@ -105,18 +95,18 @@
 
         response = await getUsersPromise
 
-        const professions = response.data.data.professions
+        const complianceDocuments = response.data.data.compliance_documents
 
         return {
           loading: false,
           itemsPerPage: limit,
           itemCount,
           activePage: page,
-          professions,
+          complianceDocuments,
           search
         }
       } catch (err) {
-        console.log('index professions index asyncData err', err)
+        console.log('index complianceDocuments index asyncData err', err)
       }
     },
 
@@ -126,7 +116,7 @@
         itemsPerPage: 10,
         itemCount: 0,
         activePage: 1,
-        professions: [],
+        complianceDocuments: [],
 
         search: ''
       }
@@ -224,6 +214,30 @@
         }
 
         this.$router.push({ query })
+      },
+
+      createComplianceDocument(complianceDocument) {
+        this.complianceDocuments.push(complianceDocument)
+      },
+
+      updateComplianceDocument(complianceDocumentId, complianceDocument) {
+        const index = this.complianceDocuments.findIndex(complianceDocument => {
+          return complianceDocument.id === complianceDocumentId
+        })
+
+        if (index > -1) {
+          this.complianceDocuments.splice(index, 1, complianceDocument)
+        }
+      },
+
+      deleteComplianceDocument(complianceDocumentId) {
+        const index = this.complianceDocuments.findIndex(complianceDocument => {
+          return complianceDocument.id === complianceDocumentId
+        })
+
+        if (index > -1) {
+          this.complianceDocuments.splice(index, 1)
+        }
       }
     }
   }

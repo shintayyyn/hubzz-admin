@@ -20,7 +20,7 @@
     </div>
     <!-- LOGOUT MODAL -->
 
-    <div class="w-full flex-1 flex">
+    <div class="w-full flex-1 flex overflow-hidden">
       <!-- SIDEBAR -->
       <div
         class="flex flex-col pt-16 h-full bg-charade"
@@ -43,6 +43,7 @@
           to="/locums"
         >Locums</nuxt-link>
 
+
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
           class="text-xs px-6 py-4 no-underline border-l-4"
@@ -51,10 +52,27 @@
         >Users</nuxt-link>
 
         <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
+          class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'compliance_documents' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/compliance_documents"
+        >Compliance Documents</nuxt-link>
+
+        <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
+          class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'profession_categories' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/profession_categories"
+        >Profession Categories</nuxt-link>
+
+        <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'professions' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/professions"
         >Professions</nuxt-link>
+
+
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'qualifications' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
@@ -146,6 +164,14 @@ export default {
         return "users";
       }
 
+      if (this.$route.name && this.$route.name.includes("compliance_documents")) {
+        return "compliance_documents";
+      }
+
+      if (this.$route.name && this.$route.name.includes("profession_categories")) {
+        return "profession_categories";
+      }
+
       if (this.$route.name && this.$route.name.includes("professions")) {
         return "professions";
       }
@@ -188,15 +214,12 @@ export default {
   transition: 0.8s ease;
 }
 
-.subpage-enter,
-.subpage-fade-leave-active {
+.subpage-enter {
   transform: translateX(120px);
   opacity: 0;
 }
 
-.subpage-enter-active,
-.subpage-fade-leave-to {
+.subpage-enter-active {
   transition: 0.8s ease;
-  z-index: 100;
 }
 </style>

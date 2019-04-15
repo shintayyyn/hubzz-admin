@@ -16,7 +16,7 @@
 		</div>
 
 		<!-- TABLE -->
-		<div style="width: 800px;">
+		<div>
 			<div class="flex flex-col">
 
 				<!-- HEADER -->
