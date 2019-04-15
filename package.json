@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
+    "dev:live": "API_URL=https://hubzz-api.herokuapp.com nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -14,21 +15,14 @@
   "dependencies": {
     "@nuxtjs/auth": "^4.5.3",
     "@nuxtjs/axios": "^5.4.1",
-    "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^2.0.0-rc.16",
     "cross-env": "^5.2.0",
     "dotenv": "^7.0.0",
-    "google-maps": "^3.3.0",
     "lodash.debounce": "^4.0.8",
-    "material-design-icons": "^3.0.1",
     "moment": "^2.24.0",
     "nuxt": "^2.4.0",
-    "nuxt-google-maps-module": "^1.6.0",
-    "nuxt-material-design-icons": "^1.0.4",
     "validator": "^10.11.0",
     "vue": "^2.6.10",
     "vue-clickaway": "^2.2.2",
-    "vue-google-maps": "^0.1.21",
     "vue2-google-maps": "^0.10.6"
   },
   "devDependencies": {

@@ -78,7 +78,7 @@
         >
           Sign out
           <i
-            class="material-icons m-2 -mt-1"
+            class="m-2 -mt-1"
             style="color:#FFC72C; font-size:21.zpx;"
           >power_settings_new</i>
         </button>
