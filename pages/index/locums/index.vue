@@ -1,10 +1,6 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
 
-		<div>
-			<nuxt-link to="/users/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
-		</div>
-
 		<div class="flex py-2">
 			<div class="relative">
 				<input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
@@ -21,58 +17,63 @@
 
 				<!-- HEADER -->
 				<div class="flex my-2">
-					<div style="width: 25%;">
+					<div class="flex" style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
 							<strong>Name</strong>
 						</div>
 					</div>
-					<div style="width: 20%;">
+					<div class="flex" style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
-							<strong>Email</strong>
+							<strong>Profession</strong>
 						</div>
 					</div>
-					<div style="width: 15%;">
+					<div class="flex" style="width: 15%;">
 						<div class="flex text-white text-xs p-4">
-							<strong>Domain</strong>
+							<strong>Date signed-up</strong>
 						</div>
 					</div>
-					<div style="width: 25%;">
+					<div class="flex" style="width: 15%;">
 						<div class="flex text-white text-xs p-4">
-							<strong>Created At</strong>
+							<strong>Sign-up verified</strong>
 						</div>
 					</div>
-					<div style="width: 15%;">
+					<div class="flex" style="width: 20%;">
 						<div class="flex text-white text-xs p-4">
-							<strong>Actions</strong>
+							<strong>Status</strong>
 						</div>
 					</div>
 				</div>
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="`/users/${user.id}`" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2">
-					<div style="width: 25%;">
+				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="{ path: `/locums/${user.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
+					<div class="flex" style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ user.personal_detail && user.personal_detail.name ? user.personal_detail.name : null }}</span>
+							<span>{{ user.personal_detail ? user.personal_detail.name : null }}</span>
 						</div>
 					</div>
-					<div style="width: 20%;">
+					<div class="flex" style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ user.email }}</span>
+							<span>{{ user.locum_detail && user.locum_detail.profession ? user.locum_detail.profession.name : null }}</span>
 						</div>
 					</div>
-					<div style="width: 15%;">
+					<div class="flex" style="width: 15%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ user.domain }}</span>
+							<span>{{ $moment(user.created_at).format('MMM D, YYYY') }}</span>
 						</div>
 					</div>
-					<div style="width: 25%;">
+					<div class="flex" style="width: 15%;">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ $moment(user.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
+							<span>{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY') : null }}</span>
 						</div>
 					</div>
-					<div style="width: 15%;">
-						<div class="flex text-white text-xs p-4">
+					<div class="flex" style="width: 20%;">
+						<div class="flex-1 flex py-2 px-4 items-center">
+							<span
+								class="flex-1 flex text-xs justify-center py-2 px-8 rounded-full"
+								:class="`${user.status === 'Active' ? 'bg-green text-white' : 'bg-yellow text-black'}`"
+								v-if="user.status"
+							>{{ user.status }}</span>
 						</div>
 					</div>
 				</nuxt-link>
@@ -116,7 +117,11 @@
 
   			const offset = page * limit - limit
 
-  			const params = { limit, offset }
+  			const domain = 'locum'
+
+  			const order_by = 'created_at:desc'
+
+  			const params = { limit, offset, domain, order_by }
 
   			if (search) {
   				params.search = search

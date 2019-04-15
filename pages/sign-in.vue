@@ -20,7 +20,15 @@
             <span class="text-xs bg-red p-1 text-white" v-if="emailErrorMessage && !showEmailFocus">{{ emailErrorMessage }}</span>
           </div>
         </div>
-        <input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="email" @keyup.enter="login" :class="showEmailFocus ? 'border-yellow-dark' : emailErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showEmailFocus = true" @blur="showEmailFocus = false, checkEmail()">
+        <input
+          class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
+          placeholder="super-admin@gmail.com"
+          v-model="email"
+          @keyup.enter="login"
+          :class="showEmailFocus ? 'border-yellow-dark' : emailErrorMessage ? 'border-red' : 'border-white-dark'"
+          @focus="showEmailFocus = true"
+          @blur="showEmailFocus = false, checkEmail()"
+        >
 
         <div class="flex flex-wrap justify-between">
           <label class="text-white text-sm my-1 py-1">Password</label>
@@ -34,7 +42,6 @@
         <button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="loggingIn">Loading...</button>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -111,9 +118,13 @@
 						loginErrorMessage = err.message
 					}
 
-					if (err && err.response && err.response.data && err.response.data.data && err.response.data.data.message) {
-						loginErrorMessage = err.response.data.data.message
+					if (err && err.response && err.response.data && err.response.data.message) {
+						loginErrorMessage = err.response.data.message
 					}
+
+          if (err && err.response && err.response.data && err.response.data.data && err.response.data.data.message) {
+            loginErrorMessage = err.response.data.data.message
+          }
 
 					this.loginErrorMessage = loginErrorMessage
 				}).finally(() => {

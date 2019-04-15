@@ -1,84 +1,240 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-6">
+  <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
 
-		<div class="flex pb-8">
-			<div class="relative">
-				<input class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo" placeholder="Search for...">
-				<button class="p-2 absolute pin-t pin-r pin-b">
-					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
-				</button>
-			</div>
-			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark">Go</button>
-		</div>
+    <div>
+      <nuxt-link to="/professions/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+    </div>
 
-		<div>
-			<table style="border-collapse: separate; border-spacing: 0 .75rem;">
-				<thead>
-					<tr>
-						<th>
-							<div class="flex text-white text-xs p-4">
-								<span>Name</span>
-							</div>
-						</th>
-						<th>
-							<div class="flex text-white text-xs p-4">
-								<span>Created At</span>
-							</div>
-						</th>
-						<th>
-							<div class="flex text-white text-xs p-4">
-								<span>Updated At</span>
-							</div>
-						</th>
-					</tr>
-				</thead>
+    <div class="flex py-2">
+      <div class="relative">
+        <input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+        <button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
+          <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
+        </button>
+      </div>
+      <button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+    </div>
 
-				<tbody>
-					<tr v-for="profession in professions" class="bg-waterloo hover:bg-waterloo-light m-8">
-						<td style="border-top-left-radius: .75rem; border-bottom-left-radius: .75rem;">
-							<div class="flex text-white text-xs p-4">
-								<span>{{ profession.name }}</span>
-							</div>
-						</td>
-						<td>
-							<div class="flex text-white text-xs p-4">
-								<span>{{ $moment(profession.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
-							</div>
-						</td>
-						<td style="border-top-right-radius: .75rem; border-bottom-right-radius: .75rem;">
-							<div class="flex text-white text-xs p-4">
-								<span>{{ profession.updatedAt }}</span>
-							</div>
-						</td>
-					</tr>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+    <!-- TABLE -->
+    <div>
+      <div class="flex flex-col">
 
-	</div>
+        <!-- HEADER -->
+        <div class="flex my-2">
+          <div style="width: 25%;">
+            <div class="flex text-white text-xs p-4">
+              <strong>Name</strong>
+            </div>
+          </div>
+          <div style="width: 20%;">
+            <div class="flex text-white text-xs p-4">
+              <strong>Email</strong>
+            </div>
+          </div>
+          <div style="width: 15%;">
+            <div class="flex text-white text-xs p-4">
+              <strong>Domain</strong>
+            </div>
+          </div>
+        </div>
+        <!-- HEADER -->
+
+        <!-- BODY -->
+        <nuxt-link v-for="(profession, index) in professions" :key="`profession-${index}`" :to="`/professions/${profession.id}`" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2">
+          <div style="width: 25%;">
+            <div class="flex text-white text-xs p-4">
+              <span>{{ profession.name }}</span>
+            </div>
+          </div>
+          <div style="width: 20%;">
+            <div class="flex text-white text-xs p-4">
+              <span>{{ profession.email }}</span>
+            </div>
+          </div>
+          <div style="width: 15%;">
+            <div class="flex text-white text-xs p-4">
+              <span>{{ profession.domain }}</span>
+            </div>
+          </div>
+        </nuxt-link>
+        <!-- BODY -->
+
+      </div>
+    </div>
+    <!-- TABLE -->
+
+    <!-- PAGINATION -->
+    <div v-if="pageCount > 1">
+      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
+      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
+    </div>
+    <!-- PAGINATION -->
+
+    <nuxt-child/>
+
+  </div>
 </template>
 
 <script>
   export default {
-  	async asyncData({ app }) {
-  		try {
-  			let response = await app.$axios.get(`/api/v1/professions`)
 
-  			const professions = response.data.data.professions
+    watchQuery: [
+      'page',
+      'search'
+    ],
 
-  			return {
-  				professions
-  			}
-  		} catch (err) {
-  			console.log('index professions index asyncData err', err)
-  		}
-  	},
+    async asyncData({ app, route }) {
+      try {
+        let {
+          page = 1,
+          search = ''
+        } = route.query
 
-  	data() {
-  		return {
-  			professions: []
-  		}
-  	}
+        page = parseInt(page)
+
+        const limit = 10
+
+        const offset = page * limit - limit
+
+        const params = { limit, offset }
+
+        if (search) {
+          params.search = search
+        }
+
+        const getUsersCountPromise = app.$axios.get(`/api/v1/professions/count`, { params })
+
+        const getUsersPromise = app.$axios.get(`/api/v1/professions`, { params })
+
+        let response = null
+
+        response = await getUsersCountPromise
+
+        const itemCount = response.data.data.count
+
+        response = await getUsersPromise
+
+        const professions = response.data.data.professions
+
+        return {
+          loading: false,
+          itemsPerPage: limit,
+          itemCount,
+          activePage: page,
+          professions,
+          search
+        }
+      } catch (err) {
+        console.log('index professions index asyncData err', err)
+      }
+    },
+
+    data() {
+      return {
+        loading: false,
+        itemsPerPage: 10,
+        itemCount: 0,
+        activePage: 1,
+        professions: [],
+
+        search: ''
+      }
+    },
+
+    computed: {
+      pageCount() {
+        return Math.ceil(this.itemCount / this.itemsPerPage)
+      },
+
+      showPage() {
+        return page => {
+          if (page === 1) {
+            return true
+          }
+
+          if (page === this.pageCount) {
+            return true
+          }
+
+          if (page === this.activePage) {
+            return true
+          }
+
+          if (page === this.activePage + 1) {
+            return true
+          }
+
+          if (page === this.activePage - 1) {
+            return true
+          }
+
+          if (this.activePage === 1 && page < 5) {
+            return true
+          }
+
+          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+            return true
+          }
+
+          if (this.activePage === 2 && page === 4) {
+            return true
+          }
+
+          if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+            return true
+          }
+
+          return false
+        }
+      }
+    },
+
+    methods: {
+      goToPage(page) {
+        if (page < 1) {
+          return
+        }
+
+        if (page > this.pageCount) {
+          return
+        }
+
+        const query = {
+          ...this.$router.query,
+          page
+        }
+
+        if (page === 1) {
+          delete query.page
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.loading = true
+        }
+
+        this.$router.push({ query })
+      },
+
+      searchSubmit() {
+        const query = {
+          ...this.$router.query
+        }
+
+        delete query.page
+
+        query.search = this.search
+
+        if (this.search === '') {
+          delete query.search
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.loading = true
+        }
+
+        this.$router.push({ query })
+      }
+    }
   }
 </script>
