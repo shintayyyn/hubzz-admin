@@ -20,7 +20,7 @@ export const actions = {
 
     await this.$auth.fetchUser()
 
-    await dispatch('socket/login', { token })
+    // await dispatch('socket/login', { token })
 
     this.$router.push('/')
   },
@@ -30,7 +30,7 @@ export const actions = {
 
     await this.$auth.logout()
 
-    await dispatch('socket/logout')
+    // await dispatch('socket/logout')
 
     this.$router.push('/sign-in')
   }
