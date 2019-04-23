@@ -30,11 +30,17 @@
           <div style="width: 25%;">
             <div class="flex text-white text-xs p-4">
               <span>REP-012</span>
+              
             </div>
           </div>
           <div style="width: 25%; padding-left:100px">
             <div class="flex text-white text-xs p-4">
-              <i class="material-icons">keyboard_arrow_right</i>
+              <svgicon
+          name="arrow-right"
+          width="21"
+          height="21"
+          color="transparent white"
+        ></svgicon>
             </div>
           </div>
         </nuxt-link>

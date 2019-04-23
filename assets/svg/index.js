@@ -1,4 +1,10 @@
 /* eslint-disable */
 require('./arrow-left-solid')
+require('./arrow-right')
+require('./cloud-download')
+require('./cloud-upload')
+require('./email')
 require('./exclamation-circle-solid')
+require('./power-settings-new')
+require('./save-icon')
 require('./times-solid')

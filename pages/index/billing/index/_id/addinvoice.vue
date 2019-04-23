@@ -14,7 +14,12 @@
             <button
               class="inline-flex py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
             >
-              <i class="material-icons">save</i>
+              <svgicon
+                  name="save-icon"
+                  width="21"
+                  height="21"
+                  color="transparent orange"
+              ></svgicon>
               <span class="pt-1 pl-1">Save Changes</span>
             </button>
           </div>
@@ -25,7 +30,12 @@
             <button
               class="inline-flex py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
             >
-              <i class="material-icons">email</i>
+              <svgicon
+                  name="email"
+                  width="21"
+                  height="21"
+                  color="transparent orange"
+              ></svgicon>
               <span class="pt-1 pl-1">Save and Archive as Final</span>
             </button>
           </div>

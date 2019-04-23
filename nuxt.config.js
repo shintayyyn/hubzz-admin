@@ -63,7 +63,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    'nuxt-material-design-icons',
+    // 'nuxt-material-design-icons',
     // ['nuxt-google-maps-module', {
     //   /* module options */
     //   key: 'GOOGLE MAPS KEY',

@@ -98,10 +98,12 @@
           @click="showLogoutModal = true"
         >
           Sign out
-          <i
-            class="material-icons m-2 -mt-1"
-            style="color:#FFC72C; font-size:21.zpx;"
-          >power_settings_new</i>
+        <svgicon
+          name="power-settings-new"
+          width="21"
+          height="21"
+          color="transparent orange"
+        ></svgicon>
         </button>
       </div>
       <!-- SIDEBAR -->
