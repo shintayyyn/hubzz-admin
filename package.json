@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
+    "dev:live": "API_URL=https://hubzz-api.herokuapp.com nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
