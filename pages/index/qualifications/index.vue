@@ -23,7 +23,7 @@
     </div>
 
     <!-- TABLE -->
-    <div style="width: 800px;">
+    <div>
       <div class="flex flex-col">
         <!-- HEADER -->
         <div class="flex my-2">

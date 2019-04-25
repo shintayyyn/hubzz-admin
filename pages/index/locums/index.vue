@@ -12,7 +12,7 @@
 		</div>
 
 		<!-- TABLE -->
-		<div style="width: 800px;">
+
 			<div class="flex flex-col">
 
 				<!-- HEADER -->
@@ -68,9 +68,9 @@
 						</div>
 					</div>
 					<div class="flex" style="width: 20%;">
-						<div class="flex-1 flex py-2 px-4 items-center">
+						<div class=" flex py-2 px-4 items-center">
 							<span
-								class="flex-1 flex text-xs justify-center py-2 px-8 rounded-full"
+								class=" text-xs justify-center py-2 px-4 rounded-full"
 								:class="`${user.status === 'Active' ? 'bg-green text-white' : 'bg-yellow text-black'}`"
 								v-if="user.status"
 							>{{ user.status }}</span>
@@ -80,7 +80,7 @@
 				</nuxt-link>
 				<!-- BODY -->
 
-			</div>
+
 		</div>
 		<!-- TABLE -->
 

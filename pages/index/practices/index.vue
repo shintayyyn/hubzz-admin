@@ -1,7 +1,7 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
-    <div class="flex flex-wrap overflow-hidden">
-      <div class="w-1/2 overflow-hidden">
+  <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
+    <div class="flex flex-wrap overflow-hidden sm:-mx-3">
+      <div class="w-1/2  sm:my-3 sm:px-3 overflow-hidden">
         <div class="flex py-2">
           <div class="relative">
             <input
@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div class="w-1/2 overflow-hidden">
+      <div class="w-1/2 sm:my-3 sm:px-3 overflow-hidden">
         <nuxt-link
           to="/practices/addpractice"
           class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow float-right"
@@ -67,31 +67,31 @@
           class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2"
         >
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-xs py-4 p-2">
               <span>{{ practice.name }}</span>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-xs py-4 p-2">
               <span>{{ practice.code }}</span>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-xs py-4 p-2">
               <span>{{ $moment(practice.created).format('MMM D, YYYY | hh:mm A') }}</span>
             </div>
           </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+          <div style="width: 10%;">
+            <div class="flex text-white text-xs py-4 p-2 ">
               <span>{{ practice.expires }}</span>
             </div>
           </div>
-          <div style="width: 20%; padding-top:6px">
-            <div
-              class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-full shadow"
-            >
-              <span>{{ practice.status }}</span>
-            </div>
+          <div style="width: 10%; ">
+              <div
+                class="inline-flex no-underline py-2 px-2 my-2 bg-sunglow text-xs text-black rounded-full shadow "
+              >
+                <span>{{ practice.status }}</span>
+              </div>
           </div>
         </nuxt-link>
         <!-- BODY -->
@@ -127,7 +127,7 @@ export default {
           code: "C82062",
           created: "01/04/2019 06:12:05",
           expires: "25/01/2023",
-          status: "Disabled"
+          status: "Active"
         },
         {
           name: "BARROW HEALTH CENTRE",

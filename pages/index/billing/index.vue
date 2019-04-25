@@ -11,14 +11,14 @@
       <div class="flex flex-col">
         <!-- HEADER -->
         <div class="flex my-2">
-          <div style="width: 10%;">
+          <div class="width: 10%;">
             <div class="flex text-white text-xs p-4">
               <strong>Invoice Number</strong>
             </div>
           </div>
           <div style="width: 30%;">
             <div class="flex text-white text-xs p-4">
-              <strong>Practice/Surgery</strong>
+              <strong>Practice /Surgery</strong>
             </div>
           </div>
           <div style="width: 10%;">
