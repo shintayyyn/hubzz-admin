@@ -24,7 +24,7 @@
           </div>
           <div class="w-1/5">
             <select
-              class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
+              class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:hubzz-yellow bg-waterloo"
             >
               <option>Filter by..</option>
               <option>Paid</option>
@@ -35,14 +35,19 @@
             <button
               class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark py-1 px-4 rounded inline-flex items-center"
             >
-              <i class="material-icons p-2" style="font-size:18px; ">cloud_download</i>
+                <svgicon
+                  name="cloud-download"
+                  width="21"
+                  height="21"
+                  color="transparent white"
+              ></svgicon>
               <span>Download CSV</span>
             </button>
           </div>
         </div>
       </div>
       <div class="p-1">
-        <table class="text-left text-xs w-50 ml-3">
+        <table class="text-left text-xs ml-3" style="width:50%">
           <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
             <tr class="flex w-full mb-4">
               <th class="p-1 w-full">Practice</th>

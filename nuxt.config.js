@@ -53,7 +53,12 @@ export default {
     {
       src: '@/plugins/moment.js',
       ssr: true
+    },
+    {
+      src: "~/plugins/google-maps",
+      ssr: true
     }
+
   ],
 
   /*
@@ -63,7 +68,7 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    'nuxt-material-design-icons',
+    // 'nuxt-material-design-icons',
     // ['nuxt-google-maps-module', {
     //   /* module options */
     //   key: 'GOOGLE MAPS KEY',
@@ -100,7 +105,10 @@ export default {
     /*
     ** You can extend webpack config here
     */
+    transpile: [/^vue2-google-maps($|\/)/],
     extend(config, ctx) {
+
     }
-  }
+  },
+
 }

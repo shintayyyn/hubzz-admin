@@ -88,9 +88,23 @@
             </strong>
             <br>1ST FLOOR INTEGRATED C C NEW RADCLIFFE STREET OLDHAM OL1 1NL
           </div>
-          <div
-            class="flex flex-col h-24 bg-white shadow rounded-lg text-black"
-          >insert google maps here</div>
+          <div class="flex flex-col h-24 bg-white shadow rounded-lg text-black">
+            <GmapMap
+              v-bind:center="{lat:10, lng:10}"
+              v-bind:zoom="7"
+              map-type-id="terrain"
+              style="height: 300px"
+            >
+              <GmapMarker
+                v-bind:key="index"
+                v-for="(m, index) in markers"
+                v-bind:position="m.position"
+                v-bind:clickable="true"
+                :draggable="true"
+                @click="center=m.position"
+              />
+            </GmapMap>
+          </div>
         </form>
       </div>
     </div>
@@ -99,7 +113,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      center: { lat: 10.0, lng: 10.0 },
+      markers: [
+        {
+          position: { lat: 10.0, lng: 10.0 }
+        },
+        { position: { lat: 10.0, lng: 10.0 } }
+      ]
+    };
+  }
+};
 </script>
 
 <style>
