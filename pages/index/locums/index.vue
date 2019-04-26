@@ -17,7 +17,7 @@
 
 				<!-- HEADER -->
 				<div class="flex my-2">
-					<div class="flex" style="width: 25%;">
+					<div class="flex" style="width: 20%;">
 						<div class="flex text-white text-xs p-4">
 							<strong>Name</strong>
 						</div>
@@ -47,7 +47,7 @@
 
 				<!-- BODY -->
 				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="{ path: `/locums/${user.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
-					<div class="flex" style="width: 25%;">
+					<div class="flex" style="width: 20%;">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ user.personal_detail ? user.personal_detail.name : null }}</span>
 						</div>
@@ -67,16 +67,16 @@
 							<span>{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY') : null }}</span>
 						</div>
 					</div>
-					<div class="flex" style="width: 20%;">
+					<div class="flex" style="width:10%;">
 						<div class=" flex py-2 px-4 items-center">
 							<span
-								class=" text-xs justify-center py-2 px-4 rounded-full"
-								:class="`${user.status === 'Active' ? 'bg-green text-white' : 'bg-yellow text-black'}`"
+								class=" inline-flex no-underline py-2 my-2 text-xs text-black rounded-full shadow "
+								:class="`${user.status === 'Active' ? 'bg-green text-white px-4 ' : 'bg-yellow text-black px-2'}`"
 								v-if="user.status"
 							>{{ user.status }}</span>
 						</div>
-						
 					</div>
+					
 				</nuxt-link>
 				<!-- BODY -->
 

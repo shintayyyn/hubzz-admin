@@ -1,8 +1,8 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div
-      style="width: calc(100% - 140px);"
-      class="flex-1 flex flex-col self-end bg-trout shadow-lg"
+      style="width: calc(100% - 70px);"
+      class="flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2"
     >
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/practices/_id/" class="text-white p-1">
@@ -12,7 +12,7 @@
       <div class="text-white pl-4 pt-2">
         <strong>Create User</strong>
       </div>
-      <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-xs w-1/2">
+      <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-xs sm:w-max lg:w-1/2">
         <div class="w-full overflow-hidden text-grey-light text-xs p-2">
           <p class="flex">Title</p>
           <input

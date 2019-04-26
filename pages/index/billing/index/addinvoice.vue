@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
     <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">

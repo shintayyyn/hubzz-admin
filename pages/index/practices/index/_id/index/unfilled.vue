@@ -1,7 +1,7 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div
-      style="width: calc(100% - 140px);"
+      style="width: calc(100% - 70px);"
       class="flex-1 flex flex-col self-end bg-trout shadow-lg"
     >
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -24,11 +24,11 @@
 
         <p class="text-xs pt-4">Posted 18/03/2019</p>
       </div>
-      <div class="flex flex-col rounded-lg p-3 text-white" style="width: 800px;">
+      <div class="flex flex-col rounded-lg p-2 text-white lg:w-3/5">
         <form class="flex flex-col bg-waterloo m-4 py-2 px-4 shadow rounded-lg">
           <div class="flex flex-wrap overflow-hidden pt-4">
             <!--LEFT-->
-            <div class="w-1/2 overflow-hidden text-grey-light text-xs">
+            <div class="w-1/2 lg:w-1/2 sm:w-full overflow-hidden text-grey-light text-xs">
               <p class="flex text-white text-xs pb-4 font-semibold">Job Number</p>
               <p class="flex pb-4">H0000000252</p>
               <p class="flex text-white text-xs pb-4 font-semibold">Rate</p>
@@ -41,7 +41,7 @@
               <p class="flex pb-4">qwe</p>
             </div>
             <!--RIGHT-->
-            <div class="w-1/2 overflow-hidden text-grey-light text-xs">
+            <div class="w-1/2 lg:w-1/2 sm:w-full overflow-hidden text-grey-light text-xs">
               <p class="flex text-white text-xs pb-4 font-semibold">Duration</p>
               <p class="flex pb-4">From 20/03/2019</p>
               <p class="flex pb-4">To 20/03/2019</p>
@@ -88,12 +88,12 @@
             </strong>
             <br>1ST FLOOR INTEGRATED C C NEW RADCLIFFE STREET OLDHAM OL1 1NL
           </div>
-          <div class="flex flex-col h-24 bg-white shadow rounded-lg text-black">
+          <div class="flex flex-col h-64 bg-white shadow rounded-lg text-black">
             <GmapMap
               v-bind:center="{lat:10, lng:10}"
               v-bind:zoom="7"
               map-type-id="terrain"
-              style="height: 300px"
+              style="height: 800px"
             >
               <GmapMarker
                 v-bind:key="index"

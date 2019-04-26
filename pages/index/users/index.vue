@@ -51,28 +51,28 @@
 
 				<!-- BODY -->
 				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="`/users/${user.id}`" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2">
-					<div style="width: 25%;">
-						<div class="flex text-white text-xs p-4">
+					<div class="flex" style="width: 25%;">
+						 <div class="flex text-white text-xs py-4 p-2">
 							<span>{{ user.personal_detail && user.personal_detail.name ? user.personal_detail.name : null }}</span>
 						</div>
 					</div>
-					<div style="width: 20%;">
-						<div class="flex text-white text-xs p-4">
+					<div class="flex" style="width: 20%;">
+						 <div class="flex text-white text-xs py-4 p-2">
 							<span>{{ user.email }}</span>
 						</div>
 					</div>
-					<div style="width: 15%;">
-						<div class="flex text-white text-xs p-4">
+					<div class="flex" style="width: 15%;">
+						 <div class="flex text-white text-xs py-4 p-2">
 							<span>{{ user.domain }}</span>
 						</div>
 					</div>
-					<div style="width: 25%;">
-						<div class="flex text-white text-xs p-4">
+					<div class="flex" style="width: 25%;">
+						 <div class="flex text-white text-xs py-4 p-2">
 							<span>{{ $moment(user.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
 						</div>
 					</div>
-					<div style="width: 15%;">
-						<div class="flex text-white text-xs p-4">
+					<div class="flex" style="width: 15%;">
+						 <div class="flex text-white text-xs py-4 p-2">
 						</div>
 					</div>
 				</nuxt-link>
@@ -85,7 +85,7 @@
 		<!-- PAGINATION -->
 		<div v-if="pageCount > 1">
 			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" @click="goToPage(page)">{{ page }}</button>
 			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
 		</div>
 		<!-- PAGINATION -->

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6">
+  <div class="flex-1 flex flex-col py-2 px-4">
     <div class="flex justify-between">
       <div class="flex py-2">
         <div class="relative">

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
+  <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
 
     <div>
       <nuxt-link to="/professions/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>

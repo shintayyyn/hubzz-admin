@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
+  <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
     <div>
       <nuxt-link
         to="/qualifications/create"
