@@ -20,10 +20,10 @@
     </div>
     <!-- LOGOUT MODAL -->
 
-    <div class="w-full flex-1 flex overflow-hidden">
+    <div class="w-full flex-1 flex overflow-hidden min-w-0">
       <!-- SIDEBAR -->
       <div
-        class="flex flex-col pt-16 h-full bg-charade"
+        class="flex flex-col pt-16 h-full bg-charade min-w-0"
         style="transition: .8s;"
         :style="`width: ${sideBarOpen ? 'auto' : '0'}; min-width: ${sideBarOpen ? '180px' : '0'}`"
       >
@@ -93,18 +93,30 @@
           :class="`${activeTab === 'billing' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/billing"
         >Billing</nuxt-link>
+
+
+
+        <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
+          class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'users' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/practice-types"
+        >Practice Types</nuxt-link>
+
+
         <button
           class="text-xs px-6 py-4 border-l-4 text-white border-transparent flex whitespace-no-wrap"
           @click="showLogoutModal = true"
         >
           Sign out
-        <svgicon
-          name="power-settings-new"
-          width="21"
-          height="21"
-          color="transparent orange"
-        ></svgicon>
+          <svgicon
+            name="power-settings-new"
+            width="21"
+            height="21"
+            color="transparent orange"
+          ></svgicon>
         </button>
+
       </div>
       <!-- SIDEBAR -->
 
@@ -180,6 +192,10 @@ export default {
 
       if (this.$route.name && this.$route.name.includes("qualifications")) {
         return "qualifications";
+      }
+
+      if (this.$route.name && this.$route.name.includes('practice-types')) {
+        return 'practice-types'
       }
 
       if (this.$route.name && this.$route.name.includes("index")) {
