@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
+  <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
     <div>
       <nuxt-link
         to="/billing/addinvoice"
@@ -11,14 +11,14 @@
       <div class="flex flex-col">
         <!-- HEADER -->
         <div class="flex my-2">
-          <div style="width: 10%;">
+          <div class="width: 10%;">
             <div class="flex text-white text-xs p-4">
               <strong>Invoice Number</strong>
             </div>
           </div>
-          <div style="width: 30%;">
+          <div style="width: 20%;">
             <div class="flex text-white text-xs p-4">
-              <strong>Practice/Surgery</strong>
+              <strong>Practice /Surgery</strong>
             </div>
           </div>
           <div style="width: 10%;">
@@ -61,7 +61,7 @@
               <span>{{ billing.invnum }}</span>
             </div>
           </div>
-          <div style="width: 30%;">
+          <div style="width: 20%;">
             <div class="flex text-white text-xs p-4">
               <span>{{ billing.practice }}</span>
             </div>

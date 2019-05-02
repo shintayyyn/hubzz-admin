@@ -1,15 +1,15 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div
-      style="width: calc(100% - 140px);"
-      class="flex-1 flex flex-col self-end bg-trout shadow-lg"
+      style="width: calc(100% - 70px);"
+      class="flex-1 flex flex-col self-end bg-trout shadow-lg "
     >
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/practices/_id/" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
-      <div class="flex flex-col rounded-lg pl-6" style="width: 800px;">
+      <div class="flex flex-col rounded-lg pl-6">
         <div class="w-full overflow-hidden">
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
@@ -31,12 +31,12 @@
           </div>
         </div>
       </div>
-      <div class="p-4">
+      <div class="flex sm:p-2">
         <!-- <b-tabs pills v-model="userTabs">
         <b-tab v-if="tab1" title="General" :title-link-class="linkClass2(0)" active>-->
         <div
           v-if="tab1"
-          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-xs w-1/2"
+          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-xs sm:w-full lg:w-2/5"
         >
           <div class="w-full overflow-hidden text-grey-light text-xs p-2">
             <p class="flex">E-Mail Address</p>
@@ -91,6 +91,9 @@
               <option>Active</option>
               <option>Disabled</option>
             </select>
+            <button
+                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+              >Save Changes</button>
           </div>
         </div>
         <!-- </b-tab> -->

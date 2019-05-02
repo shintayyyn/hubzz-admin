@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
     <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -8,7 +8,7 @@
         </nuxt-link>
       </div>
       <!-- HEADER -->
-      <div class="flex flex-col rounded-lg pl-6" style="width: 800px;">
+      <div class="flex flex-col rounded-lg pl-6 " >
         <div class="w-full overflow-hidden">
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
@@ -55,12 +55,12 @@
         </div>
       </div>
 
-      <div class="flex flex-col rounded-lg p-6" style="width: 800px;">
+      <div class="flex flex-col rounded-lg p-6 sm:p-4">
         <!--TAB 1-->
         <div v-if="tab1">
-          <form class="flex flex-col bg-waterloo m-4 py-2 px-4 shadow rounded-lg">
+          <form class="flex flex-col bg-waterloo  py-2 px-4 shadow rounded-lg sm:w-full lg:w-1/2">
             <div class="flex flex-wrap overflow-hidden">
-              <div class="w-1/2 overflow-hidden text-grey-light text-xs p-2">
+              <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-xs p-2">
                 <p class="flex">Practice Name</p>
                 <p class="flex text-white text-xs p-2 font-semibold">BARROW HEALTH CENTRE</p>
                 <p class="flex">Practice Code</p>
@@ -78,7 +78,7 @@
                 <p class="flex">Mandatory Training</p>
                 <p class="flex text-grey-light text-xs p-2 font-semibold">(none)</p>
               </div>
-              <div class="w-1/2 overflow-hidden">
+              <div class="w-1/2 sm:w-full  lg:w-1/2 ">
                 <p class="flex text-grey-light text-xs p-2">Phone Number</p>
                 <input
                   class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -125,18 +125,16 @@
         </div>
         <!--TAB 2-->
         <div v-if="tab2" class="flex flex-wrap overflow-hidden">
-          <div class="w-full overflow-hidden">
+          <div class="flex w-full overflow-hidden">
             <div>
               <button
                 class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-right"
               >Add Surgery</button>
             </div>
           </div>
-
-          <div class="w-full overflow-hidden">
             <!--TABLE-->
-            <div style="width:900px;">
-              <div class="flex flex-col">
+            <div>
+              <div class="flex flex-col ">
                 <!--HEADERS-->
                 <div class="flex">
                   <div style="width:25%">
@@ -178,14 +176,13 @@
                   </div>
                 </div>
               </div>
-            </div>
             <!--TABLE ENDS HERE-->
           </div>
         </div>
         <!--TAB 3-->
         <div v-if="tab3">
-          <div class="flex flex-col rounded-lg" style="width: 800px;">
-            <div class="w-full overflow-hidden">
+          <div class="flex flex-col rounded-lg">
+            <div class="flex w-full overflow-hidden">
               <div class="flex flex-wrap -mx-1 overflow-hidden">
                 <div class="my-1 px-1 overflow-hidden">
                   <button
@@ -461,17 +458,17 @@
             :key="`surgery-${index}`"
             class="flex no-underline rounded-lg bg-waterloo my-2"
           >
-            <div style="wid</b-tab>th: 25%;">
+            <div style="width: 20%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{ document.title }}</span>
               </div>
             </div>
-            <div style="width: 25%;">
+            <div style="width: 20%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{document.fileSize }}</span>
               </div>
             </div>
-            <div style="width: 25%;">
+            <div style="width: 20%;">
               <div class="fl</b-tab>ex text-white text-xs p-4">
                 <span>{{ document.lastUploadDate }}</span>
               </div>
@@ -479,7 +476,12 @@
             <div style="width:25%;">
               <div class="flex text-white text-xs p-4">
                 <a>
-                  <i class="material-icons" style="padding:-5px font-size:18px; ">cloud_upload</i>
+                  <svgicon
+          name="cloud-upload"
+          width="21"
+          height="21"
+          color="transparent white"
+        ></svgicon>
                   Upload
                 </a>
               </div>
@@ -583,3 +585,14 @@ export default {
   methods: {}
 };
 </script>
+<style>
+@media(min-width: 450px){
+
+ .right-side-header-content{
+
+  width: calc(100% - 0px);
+
+ }
+
+}
+</style>

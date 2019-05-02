@@ -1,6 +1,7 @@
 <template>
   <div class="w-screen h-screen relative flex flex-col">
     <!-- LOGOUT MODAL -->
+    
     <div
       class="h-full w-full flex flex-col absolute"
       :style="`z-index: ${showLogoutModal ? 100 : -100}; opacity: ${showLogoutModal ? 1 : 0};`"
@@ -25,24 +26,25 @@
       <div
         class="flex flex-col pt-16 h-full bg-charade min-w-0"
         style="transition: .8s;"
-        :style="`width: ${sideBarOpen ? 'auto' : '0'}; min-width: ${sideBarOpen ? '180px' : '0'}`"
+        :style="`width: ${sideBarOpen ? 'auto' : 0}; min-width: ${sideBarOpen ? '180px' : '0'}`"
       >
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'dashboard' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/"
         >Dashboard</nuxt-link>
+
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'compliances' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/compliances"
         >Compliance</nuxt-link>
+
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'locums' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/locums"
         >Locums</nuxt-link>
-
 
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
@@ -72,29 +74,29 @@
           to="/professions"
         >Professions</nuxt-link>
 
-
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'qualifications' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/qualifications"
         >Qualifications</nuxt-link>
+
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'practices' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/practices"
         >Practices</nuxt-link>
+
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'reports' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/reports"
         >Reports</nuxt-link>
+
         <nuxt-link
           class="text-xs px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'billing' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/billing"
         >Billing</nuxt-link>
-
-
 
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
@@ -103,18 +105,17 @@
           to="/practice-types"
         >Practice Types</nuxt-link>
 
-
         <button
           class="text-xs px-6 py-4 border-l-4 text-white border-transparent flex whitespace-no-wrap"
           @click="showLogoutModal = true"
         >
-          Sign out
-          <svgicon
-            name="power-settings-new"
-            width="21"
-            height="21"
-            color="transparent orange"
-          ></svgicon>
+          <span class="pr-1 pt-1">Sign out</span> 
+        <svgicon
+          name="power-settings-new"
+          width="21"
+          height="21"
+          color="transparent orange"
+        ></svgicon>
         </button>
 
       </div>
