@@ -24,22 +24,32 @@
 		</div>
 
 		<!-- TABLE -->
-		<div class="w-full lg:w-4/5" v-if="!loading">
+		<div class="w-full xl:w-4/5" v-if="!loading">
 			<div class="flex flex-col">
 
 				<!-- HEADER -->
 				<div class="flex mt-2">
-					<div class="flex w-1/2">
+					<div class="flex w-full md:w-1/2">
 						<div class="flex text-white text-xs p-4">
 							<strong>Name</strong>
 						</div>
 					</div>
-					<div class="flex w-1/4">
+					<div class="hidden md:flex w-1/4">
+						<div class="flex text-white text-xs p-4">
+							<strong>Created By</strong>
+						</div>
+					</div>
+					<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<strong>Created At</strong>
 						</div>
 					</div>
-					<div class="flex w-1/4">
+					<div class="hidden lg:flex w-1/4">
+						<div class="flex text-white text-xs p-4">
+							<strong>Updated By</strong>
+						</div>
+					</div>
+					<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<strong>Updated At</strong>
 						</div>
@@ -49,17 +59,27 @@
 
 				<!-- BODY -->
 				<nuxt-link v-for="(practiceType, index) in practiceTypes" :key="`practiceType-${index}`" :to="{ path: `/practice-types/${practiceType.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
-					<div class="flex w-1/2">
+					<div class="flex w-full md:w-1/2">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ practiceType.name }}</span>
 						</div>
 					</div>
-					<div class="flex w-1/4">
+					<div class="hidden md:flex w-1/4">
+						<div class="flex text-white text-xs p-4">
+							<span>{{ practiceType.created_by_user && practiceType.created_by_user.personal_detail ? practiceType.created_by_user.personal_detail.name : null  }}</span>
+						</div>
+					</div>
+					<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ $moment(practiceType.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
 						</div>
 					</div>
-					<div class="flex w-1/4">
+					<div class="hidden lg:flex w-1/4">
+						<div class="flex text-white text-xs p-4">
+							<span>{{ practiceType.updated_by_user && practiceType.updated_by_user.personal_detail ? practiceType.updated_by_user.personal_detail.name : null  }}</span>
+						</div>
+					</div>
+					<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ practiceType.updated_at ? $moment(practiceType.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
 						</div>
