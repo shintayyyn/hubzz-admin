@@ -10,7 +10,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "svg": "vsvg -s ./static/svg -t ./assets/svg"
+    "svg": "vsvg -s ./static/svg -t ./assets/svg",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.5.3",
