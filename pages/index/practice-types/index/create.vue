@@ -11,6 +11,12 @@
 			</div>
 			<!-- HEADER -->
 
+			<!-- TITLE -->
+			<div class="px-6 text-white">
+				<h3>Create Practice Type</h3>
+			</div>
+			<!-- TITLE -->
+
 			<!-- FORM -->
 			<div class="w-full sm:w-5/6 md:w-4/5 lg:w-3/4 xl:w-2/3">
 				<div class="bg-waterloo m-4 py-2 px-4 rounded-lg">

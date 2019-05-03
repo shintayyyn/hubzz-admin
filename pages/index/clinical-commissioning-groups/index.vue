@@ -3,7 +3,7 @@
 
 		<!-- BUTTON -->
 		<div>
-			<nuxt-link :to="{ path: `/practice-types/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+			<nuxt-link :to="{ path: `/clinical-commissioning-groups/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
 		</div>
 		<!-- BUTTON -->
 
@@ -20,7 +20,7 @@
 		<!-- FILTER -->
 
 		<div class="pt-4">
-			<span class="text-white text-xs">Showing {{ itemsPerPage * activePage - itemsPerPage + (practiceTypes.length > 0 ? 1 : 0) }}-{{ itemsPerPage * activePage - itemsPerPage + practiceTypes.length }} of {{ itemCount }} Practice Types</span>
+			<span class="text-white text-xs">Showing {{ itemsPerPage * activePage - itemsPerPage + (clinicalCommissioningGroups.length > 0 ? 1 : 0) }}-{{ itemsPerPage * activePage - itemsPerPage + clinicalCommissioningGroups.length }} of {{ itemCount }} Practice Types</span>
 		</div>
 
 		<!-- TABLE -->
@@ -58,30 +58,30 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(practiceType, index) in practiceTypes" :key="`practiceType-${index}`" :to="{ path: `/practice-types/${practiceType.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
+				<nuxt-link v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
 					<div class="flex w-full md:w-1/2">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.name }}</span>
+							<span>{{ clinicalCommissioningGroup.name }}</span>
 						</div>
 					</div>
 					<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.created_by_user && practiceType.created_by_user.personal_detail ? practiceType.created_by_user.personal_detail.name : null  }}</span>
+							<span>{{ clinicalCommissioningGroup.created_by_user && clinicalCommissioningGroup.created_by_user.personal_detail ? clinicalCommissioningGroup.created_by_user.personal_detail.name : null  }}</span>
 						</div>
 					</div>
 					<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ $moment(practiceType.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+							<span>{{ $moment(clinicalCommissioningGroup.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
 						</div>
 					</div>
 					<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.updated_by_user && practiceType.updated_by_user.personal_detail ? practiceType.updated_by_user.personal_detail.name : null  }}</span>
+							<span>{{ clinicalCommissioningGroup.updated_by_user && clinicalCommissioningGroup.updated_by_user.personal_detail ? clinicalCommissioningGroup.updated_by_user.personal_detail.name : null  }}</span>
 						</div>
 					</div>
 					<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.updated_at ? $moment(practiceType.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
+							<span>{{ clinicalCommissioningGroup.updated_at ? $moment(clinicalCommissioningGroup.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
 						</div>
 					</div>
 				</nuxt-link>
@@ -114,8 +114,8 @@
   export default {
 
 	  watchQuery: [
-	    'practice_types_page',
-	    'practice_types_search'
+	    'clinical_commissionings_group_page',
+	    'clinical_commissioning_groups_search'
 	  ],
 
   	async asyncData({ app, route }) {
@@ -123,11 +123,11 @@
   		try {
 
   			let {
-  				practice_types_page = 1,
-  				practice_types_search = ''
+  				clinical_commissionings_group_page = 1,
+  				clinical_commissioning_groups_search = ''
   			} = route.query
 
-  			let page = parseInt(practice_types_page)
+  			let page = parseInt(clinical_commissionings_group_page)
 
   			const limit = 10
 
@@ -141,17 +141,17 @@
   				order_by
   			}
 
-  			if (practice_types_search) {
+  			if (clinical_commissioning_groups_search) {
 
-  				params.search = practice_types_search
+  				params.search = clinical_commissioning_groups_search
 
   			}
 
-  			const getPracticeTypesCountPromise = app.$axios.get(`/api/v1/practice-types/count`, {
+  			const getPracticeTypesCountPromise = app.$axios.get(`/api/v1/clinical-commissioning-groups/count`, {
   				params
   			})
 
-  			const getPracticeTypesPromise = app.$axios.get(`/api/v1/practice-types`, {
+  			const getPracticeTypesPromise = app.$axios.get(`/api/v1/clinical-commissioning-groups`, {
   				params
   			})
 
@@ -163,20 +163,20 @@
 
   			response = await getPracticeTypesPromise
 
-  			const practiceTypes = response.data.data.practice_types
+  			const clinicalCommissioningGroups = response.data.data.clinical_commissioning_groups
 
   			return {
   				loading: false,
   				itemsPerPage: limit,
   				itemCount,
   				activePage: page,
-  				practiceTypes,
-  				search: practice_types_search
+  				clinicalCommissioningGroups,
+  				search: clinical_commissioning_groups_search
   			}
 
   		} catch (err) {
 
-  			console.log('index practice-types index asyncData err', err)
+  			console.log('index clinical-commissioning-groups index asyncData err', err)
 
   		}
 
@@ -189,7 +189,7 @@
   			itemsPerPage: 10,
   			itemCount: 0,
   			activePage: 1,
-  			practiceTypes: [],
+  			clinicalCommissioningGroups: [],
   			search: ''
   		}
 
@@ -287,12 +287,12 @@
 
   			const query = {
   				...this.$router.query,
-  				practice_types_page: page
+  				clinical_commissionings_group_page: page
   			}
 
   			if (page === 1) {
 
-  				delete query.practice_types_page
+  				delete query.clinical_commissionings_group_page
 
   			}
 
@@ -314,11 +314,11 @@
 
   			delete query.page
 
-  			query.practice_types_search = this.search
+  			query.clinical_commissioning_groups_search = this.search
 
   			if (this.search === '') {
 
-  				delete query.practice_types_search
+  				delete query.clinical_commissioning_groups_search
 
   			}
 

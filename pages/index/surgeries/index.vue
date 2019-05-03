@@ -3,7 +3,7 @@
 
 		<!-- BUTTON -->
 		<div>
-			<nuxt-link :to="{ path: `/practice-types/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+			<nuxt-link :to="{ path: `/surgeries/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
 		</div>
 		<!-- BUTTON -->
 
@@ -16,11 +16,12 @@
 				</button>
 			</div>
 			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="refresh">Refresh</button>
 		</div>
 		<!-- FILTER -->
 
 		<div class="pt-4">
-			<span class="text-white text-xs">Showing {{ itemsPerPage * activePage - itemsPerPage + (practiceTypes.length > 0 ? 1 : 0) }}-{{ itemsPerPage * activePage - itemsPerPage + practiceTypes.length }} of {{ itemCount }} Practice Types</span>
+			<span class="text-white text-xs">Showing {{ itemsPerPage * activePage - itemsPerPage + (surgeries.length > 0 ? 1 : 0) }}-{{ itemsPerPage * activePage - itemsPerPage + surgeries.length }} of {{ itemCount }} Practice Types</span>
 		</div>
 
 		<!-- TABLE -->
@@ -29,59 +30,52 @@
 
 				<!-- HEADER -->
 				<div class="flex mt-2">
-					<div class="flex w-full md:w-1/2">
+					<div class="flex w-full md:w-1/3">
 						<div class="flex text-white text-xs p-4">
 							<strong>Name</strong>
 						</div>
 					</div>
-					<div class="hidden md:flex w-1/4">
+					<div class="flex w-1/6">
 						<div class="flex text-white text-xs p-4">
-							<strong>Created By</strong>
+							<strong>Code</strong>
 						</div>
 					</div>
 					<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<strong>Created At</strong>
+							<strong>Clinical Commissioning Group</strong>
 						</div>
 					</div>
 					<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<strong>Updated By</strong>
-						</div>
-					</div>
-					<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<strong>Updated At</strong>
+							<strong>Address</strong>
 						</div>
 					</div>
 				</div>
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(practiceType, index) in practiceTypes" :key="`practiceType-${index}`" :to="{ path: `/practice-types/${practiceType.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
-					<div class="flex w-full md:w-1/2">
+				<nuxt-link v-for="(surgery, index) in surgeries" :key="`surgery-${index}`" :to="{ path: `/surgeries/${surgery.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
+					<div class="flex w-full md:w-1/3">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.name }}</span>
+							<span>{{ surgery.name }}</span>
+						</div>
+					</div>
+					<div class="flex w-1/6">
+						<div class="flex text-white text-xs p-4">
+							<span>{{ surgery.code }}</span>
 						</div>
 					</div>
 					<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.created_by_user && practiceType.created_by_user.personal_detail ? practiceType.created_by_user.personal_detail.name : null  }}</span>
-						</div>
-					</div>
-					<div class="hidden md:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ $moment(practiceType.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+							<span>{{ surgery.clinical_commissioning_group ? surgery.clinical_commissioning_group.name : null }}</span>
 						</div>
 					</div>
 					<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.updated_by_user && practiceType.updated_by_user.personal_detail ? practiceType.updated_by_user.personal_detail.name : null  }}</span>
-						</div>
-					</div>
-					<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ practiceType.updated_at ? $moment(practiceType.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
+						<div class="flex flex-col text-white text-xs p-4">
+						<!-- 	<span>{{ surgery.address ? surgery.address.line_1 : null  }}</span>
+							<span>{{ surgery.address ? surgery.address.line_2 : null  }}</span> -->
+							<span>{{ surgery.address ? surgery.address.line_3 : null  }}</span>
+							<span>{{ surgery.address ? surgery.address.post_code : null  }}</span>
 						</div>
 					</div>
 				</nuxt-link>
@@ -114,8 +108,8 @@
   export default {
 
 	  watchQuery: [
-	    'practice_types_page',
-	    'practice_types_search'
+	    'surgeries_page',
+	    'surgeries_search'
 	  ],
 
   	async asyncData({ app, route }) {
@@ -123,11 +117,11 @@
   		try {
 
   			let {
-  				practice_types_page = 1,
-  				practice_types_search = ''
+  				surgeries_page = 1,
+  				surgeries_search = ''
   			} = route.query
 
-  			let page = parseInt(practice_types_page)
+  			let page = parseInt(surgeries_page)
 
   			const limit = 10
 
@@ -141,17 +135,17 @@
   				order_by
   			}
 
-  			if (practice_types_search) {
+  			if (surgeries_search) {
 
-  				params.search = practice_types_search
+  				params.search = surgeries_search
 
   			}
 
-  			const getPracticeTypesCountPromise = app.$axios.get(`/api/v1/practice-types/count`, {
+  			const getPracticeTypesCountPromise = app.$axios.get(`/api/v1/surgeries/count`, {
   				params
   			})
 
-  			const getPracticeTypesPromise = app.$axios.get(`/api/v1/practice-types`, {
+  			const getPracticeTypesPromise = app.$axios.get(`/api/v1/surgeries`, {
   				params
   			})
 
@@ -163,20 +157,20 @@
 
   			response = await getPracticeTypesPromise
 
-  			const practiceTypes = response.data.data.practice_types
+  			const surgeries = response.data.data.surgeries
 
   			return {
   				loading: false,
   				itemsPerPage: limit,
   				itemCount,
   				activePage: page,
-  				practiceTypes,
-  				search: practice_types_search
+  				surgeries,
+  				search: surgeries_search
   			}
 
   		} catch (err) {
 
-  			console.log('index practice-types index asyncData err', err)
+  			console.log('index surgeries index asyncData err', err)
 
   		}
 
@@ -189,7 +183,7 @@
   			itemsPerPage: 10,
   			itemCount: 0,
   			activePage: 1,
-  			practiceTypes: [],
+  			surgeries: [],
   			search: ''
   		}
 
@@ -271,7 +265,7 @@
 
   	methods: {
 
-  		goToPage(page) {
+  		goToPage (page) {
 
   			if (page < 1) {
 
@@ -287,12 +281,12 @@
 
   			const query = {
   				...this.$router.query,
-  				practice_types_page: page
+  				surgeries_page: page
   			}
 
   			if (page === 1) {
 
-  				delete query.practice_types_page
+  				delete query.surgeries_page
 
   			}
 
@@ -306,7 +300,7 @@
 
   		},
 
-  		searchSubmit() {
+  		searchSubmit () {
 
   			const query = {
   				...this.$router.query
@@ -314,11 +308,11 @@
 
   			delete query.page
 
-  			query.practice_types_search = this.search
+  			query.surgeries_search = this.search
 
   			if (this.search === '') {
 
-  				delete query.practice_types_search
+  				delete query.surgeries_search
 
   			}
 
@@ -330,7 +324,65 @@
 
 	      this.$router.push({ query })
 
+  		},
+
+  		refresh() {
+
+  			let {
+  				surgeries_page = 1,
+  				surgeries_search = ''
+  			} = this.$route.query
+
+  			let page = parseInt(surgeries_page)
+
+  			const limit = 10
+
+  			const offset = page * limit - limit
+
+  			const order_by = 'created_at:desc'
+
+  			const params = {
+  				limit,
+  				offset,
+  				order_by
+  			}
+
+  			if (surgeries_search) {
+
+  				params.search = surgeries_search
+
+  			}
+
+  			this.loading = true
+
+  			this.surgeries = []
+
+  			this.$axios.get(`/api/v1/surgeries/count`, {
+  				params
+  			}).then(response => {
+
+  				this.itemCount = response.data.data.count
+
+  				return this.$axios.get(`/api/v1/surgeries`, {
+	  				params
+	  			})
+
+  			}).then(response => {
+
+  				this.surgeries = response.data.data.surgeries
+
+  			}).catch(err => {
+
+  				console.log('err', err)
+
+  			}).finally(() => {
+
+  				this.loading = false
+
+  			})
+
   		}
+
   	}
   }
 </script>

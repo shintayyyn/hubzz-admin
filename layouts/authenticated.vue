@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen relative flex flex-col">
+  <div class="h-screen relative flex flex-col">
     <!-- LOGOUT MODAL -->
     
     <div
@@ -101,9 +101,23 @@
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-xs px-6 py-4 no-underline border-l-4"
-          :class="`${activeTab === 'users' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          :class="`${activeTab === 'practice-types' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/practice-types"
         >Practice Types</nuxt-link>
+
+        <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
+          class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'clinical-commissioning-groups' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/clinical-commissioning-groups"
+        >Clinical Commissioning Groups</nuxt-link>
+
+        <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
+          class="text-xs px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'surgeries' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/surgeries"
+        >Surgeries</nuxt-link>
 
         <button
           class="text-xs px-6 py-4 border-l-4 text-white border-transparent flex whitespace-no-wrap"
@@ -197,6 +211,14 @@ export default {
 
       if (this.$route.name && this.$route.name.includes('practice-types')) {
         return 'practice-types'
+      }
+
+      if (this.$route.name && this.$route.name.includes('clinical-commissioning-groups')) {
+        return 'clinical-commissioning-groups'
+      }
+
+      if (this.$route.name && this.$route.name.includes('surgeries')) {
+        return 'surgeries'
       }
 
       if (this.$route.name && this.$route.name.includes("index")) {

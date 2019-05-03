@@ -29,7 +29,6 @@
 					</div>
 
 					<div class="text-right">
-						<nuxt-link :to="{ path: `/practice-types/${practiceType.id}`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-red-light text-xs text-white rounded-lg shadow">Cancel</nuxt-link>
 						<button class="inline-flex py-2 px-4 my-2 bg-blue-light text-xs text-white rounded-lg shadow" v-if="!updating" @click="updatePracticeType">Update</button>
 						<button class="inline-flex py-2 px-4 my-2 bg-blue-light text-xs text-white rounded-lg shadow" v-if="updating">Updating...</button>
 					</div>
