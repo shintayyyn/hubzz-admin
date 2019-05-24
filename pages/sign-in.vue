@@ -22,7 +22,6 @@
         </div>
         <input
           class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
-          placeholder="super-admin@gmail.com"
           v-model="email"
           @keyup.enter="login"
           :class="showEmailFocus ? 'border-yellow-dark' : emailErrorMessage ? 'border-red' : 'border-white-dark'"
@@ -67,8 +66,8 @@
 
 				loginErrorMessage: '',
 
-				email: '',
-				password: '',
+				email: 'admin@gmail.com',
+				password: 'qweqwe',
 
 				showEmailFocus: false,
 				showPasswordFocus: false,
