@@ -3,7 +3,7 @@
     <div style="width: calc(100% - 140px);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/compliances/select-locum" class="text-white hover:text-yellow-dark p-1">
+        <nuxt-link :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }" class="text-white hover:text-yellow-dark p-1">
           <svgicon
             name="arrow-left-solid"
             height="22"
@@ -33,25 +33,25 @@
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="text-grey mx-5">
               <p class="m-2">Name</p>
-              <p class="m-2 text-white">Ms Marie Rochelle RN</p>
+              <p class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</p>
               <p class="m-2 mt-5 mr-20">Email address</p>
-              <p class="m-2 text-white underline">rorieee95@gmail.com</p>
+              <p class="m-2 text-white underline">{{ locumUser.email ? locumUser.email : null }}</p>
               <p class="m-2 mt-5 mr-20">Mobile phone number</p>
-              <p class="m-2 text-white">454284664</p>
+              <p class="m-2 text-white">{{ locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null }}</p>
               <p class="m-2 mt-5 mr-20">Home / landline number</p>
-              <p class="m-2 text-white">845484</p>
+              <p class="m-2 text-white">{{ locumUser.contact_detail ? locumUser.contact_detail.home_number : null }}</p>
               <p class="m-2 mt-5 mr-20">Postal Address</p>
-              <p class="ml-2 text-white">Abbeydale Road</p>
-              <p class="ml-2 mt-1 text-white">Wembley</p>
-              <p class="ml-2 mt-1 text-white">HA0 1TW</p>
+              <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_1 : null }}</p>
+              <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_2 : null }}</p>
+              <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_3 : null }}</p>
               <p class="m-2 mt-5 mr-20">GMC Number</p>
-              <p class="m-2 text-white">12648</p>
+              <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
               <p class="m-2 mt-5 mr-20">MPL / NPL Number</p>
-              <p class="m-2 text-white">173836</p>
+              <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
               <p class="m-2 mt-5 mr-20">NHS Smart Card ID Number</p>
-              <p class="m-2 text-white">(none)</p>
+              <p class="m-2 text-white">{{ locumUser.locum_detail.nhs_smart_card_id_number ? locumUser.locum_detail.nhs_smart_card_id_number : null }}</p>
               <p class="m-2 mt-5 mr-20">Profession</p>
-              <p class="m-2 text-white">GP</p>
+              <p class="m-2 text-white">{{ locumUser.locum_detail.profession.profession_category ? locumUser.locum_detail.profession.profession_category.name : null }}</p>
               <p class="m-2 mt-5 mr-20">Speciality</p>
               <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark">A&E</p>
               <p class="m-2 mt-5 mr-20">Clinical Systems</p>
@@ -180,6 +180,14 @@ export default {
 
   async asyncData({ app, route }) {
     try {
+      console.log(route.params.id)
+      let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
+      const locumUser = response.data.data.user
+
+      return{
+      locumUser,
+      }
+
     } catch (err) {
       console.log("index practices index create asyncData err", err);
     }
@@ -187,34 +195,10 @@ export default {
 
   data() {
     return {
+      locumUser:null,
       profileTab: true,
       jobTab: false,
-      jobs: [
-        {
-          number: "P0000000095",
-          practice: "THE IVY MEDICAL GROUP",
-          title: "Private appointment",
-          from: "12/03/2019",
-          to: "12/03/2019",
-          createdAt: "11/03/2019"
-        },
-        {
-          number: "H0000000246",
-          practice: "VILLAGE SURGERY",
-          title: "Weavy",
-          from: "12/03/2019",
-          to: "12/03/2019",
-          createdAt: "11/03/2019"
-        },
-        {
-          number: "P0000000094",
-          practice: "THE IVY MEDICAL GROUP",
-          title: "Private appointment",
-          from: "06/03/2019",
-          to: "06/03/2019",
-          createdAt: "06/03/2019"
-        }
-      ]
+      jobs:[]
     };
   }
 };

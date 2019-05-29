@@ -1,6 +1,5 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
-
 		<div class="flex py-2">
 			<div class="relative">
 				<input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
@@ -111,37 +110,27 @@
   				page = 1,
   				search = ''
   			} = route.query
-
   			page = parseInt(page)
-
   			const limit = 10
-
   			const offset = page * limit - limit
-
   			const domain = 'locum'
-
   			const order_by = 'created_at:desc'
-
-  			const params = { limit, offset, domain, order_by }
-
+				const params = { limit, offset, domain, order_by }
+				
   			if (search) {
   				params.search = search
-  			}
-
+				}
+				
   			const getUsersCountPromise = app.$axios.get(`/api/v1/users/count`, { params })
-
-  			const getUsersPromise = app.$axios.get(`/api/v1/users`, { params })
-
+				const getUsersPromise = app.$axios.get(`/api/v1/users`, { params })
+				
   			let response = null
-
-  			response = await getUsersCountPromise
-
+				response = await getUsersCountPromise
+				
   			const itemCount = response.data.data.count
-
-  			response = await getUsersPromise
-
+				response = await getUsersPromise
+				
   			const users = response.data.data.users
-
   			return {
   				loading: false,
   				itemsPerPage: limit,
