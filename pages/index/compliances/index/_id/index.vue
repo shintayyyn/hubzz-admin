@@ -71,14 +71,14 @@
         <p class="m-4">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green text-white px-4 ' : 'bg-transparent px-2'}`"
-					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green text-white px-4 ' : 'bg-transparent px-2'}`"
+					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.id,'Verified')"
         >Verified</button>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange text-white px-4 ' : 'bg-transparent px-2'}`"
-					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange text-white px-4 ' : 'bg-transparent px-2'}`"
+					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.id,'Rejected')"
         >Rejected</button>
       </div>
@@ -125,7 +125,7 @@
           <!-- BODY -->
           <nuxt-link
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryDocument-${index}`"
-            :to="`/compliances`"
+            :to="{path:`/compliances/${locumUser.id}/view-file`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -205,7 +205,7 @@
           <!-- BODY -->
          <nuxt-link
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`mandatoryDocument-${index}`"
-            :to="`/compliances`"
+            :to="{path:`/compliances/${locumUser.id}/view-file`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -313,7 +313,7 @@ export default {
         alert('Something went wrong!!')
       }
     },
-    async toPutMplNpl({locumID, verifyReject}){
+    async toPutMplNpl(locumID, verifyReject){
       try{
       const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
         status:verifyReject

@@ -128,39 +128,39 @@
 
             <!-- BODY -->
             <nuxt-link
-              v-for="(job, index) in jobs"
+              v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
               :key="`compliance-${index}`"
               :to="`/compliances/select-locum`"
               class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
               <div style="width: 20%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.number }}</span>
+                  <span>{{ locumUserCurrentJob.number }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.practice }}</span>
+                  <span>{{ locumUserCurrentJob.practice }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.title }}</span>
+                  <span>{{ locumUserCurrentJob.title }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.from }}</span>
+                  <span>{{ locumUserCurrentJob.from }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.to }}</span>
+                  <span>{{ locumUserCurrentJob.to }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.createdAt }}</span>
+                  <span>{{ locumUserCurrentJob.createdAt }}</span>
                 </div>
               </div>
             </nuxt-link>
@@ -186,8 +186,12 @@ export default {
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
 
+      response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}/current-jobs`)
+      const locumUserCurrentJobs = response.data.data.jobs
+
       return{
       locumUser,
+      locumUserCurrentJobs
       }
 
     } catch (err) {
@@ -200,7 +204,7 @@ export default {
       locumUser:null,
       profileTab: true,
       jobTab: false,
-      jobs:[]
+      locumUserCurrentJobs:[]
     };
   }
 };
