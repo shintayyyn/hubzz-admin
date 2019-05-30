@@ -7,7 +7,7 @@
       <!-- HEADER -->
       <div class="flex text-sm text-white py-2 px-6">
         <nuxt-link
-          to="/compliances/select-locum"
+          :to="{path:`/compliances/${locumUser.id}`}"
           class="text-white hover:text-yellow-dark p-1 mr-4"
         >
           <svgicon
@@ -66,15 +66,26 @@
 export default {
   transition: "subpage",
 
+  data() {
+    return {
+      locumUser:null,
+    };
+  },
+
   async asyncData({ app, route }) {
     try {
+      console.log(route.params.id)
+      let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
+      const locumUser = response.data.data.user
+
+      return{
+      locumUser,
+      }
     } catch (err) {
       console.log("index practices index create asyncData err", err);
     }
   },
 
-  data() {
-    return {};
-  }
+
 };
 </script>

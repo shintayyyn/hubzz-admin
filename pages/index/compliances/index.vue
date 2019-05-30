@@ -13,6 +13,7 @@
       <div class="relative">
         <label class="text-xs text-white">Filter by Status</label>
         <select
+          v-model="filterCompliances"
           class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
           id="grid-state"
         >
@@ -78,13 +79,13 @@
             <span>{{  }}</span>
           </div>
         </div>
-        <!-- <div style="width: 25%;">
+        <div style="width: 25%;">
           <div class="flex lg:pl-6">
             <div class="inline-flex text-white text-xs mt-2 py-2 p-5 border border-white rounded-full">
-                <span>{{ compliance.status }}</span>
+                <span>{{ locumUser.locum_detail.compliance_documents ? locumUser.locum_detail.compliance_documents.status : 'Empty' }}</span>
             </div>
           </div>
-        </div> -->
+        </div>
       </nuxt-link>
       <!-- BODY -->
     </div>
@@ -105,7 +106,17 @@
 
 <script>
 export default {
-  
+  data() {
+    return {
+      loading: false,
+  		itemsPerPage: 10,
+  		itemCount: 0,
+  		activePage: 1,
+      locumUsers: [],
+      filterCompliances:'',
+      search:''
+    };
+  },
   watchQuery: [
 	    'page',
 	    'search'
@@ -130,13 +141,14 @@ export default {
       const getUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
 			const getUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
 				
-  		let response = null
+      let response = null
+      
 			response = await getUsersCountPromise
-				
-  		const itemCount = response.data.data.count
+      const itemCount = response.data.data.count
+      
 			response = await getUsersPromise
-				
-  		const locumUsers = response.data.data.users
+      const locumUsers = response.data.data.users
+      
   		return {
   			loading: false,
   			itemsPerPage: limit,
@@ -149,16 +161,7 @@ export default {
       console.log("index compliances index asyncData err", err);
     }
   },
-  data() {
-    return {
-      loading: false,
-  		itemsPerPage: 10,
-  		itemCount: 0,
-  		activePage: 1,
-      locumUsers: [],
-      seach:''
-    };
-  },
+  
   computed:{
     pageCount() {
   			return Math.ceil(this.itemCount / this.itemsPerPage)

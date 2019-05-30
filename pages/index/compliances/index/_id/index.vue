@@ -135,27 +135,37 @@
             </div>
             <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size : null }}</span>
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size : null }}</span>
               </div>
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</span>
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
+                  $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at)
+                  .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
               </div>
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at).format('DD/MM/YYYY')  : null }}</span>
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
+                  $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at)
+                  .format('DD/MM/YYYY')  : null }}</span>
               </div>
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at).diff($moment(), 'days')  : null }}</span>
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
+                  $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at)
+                  .diff($moment(), 'days')  : null }}</span>
               </div>
             </div>
             <div style="width: 10%;">
               <div class="inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
               </div>
             </div>
           </nuxt-link>
@@ -215,27 +225,42 @@
             </div>
             <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? optionalComplianceDocument.locumMandatoryComplianceDocument.file.size : null }}</span>
+                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? 
+                  optionalComplianceDocument.locumMandatoryComplianceDocument.file.size : null }}
+                </span>
               </div>
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</span>
+                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? 
+                  $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.file.created_at)
+                  .format('DD/MM/YYYY HH:mm:ss') : null }}
+                </span>
               </div>
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument && optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at ? $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at).format('DD/MM/YYYY')  : null }}</span>
+                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument && 
+                  optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
+                  $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at)
+                  .format('DD/MM/YYYY')  : null }}
+                </span>
               </div>
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument && optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at ? $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at).diff($moment(), 'days')  : null }}</span>
+                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument &&
+                   optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
+                   $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at)
+                   .diff($moment(), 'days')  : null }}
+                </span>
               </div>
             </div>
             <div style="width: 10%;">
               <div class="inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? optionalComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
+                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? 
+                  optionalComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}
+                </span>
               </div>
             </div>
           </nuxt-link>
@@ -243,7 +268,6 @@
         </div>
       </div>
       <!-- TABLE -->
-
       <nuxt-child/>
     </div>
   </div>
@@ -256,7 +280,7 @@ export default {
     return {
       locumUser: null,
       mandatoryComplianceDocuments:[],
-      optionalComplianceDocuments: [],
+      optionalComplianceDocuments:[],
     };
   },
 

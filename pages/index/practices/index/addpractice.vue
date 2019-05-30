@@ -24,16 +24,18 @@
               class="bg-transparent border-none w-full text-white mr-3 py-1 leading-tight focus:outline-none"
               type="text"
               placeholder="Search for practice by name, etc."
+              v-model="search" @keyup.enter="searchSubmit"
               aria-label="Full name"
             >
           </div>
         </div>
         <div class="w-full overflow-hidden">
           <div class="self-end">
-            <button
-              class="inline-flex py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
-            >Search</button>
+            <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-dark" @click="searchSubmit">Search</button>
           </div>
+        </div>
+        <div>
+          
         </div>
       </div>
     </div>
@@ -43,18 +45,69 @@
 <script>
 export default {
   transition: "subpage",
+    data() {
+      return {
+        loading: false,
+        practices: [],
+        search: ''
+      };
+    },
+
+    watchQuery: [
+	    'search'
+	  ],
 
   async asyncData({ app, route }) {
     try {
+      let {
+        search=''
+      } = route.query
+
+      if (search){
+        params.search = search
+      }
+
+      const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
+      
+      let response = await getPracticesPromise
+      const practices = response.data.data.practices
+      
+      return{
+        loading:false,
+        practices,
+        search
+      }
     } catch (err) {
       console.log("index qualifications index create asyncData err", err);
     }
   },
 
-  data() {
-    return {
-      name: ""
-    };
-  }
+  
+    computed: {
+  	},
+  
+  	methods: {
+  		async searchSubmit() {
+  			const query = {
+  				...this.$router.query
+  			}
+
+  			delete query.page
+
+  			query.search = this.search
+
+  			if (this.search === '') {
+  				delete query.search
+  			}
+
+	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+	        this.loading = true
+	      }
+
+        this.$router.push({ query })
+        
+
+  		}
+  	}
 };
 </script>

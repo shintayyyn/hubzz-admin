@@ -186,11 +186,21 @@
 export default {
   transition: "subpage",
 
+  data() {
+    return {
+      locumUser:null,
+      profileTab: true,
+      jobTab: false,
+      jobs:[]
+    };
+  },
+
   async asyncData({ app, route }) {
     try {
       console.log(route.params.id)
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
+      
 
       return{
       locumUser,
@@ -201,13 +211,6 @@ export default {
     }
   },
 
-  data() {
-    return {
-      locumUser:null,
-      profileTab: true,
-      jobTab: false,
-      jobs:[]
-    };
-  }
+
 };
 </script>

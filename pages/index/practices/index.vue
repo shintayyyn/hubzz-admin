@@ -127,13 +127,14 @@ export default {
   			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
 				const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
 				
-  			let response = null
+				let response = null
+				
 				response = await getPracticesCountPromise
+				const itemCount = response.data.data.count
 				
-  			const itemCount = response.data.data.count
 				response = await getPracticesPromise
+				const practices = response.data.data.practices
 				
-  			const practices = response.data.data.practices
   			return {
   				loading: false,
   				itemsPerPage: limit,
