@@ -2,7 +2,7 @@
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div style="width: calc(100% - 140px);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
-      <div class="flex justify-between text-sm text-white py-2 px-6">
+      <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
         <nuxt-link :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }" class="text-white hover:text-yellow-dark p-1">
           <svgicon
             name="arrow-left-solid"
@@ -170,8 +170,10 @@
         <!-- TABLE -->
       </div>
       <!-- BODY -->
+       <nuxt-child/>
     </div>
   </div>
+ 
 </template>
 
 <script>

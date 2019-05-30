@@ -68,12 +68,6 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    // 'nuxt-material-design-icons',
-    // ['nuxt-google-maps-module', {
-    //   /* module options */
-    //   key: 'GOOGLE MAPS KEY',
-    // }],
-    // 'bootstrap-vue/nuxt'
   ],
   /*
   ** Axios module configuration
@@ -108,7 +102,8 @@ export default {
     transpile: [/^vue2-google-maps($|\/)/],
     extend(config, ctx) {
 
-    }
+    },
+    
   },
 
 }

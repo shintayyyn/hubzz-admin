@@ -1,6 +1,6 @@
 /* eslint-disable */
 require('./arrow-left-solid')
-require('./arrow-right')
+require('./chevron-right')
 require('./cloud-download')
 require('./cloud-upload')
 require('./email')

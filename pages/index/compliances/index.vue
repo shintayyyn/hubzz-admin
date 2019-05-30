@@ -50,7 +50,7 @@
         </div>
         <div style="width: %;">
           <div class="flex text-white text-xs p-4">
-            <strong>Status hello</strong>
+            <strong>Status</strong>
           </div>
         </div>
       </div>

@@ -45,7 +45,9 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="{ path: `/locums/${user.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
+				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="{ path: `/locums/${user.id}`, query: $route.query }" 
+					class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
+					
 					<div class="flex" style="width: 20%;">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ user.personal_detail ? user.personal_detail.name : null }}</span>
