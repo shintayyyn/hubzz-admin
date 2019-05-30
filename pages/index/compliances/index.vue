@@ -73,11 +73,11 @@
             <span>{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
           </div>
         </div>
-        <!-- <div style="width: 25%;">
+        <div style="width: 25%;">
           <div class="flex text-white text-xs p-4">
-            <span>{{ compliance.lastFileUpload }}</span>
+            <span>{{  }}</span>
           </div>
-        </div>-->
+        </div>
         <!-- <div style="width: 25%;">
           <div class="flex lg:pl-6">
             <div class="inline-flex text-white text-xs mt-2 py-2 p-5 border border-white rounded-full">

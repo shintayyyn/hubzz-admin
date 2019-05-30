@@ -72,9 +72,8 @@
 						<div class=" flex py-2 px-4 items-center">
 							<span
 								class=" inline-flex no-underline py-2 my-2 text-xs text-black rounded-full shadow "
-								:class="`${user.status === 'Active' ? 'bg-green text-white px-4 ' : 'bg-yellow text-black px-2'}`"
-								v-if="user.status"
-							>{{ user.status }}</span>
+								:class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
+							>{{ user.actived_at ? 'Active':'Disabled' }}</span>
 						</div>
 					</div>
 					
