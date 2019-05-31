@@ -10,7 +10,11 @@ export const mutations = {
 
 export const actions = {
   async login ({ getters, commit, dispatch }, { email, password }) {
-    const response = await this.$axios.post('/api/v1/admin/login', { email, password })
+    const response = await this.$axios.post('/api/v1/admin/login', {
+      email,
+      password,
+      socket_id: this.$socket.id,
+    })
 
     const token = response.data.data.token.token
 
@@ -20,8 +24,6 @@ export const actions = {
 
     await this.$auth.fetchUser()
 
-    // await dispatch('socket/login', { token })
-
     this.$router.push('/')
   },
 
@@ -29,8 +31,6 @@ export const actions = {
     await this.$axios.post('/api/v1/logout')
 
     await this.$auth.logout()
-
-    // await dispatch('socket/logout')
 
     this.$router.push('/sign-in')
   }
