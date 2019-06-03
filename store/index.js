@@ -10,36 +10,12 @@ export const mutations = {
 
 export const actions = {
   async login ({ getters, commit, dispatch }, { email, password }) {
-
-    console.log('before oneSignalId')
-    const oneSignalId = await new Promise((resolve, reject) => {
-      this.$OneSignal.push(() => {
-        try {
-          console.log('before resolve')
-          this.$OneSignal.getUserId().then((oneSignalId) => {
-            resolve(oneSignalId)
-          })
-          console.log('after resolve')
-        } catch (err) {
-          console.log('before reject')
-          reject(err)
-          console.log('after reject')
-        }
-        console.log('end callback')
-      })
-      console.log('after push')
-    })
-    console.log('after oneSignalId')
-
-    console.log('One Signal ID:', oneSignalId)
-
     const socketId = this.$socket.id
 
     const response = await this.$axios.post('/api/v1/admin/login', {
       email,
       password,
-      socket_id: socketId,
-      one_signal_id: oneSignalId,
+      socket_id: socketId
     })
 
     const token = response.data.data.token.token
@@ -56,9 +32,7 @@ export const actions = {
       console.log('Socket Logged In')
     }
 
-    if (oneSignalId) {
-      console.log('One Signal Logged In')
-    }
+    dispatch('one-signal/setOneSignalUser')
   },
 
   async logout ({ getters, commit, dispatch }) {
@@ -70,6 +44,6 @@ export const actions = {
 
     console.log('Socket Logged Out')
 
-    console.log('One Signal Logged Out')
+    dispatch('one-signal/setOneSignalUser')
   }
 }
