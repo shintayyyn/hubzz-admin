@@ -10,10 +10,9 @@ export const mutations = {
 
 export const actions = {
 	async init ({ getters, commit, dispatch }) {
-		console.log('socket init')
+		console.log('Socket Initialize')
 
     this.$socket.on('connect', () => {
-      console.log('socket connected')
       if (this.$auth.loggedIn) {
         let token = this.$auth.$storage.getUniversal('_token.local')
 
@@ -23,7 +22,7 @@ export const actions = {
           this.$axios.post('/api/v1/socket/login', {
             socket_id: this.$socket.id,
           }).then(() => {
-            console.log('socket loggedIn')
+            console.log('Socket Logged In')
           })
         }
       }

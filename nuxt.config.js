@@ -47,6 +47,10 @@ export default {
       ssr: false
     },
     {
+      src: '@/plugins/one-signal',
+      ssr: false
+    },
+    {
       src: '@/plugins/vue-svgicon.js',
       ssr: true
     },
@@ -74,6 +78,8 @@ export default {
     //   key: 'GOOGLE MAPS KEY',
     // }],
     // 'bootstrap-vue/nuxt'
+    '@nuxtjs/onesignal',
+    '@nuxtjs/pwa',
   ],
   /*
   ** Axios module configuration
@@ -94,6 +100,16 @@ export default {
             propertyName: 'data.user'
           }
         }
+      }
+    }
+  },
+
+  oneSignal: {
+    init: {
+      appId: process.env.ONE_SIGNAL_APP_ID,
+      allowLocalhostAsSecureOrigin: true,
+      welcomeNotification: {
+          disable: true
       }
     }
   },

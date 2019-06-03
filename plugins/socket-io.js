@@ -10,11 +10,13 @@ export default (ctx, inject) => {
   })
 
   socket.on('connect', () => {
-    console.log('socket connected, socket id:', socket.id)
+    console.log('Socket Connected')
+    console.log('Socket ID:', socket.id)
   })
 
   socket.on('disconnect', reason => {
-    console.log('socket disconnected, reason:', reason)
+    console.log('Socket Disconnected')
+    console.log('Reason:', reason)
 
     if (reason === 'io server disconnect') {
       socket.connect()
