@@ -10,15 +10,28 @@ export const mutations = {
 
 export const actions = {
   async login ({ getters, commit, dispatch }, { email, password }) {
+    
+    console.log('before oneSignalId')
     const oneSignalId = await new Promise((resolve, reject) => {
-      this.$OneSignal.push(async () => {
+      this.$OneSignal.push(() => {
         try {
-          resolve(await this.$OneSignal.getUserId())
+          console.log('before resolve')
+          this.$OneSignal.getUserId().then((oneSignalId) => {
+            resolve(oneSignalId)
+          })
+          console.log('after resolve')
         } catch (err) {
+          console.log('before reject')
           reject(err)
+          console.log('after reject')
         }
+        console.log('end callback')
       })
+      console.log('after push')
     })
+    console.log('after oneSignalId')
+
+    console.log('One Signal ID:', oneSignalId)
 
     const response = await this.$axios.post('/api/v1/admin/login', {
       email,

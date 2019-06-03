@@ -15,11 +15,11 @@ export const actions = {
     console.log('before isPushNotificationsSupported')
     const isPushNotificationsSupported = await new Promise((resolve, reject) => {
       console.log('before push')
-      this.$OneSignal.push(async () => {
+      this.$OneSignal.push(() => {
         console.log('start callback')
         try {
           console.log('before resolve')
-          resolve(await this.$OneSignal.isPushNotificationsSupported())
+          resolve(this.$OneSignal.isPushNotificationsSupported())
           console.log('after resolve')
         } catch (err) {
           console.log('before reject')
@@ -37,34 +37,62 @@ export const actions = {
       return
     }
 
+    console.log('before isPushNotificationsEnabled')
     let isPushNotificationsEnabled = await new Promise((resolve, reject) => {
-      this.$OneSignal.push(async () => {
+      console.log('before push')
+
+      this.$OneSignal.push(() => {
+        console.log('start callback')
         try {
-          if (!await this.$OneSignal.isPushNotificationsEnabled()) {
-            if (!await this.$OneSignal.isOptedOut()) {
-              await this.$OneSignal.registerForPushNotifications()
-            } else {
-              await this.$OneSignal.setSubscription(true)
+          this.$OneSignal.isPushNotificationsEnabled().then((isPushNotificationsEnabled) => {
+            if (!isPushNotificationsEnabled) {
+              return this.$OneSignal.isOptedOut()
             }
-          }
-          resolve(await this.$OneSignal.isPushNotificationsEnabled())
+            return false
+          }).then((isOptedOut) => {
+            if (!isOptedOut) {
+              return this.$OneSignal.registerForPushNotifications()
+            }
+            return this.$OneSignal.setSubscription(true)
+          }).then(() => {
+            return this.$OneSignal.isPushNotificationsEnabled()
+          }).then((isPushNotificationsEnabled) => {
+            console.log('before resolve')
+            resolve(isPushNotificationsEnabled)
+            console.log('after resolve')
+          })
         } catch (err) {
+          console.log('before reject')
           reject(err)
+          console.log('after reject')
         }
+        console.log('end callback')
       })
+      console.log('after push')
     })
+    console.log('after isPushNotificationsEnabled')
 
     console.log('isPushNotificationsEnabled', isPushNotificationsEnabled)
 
+    console.log('before oneSignalId')
     const oneSignalId = await new Promise((resolve, reject) => {
-      this.$OneSignal.push(async () => {
+      this.$OneSignal.push(() => {
         try {
-          resolve(await this.$OneSignal.getUserId())
+          console.log('before resolve')
+          this.$OneSignal.getUserId().then((oneSignalId) => {
+            resolve(oneSignalId)
+          })
+          console.log('after resolve')
         } catch (err) {
+          console.log('before reject')
           reject(err)
+          console.log('after reject')
         }
+        console.log('end callback')
       })
+      console.log('after push')
     })
+    console.log('after oneSignalId')
 
     console.log('One Signal ID:', oneSignalId)
 
