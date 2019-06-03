@@ -10,7 +10,7 @@ export const mutations = {
 
 export const actions = {
   async login ({ getters, commit, dispatch }, { email, password }) {
-    
+
     console.log('before oneSignalId')
     const oneSignalId = await new Promise((resolve, reject) => {
       this.$OneSignal.push(() => {
@@ -33,10 +33,12 @@ export const actions = {
 
     console.log('One Signal ID:', oneSignalId)
 
+    const socketId = this.$socket.id
+
     const response = await this.$axios.post('/api/v1/admin/login', {
       email,
       password,
-      socket_id: this.$socket.id,
+      socket_id: socketId,
       one_signal_id: oneSignalId,
     })
 
@@ -50,9 +52,13 @@ export const actions = {
 
     this.$router.push('/')
 
-    console.log('Socket Logged In')
+    if (socketId) {
+      console.log('Socket Logged In')
+    }
 
-    console.log('One Signal Logged In')
+    if (oneSignalId) {
+      console.log('One Signal Logged In')
+    }
   },
 
   async logout ({ getters, commit, dispatch }) {
