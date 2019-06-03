@@ -12,15 +12,25 @@ export const actions = {
   async init ({ getters, commit, dispatch }) {
     console.log('One Signal Initialize')
 
+    console.log('before isPushNotificationsSupported')
     const isPushNotificationsSupported = await new Promise((resolve, reject) => {
+      console.log('before push')
       this.$OneSignal.push(async () => {
+        console.log('start callback')
         try {
+          console.log('before resolve')
           resolve(await this.$OneSignal.isPushNotificationsSupported())
+          console.log('after resolve')
         } catch (err) {
+          console.log('before reject')
           reject(err)
+          console.log('after reject')
         }
+        console.log('end callback')
       })
+      console.log('after push')
     })
+    console.log('after isPushNotificationsSupported')
 
     if (!isPushNotificationsSupported) {
       console.log('Push Notifications Not Supported')
