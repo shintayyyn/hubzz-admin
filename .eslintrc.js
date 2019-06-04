@@ -22,7 +22,7 @@ module.exports = {
     rules: {
       'vue/max-attributes-per-line': 'off',
       'max-len': 'off',
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+      // 'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
       "vue/no-use-v-if-with-v-for": "off"
     // "nuxt/rule-name": 2
     }

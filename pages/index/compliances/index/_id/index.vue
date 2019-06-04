@@ -125,7 +125,7 @@
           <!-- BODY -->
           <nuxt-link
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryDocument-${index}`"
-            :to="{path:`/compliances/${locumUser.id}/view-file`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -215,7 +215,7 @@
           <!-- BODY -->
          <nuxt-link
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`mandatoryDocument-${index}`"
-            :to="{path:`/compliances/${locumUser.id}/view-file`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -302,7 +302,6 @@ export default {
           locumMandatoryComplianceDocument
         }
       })
-
 
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {

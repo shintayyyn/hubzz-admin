@@ -7,7 +7,7 @@
       <!-- HEADER -->
       <div class="flex text-sm text-white py-2 px-6">
         <nuxt-link
-          :to="{path:`/compliances/${locumUser.id}`}"
+          :to="{path:`/compliances/${locumUser.id}`, query: $route.query}"
           class="text-white hover:text-yellow-dark p-1 mr-4"
         >
           <svgicon
@@ -31,12 +31,12 @@
       <div class="flex-col shadow-lg rounded-lg bg-waterloo mx-6 mt-10">
         <div class="inline-flex text-xs m-4">
           <div class="text-grey m-2">
-            <p class="mr-20">Name</p>
-            <p class="text-white">Ms Marie Rochelle RN</p>
-            <p class="mt-5 mr-20">Email address</p>
-            <p class="text-white underline">rorieee95@gmail.com</p>
+            <p class="mr-20">Title</p>
+            <p class="text-white">{{}}</p>
+            <p class="mt-5 mr-20">Locum</p>
+            <p class="text-white underline">{{locumUser.personal_detail ? locumUser.personal_detail.name : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
-            <p class="text-white">454284664</p>
+            <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20">
               <label for="expiryDate">Expiry date</label>
               <input
@@ -77,10 +77,18 @@ export default {
       console.log(route.params.id)
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
+      // const locumComplianceDocument = locumUser.locumDetail.compliance_documents.id
+      // reponse = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/`)
+      // const uploadedComplianceDocuments = response.data.data.locum_detail_compliance_document
+
+
 
       return{
+
       locumUser,
+
       }
+
     } catch (err) {
       console.log("index practices index create asyncData err", err);
     }

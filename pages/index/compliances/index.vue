@@ -17,10 +17,10 @@
           class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
           id="grid-state"
         >
-          <option>All</option>
+          <option :value="null">All</option>
           <option>Empty</option>
           <option>Incomplete</option>
-          <option selected>Pending</option>
+          <option>Pending</option>
           <option>Expiring</option>
           <option>Expired</option>
           <option>Rejected</option>
@@ -82,7 +82,7 @@
         <div style="width: 25%;">
           <div class="flex lg:pl-6">
             <div class="inline-flex text-white text-xs mt-2 py-2 p-5 border border-white rounded-full">
-                <span>{{ locumUser.locum_detail.compliance_documents ? locumUser.locum_detail.compliance_documents.status : 'Empty' }}</span>
+                <span>{{ locumUser.locum_detail.compliance_documents ? locumUser.locum_detail.compliance_documents.status : 'Empty'}}</span>
             </div>
           </div>
         </div>
@@ -126,7 +126,8 @@ export default {
     try {
       let {
         page = 1,
-        search=''
+        search='',
+        compliance_status='Pending'
       } = route.query
       page = parseInt(page)
       const limit = 10
@@ -137,6 +138,8 @@ export default {
       if (search) {
         params.search = search
       }
+
+      params.compliance_status = compliance_status
 
       const getUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
 			const getUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
@@ -150,6 +153,7 @@ export default {
       const locumUsers = response.data.data.users
       
   		return {
+        filterCompliances: compliance_status,
   			loading: false,
   			itemsPerPage: limit,
   			itemCount,
@@ -212,6 +216,37 @@ export default {
   
 
   },
+
+  watch: {
+    async filterCompliances() {
+      console.log('filterCompliances', this.filterCompliances)
+      
+      const params = {}
+
+      if (this.search) {
+        params.search = this.search
+      }
+
+      if (this.filterCompliances) {
+        params.compliance_status = this.filterCompliances
+      }
+
+      const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+			const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
+				
+      let response = null
+      
+			response = await getUsersCountPromise
+      const itemCount = response.data.data.count
+      
+			response = await getUsersPromise
+      const locumUsers = response.data.data.users
+
+      this.itemCount = itemCount
+      this.locumUsers = locumUsers
+    }
+  },
+
   methods: {
     
   		goToPage(page) {

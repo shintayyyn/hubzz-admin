@@ -45,33 +45,35 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(user, index) in users" :key="`user-${index}`" :to="{ path: `/locums/${user.id}`, query: $route.query }" 
-					class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
+				<nuxt-link v-for="(user, index) in users" 
+				:key="`user-${index}`" 
+				:to="{ path: `/locums/${user.id}`, query: $route.query }" 
+				 class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2" draggable="false">
 					
-					<div class="flex" style="width: 20%;">
+					<div style="width: 20%;">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ user.personal_detail ? user.personal_detail.name : null }}</span>
 						</div>
 					</div>
-					<div class="flex" style="width: 25%;">
+					<div style="width: 25%;">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ user.locum_detail && user.locum_detail.profession ? user.locum_detail.profession.name : null }}</span>
 						</div>
 					</div>
-					<div class="flex" style="width: 15%;">
+					<div style="width: 15%;">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ $moment(user.created_at).format('MMM D, YYYY') }}</span>
 						</div>
 					</div>
-					<div class="flex" style="width: 15%;">
+					<div style="width: 15%;">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY') : null }}</span>
 						</div>
 					</div>
-					<div class="flex" style="width:10%;">
+					<div style="width:10%;">
 						<div class=" flex py-2 px-4 items-center">
 							<span
-								class=" inline-flex no-underline py-2 my-2 text-xs text-black rounded-full shadow "
+								class=" inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
 								:class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
 							>{{ user.actived_at ? 'Active':'Disabled' }}</span>
 						</div>

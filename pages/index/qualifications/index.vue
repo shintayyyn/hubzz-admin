@@ -50,7 +50,7 @@
           v-for="(qualification, index) in qualifications"
           :key="`qualification-${index}`"
           :to="`/qualifications/${qualification._id}`"
-          class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2"
+          class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
         >
           <div style="width: 30%;">
             <div class="flex text-white text-xs p-4">
