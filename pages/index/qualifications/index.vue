@@ -134,62 +134,62 @@ export default {
     }
   },
 
-  data() {
-    return {
-      loading: false,
-  		itemsPerPage: 10,
-  		itemCount: 0,
-  		activePage: 1,
-      qualifications: [],
-      search:''
-    };
-  },
+    data() {
+      return {
+        loading: false,
+        itemsPerPage: 10,
+        itemCount: 0,
+        activePage: 1,
+        qualifications: [],
+        search:''
+      };
+    },
     computed:{
-    pageCount() {
-          return Math.ceil(this.itemCount / this.itemsPerPage)
-        },
+      pageCount() {
+            return Math.ceil(this.itemCount / this.itemsPerPage)
+          },
 
-        showPage() {
-          return page => {
-            if (page === 1) {
-              return true
-            }
-
-            if (page === this.pageCount) {
-              return true
-            }
-
-            if (page === this.activePage) {
-              return true
-            }
-
-            if (page === this.activePage + 1) {
-              return true
-            }
-
-            if (page === this.activePage - 1) {
-              return true
-            }
-
-            if (this.activePage === 1 && page < 5) {
-              return true
-            }
-
-            if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-              return true
-            }
-
-            if (this.activePage === 2 && page === 4) {
-              return true
-            }
-
-            if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-              return true
-            }
-
-            return false
+      showPage() {
+        return page => {
+          if (page === 1) {
+            return true
           }
+
+          if (page === this.pageCount) {
+            return true
+          }
+
+          if (page === this.activePage) {
+            return true
+          }
+
+          if (page === this.activePage + 1) {
+            return true
+          }
+
+          if (page === this.activePage - 1) {
+            return true
+          }
+
+          if (this.activePage === 1 && page < 5) {
+            return true
+          }
+
+          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+            return true
+          }
+
+          if (this.activePage === 2 && page === 4) {
+            return true
+          }
+
+          if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+            return true
+          }
+
+          return false
         }
+      }
 
     },
     methods: {
