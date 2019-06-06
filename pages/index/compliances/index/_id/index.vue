@@ -39,7 +39,7 @@
 
             </div>
           </div>
-          <div class="w-1/5 overflow-hidden text-xs m-4 pl-32 pt-6 ">
+          <div class="w-1/5 overflow-hidden text-xs m-4 pl-24 pt-6 ">
              <svgicon
                 name="chevron-right"
                 width="48"
@@ -54,13 +54,13 @@
         <p class="m-4">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green text-white px-4 ' : 'bg-transparent px-2'}`"
+          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.id,'Verified')"
         >Verified</button>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange text-white px-4 ' : 'bg-transparent px-2'}`"
+          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.id,'Rejected')"
         >Rejected</button>
@@ -71,13 +71,13 @@
         <p class="m-4">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
-          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green text-white px-4 ' : 'bg-transparent px-2'}`"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.id,'Verified')"
         >Verified</button>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
-          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange text-white px-4 ' : 'bg-transparent px-2'}`"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.id,'Rejected')"
         >Rejected</button>
@@ -136,7 +136,7 @@
             <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
-                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size : null }}</span>
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size + ' Bytes' : null }}</span>
               </div>
             </div>
             <div style="width: 15%;">
@@ -156,7 +156,7 @@
                   .format('DD/MM/YYYY')  : null }}</span>
               </div>
             </div>
-            <div style="width: 20%;">
+            <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
@@ -165,7 +165,8 @@
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full">
+              <div class="inline-flex text-black text-xs mt-2 py-2 p-3 border border-white rounded-full"
+              :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
               </div>
@@ -216,8 +217,8 @@
 
           <!-- BODY -->
          <nuxt-link
-            v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`mandatoryDocument-${index}`"
-            :to="{path:`/compliances/${locumUser.id}/view-file/`, query: $route.query}"
+            v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalDocument-${index}`"
+            :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.optionalComplianceDocument.id}`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -227,41 +228,41 @@
             </div>
             <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? 
-                  optionalComplianceDocument.locumMandatoryComplianceDocument.file.size : null }}
+                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
+                  optionalComplianceDocument.locumOptionalComplianceDocument.file.size : null }}
                 </span>
               </div>
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? 
-                  $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.file.created_at)
+                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
+                  $moment(optionalComplianceDocument.locumOptionalComplianceDocument.file.created_at)
                   .format('DD/MM/YYYY HH:mm:ss') : null }}
                 </span>
               </div>
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument && 
-                  optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
-                  $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at)
+                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument && 
+                  optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
+                  $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
                   .format('DD/MM/YYYY')  : null }}
                 </span>
               </div>
             </div>
-            <div style="width: 20%;">
+            <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument &&
-                   optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
-                   $moment(optionalComplianceDocument.locumMandatoryComplianceDocument.expired_at)
+                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument &&
+                   optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
+                   $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
                    .diff($moment(), 'days')  : null }}
                 </span>
               </div>
             </div>
             <div style="width: 10%;">
               <div class="inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full">
-                <span>{{ optionalComplianceDocument.locumMandatoryComplianceDocument ? 
-                  optionalComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}
+                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
+                  optionalComplianceDocument.locumOptionalComplianceDocument.status : 'Empty' }}
                 </span>
               </div>
             </div>
@@ -283,6 +284,7 @@ export default {
       locumUser: null,
       mandatoryComplianceDocuments:[],
       optionalComplianceDocuments:[],
+      disabled:true
     };
   },
 
@@ -304,6 +306,8 @@ export default {
           locumMandatoryComplianceDocument
         }
       })
+
+      console.log(mandatoryComplianceDocuments)
 
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {

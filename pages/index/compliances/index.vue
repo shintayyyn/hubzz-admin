@@ -76,14 +76,20 @@
         </div>
         <div style="width: 25%;">
           <div class="flex text-white text-xs p-4">
-            <span>{{  }}</span>
+            <span>{{ locumUser.last_file_upload ? $moment(locumUser.last_file_upload).format('MMM D, YYYY'):null }}</span>
           </div>
         </div>
         <div style="width: 25%;">
-          <div class="flex lg:pl-6">
-            <div class="inline-flex text-white text-xs mt-2 py-2 p-5 border border-white rounded-full">
-                <span>{{ locumUser.locum_detail.compliance_documents ? locumUser.locum_detail.compliance_documents.status : 'Empty'}}</span>
-            </div>
+          <div v-if="locumUser.compliance_status=='Empty'" class="flex py-2 lg:pl-6">
+            <span
+              class="inline-flex text-white text-xs p-2 px-8 border border-white focus:bg-green rounded-full"
+            >{{locumUser.compliance_status }}</span>
+          </div>
+          <div v-else class="flex py-2 lg:pl-6">
+            <span
+              class="inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
+              :class="`${locumUser.compliance_status=='Compliant' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+            >{{locumUser.compliance_status }}</span>
           </div>
         </div>
       </nuxt-link>

@@ -73,9 +73,9 @@
 					<div style="width:10%;">
 						<div class=" flex py-2 px-4 items-center">
 							<span
-								class=" inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
-								:class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
-							>{{ user.actived_at ? 'Active':'Disabled' }}</span>
+								class="inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
+								:class="`${user.is_actived ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
+							>{{ user.is_actived ? 'Active':'Disabled' }}</span>
 						</div>
 					</div>
 					
@@ -126,13 +126,12 @@
   			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
 				const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
 				
-  			let response = null
-				response = await getLocumUsersCountPromise
+				let response = await getLocumUsersCountPromise
+				const itemCount = response.data.data.count
 				
-  			const itemCount = response.data.data.count
 				response = await getLocumUsersPromise
+				const users = response.data.data.users
 				
-  			const users = response.data.data.users
   			return {
   				loading: false,
   				itemsPerPage: limit,
