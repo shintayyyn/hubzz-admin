@@ -116,22 +116,21 @@
   			page = parseInt(page)
   			const limit = 10
   			const offset = page * limit - limit
-  			const domain = 'locum'
   			const order_by = 'created_at:desc'
-				const params = { limit, offset, domain, order_by }
+				const params = { limit, offset, order_by }
 				
   			if (search) {
   				params.search = search
 				}
 				
-  			const getUsersCountPromise = app.$axios.get(`/api/v1/users/count`, { params })
-				const getUsersPromise = app.$axios.get(`/api/v1/users`, { params })
+  			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+				const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
 				
   			let response = null
-				response = await getUsersCountPromise
+				response = await getLocumUsersCountPromise
 				
   			const itemCount = response.data.data.count
-				response = await getUsersPromise
+				response = await getLocumUsersPromise
 				
   			const users = response.data.data.users
   			return {

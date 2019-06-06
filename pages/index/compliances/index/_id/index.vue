@@ -125,7 +125,7 @@
           <!-- BODY -->
           <nuxt-link
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryDocument-${index}`"
-            :to="{path:`/compliances/${locumUser.id}/view-file/`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/${mandatoryComplianceDocument.mandatoryComplianceDocument.id}`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -141,7 +141,9 @@
             </div>
             <div style="width: 15%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
+                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.file &&
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at ? 
                   $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at)
                   .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
               </div>
