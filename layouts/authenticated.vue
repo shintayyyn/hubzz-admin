@@ -235,13 +235,9 @@ export default {
     logout() {
       this.showLogoutModal = false;
 
-      this.$axios.post("/api/v1/logout").finally(() => {
-        this.$auth.logout().then(() => {
-          this.$router.push("/sign-in");
-        });
-      });
-    }
-  }
+      this.$store.dispatch('logout')
+    },
+  },
 };
 </script>
 

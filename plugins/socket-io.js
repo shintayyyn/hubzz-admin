@@ -1,27 +1,31 @@
-// import io from 'socket.io-client'
+import io from 'socket.io-client'
 
-// export default (ctx, inject) => {
-//   const API_URL = process.env.API_URL
+export default (ctx, inject) => {
+  const API_URL = process.env.API_URL
 
-//   console.log('API_URL', API_URL)
+  console.log('API_URL', API_URL)
 
-//   const socket = io(API_URL)
+  const socket = io(API_URL, {
+    transports: [ 'websocket' ]
+  })
 
-//   socket.on('connect', () => {
-//     console.log('connect', socket.id)
-//   })
+  socket.on('connect', () => {
+    console.log('Socket Connected')
+    console.log('Socket ID:', socket.id)
+  })
 
-//   socket.on('disconnect', reason => {
-//     console.log('disconnect', reason)
+  socket.on('disconnect', reason => {
+    console.log('Socket Disconnected')
+    console.log('Reason:', reason)
 
-//     if (reason === 'io server disconnect') {
-//       socket.connect()
-//     }
-//   })
+    if (reason === 'io server disconnect') {
+      socket.connect()
+    }
+  })
 
-//   ctx.$socket = socket
+  ctx.$socket = socket
 
-//   inject('socket', socket)
+  inject('socket', socket)
 
-//   ctx.store.dispatch('socket/init')
-// }
+  ctx.store.dispatch('socket/init')
+}
