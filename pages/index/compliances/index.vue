@@ -61,6 +61,7 @@
       <nuxt-link
         v-for="(locumUser, index) in locumUsers"
         :key="`locumUser-${index}`"
+        :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
         :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }"
         class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
       >
@@ -76,7 +77,7 @@
         </div>
         <div style="width: 25%;">
           <div class="flex text-white text-xs p-4">
-            <span>{{ locumUser.last_file_upload ? $moment(locumUser.last_file_upload).format('MMM D, YYYY'):null }}</span>
+            <span>{{ locumUser.last_file_upload ? $moment(locumUser.last_file_upload).format('DD-MM-YY HH:mm:ss'):null }}</span>
           </div>
         </div>
         <div style="width: 25%;">
@@ -88,7 +89,7 @@
           <div v-else class="flex py-2 lg:pl-6">
             <span
               class="inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
-              :class="`${locumUser.compliance_status=='Compliant' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+              :class="`${locumUser.compliance_status==='Compliant' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
             >{{locumUser.compliance_status }}</span>
           </div>
         </div>
@@ -120,7 +121,8 @@ export default {
   		activePage: 1,
       locumUsers: [],
       filterCompliances:'',
-      search:''
+      search:'',
+      disabled:'true'
     };
   },
   watchQuery: [

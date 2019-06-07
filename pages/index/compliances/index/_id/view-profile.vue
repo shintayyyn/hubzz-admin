@@ -15,7 +15,7 @@
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="mx-6 overflow-auto">
+     <div class="mx-6 overflow-auto">
         <div class="flex">
           <button
             @click="profileTab = true, jobTab = false"
@@ -63,14 +63,21 @@
               <div class="w-1/3 overflow-hidden">
                 <div class="text-grey mx-10">
                   <p class="m-2 mr-20">Headline</p>
-                  <p class="m-2 text-white">s</p>
+                  <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.headline:null}}</p>
                   <p class="m-2 mt-5 mr-20">Short Biography</p>
-                  <p class="m-2 text-white">a</p>
+                  <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.short_biography:null}}</p>
                   <p class="m-2 mt-5 mr-20">Special requirements</p>
-                  <p class="ml-2 text-white">a</p>
+                  <p class="ml-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.special_requirements:null}}</p>
                   <p class="m-2 mt-5 mr-20">Preferred rates</p>
                   <p class="ml-2 text-white">Per hour £ (none)</p>
                   <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
+                  <p class="m-2 mt-5 mr-20">Compliance Documents</p>
+                  <nuxt-link v-for="(complianceDocument, index) in locumComplianceDocuments"
+                   :key="`complianceDocument-${index}`"
+                   :to="{path: `/compliances/${locumUser.id}/view-file/${complianceDocument.compliance_document.id}`, query: $route.query }"> <!--THIS THIS TEMPORARY. CHANGE THIS LATER!-->
+                   <p class="m-2 text-white">{{complianceDocument.compliance_document?complianceDocument.compliance_document.name:null}}</p>
+                  </nuxt-link>
+                  <p class="m-2 mt-5 mr-20">Other Documents</p>
                 </div>
               </div>
               <div class="w-1/3 overflow-hidden">
@@ -78,16 +85,19 @@
                   <img class="w-48 h rounded-full mr-4" src="~/assets/images/default-user-image.png" >
                   <p class="m-2 text-grey">Sign-up verified by email</p>
                   <p class="m-2 text-white">24/01/2019</p>
+                  <p class="m-2 text-grey">Active at </p>
+                  <p class="m-2 text-white">{{locumUser.actived_at ? $moment(locumUser.actived_at).format('MMM D, YYYY') :null}}</p>
                   <select
                     class="outline-none border-2 border-transparent text-xs text-black pr-6"
                     id="grid-state"
+                    v-model="selectedStatus"
                   >
                     <option>Active</option>
                     <option>Disabled</option>
                   </select>
                   <button
-                    to="/practices/add-practice"
                     class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+                    @click.prevent="changeLocumUserStatus(locumUser.id,selectedStatus)"
                   >Save</button>
                 </div>
               </div>
@@ -134,39 +144,39 @@
 
             <!-- BODY -->
             <nuxt-link
-              v-for="(job, index) in jobs"
+              v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
               :key="`compliance-${index}`"
               :to="`/compliances/select-locum`"
               class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
               <div style="width: 20%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.number }}</span>
+                  <span>{{ locumUserCurrentJob.number }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.practice }}</span>
+                  <span>{{ locumUserCurrentJob.practice }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.title }}</span>
+                  <span>{{ locumUserCurrentJob.title }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.from }}</span>
+                  <span>{{ locumUserCurrentJob.from }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.to }}</span>
+                  <span>{{ locumUserCurrentJob.to }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ job.createdAt }}</span>
+                  <span>{{ locumUserCurrentJob.createdAt }}</span>
                 </div>
               </div>
             </nuxt-link>
@@ -187,11 +197,15 @@ export default {
   transition: "subpage",
 
   data() {
+
     return {
+      selectedStatus:'',
       locumUser:null,
       profileTab: true,
       jobTab: false,
-      jobs:[]
+      locumComplianceDocuments:[],
+      locumUserCurrentJobs:[],
+
     };
   },
 
@@ -200,10 +214,17 @@ export default {
       console.log(route.params.id)
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
+      const locumComplianceDocuments = response.data.data.user.locum_detail.compliance_documents
+
+
+      response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}/current-jobs`)
+      const locumUserCurrentJobs = response.data.data.jobs
       
 
       return{
       locumUser,
+      locumComplianceDocuments,
+      locumUserCurrentJobs
       }
 
     } catch (err) {
@@ -211,6 +232,20 @@ export default {
     }
   },
 
+  methods:{
+    async changeLocumUserStatus(locumID,activeDisabled){
+      try{
+        const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
+          status:activeDisabled
+        })
+        alert('Saved')
+      }catch(err){
+        console.log("index practices index put status err", err);
+        alert('Something went wrong!!')
+      }
+    }
+  }
 
 };
 </script>
+

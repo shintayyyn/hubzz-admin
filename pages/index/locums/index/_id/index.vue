@@ -63,14 +63,21 @@
               <div class="w-1/3 overflow-hidden">
                 <div class="text-grey mx-10">
                   <p class="m-2 mr-20">Headline</p>
-                  <p class="m-2 text-white">s</p>
+                  <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.headline:null}}</p>
                   <p class="m-2 mt-5 mr-20">Short Biography</p>
-                  <p class="m-2 text-white">a</p>
+                  <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.short_biography:null}}</p>
                   <p class="m-2 mt-5 mr-20">Special requirements</p>
-                  <p class="ml-2 text-white">a</p>
+                  <p class="ml-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.special_requirements:null}}</p>
                   <p class="m-2 mt-5 mr-20">Preferred rates</p>
                   <p class="ml-2 text-white">Per hour £ (none)</p>
                   <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
+                  <p class="m-2 mt-5 mr-20">Compliance Documents</p>
+                  <nuxt-link v-for="(complianceDocument, index) in locumComplianceDocuments"
+                   :key="`complianceDocument-${index}`"
+                   :to="{ path: `/locums/${locumUser.id}`, query: $route.query }">
+                   <p class="m-2 text-white">{{complianceDocument.compliance_document?complianceDocument.compliance_document.name:null}}</p>
+                  </nuxt-link>
+                  <p class="m-2 mt-5 mr-20">Other Documents</p>
                 </div>
               </div>
               <div class="w-1/3 overflow-hidden">
@@ -196,7 +203,9 @@ export default {
       locumUser:null,
       profileTab: true,
       jobTab: false,
-      locumUserCurrentJobs:[]
+      locumComplianceDocuments:[],
+      locumUserCurrentJobs:[],
+
     };
   },
 
@@ -205,12 +214,16 @@ export default {
       console.log(route.params.id)
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
+      const locumComplianceDocuments = response.data.data.user.locum_detail.compliance_documents
+
 
       response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}/current-jobs`)
       const locumUserCurrentJobs = response.data.data.jobs
+      
 
       return{
       locumUser,
+      locumComplianceDocuments,
       locumUserCurrentJobs
       }
 

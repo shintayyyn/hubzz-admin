@@ -56,13 +56,13 @@
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
           :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
-          @click.prevent="toPutGmcNmc(locumUser.id,'Verified')"
+          @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
           :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
-          @click.prevent="toPutGmcNmc(locumUser.id,'Rejected')"
+          @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
       </div>
 
@@ -73,13 +73,13 @@
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
           :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
-          @click.prevent="toPutMplNpl(locumUser.id,'Verified')"
+          @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
           class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
           :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
-          @click.prevent="toPutMplNpl(locumUser.id,'Rejected')"
+          @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
       </div>
       <!-- BODY -->
@@ -125,6 +125,7 @@
           <!-- BODY -->
           <nuxt-link
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryDocument-${index}`"
+            :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
             :to="{path:`/compliances/${locumUser.id}/view-file/${mandatoryComplianceDocument.mandatoryComplianceDocument.id}`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
@@ -166,7 +167,7 @@
             </div>
             <div style="width: 10%;">
               <div class="inline-flex text-black text-xs mt-2 py-2 p-3 border border-white rounded-full"
-              :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
+              :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
               </div>
@@ -284,7 +285,7 @@ export default {
       locumUser: null,
       mandatoryComplianceDocuments:[],
       optionalComplianceDocuments:[],
-      disabled:true
+      disabled:'true'
     };
   },
 
@@ -330,24 +331,40 @@ export default {
   },
  
   methods:{
-    async toPutGmcNmc(locumID,verifyReject){
+    async toPutGmcNmc(currentStatus,locumID,verifyReject){
       try{
-        const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
-          status:verifyReject
-        })
-        alert('Saved')
+        console.log(currentStatus)
+        if(currentStatus === 'Pending'){
+           const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+            status:verifyReject
+          })
+          alert('Saved')
 
+        }else if(currentStatus === 'Verified'||currentStatus ==='Rejected'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+            status:'Pending'
+          })
+          alert('Saved. Status reverted back to pending')
+        }
+      
       }catch(err){
         console.log("index practices index put GMC/NMC err", err);
         alert('Something went wrong!!')
       }
     },
-    async toPutMplNpl(locumID, verifyReject){
+    async toPutMplNpl(currentStatus,locumID, verifyReject){
       try{
-      const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
-        status:verifyReject
-      })
-      alert('Saved')
+        if(currentStatus ===  'Pending'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+            status:verifyReject
+          })
+          alert('Saved')
+        }else if(currentStatus==='Verified'||currentStatus ==='Rejected'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+            status:'Pending'
+          })
+          alert('Saved. Status reverted back to pending')
+        }
 
       }catch(err){
         console.log("index practices index put MPL/NPL err", err);
