@@ -219,6 +219,7 @@
           <!-- BODY -->
          <nuxt-link
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalDocument-${index}`"
+             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
             :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.optionalComplianceDocument.id}`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
