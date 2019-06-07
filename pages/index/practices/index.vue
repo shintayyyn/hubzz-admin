@@ -27,29 +27,31 @@
         <!-- HEADER -->
         <div class="flex my-2">
           <div style="width: 20%;">
-            <div class="flex text-white text-xs px-2 py-4">
+            <div class="flex text-white text-xs p-4">
               <strong>Practice Name</strong>
             </div>
           </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-xs px-2 py-4">
+          <div style="width: 25%;">
+            <div class="flex text-white text-xs p-4">
               <strong>Practice Code</strong>
             </div>
           </div>
-          <div style="width: 20%">
-            <div class="flex text-white text-xs px-2 py-4">
+          <div style="width: 15%">
+            <div class="flex text-white text-xs p-4">
               <strong>Created</strong>
             </div>
           </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-xs px-2 py-4">
+          <div style="width: 15%;">
+            <div class="flex text-white text-xs p-4">
               <strong>Expires</strong>
             </div>
           </div>
-        
-            <div class="flex text-white text-xs px-2 py-4">
-              <strong>Status</strong>
-            </div>
+		  <div style="width:20%">
+			<div class="flex text-white text-xs p-4">
+				<strong>Status</strong>
+			</div>  
+		  </div>
+		  
 
         </div>
         <!-- HEADER -->
@@ -58,36 +60,35 @@
         <nuxt-link
           v-for="(practice, index) in practices"
           :key="`practice-${index}`"
-          :to="`/practices/${practices._id}`"
+          :to="{path:`/practices/${practice.id}`,query:$route.query}"
           class="flex no-underline rounded-lg bg-waterloo  shadow hover:bg-waterloo-light my-2"
         >
           <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-xs py-4 p-2">
+            <div class="flex text-white text-xs p-4">
               <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
             </div>
           </div>
-          <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-xs py-4 p-2">
+          <div class="flex" style="width: 25%;">
+            <div class="flex text-white text-xs p-4">
               <span>{{ practice.surgery ? practice.surgery.code:null }}</span>
             </div>
           </div>
-          <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-xs py-4 p-2">
+          <div class="flex" style="width: 15%;">
+            <div class="flex text-white text-xs p-4">
               <span>{{ $moment(practice.created).format('MMM D, YYYY | hh:mm A') }}</span>
             </div>
           </div>
-          <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-xs py-4 p-2 ">
+          <div class="flex" style="width: 15%;">
+            <div class="flex text-white text-xs p-4 ">
               <span>{{ practice.expires }}</span>
             </div>
           </div>
-          <div class="flex">
+          <div class="flex" style="width: 10%">
             	<div class=" flex py-2 px-4 items-center">
                 <span
-								class=" inline-flex no-underline py-2 my-2 text-xs text-black rounded-full shadow "
-								:class="`${practice.status === 'Active' ? 'bg-green text-white px-4 ' : 'bg-yellow text-black px-2'}`"
-								v-if="practice.status"
-							>{{ practice.status }}</span>
+					class=" inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
+					:class="`${practice.is_actived ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
+				>{{ practice.is_actived ? 'Active':'Disabled' }}</span>
             	</div>
           </div>
         </nuxt-link>
@@ -125,15 +126,16 @@ export default {
 				}
 				
   			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
-				const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
+			const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
+			console.log(getPracticesPromise)
 				
-				let response = null
-				
-				response = await getPracticesCountPromise
-				const itemCount = response.data.data.count
-				
-				response = await getPracticesPromise
-				const practices = response.data.data.practices
+			let response = null
+			
+			response = await getPracticesCountPromise
+			const itemCount = response.data.data.count
+			
+			response = await getPracticesPromise
+			const practices = response.data.data.practices
 				
   			return {
   				loading: false,

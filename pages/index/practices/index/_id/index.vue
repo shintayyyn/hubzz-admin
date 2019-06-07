@@ -3,7 +3,7 @@
     <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/practices" class="text-white p-1">
+        <nuxt-link :to="{path:`/practices`,query:$route.query }" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
@@ -59,18 +59,20 @@
         <!--TAB 1-->
         <div v-if="tab1">
           <form class="flex flex-col bg-waterloo  py-2 px-4 shadow rounded-lg sm:w-full lg:w-1/2">
-            <div class="flex flex-wrap overflow-hidden">
+            <div class="flex flex-wrap">
               <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-xs p-2">
                 <p class="flex">Practice Name</p>
-                <p class="flex text-white text-xs p-2 font-semibold">BARROW HEALTH CENTRE</p>
+                <p class="flex text-white text-xs p-2 font-semibold">{{specificPractice.surgery ? specificPractice.surgery.name : null}}</p>
                 <p class="flex">Practice Code</p>
-                <p class="flex text-white text-xs p-2 font-semibold">C82062</p>
+                <p class="flex text-white text-xs p-2 font-semibold">{{specificPractice.surgery ? specificPractice.surgery.code : null}}</p>
                 <p class="flex">Address</p>
-                <p
-                  class="flex text-white text-xs p-2 font-semibold"
-                >HEALTH CTR, 27 HIGH ST BARROW-UPON-SOAR LOUGHBOROUGH LE12 8PY</p>
+                <p class="flex text-white text-xs p-2 font-semibold">
+                  {{specificPractice.surgery.address ? specificPractice.surgery.address.line_1 : null}} <br>
+                  {{specificPractice.surgery.address ? specificPractice.surgery.address.line_2 : null}} <br>
+                  {{specificPractice.surgery.address ? specificPractice.surgery.address.line_3 : null}} <br>
+                </p>
                 <p class="flex">CCG</p>
-                <p class="flex text-white text-xs p-2 font-semibold">West Leicestershire</p>
+                <p class="flex text-white text-xs p-2 font-semibold">{{specificPractice.surgery.clinical_commissioning_group ? specificPractice.surgery.clinical_commissioning_group.name:null}}</p>
                 <p class>Compliance Requirements for GPs:</p>
                 <p class="flex text-grey-light text-xs p-2 font-semibold">(none)</p>
                 <p class>For Nurses, et al:</p>
@@ -81,43 +83,51 @@
               <div class="w-1/2 sm:w-full  lg:w-1/2 ">
                 <p class="flex text-grey-light text-xs p-2">Phone Number</p>
                 <input
-                  class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                   type="text"
-                  placeholder="0844 4770922"
-                  aria-label="phonnumber"
+                  aria-label="phonenumber"
+                  :placeholder="specificPractice.phone_number"
+                  v-model="toPutPractice.phone_number"
                 >
                 <p class="flex text-grey-light text-xs p-2">Full name to report to</p>
                 <input
-                  class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                   type="text"
                   placeholder
-                  aria-label="Full name"
+                  aria-label="fullName"
+                  v-model='toPutPractice.report_to'
                 >
                 <p
                   class="flex text-grey-light text-xs p-2"
                 >Extra information (Parking restrictions, transport links, etc.)</p>
-                <input
-                  class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                  type="text"
-                  placeholder
-                  aria-label="extrainfo"
-                >
+                 <textarea  
+                  placeholder="Type Here" 
+                  class="text-grey-lightest text-xs w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
+                  name="practiceNote"
+                  v-model='toPutPractice.extra_information'>
+                </textarea>
+
                 <p class="flex text-grey-light text-xs p-2">Status</p>
                 <select
-                  class="blockPractice Manage-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                  class="outline-none border-2 border-transparent text-xs text-black pr-6"
+                  v-model='toPutPractice.status'
                 >
                   <option>Active</option>
                   <option>Disabled</option>
                 </select>
                 <p class="flex text-grey-light text-xs p-2">Active Until</p>
-                <input
-                  class="appearance-none bg-transparent border-none w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                  type="text"
-                  placeholder="dd/mm/yyyy"
-                  aria-label="Full name"
-                >
+                  <input
+                    type="date"
+                    class="date-picker hasDatepicker valid"
+                    name="expiryDate"
+                    disable-min-date
+                    placeholder="dd/mm/yyyy"
+                    aria-invalid="false"
+                    v-model='toPutPractice.actived_until'
+                  >
                 <button
                   class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow float:right"
+                  @click.prevent="toPutPracticeInfo(specificPractice.id,toPutPractice)"
                 >Save</button>
               </div>
             </div>
@@ -155,25 +165,21 @@
                 </div>
                 <!--HEADERS END HERE-->
                 <div
-                  v-for="(surgery,index) in surgeries"
-                  :key="`surgery-${index}`"
+                  v-for="(inSurgery,index) in surgeries"
+                  :key="`inSurgery-${index}`"
                   class="flex no-underline rounded-lg bg-waterloo my-2"
                 >
                   <div style="width: 25%;">
                     <div class="flex text-white text-xs p-4">
-                      <span>{{ surgery.practiceName }}</span>
+                      <span>{{ inSurgery.name }}</span>
                     </div>
                   </div>
                   <div style="width: 20%;">
                     <div class="flex text-white text-xs p-4">
-                      <span>{{ surgery.practiceCode }}</span>
+                      <span>{{ inSurgery.code }}</span>
                     </div>
                   </div>
-                  <div style="width: 30%;">
-                    <div class="flex text-white text-xs p-4">
-                      <span>{{ surgery.practiceLocation }}</span>
-                    </div>
-                  </div>
+             
                 </div>
               </div>
             <!--TABLE ENDS HERE-->
@@ -354,7 +360,7 @@
           <div class="w-full overflow-hidden">
             <nuxt-link :to="`/practices/_id/adduser`">
               <button
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline p-8 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
               >Add User</button>
             </nuxt-link>
           </div>
@@ -481,7 +487,7 @@
           width="21"
           height="21"
           color="transparent white"
-        ></svgicon>
+        ></svgicon> 
                   Upload
                 </a>
               </div>
@@ -497,26 +503,11 @@
 <script>
 export default {
   transition: "subpage",
-  //PROMISES CODES
-  // async asyncData({ app, route }) {
-  //   try {
-  //     let response = await app.$axios.get(
-  //       `/api/v1/practices/${route.params.id}`
-  //     );
-
-  //     const practab,
-
-  //     return {
-  //       practicetab,
-  //     };
-  //   } catch (err) {
-  //     console.log("index practices index _id index asyncData err", err);
-  //   }
-  // },
 
   data() {
     return {
-      practice: null,
+      specificPractice:[],
+      surgeries:[],
       tab1: true,
       tab2: false,
       tab3: false,
@@ -531,58 +522,57 @@ export default {
       tab12: false,
       practiceTabs: 0,
       sessionTabs: 0,
-      surgeries: [
-        {
-          practiceName: "OLDHAM FAMILY PRACTICE",
-          practiceCode: "P85007",
-          practiceLocation:
-            "1ST FLOOR INTEGRATED CC NEW RADCLIFFE STREET OLDHAM OL1 1NL"
-        },
-        {}
-      ],
-      users: [
-        {
-          fullName: "Mr. Alvin Abad Ph.D",
-          emailAddr: "kpabad.halcyondigital@gmail.com",
-          role: "Practice Manager",
-          signUpVerified: "01/04/2019",
-          status: "Disabled"
-        },
-        {}
-      ],
-      documents: [
-        {
-          title: "Agreement",
-          fileSize: "46.67 kB",
-          lastUploadDate: "1/23/2019"
-        },
-        {
-          title: "Direct Debit",
-          fileSize: "46.67 kB",
-          lastUploadDate: "1/23/2019"
-        }
-      ],
-      unfilleds: [
-        {
-          jobNum: "H0000000252",
-          practice: "OLDHAM FAMILY PRACTICE",
-          title: "qwe",
-          created: "18/03/2019",
-          from: "20/03/2019",
-          to: "20/03/2019"
-        },
-        {
-          jobNum: "H0000000252",
-          practice: "OLDHAM FAMILY PRACTICE",
-          title: "qwe",
-          created: "18/03/2019",
-          from: "20/03/2019",
-          to: "20/03/2019"
-        }
-      ]
+      users: [],
+      documents: [],
+      unfilleds: [],
+      toPutPractice:{
+        phone_number:'',
+        report_to:'',
+        email:'',
+        extra_information:'',
+        status:'',
+        actived_until:''
+      }
     };
   },
-  methods: {}
+
+  async asyncData({ app, route }) {
+    try {
+      const getSpecificPractice = app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
+
+      let response = await getSpecificPractice
+      const specificPractice = response.data.data.practice
+      const surgeries = response.data.data.practice.surgery
+
+      console.log('hellow'+surgeries)
+      return{
+        specificPractice,
+        surgeries
+      }
+    } catch (err) {
+      console.log("index practices index _id index asyncData err", err);
+    }
+  },
+
+  methods: {
+    async toPutPracticeInfo(practiceID,toPutPractice){
+      try{
+        const response = this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
+        phone_number:toPutPractice.phone_number,
+        report_to:toPutPractice.report_to,
+        extra_information:toPutPractice.extra_information,
+        status:toPutPractice.status,
+        actived_until:toPutPractice.actived_until
+        })
+        alert('Saved')
+      }catch(err){
+        console.log("index put locum detail compliance documents error");
+        alert('Something went wrong!')
+      }
+
+    }
+  }
+
 };
 </script>
 <style>

@@ -63,14 +63,14 @@
                   <button class='inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full focus:bg-yellow focus:border-yellow focus:text-black'>Denied</button>
                 </div>
               </div> -->
-               <select
+                <select
                     class="outline-none border-2 border-transparent text-xs text-black pr-6"
                     id="grid-state"
                     v-model="toPutLocumDetailCompliance.status"
                   >
                     <option>Approved</option>
                     <option>Rejected</option>
-                  </select>
+                </select>
             <p class="mt-5 mr-20">Note to Locum</p>
                 <textarea v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
