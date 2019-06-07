@@ -3,7 +3,7 @@
     <div style="width: calc(100% - 140px);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
-        <nuxt-link to="/locums" class="text-white hover:text-yellow-dark p-1">
+        <nuxt-link :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }" class="text-white hover:text-yellow-dark p-1"> <!--GO BACK BUTTON-->
           <svgicon
             name="arrow-left-solid"
             height="22"
@@ -15,7 +15,7 @@
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="mx-6 overflow-auto">
+     <div class="mx-6 overflow-auto">
         <div class="flex">
           <button
             @click="profileTab = true, jobTab = false"
@@ -74,7 +74,7 @@
                   <p class="m-2 mt-5 mr-20">Compliance Documents</p>
                   <nuxt-link v-for="(complianceDocument, index) in locumComplianceDocuments"
                    :key="`complianceDocument-${index}`"
-                   :to="{ path: `/locums/${locumUser.id}`, query: $route.query }">
+                   :to="{path: `/compliances/${locumUser.id}/view-file/${complianceDocument.compliance_document.id}`, query: $route.query }"> <!--THIS THIS TEMPORARY. CHANGE THIS LATER!-->
                    <p class="m-2 text-white">{{complianceDocument.compliance_document?complianceDocument.compliance_document.name:null}}</p>
                   </nuxt-link>
                   <p class="m-2 mt-5 mr-20">Other Documents</p>
