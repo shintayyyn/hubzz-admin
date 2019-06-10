@@ -44,20 +44,32 @@
                   <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_1 : null }}</p>
                   <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_2 : null }}</p>
                   <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_3 : null }}</p>
-                  <p class="m-2 mt-5 mr-20">GMC Number</p>
+                  <p class="m-2 mt-5 mr-20">GMC / NMC Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
                   <p class="m-2 mt-5 mr-20">MPL / NPL Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
                   <p class="m-2 mt-5 mr-20">NHS Smart Card ID Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.nhs_smart_card_id_number ? locumUser.locum_detail.nhs_smart_card_id_number : null }}</p>
                   <p class="m-2 mt-5 mr-20">Profession</p>
-                  <p class="m-2 text-white">{{ locumUser.locum_detail.profession.profession_category ? locumUser.locum_detail.profession.profession_category.name : null }}</p>
+                  <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                   <p class="m-2 mt-5 mr-20">Speciality</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark">A&E</p>
+                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                    v-for="specialty in qualifications"
+                    :key="specialty.id + '-name'">
+                    {{specialty ? specialty.name:null}}
+                  </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark">Adastra</p>
+                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                    v-for="clinicalSystem in clinicalSystems"
+                    :key="clinicalSystem.id + '-name'">
+                      {{clinicalSystem ? clinicalSystem.name:null}}
+                  </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark">English</p>
+                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                    v-for="spokenLanguage in spokenLanguages"
+                    :key="spokenLanguage.id + '-name'">
+                    {{spokenLanguage ? spokenLanguage.name:null}}
+                  </p>
                 </div>
               </div>
               <div class="w-1/3 overflow-hidden">
@@ -72,11 +84,21 @@
                   <p class="ml-2 text-white">Per hour £ (none)</p>
                   <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
                   <p class="m-2 mt-5 mr-20">Compliance Documents</p>
-                  <nuxt-link v-for="(complianceDocument, index) in locumComplianceDocuments"
-                   :key="`complianceDocument-${index}`"
-                   :to="{ path: `/locums/${locumUser.id}`, query: $route.query }">
-                   <p class="m-2 text-white">{{complianceDocument.compliance_document?complianceDocument.compliance_document.name:null}}</p>
-                  </nuxt-link>
+
+                  <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
+                   :key="`specificComplianceDoc-${index}`"
+                  >
+                   <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
+                     <svgicon
+                      name="cloud-download"
+                      width="21"
+                      height="21"
+                      color="transparent white"
+                    ></svgicon>
+                    <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
+                    </a>
+                  </div>
+                  
                   <p class="m-2 mt-5 mr-20">Other Documents</p>
                 </div>
               </div>
@@ -199,12 +221,16 @@ export default {
   data() {
 
     return {
-      selectedStatus:'',
       locumUser:null,
+      selectedStatus:'',
       profileTab: true,
       jobTab: false,
       locumComplianceDocuments:[],
-      locumUserCurrentJobs:[],
+      // locumUserCurrentJobs:[],
+      qualifications:[],
+      clinicalSystems:[],
+      spokenLanguages:[],
+      specificLocumCompDocs:[]
 
     };
   },
@@ -214,17 +240,34 @@ export default {
       console.log(route.params.id)
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
-      const locumComplianceDocuments = response.data.data.user.locum_detail.compliance_documents
+      const locumComplianceDocuments = locumUser.locum_detail.compliance_documents
+      const qualifications = locumUser.locum_detail.qualifications
+      const clinicalSystems = locumUser.locum_detail.clinical_systems
+      const spokenLanguages = locumUser.locum_detail.spoken_languages
 
+      response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents`)
+      const locumCompDoc = response.data.data.locum_detail_compliance_documents
 
-      response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}/current-jobs`)
-      const locumUserCurrentJobs = response.data.data.jobs
       
+      const specificLocumCompDocs = locumComplianceDocuments.map((specificComplianceDoc)=>{
+        const locumSpecificCompDoc = locumCompDoc.find((complianceDoc)=>{
+          return complianceDoc.id === specificComplianceDoc.id
+        })
+        return{
+          specificComplianceDoc,
+          locumSpecificCompDoc
+        }
+      })
+
+      console.log(specificLocumCompDocs)
 
       return{
       locumUser,
       locumComplianceDocuments,
-      locumUserCurrentJobs
+      qualifications,
+      clinicalSystems,
+      spokenLanguages,
+      specificLocumCompDocs,
       }
 
     } catch (err) {

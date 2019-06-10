@@ -21,10 +21,22 @@
           class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
           @click.prevent="toPutLocumDetailComplianceDocs(locumComplianceDocument.id,toPutLocumDetailCompliance)"
         >
-          <i class="material-icons -mt-1" style="font-size:20px;">save</i>Save
+          <svgicon
+          name="save-icon"
+          width="21"
+          height="21"
+          color="transparent white"
+        ></svgicon>
+         <span>Save</span>
         </button>
         <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <i class="material-icons -mt-1" style="font-size:20px;">remove_red_eye</i>Download
+            <svgicon
+          name="cloud-download"
+          width="21"
+          height="21"
+          color="transparent white"
+        ></svgicon>
+        <span>Download</span>
         </button>
       </div>
       <!-- HEADER -->
@@ -77,7 +89,6 @@
                   class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
                   name="complianceNote">Type Here
                 </textarea>
-             <!-- <input v-model="toPutLocumDetailCompliance.note" class=" bg-transparent border-orange w-full text-white mr-3 py-4 px-2 leading-tight focus:outline" type="text" placeholder="Type Here" aria-label="Full name"> -->
           </div>
           <div class="text-grey m-2">
             <p class="mr-20">File</p>
@@ -139,7 +150,6 @@ export default {
       }
     }
   }
-
 
 };
 </script>
