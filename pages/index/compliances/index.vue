@@ -127,7 +127,8 @@ export default {
   },
   watchQuery: [
 	    'page',
-	    'search'
+	    'search',
+      'compliance_status',
     ],
     
   async asyncData({ app, route }) {
@@ -135,8 +136,13 @@ export default {
       let {
         page = 1,
         search='',
-        compliance_status='Pending'
+        compliance_status=null
       } = route.query
+
+      if (!compliance_status) {
+        
+      }
+
       page = parseInt(page)
       const limit = 10
       const offset = page * limit - limit
@@ -227,6 +233,26 @@ export default {
 
   watch: {
     async filterCompliances() {
+
+      const query = {
+        ...this.$router.query
+      }
+
+      query.compliance_status = this.filterCompliances
+
+      if (this.filterCompliances === '') {
+        delete query.compliance_status
+      }
+
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.loading = true
+      }
+
+      this.$router.push({ query })
+
+      return
+
+
       console.log('filterCompliances', this.filterCompliances)
       
       const params = {}
