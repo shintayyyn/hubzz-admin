@@ -228,7 +228,7 @@
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
             :class="optionalComplianceDocuments.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
-            :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.optionalComplianceDocument.id}`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">

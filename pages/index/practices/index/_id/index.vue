@@ -3,7 +3,7 @@
     <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link :to="{path:`/practices`,query:$route.query }" class="text-white p-1">
+        <nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
@@ -139,7 +139,8 @@
             <div>
               <button
                 class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-right"
-              >Add Surgery</button>
+              >Add Surgery
+              </button>
             </div>
           </div>
             <!--TABLE-->
@@ -358,10 +359,12 @@
         <!--TAB 4-->
         <div v-if="tab4" class="flex flex-wrap overflow-hidden">
           <div class="w-full overflow-hidden">
-            <nuxt-link :to="`/practices/_id/adduser`">
+            <nuxt-link :to="`/practices/${specificPractice.id}/adduser`">
               <button
-                class="inline-flex no-underline p-8 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
-              >Add User</button>
+                class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+              >Add User
+              </button>
+              
             </nuxt-link>
           </div>
 
