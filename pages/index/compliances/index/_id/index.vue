@@ -124,9 +124,9 @@
 
           <!-- BODY -->
           <nuxt-link
-            v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryDocument-${index}`"
+            v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryComplianceDocument-${index}`"
             :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
-            :to="{path:`/compliances/${locumUser.id}/view-file/${mandatoryComplianceDocument.mandatoryComplianceDocument.id}`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
           >
             <div style="width: 25%;">
@@ -137,7 +137,13 @@
             <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
-                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size + ' Bytes' : null }}</span>
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size + ' Bytes' : null }}
+                </span>
+
+                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
+                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.id + ' ID' : null }}
+                </span>
+            
               </div>
             </div>
             <div style="width: 15%;">
@@ -218,7 +224,7 @@
 
           <!-- BODY -->
          <nuxt-link
-            v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalDocument-${index}`"
+            v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
              :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
             :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.optionalComplianceDocument.id}`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"

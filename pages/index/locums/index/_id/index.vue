@@ -97,6 +97,13 @@
                     ></svgicon>
                     <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
                     </a>
+                    <div>
+                      <!-- <embed
+                        height=500px
+                        width=400px
+                        :src="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null"
+                      > -->
+                    </div>
                   </div>
                   
                   <p class="m-2 mt-5 mr-20">Other Documents</p>
@@ -225,7 +232,7 @@ export default {
       selectedStatus:'',
       profileTab: true,
       jobTab: false,
-      locumComplianceDocuments:[],
+      locumUserComplianceDocuments:[],
       // locumUserCurrentJobs:[],
       qualifications:[],
       clinicalSystems:[],
@@ -240,7 +247,7 @@ export default {
       console.log(route.params.id)
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
-      const locumComplianceDocuments = locumUser.locum_detail.compliance_documents
+      const locumUserComplianceDocuments = locumUser.locum_detail.compliance_documents
       const qualifications = locumUser.locum_detail.qualifications
       const clinicalSystems = locumUser.locum_detail.clinical_systems
       const spokenLanguages = locumUser.locum_detail.spoken_languages
@@ -249,7 +256,7 @@ export default {
       const locumCompDoc = response.data.data.locum_detail_compliance_documents
 
       
-      const specificLocumCompDocs = locumComplianceDocuments.map((specificComplianceDoc)=>{
+      const specificLocumCompDocs = locumUserComplianceDocuments.map((specificComplianceDoc)=>{
         const locumSpecificCompDoc = locumCompDoc.find((complianceDoc)=>{
           return complianceDoc.id === specificComplianceDoc.id
         })
@@ -263,7 +270,7 @@ export default {
 
       return{
       locumUser,
-      locumComplianceDocuments,
+      locumUserComplianceDocuments,
       qualifications,
       clinicalSystems,
       spokenLanguages,

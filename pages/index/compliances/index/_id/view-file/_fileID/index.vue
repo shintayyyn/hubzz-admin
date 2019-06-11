@@ -17,27 +17,28 @@
             class="hover:text-yellow-dark fill-current"
           />
         </nuxt-link>
-        <button
-          class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(locumComplianceDocument.id,toPutLocumDetailCompliance)"
+        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
+          @click.prevent="toPutLocumDetailComplianceDocs(locumComplianceDocuments.id,toPutLocumDetailCompliance)"
         >
           <svgicon
           name="save-icon"
           width="21"
           height="21"
           color="transparent white"
+          hover:color="transparent black"
         ></svgicon>
          <span>Save</span>
         </button>
-        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-            <svgicon
-          name="cloud-download"
-          width="21"
-          height="21"
-          color="transparent white"
-        ></svgicon>
+        <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
+          <svgicon
+            name="cloud-download"
+            width="21"
+            height="21"
+            color="transparent white"
+            hover ="transparent black"
+          ></svgicon>
         <span>Download</span>
-        </button>
+        </div>
       </div>
       <!-- HEADER -->
       <!-- BODY -->
@@ -45,11 +46,11 @@
         <div class="inline-flex text-xs m-4">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
-            <p class="text-white">{{locumComplianceDocument.compliance_document ? locumComplianceDocument.compliance_document.name: null}}</p>
+            <p class="text-white">{{locumComplianceDocuments.compliance_document ? locumComplianceDocuments.compliance_document.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
             <p class="text-white underline">{{locumUser.personal_detail ? locumUser.personal_detail.name: null}}</p>
             <p class="mt-5 mr-20">File last uploaded</p>
-            <p class="text-white underline">{{locumComplianceDocument.file ? $moment(locumComplianceDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+            <p class="text-white underline">{{locumComplianceDocuments.file ? $moment(locumComplianceDocuments.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20">
@@ -92,7 +93,13 @@
           </div>
           <div class="text-grey m-2">
             <p class="mr-20">File</p>
+             <embed
+              width=1000px
+              height=600px
+              :src="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null"
+              >
           </div>
+       
         </div>
       </div>
       <!-- BODY -->
@@ -119,14 +126,15 @@ export default {
     try {
 
       let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.fileID}`)
-      const locumComplianceDocument = response.data.data.locum_detail_compliance_document
+      const locumComplianceDocuments = response.data.data.locum_detail_compliance_document
 
-      response = await app.$axios.get(`/api/v1/admin/locum-users/${locumComplianceDocument.locum_detail.user.id}`)
+      response = await app.$axios.get(`/api/v1/admin/locum-users/${locumComplianceDocuments.locum_detail.user.id}`)
       const locumUser = response.data.data.user
 
+
       return{
-        locumComplianceDocument,
-        locumUser
+        locumComplianceDocuments,
+        locumUser,
       }
 
     } catch (err) {

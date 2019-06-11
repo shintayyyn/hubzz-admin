@@ -15,7 +15,7 @@
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="mx-6 overflow-auto">
+       <div class="mx-6 overflow-auto">
         <div class="flex">
           <button
             @click="profileTab = true, jobTab = false"
@@ -89,7 +89,13 @@
                    :key="`specificComplianceDoc-${index}`"
                   >
                    <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
-                    {{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}
+                     <svgicon
+                      name="cloud-download"
+                      width="21"
+                      height="21"
+                      color="transparent white"
+                    ></svgicon>
+                    <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
                     </a>
                   </div>
                   
