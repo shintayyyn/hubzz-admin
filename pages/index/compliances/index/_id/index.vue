@@ -126,8 +126,9 @@
           <nuxt-link
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryComplianceDocument-${index}`"
             :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
+            :class="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
             :to="{path:`/compliances/${locumUser.id}/view-file/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
-            class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+            class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
               <div class="flex text-white text-xs p-4">
@@ -225,9 +226,10 @@
           <!-- BODY -->
          <nuxt-link
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
-             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
+            :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
+            :class="optionalComplianceDocuments.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
             :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.optionalComplianceDocument.id}`, query: $route.query}"
-            class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+            class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
               <div class="flex text-white text-xs p-4">

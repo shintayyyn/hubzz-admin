@@ -62,8 +62,9 @@
         v-for="(locumUser, index) in locumUsers"
         :key="`locumUser-${index}`"
         :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
+        :class="locumUser.compliance_status==='Empty' ? '' :'hover:bg-waterloo-light' "
         :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }"
-        class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+        class="flex no-underline shadow-lg rounded-lg bg-waterloo mt-2"
       >
         <div style="width: 25%;">
           <div class="flex text-white text-xs p-4 content-center">
