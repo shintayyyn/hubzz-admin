@@ -1,9 +1,7 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div
-      style="width: calc(100% - 140px);"
-      class="flex-1 flex flex-col self-end bg-trout overflow-auto"
-    >
+    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout overflow-auto">
+     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex text-sm text-white py-2 px-6">
         <nuxt-link
@@ -30,14 +28,17 @@
          <span>Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <svgicon
-            name="cloud-download"
-            width="21"
-            height="21"
-            color="transparent white"
-            hover ="transparent black"
-          ></svgicon>
-        <span>Download</span>
+          <a class="text-white" v-bind:href="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null">
+             <svgicon
+              name="cloud-download"
+              width="21"
+              height="21"
+              color="transparent white"
+              hover ="transparent black"
+            ></svgicon>
+            <span>Download</span>
+          </a>
+         
         </div>
       </div>
       <!-- HEADER -->
@@ -91,10 +92,10 @@
                   name="complianceNote">Type Here
                 </textarea>
           </div>
-          <div class="text-grey m-2">
+          <div class="flex text-grey m-2">
             <p class="mr-20">File</p>
              <embed
-              width=1000px
+              width=800px
               height=600px
               :src="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null"
               >

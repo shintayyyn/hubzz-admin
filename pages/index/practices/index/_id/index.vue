@@ -166,21 +166,23 @@
                 </div>
                 <!--HEADERS END HERE-->
                 <div
-                  v-for="(inSurgery,index) in surgeries"
-                  :key="`inSurgery-${index}`"
+                  v-for="(surgery,index) in surgeries"
+                  :key="`surgery-${index}`"
                   class="flex no-underline rounded-lg bg-waterloo my-2"
                 >
                   <div style="width: 25%;">
                     <div class="flex text-white text-xs p-4">
-                      <span>{{ inSurgery.name }}</span>
+                      <span>{{ surgery ? surgery.name :null }}</span>
                     </div>
                   </div>
-                  <div style="width: 20%;">
+                  
+                  <!-- <div style="width: 20%;">
                     <div class="flex text-white text-xs p-4">
-                      <span>{{ inSurgery.code }}</span>
+                      <span>{{ surgery ? surgery.code:null }}</span>
                     </div>
-                  </div>
-             
+                  </div> -->
+                  
+                  
                 </div>
               </div>
             <!--TABLE ENDS HERE-->
@@ -359,7 +361,7 @@
         <!--TAB 4-->
         <div v-if="tab4" class="flex flex-wrap overflow-hidden">
           <div class="w-full overflow-hidden">
-            <nuxt-link :to="`/practices/${specificPractice.id}/adduser`">
+            <nuxt-link :to="`/practices/${specificPractice.id}/new-practice-user/${surgeries.id}`">
               <button
                 class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
               >Add User
@@ -541,13 +543,11 @@ export default {
 
   async asyncData({ app, route }) {
     try {
-      const getSpecificPractice = app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-
-      let response = await getSpecificPractice
+      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
       const specificPractice = response.data.data.practice
       const surgeries = response.data.data.practice.surgery
 
-      console.log('hellow'+surgeries)
+      console.log(surgeries)
       return{
         specificPractice,
         surgeries

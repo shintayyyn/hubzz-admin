@@ -2,7 +2,7 @@
 	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
 
 		<!-- BUTTON -->
-		<div>
+		<div v-if="false">
 			<nuxt-link :to="{ path: `/clinical-commissioning-groups/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
 		</div>
 		<!-- BUTTON -->
@@ -24,11 +24,11 @@
 		</div>
 
 		<!-- TABLE -->
-		<div class="w-full xl:w-4/5" v-if="!loading">
+		<div class="w-full">
 			<div class="flex flex-col">
 
 				<!-- HEADER -->
-				<div class="flex mt-2">
+				<div class="flex mt-2 ">
 					<div class="flex w-full md:w-1/2">
 						<div class="flex text-white text-xs p-4">
 							<strong>Name</strong>
@@ -58,33 +58,37 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2" draggable="false">
-					<div class="flex w-full md:w-1/2">
+
+				<div class="flex flex-col bg-red " ref="itemContainer">
+					<nuxt-link event="" v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo my-2"  :class="false ? 'hover:bg-waterloo-light' : ''" draggable="false">
+						<div class="flex w-full md:w-1/2">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ clinicalCommissioningGroup.name }}</span>
 						</div>
-					</div>
-					<div class="hidden md:flex w-1/4">
+						</div>
+						<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ clinicalCommissioningGroup.created_by_user && clinicalCommissioningGroup.created_by_user.personal_detail ? clinicalCommissioningGroup.created_by_user.personal_detail.name : null  }}</span>
 						</div>
-					</div>
-					<div class="hidden md:flex w-1/4">
+						</div>
+						<div class="hidden md:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ $moment(clinicalCommissioningGroup.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
 						</div>
-					</div>
-					<div class="hidden lg:flex w-1/4">
+						</div>
+						<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ clinicalCommissioningGroup.updated_by_user && clinicalCommissioningGroup.updated_by_user.personal_detail ? clinicalCommissioningGroup.updated_by_user.personal_detail.name : null  }}</span>
 						</div>
-					</div>
-					<div class="hidden lg:flex w-1/4">
+						</div>
+						<div class="hidden lg:flex w-1/4">
 						<div class="flex text-white text-xs p-4">
 							<span>{{ clinicalCommissioningGroup.updated_at ? $moment(clinicalCommissioningGroup.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
 						</div>
-					</div>
-				</nuxt-link>
+						</div>
+					</nuxt-link>
+				</div>
+
 				<!-- BODY -->
 
 			</div>
@@ -97,12 +101,16 @@
 		</div>
 		<!-- LOADING -->
 
+    <!-- LOADMORE -->
+    <button class="py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow" @click="loadMore">Load More</button>
+    <!-- LOADMORE -->
+
 		<!-- PAGINATION -->
-		<div v-if="pageCount > 1" class="my-1">
+		<!-- <div v-if="false && pageCount > 1" class="my-1">
 			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
 			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
 			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
-		</div>
+		</div> -->
 		<!-- PAGINATION -->
 
 		<nuxt-child/>
@@ -124,7 +132,7 @@
 
   			let {
   				clinical_commissionings_group_page = 1,
-  				clinical_commissioning_groups_search = ''
+  				clinical_commissioning_groups_search = '',
   			} = route.query
 
   			let page = parseInt(clinical_commissionings_group_page)
@@ -147,11 +155,11 @@
 
   			}
 
-  			const getPracticeTypesCountPromise = app.$axios.get(`/api/v1/clinical-commissioning-groups/count`, {
+  			const getPracticeTypesCountPromise = app.$axios.get(`/api/v1/admin/clinical-commissioning-groups/count`, {
   				params
   			})
 
-  			const getPracticeTypesPromise = app.$axios.get(`/api/v1/clinical-commissioning-groups`, {
+  			const getPracticeTypesPromise = app.$axios.get(`/api/v1/admin/clinical-commissioning-groups`, {
   				params
   			})
 
@@ -271,6 +279,28 @@
 
   	methods: {
 
+      loadMore() {
+        const params = {
+          limit: this.itemsPerPage,
+          offset: this.clinicalCommissioningGroups.length,
+          order_by: 'created_at:desc'
+        }
+
+        if (this.search) {
+          params.search = this.search
+        }
+
+        Promise.all([
+          this.$axios.get(`/api/v1/admin/clinical-commissioning-groups/count`, { params }),
+          this.$axios.get(`/api/v1/admin/clinical-commissioning-groups`, { params })
+        ]).then((responses) => {
+          this.itemCount = responses[0].data.data.count
+          responses[1].data.data.clinical_commissioning_groups.forEach((clinicalCommissioningGroup) => {
+            this.clinicalCommissioningGroups.push(clinicalCommissioningGroup)
+          })
+        })
+      },
+
   		goToPage(page) {
 
   			if (page < 1) {
@@ -331,6 +361,36 @@
 	      this.$router.push({ query })
 
   		}
-  	}
+  	},
+
+    mounted() {
+      console.log('qwewqe 1')
+
+      new Promise((resolve, reject) => {
+        (async () => {
+          this.$nextTick(() => {
+
+            const scrollHeight = this.$refs.itemContainer.scrollHeight
+            const clientHeight = this.$refs.itemContainer.clientHeight
+
+            while (scrollHeight > clientHeight) {
+              console.log('scrollHeight', scrollHeight)
+              console.log('clientHeight', clientHeight)
+            }
+
+            console.log('qwewqe 2')
+
+
+          })
+          resolve()
+        })()
+      }).then(() => {
+        console.log('qweqwe 4')
+      })
+
+      console.log('qwewqe 3')
+
+
+    }
   }
 </script>

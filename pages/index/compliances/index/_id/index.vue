@@ -1,6 +1,7 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
-    <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout">
+    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout">
+    <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="{ path: `/compliances`, query: $route.query }" class="text-white p-1">

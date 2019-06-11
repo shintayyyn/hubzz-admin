@@ -64,6 +64,10 @@
             type="password"
             placeholder="Username"
           >
+          <button
+            class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+          >Add Practice User
+          </button>
         </div>
       </div>
     </div>
@@ -72,7 +76,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data(){},
+  async asyncData({app,route}){
+    try{
+      
+    }catch(err){
+      console.log("index practices index create asyncData err", err);
+    }
+  },
+};
 </script>
 
 <style>
