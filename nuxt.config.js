@@ -106,7 +106,7 @@ export default {
 
   oneSignal: {
     init: {
-      appId: process.env.ONE_SIGNAL_APP_ID,
+      appId: process.env.ONE_SIGNAL_APP_ID_ADMIN,
       allowLocalhostAsSecureOrigin: true,
       welcomeNotification: {
           disable: true
