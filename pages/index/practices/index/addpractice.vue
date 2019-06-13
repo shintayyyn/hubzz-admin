@@ -39,7 +39,7 @@
             <nuxt-link
               v-for="(practice, index) in practices"
               :key="`practice-${index}`"
-              :to="{path:`/practices/${practice.id}/new-practice-user/${practice.surgery.id}`,query:$route.query}"
+              :to="{path:`/practices/${practice.id}/users`,query:$route.query}"
               class="flex no-underline rounded-lg bg-waterloo  shadow hover:bg-waterloo-light my-2"
             >
               <div class="flex" style="width: 100%;">

@@ -480,7 +480,7 @@
               </div>
             </div>
             <div style="width: 20%;">
-              <div class="fl</b-tab>ex text-white text-xs p-4">
+              <div class="flex text-white text-xs p-4">
                 <span>{{ document.lastUploadDate }}</span>
               </div>
             </div>

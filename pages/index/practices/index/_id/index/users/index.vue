@@ -5,7 +5,7 @@
       class="flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2"
     >
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link :to="{path:`/practices/${specificPractice.id}`, query: $route.query}" class="text-white p-1">
+        <nuxt-link :to="{path:`/practices`, query: $route.query}" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
@@ -19,22 +19,22 @@
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
             type="text"
             placeholder="Mr. / Mrs. / Dr. / etc....."
-            v-model="title"
-            aria-label="Title"
+            v-model='toPostPracticeUser.title'
+          aria-label="Title"
           >
           <p class="flex">First Name</p>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
             type="text"
             placeholder="Jane Doe"
-            v-model="first_name"
+            v-model='toPostPracticeUser.first_name'
             aria-label="First Name"
           >
           <p class="flex">Last Name</p>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
             type="text"
-            v-model="last_name"
+            v-model='toPostPracticeUser.last_name'
             placeholder="Jane Doe"
             aria-label="Full name"
           >
@@ -43,12 +43,13 @@
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
             type="text"
             placeholder="Jane Doe"
-            v-model="suffix"
-            aria-label="Full name"
+            v-model='toPostPracticeUser.suffix'
+           aria-label="Full name"
           >
           <p class="flex">Role</p>
           <select
             class="appearance-none w-full mb-4 bg-white border-b border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            v-model='toPostPracticeUser.practice_role'
           >
             <option>Partner</option>
             <option>Practice Manager</option>
@@ -59,20 +60,28 @@
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
             id="username"
             type="text"
-            v-model="email"
-            placeholder="Email"
+            v-model='toPostPracticeUser.email'
+          placeholder="Email"
           >
           <p class="flex">Password</p>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
             id="password"
             type="password"
-            v-model="password"
+            v-model='toPostPracticeUser.password'
+            placeholder="Password"
+          >
+            <p class="flex">Repeat Password</p>
+          <input
+            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+            id="password"
+            type="password"
+            v-model='toPostPracticeUser.password_confirmation'
             placeholder="Password"
           >
           <button
             class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
-            @click.prevent="toPostPracticeUserInfo()"
+            @click.prevent="toPostPracticeUserInfo(toPostPracticeUser)"
           >Add Practice User
           </button>
         </div>
@@ -90,20 +99,20 @@ export default {
       toPostPracticeUser:{
         email:'',
         password:'',
-        password_confirmation:password,
+        password_confirmation:'',
         title:'',
         first_name:'',
         last_name:'',
         suffix:'',
         practice_role:'',
-        surgery_id:specificPractice.surgery.id
+        // surgery_id:specificPractice.surgery.id
       }
     }
   },
   async asyncData({app,route}){
     try{
       
-      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.practiceID}`)
+      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
       const specificPractice = response.data.data.practice
 
       return{
