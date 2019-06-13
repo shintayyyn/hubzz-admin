@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto" ref="scrollContainer" @scroll="scrollHandler">
+	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto __custom-scroll" ref="scrollContainer" @scroll="scrollHandler">
 
 		<!-- BUTTON -->
 		<div v-if="false">
@@ -379,7 +379,8 @@
 
             let scrollIsAtTheBottom = this.$refs.scrollContainer.scrollHeight - Math.trunc(this.$refs.scrollContainer.scrollTop) - this.$refs.scrollContainer.offsetHeight < 1
 
-            while (scrollIsAtTheBottom) {
+            // while (scrollIsAtTheBottom) {
+            if (scrollIsAtTheBottom) {
 
               await this.loadMore()
 
@@ -394,3 +395,17 @@
     }
   }
 </script>
+
+<style>
+  div.__custom-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  div.__custom-scroll::-webkit-scrollbar-track-piece {
+    background: #505561;
+  }
+
+  div.__custom-scroll::-webkit-scrollbar-thumb:vertical {
+    background: #7B8396;
+  }
+</style>
