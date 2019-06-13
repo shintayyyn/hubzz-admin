@@ -125,6 +125,8 @@ export default {
 
   async asyncData({ app, route }) {
     try {
+      //File ID route
+      //from file ID route, find first in compliance documents route. else, find in mandatory trainings route
 
       let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.fileID}`)
       const locumComplianceDocuments = response.data.data.locum_detail_compliance_document

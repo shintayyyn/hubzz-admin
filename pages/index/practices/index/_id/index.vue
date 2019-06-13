@@ -176,11 +176,11 @@
                     </div>
                   </div>
                   
-                  <!-- <div style="width: 20%;">
+                  <div style="width: 20%;">
                     <div class="flex text-white text-xs p-4">
-                      <span>{{ surgery ? surgery.code:null }}</span>
+                      <span>{{ surgery ? surgery.code :null }}</span>
                     </div>
-                  </div> -->
+                  </div>
                   
                   
                 </div>
@@ -548,6 +548,7 @@ export default {
       const surgeries = response.data.data.practice.surgery
 
       console.log(surgeries)
+
       return{
         specificPractice,
         surgeries

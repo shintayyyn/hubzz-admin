@@ -19,10 +19,6 @@
 		</div>
 		<!-- FILTER -->
 
-		<div class="pt-4">
-			<span class="text-white text-xs">Showing {{ itemsPerPage * activePage - itemsPerPage + (clinicalCommissioningGroups.length > 0 ? 1 : 0) }}-{{ itemsPerPage * activePage - itemsPerPage + clinicalCommissioningGroups.length }} of {{ itemCount }} Practice Types</span>
-		</div>
-
 		<!-- TABLE -->
 		<div class="w-full">
 			<div class="flex flex-col">
@@ -59,7 +55,7 @@
 
 				<!-- BODY -->
 
-				<div class="flex flex-col bg-red " ref="itemContainer">
+				<div class="flex flex-col bg-red overflow-auto " ref="itemContainer">
 					<nuxt-link event="" v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo my-2"  :class="false ? 'hover:bg-waterloo-light' : ''" draggable="false">
 						<div class="flex w-full md:w-1/2">
 						<div class="flex text-white text-xs p-4">
@@ -203,79 +199,7 @@
 
   	},
 
-  	computed: {
-
-  		pageCount() {
-
-  			return Math.ceil(this.itemCount / this.itemsPerPage)
-
-  		},
-
-	    showPage() {
-
-	      return page => {
-
-	        if (page === 1) {
-
-	          return true
-
-	        }
-
-	        if (page === this.pageCount) {
-
-	          return true
-
-	        }
-
-	        if (page === this.activePage) {
-
-	          return true
-
-	        }
-
-	        if (page === this.activePage + 1) {
-
-	          return true
-
-	        }
-
-	        if (page === this.activePage - 1) {
-
-	          return true
-
-	        }
-
-	        if (this.activePage === 1 && page < 5) {
-
-	          return true
-
-	        }
-
-	        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-
-	          return true
-
-	        }
-
-	        if (this.activePage === 2 && page === 4) {
-
-	          return true
-
-	        }
-
-	        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-
-	          return true
-
-	        }
-
-	        return false
-
-	      }
-
-	    }
-
-  	},
+  	computed: {},
 
   	methods: {
 
@@ -389,7 +313,6 @@
       })
 
       console.log('qwewqe 3')
-
 
     }
   }
