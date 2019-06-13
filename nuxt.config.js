@@ -8,7 +8,8 @@ export default {
   mode: 'universal',
 
   env: {
-    API_URL: process.env.API_URL
+    API_URL: process.env.API_URL,
+    ONE_SIGNAL_APP_ID_ADMIN: process.env.ONE_SIGNAL_APP_ID_ADMIN,
   },
 
   /*

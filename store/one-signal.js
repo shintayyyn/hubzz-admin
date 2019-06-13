@@ -35,6 +35,7 @@ export const actions = {
 
   async init ({ getters, commit, dispatch }) {
     console.log('One Signal Initialize')
+    console.log('ONE_SIGNAL_APP_ID_ADMIN', process.env.ONE_SIGNAL_APP_ID_ADMIN)
 
     dispatch('setOneSignalUser')
 
