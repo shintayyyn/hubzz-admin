@@ -44,11 +44,11 @@ export default {
   */
   plugins: [
     {
-      src: '@/plugins/socket-io',
+      src: '@/plugins/socket-io.js',
       ssr: false
     },
     {
-      src: '@/plugins/one-signal',
+      src: '@/plugins/one-signal.js',
       ssr: false
     },
     {
@@ -91,12 +91,21 @@ export default {
   },
 
   auth: {
+    localStorage: {
+      prefix: 'admin.auth.'
+    },
+    cookie: {
+      prefix: 'admin.auth.',
+      options: {
+        path: '/'
+      }
+    },
     strategies: {
       local: {
         endpoints: {
           logout: null,
           user: {
-            url: '/api/v1/me',
+            url: '/api/v1/admin/me',
             method: 'get',
             propertyName: 'data.user'
           }
