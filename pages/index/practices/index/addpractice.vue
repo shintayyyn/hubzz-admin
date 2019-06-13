@@ -33,12 +33,29 @@
           <div class="self-end">
             <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-dark" @click="searchSubmit">Search</button>
           </div>
+          <div>
+            <!--TABLE-->
+            <!-- BODY -->
+            <nuxt-link
+              v-for="(practice, index) in practices"
+              :key="`practice-${index}`"
+              :to="{path:`/practices/${practice.id}/new-practice-user/${practice.surgery.id}`,query:$route.query}"
+              class="flex no-underline rounded-lg bg-waterloo  shadow hover:bg-waterloo-light my-2"
+            >
+              <div class="flex" style="width: 100%;">
+                <div class="flex text-white text-xs p-4">
+                  <div>{{ practice.surgery.name }}</div>
+                  <div>{{ practice.surgery.code }}</div>
+                </div>
+              </div>
+            </nuxt-link>
+              <!--TABLE ENDS HERE-->
+          </div>
         </div>
-        <div>
-          
-        </div>
+
       </div>
     </div>
+    <nuxt-child/>
   </div>
 </template>
 
@@ -60,15 +77,21 @@ export default {
   async asyncData({ app, route }) {
     try {
       let {
+        page=1,
         search=''
       } = route.query
-
+      page = parseInt(page)
+      const limit = 10
+      const offset = page * limit - limit
+      const order_by = 'created_at:desc'
+      const params = { limit, offset, order_by }
+      
       if (search){
         params.search = search
       }
 
-      const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
-      
+      const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`,{ params })
+
       let response = await getPracticesPromise
       const practices = response.data.data.practices
       

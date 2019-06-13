@@ -129,7 +129,7 @@
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryComplianceDocument-${index}`"
             :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
             :class="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/compliances/${locumUser.id}/view-file/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/compliance-doc/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
@@ -228,7 +228,7 @@
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
             :class="optionalComplianceDocuments.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
-            :to="{path:`/compliances/${locumUser.id}/view-file/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
@@ -326,12 +326,13 @@
             v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
             :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
             :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/compliances/${locumUser.id}/view-file/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{optionalMandatoryTraining.optionalMandatoryTraining.name}}</span>
+                <span class="ml-4">{{optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null}}</span>
               </div>
             </div>
              <div style="width: 10%;">
@@ -418,8 +419,6 @@ export default {
         }
       })
 
-      console.log(mandatoryComplianceDocuments)
-
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === optionalComplianceDocument.id
@@ -440,6 +439,7 @@ export default {
         }
       })
 
+      console.log(optionalMandatoryTrainings)
 
       return{
         locumUser,

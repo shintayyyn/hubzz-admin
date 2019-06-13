@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
+	<div class="flex-1 flex flex-col py-2 px-6 overflow-auto __custom-scroll" ref="scrollContainer" @scroll="scrollHandler">
 
 		<!-- BUTTON -->
 		<div v-if="false">
@@ -54,37 +54,35 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-
-				<div class="flex flex-col bg-red overflow-auto " ref="itemContainer">
-					<nuxt-link event="" v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo my-2"  :class="false ? 'hover:bg-waterloo-light' : ''" draggable="false">
-						<div class="flex w-full md:w-1/2">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ clinicalCommissioningGroup.name }}</span>
-						</div>
-						</div>
-						<div class="hidden md:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ clinicalCommissioningGroup.created_by_user && clinicalCommissioningGroup.created_by_user.personal_detail ? clinicalCommissioningGroup.created_by_user.personal_detail.name : null  }}</span>
-						</div>
-						</div>
-						<div class="hidden md:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ $moment(clinicalCommissioningGroup.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
-						</div>
-						</div>
-						<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ clinicalCommissioningGroup.updated_by_user && clinicalCommissioningGroup.updated_by_user.personal_detail ? clinicalCommissioningGroup.updated_by_user.personal_detail.name : null  }}</span>
-						</div>
-						</div>
-						<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
-							<span>{{ clinicalCommissioningGroup.updated_at ? $moment(clinicalCommissioningGroup.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
-						</div>
-						</div>
-					</nuxt-link>
-				</div>
-
+        <div class="flex flex-col">
+          <nuxt-link event="" v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo my-2"  :class="false ? 'hover:bg-waterloo-light' : ''" draggable="false">
+            <div class="flex w-full md:w-1/2">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ clinicalCommissioningGroup.name }}</span>
+              </div>
+            </div>
+            <div class="hidden md:flex w-1/4">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ clinicalCommissioningGroup.created_by_user && clinicalCommissioningGroup.created_by_user.personal_detail ? clinicalCommissioningGroup.created_by_user.personal_detail.name : null  }}</span>
+              </div>
+            </div>
+            <div class="hidden md:flex w-1/4">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ $moment(clinicalCommissioningGroup.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+              </div>
+            </div>
+            <div class="hidden lg:flex w-1/4">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ clinicalCommissioningGroup.updated_by_user && clinicalCommissioningGroup.updated_by_user.personal_detail ? clinicalCommissioningGroup.updated_by_user.personal_detail.name : null  }}</span>
+              </div>
+            </div>
+            <div class="hidden lg:flex w-1/4">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ clinicalCommissioningGroup.updated_at ? $moment(clinicalCommissioningGroup.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
+              </div>
+            </div>
+          </nuxt-link>
+        </div>
 				<!-- BODY -->
 
 			</div>
@@ -98,7 +96,7 @@
 		<!-- LOADING -->
 
     <!-- LOADMORE -->
-    <button class="py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow" @click="loadMore">Load More</button>
+    <!-- <button class="py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow" @click="loadMore">Load More</button> -->
     <!-- LOADMORE -->
 
 		<!-- PAGINATION -->
@@ -214,7 +212,7 @@
           params.search = this.search
         }
 
-        Promise.all([
+        return Promise.all([
           this.$axios.get(`/api/v1/admin/clinical-commissioning-groups/count`, { params }),
           this.$axios.get(`/api/v1/admin/clinical-commissioning-groups`, { params })
         ]).then((responses) => {
@@ -284,36 +282,54 @@
 
 	      this.$router.push({ query })
 
-  		}
+  		},
+
+      scrollHandler() {
+        if (this.$refs.scrollContainer.scrollHeight - Math.trunc(this.$refs.scrollContainer.scrollTop) - this.$refs.scrollContainer.offsetHeight < 1) {
+          this.loading = true
+
+          this.loadMore().then(() => {
+            this.loading = false
+          })
+        }
+      }
   	},
 
     mounted() {
-      console.log('qwewqe 1')
 
       new Promise((resolve, reject) => {
-        (async () => {
-          this.$nextTick(() => {
+        (() => {
+          this.$nextTick(async () => {
 
-            const scrollHeight = this.$refs.itemContainer.scrollHeight
-            const clientHeight = this.$refs.itemContainer.clientHeight
+            let scrollIsAtTheBottom = this.$refs.scrollContainer.scrollHeight - Math.trunc(this.$refs.scrollContainer.scrollTop) - this.$refs.scrollContainer.offsetHeight < 1
 
-            while (scrollHeight > clientHeight) {
-              console.log('scrollHeight', scrollHeight)
-              console.log('clientHeight', clientHeight)
+            // while (scrollIsAtTheBottom) {
+            if (scrollIsAtTheBottom) {
+
+              await this.loadMore()
+
+              scrollIsAtTheBottom = this.$refs.scrollContainer.scrollHeight - Math.trunc(this.$refs.scrollContainer.scrollTop) - this.$refs.scrollContainer.offsetHeight < 1
             }
 
-            console.log('qwewqe 2')
-
-
+            resolve()
           })
-          resolve()
         })()
-      }).then(() => {
-        console.log('qweqwe 4')
       })
-
-      console.log('qwewqe 3')
 
     }
   }
 </script>
+
+<style>
+  div.__custom-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  div.__custom-scroll::-webkit-scrollbar-track-piece {
+    background: #505561;
+  }
+
+  div.__custom-scroll::-webkit-scrollbar-thumb:vertical {
+    background: #7B8396;
+  }
+</style>

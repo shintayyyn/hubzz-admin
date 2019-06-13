@@ -119,7 +119,7 @@ export default {
   			const offset = page * limit - limit
   			const domain = 'locum'
   			const order_by = 'created_at:desc'
-				const params = { limit, offset, domain, order_by }
+			const params = { limit, offset, domain, order_by }
 				
   			if (search) {
   				params.search = search

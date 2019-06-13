@@ -16,7 +16,7 @@
           />
         </nuxt-link>
         <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(locumComplianceDocuments.id,toPutLocumDetailCompliance)"
+          @click.prevent="toPutLocumDetailComplianceDocs(locumMandatoryTrainings.id,toPutLocumDetailCompliance)"
         >
           <svgicon
           name="save-icon"
@@ -28,7 +28,7 @@
          <span>Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white" v-bind:href="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null">
+          <a class="text-white" v-bind:href="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null">
              <svgicon
               name="cloud-download"
               width="21"
@@ -47,11 +47,11 @@
         <div class="inline-flex text-xs m-4">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
-            <p class="text-white">{{locumComplianceDocuments.compliance_document ? locumComplianceDocuments.compliance_document.name: null}}</p>
+            <p class="text-white">{{locumMandatoryTrainings.mandatory_training ? locumMandatoryTrainings.mandatory_training.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
             <p class="text-white underline">{{locumUser.personal_detail ? locumUser.personal_detail.name: null}}</p>
             <p class="mt-5 mr-20">File last uploaded</p>
-            <p class="text-white underline">{{locumComplianceDocuments.file ? $moment(locumComplianceDocuments.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+            <p class="text-white underline">{{locumMandatoryTrainings.file ? $moment(locumMandatoryTrainings.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20">
@@ -97,7 +97,7 @@
              <embed
               width=800px
               height=600px
-              :src="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null"
+              :src="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null"
               >
           </div>
        
@@ -125,25 +125,27 @@ export default {
 
   async asyncData({ app, route }) {
     try {
-      //File ID route
-      //from file ID route, find first in compliance documents route. else, find in mandatory trainings route
 
-      let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.fileID}`)
-      const locumComplianceDocuments = response.data.data.locum_detail_compliance_document
+      // let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.complianceDocID}`) 
+      let response = await app.$axios.get(`/api/v1/admin/files/${route.params.mandatoryTrainingFileID}`) //LOCUM USER MANDATORY TRAININGS
+      const mandatoryTrainingFile = response.data.data.file
 
-      response = await app.$axios.get(`/api/v1/admin/locum-users/${locumComplianceDocuments.locum_detail.user.id}`)
+      response = await app.$axios.get(`/api/v1/admin/locum-users/${mandatoryTrainingFile.created_by_user.id}`)
       const locumUser = response.data.data.user
-
+      const locumMandatoryTrainings = response.data.data.user.locum_detail.mandatory_trainings
 
       return{
-        locumComplianceDocuments,
         locumUser,
+        locumMandatoryTrainings,
       }
-
+      console.log(locumUser)
+      console.log(locumMandatoryTrainings)
+      
     } catch (err) {
       console.log("index practices index create asyncData err", err);
     }
   },
+  
   
   methods:{
   

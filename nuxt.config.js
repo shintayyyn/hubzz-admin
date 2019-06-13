@@ -8,7 +8,8 @@ export default {
   mode: 'universal',
 
   env: {
-    API_URL: process.env.API_URL
+    API_URL: process.env.API_URL,
+    ONE_SIGNAL_APP_ID_ADMIN: process.env.ONE_SIGNAL_APP_ID_ADMIN,
   },
 
   /*
@@ -106,7 +107,7 @@ export default {
 
   oneSignal: {
     init: {
-      appId: process.env.ONE_SIGNAL_APP_ID,
+      appId: process.env.ONE_SIGNAL_APP_ID_ADMIN,
       allowLocalhostAsSecureOrigin: true,
       welcomeNotification: {
           disable: true
