@@ -84,6 +84,7 @@
         >Rejected</button>
       </div>
       <!-- BODY -->
+
       <p class=" text-sm text-white pt-8 px-8 font-semibold">Mandatory</p>
       <!-- TABLE -->
       <div style="lg:w-1/2 ">
@@ -142,9 +143,6 @@
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size + ' Bytes' : null }}
                 </span>
 
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
-                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.id + ' ID' : null }}
-                </span>
             
               </div>
             </div>
@@ -185,6 +183,7 @@
         </div>
       </div>
       <!-- TABLE -->
+
       <p class=" text-sm text-white pt-8 px-8 font-semibold">Optional</p>
       <!-- TABLE -->
       <div style="lg:w-1/2 ">
@@ -240,7 +239,7 @@
             <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
-                  optionalComplianceDocument.locumOptionalComplianceDocument.file.size : null }}
+                  optionalComplianceDocument.locumOptionalComplianceDocument.file.size + ' Bytes' : null }}
                 </span>
               </div>
             </div>
@@ -282,6 +281,103 @@
         </div>
       </div>
       <!-- TABLE -->
+            <!-- BODY -->
+      <p class=" text-sm text-white pt-8 px-8 font-semibold">Mandatory Trainings (Optional) </p>
+      <!-- TABLE -->
+      <div style="lg:w-1/2 ">
+        <div class="flex lg:w-1/2 flex-col mx-6">
+          <!-- HEADER -->
+          <div class="flex my-2">
+            <div style="width: 25%;">
+              <div class="flex text-white text-xs p-4">
+                <strong>Title</strong>
+              </div>
+            </div>
+              <div style="width: 10%;">
+              <div class="flex text-white text-xs p-4">
+                <strong>File size</strong>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <strong>File uploaded</strong>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <strong>Expiry date</strong>
+              </div>
+            </div>
+            <div style="width:15%;">
+              <div class="flex text-white text-xs p-4">
+                <strong>Days to expire</strong>
+              </div>
+            </div>
+            <div style="width: 10%;">
+              <div class="flex text-white text-xs p-4">
+                <strong>Status</strong>
+              </div>
+            </div>
+          </div>
+          <!-- HEADER -->
+
+          <!-- BODY -->
+          <nuxt-link
+            v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
+            :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
+            :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
+            :to="{path:`/compliances/${locumUser.id}/view-file/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
+            class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
+          >
+            <div style="width: 25%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{optionalMandatoryTraining.optionalMandatoryTraining.name}}</span>
+              </div>
+            </div>
+             <div style="width: 10%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining ? 
+                  optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size + ' Bytes' : null}}
+                </span>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
+                   optionalMandatoryTraining.locumOptionalMandatoryTraining.file &&
+                  optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at ? 
+                  $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at)
+                  .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
+                  optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
+                  $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
+                  .format('DD/MM/YYYY')  : null }}</span>
+              </div>
+            </div>
+            <div style="width: 15%;">
+              <div class="flex text-white text-xs p-4">
+                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
+                  optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
+                  $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
+                  .diff($moment(), 'days')  : null }}</span>
+              </div>
+            </div>
+            <div style="width: 10%;">
+              <div class="inline-flex text-black text-xs mt-2 py-2 p-3 border border-white rounded-full"
+              :class="`${optionalMandatoryTraining.locumOptionalMandatoryTraining ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
+                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining ? 
+                  'Compliant' : 'Empty' }}</span>
+              </div>
+            </div>
+          </nuxt-link>
+          <!-- BODY -->
+        </div>
+      </div>
+      <!-- TABLE -->
       <nuxt-child/>
     </div>
   </div>
@@ -295,6 +391,7 @@ export default {
       locumUser: null,
       mandatoryComplianceDocuments:[],
       optionalComplianceDocuments:[],
+      optionalMandatoryTrainings:[],
       disabled:'true'
     };
   },
@@ -305,8 +402,11 @@ export default {
       const locumUser = response.data.data.user
 
       const professionCategoryid = locumUser.locum_detail.profession.profession_category.id
-      response=await app.$axios.get(`/api/v1/profession-categories/${professionCategoryid}`)
+      response = await app.$axios.get(`/api/v1/profession-categories/${professionCategoryid}`)
       const professionCategory = response.data.data.profession_category
+      response = await app.$axios.get(`/api/v1/admin/mandatory-trainings`)
+      const mandatoryTrainings = response.data.data.mandatory_trainings
+
 
       const mandatoryComplianceDocuments = professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument) => {
         const locumMandatoryComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
@@ -330,10 +430,22 @@ export default {
         }
       })
 
+      const optionalMandatoryTrainings = mandatoryTrainings.map((optionalMandatoryTraining)=>{
+        const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((mandatoryTraining)=>{
+          return mandatoryTraining.id===optionalMandatoryTraining.id
+        })
+        return{
+          optionalMandatoryTraining,
+          locumOptionalMandatoryTraining
+        }
+      })
+
+
       return{
         locumUser,
         mandatoryComplianceDocuments,
         optionalComplianceDocuments,
+        optionalMandatoryTrainings
       }
     } catch (err) {
       console.log("index practices index create asyncData err", err);
