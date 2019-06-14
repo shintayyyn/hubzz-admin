@@ -5,7 +5,7 @@
       class="flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2"
     >
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link :to="{path:`/practices`, query: $route.query}" class="text-white p-1">
+        <nuxt-link to='/practices/surgeries/surgery-add-practice' class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
@@ -81,7 +81,7 @@
           >
           <button
             class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
-            @click.prevent="toPostPracticeUserInfo(toPostPracticeUser)"
+            @click.prevent="toPostPracticeUserInfo(specificSurgery.id,toPostPracticeUser)"
           >Add Practice User
           </button>
         </div>
@@ -95,7 +95,7 @@
 export default {
   data(){
     return{
-      specificPractice:[],
+      specificSurgery:[],
       toPostPracticeUser:{
         email:'',
         password:'',
@@ -105,18 +105,18 @@ export default {
         last_name:'',
         suffix:'',
         practice_role:'',
-        // surgery_id:specificPractice.surgery.id
+        surgery_id:''
       }
     }
   },
   async asyncData({app,route}){
     try{
       
-      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-      const specificPractice = response.data.data.practice
+      let response = await app.$axios.get(`/api/v1/admin/surgeries/${route.params.surgeryID}`)
+      const specificSurgery = response.data.data.surgery
 
       return{
-        specificPractice
+        specificSurgery
       }
       
     }catch(err){
@@ -125,7 +125,7 @@ export default {
   },
 
   methods:{
-    async toPostPracticeUserInfo(toPostPracticeUser){
+    async toPostPracticeUserInfo(toPostSurgeryID,toPostPracticeUser){
       try{
         const response = this.$axios.post(`/api/v1/admin/practice-users`,{
           email:toPostPracticeUser.email,
@@ -136,7 +136,7 @@ export default {
           last_name:toPostPracticeUser.last_name,
           suffix:toPostPracticeUser.suffix,
           practice_role:toPostPracticeUser.practice_role,
-          surgery_id:toPostPracticeUser.surgery_id
+          surgery_id:toPostSurgeryID
         })
         alert('New Practice User Created')
 

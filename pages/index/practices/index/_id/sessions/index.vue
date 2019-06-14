@@ -1,0 +1,282 @@
+<template>
+	<div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+		<div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
+		<!-- HEADER -->
+		<div class="flex justify-between text-sm text-white py-2 px-6">
+			<nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
+			<svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+			</nuxt-link>
+		</div>
+
+		<!--TABS-->
+		<div class="flex flex-col rounded-lg pl-6 mt-2 " >
+			<div class="w-full overflow-hidden">
+			<div class="flex flex-wrap -mx-1 overflow-hidden">
+				<div class="my-1 px-1 overflow-hidden">
+					<div class="my-2 rounded-lg">
+						<nuxt-link
+							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							:to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
+							<strong>Practice</strong>
+						</nuxt-link>
+					</div>
+				</div>
+				<div class="my-1 px-1 overflow-hidden">
+					<div class="my-2 rounded-lg">
+						<nuxt-link
+							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							:to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
+							<strong>Surgeries</strong>
+						</nuxt-link>
+					</div>
+				</div>
+				<div class="my-1 px-1 overflow-</b-tabs>hidden">
+				<div class="my-2 rounded-lg">
+						<nuxt-link
+							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							:to="{path:`/practices/${specificPractice.id}/sessions`,query: $route.query}">
+							<strong>Sessions</strong>
+						</nuxt-link>
+					</div>
+
+				</div>
+				<div class="my-1 px-1 overflow-hidden">
+				<div class="my-2 rounded-lg">
+						<nuxt-link
+							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							:to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
+							<strong>Users</strong>
+						</nuxt-link>
+					</div>
+				</div>
+				<div class="my-1 px-1 overflow-hidden">
+				<div class="my-2 rounded-lg">
+						<nuxt-link
+							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							:to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
+							<strong>Documents</strong>
+						</nuxt-link>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+
+		<!--TABLE-->
+
+		<!--TAB 3-->
+        <div class="flex flex-col rounded-lg p-6 sm:p-6">
+          <div class="flex flex-col rounded-lg">
+            <div class="flex w-full overflow-hidden">
+              <div class="flex flex-wrap -mx-1 overflow-hidden">
+                <div class="my-1 px-1 overflow-hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab6=true,tab7=false,tab8=false,tab9=false,tab10=false,tab11=false,tab12=false"
+                  >
+                    <strong>Available</strong>
+                  </button>
+                </div>
+                <div class="my-1 px-1 overflow-hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab7=true,tab6=false,tab8=false,tab9=false,tab10=false,tab11=false,tab12=false"
+                  >
+                    <strong>Applied</strong>
+                  </button>
+                </div>
+                <div class="my-1 px-1 overflow-</b-tabs>hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab8=true,tab6=false,tab7=false,tab9=false,tab10=false,tab11=false,tab12=false"
+                  >
+                    <strong>Current</strong>
+                  </button>
+                </div>
+                <div s class="my-1 px-1 overflow-hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab9=true,tab6=false,tab7=false,tab8=false,tab10=false,tab11=false,tab12=false"
+                  >
+                    <strong>Completed</strong>
+                  </button>
+                </div>
+                <div class="my-1 px-1 overflow-hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab10=true,tab6=false,tab7=false,tab8=false,tab9=false,tab11=false,tab12=false"
+                  >
+                    <strong>Unfilled</strong>
+                  </button>
+                </div>
+                <div class="my-1 px-1 overflow-hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab11=true,tab6=false,tab7=false,tab8=false,tab9=false,tab10=false,tab12=false"
+                  >
+                    <strong>Cancelled</strong>
+                  </button>
+                </div>
+                <div class="my-1 px-1 overflow-hidden">
+                  <button
+                    class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                    @click="tab12=true,tab6=false,tab7=false,tab8=false,tab9=false,tab10=false,tab11=false"
+                  >
+                    <strong>Declined</strong>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="tab6" class="flex text-white text-xs p-4">
+            <span>Available tab</span>
+          </div>
+
+          <div v-if="tab7" class="flex text-white text-xs p-4">
+            <span>Applied Tab</span>
+          </div>
+
+          <div v-if="tab8" class="flex text-white text-xs p-4">
+            <span>Current Tab</span>
+          </div>
+
+          <div v-if="tab9" class="flex text-white text-xs p-4">
+            <span>Completed Tab</span>
+          </div>
+
+          <div v-if="tab10" class="flex text-white text-xs p-1">
+            <div class="w-full overflow-hidden">
+              <div class="flex flex-col">
+                <!-- HEADER -->
+                <div class="flex">
+                  <div style="width: 25%;">
+                    <div class="flex text-white text-xs p-2">
+                      <strong>Job Number</strong>
+                    </div>
+                  </div>
+                  <div style="width: 33%;">
+                    <div class="flex text-white text-xs p-2">
+                      <strong>Practice/Surgery</strong>
+                    </div>
+                  </div>
+                  <div style="width: 22%">
+                    <div class="flex text-white text-xs p-2">
+                      <strong>Title</strong>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-2">
+                      <strong>Created</strong>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-2">
+                      <strong>From</strong>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-2">
+                      <strong>To</strong>
+                    </div>
+                  </div>
+                </div>
+                <!-- HEADER -->
+
+                <!-- BODY -->
+                <nuxt-link
+                  v-for="(unfilled, index) in unfilleds"
+                  :key="`unfilled-${index}`"
+                  :to="`/practices/_id/unfilled`"
+                  class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+                >
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-4">
+                      <span>{{ unfilled.jobNum }}</span>
+                    </div>
+                  </div>
+                  <div style="width: 30%;">
+                    <div class="flex text-white text-xs p-4">
+                      <span>{{ unfilled.practice }}</span>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-4">
+                      <span>{{ unfilled.title }}</span>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-4">
+                      <span>{{ unfilled.created }}</span>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-4">
+                      <span>{{ unfilled.from }}</span>
+                    </div>
+                  </div>
+                  <div style="width: 20%;">
+                    <div class="flex text-white text-xs p-4">
+                      <span>{{ unfilled.to }}</span>
+                    </div>
+                  </div>
+                </nuxt-link>
+                <!-- BODY -->
+              </div>
+            </div>
+          </div>
+
+          <div v-if="tab11" class="flex text-white text-xs p-4">
+            <span>Cancelled Tab</span>
+          </div>
+
+          <div v-if="tab12" class="flex text-white text-xs p-4">
+            <span>Declined Tab</span>
+          </div>
+        </div>
+		
+		
+		
+
+        <span class="text-white ">Sessions Tab</span>
+		</div>
+
+
+		<nuxt-child/>
+
+	</div>
+</template>
+
+<script>
+export default{
+	  transition: "subpage",
+
+  data() {
+    return {
+      specificPractice:[],
+    };
+  },
+
+  async asyncData({ app, route }) {
+    try {
+      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
+      const specificPractice = response.data.data.practice
+      const surgeries = response.data.data.practice.surgery
+
+      console.log(surgeries)
+
+      return{
+        specificPractice,
+        surgeries
+      }
+    } catch (err) {
+      console.log("index practices index _id index asyncData err", err);
+    }
+  },
+}
+
+</script>
+
+<style>
+
+</style>

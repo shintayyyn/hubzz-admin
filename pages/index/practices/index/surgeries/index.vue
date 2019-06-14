@@ -72,8 +72,8 @@
 					</div>
 					<div class="hidden lg:flex w-1/4">
 						<div class="flex flex-col text-white text-xs p-4">
-						<!-- 	<span>{{ surgery.address ? surgery.address.line_1 : null  }}</span>
-							<span>{{ surgery.address ? surgery.address.line_2 : null  }}</span> -->
+							<span>{{ surgery.address ? surgery.address.line_1 : null  }}</span>
+							<span>{{ surgery.address ? surgery.address.line_2 : null  }}</span>
 							<span>{{ surgery.address ? surgery.address.line_3 : null  }}</span>
 							<span>{{ surgery.address ? surgery.address.post_code : null  }}</span>
 						</div>

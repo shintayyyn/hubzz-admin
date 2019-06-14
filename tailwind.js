@@ -212,7 +212,7 @@ module.exports = {
       'Fira Sans',
       'Droid Sans',
       'Helvetica Neue',
-      'sans-serif',
+      'sans-serif'
     ],
     'serif': [
       'Constantia',
@@ -233,7 +233,8 @@ module.exports = {
       'Liberation Mono',
       'Courier New',
       'monospace',
-    ]
+    ],
+    
   },
 
 

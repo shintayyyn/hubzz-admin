@@ -253,7 +253,6 @@ export default {
 
       return
 
-
       console.log('filterCompliances', this.filterCompliances)
       
       const params = {}

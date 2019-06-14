@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col px-4 py-2  overflow-auto">
-    <div class="flex flex-wrap overflow-hidden sm:-mx-3">
+    <div class="flex flex-wrap overflow-hidden">
       <div class="w-1/2  sm:my-3 sm:px-3 overflow-hidden">
         <div class="flex py-2">
           	<div class="relative">
@@ -15,7 +15,7 @@
 
       <div class="w-1/2 sm:my-3 sm:px-3 overflow-hidden">
         <nuxt-link
-          to="/practices/addpractice"
+          to="/practices/surgeries/surgery-add-practice"
           class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow float-right"
         >Add Practice</nuxt-link>
       </div>
