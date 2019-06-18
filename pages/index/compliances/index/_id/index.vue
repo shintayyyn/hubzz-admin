@@ -281,7 +281,6 @@
         </div>
       </div>
       <!-- TABLE -->
-            <!-- BODY -->
       <p class=" text-sm text-white pt-8 px-8 font-semibold">Mandatory Trainings (Optional) </p>
       <!-- TABLE -->
       <div style="lg:w-1/2 ">
@@ -322,7 +321,7 @@
           <!-- HEADER -->
 
           <!-- BODY -->
-          <nuxt-link
+          <!-- <nuxt-link
             v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
             :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
             :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
@@ -374,7 +373,7 @@
                   'Compliant' : 'Empty' }}</span>
               </div>
             </div>
-          </nuxt-link>
+          </nuxt-link> -->
           <!-- BODY -->
         </div>
       </div>
@@ -419,6 +418,8 @@ export default {
         }
       })
 
+      console.table(mandatoryComplianceDocuments)
+
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === optionalComplianceDocument.id
@@ -439,7 +440,6 @@ export default {
         }
       })
 
-      console.log(optionalMandatoryTrainings)
 
       return{
         locumUser,

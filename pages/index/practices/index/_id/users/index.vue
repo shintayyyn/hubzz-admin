@@ -66,7 +66,7 @@
 		<!--TAB 4-->
         <div class="flex flex-col rounded-lg p-6 sm:p-6">
           <div class="w-full overflow-hidden">
-            <nuxt-link :to="`/practices/${specificPractice.id}/new-practice-user/${surgeries.id}`">
+            <nuxt-link :to="`/practices/${specificPractice.id}/users/new-practice-user/${surgeries.id}`">
               <button
                 class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
               >Add User
@@ -109,36 +109,36 @@
 
               <!-- BODY -->
               <nuxt-link
-                v-for="(user, index) in users"
+                v-for="(user, index) in usersInPractice"
                 :key="`user-${index}`"
                 :to="`/practices/_id/edituser`"
                 class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
               >
                 <div style="width: 20%;">
                   <div class="flex text-white text-xs p-4">
-                    <span>{{ user.fullName }}</span>
+                    <span>{{ user.personal_detail.name }}</span>
                   </div>
                 </div>
                 <div style="width: 30%;">
                   <div class="flex text-white text-xs p-4">
-                    <span>{{ user.emailAddr }}</span>
+                    <span>{{ user.email }}</span>
                   </div>
                 </div>
                 <div style="width: 20%;">
                   <div class="flex text-white text-xs p-4">
-                    <span>{{ user.role }}</span>
+                    <span>{{ user.practice_detail.practice_role }}</span>
                   </div>
                 </div>
                 <div style="width: 20%;">
                   <div class="flex text-white text-xs p-4">
-                    <span>{{ user.signUpVerified }}</span>
+                    <span>{{ user.actived_at ? user.actived_at : null}}</span>
                   </div>
                 </div>
                 <div style="width: 20%; padding-top:15px">
                   <div
                     class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-full shadow"
                   >
-                    <span>{{ user.status }}</span>
+                    <span>{{ user.actived_at ? 'Active' : 'Disabled' }}</span>
                   </div>
                 </div>
               </nuxt-link>
@@ -146,8 +146,6 @@
             </div>
           </div>
         </div>
-
-        <span class="text-white ">Users Tab</span>
 		</div>
 
 
@@ -170,22 +168,28 @@ export default{
 
   async asyncData({ app, route }) {
     try {
-      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-      const specificPractice = response.data.data.practice
-	  const surgeries = response.data.data.practice.surgery
+    let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
+    const specificPractice = response.data.data.practice
+    const surgeries = response.data.data.practice.surgery
 	  
 	  response = await app.$axios.get(`/api/v1/admin/practice-users`)
-	  const practiceUsers = response.data.data.users
+    const practiceUsers = response.data.data.users
 
-	  console.table(practiceUsers)
+    const usersInPractice = practiceUsers.filter((usersInside)=>{
+      return usersInside.practice_detail.practice.id === specificPractice.id})
+    
+    console.table(usersInPractice)    
+    // console.table(specificUserInPractice)
+	  // console.table(practiceUsers)
+    // console.log(surgeries)
 
-      console.log(surgeries)
+    return{
+      specificPractice,
+      practiceUsers,
+      surgeries,
+      usersInPractice
+    }
 
-      return{
-		specificPractice,
-		practiceUsers,
-        surgeries
-      }
     } catch (err) {
       console.log("index practices index _id index asyncData err", err);
     }

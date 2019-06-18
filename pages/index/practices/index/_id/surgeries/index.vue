@@ -61,67 +61,65 @@
 			</div>
 			<!--TABS END HERE-->
 
-			<div class="flex flex-col w-full rounded-lg p-6 sm:p-6">
-				<div class="flex flex-wrap overflow-hidden">
-					<div class="flex w-full overflow-hidden">
-						<div>
-							<nuxt-link
-								:to="{path: `/practices/${specificPractice.id}/surgeries/add-surgery`}"
-								class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-right"
-							>Add Surgery
-							</nuxt-link>
-						</div>
-					</div>
-					<!--TABLE-->
-					<div class="flex flex-col ">
-						<!--HEADERS-->
-						<div class="flex">
-							<div style="width:25%">
-								<div class="flex text-white text-xs p-2">
-								<strong>Practice Name</strong>
-								</div>
-							</div>
-							<div style="width:25%">
-								<div class="flex text-white text-xs p-2">
-								<strong>Practice Code</strong>
-								</div>
-							</div>
-							<div style="width:25%">
-								<div class="flex text-white text-xs p-2">
-								<strong>Practice Location</strong>
-								</div>
-							</div>
-						</div>
-						<!--HEADERS END HERE-->
-						<div v-for="(childSurgery,index) in childSurgeries"
-							:key="`childSurgery-${index}`"
-							class="flex no-underline rounded-lg bg-waterloo my-2"
-							>	
-							<div style="width: 25%;">
-								<div class="flex text-white text-xs p-4">
-								<span>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
-								</div>
-							</div>
-							<div style="width: 25%;">
-								<div class="flex text-white text-xs p-4">
-								<span>{{ childSurgery.surgery ? childSurgery.surgery.code :'null '}}</span>
-								</div>
-							</div>
-						
-							<div style="width: 20%;">
-								<div class="text-white text-xs p-4">
-								<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
-								<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
-								<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
-								</div>
-							</div>
-						
-						</div>
-					</div>
-
+			<div class="flex p-4 overflow-hidden">
+				<div>
+					<nuxt-link
+						:to="{path: `/practices/${specificPractice.id}/surgeries/add-surgery`}"
+						class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-right"
+					>Add Surgery
+					</nuxt-link>
 				</div>
-			</div>	
+			</div>
+
+			
+				
 			<!--TABLE STARTS HERE-->
+			<!--TABLE-->
+			<div class="flex flex-col p-4 ">
+				<!--HEADERS-->
+				<div class="flex">
+					<div style="width:25%">
+						<div class="flex text-white text-xs p-2">
+						<strong>Practice Name</strong>
+						</div>
+					</div>
+					<div style="width:25%">
+						<div class="flex text-white text-xs p-2">
+						<strong>Practice Code</strong>
+						</div>
+					</div>
+					<div style="width:25%">
+						<div class="flex text-white text-xs p-2">
+						<strong>Practice Location</strong>
+						</div>
+					</div>
+				</div>
+				<!--HEADERS END HERE-->
+				<div v-for="(childSurgery,index) in childSurgeries"
+					:key="`childSurgery-${index}`"
+					class="flex no-underline rounded-lg bg-waterloo my-2"
+					>	
+					<div style="width: 25%;">
+						<div class="flex text-white text-xs p-4">
+						<span>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
+						</div>
+					</div>
+					<div style="width: 25%;">
+						<div class="flex text-white text-xs p-4">
+						<span>{{ childSurgery.surgery ? childSurgery.surgery.code :'null '}}</span>
+						</div>
+					</div>
+				
+					<div style="width: 20%;">
+						<div class="text-white text-xs p-4">
+						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
+						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
+						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
+						</div>
+					</div>
+				
+				</div>
+			</div>
 			
 
 		</div>
