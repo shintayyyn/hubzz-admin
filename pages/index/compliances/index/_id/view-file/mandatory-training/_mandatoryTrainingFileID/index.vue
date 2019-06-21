@@ -51,7 +51,7 @@
             <p class="mt-5 mr-20">Locum</p>
             <p class="text-white underline">{{locumUser.personal_detail ? locumUser.personal_detail.name: null}}</p>
             <p class="mt-5 mr-20">File last uploaded</p>
-            <p class="text-white underline">{{locumMandatoryTrainings.file ? $moment(locumMandatoryTrainings.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+            <p class="text-white underline">{{locumMandatoryTrainings && locumMandatoryTrainings.file ? $moment(locumMandatoryTrainings.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20">
@@ -97,7 +97,7 @@
              <embed
               width=800px
               height=600px
-              :src="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null"
+              :src="locumMandatoryTrainings && locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null"
               >
           </div>
        
@@ -115,6 +115,8 @@ export default {
   data() {
     return {
       locumUser:null,
+      mandatoryTrainingFile:null,
+      locumMandatoryTrainings:[],
       toPutLocumDetailCompliance:{
         status:'',
         expired_at:'',
@@ -133,14 +135,22 @@ export default {
       response = await app.$axios.get(`/api/v1/admin/locum-users/${mandatoryTrainingFile.created_by_user.id}`)
       const locumUser = response.data.data.user
       const locumMandatoryTrainings = response.data.data.user.locum_detail.mandatory_trainings
+      
+      console.log(locumMandatoryTrainings)
+      
+      // const specificMandatoryTraining = locumMandatoryTrainings.filter((userMandatoryTraining)=>{
+      //   return userMandatoryTraining.file.id === mandatoryTrainingFile.id
+      // })
+
+      // console.log(specificMandatoryTraining)
+      // console.log(locumUser)
+      // console.table(locumMandatoryTrainings)
 
       return{
         locumUser,
         locumMandatoryTrainings,
       }
-      console.log(locumUser)
-      console.log(locumMandatoryTrainings)
-      
+
     } catch (err) {
       console.log("index practices index create asyncData err", err);
     }
@@ -148,7 +158,6 @@ export default {
   
   
   methods:{
-  
     async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
       try{
         const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{

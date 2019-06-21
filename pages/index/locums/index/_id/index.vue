@@ -61,13 +61,13 @@
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
                   <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
                     v-for="clinicalSystem in clinicalSystems"
-                    :key="clinicalSystem.id + '-name'">
+                    :key="clinicalSystem.id + '-name1'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
                   <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
                     v-for="spokenLanguage in spokenLanguages"
-                    :key="spokenLanguage.id + '-name'">
+                    :key="spokenLanguage.id + '-name2'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
                   </p>
                 </div>
@@ -86,7 +86,7 @@
                   <p class="m-2 mt-5 mr-20">Compliance Documents</p>
 
                   <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
-                   :key="`specificComplianceDoc-${index}`"
+                   :key="`${index}-${specificComplianceDoc.id}-`"
                   >
                    <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
                      <svgicon
@@ -174,38 +174,38 @@
             <!-- BODY -->
             <nuxt-link
               v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
-              :key="`compliance-${index}`"
-              :to="`/compliances/select-locum`"
+              :key="`locumUserCurrentJob-${index}`"
+              :to="`/locums/${locumUser.id}/view-job/${locumUserCurrentJob.id}`"
               class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
               <div style="width: 20%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ locumUserCurrentJob.number }}</span>
+                  <span>{{ locumUserCurrentJob.job_number }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ locumUserCurrentJob.practice }}</span>
+                  <span>{{ locumUserCurrentJob.platform_job.practice.surgery.name }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ locumUserCurrentJob.title }}</span>
+                  <span>{{ locumUserCurrentJob.platform_job.appointed_to_locum.user.locum_detail.profession.name }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ locumUserCurrentJob.from }}</span>
+                  <span>{{ locumUserCurrentJob.platform_job.date_start }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ locumUserCurrentJob.to }}</span>
+                  <span>{{ locumUserCurrentJob.platform_job.date_end }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
                 <div class="flex text-white text-xs p-4">
-                  <span>{{ locumUserCurrentJob.createdAt }}</span>
+                  <span>{{ locumUserCurrentJob.platform_job.date_created }}</span>
                 </div>
               </div>
             </nuxt-link>
@@ -233,11 +233,13 @@ export default {
       profileTab: true,
       jobTab: false,
       locumUserComplianceDocuments:[],
-      // locumUserCurrentJobs:[],
+      locumUserCurrentJobs:[],
       qualifications:[],
       clinicalSystems:[],
       spokenLanguages:[],
-      specificLocumCompDocs:[]
+      specificLocumCompDocs:[],
+
+
 
     };
   },
@@ -255,7 +257,6 @@ export default {
       response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents`)
       const locumCompDoc = response.data.data.locum_detail_compliance_documents
 
-      
       const specificLocumCompDocs = locumUserComplianceDocuments.map((specificComplianceDoc)=>{
         const locumSpecificCompDoc = locumCompDoc.find((complianceDoc)=>{
           return complianceDoc.id === specificComplianceDoc.id
@@ -266,7 +267,12 @@ export default {
         }
       })
 
-      console.log(specificLocumCompDocs)
+      response = await app.$axios.get(`/api/v1/admin/jobs`)
+      const allJobs = response.data.data.jobs
+
+      const locumUserCurrentJobs = allJobs.filter((locumsAppointed)=>{
+        return locumsAppointed.appointed_to_locum_detail_id === locumUser.locum_detail.id
+      })      
 
       return{
       locumUser,
@@ -275,6 +281,7 @@ export default {
       clinicalSystems,
       spokenLanguages,
       specificLocumCompDocs,
+      locumUserCurrentJobs
       }
 
     } catch (err) {

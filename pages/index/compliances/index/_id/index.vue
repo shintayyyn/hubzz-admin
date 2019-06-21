@@ -321,22 +321,25 @@
           <!-- HEADER -->
 
           <!-- BODY -->
-          <!-- <nuxt-link
+          <nuxt-link
             v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
             :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
             :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/compliances/${locumUser.id}/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null }`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining && optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
               <div class="flex text-white text-xs p-4">
                 <span>{{optionalMandatoryTraining.optionalMandatoryTraining.name}}</span>
-                <span class="ml-4">{{optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null}}</span>
+                <span class="ml-4">{{optionalMandatoryTraining.locumOptionalMandatoryTraining &&
+                     optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? 
+                     optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null}}</span>
               </div>
             </div>
              <div style="width: 10%;">
               <div class="flex text-white text-xs p-4">
-                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining ? 
+                <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
+                  optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? 
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size + ' Bytes' : null}}
                 </span>
               </div>
@@ -373,7 +376,7 @@
                   'Compliant' : 'Empty' }}</span>
               </div>
             </div>
-          </nuxt-link> -->
+          </nuxt-link>
           <!-- BODY -->
         </div>
       </div>
@@ -400,10 +403,11 @@ export default {
     try {
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
-
       const professionCategoryid = locumUser.locum_detail.profession.profession_category.id
+
       response = await app.$axios.get(`/api/v1/profession-categories/${professionCategoryid}`)
       const professionCategory = response.data.data.profession_category
+
       response = await app.$axios.get(`/api/v1/admin/mandatory-trainings`)
       const mandatoryTrainings = response.data.data.mandatory_trainings
 
@@ -418,8 +422,6 @@ export default {
         }
       })
 
-      console.table(mandatoryComplianceDocuments)
-
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === optionalComplianceDocument.id
@@ -431,8 +433,8 @@ export default {
       })
 
       const optionalMandatoryTrainings = mandatoryTrainings.map((optionalMandatoryTraining)=>{
-        const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((mandatoryTraining)=>{
-          return mandatoryTraining.id===optionalMandatoryTraining.id
+        const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((locumMandatoryTraining)=>{
+          return locumMandatoryTraining.mandatory_training.id === optionalMandatoryTraining.id
         })
         return{
           optionalMandatoryTraining,
@@ -440,6 +442,7 @@ export default {
         }
       })
 
+      console.log(optionalMandatoryTrainings)
 
       return{
         locumUser,
@@ -470,8 +473,9 @@ export default {
         }
       
       }catch(err){
-        console.log("index practices index put GMC/NMC err", err);
         alert('Something went wrong!!')
+        console.log("index practices index put GMC/NMC err", err);
+        
       }
     },
     async toPutMplNpl(currentStatus,locumID, verifyReject){
@@ -489,8 +493,8 @@ export default {
         }
 
       }catch(err){
-        console.log("index practices index put MPL/NPL err", err);
         alert('Something went wrong!!')
+        console.log("index practices index put MPL/NPL err", err);
       }
     },
   }

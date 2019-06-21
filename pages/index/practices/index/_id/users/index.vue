@@ -10,9 +10,8 @@
 
 		<!--TABS-->
 		<div class="flex flex-col rounded-lg pl-6 mt-2 " >
-			<div class="w-full overflow-hidden">
-			<div class="flex flex-wrap -mx-1 overflow-hidden">
-				<div class="my-1 px-1 overflow-hidden">
+			<div class="flex flex-wrap -mx-1">
+				<div class="my-1 px-1">
 					<div class="my-2 rounded-lg">
 						<nuxt-link
 							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -21,7 +20,7 @@
 						</nuxt-link>
 					</div>
 				</div>
-				<div class="my-1 px-1 overflow-hidden">
+				<div class="my-1 px-1">
 					<div class="my-2 rounded-lg">
 						<nuxt-link
 							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -40,7 +39,7 @@
 					</div>
 
 				</div>
-				<div class="my-1 px-1 overflow-hidden">
+				<div class="my-1 px-1">
 				<div class="my-2 rounded-lg">
 						<nuxt-link
 							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -49,7 +48,7 @@
 						</nuxt-link>
 					</div>
 				</div>
-				<div class="my-1 px-1 overflow-hidden">
+				<div class="my-1 px-1">
 				<div class="my-2 rounded-lg">
 						<nuxt-link
 							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -58,7 +57,6 @@
 						</nuxt-link>
 					</div>
 				</div>
-			</div>
 			</div>
 		</div>
 
@@ -111,7 +109,7 @@
               <nuxt-link
                 v-for="(user, index) in usersInPractice"
                 :key="`user-${index}`"
-                :to="`/practices/_id/edituser`"
+                :to="`/practices/${specificPractice.id}/users/edit-user/${user.id}`"
                 class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
               >
                 <div style="width: 20%;">
@@ -176,9 +174,10 @@ export default{
     const practiceUsers = response.data.data.users
 
     const usersInPractice = practiceUsers.filter((usersInside)=>{
-      return usersInside.practice_detail.practice.id === specificPractice.id})
+      return usersInside.practice_detail.practice.id === specificPractice.id
+    })
     
-    console.table(usersInPractice)    
+    // console.table(usersInPractice)    
     // console.table(specificUserInPractice)
 	  // console.table(practiceUsers)
     // console.log(surgeries)

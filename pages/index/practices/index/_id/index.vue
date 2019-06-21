@@ -7,12 +7,11 @@
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
-      <!-- TABS -->
+      <!-- DEFAULT TABS -->
       <div class="flex flex-col rounded-lg pl-6 mt-2 " >
-        <div class="w-full overflow-hidden">
-          <div class="flex flex-wrap -mx-1 overflow-hidden">
-
-            <div class="my-1 px-1 overflow-hidden">
+        <div class="w-full">
+          <div class="flex flex-wrap -mx-1">
+            <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -21,8 +20,7 @@
                 </nuxt-link>
               </div>
             </div>
-
-            <div class="my-1 px-1 overflow-hidden">
+            <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -31,8 +29,7 @@
                 </nuxt-link>
               </div>
             </div>
-
-            <div class="my-1 px-1 overflow-</b-tabs>hidden">
+            <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -41,8 +38,7 @@
                 </nuxt-link>
               </div>
             </div>
-
-            <div class="my-1 px-1 overflow-hidden">
+            <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -51,8 +47,7 @@
                 </nuxt-link>
               </div>
             </div>
-
-            <div class="my-1 px-1 overflow-hidden">
+            <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
@@ -61,13 +56,12 @@
                 </nuxt-link>
               </div>
             </div>
-
           </div>
         </div>
       </div>
-
+      <!--DEFAULT TABS END HERE-->
       <div class="flex flex-col rounded-lg p-6 sm:p-6">
-        <!--TAB 1-->
+
         <div>
           <form class="flex flex-col bg-waterloo  py-2 px-4 shadow rounded-lg sm:w-full lg:w-1/2">
             <div class="flex flex-wrap">
@@ -201,8 +195,8 @@ export default {
         })
         alert('Saved')
       }catch(err){
-        console.log("index put locum detail compliance documents error");
         alert('Something went wrong!')
+        console.log("index put locum detail compliance documents error");
       }
 
     }
