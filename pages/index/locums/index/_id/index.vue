@@ -41,9 +41,9 @@
                   <p class="m-2 mt-5 mr-20">Home / landline number</p>
                   <p class="m-2 text-white">{{ locumUser.contact_detail ? locumUser.contact_detail.home_number : null }}</p>
                   <p class="m-2 mt-5 mr-20">Postal Address</p>
-                  <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_1 : null }}</p>
-                  <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_2 : null }}</p>
-                  <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.line_3 : null }}</p>
+                  <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}</p>
+                  <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}</p>
+                  <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}</p>
                   <p class="m-2 mt-5 mr-20">GMC / NMC Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
                   <p class="m-2 mt-5 mr-20">MPL / NPL Number</p>
@@ -122,6 +122,9 @@
                     v-model="selectedStatus"
                   >
                     <option>Active</option>
+                    <!-- <option>Inactive</option>
+                    <option>Suspended</option>
+                    <option>Deactivated</option> -->
                     <option>Disabled</option>
                   </select>
                   <button

@@ -16,7 +16,7 @@ export default {
   ** Headers of the page
   */
   head: {
-    title: pkg.name,
+    title: 'HQ | Hubzz',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -24,7 +24,10 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-    ]
+    ],
+    script: [
+      { src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCqkvPPMK1lBnOF1NpxUggGFzkfcoaHV24&libraries=places' }
+    ],
   },
 
   /*
@@ -36,7 +39,8 @@ export default {
   ** Global CSS
   */
   css: [
-    '~/assets/css/tailwind.css'
+    '~/assets/css/tailwind.css',
+    '~/assets/css/main.css'
   ],
 
   /*
@@ -73,12 +77,10 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/auth',
-    // 'nuxt-material-design-icons',
     // ['nuxt-google-maps-module', {
     //   /* module options */
     //   key: 'GOOGLE MAPS KEY',
     // }],
-    // 'bootstrap-vue/nuxt'
     '@nuxtjs/onesignal',
     '@nuxtjs/pwa',
   ],
@@ -133,7 +135,6 @@ export default {
     */
     transpile: [/^vue2-google-maps($|\/)/],
     extend(config, ctx) {
-
     },
     
   },

@@ -3,7 +3,7 @@
     <div style="width: calc(100% - 70px);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
-        <nuxt-link to="/locums" class="text-white hover:text-yellow-dark p-1">
+        <nuxt-link :to="{path:`/locums/${locumUser.id}`, query:$route.query}" class="text-white hover:text-yellow-dark p-1">
           <svgicon
             name="arrow-left-solid"
             height="22"
@@ -17,74 +17,71 @@
 
       <div class="mx-6 overflow-auto">
         <div class="flex">
-          <button
-            @click="profileTab = true, jobTab = false"
-            class="rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
-          >Profile</button>
-          <button
-            @click="jobTab = true, profileTab = false"
-            class="rounded-lg border-2 border-transparent text-xs text-white p-3 focus:bg-waterloo"
-          >Jobs</button>
+         <p class="text-2xl text-white font-semibold">{{specificJob.platform_job ? specificJob.platform_job.title:null }}</p>
         </div>
 
         <div class="flex xs:flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
-              <div class="w-1/3 overflow-hidden">
+              <div class="w-1/2 overflow-hidden">
                 <div class="text-grey mx-5">
                   <p class="m-2">Job Number</p>
                   <p class="m-2 text-white">{{specificJob.job_number}}</p>
                   <p class="m-2 mt-5 mr-20">Rate</p>
-                  <p class="m-2 text-white underline">{{specificJob.platform_job.rate}}</p>
+                  <p class="m-2 text-white underline">{{"£"+specificJob.platform_job ? specificJob.platform_job.rate:null +" Per Hour"}}</p>
                   <p class="m-2 mt-5 mr-20">Total Hours</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.total_hours}}</p>
+                  <p class="m-2 text-white">{{specificJob.platform_job.total_hours + " Hours"}}</p>
                   <p class="m-2 mt-5 mr-20">Job Description</p>
-                  <p class="m-2 text-white">{{  }}</p>
+                  <p class="m-2 text-white">{{specificJob.platform_job.description}}</p>
                   <p class="m-2 mt-5 mr-20">Extra Information</p>
                   <p class="ml-2 text-white">{{   }}</p>
-                  <p class="m-2 mt-5 mr-20">Specialty</p>
-                  <p class="m-2 text-white">{{ }}</p>
+                 <p class="m-2 mt-5 mr-20">Speciality</p>
+                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                    v-for="specialty in qualifications"
+                    :key="specialty.id + '-name'">
+                    {{specialty ? specialty.name:null}}
+                  </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark">
-                      {{}}
+                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                    v-for="clinicalSystem in clinicalSystems"
+                    :key="clinicalSystem.id + '-name1'">
+                      {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark">
-                    {{}}
+                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                    v-for="spokenLanguage in spokenLanguages"
+                    :key="spokenLanguage.id + '-name2'">
+                    {{spokenLanguage ? spokenLanguage.name:null}}
                   </p>
                 </div>
               </div>
-              <div class="w-1/3 overflow-hidden">
+              <div class="w-1/2 overflow-hidden">
                 <div class="text-grey mx-10">
                   <p class="m-2 mr-20">Practice</p>
-                  <p class="m-2 text-white">{{}}</p>
-                  <p class="m-2 mt-5 mr-20">Short Biography</p>
-                  <p class="m-2 text-white">{{}}</p>
-                  <p class="m-2 mt-5 mr-20">Special requirements</p>
-                  <p class="ml-2 text-white">{{}}</p>
-                  <p class="m-2 mt-5 mr-20">Preferred rates</p>
-                  <p class="ml-2 text-white">Per hour £ (none)</p>
-                  <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
-                  <p class="m-2 mt-5 mr-20">Compliance Documents</p>
-                  
-                  <p class="m-2 mt-5 mr-20">Other Documents</p>
-                </div>
-              </div>
-              <div class="w-1/3 overflow-hidden">
-                <div class="mx-20">
-                  <img class="w-48 h rounded-full mr-4" src="~/assets/images/default-user-image.png" >
-                  <p class="m-2 text-grey">Sign-up verified by email</p>
-                  <p class="m-2 text-white">24/01/2019</p>
-                  <p class="m-2 text-grey">Active at </p>
-                  <p class="m-2 text-white">{{ }}</p>
-                  <select
-                    class="outline-none border-2 border-transparent text-xs text-black pr-6"
-                    id="grid-state"
-                  >
-                    <option>Active</option>
-                    <option>Disabled</option>
-                  </select>
-               
+                  <p class="m-2 text-white">
+                    {{specificJob.platform_job.practice.surgery.name}} <br><br>
+                    {{specificJob.platform_job.practice.surgery.address.line_1}}<br><br>
+                    {{specificJob.platform_job.practice.surgery.address.line_2}}<br><br>
+                    {{specificJob.platform_job.practice.surgery.address.line_3}}<br><br>
+                  </p>
+                  <div class="mt-4 mx-2 ">
+                    <!-- google map -->
+                    <GmapMap
+                      :center="{lat:latLang.x, lng:latLang.y}"
+                      :zoom="15"
+                      map-type-id="terrain"
+                      style="width: 400px; height:300px"
+                    >
+                      <GmapMarker :position="google && new google.maps.LatLng(latLang.x, latLang.y)"/>
+                    </GmapMap>
+                  </div>
+                  <p class="m-2 mt-5 mr-20">Duration</p>
+                  <span class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-white">From</span>
+                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_start}}</span> <br><br>
+                  <span class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-white">To</span>
+                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_end}}</span> <br><br>
+                  <span class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-white">Shift</span>
+                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.shift.name}}</span> <br><br>
                 </div>
               </div>
             </div>
@@ -99,35 +96,56 @@
 </template>
 
 <script>
+import { gmapApi } from 'vue2-google-maps'
 export default {
   transition: "subpage",
 
   data() {
-
     return {
-        specificJob:[]
+        specificJob:[],
+        locumUser:[],
+        qualifications:[],
+        clinicalSystems:[],
+        spokenLanguages:[],
     };
   },
 
   async asyncData({ app, route }) {
     try {
-        let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.id}`)
-        const specificJob = response.data.data.job
+        console.log("Route ID "+route.params.id)
+        let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.jobId}`)
 
-        console.log(specificJob)
+        const specificJob = response.data.data.job
+        const locumUserID = specificJob.platform_job.appointed_to_locum.user.id
+
+        response = await app.$axios.get(`/api/v1/admin/locum-users/${locumUserID}`)
+        const locumUser = response.data.data.user
+        const qualifications = locumUser.locum_detail.qualifications
+        const clinicalSystems = locumUser.locum_detail.clinical_systems
+        const spokenLanguages = locumUser.locum_detail.spoken_languages
 
         return{
-            specificJob
+            specificJob,
+            locumUser,
+            qualifications,
+            clinicalSystems,
+            spokenLanguages
         }
 
     } catch (err) {
       console.log("index practices index create asyncData err", err);
     }
   },
-
+  computed: {
+    google: gmapApi,
+    latLang() {
+      return this.specificJob.platform_job.practice.surgery.address.coordinates
+    },
+  },
   methods:{
   }
 
 };
 </script>
-
+<style>
+</style>
