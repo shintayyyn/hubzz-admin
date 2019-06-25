@@ -3,7 +3,7 @@
     <div>
       <nuxt-link
         to="/billing/addinvoice"
-        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
       >Add Invoice</nuxt-link>
     </div>
     <!-- TABLE -->
@@ -12,37 +12,37 @@
         <!-- HEADER -->
         <div class="flex my-2">
           <div class="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Invoice Number</strong>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Practice /Surgery</strong>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Created</strong>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Issued</strong>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Job Numbers</strong>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>£ Amount</strong>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Status</strong>
             </div>
           </div>
@@ -57,37 +57,37 @@
           class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.invnum }}</span>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.practice }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.created }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.issued }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.jobnums }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.amount }}</span>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ billing.status }}</span>
               <div class="p-4" v-if="billing.status=='Issued'">
                 <a class="p-3 bg-green-dark  ">Mark as paid</a>

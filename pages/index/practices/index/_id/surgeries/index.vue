@@ -13,7 +13,7 @@
 					<div class="my-1 px-1">
 						<div class="my-2 rounded-lg">
 							<nuxt-link
-								class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 								:to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
 								<strong>Practice</strong>
 							</nuxt-link>
@@ -22,7 +22,7 @@
 					<div class="my-1 px-1">
 						<div class="my-2 rounded-lg">
 							<nuxt-link
-								class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+								class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
 								:to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
 								<strong>Surgeries</strong>
 							</nuxt-link>
@@ -31,7 +31,7 @@
 					<div class="my-1 px-1 overflow-</b-tabs>hidden">
 						<div class="my-2 rounded-lg">
 							<nuxt-link
-								class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 								:to="{path:`/practices/${specificPractice.id}/sessions`,query: $route.query}">
 								<strong>Sessions</strong>
 							</nuxt-link>
@@ -40,7 +40,7 @@
 					<div class="my-1 px-1">
 						<div class="my-2 rounded-lg">
 							<nuxt-link
-								class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 								:to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
 								<strong>Users</strong>
 							</nuxt-link>
@@ -49,7 +49,7 @@
 					<div class="my-1 px-1">
 						<div class="my-2 rounded-lg">
 							<nuxt-link
-								class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 								:to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
 								<strong>Documents</strong>
 							</nuxt-link>
@@ -75,17 +75,17 @@
 				<!--HEADERS-->
 				<div class="flex">
 					<div style="width:25%">
-						<div class="flex text-white text-xs p-2">
+						<div class="flex text-white text-sm p-2">
 						<strong>Practice Name</strong>
 						</div>
 					</div>
 					<div style="width:25%">
-						<div class="flex text-white text-xs p-2">
+						<div class="flex text-white text-sm p-2">
 						<strong>Practice Code</strong>
 						</div>
 					</div>
 					<div style="width:25%">
-						<div class="flex text-white text-xs p-2">
+						<div class="flex text-white text-sm p-2">
 						<strong>Practice Location</strong>
 						</div>
 					</div>
@@ -96,18 +96,18 @@
 					class="flex no-underline rounded-lg bg-waterloo my-2"
 					>	
 					<div style="width: 25%;">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 						<span>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
 						</div>
 					</div>
 					<div style="width: 25%;">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 						<span>{{ childSurgery.surgery ? childSurgery.surgery.code :'null '}}</span>
 						</div>
 					</div>
 				
 					<div style="width: 20%;">
-						<div class="text-white text-xs p-4">
+						<div class="text-white text-sm p-4">
 						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
 						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
 						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>

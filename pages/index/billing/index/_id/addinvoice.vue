@@ -50,7 +50,7 @@
             <!-- Column Content -->
           </div>
           <div class="my-1 px-1 w-2/5 overflow-hidden">
-            <p class="text-xs text-right">
+            <p class="text-sm text-right">
               Hubzz Limited
               Mws, 601 London Road
               Westcliff-On-Sea SS0 9PE
@@ -61,7 +61,7 @@
         </div>
         <div class="flex flex-wrap -mx-1 overflow-hidden">
           <div class="my-1 px-1 w-2/3 overflow-hidden">
-            <div class="border border-black rounded-lg p-4 text-xs">
+            <div class="border border-black rounded-lg p-4 text-sm">
               <div class="pb-2">To: Accounts Department</div>
               <select
                 class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -73,7 +73,7 @@
             </div>
           </div>
           <div class="my-1 px-1 w-1/3 overflow-hidden">
-            <div class="text-xs float-right text-right content-end">
+            <div class="text-sm float-right text-right content-end">
               <strong>INVOICE</strong>
               <br>Not yet issued
             </div>
@@ -82,7 +82,7 @@
         <div class="flex flex-wrap -mx-1 overflow-hidden">
           <div class="my-1 px-1 w-full overflow-hidden">
             <select
-              class="block appearance-none text-xs w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              class="block appearance-none text-sm w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
             >
               <option>Select the Practice for this Invoice</option>
               <option>Option 2</option>
@@ -95,12 +95,12 @@
               <!--HEADER-->
               <div class="flex justify-center my-2 bg-black">
                 <div style="width: 70%;">
-                  <div class="text-white text-xs text-center">
+                  <div class="text-white text-sm text-center">
                     <strong>Description</strong>
                   </div>
                 </div>
                 <div style="width: 30%;">
-                  <div class="text-white text-xs text-center">
+                  <div class="text-white text-sm text-center">
                     <strong>Total</strong>
                   </div>
                 </div>
@@ -123,7 +123,7 @@
           </div>
         </div>
 
-        <div class="content-end border border-black rounded-lg p-1 text-xs">
+        <div class="content-end border border-black rounded-lg p-1 text-sm">
           Payment by BACS:
           <br>Account name: XXX
           <br>Bank: XXX

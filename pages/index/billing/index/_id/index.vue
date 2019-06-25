@@ -11,7 +11,7 @@
 
       <div class="flex flex-col bg-waterloo m-4 py-2 px-4 rounded-lg" style="width: 400px;">
         <div class="flex flex-col">
-          <label class="text-xs" style="color: #CDD0D8;">Name</label>
+          <label class="text-sm" style="color: #CDD0D8;">Name</label>
         </div>
       </div>
     </div>

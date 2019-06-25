@@ -3,18 +3,18 @@
     <div>
       <nuxt-link
         to="/qualifications/create"
-        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
       >Create</nuxt-link>
     </div>
 
     <div class="flex py-2">
        	<div class="relative">
-				<input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
 				<button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
 					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
 				</button>
 			</div>
-      <button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+      <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
       </div>
 
     <!-- TABLE -->
@@ -23,22 +23,22 @@
         <!-- HEADER -->
         <div class="flex my-2">
           <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Name</strong>
             </div>
           </div>
           <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Created At</strong>
             </div>
           </div>
           <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Updated At</strong>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Actions</strong>
             </div>
           </div>
@@ -53,22 +53,22 @@
           class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
         >
           <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ qualification.name }}</span>
             </div>
           </div>
           <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ $moment(qualification.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
             </div>
           </div>
           <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ qualification.updatedAt }}</span>
             </div>
           </div>
           <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <button>Edit</button>
               <button>Delete</button>
             </div>
@@ -80,9 +80,9 @@
     <!-- TABLE -->
     <!-- PAGINATION -->
 		<div v-if="pageCount > 1">
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									<!-- ^ Removed the FF. code in this area: v-if="showPage(page) TAKE A NOTE OF THIS"-->
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									<!-- ^ Removed the FF. code in this area: v-if="showPage(page) TAKE A NOTE OF THIS"-->
 		</div>
 		<!-- PAGINATION -->
     <nuxt-child/>

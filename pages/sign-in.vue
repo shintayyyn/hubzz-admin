@@ -1,50 +1,63 @@
 <template>
-  <div class="h-full w-full flex flex-col overflow-auto xl:justify-center">
+  <div class="h-full w-full flex flex-col overflow-auto xl:justify-center"   >
+	<div class="flex flex-wrap overflow-hidden" >
 
-    <div class="flex justify-center items-start relative">
+		<div class="w-1/3 h-full overflow-hidden" :style="{ backgroundImage: `url(${backgroundUrl})` }" >
+			<div class="flex justify-center mt-20">
+				<img src="~/assets/images/hubzz-logo.png">
+			</div>
+			
+		</div>
 
-    	<div v-if="loginErrorMessage" class="absolute rounded-lg bg-red p-2 flex items-center justify-between" style="width: 520px;">
-    		<div class="flex-1 flex justify-center items-center">
-	    		<svgicon name="exclamation-circle-solid" height="24" width="24" class="text-white fill-current"/>
-	    		<span class="text-white px-4">{{ loginErrorMessage }}</span>
-    		</div>
-    		<button class="text-white p-2" @click="loginErrorMessage = ''">
-    			<svgicon name="times-solid" height="24" width="24" class="text-white fill-current"/>
-    		</button>
-    	</div>
+		<div class="w-2/3 h-full overflow-hidden">
+			<div class="flex justify-center items-start relative" >
+				<div v-if="loginErrorMessage" class="absolute rounded-lg bg-red p-2 flex items-center justify-between" style="width: 520px;">
+					<div class="flex-1 flex justify-center items-center">
+						<svgicon name="exclamation-circle-solid" height="24" width="24" class="text-white fill-current"/>
+						<span class="text-white px-4">{{ loginErrorMessage }}</span>
+					</div>
+					<button class="text-white p-2" @click="loginErrorMessage = ''">
+						<svgicon name="times-solid" height="24" width="24" class="text-white fill-current"/>
+					</button>
+				</div>
 
-      <div class="flex flex-col px-10 py-6 pt-16 m-4 rounded-lg shadow-lg" style="width: 600px; background-color: #55565A;">
-        <div class="flex flex-wrap justify-between">
-          <label class="text-white text-sm my-1 py-1">Email address</label>
-          <div class="m-1 flex-auto flex justify-end">
-            <span class="text-xs bg-red p-1 text-white" v-if="emailErrorMessage && !showEmailFocus">{{ emailErrorMessage }}</span>
-          </div>
-        </div>
-        <input
-          class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
-          v-model="email"
-          @keyup.enter="login"
-          :class="showEmailFocus ? 'border-yellow-dark' : emailErrorMessage ? 'border-red' : 'border-white-dark'"
-          @focus="showEmailFocus = true"
-          @blur="showEmailFocus = false, checkEmail()"
-        >
+				<div class="flex flex-col px-10 py-6 pt-16 m-4 rounded-lg shadow-lg" style="width: 600px; background-color: #55565A;">
+					<div class="flex flex-wrap justify-between">
+					<label class="text-white text-sm my-1 py-1">Email address</label>
+					<div class="m-1 flex-auto flex justify-end">
+						<span class="text-xs bg-red p-1 text-white" v-if="emailErrorMessage && !showEmailFocus">{{ emailErrorMessage }}</span>
+					</div>
+					</div>
+					<input
+					class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
+					v-model="email"
+					@keyup.enter="login"
+					:class="showEmailFocus ? 'border-yellow-dark' : emailErrorMessage ? 'border-red' : 'border-white-dark'"
+					@focus="showEmailFocus = true"
+					@blur="showEmailFocus = false, checkEmail()"
+					>
 
-        <div class="flex flex-wrap justify-between">
-          <label class="text-white text-sm my-1 py-1">Password</label>
-          <div class="m-1 flex-auto flex justify-end">
-            <span class="text-xs bg-red p-1 text-white" v-if="passwordErrorMessage && !showPasswordFocus">{{ passwordErrorMessage }}</span>
-          </div>
-        </div>
-        <input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="password" @keyup.enter="login" :class="showPasswordFocus ? 'border-yellow-dark' : passwordErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showPasswordFocus = true" @blur="showPasswordFocus = false, checkPassword()">
+					<div class="flex flex-wrap justify-between">
+					<label class="text-white text-sm my-1 py-1">Password</label>
+					<div class="m-1 flex-auto flex justify-end">
+						<span class="text-xs bg-red p-1 text-white" v-if="passwordErrorMessage && !showPasswordFocus">{{ passwordErrorMessage }}</span>
+					</div>
+					</div>
+					<input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="password" @keyup.enter="login" :class="showPasswordFocus ? 'border-yellow-dark' : passwordErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showPasswordFocus = true" @blur="showPasswordFocus = false, checkPassword()">
 
-        <button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="!loggingIn">Sign-in</button>
-        <button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="loggingIn">Loading...</button>
-      </div>
-    </div>
+					<button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="!loggingIn">Sign-in</button>
+					<button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="loggingIn">Loading...</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+ 
   </div>
 </template>
 
 <script>
+  import backgroundUrl from '~/assets/images/hubzz-bg.png'
   import isEmail from 'validator/lib/isEmail'
 
 	export default {
@@ -62,6 +75,7 @@
 
 		data() {
 			return {
+				backgroundUrl,
 				loggingIn: false,
 
 				loginErrorMessage: '',

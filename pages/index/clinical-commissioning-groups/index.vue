@@ -3,19 +3,19 @@
 
 		<!-- BUTTON -->
 		<div v-if="false">
-			<nuxt-link :to="{ path: `/clinical-commissioning-groups/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+			<nuxt-link :to="{ path: `/clinical-commissioning-groups/create`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow">Create</nuxt-link>
 		</div>
 		<!-- BUTTON -->
 
 		<!-- FILTER -->
 		<div class="flex py-2">
 			<div class="relative">
-				<input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
 				<button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
 					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
 				</button>
 			</div>
-			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+			<button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
 		</div>
 		<!-- FILTER -->
 
@@ -26,27 +26,27 @@
 				<!-- HEADER -->
 				<div class="flex mt-2 ">
 					<div class="flex w-full md:w-1/2">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 							<strong>Name</strong>
 						</div>
 					</div>
 					<div class="hidden md:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 							<strong>Created By</strong>
 						</div>
 					</div>
 					<div class="hidden md:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 							<strong>Created At</strong>
 						</div>
 					</div>
 					<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 							<strong>Updated By</strong>
 						</div>
 					</div>
 					<div class="hidden lg:flex w-1/4">
-						<div class="flex text-white text-xs p-4">
+						<div class="flex text-white text-sm p-4">
 							<strong>Updated At</strong>
 						</div>
 					</div>
@@ -57,27 +57,27 @@
         <div class="flex flex-col">
           <nuxt-link event="" v-for="(clinicalCommissioningGroup, index) in clinicalCommissioningGroups" :key="`clinicalCommissioningGroup-${index}`" :to="{ path: `/clinical-commissioning-groups/${clinicalCommissioningGroup.id}`, query: $route.query }" class="flex no-underline rounded-lg shadow-lg bg-waterloo my-2"  :class="false ? 'hover:bg-waterloo-light' : ''" draggable="false">
             <div class="flex w-full md:w-1/2">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ clinicalCommissioningGroup.name }}</span>
               </div>
             </div>
             <div class="hidden md:flex w-1/4">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ clinicalCommissioningGroup.created_by_user && clinicalCommissioningGroup.created_by_user.personal_detail ? clinicalCommissioningGroup.created_by_user.personal_detail.name : null  }}</span>
               </div>
             </div>
             <div class="hidden md:flex w-1/4">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ $moment(clinicalCommissioningGroup.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
               </div>
             </div>
             <div class="hidden lg:flex w-1/4">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ clinicalCommissioningGroup.updated_by_user && clinicalCommissioningGroup.updated_by_user.personal_detail ? clinicalCommissioningGroup.updated_by_user.personal_detail.name : null  }}</span>
               </div>
             </div>
             <div class="hidden lg:flex w-1/4">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ clinicalCommissioningGroup.updated_at ? $moment(clinicalCommissioningGroup.updated_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
               </div>
             </div>
@@ -96,14 +96,14 @@
 		<!-- LOADING -->
 
     <!-- LOADMORE -->
-    <!-- <button class="py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow" @click="loadMore">Load More</button> -->
+    <!-- <button class="py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow" @click="loadMore">Load More</button> -->
     <!-- LOADMORE -->
 
 		<!-- PAGINATION -->
 		<!-- <div v-if="false && pageCount > 1" class="my-1">
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
 		</div> -->
 		<!-- PAGINATION -->
 

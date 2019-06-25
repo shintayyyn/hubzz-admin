@@ -14,13 +14,35 @@
         </nuxt-link>
       </div>
       <!-- HEADER -->
+
+      <!-- CONFIRMATION MODAL -->
+      <!-- <div
+        class="h-full w-full flex flex-col absolute"
+        :style="`z-index: ${confirmationModal ? 100 : -100}; opacity: ${confirmationModal ? 1 : 0};`"
+      >
+        <div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
+          <div>
+            <span class="text-sm p-2">Proceed to sign-out?</span>
+          </div>
+          <div class="flex">
+            <button class="p-2 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
+            <button
+              class="p-2 text-sm rounded-lg border border-white mx-1 shadow"
+              @click="confirmationModal = false"
+            >Cancel</button>
+          </div>
+        </div> 
+      </div>-->
+      <!-- CONFIRMATION MODAL ENDS HERE-->
+
+
       <!-- BODY -->
       <nuxt-link
-        :to="{path:`/compliances/${locumUser.id}/view-profile`, query: $route.query}"
+        :to="{path:`/locums/${locumUser.id}`, query: $route.query}"
         class="flex lg:w-1/2 no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mx-6 mt-10 shadow"
         style="position:relative; cursor: pointer;"
       >
-          <div class="w-4/5 overflow-hidden text-xs m-4">
+          <div class="w-4/5 overflow-hidden text-sm m-4">
             <div class="text-grey">
               <p class="m-2">
                 Name <span class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span>
@@ -40,7 +62,7 @@
 
             </div>
           </div>
-          <div class="w-1/5 overflow-hidden text-xs m-4 pl-24 pt-6 ">
+          <div class="w-1/5 overflow-hidden text-sm m-4 pl-24 pt-6 ">
              <svgicon
                 name="chevron-right"
                 width="48"
@@ -50,34 +72,34 @@
           </div>
       </nuxt-link>
 
-     <div class="flex flex-row lg:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3">
+     <div class="flex flex-row lg:w-1/2 text-sm text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3">
         <p class="m-4  text-grey">GMC / NMC Number</p>
         <p class="m-4">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
         <button
-          class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-green rounded-full"
           :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
-          class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full"
           :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
       </div>
 
-      <div class="flex flex-row lg:w-1/2 text-xs text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3">
+      <div class="flex flex-row lg:w-1/2 text-sm text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3">
         <p class="m-4 text-grey">MPL / NPL Number</p>
         <p class="m-4">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
         <button
-          class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-green rounded-full"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-green rounded-full"
           :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
-          class="inline-flex text-white text-xs m-2 p-2 border border-white focus:bg-orange rounded-full"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full"
           :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
@@ -92,32 +114,32 @@
           <!-- HEADER -->
           <div class="flex my-2">
             <div style="width: 25%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Title</strong>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>File size</strong>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>File uploaded</strong>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Expiry date</strong>
               </div>
             </div>
             <div style="width:15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Days to expire</strong>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Status</strong>
               </div>
             </div>
@@ -133,12 +155,12 @@
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{mandatoryComplianceDocument.mandatoryComplianceDocument.name}}</span>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size + ' Bytes' : null }}
                 </span>
@@ -147,7 +169,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
                    mandatoryComplianceDocument.locumMandatoryComplianceDocument.file &&
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at ? 
@@ -156,7 +178,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
                   $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at)
@@ -164,7 +186,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
                   $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at)
@@ -172,7 +194,7 @@
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="inline-flex text-black text-xs mt-2 py-2 p-3 border border-white rounded-full"
+              <div class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
               :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
                   mandatoryComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
@@ -191,32 +213,32 @@
           <!-- HEADER -->
           <div class="flex my-2">
             <div style="width: 25%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Title</strong>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>File size</strong>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>File uploaded</strong>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Expiry date</strong>
               </div>
             </div>
             <div style="width:15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Days to expire</strong>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Status</strong>
               </div>
             </div>
@@ -232,19 +254,19 @@
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{optionalComplianceDocument.optionalComplianceDocument.name}}</span>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
                   optionalComplianceDocument.locumOptionalComplianceDocument.file.size + ' Bytes' : null }}
                 </span>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
                   $moment(optionalComplianceDocument.locumOptionalComplianceDocument.file.created_at)
                   .format('DD/MM/YYYY HH:mm:ss') : null }}
@@ -252,7 +274,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument && 
                   optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
                   $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
@@ -261,7 +283,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument &&
                    optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
                    $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
@@ -270,7 +292,7 @@
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full">
+              <div class="inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
                   optionalComplianceDocument.locumOptionalComplianceDocument.status : 'Empty' }}
                 </span>
@@ -288,32 +310,32 @@
           <!-- HEADER -->
           <div class="flex my-2">
             <div style="width: 25%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Title</strong>
               </div>
             </div>
               <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>File size</strong>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>File uploaded</strong>
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Expiry date</strong>
               </div>
             </div>
             <div style="width:15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Days to expire</strong>
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <strong>Status</strong>
               </div>
             </div>
@@ -325,11 +347,11 @@
             v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
             :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
             :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/compliances/${locumUser.id}/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining && optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null }`, query: $route.query}"
+            :to="{path:`/compliances/${locumUser.id}/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{optionalMandatoryTraining.optionalMandatoryTraining.name}}</span>
                 <span class="ml-4">{{optionalMandatoryTraining.locumOptionalMandatoryTraining &&
                      optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? 
@@ -337,7 +359,7 @@
               </div>
             </div>
              <div style="width: 10%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? 
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size + ' Bytes' : null}}
@@ -345,7 +367,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
                    optionalMandatoryTraining.locumOptionalMandatoryTraining.file &&
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at ? 
@@ -354,7 +376,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
                   $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
@@ -362,7 +384,7 @@
               </div>
             </div>
             <div style="width: 15%;">
-              <div class="flex text-white text-xs p-4">
+              <div class="flex text-white text-sm p-4">
                 <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
                   $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
@@ -370,7 +392,7 @@
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="inline-flex text-black text-xs mt-2 py-2 p-3 border border-white rounded-full"
+              <div class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
               :class="`${optionalMandatoryTraining.locumOptionalMandatoryTraining ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
                 <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining ? 
                   'Compliant' : 'Empty' }}</span>
@@ -395,7 +417,7 @@ export default {
       mandatoryComplianceDocuments:[],
       optionalComplianceDocuments:[],
       optionalMandatoryTrainings:[],
-      disabled:'true'
+      disabled:'true',
     };
   },
 
@@ -442,8 +464,6 @@ export default {
         }
       })
 
-      console.log(optionalMandatoryTrainings)
-
       return{
         locumUser,
         mandatoryComplianceDocuments,
@@ -456,16 +476,33 @@ export default {
   },
  
   methods:{
+    showConfirmationModal(){
+      this.confirmationModal = false;
+    },
+
     async toPutGmcNmc(currentStatus,locumID,verifyReject){
       try{
-        console.log(currentStatus)
         if(currentStatus === 'Pending'){
            const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:verifyReject
           })
           alert('Saved')
-
-        }else if(currentStatus === 'Verified'||currentStatus ==='Rejected'){
+        }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+            status:verifyReject
+          })
+          alert('Saved.')
+        }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+            status:verifyReject
+          })
+          alert('Saved.')
+        }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+            status:'Pending'
+          })
+          alert('Saved. Status reverted back to pending')
+        }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
           const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:'Pending'
           })
@@ -478,14 +515,30 @@ export default {
         
       }
     },
+
     async toPutMplNpl(currentStatus,locumID, verifyReject){
       try{
-        if(currentStatus ===  'Pending'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+        if(currentStatus === 'Pending'){
+           const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:verifyReject
           })
           alert('Saved')
-        }else if(currentStatus==='Verified'||currentStatus ==='Rejected'){
+        }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+            status:verifyReject
+          })
+          alert('Saved.')
+        }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+            status:verifyReject
+          })
+          alert('Saved.')
+        }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
+          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+            status:'Pending'
+          })
+          alert('Saved. Status reverted back to pending')
+        }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
           const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:'Pending'
           })

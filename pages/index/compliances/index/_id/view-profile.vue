@@ -20,15 +20,15 @@
         <div class="flex">
           <button
             @click="profileTab = true, jobTab = false"
-            class="rounded-lg border-2 border-transparent text-xs text-white p-3 mr-2 focus:bg-waterloo"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-3 mr-2 focus:bg-waterloo"
           >Profile</button>
           <button
             @click="jobTab = true, profileTab = false"
-            class="rounded-lg border-2 border-transparent text-xs text-white p-3 focus:bg-waterloo"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-3 focus:bg-waterloo"
           >Jobs</button>
         </div>
 
-        <div class="flex xs:flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo shadow">
+        <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
               <div class="w-1/3 overflow-hidden">
@@ -54,19 +54,19 @@
                   <p class="m-2 mt-5 mr-20">Profession</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                   <p class="m-2 mt-5 mr-20">Speciality</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
@@ -111,7 +111,7 @@
                   <p class="m-2 text-grey">Active at </p>
                   <p class="m-2 text-white">{{locumUser.actived_at ? $moment(locumUser.actived_at).format('MMM D, YYYY') :null}}</p>
                   <select
-                    class="outline-none border-2 border-transparent text-xs text-black pr-6"
+                    class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
                     v-model="selectedStatus"
                   >
@@ -119,7 +119,7 @@
                     <option>Disabled</option>
                   </select>
                   <button
-                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
                     @click.prevent="changeLocumUserStatus(locumUser.id,selectedStatus)"
                   >Save</button>
                 </div>
@@ -133,32 +133,32 @@
             <!-- HEADER -->
             <div class="flex my-2">
               <div style="width: 20%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <strong>Job number</strong>
                 </div>
               </div>
               <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <strong>Practice / Surgery</strong>
                 </div>
               </div>
               <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <strong>Title</strong>
                 </div>
               </div>
               <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <strong>From</strong>
                 </div>
               </div>
               <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <strong>To</strong>
                 </div>
               </div>
               <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <strong>Created</strong>
                 </div>
               </div>
@@ -173,32 +173,32 @@
               class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
               <div style="width: 20%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <span>{{ locumUserCurrentJob.number }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <span>{{ locumUserCurrentJob.practice }}</span>
                 </div>
               </div>
               <div style="width: 15%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <span>{{ locumUserCurrentJob.title }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <span>{{ locumUserCurrentJob.from }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <span>{{ locumUserCurrentJob.to }}</span>
                 </div>
               </div>
               <div style="width: 16%;">
-                <div class="flex text-white text-xs p-4">
+                <div class="flex text-white text-sm p-4">
                   <span>{{ locumUserCurrentJob.createdAt }}</span>
                 </div>
               </div>

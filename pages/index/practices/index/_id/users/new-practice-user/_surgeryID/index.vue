@@ -12,8 +12,8 @@
       <div class="text-white pl-4 pt-2">
         <strong>Create User</strong>
       </div>
-      <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-xs sm:w-max lg:w-1/2">
-        <div class="w-full overflow-hidden text-grey-light text-xs p-2">
+      <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-max lg:w-1/2">
+        <div class="w-full overflow-hidden text-grey-light text-sm p-2">
           <p class="flex">Title</p>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"

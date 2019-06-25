@@ -14,7 +14,7 @@
 				<div class="my-1 px-1">
 					<div class="my-2 rounded-lg">
 						<nuxt-link
-							class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 							:to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
 							<strong>Practice</strong>
 						</nuxt-link>
@@ -23,7 +23,7 @@
 				<div class="my-1 px-1">
 					<div class="my-2 rounded-lg">
 						<nuxt-link
-							class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 							:to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
 							<strong>Surgeries</strong>
 						</nuxt-link>
@@ -32,7 +32,7 @@
 				<div class="my-1 px-1 overflow-</b-tabs>hidden">
 				<div class="my-2 rounded-lg">
 						<nuxt-link
-							class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 							:to="{path:`/practices/${specificPractice.id}/sessions`,query: $route.query}">
 							<strong>Sessions</strong>
 						</nuxt-link>
@@ -42,7 +42,7 @@
 				<div class="my-1 px-1">
 				<div class="my-2 rounded-lg">
 						<nuxt-link
-							class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
 							:to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
 							<strong>Users</strong>
 						</nuxt-link>
@@ -51,7 +51,7 @@
 				<div class="my-1 px-1">
 				<div class="my-2 rounded-lg">
 						<nuxt-link
-							class="hover:bg-yellow rounded-lg p-3 text-white text-xs"
+							class="hover:bg-grey rounded-lg p-3 text-white text-sm"
 							:to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
 							<strong>Documents</strong>
 						</nuxt-link>
@@ -78,27 +78,27 @@
               <!-- HEADER -->
               <div class="flex">
                 <div style="width: 20%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <strong>Full Name</strong>
                   </div>
                 </div>
                 <div style="width: 30%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <strong>Email Address</strong>
                   </div>
                 </div>
                 <div style="width: 20%">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <strong>Role</strong>
                   </div>
                 </div>
                 <div style="width: 20%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <strong>Sign-Up Verified</strong>
                   </div>
                 </div>
                 <div style="width: 20%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <strong>Status</strong>
                   </div>
                 </div>
@@ -113,28 +113,28 @@
                 class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
               >
                 <div style="width: 20%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <span>{{ user.personal_detail.name }}</span>
                   </div>
                 </div>
                 <div style="width: 30%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <span>{{ user.email }}</span>
                   </div>
                 </div>
                 <div style="width: 20%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <span>{{ user.practice_detail.practice_role }}</span>
                   </div>
                 </div>
                 <div style="width: 20%;">
-                  <div class="flex text-white text-xs p-4">
+                  <div class="flex text-white text-sm p-4">
                     <span>{{ user.actived_at ? user.actived_at : null}}</span>
                   </div>
                 </div>
                 <div style="width: 20%; padding-top:15px">
                   <div
-                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-full shadow"
+                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-full shadow"
                   >
                     <span>{{ user.actived_at ? 'Active' : 'Disabled' }}</span>
                   </div>

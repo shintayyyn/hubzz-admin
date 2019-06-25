@@ -20,7 +20,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-xs"
+                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
                 :to="{path:`/locums/${locumUser.id}`,query: $route.query}">
                   <strong>Profile</strong>
                 </nuxt-link>
@@ -29,7 +29,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                   <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-xs"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
                   :to="{path:`/locums/${locumUser.id}/locum-jobs/allocated`,query: $route.query}">
                     <strong>Jobs</strong>
                   </nuxt-link>
@@ -37,7 +37,7 @@
             </div>
           </div>
 
-        <div class="flex xs:flex-col mt-3 text-xs no-underline shadow-lg rounded-lg bg-waterloo shadow">
+        <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
               <div class="w-1/3 overflow-hidden">
@@ -63,19 +63,19 @@
                   <p class="m-2 mt-5 mr-20">Profession</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                   <p class="m-2 mt-5 mr-20">Speciality</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name1'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-xs text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name2'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
@@ -127,7 +127,7 @@
                   <p class="m-2 text-grey">Active at </p>
                   <p class="m-2 text-white">{{locumUser.actived_at ? $moment(locumUser.actived_at).format('MMM D, YYYY') :null}}</p>
                   <select
-                    class="outline-none border-2 border-transparent text-xs text-black pr-6"
+                    class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
                     v-model="selectedStatus"
                   >
@@ -138,7 +138,7 @@
                     <option>Disabled</option>
                   </select>
                   <button
-                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow"
+                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
                     @click.prevent="changeLocumUserStatus(locumUser.id,selectedStatus)"
                   >Save</button>
                 </div>

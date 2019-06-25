@@ -3,18 +3,18 @@
     <div class="flex justify-between">
       <div class="flex py-2">
        	<div class="relative">
-				<input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
 				<button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
 					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
 				</button>
 			</div>
-      <button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+      <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
       </div>
       <div class="relative">
-        <label class="text-xs text-white">Filter by Status</label>
+        <label class="text-sm text-white">Filter by Status</label>
         <select
           v-model="filterCompliances"
-          class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
+          class="outline-none rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
           id="grid-state"
         >
           <option :value="null">All</option>
@@ -35,22 +35,22 @@
       <!-- HEADER -->
       <div class="flex my-2">
         <div style="width: 25%;">
-          <div class="flex text-white text-xs p-4">
+          <div class="flex text-white text-sm p-4">
             <strong>Locum</strong>
           </div>
         </div>
         <div style="width: 25%;">
-          <div class="flex text-white text-xs p-4">
+          <div class="flex text-white text-sm p-4">
             <strong>Profession</strong>
           </div>
         </div>
         <div style="width: 26%;">
-          <div class="flex text-white text-xs p-4">
+          <div class="flex text-white text-sm p-4">
             <strong>Last file uploaded</strong>
           </div>
         </div>
         <div style="width: %;">
-          <div class="flex text-white text-xs p-4">
+          <div class="flex text-white text-sm p-4">
             <strong>Status</strong>
           </div>
         </div>
@@ -67,29 +67,29 @@
         class="flex no-underline shadow-lg rounded-lg bg-waterloo mt-2"
       >
         <div style="width: 25%;">
-          <div class="flex text-white text-xs p-4 content-center">
+          <div class="flex text-white text-sm p-4 content-center">
             <span>{{ locumUser.personal_detail ? locumUser.personal_detail.name : null}}</span>
           </div>
         </div>
         <div style="width: 25%;">
-          <div class="flex text-white text-xs p-4">
+          <div class="flex text-white text-sm p-4">
             <span>{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
           </div>
         </div>
         <div style="width: 25%;">
-          <div class="flex text-white text-xs p-4">
+          <div class="flex text-white text-sm p-4">
             <span>{{ locumUser.last_file_upload ? $moment(locumUser.last_file_upload).format('DD-MM-YY HH:mm:ss'):null }}</span>
           </div>
         </div>
         <div style="width: 25%;">
           <div v-if="locumUser.compliance_status=='Empty'" class="flex py-2 lg:pl-6">
             <span
-              class="inline-flex text-white text-xs p-2 px-8 border border-white focus:bg-green rounded-full"
+              class="inline-flex text-white text-sm p-2 px-8 border border-white focus:bg-green rounded-full"
             >{{locumUser.compliance_status }}</span>
           </div>
           <div v-else class="flex py-2 lg:pl-6">
             <span
-              class="inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
+              class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow "
               :class="`${locumUser.compliance_status==='Compliant' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
             >{{locumUser.compliance_status }}</span>
           </div>
@@ -101,9 +101,9 @@
 
     <!-- PAGINATION -->
 		<div v-if="pageCount > 1">
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)"  @click="goToPage(page)">{{ page }}</button>                                                                                                                                                                                   <!-- ^ Removed the FF. code in this area: v-if="showPage(page)"-->                    
-			<button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
+      <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)"  @click="goToPage(page)">{{ page }}</button>                                                                                                                                                                                   <!-- ^ Removed the FF. code in this area: v-if="showPage(page)"-->                    
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									
 		</div>
 		<!-- PAGINATION -->
 

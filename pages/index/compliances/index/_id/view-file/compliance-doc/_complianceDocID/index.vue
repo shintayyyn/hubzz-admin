@@ -44,7 +44,7 @@
       <!-- HEADER -->
       <!-- BODY -->
       <div class="flex-col shadow-lg rounded-lg bg-waterloo mx-6 mt-10">
-        <div class="inline-flex text-xs m-4">
+        <div class="inline-flex text-sm m-4">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{locumComplianceDocuments.compliance_document ? locumComplianceDocuments.compliance_document.name: null}}</p>
@@ -71,14 +71,14 @@
             <p class="mt-5 mr-20">Status</p>
               <!-- <div class="flex flex-wrap overflow-hidden">
                 <div class="w-1/2 overflow-hidden">
-                  <button v-on:click="value='Approved'" class='inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full focus:bg-green focus:border-green'>Approved</button>
+                  <button v-on:click="value='Approved'" class='inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full focus:bg-green focus:border-green'>Approved</button>
                 </div>
                 <div class="w-1/2 overflow-hidden">
-                  <button class='inline-flex text-white text-xs mt-2 py-2 p-3 border border-white rounded-full focus:bg-yellow focus:border-yellow focus:text-black'>Denied</button>
+                  <button class='inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full focus:bg-yellow focus:border-yellow focus:text-black'>Denied</button>
                 </div>
               </div> -->
                 <select
-                    class="outline-none border-2 border-transparent text-xs text-black pr-6"
+                    class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
                     v-model="toPutLocumDetailCompliance.status"
                   >

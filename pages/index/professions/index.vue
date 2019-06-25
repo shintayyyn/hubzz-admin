@@ -2,17 +2,17 @@
   <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
 
     <div>
-      <nuxt-link to="/professions/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow">Create</nuxt-link>
+      <nuxt-link to="/professions/create" class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow">Create</nuxt-link>
     </div>
 
     <div class="flex py-2">
       <div class="relative">
-        <input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+        <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
         <button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
           <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
         </button>
       </div>
-      <button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+      <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
     </div>
 
     <!-- TABLE -->
@@ -22,12 +22,12 @@
         <!-- HEADER -->
         <div class="flex my-2">
           <div style="width: 50%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Name</strong>
             </div>
           </div>
           <div style="width: 50%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Category</strong>
             </div>
           </div>
@@ -37,12 +37,12 @@
         <!-- BODY -->
         <nuxt-link v-for="(profession, index) in professions" :key="`profession-${index}`" :to="`/professions/${profession.id}`" class="flex no-underline rounded-lg shadow-lg bg-waterloo hover:bg-waterloo-light my-2">
           <div style="width: 50%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ profession.name }}</span>
             </div>
           </div>
           <div style="width: 50%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ profession.profession_category ? profession.profession_category.name : null }}</span>
             </div>
           </div>
@@ -55,9 +55,9 @@
 
     <!-- PAGINATION -->
     <div v-if="pageCount > 1">
-      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
-      <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
+      <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
+      <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+      <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>
     </div>
     <!-- PAGINATION -->
 

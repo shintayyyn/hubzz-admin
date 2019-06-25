@@ -14,7 +14,7 @@
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                class="bg-sunglow hover:bg-yellow-darker rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab1=true,tab2=false"
               >
                 <strong>General</strong>
@@ -22,7 +22,7 @@
             </div>
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-xs"
+                class="bg-sunglow hover:bg-yellow-darker rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab2=true,tab1=false"
               >
                 <strong>Change Password</strong>
@@ -34,9 +34,9 @@
       <div class="flex sm:p-2">
         <div
           v-if="tab1"
-          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-xs sm:w-full lg:w-2/5"
+          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-full lg:w-2/5"
         >
-          <div class="w-full overflow-hidden text-grey-light text-xs p-2">
+          <div class="w-full overflow-hidden text-grey-light text-sm p-2">
             <p class="flex py-1">E-Mail Address</p>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
@@ -95,8 +95,8 @@
           </div>
         </div>
         <div v-if="tab2" class="flex text-white">
-          <div class="flex text-white text-xs bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
-            <div class="overflow-hidden text-grey-light text-xs p-2">
+          <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
+            <div class="overflow-hidden text-grey-light text-sm p-2">
               <p class="flex py-1">New Password</p>
               <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"

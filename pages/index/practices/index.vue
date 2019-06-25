@@ -4,19 +4,19 @@
       <div class="w-1/2  sm:my-3 sm:px-3 overflow-hidden">
         <div class="flex py-2">
           	<div class="relative">
-              <input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+              <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
                 <button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
                   <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
                 </button>
             </div>
-        <button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
         </div>
       </div>
 
       <div class="w-1/2 sm:my-3 sm:px-3 overflow-hidden">
         <nuxt-link
           to="/practices/surgeries/surgery-add-practice"
-          class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-xs text-black rounded-lg shadow float-right"
+          class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-right"
         >Add Practice</nuxt-link>
       </div>
     </div>
@@ -27,27 +27,27 @@
         <!-- HEADER -->
         <div class="flex my-2">
           <div style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Practice Name</strong>
             </div>
           </div>
           <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Practice Code</strong>
             </div>
           </div>
           <div style="width: 15%">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Created</strong>
             </div>
           </div>
           <div style="width: 15%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <strong>Expires</strong>
             </div>
           </div>
 		  <div style="width:20%">
-			<div class="flex text-white text-xs p-4">
+			<div class="flex text-white text-sm p-4">
 				<strong>Status</strong>
 			</div>  
 		  </div>
@@ -64,29 +64,29 @@
           class="flex no-underline rounded-lg bg-waterloo  shadow hover:bg-waterloo-light my-2"
         >
           <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
             </div>
           </div>
           <div class="flex" style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ practice.surgery ? practice.surgery.code:null }}</span>
             </div>
           </div>
           <div class="flex" style="width: 15%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-sm p-4">
               <span>{{ $moment(practice.created).format('MMM D, YYYY | hh:mm A') }}</span>
             </div>
           </div>
           <div class="flex" style="width: 15%;">
-            <div class="flex text-white text-xs p-4 ">
+            <div class="flex text-white text-sm p-4 ">
               <span>{{ practice.expires }}</span>
             </div>
           </div>
           <div class="flex" style="width: 10%">
             	<div class=" flex py-2 px-4 items-center">
                 <span
-					class=" inline-flex no-underline py-2 text-xs text-black rounded-full shadow "
+					class=" inline-flex no-underline py-2 text-sm text-black rounded-full shadow "
 					:class="`${practice.is_actived ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
 				>{{ practice.is_actived ? 'Active':'Disabled' }}</span>
             	</div>
@@ -103,10 +103,10 @@
 <script>
 export default {
 
-	  watchQuery: [
-	    'page',
-	    'search'
-	  ],
+	watchQuery: [
+	'page',
+	'search'
+	],
 
   	async asyncData({ app, route }) {
   		try {
