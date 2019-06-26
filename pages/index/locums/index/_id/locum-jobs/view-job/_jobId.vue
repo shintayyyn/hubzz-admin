@@ -41,6 +41,12 @@
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
+                   <div class="m-2 mt-5 text-white">
+                     <span>This job is </span>
+                     <span class="font-semibold">{{specificJob.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+                     <span> of</span>
+                     <span class="font-semibold">IR35</span> 
+                  </div>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
                   <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="clinicalSystem in clinicalSystems"

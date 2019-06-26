@@ -30,7 +30,7 @@
               <div class="my-2 rounded-lg">
                   <nuxt-link
                   class="hover:bg-grey rounded-lg p-3 text-white text-sm"
-                  :to="{path:`/locums/${locumUser.id}/locum-jobs/allocated`,query: $route.query}">
+                  :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
                     <strong>Jobs</strong>
                   </nuxt-link>
               </div>
@@ -98,25 +98,32 @@
                   <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
                    :key="`${index}-${specificComplianceDoc.id}-`"
                   >
-                   <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
-                     <svgicon
-                      name="cloud-download"
-                      width="21"
-                      height="21"
-                      color="transparent white"
-                    ></svgicon>
-                    <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
+                    <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
+                      <svgicon
+                        name="cloud-download"
+                        width="21"
+                        height="21"
+                        color="transparent white"
+                      ></svgicon>
+                      <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
                     </a>
-                    <div>
-                      <!-- <embed
-                        height=500px
-                        width=400px
-                        :src="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null"
-                      > -->
-                    </div>
                   </div>
                   
-                  <p class="m-2 mt-5 mr-20">Other Documents</p>
+                  <p class="m-2 mt-5 mr-20">Mandatory Training Documents</p>
+
+                  <div v-for="(specificLocumMandatoryTraining, index) in specificLocumMandatoryTrainings"
+                   :key="`${index}-${specificLocumMandatoryTraining.id}-`"
+                  >
+                    <a class="m-2 text-white" v-bind:href="specificLocumMandatoryTraining.file ? specificLocumMandatoryTraining.file.url:null">
+                      <svgicon
+                        name="cloud-download"
+                        width="21"
+                        height="21"
+                        color="transparent white"
+                      ></svgicon>
+                      <span class="pb-2">{{specificLocumMandatoryTraining.mandatory_training ? specificLocumMandatoryTraining.mandatory_training.name:null}}</span>
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="w-1/3 overflow-hidden">
@@ -132,10 +139,9 @@
                     v-model="selectedStatus"
                   >
                     <option>Active</option>
-                    <!-- <option>Inactive</option>
+                    <option>Inactive</option>
+                    <option>Deactivated</option>
                     <option>Suspended</option>
-                    <option>Deactivated</option> -->
-                    <option>Disabled</option>
                   </select>
                   <button
                     class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
@@ -160,7 +166,6 @@ export default {
   transition: "subpage",
 
   data() {
-
     return {
       locumUser:null,
       selectedStatus:'',
@@ -172,9 +177,7 @@ export default {
       clinicalSystems:[],
       spokenLanguages:[],
       specificLocumCompDocs:[],
-
-
-
+      specificLocumMandatoryTrainings:[]
     };
   },
 
@@ -201,6 +204,9 @@ export default {
         }
       })
 
+      const specificLocumMandatoryTrainings = locumUser.locum_detail.mandatory_trainings
+      console.log(specificLocumMandatoryTrainings)
+
       response = await app.$axios.get(`/api/v1/admin/jobs`)
       const allJobs = response.data.data.jobs
 
@@ -215,6 +221,7 @@ export default {
       clinicalSystems,
       spokenLanguages,
       specificLocumCompDocs,
+      specificLocumMandatoryTrainings,
       locumUserCurrentJobs
       }
 

@@ -8,7 +8,7 @@
 			<svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
 			</nuxt-link>
 		</div>
-    <!--EXTERNAL TABS-->
+        <!--EXTERNAL TABS-->
       <div class="flex flex-col rounded-lg pl-6 mt-2 " >
           <div class="flex flex-wrap -mx-1 ">
             <div class="my-1 px-1">
@@ -33,7 +33,7 @@
               <div class="my-2 rounded-lg">
                   <nuxt-link
                     class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
-                    :to="{path:`/practices/${specificPractice.id}/sessions`,query: $route.query}">
+                    :to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
                     <strong>Sessions</strong>
                   </nuxt-link>
               </div>
@@ -64,7 +64,7 @@
         <div class="flex flex-wrap -mx-1">
           <div class="my-1 px-1">
             <nuxt-link
-              class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
               :to="{path:`/practices/${specificPractice.id}/sessions/available`,query:$route.query}"
             >
               <strong>Available</strong>
@@ -96,7 +96,7 @@
           </div>
           <div class="my-1 px-1">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
               :to="{path:`/practices/${specificPractice.id}/sessions/unfilled`,query:$route.query}"
             >
               <strong>Unfilled</strong>
@@ -121,89 +121,89 @@
         </div>
       </div>
       <!--INTERNAL TABS END HERE-->
-      <!-- TABLE -->
-      <div class="mx-6">
-          <div class="flex flex-col">
-              <!-- HEADER -->
-              <div class="flex my-2">
-                  <div style="width: 20%;">
-                      <div class="flex text-white text-sm p-4">
-                      <strong>Job number</strong>
-                      </div>
-                  </div>
-                  <div style="width: 15%;">
-                      <div class="flex text-white text-sm p-4">
-                      <strong>Practice / Surgery</strong>
-                      </div>
-                  </div>
-                  <div style="width: 15%;">
-                      <div class="flex text-white text-sm p-4">
-                      <strong>Title</strong>
-                      </div>
-                  </div>
-                  <div style="width: 16%;">
-                      <div class="flex text-white text-sm p-4">
-                      <strong>From</strong>
-                      </div>
-                  </div>
-                  <div style="width: 16%;">
-                      <div class="flex text-white text-sm p-4">
-                      <strong>To</strong>
-                      </div>
-                  </div>
-                  <div style="width: 16%;">
-                      <div class="flex text-white text-sm p-4">
-                      <strong>Created</strong>
-                      </div>
-                  </div>
-              </div>
-              <!-- HEADER -->
 
-              <!-- BODY -->
-              <nuxt-link
-              v-for="(practiceAvailableJob, index) in practiceAvailableJobs"
-              :key="`practiceAvailableJob-${index}`"
-              :to="`/practices/${specificPractice.id}/view-job/${practiceAvailableJob.id}`"
-              class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
-              >
-                  <div style="width: 20%;">
-                      <div class="flex text-white text-sm p-4">
-                          <span>{{ practiceAvailableJob.job_number }}</span>
-                      </div>
-                  </div>
-                  <div style="width: 15%;">
-                      <div class="flex text-white text-sm p-4">
-                          <span>{{ practiceAvailableJob.platform_job.practice.surgery.name }}</span>
-                      </div>
-                  </div>
-                  <div style="width: 15%;">
+    <!-- TABLE -->
+    <div class="mx-6">
+        <div class="flex flex-col">
+            <!-- HEADER -->
+            <div class="flex my-2">
+                <div style="width: 20%;">
                     <div class="flex text-white text-sm p-4">
-                        <span>{{ practiceAvailableJob.platform_job.title }}</span>
+                    <strong>Job number</strong>
                     </div>
-                  </div>
-                  <div style="width: 16%;">
+                </div>
+                <div style="width: 15%;">
                     <div class="flex text-white text-sm p-4">
-                        <span>{{ practiceAvailableJob.platform_job.date_created }}</span>
+                    <strong>Practice / Surgery</strong>
                     </div>
-                  </div>
-                  <div style="width: 16%;">
-                      <div class="flex text-white text-sm p-4">
-                          <span>{{ practiceAvailableJob.platform_job.date_start }}</span>
-                      </div>
-                  </div>
-                  <div style="width: 16%;">
-                      <div class="flex text-white text-sm p-4">
-                          <span>{{ practiceAvailableJob.platform_job.date_end }}</span>
-                      </div>
-                  </div>
-               
-              </nuxt-link>
-              <!-- BODY -->
-          </div>
-      </div>
-      <!--TABLE ENDS HERE-->
+                </div>
+                <div style="width: 15%;">
+                    <div class="flex text-white text-sm p-4">
+                    <strong>Title</strong>
+                    </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                    <strong>From</strong>
+                    </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                    <strong>To</strong>
+                    </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                    <strong>Created</strong>
+                    </div>
+                </div>
+            </div>
+            <!-- HEADER -->
 
-      <!-- PAGINATION -->
+            <!-- BODY -->
+            <nuxt-link
+            v-for="(practiceUnfilledJob, index) in practiceUnfilledJobs"
+            :key="`practiceUnfilledJob-${index}`"
+             :to="`/practices/${specificPractice.id}/sessions/view-job/${practiceUnfilledJob.id}`"
+            class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+            >
+                <div style="width: 20%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceUnfilledJob.job_number }}</span>
+                    </div>
+                </div>
+                <div style="width: 15%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceUnfilledJob.platform_job.practice.surgery.name }}</span>
+                    </div>
+                </div>
+                <div style="width: 15%;">
+                  <div class="flex text-white text-sm p-4">
+                      <span>{{ practiceUnfilledJob.platform_job.title }}</span>
+                  </div>
+                </div>
+                <div style="width: 16%;">
+                  <div class="flex text-white text-sm p-4">
+                      <span>{{ practiceUnfilledJob.platform_job.date_created }}</span>
+                  </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceUnfilledJob.platform_job.date_start }}</span>
+                    </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceUnfilledJob.platform_job.date_end }}</span>
+                    </div>
+                </div>
+              
+            </nuxt-link>
+            <!-- BODY -->
+        </div>
+    </div>
+    <!--TABLE ENDS HERE-->
+    <!-- PAGINATION -->
 		<div v-if="pageCount > 1">
 			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
 			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
@@ -217,11 +217,11 @@
 
 <script>
 export default{
-	transition: "subpage",
+  transition: "subpage",
+
   watchQuery: [
 	'page',
 	],
-
 
   async asyncData({ app, route }) {
     try {
@@ -239,13 +239,13 @@ export default{
       const specificPractice = response.data.data.practice
       const surgeries = response.data.data.practice.surgery
 
-      response = await app.$axios.get(`/api/v1/admin/jobs?practice_id=${route.params.id}&status=Available`,{ params })
-      const practiceAvailableJobs = response.data.data.jobs
+      response = await app.$axios.get(`/api/v1/admin/jobs?practice_id=${route.params.id}&status=Unfilled`,{ params })
+      const practiceUnfilledJobs = response.data.data.jobs
       
-      response = await app.$axios.get(`/api/v1/admin/jobs/count?practice_id${route.params.id}&status=Available`,{ params })
+      response = await app.$axios.get(`/api/v1/admin/jobs/count?practice_id${route.params.id}&status=Unfilled`,{ params })
       const itemCount = response.data.data.count
 
-      console.log(practiceAvailableJobs)
+      console.log(practiceUnfilledJobs)
 
       return{
         loading: false,
@@ -253,7 +253,7 @@ export default{
         itemCount,
         activePage: page,
         specificPractice,
-        practiceAvailableJobs
+        practiceUnfilledJobs
         
       }
     } catch (err) {
@@ -268,7 +268,7 @@ export default{
       itemCount: 0,
       activePage: 1,
       specificPractice:[],
-      practiceAvailableJobs:[]
+      practiceUnfilledJobs:[]
     };
   },
 
@@ -346,6 +346,7 @@ export default{
 	      this.$router.push({ query })
       },
     }
+    
 }
 </script>
 

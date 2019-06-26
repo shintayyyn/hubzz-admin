@@ -7,6 +7,7 @@
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
+
       <!-- DEFAULT TABS -->
       <div class="flex flex-col rounded-lg pl-6 mt-2 " >
         <div class="w-full">
@@ -14,7 +15,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-yellow rounded-lg p-3 text-white text-sm"
+                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
                   :to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
                   <strong>Practice</strong>
                 </nuxt-link>
@@ -60,8 +61,8 @@
         </div>
       </div>
       <!--DEFAULT TABS END HERE-->
-      <div class="flex flex-col rounded-lg p-6 sm:p-6">
 
+      <div class="flex flex-col rounded-lg p-6 sm:p-6">
         <div>
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-1/2">
             <div class="flex flex-wrap">

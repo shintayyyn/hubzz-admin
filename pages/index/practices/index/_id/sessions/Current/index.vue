@@ -164,7 +164,7 @@
             <nuxt-link
             v-for="(practiceCurrentJob, index) in practiceCurrentJobs"
             :key="`practiceCurrentJob-${index}`"
-            :to="`/practices/${specificPractice.id}/view-job/${practiceCurrentJob.id}`"
+             :to="`/practices/${specificPractice.id}/sessions/view-job/${practiceCurrentJob.id}`"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
                 <div style="width: 20%;">

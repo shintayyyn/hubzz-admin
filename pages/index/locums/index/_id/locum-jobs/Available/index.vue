@@ -32,15 +32,15 @@
                     </div>
                 </div>
 
-                <!-- DEFAULT TABS -->
+                 <!-- DEFAULT TABS -->
                 <div class="flex flex-col rounded-lg mt-2 " >
                     <div class="flex flex-wrap -mx-1">
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
                                 class=" hover:bg-grey rounded-lg p-3 text-white text-sm"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/allocated`,query: $route.query}">
-                                <strong>Allocated</strong>
+                                :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
+                                <strong>Current</strong>
                                 </nuxt-link>
                             </div>
                         </div>
@@ -53,12 +53,30 @@
                                 </nuxt-link>
                             </div>
                         </div>
+                         <div class="my-1 px-1">
+                            <div class="my-2 rounded-lg">
+                                <nuxt-link
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                :to="{path:`/locums/${locumUser.id}/locum-jobs/matched`,query: $route.query}">
+                                <strong>Matched</strong>
+                                </nuxt-link>
+                            </div>
+                        </div>
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
                                 class="hover:bg-grey rounded-lg p-3 text-white text-sm"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/applied`,query: $route.query}">
                                 <strong>Applied</strong>
+                                </nuxt-link>
+                            </div>
+                        </div>
+                         <div class="my-1 px-1">
+                            <div class="my-2 rounded-lg">
+                                <nuxt-link
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                :to="{path:`/locums/${locumUser.id}/locum-jobs/cancelled`,query: $route.query}">
+                                <strong>Cancelled</strong>
                                 </nuxt-link>
                             </div>
                         </div>
@@ -95,7 +113,6 @@
 
                 </div>
                 <!--DEFAULT TABS END HERE-->
-
                 <!-- TABLE -->
                 <div style="w-full">
                     <div class="flex flex-col">
@@ -136,39 +153,39 @@
 
                         <!-- BODY -->
                         <nuxt-link
-                        v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
-                        :key="`locumUserCurrentJob-${index}`"
-                        :to="`/locums/${locumUser.id}/locum-jobs/view-job/${locumUserCurrentJob.id}`"
+                        v-for="(locumUserAvailableJob, index) in locumUserAvailableJobs"
+                        :key="`locumUserAvailableJob-${index}`"
+                        :to="`/locums/${locumUser.id}/locum-jobs/view-job/${locumUserAvailableJob.id}`"
                         class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
                         >
                             <div style="width: 20%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.job_number }}</span>
+                                    <span>{{ locumUserAvailableJob.job_number }}</span>
                                 </div>
                             </div>
                             <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.practice.surgery.name }}</span>
+                                    <span>{{ locumUserAvailableJob.platform_job.practice.surgery.name }}</span>
                                 </div>
                             </div>
                             <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.appointed_to_locum.user.locum_detail.profession.name }}</span>
+                                    <span>{{ locumUserAvailableJob.platform_job.appointed_to_locum.user.locum_detail.profession.name }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.date_start }}</span>
+                                    <span>{{ locumUserAvailableJob.platform_job.date_start }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.date_end }}</span>
+                                    <span>{{ locumUserAvailableJob.platform_job.date_end }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.date_created }}</span>
+                                    <span>{{ locumUserAvailableJob.platform_job.date_created }}</span>
                                 </div>
                             </div>
                         </nuxt-link>
@@ -176,6 +193,13 @@
                     </div>
                 </div>
             </div>
+             <!-- PAGINATION -->
+            <div v-if="pageCount > 1">
+                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
+                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									<!-- ^ Removed the FF. code in this area: v-if="showPage(page) TAKE A NOTE OF THIS"-->
+            </div>
+            <!-- PAGINATION -->
             
             <nuxt-child/>
 		</div>
@@ -184,32 +208,133 @@
 
 <script>
 export default{
-	transition: "subpage",
+    transition: "subpage",
 
-    data() {
+    watchQuery: [
+	'page',
+	],
+
+    async asyncData({ app, route }) {
+    try {
+        let {
+        page = 1,
+        search = ''
+        } = route.query
+        page = parseInt(page)
+        const limit = 10
+        const offset = page * limit - limit
+        const order_by = 'created_at:desc'
+        const params = { limit, offset, order_by }
+        
+        let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`, {params})
+        const locumUser = response.data.data.user
+
+        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Available`)
+        const locumUserAvailableJobs = response.data.data.jobs
+
+        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Available`)
+        const itemCount = response.data.data.count
+
+        console.log(locumUserAvailableJobs)
+
         return{
-            locumUser:null,
-            locumUserCurrentJobs:[]
+        loading: false,
+        itemsPerPage: limit,
+        itemCount,
+        activePage: page,
+        locumUser,
+        locumUserAvailableJobs
+        
+      }
+        } catch (err) {
+        console.log("index practices index _id index asyncData err", err);
         }
     },
 
-  async asyncData({ app, route }) {
-    let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
-    const locumUser = response.data.data.user
-    
-    response = await app.$axios.get(`/api/v1/admin/jobs`)
-    const allJobs = response.data.data.jobs
+    data() {
+        return{
+            loading:false,
+            itemsPerPage: 10,
+            itemCount: 0,
+            activePage: 1,
+            locumUser:null,
+            locumUserAvailableJobs:[]
+        }
+    },
+    computed: {
+  		pageCount() {
+  			return Math.ceil(this.itemCount / this.itemsPerPage)
+  		},
 
-    const locumUserCurrentJobs = allJobs.filter((locumsAppointed)=>{
-    return locumsAppointed.appointed_to_locum_detail_id === locumUser.locum_detail.id
-    })
+	    showPage() {
+	      return page => {
+	        if (page === 1) {
+	          return true
+	        }
 
-    return{
-        locumUser,
-        locumUserCurrentJobs
+	        if (page === this.pageCount) {
+	          return true
+	        }
+
+	        if (page === this.activePage) {
+	          return true
+	        }
+
+	        if (page === this.activePage + 1) {
+	          return true
+	        }
+
+	        if (page === this.activePage - 1) {
+	          return true
+	        }
+
+	        if (this.activePage === 1 && page < 5) {
+	          return true
+	        }
+
+	        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+	          return true
+	        }
+
+	        if (this.activePage === 2 && page === 4) {
+	          return true
+	        }
+
+	        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+	          return true
+	        }
+
+	        return false
+	      }
+	    }
+    },
+
+    methods: {
+  		goToPage(page) {
+  			if (page < 1) {
+  				return
+  			}
+
+  			if (page > this.pageCount) {
+  				return
+  			}
+
+  			const query = {
+  				...this.$router.query,
+  				page
+  			}
+
+  			if (page === 1) {
+  				delete query.page
+  			}
+
+	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+	        this.loading = true
+	      }
+
+	      this.$router.push({ query })
+      },
     }
-
-  },
 }
 </script>
 

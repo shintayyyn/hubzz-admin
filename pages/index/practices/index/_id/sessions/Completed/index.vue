@@ -124,7 +124,7 @@
       <!-- TABLE -->
     <div class="mx-6">
         <div class="flex flex-col">
-            <!-- HEADER -->
+           <!-- HEADER -->
             <div class="flex my-2">
                 <div style="width: 20%;">
                     <div class="flex text-white text-sm p-4">
@@ -163,7 +163,7 @@
             <nuxt-link
             v-for="(practiceCompletedJob, index) in practiceCompletedJobs"
             :key="`practiceCompletedJob-${index}`"
-            :to="`/practices/${specificPractice.id}/view-job/${practiceCompletedJob.id}`"
+             :to="`/practices/${specificPractice.id}/sessions/view-job/${practiceCompletedJob.id}`"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
                 <div style="width: 20%;">

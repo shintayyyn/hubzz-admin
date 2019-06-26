@@ -353,9 +353,6 @@
             <div style="width: 25%;">
               <div class="flex text-white text-sm p-4">
                 <span>{{optionalMandatoryTraining.optionalMandatoryTraining.name}}</span>
-                <span class="ml-4">{{optionalMandatoryTraining.locumOptionalMandatoryTraining &&
-                     optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? 
-                     optionalMandatoryTraining.locumOptionalMandatoryTraining.file.id : null}}</span>
               </div>
             </div>
              <div style="width: 10%;">
