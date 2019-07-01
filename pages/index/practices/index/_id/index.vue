@@ -80,7 +80,20 @@
                 <p class="flex">CCG</p>
                 <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery.clinical_commissioning_group ? specificPractice.surgery.clinical_commissioning_group.name:null}}</p>
                 <p class>Compliance Requirements for GPs:</p>
-                <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
+                <!-- <div v-for="(gpComplianceDocs, index) in specificPractice.gp_compliance_documents"
+                   :key="`${index}-${gpComplianceDocs.id}-`"
+                  >
+                    <a class="m-2 text-white" v-bind:href="gpComplianceDocs.file ? gpComplianceDocs.file.url:null">
+                      <svgicon
+                        name="cloud-download"
+                        width="21"
+                        height="21"
+                        color="transparent white"
+                      ></svgicon>
+                      <span class="pb-2">{{gpComplianceDocs.compliance_document ? gpComplianceDocs.compliance_document.name:"(none)"}}</span>
+                    </a>
+                </div> -->
+                (none)
                 <p class>For Nurses, et al:</p>
                 <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
                 <p class="flex">Mandatory Training</p>

@@ -40,29 +40,30 @@
         <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
+              <!--COLUMN 1-->
               <div class="w-1/3 overflow-hidden">
                 <div class="text-grey mx-5">
-                  <p class="m-2">Name</p>
+                  <p class="m-2 font-semibold">Name</p>
                   <p class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</p>
-                  <p class="m-2 mt-5 mr-20">Email address</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Email address</p>
                   <p class="m-2 text-white underline">{{ locumUser.email ? locumUser.email : null }}</p>
-                  <p class="m-2 mt-5 mr-20">Mobile phone number</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Mobile phone number</p>
                   <p class="m-2 text-white">{{ locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null }}</p>
-                  <p class="m-2 mt-5 mr-20">Home / landline number</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Home / landline number</p>
                   <p class="m-2 text-white">{{ locumUser.contact_detail ? locumUser.contact_detail.home_number : null }}</p>
-                  <p class="m-2 mt-5 mr-20">Postal Address</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
                   <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}</p>
                   <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}</p>
                   <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}</p>
-                  <p class="m-2 mt-5 mr-20">GMC / NMC Number</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
-                  <p class="m-2 mt-5 mr-20">MPL / NPL Number</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
-                  <p class="m-2 mt-5 mr-20">NHS Smart Card ID Number</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">NHS Smart Card ID Number</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.nhs_smart_card_id_number ? locumUser.locum_detail.nhs_smart_card_id_number : null }}</p>
-                  <p class="m-2 mt-5 mr-20">Profession</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
-                  <p class="m-2 mt-5 mr-20">Speciality</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
                   <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
@@ -82,18 +83,19 @@
                   </p>
                 </div>
               </div>
+              <!--COLUMN 2-->
               <div class="w-1/3 overflow-hidden">
                 <div class="text-grey mx-10">
-                  <p class="m-2 mr-20">Headline</p>
+                  <p class="m-2 mr-20 font-semibold">Headline</p>
                   <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.headline:null}}</p>
-                  <p class="m-2 mt-5 mr-20">Short Biography</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Short Biography</p>
                   <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.short_biography:null}}</p>
-                  <p class="m-2 mt-5 mr-20">Special requirements</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Special requirements</p>
                   <p class="ml-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.special_requirements:null}}</p>
-                  <p class="m-2 mt-5 mr-20">Preferred rates</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Preferred rates</p>
                   <p class="ml-2 text-white">Per hour £ (none)</p>
                   <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
-                  <p class="m-2 mt-5 mr-20">Compliance Documents</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
 
                   <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
                    :key="`${index}-${specificComplianceDoc.id}-`"
@@ -109,7 +111,7 @@
                     </a>
                   </div>
                   
-                  <p class="m-2 mt-5 mr-20">Mandatory Training Documents</p>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
 
                   <div v-for="(specificLocumMandatoryTraining, index) in specificLocumMandatoryTrainings"
                    :key="`${index}-${specificLocumMandatoryTraining.id}-`"
@@ -126,9 +128,10 @@
                   </div>
                 </div>
               </div>
+              <!--COLUMN 3-->
               <div class="w-1/3 overflow-hidden">
                 <div class="mx-20">
-                  <img class="w-48 h rounded-full mr-4" src="~/assets/images/default-user-image.png" >
+                  <img class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
                   <p class="m-2 text-grey">Sign-up verified by email</p>
                   <p class="m-2 text-white">24/01/2019</p>
                   <p class="m-2 text-grey">Active at </p>

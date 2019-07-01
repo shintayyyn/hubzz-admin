@@ -245,7 +245,7 @@ export default{
       response = await app.$axios.get(`/api/v1/admin/jobs/count?practice_id${route.params.id}&status=Available`,{ params })
       const itemCount = response.data.data.count
 
-      console.log(practiceAvailableJobs)
+      console.log(itemCount)
 
       return{
         loading: false,

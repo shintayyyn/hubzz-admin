@@ -1,4 +1,4 @@
-<template>
+s<template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div style="width: calc(100%);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->

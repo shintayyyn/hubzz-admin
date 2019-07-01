@@ -9,7 +9,6 @@
 			</nuxt-link>
 		</div>
       <!--EXTERNAL TABS-->
-      <!--EXTERNAL TABS-->
       <div class="flex flex-col rounded-lg pl-6 mt-2 " >
           <div class="flex flex-wrap -mx-1 ">
             <div class="my-1 px-1">
@@ -60,7 +59,8 @@
           </div>
       </div>
       <!--EXTERNAL TABS END HERE-->
-       <!--INTERNAL TABS-->
+
+      <!--INTERNAL TABS-->
       <div class="flex flex-col rounded-lg p-6 sm:p-6">
         <div class="flex flex-wrap -mx-1">
           <div class="my-1 px-1">
@@ -122,7 +122,8 @@
         </div>
       </div>
       <!--INTERNAL TABS END HERE-->
-       <!-- TABLE -->
+
+      <!-- TABLE -->
     <div class="mx-6">
         <div class="flex flex-col">
             <!-- HEADER -->
@@ -164,7 +165,7 @@
             <nuxt-link
             v-for="(practiceCurrentJob, index) in practiceCurrentJobs"
             :key="`practiceCurrentJob-${index}`"
-             :to="`/practices/${specificPractice.id}/sessions/view-job/${practiceCurrentJob.id}`"
+             :to="`/practices/${specificPractice.id}/sessions/view-job/view-current/${practiceCurrentJob.id}`"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
                 <div style="width: 20%;">

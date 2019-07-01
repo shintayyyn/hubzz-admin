@@ -170,7 +170,7 @@
                             </div>
                             <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserAvailableJob.platform_job.appointed_to_locum.user.locum_detail.profession.name }}</span>
+                                    <span>{{ locumUserAvailableJob.platform_job.title }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
@@ -229,13 +229,14 @@ export default{
         let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`, {params})
         const locumUser = response.data.data.user
 
-        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Available`)
+        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Available`,{ params })
         const locumUserAvailableJobs = response.data.data.jobs
 
-        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Available`)
+        response = await app.$axios.get(`api/v1/admin/jobs/count?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Available`,{ params })
         const itemCount = response.data.data.count
 
         console.log(locumUserAvailableJobs)
+        console.log(itemCount)
 
         return{
         loading: false,
@@ -243,7 +244,7 @@ export default{
         itemCount,
         activePage: page,
         locumUser,
-        locumUserAvailableJobs
+        locumUserAvailableJobs,
         
       }
         } catch (err) {
@@ -263,7 +264,8 @@ export default{
     },
     computed: {
   		pageCount() {
-  			return Math.ceil(this.itemCount / this.itemsPerPage)
+            return Math.ceil(this.itemCount / this.itemsPerPage)
+              
   		},
 
 	    showPage() {

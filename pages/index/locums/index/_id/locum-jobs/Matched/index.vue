@@ -156,7 +156,7 @@
                         <nuxt-link
                         v-for="(locumUserMatchedJob, index) in locumUserMatchedJobs"
                         :key="`locumUserMatchedJob-${index}`"
-                        :to="`/locums/${locumUser.id}/locum-jobs/view-job/${locumUserMatchedJob.id}`"
+                        :to="`/locums/${locumUser.id}/locum-jobs/view-locum-job/${locumUserMatchedJob.id}`"
                         class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
                         >
                             <div style="width: 20%;">
@@ -171,7 +171,7 @@
                             </div>
                             <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserMatchedJob.platform_job.appointed_to_locum.user.locum_detail.profession.name }}</span>
+                                    <span>{{ locumUserMatchedJob.platform_job.title }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
@@ -229,10 +229,10 @@ export default{
         let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`, {params})
         const locumUser = response.data.data.user
 
-        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Matched`)
+        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Matched`,{ params })
         const locumUserMatchedJobs = response.data.data.jobs
 
-        response = await app.$axios.get(`api/v1/admin/jobs?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Matched`)
+        response = await app.$axios.get(`api/v1/admin/jobs/count?locum_detail_id=${locumUser.locum_detail.id}&locum_status=Matched`,{ params })
         const itemCount = response.data.data.count
 
         console.log(locumUserMatchedJobs)
