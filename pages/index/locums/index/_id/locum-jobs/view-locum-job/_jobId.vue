@@ -70,17 +70,17 @@
                     {{specificJob.platform_job.practice.surgery.address.line_2}}<br><br>
                     {{specificJob.platform_job.practice.surgery.address.line_3}}<br><br>
                   </p>
-                  <div class="mt-4 mx-2 ">
-                    <!-- google map -->
-                    <GmapMap
-                      :center="{lat:latLang.x, lng:latLang.y}"
-                      :zoom="15"
-                      map-type-id="terrain"
-                      style="width: 400px; height:300px"
-                    >
-                      <GmapMarker :position="google && new google.maps.LatLng(latLang.x, latLang.y)"/>
-                    </GmapMap>
-                  </div>
+                 <div class="w-full mx-2 ">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLang.y,lng:latLang.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:200px"
+                  >
+                    <GmapMarker :position="google && new google.maps.LatLng(latLang.y, latLang.x)"/>
+                  </GmapMap>
+                </div>
                   <p class="m-2 mt-5 mr-20">Duration</p>
                   <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
                   <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_start}}</span> <br><br>
@@ -122,20 +122,19 @@ export default {
         let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.jobId}`)
 
         const specificJob = response.data.data.job
+        const qualifications = specificJob.platform_job.qualifications
+        const clinicalSystems = specificJob.platform_job.clinical_systems
+        const spokenLanguages = specificJob.platform_job.spoken_languages
 
         response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
         const locumUser = response.data.data.user
-        console.log(locumUser)
-        const qualifications = locumUser.locum_detail.qualifications
-        const clinicalSystems = locumUser.locum_detail.clinical_systems
-        const spokenLanguages = locumUser.locum_detail.spoken_languages
 
         return{
             specificJob,
-            locumUser,
             qualifications,
             clinicalSystems,
-            spokenLanguages
+            spokenLanguages,
+            locumUser,
         }
 
     } catch (err) {

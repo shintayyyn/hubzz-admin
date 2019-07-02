@@ -102,7 +102,7 @@
                         :center="{lat:latLang.x, lng:latLang.y}"
                         :zoom="15"
                         map-type-id="terrain"
-                        style="width: 100%; height:200px"
+                        style="width: 100%; height:300px"
                       >
                         <GmapMarker :position="google && new google.maps.LatLng(latLang.x, latLang.y)"/>
                       </GmapMap>
@@ -114,93 +114,100 @@
           <!--JOB INFOS ENDS HERE-->
 
           <!--LOCUM INFOS-->
-            <div class="flex xs:flex-col my-2 mx-2 px-2 w-1/4 xs:w-full text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
-              <div class="text-white mx-5">
-                <div class="flex flex-wrap -mx-2 overflow-hidden">
-                  <div class="my-2 px-2 w-1/2 overflow-hidden">
-                    <img class="w-24 h-24 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
-                  </div>
+            <div class="flex xs:flex-col my-2 mx-2 px-2 w-1/4 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
+              <div class="inline-flex">
+                <div class="flex flex-wrap overflow-hidden">
+                   <div class="text-white mx-5">
+                    <div class="flex flex-wrap -mx-2 ">
+                      <div class="my-4 px-2 w-1/2 ">
+                        <img class="w-24 h-24 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
+                      </div>
 
-                  <div class="my-2 px-2 w-1/2 overflow-hidden">
-                    <p class="text-white my-2 font-semibold text-base">{{locumUser.personal_detail ? locumUser.personal_detail.title:null}} {{locumUser.personal_detail.name}}</p>
-                    <p class="text-white my-2 font-lighttext-sm">{{locumUser.locum_detail.profession.name}}</p>
-                  </div>
+                      <div class="my-6  w-1/2 ">
+                        <p class="text-white my-2 font-semibold text-base">{{locumUser.personal_detail ? locumUser.personal_detail.title:null}} {{locumUser.personal_detail.name}}</p>
+                        <p class="text-white my-2 font-lighttext-sm">{{locumUser.locum_detail.profession.name}}</p>
+                      </div>
 
+                    </div>
+                    <p class="m-2 font-semibold">Headline</p>
+                    <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.headline : null }}</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Biography</p>
+                    <p class="m-2 text-white underline">{{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Special Requirements</p>
+                    <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.special_requirements : null }}</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Rates</p>
+
+                    <p class="m-2 text-white"
+                      v-for="locumRates in locumUser.locum_detail.rates"
+                      :key="locumRates.id + '-name1'" >
+                      {{locumRates.rate_type.name}} £ {{locumRates.min}} ~ {{locumRates.max}}</p>
+
+                    <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
+                    <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}</p>
+                    <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}</p>
+                    <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
+                    <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
+                    <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
+
+                    <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
+                    <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
+                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      v-for="specialty in locumUser.locum_detail.qualifications"
+                      :key="specialty.id + '-name'">
+                      {{specialty ? specialty.name:null}}
+                    </p> 
+                    <p class="m-2 mt-5 mr-20 font-semibold">Clinical Systems</p>
+                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      v-for="clinicalSystem in locumUser.locum_detail.clinical_systems"
+                      :key="clinicalSystem.id + '-name1'">
+                        {{clinicalSystem ? clinicalSystem.name:null}}
+                    </p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
+                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
+                      :key="spokenLanguage.id + '-name2'">
+                      {{spokenLanguage ? spokenLanguage.name:null}}
+                    </p>
+                    <!--DOCUMENTS-->
+                    <div class="h-32 mb-6 overflow-auto">
+                      <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                    <div v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
+                      :key="`${index}-${specificComplianceDoc.id}-`"
+                      >
+                        <a class="m-2 text-white" v-bind:href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null">
+                          <svgicon
+                            name="cloud-download"
+                            width="21"
+                            height="21"
+                            color="transparent white"
+                          ></svgicon>
+                          <span class="pb-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
+                        </a>
+                      </div>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+                      <div v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
+                      :key="`${index}-${specificMandatoryDoc.id}-`"
+                      >
+                        <a class="m-2 text-white" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
+                          <svgicon
+                            name="cloud-download"
+                            width="21"
+                            height="21"
+                            color="transparent white"
+                          ></svgicon>
+                          <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
+                        </a>
+                      </div>
+                    </div>
+                    <!--DOCUMENTS END HERE-->
+                  </div>
                 </div>
-                
-                <p class="m-2 font-semibold">Headline</p>
-                <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.headline : null }}</p>
-                <p class="m-2 mt-5 mr-20 font-semibold">Biography</p>
-                <p class="m-2 text-white underline">{{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}</p>
-                <p class="m-2 mt-5 mr-20 font-semibold">Special Requirements</p>
-                <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.special_requirements : null }}</p>
-                <p class="m-2 mt-5 mr-20 font-semibold">Rates</p>
-
-                <p class="m-2 text-white"
-                  v-for="locumRates in locumUser.locum_detail.rates"
-                  :key="locumRates.id + '-name1'" >
-                  {{locumRates.rate_type.name}} £ {{locumRates.min}} ~ {{locumRates.max}}</p>
-
-                <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
-                <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}</p>
-                <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}</p>
-                <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}</p>
-                <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
-                <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
-                <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
-                <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
-
-                <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
-                <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
-                <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
-                <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
-                  v-for="specialty in locumUser.locum_detail.qualifications"
-                  :key="specialty.id + '-name'">
-                  {{specialty ? specialty.name:null}}
-                </p> 
-                <p class="m-2 mt-5 mr-20 font-semibold">Clinical Systems</p>
-                <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
-                  v-for="clinicalSystem in locumUser.locum_detail.clinical_systems"
-                  :key="clinicalSystem.id + '-name1'">
-                    {{clinicalSystem ? clinicalSystem.name:null}}
-                </p>
-                <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
-                <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
-                  v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
-                  :key="spokenLanguage.id + '-name2'">
-                  {{spokenLanguage ? spokenLanguage.name:null}}
-                </p>
-                <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
-                 <div v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
-                   :key="`${index}-${specificComplianceDoc.id}-`"
-                  >
-                    <a class="m-2 text-white" v-bind:href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null">
-                      <svgicon
-                        name="cloud-download"
-                        width="21"
-                        height="21"
-                        color="transparent white"
-                      ></svgicon>
-                      <span class="pb-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
-                    </a>
-                  </div>
-                <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
-                   <div v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
-                   :key="`${index}-${specificMandatoryDoc.id}-`"
-                  >
-                    <a class="m-2 text-white" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
-                      <svgicon
-                        name="cloud-download"
-                        width="21"
-                        height="21"
-                        color="transparent white"
-                      ></svgicon>
-                      <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
-                    </a>
-                  </div>
-                
+               
               </div>
-
+              
             </div>
           <!--LOCUM INFOS END HERE-->
         </div>

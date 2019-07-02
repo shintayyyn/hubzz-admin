@@ -16,7 +16,7 @@
           />
         </nuxt-link>
         <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(locumComplianceDocuments.id,toPutLocumDetailCompliance)"
+          @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
         >
           <svgicon
           name="save-icon"
@@ -28,7 +28,7 @@
          <span>Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white" v-bind:href="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null">
+          <a class="text-white" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
              <svgicon
               name="cloud-download"
               width="21"
@@ -47,13 +47,14 @@
         <div class="inline-flex text-sm m-4">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
-            <p class="text-white">{{locumComplianceDocuments.compliance_document ? locumComplianceDocuments.compliance_document.name: null}}</p>
+            <p class="text-white">{{specificLocumComplianceDocument.compliance_document ? specificLocumComplianceDocument.compliance_document.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
             <p class="text-white underline">{{locumUser.personal_detail ? locumUser.personal_detail.name: null}}</p>
             <p class="mt-5 mr-20">File last uploaded</p>
-            <p class="text-white underline">{{locumComplianceDocuments.file ? $moment(locumComplianceDocuments.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+            <p class="text-white underline">{{specificLocumComplianceDocument.file ? $moment(specificLocumComplianceDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
+            <p class="text-white">{{$moment(specificLocumComplianceDocument.expired_at).format('MM/DD/YYYY')}}</p>
             <div class="mt-5 mr-20">
               <label for="expiryDate">Expiry date</label>
               <input
@@ -62,7 +63,7 @@
                 name="expiryDate"
                 disable-min-date
                 value
-                placeholder="dd/mm/yyyy"
+                placeholder="mm/dd/yy"
                 id="dp1554355291222"
                 aria-invalid="false"
                 v-model="toPutLocumDetailCompliance.expired_at"
@@ -86,7 +87,8 @@
                     <option>Rejected</option>
                 </select>
             <p class="mt-5 mr-20">Note to Locum</p>
-                <textarea v-model="toPutLocumDetailCompliance.note" 
+                <textarea 
+                  v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
                   class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
                   name="complianceNote">Type Here
@@ -97,7 +99,7 @@
              <embed
               width=800px
               height=600px
-              :src="locumComplianceDocuments.file ? locumComplianceDocuments.file.url:null"
+              :src="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null"
               >
           </div>
        
@@ -115,12 +117,13 @@ export default {
   data() {
     return {
       locumUser:null,
-      
+      specificLocumComplianceDocument:null,
       toPutLocumDetailCompliance:{
         status:'',
         expired_at:'',
         note:''
       }
+      
     };
   },
 
@@ -130,15 +133,13 @@ export default {
       //from file ID route, find first in compliance documents route. else, find in mandatory trainings route
 
       let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.complianceDocID}`)
-      const locumComplianceDocuments = response.data.data.locum_detail_compliance_document
-
-      response = await app.$axios.get(`/api/v1/admin/locum-users/${locumComplianceDocuments.locum_detail.user.id}`)
+      const specificLocumComplianceDocument = response.data.data.locum_detail_compliance_document
+      response = await app.$axios.get(`/api/v1/admin/locum-users/${specificLocumComplianceDocument.locum_detail.user.id}`)
       const locumUser = response.data.data.user
 
-
       return{
-        locumComplianceDocuments,
         locumUser,
+        specificLocumComplianceDocument,
       }
 
     } catch (err) {
@@ -147,21 +148,31 @@ export default {
   },
   
   methods:{
-  
-    async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
+    async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance,currentExpiration){
       try{
+        console.log("Current Date: "+currentExpiration)
+
+        let expirationDate = toPutLocumDetailCompliance.expired_at
+
+        console.log("To submit expiration date: "+expirationDate)
+
+        if(toPutLocumDetailCompliance.expired_at == ""){
+          expirationDate = currentExpiration
+        }
+        
+        console.log('Final date: ' + expirationDate)
+
         const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
           status:toPutLocumDetailCompliance.status,
-          expired_at:toPutLocumDetailCompliance.expired_at,
+          expired_at:expirationDate,
           note:toPutLocumDetailCompliance.note
         })
         alert('Saved')
       }catch(err){
-        console.log("index put locum detail compliance documents error");
+        console.log("index put locum detail compliance documents error",err);
         alert('Something went wrong!')
       }
     }
   }
-
 };
 </script>

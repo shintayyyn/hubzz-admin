@@ -85,23 +85,23 @@
             </div>
           </div>
           <div
-            v-for="(document,index) in documents"
+            v-for="(document,index) in specificPracticeDocumentTypes"
             :key="`surgery-${index}`"
             class="flex no-underline rounded-lg bg-waterloo my-2"
           >
             <div style="width: 20%;">
               <div class="flex text-white text-sm p-4">
-                <span>{{ document.title }}</span>
+                <span>{{ document.practiceDocType ? document.practiceDocType.name:null }}</span>
               </div>
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-sm p-4">
-                <span>{{document.fileSize }}</span>
+                <span>{{ document.practiceSpecificDoc ? document.practiceSpecificDoc.file.size + " Bytes":null }}</span>
               </div>
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-sm p-4">
-                <span>{{ document.lastUploadDate }}</span>
+                <span>{{ document.practiceSpecificDoc ? document.practiceSpecificDoc.created_at:null}}</span>
               </div>
             </div>
             <div style="width:25%;">
@@ -137,6 +137,7 @@ export default{
   data() {
     return {
       specificPractice:[],
+      specificPracticeDocumentTypes:[]
     };
   },
 
@@ -145,12 +146,32 @@ export default{
       let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
       const specificPractice = response.data.data.practice
       const surgeries = response.data.data.practice.surgery
+      
+      response = await app.$axios.get(`/api/v1/admin/practice-document-types`)
+      const practiceDocTypes = response.data.data.practice_document_types
 
-      console.log(surgeries)
+      response = await app.$axios.get(`/api/v1/admin/practice-documents`)
+      const practiceDocs = response.data.data.practice_documents
+
+      console.log(practiceDocTypes)
+      console.log(practiceDocs)
+
+      const specificPracticeDocumentTypes = practiceDocTypes.map((practiceDocType)=>{
+        const practiceSpecificDoc = practiceDocs.find((practiceDoc) => {
+          return practiceDoc.practice_document_type.id === practiceDocType.id
+        })
+        return{
+          practiceDocType,
+          practiceSpecificDoc
+        }
+      })
+
+      console.log(specificPracticeDocumentTypes)
 
       return{
         specificPractice,
-        surgeries
+        surgeries,
+        specificPracticeDocumentTypes
       }
     } catch (err) {
       console.log("index practices index _id index asyncData err", err);

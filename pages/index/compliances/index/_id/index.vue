@@ -73,17 +73,17 @@
       </nuxt-link>
 
      <div class="flex flex-row lg:w-1/2 text-sm text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3">
-        <p class="m-4  text-grey">GMC / NMC Number</p>
-        <p class="m-4">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
+        <p class="m-4 text-grey">GMC / NMC Number</p>
+        <p class="m-3 mt-4 ">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
         <button
-          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-green rounded-full"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-green rounded-full hover:bg-green-light"
+          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-2 hover:bg-green-light'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
-          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
+          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-2 hover:bg-orange-light'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
@@ -93,14 +93,14 @@
         <p class="m-4 text-grey">MPL / NPL Number</p>
         <p class="m-4">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
         <button
-          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-green rounded-full"
-          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 ' : 'bg-transparent px-2'}`"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-green rounded-full hover:bg-green-light"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-2 hover:bg-green-light'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
-          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full"
-          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 ' : 'bg-transparent px-2'}`"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light' : 'bg-transparent px-2 hover:bg-orange-light'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
@@ -194,10 +194,16 @@
               </div>
             </div>
             <div style="width: 10%;">
+              <div
+              v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument == null"
+              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white bg-transparent rounded-full">
+                <span>Empty</span>
+              </div>
               <div class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
-              :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
-                <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
-                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.status : 'Empty' }}</span>
+              :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
+               mandatoryComplianceDocument.locumMandatoryComplianceDocument.status &&
+               mandatoryComplianceDocument.locumMandatoryComplianceDocument.status === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
+                <span>{{mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null}}</span>
               </div>
             </div>
           </nuxt-link>
@@ -249,7 +255,7 @@
          <nuxt-link
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
-            :class="optionalComplianceDocuments.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
+            :class="optionalComplianceDocument.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
             :to="{path:`/compliances/${locumUser.id}/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
@@ -292,10 +298,16 @@
               </div>
             </div>
             <div style="width: 10%;">
-              <div class="inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full">
-                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
-                  optionalComplianceDocument.locumOptionalComplianceDocument.status : 'Empty' }}
-                </span>
+              <div
+              v-if="optionalComplianceDocument.locumOptionalComplianceDocument == null"
+              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white text-white bg-transparent rounded-full">
+                <span>Empty</span>
+              </div>
+              <div
+              v-if="optionalComplianceDocument.locumOptionalComplianceDocument" 
+              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
+              :class="`${optionalComplianceDocument.locumOptionalComplianceDocument.status  === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
+                <span>{{optionalComplianceDocument.locumOptionalComplianceDocument.status ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null}}</span>
               </div>
             </div>
           </nuxt-link>
@@ -440,7 +452,7 @@ export default {
           locumMandatoryComplianceDocument
         }
       })
-
+     
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === optionalComplianceDocument.id
@@ -452,9 +464,9 @@ export default {
       })
 
       const optionalMandatoryTrainings = mandatoryTrainings.map((optionalMandatoryTraining)=>{
-        const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((locumMandatoryTraining)=>{
-          return locumMandatoryTraining.mandatory_training.id === optionalMandatoryTraining.id
-        })
+      const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((locumMandatoryTraining)=>{
+        return locumMandatoryTraining.mandatory_training.id === optionalMandatoryTraining.id
+      })
         return{
           optionalMandatoryTraining,
           locumOptionalMandatoryTraining
