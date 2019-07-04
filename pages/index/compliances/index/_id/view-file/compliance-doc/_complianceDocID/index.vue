@@ -54,9 +54,8 @@
             <p class="text-white underline">{{specificLocumComplianceDocument.file ? $moment(specificLocumComplianceDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
-            <p class="text-white">{{$moment(specificLocumComplianceDocument.expired_at).format('MM/DD/YYYY')}}</p>
             <div class="mt-5 mr-20">
-              <label for="expiryDate">Expiry date</label>
+              <label for="expiryDate">{{"Expiry Date: "+$moment(specificLocumComplianceDocument.expired_at).format('DD/MM/YYYY')}}</label>
               <input
                 type="date"
                 class="date-picker hasDatepicker valid"
@@ -70,14 +69,6 @@
               >
             </div>
             <p class="mt-5 mr-20">Status</p>
-              <!-- <div class="flex flex-wrap overflow-hidden">
-                <div class="w-1/2 overflow-hidden">
-                  <button v-on:click="value='Approved'" class='inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full focus:bg-green focus:border-green'>Approved</button>
-                </div>
-                <div class="w-1/2 overflow-hidden">
-                  <button class='inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full focus:bg-yellow focus:border-yellow focus:text-black'>Denied</button>
-                </div>
-              </div> -->
                 <select
                     class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
@@ -118,11 +109,7 @@ export default {
     return {
       locumUser:null,
       specificLocumComplianceDocument:null,
-      toPutLocumDetailCompliance:{
-        status:'',
-        expired_at:'',
-        note:''
-      }
+      toPutLocumDetailCompliance:{}
       
     };
   },
@@ -140,44 +127,27 @@ export default {
       return{
         locumUser,
         specificLocumComplianceDocument,
+        toPutLocumDetailCompliance:{
+          status:specificLocumComplianceDocument ? specificLocumComplianceDocument.status:null,
+          expired_at:specificLocumComplianceDocument ? specificLocumComplianceDocument.expired_at:null,
+          note:specificLocumComplianceDocument ? specificLocumComplianceDocument.note:null
+        }
       }
 
-    } catch (err) {
+    }catch (err) {
       console.log("index practices index create asyncData err", err);
     }
   },
+
+  computed:{
+    
+  },
   
   methods:{
-    // async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance,currentExpiration){
-    //   try{
-    //     console.log("Current Date: "+currentExpiration)
-
-    //     let expirationDate = toPutLocumDetailCompliance.expired_at
-
-    //     console.log("To submit expiration date: "+expirationDate)
-
-    //     if(toPutLocumDetailCompliance.expired_at == ""){
-    //       expirationDate = currentExpiration
-    //     }
-        
-    //     console.log('Final date: ' + expirationDate)
-
-    //     const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-    //       status:toPutLocumDetailCompliance.status,
-    //       expired_at:expirationDate,
-    //       note:toPutLocumDetailCompliance.note
-    //     })
-    //     alert('Saved')
-    //   }catch(err){
-    //     console.log("index put locum detail compliance documents error",err);
-    //     alert('Something went wrong!')
-    //   }
-    // }
-
      async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
       try{
-        const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-          status:toPutLocumDetailCompliance.status,
+        this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+          status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
           expired_at:toPutLocumDetailCompliance.expired_at,
           note:toPutLocumDetailCompliance.note
         })

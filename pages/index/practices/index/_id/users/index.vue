@@ -134,12 +134,12 @@
                     <span>{{ user.actived_at ? user.actived_at : null}}</span>
                   </div>
                 </div>
-                <div style="width: 20%; padding-top:15px">
-                  <div
-                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-full shadow"
-                  >
-                    <span>{{ user.actived_at ? 'Active' : 'Disabled' }}</span>
-                  </div>
+                <div style="width: 20%" class="py-2">
+                
+                    <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
+                    :class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+                    >{{ user.actived_at ? 'Active' : 'Disabled' }}
+                    </span>
                 </div>
               </nuxt-link>
               <!-- BODY -->

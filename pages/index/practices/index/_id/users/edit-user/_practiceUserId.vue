@@ -14,7 +14,7 @@
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-sunglow hover:bg-yellow-darker rounded-lg py-3 px-4 text-black text-sm"
+                class="bg-sunglow hover:bg-yellow-dark rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab1=true,tab2=false"
               >
                 <strong>General</strong>
@@ -22,7 +22,7 @@
             </div>
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-sunglow hover:bg-yellow-darker rounded-lg py-3 px-4 text-black text-sm"
+                class="bg-sunglow hover:bg-yellow-dark rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab2=true,tab1=false"
               >
                 <strong>Change Password</strong>
@@ -41,35 +41,35 @@
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
-              :placeholder="specificPracticeUser.email"
+              v-model='toPutPracticeUser.email'
               aria-label="Full name"
             >
             <p class="flex py-1">Title</p>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
-              :placeholder="specificPracticeUser.personal_detail.title"
+              v-model="toPutPracticeUser.title"
               aria-label="Full name"
             >
             <p class="flex py-1">First Name</p>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
-              :placeholder="specificPracticeUser.personal_detail.first_name"
+              v-model="toPutPracticeUser.first_name"
               aria-label="Full name"
             >
             <p class="flex py-1">Last Name</p>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
-              :placeholder="specificPracticeUser.personal_detail.last_name"
+              v-model="toPutPracticeUser.last_name"
               aria-label="Full name"
             >
             <p class="flex py-1">Suffix</p>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
-              :placeholder="specificPracticeUser.personal_detail.suffix"
+              v-model="toPutPracticeUser.suffix"
               aria-label="Full name"
             >
             <p class="flex py-1">Role</p>
@@ -81,16 +81,18 @@
               <option>Practice Staff</option>
             </select>
             <p class="flex py-1">Sign-Up verified by e-mail</p>
-            <p class="p-2">{{specificPracticeUser.email ? specificPracticeUser.email_verified_at: 'Not yet verified'}}</p>
+            <p class="p-2">{{toPutPracticeUser.email ? toPutPracticeUser.email_verified_at: 'Not yet verified'}}</p>
             <p class="flex py-1">Status</p>
             <select
               class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:border-orange"
+              v-model="toPutPracticeUser.status"
             >
               <option>Active</option>
               <option>Disabled</option>
             </select>
             <button
                 class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                @click.prevent ="toPutPracticeUserInfo(specificPracticeUser.id,toPutPracticeUser)"
               >Save Changes</button>
           </div>
         </div>
@@ -133,6 +135,7 @@ export default {
       tab2: false,
       specificPracticeUser:[],
       specificPractice:[],
+      toPutPracticeUser:{},
       toChangePassword:{
         newPassword:'',
         confirmNewPassword:''
@@ -145,10 +148,22 @@ export default {
       let response = await app.$axios.get(`/api/v1/admin/practice-users/${route.params.practiceUserId}`)
       const specificPracticeUser = response.data.data.user
       const specificPractice = response.data.data.user.practice_detail.practice
-
+      
+      console.log(specificPracticeUser.status)
+    
       return{
         specificPracticeUser,
-        specificPractice
+        specificPractice,
+        toPutPracticeUser:{
+          email:specificPracticeUser.email,
+          title:specificPracticeUser.personal_detail.title,
+          first_name:specificPracticeUser.personal_detail.first_name,
+          last_name:specificPracticeUser.personal_detail.last_name,
+          suffix:specificPracticeUser.personal_detail.suffix,
+          practice_role:specificPracticeUser.practice_detail.practice_role,
+          status:specificPracticeUser.status
+        }
+       
       }
 
     }catch(err){
@@ -159,14 +174,32 @@ export default {
   methods: {
     async toChangeUserPassword(userID,toChangePassword){
       try{
-        const response = this.$axios.put(`/api/v1/admin/users/${userID}/change-password`,{
+        this.$axios.put(`/api/v1/admin/users/${userID}/change-password`,{
           password:toChangePassword.newPassword,
           password_confirmation:toChangePassword.confirmNewPassword
         })
         alert('Saved')
       }catch(err){
         alert('Something went wrong!')
-        console.log("index put locum detail compliance documents error");
+        console.log("index put locum detail compliance documents error",err);
+      }
+    },
+    async toPutPracticeUserInfo(userID,toPutPracticeUser){
+      try{
+        this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
+          email:toPutPracticeUser.email,
+          title:toPutPracticeUser.title,
+          first_name:toPutPracticeUser.first_name,
+          last_name:toPutPracticeUser.last_name,
+          suffix:toPutPracticeUser.suffix,
+          practice_role:toPutPracticeUser.practice_role,
+          status:toPutPracticeUser.status
+        })
+        alert('Saved')
+        
+      }catch(err){
+        alert('Something went wrong!')
+        console.log("index put locum detail compliance documents error", err);
       }
     }
   }

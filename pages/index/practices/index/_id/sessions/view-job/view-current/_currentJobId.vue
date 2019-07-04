@@ -96,17 +96,17 @@
                       </p>
                     </div>
                   
-                    <div class="w-full mx-2 ">
-           
-                      <GmapMap
-                        :center="{lat:latLang.x, lng:latLang.y}"
-                        :zoom="15"
-                        map-type-id="terrain"
-                        style="width: 100%; height:300px"
-                      >
-                        <GmapMarker :position="google && new google.maps.LatLng(latLang.x, latLang.y)"/>
-                      </GmapMap>
-                    </div>
+                  <div class="w-full mx-2 ">
+                    <!-- google map -->
+                    <GmapMap
+                      :center="{lat:latLang.y,lng:latLang.x}"
+                      :zoom="15"
+                      map-type-id="terrain"
+                      class="w-full h-64"
+                    >
+                      <GmapMarker :position="google && new google.maps.LatLng(latLang.y, latLang.x)"/>
+                    </GmapMap>
+                  </div>
                 </div>
                 </div>
               </div>
@@ -120,7 +120,11 @@
                    <div class="text-white mx-5">
                     <div class="flex flex-wrap -mx-2 ">
                       <div class="my-4 px-2 w-1/2 ">
-                        <img class="w-24 h-24 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
+                         <embed
+                          class="flex w-4/5 rounded-full mr-4"
+                            :src="locumUser.avatar ? locumUser.avatar.file.url:null"
+                          >
+                          <img v-if="!locumUser.avatar" class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
                       </div>
 
                       <div class="my-6  w-1/2 ">
@@ -166,7 +170,7 @@
                         {{clinicalSystem ? clinicalSystem.name:null}}
                     </p>
                     <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
-                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                       v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
                       :key="spokenLanguage.id + '-name2'">
                       {{spokenLanguage ? spokenLanguage.name:null}}

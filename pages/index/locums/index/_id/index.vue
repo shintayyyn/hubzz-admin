@@ -131,11 +131,17 @@
               <!--COLUMN 3-->
               <div class="w-1/3 overflow-hidden">
                 <div class="mx-20">
-                  <img class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
+                  <!--RENDER AVATAR PICTURE HERE-->
+
+                  <embed
+                   class="flex w-4/5 rounded-full mr-4"
+                    :src="locumUser.avatar ? locumUser.avatar.file.url:null"
+                  >
+                  <img v-if="!locumUser.avatar" class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
                   <p class="m-2 text-grey">Sign-up verified by email</p>
-                  <p class="m-2 text-white">24/01/2019</p>
+                  <p class="m-2 text-white">{{locumUser.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified"}}</p>
                   <p class="m-2 text-grey">Active at </p>
-                  <p class="m-2 text-white">{{locumUser.actived_at ? $moment(locumUser.actived_at).format('MMM D, YYYY') :null}}</p>
+                  <p class="m-2 text-white">{{locumUser.status == "Active" ? "Account is Active" :"Account is "+locumUser.status }}</p>
                   <select
                     class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
@@ -225,7 +231,8 @@ export default {
       spokenLanguages,
       specificLocumCompDocs,
       specificLocumMandatoryTrainings,
-      locumUserCurrentJobs
+      locumUserCurrentJobs,
+      selectedStatus: locumUser.status
       }
 
     } catch (err) {
