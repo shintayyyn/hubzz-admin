@@ -82,6 +82,11 @@
                   <strong>Last Upload Date</strong>
                 </div>
               </div>
+              <div style="width: 25%">
+                <div class="flex text-white text-sm p-4">
+                  <strong>Upload New File</strong>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -96,7 +101,7 @@
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-sm p-4">
-                <span>{{ document.practiceSpecificDoc ? document.practiceSpecificDoc.file.size + " Bytes":null }}</span>
+                <span>{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? document.practiceSpecificDoc.file.size + " Bytes":null }}</span>
               </div>
             </div>
             <div style="width: 20%;">
@@ -104,24 +109,32 @@
                 <span>{{ document.practiceSpecificDoc ? document.practiceSpecificDoc.created_at:null}}</span>
               </div>
             </div>
-            <div style="width:25%;">
+             <div style="width:25%;">
               <div class="flex text-white text-sm p-4">
-                <a>
-                  <svgicon
-                    name="cloud-upload"
-                    width="21"
-                    height="21"
-                    color="transparent white"
-                  ></svgicon> 
-                  Upload
-                </a>
+                <label>File
+                  <input 
+                    type="file" 
+                    id="file" 
+                    :ref="`file-${document.practiceDocType.id}`" 
+                    v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id)"/>
+                </label>
+              </div>
+            </div>
+            <div style="width:20%;">
+              <div class="flex text-white text-sm p-4">
+                <button class="bg-green rounded-full p-1 text-white lg:px-8 sm:px-2" v-on:click="submitFile(specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)">
+                <svgicon
+                  name="cloud-upload"
+                  width="21"
+                  height="21"
+                  color="transparent white"
+                ></svgicon> 
+                <span>{{document.practiceSpecificDoc && document.practiceSpecificDoc.file ? "Update":"Upload"}}</span>
+              </button>
               </div>
             </div>
           </div>
         </div>
-		
-
-        <span class="text-white ">Documents Tab</span>
 		</div>
 
 
@@ -136,8 +149,11 @@ export default{
 
   data() {
     return {
+      file:'',
       specificPractice:[],
-      specificPracticeDocumentTypes:[]
+      specificPracticeDocumentTypes:[],
+      files: [],
+      
     };
   },
 
@@ -152,9 +168,6 @@ export default{
 
       response = await app.$axios.get(`/api/v1/admin/practice-documents`)
       const practiceDocs = response.data.data.practice_documents
-
-      console.log(practiceDocTypes)
-      console.log(practiceDocs)
 
       const specificPracticeDocumentTypes = practiceDocTypes.map((practiceDocType)=>{
         const practiceSpecificDoc = practiceDocs.find((practiceDoc) => {
@@ -177,6 +190,94 @@ export default{
       console.log("index practices index _id index asyncData err", err);
     }
   },
+
+  methods:{
+    submitFile(practiceID, practiceDocumentID, practiceSpecificDocument){
+      try{
+        let formData = new FormData()
+        let file = this.files.find(({ id }) => id === practiceDocumentID)
+        if (file) {
+          file = file.file
+        }
+
+        console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
+        console.log(file)
+    
+        if(practiceSpecificDocument){
+          console.log('its something')
+          console.log(practiceSpecificDocument)
+
+          formData.append('practice_document_id',practiceID)
+          formData.append('file', file)
+          
+          this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },     
+          }).then(function(){
+              alert('SUCCESS!!')
+          }).catch(function(){
+            console.log('FAILURE!!');
+          });
+        }else{
+          console.log("its nothing")
+          formData.append('file', file)
+          formData.append('practice_id',practiceID)
+          formData.append('practice_document_type_id',practiceDocumentID)
+          this.$axios.post( '/api/v1/admin/practice-documents',formData,{
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },     
+          }).then(function(){
+              alert('SUCCESS!!')
+          }).catch(function(){
+            console.log('FAILURE!!');
+          });
+        }
+      }catch(err){
+        alert('Something went wrong!')
+        console.log("index practices index _id index asyncData err", err);
+      }
+    },
+
+    
+    handleFileUpload(refName, documentId){
+      console.log('qwe', this.$refs[refName][0], refName)
+
+      const el = this.$refs[refName][0]
+
+      console.log('sad', el, el.files)
+
+      if (el.files && el.files.length === 0) {
+        return
+      }
+
+      const file = el.files[0]
+
+      const fileReader = new FileReader()
+
+      fileReader.addEventListener('load', () => {
+        console.log('z', fileReader.result)
+      })
+
+      fileReader.readAsDataURL(file)
+
+      const index = this.files.findIndex(({ id }) => id === documentId)
+
+      if (index > -1) {
+        this.files.splice(index, 1, {
+          id: documentId,
+          file
+        })
+      } else {
+        this.files.push({
+          id: documentId,
+          file
+        })
+      }
+
+      }
+  }
 }
 </script>
 

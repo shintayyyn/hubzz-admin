@@ -148,28 +148,42 @@ export default {
   },
   
   methods:{
-    async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance,currentExpiration){
-      try{
-        console.log("Current Date: "+currentExpiration)
+    // async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance,currentExpiration){
+    //   try{
+    //     console.log("Current Date: "+currentExpiration)
 
-        let expirationDate = toPutLocumDetailCompliance.expired_at
+    //     let expirationDate = toPutLocumDetailCompliance.expired_at
 
-        console.log("To submit expiration date: "+expirationDate)
+    //     console.log("To submit expiration date: "+expirationDate)
 
-        if(toPutLocumDetailCompliance.expired_at == ""){
-          expirationDate = currentExpiration
-        }
+    //     if(toPutLocumDetailCompliance.expired_at == ""){
+    //       expirationDate = currentExpiration
+    //     }
         
-        console.log('Final date: ' + expirationDate)
+    //     console.log('Final date: ' + expirationDate)
 
+    //     const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+    //       status:toPutLocumDetailCompliance.status,
+    //       expired_at:expirationDate,
+    //       note:toPutLocumDetailCompliance.note
+    //     })
+    //     alert('Saved')
+    //   }catch(err){
+    //     console.log("index put locum detail compliance documents error",err);
+    //     alert('Something went wrong!')
+    //   }
+    // }
+
+     async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
+      try{
         const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
           status:toPutLocumDetailCompliance.status,
-          expired_at:expirationDate,
+          expired_at:toPutLocumDetailCompliance.expired_at,
           note:toPutLocumDetailCompliance.note
         })
         alert('Saved')
       }catch(err){
-        console.log("index put locum detail compliance documents error",err);
+        console.log("index put locum detail compliance documents error");
         alert('Something went wrong!')
       }
     }

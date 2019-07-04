@@ -93,7 +93,7 @@
                       <span class="pb-2">{{gpComplianceDocs.compliance_document ? gpComplianceDocs.compliance_document.name:"(none)"}}</span>
                     </a>
                 </div> -->
-                (none)
+                <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
                 <p class>For Nurses, et al:</p>
                 <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
                 <p class="flex">Mandatory Training</p>
@@ -129,6 +129,7 @@
                 <p class="flex text-grey-light text-sm p-2">Status</p>
                 <select
                   class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                  
                   v-model='toPutPractice.status'
                 >
                   <option>Active</option>
@@ -165,18 +166,10 @@ export default {
 
   data() {
     return {
-      specificPractice:[],
+      specificPractice:null,
       users: [],
       documents: [],
-      unfilleds: [],
-      toPutPractice:{
-        phone_number:'',
-        report_to:'',
-        email:'',
-        extra_information:'',
-        status:'',
-        actived_until:''
-      }
+      toPutPractice:{}
     };
   },
 
@@ -190,7 +183,15 @@ export default {
 
       return{
         specificPractice,
-        surgeries
+        surgeries,
+        toPutPractice:{
+          phone_number:specificPractice.phone_number,
+          report_to:specificPractice.report_to,
+          email:specificPractice.email,
+          extra_information:specificPractice.extra_information,
+          status:specificPractice.is_actived ? "Active":"Disabled",
+          actived_until:specificPractice.actived_until
+        }
       }
     } catch (err) {
       console.log("index practices index _id index asyncData err", err);
