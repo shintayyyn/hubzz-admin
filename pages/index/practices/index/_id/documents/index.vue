@@ -67,17 +67,17 @@
           <div class="flex flex-col">
             <!-- HEADER -->
             <div class="flex my-2">
-              <div style="width: 20%;">
+              <div style="width: 15%;">
                 <div class="flex text-white text-sm p-4">
                   <strong>Title</strong>
                 </div>
               </div>
-              <div style="width: 20%;">
+              <div style="width: 17%;">
                 <div class="flex text-white text-sm p-4">
                   <strong>File Size</strong>
                 </div>
               </div>
-              <div style="width: 20%">
+              <div style="width: 16%">
                 <div class="flex text-white text-sm p-4">
                   <strong>Last Upload Date</strong>
                 </div>
@@ -87,11 +87,13 @@
                   <strong>Upload New File</strong>
                 </div>
               </div>
+               
             </div>
           </div>
           <div
             v-for="(document,index) in specificPracticeDocumentTypes"
-            :key="`surgery-${index}`"
+            :class="document.practiceSpecificDoc == null ? '' :'hover:bg-waterloo-light' "
+            :key="`document-${index}`"
             class="flex no-underline rounded-lg bg-waterloo my-2"
           >
             <div style="width: 20%;">
@@ -101,7 +103,7 @@
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-sm p-4">
-                <span>{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? document.practiceSpecificDoc.file.size + " Bytes":null }}</span>
+                <span>{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? (document.practiceSpecificDoc.file.size / 1048576).toFixed(2) + " Mb":null }}</span>
               </div>
             </div>
             <div style="width: 20%;">
@@ -133,6 +135,20 @@
               </button>
               </div>
             </div>
+            <div style="width:20%;">
+              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm p-4">
+                <nuxt-link class="bg-blue rounded-full p-1 text-white lg:px-8 sm:px-2"
+                  :to="{path:`/practices/${specificPractice.id}/documents/view-practice-file/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`, query: $route.query}">
+                <svgicon
+                  name="folder"
+                  width="21"
+                  height="21"
+                  color="white white"
+                ></svgicon> 
+                <span>View File</span>
+              </nuxt-link>
+              </div>
+            </div>
           </div>
         </div>
 		</div>
@@ -150,9 +166,11 @@ export default{
   data() {
     return {
       file:'',
+      files: [],
       specificPractice:[],
       specificPracticeDocumentTypes:[],
-      files: [],
+    
+      disabled:'true'
       
     };
   },

@@ -132,7 +132,6 @@
               <div class="w-1/3 overflow-hidden">
                 <div class="mx-20">
                   <!--RENDER AVATAR PICTURE HERE-->
-
                   <embed
                    class="flex w-4/5 rounded-full mr-4"
                     :src="locumUser.avatar ? locumUser.avatar.file.url:null"
@@ -189,6 +188,7 @@ export default {
       specificLocumMandatoryTrainings:[]
     };
   },
+  
 
   async asyncData({ app, route }) {
     try {

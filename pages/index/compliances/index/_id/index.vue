@@ -162,7 +162,7 @@
             <div style="width: 10%;">
               <div class="flex text-white text-sm p-4">
                 <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
-                  mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size + ' Bytes' : null }}
+                  (mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
                 </span>
 
             
@@ -267,7 +267,7 @@
             <div style="width: 10%;">
               <div class="flex text-white text-sm p-4">
                 <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
-                  optionalComplianceDocument.locumOptionalComplianceDocument.file.size + ' Bytes' : null }}
+                  (optionalComplianceDocument.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
                 </span>
               </div>
             </div>
@@ -371,7 +371,7 @@
               <div class="flex text-white text-sm p-4">
                 <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
                   optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? 
-                  optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size + ' Bytes' : null}}
+                  (optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size / 1048576).toFixed(2) + ' Bytes' : null}}
                 </span>
               </div>
             </div>
