@@ -15,7 +15,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
                   <strong>Practice</strong>
                 </nuxt-link>
@@ -24,7 +24,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
                 </nuxt-link>
@@ -33,7 +33,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
                   <strong>Sessions</strong>
                 </nuxt-link>
@@ -42,7 +42,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
                   <strong>Users</strong>
                 </nuxt-link>
@@ -51,7 +51,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
                   <strong>Documents</strong>
                 </nuxt-link>
@@ -67,7 +67,7 @@
         <div class="flex flex-wrap -mx-1">
           <div class="my-1 px-1">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/available`,query:$route.query}"
             >
               <strong>Available</strong>
@@ -75,7 +75,7 @@
           </div>
           <div class="my-1 px-1">
             <nuxt-link
-              class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="bg-grey-dark hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/applied`,query:$route.query}"
             >
               <strong>Applied</strong>
@@ -83,7 +83,7 @@
           </div>
           <div class="my-1 px-1 overflow-</b-tabs>hidden">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/current`,query:$route.query}"
             >
               <strong>Current</strong>
@@ -91,7 +91,7 @@
           </div>
           <div s class="my-1 px-1">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/completed`,query:$route.query}"
             >
               <strong>Completed</strong>
@@ -99,7 +99,7 @@
           </div>
           <div class="my-1 px-1">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/unfilled`,query:$route.query}"
             >
               <strong>Unfilled</strong>
@@ -107,7 +107,7 @@
           </div>
           <div class="my-1 px-1">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/cancelled`,query:$route.query}"
             >
               <strong>Cancelled</strong>
@@ -115,7 +115,7 @@
           </div>
           <div class="my-1 px-1">
             <nuxt-link
-              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm"
+              class="hover:bg-grey-darker rounded-lg py-3 px-4 text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/declined`,query:$route.query}"
             >
               <strong>Declined</strong>

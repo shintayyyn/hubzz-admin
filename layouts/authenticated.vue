@@ -34,6 +34,7 @@
         >Dashboard</nuxt-link>
 
         <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'compliances' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/compliances"
@@ -46,34 +47,35 @@
         >Locums</nuxt-link>
 
         <nuxt-link
-          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'users' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/users"
         >Users</nuxt-link>
 
         <nuxt-link
-          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'compliance_documents' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/compliance_documents"
         >Compliance Documents</nuxt-link>
 
         <nuxt-link
-          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'profession_categories' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/profession_categories"
         >Profession Categories</nuxt-link>
 
         <nuxt-link
-          v-if="$auth.loggedIn && $auth.user.domain === 'super-admin'"
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'professions' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/professions"
         >Professions</nuxt-link>
 
         <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'qualifications' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/qualifications"
@@ -105,7 +107,7 @@
         >Practice Types</nuxt-link>
 
         <nuxt-link
-          v-if="$auth.loggedIn && ($auth.user.domain === 'Super Admin' || $auth.user.domain === 'Admin')"
+          v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'clinical-commissioning-groups' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/clinical-commissioning-groups"

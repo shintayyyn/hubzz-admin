@@ -15,7 +15,7 @@
                     <div class="my-1 px-1">
                         <div class="my-2 rounded-lg">
                             <nuxt-link
-                            class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                            class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                             :to="{path:`/locums/${locumUser.id}`,query: $route.query}">
                             <strong>Profile</strong>
                             </nuxt-link>
@@ -24,9 +24,20 @@
                     <div class="my-1 px-1">
                         <div class="my-2 rounded-lg">
                             <nuxt-link
-                            class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
+                            class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                             :to="{path:`/locums/${locumUser.id}/locum-jobs`,query: $route.query}">
                             <strong>Jobs</strong>
+                            </nuxt-link>
+                        </div>
+                    </div>
+                    <div class="my-1 px-1">
+                        <div class="my-2 rounded-lg">
+                            <nuxt-link
+                            class="border-white rounded-lg p-3 text-white text-sm no-underline"
+                            :to="{path:`/locums/${locumUser.id}/locum-compliance/${locumUser.id}`,query: $route.query}"
+                            :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
+                            :class="locumUser.compliance_status==='Empty' ? 'text-grey-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
+                            <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
                             </nuxt-link>
                         </div>
                     </div>
@@ -38,7 +49,7 @@
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
                                 <strong>Current</strong>
                                 </nuxt-link>
@@ -47,7 +58,7 @@
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/available`,query: $route.query}">
                                 <strong>Available</strong>
                                 </nuxt-link>
@@ -56,7 +67,7 @@
                          <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/matched`,query: $route.query}">
                                 <strong>Matched</strong>
                                 </nuxt-link>
@@ -65,7 +76,7 @@
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/applied`,query: $route.query}">
                                 <strong>Applied</strong>
                                 </nuxt-link>
@@ -74,7 +85,7 @@
                          <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/cancelled`,query: $route.query}">
                                 <strong>Cancelled</strong>
                                 </nuxt-link>
@@ -83,7 +94,7 @@
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/unsuccessful`,query: $route.query}">
                                 <strong>Unsuccessful</strong>
                                 </nuxt-link>
@@ -93,7 +104,7 @@
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/declined`,query: $route.query}">
                                 <strong>Declined</strong>
                                 </nuxt-link>
@@ -103,7 +114,7 @@
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
                                 <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                                 :to="{path:`/locums/${locumUser.id}/locum-jobs/completed`,query: $route.query}">
                                 <strong>Completed</strong>
                                 </nuxt-link>
@@ -243,7 +254,8 @@ export default{
         itemCount,
         activePage: page,
         locumUser,
-        locumUserDeclinedJobs
+        locumUserDeclinedJobs,
+        disabled:true
         
       }
         } catch (err) {

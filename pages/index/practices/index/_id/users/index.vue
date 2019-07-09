@@ -15,7 +15,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
                   <strong>Practice</strong>
                 </nuxt-link>
@@ -24,7 +24,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
                 </nuxt-link>
@@ -33,7 +33,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
                   <strong>Sessions</strong>
                 </nuxt-link>
@@ -42,7 +42,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
                   <strong>Users</strong>
                 </nuxt-link>
@@ -51,7 +51,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
                   <strong>Documents</strong>
                 </nuxt-link>
@@ -68,7 +68,7 @@
           <div class="w-full overflow-hidden">
             <nuxt-link :to="`/practices/${specificPractice.id}/users/new-practice-user/${surgeries.id}`">
               <button
-                class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left" no-underline
               >Add User
               </button>
               
@@ -131,7 +131,7 @@
                 </div>
                 <div style="width: 20%;">
                   <div class="flex text-white text-sm p-4">
-                    <span>{{ user.actived_at ? user.actived_at : null}}</span>
+                    <span>{{ user.actived_at ? $moment(user.actived_at).format('MMM D, YYYY | hh:mm A') : null}}</span>
                   </div>
                 </div>
                 <div style="width: 20%" class="py-2">

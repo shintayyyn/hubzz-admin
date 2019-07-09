@@ -67,17 +67,17 @@
           <div class="flex flex-col">
             <!-- HEADER -->
             <div class="flex my-2">
-              <div style="width: 15%;">
+              <div style="width: 20%;">
                 <div class="flex text-white text-sm p-4">
                   <strong>Title</strong>
                 </div>
               </div>
-              <div style="width: 17%;">
+              <div style="width: 20%;">
                 <div class="flex text-white text-sm p-4">
                   <strong>File Size</strong>
                 </div>
               </div>
-              <div style="width: 16%">
+              <div style="width: 20%">
                 <div class="flex text-white text-sm p-4">
                   <strong>Last Upload Date</strong>
                 </div>
@@ -87,13 +87,11 @@
                   <strong>Upload New File</strong>
                 </div>
               </div>
-               
             </div>
           </div>
           <div
             v-for="(document,index) in specificPracticeDocumentTypes"
-            :class="document.practiceSpecificDoc == null ? '' :'hover:bg-waterloo-light' "
-            :key="`document-${index}`"
+            :key="`surgery-${index}`"
             class="flex no-underline rounded-lg bg-waterloo my-2"
           >
             <div style="width: 20%;">
@@ -108,7 +106,7 @@
             </div>
             <div style="width: 20%;">
               <div class="flex text-white text-sm p-4">
-                <span>{{ document.practiceSpecificDoc ? document.practiceSpecificDoc.created_at:null}}</span>
+                <span>{{ document.practiceSpecificDoc ? $moment(document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null}}</span>
               </div>
             </div>
              <div style="width:25%;">
@@ -135,20 +133,6 @@
               </button>
               </div>
             </div>
-            <div style="width:20%;">
-              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm p-4">
-                <nuxt-link class="bg-blue rounded-full p-1 text-white lg:px-8 sm:px-2"
-                  :to="{path:`/practices/${specificPractice.id}/documents/view-practice-file/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`, query: $route.query}">
-                <svgicon
-                  name="folder"
-                  width="21"
-                  height="21"
-                  color="white white"
-                ></svgicon> 
-                <span>View File</span>
-              </nuxt-link>
-              </div>
-            </div>
           </div>
         </div>
 		</div>
@@ -165,12 +149,12 @@ export default{
 
   data() {
     return {
+      disabled:'true',
       file:'',
-      files: [],
       specificPractice:[],
       specificPracticeDocumentTypes:[],
-    
-      disabled:'true'
+      files: [],
+      
       
     };
   },
@@ -216,41 +200,42 @@ export default{
         let file = this.files.find(({ id }) => id === practiceDocumentID)
         if (file) {
           file = file.file
-        }
+            console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
+            console.log(file)
+        
+            if(practiceSpecificDocument){
+              console.log('its something')
+              console.log(practiceSpecificDocument)
 
-        console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
-        console.log(file)
-    
-        if(practiceSpecificDocument){
-          console.log('its something')
-          console.log(practiceSpecificDocument)
-
-          formData.append('practice_document_id',practiceID)
-          formData.append('file', file)
-          
-          this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },     
-          }).then(function(){
-              alert('SUCCESS!!')
-          }).catch(function(){
-            console.log('FAILURE!!');
-          });
+              formData.append('practice_document_id',practiceID)
+              formData.append('file', file)
+              
+              this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },     
+              }).then(function(){
+                  alert('SUCCESS!!')
+              }).catch(function(){
+                console.log('FAILURE!!');
+              });
+            }else{
+              console.log("its nothing")
+              formData.append('file', file)
+              formData.append('practice_id',practiceID)
+              formData.append('practice_document_type_id',practiceDocumentID)
+              this.$axios.post( '/api/v1/admin/practice-documents',formData,{
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                },     
+              }).then(function(){
+                  alert('SUCCESS!!')
+              }).catch(function(){
+                console.log('FAILURE!!');
+              });
+            }
         }else{
-          console.log("its nothing")
-          formData.append('file', file)
-          formData.append('practice_id',practiceID)
-          formData.append('practice_document_type_id',practiceDocumentID)
-          this.$axios.post( '/api/v1/admin/practice-documents',formData,{
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },     
-          }).then(function(){
-              alert('SUCCESS!!')
-          }).catch(function(){
-            console.log('FAILURE!!');
-          });
+          alert('Please choose a file to upload first.')
         }
       }catch(err){
         alert('Something went wrong!')
@@ -258,7 +243,6 @@ export default{
       }
     },
 
-    
     handleFileUpload(refName, documentId){
       console.log('qwe', this.$refs[refName][0], refName)
 

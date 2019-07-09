@@ -75,7 +75,8 @@
           </div>
           <div class="flex" style="width: 15%;">
             <div class="flex text-white text-sm p-4">
-              <span>{{ $moment(practice.created).format('MMM D, YYYY | hh:mm A') }}</span>
+              <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+
             </div>
           </div>
           <div class="flex" style="width: 15%;">
@@ -123,7 +124,7 @@ export default {
 				
   			if (search) {
   				params.search = search
-				}
+			}
 				
   			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
 			const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })

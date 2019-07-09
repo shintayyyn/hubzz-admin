@@ -279,6 +279,8 @@ export default {
 
     async toChangeUserPassword(userID,toChangePassword){
       try{
+        console.log(toChangePassword.newPassword)
+        console.log(toChangePassword.confirmNewPassword)
         this.$axios.put(`/api/v1/admin/users/${userID}/change-password`,{
           password:toChangePassword.newPassword,
           password_confirmation:toChangePassword.confirmNewPassword

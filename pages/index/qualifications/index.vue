@@ -59,7 +59,7 @@
           </div>
           <div style="width: 25%;">
             <div class="flex text-white text-sm p-4">
-              <span>{{ $moment(qualification.createdAt).format('MMM D, YYYY | hh:mm A') }}</span>
+              <span>{{ $moment(qualification.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
             </div>
           </div>
           <div style="width: 25%;">
