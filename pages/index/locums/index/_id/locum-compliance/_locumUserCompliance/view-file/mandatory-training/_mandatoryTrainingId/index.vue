@@ -152,7 +152,7 @@ export default {
   methods:{
     async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
       try{
-        const response = this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+        await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
           status:toPutLocumDetailCompliance.status,
           expired_at:toPutLocumDetailCompliance.expired_at,
           note:toPutLocumDetailCompliance.note

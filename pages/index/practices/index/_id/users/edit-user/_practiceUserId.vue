@@ -36,13 +36,10 @@
           v-if="tab1"
           class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-full lg:w-2/5"
         >
-
           <div class="w-full overflow-hidden text-grey-light text-sm p-2">
-            <div v-for="error in errors" :key="error" class="p-2 rounded text-black bg-sunglow mb-2">
-              {{error}}
-            </div>
+            
             <div class="flex py-1">E-Mail Address 
-              <span v-if="!toPutPracticeUser.email" class="bg-red p-1 ml-4 -mt-1 rounded">Required</span>
+              <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>
             </div>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
@@ -50,6 +47,7 @@
               type="text"
               placeholder="example@example.com"
               v-model='toPutPracticeUser.email'
+              @blur="processEmail(toPutPracticeUser.email)"
               aria-label="Email"
             >
             <p class="flex py-1">Title</p>
@@ -61,7 +59,7 @@
               aria-label="Title"
             >
             <div class="flex py-1">First Name
-              <span v-if="!toPutPracticeUser.first_name" class="bg-red p-1 ml-4 rounded">Required</span>
+              <span v-if="!toPutPracticeUser.first_name" class="bg-red p-1 ml-4 rounded">Please enter your First Name</span>
             </div>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
@@ -72,7 +70,7 @@
               aria-label="First Name"
             >
             <div class="flex py-1">Last Name 
-              <span v-if="!toPutPracticeUser.last_name" class="bg-red p-1 ml-4 rounded">Required</span>
+              <span v-if="!toPutPracticeUser.last_name" class="bg-red p-1 ml-4 rounded">Please enter your Last Name</span>
             </div>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
@@ -163,7 +161,8 @@
 <script>
 export default {
   data() {
-    return { 
+    return {
+      formError:{}, 
       errors:[],
       errorPass:[],
       userTabs: 0, 
@@ -197,10 +196,7 @@ export default {
           suffix:specificPracticeUser.personal_detail.suffix,
           practice_role:specificPracticeUser.practice_detail.practice_role,
           status:specificPracticeUser.status
-        },
-        toChangePassword:{
-
-        }       
+        },    
       }
 
     }catch(err){
@@ -209,9 +205,28 @@ export default {
   },
 
   methods: {
+    processForm:function(userInfo){
+      if(!userInfo.first_name){
+        this.formError.fnameError = "Please Input your First Name"
+      }
+      if(!userInfo.last_name){
+        this.formError.lnameError = "Please input your Last Name"
+      }
+      
+    },
+    processEmail:function(inputEmail){
+      this.formError = {
+        emailError:''
+      }
+      if(!inputEmail) {
+       this.formError.emailError = "Required"
+      } else if(!this.validEmail(inputEmail)) {
+       this.formError.emailError = "Please input a Valid E-Mail Address"       
+      }
+    },
 
     checkForm:function(uID,userInfo) {
-      this.errors = [];
+      this.errors = []
       if(!userInfo.first_name){
         this.errors.push("Please input your First Name.")
       }
@@ -219,12 +234,12 @@ export default {
         this.errors.push("Please input your Last Name")
       }
       if(!userInfo.email) {
-        this.errors.push("Please input your E-mail");
+        this.errors.push("Please input your E-mail")
       } else if(!this.validEmail(userInfo.email)) {
-        this.errors.push("Please input a Valid E-Mail Address");        
+        this.errors.push("Please input a Valid E-Mail Address")        
       }
-
       if(!this.errors.length){
+        
         this.toPutPracticeUserInfo(uID,userInfo)
       }
 
@@ -232,18 +247,20 @@ export default {
 
     validEmail:function(email) {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      console.log("whatthefuuuuuukkk")
       return re.test(email);
     },
+    
 
     checkPasswordInfo:function(uID,changePass){
       this.errorPass = [];     
 
       if(!changePass.newPassword){
-        changePass.newPassword = 0
+        changePass.newPassword = ''
         this.errorPass.push("Please type your new password.")
       }
       if(!changePass.confirmNewPassword){
-        changePass.confirmNewPassword = 0
+        changePass.confirmNewPassword = ''
         this.errorPass.push("Please type again your new password.")
       }
       if(changePass.confirmNewPassword !== changePass.newPassword){
@@ -260,7 +277,7 @@ export default {
 
     async toPutPracticeUserInfo(userID,toPutPracticeUser){
       try{
-        this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
+        await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
           email:toPutPracticeUser.email,
           title:toPutPracticeUser.title,
           first_name:toPutPracticeUser.first_name,
@@ -281,7 +298,7 @@ export default {
       try{
         console.log(toChangePassword.newPassword)
         console.log(toChangePassword.confirmNewPassword)
-        this.$axios.put(`/api/v1/admin/users/${userID}/change-password`,{
+        await this.$axios.put(`/api/v1/admin/users/${userID}/change-password`,{
           password:toChangePassword.newPassword,
           password_confirmation:toChangePassword.confirmNewPassword
         })
@@ -292,7 +309,8 @@ export default {
       }
     },
 
-  }
+  },
+
 };
 </script>
 

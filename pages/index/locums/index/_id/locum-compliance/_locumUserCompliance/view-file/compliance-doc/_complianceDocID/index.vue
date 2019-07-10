@@ -146,7 +146,7 @@ export default {
   methods:{
      async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
       try{
-        this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+        await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
           status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
           expired_at:toPutLocumDetailCompliance.expired_at,
           note:toPutLocumDetailCompliance.note

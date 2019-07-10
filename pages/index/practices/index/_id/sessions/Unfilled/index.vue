@@ -25,6 +25,7 @@
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  v-if="!specificPractice.practice_parent"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
                 </nuxt-link>

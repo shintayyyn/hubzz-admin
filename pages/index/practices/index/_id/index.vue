@@ -25,6 +25,7 @@
               <div class="my-2 rounded-lg">
                 <nuxt-link
                   class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  v-if="!specificPractice.practice_parent"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
                 </nuxt-link>
@@ -201,7 +202,8 @@ export default {
   methods: {
     async toPutPracticeInfo(practiceID,toPutPractice){
       try{
-        this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
+        //await finishes the promise. if failed, corresponding funcs will not be executed
+        await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
         phone_number:toPutPractice.phone_number,
         report_to:toPutPractice.report_to,
         extra_information:toPutPractice.extra_information,

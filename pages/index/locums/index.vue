@@ -151,8 +151,7 @@
   			itemsPerPage: 10,
   			itemCount: 0,
   			activePage: 1,
-  			users: [],
-
+  			users: {},
   			search: ''
   		}
   	},

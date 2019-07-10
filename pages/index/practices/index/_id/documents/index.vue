@@ -15,7 +15,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
                   <strong>Practice</strong>
                 </nuxt-link>
@@ -24,7 +24,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
                 </nuxt-link>
@@ -33,7 +33,8 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  v-if="!specificPractice.practice_parent"
                   :to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
                   <strong>Sessions</strong>
                 </nuxt-link>
@@ -42,7 +43,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
                   <strong>Users</strong>
                 </nuxt-link>
@@ -51,7 +52,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm"
+                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
                   <strong>Documents</strong>
                 </nuxt-link>
@@ -67,12 +68,12 @@
           <div class="flex flex-col">
             <!-- HEADER -->
             <div class="flex my-2">
-              <div style="width: 20%;">
+              <div style="width: 10%;">
                 <div class="flex text-white text-sm p-4">
                   <strong>Title</strong>
                 </div>
               </div>
-              <div style="width: 20%;">
+              <div style="width: 10%;">
                 <div class="flex text-white text-sm p-4">
                   <strong>File Size</strong>
                 </div>
@@ -94,12 +95,12 @@
             :key="`surgery-${index}`"
             class="flex no-underline rounded-lg bg-waterloo my-2"
           >
-            <div style="width: 20%;">
+            <div style="width: 10%;">
               <div class="flex text-white text-sm p-4">
                 <span>{{ document.practiceDocType ? document.practiceDocType.name:null }}</span>
               </div>
             </div>
-            <div style="width: 20%;">
+            <div style="width: 10%;">
               <div class="flex text-white text-sm p-4">
                 <span>{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? (document.practiceSpecificDoc.file.size / 1048576).toFixed(2) + " Mb":null }}</span>
               </div>
@@ -109,7 +110,7 @@
                 <span>{{ document.practiceSpecificDoc ? $moment(document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null}}</span>
               </div>
             </div>
-             <div style="width:25%;">
+             <div style="width:20%;">
               <div class="flex text-white text-sm p-4">
                 <label>File
                   <input 
@@ -131,6 +132,20 @@
                 ></svgicon> 
                 <span>{{document.practiceSpecificDoc && document.practiceSpecificDoc.file ? "Update":"Upload"}}</span>
               </button>
+              </div>
+            </div>
+            <div style="width:20%;">
+              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm p-4">
+                <nuxt-link class="bg-blue rounded-full p-1 text-white no-underline lg:px-8 sm:px-2"
+                  :to="{path:`/practices/${specificPractice.id}/documents/view-practice-file/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`, query: $route.query}">
+                <svgicon
+                  name="folder"
+                  width="21"
+                  height="21"
+                  color="white white"
+                ></svgicon> 
+                <span>View File</span>
+              </nuxt-link>
               </div>
             </div>
           </div>
@@ -194,7 +209,7 @@ export default{
   },
 
   methods:{
-    submitFile(practiceID, practiceDocumentID, practiceSpecificDocument){
+    async submitFile(practiceID, practiceDocumentID, practiceSpecificDocument){
       try{
         let formData = new FormData()
         let file = this.files.find(({ id }) => id === practiceDocumentID)
@@ -210,7 +225,7 @@ export default{
               formData.append('practice_document_id',practiceID)
               formData.append('file', file)
               
-              this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
+              await this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 },     
@@ -224,7 +239,7 @@ export default{
               formData.append('file', file)
               formData.append('practice_id',practiceID)
               formData.append('practice_document_type_id',practiceDocumentID)
-              this.$axios.post( '/api/v1/admin/practice-documents',formData,{
+              await this.$axios.post( '/api/v1/admin/practice-documents',formData,{
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 },     
