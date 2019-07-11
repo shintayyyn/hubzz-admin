@@ -45,37 +45,37 @@
 				<!-- HEADER -->
 
 				<!-- BODY -->
-				<nuxt-link v-for="(user, index) in users" 
-				:key="`user-${index}`" 
-				:to="{ path: `/locums/${user.id}`, query: $route.query }" 
+				<nuxt-link v-for="(locumUser, index) in locumUsers" 
+				:key="`locumUser-${index}`" 
+				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }" 
 				 class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2" draggable="false">
 					
 					<div style="width: 20%;">
 						<div class="flex text-white text-sm p-4">
-							<span>{{ user.personal_detail ? user.personal_detail.name : null }}</span>
+							<span>{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span>
 						</div>
 					</div>
 					<div style="width: 25%;">
 						<div class="flex text-white text-sm p-4">
-							<span>{{ user.locum_detail && user.locum_detail.profession ? user.locum_detail.profession.name : null }}</span>
+							<span>{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
 						</div>
 					</div>
 					<div style="width: 15%;">
 						<div class="flex text-white text-sm p-4">
-							<span>{{ $moment(user.created_at).format('MMM D, YYYY') }}</span>
+							<span>{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
 						</div>
 					</div>
 					<div style="width: 15%;">
 						<div class="flex text-white text-sm p-4">
-							<span>{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY') : null }}</span>
+							<span>{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : null }}</span>
 						</div>
 					</div>
 					<div style="width:10%;">
 						<div class=" flex py-2 px-4 items-center">
 							<span
-								class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow "
-								:class="`${user.status == 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
-							>{{ user.status  }}</span>
+								class="inline-flex py-2 text-sm text-black rounded-full"
+								:class="statusStyle(locumUser.status)"
+							>{{ locumUser.status  }}</span>
 						</div>
 					</div>
 					
@@ -130,14 +130,14 @@
 			const itemCount = response.data.data.count
 			
 			response = await getLocumUsersPromise
-			const users = response.data.data.users
+			const locumUsers = response.data.data.users
 				
   			return {
   				loading: false,
   				itemsPerPage: limit,
   				itemCount,
   				activePage: page,
-  				users,
+  				locumUsers,
   				search
   			}
   		} catch (err) {
@@ -151,7 +151,7 @@
   			itemsPerPage: 10,
   			itemCount: 0,
   			activePage: 1,
-  			users: {},
+  			locumUsers: {},
   			search: ''
   		}
   	},
@@ -248,7 +248,27 @@
 	      }
 
 	      this.$router.push({ query })
-  		}
+		},
+
+		statusStyle(status){
+			switch(status){
+				case 'Active':
+					return 'bg-green text-white lg:px-8 sm:px-2'
+					break;
+				case 'Inactive':
+					return 'bg-yellow text-black lg:px-8 sm:px-2'
+					break;
+				case 'Deactivated':
+					return 'bg-grey text-black lg:px-8 sm:px-2'
+					break;
+				case 'Suspended':
+					return 'bg-red text-black lg:px-8 sm:px-2'
+					break;
+				default:
+					return
+			}
+		}
+		  
   	}
   }
 </script>

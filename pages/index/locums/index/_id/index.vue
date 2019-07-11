@@ -57,7 +57,7 @@
                   <p class="m-2 font-semibold">Name</p>
                   <p class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Email address</p>
-                  <p class="m-2 text-white underline">{{ locumUser.email ? locumUser.email : null }}</p>
+                  <p class="m-2 text-white">{{ locumUser.email ? locumUser.email : null }}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Mobile phone number</p>
                   <p class="m-2 text-white">{{ locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null }}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Home / landline number</p>

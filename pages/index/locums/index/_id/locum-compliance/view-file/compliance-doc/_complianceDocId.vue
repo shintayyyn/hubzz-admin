@@ -28,7 +28,7 @@
          <span>Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
+          <a class="text-white no-underline" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
              <svgicon
               name="cloud-download"
               width="21"
@@ -56,7 +56,7 @@
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20 ">
               <p class="text-white">Expired At</p>
-              <p>{{$moment(toPutLocumDetailCompliance.expired_at).format('DD/MM/YYYY')}}</p> <!--SHOULD BE A DATE NOT DATETIME-->
+              <p>{{toPutLocumDetailCompliance.expired_at}}</p> <!--SHOULD BE A DATE NOT DATETIME-->
                 <input
                     type="date"
                     class="date-picker hasDatepicker valid"
@@ -67,20 +67,33 @@
                   >
             </div>
             <p class="mt-5 mr-20">Status</p>
-                <select
+                <!-- <select
                     class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
                     v-model="toPutLocumDetailCompliance.status"
                   >
                     <option>Approved</option>
                     <option>Rejected</option>
-                </select>
+                </select> -->
+
+                <button
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
+                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
+                  @click.prevent="setStatusData('Approved')"
+                >Approved</button>
+                <button
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
+                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
+                  @click.prevent="setStatusData('Rejected')"
+                >Rejected</button>
+
             <p class="mt-5 mr-20">Note to Locum</p>
                 <textarea 
                   v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
                   class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                  name="complianceNote">Type Here
+                  name="complianceNote"
+                  v-if="notesAreVisible">Type Here
                 </textarea>
           </div>
           <div class="flex text-grey m-2">
@@ -107,7 +120,8 @@ export default {
     return {
       locumUser:null,
       specificLocumComplianceDocument:null,
-      toPutLocumDetailCompliance:{}
+      toPutLocumDetailCompliance:{},
+      notesAreVisible:true,
       
     };
   },
@@ -127,7 +141,7 @@ export default {
         specificLocumComplianceDocument,
         toPutLocumDetailCompliance:{
           status:specificLocumComplianceDocument && specificLocumComplianceDocument.status == 'Expiring' ? 'Approved':specificLocumComplianceDocument.status,
-          expired_at:specificLocumComplianceDocument ? specificLocumComplianceDocument.expired_at:null,
+          expired_at:specificLocumComplianceDocument ? app.$moment(specificLocumComplianceDocument.expired_at).format('YYYY-MM-DD'):null,
           note:specificLocumComplianceDocument ? specificLocumComplianceDocument.note:null
         }
       }
@@ -142,7 +156,56 @@ export default {
   },
   
   methods:{
-     async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
+    setStatusData(incomingStatus){
+      if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Approved'){
+
+        this.toPutLocumDetailCompliance.status = ''
+        this.notesAreVisible = false
+        console.log('status is pending1')
+        console.log(this.toPutLocumDetailCompliance)
+
+      }else if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Rejected'){
+        
+        this.toPutLocumDetailCompliance.status = 'Rejected'
+        this.notesAreVisible = true
+        this.toPutLocumDetailCompliance.expired_at = null
+        console.log('status is rejected2')
+         console.log(this.toPutLocumDetailCompliance)
+
+      }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Rejected'){
+        
+        this.toPutLocumDetailCompliance.status = ''
+        this.notesAreVisible = true
+        this.toPutLocumDetailCompliance.expired_at = null
+        console.log('status is pending3')
+         console.log(this.toPutLocumDetailCompliance)
+
+      }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Approved'){
+         
+        this.toPutLocumDetailCompliance.status = 'Approved'
+        this.notesAreVisible = false
+        console.log('status is approved4')
+        console.log(this.toPutLocumDetailCompliance)
+
+      }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === ''  && incomingStatus === 'Approved'){
+        
+        this.toPutLocumDetailCompliance.status = incomingStatus
+        this.notesAreVisible = false
+        console.log('status is approved5')
+        console.log(this.toPutLocumDetailCompliance)
+
+      }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === '' && incomingStatus === 'Rejected'){
+        this.toPutLocumDetailCompliance.status = incomingStatus
+        this.notesAreVisible = true
+        this.toPutLocumDetailCompliance.expired_at = null
+        console.log('status is rejected6')
+        console.log(this.toPutLocumDetailCompliance)
+      }
+        
+        
+    },
+
+    async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
       try{
         await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
           status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
