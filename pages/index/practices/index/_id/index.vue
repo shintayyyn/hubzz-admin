@@ -130,7 +130,6 @@
                 <p class="flex text-grey-light text-sm p-2">Status</p>
                 <select
                   class="outline-none border-2 border-transparent text-sm text-black pr-6"
-                  
                   v-model='toPutPractice.status'
                 >
                   <option>Active</option>
@@ -204,11 +203,11 @@ export default {
       try{
         //await finishes the promise. if failed, corresponding funcs will not be executed
         await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
-        phone_number:toPutPractice.phone_number,
-        report_to:toPutPractice.report_to,
-        extra_information:toPutPractice.extra_information,
-        status:toPutPractice.status,
-        actived_until:toPutPractice.actived_until
+          phone_number:toPutPractice.phone_number,
+          report_to:toPutPractice.report_to,
+          extra_information:toPutPractice.extra_information,
+          status:toPutPractice.status,
+          actived_until:toPutPractice.actived_until
         })
         alert('Saved')
       }catch(err){

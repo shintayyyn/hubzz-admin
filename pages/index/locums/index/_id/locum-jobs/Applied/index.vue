@@ -34,7 +34,7 @@
                         <div class="my-2 rounded-lg">
                             <nuxt-link
                             class="border-white rounded-lg p-3 text-white text-sm no-underline"
-                            :to="{path:`/locums/${locumUser.id}/locum-compliance/${locumUser.id}`,query: $route.query}"
+                            :to="{path:`/locums/${locumUser.id}/locum-compliance/`,query: $route.query}"
                             :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
                             :class="locumUser.compliance_status==='Empty' ? 'text-grey-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
                             <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
@@ -255,7 +255,7 @@ export default{
         activePage: page,
         locumUser,
         locumUserAppliedJobs,
-        disabled:true
+        disabled:'true'
         
       }
         } catch (err) {

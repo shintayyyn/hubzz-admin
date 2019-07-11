@@ -97,7 +97,7 @@
               ></svgicon>
           </div>
       </nuxt-link>
-
+    <!--GMC / NMC NUMBER-->
      <div class="flex flex-row lg:w-1/2 text-sm text-white shadow-lg rounded-lg bg-waterloo mx-6 mt-3">
         <p class="m-4 text-grey">GMC / NMC Number</p>
         <p class="m-3 mt-4 ">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
@@ -131,7 +131,7 @@
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
       </div>
-      <!-- BODY -->
+      <!--GMC / NMC NUMBER ENDS HERE-->
 
       <p class=" text-sm text-white pt-8 px-8 font-semibold">Mandatory</p>
       <!-- TABLE -->
@@ -177,7 +177,7 @@
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryComplianceDocument-${index}`"
             :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
             :class="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/compliances/${locumUser.id}/view-file/compliance-doc/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
+            :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
@@ -282,7 +282,7 @@
             v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
             :class="optionalComplianceDocument.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
-            :to="{path:`/compliances/${locumUser.id}/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
+            :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
@@ -385,7 +385,7 @@
             v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
             :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
             :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/compliances/${locumUser.id}/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
+            :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo my-2"
           >
             <div style="width: 25%;">
@@ -458,7 +458,7 @@ export default {
 
   async asyncData({ app, route }) {
     try {
-      let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.locumUserCompliance}`)
+      let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
       const professionCategoryid = locumUser.locum_detail.profession.profession_category.id
 
@@ -518,27 +518,27 @@ export default {
     async toPutGmcNmc(currentStatus,locumID,verifyReject){
       try{
         if(currentStatus === 'Pending'){
-           const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:verifyReject
           })
           alert('Saved')
         }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:verifyReject
           })
           alert('Saved.')
         }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:verifyReject
           })
           alert('Saved.')
         }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:'Pending'
           })
           alert('Saved. Status reverted back to pending')
         }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
             status:'Pending'
           })
           alert('Saved. Status reverted back to pending')
@@ -554,27 +554,27 @@ export default {
     async toPutMplNpl(currentStatus,locumID, verifyReject){
       try{
         if(currentStatus === 'Pending'){
-           const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+           await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:verifyReject
           })
           alert('Saved')
         }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:verifyReject
           })
           alert('Saved.')
         }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:verifyReject
           })
           alert('Saved.')
         }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:'Pending'
           })
           alert('Saved. Status reverted back to pending')
         }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
-          const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+          await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
             status:'Pending'
           })
           alert('Saved. Status reverted back to pending')

@@ -5,7 +5,7 @@
       <!-- HEADER -->
       <div class="flex text-sm text-white py-2 px-6">
         <nuxt-link
-          :to="{path:`/compliances/${locumUser.id}`}"
+          :to="{path:`/locums/${locumUser.id}/locum-compliance`}"
           class="text-white hover:text-yellow-dark p-1 mr-4"
         >
           <svgicon
@@ -15,20 +15,18 @@
             class="hover:text-yellow-dark fill-current"
           />
         </nuxt-link>
-        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
-        >
+        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4">
           <svgicon
-          name="save-icon"
-          width="21"
-          height="21"
-          color="transparent white"
-          hover:color="transparent black"
-        ></svgicon>
-         <span>Save</span>
+            name="save-icon"
+            width="21"
+            height="21"
+            color="transparent white"
+            hover:color="transparent black"
+          ></svgicon> 
+         <span>Save</span> <!--ASK JC/ARVI ABOUT THIS. DOES MANDATORY TRAINING EXPIRE etc. etc.?-->
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
+          <a class="text-white" v-bind:href="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null">
              <svgicon
               name="cloud-download"
               width="21"
@@ -47,39 +45,44 @@
         <div class="inline-flex text-sm m-4">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
-            <p class="text-white">{{specificLocumComplianceDocument.compliance_document ? specificLocumComplianceDocument.compliance_document.name: null}}</p>
+            <p class="text-white">{{specificMandatoryTraining[0].mandatory_training ? specificMandatoryTraining[0].mandatory_training.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
-            <p class="text-white underline">{{locumUser.personal_detail ? locumUser.personal_detail.name: null}}</p>
+            <p class="text-white">{{locumUser.personal_detail ? locumUser.personal_detail.name: null}}</p>
             <p class="mt-5 mr-20">File last uploaded</p>
-            <p class="text-white underline">{{specificLocumComplianceDocument.file ? $moment(specificLocumComplianceDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+            <p class="text-white">{{specificMandatoryTraining[0] && specificMandatoryTraining[0].file ? $moment(specificMandatoryTraining[0].file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20">
-              <label for="expiryDate">{{"Expiry Date: "+$moment(specificLocumComplianceDocument.expired_at).format('DD/MM/YYYY')}}</label>
+              <label for="expiryDate">Expiry date</label>
               <input
                 type="date"
                 class="date-picker hasDatepicker valid"
                 name="expiryDate"
                 disable-min-date
-                value
-                placeholder="mm/dd/yy"
-                id="dp1554355291222"
+                placeholder="dd/mm/yyyy"
                 aria-invalid="false"
-                v-model="toPutLocumDetailCompliance.expired_at"
+                v-model="toPutLocumMandatoryTraining.expired_at"
               >
             </div>
             <p class="mt-5 mr-20">Status</p>
+              <!-- <div class="flex flex-wrap overflow-hidden">
+                <div class="w-1/2 overflow-hidden">
+                  <button v-on:click="value='Approved'" class='inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full focus:bg-green focus:border-green'>Approved</button>
+                </div>
+                <div class="w-1/2 overflow-hidden">
+                  <button class='inline-flex text-white text-sm mt-2 py-2 p-3 border border-white rounded-full focus:bg-yellow focus:border-yellow focus:text-black'>Denied</button>
+                </div>
+              </div> -->
                 <select
                     class="outline-none border-2 border-transparent text-sm text-black pr-6"
                     id="grid-state"
-                    v-model="toPutLocumDetailCompliance.status"
+                    v-model="toPutLocumMandatoryTraining.status"
                   >
                     <option>Approved</option>
                     <option>Rejected</option>
                 </select>
             <p class="mt-5 mr-20">Note to Locum</p>
-                <textarea 
-                  v-model="toPutLocumDetailCompliance.note" 
+                <textarea v-model="toPutLocumMandatoryTraining.note" 
                   placeholder="Type Here" 
                   class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
                   name="complianceNote">Type Here
@@ -90,7 +93,7 @@
              <embed
               width=800px
               height=600px
-              :src="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null"
+              :src="specificMandatoryTraining[0] && specificMandatoryTraining[0].file ? specificMandatoryTraining[0].file.url:null"
               >
           </div>
        
@@ -108,48 +111,49 @@ export default {
   data() {
     return {
       locumUser:null,
-      specificLocumComplianceDocument:null,
-      toPutLocumDetailCompliance:{}
-      
+      locumMandatoryTrainings:[],
+      specificMandatoryTraining:[],
+      toPutLocumMandatoryTraining:{}
     };
   },
 
   async asyncData({ app, route }) {
     try {
-      //File ID route
-      //from file ID route, find first in compliance documents route. else, find in mandatory trainings route
 
-      let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.complianceDocID}`)
-      const specificLocumComplianceDocument = response.data.data.locum_detail_compliance_document
-      response = await app.$axios.get(`/api/v1/admin/locum-users/${specificLocumComplianceDocument.locum_detail.user.id}`)
+      let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
+      const locumMandatoryTrainings = response.data.data.user.locum_detail.mandatory_trainings
+      
+      const specificMandatoryTraining = locumMandatoryTrainings.filter((userMandatoryTraining)=>{
+        return userMandatoryTraining.id == route.params.mandatoryTrainingId
+      })
+
+      console.log(specificMandatoryTraining[0])
 
       return{
         locumUser,
-        specificLocumComplianceDocument,
-        toPutLocumDetailCompliance:{
-          status:specificLocumComplianceDocument ? specificLocumComplianceDocument.status:null,
-          expired_at:specificLocumComplianceDocument ? specificLocumComplianceDocument.expired_at:null,
-          note:specificLocumComplianceDocument ? specificLocumComplianceDocument.note:null
+        locumMandatoryTrainings,
+        specificMandatoryTraining,
+        toPutLocumMandatoryTraining:{
+          status:specificMandatoryTraining ? specificMandatoryTraining.status:null,
+          expired_at:specificMandatoryTraining ? specificMandatoryTraining.expired_at:null,
+          note:specificMandatoryTraining ? specificMandatoryTraining.note:null
         }
       }
 
-    }catch (err) {
+    } catch (err) {
       console.log("index practices index create asyncData err", err);
     }
   },
-
-  computed:{
-    
-  },
+  
   
   methods:{
-     async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
+    async toPutLocumMandatoryTrainingDocs(locumDocID,toPutLocumMandatoryTraining){
       try{
         await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-          status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
-          expired_at:toPutLocumDetailCompliance.expired_at,
-          note:toPutLocumDetailCompliance.note
+          status:toPutLocumMandatoryTraining.status,
+          expired_at:toPutLocumMandatoryTraining.expired_at,
+          note:toPutLocumMandatoryTraining.note
         })
         alert('Saved')
       }catch(err){
@@ -158,5 +162,6 @@ export default {
       }
     }
   }
+
 };
 </script>

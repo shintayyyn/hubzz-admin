@@ -39,7 +39,7 @@
                 <div class="my-2 rounded-lg">
                 <nuxt-link
                 class="border-white rounded-lg p-3 text-white text-sm no-underline"
-                :to="{path:`/locums/${locumUser.id}/locum-compliance/${locumUser.id}`,query: $route.query}"
+                :to="{path:`/locums/${locumUser.id}/locum-compliance`,query: $route.query}"
                 :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
                 :class="locumUser.compliance_status==='Empty' ? 'text-grey-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
                   <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
@@ -75,19 +75,19 @@
                   <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name1'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name2'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
@@ -255,7 +255,7 @@ export default {
   methods:{
     async changeLocumUserStatus(locumID,activeDisabled){
       try{
-        const response = this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
+        await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
           status:activeDisabled
         })
         alert('Saved')
