@@ -73,7 +73,7 @@
 					<div style="width:10%;">
 						<div class=" flex py-2 px-4 items-center">
 							<span
-								class="inline-flex py-2 text-sm text-black rounded-full"
+								class="inline-flex text-black text-sm mt-2 py-2 p-3 rounded-full"
 								:class="statusStyle(locumUser.status)"
 							>{{ locumUser.status  }}</span>
 						</div>
@@ -262,7 +262,7 @@
 					return 'bg-grey text-black lg:px-8 sm:px-2'
 					break;
 				case 'Suspended':
-					return 'bg-red text-black lg:px-8 sm:px-2'
+					return 'bg-red text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return

@@ -228,9 +228,7 @@
               <div
                v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument"
               class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
-              :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
-               mandatoryComplianceDocument.locumMandatoryComplianceDocument.status &&
-               mandatoryComplianceDocument.locumMandatoryComplianceDocument.status === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
+              :class="statusStyle(mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null)">
                 <span>{{mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null}}</span>
               </div>
             </div>
@@ -333,8 +331,8 @@
               </div>
               <div
               v-if="optionalComplianceDocument.locumOptionalComplianceDocument" 
-              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
-              :class="`${optionalComplianceDocument.locumOptionalComplianceDocument && optionalComplianceDocument.locumOptionalComplianceDocument.status  === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
+              class="inline-flex text-black text-sm mt-2 py-2 p-3 border rounded-full"
+              :class="statusStyle(optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null)">
                 <span>{{optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null}}</span>
               </div>
             </div>
@@ -587,6 +585,25 @@ export default {
         console.log("index practices index put MPL/NPL err", err);
       }
     },
+
+    statusStyle(status){
+			switch(status){
+				case 'Approved':
+					return 'bg-green border-green text-white lg:px-8 sm:px-2'
+					break;
+				case 'Expiring':
+					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-2'
+					break;
+				case 'Expired':
+					return 'bg-red border-red text-white lg:px-8 sm:px-2'
+					break;
+				case 'Rejected':
+					return 'bg-orange border-orange text-black lg:px-8 sm:px-2'
+					break;
+				default:
+					return
+			}
+		},
   }
 };
 </script>
