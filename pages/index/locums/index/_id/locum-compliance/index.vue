@@ -222,11 +222,11 @@
             <div style="width: 10%;">
               <div
               v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument == null"
-              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white bg-transparent rounded-full">
+              class="inline-flex text-white text-sm mt-2 py-2 p-3 border border-white bg-transparent rounded-full">
                 <span>Empty</span>
               </div>
               <div
-               
+               v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument"
               class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
               :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
                mandatoryComplianceDocument.locumMandatoryComplianceDocument.status &&
