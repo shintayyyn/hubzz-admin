@@ -158,10 +158,8 @@ export default {
 
       const getUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
 			const getUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
-				
-      let response = null
       
-			response = await getUsersCountPromise
+			let response = await getUsersCountPromise
       const itemCount = response.data.data.count
       
 			response = await getUsersPromise
