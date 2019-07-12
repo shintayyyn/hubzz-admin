@@ -461,14 +461,14 @@ export default {
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
       const professionCategoryid = locumUser.locum_detail.profession.profession_category.id
-
+  
       response = await app.$axios.get(`/api/v1/profession-categories/${professionCategoryid}`)
       const professionCategory = response.data.data.profession_category
 
       response = await app.$axios.get(`/api/v1/admin/mandatory-trainings`)
       const mandatoryTrainings = response.data.data.mandatory_trainings
 
-
+      
       const mandatoryComplianceDocuments = professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument) => {
         const locumMandatoryComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
@@ -478,7 +478,6 @@ export default {
           locumMandatoryComplianceDocument
         }
       })
-     
       const optionalComplianceDocuments = professionCategory.optional_compliance_documents.map((optionalComplianceDocument) => {
         const locumOptionalComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === optionalComplianceDocument.id
