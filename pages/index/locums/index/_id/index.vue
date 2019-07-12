@@ -106,37 +106,45 @@
                   <p class="m-2 mt-5 mr-20 font-semibold">Preferred rates</p>
                   <p class="ml-2 text-white">Per hour £ (none)</p>
                   <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
-                  <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                  
 
-                  <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
-                   :key="`${index}-${specificComplianceDoc.id}-`"
-                  >
-                    <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
-                      <svgicon
-                        name="cloud-download"
-                        width="21"
-                        height="21"
-                        color="transparent white"
-                      ></svgicon>
-                      <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
-                    </a>
+                  <div v-if="specificLocumCompDocs">
+                    <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                    <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
+                    :key="`${index}-${specificComplianceDoc.id}-`"
+                    >
+                      <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
+                        <svgicon
+                          name="cloud-download"
+                          width="21"
+                          height="21"
+                          color="transparent white"
+                        ></svgicon>
+                        <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
+                      </a>
+                    </div>
                   </div>
                   
-                  <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+                  
+                  <div v-if="specificLocumMandatoryTrainings">
 
-                  <div v-for="(specificLocumMandatoryTraining, index) in specificLocumMandatoryTrainings"
-                   :key="`${index}-${specificLocumMandatoryTraining.id}-`"
-                  >
-                    <a class="m-2 text-white" v-bind:href="specificLocumMandatoryTraining.file ? specificLocumMandatoryTraining.file.url:null">
-                      <svgicon
-                        name="cloud-download"
-                        width="21"
-                        height="21"
-                        color="transparent white"
-                      ></svgicon>
-                      <span class="pb-2">{{specificLocumMandatoryTraining.mandatory_training ? specificLocumMandatoryTraining.mandatory_training.name:null}}</span>
-                    </a>
+                  <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+                     <div v-for="(specificLocumMandatoryTraining, index) in specificLocumMandatoryTrainings"
+                      :key="`${index}-${specificLocumMandatoryTraining.id}-`"
+                      >
+                      <a class="m-2 text-white" v-bind:href="specificLocumMandatoryTraining.file ? specificLocumMandatoryTraining.file.url:null">
+                        <svgicon
+                          name="cloud-download"
+                          width="21"
+                          height="21"
+                          color="transparent white"
+                        ></svgicon>
+                        <span class="pb-2">{{specificLocumMandatoryTraining.mandatory_training ? specificLocumMandatoryTraining.mandatory_training.name:null}}</span>
+                      </a>
+                    </div>
                   </div>
+                 
+
                 </div>
               </div>
               <!--COLUMN 3-->
