@@ -123,7 +123,10 @@
             </div>
             <div style="width:20%;">
               <div class="flex text-white text-sm p-4">
-                <button class="bg-green rounded-full p-1 text-white lg:px-8 sm:px-2" v-on:click="submitFile(specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)">
+                <button class="border-white rounded-full p-1 text-white lg:px-8 sm:px-2"
+                  :event="fileIsUploadable === 'false' ? disabled : 'click'"
+                  :class="fileIsUploadable === 'false' ? 'bg-transparent' : 'bg-green'" 
+                  v-on:click="submitFile(specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)">
                 <svgicon
                   name="cloud-upload"
                   width="21"
@@ -169,6 +172,7 @@ export default{
       specificPractice:[],
       specificPracticeDocumentTypes:[],
       files: [],
+      fileIsUploadable: 'false'
       
       
     };
@@ -214,7 +218,7 @@ export default{
         let formData = new FormData()
         let file = this.files.find(({ id }) => id === practiceDocumentID)
         if (file) {
-          file = file.file
+            file = file.file
             console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
             console.log(file)
         
@@ -292,8 +296,8 @@ export default{
           file
         })
       }
-
-      }
+      this.fileIsUploadable = 'true'
+    }
   }
 }
 </script>

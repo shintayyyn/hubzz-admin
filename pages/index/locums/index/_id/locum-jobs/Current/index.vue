@@ -9,203 +9,205 @@
                 </nuxt-link>
             </div>
 
-            <div class="mx-6">
+            <div v-if="locumUserCurrentJobs">
+                <div class="mx-6">
+                    <div class="flex flex-wrap">
+                        <div class="my-1 px-1">
+                            <div class="my-2 rounded-lg">
+                                <nuxt-link
+                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                :to="{path:`/locums/${locumUser.id}`,query: $route.query}">
+                                <strong>Profile</strong>
+                                </nuxt-link>
+                            </div>
+                        </div>
+                        <div class="my-1 px-1">
+                            <div class="my-2 rounded-lg">
+                                <nuxt-link
+                                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                :to="{path:`/locums/${locumUser.id}/locum-jobs`,query: $route.query}">
+                                <strong>Jobs</strong>
+                                </nuxt-link>
+                            </div>
+                        </div>
+                        <div class="my-1 px-1">
+                            <div class="my-2 rounded-lg">
+                                <nuxt-link
+                                class="border-white rounded-lg p-3 text-white text-sm no-underline"
+                                :to="{path:`/locums/${locumUser.id}/locum-compliance/`,query: $route.query}"
+                                :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
+                                :class="locumUser.compliance_status==='Empty' ? 'text-grey-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
+                                <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
+                                </nuxt-link>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="flex flex-wrap">
-                    <div class="my-1 px-1">
-                        <div class="my-2 rounded-lg">
+                    <!-- DEFAULT TABS -->
+                    <div class="flex flex-col rounded-lg mt-2 " >
+                        <div class="flex flex-wrap -mx-1">
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
+                                    <strong>Current</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/available`,query: $route.query}">
+                                    <strong>Available</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/matched`,query: $route.query}">
+                                    <strong>Matched</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/applied`,query: $route.query}">
+                                    <strong>Applied</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/cancelled`,query: $route.query}">
+                                    <strong>Cancelled</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/unsuccessful`,query: $route.query}">
+                                    <strong>Unsuccessful</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/declined`,query: $route.query}">
+                                    <strong>Declined</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+
+                            <div class="my-1 px-1">
+                                <div class="my-2 rounded-lg">
+                                    <nuxt-link
+                                    class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                                    :to="{path:`/locums/${locumUser.id}/locum-jobs/completed`,query: $route.query}">
+                                    <strong>Completed</strong>
+                                    </nuxt-link>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--DEFAULT TABS END HERE-->
+
+                    <!-- TABLE -->
+                    <div style="w-full">
+                        <div class="flex flex-col">
+                            <!-- HEADER -->
+                            <div class="flex my-2">
+                                <div style="width: 20%;">
+                                    <div class="flex text-white text-sm p-4">
+                                    <strong>Job number</strong>
+                                    </div>
+                                </div>
+                                <div style="width: 15%;">
+                                    <div class="flex text-white text-sm p-4">
+                                    <strong>Practice / Surgery</strong>
+                                    </div>
+                                </div>
+                                <div style="width: 15%;">
+                                    <div class="flex text-white text-sm p-4">
+                                    <strong>Title</strong>
+                                    </div>
+                                </div>
+                                <div style="width: 16%;">
+                                    <div class="flex text-white text-sm p-4">
+                                    <strong>From</strong>
+                                    </div>
+                                </div>
+                                <div style="width: 16%;">
+                                    <div class="flex text-white text-sm p-4">
+                                    <strong>To</strong>
+                                    </div>
+                                </div>
+                                <div style="width: 16%;">
+                                    <div class="flex text-white text-sm p-4">
+                                    <strong>Created</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- HEADER -->
+
+                            <!-- BODY -->
                             <nuxt-link
-                            class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                            :to="{path:`/locums/${locumUser.id}`,query: $route.query}">
-                            <strong>Profile</strong>
+                            v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
+                            :key="`locumUserCurrentJob-${index}`"
+                            :to="`/locums/${locumUser.id}/locum-jobs/view-locum-job/${locumUserCurrentJob.id}`"
+                            class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+                            >
+                                <div style="width: 20%;">
+                                    <div class="flex text-white text-sm p-4">
+                                        <span>{{ locumUserCurrentJob.job_number }}</span>
+                                    </div>
+                                </div>
+                                <div style="width: 15%;">
+                                    <div class="flex text-white text-sm p-4">
+                                        <span>{{ locumUserCurrentJob.platform_job.practice.surgery.name }}</span>
+                                    </div>
+                                </div>
+                                <div style="width: 15%;">
+                                    <div class="flex text-white text-sm p-4">
+                                        <span>{{ locumUserCurrentJob.platform_job.title }}</span>
+                                    </div>
+                                </div>
+                                <div style="width: 16%;">
+                                    <div class="flex text-white text-sm p-4">
+                                        <span>{{ locumUserCurrentJob.platform_job.date_start }}</span>
+                                    </div>
+                                </div>
+                                <div style="width: 16%;">
+                                    <div class="flex text-white text-sm p-4">
+                                        <span>{{ locumUserCurrentJob.platform_job.date_end }}</span>
+                                    </div>
+                                </div>
+                                <div style="width: 16%;">
+                                    <div class="flex text-white text-sm p-4">
+                                        <span>{{ locumUserCurrentJob.platform_job.date_created }}</span>
+                                    </div>
+                                </div>
                             </nuxt-link>
+                            <!-- BODY -->
                         </div>
                     </div>
-                    <div class="my-1 px-1">
-                        <div class="my-2 rounded-lg">
-                            <nuxt-link
-                            class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                            :to="{path:`/locums/${locumUser.id}/locum-jobs`,query: $route.query}">
-                            <strong>Jobs</strong>
-                            </nuxt-link>
-                        </div>
-                    </div>
-                    <div class="my-1 px-1">
-                        <div class="my-2 rounded-lg">
-                            <nuxt-link
-                            class="border-white rounded-lg p-3 text-white text-sm no-underline"
-                            :to="{path:`/locums/${locumUser.id}/locum-compliance/`,query: $route.query}"
-                            :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
-                            :class="locumUser.compliance_status==='Empty' ? 'text-grey-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
-                            <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
-                            </nuxt-link>
-                        </div>
-                    </div>
+                    <!--TABLE ENDS HERE-->
                 </div>
-
-                <!-- DEFAULT TABS -->
-                <div class="flex flex-col rounded-lg mt-2 " >
-                    <div class="flex flex-wrap -mx-1">
-                        <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
-                                <strong>Current</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-                        <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/available`,query: $route.query}">
-                                <strong>Available</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-                         <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/matched`,query: $route.query}">
-                                <strong>Matched</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-                        <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/applied`,query: $route.query}">
-                                <strong>Applied</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-                         <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/cancelled`,query: $route.query}">
-                                <strong>Cancelled</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-                        <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/unsuccessful`,query: $route.query}">
-                                <strong>Unsuccessful</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-
-                        <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/declined`,query: $route.query}">
-                                <strong>Declined</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-
-                        <div class="my-1 px-1">
-                            <div class="my-2 rounded-lg">
-                                <nuxt-link
-                                class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                                :to="{path:`/locums/${locumUser.id}/locum-jobs/completed`,query: $route.query}">
-                                <strong>Completed</strong>
-                                </nuxt-link>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!--DEFAULT TABS END HERE-->
-
-                <!-- TABLE -->
-                <div style="w-full">
-                    <div class="flex flex-col">
-                        <!-- HEADER -->
-                        <div class="flex my-2">
-                            <div style="width: 20%;">
-                                <div class="flex text-white text-sm p-4">
-                                <strong>Job number</strong>
-                                </div>
-                            </div>
-                            <div style="width: 15%;">
-                                <div class="flex text-white text-sm p-4">
-                                <strong>Practice / Surgery</strong>
-                                </div>
-                            </div>
-                            <div style="width: 15%;">
-                                <div class="flex text-white text-sm p-4">
-                                <strong>Title</strong>
-                                </div>
-                            </div>
-                            <div style="width: 16%;">
-                                <div class="flex text-white text-sm p-4">
-                                <strong>From</strong>
-                                </div>
-                            </div>
-                            <div style="width: 16%;">
-                                <div class="flex text-white text-sm p-4">
-                                <strong>To</strong>
-                                </div>
-                            </div>
-                            <div style="width: 16%;">
-                                <div class="flex text-white text-sm p-4">
-                                <strong>Created</strong>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- HEADER -->
-
-                        <!-- BODY -->
-                        <nuxt-link
-                        v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
-                        :key="`locumUserCurrentJob-${index}`"
-                        :to="`/locums/${locumUser.id}/locum-jobs/view-locum-job/${locumUserCurrentJob.id}`"
-                        class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
-                        >
-                            <div style="width: 20%;">
-                                <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.job_number }}</span>
-                                </div>
-                            </div>
-                            <div style="width: 15%;">
-                                <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.practice.surgery.name }}</span>
-                                </div>
-                            </div>
-                            <div style="width: 15%;">
-                                <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.title }}</span>
-                                </div>
-                            </div>
-                            <div style="width: 16%;">
-                                <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.date_start }}</span>
-                                </div>
-                            </div>
-                            <div style="width: 16%;">
-                                <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.date_end }}</span>
-                                </div>
-                            </div>
-                            <div style="width: 16%;">
-                                <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserCurrentJob.platform_job.date_created }}</span>
-                                </div>
-                            </div>
-                        </nuxt-link>
-                        <!-- BODY -->
-                    </div>
-                </div>
-                <!--TABLE ENDS HERE-->
             </div>
+            
             
             <nuxt-child/>
 		</div>
