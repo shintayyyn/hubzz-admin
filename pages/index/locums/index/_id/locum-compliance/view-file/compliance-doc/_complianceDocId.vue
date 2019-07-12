@@ -161,45 +161,33 @@ export default {
 
         this.toPutLocumDetailCompliance.status = ''
         this.notesAreVisible = false
-        console.log('status is pending1')
-        console.log(this.toPutLocumDetailCompliance)
 
       }else if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Rejected'){
         
         this.toPutLocumDetailCompliance.status = 'Rejected'
         this.notesAreVisible = true
         this.toPutLocumDetailCompliance.expired_at = null
-        console.log('status is rejected2')
-         console.log(this.toPutLocumDetailCompliance)
 
       }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Rejected'){
         
         this.toPutLocumDetailCompliance.status = ''
         this.notesAreVisible = true
         this.toPutLocumDetailCompliance.expired_at = null
-        console.log('status is pending3')
-         console.log(this.toPutLocumDetailCompliance)
 
       }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Approved'){
          
         this.toPutLocumDetailCompliance.status = 'Approved'
         this.notesAreVisible = false
-        console.log('status is approved4')
-        console.log(this.toPutLocumDetailCompliance)
 
       }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === ''  && incomingStatus === 'Approved'){
         
         this.toPutLocumDetailCompliance.status = incomingStatus
         this.notesAreVisible = false
-        console.log('status is approved5')
-        console.log(this.toPutLocumDetailCompliance)
 
       }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === '' && incomingStatus === 'Rejected'){
         this.toPutLocumDetailCompliance.status = incomingStatus
         this.notesAreVisible = true
         this.toPutLocumDetailCompliance.expired_at = null
-        console.log('status is rejected6')
-        console.log(this.toPutLocumDetailCompliance)
       }
         
         
