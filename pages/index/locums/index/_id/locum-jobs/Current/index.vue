@@ -9,8 +9,8 @@
                 </nuxt-link>
             </div>
 
-            <div v-if="locumUserCurrentJobs">
-                <div class="mx-6">
+            <div class="mx-6">
+                <div v-if="locumUserCurrentJobs">
                     <div class="flex flex-wrap">
                         <div class="my-1 px-1">
                             <div class="my-2 rounded-lg">
@@ -124,89 +124,89 @@
 
                     </div>
                     <!--DEFAULT TABS END HERE-->
-
-                    <!-- TABLE -->
-                    <div style="w-full">
-                        <div class="flex flex-col">
-                            <!-- HEADER -->
-                            <div class="flex my-2">
-                                <div style="width: 20%;">
-                                    <div class="flex text-white text-sm p-4">
-                                    <strong>Job number</strong>
-                                    </div>
-                                </div>
-                                <div style="width: 15%;">
-                                    <div class="flex text-white text-sm p-4">
-                                    <strong>Practice / Surgery</strong>
-                                    </div>
-                                </div>
-                                <div style="width: 15%;">
-                                    <div class="flex text-white text-sm p-4">
-                                    <strong>Title</strong>
-                                    </div>
-                                </div>
-                                <div style="width: 16%;">
-                                    <div class="flex text-white text-sm p-4">
-                                    <strong>From</strong>
-                                    </div>
-                                </div>
-                                <div style="width: 16%;">
-                                    <div class="flex text-white text-sm p-4">
-                                    <strong>To</strong>
-                                    </div>
-                                </div>
-                                <div style="width: 16%;">
-                                    <div class="flex text-white text-sm p-4">
-                                    <strong>Created</strong>
-                                    </div>
+                </div>
+                <!-- TABLE -->
+                <div style="w-full">
+                    <div class="flex flex-col">
+                        <!-- HEADER -->
+                        <div class="flex my-2">
+                            <div style="width: 20%;">
+                                <div class="flex text-white text-sm p-4">
+                                <strong>Job number</strong>
                                 </div>
                             </div>
-                            <!-- HEADER -->
-
-                            <!-- BODY -->
-                            <nuxt-link
-                            v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
-                            :key="`locumUserCurrentJob-${index}`"
-                            :to="`/locums/${locumUser.id}/locum-jobs/view-locum-job/${locumUserCurrentJob.id}`"
-                            class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
-                            >
-                                <div style="width: 20%;">
-                                    <div class="flex text-white text-sm p-4">
-                                        <span>{{ locumUserCurrentJob.job_number }}</span>
-                                    </div>
+                            <div style="width: 15%;">
+                                <div class="flex text-white text-sm p-4">
+                                <strong>Practice / Surgery</strong>
                                 </div>
-                                <div style="width: 15%;">
-                                    <div class="flex text-white text-sm p-4">
-                                        <span>{{ locumUserCurrentJob.platform_job.practice.surgery.name }}</span>
-                                    </div>
+                            </div>
+                            <div style="width: 15%;">
+                                <div class="flex text-white text-sm p-4">
+                                <strong>Title</strong>
                                 </div>
-                                <div style="width: 15%;">
-                                    <div class="flex text-white text-sm p-4">
-                                        <span>{{ locumUserCurrentJob.platform_job.title }}</span>
-                                    </div>
+                            </div>
+                            <div style="width: 16%;">
+                                <div class="flex text-white text-sm p-4">
+                                <strong>From</strong>
                                 </div>
-                                <div style="width: 16%;">
-                                    <div class="flex text-white text-sm p-4">
-                                        <span>{{ locumUserCurrentJob.platform_job.date_start }}</span>
-                                    </div>
+                            </div>
+                            <div style="width: 16%;">
+                                <div class="flex text-white text-sm p-4">
+                                <strong>To</strong>
                                 </div>
-                                <div style="width: 16%;">
-                                    <div class="flex text-white text-sm p-4">
-                                        <span>{{ locumUserCurrentJob.platform_job.date_end }}</span>
-                                    </div>
+                            </div>
+                            <div style="width: 16%;">
+                                <div class="flex text-white text-sm p-4">
+                                <strong>Created</strong>
                                 </div>
-                                <div style="width: 16%;">
-                                    <div class="flex text-white text-sm p-4">
-                                        <span>{{ locumUserCurrentJob.platform_job.date_created }}</span>
-                                    </div>
-                                </div>
-                            </nuxt-link>
-                            <!-- BODY -->
+                            </div>
                         </div>
+                        <!-- HEADER -->
+
+                        <!-- BODY -->
+                        <nuxt-link
+                        v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
+                        :key="`locumUserCurrentJob-${index}`"
+                        :to="`/locums/${locumUser.id}/locum-jobs/view-locum-job/${locumUserCurrentJob.id}`"
+                        class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+                        >
+                            <div style="width: 20%;">
+                                <div class="flex text-white text-sm p-4">
+                                    <span>{{ locumUserCurrentJob.job_number }}</span>
+                                </div>
+                            </div>
+                            <div style="width: 15%;">
+                                <div class="flex text-white text-sm p-4">
+                                    <span>{{ locumUserCurrentJob.platform_job.practice.surgery.name }}</span>
+                                </div>
+                            </div>
+                            <div style="width: 15%;">
+                                <div class="flex text-white text-sm p-4">
+                                    <span>{{ locumUserCurrentJob.platform_job.title }}</span>
+                                </div>
+                            </div>
+                            <div style="width: 16%;">
+                                <div class="flex text-white text-sm p-4">
+                                    <span>{{ locumUserCurrentJob.platform_job.date_start }}</span>
+                                </div>
+                            </div>
+                            <div style="width: 16%;">
+                                <div class="flex text-white text-sm p-4">
+                                    <span>{{ locumUserCurrentJob.platform_job.date_end }}</span>
+                                </div>
+                            </div>
+                            <div style="width: 16%;">
+                                <div class="flex text-white text-sm p-4">
+                                    <span>{{ locumUserCurrentJob.platform_job.date_created }}</span>
+                                </div>
+                            </div>
+                        </nuxt-link>
+                        <!-- BODY -->
                     </div>
-                    <!--TABLE ENDS HERE-->
                 </div>
+                <!--TABLE ENDS HERE-->
             </div>
+           
             
             
             <nuxt-child/>

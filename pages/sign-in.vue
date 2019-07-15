@@ -1,16 +1,16 @@
 <template>
   <div class="h-full w-full flex flex-col overflow-auto xl:justify-center"   >
-	<div class="flex flex-wrap overflow-hidden" >
+	<div class="flex flex-wrap items-center overflow-hidden h-full" >
 
-		<div class="w-1/3 h-full overflow-hidden" :style="{ backgroundImage: `url(${backgroundUrl})` }" >
-			<div class="flex justify-center mt-20">
+		<div class="w-full md:w-1/3 h-auto py-10 px-4 overflow-hidden" :style="{ backgroundImage: `url(${backgroundUrl})` }" >
+			<div class="flex justify-center my-4 md:my-20">
 				<img src="~/assets/images/hubzz-logo.png">
 			</div>
 			
 		</div>
 
-		<div class="w-2/3 h-full overflow-hidden">
-			<div class="flex justify-center items-start relative" >
+		<div class="w-full md:w-2/3 h-full ">
+			<div class="md:h-full flex md:items-center justify-center relative " >
 				<div v-if="loginErrorMessage" class="absolute rounded-lg bg-red p-2 flex items-center justify-between" style="width: 520px;">
 					<div class="flex-1 flex justify-center items-center">
 						<svgicon name="exclamation-circle-solid" height="24" width="24" class="text-white fill-current"/>
@@ -43,7 +43,7 @@
 						<span class="text-xs bg-red p-1 text-white" v-if="passwordErrorMessage && !showPasswordFocus">{{ passwordErrorMessage }}</span>
 					</div>
 					</div>
-					<input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="password" @keyup.enter="login" :class="showPasswordFocus ? 'border-yellow-dark' : passwordErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showPasswordFocus = true" @blur="showPasswordFocus = false, checkPassword()">
+					<input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="password" type="password" keyup.enter="login" :class="showPasswordFocus ? 'border-yellow-dark' : passwordErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showPasswordFocus = true" @blur="showPasswordFocus = false, checkPassword()">
 
 					<button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="!loggingIn">Sign-in</button>
 					<button @click="login" class="self-center rounded-lg p-5 font-bold" style="background-color: #FFDA3A;" v-if="loggingIn">Loading...</button>

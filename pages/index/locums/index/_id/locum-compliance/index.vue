@@ -222,14 +222,16 @@
             <div style="width: 10%;">
               <div
               v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument == null"
-              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white bg-transparent rounded-full">
+              class="inline-flex text-white text-sm mt-2 py-2 p-3 border border-white bg-transparent rounded-full">
                 <span>Empty</span>
               </div>
-              <div class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
+              <div
+               v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument"
+              class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
               :class="`${mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
                mandatoryComplianceDocument.locumMandatoryComplianceDocument.status &&
                mandatoryComplianceDocument.locumMandatoryComplianceDocument.status === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
-                <span>{{mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null}}</span>
+                <span>{{mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null}}</span>
               </div>
             </div>
           </nuxt-link>
@@ -332,8 +334,8 @@
               <div
               v-if="optionalComplianceDocument.locumOptionalComplianceDocument" 
               class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white rounded-full"
-              :class="`${optionalComplianceDocument.locumOptionalComplianceDocument.status  === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
-                <span>{{optionalComplianceDocument.locumOptionalComplianceDocument.status ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null}}</span>
+              :class="`${optionalComplianceDocument.locumOptionalComplianceDocument && optionalComplianceDocument.locumOptionalComplianceDocument.status  === 'Approved' ? 'bg-green border-green text-white':'bg-yellow border-yellow text-black' }`">
+                <span>{{optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null}}</span>
               </div>
             </div>
           </nuxt-link>
