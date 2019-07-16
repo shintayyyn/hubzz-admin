@@ -3,7 +3,7 @@
     <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/billing" class="text-white p-1">
+        <nuxt-link to="/support" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
@@ -15,12 +15,12 @@
               class="inline-flex py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
             >
               <svgicon
-                  name="save-icon"
+                  name="reply"
                   width="21"
                   height="21"
-                  color="transparent black"
+                  color="black"
               ></svgicon>
-              <span class="pt-1 pl-1">Save Changes</span>
+              <span class="pt-1 pl-1">Reply?</span>
             </button>
           </div>
         </div>
@@ -31,12 +31,12 @@
               class="inline-flex py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
             >
               <svgicon
-                  name="email"
+                  name="forward"
                   width="21"
                   height="21"
                   color="black"
               ></svgicon>
-              <span class="pt-1 pl-1">Save and Archive as Final</span>
+              <span class="pt-1 pl-1">Forward?</span>
             </button>
           </div>
         </div>

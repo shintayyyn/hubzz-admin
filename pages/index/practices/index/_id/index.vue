@@ -69,7 +69,13 @@
             <div class="flex flex-wrap">
               <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-sm p-2">
                 <p class="flex">Practice Name</p>
-                <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery ? specificPractice.surgery.name : null}}</p>
+                <p class="flex text-white text-sm p-2 font-semibold">
+                  {{specificPractice.surgery ? specificPractice.surgery.name : null}} 
+                  <span
+                  class="py-2 px-4 -mt-2 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
+                  :class="`${specificPractice && specificPractice.practice_parent ? 'bg-blue-light' :'bg-red-light' }`">{{specificPractice && specificPractice.practice_parent ? 'SPOKE' : 'HUB'}}</span>
+                </p>
+                
                 <p class="flex">Practice Code</p>
                 <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery ? specificPractice.surgery.code : null}}</p>
                 <p class="flex">Address</p>
@@ -134,6 +140,7 @@
                 >
                   <option>Active</option>
                   <option>Disabled</option>
+                  <!-- <option>Dormant</option> -->
                 </select>
                 <p class="flex text-grey-light text-sm p-2">Active Until</p>
                   <input

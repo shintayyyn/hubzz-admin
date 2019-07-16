@@ -11,7 +11,7 @@
 				<button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
 			</div>
 			<div class="relative">
-				<label class="text-sm text-white">Filter by Status</label>
+				<label class="text-sm text-white">Filter by Compliance Status</label>
 				<select
 					v-model="filterCompliances"
 					class="outline-none rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
@@ -92,7 +92,7 @@
 					</div>
 					<div style="width: 20%;">
 						<div class="flex text-white text-sm p-4">
-							<span>{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : null }}</span>
+							<span>{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
 						</div>
 					</div>
 					<div style="width: 20%;">
@@ -246,21 +246,6 @@
 	      }
 		},
 		
-		sortedLocums:function(){
-			return this.locumUsers.sortData((a,b) =>{
-				let modifier = 1
-				if(this.sortDirection === 'desc'){
-					modifier = -1
-				}
-				if(a[this.sortBy] < b[this.sortBy]){
-					return -1 * modifier
-				}
-				if(a[this.sortBy] > b[this.sortBy]){
-					return 1 * modifier
-				}
-				return
-			})
-		}
 	},
 	watch: {
 		async filterCompliances() {
@@ -300,10 +285,10 @@
 					
 		let response = null
 		
-				response = await getUsersCountPromise
+		response = await getUsersCountPromise
 		const itemCount = response.data.data.count
 		
-				response = await getUsersPromise
+		response = await getUsersPromise
 		const locumUsers = response.data.data.users
 
 		this.itemCount = itemCount
@@ -377,6 +362,9 @@
 					break;
 				case 'Suspended':
 					return 'bg-red text-white lg:px-8 sm:px-2'
+					break;
+				case 'Dormant':
+					return 'bg-green-darker text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return

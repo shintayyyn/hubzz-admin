@@ -30,7 +30,7 @@
               <div class="my-2 rounded-lg">
                   <nuxt-link
                   class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                  :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
+                  :to="{path:`/locums/${locumUser.id}/locum-jobs/Current?page=1`,query: $route.query}">
                     <strong>Jobs</strong>
                   </nuxt-link>
               </div>
@@ -169,6 +169,7 @@
                     <option>Inactive</option>
                     <option>Deactivated</option>
                     <option>Suspended</option>
+                    <!-- <option>Dormant</option> -->
                   </select>
                   <button
                     class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
