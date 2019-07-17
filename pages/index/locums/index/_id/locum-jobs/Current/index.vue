@@ -222,7 +222,7 @@
 
 <script>
 export default{
-    transition: "subpage",
+    transition: null,
 
     watchQuery: [
 	'page',

@@ -87,6 +87,9 @@
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark">
+                    English
+                  </p>
                   <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name2'">
@@ -168,7 +171,7 @@
                     <option>Active</option>
                     <option>Inactive</option>
                     <option>Deactivated</option>
-                    <option>Suspended</option>
+                    <!-- <option>Suspended</option> -->
                     <!-- <option>Dormant</option> -->
                   </select>
                   <button
@@ -191,7 +194,7 @@
 
 <script>
 export default {
-  transition: "subpage",
+  // transition: "subpage",
 
   data() {
     return {
@@ -213,7 +216,7 @@ export default {
 
   async asyncData({ app, route }) {
     try {
-      console.log(route.params.id)
+
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
       const locumUserComplianceDocuments = locumUser.locum_detail.compliance_documents
@@ -234,8 +237,7 @@ export default {
         }
       })
 
-      const specificLocumMandatoryTrainings = locumUser.locum_detail.mandatory_trainings
-      console.log(specificLocumMandatoryTrainings)
+      const specificLocumMandatoryTrainings = locumUser.locum_detail.mandatory_training
 
       response = await app.$axios.get(`/api/v1/admin/jobs`)
       const allJobs = response.data.data.jobs
