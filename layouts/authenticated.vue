@@ -255,7 +255,7 @@ export default {
 </script>
 
 <style>
-.page-enter {
+/* .page-enter {
   transform: translateX(120px);
   opacity: 0;
 }
@@ -271,5 +271,6 @@ export default {
 
 .subpage-enter-active {
   transition: 0.8s ease;
-}
+} */
+
 </style>

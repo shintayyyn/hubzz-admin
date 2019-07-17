@@ -32,7 +32,7 @@
                       <p class="m-2 font-semibold">Job Number</p>
                       <p class="m-2 text-white">{{specificJob.job_number}}</p>
                       <p class="m-2 mt-5 font-semibold">Rate</p>
-                      <p class="m-2 text-white underline">{{specificJob.platform_job.rate ? "£ "+ specificJob.platform_job.rate+" Per Hour":null +" Per Hour"}}</p>
+                      <p class="m-2 text-white">{{specificJob.platform_job.rate ? "£ "+ specificJob.platform_job.rate+" Per Hour":null +" Per Hour"}}</p>
                       <p class="m-2 mt-5 font-semibold">Total Hours</p>
                       <p class="m-2 text-white">{{specificJob.platform_job.total_hours ? specificJob.platform_job.total_hours+" Hours":null + " Hours"}}</p>
                       <p class="m-2 mt-5 font-semibold">Job Description</p>

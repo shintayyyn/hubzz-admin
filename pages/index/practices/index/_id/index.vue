@@ -105,6 +105,15 @@
                 <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
                 <p class="flex">Mandatory Training</p>
                 <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
+                <div v-if="specificPractice && specificPractice.practice_parent">
+                  <p class="flex m-2 text-base font-bold"> HUB info</p>
+                  <p class="flex">Practice Name</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.surgery.name}}</p>
+                  <p class="flex">Practice Code</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.surgery.code}}</p>
+                  <p class="flex">Phone Number</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.phone_number}}</p>
+                </div>
               </div>
               <div class="w-1/2 sm:w-full  lg:w-1/2 ">
                 <p class="flex text-grey-light text-sm p-2">Phone Number</p>
@@ -174,6 +183,7 @@ export default {
   data() {
     return {
       specificPractice:null,
+      practiceParent:null,
       users: [],
       documents: [],
       toPutPractice:{}
@@ -185,12 +195,13 @@ export default {
       let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
       const specificPractice = response.data.data.practice
       const surgeries = response.data.data.practice.surgery
-
+      const practiceParent = specificPractice.practice_parent
       console.log(surgeries)
 
       return{
         specificPractice,
         surgeries,
+        practiceParent,
         toPutPractice:{
           phone_number:specificPractice.phone_number,
           report_to:specificPractice.report_to,

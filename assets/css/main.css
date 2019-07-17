@@ -5,3 +5,38 @@ body{
   text-decoration: none;
 }
 
+.page-enter {
+  transform: translateX(120px);
+  opacity: 0;
+}
+
+.page-enter-active {
+  transition: 0.8s ease;
+}
+
+.subpage-enter {
+  transform: translateX(120px);
+  opacity: 0;
+}
+
+.subpage-enter-active {
+  transition: 0.8s ease;
+}
+
+.page-leave {
+  transform: translateX(120px);
+  opacity: 0;
+}
+
+.page-leave-active {
+  transition: 0.8s ease;
+}
+
+.subpage-leave {
+  transform: translateX(120px);
+  opacity: 0;
+}
+
+.subpage-leave-active {
+  transition: 0.8s ease;
+}

@@ -187,7 +187,11 @@ export default{
       response = await app.$axios.get(`/api/v1/admin/practice-document-types`)
       const practiceDocTypes = response.data.data.practice_document_types
 
-      response = await app.$axios.get(`/api/v1/admin/practice-documents`)
+      response = await app.$axios.get(`/api/v1/admin/practice-documents`, {
+        params: {
+          practice_id: route.params.id
+        }
+      })
       const practiceDocs = response.data.data.practice_documents
 
       const specificPracticeDocumentTypes = practiceDocTypes.map((practiceDocType)=>{

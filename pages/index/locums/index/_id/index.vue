@@ -30,7 +30,7 @@
               <div class="my-2 rounded-lg">
                   <nuxt-link
                   class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-                  :to="{path:`/locums/${locumUser.id}/locum-jobs/Current?page=1`,query: $route.query}">
+                  :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
                     <strong>Jobs</strong>
                   </nuxt-link>
               </div>
@@ -130,7 +130,6 @@
                   
                   
                   <div v-if="specificLocumMandatoryTrainings">
-
                   <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
                      <div v-for="(specificLocumMandatoryTraining, index) in specificLocumMandatoryTrainings"
                       :key="`${index}-${specificLocumMandatoryTraining.id}-`"
@@ -237,7 +236,7 @@ export default {
         }
       })
 
-      const specificLocumMandatoryTrainings = locumUser.locum_detail.mandatory_training
+      const specificLocumMandatoryTrainings = locumUser.locum_detail.mandatory_trainings
 
       response = await app.$axios.get(`/api/v1/admin/jobs`)
       const allJobs = response.data.data.jobs

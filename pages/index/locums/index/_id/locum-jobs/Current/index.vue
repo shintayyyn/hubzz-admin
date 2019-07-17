@@ -208,10 +208,10 @@
             </div>
            
             <!-- PAGINATION -->
-            <div v-if="pageCount > 1">
+            <div v-if="locumJobPageCount > 1">
                 <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
-                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>														<!-- ^ Removed the FF. code in this area: v-if="showPage(page)"-->
+                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === locumJobPage ? 'bg-waterloo' : ''}`" v-for="locumJobPage in locumJobPageCount" :key="`locumJobPage-${locumJobPage}`" v-if="showPage(locumJobPage)" @click="goToPage(locumJobPage)">{{ locumJobPage }}</button>
+                <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>														<!-- ^ Removed the FF. code in this area: v-if="showPage(locumJobPage)"-->
             </div>
             <!-- PAGINATION -->
             
@@ -225,18 +225,18 @@ export default{
     transition: null,
 
     watchQuery: [
-	'page',
+	'locumJobPage',
 	],
 
     async asyncData({ app, route }) {
     try {
         let {
-        page = 1,
+        locumJobPage = 1,
         search = ''
         } = route.query
-        page = parseInt(page)
+        locumJobPage = parseInt(locumJobPage)
         const limit = 10
-        const offset = page * limit - limit
+        const offset = locumJobPage * limit - limit
         const order_by = 'created_at:desc'
         const params = { limit, offset, order_by }
         
@@ -255,7 +255,7 @@ export default{
         loading: false,
         itemsPerPage: limit,
         itemCount,
-        activePage: page,
+        activePage: locumJobPage,
         locumUser,
         locumUserCurrentJobs,
         disabled:'true'
@@ -277,45 +277,45 @@ export default{
         }
     },
     computed: {
-  		pageCount() {
+  		locumJobPageCount() {
   			return Math.ceil(this.itemCount / this.itemsPerPage)
   		},
 
 	    showPage() {
-	      return page => {
-	        if (page === 1) {
+	      return locumJobPage => {
+	        if (locumJobPage === 1) {
 	          return true
 	        }
 
-	        if (page === this.pageCount) {
+	        if (locumJobPage === this.locumJobPageCount) {
 	          return true
 	        }
 
-	        if (page === this.activePage) {
+	        if (locumJobPage === this.activePage) {
 	          return true
 	        }
 
-	        if (page === this.activePage + 1) {
+	        if (locumJobPage === this.activePage + 1) {
 	          return true
 	        }
 
-	        if (page === this.activePage - 1) {
+	        if (locumJobPage === this.activePage - 1) {
 	          return true
 	        }
 
-	        if (this.activePage === 1 && page < 5) {
+	        if (this.activePage === 1 && locumJobPage < 5) {
 	          return true
 	        }
 
-	        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+	        if (this.activePage === this.locumJobPageCount && locumJobPage > this.locumJobPageCount - 4) {
 	          return true
 	        }
 
-	        if (this.activePage === 2 && page === 4) {
+	        if (this.activePage === 2 && locumJobPage === 4) {
 	          return true
 	        }
 
-	        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+	        if (this.activePage === this.locumJobPageCount - 1 && locumJobPage === this.locumJobPageCount - 3) {
 	          return true
 	        }
 
@@ -325,22 +325,22 @@ export default{
     },
 
     methods: {
-  		goToPage(page) {
-  			if (page < 1) {
+  		goToPage(locumJobPage) {
+  			if (locumJobPage < 1) {
   				return
   			}
 
-  			if (page > this.pageCount) {
+  			if (locumJobPage > this.locumJobPageCount) {
   				return
   			}
 
   			const query = {
   				...this.$router.query,
-  				page
+  				locumJobPage
   			}
 
-  			if (page === 1) {
-  				delete query.page
+  			if (locumJobPage === 1) {
+  				delete query.locumJobPage
   			}
 
 	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
