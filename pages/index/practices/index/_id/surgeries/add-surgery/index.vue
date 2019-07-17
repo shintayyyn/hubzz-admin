@@ -233,11 +233,10 @@ export default {
       
     },
 
-    addSurgery(practiceID,surgeryID){
+    async addSurgery(practiceID,surgeryID){
 
       try{
-
-        const response = this.$axios.post('/api/v1/admin/practice-children',{
+        await this.$axios.post('/api/v1/admin/practice-children',{
           parent_practice_id:practiceID,
           surgery_id:surgeryID
         })

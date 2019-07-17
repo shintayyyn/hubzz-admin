@@ -57,7 +57,7 @@
                   <strong>Documents</strong>
                 </nuxt-link>
               </div>
-            </div>
+            </div>  
           </div>
         </div>
       </div>
