@@ -96,12 +96,13 @@ export default {
 
   auth: {
     localStorage: {
-      prefix: 'admin.auth.'
+      prefix: 'admin.auth.',
     },
     cookie: {
       prefix: 'admin.auth.',
       options: {
-        path: '/'
+        path: '/',
+        expires: 1825,
       }
     },
     strategies: {
