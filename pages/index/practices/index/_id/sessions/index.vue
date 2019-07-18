@@ -56,6 +56,15 @@
                 </nuxt-link>
               </div>
             </div>
+            <div class="my-1 px-1">
+              <div class="my-2 rounded-lg">
+                <nuxt-link
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  :to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
+                  <strong>Rates</strong>
+                </nuxt-link>
+              </div>
+            </div>
           </div>
       </div>
       <!--EXTERNAL TABS END HERE-->

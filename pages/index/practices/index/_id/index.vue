@@ -58,10 +58,10 @@
                 </nuxt-link>
               </div>
             </div>
-             <div class="my-1 px-1">
+            <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
                   <strong>Rates</strong>
                 </nuxt-link>
@@ -157,7 +157,8 @@
                   v-model='toPutPractice.status'
                 >
                   <option>Active</option>
-                  <option>Disabled</option>
+                  <option>Suspended</option>
+                  <option>Deactivated</option>
                   <!-- <option>Dormant</option> -->
                 </select>
                 <p class="flex text-grey-light text-sm p-2">Active Until</p>

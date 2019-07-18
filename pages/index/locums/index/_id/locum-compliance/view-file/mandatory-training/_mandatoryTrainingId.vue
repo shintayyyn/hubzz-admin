@@ -26,7 +26,9 @@
          <span>Save</span> <!--ASK JC/ARVI ABOUT THIS. DOES MANDATORY TRAINING EXPIRE etc. etc.?-->
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white" v-bind:href="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null">
+          <a
+            @click.prevent="downloadItem(specificMandatoryTraining[0].file.url,specificMandatoryTraining[0].file.filename)" 
+            class="text-white" v-bind:href="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null">
              <svgicon
               name="cloud-download"
               width="21"
@@ -148,6 +150,25 @@ export default {
   
   
   methods:{
+
+    downloadItem (fileUrl, fileFilename) {
+      const axios = require('axios');
+      axios({
+      url: fileUrl,
+      method: 'GET',
+      responseType: 'blob', // important
+    }).then(response => {
+      console.log(response)
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileFilename);
+      document.body.appendChild(link);
+      link.click();
+      console.log(fileUrl)
+      });
+    },
+
     async toPutLocumMandatoryTrainingDocs(locumDocID,toPutLocumMandatoryTraining){
       try{
         await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{

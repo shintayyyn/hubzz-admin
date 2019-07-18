@@ -591,13 +591,16 @@ export default {
 					return 'bg-green border-green text-white lg:px-8 sm:px-2'
 					break;
 				case 'Expiring':
-					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-2'
+					return 'bg-orange border-orange text-black lg:px-8 sm:px-2'
 					break;
 				case 'Expired':
 					return 'bg-red border-red text-white lg:px-8 sm:px-2'
 					break;
 				case 'Rejected':
-					return 'bg-orange border-orange text-black lg:px-8 sm:px-2'
+					return 'bg-orange-dark border-orange text-black lg:px-8 sm:px-2'
+          break;
+        case 'Pending':
+					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-2'
 					break;
 				default:
 					return

@@ -111,39 +111,43 @@
                   <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
                   
 
-                  <div v-if="specificLocumCompDocs">
+                  <div v-if="locumUserComplianceDocuments">
                     <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
-                    <div v-for="(specificComplianceDoc, index) in specificLocumCompDocs"
-                    :key="`${index}-${specificComplianceDoc.id}-`"
+                    <div v-for="(locumUserComplianceDoc, index) in locumUserComplianceDocuments"
+                    :key="`${index}-${locumUserComplianceDoc.id}-`"
                     >
-                      <a class="m-2 text-white" v-bind:href="specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.file.url:null">
+                      <a class="m-2 text-white" 
+                        @click.prevent="downloadItem(locumUserComplianceDoc.file.url,locumUserComplianceDoc.file.filename)">
                         <svgicon
                           name="cloud-download"
                           width="21"
                           height="21"
                           color="transparent white"
                         ></svgicon>
-                        <span class="pb-2">{{specificComplianceDoc.locumSpecificCompDoc ? specificComplianceDoc.locumSpecificCompDoc.compliance_document.name:null}}</span>
+                        <span class="pb-2">{{locumUserComplianceDoc.file ? locumUserComplianceDoc.compliance_document.name:null}}</span>
                       </a>
                     </div>
                   </div>
                   
                   
-                  <div v-if="specificLocumMandatoryTrainings">
+                  <div v-if="locumUserMandatoryTrainings">
                   <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
-                     <div v-for="(specificLocumMandatoryTraining, index) in specificLocumMandatoryTrainings"
-                      :key="`${index}-${specificLocumMandatoryTraining.id}-`"
+                     <div v-for="(locumUserMandatoryTraining, index) in locumUserMandatoryTrainings"
+                      :key="`${index}-${locumUserMandatoryTraining.id}-`"
                       >
-                      <a class="m-2 text-white" v-bind:href="specificLocumMandatoryTraining.file ? specificLocumMandatoryTraining.file.url:null">
-                        <svgicon
-                          name="cloud-download"
-                          width="21"
-                          height="21"
-                          color="transparent white"
-                        ></svgicon>
-                        <span class="pb-2">{{specificLocumMandatoryTraining.mandatory_training ? specificLocumMandatoryTraining.mandatory_training.name:null}}</span>
-                      </a>
-                    </div>
+                        <a class="m-2 text-white"
+                          :event="locumUserMandatoryTraining.file === null ? disabled:'click'" 
+                          @click.prevent="downloadItem(locumUserMandatoryTraining.file.url,locumUserMandatoryTraining.file.filename)">
+                          <svgicon
+                            v-if="locumUserMandatoryTraining.file"
+                            name="cloud-download"
+                            width="21"
+                            height="21"
+                            color="transparent white"
+                          ></svgicon>
+                          <span class="pb-2">{{locumUserMandatoryTraining.mandatory_training && locumUserMandatoryTraining.file ? locumUserMandatoryTraining.mandatory_training.name:null}}</span>
+                        </a>
+                      </div>
                   </div>
                  
 
@@ -208,7 +212,7 @@ export default {
       clinicalSystems:[],
       spokenLanguages:[],
       specificLocumCompDocs:[],
-      specificLocumMandatoryTrainings:[]
+      locumUserMandatoryTrainings:[]
     };
   },
   
@@ -223,20 +227,8 @@ export default {
       const clinicalSystems = locumUser.locum_detail.clinical_systems
       const spokenLanguages = locumUser.locum_detail.spoken_languages
 
-      response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents`)
-      const locumCompDoc = response.data.data.locum_detail_compliance_documents
-
-      const specificLocumCompDocs = locumUserComplianceDocuments.map((specificComplianceDoc)=>{
-        const locumSpecificCompDoc = locumCompDoc.find((complianceDoc)=>{
-          return complianceDoc.id === specificComplianceDoc.id
-        })
-        return{
-          specificComplianceDoc,
-          locumSpecificCompDoc
-        }
-      })
-
-      const specificLocumMandatoryTrainings = locumUser.locum_detail.mandatory_trainings
+      const locumUserMandatoryTrainings = locumUser.locum_detail.mandatory_trainings
+      console.log(locumUserMandatoryTrainings)
 
       response = await app.$axios.get(`/api/v1/admin/jobs`)
       const allJobs = response.data.data.jobs
@@ -251,8 +243,7 @@ export default {
       qualifications,
       clinicalSystems,
       spokenLanguages,
-      specificLocumCompDocs,
-      specificLocumMandatoryTrainings,
+      locumUserMandatoryTrainings,
       locumUserCurrentJobs,
       selectedStatus: locumUser.status
       }
@@ -263,6 +254,25 @@ export default {
   },
 
   methods:{
+
+    downloadItem (imgUrl, imgFilename) {
+      const axios = require('axios');
+      axios({
+      url: imgUrl,
+      method: 'GET',
+      responseType: 'blob', // important
+    }).then(response => {
+      console.log(response)
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', imgFilename);
+      document.body.appendChild(link);
+      link.click();
+      console.log(imgUrl)
+      });
+    },
+
     async changeLocumUserStatus(locumID,activeDisabled){
       try{
         await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
