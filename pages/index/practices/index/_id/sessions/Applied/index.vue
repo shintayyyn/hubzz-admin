@@ -58,6 +58,15 @@
                 </nuxt-link>
               </div>
             </div>
+            <div class="my-1 px-1">
+              <div class="my-2 rounded-lg">
+                <nuxt-link
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  :to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
+                  <strong>Rates</strong>
+                </nuxt-link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -208,10 +217,10 @@
       </div>
       <!--TABLE ENDS HERE-->
       <!-- PAGINATION -->
-      <div v-if="pageCount > 1">
+      <div v-if="practiceJobPageCount > 1">
         <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-        <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
-        <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									<!-- ^ Removed the FF. code in this area: v-if="showPage(page) TAKE A NOTE OF THIS"-->
+        <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === practiceJobPage ? 'bg-waterloo' : ''}`" v-for="practiceJobPage in practiceJobPageCount" :key="`practiceJobPage-${practiceJobPage}`" v-if="showPage(practiceJobPage)" @click="goToPage(practiceJobPage)">{{ practiceJobPage }}</button>
+        <button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>																									<!-- ^ Removed the FF. code in this area: v-if="showPage(practiceJobPage) TAKE A NOTE OF THIS"-->
       </div>
       <!-- PAGINATION -->  
 		</div>
@@ -221,21 +230,21 @@
 
 <script>
 export default{
-	transition: "subpage",
+	transition: "subpracticeJobPage",
   watchQuery: [
-	'page',
+	'practiceJobPage',
 	],
 
 
   async asyncData({ app, route }) {
     try {
       let {
-        page = 1,
+        practiceJobPage = 1,
         search = ''
       } = route.query
-      page = parseInt(page)
+      practiceJobPage = parseInt(practiceJobPage)
       const limit = 10
-      const offset = page * limit - limit
+      const offset = practiceJobPage * limit - limit
       const order_by = 'created_at:desc'
       const params = { limit, offset, order_by }
 
@@ -255,7 +264,7 @@ export default{
         loading: false,
         itemsPerPage: limit,
         itemCount,
-        activePage: page,
+        activePage: practiceJobPage,
         specificPractice,
         practiceAppliedJobs
         
@@ -277,45 +286,45 @@ export default{
   },
 
   computed: {
-  		pageCount() {
+  		practiceJobPageCount() {
   			return Math.ceil(this.itemCount / this.itemsPerPage)
   		},
 
 	    showPage() {
-	      return page => {
-	        if (page === 1) {
+	      return practiceJobPage => {
+	        if (practiceJobPage === 1) {
 	          return true
 	        }
 
-	        if (page === this.pageCount) {
+	        if (practiceJobPage === this.practiceJobPageCount) {
 	          return true
 	        }
 
-	        if (page === this.activePage) {
+	        if (practiceJobPage === this.activePage) {
 	          return true
 	        }
 
-	        if (page === this.activePage + 1) {
+	        if (practiceJobPage === this.activePage + 1) {
 	          return true
 	        }
 
-	        if (page === this.activePage - 1) {
+	        if (practiceJobPage === this.activePage - 1) {
 	          return true
 	        }
 
-	        if (this.activePage === 1 && page < 5) {
+	        if (this.activePage === 1 && practiceJobPage < 5) {
 	          return true
 	        }
 
-	        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+	        if (this.activePage === this.practiceJobPageCount && practiceJobPage > this.practiceJobPageCount - 4) {
 	          return true
 	        }
 
-	        if (this.activePage === 2 && page === 4) {
+	        if (this.activePage === 2 && practiceJobPage === 4) {
 	          return true
 	        }
 
-	        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+	        if (this.activePage === this.practiceJobPageCount - 1 && practiceJobPage === this.practiceJobPageCount - 3) {
 	          return true
 	        }
 
@@ -325,22 +334,22 @@ export default{
     },
 
     methods: {
-  		goToPage(page) {
-  			if (page < 1) {
+  		goToPage(practiceJobPage) {
+  			if (practiceJobPage < 1) {
   				return
   			}
 
-  			if (page > this.pageCount) {
+  			if (practiceJobPage > this.practiceJobPageCount) {
   				return
   			}
 
   			const query = {
   				...this.$router.query,
-  				page
+  				practiceJobPage
   			}
 
-  			if (page === 1) {
-  				delete query.page
+  			if (practiceJobPage === 1) {
+  				delete query.practiceJobPage
   			}
 
 	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {

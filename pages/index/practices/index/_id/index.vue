@@ -58,6 +58,15 @@
                 </nuxt-link>
               </div>
             </div>
+            <div class="my-1 px-1">
+              <div class="my-2 rounded-lg">
+                <nuxt-link
+                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  :to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
+                  <strong>Rates</strong>
+                </nuxt-link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -69,7 +78,13 @@
             <div class="flex flex-wrap">
               <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-sm p-2">
                 <p class="flex">Practice Name</p>
-                <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery ? specificPractice.surgery.name : null}}</p>
+                <p class="flex text-white text-sm p-2 font-semibold">
+                  {{specificPractice.surgery ? specificPractice.surgery.name : null}} 
+                  <span
+                  class="py-2 px-4 -mt-2 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
+                  :class="`${specificPractice && specificPractice.practice_parent ? 'bg-blue-light' :'bg-red-light' }`">{{specificPractice && specificPractice.practice_parent ? 'SPOKE' : 'HUB'}}</span>
+                </p>
+                
                 <p class="flex">Practice Code</p>
                 <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery ? specificPractice.surgery.code : null}}</p>
                 <p class="flex">Address</p>
@@ -99,6 +114,15 @@
                 <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
                 <p class="flex">Mandatory Training</p>
                 <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
+                <div v-if="specificPractice && specificPractice.practice_parent">
+                  <p class="flex m-2 text-base font-bold"> HUB info</p>
+                  <p class="flex">Practice Name</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.surgery.name}}</p>
+                  <p class="flex">Practice Code</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.surgery.code}}</p>
+                  <p class="flex">Phone Number</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.phone_number}}</p>
+                </div>
               </div>
               <div class="w-1/2 sm:w-full  lg:w-1/2 ">
                 <p class="flex text-grey-light text-sm p-2">Phone Number</p>
@@ -133,7 +157,9 @@
                   v-model='toPutPractice.status'
                 >
                   <option>Active</option>
-                  <option>Disabled</option>
+                  <option>Suspended</option>
+                  <option>Deactivated</option>
+                  <!-- <option>Dormant</option> -->
                 </select>
                 <p class="flex text-grey-light text-sm p-2">Active Until</p>
                   <input
@@ -167,6 +193,7 @@ export default {
   data() {
     return {
       specificPractice:null,
+      practiceParent:null,
       users: [],
       documents: [],
       toPutPractice:{}
@@ -178,12 +205,13 @@ export default {
       let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
       const specificPractice = response.data.data.practice
       const surgeries = response.data.data.practice.surgery
-
+      const practiceParent = specificPractice.practice_parent
       console.log(surgeries)
 
       return{
         specificPractice,
         surgeries,
+        practiceParent,
         toPutPractice:{
           phone_number:specificPractice.phone_number,
           report_to:specificPractice.report_to,

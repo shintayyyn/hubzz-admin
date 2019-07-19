@@ -204,6 +204,8 @@ export default {
     } 
   },
 
+ 
+
   methods: {
     processForm:function(userInfo){
       if(!userInfo.first_name){

@@ -15,21 +15,11 @@
             class="hover:text-yellow-dark fill-current"
           />
         </nuxt-link>
-        <!-- <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
-        >
-          <svgicon
-          name="save-icon"
-          width="21"
-          height="21"
-          color="transparent white"
-          hover:color="transparent black"
-        ></svgicon>
-         <span>Save</span>
-        </button> -->
 
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white" v-bind:href="specificPracticeDocument.file ? specificPracticeDocument.file.url:null">
+          <a
+            @click.prevent="downloadItem(specificPracticeDocument.file.url, specificPracticeDocument.file.filename)" 
+            class="text-white">
              <svgicon
               name="cloud-download"
               width="21"
@@ -86,25 +76,16 @@ export default {
 
   async asyncData({ app, route }) {
     try {
-      //File ID route
-      //from file ID route, find first in compliance documents route. else, find in mandatory trainings route
       console.log(route.params.practiceDocId)
       let response = await app.$axios.get(`/api/v1/admin/practice-documents/${route.params.practiceDocId}`)
       const specificPracticeDocument = response.data.data.practice_document
       const specificPractice = specificPracticeDocument.practice
       console.log(specificPractice.id)
-      // const specificLocumComplianceDocument = response.data.data.locum_detail_compliance_document
-      // response = await app.$axios.get(`/api/v1/admin/locum-users/${specificLocumComplianceDocument.locum_detail.user.id}`)
-      // const locumUser = response.data.data.user
 
       return{
         specificPractice,
         specificPracticeDocument,
-        // toPutLocumDetailCompliance:{
-        //   status:specificLocumComplianceDocument ? specificLocumComplianceDocument.status:null,
-        //   expired_at:specificLocumComplianceDocument ? specificLocumComplianceDocument.expired_at:null,
-        //   note:specificLocumComplianceDocument ? specificLocumComplianceDocument.note:null
-        // }
+
       }
 
     }catch (err) {
@@ -117,19 +98,25 @@ export default {
   },
   
   methods:{
-    //  async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
-    //   try{
-    //     this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-    //       status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
-    //       expired_at:toPutLocumDetailCompliance.expired_at,
-    //       note:toPutLocumDetailCompliance.note
-    //     })
-    //     alert('Saved')
-    //   }catch(err){
-    //     console.log("index put locum detail compliance documents error");
-    //     alert('Something went wrong!')
-    //   }
-    // }
+
+    downloadItem (fileUrl, fileFilename) {
+      const axios = require('axios');
+      axios({
+      url: fileUrl,
+      method: 'GET',
+      responseType: 'blob', // important
+    }).then(response => {
+      console.log(response)
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileFilename);
+      document.body.appendChild(link);
+      link.click();
+      console.log(fileUrl)
+      });
+    },
+
   }
 };
 </script>

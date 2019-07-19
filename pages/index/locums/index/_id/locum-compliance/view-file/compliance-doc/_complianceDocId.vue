@@ -28,7 +28,9 @@
          <span>Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
-          <a class="text-white no-underline" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
+          <a 
+            @click.prevent="downloadItem(specificLocumComplianceDocument.file.url,specificLocumComplianceDocument.file.filename)"
+            class="text-white no-underline">
              <svgicon
               name="cloud-download"
               width="21"
@@ -135,7 +137,7 @@ export default {
       const specificLocumComplianceDocument = response.data.data.locum_detail_compliance_document
       response = await app.$axios.get(`/api/v1/admin/locum-users/${specificLocumComplianceDocument.locum_detail.user.id}`)
       const locumUser = response.data.data.user
-
+      console.log(specificLocumComplianceDocument)
       return{
         locumUser,
         specificLocumComplianceDocument,
@@ -191,6 +193,24 @@ export default {
       }
         
         
+    },
+
+    downloadItem (fileUrl, fileFilename) {
+      const axios = require('axios');
+      axios({
+      url: fileUrl,
+      method: 'GET',
+      responseType: 'blob', // important
+    }).then(response => {
+      console.log(response)
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileFilename);
+      document.body.appendChild(link);
+      link.click();
+      console.log(fileUrl)
+      });
     },
 
     async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){

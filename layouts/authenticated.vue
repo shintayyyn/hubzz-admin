@@ -129,6 +129,13 @@
           to="/surgeries"
         >Surgeries</nuxt-link>
 
+        <nuxt-link
+          v-if="$auth.loggedIn && $auth.user.domain === 'Admin'"
+          class="text-sm px-6 py-4 no-underline border-l-4"
+          :class="`${activeTab === 'support' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
+          to="/support"
+        >Support</nuxt-link>
+
         <button
           class="text-sm px-6 py-4 border-l-4 text-white border-transparent flex whitespace-no-wrap"
           @click="showLogoutModal = true"
@@ -231,6 +238,11 @@ export default {
         return 'surgeries'
       }
 
+      if (this.$route.name && this.$route.name.includes('support')) {
+        return 'support'
+      }
+
+
       if (this.$route.name && this.$route.name.includes("index")) {
         return "dashboard";
       }
@@ -253,7 +265,7 @@ export default {
 </script>
 
 <style>
-.page-enter {
+/* .page-enter {
   transform: translateX(120px);
   opacity: 0;
 }

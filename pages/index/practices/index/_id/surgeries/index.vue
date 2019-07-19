@@ -11,53 +11,62 @@
 			<!-- DEFAULT TABS -->
 			<div class="flex flex-col rounded-lg pl-6 mt-2 " >
 				<div class="w-full">
-				<div class="flex flex-wrap -mx-1">
-					<div class="my-1 px-1">
-					<div class="my-2 rounded-lg">
-						<nuxt-link
-						class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-						:to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
-						<strong>Practice</strong>
-						</nuxt-link>
+					<div class="flex flex-wrap -mx-1">
+						<div class="my-1 px-1">
+							<div class="my-2 rounded-lg">
+								<nuxt-link
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+								:to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
+								<strong>Practice</strong>
+								</nuxt-link>
+							</div>
+						</div>
+						<div class="my-1 px-1">
+							<div class="my-2 rounded-lg">
+								<nuxt-link
+								class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+								:to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
+								<strong>Surgeries</strong>
+								</nuxt-link>
+							</div>
+						</div>
+						<div class="my-1 px-1">
+							<div class="my-2 rounded-lg">
+								<nuxt-link
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+								:to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
+								<strong>Sessions</strong>
+								</nuxt-link>
+							</div>
+						</div>
+						<div class="my-1 px-1">
+							<div class="my-2 rounded-lg">
+								<nuxt-link
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+								:to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
+								<strong>Users</strong>
+								</nuxt-link>
+							</div>
+						</div>
+						<div class="my-1 px-1">
+							<div class="my-2 rounded-lg">
+								<nuxt-link
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+								:to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
+								<strong>Documents</strong>
+								</nuxt-link>
+							</div>
+						</div>
+						<div class="my-1 px-1">
+							<div class="my-2 rounded-lg">
+								<nuxt-link
+								class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+								:to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
+								<strong>Rates</strong>
+								</nuxt-link>
+							</div>
+						</div>
 					</div>
-					</div>
-					<div class="my-1 px-1">
-					<div class="my-2 rounded-lg">
-						<nuxt-link
-						class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-						:to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
-						<strong>Surgeries</strong>
-						</nuxt-link>
-					</div>
-					</div>
-					<div class="my-1 px-1">
-					<div class="my-2 rounded-lg">
-						<nuxt-link
-						class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-						:to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
-						<strong>Sessions</strong>
-						</nuxt-link>
-					</div>
-					</div>
-					<div class="my-1 px-1">
-					<div class="my-2 rounded-lg">
-						<nuxt-link
-						class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-						:to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
-						<strong>Users</strong>
-						</nuxt-link>
-					</div>
-					</div>
-					<div class="my-1 px-1">
-					<div class="my-2 rounded-lg">
-						<nuxt-link
-						class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
-						:to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
-						<strong>Documents</strong>
-						</nuxt-link>
-					</div>
-					</div>
-				</div>
 				</div>
 			</div>
 			<!--DEFAULT TABS END HERE-->

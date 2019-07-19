@@ -55,7 +55,7 @@
             <div class="my-2 rounded-lg">
             <nuxt-link
             class="bg-grey-dark border-white rounded-lg p-3 text-white text-sm no-underline"
-            :to="{path:`/locums/${locumUser.id}/locum-compliance`,query: $route.query}"
+            :to="{path:`/locums/${locumUser.id}/locum-compliance`,query: $route.query}" 
             :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
             :class="locumUser.compliance_status==='Empty' ? '' :'hover:bg-waterloo-light text-grey-dark'">
               <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
@@ -591,13 +591,16 @@ export default {
 					return 'bg-green border-green text-white lg:px-8 sm:px-2'
 					break;
 				case 'Expiring':
-					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-2'
+					return 'bg-orange border-orange text-black lg:px-8 sm:px-2'
 					break;
 				case 'Expired':
 					return 'bg-red border-red text-white lg:px-8 sm:px-2'
 					break;
 				case 'Rejected':
-					return 'bg-orange border-orange text-black lg:px-8 sm:px-2'
+					return 'bg-orange-dark border-orange text-black lg:px-8 sm:px-2'
+          break;
+        case 'Pending':
+					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-2'
 					break;
 				default:
 					return

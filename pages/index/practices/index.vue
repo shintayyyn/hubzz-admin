@@ -31,22 +31,22 @@
               <strong>Practice Name</strong>
             </div>
           </div>
-          <div style="width: 25%;">
+          <div style="width: 15%;">
             <div class="flex text-white text-sm p-4">
               <strong>Practice Code</strong>
             </div>
           </div>
-          <div style="width: 15%">
+          <div style="width: 25%">
             <div class="flex text-white text-sm p-4">
               <strong>Created</strong>
             </div>
           </div>
-          <div style="width: 15%;">
+          <div style="width: 25%;">
             <div class="flex text-white text-sm p-4">
               <strong>Expires</strong>
             </div>
           </div>
-		  <div style="width:20%">
+		  <div style="width:10%">
 			<div class="flex text-white text-sm p-4">
 				<strong>Status</strong>
 			</div>  
@@ -68,28 +68,28 @@
               <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
             </div>
           </div>
-          <div class="flex" style="width: 25%;">
+          <div class="flex" style="width: 15%;">
             <div class="flex text-white text-sm p-4">
               <span>{{ practice.surgery ? practice.surgery.code:null }}</span>
             </div>
           </div>
-          <div class="flex" style="width: 15%;">
+          <div class="flex" style="width: 25%;">
             <div class="flex text-white text-sm p-4">
               <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
 
             </div>
           </div>
-          <div class="flex" style="width: 15%;">
+          <div class="flex" style="width: 25%;">
             <div class="flex text-white text-sm p-4 ">
-              <span>{{ practice.expires }}</span>
+              <span>{{practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
             </div>
           </div>
           <div class="flex" style="width: 10%">
             	<div class=" flex py-2 px-4 items-center">
                 <span
 					class=" inline-flex no-underline py-2 text-sm text-black rounded-full shadow "
-					:class="`${practice.is_actived ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
-				>{{ practice.is_actived ? 'Active':'Disabled' }}</span>
+					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
+				>{{ practice.status }}</span>
             	</div>
           </div>
         </nuxt-link>
