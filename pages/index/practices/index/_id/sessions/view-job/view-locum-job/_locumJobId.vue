@@ -246,7 +246,7 @@ export default {
   async asyncData({ app, route }) {
     try {
         console.log("Route ID "+route.params.id)
-        let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.currentJobId}`)
+        let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.locumJobId}`)
 
         const specificJob = response.data.data.job
         const jobStatus = specificJob.status 
