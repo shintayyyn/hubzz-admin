@@ -65,65 +65,68 @@
 		
 		<!--TAB 5-->
         <div class="flex flex-col rounded-lg p-6 sm:p-6">
-          <div class="flex flex-col">
+          <div class="flex flex-col ">
             <!-- HEADER -->
             <div class="flex my-2">
-              <div style="width: 10%;">
-                <div class="flex text-white text-sm p-4">
+              <div class="w-1/6">
+                <div class="flex text-white text-sm px-2 py-4 md:px-4">
                   <strong>Title</strong>
                 </div>
               </div>
-              <div style="width: 10%;">
-                <div class="flex text-white text-sm p-4">
+              <div class="w-1/6">
+                <div class="flex text-white text-sm px-2 py-4 md:px-4">
                   <strong>File Size</strong>
                 </div>
               </div>
-              <div style="width: 20%">
-                <div class="flex text-white text-sm p-4">
+              <div class="w-1/6">
+                <div class="flex text-white text-sm px-2 py-4 md:px-4">
                   <strong>Last Upload Date</strong>
                 </div>
               </div>
-              <div style="width: 25%">
-                <div class="flex text-white text-sm p-4">
+              <div class="w-1/6">
+                <div class="flex text-white text-sm px-2 py-4 md:px-4">
                   <strong>Upload New File</strong>
                 </div>
               </div>
+              <div class="w-2/6"></div>
             </div>
           </div>
           <div
             v-for="(document,index) in specificPracticeDocumentTypes"
             :key="`surgery-${index}`"
-            class="flex no-underline rounded-lg bg-waterloo my-2"
+            class="flex items-center no-underline rounded-lg bg-waterloo my-2"
           >
-            <div style="width: 10%;">
-              <div class="flex text-white text-sm p-4">
+            <div class="w-1/6 ">
+              <div class="flex text-white text-sm px-2 py-4 md:px-4">
                 <span>{{ document.practiceDocType ? document.practiceDocType.name:null }}</span>
               </div>
             </div>
-            <div style="width: 10%;">
-              <div class="flex text-white text-sm p-4">
+            <div class="w-1/6 ">
+              <div class="flex text-white text-sm px-2 py-4 md:px-4">
                 <span>{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? (document.practiceSpecificDoc.file.size / 1048576).toFixed(2) + " Mb":null }}</span>
               </div>
             </div>
-            <div style="width: 20%;">
-              <div class="flex text-white text-sm p-4">
+            <div class="w-1/6 ">
+              <div class="flex text-white text-sm px-2 py-4 md:px-4">
                 <span>{{ document.practiceSpecificDoc ? $moment(document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null}}</span>
               </div>
             </div>
-             <div style="width:20%;">
-              <div class="flex text-white text-sm p-4">
+            <div class="w-1/6 ">
+              <div class="flex flex-col text-white text-sm px-2 py-4 md:px-4">
                 <label>File
                   <input 
-                    type="file" 
-                    id="file" 
-                    :ref="`file-${document.practiceDocType.id}`" 
-                    v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id)"/>
+                  type="file" 
+                  id="file" 
+                  :ref="`file-${document.practiceDocType.id}`" 
+                  v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id)"
+                  title="&nbsp;"/>
                 </label>
+                
               </div>
             </div>
-            <div style="width:20%;">
-              <div class="flex text-white text-sm p-4">
-                <button class="border-white rounded-full p-1 text-white lg:px-8 sm:px-2"
+            <div class="w-1/6 ">
+              <div class="flex text-white text-sm py-4 md:px-4">
+                <button class="flex items-center border-white rounded-full p-1 text-white lg:px-8 sm:px-2"
                   :event="fileIsUploadable === 'false' ? disabled : 'click'"
                   :class="fileIsUploadable === 'false' ? 'bg-transparent' : 'bg-green'" 
                   v-on:click="submitFile(specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)">
@@ -133,13 +136,13 @@
                   height="21"
                   color="transparent white"
                 ></svgicon> 
-                <span>{{document.practiceSpecificDoc && document.practiceSpecificDoc.file ? "Update":"Upload"}}</span>
+                <span class="px-2">{{document.practiceSpecificDoc && document.practiceSpecificDoc.file ? "Update":"Upload"}}</span>
               </button>
               </div>
             </div>
-            <div style="width:20%;">
-              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm p-4">
-                <nuxt-link class="bg-blue rounded-full p-1 text-white no-underline lg:px-8 sm:px-2"
+            <div class="w-1/6 ">
+              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm px-2 py-4 md:px-4">
+                <nuxt-link class="bg-blue flex items-center text-center rounded-full text-white no-underline px-4 py-2"
                   :to="{path:`/practices/${specificPractice.id}/documents/view-practice-file/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`, query: $route.query}">
                 <svgicon
                   name="folder"
@@ -147,7 +150,7 @@
                   height="21"
                   color="white white"
                 ></svgicon> 
-                <span>View File</span>
+                <span class="px-2">View File</span>
               </nuxt-link>
               </div>
             </div>
@@ -303,5 +306,7 @@ export default{
 </script>
 
 <style>
-
+#file{
+color: transparent;
+}
 </style>

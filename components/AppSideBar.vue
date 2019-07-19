@@ -1,41 +1,15 @@
 <template>
-  <div class="h-screen relative flex flex-col">
-    <!-- LOGOUT MODAL -->
-    <div
-      class="h-full w-full flex flex-col absolute"
-      :style="`z-index: ${showLogoutModal ? 100 : -100}; opacity: ${showLogoutModal ? 1 : 0};`"
-    >
-      <div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
-        <div>
-          <span class="text-sm p-2">Proceed to sign-out?</span>
-        </div>
-        <div class="flex">
-          <button class="p-2 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
-          <button
-            class="p-2 text-sm rounded-lg border border-white mx-1 shadow"
-            @click="showLogoutModal = false"
-          >Cancel</button>
-        </div>
-      </div>
-    </div>
-    <!-- LOGOUT MODAL ENDS HERE-->
-    <div class="w-full flex-1 flex overflow-hidden min-w-0">
-      <!-- SIDEBAR -->
-        <!-- :style="`${sideBarOpen ? 'transform: translateX(-180px);' : 'transform: translateX(0);'}`"   -->
+    <!-- SIDEBAR -->
       <div
-        class="sidebar flex flex-col md:pt-16 h-full bg-charade min-w-0"
-        :style="`${sideBarOpen ? 'z-index:-1;' : 'z-index:50;'}`"  
+        class="flex flex-col pt-16 h-full bg-charade min-w-0"
+        style="transition: .8s;"
+        :style="`width: ${sideBarOpen ? 'auto' : 0}; min-width: ${sideBarOpen ? '180px' : '0'}`"
       >
-      <div class="toggle mt-4">
-        <button class="py-2 px-8 text-yellow-dark focus:outline-none" @click="toggleSideBar">X</button>
-      </div>
-      <div class="py-4 " @click="toggleSideBar">
         <nuxt-link
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'dashboard' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/"
         >Dashboard</nuxt-link>
-      </div>
 
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
@@ -44,13 +18,11 @@
           to="/compliances"
         >Compliance</nuxt-link>
 
-      <div class="py-4 " @click="toggleSideBar">
         <nuxt-link
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'locums' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/locums"
         >Locums</nuxt-link>
-      </div>
 
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
@@ -86,28 +58,25 @@
           :class="`${activeTab === 'qualifications' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/qualifications"
         >Qualifications</nuxt-link>
-      <div class="py-4 " @click="toggleSideBar">
+
         <nuxt-link
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'practices' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/practices"
         >Practices</nuxt-link>
-      </div>
-      
-      <div class="py-4 " @click="toggleSideBar">
+
         <nuxt-link
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'reports' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/reports"
         >Reports</nuxt-link>
-      </div>
-      <div class="py-4 " @click="toggleSideBar">
+
         <nuxt-link
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'billing' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/billing"
         >Billing</nuxt-link>
-      </div>
+
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'Super Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
@@ -144,29 +113,8 @@
 
       </div>
       <!-- SIDEBAR -->
-
-      <div class="w-full flex flex-col relative bg-trout ">
-        <!-- HEADER -->
-        <div class="flex justify-between text-sm text-white py-2 px-6">
-          <button class="toggle text-white" @click="toggleSideBar">
-            <img src="~/assets/images/hbg.png">
-          </button>
-
-          <img src="~/assets/images/hubzz-icon-transparent.png">
-
-          <div class="p-2 text-sm" v-if="$auth.loggedIn">
-            <span>{{ $auth.user.email }}</span>
-          </div>
-        </div>
-        <!-- HEADER -->
-
-        <!-- PAGE -->
-        <nuxt/>
-        <!-- PAGE -->
-      </div>
-    </div>
-  </div>
 </template>
+
 
 <script>
 export default {
@@ -240,7 +188,6 @@ export default {
   methods: {
     toggleSideBar() {
       this.sideBarOpen = !this.sideBarOpen;
-      console.log(this.sideBarOpen)
     },
 
     logout() {
@@ -269,26 +216,5 @@ export default {
 
 .subpage-enter-active {
   transition: 0.8s ease;
-}
-
-.sidebar{
-  min-width: 180px;
-}
-
-.toggle{
-  display: none;
-}
-
-@media screen and (max-width: 992px){
-  .sidebar{
-  position: absolute;
-  z-index: 0;
-  transition:  all .3s ease-in-out;
-  }
-
-  .toggle{
-    display: block;
-  }
-  
 }
 </style>

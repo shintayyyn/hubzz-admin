@@ -6,48 +6,42 @@
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
-      <div class="flex p-4">
-        <div class="flex sm-6">
-          <div class="w-3/5">
-            <div class="relative">
-              <input
-                class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
-                placeholder="Search for..."
-              >
-              <button class="-ml-5 pd-2 pin-t pin-r pin-b">
-                <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
-              </button>
-              <button
-                class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark"
-              >Go</button>
-            </div>
-          </div>
-          <div class="w-1/5">
-            <select
-              class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:hubzz-yellow bg-waterloo"
-            >
-              <option>Filter by..</option>
-              <option>Paid</option>
-              <option>Not Paid</option>
-            </select>
-          </div>
-          <div class="w-1/5">
-            <button
-              class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark py-1 px-4 rounded inline-flex items-center"
-            >
-                <svgicon
-                  name="cloud-download"
-                  width="21"
-                  height="21"
-                  color="transparent white"
-              ></svgicon>
-              <span>Download CSV</span>
-            </button>
-          </div>
+      <div class="flex justify-between p-4 w-full lg:w-1/2">
+        <div class="relative">
+          <input
+            class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
+            placeholder="Search for..."
+          >
+          <button class="-ml-5 pd-2 pin-t pin-r pin-b">
+            <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
+          </button>
+          <button
+            class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark"
+          >Go</button>
+        </div>
+        <div class="flex items-center">
+          <select
+            class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:hubzz-yellow bg-waterloo"
+          >
+            <option>Filter by..</option>
+            <option>Paid</option>
+            <option>Not Paid</option>
+          </select>
+          <button
+            class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark py-1 px-4 rounded inline-flex items-center"
+          >
+              <svgicon
+                name="cloud-download"
+                width="21"
+                height="21"
+                color="transparent white"
+            ></svgicon>
+            <span class="px-2">Download CSV</span>
+          </button>
         </div>
       </div>
-      <div class="p-1">
-        <table class="text-left text-xs ml-3" style="width:50%">
+      <div class="px-4">
+        <table class="text-left text-xs w-full lg:w-1/2">
           <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
             <tr class="flex w-full mb-4">
               <th class="p-1 w-full">Practice</th>

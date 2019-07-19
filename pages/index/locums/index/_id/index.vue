@@ -52,7 +52,7 @@
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
               <!--COLUMN 1-->
-              <div class="w-1/3 overflow-hidden">
+              <div class="w-full md:w-1/3 overflow-hidden mb-2">
                 <div class="text-grey mx-5">
                   <p class="m-2 font-semibold">Name</p>
                   <p class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</p>
@@ -95,8 +95,8 @@
                 </div>
               </div>
               <!--COLUMN 2-->
-              <div class="w-1/3 overflow-hidden">
-                <div class="text-grey mx-10">
+              <div class="w-full md:w-1/3 overflow-hidden mb-2">
+                <div class="text-grey mx-5 md:mx-10">
                   <p class="m-2 mr-20 font-semibold">Headline</p>
                   <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.headline:null}}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Short Biography</p>
@@ -148,8 +148,8 @@
                 </div>
               </div>
               <!--COLUMN 3-->
-              <div class="w-1/3 overflow-hidden">
-                <div class="mx-20">
+              <div class="w-full md:w-1/3 overflow-hidden mb-2">
+                <div class="mx-5 mt-8 md:mt-0">
                   <!--RENDER AVATAR PICTURE HERE-->
                   <embed
                    class="flex w-4/5 rounded-full mr-4"
