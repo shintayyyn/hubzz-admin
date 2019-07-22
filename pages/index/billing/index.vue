@@ -11,7 +11,7 @@
       <div class="flex flex-col">
         <!-- HEADER -->
         <div class="flex my-2">
-          <div class="width: 10%;">
+          <div style="width: 15%;">
             <div class="flex text-white text-sm p-4">
               <strong>Invoice Number</strong>
             </div>
@@ -31,7 +31,7 @@
               <strong>Issued</strong>
             </div>
           </div>
-          <div style="width: 10%;">
+          <div style="width: 15%;">
             <div class="flex text-white text-sm p-4">
               <strong>Job Numbers</strong>
             </div>
@@ -54,44 +54,44 @@
           v-for="(billing, index) in billings"
           :key="`billing-${index}`"
           :to="`/billing/addinvoice`"
-          class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+          class="flex items-center no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
+          <div style="width: 15%;">
+            <div class="flex text-white text-sm p-4 overflow-x-auto">
               <span>{{ billing.invnum }}</span>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm p-4 overflow-x-auto">
               <span>{{ billing.practice }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm p-4 overflow-x-auto">
               <span>{{ billing.created }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm p-4 overflow-x-auto">
               <span>{{ billing.issued }}</span>
             </div>
           </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
+          <div style="width: 15%;">
+            <div class="flex text-white text-sm p-4 overflow-x-auto">
               <span>{{ billing.jobnums }}</span>
             </div>
           </div>
           <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm p-4 overflow-x-auto">
               <span>{{ billing.amount }}</span>
             </div>
           </div>
           <div style="width: 20%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex items-center justify-between text-white text-sm p-4">
               <span>{{ billing.status }}</span>
               <div class="p-4" v-if="billing.status=='Issued'">
-                <a class="p-3 bg-green-dark  ">Mark as paid</a>
-                </div>
+                <a class="p-3 whitespace-no-wrap rounded-full bg-green-dark">Mark as paid</a>
+              </div>
             </div>
           </div>
         </nuxt-link>

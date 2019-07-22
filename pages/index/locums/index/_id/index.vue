@@ -13,9 +13,7 @@
         </nuxt-link>
       </div>
       <!-- HEADER -->
-      <!-- BODY -->
-
-      <div class="mx-6 overflow-auto">
+            <div class="mx-6 overflow-auto">
           <div class="flex flex-wrap">
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
@@ -47,8 +45,9 @@
               </div>
             </div>
           </div>
-
-        <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
+          
+      <!-- BODY -->
+        <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
               <!--COLUMN 1-->

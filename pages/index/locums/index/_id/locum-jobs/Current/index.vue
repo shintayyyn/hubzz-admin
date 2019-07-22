@@ -130,32 +130,32 @@
                     <div class="flex flex-col">
                         <!-- HEADER -->
                         <div class="flex my-2">
-                            <div style="width: 20%;">
+                            <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
                                 <strong>Job number</strong>
                                 </div>
                             </div>
-                            <div style="width: 15%;">
+                            <div style="width: 20%;">
                                 <div class="flex text-white text-sm p-4">
                                 <strong>Practice / Surgery</strong>
                                 </div>
                             </div>
-                            <div style="width: 15%;">
+                            <div style="width: 20%;">
                                 <div class="flex text-white text-sm p-4">
                                 <strong>Title</strong>
                                 </div>
                             </div>
-                            <div style="width: 16%;">
+                            <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
                                 <strong>From</strong>
                                 </div>
                             </div>
-                            <div style="width: 16%;">
+                            <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
                                 <strong>To</strong>
                                 </div>
                             </div>
-                            <div style="width: 16%;">
+                            <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
                                 <strong>Created</strong>
                                 </div>
@@ -168,8 +168,9 @@
                         v-for="(locumUserCurrentJob, index) in locumUserCurrentJobs"
                         :key="`locumUserCurrentJob-${index}`"
                         :to="`/locums/${locumUser.id}/locum-jobs/view-locum-job/${locumUserCurrentJob.id}`"
-                        class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
+                        class="flex items-center no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
                         >
+                        <div v-if="locumUserCurrentJob === 0">No Jobs Available</div>
                             <div style="width: 20%;">
                                 <div class="flex text-white text-sm p-4">
                                     <span>{{ locumUserCurrentJob.job_number }}</span>

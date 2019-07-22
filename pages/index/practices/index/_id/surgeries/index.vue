@@ -86,17 +86,17 @@
 			<div class="flex flex-col p-4 ">
 				<!--HEADERS-->
 				<div class="flex">
-					<div style="width:25%">
+					<div style="width:35%">
 						<div class="flex text-white text-sm p-2">
 						<strong>Practice Name</strong>
 						</div>
 					</div>
-					<div style="width:25%">
+					<div style="width:30%">
 						<div class="flex text-white text-sm p-2">
 						<strong>Practice Code</strong>
 						</div>
 					</div>
-					<div style="width:25%">
+					<div style="width:35%">
 						<div class="flex text-white text-sm p-2">
 						<strong>Practice Location</strong>
 						</div>
@@ -107,18 +107,18 @@
 					:key="`childSurgery-${index}`"
 					class="flex no-underline rounded-lg bg-waterloo my-2"
 					>	
-					<div style="width: 25%;">
+					<div style="width: 35%;">
 						<div class="flex text-white text-sm p-4">
 						<span>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
 						</div>
 					</div>
-					<div style="width: 25%;">
+					<div style="width: 30%;">
 						<div class="flex text-white text-sm p-4">
 						<span>{{ childSurgery.surgery ? childSurgery.surgery.code :'null '}}</span>
 						</div>
 					</div>
 				
-					<div style="width: 20%;">
+					<div style="width: 35%;">
 						<div class="text-white text-sm p-4">
 						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
 						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>

@@ -74,7 +74,7 @@
 
       <div class="flex flex-col rounded-lg p-6 sm:p-6">
         <div>
-          <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-1/2">
+          <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
               <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-sm p-2">
                 <p class="flex">Practice Name</p>

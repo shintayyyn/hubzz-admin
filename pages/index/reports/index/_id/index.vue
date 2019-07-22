@@ -1,12 +1,12 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div style="width: calc(100% - 70px);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
+    <div class="w-full flex-1 flex flex-col self-end bg-trout shadow-lg">
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/reports/" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
-      <div class="flex justify-between p-4 w-full lg:w-1/2">
+      <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 px-4 w-full lg:w-2/3">
         <div class="relative">
           <input
             class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
@@ -19,7 +19,7 @@
             class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark"
           >Go</button>
         </div>
-        <div class="flex items-center">
+        <div class="flex items-center my-2 md:my-0">
           <select
             class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:hubzz-yellow bg-waterloo"
           >
@@ -28,7 +28,7 @@
             <option>Not Paid</option>
           </select>
           <button
-            class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark py-1 px-4 rounded inline-flex items-center"
+            class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark p-2 ml-2 rounded inline-flex items-center"
           >
               <svgicon
                 name="cloud-download"
@@ -36,12 +36,12 @@
                 height="21"
                 color="transparent white"
             ></svgicon>
-            <span class="px-2">Download CSV</span>
+            <span class="px-1">Download CSV</span>
           </button>
         </div>
       </div>
       <div class="px-4">
-        <table class="text-left text-xs w-full lg:w-1/2">
+        <table class="text-left text-xs w-full lg:w-2/3">
           <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
             <tr class="flex w-full mb-4">
               <th class="p-1 w-full">Practice</th>

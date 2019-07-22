@@ -21,12 +21,11 @@
     <!-- LOGOUT MODAL ENDS HERE-->
     <div class="w-full flex-1 flex overflow-hidden min-w-0">
       <!-- SIDEBAR -->
-        <!-- :style="`${sideBarOpen ? 'transform: translateX(-180px);' : 'transform: translateX(0);'}`"   -->
       <div
-        class="sidebar flex flex-col md:pt-16 h-full bg-charade min-w-0"
-        :style="`${sideBarOpen ? 'z-index:-1;' : 'z-index:50;'}`"  
+        class="sidebar flex flex-col pt-4 xl:pt-16 h-full bg-charade min-w-0"
+        :class="`${sideBarOpen ? 'toggle-left absolute' : ''}`"  
       >
-      <div class="toggle mt-4">
+      <div class="toggle w-full">
         <button class="py-2 px-8 text-yellow-dark focus:outline-none" @click="toggleSideBar">X</button>
       </div>
       <div class="py-4 " @click="toggleSideBar">
@@ -129,13 +128,14 @@
           to="/surgeries"
         >Surgeries</nuxt-link>
 
+      <div class="py-4 " @click="toggleSideBar">
         <nuxt-link
           v-if="$auth.loggedIn && $auth.user.domain === 'Admin'"
           class="text-sm px-6 py-4 no-underline border-l-4"
           :class="`${activeTab === 'support' ? 'text-yellow-dark border-yellow-dark' : 'text-white border-transparent'}`"
           to="/support"
         >Support</nuxt-link>
-
+      </div>
         <button
           class="text-sm px-6 py-4 border-l-4 text-white border-transparent flex whitespace-no-wrap"
           @click="showLogoutModal = true"
@@ -172,6 +172,10 @@
         <!-- PAGE -->
       </div>
     </div>
+      <div class="sidebar-shield" 
+        :style="`${sideBarOpen ? 'z-index: 1' : ''}`"  
+      ></div>
+
   </div>
 </template>
 
@@ -179,7 +183,7 @@
 export default {
   data() {
     return {
-      sideBarOpen: true,
+      sideBarOpen: false,
       showLogoutModal: false
     };
   },
@@ -284,22 +288,38 @@ export default {
 }
 
 .sidebar{
-  min-width: 180px;
+  margin-left: -200px;
+  width: 200px;
+  height: 100%;
+  overflow: auto;
+  transition: all 0.3s ease-in-out;
+  z-index: 500;
 }
 
-.toggle{
+.toggle-left{
+  margin-left: 0;
+}
+
+.sidebar-shield{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, .5);
+  z-index: -1;
+}
+
+@media screen and (min-width: 1200px){
+  .sidebar{
+    margin-left: 0;
+    position: relative;
+}
+
+.sidebar-shield{
   display: none;
 }
 
-@media screen and (max-width: 992px){
-  .sidebar{
-  position: absolute;
-  z-index: 0;
-  transition:  all .3s ease-in-out;
-  }
-
   .toggle{
-    display: block;
+    display: none;
   }
   
 } 
