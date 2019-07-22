@@ -7,7 +7,7 @@
       
       <h1 v-if="error.statusCode === 404">Page not found.</h1>
       <h1 v-if="error.statusCode === 401">You are not authorized to view this page.</h1>
-      <nuxt-link class="text-white no-underline " to="/">Home page</nuxt-link>
+      <nuxt-link class="text-white no-underline " to="/">Go Home</nuxt-link>
     </div>
 
     <!-- <h1 v-else>{{error.message}}</h1> -->
