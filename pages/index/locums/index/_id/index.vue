@@ -157,7 +157,7 @@
                 <div class="mx-5 mt-8 md:mt-0">
                   <!--RENDER AVATAR PICTURE HERE-->
                   <embed
-                   class="flex w-4/5 rounded-full mr-4"
+                   class=" object-contain w-64  rounded-full mr-4"
                     :src="locumUser.avatar ? locumUser.avatar.file.url:null"
                   >
                   <img v-if="!locumUser.avatar" class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
