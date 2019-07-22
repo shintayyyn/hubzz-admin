@@ -1,22 +1,22 @@
 <template>
   <div class="flex-1 flex flex-col px-4 py-2  overflow-auto">
-    <div class="flex flex-wrap overflow-hidden">
-      <div class="w-1/2  sm:my-3 sm:px-3 overflow-hidden">
+    <div class="flex flex-col md:flex-row">
+      <div class="w-1/2">
         <div class="flex py-2">
           	<div class="relative">
-              <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-                <button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
+              <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+                <button class="p-2 absolute pin-t pin-r pin-b focus:outline-none" @click="search = '', searchSubmit()">
                   <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
                 </button>
             </div>
-        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
         </div>
       </div>
 
-      <div class="w-1/2 sm:my-3 sm:px-3 overflow-hidden">
+      <div class="w-1/2">
         <nuxt-link
           to="/practices/surgeries/surgery-add-practice"
-          class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-right"
+          class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm text-black rounded-lg shadow md:float-right"
         >Add Practice</nuxt-link>
       </div>
     </div>
@@ -46,13 +46,11 @@
               <strong>Expires</strong>
             </div>
           </div>
-		  <div style="width:10%">
-			<div class="flex text-white text-sm p-4">
-				<strong>Status</strong>
-			</div>  
-		  </div>
-		  
-
+					<div style="width:10%">
+						<div class="flex text-white text-sm p-4">
+							<strong>Status</strong>
+						</div>  
+					</div>
         </div>
         <!-- HEADER -->
 
@@ -61,26 +59,26 @@
           v-for="(practice, index) in practices"
           :key="`practice-${index}`"
           :to="{path:`/practices/${practice.id}`,query:$route.query}"
-          class="flex no-underline rounded-lg bg-waterloo  shadow hover:bg-waterloo-light my-2"
+          class="flex items-center no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 md:px-2"
         >
           <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm py-4 px-2 md:p-4">
               <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
             </div>
           </div>
           <div class="flex" style="width: 15%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm py-4 px-2 md:p-4">
               <span>{{ practice.surgery ? practice.surgery.code:null }}</span>
             </div>
           </div>
           <div class="flex" style="width: 25%;">
-            <div class="flex text-white text-sm p-4">
+            <div class="flex text-white text-sm py-4 px-2 md:p-4">
               <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
 
             </div>
           </div>
           <div class="flex" style="width: 25%;">
-            <div class="flex text-white text-sm p-4 ">
+            <div class="flex text-white text-sm py-4 px-2 md:p-4 ">
               <span>{{practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
             </div>
           </div>
@@ -88,7 +86,7 @@
             	<div class=" flex py-2 px-4 items-center">
                 <span
 					class=" inline-flex no-underline py-2 text-sm text-black rounded-full shadow "
-					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2'}`"
+					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`"
 				>{{ practice.status }}</span>
             	</div>
           </div>

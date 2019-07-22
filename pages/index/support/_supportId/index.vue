@@ -45,11 +45,11 @@
       </div>
 
       <div class="flex flex-col bg-white m-4 py-2 px-4" style="width: 550px; height: 750px">
-        <div class="flex flex-wrap -mx-1 pt-6 overflow-hidden">
-          <div class="my-1 px-1 w-3/5 overflow-hidden">
+        <div class="flex flex-wrap -mx-1 pt-4 overflow-hidden">
+          <div class="my-2 px-1 w-3/5 overflow-hidden">
             <!-- Column Content -->
           </div>
-          <div class="my-1 px-1 w-2/5 overflow-hidden">
+          <div class="my-2 px-1 w-2/5 overflow-hidden">
             <p class="text-sm text-right">
               Hubzz Limited
               Mws, 601 London Road
@@ -91,11 +91,11 @@
           </div>
 
           <div class="my-1 px-1 w-full overflow-hidden">
-            <div class="flex flex-col">
+            <div class="flex flex-col border-b-2">
               <!--HEADER-->
-              <div class="flex justify-center my-2 bg-black">
+              <div class="flex justify-center my-1 py-2 bg-black">
                 <div style="width: 70%;">
-                  <div class="text-white text-sm text-center">
+                  <div class="text-white text-sm text-left px-4">
                     <strong>Description</strong>
                   </div>
                 </div>
@@ -106,14 +106,24 @@
                 </div>
               </div>
               <!--HEADER-->
+              <div class="flex justify-center py-1">
+                <div style="width: 70%;">
+                  <div class="text-sm text-left px-4">
+                    <strong>Sample</strong>
+                  </div>
+                </div>
+                <div style="width: 30%;">
+                  <div class="text-sm text-center">
+                    <strong>1200</strong>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="my-1 px-1 w-full overflow-hidden"></div>
-
-          <div class="my-1 px-1 w-full overflow-hidden">
+          <div class="my-2 px-2 w-full overflow-hidden">
             <div class="flex flex-wrap -mx-1 overflow-hidden">
               <div class="my-1 px-1 w-3/5 overflow-hidden">Total</div>
-              <div class="my-1 px-1 w-1/5 overflow-hidden">£</div>
+              <div class="my-1 px-1 w-1/5 overflow-hidden">£1200</div>
               <div class="my-1 px-1 w-1/5 overflow-hidden">
                 <button
                   class="bg-black hover:bg-grey-dark text-white font-bold px-2 py-1 rounded-full float-right"
@@ -123,7 +133,7 @@
           </div>
         </div>
 
-        <div class="content-end border border-black rounded-lg p-1 text-sm">
+        <div class="content-end border border-black rounded-lg p-2 text-sm">
           Payment by BACS:
           <br>Account name: XXX
           <br>Bank: XXX

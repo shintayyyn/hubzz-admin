@@ -122,7 +122,7 @@
                 v-for="(user, index) in usersInPractice"
                 :key="`user-${index}`"
                 :to="`/practices/${specificPractice.id}/users/edit-user/${user.id}`"
-                class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+                class="flex items-center no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
               >
                 <div style="width: 20%;">
                   <div class="flex text-white text-sm p-4">
