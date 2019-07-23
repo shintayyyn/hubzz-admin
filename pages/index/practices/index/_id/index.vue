@@ -1,6 +1,6 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
-    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
+  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col">
+    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg overflow-y-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
@@ -78,10 +78,10 @@
             <div class="flex flex-wrap">
               <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-sm p-2">
                 <p class="flex">Practice Name</p>
-                <p class="flex text-white text-sm p-2 font-semibold">
+                <p class="flex items-center text-white text-sm p-2 font-semibold">
                   {{specificPractice.surgery ? specificPractice.surgery.name : null}} 
                   <span
-                  class="py-2 px-4 -mt-2 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
+                  class="py-2 px-4 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
                   :class="`${specificPractice && specificPractice.practice_parent ? 'bg-blue-light' :'bg-red-light' }`">{{specificPractice && specificPractice.practice_parent ? 'SPOKE' : 'HUB'}}</span>
                 </p>
                 

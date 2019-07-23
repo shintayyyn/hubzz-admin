@@ -40,7 +40,7 @@
           </button>
         </div>
       </div>
-      <div class="px-4">
+      <div class="mx-4 overflow-x-auto">
         <table class="text-left text-xs w-full lg:w-2/3">
           <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
             <tr class="flex w-full mb-4">

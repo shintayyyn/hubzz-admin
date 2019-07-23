@@ -1,14 +1,14 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+	<div class="fixed lg:absolute  pin-t pin-b pin-r pin-l flex flex-col">
 		<div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
 		
-		<!-- HEADER -->
-		<div class="flex justify-between text-sm text-white py-2 px-6">
-			<nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
-			<svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
-			</nuxt-link>
-		</div>
-		  <!-- DEFAULT TABS -->
+      <!-- HEADER -->
+      <div class="flex justify-between text-sm text-white py-2 px-6">
+        <nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
+        <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+        </nuxt-link>
+      </div>
+      <!-- DEFAULT TABS -->
       <div class="flex flex-col rounded-lg pl-6 mt-2 " >
         <div class="w-full">
           <div class="flex flex-wrap -mx-1">
@@ -71,57 +71,40 @@
         </div>
       </div>
       <!--DEFAULT TABS END HERE-->
-		
-		<!--TAB 5-->
-        <div class="flex flex-col rounded-lg p-6 sm:p-6">
-          <div class="flex flex-col ">
-            <!-- HEADER -->
-            <div class="flex my-2">
-              <div class="w-1/6">
-                <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                  <strong>Title</strong>
-                </div>
-              </div>
-              <div class="w-1/6">
-                <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                  <strong>File Size</strong>
-                </div>
-              </div>
-              <div class="w-1/6">
-                <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                  <strong>Last Upload Date</strong>
-                </div>
-              </div>
-              <div class="w-1/6">
-                <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                  <strong>Upload New File</strong>
-                </div>
-              </div>
-              <div class="w-2/6"></div>
-            </div>
-          </div>
-          <div
-            v-for="(document,index) in specificPracticeDocumentTypes"
-            :key="`surgery-${index}`"
-            class="flex items-center no-underline rounded-lg bg-waterloo my-2"
-          >
-            <div class="w-1/6 ">
-              <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                <span>{{ document.practiceDocType ? document.practiceDocType.name:null }}</span>
-              </div>
-            </div>
-            <div class="w-1/6 ">
-              <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                <span>{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? (document.practiceSpecificDoc.file.size / 1048576).toFixed(2) + " Mb":null }}</span>
-              </div>
-            </div>
-            <div class="w-1/6 ">
-              <div class="flex text-white text-sm px-2 py-4 md:px-4">
-                <span>{{ document.practiceSpecificDoc ? $moment(document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null}}</span>
-              </div>
-            </div>
-            <div class="w-1/6 ">
-              <div class="flex flex-col text-white text-sm px-2 py-4 md:px-4">
+
+    <!-- TABLE RESPONSIVE-->
+    <div class="table border-separate overflow-x-auto px-6" style="border-spacing: 0 10px;"> 
+      <!-- HEADER -->
+      <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+        <div class="table-cell p-2 align-middle">Title</div> 
+        <div class="table-cell p-2 align-middle">File Size</div>
+        <div class="table-cell p-2 align-middle">Last Upload Date</div>
+        <div class="table-cell p-2 align-middle">Upload New File</div>
+      </div>
+      <!-- END HEADER -->
+      <!-- BODY -->
+      <div
+        v-for="(document,index) in specificPracticeDocumentTypes"
+        :key="`surgery-${index}`"
+        class="flex flex-col md:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+      >
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Title</strong>
+          <span class="whitespace-no-wrap">{{ document.practiceDocType ? document.practiceDocType.name:null }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">File Size</strong>
+          <span class="break-all">{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? (document.practiceSpecificDoc.file.size / 1048576).toFixed(2) + " Mb":null }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Last Upload Date</strong>
+          <span class="break-all">{{ document.practiceSpecificDoc ? $moment(document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null }}</span>
+        </div>
+        <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Upload New File</strong>
+          <div class="flex items-center justify-between md:justify-start flex-wrap">
+              <div class="flex flex-wrap">
+              <div class="flex text-white text-sm w-24">
                 <label>File
                   <input 
                   type="file" 
@@ -130,12 +113,9 @@
                   v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id)"
                   title="&nbsp;"/>
                 </label>
-                
               </div>
-            </div>
-            <div class="w-1/6 ">
-              <div class="flex text-white text-sm py-4 md:px-4">
-                <button class="flex items-center border-white rounded-full p-1 text-white lg:px-8 sm:px-2"
+              <div class="flex text-white text-sm py-2 md:py-0">
+                <button class="flex items-center border-white rounded-full p-1 text-white"
                   :event="fileIsUploadable === 'false' ? disabled : 'click'"
                   :class="fileIsUploadable === 'false' ? 'bg-transparent' : 'bg-green'" 
                   v-on:click="submitFile(specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)">
@@ -144,32 +124,31 @@
                   width="21"
                   height="21"
                   color="transparent white"
-                ></svgicon> 
-                <span class="px-2">{{document.practiceSpecificDoc && document.practiceSpecificDoc.file ? "Update":"Upload"}}</span>
-              </button>
+                  ></svgicon> 
+                  <span class="px-2">{{document.practiceSpecificDoc && document.practiceSpecificDoc.file ? "Update":"Upload"}}</span>
+                </button>
               </div>
-            </div>
-            <div class="w-1/6 ">
-              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm px-2 py-4 md:px-4">
+              </div>
+              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm py-2 md:py-4 md:px-4">
                 <nuxt-link class="bg-blue flex items-center text-center rounded-full text-white no-underline px-4 py-2"
                   :to="{path:`/practices/${specificPractice.id}/documents/view-practice-file/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`, query: $route.query}">
-                <svgicon
-                  name="folder"
-                  width="21"
-                  height="21"
-                  color="white white"
-                ></svgicon> 
-                <span class="px-2">View File</span>
-              </nuxt-link>
+                  <svgicon
+                    name="folder"
+                    width="21"
+                    height="21"
+                    color="white white"
+                  ></svgicon> 
+                  <span class="px-2">View File</span>
+                </nuxt-link>
               </div>
             </div>
-          </div>
         </div>
+      </div>
+      <!-- END BODY -->
+    </div>
+    <!-- END TABLE -->
 		</div>
-
-
 		<nuxt-child/>
-
 	</div>
 </template>
 

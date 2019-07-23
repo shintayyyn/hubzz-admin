@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+	<div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col">
 		<div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
 		<!-- HEADER -->
 		<div class="flex justify-between text-sm text-white py-2 px-6">
@@ -9,7 +9,7 @@
 		</div>
 
 	  <!-- DEFAULT TABS -->
-      <div class="flex flex-col rounded-lg pl-6 mt-2 " >
+      <div class="flex flex-col rounded-lg pl-6 mt-2" >
         <div class="w-full">
           <div class="flex flex-wrap -mx-1">
             <div class="my-1 px-1">
@@ -74,7 +74,7 @@
 
 		<!--TABLE STARTS HERE-->
 		<!--TAB 4-->
-        <div class="flex flex-col rounded-lg p-6 sm:p-6">
+        <div class="flex flex-col rounded-lg px-6 py-2">
           <div class="w-full overflow-hidden">
             <nuxt-link :to="`/practices/${specificPractice.id}/users/new-practice-user/${surgeries.id}`">
               <button
@@ -85,76 +85,52 @@
             </nuxt-link>
           </div>
 
-          <div class="w-full overflow-hidden">
-            <div class="flex flex-col">
-              <!-- HEADER -->
-              <div class="flex">
-                <div style="width: 20%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Full Name</strong>
-                  </div>
-                </div>
-                <div style="width: 30%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Email Address</strong>
-                  </div>
-                </div>
-                <div style="width: 20%">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Role</strong>
-                  </div>
-                </div>
-                <div style="width: 20%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Sign-Up Verified</strong>
-                  </div>
-                </div>
-                <div style="width: 20%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Status</strong>
-                  </div>
-                </div>
-              </div>
-              <!-- HEADER -->
-
-              <!-- BODY -->
-              <nuxt-link
-                v-for="(user, index) in usersInPractice"
-                :key="`user-${index}`"
-                :to="`/practices/${specificPractice.id}/users/edit-user/${user.id}`"
-                class="flex items-center no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
-              >
-                <div style="width: 20%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ user.personal_detail.name }}</span>
-                  </div>
-                </div>
-                <div style="width: 30%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ user.email }}</span>
-                  </div>
-                </div>
-                <div style="width: 20%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ user.practice_detail.practice_role }}</span>
-                  </div>
-                </div>
-                <div style="width: 20%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ user.actived_at ? $moment(user.actived_at).format('MMM D, YYYY | hh:mm A') : null}}</span>
-                  </div>
-                </div>
-                <div style="width: 20%" class="py-2">
-                
-                    <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
-                    :class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
-                    >{{ user.actived_at ? 'Active' : 'Disabled' }}
-                    </span>
-                </div>
-              </nuxt-link>
-              <!-- BODY -->
+          <!-- TABLE RESPONSIVE-->
+          <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+            <!-- HEADER -->
+            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+              <div class="table-cell p-2 align-middle">Full Name</div> 
+              <div class="table-cell p-2 align-middle">Email Address</div>
+              <div class="table-cell p-2 align-middle">Role</div>
+              <div class="table-cell p-2 align-middle">Sign-Up Verified</div>
+              <div class="table-cell p-2 align-middle">Status</div>
             </div>
+            <!-- END HEADER -->
+            <!-- BODY -->
+            <nuxt-link
+            v-for="(user, index) in usersInPractice"
+            :key="`user-${index}`"
+            :to="`/practices/${specificPractice.id}/users/edit-user/${user.id}`"
+            class="flex flex-col md:flex-row sm:flex-wrap px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+            draggable="false"
+            >
+              <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+                <strong class="block md:hidden text-sm uppercase">Full Name</strong>
+                <span class="break-word">{{ user.personal_detail.name }}</span>
+              </div>
+              <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <strong class="block md:hidden text-sm uppercase">Email Address</strong>
+                <span class="break-all">{{ user.email }}</span>
+              </div>
+              <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <strong class="block md:hidden text-sm uppercase">Role</strong>
+                <span class="break-all">{{ user.practice_detail.practice_role }}</span>
+              </div>
+              <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <strong class="block md:hidden text-sm uppercase">Sign-up Verified</strong>
+                <span class="break-all">{{ user.actived_at ? $moment(user.actived_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
+              </div>
+              <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+                <strong class="block md:hidden">Status</strong>
+                <span class="inline-flex text-black text-sm py-2 px-8 rounded-full"
+                  :class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+                  >{{ user.actived_at ? 'Active' : 'Disabled' }}
+                </span>
+                </div>
+            </nuxt-link>
+            <!-- END BODY -->
           </div>
+          <!-- END TABLE -->
         </div>
 		</div>
 
@@ -210,5 +186,12 @@ export default{
 </script>
 
 <style>
-
+.md\:table-cell:first-child{
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+.md\:table-cell:last-child{
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
 </style>

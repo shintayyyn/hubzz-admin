@@ -1,7 +1,7 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout overflow-auto">
-     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
+    <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex items-center text-sm text-white py-2 px-6">
         <nuxt-link
@@ -16,8 +16,7 @@
           />
         </nuxt-link>
         <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
-        >
+          @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)">
           <svgicon
           name="save-icon"
           width="21"
@@ -25,28 +24,28 @@
           color="transparent white"
           hover:color="transparent black"
         ></svgicon>
-         <span class="px-1">Save</span>
+        <span class="px-1">Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2">
           <a 
             @click.prevent="downloadItem(specificLocumComplianceDocument.file.url,specificLocumComplianceDocument.file.filename)"
-            class="inline-flex items-center text-white no-underline ">
-             <svgicon
+            class="inline-flex items-center text-white no-underline">
+            <svgicon
               name="cloud-download"
               width="21"
               height="21"
               color="transparent white"
               hover ="transparent black"
-            ></svgicon>
+            >
+            </svgicon>
             <span class="px-1">Download</span>
           </a>
-         
         </div>
       </div>
       <!-- HEADER -->
       <!-- BODY -->
-      <div class="flex-col shadow-lg rounded-lg bg-waterloo mx-6 mt-10">
-        <div class="inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm m-4">
+      <div class="shadow-lg rounded-lg bg-waterloo mx-6 mt-10 p-4">
+        <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{specificLocumComplianceDocument.compliance_document ? specificLocumComplianceDocument.compliance_document.name: null}}</p>
@@ -100,7 +99,7 @@
           </div>
           <div class="flex flex-col text-grey md:m-2">
             <p class="md:mr-20">File</p>
-             <embed class="w-full my-2"
+             <embed class="w-full my-2" style="max-width: 800px"
               :src="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null"
               >
           </div>

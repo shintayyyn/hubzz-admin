@@ -15,7 +15,7 @@ s<template>
       <!-- HEADER -->
       <!-- BODY -->
 
-      <div class="mx-6 overflow-auto">
+      <div class="mx-6 mb-6 overflow-auto">
         <div class="flex">
          <p class="text-2xl text-white font-semibold">{{specificJob.platform_job ? specificJob.platform_job.title:null }}</p>
          <p class="text-black p-2 bg-yellow rounded ml-4">{{jobStatus}}</p><br>
@@ -24,8 +24,8 @@ s<template>
         <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
-              <div class="w-1/2 overflow-hidden">
-                <div class="text-grey mx-5 text-white">
+              <div class="md:w-1/2 overflow-hidden">
+                <div class="text-grey text-white">
                   <p class="m-2 font-semibold">Job Number</p>
                   <p class="m-2 text-white">{{specificJob.job_number}}</p>
                   <p class="m-2 mt-5 font-semibold">Rate</p>
@@ -39,15 +39,23 @@ s<template>
                 </div>
               </div>
 
-              <div class="w-1/2 overflow-hidden">
-                <div class="text-white mx-10">
+              <div class="md:w-1/2 overflow-hidden">
+                <div class="text-white md:mx-10">
                   <p class="m-2 mt-5 font-semibold">Duration</p>
-                  <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
-                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_start}}</span> <br><br>
-                  <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">To</span>
-                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_end}}</span> <br><br>
-                  <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
-                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.shift.name}}</span> <br><br>
+                  <div class="flex flex-wrap">
+                    <div class="flex items-center my-1">
+                      <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
+                      <span class="text-sm text-white font-semibold px-2">{{specificJob.platform_job.date_start}}</span>
+                    </div>
+                    <div class="flex items-center my-1">
+                      <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">To</span>
+                      <span class="text-sm text-white font-semibold px-2">{{specificJob.platform_job.date_end}}</span>
+                    </div>
+                    <div class="flex items-center my-1">
+                      <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
+                      <span class="text-sm text-white font-semibold px-2">{{specificJob.platform_job.shift.name}}</span>
+                    </div>
+                  </div>
                   <p class="m-2 mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
                   <div class="m-2 mt-5 text-white">
                      <span>This job is </span>
@@ -58,29 +66,25 @@ s<template>
                   <p class="m-2 mt-5 font-semibold">Role</p>
                   <p class="m-2 text-white">{{specificJob.platform_job.profession.name}}</p>
                   <p class="m-2 mt-5 font-semibold">Speciality</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 font-semibold">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name1'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 font-semibold">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name2'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
                   </p>
                   <p class="m-2 mt-5 font-semibold">Compliance Documents</p>
                   <p class="m-2 mt-5 font-semibold">Mandatory Trainings</p>
-                 
-                 
-                
-                  
                 </div>
               </div>
 

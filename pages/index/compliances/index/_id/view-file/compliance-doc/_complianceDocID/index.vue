@@ -1,35 +1,35 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout overflow-auto">
-     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
-      <!-- HEADER -->
-      <div class="flex text-sm text-white py-2 px-6">
-        <nuxt-link
-          :to="{path:`/compliances/${locumUser.id}`}"
-          class="text-white hover:text-yellow-dark p-1 mr-4"
-        >
-          <svgicon
-            name="arrow-left-solid"
-            height="22"
-            width="22"
-            class="hover:text-yellow-dark fill-current"
-          />
-        </nuxt-link>
-        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
-          @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
-        >
-          <svgicon
-          name="save-icon"
-          width="21"
-          height="21"
-          color="transparent white"
-          hover:color="transparent black"
-        ></svgicon>
-         <span>Save</span>
+    <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
+    <!-- HEADER -->
+    <div class="flex text-sm text-white py-2 px-6">
+      <nuxt-link
+        :to="{path:`/compliances/${locumUser.id}`}"
+        class="text-white hover:text-yellow-dark p-1 mr-4"
+      >
+        <svgicon
+          name="arrow-left-solid"
+          height="22"
+          width="22"
+          class="hover:text-yellow-dark fill-current"
+        />
+      </nuxt-link>
+      <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
+        @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
+      >
+        <svgicon
+        name="save-icon"
+        width="21"
+        height="21"
+        color="transparent white"
+        hover:color="transparent black"
+      ></svgicon>
+      <span>Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
           <a class="text-white" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
-             <svgicon
+            <svgicon
               name="cloud-download"
               width="21"
               height="21"
@@ -38,7 +38,6 @@
             ></svgicon>
             <span>Download</span>
           </a>
-         
         </div>
       </div>
       <!-- HEADER -->
@@ -87,13 +86,12 @@
           </div>
           <div class="flex text-grey m-2">
             <p class="mr-20">File</p>
-             <embed
+            <embed
               width=800px
               height=600px
               :src="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null"
               >
           </div>
-       
         </div>
       </div>
       <!-- BODY -->

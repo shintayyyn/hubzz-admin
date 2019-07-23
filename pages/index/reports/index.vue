@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
+  <div class="flex-1 flex flex-col py-2 px-4 overflow-y-auto">
     <!-- <div>
       <nuxt-link
         to="/reports/create"
@@ -15,34 +15,25 @@
           v-for="(qualification, index) in qualifications"
           :key="`qualification-${index}`"
           :to="`/reports/${qualification._id}`"
-          class="flex no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+          class="flex items-center no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
-          <div style="width: 30%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="w-1/3 flex text-white text-xs px-2 py-4">
               <span>REP-010</span>
             </div>
-          </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="w-1/3 flex text-white text-xs px-2 py-4">
               <span>REP-011</span>
             </div>
-          </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-xs p-4">
+            <div class="w-1/3 flex text-white text-xs px-2 py-4">
               <span>REP-012</span>
-              
             </div>
-          </div>
-          <div style="width: 25%; padding-left:100px">
-            <div class="flex text-white text-xs p-4">
+            <div class="flex text-white text-xs px-2 md:px-4">
               <svgicon
-          name="arrow-right"
-          width="21"
-          height="21"
-          color="transparent white"
-        ></svgicon>
+                name="chevron-right"
+                width="21"
+                height="21"
+                color="white"
+              ></svgicon>
             </div>
-          </div>
         </nuxt-link>
         <!-- BODY -->
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col px-4 py-2  overflow-auto">
+  <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
     <div class="flex flex-col md:flex-row">
       <div class="w-1/2">
         <div class="flex py-2">
@@ -12,7 +12,6 @@
         <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
         </div>
       </div>
-
       <div class="w-1/2">
         <nuxt-link
           to="/practices/surgeries/surgery-add-practice"
@@ -20,81 +19,57 @@
         >Add Practice</nuxt-link>
       </div>
     </div>
-
-    <!-- TABLE -->
-    <div>
-      <div class="flex flex-col">
-        <!-- HEADER -->
-        <div class="flex my-2">
-          <div style="width: 20%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Practice Name</strong>
-            </div>
-          </div>
-          <div style="width: 15%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Practice Code</strong>
-            </div>
-          </div>
-          <div style="width: 25%">
-            <div class="flex text-white text-sm p-4">
-              <strong>Created</strong>
-            </div>
-          </div>
-          <div style="width: 25%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Expires</strong>
-            </div>
-          </div>
-					<div style="width:10%">
-						<div class="flex text-white text-sm p-4">
-							<strong>Status</strong>
-						</div>  
-					</div>
-        </div>
-        <!-- HEADER -->
-
-        <!-- BODY -->
-        <nuxt-link
-          v-for="(practice, index) in practices"
-          :key="`practice-${index}`"
-          :to="{path:`/practices/${practice.id}`,query:$route.query}"
-          class="flex items-center no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 md:px-2"
-        >
-          <div class="flex" style="width: 20%;">
-            <div class="flex text-white text-sm py-4 px-2 md:p-4">
-              <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
-            </div>
-          </div>
-          <div class="flex" style="width: 15%;">
-            <div class="flex text-white text-sm py-4 px-2 md:p-4">
-              <span>{{ practice.surgery ? practice.surgery.code:null }}</span>
-            </div>
-          </div>
-          <div class="flex" style="width: 25%;">
-            <div class="flex text-white text-sm py-4 px-2 md:p-4">
-              <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
-
-            </div>
-          </div>
-          <div class="flex" style="width: 25%;">
-            <div class="flex text-white text-sm py-4 px-2 md:p-4 ">
-              <span>{{practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
-            </div>
-          </div>
-          <div class="flex" style="width: 10%">
-            	<div class=" flex py-2 px-4 items-center">
-                <span
-					class=" inline-flex no-underline py-2 text-sm text-black rounded-full shadow "
-					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`"
-				>{{ practice.status }}</span>
-            	</div>
-          </div>
-        </nuxt-link>
-        <!-- BODY -->
+		<!-- TABLE RESPONSIVE-->
+    <div class="table border-separate" style="border-spacing: 0 10px;"> 
+      <!-- HEADER -->
+      <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+        <div class="table-cell p-2 align-middle">Practice Name</div> 
+        <div class="table-cell p-2 align-middle">Practice Code</div>
+        <div class="table-cell p-2 align-middle">Created</div>
+        <div class="table-cell p-2 align-middle">Expires</div>
+        <div class="table-cell p-2 align-middle">Status</div>
       </div>
+      <!-- END HEADER -->
+      <!-- BODY -->
+      <nuxt-link
+        v-for="(practice, index) in practices"
+				:key="`practice-${index}`"
+				:to="{path:`/practices/${practice.id}`,query:$route.query}"
+        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 my-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+        draggable="false"
+      >
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
+          <span class="break-word">{{ practice.surgery ? practice.surgery.name:null }}</span>
+        </div>
+
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Practice Code</strong>
+          <span class="break-all">{{ practice.surgery ? practice.surgery.code:null }}</span>
+        </div>
+
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Created</strong>
+          <span class="break-all">{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+        </div>
+
+				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Expires</strong>
+          <span class="break-all">{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
+        </div>
+
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden">Status</strong>
+          <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
+					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}Status</span>
+				</div>
+
+      </nuxt-link>
+      <!-- END BODY -->
     </div>
-    <!-- TABLE -->
+    <!-- END TABLE -->
+
+
     <nuxt-child/>
   </div>
 </template>

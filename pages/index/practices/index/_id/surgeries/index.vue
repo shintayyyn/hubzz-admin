@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
+	<div class="fixed lg:absolute  pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
 		<div style="width: calc(100%);" class="flex-1 flex flex-col w-full self-end bg-trout shadow-lg">
 			<!-- HEADER -->
 			<div class="flex justify-between text-sm text-white py-2 px-6">
@@ -80,55 +80,41 @@
 					</nuxt-link>
 				</div>
 			</div>
-
-			<!--TABLE STARTS HERE-->
-			<!--TABLE-->
-			<div class="flex flex-col p-4 ">
-				<!--HEADERS-->
-				<div class="flex">
-					<div style="width:35%">
-						<div class="flex text-white text-sm p-2">
-						<strong>Practice Name</strong>
-						</div>
+			<!-- TABLE RESPONSIVE-->
+			<div class="table border-separate overflow-x-auto px-6" style="border-spacing: 0 10px;"> 
+				<!-- HEADER -->
+				<div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+				<div class="table-cell p-2 align-middle">Practice Name</div> 
+				<div class="table-cell p-2 align-middle">Practice Code</div>
+				<div class="table-cell p-2 align-middle">Practice Location</div>
+				</div>
+				<!-- END HEADER -->
+				<!-- BODY -->
+				<div
+				v-for="(childSurgery,index) in childSurgeries"
+				:key="`childSurgery-${index}`"
+				class="flex flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+				>
+					<div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+						<strong class="block md:hidden text-sm uppercase">Practice Name</strong>
+						<span class="whitespace-no-wrap">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
 					</div>
-					<div style="width:30%">
-						<div class="flex text-white text-sm p-2">
-						<strong>Practice Code</strong>
-						</div>
+					<div class="flex items-center sm:w-full md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+						<strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code:</strong>
+						<span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :'null' }}</span>
 					</div>
-					<div style="width:35%">
-						<div class="flex text-white text-sm p-2">
-						<strong>Practice Location</strong>
+					<div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
+						<strong class="block md:hidden text-sm uppercase">Practice Location</strong>
+						<div class="text-white text-sm px-2 py-1">
+							<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
+							<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
+							<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
 						</div>
 					</div>
 				</div>
-				<!--HEADERS END HERE-->
-				<div v-for="(childSurgery,index) in childSurgeries"
-					:key="`childSurgery-${index}`"
-					class="flex no-underline rounded-lg bg-waterloo my-2"
-					>	
-					<div style="width: 35%;">
-						<div class="flex text-white text-sm p-4">
-						<span>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
-						</div>
-					</div>
-					<div style="width: 30%;">
-						<div class="flex text-white text-sm p-4">
-						<span>{{ childSurgery.surgery ? childSurgery.surgery.code :'null '}}</span>
-						</div>
-					</div>
-				
-					<div style="width: 35%;">
-						<div class="text-white text-sm p-4">
-						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
-						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
-						<span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
-						</div>
-					</div>
-				
-				</div>
+				<!-- END BODY -->
 			</div>
-			
+			<!-- END TABLE -->
 
 		</div>
 		<nuxt-child/>

@@ -1,21 +1,21 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
     <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout overflow-auto">
-     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
-      <!-- HEADER -->
-      <div class="flex text-sm text-white py-2 px-6">
-        <nuxt-link
-          :to="{path:`/locums/${locumUser.id}/locum-compliance`}"
-          class="text-white hover:text-yellow-dark p-1 mr-4"
-        >
-          <svgicon
-            name="arrow-left-solid"
-            height="22"
-            width="22"
-            class="hover:text-yellow-dark fill-current"
-          />
+    <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
+    <!-- HEADER -->
+    <div class="flex items-center text-sm text-white py-2 px-6">
+      <nuxt-link
+        :to="{path:`/locums/${locumUser.id}/locum-compliance`}"
+        class="text-white hover:text-yellow-dark p-1 mr-4"
+      >
+        <svgicon
+          name="arrow-left-solid"
+          height="22"
+          width="22"
+          class="hover:text-yellow-dark fill-current"
+        />
         </nuxt-link>
-        <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4">
+        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4">
           <svgicon
             name="save-icon"
             width="21"
@@ -23,29 +23,28 @@
             color="transparent white"
             hover:color="transparent black"
           ></svgicon> 
-         <span>Save</span> <!--ASK JC/ARVI ABOUT THIS. DOES MANDATORY TRAINING EXPIRE etc. etc.?-->
+        <span class="px-1">Save</span> <!--ASK JC/ARVI ABOUT THIS. DOES MANDATORY TRAINING EXPIRE etc. etc.?-->
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
           <a
             @click.prevent="downloadItem(specificMandatoryTraining[0].file.url,specificMandatoryTraining[0].file.filename)" 
-            class="text-white" v-bind:href="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null">
-             <svgicon
+            class="inline-flex items-center text-white no-underline" v-bind:href="locumMandatoryTrainings.file ? locumMandatoryTrainings.file.url:null">
+            <svgicon
               name="cloud-download"
               width="21"
               height="21"
               color="transparent white"
               hover ="transparent black"
             ></svgicon>
-            <span>Download</span>
+            <span class="px-1">Download</span>
           </a>
-         
         </div>
       </div>
       <!-- HEADER -->
       <!-- BODY -->
-      <div class="flex-col shadow-lg rounded-lg bg-waterloo mx-6 mt-10">
-        <div class="inline-flex text-sm m-4">
-          <div class="text-grey m-2">
+      <div class="shadow-lg rounded-lg bg-waterloo mx-6 mt-10 p-4">
+        <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
+          <div class="text-grey m-2 md:w-1/3">
             <p class="mr-20">Title</p>
             <p class="text-white">{{specificMandatoryTraining[0].mandatory_training ? specificMandatoryTraining[0].mandatory_training.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
@@ -90,15 +89,13 @@
                   name="complianceNote">Type Here
                 </textarea>
           </div>
-          <div class="flex text-grey m-2">
+          <div class="flex flex-col text-grey md:m-2">
             <p class="mr-20">File</p>
-             <embed
-              width=800px
-              height=600px
+              <embed
+              class="w-full my-2" style="max-width: 800px"
               :src="specificMandatoryTraining[0] && specificMandatoryTraining[0].file ? specificMandatoryTraining[0].file.url:null"
               >
           </div>
-       
         </div>
       </div>
       <!-- BODY -->
