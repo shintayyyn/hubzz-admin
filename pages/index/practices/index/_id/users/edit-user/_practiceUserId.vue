@@ -279,7 +279,7 @@ export default {
 
     async toPutPracticeUserInfo(userID,toPutPracticeUser){
       try{
-        await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
+        const response = await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
           email:toPutPracticeUser.email,
           title:toPutPracticeUser.title,
           first_name:toPutPracticeUser.first_name,

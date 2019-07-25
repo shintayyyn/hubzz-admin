@@ -142,7 +142,7 @@
 			
 			response = await getLocumUsersPromise
 			const locumUsers = response.data.data.users
-				
+			// this.$store.commit('SET_USERS', locumUsers)	
   			return {
 				filterCompliances: compliance_status,
   				loading: false,
