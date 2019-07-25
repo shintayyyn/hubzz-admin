@@ -60,7 +60,7 @@
         </div>
         <div v-if="pageCount > 1">
           <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-          <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+          <button class="py-2 px-3 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
           <button class="p-2 m-1 rounded-lg border text-xs text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>														<!-- ^ Removed the FF. code in this area: v-if="showPage(page)"-->
         </div>
       </div>
@@ -98,7 +98,7 @@ export default {
       } = route.query
 
       page = parseInt(page)
-      const limit = 10
+      const limit = 4
       const offset = page * limit - limit
       const order_by = 'created_at:desc'
       const params = { limit, offset, order_by }
@@ -240,11 +240,13 @@ export default {
           parent_practice_id:practiceID,
           surgery_id:surgeryID
         })
-        alert('Surgery added')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Surgery added' })
+        // alert('Surgery added')
 
       }catch(err){
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
         console.log("index practices index put status err", err);
-        alert('Something went wrong!!')
+        // alert('Something went wrong!!')
       }
     }
   }

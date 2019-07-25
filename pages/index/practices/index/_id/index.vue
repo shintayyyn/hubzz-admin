@@ -237,9 +237,12 @@ export default {
           status:toPutPractice.status,
           actived_until:toPutPractice.actived_until
         })
-        alert('Saved')
+        // alert('Saved')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+        
       }catch(err){
-        alert('Something went wrong!')
+        // alert('Something went wrong!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error");
       }
 

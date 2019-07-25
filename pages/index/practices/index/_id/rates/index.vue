@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-x-hidden overflow-y-auto">
     <div
       style="width: calc(100% - 0px);"
       class="flex-1 flex flex-col self-end bg-trout shadow-lg "
@@ -75,7 +75,7 @@
 
       <div class="flex sm:p-2">
         <div class="flex w-full text-white">
-          <div class="w-full md:w-2/3 flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
+          <div class="w-full flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg" style="max-width: 600px">
             <div class="w-full overflow-hidden text-grey-light text-sm p-2">
               <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                   {{errors[0]}}
@@ -182,10 +182,12 @@ export default {
           gp_rate:this.toPutPracticeRate.gp_rate,
           others_rate:this.toPutPracticeRate.others_rate
         })
-        alert('Saved') 
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+        // alert('Saved') 
       
       }catch(err){
-        alert('Something went wrong!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        // alert('Something went wrong!')
         console.log("index put locum detail compliance documents error", err);
       }
     },

@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed lg:absolute  pin-t pin-b pin-r pin-l flex flex-col">
+	<div class="fixed lg:absolute  pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
 		<div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
 		
       <!-- HEADER -->
@@ -110,14 +110,13 @@
                   type="file" 
                   id="file" 
                   :ref="`file-${document.practiceDocType.id}`" 
-                  v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id)"
-                  title="&nbsp;"/>
+                  v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id)"/>
                 </label>
               </div>
               <div class="flex text-white text-sm py-2 md:py-0">
                 <button class="flex items-center border-white rounded-full p-1 text-white"
                   :event="fileIsUploadable === 'false' ? disabled : 'click'"
-                  :class="fileIsUploadable === 'false' ? 'bg-transparent' : 'bg-green'" 
+                  :class="fileIsUploadable === 'false' ? 'bg-transparent' : 'bg-green px-4'" 
                   v-on:click="submitFile(specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)">
                 <svgicon
                   name="cloud-upload"
@@ -229,10 +228,12 @@ export default{
                   'Content-Type': 'multipart/form-data'
                 },     
               }).then(function(){
-                  alert('SUCCESS!!')
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
+                  // alert('SUCCESS!!')
               }).catch(function(){
                 console.log('FAILURE!!');
               });
+
             }else{
               console.log("its nothing")
               formData.append('file', file)
@@ -243,16 +244,19 @@ export default{
                   'Content-Type': 'multipart/form-data'
                 },     
               }).then(function(){
-                  alert('SUCCESS!!')
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
+                  // alert('SUCCESS!!')
               }).catch(function(){
                 console.log('FAILURE!!');
               });
             }
         }else{
-          alert('Please choose a file to upload first.')
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Please choose a file to upload first.' })
+          // alert('Please choose a file to upload first.')
         }
       }catch(err){
-        alert('Something went wrong!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Something went wrong!' })
+        // alert('Something went wrong!')
         console.log("index practices index _id index asyncData err", err);
       }
     },
@@ -298,6 +302,9 @@ export default{
 </script>
 
 <style>
+button:focus{
+  outline: none;
+}
 #file{
 color: transparent;
 }

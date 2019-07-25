@@ -80,7 +80,7 @@
 		<!-- PAGINATION -->
 		<div v-if="pageCount > 1">
 			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage - 1)">Prev</button>
-			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" v-if="showPage(page)" @click="goToPage(page)">{{ page }}</button>
+			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" :class="`${activePage === page ? 'bg-waterloo' : ''}`" v-for="page in pageCount" :key="`page-${page}`" @click="goToPage(page)">{{ page }}</button>
 			<button class="p-2 m-1 rounded-lg border text-sm text-white hover:bg-waterloo-light" @click="goToPage(activePage + 1)">Next</button>														<!-- ^ Removed the FF. code in this area: v-if="showPage(page)"-->
 		</div>
 		<!-- PAGINATION -->
@@ -91,213 +91,213 @@
 </template>
 
 <script>
-  export default {
-	data() {
+export default {
+data() {
+	return {
+		loading: false,
+		itemsPerPage: 10,
+		itemCount: 0,
+		activePage: 1,
+		locumUsers: {},
+		filterCompliances:'',
+		search: '',
+		sortBy: 'name',
+		sortDirection:'asc'
+	}
+},
+watchQuery: [
+'page',
+'search',
+'compliance_status'
+],
+
+async asyncData({ app, route }) {
+
+	try {
+		let {
+			page = 1,
+			search = '',
+			compliance_status = null  
+		} = route.query
+
+		if (!compliance_status) {
+	
+		}  
+		page = parseInt(page)
+		const limit = 10
+		const offset = page * limit - limit
+		const order_by = 'created_at:desc'
+		const params = { limit, offset, order_by }
+			
+		if (search) {
+			params.search = search
+		}
+		params.compliance_status = compliance_status
+			
+		const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+		const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
+		
+		let response = await getLocumUsersCountPromise
+		const itemCount = response.data.data.count
+		
+		response = await getLocumUsersPromise
+		const locumUsers = response.data.data.users
+			
 		return {
+			filterCompliances: compliance_status,
 			loading: false,
-			itemsPerPage: 10,
-			itemCount: 0,
-			activePage: 1,
-			locumUsers: {},
-			filterCompliances:'',
-			search: '',
-			sortBy: 'name',
-			sortDirection:'asc'
+			itemsPerPage: limit,
+			itemCount,
+			activePage: page,
+			locumUsers,
+			search
+		}
+	} catch (err) {
+		console.log('index users index asyncData err', err)
+	}
+},
+
+computed: {
+	pageCount() {
+		return Math.ceil(this.itemCount / this.itemsPerPage)
+	},
+
+	showPage() {
+		return page => {
+		if (page === 1) {
+			return true
+		}
+
+		if (page === this.pageCount) {
+			return true
+		}
+
+		if (page === this.activePage) {
+			return true
+		}
+
+		if (page === this.activePage + 1) {
+			return true
+		}
+
+		if (page === this.activePage - 1) {
+			return true
+		}
+
+		if (this.activePage === 1 && page < 5) {
+			return true
+		}
+
+		if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+			return true
+		}
+
+		if (this.activePage === 2 && page === 4) {
+			return true
+		}
+
+		if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+			return true
+		}
+
+		return false
 		}
 	},
-	watchQuery: [
-	'page',
-	'search',
-	'compliance_status'
-	],
-
-  	async asyncData({ app, route }) {
 	
-  		try {
-  			let {
-  				page = 1,
-				search = '',
-				compliance_status = null  
-			} = route.query
+},
+watch: {
+	async filterCompliances() {
 
-			if (!compliance_status) {
-        
-      		}  
-  			page = parseInt(page)
-  			const limit = 10
-  			const offset = page * limit - limit
-  			const order_by = 'created_at:desc'
-			const params = { limit, offset, order_by }
+	const query = {
+		...this.$router.query
+	}
+
+	query.compliance_status = this.filterCompliances
+
+	if (this.filterCompliances === '') {
+		delete query.compliance_status
+	}
+
+	if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+		this.loading = true
+	}
+
+	this.$router.push({ query })
+
+	return
+
+	console.log('filterCompliances', this.filterCompliances)
+	
+	const params = {}
+
+	if (this.search) {
+		params.search = this.search
+	}
+
+	if (this.filterCompliances) {
+		params.compliance_status = this.filterCompliances
+	}
+
+	const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+			const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
 				
-  			if (search) {
-  				params.search = search
-			}
-			params.compliance_status = compliance_status
-				
-  			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
-			const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
-			
-			let response = await getLocumUsersCountPromise
-			const itemCount = response.data.data.count
-			
-			response = await getLocumUsersPromise
-			const locumUsers = response.data.data.users
-			// this.$store.commit('SET_USERS', locumUsers)	
-  			return {
-				filterCompliances: compliance_status,
-  				loading: false,
-  				itemsPerPage: limit,
-  				itemCount,
-  				activePage: page,
-  				locumUsers,
-  				search
-  			}
-  		} catch (err) {
-  			console.log('index users index asyncData err', err)
-  		}
-  	},
+	let response = null
+	
+	response = await getUsersCountPromise
+	const itemCount = response.data.data.count
+	
+	response = await getUsersPromise
+	const locumUsers = response.data.data.users
 
-  	computed: {
-  		pageCount() {
-  			return Math.ceil(this.itemCount / this.itemsPerPage)
-  		},
+	this.itemCount = itemCount
+	this.locumUsers = locumUsers
+	}
+},
 
-	    showPage() {
-	      return page => {
-	        if (page === 1) {
-	          return true
-	        }
+methods: {
+	goToPage(page) {
+		if (page < 1) {
+			return
+		}
 
-	        if (page === this.pageCount) {
-	          return true
-	        }
+		if (page > this.pageCount) {
+			return
+		}
 
-	        if (page === this.activePage) {
-	          return true
-	        }
+		const query = {
+			...this.$router.query,
+			page
+		}
 
-	        if (page === this.activePage + 1) {
-	          return true
-	        }
+		if (page === 1) {
+			delete query.page
+		}
 
-	        if (page === this.activePage - 1) {
-	          return true
-	        }
+		if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+		this.loading = true
+		}
 
-	        if (this.activePage === 1 && page < 5) {
-	          return true
-	        }
-
-	        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-	          return true
-	        }
-
-	        if (this.activePage === 2 && page === 4) {
-	          return true
-	        }
-
-	        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-	          return true
-	        }
-
-	        return false
-	      }
-		},
-		
+		this.$router.push({ query })
 	},
-	watch: {
-		async filterCompliances() {
 
+	searchSubmit() {
 		const query = {
 			...this.$router.query
 		}
 
-		query.compliance_status = this.filterCompliances
+		delete query.page
 
-		if (this.filterCompliances === '') {
-			delete query.compliance_status
+		query.search = this.search
+
+		if (this.search === '') {
+			delete query.search
 		}
 
 		if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
+		this.loading = true
 		}
 
 		this.$router.push({ query })
-
-		return
-
-		console.log('filterCompliances', this.filterCompliances)
-		
-		const params = {}
-
-		if (this.search) {
-			params.search = this.search
-		}
-
-		if (this.filterCompliances) {
-			params.compliance_status = this.filterCompliances
-		}
-
-		const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
-				const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
-					
-		let response = null
-		
-		response = await getUsersCountPromise
-		const itemCount = response.data.data.count
-		
-		response = await getUsersPromise
-		const locumUsers = response.data.data.users
-
-		this.itemCount = itemCount
-		this.locumUsers = locumUsers
-		}
-	},
-
-  	methods: {
-  		goToPage(page) {
-  			if (page < 1) {
-  				return
-  			}
-
-  			if (page > this.pageCount) {
-  				return
-  			}
-
-  			const query = {
-  				...this.$router.query,
-  				page
-  			}
-
-  			if (page === 1) {
-  				delete query.page
-  			}
-
-	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-	        this.loading = true
-	      }
-
-	      this.$router.push({ query })
-  		},
-
-  		searchSubmit() {
-  			const query = {
-  				...this.$router.query
-  			}
-
-  			delete query.page
-
-  			query.search = this.search
-
-  			if (this.search === '') {
-  				delete query.search
-  			}
-
-	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-	        this.loading = true
-	      }
-
-	      this.$router.push({ query })
 		},
 
 		sortData:function(toSortBy){
@@ -355,18 +355,6 @@
 					return
 			}
 		},
-		  
-  	}
-  }
+	}
+}
 </script>
-
-<style>
-.table-cell:first-child{
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-}
-.table-cell:last-child{
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-}
-</style>

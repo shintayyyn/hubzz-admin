@@ -1,18 +1,28 @@
 export const state = () => ({
-  users: []
+  notification: {
+    enabled: false,
+    status: '',
+    text: ''
+  },
+  toggled_sidebar: false
 })
 
-export const getters = {
-}
+export const getters = {}
 
 export const mutations = {
-  SET_USERS(state, payload) {
-    state.users = payload
+  SET_NOTIFICATION(state, payload) {
+    state.notification.enabled = payload.enabled
+    state.notification.status = payload.status
+    state.notification.text = payload.text
+    console.log(state.notification)
+  },
+  TOGGLE_SIDEBAR(state, payload) {
+    state.toggled_sidebar = payload
   }
 }
 
 export const actions = {
-  async login ({ getters, commit, dispatch }, { email, password }) {
+  async login({getters, commit, dispatch}, {email, password}) {
     const socketId = this.$socket.id
 
     const response = await this.$axios.post('/api/v1/admin/login', {
@@ -38,7 +48,7 @@ export const actions = {
     dispatch('one-signal/setOneSignalUser')
   },
 
-  async logout ({ getters, commit, dispatch }) {
+  async logout({getters, commit, dispatch}) {
     await this.$axios.post('/api/v1/logout')
 
     await this.$auth.logout()

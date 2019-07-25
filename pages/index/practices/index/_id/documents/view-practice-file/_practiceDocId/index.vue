@@ -19,7 +19,7 @@
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
           <a
             @click.prevent="downloadItem(specificPracticeDocument.file.url, specificPracticeDocument.file.filename)" 
-            class="text-white">
+            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4">
              <svgicon
               name="cloud-download"
               width="21"
@@ -34,8 +34,8 @@
       </div>
       <!-- HEADER -->
       <!-- BODY -->
-      <div class="flex-col shadow-lg rounded-lg bg-waterloo mx-6 mt-10">
-        <div class="inline-flex text-sm m-4">
+      <div class="shadow-lg rounded-lg bg-waterloo mx-6 mt-10 p-4">
+        <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{specificPracticeDocument.practice_document_type ? specificPracticeDocument.practice_document_type.name: null}}</p>
@@ -44,15 +44,12 @@
             <p class="mt-5 mr-20">File last uploaded</p>
             <p class="text-white underline">{{specificPracticeDocument.file ? $moment(specificPracticeDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
           </div>
-          <div class="flex text-grey m-2">
-            <p class="mr-20">File</p>
-             <embed
-              width=800px
-              height=600px
+          <div class="flex flex-col text-grey md:m-2">
+            <p class="md:mr-20">File</p>
+             <embed class="w-full my-2" style="max-width: 800px"
               :src="specificPracticeDocument.file ? specificPracticeDocument.file.url:null"
               >
           </div>
-       
         </div>
       </div>
       <!-- BODY -->
