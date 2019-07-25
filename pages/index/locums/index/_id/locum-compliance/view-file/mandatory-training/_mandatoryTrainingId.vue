@@ -15,7 +15,8 @@
           class="hover:text-yellow-dark fill-current"
         />
         </nuxt-link>
-        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4">
+        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4"
+         @click.prevent="toPutLocumMandatoryTrainingDocs(locumUser.id,toPutLocumMandatoryTraining.status)">
           <svgicon
             name="save-icon"
             width="21"
@@ -173,10 +174,10 @@ export default {
           expired_at:toPutLocumMandatoryTraining.expired_at,
           note:toPutLocumMandatoryTraining.note
         })
-        alert('Saved')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
       }catch(err){
         console.log("index put locum detail compliance documents error");
-        alert('Something went wrong!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       }
     }
   }

@@ -50,10 +50,10 @@
                   <span class="text-sm text-white font-semibold">{{specificJob.platform_job.shift.name}}</span> <br><br>
                   <p class="m-2 mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
                   <div class="m-2 mt-5 text-white">
-                     <span>This job is </span>
-                     <span class="font-semibold">{{specificJob.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
-                     <span> of</span>
-                     <span class="font-semibold">IR35</span> 
+                    <span>This job is </span>
+                    <span class="font-semibold">{{specificJob.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+                    <span> of</span>
+                    <span class="font-semibold">IR35</span> 
                   </div>
                   <p class="m-2 mt-5 font-semibold">Role</p>
                   <p class="m-2 text-white">{{specificJob.platform_job.profession.name}}</p>

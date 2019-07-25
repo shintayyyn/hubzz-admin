@@ -16,7 +16,7 @@ s<template>
       <!-- BODY -->
 
       <div class="mx-6 mb-6 overflow-auto">
-        <div class="flex">
+        <div class="flex items-center mb-2">
          <p class="text-2xl text-white font-semibold">{{specificJob.platform_job ? specificJob.platform_job.title:null }}</p>
          <p class="text-black p-2 bg-yellow rounded ml-4">{{jobStatus}}</p><br>
         </div>
@@ -41,7 +41,7 @@ s<template>
 
               <div class="md:w-1/2 overflow-hidden">
                 <div class="text-white md:mx-10">
-                  <p class="m-2 mt-5 font-semibold">Duration</p>
+                  <p class="m-2 font-semibold">Duration</p>
                   <div class="flex flex-wrap">
                     <div class="flex items-center my-1">
                       <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>

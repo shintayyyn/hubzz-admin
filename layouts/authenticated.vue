@@ -175,12 +175,17 @@
       <div class="sidebar-shield" 
         :style="`${sideBarOpen ? 'z-index: 1' : ''}`"  
       ></div>
+  <AppNotification />
 
   </div>
 </template>
 
 <script>
+import AppNotification from '~/components/AppNotification'
 export default {
+  components: {
+    AppNotification
+  },
   data() {
     return {
       sideBarOpen: false,
@@ -189,6 +194,10 @@ export default {
   },
 
   computed: {
+    notify() {
+      return this.$store.state.notification.enabled;
+    },
+
     activeTab() {
       if (this.$route.name && this.$route.name.includes("compliances")) {
         return "compliances";
@@ -249,6 +258,20 @@ export default {
 
       if (this.$route.name && this.$route.name.includes("index")) {
         return "dashboard";
+      }
+    }
+  },
+
+  watch: {
+    notify(value) {
+      if (value) {
+        setTimeout(() => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: false,
+            status: "",
+            text: ""
+          });
+        }, 2000);
       }
     }
   },

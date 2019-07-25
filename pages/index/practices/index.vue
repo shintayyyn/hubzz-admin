@@ -61,7 +61,7 @@
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
           <strong class="block md:hidden">Status</strong>
           <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
-					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}Status</span>
+					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
 				</div>
 
       </nuxt-link>
