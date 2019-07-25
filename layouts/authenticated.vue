@@ -5,14 +5,14 @@
       class="h-full w-full flex flex-col absolute"
       :style="`z-index: ${showLogoutModal ? 100 : -100}; opacity: ${showLogoutModal ? 1 : 0};`"
     >
-      <div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
+      <div class="flex flex-col self-center py-2 px-10 md:px-24 rounded-lg bg-sunglow">
         <div>
           <span class="text-sm p-2">Proceed to sign-out?</span>
         </div>
-        <div class="flex">
-          <button class="p-2 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
+        <div class="flex justify-center my-1">
+          <button class="py-2 px-4 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
           <button
-            class="p-2 text-sm rounded-lg border border-white mx-1 shadow"
+            class="px-4 py-2 text-sm rounded-lg border border-white mx-1 shadow"
             @click="showLogoutModal = false"
           >Cancel</button>
         </div>
@@ -26,7 +26,7 @@
         :class="`${sideBarOpen ? 'toggle-left absolute' : ''}`"  
       >
       <div class="toggle w-full">
-        <button class="py-2 px-8 text-yellow-dark focus:outline-none" @click="toggleSideBar">X</button>
+        <button class="mt-6 mx-8 text-yellow-dark text-2xl font-bold focus:outline-none" @click="toggleSideBar">X</button>
       </div>
       <div class="py-4 " @click="toggleSideBar">
         <nuxt-link
@@ -152,7 +152,7 @@
       </div>
       <!-- SIDEBAR -->
 
-      <div class="w-full flex flex-col relative bg-trout ">
+      <div class="w-full flex flex-col relative bg-trout overflow-x-auto">
         <!-- HEADER -->
         <div class="flex justify-between text-sm text-white py-2 px-6">
           <button class="toggle text-white" @click="toggleSideBar">
@@ -175,12 +175,17 @@
       <div class="sidebar-shield" 
         :style="`${sideBarOpen ? 'z-index: 1' : ''}`"  
       ></div>
+  <AppNotification />
 
   </div>
 </template>
 
 <script>
+import AppNotification from '~/components/AppNotification'
 export default {
+  components: {
+    AppNotification
+  },
   data() {
     return {
       sideBarOpen: false,
@@ -189,6 +194,10 @@ export default {
   },
 
   computed: {
+    notify() {
+      return this.$store.state.notification.enabled;
+    },
+
     activeTab() {
       if (this.$route.name && this.$route.name.includes("compliances")) {
         return "compliances";
@@ -253,10 +262,23 @@ export default {
     }
   },
 
+  watch: {
+    notify(value) {
+      if (value) {
+        setTimeout(() => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: false,
+            status: "",
+            text: ""
+          });
+        }, 2000);
+      }
+    }
+  },
+
   methods: {
     toggleSideBar() {
       this.sideBarOpen = !this.sideBarOpen;
-      console.log(this.sideBarOpen)
     },
 
     logout() {
@@ -293,7 +315,7 @@ export default {
   height: 100%;
   overflow: auto;
   transition: all 0.3s ease-in-out;
-  z-index: 500;
+  z-index: 99;
 }
 
 .toggle-left{

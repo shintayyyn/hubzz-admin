@@ -6,100 +6,64 @@
         class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
       >Add Invoice</nuxt-link>
     </div>
-    <!-- TABLE -->
-    <div>
-      <div class="flex flex-col">
-        <!-- HEADER -->
-        <div class="flex my-2">
-          <div style="width: 15%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Invoice Number</strong>
-            </div>
-          </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Practice /Surgery</strong>
-            </div>
-          </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Created</strong>
-            </div>
-          </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Issued</strong>
-            </div>
-          </div>
-          <div style="width: 15%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Job Numbers</strong>
-            </div>
-          </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>£ Amount</strong>
-            </div>
-          </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-sm p-4">
-              <strong>Status</strong>
-            </div>
-          </div>
-        </div>
-        <!-- HEADER -->
 
-        <!-- BODY -->
-        <nuxt-link
-          v-for="(billing, index) in billings"
-          :key="`billing-${index}`"
-          :to="`/billing/addinvoice`"
-          class="flex items-center no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
-        >
-          <div style="width: 15%;">
-            <div class="flex text-white text-sm p-4 overflow-x-auto">
-              <span>{{ billing.invnum }}</span>
-            </div>
-          </div>
-          <div style="width: 20%;">
-            <div class="flex text-white text-sm p-4 overflow-x-auto">
-              <span>{{ billing.practice }}</span>
-            </div>
-          </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4 overflow-x-auto">
-              <span>{{ billing.created }}</span>
-            </div>
-          </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4 overflow-x-auto">
-              <span>{{ billing.issued }}</span>
-            </div>
-          </div>
-          <div style="width: 15%;">
-            <div class="flex text-white text-sm p-4 overflow-x-auto">
-              <span>{{ billing.jobnums }}</span>
-            </div>
-          </div>
-          <div style="width: 10%;">
-            <div class="flex text-white text-sm p-4 overflow-x-auto">
-              <span>{{ billing.amount }}</span>
-            </div>
-          </div>
-          <div style="width: 20%;">
-            <div class="flex items-center justify-between text-white text-sm p-4">
-              <span>{{ billing.status }}</span>
-              <div class="p-4" v-if="billing.status=='Issued'">
-                <a class="p-3 whitespace-no-wrap rounded-full bg-green-dark">Mark as paid</a>
-              </div>
-            </div>
-          </div>
-        </nuxt-link>
-        <!-- BODY -->
+    <!-- TABLE RESPONSIVE-->
+    <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+      <!-- HEADER -->
+      <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+        <div class="table-cell p-2 align-middle">Invoice Number</div> 
+        <div class="table-cell p-2 align-middle">Practice / Surgery</div>
+        <div class="table-cell p-2 align-middle">Created</div>
+        <div class="table-cell p-2 align-middle">Issued</div>
+        <div class="table-cell p-2 align-middle">Job Numbers</div>
+        <div class="table-cell p-2 align-middle">£ Amount</div>
+        <div class="table-cell p-2 align-middle">Status</div>
       </div>
+      <!-- END HEADER -->
+      <!-- BODY -->
+      <nuxt-link
+        v-for="(billing, index) in billings"
+        :key="`billing-${index}`"
+        :to="`/billing/addinvoice`"
+        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+        draggable="false"
+      >
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Invoice Number</strong>
+          <span class="break-all">{{ billing.invnum }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
+          <span class="break-word">{{ billing.practice }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Created</strong>
+          <span class="break-all">{{ billing.created }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Issued</strong>
+          <span class="break-all">{{ billing.issued }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">Job Numbers</strong>
+          <span class="break-all">{{ billing.jobnums }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden text-sm uppercase">£ Amount</strong>
+          <span class="break-all">{{ billing.amount }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden">Status</strong>
+          <span>{{ billing.status }}</span>
+          <div class="py-4" v-if="billing.status=='Issued'">
+            <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-dark">Mark as paid</a>
+          </div>
+          </div>
+      </nuxt-link>
+      <!-- END BODY -->
     </div>
-    <!-- TABLE -->
-
+    <!-- END TABLE -->
+    
     <nuxt-child/>
   </div>
 </template>
@@ -155,3 +119,14 @@ export default {
   }
 };
 </script>
+
+<style>
+.md\:table-cell:first-child{
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+.md\:table-cell:last-child{
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+</style>

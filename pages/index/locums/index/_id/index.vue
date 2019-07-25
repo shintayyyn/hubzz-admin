@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
     <div style="width: calc(100%);" class="flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
@@ -157,7 +157,7 @@
                 <div class="mx-5 mt-8 md:mt-0">
                   <!--RENDER AVATAR PICTURE HERE-->
                   <embed
-                    class="object-contain h-64 rounded-full mr-4"
+                   class=" object-contain w-64  rounded-full mr-4"
                     :src="locumUser.avatar ? locumUser.avatar.file.url:null"
                   >
                   <img v-if="!locumUser.avatar" class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
@@ -277,10 +277,13 @@ export default {
         await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
           status:activeDisabled
         })
-        alert('Saved')
+        // alert('Saved')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
       }catch(err){
         console.log("index practices index put status err", err);
-        alert('Something went wrong!!')
+        // alert('Something went wrong!!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
+        
       }
     }
   }

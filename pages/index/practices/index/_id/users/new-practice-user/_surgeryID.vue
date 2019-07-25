@@ -271,7 +271,8 @@ export default {
           practice_role:toPostPracticeUser.practice_role,
           surgery_id:toPostSurgeryID
         })
-        alert('New Practice User Created')
+        // alert('New Practice User Created')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
 
       }catch(err){
         console.log("index put locum detail compliance documents error.",err);

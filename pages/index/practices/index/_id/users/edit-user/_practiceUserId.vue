@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-x-hidden overflow-y-auto">
     <div
       style="width: calc(100% - 0px);"
       class="flex-1 flex flex-col self-end bg-trout shadow-lg "
@@ -32,9 +32,8 @@
         </div>
       </div>
       <div class="flex sm:p-2">
-        <div
-          v-if="tab1"
-          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-full lg:w-2/5"
+        <div v-if="tab1"
+          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5"
         >
           <div class="w-full overflow-hidden text-grey-light text-sm p-2">
             
@@ -278,7 +277,7 @@ export default {
 
     async toPutPracticeUserInfo(userID,toPutPracticeUser){
       try{
-        await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
+        const response = await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
           email:toPutPracticeUser.email,
           title:toPutPracticeUser.title,
           first_name:toPutPracticeUser.first_name,
@@ -287,10 +286,11 @@ export default {
           practice_role:toPutPracticeUser.practice_role,
           status:toPutPracticeUser.status
         })
-        alert('Saved')
-        
+        // alert('Saved')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved Changes' })
       }catch(err){
-        alert('Something went wrong!')
+        // alert('Something went wrong!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error", err);
       }
     },
@@ -303,9 +303,11 @@ export default {
           password:toChangePassword.newPassword,
           password_confirmation:toChangePassword.confirmNewPassword
         })
-        alert('Saved')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved Changes' })
+        // alert('Saved')
       }catch(err){
-        alert('Something went wrong!')
+        // alert('Something went wrong!')
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error",err);
       }
     },
