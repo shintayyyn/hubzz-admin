@@ -104,13 +104,13 @@
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
               <button
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 border border-white focus:bg-green rounded-full hover:bg-green-light"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
                 :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light text-center ' : 'bg-transparent px-2 hover:bg-green-light'}`"
                 v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
               >Verified</button>
               <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
                 :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-2 hover:bg-orange-light'}`"
                 v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
@@ -125,13 +125,13 @@
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
               <button
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 border border-white focus:bg-green rounded-full hover:bg-green-light"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
                 :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-2 hover:bg-green-light'}`"
                 v-if="locumUser.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
               >Verified</button>
               <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
                 :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light' : 'bg-transparent px-2 hover:bg-orange-light'}`"
                 v-if="locumUser.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
@@ -747,6 +747,7 @@ export default {
             status:verifyReject
           })
           // alert('Saved')
+        this.locumUser.locum_detail.gmc_or_nmc_number.status = response.data.data.user.locum_detail.gmc_or_nmc_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
         }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
@@ -754,6 +755,7 @@ export default {
             status:verifyReject
           })
           // alert('Saved.')
+        this.locumUser.locum_detail.gmc_or_nmc_number.status = response.data.data.user.locum_detail.gmc_or_nmc_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
         }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
@@ -761,6 +763,7 @@ export default {
             status:verifyReject
           })
           // alert('Saved.')
+        this.locumUser.locum_detail.gmc_or_nmc_number.status = response.data.data.user.locum_detail.gmc_or_nmc_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
         }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
@@ -768,6 +771,7 @@ export default {
             status:'Pending'
           })
           // alert('Saved. Status reverted back to pending')
+        this.locumUser.locum_detail.gmc_or_nmc_number.status = response.data.data.user.locum_detail.gmc_or_nmc_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
 
         }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
@@ -775,8 +779,8 @@ export default {
             status:'Pending'
           })
           // alert('Saved. Status reverted back to pending')
+        this.locumUser.locum_detail.gmc_or_nmc_number.status = response.data.data.user.locum_detail.gmc_or_nmc_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
-
         }
       
       }catch(err){
@@ -793,6 +797,7 @@ export default {
             status:verifyReject
           })
           // alert('Saved')
+        this.locumUser.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
         }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
@@ -800,6 +805,7 @@ export default {
             status:verifyReject
           })
           // alert('Saved.')
+        this.locumUser.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
         }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
@@ -807,6 +813,7 @@ export default {
             status:verifyReject
           })
           // alert('Saved.')
+        this.locumUser.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
         }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
@@ -814,6 +821,7 @@ export default {
             status:'Pending'
           })
           // alert('Saved. Status reverted back to pending')
+        this.locumUser.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
 
         }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
@@ -821,6 +829,7 @@ export default {
             status:'Pending'
           })
           // alert('Saved. Status reverted back to pending')
+        this.locumUser.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
 
         }
