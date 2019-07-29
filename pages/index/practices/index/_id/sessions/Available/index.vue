@@ -157,20 +157,21 @@
         </div>
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
           <strong class="text-sm uppercase md:hidden">Title</strong>
-          <span class="break-all">{{ practiceAvailableJob.platform_job.title }}</span>
+          <span class="break-all">{{ practiceAvailableJob.title }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <strong class="text-sm uppercase md:hidden">To</strong>
+          <span class="break-all">{{ practiceAvailableJob.date_start }}</span>
+        </div>
+        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+          <strong class="text-sm uppercase md:hidden">Created</strong>
+          <span class="break-all">{{ practiceAvailableJob.date_end }}</span>
         </div>
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
           <strong class="text-sm uppercase md:hidden">From</strong>
           <span class="break-all">{{ practiceAvailableJob.platform_job.date_created }}</span>
         </div>
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-          <strong class="text-sm uppercase md:hidden">To</strong>
-          <span class="break-all">{{ practiceAvailableJob.platform_job.date_start }}</span>
-        </div>
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
-          <strong class="text-sm uppercase md:hidden">Created</strong>
-          <span class="break-all">{{ practiceAvailableJob.platform_job.date_end }}</span>
-        </div>
+        
       </nuxt-link>
       
     </div>

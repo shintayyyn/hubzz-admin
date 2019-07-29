@@ -17,10 +17,10 @@ s<template>
 
       <div class="mx-6 mb-6 overflow-auto">
         <div class="flex items-center mb-2">
-         <p class="text-2xl text-white font-semibold">{{specificJob.platform_job ? specificJob.platform_job.title:null }}</p>
+         <p class="text-2xl text-white font-semibold">{{specificJob ? specificJob.title:null }}</p>
          <p class="text-black p-2 bg-yellow rounded ml-4">{{jobStatus}}</p><br>
         </div>
-        <p class="text-white">{{"Posted On: "+specificJob.platform_job.date_created}}</p>
+        <p class="text-white">{{"Posted On: "+specificJob.date_created}}</p>
         <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
           <div class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
@@ -29,13 +29,13 @@ s<template>
                   <p class="m-2 font-semibold">Job Number</p>
                   <p class="m-2 text-white">{{specificJob.job_number}}</p>
                   <p class="m-2 mt-5 font-semibold">Rate</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.rate ? "£ "+ specificJob.platform_job.rate+" Per Hour":null +" Per Hour"}}</p>
+                  <p class="m-2 text-white">{{specificJob.rate ? "£ "+ specificJob.rate+" Per Hour":null +" Per Hour"}}</p>
                   <p class="m-2 mt-5 font-semibold">Total Hours</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.total_hours ? specificJob.platform_job.total_hours+" Hours":null + " Hours"}}</p>
+                  <p class="m-2 text-white">{{specificJob.total_hours ? specificJob.total_hours+" Hours":null + " Hours"}}</p>
                   <p class="m-2 mt-5 font-semibold">Job Description</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.description}}</p>
+                  <p class="m-2 text-white">{{specificJob.description}}</p>
                   <p class="m-2 mt-5 font-semibold">Extra Information</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.extra_information ? specificJob.platform_job.extra_information:null }}</p>
+                  <p class="m-2 text-white">{{specificJob.extra_information ? specificJob.extra_information:null }}</p>
                 </div>
               </div>
 
@@ -45,15 +45,15 @@ s<template>
                   <div class="flex flex-wrap">
                     <div class="flex items-center my-1">
                       <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
-                      <span class="text-sm text-white font-semibold px-2">{{specificJob.platform_job.date_start}}</span>
+                      <span class="text-sm text-white font-semibold px-2">{{specificJob.date_start}}</span>
                     </div>
                     <div class="flex items-center my-1">
                       <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">To</span>
-                      <span class="text-sm text-white font-semibold px-2">{{specificJob.platform_job.date_end}}</span>
+                      <span class="text-sm text-white font-semibold px-2">{{specificJob.date_end}}</span>
                     </div>
                     <div class="flex items-center my-1">
                       <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
-                      <span class="text-sm text-white font-semibold px-2">{{specificJob.platform_job.shift.name}}</span>
+                      <span class="text-sm text-white font-semibold px-2">{{specificJob.shift.name}}</span>
                     </div>
                   </div>
                   <p class="m-2 mt-5 font-semibold">Auto-assigns this job to the first applicant</p>

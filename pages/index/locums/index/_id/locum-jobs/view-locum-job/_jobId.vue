@@ -17,7 +17,7 @@
 
       <div class="mx-6 overflow-auto">
         <div class="flex">
-         <p class="text-2xl text-white font-semibold">{{specificJob.platform_job ? specificJob.platform_job.title:null }}</p>
+         <p class="text-2xl text-white font-semibold">{{specificJob ? specificJob.title:null }}</p>
         </div>
 
         <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
@@ -28,11 +28,11 @@
                   <p class="m-2">Job Number</p>
                   <p class="m-2 text-white">{{specificJob.job_number}}</p>
                   <p class="m-2 mt-5 mr-20">Rate</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.rate ? "£ "+specificJob.platform_job.rate+" Per Hour":null +" Per Hour"}}</p>
+                  <p class="m-2 text-white">{{specificJob.rate ? "£ "+specificJob.rate+" Per Hour":null +" Per Hour"}}</p>
                   <p class="m-2 mt-5 mr-20">Total Hours</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.total_hours + " Hours"}}</p>
+                  <p class="m-2 text-white">{{specificJob.total_hours + " Hours"}}</p>
                   <p class="m-2 mt-5 mr-20">Job Description</p>
-                  <p class="m-2 text-white">{{specificJob.platform_job.description}}</p>
+                  <p class="m-2 text-white">{{specificJob.description}}</p>
                   <p class="m-2 mt-5 mr-20">Extra Information</p>
                   <p class="ml-2 text-white">{{   }}</p>
                  <p class="m-2 mt-5 mr-20">Speciality</p>
@@ -83,11 +83,11 @@
                 </div>
                   <p class="m-2 mt-5 mr-20">Duration</p>
                   <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
-                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_start}}</span> <br><br>
+                  <span class="text-sm text-white font-semibold">{{specificJob.date_start}}</span> <br><br>
                   <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">To</span>
-                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.date_end}}</span> <br><br>
+                  <span class="text-sm text-white font-semibold">{{specificJob.date_end}}</span> <br><br>
                   <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
-                  <span class="text-sm text-white font-semibold">{{specificJob.platform_job.shift.name}}</span> <br><br>
+                  <span class="text-sm text-white font-semibold">{{specificJob.shift.name}}</span> <br><br>
                 </div>
               </div>
             </div>
