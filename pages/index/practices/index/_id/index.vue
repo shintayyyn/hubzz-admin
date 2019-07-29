@@ -243,7 +243,7 @@ export default {
       }catch(err){
         // alert('Something went wrong!')
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        console.log("index put locum detail compliance documents error");
+        console.log("index put locum detail compliance documents error", err);
       }
 
     }
