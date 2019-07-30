@@ -182,17 +182,17 @@
                             </div>
                             <div style="width: 15%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserMatchedJob.platform_job.title }}</span>
+                                    <span>{{ locumUserMatchedJob.title }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserMatchedJob.platform_job.date_start }}</span>
+                                    <span>{{ locumUserMatchedJob.date_start }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
                                 <div class="flex text-white text-sm p-4">
-                                    <span>{{ locumUserMatchedJob.platform_job.date_end }}</span>
+                                    <span>{{ locumUserMatchedJob.date_end }}</span>
                                 </div>
                             </div>
                             <div style="width: 16%;">
