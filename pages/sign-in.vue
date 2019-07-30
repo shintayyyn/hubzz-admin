@@ -1,12 +1,9 @@
 <template>
   <div class="flex flex-col h-full md:flex-row overflow-auto w-full xl:justify-center">
-	<div class="flex flex-col h-full items-center md:flex-row md:h-full overflow-hidden w-full" >
+	<div class="flex flex-col h-full items-center md:flex-row md:h-full w-full" >
 
-		<div class="bg-logo lg:w-auto md:h-full overflow-hidden w-full" :style="{ backgroundImage: `url(${backgroundUrl})` }" >
-			<div class="flex justify-center items-center h-full">
-				<img src="~/assets/images/hubzz-logo.png">
-			</div>
-			
+		<div class="bg-logo flex lg:w-auto md:h-full overflow-hidden w-full p-8 sm:p-5 md:p4" :style="{ backgroundImage: `url(${backgroundUrl})` }">
+			<img class="m-auto" src="~/assets/images/hubzz-logo.png">
 		</div>
 
 		<div class="lg:mx-auto lg:w-auto md:h-full py-10 w-full">
@@ -154,12 +151,29 @@
 	background-position: top right;
 	background-repeat: no-repeat;
 }
+
+.bg-logo img{
+	height: 100%;
+}
+
+@media screen and (max-width: 320px) {
+	.bg-logo img{
+		width: 100%;
+		height: auto;
+	}
+}
+
 @media (min-width: 768px){
 	.form{
 		width: 50vw;
 	}
 	.bg-logo{
 	flex: 0 0 40%;
+	}
+
+	.bg-logo img{
+		height: auto;
+		width: auto;
 	}
 }
 @media (min-width: 992px){

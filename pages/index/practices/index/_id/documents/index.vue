@@ -1,6 +1,6 @@
 <template>
 	<div class="fixed lg:absolute  pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
-		<div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
+		<div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
 		
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -226,16 +226,18 @@ export default{
               await this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
                 headers: {
                   'Content-Type': 'multipart/form-data'
-                },     
+                },
               }).then(function(){
-                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
                   // alert('SUCCESS!!')
+                  console.log("nice 1!")
+
               }).catch(function(){
                 console.log('FAILURE!!');
               });
 
             }else{
-              console.log("its nothing")
+              console.log("its nothing 1")
               formData.append('file', file)
               formData.append('practice_id',practiceID)
               formData.append('practice_document_type_id',practiceDocumentID)
@@ -246,6 +248,7 @@ export default{
               }).then(function(){
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
                   // alert('SUCCESS!!')
+                  console.log("nice!")
               }).catch(function(){
                 console.log('FAILURE!!');
               });
@@ -308,4 +311,13 @@ button:focus{
 #file{
 color: transparent;
 }
+.page-overlap{
+    width: calc(100% - 70px);
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      width: calc(100% - 200px);
+    }
+  }
 </style>

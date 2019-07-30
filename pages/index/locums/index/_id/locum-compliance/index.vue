@@ -1,6 +1,6 @@
 <template>
   <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
-    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout">
+    <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -10,23 +10,23 @@
       </div>
       <!-- HEADER -->
       <!-- CONFIRMATION MODAL -->
-      <!-- <div
-        class="h-full w-full flex flex-col absolute"
-        :style="`z-index: ${confirmationModal ? 100 : -100}; opacity: ${confirmationModal ? 1 : 0};`"
-      >
-        <div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
-          <div>
-            <span class="text-sm p-2">Proceed to sign-out?</span>
-          </div>
-          <div class="flex">
-            <button class="p-2 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
-            <button
-              class="p-2 text-sm rounded-lg border border-white mx-1 shadow"
-              @click="confirmationModal = false"
-            >Cancel</button>
-          </div>
-        </div> 
-      </div>-->
+        <!-- <div
+          class="h-full w-full flex flex-col absolute"
+          :style="`z-index: ${confirmationModal ? 100 : -100}; opacity: ${confirmationModal ? 1 : 0};`"
+        >
+          <div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
+            <div>
+              <span class="text-sm p-2">Proceed to sign-out?</span>
+            </div>
+            <div class="flex">
+              <button class="p-2 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
+              <button
+                class="p-2 text-sm rounded-lg border border-white mx-1 shadow"
+                @click="confirmationModal = false"
+              >Cancel</button>
+            </div>
+          </div> 
+        </div>-->
       <!-- CONFIRMATION MODAL ENDS HERE-->
       <!-- BODY -->
       <div class="flex flex-wrap mx-6">
@@ -82,8 +82,6 @@
                 </p>
               </div>
               <div class="text-white">
-                
-
               </div>
             </div>
             <div class="w-1/5 overflow-hidden text-sm m-4 pt-6">
@@ -203,7 +201,7 @@
               <strong class="block md:hidden">Status</strong>
                <div
                 v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument == null"
-                class="text-center text-white text-sm py-2 sm:mx-2 border border-white bg-transparent rounded-full">
+                class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full">
                   <span>Empty</span>
                 </div>
                 <div
@@ -220,108 +218,6 @@
           <!-- END BODY -->
         </div>
         <!-- END TABLE -->  
-
-        <!-- TABLE -->
-          <!-- <div style="lg:w-2/3">
-            <div class="flex flex-col lg:w-2/3">
-              <div class="flex my-2">
-                <div style="width: 25%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Title</strong>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>File size</strong>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>File uploaded</strong>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Expiry date</strong>
-                  </div>
-                </div>
-                <div style="width:15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Days to expire</strong>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Status</strong>
-                  </div>
-                </div>
-              </div>
-              <nuxt-link
-                v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryComplianceDocument-${index}`"
-                :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
-                :class="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
-                :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
-                class="flex items-center no-underline shadow-lg rounded-lg bg-waterloo my-2 px-2"
-              >
-                <div style="width: 25%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{mandatoryComplianceDocument.mandatoryComplianceDocument.name}}</span>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument ? 
-                      (mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-                    </span>
-
-                
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument &&
-                      mandatoryComplianceDocument.locumMandatoryComplianceDocument.file &&
-                      mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at ? 
-                      $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.file.created_at)
-                      .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
-                      mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
-                      $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at)
-                      .format('DD/MM/YYYY')  : null }}</span>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ mandatoryComplianceDocument.locumMandatoryComplianceDocument && 
-                      mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at ? 
-                      $moment(mandatoryComplianceDocument.locumMandatoryComplianceDocument.expired_at)
-                      .diff($moment(), 'days')  : null }}</span>
-                  </div>
-                </div>
-                <div class="flex mx-auto">
-                  <div
-                  v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument == null"
-                  class="text-white text-sm py-2 px-4 border border-white bg-transparent rounded-full">
-                    <span>Empty</span>
-                  </div>
-                  <div
-                  v-if="mandatoryComplianceDocument.locumMandatoryComplianceDocument"
-                  class="text-black text-sm py-2 border border-white rounded-full"
-                  :class="statusStyle(mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null)">
-                  <span>
-                    {{mandatoryComplianceDocument.locumMandatoryComplianceDocument && mandatoryComplianceDocument.locumMandatoryComplianceDocument.status ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.status:null}}
-                  </span>
-                  </div>
-                </div>
-              </nuxt-link>
-            </div>
-          </div> -->
-        <!-- TABLE -->
-
 <!-- OPTIONAL -->
         <p class=" text-sm text-white pt-8 font-semibold">Optional</p>
         <!-- TABLE RESPONSIVE-->
@@ -384,7 +280,7 @@
               <strong class="block md:hidden">Status</strong>
                <div
                 v-if="optionalComplianceDocument.locumOptionalComplianceDocument == null"
-                class="text-center text-white text-sm py-2 sm:mx-2 border border-white bg-transparent rounded-full">
+                class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full">
                   <span>Empty</span>
                 </div>
                 <div
@@ -401,103 +297,6 @@
           <!-- END BODY -->
         </div>
         <!-- END TABLE -->
-        <!-- TABLE OLD -->
-          <!-- <div style="lg:w-2/3">
-            <div class="flex lg:w-2/3 flex-col">
-              <div class="flex my-2">
-                <div style="width: 25%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Title</strong>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>File size</strong>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>File uploaded</strong>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Expiry date</strong>
-                  </div>
-                </div>
-                <div style="width:15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Days to expire</strong>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div class="flex text-white text-sm p-4">
-                    <strong>Status</strong>
-                  </div>
-                </div>
-              </div>
-            <nuxt-link
-                v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
-                :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
-                :class="optionalComplianceDocument.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
-                :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
-                class="flex items-center no-underline shadow-lg rounded-lg bg-waterloo my-2 px-2"
-              >
-                <div style="width: 25%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{optionalComplianceDocument.optionalComplianceDocument.name}}</span>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
-                      (optionalComplianceDocument.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
-                    </span>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
-                      $moment(optionalComplianceDocument.locumOptionalComplianceDocument.file.created_at)
-                      .format('DD/MM/YYYY HH:mm:ss') : null }}
-                    </span>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument && 
-                      optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
-                      $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
-                      .format('DD/MM/YYYY')  : null }}
-                    </span>
-                  </div>
-                </div>
-                <div style="width: 15%;">
-                  <div class="flex text-white text-sm p-4">
-                    <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument &&
-                      optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
-                      $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
-                      .diff($moment(), 'days')  : null }}
-                    </span>
-                  </div>
-                </div>
-                <div style="width: 10%;">
-                  <div
-                  v-if="optionalComplianceDocument.locumOptionalComplianceDocument == null"
-                  class="inline-flex text-black text-sm mt-2 py-2 p-3 border border-white text-white bg-transparent rounded-full">
-                    <span>Empty</span>
-                  </div>
-                  <div
-                  v-if="optionalComplianceDocument.locumOptionalComplianceDocument" 
-                  class="inline-flex text-black text-sm py-2 px-4 border rounded-full"
-                  :class="statusStyle(optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null)">
-                    <span>{{optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null}}</span>
-                  </div>
-                </div>
-              </nuxt-link>
-            </div>
-          </div> -->
-        <!-- TABLE -->
 
 <!-- MANDATORY TRAININGS -->
         <p class=" text-sm text-white pt-8 font-semibold">Mandatory Trainings (Optional) </p>
@@ -573,96 +372,7 @@
           <!-- END BODY -->
         </div>
         <!-- END TABLE -->
-        <!-- TABLE OLD-->
-        <!-- <div style="lg:w-2/3">
-          <div class="flex lg:w-2/3 flex-col">
-            <div class="flex my-2">
-              <div style="width: 25%;">
-                <div class="flex text-white text-sm p-4">
-                  <strong>Title</strong>
-                </div>
-              </div>
-                <div style="width: 10%;">
-                <div class="flex text-white text-sm p-4">
-                  <strong>File size</strong>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-sm p-4">
-                  <strong>File uploaded</strong>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-sm p-4">
-                  <strong>Expiry date</strong>
-                </div>
-              </div>
-              <div style="width:15%;">
-                <div class="flex text-white text-sm p-4">
-                  <strong>Days to expire</strong>
-                </div>
-              </div>
-              <div style="width: 10%;">
-                <div class="flex text-white text-sm p-4">
-                  <strong>Status</strong>
-                </div>
-              </div>
-            </div>
-            <nuxt-link
-              v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
-              :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
-              :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
-              :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
-              class="flex items-center no-underline shadow-lg rounded-lg bg-waterloo my-2 px-2"
-            >
-              <div style="width: 25%;">
-                <div class="flex text-white text-sm p-4">
-                  <span>{{optionalMandatoryTraining.optionalMandatoryTraining.name}}</span>
-                </div>
-              </div>
-              <div style="width: 10%;">
-                <div class="flex text-white text-sm p-4">
-                  <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? (optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size / 1048576).toFixed(2) + ' Bytes' : null}}
-                  </span>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-sm p-4">
-                  <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.file &&
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at ? 
-                    $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at)
-                    .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-sm p-4">
-                  <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
-                    $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
-                    .format('DD/MM/YYYY')  : null }}</span>
-                </div>
-              </div>
-              <div style="width: 15%;">
-                <div class="flex text-white text-sm p-4">
-                  <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
-                    $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
-                    .diff($moment(), 'days')  : null }}</span>
-                </div>
-              </div>
-              <div style="width: 10%;">
-                <div class="inline-flex text-black text-sm py-2 px-4 border border-white rounded-full float-right"
-                :class="`${optionalMandatoryTraining.locumOptionalMandatoryTraining ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
-                  <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining ? 
-                    'Compliant' : 'Empty' }}</span>
-                </div>
-              </div>
-            </nuxt-link>
-          </div>
-        </div> -->
-        <!-- TABLE -->
-<!-- TABLES END -->
+        
         <nuxt-child/>
       </div>
     </div>
@@ -855,3 +565,33 @@ export default {
   }
 };
 </script>
+<style>
+  .md\:table-cell:first-child{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  .md\:table-cell:last-child{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  @media(min-width: 450px){
+  .right-side-header-content{
+    width: calc(100% - 0px);
+  }
+  }
+  .page-overlap{
+    min-width: 100%;
+  }
+  
+  @media screen and (min-width: 768px){
+    .page-overlap{
+    min-width: calc(100% - 70px);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      min-width: calc(100% - 200px);
+    }
+  }
+</style>

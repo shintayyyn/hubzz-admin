@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-4 overflow-y-auto">
+  <div class="flex-1 flex flex-col py-2 px-4">
     <!-- <div>
       <nuxt-link
         to="/reports/create"
@@ -8,7 +8,6 @@
     </div>-->
 
     <!-- TABLE -->
-    <div>
       <div class="flex flex-col">
         <!-- BODY -->
         <nuxt-link
@@ -17,30 +16,23 @@
           :to="`/reports/${qualification._id}`"
           class="flex items-center no-underline rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
-            <div class="w-1/3 flex text-white text-xs px-2 py-4">
-              <span>REP-010</span>
-            </div>
-            <div class="w-1/3 flex text-white text-xs px-2 py-4">
-              <span>REP-011</span>
-            </div>
-            <div class="w-1/3 flex text-white text-xs px-2 py-4">
-              <span>REP-012</span>
-            </div>
-            <div class="flex text-white text-xs px-2 md:px-4">
-              <svgicon
-                name="chevron-right"
-                width="21"
-                height="21"
-                color="white"
-              ></svgicon>
-            </div>
+          <div class="w-1/3 flex text-white text-xs px-2 py-4"><span>REP-010</span></div>
+          <div class="w-1/3 flex text-white text-xs px-2 py-4"><span>REP-011</span></div>
+          <div class="w-1/3 flex text-white text-xs px-2 py-4"><span>REP-012</span></div>
+          <div class="flex text-white text-xs px-2 md:px-4">
+            <svgicon
+              name="chevron-right"
+              width="21"
+              height="21"
+              color="white"
+            ></svgicon>
+          </div>
         </nuxt-link>
         <!-- BODY -->
       </div>
-    </div>
-    <!-- TABLE -->
+      <!-- TABLE -->
 
-    <nuxt-child/>
+      <nuxt-child/>
   </div>
 </template>
 

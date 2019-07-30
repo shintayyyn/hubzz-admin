@@ -1,9 +1,6 @@
 <template>
   <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div
-      style="width: calc(100% - 70px);"
-      class="flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2"
-    >
+    <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2" >
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="{path:`/practices/${specificPractice.id}/users`}" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
@@ -284,4 +281,13 @@ export default {
 </script>
 
 <style>
+.page-overlap{
+    width: calc(100% - 70px);
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      width: calc(100% - 200px);
+    }
+  }
 </style>
