@@ -1,6 +1,6 @@
 <template>
   <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg overflow-y-auto">
+    <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg overflow-y-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
@@ -76,7 +76,7 @@
         <div>
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
-              <div class="w-1/2 sm:w-full lg:w-1/2 text-grey-light text-sm p-2">
+              <div class="w-full md:w-1/2 text-grey-light text-sm p-2">
                 <p class="flex">Practice Name</p>
                 <p class="flex items-center text-white text-sm p-2 font-semibold">
                   {{specificPractice.surgery ? specificPractice.surgery.name : null}} 
@@ -136,7 +136,7 @@
                   <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.phone_number}}</p>
                 </div>
               </div>
-              <div class="w-1/2 sm:w-full  lg:w-1/2 ">
+              <div class="w-full md:w-1/2 ">
                 <p class="flex text-grey-light text-sm p-2">Phone Number</p>
                 <input
                   class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
@@ -264,13 +264,23 @@ export default {
 };
 </script>
 <style>
-@media(min-width: 450px){
+  @media(min-width: 450px){
+  .right-side-header-content{
+    width: calc(100% - 0px);
+  }
+  }
+  .page-overlap{
+    min-width: 100%;
+  }
+  @media screen and (min-width: 768px){
+    .page-overlap{
+    min-width: calc(100% - 70px);
+    }
+  }
 
- .right-side-header-content{
-
-  width: calc(100% - 0px);
-
- }
-
-}
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      min-width: calc(100% - 200px);
+    }
+  }
 </style>

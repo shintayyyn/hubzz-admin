@@ -1,6 +1,6 @@
 <template>
 	<div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
-		<div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout shadow-lg">
+		<div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-2 md:px-6">
         <nuxt-link :to="{path:`/practices`,query: $route.query }" class="text-white p-1">
@@ -335,4 +335,13 @@ export default{
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
 }
+.page-overlap{
+    width: calc(100% - 70px);
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      width: calc(100% - 200px);
+    }
+  }
 </style>

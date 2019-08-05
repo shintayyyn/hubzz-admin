@@ -1,6 +1,6 @@
 <template>
   <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-x-hidden overflow-y-auto">
-    <div style="width: calc(100%);" class="flex-1 flex flex-col self-end bg-trout">
+    <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex items-center text-sm text-white py-2 px-6">
@@ -228,3 +228,24 @@ export default {
   }
 };
 </script>
+<style>
+  @media(min-width: 450px){
+  .right-side-header-content{
+    width: calc(100% - 0px);
+  }
+  }
+  .page-overlap{
+    min-width: 100%;
+  }
+  @media screen and (min-width: 768px){
+    .page-overlap{
+    min-width: calc(100% - 70px);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      min-width: calc(100% - 200px);
+    }
+  }
+</style>

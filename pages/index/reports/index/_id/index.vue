@@ -1,6 +1,6 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
-    <div class="w-full flex-1 flex flex-col self-end bg-trout shadow-lg">
+  <div class="fixed lg:absolute overflow-x-hidden overflow-y-auto pin-t pin-b pin-r pin-l flex flex-col">
+    <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/reports/" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
@@ -121,3 +121,24 @@ export default {
   }
 };
 </script>
+<style>
+  @media(min-width: 450px){
+  .right-side-header-content{
+    width: calc(100% - 0px);
+  }
+  }
+  .page-overlap{
+    min-width: 100%;
+  }
+  @media screen and (min-width: 768px){
+    .page-overlap{
+    min-width: calc(100% - 70px);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap{
+      min-width: calc(100% - 200px);
+    }
+  }
+</style>
