@@ -95,27 +95,39 @@
                 </p>
                 <p class="flex">CCG</p>
                 <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery.clinical_commissioning_group ? specificPractice.surgery.clinical_commissioning_group.name:null}}</p>
-                <p class>Compliance Requirements for GPs:</p>
-                <!-- <div v-for="(gpComplianceDocs, index) in specificPractice.gp_compliance_documents"
-                   :key="`${index}-${gpComplianceDocs.id}-`"
-                  >
-                    <a class="m-2 text-white" v-bind:href="gpComplianceDocs.file ? gpComplianceDocs.file.url:null">
-                      <svgicon
-                        name="cloud-download"
-                        width="21"
-                        height="21"
-                        color="transparent white"
-                      ></svgicon>
-                      <span class="pb-2">{{gpComplianceDocs.compliance_document ? gpComplianceDocs.compliance_document.name:"(none)"}}</span>
-                    </a>
-                </div> -->
-                <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
-                <p class>For Nurses, et al:</p>
-                <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
-                <p class="flex">Mandatory Training</p>
-                <p class="flex text-grey-light text-sm p-2 font-semibold">(none)</p>
+                
+                <div v-if="specificPractice.gp_compliance_documents.length > 0">
+                  <p class="flex">Compliance Requirements for GPs:</p>
+                  <div class="text-white text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in specificPractice.gp_compliance_documents"
+                    :key="`${index}-${gpComplianceDocs.name}`"
+                    >
+                      <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
+                  </div>
+                </div>
+                <div v-if="specificPractice.others_compliance_documents.length > 0">
+                  <p class>For Nurses, et al:</p>
+                  <div class="text-white text-sm m-1 font-semibold" v-for="(othersComplianceDocs, index) in specificPractice.others_compliance_documents"
+                    :key="`${index}-${othersComplianceDocs.name}`"
+                    >
+                      <span >{{othersComplianceDocs ? othersComplianceDocs.name:"(none)"}}</span> 
+                  </div>
+                </div>
+                <div v-if="specificPractice.mandatory_trainings.length > 0">
+                  <p class="flex">Mandatory Training</p>
+                  <div class="text-white text-sm m-1 font-semibold" v-for="(mandatoryTrainings, index) in specificPractice.mandatory_trainings"
+                    :key="`${index}-${mandatoryTrainings.name}`"
+                    >
+                      <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
+                  </div>
+                </div>
+                  
+                
+                <div v-if="!specificPractice.gp_compliance_documents.length > 0 || !specificPractice.others_compliance_documents.length > 0  || !specificPractice.mandatory_trainings.length > 0">
+                  <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice yet.</p>
+                </div>
+                
                 <div v-if="specificPractice && specificPractice.practice_parent">
-                  <p class="flex m-2 text-base font-bold"> HUB info</p>
+                  <p class="flex m-2 text-base font-bold underline"> HUB info</p>
                   <p class="flex">Practice Name</p>
                   <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.surgery.name}}</p>
                   <p class="flex">Practice Code</p>

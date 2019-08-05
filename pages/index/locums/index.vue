@@ -239,7 +239,7 @@ watch: {
 	}
 
 	const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
-			const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
+	const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
 				
 	let response = null
 	
