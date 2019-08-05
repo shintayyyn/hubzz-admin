@@ -9,25 +9,6 @@
         </nuxt-link>
       </div>
       <!-- HEADER -->
-      <!-- CONFIRMATION MODAL -->
-        <!-- <div
-          class="h-full w-full flex flex-col absolute"
-          :style="`z-index: ${confirmationModal ? 100 : -100}; opacity: ${confirmationModal ? 1 : 0};`"
-        >
-          <div class="flex flex-col self-center py-2 px-24 rounded-lg bg-sunglow">
-            <div>
-              <span class="text-sm p-2">Proceed to sign-out?</span>
-            </div>
-            <div class="flex">
-              <button class="p-2 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
-              <button
-                class="p-2 text-sm rounded-lg border border-white mx-1 shadow"
-                @click="confirmationModal = false"
-              >Cancel</button>
-            </div>
-          </div> 
-        </div>-->
-      <!-- CONFIRMATION MODAL ENDS HERE-->
       <!-- BODY -->
       <div class="flex flex-wrap mx-6">
         <div class="my-1 px-1">
@@ -61,10 +42,9 @@
         </div>
       </div>
       <div class="px-6">
-        <nuxt-link
-          :to="{path:`/locums/${locumUser.id}`, query: $route.query}"
-          class="flex lg:w-2/3 no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-4 shadow"
-          style="position:relative; cursor: pointer;"
+        <div
+          class="flex lg:w-2/3 no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
+          style="position:relative"
         >
             <div class="w-4/5 overflow-hidden text-sm m-4">
               <div class="text-grey">
@@ -85,15 +65,15 @@
               </div>
             </div>
             <div class="w-1/5 overflow-hidden text-sm m-4 pt-6">
-              <svgicon
+              <!-- <svgicon
                 class="float-right"
                 name="chevron-right"
                 width="48"
                 height="48"
                 color="white"
-                ></svgicon>
+                ></svgicon> -->
             </div>
-        </nuxt-link>
+        </div>
         <!--GMC / NMC NUMBER-->
           <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 sm:justify-between">
@@ -155,9 +135,9 @@
           <nuxt-link
             v-for="(mandatoryComplianceDocument, index) in mandatoryComplianceDocuments" :key="`mandatoryComplianceDocument-${index}`"
             :event="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null ? disabled :'click'" 
-            :class="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
+            :class="mandatoryComplianceDocument.locumMandatoryComplianceDocument==null? '':'hover:bg-waterloo-light' "
             :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${mandatoryComplianceDocument.locumMandatoryComplianceDocument ? mandatoryComplianceDocument.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
-            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo" 
             draggable="false"
           >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
@@ -238,7 +218,7 @@
             :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
             :class="optionalComplianceDocument.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
             :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
-            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo" 
             draggable="false"
           >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
@@ -303,7 +283,7 @@
         <!-- TABLE RESPONSIVE-->
         <div class="w-full lg:w-2/3 table border-separate" style="border-spacing: 0 10px;"> 
           <!-- HEADER -->
-          <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+          <div v-if="!locumMandatoryTrainings.length === 0" class="hidden md:table-row font-bold text-white text-sm py-4"> 
             <div class="table-cell p-2 align-middle">Title</div> 
             <div class="table-cell p-2 align-middle">File size</div>
             <div class="table-cell p-2 align-middle">File uploaded</div>
@@ -311,50 +291,53 @@
             <div class="table-cell p-2 align-middle">Date to expire</div>
             <div class="table-cell p-2 align-middle">Status</div>
           </div>
+          <div v-else>
+            <div class="text-white m-4 ml-8">No mandatory trainings uploded</div>
+          </div>
           <!-- END HEADER -->
           <!-- BODY -->
           <nuxt-link
-            v-for="(optionalMandatoryTraining, index) in optionalMandatoryTrainings" :key="`optionalMandatoryTraining-${index}`"
-            :event="optionalMandatoryTraining.locumOptionalMandatoryTraining==null ? disabled :'click'" 
-            :class="optionalMandatoryTraining.locumOptionalMandatoryTraining==null? '':' hover:bg-waterloo-light' "
-            :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/mandatory-training/${optionalMandatoryTraining.locumOptionalMandatoryTraining ? optionalMandatoryTraining.locumOptionalMandatoryTraining.id : null }`, query: $route.query}"
-            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+            v-for="(locumMandatoryTraining, index) in locumMandatoryTrainings" :key="`locumMandatoryTraining-${index}`"
+            :event="locumMandatoryTraining==null ? disabled :'click'" 
+            :class="locumMandatoryTraining==null? '':' hover:bg-waterloo-light' "
+            :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/mandatory-training/${locumMandatoryTraining ? locumMandatoryTraining.id : null }`, query: $route.query}"
+            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo" 
             draggable="false"
           >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
-              <span class="break-word">{{ optionalMandatoryTraining.optionalMandatoryTraining.name }}</span>
+              <span class="break-word">{{ locumMandatoryTraining.mandatory_training.name }}</span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
               <strong class="block md:hidden text-sm uppercase">File size</strong>
               <span>
-                {{ optionalMandatoryTraining.locumOptionalMandatoryTraining && optionalMandatoryTraining.locumOptionalMandatoryTraining.file ? (optionalMandatoryTraining.locumOptionalMandatoryTraining.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
+                {{ locumMandatoryTraining && locumMandatoryTraining.file ? (locumMandatoryTraining.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
               </span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
               <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-               <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining &&
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.file &&
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at ? 
-                    $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.file.created_at)
+               <span>{{ locumMandatoryTraining &&
+                    locumMandatoryTraining.file &&
+                    locumMandatoryTraining.file.created_at ? 
+                    $moment(locumMandatoryTraining.file.created_at)
                     .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
               <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-              <span class="break-all">{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
-                    $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
+              <span class="break-all">{{ locumMandatoryTraining && 
+                    locumMandatoryTraining.expired_at ? 
+                    $moment(locumMandatoryTraining.expired_at)
                     .format('DD/MM/YYYY')  : null }}</span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
               <strong class="block md:hidden text-sm uppercase">Date to expire</strong>
-              <span class="break-all">{{ optionalMandatoryTraining.locumOptionalMandatoryTraining && 
-                    optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at ? 
-                    $moment(optionalMandatoryTraining.locumOptionalMandatoryTraining.expired_at)
+              <span class="break-all">{{ locumMandatoryTraining && 
+                    locumMandatoryTraining.expired_at ? 
+                    $moment(locumMandatoryTraining.expired_at)
                     .diff($moment(), 'days')  : null }}</span>
             </div>
 
@@ -362,8 +345,8 @@
               <strong class="block md:hidden">Status</strong>
                 <div
                 class="text-center text-black text-sm py-2 px-4 lg:px-8 sm:mx-2 border border-white rounded-full"
-                :class="`${optionalMandatoryTraining.locumOptionalMandatoryTraining ? 'bg-yellow border-yellow':'bg-transparent text-white' }`">
-                  <span>{{ optionalMandatoryTraining.locumOptionalMandatoryTraining ? 
+                :class="`${locumMandatoryTraining ? 'bg-green border-green text-white':'bg-transparent text-white' }`">
+                  <span>{{ locumMandatoryTraining ? 
                     'Compliant' : 'Empty' }}</span>
                 </div>
             </div>
@@ -387,7 +370,7 @@ export default {
       locumUser: null,
       mandatoryComplianceDocuments:[],
       optionalComplianceDocuments:[],
-      optionalMandatoryTrainings:[],
+      locumMandatoryTrainings:[],
       disabled:'true',
     };
   },
@@ -397,12 +380,13 @@ export default {
       let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
       const locumUser = response.data.data.user
       const professionCategoryid = locumUser.locum_detail.profession.profession_category.id
+      const locumMandatoryTrainings = locumUser.locum_detail.mandatory_trainings
   
       response = await app.$axios.get(`/api/v1/profession-categories/${professionCategoryid}`)
       const professionCategory = response.data.data.profession_category
 
       response = await app.$axios.get(`/api/v1/admin/mandatory-trainings`)
-      const mandatoryTrainings = response.data.data.mandatory_trainings
+      
 
       
       const mandatoryComplianceDocuments = professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument) => {
@@ -424,21 +408,21 @@ export default {
         }
       })
 
-      const optionalMandatoryTrainings = mandatoryTrainings.map((optionalMandatoryTraining)=>{
-      const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((locumMandatoryTraining)=>{
-        return locumMandatoryTraining.mandatory_training.id === optionalMandatoryTraining.id
-      })
-        return{
-          optionalMandatoryTraining,
-          locumOptionalMandatoryTraining
-        }
-      })
+      // const locumMandatoryTrainings = mandatoryTrainings.map((locumMandatoryTraining)=>{
+      // const locumOptionalMandatoryTraining = locumUser.locum_detail.mandatory_trainings.find((locumMandatoryTraining)=>{
+      //   return locumMandatoryTraining.mandatory_training.id === locumMandatoryTraining.id
+      // })
+      //   return{
+      //     locumMandatoryTraining,
+      //     locumOptionalMandatoryTraining
+      //   }
+      // })
 
       return{
         locumUser,
         mandatoryComplianceDocuments,
         optionalComplianceDocuments,
-        optionalMandatoryTrainings
+        locumMandatoryTrainings
       }
     } catch (err) {
       console.log("index practices index create asyncData err", err);

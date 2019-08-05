@@ -57,7 +57,7 @@
             <p class="text-white">{{locumUser.contact_detail ? locumUser.contact_detail.mobile_number : null}}</p>
             <div class="mt-5 mr-20 ">
               <p class="text-white">Expired At</p>
-              <p>{{toPutLocumDetailCompliance.expired_at}}</p> <!--SHOULD BE A DATE NOT DATETIME-->
+               <!--SHOULD BE A DATE, NOT DATETIME-->
                 <input
                     type="date"
                     class="date-picker hasDatepicker valid"

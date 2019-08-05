@@ -95,7 +95,19 @@
                 </p>
                 <p class="flex">CCG</p>
                 <p class="flex text-white text-sm p-2 font-semibold">{{specificPractice.surgery.clinical_commissioning_group ? specificPractice.surgery.clinical_commissioning_group.name:null}}</p>
-                
+                <p class="flex">Practice Types</p>
+
+                <div v-if="specificPractice.practice_types.length > 0">
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    v-for="practiceType in specificPractice.practice_types"
+                      :key="practiceType.id + '-name'">
+                      {{practiceType ? practiceType.name:null}}
+                  </p>
+                </div>
+                <div v-else>
+                  <p class="flex text-white text-sm p-2 font-semibold">Not set</p>
+                </div>
+               
                 <div v-if="specificPractice.gp_compliance_documents.length > 0">
                   <p class="flex">Compliance Requirements for GPs:</p>
                   <div class="text-white text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in specificPractice.gp_compliance_documents"
@@ -113,14 +125,13 @@
                   </div>
                 </div>
                 <div v-if="specificPractice.mandatory_trainings.length > 0">
-                  <p class="flex">Mandatory Training</p>
+                  <p class="flex">Mandatory Trainings</p>
                   <div class="text-white text-sm m-1 font-semibold" v-for="(mandatoryTrainings, index) in specificPractice.mandatory_trainings"
                     :key="`${index}-${mandatoryTrainings.name}`"
                     >
                       <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
                   </div>
                 </div>
-                  
                 
                 <div v-if="!specificPractice.gp_compliance_documents.length > 0 || !specificPractice.others_compliance_documents.length > 0  || !specificPractice.mandatory_trainings.length > 0">
                   <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice yet.</p>
