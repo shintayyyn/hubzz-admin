@@ -271,18 +271,10 @@ export default{
     },
 
     async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
-      console.log('documentid',documentId)
-      
-      console.log('qwe', this.$refs[refName][0], refName)
-
       const el = this.$refs[refName][0]
-
-      console.log('sad', el, el.files)
-
       if (el.files && el.files.length === 0) {
         return
       }
-
       const file = el.files[0]
 
       const fileReader = new FileReader()
@@ -326,14 +318,14 @@ export default{
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 },
-              }).then(function(){
+              }).then(() => {
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
                   // alert('SUCCESS!!')
                   console.log("nice 1!")
 
               })
-              .catch(function(){
-                console.log('FAILURE!!');
+              .catch(err => {
+                console.log(err);
               });
 
             }else{
@@ -345,13 +337,13 @@ export default{
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 },     
-              }).then(function(){
+              }).then(() => {
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
                   // alert('SUCCESS!!')
                   console.log("nice!")
               })
-              .catch(function(){
-                console.log('FAILURE!!');
+              .catch(err => {
+                console.log(err);
               });
             }
         }else{
@@ -360,10 +352,9 @@ export default{
         }
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Something went wrong!' })
-        // alert('Something went wrong!')
         console.log("index practices index _id index asyncData err", err);
       }
-    }
+    },
   }
 }
 </script>

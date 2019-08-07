@@ -70,79 +70,79 @@
       }
     },
 
-		data() {
-			return {
-				backgroundUrl,
-				loggingIn: false,
+	data() {
+		return {
+			backgroundUrl,
+			loggingIn: false,
 
-				loginErrorMessage: '',
+			loginErrorMessage: '',
 
-				email: 'admin@gmail.com',
-				password: 'qweqwe',
+			email: 'admin@gmail.com',
+			password: 'qweqwe',
 
-				showEmailFocus: false,
-				showPasswordFocus: false,
+			showEmailFocus: false,
+			showPasswordFocus: false,
 
-				emailErrorMessage: '',
-				passwordErrorMessage: '',
+			emailErrorMessage: '',
+			passwordErrorMessage: '',
+		}
+	},
+
+	methods: {
+		checkEmail() {
+			if (!this.email) {
+				this.emailErrorMessage = 'Required'
+			} else if (!isEmail(this.email)) {
+				this.emailErrorMessage = 'Please enter a valid email address.'
+			} else {
+				this.emailErrorMessage = ''
 			}
 		},
 
-		methods: {
-			checkEmail() {
-        if (!this.email) {
-          this.emailErrorMessage = 'Required'
-        } else if (!isEmail(this.email)) {
-          this.emailErrorMessage = 'Please enter a valid email address.'
-        } else {
-          this.emailErrorMessage = ''
-        }
-			},
-
-			checkPassword() {
-				if (this.password.trim() === '') {
-					this.passwordErrorMessage = 'Required'
-				} else {
-					this.passwordErrorMessage = ''
-				}
-			},
-
-			login() {
-				this.checkEmail()
-
-				this.checkPassword()
-
-				if (this.emailErrorMessage || this.passwordErrorMessage) {
-					return
-				}
-
-				this.loggingIn = true
-
-				this.$store.dispatch('login', {
-					email: this.email,
-					password: this.password
-				}).catch((err) => {
-					let loginErrorMessage = 'Something Went Wrong'
-
-					if (err && err.message) {
-						loginErrorMessage = err.message
-					}
-
-					if (err && err.response && err.response.data && err.response.data.message) {
-						loginErrorMessage = err.response.data.message
-					}
-
-          if (err && err.response && err.response.data && err.response.data.data && err.response.data.data.message) {
-            loginErrorMessage = err.response.data.data.message
-          }
-
-					this.loginErrorMessage = loginErrorMessage
-				}).finally(() => {
-       		this.loggingIn = false
-				})
+		checkPassword() {
+			if (this.password.trim() === '') {
+				this.passwordErrorMessage = 'Required'
+			} else {
+				this.passwordErrorMessage = ''
 			}
+		},
+
+		login() {
+			this.checkEmail()
+
+			this.checkPassword()
+
+			if (this.emailErrorMessage || this.passwordErrorMessage) {
+				return
+			}
+
+			this.loggingIn = true
+
+			this.$store.dispatch('login', {
+				email: this.email,
+				password: this.password
+			}).catch((err) => {
+				let loginErrorMessage = 'Something Went Wrong'
+
+				if (err && err.message) {
+					loginErrorMessage = err.message
+				}
+
+				if (err && err.response && err.response.data && err.response.data.message) {
+					loginErrorMessage = err.response.data.message
+				}
+
+				if (err && err.response && err.response.data && err.response.data.data && err.response.data.data.message) {
+				loginErrorMessage = err.response.data.data.message
+				}
+
+			this.loginErrorMessage = loginErrorMessage
+			}).finally(() => {
+			this.loggingIn = false
+			})
 		}
 	}
+}
 </script>
 <style scoped>
 .bg-logo{

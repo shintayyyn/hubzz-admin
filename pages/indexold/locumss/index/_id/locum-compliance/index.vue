@@ -387,8 +387,6 @@ export default {
 
       response = await app.$axios.get(`/api/v1/admin/mandatory-trainings`)
       
-
-      
       const mandatoryComplianceDocuments = professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument) => {
         const locumMandatoryComplianceDocument = locumUser.locum_detail.compliance_documents.find((complianceDocument) => {
           return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
