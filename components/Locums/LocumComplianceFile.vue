@@ -2,11 +2,15 @@
     <div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
-      <div class="flex items-center text-sm text-white py-6 px-8">
-        <nuxt-link :to="{path:`/locums/${user.id}?locum_tab=locum_compliance`}" class="cursor-pointer">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-        </nuxt-link>
-        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4"
+      <div class="flex items-center text-sm text-white py-6 px-8 mr-8">
+        <div class="mr-6">
+          <nuxt-link :to="{path:`/locums/${user.id}?locum_tab=locum_compliance`}" class="cursor-pointer">
+            <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+          </nuxt-link>
+        </div>
+        
+        
+        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 "
           @click.prevent="toPutLocumDetailComplianceDocs(compliance_doc.id,toPutLocumDetailCompliance,compliance_doc.expired_at)">
           <svgicon
           name="save-icon"
@@ -14,13 +18,13 @@
           height="21"
           color="transparent white"
           hover:color="transparent black"
-        ></svgicon>
-        <span class="px-1">Save</span>
+          ></svgicon>
+          <span class="px-1">Save</span>
         </button>
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2">
           <a 
             @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
-            class="inline-flex items-center text-white no-underline">
+            class="inline-flex items-center text-white hover:text-black no-underline">
             <svgicon
               name="cloud-download"
               width="21"
@@ -29,7 +33,7 @@
               hover ="transparent black"
             >
             </svgicon>
-            <span class="px-1">Download</span>
+            <span class="px-1 ">Download</span>
           </a>
         </div>
       </div>

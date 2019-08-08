@@ -201,7 +201,6 @@ export default {
           console.log('The job opened is', this.job)
           this.modal = true
         })
-
       },
       pagechanged(e) {
         const query = {
