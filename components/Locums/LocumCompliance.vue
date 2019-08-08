@@ -153,58 +153,58 @@
                 <div class="table-cell p-2 align-middle">Status</div>
             </div>
             <nuxt-link
-                v-for="(optionalComplianceDocument, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
-                :event="optionalComplianceDocument.locumOptionalComplianceDocument==null ? disabled :'click'"
-                :class="optionalComplianceDocument.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
-                :to="{path:`/locums/${locumUser.id}/locum-compliance/view-file/compliance-doc/${optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
+                v-for="(item, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
+                :event="item.locumOptionalComplianceDocument==null ? disabled :'click'"
+                :class="item.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
+                :to="{path:`/locums/${user.id}/compliance-docs/${item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
             >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="break-word">{{ optionalComplianceDocument.optionalComplianceDocument.name }}</span>
+                <span class="break-word">{{ item.optionalComplianceDocument.name }}</span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">File size</strong>
                 <span>
-                {{ optionalComplianceDocument.locumOptionalComplianceDocument ? (optionalComplianceDocument.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
+                {{ item.locumOptionalComplianceDocument ? (item.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
                 </span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-                <span>{{ optionalComplianceDocument.locumOptionalComplianceDocument ? 
-                        $moment(optionalComplianceDocument.locumOptionalComplianceDocument.file.created_at)
+                <span>{{ item.locumOptionalComplianceDocument ? 
+                        $moment(item.locumOptionalComplianceDocument.file.created_at)
                         .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
             </div>
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-                <span class="break-all">{{ optionalComplianceDocument.locumOptionalComplianceDocument && 
-                        optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
-                        $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
+                <span class="break-all">{{ item.locumOptionalComplianceDocument && 
+                        item.locumOptionalComplianceDocument.expired_at ? 
+                        $moment(item.locumOptionalComplianceDocument.expired_at)
                         .format('DD/MM/YYYY')  : null }}</span>
             </div>
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Date to expire</strong>
-                <span class="break-all">{{ optionalComplianceDocument.locumOptionalComplianceDocument &&
-                        optionalComplianceDocument.locumOptionalComplianceDocument.expired_at ? 
-                        $moment(optionalComplianceDocument.locumOptionalComplianceDocument.expired_at)
+                <span class="break-all">{{ item.locumOptionalComplianceDocument &&
+                        item.locumOptionalComplianceDocument.expired_at ? 
+                        $moment(item.locumOptionalComplianceDocument.expired_at)
                         .diff($moment(), 'days')  : null }}</span>
             </div>
             <div class="flex flex-col sm:flex-row sm:items-center sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden">Status</strong>
                 <div
-                v-if="optionalComplianceDocument.locumOptionalComplianceDocument == null"
+                v-if="item.locumOptionalComplianceDocument == null"
                 class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full">
                     <span>Empty</span>
                 </div>
                 <div
-                v-if="optionalComplianceDocument.locumOptionalComplianceDocument"
+                v-if="item.locumOptionalComplianceDocument"
                 class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
-                :class="statusStyle(optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null)">
+                :class="statusStyle(item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.status: null)">
                     <span>
-                        {{ optionalComplianceDocument.locumOptionalComplianceDocument ? optionalComplianceDocument.locumOptionalComplianceDocument.status: null }}
+                        {{ item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.status: null }}
                     </span>
                 </div>
             </div>
@@ -265,14 +265,17 @@
             <!-- END BODY -->
         </div>
         <!-- END TABLE -->
-
+            <div class="compliance-shield" v-if="$route.name.includes('index-compliance-docs')"></div>
         <nuxt-child/>
     </div>
-    
 </template>
 <script>
+import AppDate from '@/components/Base/AppDate'
 export default {
     props:['user'],
+    components:{
+        AppDate
+    },
     data() {
         return {
         locumUser: {
@@ -388,6 +391,55 @@ export default {
                 alert('Something went wrong!!')
                 console.log("index practices index put GMC/NMC err", err);
                 
+            }
+        },
+        async toPutMplNpl(currentStatus,locumID, verifyReject){
+            try{
+                if(currentStatus === 'Pending'){
+                const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                    status:verifyReject
+                })
+                // alert('Saved')
+                this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+
+                }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
+                const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                    status:verifyReject
+                })
+                // alert('Saved.')
+                this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+
+                }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
+                const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                    status:verifyReject
+                })
+                // alert('Saved.')
+                this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+
+                }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
+                const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                    status:'Pending'
+                })
+                // alert('Saved. Status reverted back to pending')
+                this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
+
+                }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
+                const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                    status:'Pending'
+                })
+                // alert('Saved. Status reverted back to pending')
+                this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
+
+                }
+
+            }catch(err){
+                alert('Something went wrong!!')
+                console.log("index practices index put MPL/NPL err", err);
             }
         },
         statusStyle(status){

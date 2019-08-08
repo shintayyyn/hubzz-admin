@@ -2,7 +2,7 @@
     <div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
-      <div class="flex items-center text-sm text-white py-2 px-6">
+      <div class="flex items-center text-sm text-white py-6 px-8">
         <nuxt-link :to="{path:`/locums/${user.id}?locum_tab=locum_compliance`}" class="cursor-pointer">
           <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
         </nuxt-link>
@@ -35,7 +35,7 @@
       </div>
       <!-- HEADER -->
       <!-- BODY -->
-      <div class="shadow-lg rounded-lg bg-waterloo mx-6 mb-6 p-4">
+      <div class="shadow-lg rounded-lg bg-waterloo mx-12 mb-6 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
           <div class="text-grey m-2">
             <p class="mr-20">Title</p>
@@ -50,13 +50,18 @@
               <p class="text-white">Expired At</p>
                <!--SHOULD BE A DATE, NOT DATETIME-->
                 <input
-                    type="date"
-                    class="date-picker hasDatepicker valid"
-                    name="expiryDate"
-                    disable-min-date
-                    aria-invalid="false"
-                    v-model='toPutLocumDetailCompliance.expired_at'
-                  >
+                  type="date"
+                  class="date-picker hasDatepicker valid"
+                  name="expiryDate"
+                  disable-min-date
+                  aria-invalid="false"
+                  v-model='toPutLocumDetailCompliance.expired_at'
+                >
+                <!-- <AppDate
+                  v-model="toPutLocumDetailCompliance.expired_at"
+                  :name="'expired_at'"
+                  :label="'Expiration Date'"
+                /> -->
             </div>
             <p class="mt-5 mr-20">Status</p>
                 <!-- <select
@@ -102,17 +107,22 @@
     </div>
 </template>
 <script>
+import AppDate from '@/components/Base/AppDate'
 export default {
     props:["user","compliance_doc"],
+    components:{
+      AppDate
+    },
     data() {
         return {
-        toPutLocumDetailCompliance:{},
+        toPutLocumDetailCompliance:{
+          expired_at:this.compliance_doc.expired_at,
+          status:this.compliance_doc.status,
+          note:this.compliance_doc.note
+        },
         notesAreVisible:true,
         };
     },
-
-    
-
     computed:{
         
     },
@@ -174,6 +184,7 @@ export default {
         },
 
         async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
+          console.log(toPutLocumDetailCompliance)
         try{
             await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
             status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
@@ -183,7 +194,7 @@ export default {
             // alert('Saved')
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
         }catch(err){
-            console.log("index put locum detail compliance documents error");
+            console.log("index put locum detail compliance documents error",err);
             // alert('Something went wrong!')
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         }

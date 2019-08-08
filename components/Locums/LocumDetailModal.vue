@@ -10,6 +10,7 @@
         <Component :is="activeComponent" :user="user" />
       </transition>
     </div>
+    
     <div>
       <nuxt-child/>
     </div>

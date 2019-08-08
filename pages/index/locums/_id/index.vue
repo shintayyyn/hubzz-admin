@@ -1,6 +1,7 @@
 <template>
     <div class="locum-modal shadow-lg">
         <LocumDetailModal :user="user"/>
+        <nuxt-child/>
     </div>
 </template>
 <script>

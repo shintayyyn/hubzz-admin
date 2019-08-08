@@ -36,14 +36,14 @@
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
                         <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
-                        v-for="specialty in qualifications"
+                        v-for="specialty in user.locum_detail.qualifications"
                         :key="specialty.id + '-name'">
                         {{specialty ? specialty.name:null}}
                         
                         </p>
                         <p class="m-2 mt-5 mr-20">Clinical Systems</p>
                         <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
-                        v-for="clinicalSystem in clinicalSystems"
+                        v-for="clinicalSystem in user.locum_detail.clinical_systems"
                         :key="clinicalSystem.id + '-name1'">
                             {{clinicalSystem ? clinicalSystem.name:null}}
                         </p>
@@ -53,7 +53,7 @@
                         English
                         </p>
                         <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
-                        v-for="spokenLanguage in spokenLanguages"
+                        v-for="spokenLanguage in user.locum_detail.spoken_languages"
                         :key="spokenLanguage.id + '-name2'">
                         {{spokenLanguage ? spokenLanguage.name:null}}
                         </p>
@@ -75,7 +75,7 @@
 
                         <div v-if="userComplianceDocuments">
                         <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
-                        <div v-for="(userComplianceDoc, index) in userComplianceDocuments"
+                        <div v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
                         :key="`${index}-${userComplianceDoc.id}-`"
                         >
                             <a class="m-2 text-white flex items-center" 
@@ -93,7 +93,7 @@
                         </div>
                         <div v-if="userMandatoryTrainings">
                         <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
-                            <div v-for="(userMandatoryTraining, index) in userMandatoryTrainings"
+                            <div v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
                             :key="`${index}-${userMandatoryTraining.id}-`"
                             >
                             <a class="m-2 text-white flex items-center"

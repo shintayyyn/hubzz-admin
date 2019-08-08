@@ -70,15 +70,15 @@
 		</div>
 		<!-- TABLE -->
 		<!-- PAGINATION -->
-		<div v-if="!locumUsers.length == 0 && locumUsers.length > 8" class="m-10 xl:-ml-32">
-			<AppPagination
-				:total="total"
-				:totalPages="totalPages"
-				:currentPage="currentPage"
-				@pagechanged="pagechanged"
-				:loading="loading"
-			/>
-		</div>
+		
+		<AppPagination
+			:total="total"
+			:totalPages="totalPages"
+			:currentPage="currentPage"
+			@pagechanged="pagechanged"
+			:loading="loading"
+		/>
+		
 		<!-- PAGINATION -->
 
 			<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
