@@ -8,7 +8,7 @@
       </div>
       <!-- HEADER -->
 
-      <div class="flex flex-wrap overflow-hidden p-6 text-base text-white py-2">
+      <div class="flex flex-wrap overflow-auto p-6 text-base text-white py-2">
         <div class="w-full overflow-hidden">
           <div class="pb-4">
             <strong>Add Practice</strong>
@@ -59,11 +59,20 @@
           </div>
         </div>
       </div>
+    <!-- PAGINATION -->
+		<AppPagination
+			:total="total"
+			:totalPages="totalPages"
+			:currentPage="currentPage"
+			@pagechanged="pagechanged"
+			:loading="loading"
+		/>
+		<!-- PAGINATION ENDS HERE -->
 
     <div class="practice-user-shield" v-if="modal"></div>
     <transition name="slide" mode="out-in">
-      <div class="practice-user-modal shadow-lg" v-if="modal">
-        <CreatePracticeUser @close="modal = false" :surgery="surgery"/>
+      <div class="shadow-lg" :class="practice ? 'practice-user-modal-small' : 'practice-user-modal'" v-if="modal">
+        <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery"/>
       </div>
     </transition>
     
@@ -75,6 +84,7 @@
 import AppPagination from '@/components/Base/AppPagination'
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
 export default {
+    props:['practice'],
     components:{
         AppPagination,
         CreatePracticeUser
@@ -85,19 +95,31 @@ export default {
         surgeries: [],
         surgery:null,
         modal:false,
-        loading: false,
-        itemsPerPage:10,
-        itemCount:0,
-        activePage:1,
-        search: '',
-        disabled:'true'
+        total:0,
+        totalPages:0,
+        currentPage:1,
+        perPage:0,
+        loading:false
       };
+    },
+
+    beforeDestroy() {
+		let query = Object.assign({}, this.$route.query)
+		delete query.add_practice_page
+    this.$router.push({ query })
+    
+    },
+    watch:{
+      $route(to, from) {
+        this.currentPage = parseInt(to.query.add_practice_page)
+        this.getAllSurgeries()
+        },
     },
 
     created(){
         const query = {
             ...this.$route.query,
-            current_page: this.$route.query.current_page || 1
+            add_practice_page: this.$route.query.add_practice_page || 1
         }
 
         this.$axios.$get(`/api/v1/admin/surgeries/count`).then(res=>{
@@ -117,7 +139,7 @@ export default {
     getAllSurgeries(){
         this.loading = true
         let offset = 0
-        offset = this.perPage * (parseInt(this.$route.query.current_page) - 1)
+        offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
         
         this.$axios.$get(`/api/v1/admin/surgeries?limit=${this.perPage}&offset=${offset}`).then(res=>{
           this.surgeries = res.data.surgeries
@@ -135,6 +157,13 @@ export default {
           this.modal = true
         })
     },
+    pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				add_practice_page: e || 1
+			}
+			this.$router.push({ query })
+		},
     
   }
 };
@@ -155,7 +184,7 @@ export default {
   opacity: 0.5;
   z-index: 511;
 }
-.practice-user-modal {
+.practice-user-modal,.practice-user-modal-small {
   position: fixed;
   top: 0;
   right: 0;
@@ -168,9 +197,14 @@ export default {
   background-color:#505561;
   z-index: 512;
 }
+
 @media screen and (min-width: 1200px) {
   .practice-user-modal {
     width: 70%;
   }
+  .practice-user-modal-small {
+    width: 60%;
+  }
+
 }
 </style>

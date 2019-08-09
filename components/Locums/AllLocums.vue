@@ -9,28 +9,48 @@
 					class="w-full sm:w-1/2 md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
 					id="grid-state"
 					>
-					<option :value="null">All</option>
-					<option>Empty</option>
-					<option>Incomplete</option>
-					<option>Pending</option>
-					<option>Expiring</option>
-					<option>Expired</option>
-					<option>Rejected</option>
-					<option>Compliant</option>
+					<option value=''>All</option>
+					<option value='Empty'>Empty</option>
+					<option value='Incomplete'>Incomplete</option>
+					<option value='Pending'>Pending</option>
+					<option value='Expiring'>Expiring</option>
+					<option value='Expired'>Expired</option>
+					<option value='Rejected'>Rejected</option>
+					<option value='Compliant'>Compliant</option>
 				</select>
 			</div>
 		</div>
 		
 		<!-- TABLE -->
-		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
+		<div v-if="locumUsers.length>0" class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
 			<!-- HEADER -->
 			<div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-				<div class="table-cell p-2 align-middle">Name</div> 
-				<div class="table-cell p-2 align-middle">Profession</div>
-				<div class="table-cell p-2 align-middle">Date signed-up</div>
-				<div class="table-cell p-2 align-middle">Sign-up verified</div>
-				<div class="table-cell p-2 align-middle">Status</div>
-				<div class="table-cell p-2 align-middle">Compliance Status</div>
+				<div class="table-cell p-2 align-middle cursor-pointer"
+					@click="getAllLocums('name:desc')">
+					Name
+					<svgicon name="sort" height="12" width="12" color="white" />
+				</div> 
+				<div class="table-cell p-2 align-middle cursor-pointer"
+					@click="getAllLocums('profession:desc')">
+					Profession
+					<svgicon name="sort" height="12" width="12" color="white" />
+				</div>
+				<div class="table-cell p-2 align-middle cursor-pointer"
+					@click="getAllLocums('created_at:desc')">
+					Date signed-up
+					<svgicon name="sort" height="12" width="12" color="white" />
+				</div>
+				<div class="table-cell p-2 align-middle cursor-pointer"
+					@click="getAllLocums('verified_at:desc')">
+					Sign-up verified
+					<svgicon name="sort" height="12" width="12" color="white" />
+				</div>
+				<div class="table-cell p-2 align-middle">
+					Status
+				</div>
+				<div class="table-cell p-2 align-middle">
+					Compliance Status
+				</div>
 			</div>
 			<!-- BODY -->
 			<nuxt-link
@@ -68,21 +88,24 @@
 					</div>
 			</nuxt-link>
 		</div>
+		<div v-else class=" flex justify-center sm:my-8 w-full text-white">
+			There are currently no {{filterCompliances}} Locum.
+		</div>
 		<!-- TABLE -->
-		<!-- PAGINATION -->
-		
-		<AppPagination
-			:total="total"
-			:totalPages="totalPages"
-			:currentPage="currentPage"
-			@pagechanged="pagechanged"
-			:loading="loading"
-		/>
-		
-		<!-- PAGINATION -->
 
-			<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
+		<!-- PAGINATION -->
+		<div v-if="locumUsers.length>0">
+			<AppPagination
+				:total="total"
+				:totalPages="totalPages"
+				:currentPage="currentPage"
+				@pagechanged="pagechanged"
+				:loading="loading"
+			/>
+		</div>
+		<!-- PAGINATION ENDS HERE -->
 
+		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
 		<!-- <transition name="slide" mode="out-in">
 			<div class="locum-modal shadow-lg" v-if="modal">
 				<LocumDetailModal @close="modal = false" :user="user" />
@@ -107,9 +130,10 @@ export default{
 		return {
 			locumUsers: [],
 			user:null,
+			ascendDescend: 0,
 			total: 0,
 			totalPages: 0,
-			currentPage: 0,
+			currentPage: 1,
 			perPage: 0,
 			loading: false,
 			modal:false,
@@ -121,28 +145,25 @@ export default{
 	},
 	beforeDestroy() {
 		let query = Object.assign({}, this.$route.query)
-		delete query.current_page
+		delete query.all_locum_page
 		this.$router.push({ query })
 	},
 	watch:{
 		$route(to, from) {
-			this.currentPage = parseInt(to.query.current_page)
-			this.getAllLocums()
-    	},
+			this.currentPage = parseInt(to.query.all_locum_page)
+			this.getAllLocums('created_at:desc')
+		},
+		filterCompliances:function(){
+			this.countLocums(),
+			this.getAllLocums('created_at:desc')
+		}
 	},
 	created(){
 		const query = {
 			...this.$route.query,
-			current_page: this.$route.query.current_page || 1
+			all_locum_page: this.$route.query.all_locum_page || 1
 		}
-
-		this.$axios.$get(`/api/v1/admin/locum-users/count`).then(res=>{
-			this.total = res.data.count
-			this.perPage = 8
-			this.totalPages = Math.ceil(this.total/this.perPage)
-			this.getAllLocums()
-		})
-
+		this.countLocums()
 	},
 
 	computed:{
@@ -150,14 +171,49 @@ export default{
 	},
 	
 	methods:{
-		getAllLocums(){
+		countLocums(){
+			if(!this.filterCompliances){
+				this.$axios.$get(`/api/v1/admin/locum-users/count`).then(res=>{
+					this.total = res.data.count
+					this.perPage = 8
+					this.totalPages = Math.ceil(this.total/this.perPage)
+					this.getAllLocums('created_at:desc')
+				})
+			}else{
+				this.$axios.$get(`/api/v1/admin/locum-users/count?compliance_status=${this.filterCompliances}`).then(res=>{
+					this.total = res.data.count
+					this.perPage = 8
+					this.totalPages = Math.ceil(this.total/this.perPage)
+					this.getAllLocums('created_at:desc')
+				})
+			}
+			
+		},
+		getAllLocums(orderBy){
 			this.loading = true
 			let offset = 0
-			offset = this.perPage * (parseInt(this.$route.query.current_page) - 1)
+			offset = this.perPage * (parseInt(this.$route.query.all_locum_page) - 1)
+	
+			if (this.ascendDescend == 0) {
+				orderBy = orderBy.replace('desc', 'asc')
+				this.ascendDescend = 1
+				console.log('true', this.ascendDescend)
+			} else if (this.ascendDescend == 1) {
+				orderBy = orderBy.replace('asc', 'desc')
+				this.ascendDescend = 0
+			}
+
+			if(!this.filterCompliances){
+				this.$axios.$get(`/api/v1/admin/locum-users?order_by=${orderBy}&limit=${this.perPage}&offset=${offset}`).then(res=>{
+					this.locumUsers = res.data.users
+				})
+			}else{
+				this.$axios.$get(`/api/v1/admin/locum-users?compliance_status=${this.filterCompliances}&order_by=${orderBy}limit=${this.perPage}&offset=${offset}`).then(res=>{
+					this.locumUsers = res.data.users
+				})
+			}
 			
-			this.$axios.$get(`/api/v1/admin/locum-users?limit=${this.perPage}&offset=${offset}`).then(res=>{
-				this.locumUsers = res.data.users
-			})
+			
 			this.loading = false 
 			
 		},
@@ -176,7 +232,7 @@ export default{
 		pagechanged(e) {
 			const query = {
 				...this.$route.query,
-				current_page: e || 1
+				all_locum_page: e || 1
 			}
 			this.$router.push({ query })
 		},

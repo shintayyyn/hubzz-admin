@@ -146,16 +146,7 @@ export default{
         this.loading = false 
       },
       show(){
-        console.log()
         this.modal=true
-        // Promise.all([
-        // 	this.$axios.$get(`/api/v1/admin/practices/${id}`).then(res =>{
-        // 		this.practice = res.data.practice
-        // 	})
-        // ]).then(()=>{
-        // 	console.log('this is the practice from all locums', this.practice)
-        // 	this.modal = true
-        // })
       },
       pagechanged(e) {
         const query = {
@@ -166,7 +157,6 @@ export default{
       },
     }
 }
-
 </script>
 <style>
 .card {

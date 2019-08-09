@@ -7,6 +7,7 @@
         </div>
         
         <div class="ml-4">
+
             <div class="text-white pl-4 pt-2">
                 <strong>Create User</strong>
             </div>
@@ -109,14 +110,13 @@
                 </div>
             </div>
         </div>
-      
     <nuxt-child/>
   </div>
 </template>
 
 <script>
 export default {
-    props:["surgery"],
+    props:['practice','surgery'],
     data(){
         return{
             emailError:'',
@@ -139,6 +139,14 @@ export default {
                 surgery_id:''
             }
         }
+  },
+
+  created(){
+    console.log("surgery",this.surgery)
+    console.log("practice",this.practice)
+    if(this.practice){
+      console.log('practice is here')
+    }
   },
   
 
@@ -172,10 +180,8 @@ export default {
 
       if(!inputPassword){
         this.passwordError = "Please type your password."
-        console.log('lolwut')
       }else if(inputPassword < 6){
         this.passwordError = "Password must be at least 6 characters"
-        console.log('ur mom is so ugly that everybody died')
       }
     },
     
@@ -184,13 +190,10 @@ export default {
       
       if(!inputConfirmPassword){
         this.confirmPasswordError = "Please type again your new password."
-        console.log('lolwut')
       }else if(inputConfirmPassword !== inputPassword){
         this.confirmPasswordError = "Passwords do not match"
-        console.log('i wanna die')
       }else if(inputPassword < 6 || inputConfirmPassword < 6){
         this.confirmPasswordError = "Password must be at least 6 characters"
-        console.log('ur mom is so ugly that everybody died')
       }
     },
 
@@ -242,6 +245,14 @@ export default {
 
     async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
       try{
+        if(this.practice){
+           await this.$axios.post('/api/v1/admin/practice-children',{
+            parent_practice_id:this.practice.id,
+            surgery_id:this.surgery.id
+          })
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Surgery added' })
+          // alert('Surgery added')
+        }
         await this.$axios.post(`/api/v1/admin/practice-users`,{
           email:toPostPracticeUser.email,
           password:toPostPracticeUser.password,
@@ -259,6 +270,23 @@ export default {
       }catch(err){
         console.log("index put locum detail compliance documents error.",err);
         alert('Something went wrong!')
+      }
+    },
+
+    async addSurgery(practiceID,surgeryID){
+
+      try{
+        await this.$axios.post('/api/v1/admin/practice-children',{
+          parent_practice_id:practiceID,
+          surgery_id:surgeryID
+        })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Surgery added' })
+        // alert('Surgery added')
+
+      }catch(err){
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
+        console.log("index practices index put status err", err);
+        // alert('Something went wrong!!')
       }
     }
   }

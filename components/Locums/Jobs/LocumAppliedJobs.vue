@@ -23,7 +23,7 @@
               v-for="(item, index) in appliedJobs" 
               @click="show(item.id)"
               :key="`item-${index}`" 
-              class="flex flex-col xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+              class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
               draggable="false"
             >
               <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
@@ -132,7 +132,7 @@ export default {
       appliedJobs: [],
       total: 0,
       totalPages: 0,
-      currentPage: 0,
+      currentPage: 1,
       perPage: 0,
       ascendDescend: 0,
       modal:false
@@ -145,7 +145,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.currentPage = parseInt(to.query.applied_job_page)
+      this.current_page = parseInt(to.query.applied_job_page)
       this.getAppliedJobs('date_created:desc')
     },
 
