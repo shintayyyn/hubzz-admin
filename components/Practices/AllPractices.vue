@@ -68,6 +68,17 @@
       <!-- END BODY -->
     </div>
     <!-- END TABLE -->
+    <!-- PAGINATION -->
+		<div v-if="practices.length>0">
+			<AppPagination
+				:total="total"
+				:totalPages="totalPages"
+				:currentPage="currentPage"
+				@pagechanged="pagechanged"
+				:loading="loading"
+			/>
+		</div>
+		<!-- PAGINATION ENDS HERE -->
 
     <div class="practice-shield" v-if="$route.name.includes('index-practices-id')"></div>
 
@@ -101,7 +112,7 @@ export default{
           modal:false,
           total: 0,
           totalPages: 0,
-          currentPage: 0,
+          currentPage: 1,
           perPage: 0,
           loading: false,
           modal:false,
@@ -112,23 +123,31 @@ export default{
         }
     },
     beforeDestroy(){
-
+      let query = Object.assign({}, this.$route.query)
+		  delete query.all_practice_page
+		  this.$router.push({ query })
     },
     watch:{
-
+      $route(to, from) {
+        this.currentPage = parseInt(to.query.all_practice_page)
+        this.getAllPractices('created_at:desc')
+      },
     },
     created(){
         const query = {
             ...this.$route.query,
-            current_page: this.$route.query.current_page || 1
+            all_practice_page: this.$route.query.all_practice_page || 1
         }
-
-        this.$axios.$get(`/api/v1/admin/practices/count`).then(res=>{
-            this.total = res.data.count
-            this.perPage = 8
-            this.totalPages = Math.ceil(this.total/this.perPage)
-            this.getAllPractices()
-        })
+        Promise.all([
+          this.$axios.$get(`/api/v1/admin/practices/count`).then(res=>{
+              this.total = res.data.count
+              this.perPage = 8
+              this.totalPages = Math.ceil(this.total/this.perPage)
+          })
+        ]).then(()=>{
+          this.getAllPractices()
+        })  
+        
     },
     computed:{
 
@@ -138,7 +157,7 @@ export default{
       getAllPractices(){
         this.loading = true
         let offset = 0
-        offset = this.perPage * (parseInt(this.$route.query.current_page) - 1)
+        offset = this.perPage * (parseInt(this.$route.query.all_practice_page) - 1)
         
         this.$axios.$get(`/api/v1/admin/practices?limit=${this.perPage}&offset=${offset}`).then(res=>{
           this.practices = res.data.practices
@@ -151,7 +170,7 @@ export default{
       pagechanged(e) {
         const query = {
           ...this.$route.query,
-          current_page: e || 1
+          all_practice_page: e || 1
         }
         this.$router.push({ query })
       },

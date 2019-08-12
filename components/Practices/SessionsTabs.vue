@@ -48,6 +48,7 @@ export default {
         ...this.$route.query,
         session_tab: type
       }
+      
       this.$router.push({ query })
     }
   }

@@ -145,26 +145,26 @@ export default {
         console.log("You are currently viewing this practice",this.practice)
     },
     methods:{
-        async toPutPracticeInfo(practiceID,toPutPractice){
-            try{
-                //await finishes the promise. if failed, corresponding funcs will not be executed
-                await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
-                phone_number:toPutPractice.phone_number,
-                report_to:toPutPractice.report_to,
-                extra_information:toPutPractice.extra_information,
-                status:toPutPractice.status,
-                actived_until:toPutPractice.actived_until
-                })
-                // alert('Saved')
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
-                
-            }catch(err){
-                // alert('Something went wrong!')
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-                console.log("index put locum detail compliance documents error");
-            }
+      async toPutPracticeInfo(practiceID,toPutPractice){
+        try{
+            //await finishes the promise. if failed, corresponding funcs will not be executed
+            await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
+            phone_number:toPutPractice.phone_number,
+            report_to:toPutPractice.report_to,
+            extra_information:toPutPractice.extra_information,
+            status:toPutPractice.status,
+            actived_until:toPutPractice.actived_until
+            })
+            // alert('Saved')
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+            
+        }catch(err){
+            // alert('Something went wrong!')
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+            console.log("index put locum detail compliance documents error");
+        }
 
-        }   
+      }   
     }
     
 }

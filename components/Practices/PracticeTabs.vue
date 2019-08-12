@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-row flex-wrap justify-start">
-      <div 
-        @click.prevent="goTo('practice_profile')"
+      <nuxt-link 
+        :to="{path:`/practices/${practice.id}`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.query.practice_tab === 'practice_profile' ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Practice</div>
+        :class="!$route.query.practice_tab ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Practice</nuxt-link>
       <div
         v-if="this.practice.practice_children.length > 0"
         @click.prevent="goTo('practice_surgeries')"
@@ -45,6 +45,9 @@ export default {
       const query = {
         ...this.$route.query,
         practice_tab: type
+      }
+      if(query.session_tab){
+        delete query.session_tab
       }
       this.$router.push({ query })
     }

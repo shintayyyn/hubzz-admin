@@ -184,35 +184,35 @@ export default {
 
     methods:{
         downloadItem (imgUrl, imgFilename) {
-        const axios = require('axios');
-        axios({
-        url: imgUrl,
-        method: 'GET',
-        responseType: 'blob', // important
-        }).then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', imgFilename);
-            document.body.appendChild(link);
-            link.click();
-        });
-    }   ,
+            const axios = require('axios');
+            axios({
+            url: imgUrl,
+            method: 'GET',
+            responseType: 'blob', // important
+            }).then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', imgFilename);
+                document.body.appendChild(link);
+                link.click();
+            });
+        },
 
-    async changeLocumUserStatus(locumID,activeDisabled){
-      try{
-        await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
-          status:activeDisabled
-        })
-        // alert('Saved')
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
-      }catch(err){
-        console.log("index practices index put status err", err);
-        // alert('Something went wrong!!')
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
-        
-      }
-    }
+        async changeLocumUserStatus(locumID,activeDisabled){
+            try{
+                await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
+                status:activeDisabled
+                })
+                // alert('Saved')
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+            }catch(err){
+                console.log("index practices index put status err", err);
+                // alert('Something went wrong!!')
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
+                
+            }
+        }
   }
 }
 </script>

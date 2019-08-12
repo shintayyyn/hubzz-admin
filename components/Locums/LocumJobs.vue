@@ -3,12 +3,12 @@
       <LocumJobsTabs />
       <div>
         <transition name="fade" mode="out-in">
-          <Component :is="activeComponent" :user="user" :jobs="jobs" />
+          <Component :is="activeComponent" :user="user" />
         </transition>
       </div>
     </div>
 </template>
-</<script>
+<script>
 import LocumJobsTabs from '@/components/Locums/LocumJobsTabs'
 import LocumAvailableJobs from '@/components/Locums/Jobs/LocumAvailableJobs'
 import LocumAppliedJobs from '@/components/Locums/Jobs/LocumAppliedJobs'
@@ -19,7 +19,7 @@ import LocumUnsuccessfulJobs from '@/components/Locums/Jobs/LocumUnsuccessfulJob
 import LocumCancelledJobs from '@/components/Locums/Jobs/LocumCancelledJobs'
 import LocumDeclinedJobs from '@/components/Locums/Jobs/LocumDeclinedJobs'
 export default {
-    props:['user','jobs'],
+    props:['user'],
     components:{
       LocumJobsTabs,
       locum_available: LocumAvailableJobs,
