@@ -21,13 +21,12 @@
             <div class="table-cell p-2 align-middle">Sign-Up Verified</div>
             <div class="table-cell p-2 align-middle">Status</div>
           </div>
-            <nuxt-link
+            <div
             v-for="(user, index) in users"
             :key="`user-${index}`"
-            :to="`/practices/${practice.id}/users/edit-user/${user.id}`"
             class="flex flex-col md:flex-row sm:flex-wrap px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
             draggable="false"
-            >
+            ><!--This needs to lead to a nuxt child with admin being able to modify the user-->
               <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Full Name</strong>
                 <span class="break-word">{{ user.personal_detail.name }}</span>
@@ -51,7 +50,7 @@
                   >{{ user.status }}
                 </span>
                 </div>
-            </nuxt-link>
+            </div>
            </div>
         </div>
     </div>
