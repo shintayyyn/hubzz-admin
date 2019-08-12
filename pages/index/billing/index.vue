@@ -89,7 +89,7 @@ export default {
       billings: [
         {
           invnum: "0000000001",
-          practice: "Disembowelment",
+          practice: "OLDHAM",
           created: "10/02/2019",
           issued: "15/02/2019",
           jobnums: "H00000000101",
@@ -98,7 +98,7 @@ export default {
         },
         {
           invnum: "0000000002",
-          practice: "Live Skinning",
+          practice: "TROUTBECK",
           created: "10/02/2019",
           issued: "14/02/2019",
           jobnums: "H00000000102",
@@ -107,7 +107,7 @@ export default {
         },
         {
           invnum: "0000000001",
-          practice: "Live Limb Cutting",
+          practice: "INSPIRE",
           created: "10/02/2019",
           issued: "15/02/2019",
           jobnums: "H00000000103",

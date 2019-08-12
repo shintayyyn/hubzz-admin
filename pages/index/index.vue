@@ -1,11 +1,10 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-4 md:px-6">
-		<h1>Index</h1>
-	</div>
+    <div class="m-6">
+        <span class="text-4xl text-white">Dashboard</span>
+    </div>
 </template>
-
 <script>
-  export default {
-  	
-  }
+export default {
+    
+}
 </script>
