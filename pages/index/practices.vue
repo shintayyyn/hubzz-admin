@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
+   <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
     <div class="flex flex-col md:flex-row">
       <div class="w-1/2">
         <div class="flex py-2">
@@ -13,10 +13,10 @@
         </div>
       </div>
       <div class="w-1/2">
-        <nuxt-link
-          to="/practices/surgeries/surgery-add-practice"
+        <button
+          @click="show()"
           class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm text-black rounded-lg shadow md:float-right"
-        >Add Practice</nuxt-link>
+        >Add Practice</button>
       </div>
     </div>
 		<!-- TABLE RESPONSIVE-->
@@ -55,7 +55,7 @@
 
 				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
           <strong class="block md:hidden text-sm uppercase">Expires</strong>
-          <span class="break-all">{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Not set' }}</span>
+          <span class="break-all">{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
 
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
@@ -67,8 +67,7 @@
       </nuxt-link>
       <!-- END BODY -->
     </div>
-	<div class="practice-shield" v-if="$route.name.includes('index-practices-id')"></div>
-	
+    <!-- END TABLE -->
 	<!-- PAGINATION -->
 	<div class="flex justify-center">
 		<div v-if="pageCount > 1">
@@ -87,15 +86,27 @@
 		</div>
 	</div>
 	<!-- PAGINATION -->
-    <!-- END TABLE -->
 
+	 <div class="practice-shield" v-if="$route.name.includes('index-practices-id')"></div>
+
+    <div class="practice-shield" v-if="modal"></div>
+    <transition name="slide" mode="out-in">
+      <div class="practice-modal shadow-lg" v-if="modal">
+        <AddPracticeSurgery @close="modal = false"/>
+      </div>
+    </transition>
 
     <nuxt-child/>
   </div>
 </template>
 
 <script>
+import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
+
 export default {
+	components:{
+		AddPracticeSurgery
+	},
 	data() {
       return {
         loading: false,
@@ -104,6 +115,7 @@ export default {
         activePage: 1,
         practices: [],
 		search: '',
+		modal:false
 
       };
     },
@@ -208,6 +220,9 @@ export default {
   	},
   
   	methods: {
+		show(){
+			this.modal=true
+		},
   		goToPage(page) {
   			if (page < 1) {
   				return

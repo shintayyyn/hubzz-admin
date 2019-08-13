@@ -164,6 +164,8 @@ export default {
       ]).then(() => {
         this.getAppliedJobs('date_created:desc'),
         console.log(this.appliedJobs)
+      }).catch((err) => {
+        console.log(err)
       })
     },
     computed:{ 
@@ -202,7 +204,9 @@ export default {
           ]).then(()=>{
             console.log('The job opened is', this.job)
             this.modal = true
-        })
+        }).catch((err) => {
+        console.log(err)
+      })
       },
       pagechanged(e) {
         const query = {

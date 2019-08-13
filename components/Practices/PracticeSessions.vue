@@ -43,7 +43,7 @@ export default {
         console.log(this.practice)
         const query = {
             ...this.$route.query,
-            session_tab:this.$route.query.session_tab || 'session_applied'
+            session_tab:this.$route.query.session_tab || 'session_available'
         }
         this.$router.push({query})
     }
