@@ -1,20 +1,25 @@
 <template>
-    <div class="practice-modal shadow-lg">
-        <transition name="slide" mode="out-in">
-            <PracticeDetailModal :practice="practice"/>
+    <div class="practice-modal p-8 shadow-lg">
+      <nuxt-link to="/practices" class="cursor-pointer">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+      </nuxt-link>
+      <PracticeTabs :practice="practice"/>
+
+      <div class="mt-5" v-if="$route.path == `/practices/${practice.id}`">
+        <transition name="slide" mode="out-in" >
+          <PracticeProfile :practice="practice"/>
         </transition>
-        <nuxt-child/>
+      </div>
+      <nuxt-child/>
     </div>
 </template>
 <script>
-import PracticeDetailModal from '@/components/Practices/PracticeDetailModal'
+import PracticeProfile from '@/components/Practices/PracticeProfile'
+import PracticeTabs from '@/components/Practices/PracticeTabs'
 export default {
-    // transition:{
-    //     name:'slide',
-    //     mode:'out-in'
-    // },
     components:{
-        PracticeDetailModal
+        PracticeProfile,
+        PracticeTabs
     },
     data() {
         return {

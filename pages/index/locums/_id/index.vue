@@ -35,11 +35,6 @@ export default {
 }
 </script>
 <style>
-.card {
-  min-width: 100px;
-  height: 250px;
-  box-sizing: content-box;
-}
 .locum-shield {
   position: fixed;
   top: 0;

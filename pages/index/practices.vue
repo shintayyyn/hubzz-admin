@@ -33,8 +33,8 @@
       <!-- BODY -->
       <nuxt-link
         v-for="(practice, index) in practices"
-				:key="`practice-${index}`"
-				:to="{path:`/practices/${practice.id}`,query:$route.query}"
+		:key="`practice-${index}`"
+		:to="{path:`/practices/${practice.id}`,query:$route.query}"
         class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 my-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
         draggable="false"
       >

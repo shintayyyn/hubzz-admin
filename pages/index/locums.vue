@@ -370,3 +370,8 @@ methods: {
 	}
 }
 </script>
+<style>
+.page-button {
+  background: linear-gradient(to top, #f2d024, #efde86);
+}
+</style>

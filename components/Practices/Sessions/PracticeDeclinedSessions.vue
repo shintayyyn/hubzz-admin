@@ -5,7 +5,7 @@
           <div
           class="mt-10 w-full text-center"
           style="font-family: Nunito"
-          >This locum has not declined to any job yet.</div>
+          >This practice has no declined session/s yet.</div>
         </div>
         <div v-else>
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 

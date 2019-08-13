@@ -5,7 +5,7 @@
             <div
             class="mt-10 w-full text-center"
             style="font-family: Nunito"
-            >This locum is not currently hired to any job.</div>
+            >This practice is no currently ongoing session/s.</div>
           </div>
           <div v-else>
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 

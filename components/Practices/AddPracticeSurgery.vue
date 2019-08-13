@@ -104,10 +104,9 @@ export default {
     },
 
     beforeDestroy() {
-		let query = Object.assign({}, this.$route.query)
-		delete query.add_practice_page
-    this.$router.push({ query })
-    
+      let query = Object.assign({}, this.$route.query)
+      delete query.add_practice_page
+      this.$router.push({ query })
     },
     watch:{
       $route(to, from) {

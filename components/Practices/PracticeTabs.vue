@@ -3,41 +3,40 @@
       <nuxt-link 
         :to="{path:`/practices/${practice.id}`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="!$route.query.practice_tab ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        :class="$route.path == `/practices/${practice.id}` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Practice</nuxt-link>
-      <div
+      <nuxt-link
         v-if="this.practice.practice_children.length > 0"
-        @click.prevent="goTo('practice_surgeries')"
+        :to="{path:`/practices/${practice.id}/practice-surgeries`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.query.practice_tab === 'practice_surgeries' ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : 'text-white'"
-      >Surgeries</div>
-      <div
-        @click.prevent="goTo('practice_sessions')"
+        :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Surgeries</nuxt-link>
+      <nuxt-link
+        :to="{path:`/practices/${practice.id}/practice-sessions`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.query.practice_tab === 'practice_sessions' ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : 'text-white'"
-      >Sessions</div>
-      <div 
-        @click.prevent="goTo('practice_users')"
+        :class="$route.path == `/practices/${practice.id}/practice-sessions` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Sessions</nuxt-link>
+      <nuxt-link 
+        :to="{path:`/practices/${practice.id}/practice-users`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.query.practice_tab === 'practice_users' ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Users</div>
-      <div
-        @click.prevent="goTo('practice_documents')"
+        :class="$route.path == `/practices/${practice.id}/practice-users` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Users</nuxt-link>
+      <nuxt-link
+        :to="{path:`/practices/${practice.id}/practice-documents`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.query.practice_tab === 'practice_documents' ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : 'text-white'"
-      >Documents</div>
-      <div
-        @click.prevent="goTo('practice_rates')"
+        :class="$route.path == `/practices/${practice.id}/practice-documents` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Documents</nuxt-link>
+      <nuxt-link
+        :to="{path:`/practices/${practice.id}/practice-rates`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.query.practice_tab === 'practice_rates' ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : 'text-white'"
-      >Rates</div>
+        :class="$route.path == `/practices/${practice.id}/practice-rates` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Rates</nuxt-link>
   </div>
 </template>
 <script>
 export default {
   props:['practice'],
   created(){
-    console.log(this.$route.query.practice_tab)
     console.log("practice tabs has",this.practice)
   },
   methods: {

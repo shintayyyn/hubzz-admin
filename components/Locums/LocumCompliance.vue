@@ -265,7 +265,7 @@
             <!-- END BODY -->
         </div>
         <!-- END TABLE -->
-            <div class="compliance-shield" v-if="$route.name.includes('index-compliance-docs')"></div>
+        <div class="compliance-shield" v-if="$route.name.includes('index-compliance-docs')"></div>
         <nuxt-child/>
     </div>
 </template>
@@ -468,11 +468,6 @@ export default {
 }
 </script>
 <style>
-.card {
-  min-width: 100px;
-  height: 250px;
-  box-sizing: content-box;
-}
 .compliance-shield {
   position: fixed;
   top: 0;

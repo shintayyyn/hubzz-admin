@@ -81,7 +81,6 @@
               class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left" no-underline
             >Add User
             </button>
-            
           </nuxt-link>
         </div>
 

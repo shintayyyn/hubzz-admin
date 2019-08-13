@@ -116,7 +116,7 @@
 
 <script>
 export default {
-    props:['practice','surgery'],
+    props:['practice','surgery','user'],
     data(){
         return{
             emailError:'',
@@ -245,7 +245,7 @@ export default {
 
     async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
       try{
-        if(this.practice){
+        if(!this.practice.practice_children){
            await this.$axios.post('/api/v1/admin/practice-children',{
             parent_practice_id:this.practice.id,
             surgery_id:this.surgery.id
