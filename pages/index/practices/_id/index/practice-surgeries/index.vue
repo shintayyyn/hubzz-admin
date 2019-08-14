@@ -1,6 +1,6 @@
 <template>
    
-        <div class="practice-tab mt-5">
+        <div class="mt-5">
             <transition name="fade" mode="out-in">
                 <PracticeSurgeries :practice="practice"/>
             </transition>

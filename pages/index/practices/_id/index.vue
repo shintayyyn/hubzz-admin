@@ -6,10 +6,12 @@
       <PracticeTabs :practice="practice"/>
 
       <div class="mt-5" v-if="$route.path == `/practices/${practice.id}`">
-        <transition name="slide" mode="out-in" >
+        <transition name="fade" mode="out-in" >
           <PracticeProfile :practice="practice"/>
         </transition>
       </div>
+      <div class="practice-shield" v-if="$route.name.includes('index-practice-users-pracUserId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('index-practice-documents-pracDocId')"></div>
       <nuxt-child/>
     </div>
 </template>
@@ -17,6 +19,7 @@
 import PracticeProfile from '@/components/Practices/PracticeProfile'
 import PracticeTabs from '@/components/Practices/PracticeTabs'
 export default {
+    
     components:{
         PracticeProfile,
         PracticeTabs

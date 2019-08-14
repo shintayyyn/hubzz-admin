@@ -1,5 +1,5 @@
 <template>
-    <div class="practice-tab mt-2">
+    <div class="mt-5">
         <PracticeRates :practice="practice"/>
     </div>
 </template>

@@ -21,6 +21,7 @@
           ></svgicon>
           <span class="px-1">Save</span>
         </button>
+
         <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2">
           <a 
             @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
@@ -68,15 +69,6 @@
                 /> -->
             </div>
             <p class="mt-5 mr-20">Status</p>
-                <!-- <select
-                    class="outline-none border-2 border-transparent text-sm text-black pr-6"
-                    id="grid-state"
-                    v-model="toPutLocumDetailCompliance.status"
-                  >
-                    <option>Approved</option>
-                    <option>Rejected</option>
-                </select> -->
-
                 <button
                   class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
                   :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"

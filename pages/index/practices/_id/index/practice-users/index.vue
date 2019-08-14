@@ -1,5 +1,5 @@
 <template>
-    <div class="practice-tab mt-5">
+    <div class="mt-5">
         <transition name="fade" mode="out-in">
             <PracticeUsers :practice="practice"/>
         </transition>
@@ -8,7 +8,6 @@
 </template>
 <script>
 import PracticeUsers from '@/components/Practices/PracticeUsers'
-import PracticeTabs from '@/components/Practices/PracticeTabs'
 export default {
     transition:{
         name:'fade',
@@ -16,7 +15,6 @@ export default {
     },
     components:{
         PracticeUsers,
-        PracticeTabs
     },
     data(){
         return{

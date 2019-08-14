@@ -42,8 +42,11 @@
                   </label>
                 </div>
               </div>
-              <div v-if="document.practiceSpecificDoc" class="flex text-white text-sm py-2 md:py-4 md:px-4">
-                <div class="bg-blue flex items-center text-center rounded-full text-white no-underline px-4 py-2">
+              <div v-if="document.practiceSpecificDoc" 
+              class="flex text-white text-sm py-2 md:py-4 md:px-4">
+                <nuxt-link 
+                :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`}"
+                class="bg-blue flex items-center text-center rounded-full text-white no-underline px-4 py-2">
                   <svgicon
                     name="folder"
                     width="21"
@@ -51,7 +54,7 @@
                     color="white white"
                   ></svgicon> 
                   <span class="px-2">View File</span>
-                </div>
+                </nuxt-link>
               </div>
             </div>
         </div>
@@ -87,44 +90,6 @@ export default{
             console.log(err)
         })
     },
-
-    // async asyncData({ app, route }) {
-    //     try {
-    //     let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-    //     const specificPractice = response.data.data.practice
-    //     const surgeries = response.data.data.practice.surgery
-        
-    //     response = await app.$axios.get(`/api/v1/admin/practice-document-types`)
-    //     const practiceDocTypes = response.data.data.practice_document_types
-
-    //     response = await app.$axios.get(`/api/v1/admin/practice-documents`, {
-    //         params: {
-    //         practice_id: route.params.id
-    //         }
-    //     })
-    //     const practiceDocs = response.data.data.practice_documents
-
-    //     const specificPracticeDocumentTypes = practiceDocTypes.map((practiceDocType)=>{
-    //         const practiceSpecificDoc = practiceDocs.find((practiceDoc) => {
-    //         return practiceDoc.practice_document_type.id === practiceDocType.id
-    //         })
-    //         return{
-    //             practiceDocType,
-    //             practiceSpecificDoc
-    //         }
-    //     })
-
-    //     console.log(specificPracticeDocumentTypes)
-
-    //     return{
-    //         specificPractice,
-    //         surgeries,
-    //         specificPracticeDocumentTypes
-    //     }
-    //     } catch (err) {
-    //     console.log("index practices index _id index asyncData err", err);
-    //     }
-    // },
 
   methods:{
     async getData(){
@@ -307,8 +272,33 @@ button:focus{
 #file{
 color: transparent;
 }
-.page-overlap{
-width: calc(100% - 70px);
+.practice-document-shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
+.practice-document-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px orange;
+  transition: all 0.3s ease-in-out;
+  background-color:#505561;
+  z-index: 512;
+}
+@media screen and (min-width: 1200px) {
+  .practice-document-modal {
+    width: 70%;
+  }
 }
 
   

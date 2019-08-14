@@ -102,7 +102,7 @@ export default {
       url: fileUrl,
       method: 'GET',
       responseType: 'blob', // important
-    }).then(response => {
+      }).then(response => {
       console.log(response)
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');

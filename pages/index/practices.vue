@@ -87,9 +87,7 @@
 	</div>
 	<!-- PAGINATION -->
 
-	 <div class="practice-shield" v-if="$route.name.includes('index-practices-id')"></div>
-
-    <div class="practice-shield" v-if="modal"></div>
+	<div class="practice-shield" v-if="$route.name.includes('index-practices-id')"></div>
     <transition name="slide" mode="out-in">
       <div class="practice-modal shadow-lg" v-if="modal">
         <AddPracticeSurgery @close="modal = false"/>

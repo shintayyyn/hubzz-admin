@@ -3,7 +3,7 @@
         <div class="w-full overflow-hidden">
             <div>
               <button
-                class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
                 @click="show(surgery.id)"
               >Add User
               </button>
@@ -47,8 +47,8 @@
                     :class="`${user.status === 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
                     >{{ user.status }}
                     </span>
-                    </div>
-            </nuxt-link>    
+                </div>
+            </nuxt-link>  
         </div>
         <div class="practice-user-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
@@ -56,8 +56,7 @@
                 <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery"/>
             </div>
         </transition>
-        <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId')">ffewefewf</div>
-        <nuxt-child/>
+        
     </div>
 </template>
 <script>

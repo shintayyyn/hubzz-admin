@@ -1,8 +1,8 @@
 <template>
-    <div class="page-overlap flex-1 flex flex-col self-end bg-trout  ">
+    <div class="page-overlap flex-1 flex flex-col self-end bg-trout mt-4">
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="`/practices/${practice.id}/practice-users`" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
         </nuxt-link>
       </div>
       <div class="flex flex-col rounded-lg pl-6">
@@ -32,7 +32,6 @@
           class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5"
         >
           <div class="w-full overflow-hidden text-grey-light text-sm p-2">
-            
             <div class="flex py-1">E-Mail Address 
               <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>
             </div>
@@ -147,7 +146,10 @@
           </div>
         </div>
       </div>
+      <!-- <div class="compliance-shield" v-if="$route.name.includes('index-practice-users-pracUserId')"></div>
+      <nuxt-child/> -->
     </div>
+    
 </template>
 <script>
 export default {

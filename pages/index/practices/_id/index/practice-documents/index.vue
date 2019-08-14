@@ -1,6 +1,9 @@
 <template>
-    <div class="practice-tab mt-5">
-       <PracticeDocuments :practice="practice"/>
+    <div class="mt-5">
+        <transition name="fade" mode="out-in">    
+            <PracticeDocuments :practice="practice"/>
+        </transition>
+        <nuxt-child/>
     </div>
 </template>
 <script>
