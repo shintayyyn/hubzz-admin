@@ -18,27 +18,22 @@ export default {
         return{
             compliance_doc:null,
             user:null
-            
         }
     },
     async asyncData({ app, route }) {
         try {
-        //File ID route
-        //from file ID route, find first in compliance documents route. else, find in mandatory trainings route
+            let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`)
+            const compliance_doc = response.data.data.locum_detail_compliance_document
 
-        let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`)
-        const compliance_doc = response.data.data.locum_detail_compliance_document
-
-        response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
-        const user = response.data.data.user
-        
-        console.log(compliance_doc)
-        console.log(user)
-        return{
-            compliance_doc,
-            user
-        }
-
+            response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
+            const user = response.data.data.user
+            
+            console.log(compliance_doc)
+            console.log(user)
+            return{
+                compliance_doc,
+                user
+            }
         }catch (err) {
         console.log("index practices index create asyncData err", err);
         }

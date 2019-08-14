@@ -9,7 +9,13 @@
               </button>
             </div>
         </div>
-        <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+        <div class="text-white " v-if="users.length == 0">
+            <div
+            class="mt-10 w-full text-center"
+            style="font-family: Nunito"
+            >This practice has no users+.</div>
+        </div>
+        <div v-else class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
                 <div class="table-cell p-2 align-middle">Full Name</div> 
                 <div class="table-cell p-2 align-middle">Email Address</div>
@@ -50,13 +56,22 @@
                 </div>
             </nuxt-link>  
         </div>
+        
+        <div v-if="!users.length == 0" class="-ml-32">
+          <AppPagination
+            :total="total"
+            :totalPages="totalPages"
+            :currentPage="currentPage"
+            @pagechanged="pagechanged"
+          />
+        </div>
+
         <div class="practice-user-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
             <div class="practice-user-modal shadow-lg" v-if="modal">
                 <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery"/>
             </div>
         </transition>
-        
     </div>
 </template>
 <script>
@@ -76,24 +91,25 @@ export default {
             currentPage:1,
             perPage:0,
             surgery:null,
-            users:null,
+            users:[],
             query:null
         }
     },
-    // beforeDestroy(){
-    //     let query = Object.assign({}, this.$route.query)
-    //     delete query.practice_users_page
-    //     this.$router.push({ query })
-    // },
-    // watch:{
-    //     $route(to, from){
-    //         this.currentPage = parseInt(to.query.practice_users_page)
-    //         this.getAllPracticeUsers() 
-    //     },
-    // },
+    beforeDestroy(){
+        let query = Object.assign({}, this.$route.query)
+        delete query.practice_users_page
+        this.$router.push({ query })
+    },
+    watch:{
+        $route(to, from){
+            this.currentPage = parseInt(to.query.practice_users_page)
+            this.getAllPracticeUsers() 
+        },
+    },
     created(){
         this.query = {
-        ...this.$route.query
+        ...this.$route.query,
+        practice_users_page: this.$route.query.practice_users_page || 1
         }
         this.$axios.$get(`/api/v1/admin/practice-users/count?practice_id=${this.practice.id}`).then(res=>{
             this.total = res.data.count
@@ -109,9 +125,9 @@ export default {
         getAllPracticeUsers(){
             this.loading = true
             let offset = 0
-            offset = this.perPage *(parseInt(this.$route.query.current_page) - 1)
 
-            this.$axios.$get(`/api/v1/admin/practice-users?practice_id=${this.practice.id}`).then(res=>{
+            offset = this.perPage *(parseInt(this.$route.query.practice_users_page) - 1)
+            this.$axios.$get(`/api/v1/admin/practice-users?practice_id=${this.practice.id}&limit=${this.perPage}&offset=${offset}`).then(res=>{
             this.users = res.data.users
             })
             this.loading = false
@@ -128,6 +144,13 @@ export default {
                 this.modal = true
             })
         },
+        pagechanged(e) {
+            const query = {
+                ...this.$route.query,
+                practice_users_page: e || 1
+            }
+            this.$router.push({ query })
+        }
     },
       
     

@@ -198,15 +198,15 @@ export default {
       show(id) {
         console.log(id)
         Promise.all([
-            this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
+          this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
               this.job = res.data.job
             })
           ]).then(()=>{
             console.log('The job opened is', this.job)
             this.modal = true
-        }).catch((err) => {
-        console.log(err)
-      })
+          }).catch((err) => {
+          console.log(err)
+        })
       },
       pagechanged(e) {
         const query = {

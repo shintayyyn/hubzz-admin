@@ -156,7 +156,7 @@ export default {
       }
       Promise.all([
         console.log(this.user),
-        this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&locum_status=Declined`).then(res=>{
+        this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Declined`).then(res=>{
           this.total = res.data.count
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
@@ -169,7 +169,7 @@ export default {
     computed:{ 
       // declinedJobs:function(){
       //   return this.jobs.filter(function(job) {
-      //     return job.locum_status === "Declined"
+      //     return job.status === "Declined"
       //   })
       // }
     },
@@ -188,7 +188,7 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.declined_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&locum_status=Declined&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
+          this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Declined&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
             this.declinedJobs = res.data.jobs
           })
        
