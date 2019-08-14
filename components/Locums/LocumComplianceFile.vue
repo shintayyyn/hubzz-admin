@@ -4,13 +4,13 @@
       <!-- HEADER -->
       <div class="flex items-center text-sm text-white py-6 px-8 mr-8">
         <div class="mr-6">
-          <nuxt-link :to="{path:`/locums/${user.id}?locum_tab=locum_compliance`}" class="cursor-pointer">
+          <div @click="goBack()" class="cursor-pointer">
             <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-          </nuxt-link>
+          </div>
         </div>
         
         
-        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 "
+        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1"
           @click.prevent="toPutLocumDetailComplianceDocs(compliance_doc.id,toPutLocumDetailCompliance,compliance_doc.expired_at)">
           <svgicon
           name="save-icon"
@@ -22,7 +22,7 @@
           <span class="px-1">Save</span>
         </button>
 
-        <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2">
+        <div class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1">
           <a 
             @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
             class="inline-flex items-center text-white hover:text-black no-underline">
@@ -34,7 +34,7 @@
               hover ="transparent black"
             >
             </svgicon>
-            <span class="px-1 ">Download</span>
+            <span class="px-1">Download</span>
           </a>
         </div>
       </div>
@@ -125,75 +125,82 @@ export default {
     
     methods:{
         setStatusData(incomingStatus){
-        if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Approved'){
+          if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Approved'){
 
-            this.toPutLocumDetailCompliance.status = ''
-            this.notesAreVisible = false
+              this.toPutLocumDetailCompliance.status = ''
+              this.notesAreVisible = false
 
-        }else if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Rejected'){
-            
-            this.toPutLocumDetailCompliance.status = 'Rejected'
-            this.notesAreVisible = true
-            this.toPutLocumDetailCompliance.expired_at = null
+          }else if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Rejected'){
+              
+              this.toPutLocumDetailCompliance.status = 'Rejected'
+              this.notesAreVisible = true
+              this.toPutLocumDetailCompliance.expired_at = null
 
-        }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Rejected'){
-            
-            this.toPutLocumDetailCompliance.status = ''
-            this.notesAreVisible = true
-            this.toPutLocumDetailCompliance.expired_at = null
+          }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Rejected'){
+              
+              this.toPutLocumDetailCompliance.status = ''
+              this.notesAreVisible = true
+              this.toPutLocumDetailCompliance.expired_at = null
 
-        }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Approved'){
-            
-            this.toPutLocumDetailCompliance.status = 'Approved'
-            this.notesAreVisible = false
+          }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Approved'){
+              
+              this.toPutLocumDetailCompliance.status = 'Approved'
+              this.notesAreVisible = false
 
-        }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === ''  && incomingStatus === 'Approved'){
-            
-            this.toPutLocumDetailCompliance.status = incomingStatus
-            this.notesAreVisible = false
+          }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === ''  && incomingStatus === 'Approved'){
+              
+              this.toPutLocumDetailCompliance.status = incomingStatus
+              this.notesAreVisible = false
 
-        }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === '' && incomingStatus === 'Rejected'){
-            this.toPutLocumDetailCompliance.status = incomingStatus
-            this.notesAreVisible = true
-            this.toPutLocumDetailCompliance.expired_at = null
-        }
-            
-            
+          }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === '' && incomingStatus === 'Rejected'){
+              this.toPutLocumDetailCompliance.status = incomingStatus
+              this.notesAreVisible = true
+              this.toPutLocumDetailCompliance.expired_at = null
+          }   
         },
 
         downloadItem (fileUrl, fileFilename) {
-        const axios = require('axios');
-        axios({
-        url: fileUrl,
-        method: 'GET',
-        responseType: 'blob', // important
-        }).then(response => {
-        console.log(response)
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', fileFilename);
-        document.body.appendChild(link);
-        link.click();
-        console.log(fileUrl)
-        });
+          const axios = require('axios');
+          axios({
+            url: fileUrl,
+            method: 'GET',
+            responseType: 'blob', // important
+          }).then(response => {
+            console.log(response)
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', fileFilename);
+            document.body.appendChild(link);
+            link.click();
+            console.log(fileUrl)
+          });
         },
 
         async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
           console.log(toPutLocumDetailCompliance)
-        try{
-            await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-            status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
-            expired_at:toPutLocumDetailCompliance.expired_at,
-            note:toPutLocumDetailCompliance.note
-            })
-            // alert('Saved')
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
-        }catch(err){
-            console.log("index put locum detail compliance documents error",err);
-            // alert('Something went wrong!')
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        }
+          try{
+              await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+              status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
+              expired_at:toPutLocumDetailCompliance.expired_at,
+              note:toPutLocumDetailCompliance.note
+              })
+              // alert('Saved')
+              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+          }catch(err){
+              console.log("index put locum detail compliance documents error",err);
+              // alert('Something went wrong!')
+              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+          }
+        },
+        goBack(type) {
+          const query = {
+            ...this.$route.query,
+          }
+          if(query.job_status){
+            delete query.job_status
+          }
+          this.$router.push({path:`/locums/${this.user.id}/locum-compliance`,query })
         }
     }
 }

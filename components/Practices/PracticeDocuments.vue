@@ -25,7 +25,7 @@
         </div>
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
           <strong class="block md:hidden text-sm uppercase">Last Upload Date</strong>
-          <span class="break-all">{{ document.practiceSpecificDoc ? $moment(document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null }}</span>
+          <span class="break-all">{{ document.practiceSpecificDoc && document.practiceSpecificDoc.created_at ? $moment(document.practiceSpecificDoc.updated_at ? document.practiceSpecificDoc.updated_at : document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null }}</span>
         </div>
 
         <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
@@ -38,14 +38,14 @@
                     type="file" 
                     id="file" 
                     :ref="`file-${document.practiceDocType.id}`" 
-                    v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, specificPractice.id, document.practiceDocType.id, document.practiceSpecificDoc)"/>
+                    v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"/>
                   </label>
                 </div>
               </div>
               <div v-if="document.practiceSpecificDoc" 
               class="flex text-white text-sm py-2 md:py-4 md:px-4">
                 <nuxt-link 
-                :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`}"
+                :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
                 class="bg-blue flex items-center text-center rounded-full text-white no-underline px-4 py-2">
                   <svgicon
                     name="folder"
@@ -77,12 +77,16 @@ export default{
         practiceDocTypes:[],
         practiceDocs:[],
         file1IsUploadable:'false',
-        file2IsUploadable:'false'
+        file2IsUploadable:'false',
+        query:null
         
         };
     },
     created(){
         Promise.all([
+            this.query = {
+            ...this.$route.query
+            },
             this.getData()
         ]).then(()=>{
             console.log('it worked')
@@ -177,6 +181,7 @@ export default{
     },
 
     async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
+      await console.log("Infos uploaded: \n","refname: ",refName,"docID: ",documentId,"prac id: ",practiceID, "prac docid: ",practiceDocumentID,"prac document: ",practiceSpecificDocument)
       const el = this.$refs[refName][0]
       if (el.files && el.files.length === 0) {
         return

@@ -20,7 +20,7 @@
             <nuxt-link
                 v-for="(user, index) in users"
                 :key="`user-${index}`"
-                :to="{path:`/practices/${practice.id}/practice-users/${user.id}`}"
+                :to="{path:`/practices/${practice.id}/practice-users/${user.id}`,query}"
                 class="flex flex-col md:flex-row sm:flex-wrap px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
                 ><!--This needs to lead to a nuxt child with admin being able to modify the user-->
@@ -76,7 +76,8 @@ export default {
             currentPage:1,
             perPage:0,
             surgery:null,
-            users:null
+            users:null,
+            query:null
         }
     },
     // beforeDestroy(){
@@ -91,6 +92,9 @@ export default {
     //     },
     // },
     created(){
+        this.query = {
+        ...this.$route.query
+        }
         this.$axios.$get(`/api/v1/admin/practice-users/count?practice_id=${this.practice.id}`).then(res=>{
             this.total = res.data.count
             this.perPage = 8

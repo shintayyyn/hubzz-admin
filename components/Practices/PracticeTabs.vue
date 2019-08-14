@@ -1,54 +1,54 @@
 <template>
   <div class="flex flex-row flex-wrap justify-start">
-      <nuxt-link 
-        :to="{path:`/practices/${practice.id}`}"
+      <div
+        @click="goTo()" 
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Practice</nuxt-link>
-      <nuxt-link
+      >Practice</div>
+      <div
+        @click="goTo('practice-surgeries')"
         v-if="this.practice.practice_children.length > 0"
-        :to="{path:`/practices/${practice.id}/practice-surgeries`}"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Surgeries</nuxt-link>
-      <nuxt-link
-        :to="{path:`/practices/${practice.id}/practice-sessions`}"
+      >Surgeries</div>
+      <div
+        @click="goTo('practice-sessions')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-sessions` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Sessions</nuxt-link>
-      <nuxt-link 
-        :to="{path:`/practices/${practice.id}/practice-users`}"
+      >Sessions</div>
+      <div 
+        @click="goTo('practice-users')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-users` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Users</nuxt-link>
-      <nuxt-link
-        :to="{path:`/practices/${practice.id}/practice-documents`}"
+      >Users</div>
+      <div
+        @click="goTo('practice-documents')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-documents` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Documents</nuxt-link>
-      <nuxt-link
-        :to="{path:`/practices/${practice.id}/practice-rates`}"
+      >Documents</div>
+      <div
+        @click="goTo('practice-rates')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-rates` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
-      >Rates</nuxt-link>
+      >Rates</div>
   </div>
 </template>
 <script>
 export default {
   props:['practice'],
-  created(){
-    console.log("practice tabs has",this.practice)
-  },
   methods: {
     goTo(type) {
       const query = {
-        ...this.$route.query,
-        practice_tab: type
+        ...this.$route.query
       }
-      if(query.session_tab){
-        delete query.session_tab
+      if(query.sesstion_tab){
+        delete query.sesstion_tab
       }
-      this.$router.push({ query })
+      if(type){
+        this.$router.push({path:`/practices/${this.practice.id}/`+type,query })
+      }else{
+        this.$router.push({path:`/practices/${this.practice.id}`,query })
+      }
     }
   }
 }

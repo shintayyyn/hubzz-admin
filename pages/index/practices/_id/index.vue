@@ -1,8 +1,8 @@
 <template>
     <div class="practice-modal p-8 shadow-lg">
-      <nuxt-link to="/practices" class="cursor-pointer">
+      <div @click="goBack()" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-      </nuxt-link>
+      </div>
       <PracticeTabs :practice="practice"/>
 
       <div class="mt-5" v-if="$route.path == `/practices/${practice.id}`">
@@ -19,7 +19,6 @@
 import PracticeProfile from '@/components/Practices/PracticeProfile'
 import PracticeTabs from '@/components/Practices/PracticeTabs'
 export default {
-    
     components:{
         PracticeProfile,
         PracticeTabs
@@ -39,6 +38,17 @@ export default {
         }catch(err){
              console.log('get practice error!!!!',err)
         }
+    },
+    methods:{
+        goBack(){
+            const query = {
+                ...this.$route.query
+            }
+            if(query.session_tab){
+                delete query.session_tab
+            }
+            this.$router.push({path:'/practices',query})
+        },
     }
 }
 </script>

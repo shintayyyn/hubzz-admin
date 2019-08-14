@@ -55,6 +55,8 @@ export default {
         { name: "Practices", route: "/practices" },
         { name: "Reports", route: "/reports" },
         { name: "Billing", route: "/billing" },
+        { name: "FAQs", route: "/faqs" },
+        { name: "Terms and Conditions", route: "/tncs" },
         { name: "Support", route: "/support" }
       ];
 

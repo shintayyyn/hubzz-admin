@@ -72,7 +72,6 @@
                         <p class="ml-2 text-white">Per hour £ (none)</p>
                         <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
                         
-
                         <div v-if="userComplianceDocuments">
                         <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
                         <div v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
@@ -173,7 +172,7 @@ export default {
 
     created() {
     
-        console.log("user",this.user)
+        console.log("this is locum profile",this.user)
         // this.locumDetails = this.user.locum_detail
         // this.userComplianceDocuments = this.user.locum_detail.compliance_documents
         // this.qualifications = this.user.locum_detail.qualifications

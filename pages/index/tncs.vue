@@ -1,6 +1,6 @@
 <template>
     <div class="m-6">
-        <div class="text-4xl text-white">Dashboard</div>
+        <div class="text-4xl text-white">Terms and Conitions</div>
         <div class="text-sm text-white">Work in progress.</div>
     </div>
 </template>
@@ -9,3 +9,6 @@ export default {
     
 }
 </script>
+<style>
+
+</style>

@@ -4,7 +4,7 @@
       <!-- HEADER -->
       <div class="flex text-sm text-white py-6 px-6">
         <nuxt-link
-          :to="{path:`/practices/${practice.id}/practice-documents`}"
+          :to="{path:`/practices/${practice.id}/practice-documents`,query}"
           class="text-white hover:text-yellow-dark p-1 mr-4"
         >
           <svgicon
@@ -62,11 +62,15 @@ export default {
     data() {
         return {
             practice:null,
+            query:null
         };
     },
 
     created(){
-        this.practice = this.practiceDoc.practice
+        this.practice = this.practiceDoc.practice,
+        this.query = {
+        ...this.$route.query
+        }
     },
 
     computed:{

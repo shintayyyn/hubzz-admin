@@ -1,23 +1,29 @@
 <template>
-    <div class="locum-modal shadow-lg">
-        <transition name = "slide" mode = "out-in">
-            <LocumDetailModal :user="user"/>
-        </transition>
+    <div class="locum-modal p-8 shadow-lg">
+        <div @click="goBack()" class="cursor-pointer">
+            <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
+        </div>
+        <LocumTabs :user="user"/>
+        <div class="mt-5" v-if="$route.path == `/locums/${user.id}`">
+            <transition name="fade" mode="out-in">
+                <LocumProfile :user="user"/>
+            </transition>
+        </div>
         <nuxt-child/>
+        <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')"></div>
+        <!--PUT SHIELDS HERE FOR CHILDREN-->
     </div>
 </template>
 <script>
-import LocumDetailModal from '@/components/Locums/LocumDetailModal'
+import LocumProfile from '@/components/Locums/LocumProfile'
+import LocumTabs from '@/components/Locums/LocumTabs'
 export default {
-    // transition:{
-    //     name:'slide',
-    //     mode:'out-in'
-    // },
     components:{
-        LocumDetailModal
+        LocumProfile,
+        LocumTabs
     },
-    data() {
-        return {
+    data(){
+        return{
             user: null,
         }
     },
@@ -25,12 +31,24 @@ export default {
         try{
             let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
+            console.log(user)
             return{
                 user
             }
         }catch(err){
-             console.log('get locum error!!!!',err)
+            console.log("get locum error!",err)
         }
+    },
+    methods:{
+        goBack(){
+            const query = {
+                ...this.$route.query
+            }
+            if(query.job_status){
+                delete query.job_status
+            }
+            this.$router.push({path:'/locums',query})
+        },
     }
 }
 </script>

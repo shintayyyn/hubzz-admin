@@ -1,5 +1,5 @@
 <template>
-    <div class="px-6">
+    <div>
         <div
             class="flex lg:w-2/3 no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
             style="position:relative;">
@@ -82,7 +82,7 @@
                 v-for="(item, index) in mandatoryComplianceDocuments" :key="`item-${index}`"
                 :event="item.locumMandatoryComplianceDocument==null ? disabled :'click'" 
                 :class="item.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
-                :to="{path:`/locums/${user.id}/compliance-docs/${item.locumMandatoryComplianceDocument ? item.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
+                :to="{path:`/locums/${user.id}/locum-compliance/${item.locumMandatoryComplianceDocument ? item.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
             >
@@ -156,7 +156,7 @@
                 v-for="(item, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
                 :event="item.locumOptionalComplianceDocument==null ? disabled :'click'"
                 :class="item.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
-                :to="{path:`/locums/${user.id}/compliance-docs/${item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.id : null }`, query: $route.query}"
+                :to="{path:`/locums/${user.id}/locum-compliance/${item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.id : null }`, query}"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
             >
@@ -290,6 +290,7 @@ export default {
         locumMandatoryTrainings:[],
         professionCategory:null,
         disabled:'true',
+        query:null
         };
     },
     created() {
@@ -298,7 +299,10 @@ export default {
         let route = this.$route.params.id
     
         Promise.all([
-            this.getData()
+            this.getData(),
+            this.query = {
+            ...this.$route.query
+            }
         ]).then(()=>{
             console.log('mandatory trainings',this.locumMandatoryTrainings)
             console.log('pro cat 1',this.professionCategoryId),
