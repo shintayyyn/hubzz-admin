@@ -4,23 +4,13 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
       </div>
       <PracticeTabs :practice="practice"/>
-
-      <div class="mt-5" v-if="$route.path == `/practices/${practice.id}`">
-        <transition name="fade" mode="out-in" >
-          <PracticeProfile :practice="practice"/>
-        </transition>
-      </div>
-      <div class="practice-shield" v-if="$route.name.includes('index-practice-users-pracUserId')"></div>
-      <div class="practice-shield" v-if="$route.name.includes('index-practice-documents-pracDocId')"></div>
       <nuxt-child/>
     </div>
 </template>
 <script>
-import PracticeProfile from '@/components/Practices/PracticeProfile'
 import PracticeTabs from '@/components/Practices/PracticeTabs'
 export default {
     components:{
-        PracticeProfile,
         PracticeTabs
     },
     data() {

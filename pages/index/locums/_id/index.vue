@@ -4,22 +4,13 @@
             <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
         </div>
         <LocumTabs :user="user"/>
-        <div class="mt-5" v-if="$route.path == `/locums/${user.id}`">
-            <transition name="fade" mode="out-in">
-                <LocumProfile :user="user"/>
-            </transition>
-        </div>
         <nuxt-child/>
-        <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')"></div>
-        <!--PUT SHIELDS HERE FOR CHILDREN-->
     </div>
 </template>
 <script>
-import LocumProfile from '@/components/Locums/LocumProfile'
 import LocumTabs from '@/components/Locums/LocumTabs'
 export default {
     components:{
-        LocumProfile,
         LocumTabs
     },
     data(){
@@ -31,7 +22,6 @@ export default {
         try{
             let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
-            console.log(user)
             return{
                 user
             }
@@ -51,6 +41,7 @@ export default {
         },
     }
 }
+
 </script>
 <style>
 .locum-shield {

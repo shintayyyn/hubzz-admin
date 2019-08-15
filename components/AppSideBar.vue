@@ -57,7 +57,7 @@ export default {
         { name: "Billing", route: "/billing" },
         { name: "FAQs", route: "/faqs" },
         { name: "Terms and Conditions", route: "/tncs" },
-        { name: "Support", route: "/support" }
+        { name: "Support", route: "/supports" }
       ];
 
       if (domain === "Super Admin"){

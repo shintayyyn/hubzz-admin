@@ -1,15 +1,14 @@
 <template>
-  <div class="fixed lg:absolute overflow-x-hidden overflow-y-auto pin-t pin-b pin-r pin-l flex flex-col">
-    <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
+    <div>
       <!-- HEADER -->
-      <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/support" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+      <div class="flex justify-between text-sm text-white">
+        <nuxt-link to="/supports" class="text-white p-1">
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
         </nuxt-link>
       </div>
       <!-- HEADER -->
       <div class="flex flex-wrap overflow-hidden pl-4">
-        <div class="px-1 w-1/8 overflow-hidden">
+        <!-- <div class="px-1 w-1/8 overflow-hidden">
           <div class="self-end">
             <button class="inline-flex py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow">
               <svgicon
@@ -37,54 +36,41 @@
               <span class="pt-1 pl-1">Forward?</span>
             </button>
           </div>
+        </div> -->
+        <div class="flex text-white w-full m-2 border-b border-sunglow">
+          <div class="flex flex-wrap overflow-hidden lg:-mx-1">
+            <div class="w-full xl:w-1/2 overflow-hidden lg:my-1 lg:px-1">
+              <div>
+                <span>From: </span> 
+                <span class="m-2">{{email.sender.email}}</span></div>
+              <div>Domain: {{email.sender.domain}}</div>
+            </div>
+            <div class="w-full xl:w-1/2 overflow-hidden lg:my-1 lg:px-1">
+              <div>Date: {{$moment(email.sender.created_at).format('MMM DD,YYYY | HH:MM:ss') }}</div>
+            </div>
+          </div>
         </div>
+
       </div>
       <div class="m-4">
-        <div class="invoice flex flex-col bg-white py-2 px-4" style="height: 750px">
-          WORK IN PROGRESS
+        <div class="flex flex-col bg-white py-2 px-4 rounded-lg w-full h-full">
+          <div class="m-8">
+            {{email.message}}
+          </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  transition: "subpage",
-
-  async asyncData({ app, route }) {
-    try {
-    } catch (err) {
-      console.log("index qualifications index create asyncData err", err);
-    }
-  },
-
+  props:['email'],
   data() {
     return {
-      name: ""
     };
   }
 };
 </script>
 <style>
-  .invoice{
-    width: 100%;
-  }
-  .page-overlap{
-    min-width: 100%;
-  }
-  @media screen and (min-width: 768px){
-    .page-overlap{
-    min-width: calc(100% - 70px);
-    }
-    .invoice{
-      width: 550px;
-    }
-  }
-
-  @media screen and (min-width: 1200px) {
-    .page-overlap{
-      min-width: calc(100% - 200px);
-    }
-  }
+  
 </style>

@@ -78,6 +78,7 @@
 		</div>
 		<!-- TABLE -->
 		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
+		
 		<!-- PAGINATION -->
 		<div class="flex justify-center">
 			<div v-if="pageCount > 1">
