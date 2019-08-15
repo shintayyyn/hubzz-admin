@@ -1,12 +1,5 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
-    <div>
-      <nuxt-link
-        to="/support/addinvoice"
-        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
-      >Add</nuxt-link>
-    </div>
-
     <!-- TABLE RESPONSIVE-->
     <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->

@@ -133,6 +133,7 @@ export default {
     data(){
       return{ 
         currentJobs:[],
+        job:null,
         total:0,
         totalPages:0,
         currentPage:1,
