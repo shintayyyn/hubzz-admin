@@ -2,7 +2,7 @@
   <section>
     <div class="px-10">
       <div class="flex flex-no-wrap justify-start">
-        <div class="text-4xl mb-4 text-white">Frequently Asked Questions</div>
+        <div class="text-4xl mb-4 text-white">Frequently Asked Questions (Still buggy)</div>
       </div>
     </div>
     <div class="px-10 mt-5">
@@ -92,10 +92,10 @@
             </div>
           </div>
           <div
-            class="flex justify-start item-answer font-bold text-sm overflow-hidden"
+            class="flex justify-start w-full h-full item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-            <quillEditor :options="editorOption" v-model="item.answer" class="w-full mx-4"></quillEditor>
+            <quillEditor :options="editorOption" v-model="item.answer" class="mx-4"></quillEditor>
           </div>
         </div>
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq')"></div>
