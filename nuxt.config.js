@@ -42,7 +42,10 @@ export default {
   */
   css: [
     '~/assets/css/tailwind.css',
-    '~/assets/css/main.css'
+    '~/assets/css/main.css',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
   ],
 
   /*
@@ -68,7 +71,11 @@ export default {
     {
       src: "~/plugins/google-maps",
       ssr: true
-    }
+    },
+    { 
+      src: '~plugins/nuxt-quill-plugin.js',
+      ssr: false
+     }
 
   ],
 

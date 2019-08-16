@@ -18,7 +18,7 @@
       ></textarea>
     </div>
     <div class="flex justify-end">
-        <button class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
+        <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
             Save
         </button>
     </div>
@@ -30,7 +30,8 @@ export default {
   data() {
     return {
       form: {
-        terms_and_conditions:''
+        terms_and_conditions:'',
+        privacy_policy:''
       },
       setFocus: false
     }
@@ -38,17 +39,18 @@ export default {
   created() {
     Promise.all([
       this.form.terms_and_conditions = this.terms[0].terms_and_conditions,
+      this.form.privacy_policy = this.terms[0].privacy_policy
     ]).then(()=>{
       console.log(this.form)
-      console.log("yeah u suckk")
     })
   },
   methods:{
-    async save(form){
+    async save(){
       try{
-        await this.$axios.put('/api/v1/admin/terms-and-conditions')
+        await this.$axios.put('/api/v1/admin/terms-and-conditions',this.form)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Terms and Conditions Updated' })
       }catch(err){
-
+        console.log("update tncs error!",err)
       }
 
     }
