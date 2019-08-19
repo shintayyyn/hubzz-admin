@@ -168,7 +168,7 @@
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">File size</strong>
                 <span>
-                {{ item.locumOptionalComplianceDocument ? (item.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + ' Bytes' : null }}
+                {{ item.locumOptionalComplianceDocument ? (item.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
                 </span>
             </div>
 
@@ -351,7 +351,6 @@ export default {
                 const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                     status:verifyReject
                 })
-                // alert('Saved')
                 this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
@@ -360,7 +359,6 @@ export default {
                     status:verifyReject
                 })
                 
-                // alert('Saved.')
                 this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
@@ -368,7 +366,6 @@ export default {
                 const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                     status:verifyReject
                 })
-                // alert('Saved.')
                 this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
@@ -402,7 +399,6 @@ export default {
                 const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                     status:verifyReject
                 })
-                // alert('Saved')
                 this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
@@ -410,7 +406,6 @@ export default {
                 const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                     status:verifyReject
                 })
-                // alert('Saved.')
                 this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
@@ -418,7 +413,6 @@ export default {
                 const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                     status:verifyReject
                 })
-                // alert('Saved.')
                 this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
 
@@ -426,7 +420,6 @@ export default {
                 const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                     status:'Pending'
                 })
-                // alert('Saved. Status reverted back to pending')
                 this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
 
@@ -434,7 +427,6 @@ export default {
                 const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                     status:'Pending'
                 })
-                // alert('Saved. Status reverted back to pending')
                 this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
 

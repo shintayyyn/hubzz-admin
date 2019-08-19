@@ -153,7 +153,7 @@
             </div>
           </div>
 
-          <!-- <div class="w-2/5 pt-12 overflow-hidden">
+          <div class="w-2/5 pt-12 overflow-hidden">
             <div>
               <div v-if="job.platform_job && job.platform_job.appointed_to_locum" class="flex xs:flex-col my-2 mx-2 px-2 w-1/4 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
                 <div class="inline-flex">
@@ -251,12 +251,10 @@
                       
                     </div>
                   </div>
-                
                 </div>
-                
               </div>
             </div>
-          </div> -->
+          </div>
         </div>
         <!-- BODY -->
         <nuxt-child/>
@@ -273,16 +271,11 @@ export default {
   },
   created(){
     console.log('Tis is the job wthin the modal',this.job)
+    
    
     if(this.job.platform_job.appointed_to_locum){
-      
-      Promise.all([
-        this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
-          this.locumUser = res.data.user
-        })
-      ]).then(()=>{
-        console.log(this.locumUser)
-      })
+      this.getLocum()
+      console.log('Tis is the locum wthin the job',this.locumUser)
     }
     
     console.log(this.job.platform_job.appointed_to_locum)
@@ -297,6 +290,11 @@ export default {
     },
   },
   methods: {
+    async getLocum(){
+      await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
+        this.locumUser = res.data.user
+      })
+    },
     goTo(type) {
       const query = {
         ...this.$route.query,

@@ -71,6 +71,7 @@ export default {
         this.query = {
         ...this.$route.query
         }
+        console.log(this.practiceDoc)
     },
 
     computed:{
