@@ -2,7 +2,7 @@
   <section>
     <div class="px-10">
       <div class="flex flex-no-wrap justify-start">
-        <div class="text-4xl mb-4 text-white">Frequently Asked Questions (Still buggy)</div>
+        <div class="text-4xl mb-4 text-white">Frequently Asked Questions</div>
       </div>
     </div>
     <div class="px-10 mt-5">
