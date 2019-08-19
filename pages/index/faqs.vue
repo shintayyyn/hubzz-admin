@@ -46,10 +46,10 @@
             </div>
           </div>
           <div
-            class="flex justify-start item-answer font-bold text-sm overflow-hidden"
+            class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-             <quillEditor :options="editorOption" v-model="item.answer" class="w-full mx-4"></quillEditor>
+             <div v-html="item.answer" class="w-full h-auto mx-4"></div>
           </div>
         </div>
 
@@ -92,10 +92,10 @@
             </div>
           </div>
           <div
-            class="flex justify-start w-full h-full item-answer font-bold text-sm overflow-hidden"
+            class="flex justify-start w-full h-auto item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-            <quillEditor :options="editorOption" v-model="item.answer" class="mx-4"></quillEditor>
+            <quill-editor :options="editorOption" v-model="item.answer" class="mx-4"></quill-editor>
           </div>
         </div>
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq')"></div>
@@ -106,16 +106,12 @@
   </section>
 </template>
 <script>
-import { quillEditor } from 'vue-quill-editor'
 export default {
-  components:{
-    quillEditor
-  },
   data(){
     return{
        editorOption: {
           theme: 'bubble',
-          placeholder: "hahaha",
+          placeholder: "Edit Faqs",
           modules: {
             toolbar: [
               ['bold', 'italic', 'underline', 'strike'],
@@ -124,8 +120,6 @@ export default {
               [{ 'color': [] }, { 'background': [] }],
               [{ 'font': [] }],
               [{ 'align': [] }],
-              ['link', 'image'],
-              ['clean']
             ]
           }
        }
@@ -155,7 +149,7 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 .toggled {
-  height: 50px;
+  height: auto;
 }
 .faq-shield {
   position: fixed;

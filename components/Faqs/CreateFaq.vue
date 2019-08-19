@@ -10,7 +10,8 @@
         </div>
         <!-- quill-editor -->
         <div class="text-xl my-2">Answer</div>
-        <quill-editor 
+        <no-ssr placeholder="Loading...">
+          <quill-editor 
             class="bg-white text-black"
             ref="myTextEditor"
             v-model="form.answer"
@@ -18,7 +19,8 @@
             @blur="onEditorBlur($event)"
             @focus="onEditorFocus($event)"
             @ready="onEditorReady($event)">
-        </quill-editor>
+          </quill-editor>
+        </no-ssr>
         <div class="flex justify-start">
         <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
             Save
@@ -28,12 +30,8 @@
 </template>
 
 <script>
-import { quillEditor } from 'vue-quill-editor'
   export default {
     props:['domain'],
-    components: {
-        quillEditor
-    },
     data() {
       return {
         form:{
@@ -60,7 +58,7 @@ import { quillEditor } from 'vue-quill-editor'
                 [{ 'color': [] }, { 'background': [] }],
                 [{ 'align': [] }],
                 ['clean'],
-                ['link', 'image', 'video']
+                ['link']
                 ],
             }
         }
