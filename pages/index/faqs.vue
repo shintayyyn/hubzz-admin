@@ -92,10 +92,10 @@
             </div>
           </div>
           <div
-            class="flex justify-start w-full h-auto item-answer font-bold text-sm overflow-hidden"
+            class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-            <quill-editor :options="editorOption" v-model="item.answer" class="mx-4"></quill-editor>
+            <div v-html="item.answer" class="w-full h-auto mx-4"></div>
           </div>
         </div>
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq')"></div>

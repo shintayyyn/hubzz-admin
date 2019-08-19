@@ -1,6 +1,6 @@
 <template>
     <div class="max-w-xl mt-2 text-sm text-white">
-        <SessionsTabs/>
+        <SessionsTabs :practice="practice"/>
         <div>
             <transition name="fade" mode="out-in">
                 <Component :is="activeComponent" :practice="practice" /> 

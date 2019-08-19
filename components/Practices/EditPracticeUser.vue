@@ -146,8 +146,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="compliance-shield" v-if="$route.name.includes('index-practice-users-pracUserId')"></div>
-      <nuxt-child/> -->
     </div>
     
 </template>

@@ -265,7 +265,6 @@
             <!-- END BODY -->
         </div>
         <!-- END TABLE -->
-        <div class="compliance-shield" v-if="$route.name.includes('index-compliance-docs')"></div>
         <nuxt-child/>
     </div>
 </template>

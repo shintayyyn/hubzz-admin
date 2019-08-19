@@ -119,7 +119,8 @@ export default {
         notesAreVisible:true,
         };
     },
-    computed:{
+    created(){
+      console.log("Route name: ",this.$route.name) 
         
     },
     

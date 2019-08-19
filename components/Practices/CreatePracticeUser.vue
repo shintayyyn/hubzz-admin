@@ -245,15 +245,15 @@ export default {
 
     async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
       try{
-        if(this.practice && !this.practice.practice_children){
+        if(this.practice && this.practice.practice_children.length>=0 && this.practice.practice_parent == null ){
            await this.$axios.post('/api/v1/admin/practice-children',{
             parent_practice_id:this.practice.id,
             surgery_id:this.surgery.id
           })
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Surgery added' })
           // alert('Surgery added')
-        }
-        await this.$axios.post(`/api/v1/admin/practice-users`,{
+        }else{
+          await this.$axios.post(`/api/v1/admin/practice-users`,{
           email:toPostPracticeUser.email,
           password:toPostPracticeUser.password,
           password_confirmation:toPostPracticeUser.password_confirmation,
@@ -266,6 +266,8 @@ export default {
         })
         // alert('New Practice User Created')
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
+        }
+        
 
       }catch(err){
         console.log("index put locum detail compliance documents error.",err);
