@@ -20,9 +20,9 @@
             <!-- END HEADER -->
             <!-- BODY -->
             <div
-            v-for="(childSurgery,index) in practice.practice_children"
+            v-for="(childSurgery,index) in practiceChildren"
             :key="`childSurgery-${index}`"
-            class="flex flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo" 
+            class="flex flex-wrap justify-between px-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo" 
             >
                 <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
@@ -62,12 +62,24 @@ export default {
     },
     data(){
         return{
+            practiceChildren:{},
             modal:false
         }
     },
+    created(){
+        console.log('helloowwssxxzz',this.practiceChildren)
+        this.getData()
+    },
+
     methods:{
         show(){
             this.modal = true
+        },
+        async getData(){
+            this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`).then(res=>{
+                this.practiceChildren = res.data.practice_surgeries
+            })
+
         }
     }
 }

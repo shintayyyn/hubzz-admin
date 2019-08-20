@@ -7,10 +7,14 @@
         </div>
         
         <div class="ml-4">
-
             <div class="text-white pl-4 pt-2">
-                <strong>Create User</strong>
+                <div class="text-lg font-bold" v-if="practice && practice.type=='Hub'">Create Spoke User</div>
+                <div class="text-lg font-bold" v-else>Create User</div>
+                <div class="text-xs font-hairline">
+                  Surgery: {{surgery.name}}
+              </div>
             </div>
+            
             <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-max lg:w-1/2">
                 <div class="w-full overflow-hidden text-grey-light text-sm p-2">
                     <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
@@ -56,6 +60,46 @@
                         v-model='toPostPracticeUser.suffix'
                         aria-label="Suffix"
                     >
+                    <span>Practice Types</span>
+                    <span class="text-xs">(hold ctrl + click to choose)</span>
+                    <div class="w-full">
+                      <select
+                      class="w-full text-black"
+                      multiple="true"
+                      v-bind:class="{ 'fix-height': multiple === 'true' }"
+                      v-model="toPostPracticeUser.practice_type_id"
+                      >
+                      <option
+                        v-for="item in practiceTypes"
+                        :key="item.id"
+                        :value="item">
+                        {{item.label}}
+                      </option>
+        
+                    </select>
+                    <div
+                     v-for="(practice_type, index) in toPostPracticeUser.practice_type_id"
+                     :key="`practice_type-${index}`"
+                     class="inline-flex m-1"
+                     >
+                     <span class="bg-yellow-dark rounded-lg p-2 text-black">
+                       {{toPostPracticeUser.practice_type_id[index].label}}
+                     </span>
+                     
+
+                    </div>
+                    
+                    <!-- <AppFilterSearch
+                      v-model="toPostPracticeUser.practice_types"
+                      :name="'practice_type_id'"
+                      :label="'Practice Types'"
+                      :placeholder="'Select...'"
+                      :items="practiceTypes"
+                      :info="'Choose at least one qualification'"
+                      
+                    /> -->
+                    </div>
+                    
                     <div class="flex py-1">Role
                         <span v-if="!toPostPracticeUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
                     </div>
@@ -68,6 +112,28 @@
                         <option>Practice Manager</option>
                         <option>Practice Staff</option>
                     </select>
+                    <div class="flex py-1">Type</div>
+                    <select
+                        class="appearance-none w-full mb-4 bg-white border-b border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                        :class="`${toPostPracticeUser.practice_type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        v-model="toPostPracticeUser.practice_type"
+
+                    >
+                        <option>Hub</option>
+                        <option>Stand Alone</option>
+                        <option>Spoke</option>
+                    </select>
+                    <div v-if="toPostPracticeUser.practice_type == 'Spoke'" class="flex py-1">Parent Surgery ID
+                      <input
+                        class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+                        :class="`${toPostPracticeUser.parent_surgery_id !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        id="parent"
+                        type="text"
+                        v-model='toPostPracticeUser.parent_surgery_id'
+                        placeholder="Parent ID"
+                    >
+                    </div>
+                    
                     <div class="flex py-1">E-Mail Address 
                         <span v-if="emailError" class="bg-red p-1 ml-4 -mt-1 rounded">{{emailError}}</span>
                     </div>
@@ -115,7 +181,11 @@
 </template>
 
 <script>
+import AppFilterSearch from '@/components/Base/AppFilterSearch'
 export default {
+    components:{
+      AppFilterSearch
+    },
     props:['practice','surgery','user'],
     data(){
         return{
@@ -127,6 +197,8 @@ export default {
             errors:[],
             specificSurgery:[],
             specificPractice:[],
+            practiceTypes:'',
+            multiple:"true",
             toPostPracticeUser:{
                 email:'',
                 password:'',
@@ -136,16 +208,28 @@ export default {
                 last_name:'',
                 suffix:'',
                 practice_role:'Partner',
-                surgery_id:''
+                practice_type:'Hub',
+                practice_type_id:[],
+                parent_surgery_id:'',
+                surgery_id:this.surgery.id
             }
         }
   },
-
-  created(){
+  async created(){
     console.log("surgery",this.surgery)
     console.log("practice",this.practice)
+    await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
+      this.practiceTypes = [];
+      res.data.practice_types.forEach(item => {
+        this.practiceTypes.push({  value: item.id, label: item.name });
+      })
+    })    
+    // if(!practice){
+    //   await this.$axios.$get(`/api/v1/admin/practice`)
+    // }
+    console.log("prac types",this.practiceTypes)
     if(this.practice){
-      console.log('practice is here')
+      console.log('Practice to be created is a spoke')
     }
   },
   
@@ -241,56 +325,32 @@ export default {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    
+    async getPracticeTypes(){
+      await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
+        this.practiceTypes = [];
+        res.data.practice_types.forEach(item => {
+          this.practiceTypes.push({ label: item.name, value: item.id });
+        })
+      })
+      console.log('practice types',this.practiceTypes)
+    },
 
     async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
       try{
-        if(this.practice && this.practice.practice_children.length>=0 && this.practice.practice_parent == null ){
-           await this.$axios.post('/api/v1/admin/practice-children',{
-            parent_practice_id:this.practice.id,
-            surgery_id:this.surgery.id
-          })
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Surgery added' })
-          // alert('Surgery added')
-        }else{
-          await this.$axios.post(`/api/v1/admin/practice-users`,{
-          email:toPostPracticeUser.email,
-          password:toPostPracticeUser.password,
-          password_confirmation:toPostPracticeUser.password_confirmation,
-          title:toPostPracticeUser.title,
-          first_name:toPostPracticeUser.first_name,
-          last_name:toPostPracticeUser.last_name,
-          suffix:toPostPracticeUser.suffix,
-          practice_role:toPostPracticeUser.practice_role,
-          surgery_id:toPostSurgeryID
+        //-------------CREATE NEW PRACTICE---------------------//
+        this.toPostPracticeUser.practice_type_id = this.toPostPracticeUser.practice_type_id.map(
+          item=>item.value
+        ),
+        this.$axios.post(`/api/v1/admin/practices`,this.toPostPracticeUser).then(res=>{
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
         })
-        // alert('New Practice User Created')
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
-        }
-        
-
+         //-------------CREATE NEW PRACTICE ENDS HERE---------------------//
       }catch(err){
         console.log("index put locum detail compliance documents error.",err);
         alert('Something went wrong!')
       }
     },
 
-    async addSurgery(practiceID,surgeryID){
-
-      try{
-        await this.$axios.post('/api/v1/admin/practice-children',{
-          parent_practice_id:practiceID,
-          surgery_id:surgeryID
-        })
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Surgery added' })
-        // alert('Surgery added')
-
-      }catch(err){
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
-        console.log("index practices index put status err", err);
-        // alert('Something went wrong!!')
-      }
-    }
   }
 };
 </script>

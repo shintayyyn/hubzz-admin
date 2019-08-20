@@ -7,7 +7,7 @@
       >Practice</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-surgeries')"
-        v-if="practice.practice_children.length>=0 && practice.practice_parent == null "
+        v-if="practice.type == 'Hub' "
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Surgeries</nuxt-link>

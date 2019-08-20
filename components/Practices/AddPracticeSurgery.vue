@@ -39,7 +39,7 @@
             <div
               v-for="(surgery, index) in surgeries"
               :key="`surgery-${index}`"
-              @click = show(surgery.id)
+              @click="practice &&practice.type=='Hub' ? addChild(surgery.id):show(surgery.id)"
               class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
             >
               <div class="flex" style="width: 100%;">
@@ -144,6 +144,15 @@ export default {
           this.surgeries = res.data.surgeries
         })
         this.loading = false 
+    },
+    async addChild(surgeryId){
+      await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{
+        parent_practice_id:this.practice.id,
+        surgery_id:surgeryId
+      }).then(res=>{
+        this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Practice Child Added'})
+      })
+      
     },
     show(id){
         console.log(id)

@@ -9,7 +9,7 @@
                   {{practice.surgery ? practice.surgery.name : null}} 
                   <span
                   class="py-2 px-4 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
-                  :class="`${practice && practice.practice_parent ? 'bg-blue-light' :'bg-red-light' }`">{{practice && practice.practice_parent ? 'SPOKE' : 'HUB'}}</span>
+                  :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
                 </p>
                 
                 <p class="flex">Practice Code</p>
@@ -64,14 +64,12 @@
                   <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice yet.</p>
                 </div>
                 
-                <div v-if="practice && practice.practice_parent">
+                <div v-if="practice && practice.type=='Spoke'">
                   <p class="flex m-2 text-base font-bold underline"> HUB info</p>
                   <p class="flex">Practice Name</p>
-                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practice.practice_parent.surgery.name}}</p>
-                  <p class="flex">Practice Code</p>
-                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practice.practice_parent.surgery.code}}</p>
-                  <p class="flex">Phone Number</p>
-                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practice.practice_parent.phone_number}}</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.name}}</p>
+                  <!-- <p class="flex">Phone Number</p>
+                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p> -->
                 </div>
               </div>
               <div class="w-full md:w-1/2 ">
@@ -125,6 +123,30 @@
                   class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
                   @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
                 >Save</button>
+                <p class="flex text-grey-light text-sm p-2">Change Practice Type</p>
+                <select
+                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                  v-model='toPutPracticeType.type'
+                >
+                  <option>Hub</option>
+                  <option>Spoke</option>
+                  <option>Stand Alone</option>
+                </select>
+                <div v-if="toPutPracticeType.type == 'Spoke'">
+                  <p class="flex text-grey-light text-sm p-2">Parent Practice ID:</p>
+                  <input
+                    class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                    type="text"
+                    placeholder
+                    aria-label="fullName"
+                    v-model='toPutPractice.report_to'
+                  >
+                </div>
+                
+                <button
+                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+                  @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
+                >Change</button>
               </div>
             </div>
           </form>
@@ -137,12 +159,25 @@ export default {
 
     data(){
         return{
-            practiceParent:null,
-            toPutPractice:{}
+            practiceParent:'',
+            toPutPractice:{},
+            toPutPracticeType:{
+              type:''
+            },
         }
     },
     created(){
         console.log("You are currently viewing this practice",this.practice)
+
+        if(this.practice.type == 'Spoke'){
+          Promise.all([
+            this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`).then(res=>{
+            this.practiceParent = res.data.practice.parent_surgery
+          })
+          ]).then(()=>{
+            console.log('hello',this.practiceParent.name)
+          })
+        }
     },
     methods:{
       async toPutPracticeInfo(practiceID,toPutPractice){
@@ -164,7 +199,34 @@ export default {
             console.log("index put locum detail compliance documents error");
         }
 
-      }   
+      },
+      async toChangePracticeType(practiceID,toPutPracticeType){
+        try{
+          console.log(toPutPracticeType)
+          if(toPutPracticeType.type)
+          await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
+            type:toPutPracticeType.type
+          })
+          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'alert',text:'Saved'})
+        }catch(err){
+          console.log('change practice type error!',err)
+        }
+      },
+      practiceTypeStyle(type){
+        switch(type){
+          case 'Stand Alone':
+            return 'bg-green-light text-white lg:px-4 sm:px-2'
+            break;
+          case 'Hub':
+            return 'bg-red-light text-white lg:px-8 sm:px-2'
+            break;
+          case 'Spoke':
+            return 'bg-blue-light text-white lg:px-8 sm:px-2'
+            break;
+          default:
+            return
+        }
+      },   
     }
     
 }
