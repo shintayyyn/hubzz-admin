@@ -54,17 +54,18 @@
                     >{{ user.status }}
                     </span>
                 </div>
-            </nuxt-link>  
+            </nuxt-link> 
+            <div v-if="!users.length == 0" class="ml-32">
+                <AppPagination
+                    :total="total"
+                    :totalPages="totalPages"
+                    :currentPage="currentPage"
+                    @pagechanged="pagechanged"
+                />
+            </div> 
         </div>
         <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId')"></div>
-        <div v-if="!users.length == 0" class="-ml-32">
-          <AppPagination
-            :total="total"
-            :totalPages="totalPages"
-            :currentPage="currentPage"
-            @pagechanged="pagechanged"
-          />
-        </div>
+        
         <transition name="slide" mode="out-in">
             <div class="practice-user-modal shadow-lg" v-if="modal">
                 <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery"/>

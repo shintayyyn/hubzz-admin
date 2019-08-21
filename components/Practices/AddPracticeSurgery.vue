@@ -9,11 +9,6 @@
       <!-- HEADER -->
 
       <div class="flex flex-wrap overflow-auto p-6 text-base text-white py-2">
-        <div class="w-full overflow-hidden">
-          <div class="pb-4">
-            <strong>Add Practice</strong>
-          </div>
-        </div>
         <div class="w-full">
           <div
             class="flex items-center pd-4 border-grey-light"
@@ -36,22 +31,41 @@
           <div>
             <!--TABLE-->
             <!-- BODY -->
-            <div
-              v-for="(surgery, index) in surgeries"
-              :key="`surgery-${index}`"
-              @click="practice &&practice.type=='Hub' ? addChild(surgery.id):show(surgery.id)"
-              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
-            >
-              <div class="flex" style="width: 100%;">
-                <div class="text-white text-xs p-4">
-                  <span class="font-bold">{{ surgery.name }}</span><br><br><br>
-                  <span>{{surgery.address.line_1}}</span>
-                  <span>{{surgery.address.line_2}}</span>
-                  <span>{{surgery.address.line_3}}</span><br><br><br>
-                  <span class='p-2 bg-trout rounded'>CCG</span>
-                  <span>{{surgery.clinical_commissioning_group.name}}</span><br><br><br>
-                  <span class='p-2 bg-trout rounded'>Practice Code</span>
-                  <span>{{ surgery.code }}</span><br>
+            <div v-if="!practice||practice&&practice.type=='Hub'"> <!--IF PRACTICE IS A HUB / THERE IS NO PRACTICE-->
+              <div
+                v-for="(surgery, index) in surgeries"
+                :key="`surgery-${index}`"
+                @click="practice &&practice.type=='Hub' ? addChild(surgery.id):show(surgery.id)"
+                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
+              >
+                <div class="flex" style="width: 100%;">
+                  <div class="text-white text-xs p-4">
+                    <span class="font-bold">{{ surgery.name }}</span><br><br><br>
+                    <span>{{surgery.address.line_1}}</span>
+                    <span>{{surgery.address.line_2}}</span>
+                    <span>{{surgery.address.line_3}}</span><br><br><br>
+                    <span class='p-2 bg-trout rounded'>CCG</span>
+                    <span>{{surgery.clinical_commissioning_group.name}}</span><br><br><br>
+                    <span class='p-2 bg-trout rounded'>Practice Code</span>
+                    <span>{{ surgery.code }}</span><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div v-if="practice&&practice.type == 'Spoke'"> <!--IF PRACTICE IS A SPOKE-->
+              <div
+                v-for="(hub, index) in hubzz"
+                :key="`hub-${index}`"
+                @click="changeParent(hub.surgery.id)"
+                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
+              >
+                <div class="flex" style="width: 100%;">
+                  <div class="text-white text-xs p-4">
+                    <span class="font-bold">{{ hub.surgery.name }}</span><br><br><br>
+                    <span class='p-2 bg-trout rounded'>Practice Code</span>
+                    <span>{{ hub.surgery.code }}</span><br>
+                  </div>
                 </div>
               </div>
             </div>
@@ -84,7 +98,7 @@
 import AppPagination from '@/components/Base/AppPagination'
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
 export default {
-    props:['practice'],
+    props:['practice','practiceHub'],
     components:{
         AppPagination,
         CreatePracticeUser
@@ -94,6 +108,9 @@ export default {
       return {
         surgeries: [],
         surgery:null,
+        hubzz:[],
+        hub:null,
+        practiceCount:null,
         modal:false,
         total:0,
         totalPages:0,
@@ -120,13 +137,8 @@ export default {
             ...this.$route.query,
             add_practice_page: this.$route.query.add_practice_page || 1
         }
-
-        this.$axios.$get(`/api/v1/admin/surgeries/count`).then(res=>{
-            this.total = res.data.count
-            this.perPage = 8
-            this.totalPages = Math.ceil(this.total/this.perPage)
-            this.getAllSurgeries()
-        })
+    
+        this.getData()
         
     },
 
@@ -135,16 +147,44 @@ export default {
   },
 
   methods: {
-    getAllSurgeries(){
+    getData(){
+      if(this.practice && this.practice.type=="Spoke"){
+        this.$axios.$get(`/api/v1/admin/practices/count?type="Hub"`).then(res=>{
+          this.total = res.data.count
+          this.perPage = 8
+          this.totalPages = Math.ceil(this.total/this.perPage)
+          this.getAllHubzz()
+        })
+      }else if(!this.practice || this.practice&&this.practice.type=="Hub"){
+        this.$axios.$get(`/api/v1/admin/surgeries/count`).then(res=>{
+          this.total = res.data.count
+          this.perPage = 8
+          this.totalPages = Math.ceil(this.total/this.perPage)
+          this.getAllSurgeries()
+        })
+      }
+    },
+    async getAllSurgeries(){
         this.loading = true
         let offset = 0
         offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
-        
-        this.$axios.$get(`/api/v1/admin/surgeries?limit=${this.perPage}&offset=${offset}`).then(res=>{
+        await this.$axios.$get(`/api/v1/admin/surgeries?limit=${this.perPage}&offset=${offset}`).then(res=>{
           this.surgeries = res.data.surgeries
         })
         this.loading = false 
     },
+    async getAllHubzz(){
+        this.loading = true
+        let offset = 0
+        offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
+        await this.$axios.$get(`/api/v1/admin/practices?type=Hub&limit=${this.perPage}&offset=${offset}`).then(res=>{
+          this.hubzz = res.data.practices
+          
+        })
+        console.log("hubzz",this.hubzz)
+        this.loading = false 
+    },
+
     async addChild(surgeryId){
       await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{
         parent_practice_id:this.practice.id,
@@ -154,16 +194,35 @@ export default {
       })
       
     },
-    show(id){
-        console.log(id)
-        Promise.all([
-          this.$axios.$get(`/api/v1/admin/surgeries/${id}`).then(res =>{
-            this.surgery = res.data.surgery
-          })
-        ]).then(()=>{
-          console.log('The surgery opened is', this.surgery)
-          this.modal = true
+    async changeParent(surgeryId){
+      if(this.practiceHub.parent_surgery.id == surgeryId){
+        this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'danger', text:'That surgery is the current Practice Parent'})
+      }else{
+        await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
+          surgery_id:surgeryId
+        }).then(res=>{
+          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Changed'})
         })
+         
+      }
+    },
+    async show(id){
+      await this.$axios.$get(`/api/v1/admin/surgeries/${id}`).then(res =>{
+        this.surgery = res.data.surgery
+      }),
+
+      await this.$axios.$get(`/api/v1/admin/practices/count/?search=${this.surgery.name}`).then(res => {
+        this.practiceCount = res.data.count
+      })
+  
+      if(this.practiceCount>0){
+        this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'danger', text:'Surgery Already Registered'})
+      }else{
+        console.log('The surgery opened is', this.surgery)
+        this.modal = true
+      }
+          
+        
     },
     pagechanged(e) {
 			const query = {

@@ -12,6 +12,12 @@
         :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Surgeries</nuxt-link>
       <nuxt-link
+        :to="getRoute('practice-hub')"
+        v-if="practice.type == 'Spoke' "
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
+        :class="$route.path == `/practices/${practice.id}/practice-hub`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+      >Hub</nuxt-link>
+      <nuxt-link
         :to="getRoute('practice-sessions')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-sessions` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"

@@ -67,7 +67,7 @@ export default {
         }
     },
     created(){
-        console.log('helloowwssxxzz',this.practiceChildren)
+        console.log('This Practice`s children is',this.practiceChildren)
         this.getData()
     },
 

@@ -115,15 +115,15 @@
                     <div class="flex py-1">Type</div>
                     <select
                         class="appearance-none w-full mb-4 bg-white border-b border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                        :class="`${toPostPracticeUser.practice_type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
-                        v-model="toPostPracticeUser.practice_type"
+                        :class="`${toPostPracticeUser.type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        v-model="toPostPracticeUser.type"
 
                     >
                         <option>Hub</option>
                         <option>Stand Alone</option>
                         <option>Spoke</option>
                     </select>
-                    <div v-if="toPostPracticeUser.practice_type == 'Spoke'" class="flex py-1">Parent Surgery ID
+                    <div v-if="toPostPracticeUser.type == 'Spoke'" class="flex py-1">Parent Surgery ID
                       <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
                         :class="`${toPostPracticeUser.parent_surgery_id !== '' ? 'focus:border-orange' :'focus:border-red'}`"
@@ -208,7 +208,7 @@ export default {
                 last_name:'',
                 suffix:'',
                 practice_role:'Partner',
-                practice_type:'Hub',
+                type:'Hub',
                 practice_type_id:[],
                 parent_surgery_id:'',
                 surgery_id:this.surgery.id

@@ -4,7 +4,7 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
       </div>
         <!-- BODY -->
-        <div class="flex flex-wrap mx-6 overflow-auto">
+        <div class="flex flex-wrap w-full mx-6 overflow-auto">
           <div class="w-3/5 overflow-hidden">
             <div>
               <div class="flex">
@@ -153,9 +153,9 @@
             </div>
           </div>
 
-          <div class="w-2/5 pt-12 overflow-hidden">
-            <div>
-              <div v-if="job.platform_job && job.platform_job.appointed_to_locum" class="flex xs:flex-col my-2 mx-2 px-2 w-1/4 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
+          <div class="w-2/5 mt-12 overflow-hidden">
+            <div class="w-full">
+              <div v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" class="flex xs:flex-col my-2 mx-2 px-2 w-4/5 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
                 <div class="inline-flex">
                   <div class="flex flex-wrap overflow-hidden">
                     <div class="text-white mx-5">
@@ -164,7 +164,7 @@
                           <embed
                             v-if="locumUser.avatar"
                             class="flex w-4/5 rounded-full mr-4"
-                              :src="locumUser.avatar ? locumUser.avatar.file.url:null"
+                              :src="locumUser && locumUser.avatar ? locumUser.avatar.file.url:null"
                             >
                             <img v-else class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
                         </div>
@@ -269,12 +269,13 @@ export default {
         locumUser:null
       }
   },
-  created(){
+  async created(){
     console.log('Tis is the job wthin the modal',this.job)
     
    
     if(this.job.platform_job.appointed_to_locum){
-      this.getLocum()
+
+      await this.getLocum()
       console.log('Tis is the locum wthin the job',this.locumUser)
     }
     
@@ -293,6 +294,7 @@ export default {
     async getLocum(){
       await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
         this.locumUser = res.data.user
+        console.log(this.locumUser)
       })
     },
     goTo(type) {

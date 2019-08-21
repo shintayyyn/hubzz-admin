@@ -28,6 +28,7 @@
         <div class="table-cell p-2 align-middle">Created</div>
         <div class="table-cell p-2 align-middle">Expires</div>
         <div class="table-cell p-2 align-middle">Status</div>
+		<div class="table-cell p-2 align-middle">Type</div>
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
@@ -61,8 +62,13 @@
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
           <strong class="block md:hidden">Status</strong>
           <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
-					:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
-				</div>
+			:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
+		</div>
+		<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+          <strong class="block md:hidden">Type</strong>
+          <span class="inline-flex no-underline py-2 px-4 text-sm text-black rounded-full shadow"
+			:class="typeStyle(practice.type)">{{ practice.type }}</span>
+		</div>
 
       </nuxt-link>
       <!-- END BODY -->
@@ -87,7 +93,7 @@
 	</div>
 	<!-- PAGINATION -->
 
-	<div class="practice-shield" v-if="$route.name.includes('index-practices-id')"></div>
+	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true"></div>
     <transition name="slide" mode="out-in">
       <div class="practice-modal shadow-lg" v-if="modal">
         <AddPracticeSurgery @close="modal = false"/>
@@ -264,7 +270,24 @@ export default {
 	      }
 
 	      this.$router.push({ query })
-  		}
+		},
+
+		typeStyle(status){
+			switch(status){
+				case 'Hub':
+					return 'bg-red-light text-white lg:px-8 sm:px-2'
+					break;
+				case 'Spoke':
+					return 'bg-blue-light text-white lg:px-8 sm:px-2'
+					break;
+				case 'Stand Alone':
+					return 'bg-green-light text-white lg:px-8 sm:px-2'
+					break;
+				default:
+					return
+			}
+		},
+		  
   	}
 };
 </script>

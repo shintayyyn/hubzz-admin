@@ -5,7 +5,7 @@
                 <PracticeProfile :practice="practice"/>
             </transition>
         </div>
-      <nuxt-child/>
+        <nuxt-child/>
     </div>
 </template>
 <script>

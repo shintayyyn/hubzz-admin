@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col rounded-lg p-6 sm:p-6">
+    <div class="flex flex-col rounded-lg p-4 sm:p-4">
         <div>
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
@@ -34,7 +34,19 @@
                 <div v-else>
                   <p class="flex text-white text-sm p-2 font-semibold">Not set</p>
                 </div>
-               
+                <p class="flex text-grey-light text-sm p-2">Change Practice Type</p>
+                <select
+                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                  v-model='toPutPracticeType.type'
+                >
+                  <option>Hub</option>
+                  <option>Spoke</option>
+                  <option>Stand Alone</option>
+                </select>
+                <button
+                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+                  @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
+                >Change</button>
                 <div v-if="practice.gp_compliance_documents.length > 0">
                   <p class="flex">Compliance Requirements for GPs:</p>
                   <div class="text-white text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in practice.gp_compliance_documents"
@@ -59,17 +71,8 @@
                       <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
                   </div>
                 </div>
-                
                 <div v-if="!practice.gp_compliance_documents.length > 0 || !practice.others_compliance_documents.length > 0  || !practice.mandatory_trainings.length > 0">
                   <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice yet.</p>
-                </div>
-                
-                <div v-if="practice && practice.type=='Spoke'">
-                  <p class="flex m-2 text-base font-bold underline"> HUB info</p>
-                  <p class="flex">Practice Name</p>
-                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.name}}</p>
-                  <!-- <p class="flex">Phone Number</p>
-                  <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p> -->
                 </div>
               </div>
               <div class="w-full md:w-1/2 ">
@@ -85,7 +88,7 @@
                 <input
                   class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                   type="text"
-                  placeholder
+                  :placeholder="practice.report_to"
                   aria-label="fullName"
                   v-model='toPutPractice.report_to'
                 >
@@ -123,16 +126,7 @@
                   class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
                   @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
                 >Save</button>
-                <p class="flex text-grey-light text-sm p-2">Change Practice Type</p>
-                <select
-                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
-                  v-model='toPutPracticeType.type'
-                >
-                  <option>Hub</option>
-                  <option>Spoke</option>
-                  <option>Stand Alone</option>
-                </select>
-                <div v-if="toPutPracticeType.type == 'Spoke'">
+                <!-- <div v-if="toPutPracticeType.type == 'Spoke'">
                   <p class="flex text-grey-light text-sm p-2">Parent Practice ID:</p>
                   <input
                     class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
@@ -141,12 +135,7 @@
                     aria-label="fullName"
                     v-model='toPutPractice.report_to'
                   >
-                </div>
-                
-                <button
-                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
-                  @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
-                >Change</button>
+                </div> -->
               </div>
             </div>
           </form>
@@ -160,7 +149,9 @@ export default {
     data(){
         return{
             practiceParent:'',
-            toPutPractice:{},
+            toPutPractice:{
+
+            },
             toPutPracticeType:{
               type:''
             },
