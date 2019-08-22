@@ -10,7 +10,7 @@
             </div>
         </div>
         <!-- TABLE RESPONSIVE-->
-        <div class="table border-separate overflow-x-auto px-6" style="border-spacing: 0 10px;"> 
+        <div v-if="practiceChildren.length>0" class="table border-separate overflow-x-auto px-6" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
             <div class="table-cell p-2 align-middle">Practice Name</div> 
@@ -44,6 +44,21 @@
             <!-- END BODY -->
             <!--put -->
         </div>
+        <div v-else>
+            <div
+            class="mt-10 text-white w-full text-center"
+            style="font-family: Nunito"
+            >This practice has no children.</div>
+        </div>
+        <div v-if="!practiceChildren.length == 0" class="m-10 xl:-ml-32">
+          <AppPagination
+            :total="total"
+            :totalPages="totalPages"
+            :currentPage="currentPage"
+            @pagechanged="pagechanged"
+          />
+        </div>
+
         <!-- END TABLE -->
         <div class="add-practice-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
@@ -55,32 +70,75 @@
 </template>
 <script>
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
+import AppPagination from '@/components/Base/AppPagination'
 export default {
     props:['practice'],
     components:{
-        AddPracticeSurgery
+        AddPracticeSurgery,
+        AppPagination
     },
     data(){
         return{
             practiceChildren:{},
+            total:0,
+            totalPages:0,
+            currentPage:1,
+            perPage:0,
             modal:false
         }
     },
+    beforeDestroy(){
+        let query = Object.assign({},this.$route.query)
+        delete query.practice_children_page
+        this.$router.push({query})
+    },
+    watch: {
+      $route(to, from) {
+        this.currentPage = parseInt(to.query.practice_children_page)
+        this.getChildren('date_created:desc')
+      },
+    },
     created(){
-        console.log('This Practice`s children is',this.practiceChildren)
-        this.getData()
+        // console.log('This Practice`s children is',this.practiceChildren)
+        // this.getData()
+        const query = {
+            ...this.$route.query,
+            practice_children_page: this.$route.query.practice_children_page || 1
+        }
+        Promise.all([
+            console.log(this.practice),
+            this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
+            this.total = res.data.count
+            this.perPage = 5
+            this.totalPages = Math.ceil(this.total / this.perPage)
+            })
+        ]).then(() => {
+            this.getChildren('date_created:desc'),
+            console.log(this.practiceChildren)
+        }).catch((err) => {
+            console.log(err)
+        })
     },
 
     methods:{
         show(){
             this.modal = true
         },
-        async getData(){
+        async getChildren(){
+            let offset = 0
+            offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
             this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`).then(res=>{
                 this.practiceChildren = res.data.practice_surgeries
             })
 
+        },
+        pagechanged(e) {
+        const query = {
+          ...this.$route.query,
+          practice_children_page: e || 1
         }
+        this.$router.push({ query })
+      }
     }
 }
 </script>

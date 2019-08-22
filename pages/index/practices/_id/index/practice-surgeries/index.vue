@@ -1,13 +1,10 @@
 <template>
-   
-        <div class="mt-5">
-            <transition name="fade" mode="out-in">
-                <PracticeSurgeries :practice="practice"/>
-            </transition>
-            <nuxt-child/>
-        </div>
-        
-   
+    <div class="mt-5">
+        <transition name="fade" mode="out-in">
+            <PracticeSurgeries :practice="practice"/>
+        </transition>
+        <nuxt-child/>
+    </div>
 </template>
 <script>
 import PracticeTabs from '@/components/Practices/PracticeTabs'

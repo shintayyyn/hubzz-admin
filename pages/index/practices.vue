@@ -76,20 +76,18 @@
     <!-- END TABLE -->
 	<!-- PAGINATION -->
 	<div class="flex justify-center">
-		<div v-if="pageCount > 1">
-			<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-				@click="goToPage(activePage - 1)" 
-				:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
-			<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-				:class="`${activePage === page ? 'text-white' : ''}`" 
-				v-for="page in pageCount" 
-				v-if="showPage(page)"
-				:key="`page-${page}`" 
-				@click="goToPage(page)">{{ page }}</button>
-			<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-				@click="goToPage(activePage + 1)"
-				:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
-		</div>
+		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
+			@click="goToPage(activePage - 1)" 
+			:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
+		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
+			:class="`${activePage === page ? 'text-white' : ''}`" 
+			v-for="page in pageCount" 
+			v-if="showPage(page)"
+			:key="`page-${page}`" 
+			@click="goToPage(page)">{{ page }}</button>
+		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
+			@click="goToPage(activePage + 1)"
+			:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
 	</div>
 	<!-- PAGINATION -->
 

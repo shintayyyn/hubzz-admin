@@ -43,14 +43,14 @@ export default {
         return {
           specificPractice:null,
           toPutPracticeRate:{
-            gp_rate:this.practice.rates[0].rate,
-            others_rate:this.practice.rates[1].rate
+            gp_rate:this.practice.rates.length>0 ? this.practice.rates[0].rate : '',
+            others_rate:this.practice.rates.length>0 ? this.practice.rates[1].rate: ''
           },
           errors:[]
         }
     },
     created(){
-        console.log("rates",this.practice.rates[0].rate)
+        console.log("rates",this.practice.rates)
     },
 
     methods: {

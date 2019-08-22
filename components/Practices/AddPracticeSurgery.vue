@@ -18,16 +18,16 @@
               class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3  px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
               placeholder="Search for surgery by name, etc."
-              
+              v-model="search" @keyup.enter="searchSubmit()"
               aria-label="Full name"
             >
-            <!-- v-model="search" @keyup.enter="searchSubmit" -->
+             <div class="self-end">
+              <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-dark" @click="searchSubmit()">Search</button>
+            </div>
           </div>
         </div>
         <div class="w-full overflow-hidden">
-          <div class="self-end">
-            <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-dark">Search</button>
-          </div>
+         
           <div>
             <!--TABLE-->
             <!-- BODY -->
@@ -108,6 +108,7 @@ export default {
       return {
         surgeries: [],
         surgery:null,
+        search:'',
         hubzz:[],
         hub:null,
         practiceCount:null,
@@ -138,7 +139,6 @@ export default {
             add_practice_page: this.$route.query.add_practice_page || 1
         }
         this.getData()
-        
     },
 
   computed: {
@@ -146,16 +146,33 @@ export default {
   },
 
   methods: {
-    getData(){
+    async getData(){
       if(this.practice && this.practice.type=="Spoke"){
-        this.$axios.$get(`/api/v1/admin/practices/count?type="Hub"`).then(res=>{
+        // const limit = this.perPage
+        // const type = 'Hub'
+        // let offset = 0
+        // offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
+        // const params = {limit, offset}
+        // if(this.search){
+        //   params.search = this.search
+        //   console.log('hello',params)
+        // }
+        await this.$axios.$get(`/api/v1/admin/practices/count?type="Hub"`).then(res=>{
           this.total = res.data.count
           this.perPage = 8
           this.totalPages = Math.ceil(this.total/this.perPage)
           this.getAllHubzz()
         })
       }else if(!this.practice || this.practice&&this.practice.type=="Hub"){
-        this.$axios.$get(`/api/v1/admin/surgeries/count`).then(res=>{
+        const limit = this.perPage
+        let offset = 0
+        offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
+        const params = {limit, offset}
+        if(this.search){
+          params.search = this.search
+          console.log('hello',params)
+        }
+        await this.$axios.$get(`/api/v1/admin/surgeries/count`,{params}).then(res=>{
           this.total = res.data.count
           this.perPage = 8
           this.totalPages = Math.ceil(this.total/this.perPage)
@@ -165,12 +182,32 @@ export default {
     },
     async getAllSurgeries(){
         this.loading = true
+        const limit = this.perPage
         let offset = 0
         offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
-        await this.$axios.$get(`/api/v1/admin/surgeries?limit=${this.perPage}&offset=${offset}`).then(res=>{
+        const params = {limit, offset}
+        if(this.search){
+          params.search = this.search
+          console.log('hello',params)
+        }
+        await this.$axios.$get(`/api/v1/admin/surgeries`,{params}).then(res=>{
           this.surgeries = res.data.surgeries
         })
         this.loading = false 
+    },
+    async searchSubmit(){
+        const query = {
+          ...this.$route.query,
+          
+        }
+        delete query.add_practice_page
+        query.search = this.search
+        console.log('fuck this',this.search)
+        this.getData()
+        
+        if (this.search === '') {
+          delete query.search
+        }
     },
     async getAllHubzz(){
         this.loading = true
