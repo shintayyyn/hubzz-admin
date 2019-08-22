@@ -54,7 +54,7 @@ export default {
         { name: "Locums", route: "/locums" },
         { name: "Practices", route: "/practices" },
         { name: "Reports", route: "/reports" },
-        { name: "Billing", route: "/billing" },
+        { name: "Billing", route: "/billings" },
         { name: "FAQs", route: "/faqs" },
         { name: "Terms and Conditions", route: "/tncs" },
         { name: "Support", route: "/supports" }

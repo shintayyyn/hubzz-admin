@@ -1,11 +1,9 @@
 <template>
   <section>
-    <div class="px-10">
+    <div class="px-6 mt-5">
       <div class="flex flex-no-wrap justify-start">
         <div class="text-4xl mb-4 text-white">Frequently Asked Questions</div>
       </div>
-    </div>
-    <div class="px-10 mt-5">
       <div class="rounded-lg text-white bg-charade shadow-lg pt-10 px-5 pb-5 mb-10">
         <div class="inline-flex font-bold mt-4 mb-2">
           <div class="flex m-1">

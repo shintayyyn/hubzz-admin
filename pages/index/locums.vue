@@ -77,7 +77,7 @@
 			</nuxt-link>
 		</div>
 		<!-- TABLE -->
-		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
+		
 		
 		<!-- PAGINATION -->
 		<div class="flex justify-center">
@@ -97,7 +97,7 @@
 			</div>
 		</div>
 		<!-- PAGINATION -->
-
+		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
 		<nuxt-child/>
 
 	</div>

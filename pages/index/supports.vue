@@ -1,7 +1,12 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
+    <div class="px-2">
+      <div class="flex flex-no-wrap justify-start">
+        <div class="text-4xl mb-4 text-white">Support</div>
+      </div>
+    </div>
     <!-- TABLE RESPONSIVE-->
-    <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+    <div v-if="emails.length>0" class="px-10 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->
       <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
         <div class="table-cell p-2 align-middle">Sender Name</div> 
@@ -36,6 +41,9 @@
       </nuxt-link>
       <!-- END BODY -->
     </div>
+    <div v-else class="flex justify-center text-white ">
+      <div>There are currently no messages of concern.</div>
+    </div>
     <!-- END TABLE -->
     <div class="support-shield" v-if="$route.name.includes('index-supports-id')"></div>
     <nuxt-child/>
@@ -49,19 +57,19 @@ export default {
       emails: []
     };
   },
-  async asyncData({ app }) {
-    try {
-      let response = await app.$axios.get(`/api/v1/admin/supports`);
+  // async asyncData({ app }) {
+  //   try {
+  //     let response = await app.$axios.get(`/api/v1/admin/supports`);
 
-      const emails = response.data.data.emails;
+  //     const emails = response.data.data.emails;
 
-      return {
-        emails
-      };
-    } catch (err) {
-      console.log("index emails index asyncData err", err);
-    }
-  },
+  //     return {
+  //       emails
+  //     };
+  //   } catch (err) {
+  //     console.log("index emails index asyncData err", err);
+  //   }
+  // },
 
   
 };

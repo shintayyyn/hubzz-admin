@@ -1,9 +1,7 @@
 <template>
-  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
-    <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
-      <!-- HEADER -->
-      <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/billing" class="text-white p-1">
+<div>
+      <div class="flex justify-between text-sm text-white">
+        <nuxt-link to="/billings" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
@@ -140,51 +138,20 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
   transition: "subpage",
 
-  async asyncData({ app, route }) {
-    try {
-    } catch (err) {
-      console.log("index qualifications index create asyncData err", err);
-    }
-  },
 
   data() {
     return {
-      name: ""
+      
     };
   }
 };
 </script>
 <style>
-  .invoice{
-    width: 100%;
-  }
-  @media(min-width: 480px){
-    .right-side-header-content{
-      width: calc(100% - 0px);
-    }
-  }
-  .page-overlap{
-    min-width: 100%;
-  }
-  @media screen and (min-width: 768px){
-    .page-overlap{
-    min-width: calc(100% - 70px);
-    }
-    .invoice{
-      width: 550px;
-    }
-  }
-
-  @media screen and (min-width: 1200px) {
-    .page-overlap{
-      min-width: calc(100% - 200px);
-    }
-  }
+  
 </style>

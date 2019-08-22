@@ -41,13 +41,16 @@ export default {
     props:['practice'],
     data() {
         return {
-        specificPractice:null,
-        toPutPracticeRate:{},
-        errors:[]
+          specificPractice:null,
+          toPutPracticeRate:{
+            gp_rate:this.practice.rates[0].rate,
+            others_rate:this.practice.rates[1].rate
+          },
+          errors:[]
         }
     },
     created(){
-        console.log(this.practice)
+        console.log("rates",this.practice.rates[0].rate)
     },
 
     methods: {

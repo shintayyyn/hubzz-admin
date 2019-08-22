@@ -82,7 +82,7 @@
                 </div>
                 <div class="w-full md:w-1/2 ">
                     <div>
-                        <p class="flex text-grey-light text-sm p-2">Status</p>
+                        <p class="flex text-grey-light text-sm p-2">Does the hub pay for the Surgery?</p>
                         <select
                             class="outline-none w-1/2 border-2 border-transparent text-sm text-black pr-6"
                             v-model='toPutPracticeParent.pay_for_surgery'
@@ -91,7 +91,7 @@
                             <option>No</option>
                         <!-- <option>Dormant</option> -->
                         </select>
-                        <p class="flex text-grey-light text-sm p-2">Change Practice Type</p>
+                        <p class="flex text-grey-light text-sm p-2">Verify Job Creation</p>
                         <select
                             class="outline-none w-1/2 border-2 border-transparent text-sm text-black pr-6"
                             v-model='toPutPracticeParent.verify_job_creation'
