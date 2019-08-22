@@ -3,10 +3,12 @@
         <div class="w-1/2">
             <button
             @click="show()"
-            class=" no-underline py-2 px-4 mb-4 bg-sunglow text-sm text-black rounded-lg shadow"
-            >Change Parent</button>
+            class=" no-underline py-2 px-4 mb-4 bg-sunglow text-sm text-black rounded-lg shadow">
+                <span v-if="practiceParent">Change Parent</span>
+                <span v-else>Add Parent</span>
+            </button>
         </div>
-        <div>
+        <div v-if="practiceParent">
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
                 <div class="w-full md:w-1/2">
@@ -128,14 +130,13 @@ export default {
     data(){
         return{
             modal:false,
-            toPutPracticeParent:{
-                pay_for_surgery:this.practiceHub.pay_for_surgery,
-                verify_job_creation:this.practiceHub.verify_job_creation
-            }
+            toPutPracticeParent:{}
         }
     },
     created(){
-        console.log(this.practice)
+        console.log('pracc',this.practice)
+        console.log('parent',this.practiceParent)
+        console.log('hub',this.practiceHub)
     },
     methods:{
         show(){

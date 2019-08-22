@@ -42,9 +42,9 @@
 <script>
 export default {
   props:['practice'],
-  
-  created(){
+  async created(){
     console.log("Practice in tabs",this.practice)
+
   },
   computed:{
     getRoute(){

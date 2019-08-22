@@ -137,7 +137,6 @@ export default {
             ...this.$route.query,
             add_practice_page: this.$route.query.add_practice_page || 1
         }
-    
         this.getData()
         
     },
