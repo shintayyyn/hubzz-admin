@@ -1,7 +1,9 @@
 <template>
     <div class="mt-5">
         <LocumCompliance :user="user"/>
+        <nuxt-child/>
     </div>
+    
 </template>
 <script>
 import LocumCompliance from '@/components/Locums/LocumCompliance'

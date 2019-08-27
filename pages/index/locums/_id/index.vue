@@ -4,7 +4,7 @@
             <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
         </div>
         <LocumTabs :user="user"/>
-        <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')"></div>
+        <div class="compliance-shield" v-if="$route.name.includes('index-locum-compliance-docId')"/>
         <nuxt-child/>
     </div>
 </template>
@@ -21,6 +21,7 @@ export default {
     },
     async asyncData({app, route}){
         try{
+            
             let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
             return{

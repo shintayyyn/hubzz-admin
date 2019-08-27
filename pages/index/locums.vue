@@ -76,12 +76,12 @@
 					</div>
 			</nuxt-link>
 		</div>
-		<!-- TABLE -->
+		<!-- TABLE ENDS HERE-->
 		
 		
 		<!-- PAGINATION -->
 		<div class="flex justify-center">
-			<div v-if="pageCount > 1">
+			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 					@click="goToPage(activePage - 1)" 
 					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
@@ -96,7 +96,7 @@
 					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
 			</div>
 		</div>
-		<!-- PAGINATION -->
+		<!-- PAGINATION ENDS HERE -->
 		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
 		<nuxt-child/>
 
@@ -156,12 +156,9 @@ async asyncData({ app, store, route }) {
 		response = await getLocumUsersPromise
 		const locumUsers = response.data.data.users
 		
-		store.commit('locums/SET_LOCUM_COUNT',itemCount)
-		store.commit('locums/SET_LOCUM_USERS',locumUsers)
-		
+		store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
+		store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
 
-		console.log('one',locumUsers,'two',itemCount)
-			
 		return {
 			filterCompliances: compliance_status,
 			loading: false,
@@ -178,7 +175,8 @@ async asyncData({ app, store, route }) {
 
 computed: {
 	locumUsers(){
-		return this.$store.state.locums.locumUsers
+		return this.$store.state.locums.locumUsers //this is a getter.the data obtained by the state goes here
+												
 	},
 	itemCount(){
 		return this.$store.state.locums.itemCount
@@ -232,7 +230,6 @@ computed: {
 },
 watch: {
 	async filterCompliances() {
-
 	const query = {
 		...this.$router.query
 	}
@@ -278,8 +275,12 @@ watch: {
 	this.locumUsers = locumUsers
 	}
 },
+// created(){
+// 	this.getLocums()
+// },
 
 methods: {
+	
 	goToPage(page) {
 		if (page < 1) {
 			return

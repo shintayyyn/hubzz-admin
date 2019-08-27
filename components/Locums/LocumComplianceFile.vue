@@ -176,8 +176,21 @@ export default {
             link.click();
             console.log(fileUrl)
           });
+        }, 
+        getLocums(){
+          this.$store.dispatch("locums/fetchLocums",{
+            limit:8,
+            order_by:'created_at:desc',
+            offset: this.getQuery()
+          });
         },
-
+        getQuery(){
+            const query = {
+                ...this.$route.query
+            }
+            const offset = parseInt(query.page)*8 - 8 
+            return offset
+        },
         async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
           console.log(toPutLocumDetailCompliance)
           try{
@@ -186,6 +199,7 @@ export default {
               expired_at:toPutLocumDetailCompliance.expired_at,
               note:toPutLocumDetailCompliance.note
               })
+              await this.getLocums()
               // alert('Saved')
               this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
           }catch(err){
