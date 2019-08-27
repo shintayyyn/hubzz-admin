@@ -119,10 +119,6 @@ export default {
         notesAreVisible:true,
         };
     },
-    created(){
-      console.log("Route name: ",this.$route.name) 
-        
-    },
     
     methods:{
         setStatusData(incomingStatus){
@@ -177,13 +173,6 @@ export default {
             console.log(fileUrl)
           });
         }, 
-        getLocums(){
-          this.$store.dispatch("locums/fetchLocums",{
-            limit:8,
-            order_by:'created_at:desc',
-            offset: this.getQuery()
-          });
-        },
         getQuery(){
             const query = {
                 ...this.$route.query
@@ -191,21 +180,27 @@ export default {
             const offset = parseInt(query.page)*8 - 8 
             return offset
         },
+        getLocums(){
+          this.$store.dispatch("locums/fetchLocums",{
+            limit:8,
+            order_by:'created_at:desc',
+            offset: this.getQuery()
+          });
+        },
+        
         async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
-          console.log(toPutLocumDetailCompliance)
           try{
-              await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+            const first=this.user
+            await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
               status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
               expired_at:toPutLocumDetailCompliance.expired_at,
               note:toPutLocumDetailCompliance.note
-              })
-              await this.getLocums()
-              // alert('Saved')
-              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+            })
+            await this.getLocums()
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
           }catch(err){
-              console.log("index put locum detail compliance documents error",err);
-              // alert('Something went wrong!')
-              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+            console.log("index put locum detail compliance documents error",err);
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
           }
         },
         goBack(type) {

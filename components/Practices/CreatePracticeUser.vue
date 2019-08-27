@@ -235,6 +235,20 @@ export default {
   
 
   methods:{
+    getQuery(){
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page)*8 - 8
+      return offset
+    },
+    getPractices(){
+      this.$store.dispatch("practices/fetchPractices",{
+        limit:8,
+        order_by:'created_at:desc',
+        offset:this.getQuery()
+      })
+    },
     verifyEmail:function(inputEmail){
       this.emailError = ''
       
@@ -337,14 +351,13 @@ export default {
 
     async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
       try{
-        //-------------CREATE NEW PRACTICE---------------------//
         this.toPostPracticeUser.practice_type_id = this.toPostPracticeUser.practice_type_id.map(
           item=>item.value
         ),
         this.$axios.post(`/api/v1/admin/practices`,this.toPostPracticeUser).then(res=>{
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
         })
-         //-------------CREATE NEW PRACTICE ENDS HERE---------------------//
+        await this.getPractices()
       }catch(err){
         console.log("index put locum detail compliance documents error.",err);
         alert('Something went wrong!')

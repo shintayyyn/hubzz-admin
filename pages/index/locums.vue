@@ -33,12 +33,28 @@
 		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
 			<!-- HEADER -->
 			<div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-				<div class="table-cell p-2 align-middle">Name</div> 
-				<div class="table-cell p-2 align-middle">Profession</div>
-				<div class="table-cell p-2 align-middle">Date signed-up</div>
-				<div class="table-cell p-2 align-middle">Sign-up verified</div>
-				<div class="table-cell p-2 align-middle">Status</div>
-				<div class="table-cell p-2 align-middle">Compliance Status</div>
+				<div class="table-cell p-2 align-middle" @click="sortBy('name')">
+					Name
+					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+				</div> 
+				<div class="table-cell p-2 align-middle" @click="sortBy('profession')" >
+					Profession
+					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+				</div>
+				<div class="table-cell p-2 align-middle" @click="sortBy('created_at')" >
+					Date signed-up
+					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+				</div>
+				<div class="table-cell p-2 align-middle" @click="sortBy('email_verified_at')" >
+					Sign-up verified
+					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+				</div>
+				<div class="table-cell p-2 align-middle">
+					Status
+				</div>
+				<div class="table-cell p-2 align-middle">
+					Compliance Status
+				</div>
 			</div>
 			<!-- BODY -->
 			<nuxt-link 
@@ -83,17 +99,22 @@
 		<div class="flex justify-center">
 			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1)" 
-					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
+					@click="goToPage(activePage - 1,search)" 
+					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev
+				</button>
+
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 					:class="`${activePage === page ? 'text-white' : ''}`" 
 					v-for="page in pageCount" 
 					v-if="showPage(page)"
 					:key="`page-${page}`" 
-					@click="goToPage(page)">{{ page }}</button>
+					@click="goToPage(page, search)">{{ page }}
+				</button>
+				
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					@click="goToPage(activePage + 1)"
-					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
+					@click="goToPage(activePage + 1,search)"
+					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next
+				</button>														
 			</div>
 		</div>
 		<!-- PAGINATION ENDS HERE -->
@@ -105,232 +126,269 @@
 
 <script>
 export default {
-data() {
-	return {
-		loading: false,
-		itemsPerPage: 8,
-		// itemCount: 0,
-		activePage: 1,
-		// locumUsers: {},
-		filterCompliances:'',
-		search: '',
-		sortBy: 'name',
-		sortDirection:'asc',
-	}
-},
-watchQuery: [
-'page',
-'search',
-'compliance_status'
-],
-
-async asyncData({ app, store, route }) {
-
-	try {
-		let {
-			page = 1,
-			search = '',
-			compliance_status = null  
-		} = route.query
-
-		if (!compliance_status) {
-	
-		}  
-		page = parseInt(page)
-		const limit = 8
-		const offset = page * limit - limit
-		const order_by = 'created_at:desc'
-		const params = { limit, offset, order_by }
-			
-		if (search) {
-			params.search = search
-		}
-		params.compliance_status = compliance_status
-			
-		const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
-		const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
-		
-		let response = await getLocumUsersCountPromise
-		const itemCount = response.data.data.count
-		
-		response = await getLocumUsersPromise
-		const locumUsers = response.data.data.users
-		
-		store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
-		store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
-
+	data() {
 		return {
-			filterCompliances: compliance_status,
 			loading: false,
-			itemsPerPage: limit,
-			// itemCount,
-			activePage: page,
-			// locumUsers,
-			search
-		}
-	} catch (err) {
-		console.log('index users index asyncData err', err)
-	}
-},
-
-computed: {
-	locumUsers(){
-		return this.$store.state.locums.locumUsers //this is a getter.the data obtained by the state goes here
-												
-	},
-	itemCount(){
-		return this.$store.state.locums.itemCount
-	},
-	pageCount() {
-		return Math.ceil(this.itemCount / this.itemsPerPage)
-	},
-
-	showPage() {
-		return page => {
-		if (page === 1) {
-			return true
-		}
-
-		if (page === this.pageCount) {
-			return true
-		}
-
-		if (page === this.activePage) {
-			return true
-		}
-
-		if (page === this.activePage + 1) {
-			return true
-		}
-
-		if (page === this.activePage - 1) {
-			return true
-		}
-
-		if (this.activePage === 1 && page < 5) {
-			return true
-		}
-
-		if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-			return true
-		}
-
-		if (this.activePage === 2 && page === 4) {
-			return true
-		}
-
-		if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-			return true
-		}
-
-		return false
+			itemsPerPage: 8,
+			// itemCount: 0,
+			activePage: 1,
+			// locumUsers: {},
+			paramSort:{
+				order_by:'created_at:desc'
+			},
+			filterCompliances:'',
+			search: '',
+			sortType:'',
+			name: true,
+			profession: true,
+			created_at: true,
+			email_verified_at: true
 		}
 	},
-	
-},
-watch: {
-	async filterCompliances() {
-	const query = {
-		...this.$router.query
-	}
+	watchQuery: [
+	'page',
+	'search',
+	'compliance_status'
+	],
 
-	query.compliance_status = this.filterCompliances
+	async asyncData({ app, store, route }) {
+		try {
+			let {
+				page = 1,
+				search = '',
+				compliance_status = null  
+			} = route.query
 
-	if (this.filterCompliances === '') {
-		delete query.compliance_status
-	}
-
-	if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-		this.loading = true
-	}
-
-	this.$router.push({ query })
-
-	return
-
-	console.log('filterCompliances', this.filterCompliances)
-	
-	const params = {}
-
-	if (this.search) {
-		params.search = this.search
-	}
-
-	if (this.filterCompliances) {
-		params.compliance_status = this.filterCompliances
-	}
-
-	const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
-	const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
+			if (!compliance_status) {
+		
+			} 
+			
+			page = parseInt(page)
+			const limit = 8
+			const offset = page * limit - limit
+			const order_by = 'created_at:desc'
+			const params = { limit, offset, order_by }
 				
-	let response = null
-	
-	response = await getUsersCountPromise
-	const itemCount = response.data.data.count
-	
-	response = await getUsersPromise
-	const locumUsers = response.data.data.users
+			if (search) {
+				params.search = search
+			}
+			params.compliance_status = compliance_status
+				
+			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+			const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
+			
+			let response = await getLocumUsersCountPromise
+			const itemCount = response.data.data.count
+			
+			response = await getLocumUsersPromise
+			const locumUsers = response.data.data.users
+			
+			store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
+			store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
 
-	this.itemCount = itemCount
-	this.locumUsers = locumUsers
-	}
-},
-// created(){
-// 	this.getLocums()
-// },
-
-methods: {
-	
-	goToPage(page) {
-		if (page < 1) {
-			return
+			return {
+				filterCompliances: compliance_status,
+				loading: false,
+				itemsPerPage: limit,
+				// itemCount,
+				activePage: page,
+				// locumUsers,
+				search
+			}
+		} catch (err) {
+			console.log('index users index asyncData err', err)
 		}
-
-		if (page > this.pageCount) {
-			return
-		}
-
-		const query = {
-			...this.$router.query,
-			page
-		}
-
-		if (page === 1) {
-			delete query.page
-		}
-
-		if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-		this.loading = true
-		}
-
-		this.$router.push({ query })
 	},
 
-	searchSubmit() {
+	computed: {
+		locumUsers(){
+			return this.$store.state.locums.locumUsers //the data obtained by the state goes here
+		},
+		itemCount(){
+			return this.$store.state.locums.itemCount
+		},
+		pageCount() {
+			return Math.ceil(this.itemCount / this.itemsPerPage)
+		},
+
+		showPage() {
+			return page => {
+			if (page === 1) {
+				return true
+			}
+
+			if (page === this.pageCount) {
+				return true
+			}
+
+			if (page === this.activePage) {
+				return true
+			}
+
+			if (page === this.activePage + 1) {
+				return true
+			}
+
+			if (page === this.activePage - 1) {
+				return true
+			}
+
+			if (this.activePage === 1 && page < 5) {
+				return true
+			}
+
+			if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+				return true
+			}
+
+			if (this.activePage === 2 && page === 4) {
+				return true
+			}
+
+			if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+				return true
+			}
+
+			return false
+			}
+		},
+		
+	},
+	watch: {
+		async filterCompliances() {
 		const query = {
 			...this.$router.query
 		}
 
-		delete query.page
+		query.compliance_status = this.filterCompliances
 
-		query.search = this.search
-
-		if (this.search === '') {
-			delete query.search
+		if (this.filterCompliances === '') {
+			delete query.compliance_status
 		}
 
 		if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-		this.loading = true
+			this.loading = true
 		}
 
 		this.$router.push({ query })
+
+		return
+
+		const params = {}
+
+		if (this.search) {
+			params.search = this.search
+		}
+
+		if (this.filterCompliances) {
+			params.compliance_status = this.filterCompliances
+		}
+
+		const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+		const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
+					
+		let response = null
+		
+		response = await getUsersCountPromise
+		const itemCount = response.data.data.count
+		
+		response = await getUsersPromise
+		const locumUsers = response.data.data.users
+
+		this.itemCount = itemCount
+		this.locumUsers = locumUsers
+		}
+	},
+	// created(){
+	// 	this.getLocums()
+	// },
+
+	methods: {
+		getQuery(){
+			const query = {
+				...this.$route.query
+			}
+			const offset = parseInt(query.page)*8 - 8 
+			return offset
+		},
+		getLocums(params){
+			this.$store.dispatch("locums/fetchLocums",{
+			limit:8,
+			order_by:params.order_by,
+			offset: this.getQuery()
+			});
+		},
+		sortBy(sortedBy) {
+			switch (sortedBy) {
+				case 'name':
+				this.rate = !this.rate
+				this.sortType = this.rate
+				case 'profession':
+				this.job_number = !this.job_number
+				this.sortType = this.job_number
+				break;
+				case 'created_at':
+				this.date_start = !this.date_start
+				this.sortType = this.date_start
+				break;
+				case 'email_verified_at':
+				this.date_end = !this.date_end
+				this.sortType = this.date_end
+				break;
+			}
+			this.paramSort.order_by = `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			this.getLocums(this.paramSort)
+		},
+		goToPage(page,search) {
+			if (page < 1) {
+				return
+			}
+
+			if (page > this.pageCount) {
+				return
+			}
+
+			let query = {
+				...this.$router.query,
+				page
+			}
+
+			if(search){
+				query = {
+					...this.$router.query,
+					page,search
+				}
+			}
+
+			if (page === 1) {
+				delete query.page
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+			this.loading = true
+			}
+
+			this.$router.push({ query })
 		},
 
-		sortData:function(toSortBy){
-			if(toSortBy = this.sortBy){
-				this.sortDirection = this.sortDirection === 'asc'?'desc':'asc'
+		searchSubmit() {
+			const query = {
+				...this.$router.query
 			}
-			this.sortBy = toSortBy
+
+			delete query.page
+
+			query.search = this.search
+
+			if (this.search === '') {
+				delete query.search
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+			this.loading = true
+			}
+
+			this.$router.push({ query })
 		},
 
 		statusStyle(status){
@@ -381,6 +439,7 @@ methods: {
 					return
 			}
 		},
+		
 	}
 }
 </script>

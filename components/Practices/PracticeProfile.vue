@@ -163,17 +163,30 @@ export default {
         if(this.practice.type == 'Spoke'){
           Promise.all([
             this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`).then(res=>{
-            this.practiceParent = res.data.practice.parent_surgery
-          })
+              this.practiceParent = res.data.practice.parent_surgery
+            })
           ]).then(()=>{
             console.log('hello',this.practiceParent.name)
           })
         }
     },
     methods:{
+      getQuery(){
+        const query = {
+          ...this.$route.query
+        }
+        const offset = parseInt(query.page)*8 - 8
+        return offset
+      },
+      getPractices(){
+        this.$store.dispatch("practices/fetchPractices",{
+          limit:8,
+          order_by:'created_at:desc',
+          offset:this.getQuery()
+        })
+      },
       async toPutPracticeInfo(practiceID,toPutPractice){
         try{
-            //await finishes the promise. if failed, corresponding funcs will not be executed
             await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
             phone_number:toPutPractice.phone_number,
             report_to:toPutPractice.report_to,
@@ -181,11 +194,10 @@ export default {
             status:toPutPractice.status,
             actived_until:toPutPractice.actived_until
             })
-            // alert('Saved')
+            await this.getPractices()  
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
             
         }catch(err){
-            // alert('Something went wrong!')
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
             console.log("index put locum detail compliance documents error");
         }
@@ -198,6 +210,7 @@ export default {
           await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
             type:toPutPracticeType.type
           })
+          await this.getPractices()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'alert',text:'Saved'})
         }catch(err){
           console.log('change practice type error!',err)

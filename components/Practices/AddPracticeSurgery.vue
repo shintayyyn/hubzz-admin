@@ -31,11 +31,11 @@
           <div>
             <!--TABLE-->
             <!-- BODY -->
-            <div v-if="!practice||practice&&practice.type=='Hub'"> <!--IF PRACTICE IS A HUB / THERE IS NO PRACTICE-->
+            <div v-if="!practice||practice&&practice.type=='Hub'"> <!--IF PRACTICE IS A HUB / NEW PRACTICE IS BEING CREATED-->
               <div
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
-                @click="practice &&practice.type=='Hub' ? addChild(surgery.id):show(surgery.id)"
+                @click="practice &&practice.type=='Hub' ? newPracticeOrChild(surgery.id):show(surgery.id)"
                 class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
               >
                 <div class="flex" style="width: 100%;">
@@ -146,6 +146,20 @@ export default {
   },
 
   methods: {
+    // getQuery(){
+    //   const query = {
+    //     ...this.$route.query
+    //   }
+    //   const offset = parseInt(query.page)*8 - 8
+    //   return offset
+    // },
+    getPractices(){
+      this.$store.dispatch("practices/fetchPractices",{
+        limit:8,
+        order_by:'created_at:desc',
+        // offset:this.getQuery()
+      })
+    },
     async getData(){
       if(this.practice && this.practice.type=="Spoke"){
         // const limit = this.perPage
@@ -221,11 +235,12 @@ export default {
         this.loading = false 
     },
 
-    async addChild(surgeryId){
+    async newPracticeOrChild(surgeryId){
       await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{
         parent_practice_id:this.practice.id,
         surgery_id:surgeryId
       }).then(res=>{
+        getPractices()
         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Practice Child Added'})
       })
       

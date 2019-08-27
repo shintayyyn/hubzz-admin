@@ -33,7 +33,7 @@
       <!-- END HEADER -->
       <!-- BODY -->
       <nuxt-link
-        v-for="(practice, index) in practices"
+        v-for="(practice, index) in getAllPractices"
 		:key="`practice-${index}`"
 		:to="{path:`/practices/${practice.id}`,query:$route.query}"
         class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 my-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
@@ -77,16 +77,16 @@
 	<!-- PAGINATION -->
 	<div class="flex justify-center">
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-			@click="goToPage(activePage - 1)" 
+			@click="goToPage(activePage - 1,search)" 
 			:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 			:class="`${activePage === page ? 'text-white' : ''}`" 
 			v-for="page in pageCount" 
 			v-if="showPage(page)"
 			:key="`page-${page}`" 
-			@click="goToPage(page)">{{ page }}</button>
+			@click="goToPage(page,search)">{{ page }}</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-			@click="goToPage(activePage + 1)"
+			@click="goToPage(activePage + 1,search)"
 			:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
 	</div>
 	<!-- PAGINATION -->
@@ -113,9 +113,9 @@ export default {
       return {
         loading: false,
         itemsPerPage:8,
-        itemCount: 0,
+        // itemCount: 0,
         activePage: 1,
-        practices: [],
+        // practices: [], 
 		search: '',
 		modal:false
 
@@ -127,7 +127,7 @@ export default {
 	'search'
 	],
 
-  	async asyncData({ app, route }) {
+  	async asyncData({ app,store, route }) {
   		try {
   			let {
   				page = 1,
@@ -156,15 +156,18 @@ export default {
 			
 			response = await getPracticesPromise
 			const practices = response.data.data.practices
+			
+			store.commit('practices/SET_PRACTICE_COUNT',itemCount)
+			store.commit('practices/SET_PRACTICES',practices)
 
 			console.log(practices.length)
 				
   			return {
   				loading: false,
   				itemsPerPage: limit,
-  				itemCount,
+  				// itemCount,
   				activePage: page,
-  				practices,
+  				// practices,
   				search
   			}
   		} catch (err) {
@@ -172,8 +175,13 @@ export default {
   		}
   	},
 
-    
     computed: {
+		getAllPractices(){
+			return this.$store.getters["practices/getAllPractices"]
+		},
+		itemCount(){
+			return this.$store.state.practices.itemCount
+		},
   		pageCount() {
   			return Math.ceil(this.itemCount / this.itemsPerPage)
   		},
@@ -222,22 +230,30 @@ export default {
   	},
   
   	methods: {
+		
 		show(){
 			this.modal=true
 		},
-  		goToPage(page) {
+  		goToPage(page,search) {
   			if (page < 1) {
   				return
   			}
 
   			if (page > this.pageCount) {
   				return
-  			}
+			  }
+			  
+  			let query = {
+				...this.$router.query,
+				page
+			}
 
-  			const query = {
-  				...this.$router.query,
-  				page
-  			}
+			if(search){
+				query = {
+					...this.$router.query,
+					page,search
+				}
+			}
 
   			if (page === 1) {
   				delete query.page
