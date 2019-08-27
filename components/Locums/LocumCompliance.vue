@@ -284,7 +284,7 @@ export default {
             }
         },
         professionCategoryId:null,
-        mandatoryComplianceDocuments:[],
+        // mandatoryComplianceDocuments:[],
         optionalComplianceDocuments:[],
         locumMandatoryTrainings:[],
         professionCategory:null,
@@ -312,6 +312,14 @@ export default {
         }) 
 
     },
+    computed:{
+        mandatoryComplianceDocuments(){
+            return this.$store.state.locums.mandatoryComplianceDocuments
+        },
+        // optionalComplianceDocuments(){
+        //     return this.$store.state.locums.optionalComplianceDocuments
+        // }
+    },
     methods:{
         async getData(){
             this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
@@ -323,7 +331,7 @@ export default {
             })
             console.log("one",proCat)
 
-            this.mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
+            const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
                 const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
                     return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
                 })
@@ -332,6 +340,7 @@ export default {
                     locumMandatoryComplianceDocument
                 }
             })
+
             console.log("two",this.mandatoryComplianceDocuments)
 
             this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
@@ -344,6 +353,9 @@ export default {
                 }
             })
             console.log("three",this.optionalComplianceDocuments)
+
+            this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+            // this.$store.commit('locums/SET_OPTIONAL_DOCS', this.optionalComplianceDocuments)
         },
         async toPutGmcNmc(currentStatus,locumID,verifyReject){
             try{

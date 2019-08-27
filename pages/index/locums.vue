@@ -109,9 +109,9 @@ data() {
 	return {
 		loading: false,
 		itemsPerPage: 8,
-		itemCount: 0,
+		// itemCount: 0,
 		activePage: 1,
-		locumUsers: {},
+		// locumUsers: {},
 		filterCompliances:'',
 		search: '',
 		sortBy: 'name',
@@ -124,7 +124,7 @@ watchQuery: [
 'compliance_status'
 ],
 
-async asyncData({ app, route }) {
+async asyncData({ app, store, route }) {
 
 	try {
 		let {
@@ -155,14 +155,20 @@ async asyncData({ app, route }) {
 		
 		response = await getLocumUsersPromise
 		const locumUsers = response.data.data.users
+		
+		store.commit('locums/SET_LOCUM_COUNT',itemCount)
+		store.commit('locums/SET_LOCUM_USERS',locumUsers)
+		
+
+		console.log('one',locumUsers,'two',itemCount)
 			
 		return {
 			filterCompliances: compliance_status,
 			loading: false,
 			itemsPerPage: limit,
-			itemCount,
+			// itemCount,
 			activePage: page,
-			locumUsers,
+			// locumUsers,
 			search
 		}
 	} catch (err) {
@@ -171,6 +177,12 @@ async asyncData({ app, route }) {
 },
 
 computed: {
+	locumUsers(){
+		return this.$store.state.locums.locumUsers
+	},
+	itemCount(){
+		return this.$store.state.locums.itemCount
+	},
 	pageCount() {
 		return Math.ceil(this.itemCount / this.itemsPerPage)
 	},

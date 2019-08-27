@@ -1,6 +1,9 @@
 export default () =>({
     loading_locums: true,
-    locums_count: 0,
-    all_locums: [],
+    locumUsers: [],
+    itemCount:0,
+
+    mandatoryComplianceDocuments:[],
+    optionalComplianceDocuments:[]
    
 })
