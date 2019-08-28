@@ -23,11 +23,31 @@
     <div class="table border-separate" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->
       <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-        <div class="table-cell p-2 align-middle">Practice Name</div> 
+        <div class="table-cell p-2 align-middle" @click="sortBy('name',activePage,search)">
+			Practice Name
+			<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+			<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+			<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+		</div> 
         <div class="table-cell p-2 align-middle">Practice Code</div>
-        <div class="table-cell p-2 align-middle">Created</div>
-        <div class="table-cell p-2 align-middle">Expires</div>
-        <div class="table-cell p-2 align-middle">Status</div>
+        <div class="table-cell p-2 align-middle" @click="sortBy('created_at',activePage,search)">
+			Created
+			<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+			<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+			<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+		</div>
+        <div class="table-cell p-2 align-middle" @click="sortBy('actived_until',activePage,search)">
+			Expires
+			<svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+			<svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+			<svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+		</div>
+        <div class="table-cell p-2 align-middle" @click="sortBy('status',activePage,search)">
+			Status
+			<svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+			<svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+			<svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+		</div>
 		<div class="table-cell p-2 align-middle">Type</div>
       </div>
       <!-- END HEADER -->
@@ -77,16 +97,16 @@
 	<!-- PAGINATION -->
 	<div class="flex justify-center">
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-			@click="goToPage(activePage - 1,search)" 
+			@click="goToPage(activePage - 1,search,order_by)" 
 			:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 			:class="`${activePage === page ? 'text-white' : ''}`" 
 			v-for="page in pageCount" 
 			v-if="showPage(page)"
 			:key="`page-${page}`" 
-			@click="goToPage(page,search)">{{ page }}</button>
+			@click="goToPage(page,search,order_by)">{{ page }}</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-			@click="goToPage(activePage + 1,search)"
+			@click="goToPage(activePage + 1,search,order_by)"
 			:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
 	</div>
 	<!-- PAGINATION -->
@@ -115,8 +135,20 @@ export default {
         itemsPerPage:8,
         // itemCount: 0,
         activePage: 1,
-        // practices: [], 
+		// practices: [],
+		
 		search: '',
+		paramSort:{
+			order_by:''
+		},
+		sort:'',
+		sortedBy:'',
+		sortType:'',
+		order_by:'',
+		name:true,
+		created_at:true,
+		actived_until:true,
+		status:true,
 		modal:false
 
       };
@@ -131,15 +163,16 @@ export default {
   		try {
   			let {
   				page = 1,
-  				search = ''
+				search = '',
+				order_by=''  
 			} = route.query
 			  
-  			page = parseInt(page)
+			page = parseInt(page)
+			const createdRoute = route.query  
   			const limit = 8
   			const offset = page * limit - limit
-  			const order_by = 'created_at:desc'
+  			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
 			const params = { limit, offset, order_by }
-			console.log(params)
 				
   			if (search) {
   				params.search = search
@@ -147,7 +180,6 @@ export default {
 				
   			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
 			const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
-			console.log(getPracticesPromise)
 				
 			let response = null
 			
@@ -168,7 +200,8 @@ export default {
   				// itemCount,
   				activePage: page,
   				// practices,
-  				search
+				search,
+				order_by  
   			}
   		} catch (err) {
   			console.log('index practices index asyncData err', err)
@@ -230,11 +263,84 @@ export default {
   	},
   
   	methods: {
-		
 		show(){
 			this.modal=true
 		},
-  		goToPage(page,search) {
+
+		getQuery(){
+			const query = {
+				...this.$route.query
+			}
+			const offset = parseInt(query.page)*8 - 8 
+			return offset
+		},
+
+		getPractices(params,search){
+			this.$store.dispatch("practices/fetchPractices",{
+				limit:8,
+				search:search,
+				order_by:params.order_by,
+				offset:this.getQuery()
+			})
+		},
+		async sortBy(sortedBy,page,search) {
+			switch (sortedBy) {
+				case 'name':
+					this.sortedBy = sortedBy
+					this.name = !this.name
+					this.sortType = this.name
+				case 'created_at':
+					this.sortedBy = sortedBy
+					this.created_at = !this.created_at
+					this.sortType = this.created_at
+				break;
+				case 'actived_until':
+					this.sortedBy = sortedBy
+					this.actived_until = !this.actived_until
+					this.sortType = this.actived_until
+				break;
+				case 'status':
+					this.sortedBy = sortedBy
+					this.status = !this.status
+					this.sortType = this.status
+				break;
+			}
+			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			let order_by = await this.paramSort.order_by
+			console.log(order_by)
+			let query = {
+				...this.$router.query,
+				order_by
+			}
+			if (page === 1) {
+				delete query.page
+			}
+			if(page){
+				query = {
+					...this.$router.query,
+					page,order_by
+				}
+			}
+			if(search){
+				query = {
+					...this.$router.query,
+					search,order_by
+				}
+			}
+			if(page & search){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
+			
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+			this.loading = true
+			}
+			this.$router.push({query})
+			this.getPractices(this.paramSort,this.search)
+		},
+  		goToPage(page,search,order_by) {
   			if (page < 1) {
   				return
   			}
@@ -254,6 +360,18 @@ export default {
 					page,search
 				}
 			}
+			if(order_by){
+				query={
+					...this.$route.query,
+					page,order_by
+				}
+			}
+			if(search && order_by){
+				query={
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
 
   			if (page === 1) {
   				delete query.page
@@ -264,26 +382,45 @@ export default {
 	      }
 
 	      this.$router.push({ query })
-  		},
+		},
 
-  		searchSubmit() {
-  			const query = {
-  				...this.$router.query
-  			}
-
-  			delete query.page
-
-  			query.search = this.search
+  		searchSubmit(page, order_by) {
+			let search = this.search
+			let query = {
+				...this.$router.query,
+				search
+			}
+			if(page === 1){
+				delete query.page
+			}
+			if(page && page>1){
+				query = {
+					...this.$router.query,
+					page,search
+				}
+			}
+			if(order_by){
+				query = {
+					...this.$router.query,
+					search,order_by
+				}
+			}
+			if(page && order_by){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
 
   			if (this.search === '') {
   				delete query.search
   			}
 
-	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-	        this.loading = true
-	      }
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
 
-	      this.$router.push({ query })
+	      	this.$router.push({ query })
 		},
 
 		typeStyle(status){

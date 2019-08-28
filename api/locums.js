@@ -1,6 +1,7 @@
 export function fetchLocums(axios,payload){
     console.log('API is performed', payload)
     let params = {}
+    payload.search ? params.search = payload.search : null
     payload.compliance_status ? params.compliance_status = payload.compliance_status : null
     payload.order_by ? params.order_by = payload.order_by : null
     payload.limit ? params.limit = payload.limit : null

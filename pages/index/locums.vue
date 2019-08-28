@@ -141,15 +141,16 @@ export default {
 			// itemCount: 0,
 			activePage: 1,
 			// locumUsers: {},
+			
+			filterCompliances:'',
+			search: '',
 			paramSort:{
 				order_by:''
 			},
-			filterCompliances:'',
-			search: '',
 			sort:'',
-			sortedBy:'', //for 
-			order_by:'', //for query
-			sortType:'',
+			sortedBy:'',
+			sortType:'', 
+			order_by:'',
 			name: true,
 			profession: true,
 			created_at: true,
@@ -167,6 +168,7 @@ export default {
 			let {
 				page = 1,
 				search = '',
+				order_by='',
 				compliance_status = null  
 			} = route.query
 
@@ -177,7 +179,7 @@ export default {
 			const createdRoute = route.query
 			const limit = 8
 			const offset = page * limit - limit
-			let order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
+			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
 			const params = { limit, offset, order_by }
 				
 			if (search) {
@@ -266,6 +268,7 @@ export default {
 		},
 		
 	},
+
 	watch: {
 		async filterCompliances() {
 		const query = {
@@ -311,9 +314,6 @@ export default {
 		this.locumUsers = locumUsers
 		}
 	},
-	// created(){
-	// 	this.getLocums()
-	// },
 
 	methods: {
 		getQuery(){
@@ -323,11 +323,12 @@ export default {
 			const offset = parseInt(query.page)*8 - 8 
 			return offset
 		},
-		getLocums(params){
+		getLocums(params,search){
 			this.$store.dispatch("locums/fetchLocums",{
-			limit:8,
-			order_by:params.order_by,
-			offset: this.getQuery()
+				limit:8,
+				search:search,
+				order_by:params.order_by,
+				offset: this.getQuery()
 			});
 		},
 		async sortBy(sortedBy,page,search) {
@@ -359,6 +360,9 @@ export default {
 				...this.$router.query,
 				order_by
 			}
+			if (page === 1) {
+				delete query.page
+			}
 			if(page){
 				query = {
 					...this.$router.query,
@@ -382,7 +386,7 @@ export default {
 			this.loading = true
 			}
 			this.$router.push({query})
-			this.getLocums(this.paramSort)
+			this.getLocums(this.paramSort,this.search)
 		},
 		goToPage(page,search,order_by) {
 			if (page < 1) {
@@ -429,13 +433,17 @@ export default {
 		},
 
 		searchSubmit(page,order_by) {
+			let search= this.search
 			let query = {
-				...this.$router.query
+				...this.$router.query,
+				search
 			}
 
-			let search= this.search
+			if (page === 1) {
+				delete query.page
+			}
 
-			if(page){
+			if(page&&page>1){
 				query = {
 					...this.$router.query,
 					page,search
@@ -447,7 +455,7 @@ export default {
 					search,order_by
 				}
 			}
-			if(page & order_by){
+			if(page && order_by){
 				query = {
 					...this.$router.query,
 					page,search,order_by

@@ -1,6 +1,7 @@
 export function fetchPractices(axios,payload){
     console.log('Practice API is performed',payload)
     let params = {}
+    payload.search ? params.search = payload.search : null
     payload.type ? params.type = payload.type : null
     payload.status ? params.status = payload.status : null
     payload.order_by ? params.order_by = payload.order_by : null
