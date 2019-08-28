@@ -23,26 +23,26 @@
     <div class="table border-separate" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->
       <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-        <div class="table-cell p-2 align-middle" @click="sortBy('name',activePage,search)">
+        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('name',activePage,search)">
 			Practice Name
 			<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div> 
         <div class="table-cell p-2 align-middle">Practice Code</div>
-        <div class="table-cell p-2 align-middle" @click="sortBy('created_at',activePage,search)">
+        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('created_at',activePage,search)">
 			Created
 			<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div>
-        <div class="table-cell p-2 align-middle" @click="sortBy('actived_until',activePage,search)">
+        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('actived_until',activePage,search)">
 			Expires
 			<svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div>
-        <div class="table-cell p-2 align-middle" @click="sortBy('status',activePage,search)">
+        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('status',activePage,search)">
 			Status
 			<svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -112,6 +112,7 @@
 	<!-- PAGINATION -->
 
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true"></div>
+
     <transition name="slide" mode="out-in">
       <div class="practice-modal shadow-lg" v-if="modal">
         <AddPracticeSurgery @close="modal = false"/>
@@ -124,7 +125,6 @@
 
 <script>
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
-
 export default {
 	components:{
 		AddPracticeSurgery

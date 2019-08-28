@@ -4,11 +4,11 @@
 			<div class="flex py-2">
 				<div class="relative">
 					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-					<button class="absolute pin-t pin-r pin-b mr-2 px-4 py-2" @click="search = '', searchSubmit(activePage,order_by)">
+					<button class="absolute pin-t pin-r pin-b mr-2 px-4 py-2" @click="search = '', searchSubmit()">
 						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
-				<button class="rounded-lg text-sm text-white p-2 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
+				<button class="rounded-lg text-sm text-white p-2 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
 			</div>
 			<div class="relative flex flex-col md:flex-row md:items-center md:items-end py-2 md:py-0 md:px-4 md:px-6 -mt-2 md:mt-0">
 				<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
@@ -33,25 +33,25 @@
 		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
 			<!-- HEADER -->
 			<div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-				<div class="table-cell p-2 align-middle" @click="sortBy('name',activePage,search)">
+				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('name',activePage,search,filterCompliances)">
 					Name
 					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div> 
-				<div class="table-cell p-2 align-middle" @click="sortBy('profession',activePage,search)" >
+				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('profession',activePage,search,filterCompliances)" >
 					Profession
 					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle" @click="sortBy('created_at',activePage,search)" >
+				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('created_at',activePage,search,filterCompliances)" >
 					Date signed-up
 					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle" @click="sortBy('email_verified_at',activePage,search)" >
+				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('email_verified_at',activePage,search,filterCompliances)" >
 					Sign-up verified
 					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -107,7 +107,7 @@
 		<div class="flex justify-center">
 			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1, search, order_by)" 
+					@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
 					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev
 				</button>
 
@@ -116,11 +116,11 @@
 					v-for="page in pageCount" 
 					v-if="showPage(page)"
 					:key="`page-${page}`" 
-					@click="goToPage(page, search, order_by)">{{ page }}
+					@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
 				</button>
 				
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					@click="goToPage(activePage + 1, search, order_by)"
+					@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
 					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next
 				</button>														
 			</div>
@@ -133,7 +133,11 @@
 </template>
 
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 export default {
+	components:{
+		AppLoading
+	},
 	data() {
 		return {
 			loading: false,
@@ -144,7 +148,7 @@ export default {
 			
 			filterCompliances:'',
 			search: '',
-			paramSort:{
+			paramFilterSort:{
 				order_by:''
 			},
 			sort:'',
@@ -271,47 +275,37 @@ export default {
 
 	watch: {
 		async filterCompliances() {
-		const query = {
-			...this.$router.query
-		}
+			const query = {
+				...this.$router.query
+			}
 
-		query.compliance_status = this.filterCompliances
+			query.compliance_status = this.filterCompliances
 
-		if (this.filterCompliances === '') {
-			delete query.compliance_status
-		}
+			if (this.filterCompliances === '') {
+				delete query.compliance_status
+			}
 
-		if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
-		}
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
 
-		this.$router.push({ query })
+			this.$router.push({ query })
 
-		return
+			return
 
-		const params = {}
+			const params = {}
 
-		if (this.search) {
-			params.search = this.search
-		}
+			if (this.search) {
+				params.search = this.search
+			}
 
-		if (this.filterCompliances) {
-			params.compliance_status = this.filterCompliances
-		}
+			if (this.filterCompliances) {
+				params.compliance_status = this.filterCompliances
+			}
 
-		const getUsersCountPromise = this.$axios.get(`/api/v1/admin/locum-users/count`, { params })
-		const getUsersPromise = this.$axios.get(`/api/v1/admin/locum-users`, { params })
-					
-		let response = null
-		
-		response = await getUsersCountPromise
-		const itemCount = response.data.data.count
-		
-		response = await getUsersPromise
-		const locumUsers = response.data.data.users
+			this.paramFilterSort.compliance_status = this.filterCompliances
 
-		this.itemCount = itemCount
-		this.locumUsers = locumUsers
+			this.getLocums(this.paramFilterSort)
 		}
 	},
 
@@ -323,15 +317,16 @@ export default {
 			const offset = parseInt(query.page)*8 - 8 
 			return offset
 		},
-		getLocums(params,search){
+		getLocums(params){
 			this.$store.dispatch("locums/fetchLocums",{
 				limit:8,
-				search:search,
+				search:params.search,
+				compliance_status:params.compliance_status,
 				order_by:params.order_by,
 				offset: this.getQuery()
 			});
 		},
-		async sortBy(sortedBy,page,search) {
+		async sortBy(sortedBy,page,search,compliance_status) {
 			switch (sortedBy) {
 				case 'name':
 					this.sortedBy = sortedBy
@@ -353,8 +348,8 @@ export default {
 					this.sortType = this.email_verified_at
 				break;
 			}
-			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-			let order_by = await this.paramSort.order_by
+			this.paramFilterSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			let order_by = await this.paramFilterSort.order_by
 			console.log(order_by)
 			let query = {
 				...this.$router.query,
@@ -364,31 +359,37 @@ export default {
 				delete query.page
 			}
 			if(page){
-				query = {
-					...this.$router.query,
-					page,order_by
-				}
+				query = {...this.$router.query,page,order_by}
 			}
 			if(search){
-				query = {
-					...this.$router.query,
-					search,order_by
-				}
+				query = {...this.$router.query,search,order_by}
 			}
-			if(page & search){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
+			if(compliance_status){
+				query = {...this.$route.query,compliance_status,order_by}
 			}
-			
+			if(page && search){
+				query = {...this.$router.query,page,search,order_by}
+			}
+			if(page && compliance_status){
+				query = {...this.$router.query,page,compliance_status,order_by}
+			}
+			if(search && compliance_status){
+				query = {...this.$router.query,search,compliance_status,order_by}
+			}
+			if(page && search && compliance_status){
+				query = {...this.$router.query,page,search,compliance_status}
+			}
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
+				this.loading = true
 			}
 			this.$router.push({query})
-			this.getLocums(this.paramSort,this.search)
+			
+			console.log('hello',this.paramFilterSort)
+			this.paramFilterSort.search = search
+			this.paramFilterSort.compliance_status = compliance_status
+			this.getLocums(this.paramFilterSort)
 		},
-		goToPage(page,search,order_by) {
+		goToPage(page,search,order_by, compliance_status) {
 			if (page < 1) {
 				return
 			}
@@ -397,28 +398,32 @@ export default {
 				return
 			}
 
-			let query = {
-				...this.$router.query,
-				page
-			}
+			let query = {...this.$router.query,page}
 
 			if(search){
-				query = {
-					...this.$router.query,
-					page,search
-				}
+				query = {...this.$router.query,page,search}
 			}
 			if(order_by){
-				query = {
-					...this.$router.query,
-					page,order_by
-				}
+				query = {...this.$router.query,page,order_by}
 			}
+			if(compliance_status){
+				query = {...this.$router.query,page,compliance_status}
+			}
+
 			if(search && order_by){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
+				query = {...this.$router.query,page,search,order_by}
+			}
+
+			if(search && compliance_status){
+				query = {...this.$router.query,page,search,compliance_status}
+			}
+
+			if(order_by && compliance_status){
+				query = {...this.$router.query,page,order_by,compliance_status}
+			}
+
+			if(search && order_by && compliance_status){
+				query = {...this.$router.query,page,search,order_by,compliance_status}
 			}
 
 			if (page === 1) {
@@ -426,48 +431,48 @@ export default {
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
+				this.loading = true
 			}
 
 			this.$router.push({ query })
 		},
 
-		searchSubmit(page,order_by) {
+		searchSubmit(page,order_by,compliance_status) {
 			let search= this.search
-			let query = {
-				...this.$router.query,
-				search
-			}
+
+			let query = {...this.$router.query,search}
 
 			if (page === 1) {
 				delete query.page
 			}
 
-			if(page&&page>1){
-				query = {
-					...this.$router.query,
-					page,search
-				}
+			if(page){
+				query = {...this.$router.query,page,search}
 			}
 			if(order_by){
-				query = {
-					...this.$router.query,
-					search,order_by
-				}
+				query = {...this.$router.query,search,order_by}
+			}
+			if(compliance_status){
+				query = {...this.$router.query,search,compliance_status}
 			}
 			if(page && order_by){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
+				query = {...this.$router.query,page,search,order_by}
 			}
-
+			if(page && compliance_status){
+				query = {...this.$router.query,page,search,compliance_status}
+			}
+			if(compliance_status && order_by){
+				query={...this.$router.query,search,compliance_status,order_by}
+			}
+			if(page && compliance_status && order_by){
+				query = {...this.$router.query,page,search,compliance_status,order_by}
+			}
 			if (this.search === '') {
 				delete query.search
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
+				this.loading = true
 			}
 
 			this.$router.push({ query })

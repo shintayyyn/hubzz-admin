@@ -65,7 +65,7 @@
             </div> 
         </div>
         <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId')"></div>
-        
+        <div class="edit-practice-user-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
             <div class="practice-user-modal shadow-lg" v-if="modal">
                 <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery"/>
@@ -134,9 +134,6 @@ export default {
         show(id){
             console.log(id)
             Promise.all([
-                // this.$axios.$get(`/api/v1/admin/surgeries/${id}`).then(res =>{
-                //     this.surgery = res.data.surgery
-                // })
                 this.surgery = this.practice.surgery
             ]).then(()=>{
                 console.log('The surgery opened is', this.surgery)

@@ -5,7 +5,6 @@
                 <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
             </div>
         </div>
-        
         <div class="ml-4">
             <div class="text-white pl-4 pt-2">
                 <div class="text-lg font-bold" v-if="practice && practice.type=='Hub'">Create Spoke User</div>
@@ -89,15 +88,6 @@
 
                     </div>
                     
-                    <!-- <AppFilterSearch
-                      v-model="toPostPracticeUser.practice_types"
-                      :name="'practice_type_id'"
-                      :label="'Practice Types'"
-                      :placeholder="'Select...'"
-                      :items="practiceTypes"
-                      :info="'Choose at least one qualification'"
-                      
-                    /> -->
                     </div>
                     
                     <div class="flex py-1">Role
@@ -224,9 +214,6 @@ export default {
         this.practiceTypes.push({  value: item.id, label: item.name });
       })
     })    
-    // if(!practice){
-    //   await this.$axios.$get(`/api/v1/admin/practice`)
-    // }
     console.log("prac types",this.practiceTypes)
     if(this.practice){
       console.log('Practice to be created is a spoke')
@@ -246,7 +233,6 @@ export default {
       this.$store.dispatch("practices/fetchPractices",{
         limit:8,
         order_by:'created_at:desc',
-        offset:this.getQuery()
       })
     },
     verifyEmail:function(inputEmail){
@@ -351,10 +337,10 @@ export default {
 
     async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
       try{
-        this.toPostPracticeUser.practice_type_id = this.toPostPracticeUser.practice_type_id.map(
+        this.toPostPracticeUser.practice_type_id = await this.toPostPracticeUser.practice_type_id.map(
           item=>item.value
-        ),
-        this.$axios.post(`/api/v1/admin/practices`,this.toPostPracticeUser).then(res=>{
+        )
+        await this.$axios.post(`/api/v1/admin/practices`,this.toPostPracticeUser).then(res=>{
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
         })
         await this.getPractices()

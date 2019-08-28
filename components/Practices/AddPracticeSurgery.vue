@@ -146,31 +146,14 @@ export default {
   },
 
   methods: {
-    // getQuery(){
-    //   const query = {
-    //     ...this.$route.query
-    //   }
-    //   const offset = parseInt(query.page)*8 - 8
-    //   return offset
-    // },
     getPractices(){
       this.$store.dispatch("practices/fetchPractices",{
         limit:8,
         order_by:'created_at:desc',
-        // offset:this.getQuery()
       })
     },
     async getData(){
       if(this.practice && this.practice.type=="Spoke"){
-        // const limit = this.perPage
-        // const type = 'Hub'
-        // let offset = 0
-        // offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
-        // const params = {limit, offset}
-        // if(this.search){
-        //   params.search = this.search
-        //   console.log('hello',params)
-        // }
         await this.$axios.$get(`/api/v1/admin/practices/count?type="Hub"`).then(res=>{
           this.total = res.data.count
           this.perPage = 8

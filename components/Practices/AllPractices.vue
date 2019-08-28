@@ -149,11 +149,7 @@ export default{
         })  
         
     },
-    computed:{
-
-    },
     methods:{
-
       getAllPractices(){
         this.loading = true
         let offset = 0
