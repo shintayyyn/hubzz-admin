@@ -4,7 +4,7 @@
 			<div class="flex py-2">
 				<div class="relative">
 					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-					<button class="absolute pin-t pin-r pin-b mr-2 px-4 py-2" @click="search = '', searchSubmit()">
+					<button class="absolute pin-t pin-r pin-b mr-2 px-4 py-2" @click="search = '', searchSubmit(activePage,order_by)">
 						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
@@ -33,21 +33,29 @@
 		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
 			<!-- HEADER -->
 			<div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-				<div class="table-cell p-2 align-middle" @click="sortBy('name')">
+				<div class="table-cell p-2 align-middle" @click="sortBy('name',activePage,search)">
 					Name
-					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div> 
-				<div class="table-cell p-2 align-middle" @click="sortBy('profession')" >
+				<div class="table-cell p-2 align-middle" @click="sortBy('profession',activePage,search)" >
 					Profession
-					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle" @click="sortBy('created_at')" >
+				<div class="table-cell p-2 align-middle" @click="sortBy('created_at',activePage,search)" >
 					Date signed-up
-					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle" @click="sortBy('email_verified_at')" >
+				<div class="table-cell p-2 align-middle" @click="sortBy('email_verified_at',activePage,search)" >
 					Sign-up verified
-					<svgicon class="inline align-baseline" name="sort" height="12" width="12" color="white" />
+					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
 				<div class="table-cell p-2 align-middle">
 					Status
@@ -99,7 +107,7 @@
 		<div class="flex justify-center">
 			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1,search)" 
+					@click="goToPage(activePage - 1, search, order_by)" 
 					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev
 				</button>
 
@@ -108,11 +116,11 @@
 					v-for="page in pageCount" 
 					v-if="showPage(page)"
 					:key="`page-${page}`" 
-					@click="goToPage(page, search)">{{ page }}
+					@click="goToPage(page, search, order_by)">{{ page }}
 				</button>
 				
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					@click="goToPage(activePage + 1,search)"
+					@click="goToPage(activePage + 1, search, order_by)"
 					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next
 				</button>														
 			</div>
@@ -134,10 +142,13 @@ export default {
 			activePage: 1,
 			// locumUsers: {},
 			paramSort:{
-				order_by:'created_at:desc'
+				order_by:''
 			},
 			filterCompliances:'',
 			search: '',
+			sort:'',
+			sortedBy:'', //for 
+			order_by:'', //for query
 			sortType:'',
 			name: true,
 			profession: true,
@@ -161,12 +172,12 @@ export default {
 
 			if (!compliance_status) {
 		
-			} 
-			
+			}
 			page = parseInt(page)
+			const createdRoute = route.query
 			const limit = 8
 			const offset = page * limit - limit
-			const order_by = 'created_at:desc'
+			let order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
 			const params = { limit, offset, order_by }
 				
 			if (search) {
@@ -193,7 +204,8 @@ export default {
 				// itemCount,
 				activePage: page,
 				// locumUsers,
-				search
+				search,
+				order_by
 			}
 		} catch (err) {
 			console.log('index users index asyncData err', err)
@@ -318,28 +330,61 @@ export default {
 			offset: this.getQuery()
 			});
 		},
-		sortBy(sortedBy) {
+		async sortBy(sortedBy,page,search) {
 			switch (sortedBy) {
 				case 'name':
-				this.rate = !this.rate
-				this.sortType = this.rate
+					this.sortedBy = sortedBy
+					this.name = !this.name
+					this.sortType = this.name
 				case 'profession':
-				this.job_number = !this.job_number
-				this.sortType = this.job_number
+					this.sortedBy = sortedBy
+					this.profession = !this.profession
+					this.sortType = this.profession
 				break;
 				case 'created_at':
-				this.date_start = !this.date_start
-				this.sortType = this.date_start
+					this.sortedBy = sortedBy
+					this.created_at = !this.created_at
+					this.sortType = this.created_at
 				break;
 				case 'email_verified_at':
-				this.date_end = !this.date_end
-				this.sortType = this.date_end
+					this.sortedBy = sortedBy
+					this.email_verified_at = !this.email_verified_at
+					this.sortType = this.email_verified_at
 				break;
 			}
-			this.paramSort.order_by = `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			let order_by = await this.paramSort.order_by
+			console.log(order_by)
+			let query = {
+				...this.$router.query,
+				order_by
+			}
+			if(page){
+				query = {
+					...this.$router.query,
+					page,order_by
+				}
+			}
+			if(search){
+				query = {
+					...this.$router.query,
+					search,order_by
+				}
+			}
+			if(page & search){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
+			
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+			this.loading = true
+			}
+			this.$router.push({query})
 			this.getLocums(this.paramSort)
 		},
-		goToPage(page,search) {
+		goToPage(page,search,order_by) {
 			if (page < 1) {
 				return
 			}
@@ -359,6 +404,18 @@ export default {
 					page,search
 				}
 			}
+			if(order_by){
+				query = {
+					...this.$router.query,
+					page,order_by
+				}
+			}
+			if(search && order_by){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
 
 			if (page === 1) {
 				delete query.page
@@ -371,14 +428,31 @@ export default {
 			this.$router.push({ query })
 		},
 
-		searchSubmit() {
-			const query = {
+		searchSubmit(page,order_by) {
+			let query = {
 				...this.$router.query
 			}
 
-			delete query.page
+			let search= this.search
 
-			query.search = this.search
+			if(page){
+				query = {
+					...this.$router.query,
+					page,search
+				}
+			}
+			if(order_by){
+				query = {
+					...this.$router.query,
+					search,order_by
+				}
+			}
+			if(page & order_by){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
 
 			if (this.search === '') {
 				delete query.search
