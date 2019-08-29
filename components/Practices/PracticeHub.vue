@@ -8,6 +8,7 @@
                 <span v-else>Add Parent</span>
             </button>
         </div>
+        
         <div v-if="practiceParent">
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
@@ -73,13 +74,13 @@
                         <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice Hub yet.</p>
                         </div>
                         
-                        <div v-if="practiceParent && practiceParent.type=='Spoke'">
+                        <!-- <div v-if="practiceParent && practiceParent.type=='Spoke'">
                         <p class="flex m-2 text-base font-bold underline"> HUB info</p>
                         <p class="flex">Practice Name</p>
                         <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParentHub.name}}</p>
-                        <!-- <p class="flex">Phone Number</p>
-                        <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p> -->
-                        </div>
+                        <p class="flex">Phone Number</p>
+                        <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p>
+                        </div> -->
                     </div>
                 </div>
                 <div class="w-full md:w-1/2 ">
@@ -111,6 +112,28 @@
             </div>
           </form>
         </div>
+        <div v-if="!practiceParent && practiceHub">
+             <form class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg sm:w-full lg:w-2/3">
+                <div class="m-4">
+                    <div class="inline-flex text-lg">
+                        <div class="flex">
+                            <svgicon name="alert" width="48" height="48" color="white"/>
+                        </div>
+                        <div class="flex">
+                            <p class="mt-4">This surgery is not yet a registered practice in HUBZZ.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-grey-light text-sm m-4">
+                    <p class="font-semibold">Surgery Name</p>
+                    <p class="m-2">{{practiceHub.parent_surgery.name}}</p>
+                    <p class="font-semibold">Surgery Code</p>
+                    <p class="m-2">{{practiceHub.parent_surgery.code}}</p>
+                </div>
+             </form>
+        </div>
+        
+        
         <div class="practice-shield" v-if="modal == true"></div>
         <transition name="slide" mode="out-in">
             <div class="change-parent-modal shadow-lg" v-if="modal">

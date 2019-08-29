@@ -17,9 +17,8 @@
             <input
               class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3  px-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
-              placeholder="Search for surgery by name, etc."
+              :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
               v-model="search" @keyup.enter="searchSubmit()"
-              aria-label="Full name"
             >
              <div class="self-end">
               <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-dark" @click="searchSubmit()">Search</button>
@@ -35,12 +34,15 @@
               <div
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
-                @click="practice &&practice.type=='Hub' ? newPracticeOrChild(surgery.id):show(surgery.id)"
+                @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
                 class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
               >
                 <div class="flex" style="width: 100%;">
+                  
                   <div class="text-white text-xs p-4">
-                    <span class="font-bold">{{ surgery.name }}</span><br><br><br>
+                    
+                    <span class="font-bold">{{ surgery.name }}</span>
+                    <span v-if="surgery.practice_count > 0" class="p-1 rounded-lg text-sm bg-green"> Registered</span><br><br><br>
                     <span>{{surgery.address.line_1}}</span>
                     <span>{{surgery.address.line_2}}</span>
                     <span>{{surgery.address.line_3}}</span><br><br><br>
@@ -57,17 +59,37 @@
               <div
                 v-for="(hub, index) in hubzz"
                 :key="`hub-${index}`"
-                @click="changeParent(hub.surgery.id)"
+                @click="changeParent(hub.surgery.id,hub.id)"
                 class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
               >
                 <div class="flex" style="width: 100%;">
                   <div class="text-white text-xs p-4">
+                    <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
                     <span class="font-bold">{{ hub.surgery.name }}</span><br><br><br>
                     <span class='p-2 bg-trout rounded'>Practice Code</span>
                     <span>{{ hub.surgery.code }}</span><br>
                   </div>
                 </div>
               </div>
+              <!-- <div
+                v-for="(surgery, index) in surgeries"
+                :key="`surgery-${index}`"
+                @click="changeParent(surgery.id)"
+                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
+              >
+                <div class="flex" style="width: 100%;">
+                  <div class="text-white text-xs p-4">
+                    <span class="font-bold">{{ surgery.name }}</span><br><br><br>
+                    <span>{{surgery.address.line_1}}</span>
+                    <span>{{surgery.address.line_2}}</span>
+                    <span>{{surgery.address.line_3}}</span><br><br><br>
+                    <span class='p-2 bg-trout rounded'>CCG</span>
+                    <span>{{surgery.clinical_commissioning_group.name}}</span><br><br><br>
+                    <span class='p-2 bg-trout rounded'>Practice Code</span>
+                    <span>{{ surgery.code }}</span><br>
+                  </div>
+                </div>
+              </div> -->
             </div>
               <!--TABLE ENDS HERE-->
           </div>
@@ -130,7 +152,9 @@ export default {
       $route(to, from) {
         this.currentPage = parseInt(to.query.add_practice_page)
         this.getAllSurgeries()
-        },
+        this.getAllHubzz()
+        
+      },
     },
 
     created(){
@@ -152,23 +176,35 @@ export default {
         order_by:'created_at:desc',
       })
     },
+    getPracticeHub(practiceId){
+      this.$store.dispatch("practices/fetchHub",{
+        practice_id:practiceId
+      })
+    },
+    getPracticeParent(parentId){
+      this.$store.dispatch("practices/fetchPracticeParent",{
+         practice_parent_id:parentId
+      })
+    },
     async getData(){
+      const limit = this.perPage
+      let offset = 0
+      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
+      const params = {limit, offset}
+      if(this.search){
+        params.search = this.search
+        console.log('hello',params)
+      }
+
       if(this.practice && this.practice.type=="Spoke"){
-        await this.$axios.$get(`/api/v1/admin/practices/count?type="Hub"`).then(res=>{
+        params.type = "Hub"
+        await this.$axios.$get(`/api/v1/admin/practices/count`,{params}).then(res=>{
           this.total = res.data.count
           this.perPage = 8
           this.totalPages = Math.ceil(this.total/this.perPage)
           this.getAllHubzz()
         })
       }else if(!this.practice || this.practice&&this.practice.type=="Hub"){
-        const limit = this.perPage
-        let offset = 0
-        offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
-        const params = {limit, offset}
-        if(this.search){
-          params.search = this.search
-          console.log('hello',params)
-        }
         await this.$axios.$get(`/api/v1/admin/surgeries/count`,{params}).then(res=>{
           this.total = res.data.count
           this.perPage = 8
@@ -212,32 +248,67 @@ export default {
         offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
         await this.$axios.$get(`/api/v1/admin/practices?type=Hub&limit=${this.perPage}&offset=${offset}`).then(res=>{
           this.hubzz = res.data.practices
-          
         })
         console.log("hubzz",this.hubzz)
         this.loading = false 
     },
 
-    async newPracticeOrChild(surgeryId){
-      await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{
-        parent_practice_id:this.practice.id,
-        surgery_id:surgeryId
-      }).then(res=>{
-        getPractices()
-        this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Practice Child Added'})
-      })
-      
+    async newHubOrSpoke(surgeryId){
+      if(!this.practice||this.practice&&this.practice.type=='Hub'){
+        await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{
+          parent_practice_id:this.practice.id,
+          surgery_id:surgeryId
+        }).then(res=>{
+          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Practice Child Added'})
+        })
+      }
+        // else if(practice&&practice.type == 'Spoke'){
+        //   if(this.practiceHub.parent_surgery){
+        //     if(this.practiceHub.parent_surgery.id == surgeryId){
+        //       this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'danger', text:'That surgery is the current Practice Parent'})
+        //     }else{
+        //       await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
+        //         surgery_id:surgeryId
+        //       }).then(async res=>{
+        //         await this.getPracticeHub(this.practice.id)
+        //         await this.getPracticeParent(parentId)
+        //         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Added'})
+        //       })
+        //     }
+        //   }else{
+        //     await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
+        //       surgery_id:surgeryId
+        //     }).then(async res=>{
+        //       await this.getPracticeHub(this.practice.id)
+        //       await this.getPracticeParent(this.practice.id)
+        //       this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Changed'})
+        //     })
+        //   }
+        // }
     },
-    async changeParent(surgeryId){
-      if(this.practiceHub.parent_surgery.id == surgeryId){
-        this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'danger', text:'That surgery is the current Practice Parent'})
+    async changeParent(surgeryId,parentId){
+      console.log("this is the parent of the spoke",this.practiceHub.parent_surgery)
+      console.log("the practice", this.practice)
+      if(this.practiceHub.parent_surgery){
+        if(this.practiceHub.parent_surgery.id == surgeryId){
+          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'danger', text:'That surgery is the current Practice Parent'})
+        }else{
+          await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
+            surgery_id:surgeryId
+          }).then(async res=>{
+            await this.getPracticeHub(this.practice.id)
+            await this.getPracticeParent(parentId)
+            this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Added'})
+          })
+        }
       }else{
         await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
           surgery_id:surgeryId
-        }).then(res=>{
+        }).then(async res=>{
+          await this.getPracticeHub(this.practice.id)
+          await this.getPracticeParent(this.practice.id)
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Changed'})
         })
-         
       }
     },
     async show(id){
@@ -264,7 +335,8 @@ export default {
 				add_practice_page: e || 1
 			}
 			this.$router.push({ query })
-		},
+    },
+
     
   }
 };

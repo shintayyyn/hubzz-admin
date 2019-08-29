@@ -28,7 +28,11 @@
 				</select>
 			</div>
 		</div>
-		
+
+		<!-- <div>
+			<AppLoading :message:'hello'/>
+		</div> -->
+
 		<!-- TABLE -->
 		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
 			<!-- HEADER -->
@@ -142,10 +146,8 @@ export default {
 		return {
 			loading: false,
 			itemsPerPage: 8,
-			// itemCount: 0,
 			activePage: 1,
-			// locumUsers: {},
-			
+						
 			filterCompliances:'',
 			search: '',
 			paramFilterSort:{
@@ -207,9 +209,7 @@ export default {
 				filterCompliances: compliance_status,
 				loading: false,
 				itemsPerPage: limit,
-				// itemCount,
 				activePage: page,
-				// locumUsers,
 				search,
 				order_by
 			}
