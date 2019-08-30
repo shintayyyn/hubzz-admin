@@ -103,10 +103,10 @@ export default {
 
   auth: {
     localStorage: {
-      prefix: 'admin.auth.',
+      prefix: 'admin.hubzz.auth.',
     },
     cookie: {
-      prefix: 'admin.auth.',
+      prefix: 'admin.hubzz.auth.',
       options: {
         path: '/',
         expires: 1825,
