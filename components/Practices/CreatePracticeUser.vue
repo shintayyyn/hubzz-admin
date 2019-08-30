@@ -9,9 +9,9 @@
             <div class="text-white pl-4 pt-2">
                 <div class="text-lg font-bold" v-if="practice && practice.type=='Hub'">Create Spoke User</div>
                 <div class="text-lg font-bold" v-else>Create User</div>
-                <div class="text-xs font-hairline">
+                <div v-if="surgery" class="text-xs font-hairline">
                   Surgery: {{surgery.name}}
-              </div>
+                </div>
             </div>
             
             <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-max lg:w-1/2">
@@ -24,7 +24,7 @@
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                         type="text"
                         placeholder="Mr. / Mrs. / Dr. / etc....."
-                        v-model='toPostPracticeUser.title'
+                        v-model='toPostUser.title'
                         aria-label="Title"
                     >
                     <div class="flex py-1">First Name
@@ -32,11 +32,11 @@
                     </div>
                     <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        :class="`${toPostPracticeUser.first_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPostUser.first_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
                         type="text"
                         placeholder="Jane"
-                        v-model='toPostPracticeUser.first_name'
-                        @blur="verifyFirstName(toPostPracticeUser.first_name)"
+                        v-model='toPostUser.first_name'
+                        @blur="verifyFirstName(toPostUser.first_name)"
                         aria-label="First Name"
                     >
                     <div class="flex py-1">Last Name
@@ -44,10 +44,10 @@
                     </div>
                     <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        :class="`${toPostPracticeUser.last_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPostUser.last_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
                         type="text"
-                        v-model='toPostPracticeUser.last_name'
-                        @blur="verifyLastName(toPostPracticeUser.last_name)"
+                        v-model='toPostUser.last_name'
+                        @blur="verifyLastName(toPostUser.last_name)"
                         placeholder="Doe"
                         aria-label="Last Name"
                     >
@@ -56,70 +56,69 @@
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
                         type="text"
                         placeholder="Ph.D"
-                        v-model='toPostPracticeUser.suffix'
+                        v-model='toPostUser.suffix'
                         aria-label="Suffix"
                     >
-                    <span>Practice Types</span>
-                    <span class="text-xs">(hold ctrl + click to choose)</span>
-                    <div class="w-full">
+                    
+                    <div v-if="surgery && surgery.practice_count<1" class="w-full">
+                      <span>Practice Types</span>
+                      <span class="text-xs">(hold ctrl + click to choose)</span>
                       <select
-                      class="w-full text-black"
-                      multiple="true"
-                      v-bind:class="{ 'fix-height': multiple === 'true' }"
-                      v-model="toPostPracticeUser.practice_type_id"
+                        class="w-full text-black"
+                        multiple="true"
+                        v-bind:class="{ 'fix-height': multiple === 'true' }"
+                        v-model="toPostUser.practice_type_id"
+                        >
+                        <option
+                          v-for="item in practiceTypes"
+                          :key="item.id"
+                          :value="item">
+                          {{item.label}}
+                        </option>
+          
+                      </select>
+                      <div
+                      v-for="(practice_type, index) in toPostUser.practice_type_id"
+                      :key="`practice_type-${index}`"
+                      class="inline-flex m-1"
                       >
-                      <option
-                        v-for="item in practiceTypes"
-                        :key="item.id"
-                        :value="item">
-                        {{item.label}}
-                      </option>
-        
-                    </select>
-                    <div
-                     v-for="(practice_type, index) in toPostPracticeUser.practice_type_id"
-                     :key="`practice_type-${index}`"
-                     class="inline-flex m-1"
-                     >
-                     <span class="bg-yellow-dark rounded-lg p-2 text-black">
-                       {{toPostPracticeUser.practice_type_id[index].label}}
-                     </span>
-                     
-
+                        <span class="bg-yellow-dark rounded-lg p-2 text-black">
+                          {{toPostUser.practice_type_id[index].label}}
+                        </span>
+                      </div>
                     </div>
                     
-                    </div>
-                    
-                    <div class="flex py-1">Role
-                        <span v-if="!toPostPracticeUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
+                    <div v-if="surgery" class="flex py-1">Role
+                        <span v-if="!toPostUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
                     </div>
                     <select
+                        v-if="surgery"
                         class="appearance-none w-full mb-4 bg-white border-b border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                        :class="`${toPostPracticeUser.practice_role !== '' ? 'focus:border-orange' :'focus:border-red'}`"
-                        v-model='toPostPracticeUser.practice_role'
+                        :class="`${toPostUser.practice_role !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        v-model='toPostUser.practice_role'
                     >
                         <option>Partner</option>
                         <option>Practice Manager</option>
                         <option>Practice Staff</option>
                     </select>
-                    <div class="flex py-1">Type</div>
+                    <div v-if="surgery && surgery.practice_count<1" class="flex py-1">Type</div>
                     <select
+                        v-if="surgery && surgery.practice_count<1"
                         class="appearance-none w-full mb-4 bg-white border-b border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                        :class="`${toPostPracticeUser.type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
-                        v-model="toPostPracticeUser.type"
-
+                        :class="`${toPostUser.type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        v-model="toPostUser.type"
                     >
                         <option>Hub</option>
                         <option>Stand Alone</option>
                         <option>Spoke</option>
                     </select>
-                    <div v-if="toPostPracticeUser.type == 'Spoke'" class="flex py-1">Parent Surgery ID
+                    <div v-if="toPostUser.type == 'Spoke'" class="flex py-1">Parent Surgery ID
                       <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        :class="`${toPostPracticeUser.parent_surgery_id !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPostUser.parent_surgery_id !== '' ? 'focus:border-orange' :'focus:border-red'}`"
                         id="parent"
                         type="text"
-                        v-model='toPostPracticeUser.parent_surgery_id'
+                        v-model='toPostUser.parent_surgery_id'
                         placeholder="Parent ID"
                     >
                     </div>
@@ -129,11 +128,11 @@
                     </div>
                     <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        :class="`${toPostPracticeUser.email !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPostUser.email !== '' ? 'focus:border-orange' :'focus:border-red'}`"
                         id="email"
                         type="text"
-                        v-model='toPostPracticeUser.email'
-                        @blur="verifyEmail(toPostPracticeUser.email)"
+                        v-model='toPostUser.email'
+                        @blur="verifyEmail(toPostUser.email)"
                         placeholder="example@example.com"
                     >
                     <div class="flex py-1">Password
@@ -141,10 +140,10 @@
                     </div>
                     <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        :class="`${toPostPracticeUser.password !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPostUser.password !== '' ? 'focus:border-orange' :'focus:border-red'}`"
                         type="password"
-                        v-model='toPostPracticeUser.password'
-                        @blur="verifyPassword(toPostPracticeUser.password)"
+                        v-model='toPostUser.password'
+                        @blur="verifyPassword(toPostUser.password)"
                         placeholder="Password"
                     >
                     <div class="flex py-1">Confirm Password
@@ -152,15 +151,15 @@
                     </div>
                     <input
                         class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                        :class="`${toPostPracticeUser.password_confirmation !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPostUser.password_confirmation !== '' ? 'focus:border-orange' :'focus:border-red'}`"
                         type="password"
-                        v-model='toPostPracticeUser.password_confirmation'
-                        @blur="verifyConfirmPassword(toPostPracticeUser.password, toPostPracticeUser.password_confirmation)"
+                        v-model='toPostUser.password_confirmation'
+                        @blur="verifyConfirmPassword(toPostUser.password, toPostUser.password_confirmation)"
                         placeholder="Password"
                     >
                     <button
                         class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
-                        @click.prevent="checkForm(toPostPracticeUser,surgery.id)"
+                        @click.prevent="toPostUserInfo(toPostUser,toPostUser.surgery_id)"
                     >Add Practice User
                     </button>
                 </div>
@@ -176,7 +175,7 @@ export default {
     components:{
       AppFilterSearch
     },
-    props:['practice','surgery','user'],
+    props:['practice','surgery','user','adminCreate'],
     data(){
         return{
             emailError:'',
@@ -189,7 +188,7 @@ export default {
             specificPractice:[],
             practiceTypes:'',
             multiple:"true",
-            toPostPracticeUser:{
+            toPostUser:{
                 email:'',
                 password:'',
                 password_confirmation:'',
@@ -201,7 +200,7 @@ export default {
                 type:'Hub',
                 practice_type_id:[],
                 parent_surgery_id:'',
-                surgery_id:this.surgery.id
+                surgery_id:`${this.surgery ? this.surgery.id:''}`
             }
         }
   },
@@ -316,7 +315,7 @@ export default {
       }
 
       if(!this.errors.length){
-        this.toPostPracticeUserInfo(userInfo,surgID)
+        this.toPostUserInfo(userInfo,surgID)
       }
 
     },
@@ -335,15 +334,37 @@ export default {
       console.log('practice types',this.practiceTypes)
     },
 
-    async toPostPracticeUserInfo(toPostPracticeUser,toPostSurgeryID){
+    async toPostUserInfo(toPostUser,toPostSurgeryID){
       try{
-        this.toPostPracticeUser.practice_type_id = await this.toPostPracticeUser.practice_type_id.map(
-          item=>item.value
-        )
-        await this.$axios.post(`/api/v1/admin/practices`,this.toPostPracticeUser).then(res=>{
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
-        })
-        await this.getPractices()
+        
+        if(this.surgery && this.surgery.practice_count<1 || this.practice && this.practice.user_count<1){ //Create new practice
+          console.log('this surgery is new')
+          this.toPostUser.practice_type_id = await this.toPostUser.practice_type_id.map(
+            item=>item.value
+          )
+          await this.$axios.post(`/api/v1/admin/practices`,toPostUser).then(res=>{
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'New Practice User Created' })
+          }).catch(err=>{
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something Went Wrong!'})
+          })
+              
+          await this.getPractices()
+        }else if(this.surgery && this.surgery.practice_count>0 || this.practice && this.practice.user_count>0){//Add user to the practice
+          console.log('this surgery is registered. user is being added')
+          await this.$axios.post(`/api/v1/admin/practice-users`,toPostUser).then(res=>{
+            this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'success', text: 'Added new user'})
+          }).catch(err=>{
+            this.$store.commit('SET_NOTIFICATION',{ enabled: true, status: 'danger',  text: 'Something Went Wrong!'})
+          })
+        }else if(this.adminCreate == true){
+          console.log('new admin is being created')
+          await this.$axios.post(`/api/v1/admin/admin-users`,toPostUser).then(res=>{
+            this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'success', text: 'New Admin Account Successfully Created'})
+          }).catch(err=>{
+            this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'danger', text: 'Something Went Wrong!'})
+          })
+        } 
+        
       }catch(err){
         console.log("index put locum detail compliance documents error.",err);
         alert('Something went wrong!')

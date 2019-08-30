@@ -17,7 +17,10 @@ export default{
     SET_PRACTICE_PARENT(state, payload){
         state.practiceParent = payload
     },
-    // SET_PRACTICE_SPOKES(state, payload){
-    //     state.
-    // }
+    SET_PRACTICE_SPOKES_COUNT(state, payload){
+        state.practiceSpokesCount = payload
+    },
+    SET_PRACTICE_SPOKES(state, payload){
+        state.practiceSpokes = payload
+    }
 }

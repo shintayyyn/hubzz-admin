@@ -1,7 +1,7 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
-    <div class="flex flex-col md:flex-row">
-      <div class="w-1/2">
+    <div class="flex px-2 justify-between md:flex-row">
+      
         <div class="flex py-2">
           	<div class="relative">
               <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
@@ -11,8 +11,8 @@
             </div>
         <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
         </div>
-      </div>
-      <div class="w-1/2">
+      
+      <div>
         <button
           @click="show()"
           class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm text-black rounded-lg shadow md:float-right"

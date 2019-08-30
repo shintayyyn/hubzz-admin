@@ -28,9 +28,7 @@
         </div>
       </div>
       <div class="flex sm:p-2">
-        <div v-if="tab1"
-          class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5"
-        >
+        <div v-if="tab1" class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
           <div class="w-full overflow-hidden text-grey-light text-sm p-2">
             <div class="flex py-1">E-Mail Address 
               <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>

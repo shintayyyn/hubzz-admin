@@ -6,4 +6,9 @@ export default()=>({
     practice:'',
     practiceHub:'',
     practiceParent:'',
+
+    surgeries:'',
+    practiceSpokes:[],
+    practiceSpokesCount:0,
+
 })

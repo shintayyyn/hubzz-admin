@@ -16,9 +16,12 @@ export default{
     async fetchPracticeParent({ commit },payload){
         const response = await practiceApi.fetchPracticeParent(this.$axios, payload)
         return commit('SET_PRACTICE_PARENT',response.data.practice)
+    },
+    async fetchSpokes({ commit }, payload){
+        const response = await practiceApi.fetchSpokes(this.$axios, payload)
+        if(payload.countOnly){
+            return commit('SET_PRACTICE_SPOKES_COUNT', response.data.count)
+        }
+        return commit ('SET_PRACTICE_SPOKES',response.data.practice_surgeries)
     }
-    // async fetchSpokes({ commit }, payload){
-    //     const response = await practiceApi.fetchSpokes(this.$axios, payload)
-    //     return commit ('')
-    // }
 }

@@ -186,6 +186,11 @@ export default {
          practice_parent_id:parentId
       })
     },
+    getPracticeSpokes(practiceId){
+      this.$store.dispatch("practices/fetchSpokes",{
+        practice_id:practiceId
+      })
+    },
     async getData(){
       const limit = this.perPage
       let offset = 0
@@ -258,7 +263,8 @@ export default {
         await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{
           parent_practice_id:this.practice.id,
           surgery_id:surgeryId
-        }).then(res=>{
+        }).then(async res=>{
+          await this.getPracticeSpokes(this.practice.id)
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Practice Child Added'})
         })
       }

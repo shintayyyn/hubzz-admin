@@ -79,8 +79,8 @@ export default {
     },
     data(){
         return{
-            practiceChildren:{},
-            total:0,
+            // practiceChildren:{},
+            // total:0,
             totalPages:0,
             currentPage:1,
             perPage:0,
@@ -98,26 +98,35 @@ export default {
         this.getChildren('date_created:desc')
       },
     },
-    created(){
+    computed:{
+        total(){
+            return this.$store.state.practices.practiceSpokesCount
+        },
+        practiceChildren(){
+            return this.$store.state.practices.practiceSpokes
+        },
+
+    },
+    async created(){
         // console.log('This Practice`s children is',this.practiceChildren)
         // this.getData()
         const query = {
             ...this.$route.query,
             practice_children_page: this.$route.query.practice_children_page || 1
         }
-        Promise.all([
-            console.log(this.practice),
-            this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
-            this.total = res.data.count
-            this.perPage = 5
-            this.totalPages = Math.ceil(this.total / this.perPage)
+        try{
+            await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
+                this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) 
+                this.perPage = 5
+                this.totalPages = Math.ceil(this.total / this.perPage)
             })
-        ]).then(() => {
-            this.getChildren('date_created:desc'),
+ 
+            await this.getChildren('date_created:desc'),
             console.log(this.practiceChildren)
-        }).catch((err) => {
+
+        }catch(err){
             console.log(err)
-        })
+        }
     },
 
     methods:{
@@ -127,8 +136,8 @@ export default {
         async getChildren(){
             let offset = 0
             offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
-            this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`).then(res=>{
-                this.practiceChildren = res.data.practice_surgeries
+            await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,offset).then(res=>{
+                this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
             })
 
         },
@@ -138,6 +147,7 @@ export default {
           practice_children_page: e || 1
         }
         this.$router.push({ query })
+        this.getChildren()
       }
     }
 }
