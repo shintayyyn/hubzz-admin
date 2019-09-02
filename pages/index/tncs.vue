@@ -41,7 +41,7 @@ export default {
         }
         this.$router.push({ query })
     },
-    async asyncData({app,route}){
+    async asyncData({app,store,route}){
         try{
             let response = await app.$axios.get(`/api/v1/admin/terms-and-conditions`)
             const terms = response.data.data.terms
@@ -54,7 +54,8 @@ export default {
                 privacypolicy
             }
         }catch(err){
-
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+            console.log('get TNCS error!!!!', err)
         }
     },
     methods:{

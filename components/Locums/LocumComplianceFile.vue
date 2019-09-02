@@ -175,7 +175,7 @@ export default {
         }, 
         getQuery(){
             const query = {
-                ...this.$route.query
+              ...this.$route.query
             }
             const offset = parseInt(query.page)*8 - 8 
             return offset

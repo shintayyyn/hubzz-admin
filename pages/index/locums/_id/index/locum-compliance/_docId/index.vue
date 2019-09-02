@@ -20,7 +20,7 @@ export default {
             user:null
         }
     },
-    async asyncData({ app, route }) {
+    async asyncData({ app, store, route }) {
         try {
             let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`)
             const compliance_doc = response.data.data.locum_detail_compliance_document
@@ -35,7 +35,8 @@ export default {
                 user
             }
         }catch (err) {
-        console.log("index practices index create asyncData err", err);
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+            console.log("index practices index create asyncData err", err);
         }
     },
 }

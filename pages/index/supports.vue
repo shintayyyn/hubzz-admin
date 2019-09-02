@@ -57,19 +57,20 @@ export default {
       emails: []
     };
   },
-  // async asyncData({ app }) {
-  //   try {
-  //     let response = await app.$axios.get(`/api/v1/admin/supports`);
+  async asyncData({ app,store,route }) {
+    try {
+      let response = await app.$axios.get(`/api/v1/admin/supports`);
 
-  //     const emails = response.data.data.emails;
+      const emails = response.data.data.emails;
 
-  //     return {
-  //       emails
-  //     };
-  //   } catch (err) {
-  //     console.log("index emails index asyncData err", err);
-  //   }
-  // },
+      return {
+        emails
+      };
+    } catch (err) {
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log("index emails index asyncData err", err);
+    }
+  },
 
   
 };

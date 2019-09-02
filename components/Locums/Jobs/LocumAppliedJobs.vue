@@ -130,7 +130,6 @@ export default {
   },
   methods: {
     getAppliedJobs(orderBy) {
-
       let offset = 0
       if (this.ascendDescend == 0) {
         orderBy = orderBy.replace('desc', 'asc')
@@ -145,7 +144,6 @@ export default {
       this.$axios.$get(`/api/v1/admin/jobs?locum_detail_id=${this.user.locum_detail.id}&locum_status=Applied&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
         this.appliedJobs = res.data.jobs
       })
-
     },
     show(id) {
       console.log(id)

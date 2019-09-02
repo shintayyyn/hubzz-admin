@@ -97,8 +97,11 @@ export default{
 
   methods:{
     async getData(){
+      try{
         const pracDocTypes = await this.$axios.$get(`/api/v1/admin/practice-document-types`).then(res=>{
             this.practiceDocTypes = res.data.practice_document_types
+        }).catch(err=>{
+          store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
         })
         console.log("practice doc",this.practiceDocTypes)
         this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
@@ -109,16 +112,20 @@ export default{
         console.log('prac docs',this.practiceDocs.data.practice_documents)
 
         this.specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
-        const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
-          return practiceDoc.practice_document_type.id === practiceDocType.id
+          const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
+            return practiceDoc.practice_document_type.id === practiceDocType.id
+          })
+          return{
+            practiceDocType,
+            practiceSpecificDoc
+          }
         })
-        return{
-          practiceDocType,
-          practiceSpecificDoc
-        }
-      })
 
         console.log(this.specificPracticeDocumentTypes)
+      }catch(err){
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      }
+        
 
     },
     async submitFile(practiceID, practiceDocumentID, practiceSpecificDocument){
@@ -143,12 +150,12 @@ export default{
                 },
               }).then(function(){
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
-                  // alert('SUCCESS!!')
                   console.log("nice 1!")
 
               })
-              .catch(function(){
-                console.log('FAILURE!!');
+              .catch(err =>{
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+                console.log('upload file failed', err);
               });
 
             }else{
@@ -162,20 +169,18 @@ export default{
                 },     
               }).then(function(){
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
-                  // alert('SUCCESS!!')
                   console.log("nice!")
               })
-              .catch(function(){
-                console.log('FAILURE!!');
+              .catch(err =>{
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+                console.log('upload file failed', err);
               });
             }
         }else{
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Please choose a file to upload first.' })
-          // alert('Please choose a file to upload first.')
         }
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Something went wrong!' })
-        // alert('Something went wrong!')
         console.log("index practices index _id index asyncData err", err);
       }
     },
@@ -231,11 +236,11 @@ export default{
                 },
               }).then(() => {
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
-                  // alert('SUCCESS!!')
                   console.log("nice 1!")
 
               })
               .catch(err => {
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
                 console.log(err);
               });
 
@@ -250,19 +255,18 @@ export default{
                 },     
               }).then(() => {
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
-                  // alert('SUCCESS!!')
                   console.log("nice!")
               })
               .catch(err => {
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
                 console.log(err);
               });
             }
         }else{
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Please choose a file to upload first.' })
-          // alert('Please choose a file to upload first.')
         }
       }catch(err){
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index practices index _id index asyncData err", err);
       }
     },

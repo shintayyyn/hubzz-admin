@@ -124,20 +124,26 @@ export default {
     }
   },
   async asyncData({ app, route, store, error }) {
-    const response = await app.$axios.$get(`/api/v1/admin/faqs`)
-    let faqs = response && response.data && response.data.faqs ? response.data.faqs : []
-    faqs = faqs.map((faq) => {
+    try{
+      const response = await app.$axios.$get(`/api/v1/admin/faqs`)
+      let faqs = response && response.data && response.data.faqs ? response.data.faqs : []
+      faqs = faqs.map((faq) => {
+        return {
+          ...faq,
+          'toggled': false
+        }
+      })
+      const locum_faqs = faqs.filter(faq => faq.domain === 'Locum')
+      const practice_faqs = faqs.filter(faq => faq.domain === 'Practice')
       return {
-        ...faq,
-        'toggled': false
+        locum_faqs,
+        practice_faqs
       }
-    })
-    const locum_faqs = faqs.filter(faq => faq.domain === 'Locum')
-    const practice_faqs = faqs.filter(faq => faq.domain === 'Practice')
-    return {
-      locum_faqs,
-      practice_faqs
+    }catch(err){
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('faqs error!', err)
     }
+    
   },
 }
 </script>

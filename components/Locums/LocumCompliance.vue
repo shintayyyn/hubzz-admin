@@ -336,35 +336,40 @@ export default {
             return offset
         },
         async getData(){
-            this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
+            try{
+                this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
 
-            this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
+                this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
 
-            const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
-                this.professionCategory = res.data.profession_category
-            })
-
-            const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
-                const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-                    return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
+                const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
+                    this.professionCategory = res.data.profession_category
                 })
-                return{
-                    mandatoryComplianceDocument,
-                    locumMandatoryComplianceDocument
-                }
-            })
 
-            this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
-                const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-                    return complianceDocument.compliance_document.id === optionalComplianceDocument.id
+                const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
+                    const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
+                        return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
+                    })
+                    return{
+                        mandatoryComplianceDocument,
+                        locumMandatoryComplianceDocument
+                    }
                 })
-                return{
-                    optionalComplianceDocument,
-                    locumOptionalComplianceDocument
-                }
-            })
 
-            this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+                this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
+                    const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
+                        return complianceDocument.compliance_document.id === optionalComplianceDocument.id
+                    })
+                    return{
+                        optionalComplianceDocument,
+                        locumOptionalComplianceDocument
+                    }
+                })
+                this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+            }catch(err){
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                console.log("get data error!!", err);
+            }
+            
         },
         async toPutGmcNmc(currentStatus,locumID,verifyReject){
             try{
@@ -410,7 +415,7 @@ export default {
                 }
             
             }catch(err){
-                alert('Something went wrong!!')
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
                 console.log("index practices index put GMC/NMC err", err);
                 
             }
@@ -460,7 +465,7 @@ export default {
                 }
 
             }catch(err){
-                alert('Something went wrong!!')
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
                 console.log("index practices index put MPL/NPL err", err);
             }
         },

@@ -212,6 +212,8 @@ export default {
       res.data.practice_types.forEach(item => {
         this.practiceTypes.push({  value: item.id, label: item.name });
       })
+    }).catch(err=>{
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
     })    
     console.log("prac types",this.practiceTypes)
     if(this.practice){
@@ -388,8 +390,8 @@ export default {
         } 
         
       }catch(err){
+        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
         console.log("index put locum detail compliance documents error.",err);
-        alert('Something went wrong!')
       }
     },
 

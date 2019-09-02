@@ -20,7 +20,7 @@ export default {
         }
     },
 
-    async asyncData({app,route}){
+    async asyncData({app,store,route}){
 
         try{
             const response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
@@ -32,7 +32,8 @@ export default {
             }
         
         }catch(err){
-        console.log("index practices index create asyncData err", err);
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'warning', text:'Something went wrong!'})
+            console.log("index practices index create asyncData err", err);
         }
     },
 

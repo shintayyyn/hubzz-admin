@@ -14,7 +14,7 @@ export default {
             user:null
         }
     },
-    async asyncData({app, route}){
+    async asyncData({app, store, route}){
         try{
             let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
@@ -22,7 +22,8 @@ export default {
                 user
             }
         }catch(err){
-            console.log('get locumUser error!!!')
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			console.log('Get locum job error',err)
         }
     }
     

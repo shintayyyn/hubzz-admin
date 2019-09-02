@@ -204,7 +204,8 @@ export default {
 				order_by  
   			}
   		} catch (err) {
-  			console.log('index practices index asyncData err', err)
+			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+  			console.log('Get practices error!', err)
   		}
   	},
 

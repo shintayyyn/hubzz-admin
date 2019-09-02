@@ -19,7 +19,7 @@ export default {
             practice:null
         }
     },
-    async asyncData({app,route}){
+    async asyncData({app,store,route}){
         try{
             let response = await app.$axios.get(`/api/v1/admin/practice-users/${route.params.pracUserId}`)
             const user = response.data.data.user
@@ -29,6 +29,7 @@ export default {
                 practice,    
             }
         }catch(err){
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
             console.log("something went wrong!",err)
         }
     }

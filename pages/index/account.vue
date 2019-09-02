@@ -95,6 +95,7 @@
                     user
                 }
             }catch(err){
+                store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
                 console.log("get user error",err)
             }
         },

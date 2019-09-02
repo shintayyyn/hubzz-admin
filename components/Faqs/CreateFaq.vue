@@ -79,7 +79,8 @@
               await this.$axios.post(`/api/v1/admin/faqs`,this.form)
                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'FAQ successfully created' })
           }catch(err){
-              console.log('something went wrong!',err)
+            this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+            console.log('something went wrong!',err)
           }
       }
     },

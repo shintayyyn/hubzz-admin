@@ -214,7 +214,8 @@ export default {
 				order_by
 			}
 		} catch (err) {
-			console.log('index users index asyncData err', err)
+			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			console.log('Get locums error!', err)
 		}
 	},
 

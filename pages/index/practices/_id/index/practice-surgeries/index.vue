@@ -23,7 +23,7 @@ export default {
             practice:null,
         }
     },
-    async asyncData({app, route}){
+    async asyncData({app,store,route}){
         try{
             let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
             const practice = response.data.data.practice
@@ -33,7 +33,8 @@ export default {
                 practice
             }
         }catch(err){
-             console.log('get practice error!!!!',err)
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+            console.log('get practice error!!!!',err)
         }
     }
 }

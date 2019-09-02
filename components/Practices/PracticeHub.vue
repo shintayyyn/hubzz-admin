@@ -188,6 +188,7 @@ export default {
                 })
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Practice Parent Updated' })
             }catch(err){
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
                 console.log("put practice error",err)
             }
 

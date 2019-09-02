@@ -201,17 +201,15 @@ export default {
         async changeLocumUserStatus(locumID,activeDisabled){
             try{
                 await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
-                status:activeDisabled
+                    status:activeDisabled
                 })
-                // alert('Saved')
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
             }catch(err){
                 console.log("index practices index put status err", err);
-                // alert('Something went wrong!!')
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
                 
             }
         }
-  }
+    }
 }
 </script>

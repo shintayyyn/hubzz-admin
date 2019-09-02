@@ -301,6 +301,8 @@ export default {
             await this.getPracticeHub(this.practice.id)
             await this.getPracticeParent(parentId)
             this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Added'})
+          }).catch(err=>{
+            this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
           })
         }
       }else{
@@ -328,8 +330,6 @@ export default {
         console.log('The surgery opened is', this.surgery)
         this.modal = true
       }
-          
-        
     },
     pagechanged(e) {
 			const query = {

@@ -21,7 +21,7 @@ export default {
 
         }
     },
-    async asyncData({app,route}){
+    async asyncData({app,store,route}){
         try{
             let response = await app.$axios.get(`/api/v1/admin/practice-documents/${route.params.pracDocId}`)
             const practiceDoc = response.data.data.practice_document
@@ -32,6 +32,7 @@ export default {
                 practice
             }
         }catch(err){
+            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
             console.log('get document error!',err)
         }
 
