@@ -1,14 +1,20 @@
 export default()=>({
     loading_practices: true,
-    allPractices:[],
     itemCount:0,
+    allPractices:[],
+    
 
     practice:'',
     practiceHub:'',
     practiceParent:'',
 
+    practiceSpokesCount:0,
     surgeries:'',
     practiceSpokes:[],
-    practiceSpokesCount:0,
+    
+
+    practiceUserCount:0,
+    practiceUsers:[],
+    
 
 })

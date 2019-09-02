@@ -1,5 +1,5 @@
 import * as practiceApi from '@/api/practices'
-import { fetchHub, fetchPracticeParent } from '../../api/practices';
+import { fetchHub, fetchPracticeParent, fetchPracticeUsers } from '../../api/practices';
 export default{
     
     async fetchPractices({ commit },payload){
@@ -23,5 +23,12 @@ export default{
             return commit('SET_PRACTICE_SPOKES_COUNT', response.data.count)
         }
         return commit ('SET_PRACTICE_SPOKES',response.data.practice_surgeries)
+    },
+    async fetchPracticeUsers({ commit }, payload){
+        const response = await practiceApi.fetchPracticeUsers(this.$axios, payload)
+        if(payload.countOnly){
+            return commit('SET_PRACTICE_USERS_COUNT', response.data.count)
+        }
+        return commit('SET_PRACTICE_USERS', response.data.users)
     }
 }

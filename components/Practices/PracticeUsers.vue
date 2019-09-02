@@ -13,7 +13,7 @@
             <div
             class="mt-10 w-full text-center"
             style="font-family: Nunito"
-            >This practice has no users+.</div>
+            >This practice has no users.</div>
         </div>
         <div v-else class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
@@ -85,12 +85,12 @@ export default {
     data(){
         return {
             modal:false,
-            total:0,
+            // total:0,
+            // users:[],
             totalPages:0,
             currentPage:1,
             perPage:0,
             surgery:null,
-            users:[],
             query:null
         }
     },
@@ -105,29 +105,55 @@ export default {
             this.getAllPracticeUsers() 
         },
     },
-    created(){
-        this.query = {
-        ...this.$route.query,
-        practice_users_page: this.$route.query.practice_users_page || 1
+    computed:{
+        total(){
+            return this.$store.state.practices.practiceUsersCount
+        },
+        users(){
+            return this.$store.state.practices.practiceUsers
         }
-        this.$axios.$get(`/api/v1/admin/practice-users/count?practice_id=${this.practice.id}`).then(res=>{
-            this.total = res.data.count
-            this.perPage = 8
-            this.totalPages = Math.ceil(this.total/this.perPage)
-            this.getAllPracticeUsers()
-        }),
+    },
+    async created(){
+        const query = {
+            ...this.$route.query,
+            practice_users_page: this.$route.query.practice_users_page || 1
+        }
+        this.loading = true
+        let practice_id = this.practice.id
+        let params = {
+            practice_id
+        } 
+        try{
+            await this.$axios.$get(`/api/v1/admin/practice-users/count`,{params}).then(res=>{
+                console.log(res)
+                this.$store.commit(`practices/SET_PRACTICE_USERS_COUNT`,res.data.count)
+                this.perPage = 5
+                this.totalPages = Math.ceil(this.total / this.perPage)
+                this.getAllPracticeUsers()
+            })
+        }catch(err){
+            console.log(err)
+        }
+       
         this.surgery = this.practice.surgery
         console.log(this.$route.name)
         
     }, 
     methods:{
-        getAllPracticeUsers(){
+        async getAllPracticeUsers(){
             this.loading = true
+            let practice_id = this.practice.id
+            let limit = 5
             let offset = 0
-
-            offset = this.perPage *(parseInt(this.$route.query.practice_users_page) - 1)
-            this.$axios.$get(`/api/v1/admin/practice-users?practice_id=${this.practice.id}&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.users = res.data.users
+            offset = this.perPage*(parseInt(this.$route.query.practice_users_page)-1)
+            let params = {
+                practice_id,
+                limit,
+                offset
+            } 
+            await this.$axios.$get(`/api/v1/admin/practice-users`,{params}).then(res=>{
+                console.log(res)
+                this.$store.commit('practices/SET_PRACTICE_USERS', res.data.users)
             })
             this.loading = false
         },
@@ -146,6 +172,7 @@ export default {
                 practice_users_page: e || 1
             }
             this.$router.push({ query })
+            this.getAllPracticeUsers()
         }
     },
       

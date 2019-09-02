@@ -95,7 +95,7 @@ export default {
     watch: {
       $route(to, from) {
         this.currentPage = parseInt(to.query.practice_children_page)
-        this.getChildren('date_created:desc')
+        this.getChildren()
       },
     },
     computed:{
@@ -119,11 +119,8 @@ export default {
                 this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) 
                 this.perPage = 5
                 this.totalPages = Math.ceil(this.total / this.perPage)
+                this.getChildren()
             })
- 
-            await this.getChildren('date_created:desc'),
-            console.log(this.practiceChildren)
-
         }catch(err){
             console.log(err)
         }
@@ -134,21 +131,23 @@ export default {
             this.modal = true
         },
         async getChildren(){
+            //let loading = true
+            let limit = 5
             let offset = 0
             offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
-            await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,offset).then(res=>{
+            let params = {limit, offset}
+            await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{params}).then(res=>{
                 this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
             })
-
         },
         pagechanged(e) {
-        const query = {
-          ...this.$route.query,
-          practice_children_page: e || 1
+            const query = {
+                ...this.$route.query,
+                practice_children_page: e || 1
+            }
+            this.$router.push({ query })
+            this.getChildren()
         }
-        this.$router.push({ query })
-        this.getChildren()
-      }
     }
 }
 </script>
@@ -181,6 +180,7 @@ export default {
   background-color:#505561;
   z-index: 512;
 }
+
 @media screen and (min-width: 1200px) {
   .add-practice-modal {
     width: 70%;

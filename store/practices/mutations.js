@@ -22,5 +22,11 @@ export default{
     },
     SET_PRACTICE_SPOKES(state, payload){
         state.practiceSpokes = payload
+    },
+    SET_PRACTICE_USERS_COUNT(state, payload){
+        state.practiceUsersCount = payload
+    },
+    SET_PRACTICE_USERS(state, payload){
+        state.practiceUsers = payload
     }
 }

@@ -234,6 +234,13 @@ export default {
         order_by:'created_at:desc',
       })
     },
+    getPracticeUsers(){
+      this.$store.dispatch("practices/fetchPracticeUsers",{
+        limit:5,
+        practice_id: this.practice ? this.practice.id : '',
+        order_by:'id:desc',
+      })
+    },
     verifyEmail:function(inputEmail){
       this.emailError = ''
       
@@ -347,7 +354,6 @@ export default {
           }).catch(err=>{
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something Went Wrong!'})
           })
-              
           await this.getPractices()
         }else if(this.surgery && this.surgery.practice_count>0 || this.practice && this.practice.user_count>0){//Add user to the practice
           console.log('this surgery is registered. user is being added')
@@ -356,6 +362,7 @@ export default {
           }).catch(err=>{
             this.$store.commit('SET_NOTIFICATION',{ enabled: true, status: 'danger',  text: 'Something Went Wrong!'})
           })
+          await this.getPracticeUsers()
         }else if(this.adminCreate == true){
           console.log('new admin is being created')
           await this.$axios.post(`/api/v1/admin/admin-users`,toPostUser).then(res=>{
