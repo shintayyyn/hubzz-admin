@@ -159,7 +159,7 @@
                     >
                     <button
                         class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
-                        @click.prevent="toPostUserInfo(toPostUser,toPostUser.surgery_id)"
+                        @click.prevent="checkForm(toPostUser,toPostUser.surgery_id)"
                     >Add Practice User
                     </button>
                 </div>
@@ -175,7 +175,7 @@ export default {
     components:{
       AppFilterSearch
     },
-    props:['practice','surgery','user','adminCreate'],
+    props:['practice','surgery','user','adminCreate','userCount'],
     data(){
         return{
             emailError:'',
@@ -235,11 +235,25 @@ export default {
       })
     },
     getPracticeUsers(){
+      this.$store.dispatch("practices.fetchPractices",{
+        countOnly:true,
+        limit:5,
+        practice_id: this.practice ? this.practice.id : '',
+      })
       this.$store.dispatch("practices/fetchPracticeUsers",{
         limit:5,
         practice_id: this.practice ? this.practice.id : '',
-        order_by:'id:desc',
+        // order_by:'id:desc',
       })
+    },
+    updatePracticeUsersPageCount(){
+      let payload = {
+          userCount : this.userCount,
+          perPage : 5
+      }
+      console.log('payload',payload)
+      this.$store.commit('practices/UPDATE_PRACTICE_USERS_PAGE_COUNT',payload) 
+
     },
     verifyEmail:function(inputEmail){
       this.emailError = ''
@@ -363,6 +377,7 @@ export default {
             this.$store.commit('SET_NOTIFICATION',{ enabled: true, status: 'danger',  text: 'Something Went Wrong!'})
           })
           await this.getPracticeUsers()
+          await this.updatePracticeUsersPageCount()
         }else if(this.adminCreate == true){
           console.log('new admin is being created')
           await this.$axios.post(`/api/v1/admin/admin-users`,toPostUser).then(res=>{

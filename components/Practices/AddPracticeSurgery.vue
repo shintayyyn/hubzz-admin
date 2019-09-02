@@ -38,9 +38,7 @@
                 class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
               >
                 <div class="flex" style="width: 100%;">
-                  
                   <div class="text-white text-xs p-4">
-                    
                     <span class="font-bold">{{ surgery.name }}</span>
                     <span v-if="surgery.practice_count > 0" class="p-1 rounded-lg text-sm bg-green"> Registered</span><br><br><br>
                     <span>{{surgery.address.line_1}}</span>
@@ -71,25 +69,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div
-                v-for="(surgery, index) in surgeries"
-                :key="`surgery-${index}`"
-                @click="changeParent(surgery.id)"
-                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
-              >
-                <div class="flex" style="width: 100%;">
-                  <div class="text-white text-xs p-4">
-                    <span class="font-bold">{{ surgery.name }}</span><br><br><br>
-                    <span>{{surgery.address.line_1}}</span>
-                    <span>{{surgery.address.line_2}}</span>
-                    <span>{{surgery.address.line_3}}</span><br><br><br>
-                    <span class='p-2 bg-trout rounded'>CCG</span>
-                    <span>{{surgery.clinical_commissioning_group.name}}</span><br><br><br>
-                    <span class='p-2 bg-trout rounded'>Practice Code</span>
-                    <span>{{ surgery.code }}</span><br>
-                  </div>
-                </div>
-              </div> -->
             </div>
               <!--TABLE ENDS HERE-->
           </div>
@@ -120,7 +99,7 @@
 import AppPagination from '@/components/Base/AppPagination'
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
 export default {
-    props:['practice','practiceHub'],
+    props:['practice','practiceHub', 'spokesCount'],
     components:{
         AppPagination,
         CreatePracticeUser
@@ -153,7 +132,6 @@ export default {
         this.currentPage = parseInt(to.query.add_practice_page)
         this.getAllSurgeries()
         this.getAllHubzz()
-        
       },
     },
 
@@ -163,6 +141,7 @@ export default {
             add_practice_page: this.$route.query.add_practice_page || 1
         }
         this.getData()
+        
     },
 
   computed: {
@@ -186,10 +165,25 @@ export default {
          practice_parent_id:parentId
       })
     },
+    getPracticeSpokesCount(practiceId){
+      this.$store.dispatch("practices/fetchSpokes",{
+        countOnly:true,
+        practice_id:practiceId
+      })
+    },
     getPracticeSpokes(practiceId){
       this.$store.dispatch("practices/fetchSpokes",{
         practice_id:practiceId
       })
+    },
+    updatePracticeSpokesPageCount(){
+      let payload = {
+        spokesCount : this.spokesCount,
+        perPage : 5
+      }
+      console.log('payload',payload)
+      this.$store.commit('practices/UPDATE_PRACTICE_SPOKES_PAGE_COUNT',payload) 
+
     },
     async getData(){
       const limit = this.perPage
@@ -265,6 +259,8 @@ export default {
           surgery_id:surgeryId
         }).then(async res=>{
           await this.getPracticeSpokes(this.practice.id)
+          await this.getPracticeSpokesCount(this.practice.id)
+          await this.updatePracticeSpokesPageCount()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Practice Child Added'})
         })
       }

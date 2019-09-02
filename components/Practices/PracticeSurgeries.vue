@@ -63,7 +63,7 @@
         <div class="add-practice-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
         <div class="add-practice-modal shadow-lg" v-if="modal">
-            <AddPracticeSurgery @close="modal = false" :practice="practice"/>
+            <AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
         </div>
         </transition>
     </div>
@@ -81,7 +81,7 @@ export default {
         return{
             // practiceChildren:{},
             // total:0,
-            totalPages:0,
+            // totalPages:0,
             currentPage:1,
             perPage:0,
             modal:false
@@ -105,6 +105,9 @@ export default {
         practiceChildren(){
             return this.$store.state.practices.practiceSpokes
         },
+        totalPages(){
+            return this.$store.state.practices.practiceSpokesPageCount
+        }
 
     },
     async created(){
@@ -116,9 +119,11 @@ export default {
         }
         try{
             await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
-                this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) 
+                this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) //quantity of spokes
                 this.perPage = 5
-                this.totalPages = Math.ceil(this.total / this.perPage)
+
+                let pageCount = Math.ceil(this.total / this.perPage)
+                this.$store.commit('practices/SET_PRACTICE_SPOKES_PAGE_COUNT',pageCount) //number of pages
                 this.getChildren()
             })
         }catch(err){

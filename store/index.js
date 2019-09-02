@@ -4,7 +4,8 @@ export const state = () => ({
     status: '',
     text: ''
   },
-  toggled_sidebar: false
+  toggled_sidebar: false,
+  totalPages:0
 })
 
 export const getters = {}
@@ -18,7 +19,7 @@ export const mutations = {
   },
   TOGGLE_SIDEBAR(state, payload) {
     state.toggled_sidebar = payload
-  }
+  },
 }
 
 export const actions = {

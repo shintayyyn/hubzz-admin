@@ -17,6 +17,7 @@ export function fetchPracticeParent(axios,payload){
     console.log('Practice API for getting Parent Practice is performed', payload)
     return axios.$get(`/api/v1/admin/practices/${payload.practice_parent_id}`)
 }
+
 export function fetchSpokes(axios,payload){
     console.log('Practice API for getting spokes is perfomed', payload)
     let params = {}

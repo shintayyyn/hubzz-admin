@@ -43,7 +43,7 @@ export default {
             const practiceHub = response.data.data.practice
                   
             let practiceParent = ''
-            if (practiceHub.parent_surgery.practice) {
+            if (practiceHub.parent_surgery && practiceHub.parent_surgery.practice) {
                 response = await app.$axios.get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
                 practiceParent = response.data.data.practice
                 store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 

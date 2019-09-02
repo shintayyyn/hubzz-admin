@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="px-4">
         <div class="w-full overflow-hidden">
             <div>
               <button
@@ -68,7 +68,7 @@
         <div class="edit-practice-user-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
             <div class="practice-user-modal shadow-lg" v-if="modal">
-                <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery"/>
+                <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total"/>
             </div>
         </transition>
     </div>
@@ -87,7 +87,7 @@ export default {
             modal:false,
             // total:0,
             // users:[],
-            totalPages:0,
+            // totalPages:0,
             currentPage:1,
             perPage:0,
             surgery:null,
@@ -111,7 +111,11 @@ export default {
         },
         users(){
             return this.$store.state.practices.practiceUsers
+        },
+        totalPages(){
+            return this.$store.state.practices.practiceUsersPageCount
         }
+
     },
     async created(){
         const query = {
@@ -128,7 +132,9 @@ export default {
                 console.log(res)
                 this.$store.commit(`practices/SET_PRACTICE_USERS_COUNT`,res.data.count)
                 this.perPage = 5
-                this.totalPages = Math.ceil(this.total / this.perPage)
+
+                let pageCount = Math.ceil(this.total / this.perPage)
+                this.$store.commit('practices/SET_PRACTICE_USERS_PAGE_COUNT',pageCount)
                 this.getAllPracticeUsers()
             })
         }catch(err){
@@ -157,6 +163,7 @@ export default {
             })
             this.loading = false
         },
+        
         show(id){
             console.log(id)
             Promise.all([

@@ -126,9 +126,9 @@
                 </div>
                 <div class="text-grey-light text-sm m-4">
                     <p class="font-semibold">Surgery Name</p>
-                    <p class="m-2">{{practiceHub.parent_surgery.name}}</p>
+                    <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.name : ''}}</p>
                     <p class="font-semibold">Surgery Code</p>
-                    <p class="m-2">{{practiceHub.parent_surgery.code}}</p>
+                    <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.code : ''}}</p>
                 </div>
              </form>
         </div>
