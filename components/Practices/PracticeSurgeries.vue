@@ -111,8 +111,6 @@ export default {
 
     },
     async created(){
-        // console.log('This Practice`s children is',this.practiceChildren)
-        // this.getData()
         const query = {
             ...this.$route.query,
             practice_children_page: this.$route.query.practice_children_page || 1
@@ -127,7 +125,8 @@ export default {
                 this.getChildren()
             })
         }catch(err){
-            console.log(err)
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+            console.log("get practice surgeries error!!!!",err)
         }
     },
 
@@ -136,13 +135,16 @@ export default {
             this.modal = true
         },
         async getChildren(){
-            //let loading = true
             let limit = 5
             let offset = 0
             offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
             let params = {limit, offset}
+        
             await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{params}).then(res=>{
                 this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
+            }).catch(err=>{
+                console.log('get children error!!!!',err)
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
             })
         },
         pagechanged(e) {

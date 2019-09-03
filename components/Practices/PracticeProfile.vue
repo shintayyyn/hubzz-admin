@@ -188,18 +188,18 @@ export default {
       async toPutPracticeInfo(practiceID,toPutPractice){
         try{
             await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
-            phone_number:toPutPractice.phone_number,
-            report_to:toPutPractice.report_to,
-            extra_information:toPutPractice.extra_information,
-            status:toPutPractice.status,
-            actived_until:toPutPractice.actived_until
+              phone_number:toPutPractice.phone_number,
+              report_to:toPutPractice.report_to,
+              extra_information:toPutPractice.extra_information,
+              status:toPutPractice.status,
+              actived_until:toPutPractice.actived_until
             })
             await this.getPractices()  
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
             
         }catch(err){
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-            console.log("index put locum detail compliance documents error");
+            console.log("put locum profile info error");
         }
 
       },
@@ -213,6 +213,7 @@ export default {
           await this.getPractices()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'alert',text:'Saved'})
         }catch(err){
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
           console.log('change practice type error!',err)
         }
       },

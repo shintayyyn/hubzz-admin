@@ -83,11 +83,9 @@ export default {
           others_rate:this.toPutPracticeRate.others_rate
         })
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
-        // alert('Saved') 
       
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        // alert('Something went wrong!')
         console.log("index put locum detail compliance documents error", err);
       }
     },

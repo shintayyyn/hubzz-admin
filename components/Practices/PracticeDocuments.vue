@@ -231,18 +231,18 @@ export default{
               formData.append('file', file)
               
               await this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                },
-              }).then(() => {
-                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
-                  console.log("nice 1!")
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  },
+                }).then(() => {
+                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
+                    console.log("nice 1!")
 
-              })
-              .catch(err => {
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-                console.log(err);
-              });
+                })
+                .catch(err => {
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+                  console.log(err);
+                });
 
             }else{
               console.log("its nothing 1")
@@ -250,18 +250,18 @@ export default{
               formData.append('practice_id',practiceID)
               formData.append('practice_document_type_id',practiceDocumentID)
               await this.$axios.post( '/api/v1/admin/practice-documents',formData,{
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                },     
-              }).then(() => {
-                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
-                  console.log("nice!")
-              })
-              .catch(err => {
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-                console.log(err);
-              });
-            }
+                  headers: {
+                    'Content-Type': 'multipart/form-data'
+                  },     
+                }).then(() => {
+                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
+                    console.log("nice!")
+                })
+                .catch(err => {
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+                  console.log(err);
+                });
+              }
         }else{
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Please choose a file to upload first.' })
         }

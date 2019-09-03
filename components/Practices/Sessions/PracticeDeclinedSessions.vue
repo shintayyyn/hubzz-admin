@@ -118,6 +118,9 @@ export default {
       ]).then(() => {
         this.getDeclinedJobs('date_created:desc'),
         console.log(this.declinedJobs)
+      }).catch(err=>{
+        console.log('get applied jobs error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
     computed:{ 
@@ -129,8 +132,7 @@ export default {
     },
     methods:{
       
-      getDeclinedJobs(orderBy){
-        
+      async getDeclinedJobs(orderBy){
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -142,20 +144,26 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.declined_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Declined&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.declinedJobs = res.data.jobs
-          })
+        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Declined&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
+          this.declinedJobs = res.data.jobs
+        }).catch(err=>{
+          console.log('get declined jobs error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
        
       },
       show(id) {
         console.log(id)
         Promise.all([
-            this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
-              this.job = res.data.job
-            })
-          ]).then(()=>{
-            console.log('The job opened is', this.job)
-            this.modal = true
+          this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
+            this.job = res.data.job
+          })
+        ]).then(()=>{
+          console.log('The job opened is', this.job)
+          this.modal = true
+        }).catch(err=>{
+          console.log('show declined job error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       },
       pagechanged(e) {

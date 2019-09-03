@@ -94,6 +94,9 @@ export default {
                 document.body.appendChild(link);
                 link.click();
                 console.log(fileUrl)
+            }).catch(err=>{
+              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+              console.log('download file error',err)
             });
         },  
     }
@@ -101,22 +104,22 @@ export default {
 </script>
 <style>
     @media(min-width: 450px){
-        .right-side-header-content{
-            width: calc(100% - 0px);
-        }
+      .right-side-header-content{
+          width: calc(100% - 0px);
+      }
     }
     .page-overlap{
         min-width: 100%;
     }
     @media screen and (min-width: 768px){
-        .page-overlap{
-            min-width: calc(100% - 70px);
-        }
+      .page-overlap{
+          min-width: calc(100% - 70px);
+      }
     }
 
     @media screen and (min-width: 1200px) {
-        .page-overlap{
-            min-width: calc(100% - 200px);
-        }
+      .page-overlap{
+          min-width: calc(100% - 200px);
+      }
     }
 </style>

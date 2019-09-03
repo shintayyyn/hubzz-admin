@@ -65,20 +65,5 @@ export default {
       }
     }
   },
-  // methods: {
-  //   goTo(type) {
-  //     const query = {
-  //       ...this.$route.query
-  //     }
-  //     if(query.sesstion_tab){
-  //       delete query.session_tab
-  //     }
-  //     if(type){
-  //       this.$router.push({path:`/practices/${this.practice.id}/`+type,query })
-  //     }else{
-  //       this.$router.push({path:`/practices/${this.practice.id}`,query })
-  //     }
-  //   }
-  // }
 }
 </script>

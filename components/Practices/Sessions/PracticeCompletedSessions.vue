@@ -129,7 +129,7 @@ export default {
       // }
     },
     methods:{
-      getCompletedJobs(orderBy){
+      async getCompletedJobs(orderBy){
         
         let offset = 0
         if(this.ascendDescend == 0){
@@ -142,9 +142,12 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Completed&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.completedJobs = res.data.jobs
-          })
+        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Completed&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
+          this.completedJobs = res.data.jobs
+        }).catch(err=>{
+          console.log('get completed jobs error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
        
       },
       show(id) {
@@ -156,6 +159,9 @@ export default {
           ]).then(()=>{
             console.log('The job opened is', this.job)
             this.modal = true
+        }).catch(err=>{
+          console.log('show completed job error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       },
       pagechanged(e) {

@@ -50,9 +50,6 @@ export default {
           ...this.$route.query,
           session_tab:tab
         }
-
-        // delete query.session_tab
-
         return{
           path: `/practices/${this.practice.id}/practice-sessions`,
           query
@@ -60,15 +57,5 @@ export default {
       }
     }
   },
-  // methods: {
-  //   goTo(type) {
-  //     const query = {
-  //       ...this.$route.query,
-  //       session_tab: type
-  //     }
-      
-  //     this.$router.push({ query })
-  //   }
-  // }
 }
 </script>

@@ -118,8 +118,10 @@ export default {
       ]).then(() => {
         this.getAppliedJobs('date_created:desc'),
         console.log(this.appliedJobs)
-      }).catch((err) => {
-        console.log(err)
+      }).catch(err => { 
+        console.log('show applied job error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+       
       })
     },
     computed:{ 
@@ -131,8 +133,7 @@ export default {
     },
     methods:{
       
-      getAppliedJobs(orderBy){
-        
+      async getAppliedJobs(orderBy){
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -144,9 +145,12 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.applied_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Applied&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.appliedJobs = res.data.jobs
-          })
+        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Applied&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
+          this.appliedJobs = res.data.jobs
+        }).catch(err=>{
+          console.log('get applied jobs error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
        
       },
       show(id) {
@@ -159,7 +163,9 @@ export default {
             console.log('The job opened is', this.job)
             this.modal = true
           }).catch((err) => {
-          console.log(err)
+            console.log('get applied jobs error!!!',err)
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+            console.log(err)
         })
       },
       pagechanged(e) {

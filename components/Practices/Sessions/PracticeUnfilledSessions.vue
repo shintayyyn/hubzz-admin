@@ -128,7 +128,7 @@ export default {
     // }
   },
   methods: {
-    getMatchedJobs(orderBy) {
+    async getMatchedJobs(orderBy) {
 
       let offset = 0
       if (this.ascendDescend == 0) {
@@ -141,8 +141,11 @@ export default {
       }
 
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
-      this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Matched&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
+      await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Matched&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
         this.matchedJobs = res.data.jobs
+      }).catch(err=>{
+        console.log('get unfilled jobs error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
 
     },
@@ -155,6 +158,9 @@ export default {
       ]).then(()=>{
         console.log('The job opened is', this.job)
         this.modal = true
+      }).catch(err=>{
+        console.log('show unfilled job error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
     pagechanged(e) {

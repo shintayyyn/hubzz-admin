@@ -1,5 +1,9 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-6 overflow-auto">
+    <div class="flex flex-no-wrap justify-start">
+      <div class="text-4xl text-white">Billing</div>
+    </div>
+    <div class="text-sm mb-4 text-white">Work in progress.</div>
     <div>
       <nuxt-link
         to="/billings/addinvoice"

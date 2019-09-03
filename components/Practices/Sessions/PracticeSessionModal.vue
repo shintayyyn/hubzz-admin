@@ -295,6 +295,9 @@ export default {
       await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
         this.locumUser = res.data.user
         console.log(this.locumUser)
+      }).catch(err=>{
+        console.log('get locum in job error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
     goTo(type) {

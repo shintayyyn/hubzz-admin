@@ -121,15 +121,9 @@ export default {
       })
     },
     computed:{ 
-      // cancelledJobs:function(){
-      //   return this.jobs.filter(function(job) {
-      //     return job.status === "Cancelled"
-      //   })
-      // }
     },
     methods:{
-      getCancelledJobs(orderBy){
-        
+      async getCancelledJobs(orderBy){
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -141,9 +135,12 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.cancelled_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Cancelled&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.cancelledJobs = res.data.jobs
-          })
+        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Cancelled&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
+          this.cancelledJobs = res.data.jobs
+        }).catch(err=>{
+          console.log('get cancelled jobs error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
        
       },
       show(id) {
@@ -155,6 +152,9 @@ export default {
           ]).then(()=>{
             console.log('The job opened is', this.job)
             this.modal = true
+        }).catch(err=>{
+          console.log('show cancelled job error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       },
       pagechanged(e) {

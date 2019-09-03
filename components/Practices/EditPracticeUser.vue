@@ -261,10 +261,8 @@ export default {
           practice_role:toPutPracticeUser.practice_role,
           status:toPutPracticeUser.status
         })
-        // alert('Saved')
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved Changes' })
       }catch(err){
-        // alert('Something went wrong!')
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error", err);
       }
@@ -279,9 +277,7 @@ export default {
           password_confirmation:toChangePassword.confirmNewPassword
         })
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved Changes' })
-        // alert('Saved')
       }catch(err){
-        // alert('Something went wrong!')
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error",err);
       }

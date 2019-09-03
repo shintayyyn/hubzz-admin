@@ -160,6 +160,9 @@ export default {
             await this.$axios.$get(`/api/v1/admin/practice-users`,{params}).then(res=>{
                 console.log(res)
                 this.$store.commit('practices/SET_PRACTICE_USERS', res.data.users)
+            }).catch(err=>{
+                console.log('get users error!',err)
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
             })
             this.loading = false
         },

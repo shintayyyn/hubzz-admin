@@ -1,8 +1,9 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-6">
     <div class="flex flex-no-wrap justify-start">
-      <div class="text-4xl mb-4 text-white">Reports</div>
+      <div class="text-4xl text-white">Reports</div>
     </div>
+    <div class="text-sm mb-4 text-white">Work in progress.</div>
     <!-- TABLE -->
       <div class="flex flex-col">
         <!-- BODY -->
