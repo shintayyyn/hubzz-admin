@@ -1,5 +1,6 @@
 <template>
     <div class="px-4">
+        <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'"/>
         <div class="w-full overflow-hidden">
             <div>
               <button
@@ -76,14 +77,17 @@
 <script>
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
 import AppPagination from '@/components/Base/AppPagination'
+import AppLoading from '@/components/Base/AppLoading'
 export default {
     props:['practice'],
     components:{
         CreatePracticeUser,
-        AppPagination
+        AppPagination,
+        AppLoading
     },
     data(){
         return {
+            loadingPracticeUsers:false,
             modal:false,
             // total:0,
             // users:[],
@@ -128,6 +132,7 @@ export default {
             practice_id
         } 
         try{
+            this.loadingPracticeUsers = true
             await this.$axios.$get(`/api/v1/admin/practice-users/count`,{params}).then(res=>{
                 console.log(res)
                 this.$store.commit(`practices/SET_PRACTICE_USERS_COUNT`,res.data.count)
@@ -138,6 +143,7 @@ export default {
                 this.getAllPracticeUsers()
             })
         }catch(err){
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
             console.log(err)
         }
        
@@ -147,7 +153,6 @@ export default {
     }, 
     methods:{
         async getAllPracticeUsers(){
-            this.loading = true
             let practice_id = this.practice.id
             let limit = 5
             let offset = 0
@@ -164,7 +169,7 @@ export default {
                 console.log('get users error!',err)
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
             })
-            this.loading = false
+            this.loadingPracticeUsers = false
         },
         
         show(id){

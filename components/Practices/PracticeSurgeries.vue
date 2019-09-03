@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col rounded-lg">
+        <AppLoading :loading="loadingSurgeries" :message="'Loading Practice Surgeries'"/>
         <div class="flex px-4 overflow-hidden">
             <div>
                 <button
@@ -71,11 +72,13 @@
 <script>
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 import AppPagination from '@/components/Base/AppPagination'
+import AppLoading from '@/components/Base/AppLoading'
 export default {
     props:['practice'],
     components:{
         AddPracticeSurgery,
-        AppPagination
+        AppPagination,
+        AppLoading
     },
     data(){
         return{
@@ -84,7 +87,8 @@ export default {
             // totalPages:0,
             currentPage:1,
             perPage:0,
-            modal:false
+            modal:false,
+            loadingSurgeries:false
         }
     },
     beforeDestroy(){
@@ -116,10 +120,11 @@ export default {
             practice_children_page: this.$route.query.practice_children_page || 1
         }
         try{
+            this.loadingSurgeries = true
             await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
                 this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) //quantity of spokes
                 this.perPage = 5
-
+                
                 let pageCount = Math.ceil(this.total / this.perPage)
                 this.$store.commit('practices/SET_PRACTICE_SPOKES_PAGE_COUNT',pageCount) //number of pages
                 this.getChildren()
@@ -146,6 +151,7 @@ export default {
                 console.log('get children error!!!!',err)
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
             })
+            this.loadingSurgeries = false
         },
         pagechanged(e) {
             const query = {

@@ -1,8 +1,12 @@
 <template>
   <transition name="fade" mode="out-in">
-    <div class="loading-shield flex flex-col items-center justify-center shadow-md" v-if="loading">
-      <h1 :class="inClass">{{ message }}</h1>
-      <svgicon name="loader" width="60" height="60" />
+    <div
+      :class="inClass"
+      class="loading-shield flex flex-col items-center justify-center shadow-md"
+      v-if="loading"
+    >
+      <svgicon v-if="spinner" name="loader" color="white" width="60" height="60" />
+      <h1 class="loader-message pin" v-if="message">{{ message }}</h1>
     </div>
   </transition>
 </template>
@@ -14,8 +18,11 @@ export default {
       default: false
     },
     message: {
-      type: String,
-      required: true
+      type: String
+    },
+    spinner: {
+      type: Boolean,
+      default: true
     },
     inClass: String
   }
@@ -30,15 +37,17 @@ export default {
   left: 0;
   right: 0;
   z-index: 49;
-  background-color: #f5f6f9;
-  box-shadow: 10px 10px 0.1 10px #f5f6f9;
-  opacity: 0.5;
+  background-color: #2C2F38;
+  box-shadow: 10px 10px 0.1 10px #2C2F38;
+  opacity: 0.75;
 }
 .loader-message {
   position: -webkit-sticky;
   position: sticky;
-  top: 50%;
+  color:white;
+  /* top: 50%; */
   text-align: center;
+  z-index: 50;
   /* left: 50%; */
   /* transform: translate(-50%, -50%); */
 }
@@ -54,15 +63,15 @@ export default {
     text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
   }
   40% {
-    color: #333;
+    color: white;
     text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
   }
   60% {
-    text-shadow: 0.25em 0 0 #333, 0.5em 0 0 rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 rgba(0, 0, 0, 0);
   }
   80%,
   100% {
-    text-shadow: 0.25em 0 0 #333, 0.5em 0 0 #333;
+    text-shadow: 0.25em 0 0 white, 0.5em 0 0 white;
   }
 }
 </style>

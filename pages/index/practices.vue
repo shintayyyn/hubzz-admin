@@ -1,7 +1,7 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
+	<AppLoading :loading="loadingPractices" :message="'Loading Practices'"/>
     <div class="flex px-2 justify-between md:flex-row">
-      
         <div class="flex py-2">
           	<div class="relative">
               <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
@@ -11,7 +11,6 @@
             </div>
         <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
         </div>
-      
       <div>
         <button
           @click="show()"
@@ -125,9 +124,11 @@
 
 <script>
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
+import AppLoading from '@/components/Base/AppLoading'
 export default {
 	components:{
-		AddPracticeSurgery
+		AddPracticeSurgery,
+		AppLoading
 	},
 	data() {
       return {
@@ -161,6 +162,7 @@ export default {
 
   	async asyncData({ app,store, route }) {
   		try {
+			await store.commit('practices/TOGGLE_LOADING',true)
   			let {
   				page = 1,
 				search = '',
@@ -189,11 +191,9 @@ export default {
 			response = await getPracticesPromise
 			const practices = response.data.data.practices
 			
-			store.commit('practices/SET_PRACTICE_COUNT',itemCount)
-			store.commit('practices/SET_PRACTICES',practices)
-
-			console.log(practices.length)
-				
+			await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
+			await store.commit('practices/SET_PRACTICES',practices)
+			await store.commit('practices/TOGGLE_LOADING',false)
   			return {
   				loading: false,
   				itemsPerPage: limit,
@@ -210,6 +210,10 @@ export default {
   	},
 
     computed: {
+		loadingPractices(){
+			console.log('pracs',this.$store.state.practices.loading_practices)
+			return this.$store.state.practices.loading_practices
+		},
 		getAllPractices(){
 			return this.$store.getters["practices/getAllPractices"]
 		},

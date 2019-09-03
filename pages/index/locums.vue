@@ -1,5 +1,8 @@
 <template>
 	<div class="flex-1 flex flex-col py-2">
+		<div>
+			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
+		</div>
 		<div class="flex flex-col md:flex-row justify-between px-6">
 			<div class="flex py-2">
 				<div class="relative">
@@ -29,9 +32,7 @@
 			</div>
 		</div>
 
-		<!-- <div>
-			<AppLoading :message:'hello'/>
-		</div> -->
+		
 
 		<!-- TABLE -->
 		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
@@ -163,14 +164,33 @@ export default {
 			email_verified_at: true
 		}
 	},
+	// beforeCreate() {
+    // 	
+	  // },
+	created() {
+		console.log('created')
+		console.log('process.client', process.client)
+		console.log('process.server', process.server)
+	},
+
+	mounted() {
+		console.log('mounted')
+		this.$socket.on('usersDeleted', this.usersDeletedHandler)
+	},
+
+	destroyed() {
+		console.log('destroyed')
+		this.$socket.off('usersDeleted', this.usersDeletedHandler)
+	},
 	watchQuery: [
 	'page',
 	'search',
 	'compliance_status'
 	],
-
 	async asyncData({ app, store, route }) {
+		
 		try {
+			await store.commit('locums/TOGGLE_LOADING',true)
 			let {
 				page = 1,
 				search = '',
@@ -202,24 +222,29 @@ export default {
 			response = await getLocumUsersPromise
 			const locumUsers = response.data.data.users
 			
-			store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
-			store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
-
+			await store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
+			await store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
+			await store.commit('locums/TOGGLE_LOADING',false)
 			return {
 				filterCompliances: compliance_status,
 				loading: false,
 				itemsPerPage: limit,
 				activePage: page,
 				search,
-				order_by
+				order_by,
 			}
 		} catch (err) {
 			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
 			console.log('Get locums error!', err)
 		}
+		
 	},
 
 	computed: {
+		loadingLocums(){
+			console.log('locs',this.$store.state.locums.loading_locums)
+			return this.$store.state.locums.loading_locums
+		},
 		locumUsers(){
 			return this.$store.state.locums.locumUsers //the data obtained by the state goes here
 		},
@@ -533,21 +558,7 @@ export default {
 		}
 	},
 
-	created() {
-		console.log('created')
-		console.log('process.client', process.client)
-		console.log('process.server', process.server)
-	},
-
-	mounted() {
-		console.log('mounted')
-		this.$socket.on('usersDeleted', this.usersDeletedHandler)
-	},
-
-	destroyed() {
-		console.log('destroyed')
-		this.$socket.off('usersDeleted', this.usersDeletedHandler)
-	},
+	
 }
 </script>
 <style>
