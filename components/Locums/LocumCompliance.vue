@@ -242,13 +242,13 @@
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">File size</strong>
                     <span>
-                    {{(item.file.size / 1048576).toFixed(2) + 'Bytes'}}
+                    {{( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes'}}
                     </span>
                 </div>
 
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-                    <span>{{ item.file.created_at ? $moment(item.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</span>
+                    <span>{{ item.file && item.file.created_at  ? $moment(item.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</span>
                 </div>
 
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
