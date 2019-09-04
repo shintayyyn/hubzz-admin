@@ -369,7 +369,6 @@ export default {
                 this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
                 console.log("get data error!!", err);
             }
-            
         },
         async toPutGmcNmc(currentStatus,locumID,verifyReject){
             try{

@@ -8,17 +8,18 @@
 
 		<div class="lg:mx-auto lg:w-auto md:h-full py-10 w-full">
 			<div class="relative w-full flex justify-center md:h-full md:items-center px-4 md:px-0" >
-				<div v-if="loginErrorMessage" class="absolute rounded-lg bg-red p-2 flex items-center justify-between" style="width: 100%;">
-					<div class="flex-1 flex justify-center items-center">
-						<svgicon name="exclamation-circle-solid" height="24" width="24" class="text-white fill-current"/>
-						<span class="text-white px-4">{{ loginErrorMessage }}</span>
-					</div>
-					<button class="text-white p-2" @click="loginErrorMessage = ''">
-						<svgicon name="times-solid" height="24" width="24" class="text-white fill-current"/>
-					</button>
-				</div>
+				
 
 				<div class="form w-full flex flex-col pt-16 px-10 py-6 rounded-lg shadow-lg" style="background-color: #55565A;">
+					<div v-if="loginErrorMessage" class="rounded-lg bg-red -mt-10 m-2 p-2 flex items-center justify-between" style="width: 100%;">
+						<div class="flex-1 flex justify-center items-center">
+							<svgicon name="exclamation-circle-solid" height="24" width="24" class="text-white fill-current"/>
+							<span class="text-white px-4">{{ loginErrorMessage }}</span>
+						</div>
+						<button class="text-white p-2" @click="loginErrorMessage = ''">
+							<svgicon name="times-solid" height="24" width="24" class="text-white fill-current"/>
+						</button>
+					</div>
 					<div class="flex flex-wrap justify-between">
 					<label class="text-white text-sm my-1 py-1">Email address</label>
 					<div class="m-1 flex-auto flex justify-end">
@@ -35,10 +36,10 @@
 					>
 
 					<div class="flex flex-wrap justify-between">
-					<label class="text-white text-sm my-1 py-1">Password</label>
-					<div class="m-1 flex-auto flex justify-end">
-						<span class="text-xs bg-red p-1 text-white" v-if="passwordErrorMessage && !showPasswordFocus">{{ passwordErrorMessage }}</span>
-					</div>
+						<label class="text-white text-sm my-1 py-1">Password</label>
+						<div class="m-1 flex-auto flex justify-end">
+							<span class="text-xs bg-red p-1 text-white" v-if="passwordErrorMessage && !showPasswordFocus">{{ passwordErrorMessage }}</span>
+						</div>
 					</div>
 					<input class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b" v-model="password" type="password" keyup.enter="login" :class="showPasswordFocus ? 'border-yellow-dark' : passwordErrorMessage ? 'border-red' : 'border-white-dark'" @focus="showPasswordFocus = true" @blur="showPasswordFocus = false, checkPassword()">
 

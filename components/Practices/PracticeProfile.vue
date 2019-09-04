@@ -34,19 +34,6 @@
                 <div v-else>
                   <p class="flex text-white text-sm p-2 font-semibold">Not set</p>
                 </div>
-                <p class="flex text-grey-light text-sm p-2">Change Practice Type</p>
-                <select
-                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
-                  v-model='toPutPracticeType.type'
-                >
-                  <option>Hub</option>
-                  <option>Spoke</option>
-                  <option>Stand Alone</option>
-                </select>
-                <button
-                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
-                  @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
-                >Change</button>
                 <div v-if="practice.gp_compliance_documents.length > 0">
                   <p class="flex">Compliance Requirements for GPs:</p>
                   <div class="text-white text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in practice.gp_compliance_documents"
@@ -126,6 +113,23 @@
                   class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
                   @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
                 >Save</button>
+                <div class="text-white text-xl font-bold">
+                 _________________________________
+                </div>
+                <p class="flex text-grey-light text-base font-bold mt-4">Change Practice Type</p>
+                <select
+                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                  v-model='toPutPracticeType.type'
+                >
+                  <option>Hub</option>
+                  <option>Spoke</option>
+                  <option>Stand Alone</option>
+                </select>
+                
+                <button
+                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+                  @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
+                >Change</button>
                 <!-- <div v-if="toPutPracticeType.type == 'Spoke'">
                   <p class="flex text-grey-light text-sm p-2">Parent Practice ID:</p>
                   <input
@@ -187,13 +191,14 @@ export default {
       },
       async toPutPracticeInfo(practiceID,toPutPractice){
         try{
-            await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
+            const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
               phone_number:toPutPractice.phone_number,
               report_to:toPutPractice.report_to,
               extra_information:toPutPractice.extra_information,
               status:toPutPractice.status,
               actived_until:toPutPractice.actived_until
             })
+
             await this.getPractices()  
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
             
@@ -206,10 +211,12 @@ export default {
       async toChangePracticeType(practiceID,toPutPracticeType){
         try{
           console.log(toPutPracticeType)
-          if(toPutPracticeType.type)
-          await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
+          // if(toPutPracticeType.type)
+          const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
             type:toPutPracticeType.type
           })
+          
+          this.practice.type = response.data.data.practice.type
           await this.getPractices()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'alert',text:'Saved'})
         }catch(err){

@@ -20,7 +20,7 @@
               color="black black"
               class="mx-1 -my-1"/>
           </nuxt-link>
-          <button @click="deleteLocumFaq = true" class="flex p-2 text-white font-bold bg-red rounded-lg cursor-pointer ">
+          <button v-if="deleteLocumFaq == false" @click="deleteLocumFaq = true" class="flex p-2 text-white font-bold bg-red rounded-lg cursor-pointer ">
             <span>Delete</span>
             <svgicon
               name="garbage"
@@ -29,9 +29,18 @@
               color="white white"
               class="mx-1 -my-1"/>
           </button>
+          <button v-if="deleteLocumFaq == true" @click="deleteLocumFaq = false" class="flex p-2 text-white font-bold bg-green-dark rounded-lg cursor-pointer ">
+            <span>Done</span>
+            <svgicon
+              name="circle-check"
+              width="21"
+              height="21"
+              color="white white"
+              class="mx-1 -my-1"/>
+          </button>
         </div>
 
-        <div v-for="item in locum_faqs" :key="item.id">
+        <div v-for="item in locumFaqs" :key="item.id">
           <div class="inline-flex w-full">
             <nuxt-link v-if="deleteLocumFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer"> 
               <svgicon
@@ -51,7 +60,7 @@
             </div>
             <div
               class="flex m-1 w-full rounded-lg bg-trout p-4 justify-between cursor-pointer"
-              @click="item.toggled = !item.toggled"
+              @click="toggleFaqOn(item)"
             >
               <div>{{item.question}}</div>
               <div class="font-bold text-lg">
@@ -67,9 +76,8 @@
              <div v-html="item.answer" class="w-full h-auto mx-4"></div>
           </div>
         </div>
-        <button v-if="deleteLocumFaq == true" @click="deleteLocumFaq = false" class="flex p-2 ml-12 m-2 font-bold bg-green-dark rounded-lg cursor-pointer ">
-          <span>Done</span>
-        </button>
+
+        
 
         <!---------------------------------------------------------------------------------->
         <div class="inline-flex font-bold mt-4 mb-2">
@@ -87,7 +95,7 @@
               color="black black"
               class="mx-1 -my-1"/>
           </nuxt-link>
-          <button @click="deletePracticeFaq = true" class="flex text-white text-bold p-2 bg-red rounded-lg cursor-pointer">
+          <button v-if="deletePracticeFaq == false" @click="deletePracticeFaq = true" class="flex text-white font-bold p-2 bg-red rounded-lg cursor-pointer">
             <span>Delete</span>
             <svgicon
               name="garbage"
@@ -96,9 +104,18 @@
               color="white white"
               class="mx-1 -my-1"/>
           </button>
+          <button v-if="deletePracticeFaq == true" @click="deletePracticeFaq = false" class="flex p-2 text-white font-bold bg-green-dark rounded-lg cursor-pointer ">
+            <span>Done</span>
+            <svgicon
+              name="circle-check"
+              width="21"
+              height="21"
+              color="white white"
+              class="mx-1 -my-1"/>
+          </button>
         </div>
       
-        <div v-for="item in practice_faqs" :key="item.id">
+        <div v-for="item in practiceFaqs" :key="item.id">
           <div class="inline-flex w-full">
             <nuxt-link v-if="deletePracticeFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer"> 
               <svgicon
@@ -134,9 +151,7 @@
             <div v-html="item.answer" class="w-full h-auto mx-4"></div>
           </div>
         </div>
-         <button v-if="deletePracticeFaq == true" @click="deletePracticeFaq = false" class="flex p-2 ml-12 m-2 font-bold bg-green-dark rounded-lg cursor-pointer ">
-          <span>Done</span>
-        </button>
+        
 
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq')"></div>
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-id')"></div>
@@ -167,6 +182,16 @@ export default {
       }
     }
   },
+  computed:{
+    locumFaqs(){
+      console.log("locum faqs in page",this.$store.state.faqs.locumFaqs)
+      return this.$store.state.faqs.locumFaqs
+    },
+    practiceFaqs(){
+      console.log('practice faqs in page',this.$store.state.faqs.practiceFaqs)
+      return this.$store.state.faqs.practiceFaqs
+    },
+  },
   async asyncData({ app, route, store, error }) {
     try{
       const response = await app.$axios.$get(`/api/v1/admin/faqs`)
@@ -177,11 +202,13 @@ export default {
           'toggled': false
         }
       })
-      const locum_faqs = faqs.filter(faq => faq.domain === 'Locum')
-      const practice_faqs = faqs.filter(faq => faq.domain === 'Practice')
+      const locumFaqs = faqs.filter(faq => faq.domain === 'Locum')
+      await store.commit('faqs/SET_LOCUM_FAQS',locumFaqs)
+      const practiceFaqs = faqs.filter(faq => faq.domain === 'Practice')
+      await store.commit('faqs/SET_PRACTICE_FAQS',practiceFaqs)
       return {
-        locum_faqs,
-        practice_faqs
+        // locumFaqs,
+        // practiceFaqs
       }
     }catch(err){
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
@@ -189,11 +216,21 @@ export default {
     }
   },
   methods:{
+    async toggleFaqOn(itemFaq){
+      console.log('to toggle faq',itemFaq)
+      if(itemFaq.domain == 'Locum'){
+        this.$store.commit('faqs/TOGGLE_LOCUM_FAQ',itemFaq)
+      }else if(itemFaq.domain == 'Practice'){
+        this.$store.commit('faqs/TOGGLE_PRACTICE_FAQ',itemFaq)
+      }
+    },
     async toDeleteFaq(faqId){
-        const deleteFaq = {
-          faq_id: faqId
-        }
-        await this.$axios.delete('/api/v1/admin/faqs',deleteFaq).then(()=>{
+        // const deleteFaq = {
+        //   data:{
+        //     faq_id: faqId
+        //   }
+        // }
+        await this.$axios.delete(`/api/v1/admin/faqs/${faqId}`).then(()=>{
           this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Delete Faq Successful'})
         }).catch(err=>{
           console.log('delete faq error!',err)

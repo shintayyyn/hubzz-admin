@@ -74,14 +74,23 @@
       onEditorReady(editor) {
         console.log('editor ready!', editor)
       },
+      getLocumFaqs(){
+        this.$store.dispatch("faqs/fetchLocumFaqs")
+      },
+      getPracticeFaqs(){
+        this.$store.dispatch("faqs/fetchPracticeFaqs")
+      },
       async save(){
-          try{
-              await this.$axios.post(`/api/v1/admin/faqs`,this.form)
-               this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'FAQ successfully created' })
-          }catch(err){
-            this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-            console.log('something went wrong!',err)
-          }
+        try{
+          await this.$axios.post(`/api/v1/admin/faqs`,this.form)
+          await this.getLocumFaqs()
+          // await this.getPracticeFaqs()
+          
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'FAQ successfully created' })
+        }catch(err){
+          this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+          console.log('something went wrong!',err)
+        }
       }
     },
     computed: {

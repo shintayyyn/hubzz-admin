@@ -99,52 +99,48 @@
 import AppPagination from '@/components/Base/AppPagination'
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
 export default {
-    props:['practice','practiceHub', 'spokesCount'],
-    components:{
-        AppPagination,
-        CreatePracticeUser
-    },
-  
-    data() {
-      return {
-        surgeries: [],
-        surgery:null,
-        search:'',
-        hubzz:[],
-        hub:null,
-        practiceCount:null,
-        modal:false,
-        total:0,
-        totalPages:0,
-        currentPage:1,
-        perPage:0,
-        loading:false
-      };
-    },
+  props:['practice','practiceHub', 'spokesCount'],
+  components:{
+      AppPagination,
+      CreatePracticeUser
+  },
 
-    beforeDestroy() {
-      let query = Object.assign({}, this.$route.query)
-      delete query.add_practice_page
-      this.$router.push({ query })
-    },
-    watch:{
-      $route(to, from) {
-        this.currentPage = parseInt(to.query.add_practice_page)
-        this.getAllSurgeries()
-        this.getAllHubzz()
-      },
-    },
+  data() {
+    return {
+      surgeries: [],
+      surgery:null,
+      search:'',
+      hubzz:[],
+      hub:null,
+      practiceCount:null,
+      modal:false,
+      total:0,
+      totalPages:0,
+      currentPage:1,
+      perPage:0,
+      loading:false
+    };
+  },
 
-    created(){
-        const query = {
-            ...this.$route.query,
-            add_practice_page: this.$route.query.add_practice_page || 1
-        }
-        this.getData()
-        
+  beforeDestroy() {
+    let query = Object.assign({}, this.$route.query)
+    delete query.add_practice_page
+    this.$router.push({ query })
+  },
+  watch:{
+    $route(to, from) {
+      this.currentPage = parseInt(to.query.add_practice_page)
+      this.getAllSurgeries()
+      this.getAllHubzz()
     },
+  },
 
-  computed: {
+  created(){
+    const query = {
+        ...this.$route.query,
+        add_practice_page: this.$route.query.add_practice_page || 1
+    }
+    this.getData()
       
   },
 
@@ -338,8 +334,6 @@ export default {
 			}
 			this.$router.push({ query })
     },
-
-    
   }
 };
 </script>
@@ -380,6 +374,5 @@ export default {
   .practice-user-modal-small {
     width: 60%;
   }
-
 }
 </style>
