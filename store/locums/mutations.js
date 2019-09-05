@@ -19,6 +19,10 @@ export default{
         if(index>0){
             state.mandatoryComplianceDocuments.splice(index,1,payload)
         }
+    },
+
+    SET_LOCUM_DOC_ALERT(state, payload){
+        state.locumDocAlert = payload
     }
     
 }

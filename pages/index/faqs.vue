@@ -194,28 +194,38 @@ export default {
   },
   async asyncData({ app, route, store, error }) {
     try{
-      const response = await app.$axios.$get(`/api/v1/admin/faqs`)
-      let faqs = response && response.data && response.data.faqs ? response.data.faqs : []
-      faqs = faqs.map((faq) => {
-        return {
-          ...faq,
-          'toggled': false
-        }
-      })
-      const locumFaqs = faqs.filter(faq => faq.domain === 'Locum')
-      await store.commit('faqs/SET_LOCUM_FAQS',locumFaqs)
-      const practiceFaqs = faqs.filter(faq => faq.domain === 'Practice')
+      let response = await app.$axios.$get(`/api/v1/admin/faqs?domain=Locum`)
+      let locumFaqs = response.data.faqs
+        // locumFaqs = locumFaqs.map((faq) => {
+        //   return {
+        //     ...faq,
+        //     'toggled': false
+        //   }
+        // })
+      response = await app.$axios.$get('/api/v1/admin/faqs?domain=Practice')
+      let practiceFaqs = response.data.faqs
+        // practiceFaqs = practiceFaqs.map((faq) => {
+        //   return {
+        //     ...faq,
+        //     'toggled': false
+        //   }
+        // })
+
+      await store.commit('faqs/SET_LOCUM_FAQS', locumFaqs)
       await store.commit('faqs/SET_PRACTICE_FAQS',practiceFaqs)
-      return {
-        // locumFaqs,
-        // practiceFaqs
-      }
+
     }catch(err){
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('faqs error!', err)
     }
   },
   methods:{
+    getLocumFaqs(){
+      this.$store.dispatch("faqs/fetchLocumFaqs")
+    },
+    getPracticeFaqs(){
+      this.$store.dispatch("faqs/fetchPracticeFaqs")
+    },
     async toggleFaqOn(itemFaq){
       console.log('to toggle faq',itemFaq)
       if(itemFaq.domain == 'Locum'){
@@ -231,6 +241,8 @@ export default {
         //   }
         // }
         await this.$axios.delete(`/api/v1/admin/faqs/${faqId}`).then(()=>{
+          this.getLocumFaqs()
+          this.getPracticeFaqs()
           this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Delete Faq Successful'})
         }).catch(err=>{
           console.log('delete faq error!',err)

@@ -63,58 +63,58 @@
                 </div>
               </div>
               <div class="w-full md:w-1/2 ">
-                <p class="flex text-grey-light text-sm p-2">Phone Number</p>
-                <input
-                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
-                  type="text"
-                  aria-label="phonenumber"
-                  :placeholder="practice.phone_number"
-                  v-model="toPutPractice.phone_number"
-                >
-                <p class="flex text-grey-light text-sm p-2">Full name to report to</p>
-                <input
-                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
-                  type="text"
-                  :placeholder="practice.report_to"
-                  aria-label="fullName"
-                  v-model='toPutPractice.report_to'
-                >
-                <p
-                  class="flex text-grey-light text-sm p-2"
-                >Extra information (Parking restrictions, transport links, etc.)</p>
-                 <textarea  
-                  placeholder="Type Here" 
-                  class="text-grey-lightest text-sm w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
-                  name="practiceNote"
-                  v-model='toPutPractice.extra_information'>
-                </textarea>
-
-                <p class="flex text-grey-light text-sm p-2">Status</p>
-                <select
-                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
-                  v-model='toPutPractice.status'
-                >
-                  <option>Active</option>
-                  <option>Suspended</option>
-                  <option>Deactivated</option>
-                  <!-- <option>Dormant</option> -->
-                </select>
-                <p class="flex text-grey-light text-sm p-2">Active Until</p>
+                <div class="border-b-4 border-white">
+                  <p class="flex text-grey-light text-sm p-2">Phone Number</p>
                   <input
-                    type="date"
-                    class="date-picker hasDatepicker valid"
-                    name="expiryDate"
-                    disable-min-date
-                    placeholder="dd/mm/yyyy"
-                    aria-invalid="false"
-                    v-model='toPutPractice.actived_until'
+                    class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                    type="text"
+                    aria-label="phonenumber"
+                    :placeholder="practice.phone_number"
+                    v-model="toPutPractice.phone_number"
                   >
-                <button
-                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
-                  @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
-                >Save</button>
-                <div class="text-white text-xl font-bold">
-                 _________________________________
+                  <p class="flex text-grey-light text-sm p-2">Full name to report to</p>
+                  <input
+                    class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                    type="text"
+                    :placeholder="practice.report_to"
+                    aria-label="fullName"
+                    v-model='toPutPractice.report_to'
+                  >
+                  <p
+                    class="flex text-grey-light text-sm p-2"
+                  >Extra information (Parking restrictions, transport links, etc.)</p>
+                  <textarea  
+                    placeholder="Type Here" 
+                    class="text-grey-lightest text-sm w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    name="practiceNote"
+                    v-model='toPutPractice.extra_information'>
+                  </textarea>
+
+                  <span class="flex text-grey-light text-sm p-2">Status</span>
+                  <span class="flex text-grey-light text-sm p-2">{{practice.status}}</span>
+                  <select
+                    class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                    v-model='toPutPractice.status'
+                  >
+                    <option>Active</option>
+                    <option>Suspended</option>
+                    <option>Deactivated</option>
+                    <!-- <option>Dormant</option> -->
+                  </select>
+                  <p class="flex text-grey-light text-sm p-2">Active Until</p>
+                    <input
+                      type="date"
+                      class="date-picker hasDatepicker valid"
+                      name="expiryDate"
+                      disable-min-date
+                      placeholder="dd/mm/yyyy"
+                      aria-invalid="false"
+                      v-model='toPutPractice.actived_until'
+                    >
+                  <button
+                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+                    @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
+                  >Save</button>
                 </div>
                 <p class="flex text-grey-light text-base font-bold mt-4">Change Practice Type</p>
                 <select

@@ -182,6 +182,20 @@ export default {
     },
 
     methods:{
+        getLocums(){
+          this.$store.dispatch("locums/fetchLocums",{
+            limit:8,
+            order_by:'created_at:desc',
+            offset: this.getQuery()
+          });
+        },
+        getQuery(){
+            const query = {
+                ...this.$route.query
+            }
+            const offset = parseInt(query.page)*8 - 8 
+            return offset
+        },
         downloadItem (imgUrl, imgFilename) {
             const axios = require('axios');
             axios({
@@ -203,6 +217,7 @@ export default {
                 await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
                     status:activeDisabled
                 })
+                await this.getLocums()
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
             }catch(err){
                 console.log("index practices index put status err", err);

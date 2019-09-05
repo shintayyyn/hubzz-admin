@@ -1,7 +1,10 @@
 export default () =>({
     loading_locums: true,
-    
-    locumUsers: [], //the data obtained by the database goes here
+    //--------------Locum Tab---------------
+    locumUsers: [],
     itemCount:0,
     mandatoryComplianceDocuments:[],
+    //----------------Dashboard-------------
+    locumDocAlert:[],
+    locumDocArchive:[]
 })

@@ -39,6 +39,21 @@
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')"
                 >Rejected</button>
+                
+            </div>
+            <div class="flex w-full justify-end mt-2 sm:m-0">
+                <div>Reason for Rejection:</div>
+                <textarea 
+                    placeholder="Type Here" 
+                    class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    name="complianceNote"
+                    >Type Here
+                </textarea>
+                <div class="mt-4 mx-2">
+                    <button class="p-2 px-4  rounded-full rounded-lg text-white bg-blue">
+                        Confirm
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -60,6 +75,20 @@
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')"
                 >Rejected</button>
+            </div>
+            <div class="flex w-full justify-end mt-2 sm:m-0">
+                <div>Reason for Rejection:</div>
+                <textarea 
+                    placeholder="Type Here" 
+                    class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    name="complianceNote"
+                    >Type Here
+                </textarea>
+                <div class="mt-4 mx-2">
+                    <button class="p-2 px-4  rounded-full rounded-lg text-white bg-blue">
+                        Confirm
+                    </button>
+                </div>
             </div>
         </div>
         <!--GMC / NMC NUMBER ENDS HERE-->

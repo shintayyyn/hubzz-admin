@@ -4,14 +4,24 @@ export default{
     },
 
     SET_LOCUM_FAQS(state, payload){
-        state.locumFaqs = payload
+        let locum_faqs = payload.map((faq) => {
+            return {
+                ...faq,
+                'toggled': false
+            }
+        })
+        state.locumFaqs = locum_faqs
     },
     SET_PRACTICE_FAQS(state, payload){
-        state.practiceFaqs = payload
+        let practice_faqs = payload.map((faq) => {
+            return {
+                ...faq,
+                'toggled': false
+            }
+        })
+        state.practiceFaqs = practice_faqs
     },
     TOGGLE_LOCUM_FAQ(state, payload){
-        console.log('payload',payload)
-        console.log('state',state.locumFaqs)
         const index = state.locumFaqs.findIndex((locumFaq)=>{
             return locumFaq.id === payload.id
         })
@@ -20,8 +30,6 @@ export default{
         }
     },
     TOGGLE_PRACTICE_FAQ_ON(state, payload){
-        console.log('payload',payload)
-        console.log('state',state.practiceFaqs)
         const index = state.practiceFaqs.findIndex((practiceFaq)=>{
             return practiceFaq.id === payload.id
         })
@@ -30,7 +38,6 @@ export default{
         }
     },
     TOGGLE_PRACTICE_FAQ_OFF(state, payload){
-        console.log(payload)
         payload.toggle = false
         state.itemPracticeFaq = payload
         
