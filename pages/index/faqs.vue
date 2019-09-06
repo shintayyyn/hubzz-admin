@@ -35,7 +35,7 @@
               name="circle-check"
               width="21"
               height="21"
-              color="white white"
+              color="white"
               class="mx-1 -my-1"/>
           </button>
         </div>
@@ -76,9 +76,6 @@
              <div v-html="item.answer" class="w-full h-auto mx-4"></div>
           </div>
         </div>
-
-        
-
         <!---------------------------------------------------------------------------------->
         <div class="inline-flex font-bold mt-4 mb-2">
           <div class="flex m-1">
@@ -110,7 +107,7 @@
               name="circle-check"
               width="21"
               height="21"
-              color="white white"
+              color="white"
               class="mx-1 -my-1"/>
           </button>
         </div>

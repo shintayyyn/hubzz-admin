@@ -128,65 +128,9 @@ export default{
         
 
     },
-    async submitFile(practiceID, practiceDocumentID, practiceSpecificDocument){
-      try{
-        let formData = new FormData()
-        let file = this.files.find(({ id }) => id === practiceDocumentID)
-        if (file) {
-            file = file.file
-            console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
-            console.log(file)
-        
-            if(practiceSpecificDocument){
-              console.log('its something')
-              console.log(practiceSpecificDocument)
-
-              formData.append('practice_document_id',practiceID)
-              formData.append('file', file)
-              
-              await this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                },
-              }).then(function(){
-                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
-                  console.log("nice 1!")
-
-              })
-              .catch(err =>{
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-                console.log('upload file failed', err);
-              });
-
-            }else{
-              console.log("its nothing 1")
-              formData.append('file', file)
-              formData.append('practice_id',practiceID)
-              formData.append('practice_document_type_id',practiceDocumentID)
-              await this.$axios.post( '/api/v1/admin/practice-documents',formData,{
-                headers: {
-                  'Content-Type': 'multipart/form-data'
-                },     
-              }).then(function(){
-                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
-                  console.log("nice!")
-              })
-              .catch(err =>{
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-                console.log('upload file failed', err);
-              });
-            }
-        }else{
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Please choose a file to upload first.' })
-        }
-      }catch(err){
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Something went wrong!' })
-        console.log("index practices index _id index asyncData err", err);
-      }
-    },
-
     async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
       await console.log("Infos uploaded: \n","refname: ",refName,"docID: ",documentId,"prac id: ",practiceID, "prac docid: ",practiceDocumentID,"prac document: ",practiceSpecificDocument)
+      this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'upload', text: 'Uploading' })
       const el = this.$refs[refName][0]
       if (el.files && el.files.length === 0) {
         return

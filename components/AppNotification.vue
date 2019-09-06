@@ -6,9 +6,9 @@
         :class="notificationStatus"
         v-if="$store.state.notification.enabled"
       >
-        <!-- <div class="mr-2">
+        <div class="mr-2">
           <svgicon :name="notificationIcon" height="20" width="20" :color="iconSvgColor" />
-        </div> -->
+        </div>
         <div class="font-bold text-sm leading-normal">{{$store.state.notification.text}}</div>
       </div>
     </div>
@@ -28,44 +28,49 @@ export default {
         case "alert":
           return "bg-yellow";
           break;
-        case "info":
+        case "upload":
           return "bg-blue text-blue-lightest";
         default:
           return "bg-white";
       }
     },
 
-    // notificationIcon() {
-    //   switch (this.$store.state.notification.status) {
-    //     case "success":
-    //       return "success-checkmark";
-    //       break;
-    //     case "danger":
-    //       return "exclamation-mark";
-    //       break;
-    //     case "alert":
-    //       return "alert";
-    //       break;
-    //     case "info":
-    //       return "info";
-    //       break;
-    //     default:
-    //       return "alert";
-    //   }
-    // },
+    notificationIcon() {
+      switch (this.$store.state.notification.status) {
+        case "success":
+          return "circle-check";
+          break;
+        case "danger":
+          return "exclamation-mark";
+          break;
+        case "alert":
+          return "exclamation-circle-solid";
+          break;
+        case "upload":
+          return "cloud-upload";
+          break;
+        default:
+          return "alert";
+      }
+    },
 
-    // iconSvgColor() {
-    //   switch (this.$store.state.notification.status) {
-    //     case "danger":
-    //       return "#fff";
-    //       break;
-    //     case "info":
-    //       return "#dae1e7";
-    //       break;
-    //     default:
-    //       return "";
-    //   }
-    // }
+    iconSvgColor() {
+      switch (this.$store.state.notification.status) {
+        case "success":
+          return "black black"
+        case "danger":
+          return "white white";
+          break;
+        case "upload":
+          return "transparent white";
+          break; 
+        case "info":
+          return "white white";
+          break;
+        default:
+          return "";
+      }
+    }
   }
 }
 </script>

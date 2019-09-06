@@ -23,7 +23,7 @@
         <!--GMC / NMC NUMBER-->
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 sm:justify-between">
-                <p class="text-grey">GMC / NMC Number</p>
+                <p class="text-grey">GMC / NMC / HCPC Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
@@ -32,26 +32,28 @@
                 :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light text-center ' : 'bg-transparent px-2 hover:bg-green-light'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Verified')"
-                >Verified</button>
+                >{{user.locum_detail.gmc_or_nmc_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
                 class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
                 :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-2 hover:bg-orange-light'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
-                @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')"
-                >Rejected</button>
+                @click.prevent="toRejectGmcNmc()"
+                >{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
                 
             </div>
-            <div class="flex w-full justify-end mt-2 sm:m-0">
-                <div>Reason for Rejection:</div>
-                <textarea 
-                    placeholder="Type Here" 
-                    class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                    name="complianceNote"
-                    >Type Here
-                </textarea>
+            <div v-if="rejectGmcNmc == true" class="flex w-full justify-end mt-2 sm:m-0">
+                <div class="p-1 px-6 m-1 bg-waterloo-light rounded-lg">
+                    <textarea
+                        v-model="notes" 
+                        placeholder="Reason for Rejection (Optional)" 
+                        class="text-grey-lightest flex-1 py-2 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                        name="complianceNote"
+                        >
+                    </textarea>
+                </div>
                 <div class="mt-4 mx-2">
-                    <button class="p-2 px-4  rounded-full rounded-lg text-white bg-blue">
-                        Confirm
+                    <button @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')" class="p-2 px-8  rounded-full rounded-lg text-white bg-blue">
+                        <span>{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
                     </button>
                 </div>
             </div>
@@ -68,25 +70,27 @@
                 :class="`${user.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-2 hover:bg-green-light'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Verified')"
-                >Verified</button>
+                >{{user.locum_detail.mpl_or_npl_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
                 class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
                 :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light' : 'bg-transparent px-2 hover:bg-orange-light'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
-                @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')"
-                >Rejected</button>
+                @click.prevent="toRejectMplNpl()"
+                >{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
             </div>
-            <div class="flex w-full justify-end mt-2 sm:m-0">
-                <div>Reason for Rejection:</div>
-                <textarea 
-                    placeholder="Type Here" 
-                    class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                    name="complianceNote"
-                    >Type Here
-                </textarea>
+            <div v-if="rejectMplNpl == true" class="flex w-full justify-end mt-2 sm:m-0">
+                <div class="p-1 px-6 m-1 bg-waterloo-light rounded-lg">
+                    <textarea
+                        v-model="notes" 
+                        placeholder="Reason for Rejection (Optional)" 
+                        class="text-grey-lightest flex-1 py-2 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                        name="complianceNote"
+                        >
+                    </textarea>
+                </div>
                 <div class="mt-4 mx-2">
-                    <button class="p-2 px-4  rounded-full rounded-lg text-white bg-blue">
-                        Confirm
+                    <button @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')" class="p-2 px-8  rounded-full rounded-lg text-white bg-blue">
+                        <span>{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
                     </button>
                 </div>
             </div>
@@ -312,13 +316,16 @@ export default {
                 mpl_or_npl_number: ''
             }
         },
-        professionCategoryId:null,
+        professionCategoryId: null,
         // mandatoryComplianceDocuments:[],
-        optionalComplianceDocuments:[],
-        locumMandatoryTrainings:[],
-        professionCategory:null,
-        disabled:'true',
-        query:null
+        optionalComplianceDocuments: [],
+        locumMandatoryTrainings: [],
+        professionCategory: null,
+        disabled: 'true',
+        query: null,
+        rejectGmcNmc: false,
+        rejectMplNpl: false,
+        notes:''
         };
     },
     created() {
@@ -364,6 +371,13 @@ export default {
             const offset = parseInt(query.page)*8 - 8 
             return offset
         },
+        toRejectGmcNmc(){
+            this.rejectGmcNmc = !this.rejectGmcNmc
+        },
+        toRejectMplNpl(){
+            console.log('daddsdssaad')
+            this.rejectMplNpl = !this.rejectMplNpl
+        },
         async getData(){
             try{
                 this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
@@ -399,30 +413,50 @@ export default {
                 console.log("get data error!!", err);
             }
         },
-        async toPutGmcNmc(currentStatus,locumID,verifyReject){
+        async toPutGmcNmc(currentStatus, locumID, verifyReject){
             try{
                 if(currentStatus === 'Pending'){
-                    const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
-                        status:verifyReject
-                    })
-                    this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-                    await this.getLocums()
-
+                    if(verifyReject === 'Verified'){
+                        const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+                            status:verifyReject,
+                        })
+                        this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
+                        await this.getLocums()
+                    }else if(verifyReject === 'Rejected'){
+                        if(this.notes){
+                            console.log('notes',this.notes)
+                            const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+                                status:verifyReject,
+                                note:this.notes
+                            })
+                            this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
+                            await this.getLocums()
+                        }else if(this.notes == ''){
+                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                        }
+                    }
                 }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
-                    const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
-                        status:verifyReject
-                    })
-                    this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-                    await this.getLocums()
+                    if(this.notes){
+                        console.log('notes',this.notes)
+                        const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
+                            status:verifyReject,
+                            note:this.notes
+                        })
+                        this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
+                        await this.getLocums()
+                    }else if(this.notes == ''){
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                    }
 
                 }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
                     const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                         status:verifyReject
                     })
                     this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                     await this.getLocums()
 
                 }else if(currentStatus === 'Verified' && verifyReject ==='Verified'){
@@ -430,17 +464,20 @@ export default {
                         status:'Pending'
                     })
                     this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
+                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to Pending' })
                     await this.getLocums()
 
                 }else if(currentStatus === 'Rejected' && verifyReject ==='Rejected'){
                     const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
-                        status:'Pending'
+                        status:'Pending',
+                        note:this.notes
                     })
                     this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
+                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to Pending' })
                     await this.getLocums()
                 }
+                this.rejectGmcNmc = false
+                this.notes = ''
             
             }catch(err){
                 this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
@@ -448,24 +485,43 @@ export default {
                 
             }
         },
-        async toPutMplNpl(currentStatus,locumID, verifyReject){
+        async toPutMplNpl(currentStatus, locumID, verifyReject){
             try{
                 if(currentStatus === 'Pending'){
-                    const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
-                        status:verifyReject
-                    })
-                    this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-                    await this.getLocums()
-
+                    if(verifyReject === 'Verified'){
+                        const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                            status:verifyReject,
+                        })
+                        this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
+                        await this.getLocums()
+                    }else if(verifyReject === 'Rejected'){
+                        if(this.notes){
+                            console.log('notes',this.notes)
+                            const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                                status:verifyReject,
+                                note:this.notes
+                            })
+                            this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
+                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
+                            await this.getLocums()
+                        }else if(this.notes == ''){
+                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                        }
+                    }
                 }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
-                    const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
-                        status:verifyReject
-                    })
-                    this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-                    await this.getLocums()
-
+                    if(this.notes){
+                        console.log('notes',this.notes)
+                        const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
+                            status:verifyReject,
+                            note:this.notes
+                        })
+                        this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
+                        await this.getLocums()
+                    }else if(this.notes == ''){
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                    }
                 }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:verifyReject
@@ -491,8 +547,10 @@ export default {
                     await this.getLocums()
 
                 }
-
+                this.rejectMplNpl = false
+                this.notes = ''
             }catch(err){
+                
                 this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
                 console.log("index practices index put MPL/NPL err", err);
             }

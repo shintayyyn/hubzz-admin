@@ -107,8 +107,6 @@
               @click.prevent ="checkForm(user.id,toPutPracticeUser)"
             >Save Changes</button>
           </div>
-
-            
         </div>
         <div v-if="tab2" class="flex text-white">
           <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
@@ -190,6 +188,7 @@ export default {
       }
       
     },
+    
     processEmail:function(inputEmail){
       this.formError = {
         emailError:''
@@ -225,7 +224,6 @@ export default {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     },
-    
 
     checkPasswordInfo:function(uID,changePass){
       this.errorPass = [];     
@@ -261,7 +259,7 @@ export default {
           practice_role:toPutPracticeUser.practice_role,
           status:toPutPracticeUser.status
         })
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved Changes' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved Changes' })
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error", err);
@@ -276,7 +274,7 @@ export default {
           password:toChangePassword.newPassword,
           password_confirmation:toChangePassword.confirmNewPassword
         })
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved Changes' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved Changes' })
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         console.log("index put locum detail compliance documents error",err);

@@ -79,15 +79,17 @@
                   :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
                   @click.prevent="setStatusData('Rejected')"
                 >Rejected</button>
-
-            <p class="mt-5 mr-20">Note to Locum</p>
-            <textarea 
-                v-model="toPutLocumDetailCompliance.note" 
-                placeholder="Type Here" 
-                class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                name="complianceNote"
-                v-if="notesAreVisible">Type Here
-            </textarea>
+            <div v-if="notesAreVisible">
+              <p class="mt-5 mr-20">Reason for Rejection</p>
+               <textarea 
+                  v-model="toPutLocumDetailCompliance.note" 
+                  placeholder="Type Here" 
+                  class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                  name="complianceNote"
+                  >Type Here
+              </textarea>
+            </div>
+           
           </div>
           <div class="flex flex-col text-grey md:m-2">
             <p class="md:mr-20">File</p>
@@ -116,7 +118,7 @@ export default {
           status:this.compliance_doc.status,
           note:this.compliance_doc.note
         },
-        notesAreVisible:true,
+        notesAreVisible:false,
         };
     },
     
@@ -190,17 +192,32 @@ export default {
         
         async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
           try{
-            const first=this.user
-            await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-              status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
-              expired_at:toPutLocumDetailCompliance.expired_at,
-              note:toPutLocumDetailCompliance.note
-            })
-            await this.getLocums()
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+            console.log('to put compliance', toPutLocumDetailCompliance)
+
+            if(toPutLocumDetailCompliance.status == 'Rejected'){
+              if(toPutLocumDetailCompliance.note){
+                await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+                  status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
+                  expired_at:toPutLocumDetailCompliance.expired_at,
+                  note:toPutLocumDetailCompliance.note
+                })
+                await this.getLocums()
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+              }else if(toPutLocumDetailCompliance.note == ''){
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes are required' })
+              }
+              
+            }else if(toPutLocumDetailCompliance.status == 'Approved' || toPutLocumDetailCompliance.status == 'Expired' || toPutLocumDetailCompliance.statis == ''){
+              await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
+                status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
+                expired_at:toPutLocumDetailCompliance.expired_at,
+              })
+              await this.getLocums()
+              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+            }
           }catch(err){
-            console.log("index put locum detail compliance documents error",err);
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+            console.log('compliance file verification error',err);
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err })
           }
         },
         goBack(type) {

@@ -89,11 +89,13 @@
                     name="practiceNote"
                     v-model='toPutPractice.extra_information'>
                   </textarea>
-
-                  <span class="flex text-grey-light text-sm p-2">Status</span>
-                  <span class="flex text-grey-light text-sm p-2">{{practice.status}}</span>
+                  <div class="my-4">
+                    <span class="text-grey-light text-sm p-2">Status: </span>
+                    <span class="text-grey-light text-sm p-2" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
+                  </div>
+                  
                   <select
-                    class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                    class="flex m-2 outline-none border-2 border-transparent text-sm text-black pr-6"
                     v-model='toPutPractice.status'
                   >
                     <option>Active</option>
@@ -101,7 +103,8 @@
                     <option>Deactivated</option>
                     <!-- <option>Dormant</option> -->
                   </select>
-                  <p class="flex text-grey-light text-sm p-2">Active Until</p>
+                  <span class="text-grey-light text-sm p-2">Active Until</span>
+                  <span class="flextext-sm text-white ">{{practice&&practice.actived_until ? practice.actived_until : ''}}</span>
                     <input
                       type="date"
                       class="date-picker hasDatepicker valid"
@@ -200,7 +203,7 @@ export default {
             })
 
             await this.getPractices()  
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
             
         }catch(err){
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
@@ -218,7 +221,7 @@ export default {
           
           this.practice.type = response.data.data.practice.type
           await this.getPractices()
-          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'alert',text:'Saved'})
+          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})
         }catch(err){
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
           console.log('change practice type error!',err)

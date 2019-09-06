@@ -145,7 +145,6 @@ export default {
 	},
 	data() {
 		return {
-			loading: false,
 			itemsPerPage: 8,
 			activePage: 1,
 						
@@ -227,7 +226,6 @@ export default {
 			await store.commit('locums/TOGGLE_LOADING',false)
 			return {
 				filterCompliances: compliance_status,
-				loading: false,
 				itemsPerPage: limit,
 				activePage: page,
 				search,

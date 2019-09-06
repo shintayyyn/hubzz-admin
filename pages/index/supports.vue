@@ -6,7 +6,7 @@
       </div>
     </div>
     <!-- TABLE RESPONSIVE-->
-    <div v-if="emails.length>0" class="px-10 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+    <div v-if="emails.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->
       <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
         <div class="table-cell p-2 align-middle">Sender Name</div> 

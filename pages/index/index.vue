@@ -1,6 +1,7 @@
 <template>
     <div class="mx-6">
         <div class="text-4xl text-white">Dashboard</div>
+        <div class="text-sm font-hairline text-white">Work in progress</div>
         <div class="flex flex-wrap text-white -mx-1 overflow-hidden sm:-mx-2">
             <!--------------------------- Column 1 ---------------------------->
             <div class="my-1 p-3 w-1/3  sm:my-2 sm:px-2">
@@ -11,7 +12,7 @@
                     <nuxt-link
                     v-for="(item,index) in locumDocsAlert" 
                     :key="`item-${index}`" 
-                    :to="{path:`/locums/${item.locum_detail.id}/locum-compliance/${item.compliance_document.id}`}"
+                    :to="{path:`/locums/${item.locum_detail.user.id}/locum-compliance/${item.compliance_document.id}`}"
                     class="inline-block p-3 m-1 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg ">
                         <div class="font-hairline">
                             {{$moment(item.uploaded_at).format('MMMM DD, YYYY | HH:mm')}}
