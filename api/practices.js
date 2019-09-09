@@ -9,6 +9,10 @@ export function fetchPractices(axios,payload){
     payload.offset ? params.offset = payload.offset : null
     return axios.$get(`/api/v1/admin/practices${payload.countOnly ? '/count':''}`,{params:params})
 }
+export function fetchSpecificPractice(axios, payload){
+    console.log('Practice API for specific practice is being performed', payload)
+    return axios.$get(`/api/v1/admin/practices/${payload.id}`)
+}
 export function fetchHub(axios,payload){
     console.log('Practice API for getting Hub is performed',payload)
     return axios.$get(`/api/v1/admin/practices/${payload.practice_id}/parent-surgery`)

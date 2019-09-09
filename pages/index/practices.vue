@@ -14,7 +14,7 @@
       <div>
         <button
           @click="show()"
-          class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm text-black rounded-lg shadow md:float-right"
+          class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
         >Add Practice</button>
       </div>
     </div>

@@ -4,7 +4,7 @@
         <div class="w-full overflow-hidden">
             <div>
               <button
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
                 @click="show(surgery.id)"
               >Add User
               </button>
@@ -34,7 +34,6 @@
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Full Name</strong>
                     <span class="break-word">{{ user.personal_detail.name }}</span>
-                    <span class="break-word">{{ user.id}}</span>
                 </div>
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Email Address</strong>

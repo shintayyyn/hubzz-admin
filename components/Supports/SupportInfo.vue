@@ -2,9 +2,9 @@
     <div>
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/supports" class="text-white p-1">
+        <div @click="goBack()" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-        </nuxt-link>
+        </div>
       </div>
       <!-- HEADER -->
       <div class="flex flex-wrap overflow-hidden pl-4">
@@ -41,6 +41,14 @@ export default {
   data() {
     return {
     };
+  },
+  methods:{
+    goBack(){
+      const query = {
+          ...this.$route.query
+      }
+      this.$router.push({path:'/supports',query})
+    },
   }
 };
 </script>

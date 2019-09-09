@@ -2,7 +2,7 @@ export default()=>({
     loading_practices: true,
     itemCount:0,
     allPractices:[],
-
+    
     practice:'',
     practiceHub:'',
     practiceParent:'',

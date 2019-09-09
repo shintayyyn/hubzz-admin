@@ -62,66 +62,83 @@
                   <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice yet.</p>
                 </div>
               </div>
-              <div class="w-full md:w-1/2 ">
-                <div class="border-b-4 border-white">
-                  <p class="flex text-grey-light text-sm p-2">Phone Number</p>
+
+              <div class="w-full text-sm text-white md:w-1/2 ">
+                <div class="m-2">
+                  <span class="font-semibold text-lg">Other Information</span>
+                  <span class="m-1 p-2 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit ==false" @click="toEdit=true">Edit</span>
+                  <span class="m-1 p-2 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit == true" @click="toEdit=false">Cancel Editing</span>
+                </div>
+
+                <div v-if="toEdit == false" class="border-b-4 border-white">
+                  <p class="flex text-grey-light p-2">Phone Number</p>
+                  <p class="flex mx-4 font-semibold">{{practice && practice.phone_number ? practice.phone_number : 'N/A'}}</p>
+                  <p class="flex text-grey-light p-2">Full name to report to</p>
+                  <p class="flex mx-4 font-semibold">{{practice && practice.report_to ? practice.report_to : 'N/A'}}</p>
+                  <p class="flex text-grey-light p-2">Extra information (Parking restrictions, transport links, etc.)</p>
+                  <p class="flex mx-4 font-semibold">{{practice && practice.extra_information ? practice.extra_information : 'N/A'}}</p>
+                  <div class="my-4">
+                    <span class="text-grey-light p-2">Status: </span>
+                    <span class="text-grey-light p-2 rounded-lg font-semibold" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
+                  </div>
+                  <span class="text-grey-light p-2">Active Until</span>
+                  <p class="flex m-4 font-semibold">{{practice && practice.actived_until ? practice.actived_until : 'N/A'}}</p>
+                </div>
+
+                <div v-if="toEdit == true" class="border-b-4 border-white">
+                  <p class="flex text-grey-light p-2">Phone Number</p>
                   <input
-                    class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                    class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                     type="text"
                     aria-label="phonenumber"
-                    :placeholder="practice.phone_number"
                     v-model="toPutPractice.phone_number"
                   >
-                  <p class="flex text-grey-light text-sm p-2">Full name to report to</p>
+                  <p class="flex text-grey-light p-2">Full name to report to</p>
                   <input
-                    class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                    class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                     type="text"
-                    :placeholder="practice.report_to"
                     aria-label="fullName"
                     v-model='toPutPractice.report_to'
                   >
                   <p
-                    class="flex text-grey-light text-sm p-2"
+                    class="flex text-grey-light p-2"
                   >Extra information (Parking restrictions, transport links, etc.)</p>
                   <textarea  
                     placeholder="Type Here" 
-                    class="text-grey-lightest text-sm w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    class="text-grey-lightest w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
                     name="practiceNote"
                     v-model='toPutPractice.extra_information'>
                   </textarea>
-                  <div class="my-4">
-                    <span class="text-grey-light text-sm p-2">Status: </span>
-                    <span class="text-grey-light text-sm p-2" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
-                  </div>
-                  
+                  <span class="text-grey-light p-2">Status: </span>
                   <select
-                    class="flex m-2 outline-none border-2 border-transparent text-sm text-black pr-6"
+                    class="mx-2 m-1 outline-none border-2 border-transparent text-black pr-6"
                     v-model='toPutPractice.status'
                   >
                     <option>Active</option>
                     <option>Suspended</option>
                     <option>Deactivated</option>
-                    <!-- <option>Dormant</option> -->
                   </select>
-                  <span class="text-grey-light text-sm p-2">Active Until</span>
-                  <span class="flextext-sm text-white ">{{practice&&practice.actived_until ? practice.actived_until : ''}}</span>
-                    <input
-                      type="date"
-                      class="date-picker hasDatepicker valid"
-                      name="expiryDate"
-                      disable-min-date
-                      placeholder="dd/mm/yyyy"
-                      aria-invalid="false"
-                      v-model='toPutPractice.actived_until'
-                    >
+                  <div class="my-2">
+                    <span class="text-grey-light p-2">Active Until</span>
+                      <input
+                        type="date"
+                        class="date-picker hasDatepicker valid"
+                        name="expiryDate"
+                        disable-min-date
+                        placeholder="dd/mm/yyyy"
+                        aria-invalid="false"
+                        v-model='toPutPractice.actived_until'
+                      >
+                  </div>
+                  
                   <button
-                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+                    class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-black font-semibold rounded-lg shadow float:right"
                     @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
                   >Save</button>
                 </div>
                 <p class="flex text-grey-light text-base font-bold mt-4">Change Practice Type</p>
                 <select
-                  class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                  class="outline-none border-2 border-transparent text-black pr-6"
                   v-model='toPutPracticeType.type'
                 >
                   <option>Hub</option>
@@ -130,13 +147,13 @@
                 </select>
                 
                 <button
-                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+                  class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-black font-semibold rounded-lg shadow float:right"
                   @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
                 >Change</button>
                 <!-- <div v-if="toPutPracticeType.type == 'Spoke'">
-                  <p class="flex text-grey-light text-sm p-2">Parent Practice ID:</p>
+                  <p class="flex text-grey-light p-2">Parent Practice ID:</p>
                   <input
-                    class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                    class="appearance-none bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                     type="text"
                     placeholder
                     aria-label="fullName"
@@ -152,15 +169,19 @@
 <script>
 export default {
     props:['practice'],
-
     data(){
         return{
             practiceParent:'',
             toPutPractice:{
-
+              phone_number:this.practice.phone_number,
+              report_to:this.practice.report_to,
+              extra_information:this.practice.extra_information,
+              status:this.practice.status,
+              actived_until:this.practice.actived_until
             },
+            toEdit:false,
             toPutPracticeType:{
-              type:''
+              type:this.practice.type
             },
         }
     },
@@ -173,7 +194,6 @@ export default {
               this.practiceParent = res.data.practice.parent_surgery
             })
           ]).then(()=>{
-            console.log('hello',this.practiceParent.name)
           })
         }
     },
@@ -186,10 +206,16 @@ export default {
         return offset
       },
       getPractices(){
+        console.log("hello")
         this.$store.dispatch("practices/fetchPractices",{
           limit:8,
           order_by:'created_at:desc',
           offset:this.getQuery()
+        })
+      },
+      getPractice(){
+        this.$store.dispatch("practices/fetchSpecificPractice",{
+          id:this.practice.id
         })
       },
       async toPutPracticeInfo(practiceID,toPutPractice){
@@ -201,8 +227,14 @@ export default {
               status:toPutPractice.status,
               actived_until:toPutPractice.actived_until
             })
-
-            await this.getPractices()  
+            this.practice.phone_number = response.data.data.practice.phone_number
+            this.practice.report_to = response.data.data.practice.report_to,
+            this.practice.extra_information = response.data.data.extra_information,
+            this.practice.status = response.data.data.practice.status,
+            this.practice.actived_until = response.data.data.practice.actived_until
+            
+            await this.getPractices()
+            this.toEdit = false  
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
             
         }catch(err){
@@ -221,6 +253,7 @@ export default {
           
           this.practice.type = response.data.data.practice.type
           await this.getPractices()
+          await this.getPractice()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})
         }catch(err){
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

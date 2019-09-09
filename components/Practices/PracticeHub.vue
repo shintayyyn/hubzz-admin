@@ -3,7 +3,7 @@
         <div class="w-1/2">
             <button
             @click="show()"
-            class=" no-underline py-2 px-4 mb-4 bg-sunglow text-sm text-black rounded-lg shadow">
+            class="no-underline py-2 px-4 mb-4 bg-sunglow font-semibold text-sm text-black rounded-lg shadow">
                 <span v-if="practiceParent">Change Parent</span>
                 <span v-else>Add Parent</span>
             </button>
@@ -120,11 +120,12 @@
                             <svgicon name="alert" width="48" height="48" color="white"/>
                         </div>
                         <div class="flex">
-                            <p class="mt-4">This surgery is not yet a registered practice in HUBZZ.</p>
+                            <p v-if="practiceHub.parent_surgery" class="mt-4">This surgery is not yet a registered practice in HUBZZ.</p>
+                            <p v-else>This practice has no Hub yet.</p>
                         </div>
                     </div>
                 </div>
-                <div class="text-grey-light text-sm m-4">
+                <div v-if="practiceHub.parent_surgery" class="text-grey-light text-sm m-4">
                     <p class="font-semibold">Surgery Name</p>
                     <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.name : ''}}</p>
                     <p class="font-semibold">Surgery Code</p>
@@ -132,7 +133,6 @@
                 </div>
              </form>
         </div>
-        
         
         <div class="practice-shield" v-if="modal == true"></div>
         <transition name="slide" mode="out-in">

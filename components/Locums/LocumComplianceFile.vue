@@ -10,7 +10,7 @@
         </div>
         
         
-        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1"
+        <button class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1"
           @click.prevent="toPutLocumDetailComplianceDocs(compliance_doc.id,toPutLocumDetailCompliance,compliance_doc.expired_at)">
           <svgicon
           name="save-icon"
@@ -25,13 +25,13 @@
         <div class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1">
           <a 
             @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
-            class="inline-flex items-center text-white hover:text-black no-underline">
+            class="inline-flex items-center cursor-pointer text-white hover:text-black no-underline">
             <svgicon
               name="cloud-download"
               width="21"
               height="21"
               color="transparent white"
-              hover ="transparent black"
+              hover="transparent black"
             >
             </svgicon>
             <span class="px-1">Download</span>

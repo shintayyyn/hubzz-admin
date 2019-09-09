@@ -6,46 +6,46 @@
                 <div class="w-full md:w-1/3 overflow-hidden mb-2">
                     <div class="text-grey mx-5">
                         <p class="m-2 font-semibold">Name</p>
-                        <p class="m-2 text-white">{{ user.personal_detail ? user.personal_detail.name : null }}</p>
+                        <p class="m-2 text-white">{{ user.personal_detail ? user.personal_detail.name : 'N/A' }}</p>
 
                         <p class="m-2 mt-5 mr-20 font-semibold">Email address</p>
-                        <p class="m-2 text-white">{{ user.email ? user.email : null }}</p>
+                        <p class="m-2 text-white">{{ user.email ? user.email : 'N/A' }}</p>
 
                         <p class="m-2 mt-5 mr-20 font-semibold">Mobile phone number</p>
-                        <p class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</p>
+                        <p class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.mobile_number : 'N/A' }}</p>
 
                         <p class="m-2 mt-5 mr-20 font-semibold">Home / landline number</p>
-                        <p class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.home_number : null }}</p>
+                        <p class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.home_number : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
-                        <p class="ml-2 text-white">{{ user.address_detail ? user.address_detail.address.line_1 : null }}</p>
-                        <p class="ml-2 mt-1 text-white">{{ user.address_detail ? user.address_detail.address.line_2 : null }}</p>
-                        <p class="ml-2 mt-1 text-white">{{ user.address_detail ? user.address_detail.address.line_3 : null }}</p>
+                        <p class="ml-2 text-white">{{ user.address_detail ? user.address_detail.address.line_1 : 'N/A' }}</p>
+                        <p class="ml-2 mt-1 text-white">{{ user.address_detail ? user.address_detail.address.line_2 : 'N/A' }}</p>
+                        <p class="ml-2 mt-1 text-white">{{ user.address_detail ? user.address_detail.address.line_3 : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
-                        <p class="m-2 text-white">{{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : null }}</p>
+                        <p class="m-2 text-white">{{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
-                        <p class="m-2 text-white">{{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : null }}</p>
+                        <p class="m-2 text-white">{{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">NHS Smart Card ID Number</p>
-                        <p class="m-2 text-white">{{ locumDetails.nhs_smart_card_id_number ? locumDetails.nhs_smart_card_id_number : null }}</p>
+                        <p class="m-2 text-white">{{ locumDetails.nhs_smart_card_id_number ? locumDetails.nhs_smart_card_id_number : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
-                        <p class="m-2 text-white">{{ locumDetails.profession ? locumDetails.profession.name : null }}</p>
+                        <p class="m-2 text-white">{{ locumDetails.profession ? locumDetails.profession.name : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
                         <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                         v-for="specialty in user.locum_detail.qualifications"
                         :key="specialty.id + '-name'">
-                        {{specialty ? specialty.name:null}}
+                        {{specialty ? specialty.name:'N/A'}}
                         
                         </p>
                         <p class="m-2 mt-5 mr-20">Clinical Systems</p>
                         <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                         v-for="clinicalSystem in user.locum_detail.clinical_systems"
                         :key="clinicalSystem.id + '-name1'">
-                            {{clinicalSystem ? clinicalSystem.name:null}}
+                            {{clinicalSystem ? clinicalSystem.name:'N/A'}}
                         </p>
                         
                         <p class="m-2 mt-5 mr-20">Spoken Languages</p>
@@ -55,7 +55,7 @@
                         <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                         v-for="spokenLanguage in user.locum_detail.spoken_languages"
                         :key="spokenLanguage.id + '-name2'">
-                        {{spokenLanguage ? spokenLanguage.name:null}}
+                        {{spokenLanguage ? spokenLanguage.name:'N/A'}}
                         </p>
                     </div>
                 </div>
@@ -63,21 +63,21 @@
                 <div class="w-full md:w-1/3 overflow-hidden mb-2">
                     <div class="text-grey mx-5 md:mx-10">
                         <p class="m-2 mr-20 font-semibold">Headline</p>
-                        <p class="m-2 text-white">{{user.locum_detail?user.locum_detail.headline:null}}</p>
+                        <p class="m-2 text-white">{{user.locum_detail?user.locum_detail.headline:'N/A'}}</p>
                         <p class="m-2 mt-5 mr-20 font-semibold">Short Biography</p>
-                        <p class="m-2 text-white">{{user.locum_detail?user.locum_detail.short_biography:null}}</p>
+                        <p class="m-2 text-white">{{user.locum_detail?user.locum_detail.short_biography:'N/A'}}</p>
                         <p class="m-2 mt-5 mr-20 font-semibold">Special requirements</p>
-                        <p class="ml-2 text-white">{{user.locum_detail?user.locum_detail.special_requirements:null}}</p>
+                        <p class="ml-2 text-white">{{user.locum_detail?user.locum_detail.special_requirements:'N/A'}}</p>
                         <p class="m-2 mt-5 mr-20 font-semibold">Preferred rates</p>
                         <p class="ml-2 text-white">Per hour £ (none)</p>
                         <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
                         
                         <div v-if="userComplianceDocuments">
-                        <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                        <p class="m-2 mt-5 mr-20 font-semibold ">Compliance Documents</p>
                         <div v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
                         :key="`${index}-${userComplianceDoc.id}-`"
                         >
-                            <a class="m-2 text-white flex items-center" 
+                            <a class="m-2 text-white flex cursor-pointer items-center hover:text-yellow-dark" 
                             @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)">
                             <svgicon
                                 name="cloud-download"
@@ -95,7 +95,7 @@
                             <div v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
                             :key="`${index}-${userMandatoryTraining.id}-`"
                             >
-                            <a class="m-2 text-white flex items-center"
+                            <a class="m-2 text-white flex cursor-pointer items-center hover:text-yellow-dark"
                                 :event="userMandatoryTraining.file === null ? disabled:'click'" 
                                 @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)">
                                 <svgicon
@@ -115,7 +115,6 @@
             <!--COLUMN 3-->
                 <div class="w-full md:w-1/3 overflow-hidden mb-2">
                     <div class="mx-5 mt-8 md:mt-0">
-                        <!--RENDER AVATAR PICTURE HERE-->
                         <embed
                         class=" object-contain w-64  rounded-full mr-4"
                         :src="user.avatar ? user.avatar.file.url:null"
@@ -133,11 +132,9 @@
                         <option>Active</option>
                         <option>Inactive</option>
                         <option>Deactivated</option>
-                        <!-- <option>Suspended</option> -->
-                        <!-- <option>Dormant</option> -->
                         </select>
                         <button
-                        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
+                        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow"
                         @click.prevent="changeLocumUserStatus(user.id,selectedStatus)"
                         >Save</button>
                     </div>
