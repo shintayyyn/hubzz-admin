@@ -12,7 +12,7 @@
                 >Create Admin Account</button>
             </div>
         </div>
-        <div v-if="users.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+        <div v-if="adminUsers.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
                 <div class="table-cell p-2 align-middle">E-Mail</div> 
@@ -22,7 +22,7 @@
             <!-- END HEADER -->
             <!-- BODY -->
             <nuxt-link
-                v-for="(user, index) in users"
+                v-for="(user, index) in adminUsers"
                 :key="`user-${index}`"
                 :to="{ path: `/admin-management/${user.id}`,query: $route.query}"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
@@ -87,8 +87,8 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 activePage: 1,
 
                 search:'',
-                itemCount:'',
-                users:{},
+                // itemCount:'',
+                // adminUsers:{},
                 adminCreate:true,
                 modal:false
             }
@@ -99,7 +99,7 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
         ],
         async asyncData({ app, store, route}){
             try{
-                //toggle loading
+                await store.commit('adminusers/TOGGLE_LOADING', true)
                 let{
                     page = 1,
                     search = '',
@@ -120,15 +120,18 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 const itemCount = response.data.data.count
 
                 response = await getAdminUsers
-                const users = response.data.data.users
+                const adminUsers = response.data.data.users
                 
                 //store users adn count here
+                await store.commit('adminusers/SET_ADMIN_COUNT', itemCount)
+                await store.commit('adminusers/SET_ADMIN_USERS', adminUsers)
+                await store.commit('adminusers/TOGGLE_LOADING', false)
                 return{
                     itemsPerPage: limit,
                     activePage: page,
                     search,
-                    itemCount, //store
-                    users //store
+                    //itemCount, //store
+                    //adminUsers //store
                 }
             }catch(err){
                 store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
@@ -136,6 +139,15 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
             }
         },
         computed:{
+            loadingAdminUsers(){
+                return this.$store.state.adminusers.loading_admin_users
+            },
+            itemCount(){
+                return this.$store.state.adminusers.itemCount
+            },
+            adminUsers(){
+                return this.$store.state.adminusers.adminUsers
+            },
             pageCount() {
                 return Math.ceil(this.itemCount / this.itemsPerPage)
             },
@@ -204,10 +216,6 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 if (page === 1) {
                     delete query.page
                 }
-
-                // if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-                //     this.loading = true
-                // }
 
                 this.$router.push({ query })
             },

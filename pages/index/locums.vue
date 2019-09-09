@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-1 flex flex-col py-2">
+	<div class="flex-1 flex flex-col overflow-hidden py-2">
 		<div>
 			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
 		</div>
@@ -133,7 +133,6 @@
 		<!-- PAGINATION ENDS HERE -->
 		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
 		<nuxt-child/>
-
 	</div>
 </template>
 

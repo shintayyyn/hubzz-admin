@@ -237,7 +237,7 @@ export default {
       })
     },
     getPracticeUsers(){
-      this.$store.dispatch("practices.fetchPractices",{
+      this.$store.dispatch("practices/fetchPractices",{
         countOnly:true,
         limit:5,
         practice_id: this.practice ? this.practice.id : '',
@@ -246,6 +246,12 @@ export default {
         limit:5,
         practice_id: this.practice ? this.practice.id : '',
         // order_by:'id:desc',
+      })
+    },
+    getAdminUsers(){
+      this.$store.dispatch("adminusers/fetchAdminUsers",{})
+      this.$store.dispatch("adminusers/fetchAdminUsers",{
+        limit:8
       })
     },
     updatePracticeUsersPageCount(){
@@ -387,6 +393,7 @@ export default {
           }).catch(err=>{
             this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'danger', text: 'Something Went Wrong!'})
           })
+          await this.getAdminUsers()
         } 
         
       }catch(err){

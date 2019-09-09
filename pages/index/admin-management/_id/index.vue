@@ -124,6 +124,12 @@ export default {
         }
     },
     methods:{
+        getAdminUsers(){
+            this.$store.dispatch("adminusers/fetchAdminUsers",{})
+            this.$store.dispatch("adminusers/fetchAdminUsers",{
+                limit:8
+            })
+        },
         goBack(){
             const query = {
                 ...this.$route.query
@@ -137,7 +143,6 @@ export default {
             if(!userInfo.last_name){
                 this.formError.lnameError = "Please input your Last Name"
             }
-        
         },
         processEmail(inputEmail){
             this.formError = {
@@ -198,7 +203,7 @@ export default {
             return re.test(email);
         },
 
-        toPutAdminUserInfo(user_id, toPutUserInfo){
+        async toPutAdminUserInfo(user_id, toPutUserInfo){
             console.log(toPutUserInfo)
             this.$axios.$put(`/api/v1/admin/admin-users/${user_id}`,{
                 email:toPutUserInfo.email,
@@ -214,6 +219,7 @@ export default {
                 console.log('edit admin user error!',err)
                 this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
             })
+            await this.getAdminUsers()
         }
     }
 }
