@@ -46,7 +46,7 @@
     </div>
     <!-- END TABLE -->
     <!-- PAGINATION -->
-		<div class="flex justify-center">
+		<div v-if="emails.length>0" class="flex justify-center">
 			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 					@click="goToPage(activePage - 1)" 

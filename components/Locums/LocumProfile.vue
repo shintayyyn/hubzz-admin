@@ -215,7 +215,7 @@ export default {
                     status:activeDisabled
                 })
                 await this.getLocums()
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Saved' })
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
             }catch(err){
                 console.log("index practices index put status err", err);
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })

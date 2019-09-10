@@ -193,20 +193,9 @@ export default {
     try{
       let response = await app.$axios.$get(`/api/v1/admin/faqs?domain=Locum`)
       let locumFaqs = response.data.faqs
-        // locumFaqs = locumFaqs.map((faq) => {
-        //   return {
-        //     ...faq,
-        //     'toggled': false
-        //   }
-        // })
+
       response = await app.$axios.$get('/api/v1/admin/faqs?domain=Practice')
       let practiceFaqs = response.data.faqs
-        // practiceFaqs = practiceFaqs.map((faq) => {
-        //   return {
-        //     ...faq,
-        //     'toggled': false
-        //   }
-        // })
 
       await store.commit('faqs/SET_LOCUM_FAQS', locumFaqs)
       await store.commit('faqs/SET_PRACTICE_FAQS',practiceFaqs)
@@ -232,11 +221,6 @@ export default {
       }
     },
     async toDeleteFaq(faqId){
-        // const deleteFaq = {
-        //   data:{
-        //     faq_id: faqId
-        //   }
-        // }
         await this.$axios.delete(`/api/v1/admin/faqs/${faqId}`).then(()=>{
           this.getLocumFaqs()
           this.getPracticeFaqs()

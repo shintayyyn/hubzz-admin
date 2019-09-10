@@ -7,30 +7,48 @@
             </div>
             <div>
                 <button
+                v-if="deleteAdminUser == true"
+                @click="deleteAdminUser = false"
+                class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green text-sm font-semibold text-white rounded-lg shadow md:float-right"
+                >Done</button>
+                <button
+                v-if="deleteAdminUser == false"
+                @click="deleteAdminUser = true"
+                class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-red text-sm font-semibold text-white rounded-lg shadow md:float-right"
+                >Delete Admin User</button>
+                <button
                 @click="show()"
-                class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm text-black rounded-lg shadow md:float-right"
+                class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
                 >Create Admin Account</button>
             </div>
         </div>
         <div v-if="adminUsers.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+            <div class="hidden md:table-row font-bold text-white text-sm py-4">
+                <div v-if="deleteAdminUser == true" class="table-cell">Delete Admin User</div> 
                 <div class="table-cell p-2 align-middle">E-Mail</div> 
                 <div class="table-cell p-2 align-middle">Domain</div>
                 <div class="table-cell p-2 align-middle">Name</div>
             </div>
             <!-- END HEADER -->
             <!-- BODY -->
-            <nuxt-link
+            <div
                 v-for="(user, index) in adminUsers"
                 :key="`user-${index}`"
-                :to="{ path: `/admin-management/${user.id}`,query: $route.query}"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
             >
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+                <div @click="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
+                    <svgicon
+                        name="delete-user"
+                        width="21"
+                        height="21"
+                        color="red red"
+                        class="mx-3 mt-3"/>
+                </div>
+                <nuxt-link :to="{ path: `/admin-management/${user.id}`,query: $route.query}" class="flex flex-col text-white sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">E-Mail</strong>
                     <span class="break-word">{{ user.email }}</span>
-                </div>
+                </nuxt-link>
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Domain</strong>
                     <span class="break-all">{{ user.domain }}</span>
@@ -39,7 +57,7 @@
                     <strong class="block md:hidden text-sm uppercase">Name</strong>
                     <span class="break-all">{{ user.personal_detail.name }}</span>
                 </div>
-            </nuxt-link>
+            </div>
             <!-- END BODY -->
         </div>
         <!-- PAGINATION -->
@@ -90,7 +108,8 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 // itemCount:'',
                 // adminUsers:{},
                 adminCreate:true,
-                modal:false
+                modal:false,
+                deleteAdminUser:false
             }
         },
         watchQuery: [
@@ -194,6 +213,20 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
             },
         },
         methods:{
+             getAdminUsers(){
+                this.$store.dispatch("adminusers/fetchAdminUsers",{})
+                this.$store.dispatch("adminusers/fetchAdminUsers",{
+                    limit:8
+                })
+            },
+            async toDeleteAdminUser(userId){
+                await this.$axios.$delete(`/api/v1/admin/admin-users/${userId}`).then(()=>{
+                    this.getAdminUsers()
+                    this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'success', text: 'Admin Account Successfully Deleted'})
+                }).catch((err)=>{
+                    this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'danger', text: 'Something Went Wrong!'})
+                })
+            },
             show(){
                 this.modal=true
             },
