@@ -12,6 +12,15 @@ export default (ctx, inject) => {
   socket.on('connect', () => {
     console.log('Socket Connected')
     console.log('Socket ID:', socket.id)
+    ctx.store.commit('SET_SOCKET',socket.id)
+  })
+
+  socket.on('connect_error', reason => {
+    ctx.store.commit("SET_NOTIFICATION", {
+      enabled: true,
+      status: "danger",
+      text: 'Server Offline',
+    });
   })
 
   socket.on('disconnect', reason => {
@@ -21,11 +30,20 @@ export default (ctx, inject) => {
     if (reason === 'io server disconnect') {
       socket.connect()
     }
+
+    if (reason === 'transport close') {
+      ctx.store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: 'Server Shut Down',
+      });
+    }
   })
 
   ctx.$socket = socket
-
   inject('socket', socket)
-
   ctx.store.dispatch('socket/init')
+  ctx.store.dispatch('adminusers/initializeAdminTransactionListener')
+  ctx.store.dispatch('locums/initializeLocumTransactionListener')
+  // ctx.store.dispatch('practices/initializePracticeTransactionListener')
 }

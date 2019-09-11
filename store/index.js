@@ -1,4 +1,5 @@
 export const state = () => ({
+  socket_id: '',
   notification: {
     enabled: false,
     status: '',
@@ -11,6 +12,9 @@ export const state = () => ({
 export const getters = {}
 
 export const mutations = {
+  SET_SOCKET(state, payload){
+    state.socket_id = payload
+  },
   SET_NOTIFICATION(state, payload) {
     state.notification.enabled = payload.enabled
     state.notification.status = payload.status
@@ -59,5 +63,23 @@ export const actions = {
     console.log('Socket Logged Out')
 
     dispatch('one-signal/setOneSignalUser')
+  },
+
+  async joinRoom({dispatch}, payload){
+    try{
+      await this.$axios.$post('/api/v1/socket/join-room',{
+        socket_id: payload.socket_id,
+        room_name: payload.room_name
+      })
+    }catch(err){
+      console.log('join room error!',err)
+    }
+  },
+
+  async leaveRoom({},payload){
+    await this.$axios.$post('api/v1/socket/leave-room', {
+      socket_id: payload.socket_id,
+      room_name: payload.room_name
+    })
   }
 }

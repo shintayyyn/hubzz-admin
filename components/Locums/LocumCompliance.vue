@@ -121,7 +121,7 @@
             >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="break-word">{{ item.mandatoryComplianceDocument.name }}</span>
+                <span class="break-word">{{ item && item.mandatoryComplianceDocument ? item.mandatoryComplianceDocument.name : null }}</span>
             </div>
 
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
@@ -183,7 +183,7 @@
                 <div class="table-cell p-2 align-middle">File uploaded</div>
                 <div class="table-cell p-2 align-middle">Expiry Date</div>
                 <div class="table-cell p-2 align-middle">Days to expire</div>
-                <div class="table-cell p-2 align-middle">Status</div>
+                <!-- <div class="table-cell p-2 align-middle">Status</div> -->
             </div>
             <nuxt-link
                 v-for="(item, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
@@ -234,10 +234,9 @@
                 </div>
                 <div
                 v-if="item.locumOptionalComplianceDocument"
-                class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
-                :class="statusStyle(item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.status: null)">
+                class="text-center text-black text-sm text-white py-2 sm:mx-2 bg-green rounded-full">
                     <span>
-                        {{ item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.status: null }}
+                        Present
                     </span>
                 </div>
             </div>
@@ -329,8 +328,6 @@ export default {
         };
     },
     created() {
-        console.log("user compliance",this.user)
-        console.log(this.user.id)
         let route = this.$route.params.id
     
         Promise.all([
@@ -339,10 +336,10 @@ export default {
             ...this.$route.query
             }
         ]).then(()=>{
-            console.log('mandatory trainings',this.locumMandatoryTrainings)
-            console.log('pro cat 1',this.professionCategoryId),
-            console.log("pro category",this.professionCategory.mandatory_compliance_documents),
-            console.log("locum mandatory comp docs", this.mandatoryComplianceDocuments)
+            // console.log('mandatory trainings',this.locumMandatoryTrainings)
+            // console.log('pro cat 1',this.professionCategoryId),
+            // console.log("pro category",this.professionCategory.mandatory_compliance_documents),
+            // console.log("locum mandatory comp docs", this.mandatoryComplianceDocuments)
         }).catch(err =>{
             console.log(err)
         }) 
@@ -352,9 +349,6 @@ export default {
         mandatoryComplianceDocuments(){
             return this.$store.state.locums.mandatoryComplianceDocuments
         },
-        // optionalComplianceDocuments(){
-        //     return this.$store.state.locums.optionalComplianceDocuments
-        // }
     },
     methods:{
         getLocums(){
@@ -375,7 +369,6 @@ export default {
             this.rejectGmcNmc = !this.rejectGmcNmc
         },
         toRejectMplNpl(){
-            console.log('daddsdssaad')
             this.rejectMplNpl = !this.rejectMplNpl
         },
         async getData(){
@@ -407,7 +400,10 @@ export default {
                         locumOptionalComplianceDocument
                     }
                 })
-                this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+                const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
+
+                await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+                await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
             }catch(err){
                 this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
                 console.log("get data error!!", err);
@@ -425,7 +421,6 @@ export default {
                         await this.getLocums()
                     }else if(verifyReject === 'Rejected'){
                         if(this.notes){
-                            console.log('notes',this.notes)
                             const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                                 status:verifyReject,
                                 note:this.notes
@@ -439,7 +434,6 @@ export default {
                     }
                 }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
                     if(this.notes){
-                        console.log('notes',this.notes)
                         const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                             status:verifyReject,
                             note:this.notes
@@ -497,7 +491,6 @@ export default {
                         await this.getLocums()
                     }else if(verifyReject === 'Rejected'){
                         if(this.notes){
-                            console.log('notes',this.notes)
                             const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                                 status:verifyReject,
                                 note:this.notes
@@ -511,7 +504,6 @@ export default {
                     }
                 }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
                     if(this.notes){
-                        console.log('notes',this.notes)
                         const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                             status:verifyReject,
                             note:this.notes

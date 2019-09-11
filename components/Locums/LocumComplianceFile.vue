@@ -68,17 +68,21 @@
                   :label="'Expiration Date'"
                 /> -->
             </div>
-            <p class="mt-5 mr-20">Status</p>
-                <button
-                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
-                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
-                  @click.prevent="setStatusData('Approved')"
-                >Approved</button>
-                <button
-                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
-                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
-                  @click.prevent="setStatusData('Rejected')"
-                >Rejected</button>
+
+            <div v-if="compliance_doc.compliance_document.id < 5"> <!--CHANGE THIS ASAP-->
+              <p class="mt-5 mr-20">Status</p>
+              <button
+                class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
+                :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
+                @click.prevent="setStatusData('Approved')"
+              >Approved</button>
+              <button
+                class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
+                :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
+                @click.prevent="setStatusData('Rejected')"
+              >Rejected</button>
+            </div>
+            
             <div v-if="notesAreVisible">
               <p class="mt-5 mr-20">Reason for Rejection</p>
                <textarea 
@@ -121,7 +125,10 @@ export default {
         notesAreVisible:false,
         };
     },
-    
+    async created(){
+      console.log('comp doc',this.compliance_doc)
+
+    },
     methods:{
         setStatusData(incomingStatus){
           if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Approved'){
@@ -165,14 +172,14 @@ export default {
             method: 'GET',
             responseType: 'blob', // important
           }).then(response => {
-            console.log(response)
+            // console.log(response)
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', fileFilename);
             document.body.appendChild(link);
             link.click();
-            console.log(fileUrl)
+            // console.log(fileUrl)
           });
         }, 
         getQuery(){
@@ -192,8 +199,6 @@ export default {
         
         async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
           try{
-            console.log('to put compliance', toPutLocumDetailCompliance)
-
             if(toPutLocumDetailCompliance.status == 'Rejected'){
               if(toPutLocumDetailCompliance.note){
                 await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{

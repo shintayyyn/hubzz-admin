@@ -20,7 +20,6 @@ export default {
         try{
             let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
-            console.log(user)
             return{
                 user
             }

@@ -249,10 +249,11 @@ export default {
       })
     },
     getAdminUsers(){
-      this.$store.dispatch("adminusers/fetchAdminUsers",{})
+      this.$store.dispatch("adminusers/fetchAdminUsersCount",{})
       this.$store.dispatch("adminusers/fetchAdminUsers",{
         limit:8
       })
+      this.$store.commit('adminusers/ADD_ADMIN_USER',this.toPostUser)
     },
     updatePracticeUsersPageCount(){
       let payload = {

@@ -47,15 +47,15 @@
                 </div>
                 <nuxt-link :to="{ path: `/admin-management/${user.id}`,query: $route.query}" class="flex flex-col text-white sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">E-Mail</strong>
-                    <span class="break-word">{{ user.email }}</span>
+                    <span class="break-word">{{ user && user.email ? user.email : null }}</span>
                 </nuxt-link>
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Domain</strong>
-                    <span class="break-all">{{ user.domain }}</span>
+                    <span class="break-all">{{ user && user.domain ? user.domain : null }}</span>
                 </div>
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Name</strong>
-                    <span class="break-all">{{ user.personal_detail.name }}</span>
+                    <span class="break-all">{{ user && user.personal_detail && user.personal_detail.name ? user.personal_detail.name : null }}</span>
                 </div>
             </div>
             <!-- END BODY -->
@@ -141,7 +141,7 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 response = await getAdminUsers
                 const adminUsers = response.data.data.users
                 
-                //store users adn count here
+                //store users and count here
                 await store.commit('adminusers/SET_ADMIN_COUNT', itemCount)
                 await store.commit('adminusers/SET_ADMIN_USERS', adminUsers)
                 await store.commit('adminusers/TOGGLE_LOADING', false)
@@ -158,6 +158,9 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
             }
         },
         computed:{
+            socketId() {
+                return this.$store.state.socket_id;
+            },
             loadingAdminUsers(){
                 return this.$store.state.adminusers.loading_admin_users
             },
@@ -165,7 +168,7 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 return this.$store.state.adminusers.itemCount
             },
             adminUsers(){
-                return this.$store.state.adminusers.adminUsers
+                return this.$store.getters["adminusers/getAdminUsers"]
             },
             pageCount() {
                 return Math.ceil(this.itemCount / this.itemsPerPage)
