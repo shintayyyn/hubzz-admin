@@ -12,6 +12,21 @@ export default{
     SET_SPECIFIC_PRACTICE(state, payload){
         state.practice = payload
     },
+    ADD_PRACTICE(state, payload){
+        state.allPractices.unshift(payload)
+        state.itemCount = state.itemCount +1
+    },
+    UPDATE_PRACTICE(state, payload){
+        
+        let index = state.allPractices.findIndex(practice => practice.id === payload.id)
+        if(index >= 0){
+            state.allPractices.splice(index, 1, payload)
+        }
+
+        console.log("practice payload", payload)
+        console.log("practices", state.allPractices)
+        state.practice = payload
+    },
     //--------------PRACTICE HUBZZZZ-----------------------
     SET_PRACTICE_HUB(state, payload){
         state.practiceHub = payload
@@ -31,7 +46,6 @@ export default{
     },
     UPDATE_PRACTICE_SPOKES_PAGE_COUNT(state, payload){
         let pageCount = Math.ceil((payload.spokesCount+1) / payload.perPage)
-        console.log('the page count is',pageCount)
         state.practiceSpokesPageCount = pageCount
     },
     
@@ -42,12 +56,22 @@ export default{
     SET_PRACTICE_USERS(state, payload){
         state.practiceUsers = payload
     },
+    ADD_PRACTICE_USER(state, payload){
+        state.practiceUsers.push(payload.user)
+        state.practiceUsersCount = state.practiceUsersCount + 1
+    },
     SET_PRACTICE_USERS_PAGE_COUNT(state, payload){
         state.practiceUsersPageCount = payload 
     },
+    UPDATE_PRACTICE_USER(state, payload){
+        let index = state.practiceUsers.findIndex(practiceUser => practiceUser.id === payload.user.id)
+        if(index >= 0){
+            state.practiceUsers.splice(index, 1, payload.user)
+        }
+    },
     UPDATE_PRACTICE_USERS_PAGE_COUNT(state, payload){
         let pageCount = Math.ceil((payload.userCount+1) / payload.perPage)
-        console.log('the page count is',pageCount)
         state.practiceUsersPageCount = pageCount
     },
+
 }

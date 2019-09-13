@@ -437,7 +437,7 @@ export default {
 					return 'bg-blue-light text-white lg:px-8 sm:px-2'
 					break;
 				case 'Stand Alone':
-					return 'bg-green-light text-white lg:px-8 sm:px-2'
+					return 'bg-indigo-light text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return

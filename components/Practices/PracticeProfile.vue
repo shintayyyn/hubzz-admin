@@ -70,7 +70,7 @@
                   <span class="m-1 p-2 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit == true" @click="toEdit=false">Cancel Editing</span>
                 </div>
 
-                <div v-if="toEdit == false" class="border-b-4 border-white">
+                <div v-if="toEdit == false" class="border-b border-white">
                   <p class="flex text-grey-light p-2">Phone Number</p>
                   <p class="flex mx-4 font-semibold">{{practice && practice.phone_number ? practice.phone_number : 'N/A'}}</p>
                   <p class="flex text-grey-light p-2">Full name to report to</p>
@@ -263,7 +263,7 @@ export default {
       practiceTypeStyle(type){
         switch(type){
           case 'Stand Alone':
-            return 'bg-green-light text-white lg:px-4 sm:px-2'
+            return 'bg-indigo-light text-white lg:px-4 sm:px-2'
             break;
           case 'Hub':
             return 'bg-red-light text-white lg:px-8 sm:px-2'

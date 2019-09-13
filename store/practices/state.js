@@ -12,7 +12,7 @@ export default()=>({
     practiceSpokes:[],
     practiceSpokesPageCount:0,
     
-    practiceUserCount:0,
+    practiceUsersCount:0,
     practiceUsers:[],
     practiceUsersPageCount:0
 })

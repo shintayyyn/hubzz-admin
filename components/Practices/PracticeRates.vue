@@ -1,39 +1,35 @@
 <template>
     <div class="flex flex-col rounded-lg">
-        
-            
-                <div class="w-full flex text-white text-sm bg-waterloo py-2 px-3 shadow rounded-lg" style="max-width: 600px">
-                    <div class="w-full overflow-hidden text-grey-light text-sm p-2">
-                        <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
-                            {{errors[0]}}
-                        </div>
-                        <div class="flex py-1">GP Rate
-                            <span v-if="!toPutPracticeRate.gp_rate" class="bg-red p-1 ml-4 rounded">Required</span>
-                        </div>
-                        <input
-                            class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                            type="text"
-                            v-model="toPutPracticeRate.gp_rate"
-                            aria-label=""
-                        >
-                        <div class="flex py-1">Others Rate
-                            <span v-if="!toPutPracticeRate.others_rate" class="bg-red p-1 ml-4 rounded">Required</span>
-                        </div>
-                        <input
-                            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                            type="text"
-                            v-model="toPutPracticeRate.others_rate"
-                            aria-label="newtext"
-                        >
-                        <button
-                            class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
-                            @click.prevent="checkForm(practice.id,toPutPracticeRate)"
-                            >Save Changes
-                        </button>
-                    </div>
-                </div>
-            
-        
+      <div class="w-full flex text-white text-sm bg-waterloo py-2 px-3 shadow rounded-lg" style="max-width: 600px">
+        <div class="w-full overflow-hidden text-grey-light text-sm p-2">
+            <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
+                {{errors[0]}}
+            </div>
+            <div class="flex py-1">GP Rate
+                <span v-if="!toPutPracticeRate.gp_rate" class="bg-red p-1 ml-4 rounded">Required</span>
+            </div>
+            <input
+                class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
+                type="text"
+                v-model="toPutPracticeRate.gp_rate"
+                aria-label=""
+            >
+            <div class="flex py-1">Others Rate
+                <span v-if="!toPutPracticeRate.others_rate" class="bg-red p-1 ml-4 rounded">Required</span>
+            </div>
+            <input
+                class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+                type="text"
+                v-model="toPutPracticeRate.others_rate"
+                aria-label="newtext"
+            >
+            <button
+                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                @click.prevent="checkForm(practice.id,toPutPracticeRate)"
+                >Save Changes
+            </button>
+        </div>
+      </div>
     </div>
 </template>
 <script>
@@ -63,7 +59,6 @@ export default {
       },
 
       getPractices(){
-        console.log("hello")
         this.$store.dispatch("practices/fetchPractices",{
           limit:8,
           order_by:'created_at:desc',

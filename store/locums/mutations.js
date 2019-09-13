@@ -32,10 +32,8 @@ export default{
                 locumMandatoryComplianceDocument:payload,
                 mandatoryComplianceDocument:payload.compliance_document
             }
-            console.log('new payload',payload)
             state.mandatoryComplianceDocuments.splice(index, 1, payload)
         }
-        console.log('state',state.mandatoryComplianceDocuments)
     },
 
     // SET_OPTIONAL_DOCS(state,payload){

@@ -19,7 +19,7 @@
           color="transparent white"
           hover:color="transparent black"
           ></svgicon>
-          <span class="px-1">Save</span>
+          <span class="px-1 font-semibold">Save</span>
         </button>
 
         <div class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1">
@@ -34,7 +34,7 @@
               hover="transparent black"
             >
             </svgicon>
-            <span class="px-1">Download</span>
+            <span class="px-1 font-semibold">Download</span>
           </a>
         </div>
       </div>
@@ -51,49 +51,47 @@
             <p class="text-white">{{compliance_doc.file ? $moment(compliance_doc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{user.contact_detail ? user.contact_detail.mobile_number : null}}</p>
-            <div class="mt-5 mr-20 ">
-              <p class="text-white">Expired At</p>
-               <!--SHOULD BE A DATE, NOT DATETIME-->
-                <input
-                  type="date"
-                  class="date-picker hasDatepicker valid"
-                  name="expiryDate"
-                  disable-min-date
-                  aria-invalid="false"
-                  v-model='toPutLocumDetailCompliance.expired_at'
-                >
-                <!-- <AppDate
-                  v-model="toPutLocumDetailCompliance.expired_at"
-                  :name="'expired_at'"
-                  :label="'Expiration Date'"
-                /> -->
-            </div>
-
-            <div v-if="compliance_doc.compliance_document.id < 5"> <!--CHANGE THIS ASAP-->
-              <p class="mt-5 mr-20">Status</p>
-              <button
-                class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
-                :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
-                @click.prevent="setStatusData('Approved')"
-              >Approved</button>
-              <button
-                class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
-                :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
-                @click.prevent="setStatusData('Rejected')"
-              >Rejected</button>
-            </div>
             
-            <div v-if="notesAreVisible">
-              <p class="mt-5 mr-20">Reason for Rejection</p>
-               <textarea 
-                  v-model="toPutLocumDetailCompliance.note" 
-                  placeholder="Type Here" 
-                  class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                  name="complianceNote"
-                  >Type Here
-              </textarea>
+            <div  v-if="compliance_doc.compliance_document.id < 5" class="mt-3 mr-20">
+              <div class="my-2 py-2 border-b border-white">
+                <p>Expired At </p>
+                <p class="text-white">{{$moment(compliance_doc && compliance_doc.expired_at ? compliance_doc.expired_at : null).format('DD/MM/YYYY HH:mm:ss')}}</p>
+              </div>
+              <p class="my-2 font-semibold text-lg text-white"> Change Expiration Date / Status</p>
+              <p>Expired At </p>
+              <input
+                type="date"
+                class="date-picker hasDatepicker valid"
+                name="expiryDate"
+                disable-min-date
+                aria-invalid="false"
+                v-model='toPutLocumDetailCompliance.expired_at'
+              >
+              <div> <!--CHANGE THIS ASAP-->
+                <p class="mt-5 mr-20">Status</p>
+                <button
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
+                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
+                  @click.prevent="setStatusData('Approved')"
+                >Approved</button>
+                <button
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
+                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
+                  @click.prevent="setStatusData('Rejected')"
+                >Rejected</button>
+              </div>
+              
+              <div v-if="notesAreVisible">
+                <p class="mt-5 mr-20">Reason for Rejection</p>
+                <textarea 
+                    v-model="toPutLocumDetailCompliance.note" 
+                    placeholder="Type Here" 
+                    class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    name="complianceNote"
+                    >Type Here
+                </textarea>
+              </div>
             </div>
-           
           </div>
           <div class="flex flex-col text-grey md:m-2">
             <p class="md:mr-20">File</p>

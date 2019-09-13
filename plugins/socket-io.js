@@ -45,5 +45,5 @@ export default (ctx, inject) => {
   ctx.store.dispatch('socket/init')
   ctx.store.dispatch('adminusers/initializeAdminTransactionListener')
   ctx.store.dispatch('locums/initializeLocumTransactionListener')
-  // ctx.store.dispatch('practices/initializePracticeTransactionListener')
+  ctx.store.dispatch('practices/initializePracticeTransactionListener')
 }

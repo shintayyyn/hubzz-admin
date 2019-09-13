@@ -181,8 +181,8 @@
                 <div class="table-cell p-2 align-middle">Title</div> 
                 <div class="table-cell p-2 align-middle">File size</div>
                 <div class="table-cell p-2 align-middle">File uploaded</div>
-                <div class="table-cell p-2 align-middle">Expiry Date</div>
-                <div class="table-cell p-2 align-middle">Days to expire</div>
+                <!-- <div class="table-cell p-2 align-middle">Expiry Date</div>
+                <div class="table-cell p-2 align-middle">Days to expire</div> -->
                 <!-- <div class="table-cell p-2 align-middle">Status</div> -->
             </div>
             <nuxt-link
@@ -211,7 +211,7 @@
                         $moment(item.locumOptionalComplianceDocument.file.created_at)
                         .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
             </div>
-            <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+            <!-- <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
                 <span class="break-all">{{ item.locumOptionalComplianceDocument && 
                         item.locumOptionalComplianceDocument.expired_at ? 
@@ -224,7 +224,7 @@
                         item.locumOptionalComplianceDocument.expired_at ? 
                         $moment(item.locumOptionalComplianceDocument.expired_at)
                         .diff($moment(), 'days')  : null }}</span>
-            </div>
+            </div> -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden">Status</strong>
                 <div
@@ -257,8 +257,8 @@
                 <div class="table-cell p-2 align-middle">Title</div> 
                 <div class="table-cell p-2 align-middle">File size</div>
                 <div class="table-cell p-2 align-middle">File uploaded</div>
-                <div class="table-cell p-2 align-middle">Expiry Date</div>
-                <div class="table-cell p-2 align-middle">Days to expire</div>
+                <!-- <div class="table-cell p-2 align-middle">Expiry Date</div>
+                <div class="table-cell p-2 align-middle">Days to expire</div> -->
             </div>
             <!-- BODY -->
             <div
@@ -278,7 +278,7 @@
                     </span>
                 </div>
 
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <!-- <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
                     <span>{{ item.file && item.file.created_at  ? $moment(item.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</span>
                 </div>
@@ -286,7 +286,7 @@
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
                     <span class="break-all">{{ item.expired_at ? $moment(item.expired_at).format('DD/MM/YYYY')  : null }}</span>
-                </div>
+                </div> -->
 
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
