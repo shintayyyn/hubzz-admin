@@ -26,14 +26,28 @@ export default{
         state.locumUser = updatedLocumUser
     },
     UPDATE_LOCUM_DOCUMENT(state, payload){
-        let index = state.mandatoryComplianceDocuments.findIndex(mandatoryCompDoc => mandatoryCompDoc.locumMandatoryComplianceDocument.id === payload.id)
+        console.log('to update locum', payload.locumUser.id)
+        let index = state.mandatoryComplianceDocuments.findIndex(mandatoryCompDoc => mandatoryCompDoc.locumMandatoryComplianceDocument.id === payload.locumDetailComplianceDocument.id)
         if(index >= 0){
-            payload = {
-                locumMandatoryComplianceDocument:payload,
-                mandatoryComplianceDocument:payload.compliance_document
+            let updatedMandatoryDocument = {
+                locumMandatoryComplianceDocument:payload.locumDetailComplianceDocument,
+                mandatoryComplianceDocument:payload.locumDetailComplianceDocument.compliance_document
             }
-            state.mandatoryComplianceDocuments.splice(index, 1, payload)
+            state.mandatoryComplianceDocuments.splice(index, 1, updatedMandatoryDocument)
         }
+        let index2 = state.locumUsers.findIndex(locumUser =>{
+            console.log('locumUser', locumUser)
+            console.log('payload locumUser', payload.locumUser)
+            console.log('payload locumUser id', payload.locumUser.id)
+            locumUser.id === payload.locumUser.id
+        })
+        console.log('index for locum',index2)
+        // if(index2 >= 0){
+        //     console.log("locum users",state.locumUsers)
+        //     state.locumUsers.splice(index, 1, payload)
+        //     let updatedLocumUser = state.locumUsers.find(locumUser => locumUser.id === payload.locumUser.id)
+        //     state.locumUser = updatedLocumUser
+        // }
     },
 
     // SET_OPTIONAL_DOCS(state,payload){

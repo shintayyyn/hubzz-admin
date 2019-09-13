@@ -34,77 +34,72 @@
 </template>
 <script>
 export default {
-    props:['practice'],
-    data() {
-        return {
-          specificPractice:null,
-          toPutPracticeRate:{
-            gp_rate:this.practice.rates.length>0 ? this.practice.rates[0].rate : '',
-            others_rate:this.practice.rates.length>0 ? this.practice.rates[1].rate: ''
-          },
-          errors:[]
-        }
-    },
-    created(){
-        console.log("rates",this.practice.rates)
-    },
-
-    methods: {
-      getQuery(){
-        const query = {
-          ...this.$route.query
-        }
-        const offset = parseInt(query.page)*8 - 8
-        return offset
-      },
-
-      getPractices(){
-        this.$store.dispatch("practices/fetchPractices",{
-          limit:8,
-          order_by:'created_at:desc',
-          offset:this.getQuery()
-        })
-      },
-
-      checkForm:function(practiceID,rateInfo) {
-        this.errors = []
-        if(!rateInfo.gp_rate){
-          this.errors.push("Please input rate for GP.")
-        }
-        if(!rateInfo.others_rate){
-          this.errors.push("Please input rate for Others")
-        }
-        if(isNaN(rateInfo.gp_rate)===true){
-          this.errors.push("Please input a numerical info for GP")
-        }
-        if(isNaN(rateInfo.others_rate)===true){
-          this.errors.push("Please input a numerical info for Others")
-        }
-        if(!this.errors.length){
-          this.toPutPracticeRateInfo(practiceID)
-        }
-
-      },
-
-      async toPutPracticeRateInfo(specificPracticeID){
-        try{
-          await this.$axios.$put(`/api/v1/admin/practices/${specificPracticeID}/rates`,{
-            gp_rate:this.toPutPracticeRate.gp_rate,
-            others_rate:this.toPutPracticeRate.others_rate
-          }).then(()=>{
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-            this.getPractices()
-          })
-          
-        
-        }catch(err){
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-          console.log("index put locum detail compliance documents error", err);
-        }
-      },
-
+  props:['practice'],
+  data() {
+      return {
+        specificPractice:null,
+        toPutPracticeRate:{
+          gp_rate:this.practice.rates.length>0 ? this.practice.rates[0].rate : '',
+          others_rate:this.practice.rates.length>0 ? this.practice.rates[1].rate: ''
+        },
+        errors:[]
+      }
+  },
+  created(){
+      console.log("rates",this.practice.rates)
   },
 
+  methods: {
+    getQuery(){
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page)*8 - 8
+      return offset
+    },
 
+    getPractices(){
+      this.$store.dispatch("practices/fetchPractices",{
+        limit:8,
+        order_by:'created_at:desc',
+        offset:this.getQuery()
+      })
+    },
+
+    checkForm:function(practiceID,rateInfo) {
+      this.errors = []
+      if(!rateInfo.gp_rate){
+        this.errors.push("Please input rate for GP.")
+      }
+      if(!rateInfo.others_rate){
+        this.errors.push("Please input rate for Others")
+      }
+      if(isNaN(rateInfo.gp_rate)===true){
+        this.errors.push("Please input a numerical info for GP")
+      }
+      if(isNaN(rateInfo.others_rate)===true){
+        this.errors.push("Please input a numerical info for Others")
+      }
+      if(!this.errors.length){
+        this.toPutPracticeRateInfo(practiceID)
+      }
+
+    },
+
+    async toPutPracticeRateInfo(specificPracticeID){
+      try{
+        await this.$axios.$put(`/api/v1/admin/practices/${specificPracticeID}/rates`,{
+          gp_rate:this.toPutPracticeRate.gp_rate,
+          others_rate:this.toPutPracticeRate.others_rate
+        }).then(()=>{
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+          this.getPractices()
+        })
+      }catch(err){
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        console.log("index put locum detail compliance documents error", err);
+      }
+    },
+  },
 }
 </script>

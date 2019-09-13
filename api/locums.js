@@ -8,3 +8,7 @@ export function fetchLocums(axios,payload){
     payload.offset ? params.offset = payload.offset : null
     return axios.$get(`/api/v1/admin/locum-users${payload.countOnly ? '/count' : ''}`,{params : params})
 }
+export function fetchSpecificLocum(axios, payload){
+    console.log('API for specific locum is performed', payload)
+    return axios.$get(`/api/v1/admin/locum-users/${payload.id}`)
+}

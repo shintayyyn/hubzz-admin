@@ -132,7 +132,7 @@
             </div>
             <div
               class="flex m-1 w-full rounded-lg bg-trout p-4 justify-between cursor-pointer"
-              @click="item.toggled = !item.toggled"
+              @click="toggleFaqOn(item)"
             >
               <div>{{item.question}}</div>
               <div class="font-bold text-lg">
@@ -181,11 +181,9 @@ export default {
   },
   computed:{
     locumFaqs(){
-      console.log("locum faqs in page",this.$store.state.faqs.locumFaqs)
       return this.$store.state.faqs.locumFaqs
     },
     practiceFaqs(){
-      console.log('practice faqs in page',this.$store.state.faqs.practiceFaqs)
       return this.$store.state.faqs.practiceFaqs
     },
   },
@@ -213,10 +211,10 @@ export default {
       this.$store.dispatch("faqs/fetchPracticeFaqs")
     },
     async toggleFaqOn(itemFaq){
-      console.log('to toggle faq',itemFaq)
       if(itemFaq.domain == 'Locum'){
         this.$store.commit('faqs/TOGGLE_LOCUM_FAQ',itemFaq)
-      }else if(itemFaq.domain == 'Practice'){
+      }
+      if(itemFaq.domain == 'Practice'){
         this.$store.commit('faqs/TOGGLE_PRACTICE_FAQ',itemFaq)
       }
     },

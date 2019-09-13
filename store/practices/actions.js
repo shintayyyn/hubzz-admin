@@ -1,41 +1,48 @@
 import * as practiceApi from '@/api/practices'
 export default{
     async initializePracticeTransactionListener({state, commit}){
-        this.$socket.on("createdPractice",  payload => {
+        this.$socket.on("createdPractice",  (payload) => {
             commit('ADD_PRACTICE', payload.payload.practice)
             commit('ADD_PRACTICE_USER', payload.payload.user)
         }),
-        this.$socket.on("updatedPractice", practice => {
-            commit('UPDATE_PRACTICE', practice)
+        this.$socket.on("updatedPractice", async (practice) => {
+            const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+            const updatedPractice = response.data.practice
+            await commit('UPDATE_PRACTICE', updatedPractice)
         }),
-        this.$socket.on("updatedPracticeRates", practice=> {
-            commit('UPDATE_PRACTICE', practice)
+        this.$socket.on("updatedPracticeRates", async (practice) => {
+            const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+            const updatedPractice = response.data.practice
+            commit('UPDATE_PRACTICE', updatedPractice)
+        }),
+        this.$socket.on("updatedPracticeType", async (practice) => {
+            const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+            const updatedPractice = await response.data.practice
+            console.log('updated', updatedPractice)
+            await commit('UPDATE_PRACTICE', updatedPractice)
         }),
         this.$socket.on("deletePractice", practice => {
             commit('DELETE_PRACTICE', practice)
-        })
-
-        this.$socket.on("createdPracticeDocument", practiceDocument => {
+        }),
+       
+        this.$socket.on("createdPracticeDocument", (practiceDocument) => {
             commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
         }),
-        this.$socket.on("updatedPracticeDocument", practiceDocument => {
+        this.$socket.on("updatedPracticeDocument", (practiceDocument) => {
             commit('UPDATE_PRACTICE_DOCUMENT', practiceDocument)
         }),
-        this.$socket.on("deletedPracticeDocument", practiceDocument => {
+        this.$socket.on("deletedPracticeDocument", (practiceDocument) => {
             commit('DELETE_PRACTICE_DOCUMENT', practiceDocument)
         })
 
-        this.$socket.on("updatePracticeType", practice => {
-            commit('UPDATE_PRACTICE', practice)
-        })
-
-        this.$socket.on("createdPracticeUser", user => {
+       
+        this.$socket.on("createdPracticeUser", (user) => {
             commit('ADD_PRACTICE_USER', user)
         })
-        this.$socket.on("updatedPracticeUser", user => {
+        this.$socket.on("updatedPracticeUser", (user) => {
             commit('UPDATE_PRACTICE_USER', user)
         })
-        this.$socket.on("deletedPracticeUser",user => {
+        this.$socket.on("deletedPracticeUser", (user) => {
             commit('DELETE_PRACTICE_USER', user)
         })
 
