@@ -31,6 +31,7 @@ export default {
             const user = response.data.data.user
 
             await store.commit('locums/SET_LOCUM_USER', user)
+            
             return{
             }
         }catch(err){

@@ -12,10 +12,13 @@
                         <p class="m-2 text-white">{{ user.email ? user.email : 'N/A' }}</p>
 
                         <p class="m-2 mt-5 mr-20 font-semibold">Mobile phone number</p>
-                        <p class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.mobile_number : 'N/A' }}</p>
+                        <p class="m-2 text-white">{{ user.contact_detail && user.contact_detail.mobile_number ? user.contact_detail.mobile_number : 'N/A' }}</p>
 
                         <p class="m-2 mt-5 mr-20 font-semibold">Home / landline number</p>
-                        <p class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.home_number : 'N/A' }}</p>
+                        <p class="m-2 text-white">{{ user.contact_detail && user.contact_detail.home_number ? user.contact_detail.home_number : 'N/A' }}</p>
+
+                        <p class="m-2 mt-5 mr-20 font-semibold">Work Number</p>
+                        <p class="m-2 text-white">{{ user.contact_detail && user.contact_detail.work_number ? user.contact_detail.work_number : 'N/A' }}</p>
                         
                         <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
                         <p class="ml-2 text-white">{{ user.address_detail ? user.address_detail.address.line_1 : 'N/A' }}</p>
@@ -114,7 +117,7 @@
                 </div>
             <!--COLUMN 3-->
                 <div class="w-full md:w-1/3 overflow-hidden mb-2">
-                    <div class="mx-5 mt-8 md:mt-0">
+                    <div class="mx-5 mt-8 md:mt-0 border-b ">
                         <embed
                         class=" object-contain w-64  rounded-full mr-4"
                         :src="user.avatar ? user.avatar.file.url:null"
@@ -122,8 +125,15 @@
                         <img v-if="!user.avatar" class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
                         <p class="m-2 text-grey">Sign-up verified by email</p>
                         <p class="m-2 text-white">{{user.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified"}}</p>
-                        <p class="m-2 text-grey">Active at </p>
-                        <p class="m-2 text-white">{{user.status == "Active" ? "Account is Active" :"Account is "+user.status }}</p>
+                        <!-- <p class="m-2 text-grey">Active at </p> -->
+                        <div class="my-4">
+                            <span class="m-2 text-white">Account is </span>
+                            <span :class="statusStyle(user.status)">{{user.status}}</span>
+                        </div>
+                        
+                    </div>
+                    <div class="m-6">
+                        <p class="text-lg text-white font-semibold">Change Locum Status</p>
                         <select
                         class="outline-none border-2 border-transparent text-sm text-black pr-6"
                         id="grid-state"
@@ -138,6 +148,7 @@
                         @click.prevent="changeLocumUserStatus(user.id,selectedStatus)"
                         >Save</button>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -168,14 +179,11 @@ export default {
     },
 
     created() {
-    
-        console.log("this is locum profile",this.user)
-        // this.locumDetails = this.user.locum_detail
-        // this.userComplianceDocuments = this.user.locum_detail.compliance_documents
-        // this.qualifications = this.user.locum_detail.qualifications
-        // this.clinicalSystems = this.user.locum_detail.clinical_systems
-        // this.spokenLanguages = this.user.locum_detail.spoken_languages
-        
+        this.locumDetails = this.user.locum_detail
+        this.userComplianceDocuments = this.user.locum_detail.compliance_documents
+        this.qualifications = this.user.locum_detail.qualifications
+        this.clinicalSystems = this.user.locum_detail.clinical_systems
+        this.spokenLanguages = this.user.locum_detail.spoken_languages
     },
 
     methods:{
@@ -211,17 +219,39 @@ export default {
 
         async changeLocumUserStatus(locumID,activeDisabled){
             try{
-                await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
+                const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/status',{
                     status:activeDisabled
                 })
                 await this.getLocums()
+                this.user.status = response.data.data.user.status
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
             }catch(err){
                 console.log("index practices index put status err", err);
                 this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!!' })
                 
             }
-        }
+        },
+        statusStyle(status){
+			switch(status){
+				case 'Active':
+					return 'bg-green text-white rounded p-1 px-2'
+					break;
+				case 'Inactive':
+					return 'bg-yellow text-black rounded p-1 px-2'
+					break;
+				case 'Deactivated':
+					return 'bg-grey text-black rounded p-1 px-2'
+					break;
+				case 'Suspended':
+					return 'bg-red text-white rounded p-1 px-2'
+					break;
+				case 'Dormant':
+					return 'bg-green-darker text-white rounded p-1 px-2'
+					break;
+				default:
+					return
+			}
+		}
     }
 }
 </script>

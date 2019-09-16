@@ -14,5 +14,5 @@ export default()=>({
     
     practiceUsersCount:0,
     practiceUsers:[],
-    practiceUsersPageCount:0
+    practiceUsersPageCount:0,
 })

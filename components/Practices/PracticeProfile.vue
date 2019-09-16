@@ -78,6 +78,15 @@
                   <p class="flex text-grey-light p-2">Extra information (Parking restrictions, transport links, etc.)</p>
                   <p class="flex mx-4 font-semibold">{{practice && practice.extra_information ? practice.extra_information : 'N/A'}}</p>
                   <div class="my-4">
+                    <span class="tool" data-tip="Practice Status is automatically set to 'Active' once Practice Verification Process is done." tabindex="1">
+                      <svgicon
+                      name="info"
+                      width="21"
+                      height="21"
+                      color="white transparent black"
+                      class="-mb-1 ml-2" 
+                      ></svgicon>
+                    </span>
                     <span class="text-grey-light p-2">Status: </span>
                     <span class="text-grey-light p-2 rounded-lg font-semibold" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
                   </div>
@@ -109,6 +118,15 @@
                     name="practiceNote"
                     v-model='toPutPractice.extra_information'>
                   </textarea>
+                  <span class="tool" data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified once." tabindex="1">
+                    <svgicon
+                    name="info"
+                    width="21"
+                    height="21"
+                    color="white transparent black"
+                    class="-mb-1 ml-2" 
+                    ></svgicon>
+                  </span>
                   <span class="text-grey-light p-2">Status: </span>
                   <select
                     class="mx-2 m-1 outline-none border-2 border-transparent text-black pr-6"
@@ -194,6 +212,7 @@ export default {
               this.practiceParent = res.data.practice.parent_surgery
             })
           ]).then(()=>{
+            console.log('get parent')
           })
         }
     },
@@ -239,7 +258,7 @@ export default {
             
         }catch(err){
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-            console.log("put locum profile info error");
+            console.log("put locum profile info error",err);
         }
 
       },
@@ -250,7 +269,6 @@ export default {
           const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
             type:toPutPracticeType.type
           })
-          
           this.practice.type = response.data.data.practice.type
           await this.getPractices()
           await this.getPractice()
@@ -280,5 +298,68 @@ export default {
 }
 </script>
 <style>
+.tool {
+    cursor: help;
+    position: relative;
+}
+.tool::before,
+.tool::after {
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    z-index: -100;
+}
 
+.tool:hover::before,
+.tool:focus::before,
+.tool:hover::after,
+.tool:focus::after {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    z-index: 100; 
+}
+
+.tool::before {
+    border-style: solid;
+    border-width: 1em 0.75em 0 0.75em;
+    border-color: #3E474F transparent transparent transparent;
+    bottom: 100%;
+    content: "";
+    margin-left: -0.5em;
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26), opacity .65s .5s;
+    transform:  scale(.6) translateY(-90%);
+} 
+
+.tool:hover::before,
+.tool:focus::before {
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
+}
+
+
+/*== speech bubble ==*/
+.tool::after {
+    background: #3E474F;
+    border-radius: .50em;
+    bottom: 180%;
+    color: #EDEFF0;
+    content: attr(data-tip);
+    margin-left: -8.75em;
+    padding: 1em;
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
+    transform:  scale(.6) translateY(50%);  
+    width: 17.5em;
+}
+
+.tool:hover::after,
+.tool:focus::after  {
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
+}
+
+@media (max-width: 760px) {
+  .tool::after { 
+        font-size: .75em;
+        margin-left: -5em;
+        width: 10em; 
+  }
+}
 </style>

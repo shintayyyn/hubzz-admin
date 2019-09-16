@@ -21,12 +21,12 @@ export default{
         let index = state.locumUsers.findIndex(locumUser => locumUser.id === payload.id)
         if(index >= 0){
             state.locumUsers.splice(index, 1, payload)
+            const updatedLocumUser = state.locumUsers.find(locumUser => locumUser.id === payload.id)
+            state.locumUser = updatedLocumUser
+            // console.log('updated state locum', state.locumUser)
         }
-        let updatedLocumUser = state.locumUsers.find(locumUser => locumUser.id === payload.id)
-        state.locumUser = updatedLocumUser
     },
     UPDATE_LOCUM_DOCUMENT(state, payload){
-        console.log('to update locum', payload.locumUser.id)
         let index = state.mandatoryComplianceDocuments.findIndex(mandatoryCompDoc => mandatoryCompDoc.locumMandatoryComplianceDocument.id === payload.locumDetailComplianceDocument.id)
         if(index >= 0){
             let updatedMandatoryDocument = {
@@ -35,24 +35,12 @@ export default{
             }
             state.mandatoryComplianceDocuments.splice(index, 1, updatedMandatoryDocument)
         }
-        let index2 = state.locumUsers.findIndex(locumUser =>{
-            console.log('locumUser', locumUser)
-            console.log('payload locumUser', payload.locumUser)
-            console.log('payload locumUser id', payload.locumUser.id)
-            locumUser.id === payload.locumUser.id
-        })
-        console.log('index for locum',index2)
-        // if(index2 >= 0){
-        //     console.log("locum users",state.locumUsers)
-        //     state.locumUsers.splice(index, 1, payload)
-        //     let updatedLocumUser = state.locumUsers.find(locumUser => locumUser.id === payload.locumUser.id)
-        //     state.locumUser = updatedLocumUser
-        // }
-    },
 
-    // SET_OPTIONAL_DOCS(state,payload){
-    //     state.optionalComplianceDocuments = payload
-    // },
+        let index2 = state.locumUsers.findIndex(locumUser => locumUser.id === payload.locumUser.id)
+        if(index2 >= 0){
+            state.locumUsers.splice(index2, 1, payload.locumUser)
+        }
+    },
     SET_APPROVED_DOC(state,payload){
         let index = state.mandatoryComplianceDocuments.findIndex(docs=>docs.id==payload.id)
         if(index>0){

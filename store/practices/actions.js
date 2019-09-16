@@ -1,30 +1,39 @@
 import * as practiceApi from '@/api/practices'
 export default{
     async initializePracticeTransactionListener({state, commit}){
+        //-------------------PRACTICES-------------------
         this.$socket.on("createdPractice",  (payload) => {
             commit('ADD_PRACTICE', payload.payload.practice)
             commit('ADD_PRACTICE_USER', payload.payload.user)
         }),
+        this.$socket.on("deletePractice", practice => {
+            commit('DELETE_PRACTICE', practice)
+        }),
+        //------------------PRACTICE INFOS-------------------
         this.$socket.on("updatedPractice", async (practice) => {
             const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
             const updatedPractice = response.data.practice
-            await commit('UPDATE_PRACTICE', updatedPractice)
+            commit('UPDATE_PRACTICE', updatedPractice)
         }),
+
+        //-------------------PRACTICE RATES----------------------
         this.$socket.on("updatedPracticeRates", async (practice) => {
             const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
             const updatedPractice = response.data.practice
             commit('UPDATE_PRACTICE', updatedPractice)
         }),
+
+        //----------------------PRACTICE TYPES------------------------
         this.$socket.on("updatedPracticeType", async (practice) => {
             const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-            const updatedPractice = await response.data.practice
-            console.log('updated', updatedPractice)
-            await commit('UPDATE_PRACTICE', updatedPractice)
+            const updatedPractice = response.data.practice
+            console.log('updated', response)
+            commit('UPDATE_PRACTICE', updatedPractice)
+            // if(this.$router.name )  <<---------------YOU CAN USE ROUTERS HERE
         }),
-        this.$socket.on("deletePractice", practice => {
-            commit('DELETE_PRACTICE', practice)
-        }),
-       
+        
+        
+        //--------------------PRACTICE DOCUMENTS----------------------
         this.$socket.on("createdPracticeDocument", (practiceDocument) => {
             commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
         }),
@@ -35,7 +44,7 @@ export default{
             commit('DELETE_PRACTICE_DOCUMENT', practiceDocument)
         })
 
-       
+       //----------------------PRACTICE USERS-----------------------
         this.$socket.on("createdPracticeUser", (user) => {
             commit('ADD_PRACTICE_USER', user)
         })
@@ -47,6 +56,7 @@ export default{
         })
 
     },
+
     async fetchPractices({ commit }, payload){
         commit('TOGGLE_LOADING',true)
         const response = await practiceApi.fetchPractices(this.$axios, payload)

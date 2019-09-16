@@ -17,14 +17,14 @@ export default{
         state.itemCount = state.itemCount +1
     },
     UPDATE_PRACTICE(state, payload){
-        console.log("practice payload", payload)
-        console.log("practices", state.allPractices)
-
         let index = state.allPractices.findIndex(practice => practice.id === payload.id)
+        console.log()
         if(index >= 0){
             state.allPractices.splice(index, 1, payload)
+            const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)
+            console.log('updated practice', updatedPractice)
+            state.practice = updatedPractice
         }
-        // state.practice = payload
     },
     //--------------PRACTICE HUBZZZZ-----------------------
     SET_PRACTICE_HUB(state, payload){

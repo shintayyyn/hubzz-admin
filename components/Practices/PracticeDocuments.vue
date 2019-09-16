@@ -83,16 +83,15 @@ export default{
         };
     },
     created(){
-        Promise.all([
+        // Promise.all([
             this.query = {
             ...this.$route.query
             },
             this.getData()
-        ]).then(()=>{
-            console.log('it worked')
-        }).catch(err=>{
-            console.log(err)
-        })
+        // ]).then(()=>{
+        // }).catch(err=>{
+        //     console.log(err)
+        // })
     },
 
   methods:{
@@ -174,32 +173,63 @@ export default{
               formData.append('practice_document_id',practiceID)
               formData.append('file', file)
               
-              await this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
+              const response = await this.$axios.put(`/api/v1/admin/practice-documents/${practiceSpecificDocument.id}`,formData,{
                   headers: {
                     'Content-Type': 'multipart/form-data'
                   },
-                }).then(() => {
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
-                    console.log("nice 1!")
+                }).then(async() => {
+                  console.log("practice doc",this.practiceDocTypes)
+                  this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
+                      params: {
+                          practice_id: this.practice.id
+                      }
+                  })
+                  console.log('prac docs',this.practiceDocs.data.practice_documents)
 
+                  this.specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
+                    const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
+                      return practiceDoc.practice_document_type.id === practiceDocType.id
+                    })
+                    return{
+                      practiceDocType,
+                      practiceSpecificDoc
+                    }
+                  })
+                  console.log('practice docs',this.specificPracticeDocumentTypes)
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
                 })
                 .catch(err => {
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
                   console.log(err);
                 });
-
             }else{
               console.log("its nothing 1")
               formData.append('file', file)
               formData.append('practice_id',practiceID)
               formData.append('practice_document_type_id',practiceDocumentID)
-              await this.$axios.post( '/api/v1/admin/practice-documents',formData,{
+              const response = await this.$axios.post( '/api/v1/admin/practice-documents',formData,{
                   headers: {
                     'Content-Type': 'multipart/form-data'
                   },     
-                }).then(() => {
-                    this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
-                    console.log("nice!")
+                }).then( async() => {
+                  console.log("practice doc",this.practiceDocTypes)
+                  this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
+                      params: {
+                          practice_id: this.practice.id
+                      }
+                  })
+                  console.log('prac docs',this.practiceDocs.data.practice_documents)
+
+                  this.specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
+                    const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
+                      return practiceDoc.practice_document_type.id === practiceDocType.id
+                    })
+                    return{
+                      practiceDocType,
+                      practiceSpecificDoc
+                    }
+                  })
+                  this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
                 })
                 .catch(err => {
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

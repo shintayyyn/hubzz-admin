@@ -124,8 +124,6 @@ export default {
         };
     },
     async created(){
-      console.log('comp doc',this.compliance_doc)
-
     },
     methods:{
         setStatusData(incomingStatus){
