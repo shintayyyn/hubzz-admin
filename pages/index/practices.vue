@@ -94,13 +94,13 @@
     </div>
 	<div v-else>
 		<div
-            class="mt-10 w-full text-center"
+            class="mt-10 w-full text-center text-white"
             style="font-family: Nunito"
             >There are no registered practices.</div>
 	</div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
-	<div class="flex justify-center">
+	<div v-if="itemCount > 0" class="flex justify-center">
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 			@click="goToPage(activePage - 1,search,order_by)" 
 			:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
