@@ -103,7 +103,7 @@
               <option>Disabled</option>
             </select>
             <button
-              class="bg-sunglow hover:bg-yellow-dark rounded-lg mt-3 py-3 px-4 text-black text-sm"
+              class="bg-sunglow font-semibold hover:bg-yellow-dark rounded-lg mt-3 py-3 px-4 text-black text-sm"
               @click.prevent ="checkForm(user.id,toPutPracticeUser)"
             >Save Changes</button>
           </div>
@@ -135,7 +135,7 @@
                 v-model="toChangePassword.confirmNewPassword"
               >
               <button
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
                 @click.prevent="checkPasswordInfo(user.id,toChangePassword)"
                 >Save Changes</button>
             </div>

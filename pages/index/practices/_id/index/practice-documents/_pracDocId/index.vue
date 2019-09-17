@@ -17,19 +17,26 @@ export default {
     data(){
         return{
             practiceDoc:null,
-            practice:null,
+            // practice:null,
 
         }
+    },
+    computed:{
+      practice(){
+        return this.$store.state.practices.practice
+      }
     },
     async asyncData({app,store,route}){
         try{
             let response = await app.$axios.get(`/api/v1/admin/practice-documents/${route.params.pracDocId}`)
             const practiceDoc = response.data.data.practice_document
-            const practice = practiceDoc.practice
+            response = await app.$axios.get(`/api/v1/admin/practices/${practiceDoc.practice.id}`)
+            const practice = response.data.data.practice
+            await store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
 
             return{
                 practiceDoc,
-                practice
+                // practice
             }
         }catch(err){
             store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})

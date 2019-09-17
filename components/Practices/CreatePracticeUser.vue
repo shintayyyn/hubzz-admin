@@ -158,7 +158,7 @@
                         placeholder="Password"
                     >
                     <button
-                        class="inline-flex no-underline  py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
+                        class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
                         @click.prevent="checkForm(toPostUser,toPostUser.surgery_id)"
                     >Add Practice User
                     </button>
@@ -245,7 +245,7 @@ export default {
       this.$store.dispatch("practices/fetchPracticeUsers",{
         limit:5,
         practice_id: this.practice ? this.practice.id : '',
-        // order_by:'id:desc',
+        order_by:'created_at:desc',
       })
     },
     getAdminUsers(){

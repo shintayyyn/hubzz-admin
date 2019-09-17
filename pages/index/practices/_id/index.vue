@@ -19,10 +19,17 @@ export default {
         return {
         }
     },
+    computed:{
+      practice(){
+        return this.$store.state.practices.practice
+      }
+    },
     async asyncData({app,store,route}){
         try{
+           
             let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
             const practice = response.data.data.practice
+            console.log('practice here', practice)
             await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
             return{
                 
@@ -32,11 +39,7 @@ export default {
           console.log('get practice error!!!!',err)
         }
     },
-    computed:{
-      practice(){
-        return this.$store.state.practices.practice
-      }
-    },
+    
     methods:{
         goBack(){
             const query = {

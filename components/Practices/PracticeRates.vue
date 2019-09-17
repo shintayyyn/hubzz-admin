@@ -1,7 +1,26 @@
 <template>
     <div class="flex flex-col rounded-lg">
       <div class="w-full flex text-white text-sm bg-waterloo py-2 px-3 shadow rounded-lg" style="max-width: 600px">
-        <div class="w-full overflow-hidden text-grey-light text-sm p-2">
+        
+        <div v-if="toEdit == false" class="w-full overflow-hidden text-grey-light text-sm p-2">
+          <div class="flex py-1">
+            GP Rate
+          </div>
+          <div class="text-white text-lg font-semibold mx-6 mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none">
+            {{practice.rates.length > 0 ?'£'+practice.rates[0].rate : 'N/A'}}
+          </div>
+          <div class="flex py-1">Others Rate
+          </div>
+            <div class="text-white text-lg font-semibold mx-6 mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none">
+            {{practice.rates.length > 0 ? '£'+practice.rates[1].rate : 'N/A'}}
+          </div>
+          <button
+            class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
+            @click="toEdit = true"
+            >Edit
+          </button>
+        </div>
+        <div v-if="toEdit == true" class="w-full overflow-hidden text-grey-light text-sm p-2">
             <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                 {{errors[0]}}
             </div>
@@ -24,7 +43,7 @@
                 aria-label="newtext"
             >
             <button
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
                 @click.prevent="checkForm(practice.id,toPutPracticeRate)"
                 >Save Changes
             </button>
@@ -37,6 +56,7 @@ export default {
   props:['practice'],
   data() {
       return {
+        toEdit: false,
         specificPractice:null,
         toPutPracticeRate:{
           gp_rate:this.practice.rates.length>0 ? this.practice.rates[0].rate : '',
@@ -46,6 +66,7 @@ export default {
       }
   },
   created(){
+      console.log('practice', this.practice)
       console.log("rates",this.practice.rates)
   },
 
@@ -94,6 +115,7 @@ export default {
         }).then(()=>{
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
           this.getPractices()
+          this.toEdit = false
         })
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

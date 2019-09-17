@@ -181,9 +181,6 @@
                 <div class="table-cell p-2 align-middle">Title</div> 
                 <div class="table-cell p-2 align-middle">File size</div>
                 <div class="table-cell p-2 align-middle">File uploaded</div>
-                <!-- <div class="table-cell p-2 align-middle">Expiry Date</div>
-                <div class="table-cell p-2 align-middle">Days to expire</div> -->
-                <!-- <div class="table-cell p-2 align-middle">Status</div> -->
             </div>
             <nuxt-link
                 v-for="(item, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
@@ -211,20 +208,6 @@
                         $moment(item.locumOptionalComplianceDocument.file.created_at)
                         .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
             </div>
-            <!-- <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-                <span class="break-all">{{ item.locumOptionalComplianceDocument && 
-                        item.locumOptionalComplianceDocument.expired_at ? 
-                        $moment(item.locumOptionalComplianceDocument.expired_at)
-                        .format('DD/MM/YYYY')  : null }}</span>
-            </div>
-            <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Date to expire</strong>
-                <span class="break-all">{{ item.locumOptionalComplianceDocument &&
-                        item.locumOptionalComplianceDocument.expired_at ? 
-                        $moment(item.locumOptionalComplianceDocument.expired_at)
-                        .diff($moment(), 'days')  : null }}</span>
-            </div> -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
                 <strong class="block md:hidden">Status</strong>
                 <div
@@ -257,8 +240,6 @@
                 <div class="table-cell p-2 align-middle">Title</div> 
                 <div class="table-cell p-2 align-middle">File size</div>
                 <div class="table-cell p-2 align-middle">File uploaded</div>
-                <!-- <div class="table-cell p-2 align-middle">Expiry Date</div>
-                <div class="table-cell p-2 align-middle">Days to expire</div> -->
             </div>
             <!-- BODY -->
             <div
@@ -277,16 +258,6 @@
                     {{( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes'}}
                     </span>
                 </div>
-
-                <!-- <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                    <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-                    <span>{{ item.file && item.file.created_at  ? $moment(item.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</span>
-                </div>
-
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                    <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-                    <span class="break-all">{{ item.expired_at ? $moment(item.expired_at).format('DD/MM/YYYY')  : null }}</span>
-                </div> -->
 
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
@@ -335,12 +306,7 @@ export default {
             this.query = {
             ...this.$route.query
             }
-        ]).then(()=>{
-            // console.log('mandatory trainings',this.locumMandatoryTrainings)
-            // console.log('pro cat 1',this.professionCategoryId),
-            // console.log("pro category",this.professionCategory.mandatory_compliance_documents),
-            // console.log("locum mandatory comp docs", this.mandatoryComplianceDocuments)
-        }).catch(err =>{
+        ]).then(()=>{}).catch(err =>{
             console.log(err)
         }) 
 
@@ -416,7 +382,7 @@ export default {
                         const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                             status:verifyReject,
                         })
-                        this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                        // this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                         await this.getLocums()
                     }else if(verifyReject === 'Rejected'){
@@ -425,7 +391,7 @@ export default {
                                 status:verifyReject,
                                 note:this.notes
                             })
-                            this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                            // this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                             await this.getLocums()
                         }else if(this.notes == ''){
@@ -438,7 +404,7 @@ export default {
                             status:verifyReject,
                             note:this.notes
                         })
-                        this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                        // this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                         await this.getLocums()
                     }else if(this.notes == ''){
@@ -449,7 +415,7 @@ export default {
                     const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                         status:verifyReject
                     })
-                    this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                    // this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                     await this.getLocums()
 
@@ -457,7 +423,7 @@ export default {
                     const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/gmc-or-nmc-number/status',{
                         status:'Pending'
                     })
-                    this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                    // this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to Pending' })
                     await this.getLocums()
 
@@ -466,7 +432,7 @@ export default {
                         status:'Pending',
                         note:this.notes
                     })
-                    this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
+                    // this.user.locum_detail.gmc_or_nmc_number.status = response.data.user.locum_detail.gmc_or_nmc_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to Pending' })
                     await this.getLocums()
                 }
@@ -486,7 +452,7 @@ export default {
                         const response = await this.$axios.$put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                             status:verifyReject,
                         })
-                        this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
+                        //this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
                         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                         await this.getLocums()
                     }else if(verifyReject === 'Rejected'){
@@ -495,7 +461,7 @@ export default {
                                 status:verifyReject,
                                 note:this.notes
                             })
-                            this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
+                            //this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
                             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                             await this.getLocums()
                         }else if(this.notes == ''){
@@ -508,7 +474,7 @@ export default {
                             status:verifyReject,
                             note:this.notes
                         })
-                        this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
+                        //this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
                         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                         await this.getLocums()
                     }else if(this.notes == ''){
@@ -518,7 +484,7 @@ export default {
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:verifyReject
                     })
-                    this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
                     await this.getLocums()
 
@@ -526,7 +492,7 @@ export default {
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:'Pending'
                     })
-                    this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
                     await this.getLocums()
 
@@ -534,7 +500,7 @@ export default {
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:'Pending'
                     })
-                    this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
                     await this.getLocums()
 

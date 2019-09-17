@@ -69,29 +69,24 @@ export default{
     props:['practice'],
     data() {
         return {
-        disabled:'true',
-        file:'',
-        specificPractice:[],
-        specificPracticeDocumentTypes:[],
-        files: [],
-        practiceDocTypes:[],
-        practiceDocs:[],
-        file1IsUploadable:'false',
-        file2IsUploadable:'false',
-        query:null
-        
+          file:'',
+          // specificPracticeDocumentTypes:[],
+          files: [],
+          practiceDocTypes:[],
+          practiceDocs:[],
+          query:null
         };
     },
     created(){
-        // Promise.all([
-            this.query = {
-            ...this.$route.query
-            },
-            this.getData()
-        // ]).then(()=>{
-        // }).catch(err=>{
-        //     console.log(err)
-        // })
+      this.query = {
+      ...this.$route.query
+      },
+      this.getData()
+    },
+    computed:{
+      specificPracticeDocumentTypes(){
+        return this.$store.state.practices.specificPracticeDocumentTypes
+      }
     },
 
   methods:{
@@ -110,7 +105,7 @@ export default{
         })
         console.log('prac docs',this.practiceDocs.data.practice_documents)
 
-        this.specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
+        const specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
           const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
             return practiceDoc.practice_document_type.id === practiceDocType.id
           })
@@ -119,13 +114,10 @@ export default{
             practiceSpecificDoc
           }
         })
-
-        console.log(this.specificPracticeDocumentTypes)
+        await this.$store.commit('practices/SET_PRACTICE_DOCUMENTS', specificPracticeDocumentTypes)
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       }
-        
-
     },
     async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
       await console.log("Infos uploaded: \n","refname: ",refName,"docID: ",documentId,"prac id: ",practiceID, "prac docid: ",practiceDocumentID,"prac document: ",practiceSpecificDocument)
@@ -138,9 +130,9 @@ export default{
 
       const fileReader = new FileReader()
 
-      fileReader.addEventListener('load', () => {
-        console.log('z', fileReader.result)
-      })
+      // fileReader.addEventListener('load', () => {
+      //   console.log('z', fileReader.result)
+      // })
 
       fileReader.readAsDataURL(file)
 
@@ -167,7 +159,7 @@ export default{
             console.log(file)
         
             if(practiceSpecificDocument){
-              console.log('its something')
+              console.log('File exists: PUT Request (Updates Existing)')
               console.log(practiceSpecificDocument)
 
               formData.append('practice_document_id',practiceID)
@@ -186,7 +178,7 @@ export default{
                   })
                   console.log('prac docs',this.practiceDocs.data.practice_documents)
 
-                  this.specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
+                  let specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
                     const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
                       return practiceDoc.practice_document_type.id === practiceDocType.id
                     })
@@ -195,7 +187,8 @@ export default{
                       practiceSpecificDoc
                     }
                   })
-                  console.log('practice docs',this.specificPracticeDocumentTypes)
+                  await this.$store.commit('practices/SET_PRACTICE_DOCUMENTS', specificPracticeDocumentTypes)
+                  console.log('practice docs',specificPracticeDocumentTypes)
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
                 })
                 .catch(err => {
@@ -203,24 +196,25 @@ export default{
                   console.log(err);
                 });
             }else{
-              console.log("its nothing 1")
+              console.log('File does not exist: POST Request (Posts new file)')
               formData.append('file', file)
               formData.append('practice_id',practiceID)
               formData.append('practice_document_type_id',practiceDocumentID)
+
               const response = await this.$axios.post( '/api/v1/admin/practice-documents',formData,{
                   headers: {
                     'Content-Type': 'multipart/form-data'
                   },     
-                }).then( async() => {
+                }).then(async() => {
                   console.log("practice doc",this.practiceDocTypes)
                   this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
                       params: {
                           practice_id: this.practice.id
                       }
                   })
-                  console.log('prac docs',this.practiceDocs.data.practice_documents)
+                  console.log('prac docs',practiceDocs.data.practice_documents)
 
-                  this.specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
+                  let specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
                     const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
                       return practiceDoc.practice_document_type.id === practiceDocType.id
                     })
@@ -229,6 +223,7 @@ export default{
                       practiceSpecificDoc
                     }
                   })
+                  await this.$store.commit('practices/SET_PRACTICE_DOCUMENTS', specificPracticeDocumentTypes)
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Success!' })
                 })
                 .catch(err => {

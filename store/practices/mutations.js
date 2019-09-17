@@ -15,22 +15,21 @@ export default{
     ADD_PRACTICE(state, payload){
         state.allPractices.unshift(payload)
         state.itemCount = state.itemCount +1
+        if(state.itemCount > 8){
+            state.allPractices.pop()
+        }
     },
     UPDATE_PRACTICE(state, payload){
         let index = state.allPractices.findIndex(practice => practice.id === payload.id)
-        console.log()
         if(index >= 0){
             state.allPractices.splice(index, 1, payload)
-            const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)
-            console.log('updated practice', updatedPractice)
-            
-            if(state.practice.id == updatedPractice.id){
+            const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)            
+            if(state.practice.id === updatedPractice.id){
                 state.practice = updatedPractice
             }
-            
         }
     },
-    //--------------PRACTICE HUBZZZZ-----------------------
+    //--------------PRACTICE HUBZZ-----------------------
     SET_PRACTICE_HUB(state, payload){
         state.practiceHub = payload
     },
@@ -60,8 +59,14 @@ export default{
         state.practiceUsers = payload
     },
     ADD_PRACTICE_USER(state, payload){
-        state.practiceUsers.push(payload.user)
-        state.practiceUsersCount = state.practiceUsersCount + 1
+        let index = state.practiceUsers.findIndex(practiceUser => practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
+        if(index >= 0){
+            state.practiceUsers.unshift(payload.user)
+            state.practiceUsersCount = state.practiceUsersCount + 1
+            if(state.practiceUsersCount > 5){
+                state.practiceUsers.pop()
+            }
+        }
     },
     SET_PRACTICE_USERS_PAGE_COUNT(state, payload){
         state.practiceUsersPageCount = payload 
@@ -77,4 +82,8 @@ export default{
         state.practiceUsersPageCount = pageCount
     },
 
-}
+    //---------------PRACTICE DOCUMENTS-------------------
+    SET_PRACTICE_DOCUMENTS(state, payload){
+        state.specificPracticeDocumentTypes = payload
+    }
+}   

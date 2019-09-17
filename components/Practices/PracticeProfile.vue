@@ -246,11 +246,11 @@ export default {
               status:toPutPractice.status,
               actived_until:toPutPractice.actived_until
             })
-            this.practice.phone_number = response.data.data.practice.phone_number
-            this.practice.report_to = response.data.data.practice.report_to,
-            this.practice.extra_information = response.data.data.extra_information,
-            this.practice.status = response.data.data.practice.status,
-            this.practice.actived_until = response.data.data.practice.actived_until
+            // this.practice.phone_number = response.data.data.practice.phone_number
+            // this.practice.report_to = response.data.data.practice.report_to,
+            // this.practice.extra_information = response.data.data.extra_information,
+            // this.practice.status = response.data.data.practice.status,
+            // this.practice.actived_until = response.data.data.practice.actived_until
             
             await this.getPractices()
             this.toEdit = false  
@@ -269,7 +269,7 @@ export default {
           const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
             type:toPutPracticeType.type
           })
-          this.practice.type = response.data.data.practice.type
+          // this.practice.type = response.data.data.practice.type
           await this.getPractices()
           await this.getPractice()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})

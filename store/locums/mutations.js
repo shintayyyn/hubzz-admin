@@ -22,7 +22,11 @@ export default{
         if(index >= 0){
             state.locumUsers.splice(index, 1, payload)
             const updatedLocumUser = state.locumUsers.find(locumUser => locumUser.id === payload.id)
-            state.locumUser = updatedLocumUser
+            
+            if(state.locumUser.id === updatedLocumUser.id){
+                state.locumUser = updatedLocumUser
+            }
+            
             // console.log('updated state locum', state.locumUser)
         }
     },

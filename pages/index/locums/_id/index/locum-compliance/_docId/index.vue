@@ -17,7 +17,12 @@ export default {
     data(){
         return{
             compliance_doc:null,
-            user:null
+            // user:null
+        }
+    },
+    computed:{
+        user(){
+            return this.$store.state.locums.locumUser
         }
     },
     async asyncData({ app, store, route }) {
@@ -27,10 +32,11 @@ export default {
 
             response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
+            await store.commit('locums/SET_LOCUM_USER', user)
 
             return{
                 compliance_doc,
-                user
+                // user
             }
         }catch (err) {
             store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})

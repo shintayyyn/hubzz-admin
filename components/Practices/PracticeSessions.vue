@@ -40,7 +40,7 @@ export default {
         }
     },
     created(){
-        console.log(this.practice)
+        console.log('practice in session',this.practice)
         const query = {
             ...this.$route.query,
             session_tab:this.$route.query.session_tab || 'session_available'

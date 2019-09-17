@@ -38,8 +38,9 @@ export function fetchPracticeUsers(axios,payload){
     let params = {}
     payload.practice_id ? params.practice_id = payload.practice_id : null
     payload.practice_role ? params.practice_role = payload.practice_role : null
-    payload.status ? params.status = payload.status : null 
+    payload.status ? params.status = payload.status : null
+    payload.order_by ? params.order_by = payload.order_by : null 
     payload.limit ? params.limit = payload.limit : null
     payload.offset ? params.offset  = payload.offset : null
-    return axios.$get(`/api/v1/admin/practice-users${payload.countOnly ? '/count':''}`,{params})
+    return axios.$get(`/api/v1/admin/practice-users${payload.countOnly ? '/count':''}`,{params:params})
 }

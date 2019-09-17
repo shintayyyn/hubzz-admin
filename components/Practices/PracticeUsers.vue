@@ -158,8 +158,9 @@ export default {
             offset = this.perPage*(parseInt(this.$route.query.practice_users_page)-1)
             let params = {
                 practice_id,
+                order_by:'created_at:desc',
                 limit,
-                offset
+                offset,
             } 
             await this.$axios.$get(`/api/v1/admin/practice-users`,{params}).then(res=>{
                 console.log(res)
