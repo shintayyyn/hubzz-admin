@@ -19,7 +19,7 @@
       </div>
     </div>
 	<!-- TABLE RESPONSIVE-->
-    <div v-if="itemCount <= 0" class="table border-separate" style="border-spacing: 0 10px;"> 
+    <div v-if="itemCount > 0" class="table border-separate" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->
       <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
         <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('name',activePage,search)">
