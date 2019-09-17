@@ -23,7 +23,11 @@ export default{
             state.allPractices.splice(index, 1, payload)
             const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)
             console.log('updated practice', updatedPractice)
-            state.practice = updatedPractice
+            
+            if(state.practice.id == updatedPractice.id){
+                state.practice = updatedPractice
+            }
+            
         }
     },
     //--------------PRACTICE HUBZZZZ-----------------------
