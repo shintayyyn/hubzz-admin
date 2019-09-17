@@ -18,8 +18,8 @@
         >Add Practice</button>
       </div>
     </div>
-		<!-- TABLE RESPONSIVE-->
-    <div class="table border-separate" style="border-spacing: 0 10px;"> 
+	<!-- TABLE RESPONSIVE-->
+    <div v-if="itemCount > 0" class="table border-separate" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->
       <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
         <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('name',activePage,search)">
@@ -92,6 +92,12 @@
       </nuxt-link>
       <!-- END BODY -->
     </div>
+	<div v-else>
+		<div
+            class="mt-10 w-full text-center"
+            style="font-family: Nunito"
+            >There are no registered practices.</div>
+	</div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
 	<div class="flex justify-center">
