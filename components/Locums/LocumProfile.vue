@@ -116,7 +116,9 @@
                     </div>
                 </div>
             <!--COLUMN 3-->
+            
                 <div class="w-full md:w-1/3 overflow-hidden mb-2">
+                
                     <div class="mx-5 mt-8 md:mt-0 border-b ">
                         <embed
                         class=" object-contain w-64  rounded-full mr-4"
@@ -133,15 +135,26 @@
                         
                     </div>
                     <div class="m-6">
-                        <p class="text-lg text-white font-semibold">Change Locum Status</p>
+                        <span class="text-lg text-white font-semibold">
+                            Change Locum Status 
+                        </span>
+                        <span class="tool" data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant." tabindex="1">
+                            <svgicon
+                                name="info"
+                                width="21"
+                                height="21"
+                                color="white transparent black"
+                                class="-mb-1 ml-2" 
+                            ></svgicon>
+                        </span>
                         <select
-                        class="outline-none border-2 border-transparent text-sm text-black pr-6"
-                        id="grid-state"
-                        v-model="selectedStatus"
+                            class="outline-none border-2 border-transparent text-sm text-black pr-6"
+                            id="grid-state"
+                            v-model="selectedStatus"
                         >
-                        <option>Active</option>
-                        <option>Inactive</option>
-                        <option>Deactivated</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                            <option>Deactivated</option>
                         </select>
                         <button
                         class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow"

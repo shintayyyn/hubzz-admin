@@ -3,7 +3,6 @@
         <LocumComplianceFile :user="user" :compliance_doc="compliance_doc"/> 
     </div>
 </template>
-
 <script>
 import LocumComplianceFile from '@/components/Locums/LocumComplianceFile'
 export default {
@@ -47,16 +46,6 @@ export default {
 </script>
 
 <style>
-.compliance-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
 .compliance-modal {
   position: fixed;
   top: 0;

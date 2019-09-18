@@ -3,7 +3,7 @@
         <div class="overflow-x-auto overflow-y-hidden">
         <div v-if="completedJobs.length === 0">
           <div
-          class="mt-10 w-full text-center"
+          class="mt-10 w-full text-white text-center"
           style="font-family: Nunito"
           >This locum has not completed a job yet.</div>
         </div>
@@ -19,9 +19,9 @@
               <div class="table-cell p-2 align-middle">Created</div>
             </div>
             <!-- BODY -->
-            <div 
+            <nuxt-link 
               v-for="(item, index) in completedJobs" 
-              @click="show(item.id)"
+              :to="{ path: `/locums/${user.id}/locum-jobs/locum-completed-jobs/${item.id}`}"
               :key="`item-${index}`" 
               class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
               draggable="false"
@@ -50,7 +50,7 @@
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
                 <span class="">{{item.date_created}}</span>
               </div>
-            </div>
+            </nuxt-link>
           </div>
            <!-- <table>
             <thead>

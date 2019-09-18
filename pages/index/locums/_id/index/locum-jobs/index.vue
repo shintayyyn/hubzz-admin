@@ -1,18 +1,25 @@
 <template>
     <div class="mt-5">
-        <LocumJobs :user="user"/>
+        <LocumJobsTabs :user="user"/>
+        <!-- <LocumJobs :user="user"/> -->
+        <nuxt-child/>
     </div>
 </template>
 <script>
+import LocumJobsTabs from '@/components/Locums/LocumJobsTabs'
 import LocumJobs from '@/components/Locums/LocumJobs'
 export default {
     components:{
-        LocumJobs
+        LocumJobs,
+        LocumJobsTabs
     },
     data(){
         return{
             // user:null
         }
+    },
+    created(){
+        this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-current-jobs`})
     },
     computed:{
         user(){

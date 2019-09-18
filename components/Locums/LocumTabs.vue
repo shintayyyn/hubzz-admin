@@ -8,7 +8,7 @@
       <div
         @click="goTo('locum-jobs')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path === `/locums/${user.id}/locum-jobs` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : 'text-white'"
+        :class="$route.path.includes(`/locums/${user.id}/locum-jobs`) ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : 'text-white'"
       >Jobs</div>
       <div
         @click="goTo('locum-compliance')"

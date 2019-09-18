@@ -4,7 +4,8 @@
             <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
         </div>
         <LocumTabs :user="user"/>
-        <div class="compliance-shield" v-if="$route.name.includes('index-locum-compliance-docId')"/>
+        <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')"/>
+        <div class="locum-shield" v-if="$route.name.includes('locumJobId')"></div>
         <nuxt-child/>
     </div>
 </template>
@@ -13,11 +14,6 @@ import LocumTabs from '@/components/Locums/LocumTabs'
 export default {
     components:{
         LocumTabs
-    },
-    data(){
-        return{
-            // user: null,
-        }
     },
     computed:{
         user(){

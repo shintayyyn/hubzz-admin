@@ -1,10 +1,7 @@
 <template>
-    <div class=m-6>
-      <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-      </div>
+    <div class=mx-6>
         <!-- BODY -->
-        <div class="mx-6 overflow-auto">
+        <div class="mx-6 my-4 overflow-auto">
           <div class="flex">
           <p class="text-2xl text-white font-semibold">{{job ? job.title:null }}</p>
           <p class="text-black p-2 bg-yellow rounded ml-4">{{job.status}}</p><br>
