@@ -72,8 +72,8 @@
                         <p class="m-2 mt-5 mr-20 font-semibold">Special requirements</p>
                         <p class="ml-2 text-white">{{user.locum_detail?user.locum_detail.special_requirements:'N/A'}}</p>
                         <p class="m-2 mt-5 mr-20 font-semibold">Preferred rates</p>
-                        <p class="ml-2 text-white">Per hour £ (none)</p>
-                        <p class="ml-2 mt-1 text-white">Per session £ (none)</p>
+                        <p class="ml-2 text-white">{{user.locum_detail.rates[0].min && user.locum_detail.rates[0].max ? 'Per Hour: £'+user.locum_detail.rates[0].min+' - £'+user.locum_detail.rates[0].max : '(none)'}}</p>
+                        <p class="ml-2 mt-1 text-white">{{user.locum_detail.rates[1].min && user.locum_detail.rates[1].max ? 'Per Half Day Session: £'+user.locum_detail.rates[1].min+' - £'+user.locum_detail.rates[1].max : '(none)'}}</p>
                         
                         <div v-if="userComplianceDocuments">
                         <p class="m-2 mt-5 mr-20 font-semibold ">Compliance Documents</p>
