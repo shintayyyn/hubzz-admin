@@ -56,6 +56,10 @@
               <div class="my-2 py-2 border-b border-white">
                 <p>Expired At </p>
                 <p class="text-white">{{$moment(compliance_doc && compliance_doc.expired_at ? compliance_doc.expired_at : null).format('DD/MM/YYYY HH:mm:ss')}}</p>
+                <div v-if="compliance_doc.status == 'Rejected'" class="my-2 py-2">
+                  <p>Note</p>
+                  <p class="text-white">{{compliance_doc && compliance_doc.note ? compliance_doc.note : 'N/A'}}</p>
+                </div>
               </div>
               <p class="my-2 font-semibold text-lg text-white"> Change Expiration Date / Status</p>
               <p>Expired At </p>
@@ -124,6 +128,7 @@ export default {
         };
     },
     async created(){
+      console.log('comp doc', this.compliance_doc)
     },
     methods:{
         setStatusData(incomingStatus){

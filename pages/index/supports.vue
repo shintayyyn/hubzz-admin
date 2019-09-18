@@ -31,7 +31,7 @@
           <span class="break-all">{{ email.sender.domain }}</span>
         </div>
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-          <strong class="block md:hidden text-sm uppercase">Account Role</strong>
+          <strong class="block md:hidden text-sm uppercase">Account Domain</strong>
           <span class="break-all">{{ email.sender.domain }}</span>
         </div>
         <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">

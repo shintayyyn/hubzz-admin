@@ -7,23 +7,27 @@
         </div>
       </div>
       <!-- HEADER -->
+      
       <div class="flex flex-wrap overflow-hidden pl-4">
-        <div class="flex text-white w-full m-2 border-b border-sunglow">
-          <div class="flex flex-wrap overflow-hidden lg:-mx-1">
-            <div class="w-full xl:w-2/3 overflow-hidden lg:my-1 lg:px-1">
-              <div>
-                <div>From: </div> 
-                <div class="m-2">{{email.sender.email}}</div></div>
-              <div>Domain:</div>
-              <div class="m-2">{{email.sender.domain}}</div>
-            </div>
-            <div class="w-full xl:w-1/3 overflow-hidden lg:my-1 lg:px-1">
-              <div>Date Sent:</div>
-              <div class="m-2">{{$moment(email.sender.created_at).format('MMM DD,YYYY | HH:MM:ss') }}</div>
-            </div>
+        <div class="text-xs text-white italic">
+            (Dev's notes: Do you want to reply to support messages through the platform? or have the replies be done manually outside the platform? )
           </div>
+        <div class="flex-col text-white w-full m-2 border-b border-sunglow">
+          <div class="my-2">
+            <span>Date Sent:</span>
+            <span class="mx-2">{{$moment(email.sender.created_at).format('MMM DD,YYYY | HH:MM:ss') }}</span>
+          </div>
+          <div>
+            <div>From: </div> 
+            <div class="m-2">{{email.sender.email}}</div>
+          </div>
+          <div>
+            <div>Domain:</div>
+            <div class="m-2">{{email.sender.domain}}</div>
+          </div>
+           
         </div>
-
+       
       </div>
       <div class="m-4">
         <div class="flex flex-col bg-white py-2 px-4 rounded-lg w-full h-full">

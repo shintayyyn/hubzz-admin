@@ -4,16 +4,16 @@
         <div class="text-sm font-hairline text-white">Work in progress</div>
         <div class="flex flex-wrap text-white -mx-1 overflow-hidden sm:-mx-2">
             <!--------------------------- Column 1 ---------------------------->
-            <div class="my-1 p-3 w-1/3  sm:my-2 sm:px-2">
+            <div class="my-1 p-3 xl:w-1/3 sm:w-full">
                 <div class='m-3'>
                     Locums
                 </div>
-                <div class="h-72 overflow-y-auto ">
+                <div class="h-72 overflow-y-auto overflow-x-hidden">
                     <nuxt-link
                     v-for="(item,index) in locumDocsAlert" 
                     :key="`item-${index}`" 
                     :to="{path:`/locums/${item.locum_detail.user.id}/locum-compliance/${item.compliance_document.id}`}"
-                    class="inline-block p-3 m-1 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg ">
+                    class="inline-block w-full p-3 my-1 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg ">
                         <div class="font-hairline">
                             {{$moment(item.uploaded_at).format('MMMM DD, YYYY | HH:mm')}}
                         </div>
@@ -38,10 +38,10 @@
                 </div>
             </div>
             <!-------------------------------- Column 2 ---------------------------->
-            <div class="my-1 p-3 w-1/3  overflow-hidden sm:my-2 sm:px-2">
+            <div class="my-1 p-3 xl:w-1/3 sm:w-full overflow-hidden sm:my-2 sm:px-2">
                 <div class='m-3'>
                    Practices
-                </div>
+                </div> 
                 <div class="border-b border-white ">
                     <div class="p-2 m-3 shadow-md bg-waterloo hover:bg-waterloo-light rounded-lg ">
                         <div class="flex flex-wrap overflow-hidden sm:-mx-1">
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <!--------------------------------- Column 3 ----------------------------->
-            <div class="my-1 p-3 w-1/3  overflow-hidden sm:my-2 sm:px-2">
+            <div class="my-1 p-3 xl:w-1/3 sm:w-full overflow-hidden sm:my-2 sm:px-2">
                 <div class='m-3'>
                     Billings
                 </div>
