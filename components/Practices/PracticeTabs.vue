@@ -21,7 +21,7 @@
       <nuxt-link
         :to="getRoute('practice-sessions')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}/practice-sessions`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        :class="$route.path.includes(`/practices/${practice.id}/practice-sessions`)? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Sessions</nuxt-link>
       <!-- <span>{{practice}}</span> -->
 

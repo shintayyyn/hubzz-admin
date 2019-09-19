@@ -49,7 +49,6 @@ export default {
     goTo(type) {
       const query = {
         ...this.$route.query,
-        // job_status: type
       }
       if(type){
         this.$router.push({ path:`/locums/${this.user.id}/locum-jobs/`+type,query })

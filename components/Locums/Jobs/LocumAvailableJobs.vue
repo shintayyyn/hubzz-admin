@@ -52,52 +52,6 @@
               </div>
             </nuxt-link>
           </div>
-           <!-- <table>
-            <thead>
-              <tr class="text-xs sm:text-sm text-left">
-                <th @click="getCurrentJobs('id:desc')">
-                  Job number
-                  <svgicon name="sort" height="12" width="12"/>
-                </th>
-                <th>Practice / Surgery</th>
-                <th @click="getCurrentJobs('title:desc')">
-                  Title
-                  <svgicon name="sort" height="12" width="12"/>
-                </th>
-                <th @click="getCurrentJobs('date_start:desc')">
-                  From
-                  <svgicon name="sort" height="12" width="12"/>
-                </th>
-                <th @click="getCurrentJobs('date_end:desc')">
-                  To
-                  <svgicon name="sort" height="12" width="12"/>
-                </th>
-                <th @click="getCurrentJobs('date_created:desc')">
-                  Created
-                  <svgicon name="sort" height="12" width="12"/>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <template v-for="(item, index) in currentJobs">
-                <tr
-                  :key="item.id"
-                  class="__job-card shadow-md cursor-pointer rounded-lg text-left"
-                  @click="show(item.id)"
-                >
-                  <td>{{item.job_number}}</td>
-                  <td>{{item.platform_job.practice.surgery.name}}</td>
-                  <td>{{item.title}}</td>
-                  <td>{{item.date_start}}</td>
-                  <td>{{item.date_end}}</td>
-                  <td>{{item.date_created}}</td>
-                </tr>
-                <tr :key="`${item.id}-${index}`">
-                  <td></td>
-                </tr>
-              </template>
-            </tbody>
-          </table> -->
         </div>
       <div v-if="!availableJobs.length == 0" class="m-10 xl:-ml-32">
         <AppPagination
@@ -155,27 +109,21 @@ export default {
       available_job_page: this.$route.query.available_job_page || 1
     }
     Promise.all([
-      console.log(this.user),
       this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Available`).then(res => {
         this.total = res.data.count
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
-      this.getAvailableJobs('date_created:desc'),
-      console.log(this.availableJobs)
+      this.getAvailableJobs('date_created:desc')
     })
-  },
-  computed: {
   },
   methods: {
     getAvailableJobs(orderBy) {
-
       let offset = 0
       if (this.ascendDescend == 0) {
         orderBy = orderBy.replace('desc', 'asc')
         this.ascendDescend = 1
-        console.log('true', this.ascendDescend)
       } else if (this.ascendDescend == 1) {
         orderBy = orderBy.replace('asc', 'desc')
         this.ascendDescend = 0
@@ -186,17 +134,6 @@ export default {
         this.availableJobs = res.data.jobs
       })
 
-    },
-    show(id) {
-      console.log(id)
-      Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
-          this.job = res.data.job
-        })
-      ]).then(()=>{
-        console.log('The job opened is', this.job)
-        this.modal = true
-      })
     },
     pagechanged(e) {
       const query = {

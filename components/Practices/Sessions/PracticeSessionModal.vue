@@ -1,8 +1,8 @@
 <template>
     <div class=m-6>
-      <div @click="$emit('close')" class="cursor-pointer">
+      <!-- <div @click="$emit('close')" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-      </div>
+      </div> -->
         <!-- BODY -->
         <div class="flex flex-wrap w-full mx-6 overflow-auto">
           <div class="w-3/5 overflow-hidden">
@@ -248,7 +248,7 @@
                           </a>
                         </div>
                       </div>
-                      
+
                     </div>
                   </div>
                 </div>
@@ -270,16 +270,9 @@ export default {
       }
   },
   async created(){
-    console.log('Tis is the job wthin the modal',this.job)
-    
-   
     if(this.job.platform_job.appointed_to_locum){
-
       await this.getLocum()
-      console.log('Tis is the locum wthin the job',this.locumUser)
     }
-    
-    console.log(this.job.platform_job.appointed_to_locum)
   },
   computed: {
     google: gmapApi,
@@ -294,7 +287,6 @@ export default {
     async getLocum(){
       await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
         this.locumUser = res.data.user
-        console.log(this.locumUser)
       }).catch(err=>{
         console.log('get locum in job error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

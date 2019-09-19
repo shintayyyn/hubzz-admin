@@ -1,5 +1,10 @@
 <template>
     <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
+        <transition name="fade" mode="out-in">
+             <div v-if="showConfirmCancelModal == true">
+                <AppConfirmCancel @close="showConfirmCancelModal = false" :adminAccountId="adminAccountId"/>
+             </div>
+        </transition>
         <div class="flex px-2 justify-between">
             <div>
                 <div class="text-4xl text-white">Admin Management</div>
@@ -37,7 +42,7 @@
                 :key="`user-${index}`"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
             >
-                <div @click="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
+                <div @click.prevent="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
                     <svgicon
                         name="delete-user"
                         width="21"
@@ -60,6 +65,7 @@
             </div>
             <!-- END BODY -->
         </div>
+
         <!-- PAGINATION -->
 		<div class="flex justify-center">
 			<div >
@@ -90,14 +96,17 @@
                 <CreatePracticeUser @close="modal = false" :adminCreate="adminCreate"/>
             </div>
         </transition>
+        
         <div class="admin-user-shield" v-if="$route.name.includes('index-admin-management-id')"/>
    </div>
 </template>
 <script>
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
+import AppConfirmCancel from '@/components/AppConfirmCancel'
     export default {
         components:{
-            CreatePracticeUser
+            CreatePracticeUser,
+            AppConfirmCancel
         },
         data(){
             return{
@@ -108,8 +117,12 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
                 // itemCount:'',
                 // adminUsers:{},
                 adminCreate:true,
+                adminAccountId:'',
                 modal:false,
-                deleteAdminUser:false
+                confirmCancel: false,
+                adminId:'',
+                deleteAdminUser:false,
+                showConfirmCancelModal: false
             }
         },
         watchQuery: [
@@ -216,20 +229,24 @@ import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
             },
         },
         methods:{
-             getAdminUsers(){
+            getAdminUsers(){
                 this.$store.dispatch("adminusers/fetchAdminUsers",{})
                 this.$store.dispatch("adminusers/fetchAdminUsers",{
                     limit:8
                 })
+            },  
+            toDeleteAdminUser(userId) {
+                this.adminAccountId = userId
+                this.showConfirmCancelModal = true
             },
-            async toDeleteAdminUser(userId){
-                await this.$axios.$delete(`/api/v1/admin/admin-users/${userId}`).then(()=>{
-                    this.getAdminUsers()
-                    this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'success', text: 'Admin Account Successfully Deleted'})
-                }).catch((err)=>{
-                    this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'danger', text: 'Something Went Wrong!'})
-                })
-            },
+            // async toDeleteAdminUser(userId){
+            //     await this.$axios.$delete(`/api/v1/admin/admin-users/${userId}`).then(()=>{
+            //         this.getAdminUsers()
+            //         this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'success', text: 'Admin Account Successfully Deleted'})
+            //     }).catch((err)=>{
+            //         this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'danger', text: 'Something Went Wrong!'})
+            //     })
+            // },
             show(){
                 this.modal=true
             },

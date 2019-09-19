@@ -110,15 +110,13 @@ export default {
       applied_job_page: this.$route.query.applied_job_page || 1
     }
     Promise.all([
-      console.log(this.user),
       this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Applied`).then(res => {
         this.total = res.data.count
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
-      this.getAppliedJobs('date_created:desc'),
-        console.log(this.appliedJobs)
+      this.getAppliedJobs('date_created:desc')
     })
   },
   computed: {
@@ -140,17 +138,7 @@ export default {
         this.appliedJobs = res.data.jobs
       })
     },
-    show(id) {
-      console.log(id)
-      Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
-          this.job = res.data.job
-        })
-      ]).then(()=>{
-        console.log('The job opened is', this.job)
-        this.modal = true
-      })
-    },
+
     pagechanged(e) {
       const query = {
         ...this.$route.query,
@@ -168,32 +156,5 @@ export default {
   height: 250px;
   box-sizing: content-box;
 }
-.job-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
-.job-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px orange;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-  .job-modal {
-    width: 60%;
-  }
-}
+
 </style>

@@ -4,6 +4,9 @@
     <transition name="drop" mode="out-in">
       <SignOut v-if="showLogoutModal" @modal="showLogoutModal = $event" />
     </transition>
+    <transition name="drop" mode="out-in">
+      <AppConfirmCancel v-if="showConfirmCancelModal" @confirmCancelModal="showConfirmCancelModal = $event" />
+    </transition>
     <div class="sidebar-shield" v-if="$store.state.toggled_sidebar" @click="close"></div>
     <AppNotification />
     <div class="content bg-trout">
@@ -38,16 +41,19 @@ import AppNotification from '~/components/AppNotification'
 import AppHeader from '~/components/AppHeader'
 import AppSideBar from '~/components/AppSideBar'
 import SignOut from '~/components/Auth/SignOut'
+import AppConfirmCancel from '~/components/AppConfirmCancel'
 export default {
   components: {
     AppNotification,
     AppHeader,
     AppSideBar,
-    SignOut
+    SignOut,
+    AppConfirmCancel
   },
   data() {
     return {
-      showLogoutModal: false
+      showLogoutModal: false,
+      showConfirmCancelModal: false
     };
   },
 

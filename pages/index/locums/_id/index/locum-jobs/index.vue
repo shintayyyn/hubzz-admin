@@ -1,16 +1,13 @@
 <template>
     <div class="mt-5">
         <LocumJobsTabs :user="user"/>
-        <!-- <LocumJobs :user="user"/> -->
         <nuxt-child/>
     </div>
 </template>
 <script>
 import LocumJobsTabs from '@/components/Locums/LocumJobsTabs'
-import LocumJobs from '@/components/Locums/LocumJobs'
 export default {
     components:{
-        LocumJobs,
         LocumJobsTabs
     },
     data(){

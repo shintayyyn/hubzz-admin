@@ -79,7 +79,7 @@
 			loginErrorMessage: '',
 
 			email: 'admin@gmail.com',
-			password: 'qweqwe',
+			password: 'test1234567',
 
 			showEmailFocus: false,
 			showPasswordFocus: false,

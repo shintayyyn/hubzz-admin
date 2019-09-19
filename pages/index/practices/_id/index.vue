@@ -5,8 +5,9 @@
       </div>
       <PracticeTabs :practice="practice"/>
       <nuxt-child/>
-      <div class="practice-shield" v-if="$route.name.includes('index-practice-users-pracUserId')"></div>
-      <div class="practice-shield" v-if="$route.name.includes('index-practice-documents-pracDocId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('pracUserId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('pracDocId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSessionId')"></div>
     </div>
 </template>
 <script>

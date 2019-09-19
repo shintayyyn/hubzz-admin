@@ -3,8 +3,7 @@
         <div class="overflow-x-auto xl:overflow-hidden">
           <div v-if="currentJobs.length === 0">
             <div
-            class="mt-10 w-full text-center"
-            style="font-family: Nunito"
+            class="mt-10 w-full text-center text-white"
             >This practice is no currently ongoing session/s.</div>
           </div>
           <div v-else>
@@ -19,9 +18,9 @@
                 <div class="table-cell p-2 align-middle">Created</div>
               </div>
               <!-- BODY -->
-              <div 
+              <nuxt-link 
                 v-for="(item, index) in currentJobs" 
-                @click="show(item.id)"
+                 :to="{ path: `/practices/${practice.id}/practice-sessions/practice-current-sessions/${item.id}`}"
                 :key="`item-${index}`" 
                 class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
@@ -51,7 +50,7 @@
                     <strong class="block md:hidden text-sm uppercase">Created</strong>
                   <span class="">{{item.date_created}}</span>
                 </div>
-              </div>
+              </nuxt-link>
             </div>
           </div>
           <!--PAGINATION-->
@@ -67,9 +66,9 @@
 
           <div class="job-shield" v-if="modal"></div>
           <transition name="slide" mode="out-in">
-          <div class="job-modal shadow-lg" v-if="modal">
-            <PracticeSessionModal @close="modal = false" :job="job" />
-          </div>
+            <div class="job-modal shadow-lg" v-if="modal">
+              <PracticeSessionModal @close="modal = false" :job="job" />
+            </div>
           </transition>
           
         </div>
@@ -114,7 +113,6 @@ export default {
         current_job_page: this.$route.query.current_job_page || 1
       }
       Promise.all([
-        console.log(this.user),
         this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Current`).then(res=>{
           this.total = res.data.count
           this.perPage = 5
@@ -150,20 +148,6 @@ export default {
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       
-      },
-      show(id){
-        console.log(id)
-        Promise.all([
-          this.$axios.$get(`/api/v1/admin/jobs/${id}`).then(res =>{
-            this.job = res.data.job
-          })
-        ]).then(()=>{
-          console.log('The job opened is', this.job)
-          this.modal = true
-        }).catch(err=>{
-          console.log('show current job error!!!',err)
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        })
       },
       pagechanged(e) {
         const query = {

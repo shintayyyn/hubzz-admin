@@ -31,9 +31,6 @@
 				</select>
 			</div>
 		</div>
-
-		
-
 		<!-- TABLE -->
 		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
 			<!-- HEADER -->
@@ -106,8 +103,7 @@
 			</nuxt-link>
 		</div>
 		<!-- TABLE ENDS HERE-->
-		
-		
+
 		<!-- PAGINATION -->
 		<div class="flex justify-center">
 			<div >
@@ -166,19 +162,19 @@ export default {
     // 	
 	  // },
 	created() {
-		console.log('created')
-		console.log('process.client', process.client)
-		console.log('process.server', process.server)
+		// console.log('created')
+		// console.log('process.client', process.client)
+		// console.log('process.server', process.server)
 	},
 
 	mounted() {
-		console.log('mounted')
-		this.$socket.on('usersDeleted', this.usersDeletedHandler)
+		// console.log('mounted')
+		// this.$socket.on('usersDeleted', this.usersDeletedHandler)
 	},
 
 	destroyed() {
-		console.log('destroyed')
-		this.$socket.off('usersDeleted', this.usersDeletedHandler)
+		// console.log('destroyed')
+		// this.$socket.off('usersDeleted', this.usersDeletedHandler)
 	},
 	watchQuery: [
 	'page',
