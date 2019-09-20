@@ -453,7 +453,7 @@ export default {
 				this.loading = true
 			}
 
-			this.$router.push({ query })
+			this.$router.push({ query }).catch(err=>{})
 		},
 
 		searchSubmit(page,order_by,compliance_status) {
@@ -494,7 +494,7 @@ export default {
 				this.loading = true
 			}
 
-			this.$router.push({ query })
+			this.$router.push({ query }).catch(err => {})
 		},
 
 		statusStyle(status){

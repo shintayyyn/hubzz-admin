@@ -62,8 +62,8 @@ export default {
           return "white white";
           break;
         case "upload":
-          return "transparent white";
-          break; 
+         return "transparent white";
+          break;  
         case "info":
           return "white white";
           break;

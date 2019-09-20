@@ -103,7 +103,7 @@ export default{
                 practice_id: this.practice.id
             }
         })
-        console.log('prac docs',this.practiceDocs.data.practice_documents)
+        // console.log('prac docs',this.practiceDocs.data.practice_documents)
 
         const specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
           const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
@@ -176,7 +176,7 @@ export default{
                           practice_id: this.practice.id
                       }
                   })
-                  console.log('prac docs',this.practiceDocs.data.practice_documents)
+                  // console.log('prac docs',this.practiceDocs.data.practice_documents)
 
                   let specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
                     const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
@@ -212,7 +212,7 @@ export default{
                           practice_id: this.practice.id
                       }
                   })
-                  console.log('prac docs',practiceDocs.data.practice_documents)
+                  // console.log('prac docs',practiceDocs.data.practice_documents)
 
                   let specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
                     const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {

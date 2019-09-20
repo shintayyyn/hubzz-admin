@@ -75,10 +75,10 @@ export default {
         }, 2000);
       }
     },
-    $route(value) {
-      this.$store.commit("TOGGLE_SIDEBAR", false);
-      document.body.style.overflow = "auto";
-    }
+    // $route(value) {
+    //   this.$store.commit("TOGGLE_SIDEBAR", false);
+    //   document.body.style.overflow = "auto";
+    // }
   },
   methods: {
       close() {

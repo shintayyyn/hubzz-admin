@@ -2,6 +2,7 @@
 require('./add-circle')
 require('./add-rectangle')
 require('./alert')
+require('./ani-double-ring')
 require('./arrow-left-solid')
 require('./arrow-right')
 require('./arrow-up')

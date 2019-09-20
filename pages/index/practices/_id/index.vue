@@ -46,10 +46,7 @@ export default {
             const query = {
                 ...this.$route.query
             }
-            if(query.session_tab){
-                delete query.session_tab
-            }
-            this.$router.push({path:'/practices',query})
+            this.$router.push({path:'/practices',query}).catch(err => {})
         },
     }
 }

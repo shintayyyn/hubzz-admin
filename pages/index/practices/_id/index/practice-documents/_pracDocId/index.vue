@@ -17,8 +17,6 @@ export default {
     data(){
         return{
             practiceDoc:null,
-            // practice:null,
-
         }
     },
     computed:{
@@ -36,7 +34,6 @@ export default {
 
             return{
                 practiceDoc,
-                // practice
             }
         }catch(err){
             store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})

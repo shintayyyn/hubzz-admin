@@ -43,7 +43,7 @@ export default {
             if(query.job_status){
                 delete query.job_status
             }
-            this.$router.push({path:'/locums',query})
+            this.$router.push({path:'/locums',query}).catch(err => {})
         },
     }
 }

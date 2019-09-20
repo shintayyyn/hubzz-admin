@@ -9,7 +9,6 @@
           </div>
         </div>
         
-        
         <button class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1"
           @click.prevent="toPutLocumDetailComplianceDocs(compliance_doc.id,toPutLocumDetailCompliance,compliance_doc.expired_at)">
           <svgicon
@@ -62,7 +61,12 @@
                 </div>
               </div>
               <p class="my-2 font-semibold text-lg text-white"> Change Expiration Date / Status</p>
-              <p>Expired At </p>
+              <!-- <p>Expired At </p> -->
+              <!-- <AppDate
+                v-model="toPutLocumDetailCompliance.expired_at"
+                :name="'expired_At'"
+                :label="'Expired At'"
+              /> -->
               <input
                 type="date"
                 class="date-picker hasDatepicker valid"

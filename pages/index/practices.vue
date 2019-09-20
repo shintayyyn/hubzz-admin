@@ -348,7 +348,7 @@ export default {
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 			this.loading = true
 			}
-			this.$router.push({query})
+			this.$router.push({ query }).catch(err => {})
 			this.getPractices(this.paramSort,this.search)
 		},
   		goToPage(page,search,order_by) {
@@ -392,7 +392,7 @@ export default {
 	        this.loading = true
 	      }
 
-	      this.$router.push({ query })
+	      this.$router.push({ query }).catch(err=>{})
 		},
 
   		searchSubmit(page, order_by) {
@@ -431,7 +431,7 @@ export default {
 				this.loading = true
 			}
 
-	      	this.$router.push({ query })
+	      	this.$router.push({ query }).catch(err=>{})
 		},
 
 		typeStyle(status){

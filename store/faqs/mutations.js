@@ -22,10 +22,13 @@ export default{
         state.practiceFaqs = practice_faqs
     },
     ADD_FAQ(state, payload){
-        if(payload.domain === 'Locum'){
+        console.log('payload', payload)
+        if(payload[0].domain === 'Locum'){
+            console.table('locumfaqs', state.locumFaqs)
             state.locumFaqs.push(payload[0])
         }
-        if(payload.domain === 'Practice'){
+        if(payload[0].domain === 'Practice'){
+            console.table('practicefaqs', state.practiceFaqs)
             state.practiceFaqs.push(payload[0])
         }
     },

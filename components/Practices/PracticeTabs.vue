@@ -17,14 +17,11 @@
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path == `/practices/${practice.id}/practice-hub`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Hub</nuxt-link>
-
       <nuxt-link
         :to="getRoute('practice-sessions')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path.includes(`/practices/${practice.id}/practice-sessions`)? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Sessions</nuxt-link>
-      <!-- <span>{{practice}}</span> -->
-
       <nuxt-link 
         :to="getRoute('practice-users')"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
@@ -45,10 +42,7 @@
 <script>
 export default {
   props:['practice'],
-  // async created(){
-  //   console.log("Practice in tabs",this.practice.id)
-
-  // },
+  
   computed:{
     getRoute(){
       return(tab) =>{
@@ -58,9 +52,7 @@ export default {
         const query = {
           ...this.$route.query,
         }
-
         delete query.session_tab
-        // console.log('qweqwe',tab)
         return{
           path: tab ? `/practices/${this.practice.id}/${tab}` : `/practices/${this.practice.id}`,
           query

@@ -21,7 +21,7 @@ export default {
         }
     },
     created(){
-        this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`})
+        this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`}).catch(err => {})
     },
     computed:{
       practice(){
