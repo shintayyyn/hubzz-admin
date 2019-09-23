@@ -217,7 +217,6 @@ export default {
 
     computed: {
 		loadingPractices(){
-			console.log('pracs',this.$store.state.practices.loading_practices)
 			return this.$store.state.practices.loading_practices
 		},
 		getAllPractices(){
@@ -318,7 +317,6 @@ export default {
 			}
 			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
 			let order_by = await this.paramSort.order_by
-			console.log(order_by)
 			let query = {
 				...this.$router.query,
 				order_by
@@ -456,5 +454,38 @@ export default {
 <style>
 .page-button {
   background: linear-gradient(to top, #f2d024, #efde86);
+}
+.card {
+  min-width: 100px;
+  height: 250px;
+  box-sizing: content-box;
+}
+.practice-shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
+.practice-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px orange;
+  transition: all 0.3s ease-in-out;
+  background-color:#505561;
+  z-index: 512;
+}
+@media screen and (min-width: 1200px) {
+  .practice-modal {
+    width: 80%;
+  }
 }
 </style>

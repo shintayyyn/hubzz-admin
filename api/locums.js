@@ -1,5 +1,4 @@
 export function fetchLocums(axios,payload){
-    console.log('API is performed', payload)
     let params = {}
     payload.search ? params.search = payload.search : null
     payload.compliance_status ? params.compliance_status = payload.compliance_status : null
@@ -9,6 +8,5 @@ export function fetchLocums(axios,payload){
     return axios.$get(`/api/v1/admin/locum-users${payload.countOnly ? '/count' : ''}`,{params : params})
 }
 export function fetchSpecificLocum(axios, payload){
-    console.log('API for specific locum is performed', payload)
     return axios.$get(`/api/v1/admin/locum-users/${payload.id}`)
 }

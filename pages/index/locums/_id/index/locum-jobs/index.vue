@@ -16,7 +16,10 @@ export default {
         }
     },
     created(){
-        this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-current-jobs`}).catch(err => {})
+        if(this.$route.name == 'index-locums-id-index-locum-jobs-index'){
+            this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-current-jobs`}).catch(err => {})
+        }
+        
     },
     computed:{
         user(){

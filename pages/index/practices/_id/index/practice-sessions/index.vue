@@ -21,7 +21,9 @@ export default {
         }
     },
     created(){
-        this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`}).catch(err => {})
+        if(this.$route.name == 'index-practices-id-index-practice-sessions-index'){
+            this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`}).catch(err => {})
+        }
     },
     computed:{
       practice(){

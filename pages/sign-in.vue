@@ -123,7 +123,6 @@
 				email: this.email,
 				password: this.password
 			}).then((res) => {
-				console.log('hotdog')
 			}).catch((err) => {
 				let loginErrorMessage = 'Something Went Wrong'
 

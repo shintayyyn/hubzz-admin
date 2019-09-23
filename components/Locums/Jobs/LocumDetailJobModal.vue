@@ -1,13 +1,14 @@
 <template>
-    <div class=mx-6>
+    <div>
         <!-- BODY -->
-        <div class="mx-6 my-4 overflow-auto">
+        <div class="m-8 my-4 overflow-auto">
           <div class="flex">
-          <p class="text-2xl text-white font-semibold">{{job ? job.title:null }}</p>
-          <p class="text-black p-2 bg-yellow rounded ml-4">{{job.status}}</p><br>
-          <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red':'bg-blue'">{{job.type}}</p><br>
+            <p class="text-2xl text-white font-semibold">{{job ? job.title:null }}</p>
+            <p class="text-black p-2 bg-yellow rounded ml-4">{{job.status}}</p><br>
+            <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red':'bg-blue'">{{job.type}}</p><br>
           </div>
           <p class="text-white">{{"Posted On: "+job.date_created}}</p>
+
           <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
             <div class="inline-flex m-4">
               <div class="flex flex-wrap overflow-hidden">

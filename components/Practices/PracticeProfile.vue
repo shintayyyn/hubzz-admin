@@ -194,8 +194,6 @@ export default {
         }
     },
     created(){
-        console.log("You are currently viewing this practice",this.practice)
-
         if(this.practice.type == 'Spoke'){
           Promise.all([
             this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`).then(res=>{
@@ -215,7 +213,6 @@ export default {
         return offset
       },
       getPractices(){
-        console.log("hello")
         this.$store.dispatch("practices/fetchPractices",{
           limit:8,
           order_by:'created_at:desc',
@@ -254,12 +251,9 @@ export default {
       },
       async toChangePracticeType(practiceID,toPutPracticeType){
         try{
-          console.log(toPutPracticeType)
-          // if(toPutPracticeType.type)
           const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
             type:toPutPracticeType.type
           })
-          // this.practice.type = response.data.data.practice.type
           await this.getPractices()
           await this.getPractice()
           this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})

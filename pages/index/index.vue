@@ -4,7 +4,7 @@
         <div class="text-sm font-hairline text-white">Work in progress</div>
         <div class="flex flex-wrap text-white -mx-1 overflow-hidden sm:-mx-2">
             <!--------------------------- Column 1 ---------------------------->
-            <div class="my-1 p-3 xl:w-1/3 sm:w-full">
+            <div class="my-1 p-3 xl:w-1/3 w-full">
                 <div class='m-3'>
                     Locums
                 </div>
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <!-------------------------------- Column 2 ---------------------------->
-            <div class="my-1 p-3 xl:w-1/3 sm:w-full overflow-hidden sm:my-2 sm:px-2">
+            <div class="my-1 p-3 xl:w-1/3 w-full overflow-hidden sm:my-2 sm:px-2">
                 <div class='m-3'>
                    Practices
                 </div> 
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <!--------------------------------- Column 3 ----------------------------->
-            <div class="my-1 p-3 xl:w-1/3 sm:w-full overflow-hidden sm:my-2 sm:px-2">
+            <div class="my-1 p-3 xl:w-1/3 w-full overflow-hidden sm:my-2 sm:px-2">
                 <div class='m-3'>
                     Billings
                 </div>
@@ -107,7 +107,6 @@ export default {
     async asyncData({app, store, route}){
         try{
             let response = await app.$axios.$get(`/api/v1/admin/locum-detail-compliance-documents`)
-            console.log('comp docs', response.data.locum_detail_compliance_documents)
             const locumDocAlert = response.data.locum_detail_compliance_documents
 
             await store.commit('locums/SET_LOCUM_DOC_ALERT', locumDocAlert)
