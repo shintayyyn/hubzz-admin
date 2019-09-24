@@ -25,26 +25,28 @@
                 {{errors[0]}}
             </div>
             <div class="flex py-1">GP Rate
-                <span v-if="!toPutPracticeRate.gp_rate" class="bg-red p-1 ml-4 rounded">Required</span>
+                <span v-if="gpError" class="bg-red p-1 ml-4 rounded">{{gpError}}</span>
             </div>
             <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
                 type="text"
                 v-model="toPutPracticeRate.gp_rate"
+                @blur="verifyGpRate()"
                 aria-label=""
             >
             <div class="flex py-1">Others Rate
-                <span v-if="!toPutPracticeRate.others_rate" class="bg-red p-1 ml-4 rounded">Required</span>
+                <span v-if="othersError" class="bg-red p-1 ml-4 rounded">{{othersError}}</span>
             </div>
             <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
                 type="text"
                 v-model="toPutPracticeRate.others_rate"
+                @blur="verifyOthersRate()"
                 aria-label="newtext"
             >
             <button
                 class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
-                @click.prevent="checkForm(practice.id,toPutPracticeRate)"
+                @click.prevent="checkForm()"
                 >Save Changes
             </button>
         </div>
@@ -62,7 +64,9 @@ export default {
           gp_rate:this.practice.rates.length>0 ? this.practice.rates[0].rate : '',
           others_rate:this.practice.rates.length>0 ? this.practice.rates[1].rate: ''
         },
-        errors:[]
+        errors:[],
+        gpError:'',
+        othersError:''
       }
   },
   created(){
@@ -86,23 +90,41 @@ export default {
         offset:this.getQuery()
       })
     },
-
-    checkForm:function(practiceID,rateInfo) {
+    verifyGpRate:function(){
+      this.gpError = ''
+      if(!this.toPutPracticeRate.gp_rate){
+        this.gpError="GP rate is required"
+      }
+      if(isNaN(this.toPutPracticeRate.gp_rate) === true){
+        this.gpError="Input should be a number"
+      }
+    },
+    verifyOthersRate:function(){
+      console.log('helloo')
+      this.othersError = ''
+      if(!this.toPutPracticeRate.others_rate){
+        this.othersError = "Others Rate is required"
+      }
+      if(isNaN(this.toPutPracticeRate.others_rate) === true){
+        this.othersError = "Input should be a number"
+      }
+    },
+    checkForm:function() {
       this.errors = []
-      if(!rateInfo.gp_rate){
+      if(!this.toPutPracticeRate.gp_rate){
         this.errors.push("Please input rate for GP.")
       }
-      if(!rateInfo.others_rate){
+      if(!this.toPutPracticeRate.others_rate){
         this.errors.push("Please input rate for Others")
       }
-      if(isNaN(rateInfo.gp_rate)===true){
+      if(isNaN(this.toPutPracticeRate.gp_rate)===true){
         this.errors.push("Please input a numerical info for GP")
       }
-      if(isNaN(rateInfo.others_rate)===true){
+      if(isNaN(this.toPutPracticeRate.others_rate)===true){
         this.errors.push("Please input a numerical info for Others")
       }
       if(!this.errors.length){
-        this.toPutPracticeRateInfo(practiceID)
+        this.toPutPracticeRateInfo(this.practice.id)
       }
 
     },

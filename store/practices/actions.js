@@ -1,6 +1,6 @@
 import * as practiceApi from '@/api/practices'
 export default{
-    async initializePracticeTransactionListener({state, commit}){
+    async initializePracticeTransactionListener({state, commit}, route){
         //-------------------PRACTICES-------------------
         this.$socket.on("createdPractice",  (payload) => {
             commit('ADD_PRACTICE', payload.payload.practice)
@@ -27,9 +27,25 @@ export default{
         this.$socket.on("updatedPracticeType", async (practice) => {
             const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
             const updatedPractice = response.data.practice
-            console.log('updated', response)
             commit('UPDATE_PRACTICE', updatedPractice)
-            // if(this.$router.name )  <<---------------YOU CAN USE ROUTERS HERE
+            const routeName = this.$router.currentRoute.name
+            
+            if(updatedPractice.type === 'Hub'){
+                if(routeName.includes('practice-hub')){
+                    const query = {
+                        ...this.$router.currentRoute.query
+                    }
+                    this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-surgeries`, query}).catch(err => {})
+                }  
+            }
+            if(updatedPractice.type === 'Spoke'){
+                if(routeName.includes('practice-surgeries')){
+                    const query = {
+                        ...this.$router.currentRoute.query
+                    }
+                    this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-hub`, query }).catch(err => {})
+                }  
+            }  
         }),
         
         

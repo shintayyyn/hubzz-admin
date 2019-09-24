@@ -9,6 +9,7 @@
 <script>
 import PracticeSurgeries from '@/components/Practices/PracticeSurgeries'
 export default {
+    middleware: 'changedPracticeType',
     transition:{
         name:'fade',
         mode:'out-in'

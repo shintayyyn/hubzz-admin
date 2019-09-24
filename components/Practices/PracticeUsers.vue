@@ -133,7 +133,6 @@ export default {
         try{
             this.loadingPracticeUsers = true
             await this.$axios.$get(`/api/v1/admin/practice-users/count`,{params}).then(res=>{
-                console.log(res)
                 this.$store.commit(`practices/SET_PRACTICE_USERS_COUNT`,res.data.count)
                 this.perPage = 5
 

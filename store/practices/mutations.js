@@ -19,7 +19,7 @@ export default{
             state.allPractices.pop()
         }
     },
-    UPDATE_PRACTICE(state, payload){
+    UPDATE_PRACTICE(state, payload, redirect){
         let index = state.allPractices.findIndex(practice => practice.id === payload.id)
         if(index >= 0){
             state.allPractices.splice(index, 1, payload)

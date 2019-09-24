@@ -11,6 +11,7 @@
 <script>
 import PracticeHub from '@/components/Practices/PracticeHub'
 export default {
+    middleware: 'changedPracticeType',
     components:{
         PracticeHub
     },

@@ -13,7 +13,7 @@
 <script>
 import PracticeTabs from '@/components/Practices/PracticeTabs'
 export default {
-    middleware: 'changedPracticeType',
+    
     components:{
         PracticeTabs
     },

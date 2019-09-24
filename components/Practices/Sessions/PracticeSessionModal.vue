@@ -23,7 +23,7 @@
                     <p class="mt-5 font-semibold">Job Description</p>
                     <p class="text-white">{{job.description}}</p>
                     <p class="mt-5 font-semibold">Extra Information</p>
-                    <p class="text-white">{{job.extra_information ? job.extra_information:null }}</p>
+                    <p class="text-white">{{job.platform_job ? job.platform_job.extra_information : 'N/A'}}</p>
                   </div>
                 </div>
 
@@ -50,29 +50,29 @@
                       <p class="m-2 ">{{job.platform_job.profession.name}}</p>
 
                       <p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
-                      <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                         v-for="specialty in job.platform_job.qualifications"
                         :key="specialty.id + '-name'">
                         {{specialty ? specialty.name:null}}
                       </p>
 
                       <p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
-                      <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                         v-for="clinicalSystem in job.platform_job.clinical_systems"
                         :key="clinicalSystem.id + '-name1'">
                           {{clinicalSystem ? clinicalSystem.name:null}}
                       </p>
 
                       <p class="m-2 mt-5 w-1/2 font-semibold">Spoken Languages</p>
-                      <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
                         v-for="spokenLanguage in job.platform_job.spoken_languages"
                         :key="spokenLanguage.id + '-name2'">
                         {{spokenLanguage ? spokenLanguage.name:null}}
                       </p>
 
                       <div v-if="job.platform_job.compliance_documents.length > 0">
-                        <p class="flex">Compliance Requirements for GPs:</p>
-                        <div class="text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
+                        <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
+                        <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documents"
                           :key="`${index}-${gpComplianceDocs.name}`"
                           >
                             <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
@@ -80,8 +80,8 @@
                       </div>
 
                       <div v-if="job.platform_job.mandatory_trainings.length > 0">
-                        <p class="flex">Mandatory Trainings</p>
-                        <div class="text-sm m-1 font-semibold" v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
+                        <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
+                        <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
                           :key="`${index}-${mandatoryTrainings.name}`"
                           >
                             <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
@@ -171,11 +171,11 @@
 
                     </div>
                   </div>
-                  <div class="overflow-x-hidden">
+                  <div class="overflow-x-hidden mx-4">
                     <div class="m-2 font-semibold">Headline</div>
                     <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.headline : null }}</p>
                     <p class="m-2 mt-5 mr-20 font-semibold">Biography</p>
-                    <p class="m-2 text-white underline">{{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}</p>
+                    <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}</p>
                     <p class="m-2 mt-5 mr-20 font-semibold">Special Requirements</p>
                     <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.special_requirements : null }}</p>
                     <p class="m-2 mt-5 mr-20 font-semibold">Rates</p>
@@ -217,7 +217,7 @@
                       {{spokenLanguage ? spokenLanguage.name:null}}
                     </p>
                     
-                    <div class="h-32 mb-6 overflow-auto">
+                    <div class="h-32 mb-6 w-full overflow-auto">
                       <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
                     <div v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
                       :key="`${index}-${specificComplianceDoc.id}-`"
@@ -267,6 +267,7 @@ export default {
       }
   },
   async created(){
+    console.log('job', this.job)
     if(this.job.platform_job.appointed_to_locum){
       await this.getLocum()
     }

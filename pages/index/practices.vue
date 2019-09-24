@@ -166,7 +166,7 @@ export default {
 	'search'
 	],
 
-  	async asyncData({ app,store, route }) {
+  	async asyncData({ app, store, route }) {
   		try {
 			await store.commit('practices/TOGGLE_LOADING',true)
   			let {
@@ -174,7 +174,7 @@ export default {
 				search = '',
 				order_by=''  
 			} = route.query
-			  
+			console.log('route', route) 
 			page = parseInt(page)
 			const createdRoute = route.query  
   			const limit = 8
@@ -389,7 +389,7 @@ export default {
 	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 	        this.loading = true
 	      }
-
+		  console.log('router', this.$router)	
 	      this.$router.push({ query }).catch(err=>{})
 		},
 
