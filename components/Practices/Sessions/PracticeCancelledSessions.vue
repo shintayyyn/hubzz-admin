@@ -107,9 +107,14 @@ export default {
         ...this.$route.query,
         cancelled_job_page: this.$route.query.cancelled_job_page || 1
       }
+      let params = {
+        practice_id : this.practice.id,
+        status : 'Cancelled'
+      }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Cancelled`).then(res=>{
-          this.total = res.data.count
+          // this.total = res.data.count
+          this.$store.commit('jobs/SET_PRACTICE_CANCELLED_SESSIONS_COUNT', res.data.count)
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
@@ -119,6 +124,12 @@ export default {
       })
     },
     computed:{ 
+      total(){
+        return this.$store.state.jobs.practice_cancelled_sessions_count
+      },
+      cancelledJobs(){
+        return this.$store.state.jobs.practice_cancelled_sessions
+      }
     },
     methods:{
       async getCancelledJobs(orderBy){
@@ -133,8 +144,16 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.cancelled_job_page) - 1)
-        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Cancelled&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-          this.cancelledJobs = res.data.jobs
+        let params = {
+          practice_id : this.practice.id,
+          status : 'Cancelled',
+          order_by : ['id:desc',orderBy],
+          limit: this.perPage,
+          offset: offset
+        }
+        await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
+          // this.cancelledJobs = res.data.jobs
+          this.$store.commit('jobs/SET_CANCELLED_SESSIONS', res.data.jobs)
         }).catch(err=>{
           console.log('get cancelled jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

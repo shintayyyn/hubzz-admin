@@ -83,8 +83,6 @@ export default {
   },
   data() {
     return {
-      matchedJobs: [],
-      total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -108,10 +106,14 @@ export default {
       ...this.$route.query,
       matched_job_page: this.$route.query.matched_job_page || 1
     }
+    let params = {
+      locum_detail_id : this.user.locum_detail.id,
+      locum_status : 'Matched'
+    }
     Promise.all([
       console.log(this.user),
       this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Matched`).then(res => {
-        this.total = res.data.count
+        this.$store.commit('jobs/SET_LOCUM_MATCHED_JOBS_COUNT', res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
@@ -119,6 +121,14 @@ export default {
       this.getMatchedJobs('date_created:desc'),
         console.log(this.matchedJobs)
     })
+  },
+  computed:{
+    total(){
+      return this.$store.state.jobs.locum_matched_jobs_count
+    },
+    matchedJobs(){
+      return this.$store.state.jobs.locum_matched_jobs
+    }
   },
   methods: {
     getMatchedJobs(orderBy) {
@@ -131,10 +141,16 @@ export default {
         orderBy = orderBy.replace('asc', 'desc')
         this.ascendDescend = 0
       }
-
+      let params = {
+        locum_detail_id: this.user.locum_detail.id,
+        locum_status : 'Matched',
+        order_by : ['id:desc',orderBy],
+        limit: this.perPage,
+        offset: offset
+      }
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
-      this.$axios.$get(`/api/v1/admin/jobs?locum_detail_id=${this.user.locum_detail.id}&locum_status=Matched&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
-        this.matchedJobs = res.data.jobs
+      this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
+        this.$store.commit('jobs/SET_LOCUM_MATCHED_JOBS', res.data.jobs)
       })
     },
     pagechanged(e) {

@@ -82,8 +82,8 @@ export default {
   },
   data() {
     return {
-      availableJobs: [],
-      total: 0,
+      // availableJobs: [],
+      // total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -107,9 +107,14 @@ export default {
       ...this.$route.query,
       available_job_page: this.$route.query.available_job_page || 1
     }
+    let params = {
+      practice_id : this.practice.id,
+      status : 'Available'
+    }
     Promise.all([
-      this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Available`).then(res => {
-        this.total = res.data.count
+      this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
+        // this.total = res.data.count
+        this.$store.commit('job/SET_PRACTICE_AVAILABLE_SESSIONS_COUNT', res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
@@ -119,6 +124,12 @@ export default {
     })
   },
   computed: {
+    total(){
+      return this.$store.state.jobs.practice_available_sessions_count
+    },
+    availableJobs(){
+      return this.$store.state.jobs.practice_available_sessions
+    }
   },
   methods: {
     async getAvailableJobs(orderBy) {
@@ -132,10 +143,17 @@ export default {
         orderBy = orderBy.replace('asc', 'desc')
         this.ascendDescend = 0
       }
-
+      let params = {
+        practice_id : this.practice.id,
+        status : 'Available',
+        order_by : ['id:desc',orderBy],
+        limit: this.perPage,
+        offset: offset
+      }
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
-      await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Available&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
-        this.availableJobs = res.data.jobs
+      await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
+        this.$store.commit('job/SET_PRACTICE_AVAILABLE_SESSIONS', res.data.jobs)
+        // this.availableJobs = res.data.jobs
       }).catch(err=>{
         console.log('get available jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

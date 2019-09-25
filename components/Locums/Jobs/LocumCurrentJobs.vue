@@ -86,8 +86,8 @@ export default {
     },
     data(){
       return{ 
-        currentJobs:[],
-        total:0,
+        // currentJobs:[],
+        // total:0,
         totalPages:0,
         currentPage:1,
         perPage:0,
@@ -112,9 +112,14 @@ export default {
         ...this.$route.query,
         current_job_page: this.$route.query.current_job_page || 1
       }
+      let params = {
+        locum_detail_id: this.user.locum_detail.id,
+        locum_status: 'Current'
+      }
       Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Current`).then(res=>{
-          this.total = res.data.count
+        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
+          this.$store.commit('jobs/SET_LOCUM_CURRENT_JOBS_COUNT', res.data.count)
+          // this.total = res.data.count
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
@@ -123,6 +128,12 @@ export default {
       })
     },
     computed:{ 
+      total(){
+        return this.$store.state.jobs.locum_current_jobs_count
+      },
+      currentJobs(){
+        return this.$store.state.jobs.locum_current_jobs
+      }
     },
     methods:{
       getCurrentJobs(orderBy){
@@ -137,10 +148,17 @@ export default {
         }
         
         offset = this.perPage * (parseInt(this.$route.query.current_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?locum_detail_id=${this.user.locum_detail.id}&locum_status=Current&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.currentJobs = res.data.jobs
-          })
-       
+        let params = {
+          locum_detail_id:this.user.locum_detail.id,
+          locum_status:'Current',
+          order_by:['id:desc',orderBy],
+          limit:this.perPage,
+          offset:offset
+        }
+        this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
+          this.$store.commit('jobs/SET_LOCUM_CURRENT_JOBS', res.data.jobs)
+          // this.currentJobs = res.data.jobs
+        })
       },
       pagechanged(e) {
         const query = {

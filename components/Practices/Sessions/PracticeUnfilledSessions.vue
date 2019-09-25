@@ -19,7 +19,7 @@
             </div>
             <!-- BODY -->
             <nuxt-link 
-              v-for="(item, index) in matchedJobs" 
+              v-for="(item, index) in unfilledSessions" 
                :to="{ path: `/practices/${practice.id}/practice-sessions/practice-unfilled-sessions/${item.id}`}"
               :key="`item-${index}`" 
               class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
@@ -82,8 +82,8 @@ export default {
   },
   data() {
     return {
-      matchedJobs: [],
-      total: 0,
+      // matchedJobs: [],
+      // total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -107,15 +107,28 @@ export default {
       ...this.$route.query,
       matched_job_page: this.$route.query.matched_job_page || 1
     }
+    let params = {
+      practice_id : this.practice.id,
+      statuus: 'Unfilled'
+    }
     Promise.all([
-      this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Matched`).then(res => {
-        this.total = res.data.count
+      this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
+        // this.total = res.data.count
+        this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS_COUNT',res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
       this.getMatchedJobs('date_created:desc')
     })
+  },
+  computed:{
+    total(){
+      return this.$store.state.jobs.practice_unfilled_sessions_count
+    },
+    unfilledSessions(){
+      return this.$store.state.jobs.practice_unfilled_sessions
+    }
   },
   methods: {
     async getMatchedJobs(orderBy) {
@@ -128,10 +141,17 @@ export default {
         orderBy = orderBy.replace('asc', 'desc')
         this.ascendDescend = 0
       }
-
+      let params = {
+        practice_id : this.practice.id,
+        status : 'Unfilled',
+        order_by : ['id:desc',orderBy],
+        limit: this.perPage,
+        offset: offset
+      }
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
-      await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Matched&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
-        this.matchedJobs = res.data.jobs
+      await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
+        // this.matchedJobs = res.data.jobs
+        this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS', res.data.jobs)
       }).catch(err=>{
         console.log('get unfilled jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

@@ -83,8 +83,8 @@ export default {
   },
   data() {
     return {
-      appliedJobs: [],
-      total: 0,
+      // appliedJobs: [],
+      // total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -109,9 +109,13 @@ export default {
       ...this.$route.query,
       applied_job_page: this.$route.query.applied_job_page || 1
     }
+    let params = {
+      locum_detail_id : this.user.locum_detail.id,
+      locum_status : 'Applied'
+    }
     Promise.all([
-      this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Applied`).then(res => {
-        this.total = res.data.count
+      this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
+        this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT', res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
@@ -120,6 +124,12 @@ export default {
     })
   },
   computed: {
+    total(){
+      return this.$store.state.jobs.locum_available_jobs_count
+    },
+    appliedJobs(){
+      return this.$store.state.jobs.locum_available_jobs
+    }
   },
   methods: {
     getAppliedJobs(orderBy) {
@@ -134,8 +144,17 @@ export default {
       }
 
       offset = this.perPage * (parseInt(this.$route.query.applied_job_page) - 1)
-      this.$axios.$get(`/api/v1/admin/jobs?locum_detail_id=${this.user.locum_detail.id}&locum_status=Applied&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
-        this.appliedJobs = res.data.jobs
+      let params = {
+        locum_detail_id: this.user.locum_detail.id,
+        locum_status : 'Applied',
+        order_by : ['id:desc',orderBy],
+        limit: this.perPage,
+        offset: offset
+      }
+      
+      this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
+        console.log('applied jobs', res)
+        this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS',res.data.jobs )
       })
     },
 

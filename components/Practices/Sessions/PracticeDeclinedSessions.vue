@@ -82,8 +82,8 @@ export default {
     },
     data(){
       return{
-        declinedJobs:[],
-        total:0,
+        // declinedJobs:[],
+        // total:0,
         totalPages:0,
         currentPage:1,
         perPage:0,
@@ -107,9 +107,14 @@ export default {
         ...this.$route.query,
         declined_job_page: this.$route.query.declined_job_page || 1
       }
+      let params = {
+        practice_id : this.practice.id,
+        status : 'Declined'
+      }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Declined`).then(res=>{
-          this.total = res.data.count
+          // this.total = res.data.count
+          this.$store.commit('jobs/SET_PRACTICE_DECLINED_SESSIONS_COUNT',res.data.count)
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
@@ -120,6 +125,14 @@ export default {
         console.log('get applied jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
+    },
+    computed:{
+      total(){
+        return this.$store.state.jobs.practice_declined_sessions_count
+      },
+      declinedJobs(){
+        return this.$store.state.jobs.practice_declined_sessions
+      } 
     },
     methods:{
       async getDeclinedJobs(orderBy){
@@ -132,10 +145,17 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
-        
+        let params = {
+          practice_id : this.practice.id,
+          status : 'Declined',
+          order_by : ['id:desc',orderBy],
+          limit: this.perPage,
+          offset: offset
+        }
         offset = this.perPage * (parseInt(this.$route.query.declined_job_page) - 1)
-        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Declined&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-          this.declinedJobs = res.data.jobs
+        await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res=>{
+          //this.declinedJobs = res.data.jobs
+          this.$store.commit('jobs/SET_PRACTICE_DECLINED_SESSIONS', res.data.jobs)
         }).catch(err=>{
           console.log('get declined jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

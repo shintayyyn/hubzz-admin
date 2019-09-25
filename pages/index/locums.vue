@@ -206,7 +206,7 @@ export default {
 				params.search = search
 			}
 			params.compliance_status = compliance_status
-				
+			console.log('params', params)
 			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
 			const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
 			

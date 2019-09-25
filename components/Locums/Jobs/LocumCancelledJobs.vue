@@ -83,8 +83,8 @@ export default {
     },
     data(){
       return{
-        cancelledJobs:[],
-        total:0,
+        // cancelledJobs:[],
+        // total:0,
         totalPages:0,
         currentPage:1,
         perPage:0,
@@ -108,9 +108,14 @@ export default {
         ...this.$route.query,
         cancelled_job_page: this.$route.query.cancelled_job_page || 1
       }
+      let params = {
+        locum_detail_id : this.user.locum_detail.id,
+        locum_status : 'Cancelled'
+      }
       Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Cancelled`).then(res=>{
-          this.total = res.data.count
+        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
+          // this.total = res.data.count
+          this.$store.commit('jobs/SET_LOCUM_CANCELLED_JOBS_COUNT', res.data.count)
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
@@ -118,9 +123,16 @@ export default {
         this.getCancelledJobs('date_created:desc')
       })
     },
+    computed:{
+      total(){
+        return this.$store.state.jobs.locum_cancelled_jobs_count
+      },
+      cancelledJobs(){
+        return this.$store.state.jobs.locum_cancelled_jobs
+      }
+    },
     methods:{
       getCancelledJobs(orderBy){
-        
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -130,12 +142,18 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
-        
+        let params = {
+          locum_detail_id: this.user.locum_detail.id,
+          locum_status : 'Cancelled',
+          order_by : ['id:desc',orderBy],
+          limit: this.perPage,
+          offset: offset
+        }
         offset = this.perPage * (parseInt(this.$route.query.cancelled_job_page) - 1)
-          this.$axios.$get(`/api/v1/admin/jobs?locum_detail_id=${this.user.locum_detail.id}&locum_status=Cancelled&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-            this.cancelledJobs = res.data.jobs
-          })
-       
+        this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
+          this.$store.commit('jobs/SET_LOCUM_CANCELLED_JOBS', res.data.jobs)
+          // this.cancelledJobs = res.data.jobs
+        })
       },
       pagechanged(e) {
         const query = {

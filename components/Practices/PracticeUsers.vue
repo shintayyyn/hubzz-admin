@@ -135,7 +135,6 @@ export default {
             await this.$axios.$get(`/api/v1/admin/practice-users/count`,{params}).then(res=>{
                 this.$store.commit(`practices/SET_PRACTICE_USERS_COUNT`,res.data.count)
                 this.perPage = 5
-
                 let pageCount = Math.ceil(this.total / this.perPage)
                 this.$store.commit('practices/SET_PRACTICE_USERS_PAGE_COUNT',pageCount)
                 this.getAllPracticeUsers()

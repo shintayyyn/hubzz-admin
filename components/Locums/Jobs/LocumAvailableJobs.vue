@@ -83,8 +83,8 @@ export default {
   },
   data() {
     return {
-      availableJobs: [],
-      total: 0,
+      // availableJobs: [],
+      // total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -108,15 +108,28 @@ export default {
       ...this.$route.query,
       available_job_page: this.$route.query.available_job_page || 1
     }
+    let params = {
+      locum_detail_id : this.user.locum_detail.id,
+      locum_status : 'Available'
+    }
     Promise.all([
-      this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Available`).then(res => {
-        this.total = res.data.count
+      this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
+        // this.total = res.data.count
+        this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT', res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
       this.getAvailableJobs('date_created:desc')
     })
+  },
+  computed:{
+    total(){
+      return this.$store.state.jobs.locum_available_jobs_count
+    },
+    availableJobs(){
+      return this.$store.state.jobs.locum_available_jobs
+    }
   },
   methods: {
     getAvailableJobs(orderBy) {
@@ -129,9 +142,19 @@ export default {
         this.ascendDescend = 0
       }
 
+      let params = {
+        locum_detail_id: this.user.locum_detail.id,
+        locum_status : 'Available',
+        order_by : ['id:desc',orderBy],
+        limit: this.perPage,
+        offset: offset
+      }
+
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
-      this.$axios.$get(`/api/v1/admin/jobs?locum_detail_id=${this.user.locum_detail.id}&locum_status=Available&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res => {
-        this.availableJobs = res.data.jobs
+      this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
+        console.log('available jobs', res.data.jobs)
+        this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS', res.data.jobs)
+        // this.availableJobs = res.data.jobs
       })
 
     },

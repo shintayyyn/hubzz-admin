@@ -85,9 +85,9 @@ export default {
     },
     data(){
       return{ 
-        currentJobs:[],
+        // currentJobs:[], 
+        // total:0,
         job:null,
-        total:0,
         totalPages:0,
         currentPage:1,
         perPage:0,
@@ -112,9 +112,14 @@ export default {
         ...this.$route.query,
         current_job_page: this.$route.query.current_job_page || 1
       }
+      let params = {
+        practince_id : this.practice_id,
+        status : 'Current'
+      }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/jobs/count?practice_id=${this.practice.id}&status=Current`).then(res=>{
-          this.total = res.data.count
+          // this.total = res.data.count
+          this.$store.commit('jobs/SET_PRACTICE_CURRENT_SESSIONS_COUNT', res.data.count)
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
@@ -127,6 +132,12 @@ export default {
       })
     },
     computed:{ 
+      total(){
+        return this.$store.state.jobs.practice_current_sessions_count
+      },
+      currentJobs(){
+        return this.$store.state.jobs.practice_current_sessions
+      }
     },
     methods:{
       async getCurrentJobs(orderBy){ 
@@ -139,10 +150,17 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
-        
+        let params = {
+          practice_id : this.practice.id,
+          status : 'Current',
+          order_by : ['id:desc',orderBy],
+          limit: this.perPage,
+          offset: offset
+        }
         offset = this.perPage * (parseInt(this.$route.query.current_job_page) - 1)
-        await this.$axios.$get(`/api/v1/admin/jobs?practice_id=${this.practice.id}&status=Current&order_by=${orderBy}&order_by=id%3Adesc&limit=${this.perPage}&offset=${offset}`).then(res=>{
-          this.currentJobs = res.data.jobs
+        await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
+          this.$store.commit('jobs/SET_PRACTICE_CURRENT_SESSIONS', res.data.jobs)
+          // this.currentJobs = res.data.jobs
         }).catch(err=>{
           console.log('get current jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
