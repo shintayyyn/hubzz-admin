@@ -17,12 +17,11 @@ export default {
     },
     data() {
         return {
-            // practice:null,
         }
     },
     created(){
         if(this.$route.name == 'index-practices-id-index-practice-sessions-index'){
-            this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`}).catch(err => {})
+            this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`, query: this.$route.query})
         }
     },
     computed:{

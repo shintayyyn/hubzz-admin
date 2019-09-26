@@ -70,8 +70,6 @@ export default {
       }
   },
   created(){
-      console.log('practice', this.practice)
-      console.log("rates",this.practice.rates)
   },
 
   methods: {
@@ -100,7 +98,6 @@ export default {
       }
     },
     verifyOthersRate:function(){
-      console.log('helloo')
       this.othersError = ''
       if(!this.toPutPracticeRate.others_rate){
         this.othersError = "Others Rate is required"

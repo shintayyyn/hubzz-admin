@@ -114,7 +114,7 @@ export default {
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
         // this.total = res.data.count
-        this.$store.commit('job/SET_PRACTICE_AVAILABLE_SESSIONS_COUNT', res.data.count)
+        this.$store.commit('jobs/SET_PRACTICE_AVAILABLE_SESSIONS_COUNT', res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
@@ -152,7 +152,7 @@ export default {
       }
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
       await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
-        this.$store.commit('job/SET_PRACTICE_AVAILABLE_SESSIONS', res.data.jobs)
+        this.$store.commit('jobs/SET_PRACTICE_AVAILABLE_SESSIONS', res.data.jobs)
         // this.availableJobs = res.data.jobs
       }).catch(err=>{
         console.log('get available jobs error!!!',err)

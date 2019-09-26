@@ -82,8 +82,8 @@ export default {
     },
     data(){
       return{
-        cancelledJobs:[],
-        total:0,
+        // cancelledJobs:[],
+        // total:0,
         totalPages:0,
         currentPage:1,
         perPage:0,
@@ -153,7 +153,7 @@ export default {
         }
         await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
           // this.cancelledJobs = res.data.jobs
-          this.$store.commit('jobs/SET_CANCELLED_SESSIONS', res.data.jobs)
+          this.$store.commit('jobs/SET_PRACTICE_CANCELLED_SESSIONS', res.data.jobs)
         }).catch(err=>{
           console.log('get cancelled jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

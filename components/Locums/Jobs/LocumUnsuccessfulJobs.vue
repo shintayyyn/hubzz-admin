@@ -113,7 +113,7 @@ export default {
       Promise.all([
         console.log(this.user),
         this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Unsuccessful`).then(res=>{
-          this.$store.commit('jobs/SET_UNSUCCESSFUL_JOBS_COUNT', res.data.count)
+          this.$store.commit('jobs/SET_LOCUM_UNSUCCESSFUL_JOBS_COUNT', res.data.count)
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })

@@ -173,8 +173,7 @@ export default {
   				page = 1,
 				search = '',
 				order_by=''  
-			} = route.query
-			console.log('route', route) 
+			} = route.query 
 			page = parseInt(page)
 			const createdRoute = route.query  
   			const limit = 8
@@ -346,7 +345,7 @@ export default {
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 			this.loading = true
 			}
-			this.$router.push({ query }).catch(err => {})
+			this.$router.push({ query })
 			this.getPractices(this.paramSort,this.search)
 		},
   		goToPage(page,search,order_by) {
@@ -388,9 +387,8 @@ export default {
 
 	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 	        this.loading = true
-	      }
-		  console.log('router', this.$router)	
-	      this.$router.push({ query }).catch(err=>{})
+	      }	
+	      this.$router.push({ query })
 		},
 
   		searchSubmit(page, order_by) {
@@ -429,7 +427,7 @@ export default {
 				this.loading = true
 			}
 
-	      	this.$router.push({ query }).catch(err=>{})
+	      	this.$router.push({ query })
 		},
 
 		typeStyle(status){

@@ -35,7 +35,7 @@ export default{
                     const query = {
                         ...this.$router.currentRoute.query
                     }
-                    this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-surgeries`, query}).catch(err => {})
+                    this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-surgeries`, query})
                 }  
             }
             if(updatedPractice.type === 'Spoke'){
@@ -43,7 +43,7 @@ export default{
                     const query = {
                         ...this.$router.currentRoute.query
                     }
-                    this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-hub`, query }).catch(err => {})
+                    this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-hub`, query })
                 }  
             }  
         }),

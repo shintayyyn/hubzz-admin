@@ -145,7 +145,6 @@ export default {
         }
        
         this.surgery = this.practice.surgery
-        console.log(this.$route.name)
         
     }, 
     methods:{
@@ -161,7 +160,6 @@ export default {
                 offset,
             } 
             await this.$axios.$get(`/api/v1/admin/practice-users`,{params}).then(res=>{
-                console.log(res)
                 this.$store.commit('practices/SET_PRACTICE_USERS', res.data.users)
             }).catch(err=>{
                 console.log('get users error!',err)
@@ -171,7 +169,6 @@ export default {
         },
         
         show(id){
-            console.log(id)
             Promise.all([
                 this.surgery = this.practice.surgery
             ]).then(()=>{

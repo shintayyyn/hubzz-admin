@@ -97,14 +97,11 @@ export default{
         }).catch(err=>{
           store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
         })
-        console.log("practice doc",this.practiceDocTypes)
         this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
             params: {
                 practice_id: this.practice.id
             }
         })
-        // console.log('prac docs',this.practiceDocs.data.practice_documents)
-
         const specificPracticeDocumentTypes = this.practiceDocTypes.map((practiceDocType)=>{
           const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find((practiceDoc) => {
             return practiceDoc.practice_document_type.id === practiceDocType.id
@@ -129,11 +126,7 @@ export default{
       const file = el.files[0]
 
       const fileReader = new FileReader()
-
-      // fileReader.addEventListener('load', () => {
-      //   console.log('z', fileReader.result)
-      // })
-
+      
       fileReader.readAsDataURL(file)
 
       const index = this.files.findIndex(({ id }) => id === documentId)
@@ -155,12 +148,12 @@ export default{
         let file = this.files.find(({ id }) => id === practiceDocumentID)
         if (file) {
             file = file.file
-            console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
-            console.log(file)
+            // console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
+            // console.log(file)
         
             if(practiceSpecificDocument){
-              console.log('File exists: PUT Request (Updates Existing)')
-              console.log(practiceSpecificDocument)
+              // console.log('File exists: PUT Request (Updates Existing)')
+              // console.log(practiceSpecificDocument)
 
               formData.append('practice_document_id',practiceID)
               formData.append('file', file)
@@ -170,7 +163,7 @@ export default{
                     'Content-Type': 'multipart/form-data'
                   },
                 }).then(async() => {
-                  console.log("practice doc",this.practiceDocTypes)
+                  // console.log("practice doc",this.practiceDocTypes)
                   this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
                       params: {
                           practice_id: this.practice.id
@@ -188,7 +181,7 @@ export default{
                     }
                   })
                   await this.$store.commit('practices/SET_PRACTICE_DOCUMENTS', specificPracticeDocumentTypes)
-                  console.log('practice docs',specificPracticeDocumentTypes)
+                  // console.log('practice docs',specificPracticeDocumentTypes)
                   this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Upload Success' })
                 })
                 .catch(err => {
@@ -196,7 +189,7 @@ export default{
                   console.log(err);
                 });
             }else{
-              console.log('File does not exist: POST Request (Posts new file)')
+              // console.log('File does not exist: POST Request (Posts new file)')
               formData.append('file', file)
               formData.append('practice_id',practiceID)
               formData.append('practice_document_type_id',practiceDocumentID)
@@ -206,7 +199,7 @@ export default{
                     'Content-Type': 'multipart/form-data'
                   },     
                 }).then(async() => {
-                  console.log("practice doc",this.practiceDocTypes)
+                  // console.log("practice doc",this.practiceDocTypes)
                   this.practiceDocs = await this.$axios.$get(`/api/v1/admin/practice-documents`,{
                       params: {
                           practice_id: this.practice.id

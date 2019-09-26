@@ -12,14 +12,12 @@ export default {
     },
     data(){
         return{
-            // user:null
         }
     },
     created(){
         if(this.$route.name == 'index-locums-id-index-locum-jobs-index'){
-            this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-current-jobs`}).catch(err => {})
+            this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-current-jobs`, query: this.$route.query})
         }
-        
     },
     computed:{
         user(){

@@ -37,7 +37,7 @@ export default {
             if(query.session_tab){
                 delete query.session_tab
             }
-            this.$router.push({path:'/supports',query}).catch(err => {})
+            this.$router.push({path:'/supports',query})
         },
     }
 }

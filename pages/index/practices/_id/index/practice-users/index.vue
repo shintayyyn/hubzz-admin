@@ -18,7 +18,6 @@ export default {
     },
     data(){
         return{
-            // practice: null
         }
     },
     computed:{
@@ -30,10 +29,8 @@ export default {
         try{
             let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
             const practice = response.data.data.practice
-            console.log("this",practice)
             await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
             return{
-                // practice
             }
         }catch(err){
             store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})

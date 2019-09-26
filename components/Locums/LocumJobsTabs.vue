@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row flex-wrap justify-start">
       <nuxt-link 
-        :to="getRoute('locum-current-jobs')"
+        :to="`/locums/${this.user.id}/locum-jobs/locum-current-jobs`"
         class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
         :class="$route.path === `/locums/${user.id}/locum-jobs/locum-current-jobs` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
       >Current</nuxt-link>
@@ -45,6 +45,7 @@
 <script>
 export default {
   props:['user'],
+  
   computed: {
     getRoute() {
       return(tab) => {

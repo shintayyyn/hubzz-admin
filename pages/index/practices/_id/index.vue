@@ -46,7 +46,7 @@ export default {
             const query = {
                 ...this.$route.query
             }
-            this.$router.push({path:'/practices',query}).catch(err => {})
+            this.$router.push({path:'/practices',query})
         },
     }
 }

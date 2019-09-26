@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
-      <div v-if="matchedJobs.length == 0">
+      <div v-if="unfilledSessions.length == 0">
         <div
           class="mt-10 w-full text-center text-white"
         >This practice has no unfilled session/s.</div>
@@ -52,7 +52,7 @@
             </nuxt-link>
           </div>
         </div>
-      <div v-if="!matchedJobs.length == 0" class="m-10 xl:-ml-32">
+      <div v-if="!unfilledSessions.length == 0" class="m-10 xl:-ml-32">
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -82,8 +82,6 @@ export default {
   },
   data() {
     return {
-      // matchedJobs: [],
-      // total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -113,7 +111,6 @@ export default {
     }
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
-        // this.total = res.data.count
         this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS_COUNT',res.data.count)
         this.perPage = 5
         this.totalPages = Math.ceil(this.total / this.perPage)
@@ -150,7 +147,6 @@ export default {
       }
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
       await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
-        // this.matchedJobs = res.data.jobs
         this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS', res.data.jobs)
       }).catch(err=>{
         console.log('get unfilled jobs error!!!',err)

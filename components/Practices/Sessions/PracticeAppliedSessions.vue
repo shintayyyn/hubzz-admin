@@ -114,7 +114,7 @@ export default {
       Promise.all([
         this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
           // this.total = res.data.count
-          this.$store.commit('jobs/SET_PRACTICE_APPLIED_JOBS_COUNT', res.data.count)
+          this.$store.commit('jobs/SET_PRACTICE_APPLIED_SESSIONS_COUNT', res.data.count)
           this.perPage = 5
           this.totalPages = Math.ceil(this.total / this.perPage)
         })

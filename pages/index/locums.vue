@@ -206,7 +206,6 @@ export default {
 				params.search = search
 			}
 			params.compliance_status = compliance_status
-			console.log('params', params)
 			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
 			const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
 			
@@ -235,11 +234,10 @@ export default {
 
 	computed: {
 		loadingLocums(){
-			console.log('locs',this.$store.state.locums.loading_locums)
 			return this.$store.state.locums.loading_locums
 		},
 		locumUsers(){
-			return this.$store.state.locums.locumUsers //the data obtained by the state goes here
+			return this.$store.state.locums.locumUsers 
 		},
 		itemCount(){
 			return this.$store.state.locums.itemCount
@@ -247,7 +245,6 @@ export default {
 		pageCount() {
 			return Math.ceil(this.itemCount / this.itemsPerPage)
 		},
-
 		showPage() {
 			return page => {
 			if (page === 1) {
@@ -453,7 +450,7 @@ export default {
 				this.loading = true
 			}
 
-			this.$router.push({ query }).catch(err=>{})
+			this.$router.push({ query })
 		},
 
 		searchSubmit(page,order_by,compliance_status) {
@@ -494,7 +491,7 @@ export default {
 				this.loading = true
 			}
 
-			this.$router.push({ query }).catch(err => {})
+			this.$router.push({ query })
 		},
 
 		statusStyle(status){
