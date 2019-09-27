@@ -15,7 +15,7 @@ export default{
     ADD_PRACTICE(state, payload){
         state.allPractices.unshift(payload)
         state.itemCount = state.itemCount +1
-        if(state.itemCount > 8){
+        if(state.itemCount > 10){
             state.allPractices.pop()
         }
     },

@@ -197,7 +197,7 @@ export default {
 			}
 			page = parseInt(page)
 			const createdRoute = route.query
-			const limit = 8
+			const limit = 10
 			const offset = page * limit - limit
 			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
 			const params = { limit, offset, order_by }

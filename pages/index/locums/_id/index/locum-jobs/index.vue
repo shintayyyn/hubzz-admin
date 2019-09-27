@@ -30,7 +30,7 @@ export default {
             const user = response.data.data.user
 
             await store.commit('locums/SET_LOCUM_USER', user)
-            
+            await store.commit('jobs/SET_JOBS_LOCUM_USER_ID_VIEWER',user.id )
             return{
                 // user
             }

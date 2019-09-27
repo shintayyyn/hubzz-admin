@@ -139,7 +139,7 @@ export default {
 	data() {
       return {
         loading: false,
-        itemsPerPage:8,
+        itemsPerPage:10,
         // itemCount: 0,
         activePage: 1,
 		// practices: [],

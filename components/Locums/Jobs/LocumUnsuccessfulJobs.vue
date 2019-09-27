@@ -107,14 +107,14 @@ export default {
         unsuccessful_job_page: this.$route.query.unsuccessful_job_page || 1
       }
       let params = {
-        locum_detail_id : this.user.locum_detail.id,
+        viewing_locum_user_id : this.user.id,
         locum_status : 'Unsuccessful'
       }
       Promise.all([
         console.log(this.user),
-        this.$axios.$get(`/api/v1/admin/jobs/count?locum_detail_id=${this.user.locum_detail.id}&locum_status=Unsuccessful`).then(res=>{
+        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
           this.$store.commit('jobs/SET_LOCUM_UNSUCCESSFUL_JOBS_COUNT', res.data.count)
-          this.perPage = 5
+          this.perPage = 10
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
       ]).then(() => {
@@ -143,7 +143,7 @@ export default {
           this.ascendDescend = 0
         }
         let params = {
-          locum_detail_id: this.user.locum_detail.id,
+          viewing_locum_user_id : this.user.id,
           locum_status : 'Unsuccessful',
           order_by : ['id:desc',orderBy],
           limit: this.perPage,

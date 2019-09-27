@@ -18,10 +18,11 @@ export function fetchLocumJobs(axios, payload){
     return axios.$get(`/api/v1/admin/jobs${payload.countOnly ? '/count':''}`,{params: params})
 }
 
-export function fetchPracticeSession(axios, payload){
-    return axios.$get(`/api/v1/admin/jobs/${payload}`)
-}
-
-export function fetchLocumJob(axios, payload){
-    return axios.$get(`/api/v1/admin/jobs/${payload}`)
+export function fetchSpecificJob(axios, payload){
+    let params ={}
+    params.detailed = false
+    if(payload.locumUserId){
+        params.viewing_locum_user_id = payload.locumUserId
+    }
+    return axios.$get(`/api/v1/admin/jobs/${payload.jobId}`,{ params })
 }

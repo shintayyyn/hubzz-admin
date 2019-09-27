@@ -106,13 +106,13 @@ export default {
       matched_job_page: this.$route.query.matched_job_page || 1
     }
     let params = {
-      practice_id : this.practice.id,
+      viewing_practice_id : this.practice.id,
       statuus: 'Unfilled'
     }
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
         this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS_COUNT',res.data.count)
-        this.perPage = 5
+        this.perPage = 10
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
@@ -139,7 +139,7 @@ export default {
         this.ascendDescend = 0
       }
       let params = {
-        practice_id : this.practice.id,
+        viewing_practice_id : this.practice.id,
         status : 'Unfilled',
         order_by : ['id:desc',orderBy],
         limit: this.perPage,

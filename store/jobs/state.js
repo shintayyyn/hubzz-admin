@@ -1,6 +1,7 @@
 export default () => ({
     loading_jobs:  true,
-
+    viewing_sessions_practice_id :'',
+    viewing_jobs_locum_user_id : '',
     //PRACTICE
     practice_available_sessions: [],
     practice_available_sessions_count: 0,

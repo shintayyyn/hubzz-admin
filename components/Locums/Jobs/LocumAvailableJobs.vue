@@ -109,14 +109,14 @@ export default {
       available_job_page: this.$route.query.available_job_page || 1
     }
     let params = {
-      locum_detail_id : this.user.locum_detail.id,
-      locum_status : 'Available'
+      viewing_locum_user_id : this.user.id,
+      locum_status : ['Available','Matched']
     }
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
         // this.total = res.data.count
         this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT', res.data.count)
-        this.perPage = 5
+        this.perPage = 10
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
@@ -143,7 +143,7 @@ export default {
       }
 
       let params = {
-        locum_detail_id: this.user.locum_detail.id,
+        viewing_locum_user_id : this.user.id,
         locum_status : 'Available',
         order_by : ['id:desc',orderBy],
         limit: this.perPage,
