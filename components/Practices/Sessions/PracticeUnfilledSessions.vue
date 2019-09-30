@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
+      <div>
+        <AppLoading :loading="loadingJobs" :message="'Loading Unfilled Sessions'"/>
+      </div>
       <div v-if="unfilledSessions.length == 0">
         <div
           class="mt-10 w-full text-center text-white"
@@ -72,11 +75,13 @@
   </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
   props: ['practice'],
   components: {
+    AppLoading,
     AppPagination,
     PracticeSessionModal,
   },
@@ -100,7 +105,8 @@ export default {
       this.getMatchedJobs('date_created:desc')
     },
   },
-  created() {
+  async created() {
+    await this.$store.commit('jobs/TOGGLE_LOADING',true)
     const query = {
       ...this.$route.query,
       matched_job_page: this.$route.query.matched_job_page || 1
@@ -120,6 +126,9 @@ export default {
     })
   },
   computed:{
+    loadingJobs(){
+      return this.$store.state.jobs.loading_jobs
+    },
     total(){
       return this.$store.state.jobs.practice_unfilled_sessions_count
     },
@@ -129,7 +138,6 @@ export default {
   },
   methods: {
     async getMatchedJobs(orderBy) {
-
       let offset = 0
       if (this.ascendDescend == 0) {
         orderBy = orderBy.replace('desc', 'asc')
@@ -148,6 +156,7 @@ export default {
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
       await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
         this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS', res.data.jobs)
+        this.$store.commit('jobs/TOGGLE_LOADING',false)
       }).catch(err=>{
         console.log('get unfilled jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

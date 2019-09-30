@@ -1,82 +1,87 @@
 <template>
     <div>
         <div class="overflow-x-auto overflow-y-hidden">
-        <div v-if="completedJobs.length === 0">
-          <div
-          class="mt-10 w-full text-center text-white"
-          >This practice has no completed session/s.</div>
-        </div>
-        <div v-else>
-          <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
-            <!-- HEADER -->
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-              <div class="table-cell p-2 align-middle">Job Number</div> 
-              <div class="table-cell p-2 align-middle">Practice / Surgery</div>
-              <div class="table-cell p-2 align-middle">Title</div>
-              <div class="table-cell p-2 align-middle">From</div>
-              <div class="table-cell p-2 align-middle">To</div>
-              <div class="table-cell p-2 align-middle">Created</div>
+          <div>
+            <AppLoading :loading="loadingJobs" :message="'Loading Completed Sessions'"/>
+          </div>
+          <div v-if="completedJobs.length === 0">
+            <div
+            class="mt-10 w-full text-center text-white"
+            >This practice has no completed session/s.</div>
+          </div>
+          <div v-else>
+            <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+              <!-- HEADER -->
+              <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+                <div class="table-cell p-2 align-middle">Job Number</div> 
+                <div class="table-cell p-2 align-middle">Practice / Surgery</div>
+                <div class="table-cell p-2 align-middle">Title</div>
+                <div class="table-cell p-2 align-middle">From</div>
+                <div class="table-cell p-2 align-middle">To</div>
+                <div class="table-cell p-2 align-middle">Created</div>
+              </div>
+              <!-- BODY -->
+              <nuxt-link 
+                v-for="(item, index) in completedJobs" 
+                :to="{ path: `/practices/${practice.id}/practice-sessions/practice-completed-sessions/${item.id}`}"
+                :key="`item-${index}`" 
+                class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+                draggable="false"
+              >
+                <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Job Number</strong>
+                  <span class="">{{item.job_number}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6 w-full  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
+                  <span class="">{{item.platform_job.practice.surgery.name}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Title</strong>
+                  <span class="">{{item.title}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">From</strong>
+                  <span class="">{{item.date_start}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">To</strong>
+                  <span class="">{{item.date_end}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Created</strong>
+                  <span class="">{{item.date_created}}</span>
+                </div>
+              </nuxt-link>
             </div>
-            <!-- BODY -->
-            <nuxt-link 
-              v-for="(item, index) in completedJobs" 
-              :to="{ path: `/practices/${practice.id}/practice-sessions/practice-completed-sessions/${item.id}`}"
-              :key="`item-${index}`" 
-              class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
-              draggable="false"
-            >
-              <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-                <span class="">{{item.job_number}}</span>
-              </div>
-              <div class="flex flex-col xl:px-6 w-full  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-                <span class="">{{item.platform_job.practice.surgery.name}}</span>
-              </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="">{{item.title}}</span>
-              </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">From</strong>
-                <span class="">{{item.date_start}}</span>
-              </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">To</strong>
-                <span class="">{{item.date_end}}</span>
-              </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
-                  <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class="">{{item.date_created}}</span>
-              </div>
-            </nuxt-link>
           </div>
-        </div>
-        <div v-if="!completedJobs.length == 0" class="m-10 xl:-ml-32">
-          <AppPagination
-            :total="total"
-            :totalPages="totalPages"
-            :currentPage="currentPage"
-            @pagechanged="pagechanged"
-          />
-        </div>
+          <div v-if="!completedJobs.length == 0" class="m-10 xl:-ml-32">
+            <AppPagination
+              :total="total"
+              :totalPages="totalPages"
+              :currentPage="currentPage"
+              @pagechanged="pagechanged"
+            />
+          </div>
 
-        <div class="job-shield" v-if="modal"></div>
-        <transition name="slide" mode="out-in">
-          <div class="job-modal shadow-lg" v-if="modal">
-            <PracticeSessionModal @close="modal = false" :job="job" />
-          </div>
-        </transition>
+          <div class="job-shield" v-if="modal"></div>
+          <transition name="slide" mode="out-in">
+            <div class="job-modal shadow-lg" v-if="modal">
+              <PracticeSessionModal @close="modal = false" :job="job" />
+            </div>
+          </transition>
         
       </div>
     </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
     props:['practice'],
     components:{
+      AppLoading,
       AppPagination,
       PracticeSessionModal
     },
@@ -102,7 +107,8 @@ export default {
         this.getCompletedJobs('date_created:desc')
       },
     },
-    created(){
+    async created(){
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
         completed_job_page: this.$route.query.completed_job_page || 1
@@ -124,6 +130,9 @@ export default {
       })
     },
     computed:{ 
+      loadingJobs(){
+        return this.$store.state.jobs.loading_jobs
+      },
       total(){
         return this.$store.state.jobs.practice_completed_sessions_count
       },
@@ -153,6 +162,7 @@ export default {
         await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res=>{
           // this.completedJobs = res.data.jobs
           this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS', res.data.jobs)
+          this.$store.commit('jobs/TOGGLE_LOADING',false)
         }).catch(err=>{
           console.log('get completed jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
+      <div>
+        <AppLoading :loading="loadingJobs" :message="'Loading Applied Jobs'"/>
+      </div>
       <div v-if="appliedJobs.length === 0">
         <div
           class="mt-10 w-full text-white text-center"
@@ -11,7 +14,7 @@
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-              <div class="table-cell p-2 align-middle">Job Number</div> 
+              <div class="table-cell p-2 align-middle">Jodsdsb Number</div> 
               <div class="table-cell p-2 align-middle">Practice / Surgery</div>
               <div class="table-cell p-2 align-middle">Title</div>
               <div class="table-cell p-2 align-middle">From</div>
@@ -73,11 +76,13 @@
   </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
 export default {
   props: ['user'],
   components: {
+    AppLoading,
     AppPagination,
     LocumDetailJobModal
   },
@@ -99,12 +104,13 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.current_page = parseInt(to.query.applied_job_page)
+      this.currentPage = parseInt(to.query.applied_job_page)
       this.getAppliedJobs('date_created:desc')
     },
 
   },
-  created() {
+  async created() {
+    await this.$store.commit('jobs/TOGGLE_LOADING', true)
     const query = {
       ...this.$route.query,
       applied_job_page: this.$route.query.applied_job_page || 1
@@ -124,6 +130,9 @@ export default {
     })
   },
   computed: {
+    loadingJobs(){
+      return this.$store.state.jobs.loading_jobs
+    },
     total(){
       return this.$store.state.jobs.locum_available_jobs_count
     },
@@ -155,7 +164,9 @@ export default {
       this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
         console.log('applied jobs', res)
         this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS',res.data.jobs )
+        this.$store.commit('jobs/TOGGLE_LOADING', false)
       })
+     
     },
 
     pagechanged(e) {

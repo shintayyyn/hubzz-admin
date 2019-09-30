@@ -1,6 +1,9 @@
 <template>
     <div>
         <div class="overflow-x-auto xl:overflow-hidden">
+          <div>
+            <AppLoading :loading="loadingJobs" :message="'Loading Current Jobs'"/>
+          </div>
           <div v-if="currentJobs.length === 0">
             <div
             class="mt-10 text-white w-full text-center"
@@ -76,11 +79,13 @@
     </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
 export default {
     props:['user'],
     components:{
+      AppLoading,
       AppPagination,
       LocumDetailJobModal
     },
@@ -107,7 +112,8 @@ export default {
       },
 
     },
-    created(){
+    async created(){
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
         current_job_page: this.$route.query.current_job_page || 1
@@ -127,7 +133,10 @@ export default {
         this.getCurrentJobs('date_created:desc')
       })
     },
-    computed:{ 
+    computed:{
+      loadingJobs(){
+        return this.$store.state.jobs.loading_jobs
+      } ,
       total(){
         return this.$store.state.jobs.locum_current_jobs_count
       },
@@ -137,7 +146,6 @@ export default {
     },
     methods:{
       getCurrentJobs(orderBy){
-        
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -157,7 +165,7 @@ export default {
         }
         this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
           this.$store.commit('jobs/SET_LOCUM_CURRENT_JOBS', res.data.jobs)
-          // this.currentJobs = res.data.jobs
+          this.$store.commit('jobs/TOGGLE_LOADING', false)
         })
       },
       pagechanged(e) {

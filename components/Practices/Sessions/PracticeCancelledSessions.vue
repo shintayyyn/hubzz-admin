@@ -1,6 +1,9 @@
 <template>
     <div>
       <div class="overflow-x-auto overflow-y-hidden">
+        <div>
+          <AppLoading :loading="loadingJobs" :message="'Loading Cancelled Sessions'"/>
+        </div>
         <div v-if="cancelledJobs.length === 0">
           <div
           class="mt-10 w-full text-center text-white"
@@ -72,11 +75,13 @@
     </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
     props:['practice'],
     components:{
+      AppLoading,
       AppPagination,
       PracticeSessionModal
     },
@@ -102,7 +107,8 @@ export default {
         this.getCancelledJobs('date_created:desc')
       },
     },
-    created(){
+    async created(){
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
         cancelled_job_page: this.$route.query.cancelled_job_page || 1
@@ -124,6 +130,9 @@ export default {
       })
     },
     computed:{ 
+      loadingJobs(){
+        return this.$store.state.jobs.loading_jobs
+      },
       total(){
         return this.$store.state.jobs.practice_cancelled_sessions_count
       },
@@ -133,6 +142,7 @@ export default {
     },
     methods:{
       async getCancelledJobs(orderBy){
+        await this.$store.commit('jobs/TOGGLE_LOADING', true)
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -154,6 +164,7 @@ export default {
         await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
           // this.cancelledJobs = res.data.jobs
           this.$store.commit('jobs/SET_PRACTICE_CANCELLED_SESSIONS', res.data.jobs)
+          this.$store.commit('jobs/TOGGLE_LOADING', false)
         }).catch(err=>{
           console.log('get cancelled jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
