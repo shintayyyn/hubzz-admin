@@ -25,5 +25,8 @@ export function fetchSpecificJob(axios, payload){
     if(payload.locumUserId){
         params.viewing_locum_user_id = payload.locumUserId
     }
+    if(payload.practiceId){
+        params.viewing_practice_id = payload.practiceId
+    }
     return axios.$get(`/api/v1/admin/jobs/${payload.jobId}`,{ params })
 }

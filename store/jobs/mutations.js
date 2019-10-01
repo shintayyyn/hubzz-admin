@@ -8,6 +8,7 @@ export default{
     SET_JOBS_LOCUM_USER_ID_VIEWER(state, payload){
         state.viewing_jobs_locum_user = payload
     },
+
     // =================== PRACTICE ================
     SET_PRACTICE_AVAILABLE_SESSIONS(state, payload){
         state.practice_available_sessions = payload
@@ -71,9 +72,10 @@ export default{
         state.practice_declined_sessions.unshift(payload)
         state.practice_declined_sessions_count = state.practice_declined_sessions_count + 1
         if(state.practice_declined_sessions_Count > 10){
-            state.practice_applied_sessions.pop()
+            state.practice_declined_sessions.pop()
         }
     },
+
     // =================== LOCUM ======================
     SET_LOCUM_CURRENT_JOBS(state, payload){
         state.locum_current_jobs = payload
@@ -119,6 +121,11 @@ export default{
         if(state.locum_applied_jobs_count > 10){
             state.locum_applied_jobs.pop()
         }
+    },
+    DEDUCT_LOCUM_APPLIED_JOBS(state, payload){
+        console.log('deduct locum available jobs is working', payload)
+        state.locum_applied_jobs = state.locum_applied_jobs.filter(job => job.id !== payload.id)
+        state.locum_applied_jobs_count = state.locum_applied_jobs_count - 1
     },
     //=======================================
     SET_LOCUM_CANCELLED_JOBS(state, payload){
