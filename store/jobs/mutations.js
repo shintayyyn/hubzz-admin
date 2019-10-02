@@ -158,7 +158,6 @@ export default{
     },
     DEDUCT_LOCUM_CURRENT_JOBS(state, payload){
         console.log('deduct locum current jobs is working', payload)
-
         let index = state.locum_current_jobs.findIndex(
             job => job.id === payload.id
         )
@@ -182,7 +181,6 @@ export default{
     },
     DEDUCT_LOCUM_AVAILABLE_JOBS(state, payload){
         console.log('deduct locum available jobs is working', payload)
-
         let index = state.locum_available_jobs.findIndex(
             job => job.id === payload.id
         )

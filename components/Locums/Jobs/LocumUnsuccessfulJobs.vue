@@ -156,12 +156,14 @@ export default {
         })
        
       },
-      pagechanged(e) {
+      async pagechanged(e) {
         const query = {
           ...this.$route.query,
           unsuccessful_job_page: e || 1
         }
-        this.$router.push({ query })
+        await this.$store.commit('jobs/TOGGLE_LOADING', true)
+        await this.$router.push({ query })
+        await this.$store.commit('jobs/TOGGLE_LOADING', false)
       }
     }
 }
