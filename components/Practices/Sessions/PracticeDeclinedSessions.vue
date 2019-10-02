@@ -1,9 +1,6 @@
 <template>
     <div>
-        <div class="overflow-x-auto overflow-y-hidden">
-        <div>
-          <AppLoading :loading="loadingJobs" :message="'Loading Declined Sessions'"/>
-        </div>
+      <div class="overflow-x-auto overflow-y-hidden">
         <div v-if="declinedJobs.length === 0">
           <div
           class="mt-10 w-full text-center text-white"
@@ -75,13 +72,11 @@
     </div>
 </template>
 <script>
-import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
     props:['practice'],
     components:{
-      AppLoading,
       AppPagination,
       PracticeSessionModal
     },
@@ -132,10 +127,7 @@ export default {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
-    computed:{
-      loadingJobs(){
-        return this.$store.state.jobs.loading_jobs
-      },  
+    computed:{ 
       total(){
         return this.$store.state.jobs.practice_declined_sessions_count
       },

@@ -1,9 +1,6 @@
 <template>
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
-      <div>
-        <AppLoading :loading="loadingJobs" :message="'Loading Matched Jobs'"/>
-      </div>
       <div v-if="matchedJobs.length == 0">
         <div
           class="mt-10 w-full text-white text-center"
@@ -76,13 +73,11 @@
   </div>
 </template>
 <script>
-import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
 export default {
   props: ['user'],
   components: {
-    AppLoading,
     AppPagination,
     LocumDetailJobModal,
   },
@@ -129,9 +124,6 @@ export default {
     })
   },
   computed:{
-    loadingJobs(){
-      return this.$store.state.jobs.loading_jobs
-    },
     total(){
       return this.$store.state.jobs.locum_matched_jobs_count
     },

@@ -4,19 +4,21 @@
     </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import LocumCurrentJobs from '@/components/Locums/Jobs/LocumCurrentJobs'
 export default {
     components:{
+        AppLoading,
         LocumCurrentJobs
     },
     computed:{
         user(){
             return this.$store.state.locums.locumUser
-        }
+        },
     },
     async asyncData({app, store, route}){
         try{
-             let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
+            let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
             const user = response.data.data.user
 
             await store.commit('locums/SET_LOCUM_USER', user)

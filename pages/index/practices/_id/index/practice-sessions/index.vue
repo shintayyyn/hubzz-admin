@@ -1,17 +1,22 @@
 <template>
     <div class="mt-5">
+        <div>
+            <AppLoading :loading="loadingJobs" :message="'Loading Sessions'"/>
+        </div>
         <SessionsTabs :practice="practice"/>
         <nuxt-child/>
     </div>
 </template>
 <script>
 import SessionsTabs from '@/components/Practices/SessionsTabs'
+import AppLoading from '@/components/Base/AppLoading'
 export default {
     transition:{
         name:'fade',
         mode:'out-in'
     },
     components:{
+        AppLoading,
         SessionsTabs
 
     },
@@ -27,7 +32,10 @@ export default {
     computed:{
       practice(){
         return this.$store.state.practices.practice
-      }
+      },
+      loadingJobs(){
+        return this.$store.state.jobs.loading_jobs
+      },
     },
     async asyncData({app,store,route}){
         try{

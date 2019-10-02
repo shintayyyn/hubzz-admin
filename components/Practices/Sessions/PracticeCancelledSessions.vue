@@ -1,9 +1,6 @@
 <template>
     <div>
       <div class="overflow-x-auto overflow-y-hidden">
-        <div>
-          <AppLoading :loading="loadingJobs" :message="'Loading Cancelled Sessions'"/>
-        </div>
         <div v-if="cancelledJobs.length === 0">
           <div
           class="mt-10 w-full text-center text-white"
@@ -75,13 +72,11 @@
     </div>
 </template>
 <script>
-import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
     props:['practice'],
     components:{
-      AppLoading,
       AppPagination,
       PracticeSessionModal
     },
@@ -129,10 +124,7 @@ export default {
         console.log(this.cancelledJobs)
       })
     },
-    computed:{ 
-      loadingJobs(){
-        return this.$store.state.jobs.loading_jobs
-      },
+    computed:{
       total(){
         return this.$store.state.jobs.practice_cancelled_sessions_count
       },

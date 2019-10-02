@@ -1,9 +1,6 @@
 <template>
     <div>
         <div class="overflow-x-auto overflow-y-hidden">
-          <div>
-            <AppLoading :loading="loadingJobs" :message="'Loading Applied Sessions'"/>
-          </div>
           <div v-if="appliedJobs.length === 0">
             <div
             class="mt-10 w-full text-center text-white"
@@ -134,9 +131,6 @@ export default {
       })
     },
     computed:{
-      loadingJobs(){
-        return this.$store.state.jobs.loading_jobs
-      },
       total(){
         return this.$store.state.jobs.practice_applied_sessions_count
       },

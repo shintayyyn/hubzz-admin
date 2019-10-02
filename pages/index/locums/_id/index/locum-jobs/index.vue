@@ -1,13 +1,18 @@
 <template>
     <div class="mt-5">
+        <div>
+            <AppLoading :loading="loadingJobs" :message="'Loading Jobs'"/>
+        </div>
         <LocumJobsTabs :user="user"/>
         <nuxt-child/>
     </div>
 </template>
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 import LocumJobsTabs from '@/components/Locums/LocumJobsTabs'
 export default {
     components:{
+        AppLoading,
         LocumJobsTabs
     },
     data(){
@@ -22,7 +27,10 @@ export default {
     computed:{
         user(){
             return this.$store.state.locums.locumUser
-        }
+        },
+        loadingJobs(){
+            return this.$store.state.jobs.loading_jobs
+        },
     },
     async asyncData({app, store, route}){
         try{
