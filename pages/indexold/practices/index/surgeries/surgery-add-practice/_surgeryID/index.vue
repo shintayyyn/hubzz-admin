@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2" >
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to='/practices/surgeries/surgery-add-practice' class="text-white p-1">
@@ -10,7 +10,7 @@
         <strong>Create User</strong>
       </div>
       <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-max lg:w-1/2">
-        <div class="w-full overflow-hidden text-grey-light text-sm p-2">
+        <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
            <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
               {{errors[0]}}
             </div>
@@ -56,7 +56,7 @@
               <span v-if="!toPostPracticeUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
           </div>
           <select
-            class="appearance-none w-full mb-4 bg-white border-b border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
             :class="`${toPostPracticeUser.practice_role !== '' ? 'focus:border-orange' :'focus:border-red'}`"
             v-model='toPostPracticeUser.practice_role'
           >

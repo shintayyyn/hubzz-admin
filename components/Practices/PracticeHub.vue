@@ -13,7 +13,7 @@
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
                 <div class="w-full md:w-1/2">
-                    <div class="text-grey-light text-sm p-2">
+                    <div class="text-gray-300 text-sm p-2">
                         <p class="flex">Practice Name</p>
                         <p class="flex items-center text-white text-sm p-2 font-semibold">
                         {{practiceParent.surgery ? practiceParent.surgery.name : null}} 
@@ -35,7 +35,7 @@
                         
                         <p class="flex">Practice Types</p>
                         <div v-if="practiceParent.practice_types.length > 0">
-                        <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                        <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
                             v-for="practiceType in practiceParent.practice_types"
                             :key="practiceType.id + '-name'">
                             {{practiceType ? practiceType.name:null}}
@@ -77,15 +77,15 @@
                         <!-- <div v-if="practiceParent && practiceParent.type=='Spoke'">
                         <p class="flex m-2 text-base font-bold underline"> HUB info</p>
                         <p class="flex">Practice Name</p>
-                        <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParentHub.name}}</p>
+                        <p class="flex text-gray-300 text-sm p-2 font-semibold">{{practiceParentHub.name}}</p>
                         <p class="flex">Phone Number</p>
-                        <p class="flex text-grey-light text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p>
+                        <p class="flex text-gray-300 text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p>
                         </div> -->
                     </div>
                 </div>
                 <div class="w-full md:w-1/2 ">
                     <div>
-                        <p class="flex text-grey-light text-sm p-2">Does the hub pay for the Surgery?</p>
+                        <p class="flex text-gray-300 text-sm p-2">Does the hub pay for the Surgery?</p>
                         <select
                             class="outline-none w-1/2 border-2 border-transparent text-sm text-black pr-6"
                             v-model='toPutPracticeParent.pay_for_surgery'
@@ -94,7 +94,7 @@
                             <option>No</option>
                         <!-- <option>Dormant</option> -->
                         </select>
-                        <p class="flex text-grey-light text-sm p-2">Verify Job Creation</p>
+                        <p class="flex text-gray-300 text-sm p-2">Verify Job Creation</p>
                         <select
                             class="outline-none w-1/2 border-2 border-transparent text-sm text-black pr-6"
                             v-model='toPutPracticeParent.verify_job_creation'
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="practiceHub.parent_surgery" class="text-grey-light text-sm m-4">
+                <div v-if="practiceHub.parent_surgery" class="text-gray-300 text-sm m-4">
                     <p class="font-semibold">Surgery Name</p>
                     <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.name : ''}}</p>
                     <p class="font-semibold">Surgery Code</p>
@@ -168,13 +168,13 @@ export default {
         practiceTypeStyle(type){
             switch(type){
                 case 'Stand Alone':
-                return 'bg-green-light text-white lg:px-4 sm:px-2'
+                return 'bg-green-300 text-white lg:px-4 sm:px-2'
                 break;
                 case 'Hub':
-                return 'bg-red-light text-white lg:px-8 sm:px-2'
+                return 'bg-red-300 text-white lg:px-8 sm:px-2'
                 break;
                 case 'Spoke':
-                return 'bg-blue-light text-white lg:px-8 sm:px-2'
+                return 'bg-blue-300 text-white lg:px-8 sm:px-2'
                 break;
                 default:
                 return

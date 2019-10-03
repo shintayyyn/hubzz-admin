@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed lg:absolute overflow-x-hidden overflow-y-auto pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="fixed lg:absolute overflow-x-hidden overflow-y-auto top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -60,7 +60,7 @@
               <div class="border border-black rounded-lg p-4 text-sm">
                 <div class="pb-2">To: Accounts Department</div>
                 <select
-                  class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                  class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                 >
                   <option>Select the Practice for this Invoice</option>
                   <option>Option 2</option>
@@ -78,7 +78,7 @@
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 w-full overflow-hidden">
               <select
-                class="block appearance-none text-sm w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                class="block appearance-none text-sm w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
               >
                 <option>Select the Practice for this Invoice</option>
                 <option>Option 2</option>
@@ -122,7 +122,7 @@
                 <div class="my-1 px-1 w-1/5 overflow-hidden">£1200</div>
                 <div class="my-1 px-1 w-1/5 overflow-hidden">
                   <button
-                    class="bg-black hover:bg-grey-dark text-white font-bold px-2 py-1 rounded-full float-right"
+                    class="bg-black hover:bg-gray-dark text-white font-bold px-2 py-1 rounded-full float-right"
                   >+</button>
                 </div>
               </div>

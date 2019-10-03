@@ -4,11 +4,11 @@
 		<div class="flex py-2">
 			<div class="relative">
 				<input class="rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:border-sunglow bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-				<button class="p-2 absolute pin-t pin-r pin-b" @click="search = '', searchSubmit()">
+				<button class="p-2 absolute top-0 right-0 bottom-0" @click="search = '', searchSubmit()">
 					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
 				</button>
 			</div>
-			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark" @click="searchSubmit">Go</button>
+			<button class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-500" @click="searchSubmit">Go</button>
 		</div>
 
 		<!-- TABLE -->

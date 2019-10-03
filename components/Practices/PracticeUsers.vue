@@ -1,5 +1,5 @@
 <template>
-    <div class="px-4">
+    <div>
         <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'"/>
         <div class="w-full overflow-hidden">
             <div>
@@ -16,54 +16,53 @@
             style="font-family: Nunito"
             >This practice has no users.</div>
         </div>
-        <div v-else class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-                <div class="table-cell p-2 align-middle">Full Name</div> 
-                <div class="table-cell p-2 align-middle">Email Address</div>
-                <div class="table-cell p-2 align-middle">Role</div>
-                <div class="table-cell p-2 align-middle">Sign-Up Verified</div>
-                <div class="table-cell p-2 align-middle">Status</div>
+        <div v-else class="flex flex-col text-white mt-4"> 
+            <div class="w-full hidden md:flex text-sm font-bold pb-2"> 
+                <div class="w-1/5 px-4">Full Name</div> 
+                <div class="w-1/5 px-3">Email Address</div>
+                <div class="w-1/5 px-2">Role</div>
+                <div class="w-1/5 px-1">Sign-Up Verified</div>
+                <div class="w-1/5">Status</div>
             </div>
-            <nuxt-link
+            <div
                 v-for="(user, index) in users"
                 :key="`user-${index}`"
-                :to="{path:`/practices/${practice.id}/practice-users/${user.id}`,query}"
-                class="flex flex-col md:flex-row sm:flex-wrap px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
-                draggable="false"
+                @click="$router.push(`/practices/${practice.id}/practice-users/${user.id}`)"
+                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0" 
                 ><!--This needs to lead to a nuxt child with admin being able to modify the user-->
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+                <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Full Name</strong>
                     <span class="break-word">{{ user.personal_detail.name }}</span>
                 </div>
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Email Address</strong>
                     <span class="break-all">{{ user.email }}</span>
                 </div>
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Role</strong>
                     <span class="break-all">{{ user.practice_detail.practice_role }}</span>
                 </div>
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Sign-up Verified</strong>
                     <span class="break-all">{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
                 </div>
-                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+                <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden">Status</strong>
                     <span class="inline-flex text-black text-sm py-2 px-8 rounded-full"
-                    :class="`${user.status === 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+                    :class="`${user.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2' }`"
                     >{{ user.status }}
                     </span>
                 </div>
-            </nuxt-link> 
-            <div v-if="!users.length == 0" class="ml-32">
-                <AppPagination
-                    :total="total"
-                    :totalPages="totalPages"
-                    :currentPage="currentPage"
-                    @pagechanged="pagechanged"
-                />
             </div> 
         </div>
+        <div v-if="!users.length == 0">
+            <AppPagination
+                :total="total"
+                :totalPages="totalPages"
+                :currentPage="currentPage"
+                @pagechanged="pagechanged"
+            />
+        </div> 
         <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId')"></div>
         <div class="edit-practice-user-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">

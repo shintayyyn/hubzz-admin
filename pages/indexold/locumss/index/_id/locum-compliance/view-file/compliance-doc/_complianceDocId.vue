@@ -1,21 +1,21 @@
 <template>
-  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-x-hidden overflow-y-auto">
+  <div class="fixed lg:absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-x-hidden overflow-y-auto">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex items-center text-sm text-white py-2 px-6">
         <nuxt-link
           :to="{path:`/locums/${locumUser.id}/locum-compliance`}"
-          class="text-white hover:text-yellow-dark p-1 mr-4"
+          class="text-white hover:text-yellow-500 p-1 mr-4"
         >
           <svgicon
             name="arrow-left-solid"
             height="22"
             width="22"
-            class="hover:text-yellow-dark fill-current"
+            class="hover:text-yellow-500 fill-current"
           />
         </nuxt-link>
-        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4"
+        <button class="inline-flex items-center text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 mr-4"
           @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)">
           <svgicon
           name="save-icon"
@@ -26,7 +26,7 @@
         ></svgicon>
         <span class="px-1">Save</span>
         </button>
-        <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2">
+        <div class="text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2">
           <a 
             @click.prevent="downloadItem(specificLocumComplianceDocument.file.url,specificLocumComplianceDocument.file.filename)"
             class="inline-flex items-center text-white no-underline">
@@ -46,7 +46,7 @@
       <!-- BODY -->
       <div class="shadow-lg rounded-lg bg-waterloo mx-6 mb-6 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-          <div class="text-grey m-2">
+          <div class="text-gray m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{specificLocumComplianceDocument.compliance_document ? specificLocumComplianceDocument.compliance_document.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
@@ -78,13 +78,13 @@
                 </select> -->
 
                 <button
-                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
-                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-300"
+                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-300' : 'bg-transparent px-4 hover:bg-green-300'}`"
                   @click.prevent="setStatusData('Approved')"
                 >Approved</button>
                 <button
-                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
-                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-300"
+                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300 ' : 'bg-transparent px-4 hover:bg-orange-300'}`"
                   @click.prevent="setStatusData('Rejected')"
                 >Rejected</button>
 
@@ -92,12 +92,12 @@
                 <textarea 
                   v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
-                  class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                  class="text-gray-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
                   name="complianceNote"
                   v-if="notesAreVisible">Type Here
                 </textarea>
           </div>
-          <div class="flex flex-col text-grey md:m-2">
+          <div class="flex flex-col text-gray md:m-2">
             <p class="md:mr-20">File</p>
              <embed class="w-full my-2" style="max-width: 800px"
               :src="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null"

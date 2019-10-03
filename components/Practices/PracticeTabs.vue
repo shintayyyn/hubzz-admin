@@ -2,40 +2,40 @@
   <div class="flex flex-row flex-wrap justify-start">
       <nuxt-link
         :to="getRoute()" 
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path == `/practices/${practice.id}` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Practice</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-surgeries')"
         v-if="practice.type == 'Hub' "
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Surgeries</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-hub')"
         v-if="practice.type == 'Spoke' "
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}/practice-hub`? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path == `/practices/${practice.id}/practice-hub`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Hub</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-sessions')"
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path.includes(`/practices/${practice.id}/practice-sessions`)? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path.includes(`/practices/${practice.id}/practice-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Sessions</nuxt-link>
       <nuxt-link 
         :to="getRoute('practice-users')"
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}/practice-users` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path == `/practices/${practice.id}/practice-users` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Users</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-documents')"
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}/practice-documents` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path == `/practices/${practice.id}/practice-documents` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Documents</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-rates')"
-        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white"
-        :class="$route.path == `/practices/${practice.id}/practice-rates` ? 'border rounded-lg border-grey-dark bg-grey-dark hover:bg-grey' : ''"
+        class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+        :class="$route.path == `/practices/${practice.id}/practice-rates` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Rates</nuxt-link>
   </div>
 </template>

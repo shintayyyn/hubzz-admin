@@ -6,7 +6,7 @@
       v-if="loading"
     >
       <svgicon v-if="spinner" name="loader" color="white" width="60" height="60" />
-      <h1 class="loader-message pin" v-if="message">{{ message }}</h1>
+      <h1 class="loader-message inset-0" v-if="message">{{ message }}</h1>
     </div>
   </transition>
 </template>
@@ -37,14 +37,14 @@ export default {
   left: 0;
   right: 0;
   z-index: 49;
-  background-color: #2C2F38;
-  box-shadow: 10px 10px 0.1 10px #2C2F38;
+  background-color: #2c2f38;
+  box-shadow: 10px 10px 0.1 10px #2c2f38;
   opacity: 0.75;
 }
 .loader-message {
   position: -webkit-sticky;
   position: sticky;
-  color:white;
+  color: white;
   /* top: 50%; */
   text-align: center;
   z-index: 50;

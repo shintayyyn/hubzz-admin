@@ -4,8 +4,8 @@
         <div class="m-8 my-4 overflow-auto">
           <div class="flex">
             <p class="text-2xl text-white font-semibold">{{job ? job.title:null }}</p>
-            <p class="text-black p-2 bg-yellow rounded ml-4">{{job.status}}</p><br>
-            <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red':'bg-blue'">{{job.type}}</p><br>
+            <p class="text-black p-2 bg-yellow-500 rounded ml-4">{{job.status}}</p><br>
+            <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</p><br>
           </div>
           <p class="text-white">{{"Posted On: "+job.date_created}}</p>
 
@@ -13,7 +13,7 @@
             <div class="inline-flex m-4">
               <div class="flex flex-wrap overflow-hidden">
                 <div class="xl:w-1/2 sm:w-full overflow-hidden">
-                  <div class="text-grey text-white">
+                  <div class="text-gray text-white">
                     <p class="m-2 font-semibold">Job Number</p>
                     <p class="m-2 text-white">{{job.job_number}}</p>
                     <p class="m-2 mt-5 font-semibold">Rate</p>
@@ -49,21 +49,21 @@
                     <p class="m-2 text-white">{{job.platform_job.profession.name}}</p>
 
                     <p class="m-2 mt-5 font-semibold">Speciality</p>
-                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="specialty in job.platform_job.qualifications"
                       :key="specialty.id + '-name'">
                       {{specialty ? specialty.name:null}}
                     </p>
 
                     <p class="m-2 mt-5 font-semibold">Clinical Systems</p>
-                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="clinicalSystem in job.platform_job.clinical_systems"
                       :key="clinicalSystem.id + '-name1'">
                         {{clinicalSystem ? clinicalSystem.name:null}}
                     </p>
 
                     <p class="m-2 mt-5 font-semibold">Spoken Languages</p>
-                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="spokenLanguage in job.platform_job.spoken_languages"
                       :key="spokenLanguage.id + '-name2'">
                       {{spokenLanguage ? spokenLanguage.name:null}}

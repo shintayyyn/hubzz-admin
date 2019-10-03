@@ -5,11 +5,11 @@
         <div class="flex py-2">
           	<div class="relative">
               <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-                <button class="p-2 absolute pin-t pin-r pin-b focus:outline-none" @click="search = '', searchSubmit()">
+                <button class="p-2 absolute top-0 right-0 bottom-0 focus:outline-none" @click="search = '', searchSubmit()">
                   <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
                 </button>
             </div>
-        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
+        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button>
         </div>
       </div>
       <div class="w-1/2">
@@ -35,7 +35,7 @@
         v-for="(practice, index) in practices"
 			:key="`practice-${index}`"
 			:to="{path:`/practices/${practice.id}`,query:$route.query}"
-			class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 my-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+			class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 my-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
 			draggable="false"
       >
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">

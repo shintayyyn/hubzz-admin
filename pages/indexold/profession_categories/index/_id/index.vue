@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+	<div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
 		<div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
 
 			<!-- HEADER -->
@@ -12,12 +12,12 @@
 
 			<div class="flex-1 flex flex-col bg-waterloo m-4 py-2 px-4 rounded-lg overflow-auto">
 				<div class="flex flex-col mb-4" style="max-width: 400px;">
-					<label class="text-xs py-1 text-grey">Name</label>
+					<label class="text-xs py-1 text-gray">Name</label>
 					<input class="p-2 rounded" v-model="name">
 				</div>
 
 				<div class="flex flex-col mb-4">
-					<label class="text-xs py-1 text-grey">Qualifications</label>
+					<label class="text-xs py-1 text-gray">Qualifications</label>
 					<div class="flex items-center" v-for="qualification in qualifications">
 						<input class="m-1" type="checkbox" v-model="qualification_id" name="qualification_id" :value="qualification.id">
 						<label class="text-white">{{ qualification.name }}</label>
@@ -25,7 +25,7 @@
 				</div>
 
 				<div class="flex flex-col">
-					<label class="text-xs py-1 text-grey">Mandatory Compliance Documents</label>
+					<label class="text-xs py-1 text-gray">Mandatory Compliance Documents</label>
 					<div class="flex items-center" v-for="complianceDocument in complianceDocuments">
 						<input class="m-1" type="checkbox" v-model="mandatory_compliance_document_id" name="mandatory_compliance_document_id" :value="complianceDocument.id">
 						<label class="text-white">{{ complianceDocument.name }}</label>

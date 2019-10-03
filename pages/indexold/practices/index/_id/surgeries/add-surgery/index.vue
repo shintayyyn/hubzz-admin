@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -17,7 +17,7 @@
         </div>
         <div class="w-full">
           <div
-            class="flex items-center pd-4 border-grey-light"
+            class="flex items-center pd-4 border-gray-300"
             style="width: 400px;"
           >
             <input
@@ -31,7 +31,7 @@
         </div>
         <div class="w-full overflow-hidden">
           <div class="self-end">
-            <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-dark" @click="searchSubmit">Search</button>
+            <button class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500" @click="searchSubmit">Search</button>
           </div>
           <div>
             <!--TABLE-->

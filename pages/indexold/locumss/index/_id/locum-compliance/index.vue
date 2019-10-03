@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-auto">
+  <div class="fixed lg:absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
@@ -14,7 +14,7 @@
         <div class="my-1 px-1">
           <div class="my-2 rounded-lg">
             <nuxt-link
-            class=" hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+            class=" hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
             :to="{path:`/locums/${locumUser.id}`,query: $route.query}">
               <strong>Profile</strong>
             </nuxt-link>
@@ -23,7 +23,7 @@
         <div class="my-1 px-1">
           <div class="my-2 rounded-lg">
               <nuxt-link
-              class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+              class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
               :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
                 <strong>Jobs</strong>
               </nuxt-link>
@@ -32,10 +32,10 @@
         <div class="my-1 px-1">
             <div class="my-2 rounded-lg">
               <nuxt-link
-              class="bg-grey-dark border-white rounded-lg p-3 text-white text-sm no-underline"
+              class="bg-gray-dark border-white rounded-lg p-3 text-white text-sm no-underline"
               :to="{path:`/locums/${locumUser.id}/locum-compliance`,query: $route.query}" 
               :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
-              :class="locumUser.compliance_status==='Empty' ? '' :'hover:bg-waterloo-light text-grey-dark'">
+              :class="locumUser.compliance_status==='Empty' ? '' :'hover:bg-waterloo-light text-gray-dark'">
               <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
               </nuxt-link>
           </div>
@@ -47,7 +47,7 @@
           style="position:relative"
         >
             <div class="w-4/5 overflow-hidden text-sm m-4">
-              <div class="text-grey">
+              <div class="text-gray">
                 <p class="m-2">
                   Name <span class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span>
                 </p>
@@ -77,19 +77,19 @@
         <!--GMC / NMC NUMBER-->
           <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 sm:justify-between">
-              <p class="text-grey">GMC / NMC Number</p>
+              <p class="text-gray">GMC / NMC Number</p>
               <p class="mx-3 sm:mx-0">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
               <button
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
-                :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light text-center ' : 'bg-transparent px-2 hover:bg-green-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-300"
+                :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-300 text-center ' : 'bg-transparent px-2 hover:bg-green-300'}`"
                 v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
               >Verified</button>
               <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
-                :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-2 hover:bg-orange-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-300"
+                :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300 ' : 'bg-transparent px-2 hover:bg-orange-300'}`"
                 v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
               >Rejected</button>
@@ -98,19 +98,19 @@
 
           <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 sm:justify-between">
-              <p class="text-grey">MPL / NPL Number</p>
+              <p class="text-gray">MPL / NPL Number</p>
               <p class="mx-3 sm:mx-0">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
               <button
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
-                :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-2 hover:bg-green-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-300"
+                :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-300' : 'bg-transparent px-2 hover:bg-green-300'}`"
                 v-if="locumUser.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
               >Verified</button>
               <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
-                :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light' : 'bg-transparent px-2 hover:bg-orange-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-300"
+                :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
                 v-if="locumUser.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
               >Rejected</button>

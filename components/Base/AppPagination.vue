@@ -15,9 +15,9 @@
           @click="onClickFirstPage"
           :disabled="loading || isInFirstPage"
         >
-          <span class="absolute mx-2 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" >
-                <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"></path>
+          <span class="absolute mx-2 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
             </svg>
           </span>
         </button>
@@ -36,9 +36,9 @@
           @click="onClickPreviousPage"
           :disabled="loading || isInFirstPage"
         >
-          <span class="absolute mx-1 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-                <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+          <span class="absolute mx-1 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
             </svg>
           </span>
         </button>
@@ -67,9 +67,9 @@
           @click="onClickNextPage"
           :disabled="loading || isInLastPage"
         >
-          <span class="absolute mx-1 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          <span class="absolute mx-1 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
             </svg>
           </span>
         </button>
@@ -88,9 +88,9 @@
           @click="onClickLastPage"
           :disabled="loading || isInLastPage"
         >
-          <span class="absolute mx-2 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-                <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"></path>
+          <span class="absolute mx-2 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z" />
             </svg>
           </span>
         </button>
@@ -111,9 +111,9 @@
           @click="onClickFirstPage"
           :disabled="loading || isInFirstPage"
         >
-          <span class="absolute mx-2 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" >
-                <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"></path>
+          <span class="absolute mx-2 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
             </svg>
           </span>
         </button>
@@ -132,14 +132,14 @@
           @click="onClickPreviousPage"
           :disabled="loading || isInFirstPage"
         >
-          <span class="absolute mx-1 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-                <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+          <span class="absolute mx-1 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
             </svg>
           </span>
         </button>
       </div>
-      
+
       <div class="pagination-item next m-1">
         <button
           type="button"
@@ -153,9 +153,9 @@
           @click="onClickNextPage"
           :disabled="loading || isInLastPage"
         >
-          <span class="absolute mx-1 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          <span class="absolute mx-1 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
             </svg>
           </span>
         </button>
@@ -174,9 +174,9 @@
           @click="onClickLastPage"
           :disabled="loading || isInLastPage"
         >
-          <span class="absolute mx-2 my-1 pin-l pin-t">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-                <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"></path>
+          <span class="absolute mx-2 my-1 left-0 top-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+              <path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z" />
             </svg>
           </span>
         </button>
@@ -215,61 +215,69 @@ export default {
   },
   computed: {
     isInFirstPage() {
-      return this.currentPage === 1
+      return this.currentPage === 1;
     },
     isInLastPage() {
-      return this.currentPage === this.totalPages
+      return this.currentPage === this.totalPages;
     },
     startPage() {
-      if (this.currentPage === 1 || (this.currentPage === 2 || this.totalPages <= this.maxVisibleButtons)) {
-        return 1
+      if (
+        this.currentPage === 1 ||
+        (this.currentPage === 2 || this.totalPages <= this.maxVisibleButtons)
+      ) {
+        return 1;
       }
 
       if (this.currentPage === this.totalPages - 1) {
-        return this.totalPages - this.maxVisibleButtons + 1
+        return this.totalPages - this.maxVisibleButtons + 1;
       }
 
-      if (this.currentPage === this.totalPages && this.totalPages > this.maxVisibleButtons) {
-        return this.totalPages - this.maxVisibleButtons + 1
+      if (
+        this.currentPage === this.totalPages &&
+        this.totalPages > this.maxVisibleButtons
+      ) {
+        return this.totalPages - this.maxVisibleButtons + 1;
       }
 
-      return this.currentPage - 2
+      return this.currentPage - 2;
     },
     pages() {
       const range = [];
-      for (let i = this.startPage;
-        i <= Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages);
-        i += 1) {
+      for (
+        let i = this.startPage;
+        i <=
+        Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages);
+        i += 1
+      ) {
         range.push({
           name: i,
           isDisabled: i === this.currentPage
         });
       }
       return range;
-    },
+    }
   },
   methods: {
     onClickFirstPage() {
-      this.$emit('pagechanged', 1)
+      this.$emit("pagechanged", 1);
     },
     onClickPreviousPage() {
-      this.$emit('pagechanged', this.currentPage - 1)
+      this.$emit("pagechanged", this.currentPage - 1);
     },
     onClickPage(page) {
-      this.$emit('pagechanged', page)
+      this.$emit("pagechanged", page);
     },
     onClickNextPage() {
-      this.$emit('pagechanged', this.currentPage + 1)
+      this.$emit("pagechanged", this.currentPage + 1);
     },
     onClickLastPage() {
-      this.$emit('pagechanged', this.totalPages)
+      this.$emit("pagechanged", this.totalPages);
     },
     isPageActive(page) {
-      return this.currentPage === page
-    },
-  
+      return this.currentPage === page;
+    }
   }
-}
+};
 </script>
 <style scoped>
 .pagination {
@@ -292,7 +300,7 @@ button:active {
   transform: translate(2px, 2px);
 }
 
-button:disabled svg{
+button:disabled svg {
   fill: #aaa;
 }
 </style>

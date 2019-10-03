@@ -5,11 +5,11 @@
         <div class="flex py-2">
           	<div class="relative">
               <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-                <button class="p-2 absolute pin-t pin-r pin-b focus:outline-none" @click="search = '', searchSubmit()">
+                <button class="p-2 absolute top-0 right-0 bottom-0 focus:outline-none" @click="search = '', searchSubmit()">
                   <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
                 </button>
             </div>
-        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
+        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button>
         </div>
       <div>
         <button
@@ -19,77 +19,76 @@
       </div>
     </div>
 	<!-- TABLE RESPONSIVE-->
-    <div v-if="itemCount > 0" class="table border-separate" style="border-spacing: 0 10px;"> 
+    <div v-if="itemCount > 0" class="flex flex-col mx-2 text-white"> 
       <!-- HEADER -->
-      <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('name',activePage,search)">
+      <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
+        <div class="w-1/6" @click="sortBy('name',activePage,search)">
 			Practice Name
 			<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div> 
-        <div class="table-cell p-2 align-middle">Practice Code</div>
-        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('created_at',activePage,search)">
+        <div class="w-1/6">Practice Code</div>
+        <div class="w-1/6" @click="sortBy('created_at',activePage,search)">
 			Created
 			<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div>
-        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('actived_until',activePage,search)">
+        <div class="w-1/6" @click="sortBy('actived_until',activePage,search)">
 			Expires
 			<svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div>
-        <div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('status',activePage,search)">
+        <div class="w-1/6" @click="sortBy('status',activePage,search)">
 			Status
 			<svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 			<svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 			<svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 		</div>
-		<div class="table-cell p-2 align-middle">Type</div>
+		<div class="w-1/6">Type</div>
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
-      <nuxt-link
+      <div
         v-for="(practice, index) in getAllPractices"
 		:key="`practice-${index}`"
-		:to="{path:`/practices/${practice.id}`,query:$route.query}"
-        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 my-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
-        draggable="false"
+		@click="$router.push(`/practices/${practice.id}`)"
+        class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0" 
       >
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
           <span class="break-word">{{ practice.surgery ? practice.surgery.name:null }}</span>
         </div>
 
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Practice Code</strong>
           <span class="break-all">{{ practice.surgery ? practice.surgery.code:null }}</span>
         </div>
 
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Created</strong>
           <span class="break-all">{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+		<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Expires</strong>
           <span class="break-all">{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
 
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Status</strong>
           <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
-			:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
+			:class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
 		</div>
-		<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
+		<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
           <span class="inline-flex no-underline py-2 px-4 text-sm text-black rounded-full shadow"
 			:class="typeStyle(practice.type)">{{ practice.type }}</span>
 		</div>
 
-      </nuxt-link>
+      </div>
       <!-- END BODY -->
     </div>
 	<div v-else>
@@ -103,7 +102,7 @@
 	<div v-if="itemCount > 0" class="flex justify-center">
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 			@click="goToPage(activePage - 1,search,order_by)" 
-			:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
+			:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'">Prev</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 			:class="`${activePage === page ? 'text-white' : ''}`" 
 			v-for="page in pageCount" 
@@ -112,7 +111,7 @@
 			@click="goToPage(page,search,order_by)">{{ page }}</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 			@click="goToPage(activePage + 1,search,order_by)"
-			:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
+			:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">Next</button>														
 	</div>
 	<!-- PAGINATION -->
 
@@ -433,13 +432,13 @@ export default {
 		typeStyle(status){
 			switch(status){
 				case 'Hub':
-					return 'bg-red-light text-white lg:px-8 sm:px-2'
+					return 'bg-red-300 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Spoke':
-					return 'bg-blue-light text-white lg:px-8 sm:px-2'
+					return 'bg-blue-300 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Stand Alone':
-					return 'bg-indigo-light text-white lg:px-8 sm:px-2'
+					return 'bg-indigo-300 text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return

@@ -5,20 +5,20 @@
       <div class="flex text-sm text-white py-6 px-6">
         <nuxt-link
           :to="{path:`/practices/${practice.id}/practice-documents`,query}"
-          class="text-white hover:text-yellow-dark p-1 mr-4"
+          class="text-white hover:text-yellow-500 p-1 mr-4"
         >
           <svgicon
             name="arrow-left-solid"
             height="32"
             width="32"
-            class="hover:text-yellow-dark fill-current"
+            class="hover:text-yellow-500 fill-current"
           />
         </nuxt-link>
 
-        <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
+        <div class="text-white hover:text-black hover:bg-yellow-500 rounded-lg inline-flex p-2">
           <a
             @click.prevent="downloadItem(practiceDoc.file.url, practiceDoc.file.filename)" 
-            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg mr-4">
+            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-500 rounded-lg mr-4">
              <svgicon
               name="cloud-download"
               width="21"
@@ -35,7 +35,7 @@
       <!-- BODY -->
       <div class="shadow-lg rounded-lg bg-waterloo mx-6 mt-10 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-          <div class="text-grey m-2">
+          <div class="text-gray m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{practiceDoc.practice_document_type ? practiceDoc.practice_document_type.name: null}}</p>
             <p class="mt-5 mr-20">Practice</p>
@@ -43,7 +43,7 @@
             <p class="mt-5 mr-20">File last uploaded</p>
             <p class="text-white underline">{{practiceDoc.file ? $moment(practiceDoc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
           </div>
-          <div class="flex flex-col text-grey md:m-2">
+          <div class="flex flex-col text-gray md:m-2">
             <p class="md:mr-20">File</p>
              <embed class="w-full my-2" style="max-width: 800px"
               :src="practiceDoc.file ? practiceDoc.file.url:null"

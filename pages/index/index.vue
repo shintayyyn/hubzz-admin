@@ -8,7 +8,7 @@
                 <div class='m-3'>
                     Locums
                 </div>
-                <div class="h-72 overflow-y-auto overflow-x-hidden">
+                <div class="h-72 overflow-y-auto overflow-x-hidden px-2">
                     <nuxt-link
                     v-for="(item,index) in locumDocsAlert" 
                     :key="`item-${index}`" 
@@ -17,7 +17,7 @@
                         <div class="font-hairline">
                             {{$moment(item.uploaded_at).format('MMMM DD, YYYY | HH:mm')}}
                         </div>
-                        <div class="w-full sm:my-1 sm:px-1">
+                        <div class="w-full flex flex-col sm:my-1 sm:px-1">
                             <span>Locum </span>
                             <span class="font-bold">{{item.locum_detail.user.personal_detail.name}}</span>
                             <span>Uploaded Compliance Document</span>

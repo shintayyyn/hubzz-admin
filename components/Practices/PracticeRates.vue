@@ -2,7 +2,7 @@
     <div class="flex flex-col rounded-lg">
       <div class="w-full flex text-white text-sm bg-waterloo py-2 px-3 shadow rounded-lg" style="max-width: 600px">
         
-        <div v-if="toEdit == false" class="w-full overflow-hidden text-grey-light text-sm p-2">
+        <div v-if="toEdit == false" class="w-full overflow-hidden text-gray-300 text-sm p-2">
           <div class="flex py-1">
             GP Rate
           </div>
@@ -20,7 +20,7 @@
             >Edit
           </button>
         </div>
-        <div v-if="toEdit == true" class="w-full overflow-hidden text-grey-light text-sm p-2">
+        <div v-if="toEdit == true" class="w-full overflow-hidden text-gray-300 text-sm p-2">
             <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                 {{errors[0]}}
             </div>

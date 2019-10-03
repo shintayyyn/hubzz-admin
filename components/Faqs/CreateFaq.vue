@@ -4,7 +4,7 @@
             <div class="text-xl my-2">Question</div>
             <input
                 v-model="form.question" 
-                class="appearance-none block w-full bg-grey-lighter text-grey-darker rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                class="appearance-none block w-full bg-gray-lighter text-gray-darker rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
                 type="text" 
                 placeholder="Please type the question here">
         </div>

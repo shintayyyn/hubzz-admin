@@ -150,19 +150,24 @@ table tbody td {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #e6e6e6;
+  background: #505561;
+  border-radius: 3px
+}
+
+::-webkit-scrollbar-track:hover {
+  background: #5b616e;
   border-radius: 3px
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: rgb(116, 122, 139);
   border-radius: 3px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #505561;
+  background: #7b8396;
 }
 /*===========TOOLTIP=========*/
 .tool {

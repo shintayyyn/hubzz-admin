@@ -7,11 +7,11 @@
 			<div class="flex py-2">
 				<div class="relative">
 					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-					<button class="absolute pin-t pin-r pin-b mr-2 px-4 py-2" @click="search = '', searchSubmit()">
+					<button class="absolute top-0 right-0 bottom-0 mr-1 px-4 py-2" @click="search = '', searchSubmit()">
 						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
-				<button class="rounded-lg text-sm text-white p-2 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
+				<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
 			</div>
 			<div class="relative flex flex-col md:flex-row md:items-center md:items-end py-2 md:py-0 md:px-4 md:px-6 -mt-2 md:mt-0">
 				<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
@@ -31,85 +31,71 @@
 				</select>
 			</div>
 		</div>
-		<!-- TABLE -->
-		<div class="table border-separate overflow-x-auto mx-6" style="border-spacing: 0 10px;"> 
-			<!-- HEADER -->
-			<div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('name',activePage,search,filterCompliances)">
+		<div class="flex flex-col mx-6 text-white">
+			<div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2">
+				<div class="w-1/6" @click="sortBy('name',activePage,search,filterCompliances)">
 					Name
 					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
-				</div> 
-				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('profession',activePage,search,filterCompliances)" >
+					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/></div>
+				<div class="w-1/6" @click="sortBy('profession',activePage,search,filterCompliances)">
 					Profession
 					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('created_at',activePage,search,filterCompliances)" >
+				<div class="w-1/6" @click="sortBy('created_at',activePage,search,filterCompliances)">
 					Date signed-up
 					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle cursor-pointer" @click="sortBy('email_verified_at',activePage,search,filterCompliances)" >
+				<div class="w-1/6" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
 					Sign-up verified
 					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="table-cell p-2 align-middle">
-					Status
-				</div>
-				<div class="table-cell p-2 align-middle">
-					Compliance Status
-				</div>
+				<div class="w-1/6">Status</div>
+				<div class="w-1/6">Compliance Status</div>
 			</div>
-			<!-- BODY -->
-			<nuxt-link 
-			v-for="(locumUser, index) in locumUsers" 
-			:key="`locumUser-${index}`" 
-			:to="{ path: `/locums/${locumUser.id}`, query: $route.query }" 
-			class="flex flex-col sm:flex-row sm:flex-wrap px-2 py-2 my-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
-			draggable="false"
-			>
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
-					<strong class="block md:hidden text-sm uppercase">Name</strong>
-					<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span>
-				</div>
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-					<strong class="block md:hidden text-sm uppercase">Profession</strong>
-					<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
-				</div>
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-					<strong class="block md:hidden text-sm uppercase">Date signed-up</strong>
-					<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
-				</div>
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-					<strong class="block md:hidden text-sm uppercase">Sign-up verified</strong>
-					<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
-				</div>
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
-					<strong class="block md:hidden text-sm uppercase">Status</strong>
-					<span class="inline-flex text-black text-sm py-2 p-3 rounded-full"
-						:class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
-				</div>
-				<div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
-						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
-					<span class="inline-flex text-black text-sm py-2 p-3 rounded-full"
-						:class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+			<div
+				v-for="(locumUser, index) in locumUsers" 
+				:key="`locumUser-${index}`" 
+				@click="$router.push(`/locums/${locumUser.id}`)"
+			 	class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0">
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Name</strong>
+						<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Profession</strong>
+						<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
 					</div>
-			</nuxt-link>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Date signed-up</strong>
+						<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Sign-up verified</strong>
+						<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Status</strong>
+						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
+						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+					</div>
+			</div>
 		</div>
-		<!-- TABLE ENDS HERE-->
 
 		<!-- PAGINATION -->
 		<div class="flex justify-center">
 			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 					@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
-					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev
+					:class="activePage === 1 ? 'text-gray-500' : 'hover:bg-yellow-500'">Prev
 				</button>
 
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
@@ -122,7 +108,7 @@
 				
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 					@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
-					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next
+					:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">Next
 				</button>														
 			</div>
 		</div>
@@ -497,19 +483,19 @@ export default {
 		statusStyle(status){
 			switch(status){
 				case 'Active':
-					return 'bg-green text-white lg:px-8 sm:px-2'
+					return 'bg-green-500 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Inactive':
-					return 'bg-yellow text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-500 text-black lg:px-8 sm:px-2'
 					break;
 				case 'Deactivated':
-					return 'bg-grey text-black lg:px-8 sm:px-2'
+					return 'bg-gray-500 text-black lg:px-8 sm:px-2'
 					break;
 				case 'Suspended':
-					return 'bg-red text-white lg:px-8 sm:px-2'
+					return 'bg-red-500 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Dormant':
-					return 'bg-green-darker text-white lg:px-8 sm:px-2'
+					return 'bg-green-700 text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return
@@ -521,22 +507,22 @@ export default {
 					return 'border border-white text-white lg:px-8 sm:px-2'
 					break;
 				case 'Incomplete':
-					return 'bg-yellow-light text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-300 text-black lg:px-8 sm:px-2'
 					break;
 				case 'Pending':
-					return 'bg-yellow text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-500 text-black lg:px-8 sm:px-2'
 					break;
 				case 'Expiring':
-					return 'bg-orange text-black lg:px-8 sm:px-2'
+					return 'bg-orange-500 text-black lg:px-8 sm:px-2'
 					break;
 				case 'Expired':
-					return 'bg-red text-white lg:px-8 sm:px-2'
+					return 'bg-red-500 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Rejected':
-					return 'bg-orange-dark text-black lg:px-8 sm:px-2'
+					return 'bg-orange-700 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Compliant':
-					return 'bg-green text-white lg:px-8 sm:px-2'
+					return 'bg-green-500 text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return

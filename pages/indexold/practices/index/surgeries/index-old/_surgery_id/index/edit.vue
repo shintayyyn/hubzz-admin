@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l cursor-pointer">
+	<div class="absolute top-0 bottom-0 right-0 left-0 cursor-pointer">
 
 		<div class="sm:ml-32 h-full bg-trout shadow-lg cursor-default">
 
@@ -86,8 +86,8 @@
 					</div>
 
 					<div class="text-right">
-						<button class="inline-flex py-2 px-4 my-2 bg-blue-light text-xs text-white rounded-lg shadow" v-if="!updating" @click="updatePracticeType">Update</button>
-						<button class="inline-flex py-2 px-4 my-2 bg-blue-light text-xs text-white rounded-lg shadow" v-if="updating">Updating...</button>
+						<button class="inline-flex py-2 px-4 my-2 bg-blue-300 text-xs text-white rounded-lg shadow" v-if="!updating" @click="updatePracticeType">Update</button>
+						<button class="inline-flex py-2 px-4 my-2 bg-blue-300 text-xs text-white rounded-lg shadow" v-if="updating">Updating...</button>
 					</div>
 				</div>
 			</div>

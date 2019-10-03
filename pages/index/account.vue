@@ -6,7 +6,7 @@
                 <div class="flex flex-wrap -mx-1 overflow-hidden">
                     <div class="my-1 px-1 overflow-hidden">
                         <button
-                            class="bg-sunglow hover:bg-yellow-dark rounded-lg py-3 px-4 text-black text-sm"
+                            class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
                             @click="tab1=true,tab2=false"
                         >
                             <strong>General</strong>
@@ -14,7 +14,7 @@
                     </div>
                     <div class="my-1 px-1 overflow-hidden">
                         <button
-                            class="bg-sunglow hover:bg-yellow-dark rounded-lg py-3 px-4 text-black text-sm"
+                            class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
                             @click="tab2=true,tab1=false"
                         >
                             <strong>Change Password</strong>
@@ -37,7 +37,7 @@
             <div v-if="tab2">
                  <div v-if="tab2" class="flex text-white">
                     <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
-                        <div class="overflow-hidden text-grey-light text-sm p-2">
+                        <div class="overflow-hidden text-gray-300 text-sm p-2">
                             <div v-if="errorPass[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                                 {{errorPass[0]}}
                             </div>
