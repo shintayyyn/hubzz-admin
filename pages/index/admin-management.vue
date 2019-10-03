@@ -40,7 +40,7 @@
             <div
                 v-for="(user, index) in adminUsers"
                 :key="`user-${index}`"
-                class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+                class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
             >
                 <div @click.prevent="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
                     <svgicon
@@ -71,7 +71,7 @@
 			<div >
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 					@click="goToPage(activePage - 1 ,search)" 
-					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev
+					:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'">Prev
 				</button>
 
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
@@ -84,7 +84,7 @@
 				
 				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 					@click="goToPage(activePage + 1, search)"
-					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next
+					:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">Next
 				</button>														
 			</div>
 		</div>

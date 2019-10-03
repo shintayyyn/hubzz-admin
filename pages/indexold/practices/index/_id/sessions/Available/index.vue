@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
+	<div class="fixed lg:absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-y-auto overflow-x-hidden">
 		<div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-2 md:px-6">
@@ -13,7 +13,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
                   <strong>Practice</strong>
                 </nuxt-link>
@@ -22,7 +22,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   v-if="!specificPractice.practice_parent"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
@@ -32,7 +32,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="bg-gray-dark hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
                   <strong>Sessions</strong>
                 </nuxt-link>
@@ -41,7 +41,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
                   <strong>Users</strong>
                 </nuxt-link>
@@ -50,7 +50,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
                   <strong>Documents</strong>
                 </nuxt-link>
@@ -59,7 +59,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
                   <strong>Rates</strong>
                 </nuxt-link>
@@ -74,21 +74,21 @@
       </button> -->
       <div class="flex justify-center md:justify-start px-2 md:px-6 my-2">
         <div class="flex flex-wrap -mx-1">
-          <div class="md:my-1 bg-grey-dark hover:bg-grey-darker rounded-lg p-4 mx-1">
+          <div class="md:my-1 bg-gray-dark hover:bg-gray-darker rounded-lg p-4 mx-1">
             <nuxt-link
               class="text-white md:text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/available`,query:$route.query}">
               <strong>Available</strong>
             </nuxt-link>
           </div>
-          <div class="md:my-1 hover:bg-grey-darker rounded-lg p-4 mx-1">
+          <div class="md:my-1 hover:bg-gray-darker rounded-lg p-4 mx-1">
             <nuxt-link
               class="text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/applied`,query:$route.query}">
               <strong>Applied</strong>
             </nuxt-link>
           </div>
-          <div class="md:my-1 hover:bg-grey-darker rounded-lg p-4 mx-1 overflow-</b-tabs>hidden">
+          <div class="md:my-1 hover:bg-gray-darker rounded-lg p-4 mx-1 overflow-</b-tabs>hidden">
             <nuxt-link
               class="text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/current`,query:$route.query}"
@@ -96,28 +96,28 @@
               <strong>Current</strong>
             </nuxt-link>
           </div>
-          <div s class="md:my-1 hover:bg-grey-darker rounded-lg p-4 mx-1">
+          <div s class="md:my-1 hover:bg-gray-darker rounded-lg p-4 mx-1">
             <nuxt-link
               class="text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/completed`,query:$route.query}">
               <strong>Completed</strong>
             </nuxt-link>
           </div>
-          <div class="md:my-1 hover:bg-grey-darker rounded-lg p-4 mx-1">
+          <div class="md:my-1 hover:bg-gray-darker rounded-lg p-4 mx-1">
             <nuxt-link
               class="text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/unfilled`,query:$route.query}">
               <strong>Unfilled</strong>
             </nuxt-link>
           </div>
-          <div class="md:my-1 hover:bg-grey-darker rounded-lg p-4 mx-1">
+          <div class="md:my-1 hover:bg-gray-darker rounded-lg p-4 mx-1">
             <nuxt-link
               class="text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/cancelled`,query:$route.query}">
               <strong>Cancelled</strong>
             </nuxt-link>
           </div>
-          <div class="md:my-1 hover:bg-grey-darker rounded-lg p-4 mx-1">
+          <div class="md:my-1 hover:bg-gray-darker rounded-lg p-4 mx-1">
             <nuxt-link
               class="text-white text-sm no-underline"
               :to="{path:`/practices/${specificPractice.id}/sessions/declined`,query:$route.query}">

@@ -1,5 +1,5 @@
 <template>
-	<div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
+	<div class="fixed lg:absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-y-auto overflow-x-hidden">
 		<div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
@@ -15,7 +15,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}`,query: $route.query}">
                   <strong>Practice</strong>
                 </nuxt-link>
@@ -24,7 +24,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   v-if="!specificPractice.practice_parent"
                   :to="{path:`/practices/${specificPractice.id}/surgeries`,query: $route.query}">
                   <strong>Surgeries</strong>
@@ -34,7 +34,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/sessions/available`,query: $route.query}">
                   <strong>Sessions</strong>
                 </nuxt-link>
@@ -43,7 +43,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="bg-gray-dark hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/users`,query: $route.query}">
                   <strong>Users</strong>
                 </nuxt-link>
@@ -52,7 +52,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/documents`,query: $route.query}">
                   <strong>Documents</strong>
                 </nuxt-link>
@@ -61,7 +61,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/practices/${specificPractice.id}/rates`,query: $route.query}">
                   <strong>Rates</strong>
                 </nuxt-link>
@@ -100,7 +100,7 @@
           v-for="(user, index) in usersInPractice"
           :key="`user-${index}`"
           :to="`/practices/${specificPractice.id}/users/edit-user/${user.id}`"
-          class="flex flex-col md:flex-row sm:flex-wrap px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+          class="flex flex-col md:flex-row sm:flex-wrap px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
           draggable="false"
           >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">

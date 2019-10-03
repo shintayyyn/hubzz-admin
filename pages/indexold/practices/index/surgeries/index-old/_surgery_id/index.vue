@@ -1,11 +1,11 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l cursor-pointer">
+	<div class="absolute top-0 bottom-0 right-0 left-0 cursor-pointer">
 
 		<div class="sm:ml-16 h-full bg-trout shadow-lg cursor-default relative">
 
 			<!-- DELETE MODAL -->
 			<div v-if="showDeleteModal" class="flex justify-center">
-				<div class="absolute py-4 px-6 bg-white rounded-lg rounded-t-none text-center bg-red-light shadow-lg">
+				<div class="absolute py-4 px-6 bg-white rounded-lg rounded-t-none text-center bg-red-300 shadow-lg">
 					<div>
 						<span class="text-sm text-white">Are you sure you want to delete this Surgery?</span>
 					</div>
@@ -132,8 +132,8 @@
 					</div>
 
 					<div class="text-right">
-						<nuxt-link :to="{ path: `/surgeries/${surgery.id}/edit`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-blue-light text-xs text-white rounded-lg shadow">Edit</nuxt-link>
-						<button class="inline-flex py-2 px-4 my-2 bg-red-light text-xs text-white rounded-lg shadow" @click="showDeleteModal = true">Delete</button>
+						<nuxt-link :to="{ path: `/surgeries/${surgery.id}/edit`, query: $route.query }" class="inline-flex no-underline py-2 px-4 my-2 bg-blue-300 text-xs text-white rounded-lg shadow">Edit</nuxt-link>
+						<button class="inline-flex py-2 px-4 my-2 bg-red-300 text-xs text-white rounded-lg shadow" @click="showDeleteModal = true">Delete</button>
 					</div>
 
 				</div>

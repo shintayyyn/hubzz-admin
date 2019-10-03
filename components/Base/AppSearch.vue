@@ -5,11 +5,11 @@
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" 
             :placeholder="placeholder"
             @keyup.enter="$emit('click')">
-            <button class="absolute pin-t pin-r pin-b mr-2 px-4 py-2" @click="search = '', searchSubmit()" >
+            <button class="absolute top-0 right-0 bottom-0 mr-2 px-4 py-2" @click="search = '', searchSubmit()" >
                 <svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
             </button>
         </div>
-        <button class="rounded-lg text-sm text-white p-2 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
+        <button class="rounded-lg text-sm text-white p-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button>
     </div>
 </template>
 

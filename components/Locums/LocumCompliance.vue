@@ -4,7 +4,7 @@
             class="flex lg:w-2/3 no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
             style="position:relative;">
             <div class="w-4/5 overflow-hidden text-sm m-4">
-                <div class="text-grey">
+                <div class="text-gray-400">
                 <p class="m-2">
                     Name <span class="m-2 text-white">{{ user.personal_detail ? user.personal_detail.name : null }}</span>
                 </p>
@@ -23,44 +23,36 @@
         <!--GMC / NMC NUMBER-->
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 sm:justify-between">
-                <p class="text-grey">GMC / NMC / HCPC Number</p>
+                <p class="text-gray-400">GMC / NMC / HCPC Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
                 <button
-<<<<<<< HEAD
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
-=======
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 border border-white focus:bg-green rounded-full hover:bg-green-light"
->>>>>>> fca06d4d31f77c8dcc9fa5c8bc42c165152fd391
-                :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light text-center ' : 'bg-transparent px-2 hover:bg-green-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
+                :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600 text-center ' : 'bg-transparent px-2 hover:bg-green-500'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Verified')"
                 >{{user.locum_detail.gmc_or_nmc_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
-<<<<<<< HEAD
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
-=======
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
->>>>>>> fca06d4d31f77c8dcc9fa5c8bc42c165152fd391
-                :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-2 hover:bg-orange-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange-500 rounded-full hover:bg-orange-500 focus:outline-none"
+                :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange-500 border-orange-500 text-white px-4 hover:bg-orange-600 ' : 'bg-transparent px-2 hover:bg-orange-500'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toRejectGmcNmc()"
                 >{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
                 
             </div>
             <div v-if="rejectGmcNmc == true" class="flex w-full justify-end mt-2 sm:m-0">
-                <div class="p-1 px-6 m-1 bg-waterloo-light rounded-lg">
-                    <textarea
-                        v-model="notes" 
-                        placeholder="Reason for Rejection (Optional)" 
-                        class="text-grey-lightest flex-1 py-2 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                        name="complianceNote"
-                        >
-                    </textarea>
-                </div>
-                <div class="mt-4 mx-2">
-                    <button @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')" class="py-2 px-8 rounded-full rounded-lg text-white bg-blue">
+                 <div class="flex items-center my-2">
+                    <div class="border rounded-lg mx-2 p-2">
+                        <textarea
+                            v-model="notes" 
+                            placeholder="Reason for Rejection (Optional)" 
+                            class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
+                            name="complianceNote"
+                            >
+                        </textarea>
+                    </div>
+                     <button @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')" class="p-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
                         <span>{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
                     </button>
                 </div>
@@ -69,35 +61,36 @@
 
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 sm:justify-between">
-                <p class="text-grey">MPL / NPL Number</p>
+                <p class="text-gray">MPL / NPL Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.mpl_or_npl_number ? user.locum_detail.mpl_or_npl_number.number : null }}</p>
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
                 <button
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
-                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-2 hover:bg-green-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
+                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600' : 'bg-transparent px-2 hover:bg-green-300'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Verified')"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
-                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light' : 'bg-transparent px-2 hover:bg-orange-light'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange-500 rounded-full hover:bg-orange-500 focus:outline-none"
+                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange-500 text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toRejectMplNpl()"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
             </div>
             <div v-if="rejectMplNpl == true" class="flex w-full justify-end mt-2 sm:m-0">
-                <div class="p-1 px-6 m-1 bg-waterloo-light rounded-lg">
-                    <textarea
-                        v-model="notes" 
-                        placeholder="Reason for Rejection (Optional)" 
-                        class="text-grey-lightest flex-1 py-2 bg-transparent overflow-auto resize border-b focus:border-orange" 
-                        name="complianceNote"
-                        >
-                    </textarea>
-                </div>
-                <div class="mt-4 mx-2">
-                    <button @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')" class="p-2 px-8  rounded-full rounded-lg text-white bg-blue">
+                <div class="flex items-center my-2">
+                    <div class="border rounded-lg mx-2 p-2">
+                        <textarea
+                            v-model="notes" 
+                            placeholder="Reason for Rejection (Optional)" 
+                            class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
+                            name="complianceNote"
+                            >
+                        </textarea>
+                    </div>
+                    
+                     <button @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')" class="p-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
                         <span>{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
                     </button>
                 </div>
@@ -122,9 +115,9 @@
             <nuxt-link
                 v-for="(item, index) in mandatoryComplianceDocuments" :key="`item-${index}`"
                 :event="item.locumMandatoryComplianceDocument==null ? disabled :'click'" 
-                :class="item.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-light' "
+                :class="item.locumMandatoryComplianceDocument==null? '':' hover:bg-waterloo-300' "
                 :to="{path:`/locums/${user.id}/locum-compliance/${item.locumMandatoryComplianceDocument ? item.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
-                class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+                class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-300" 
                 draggable="false"
             >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-6 pr-1 py-2 md:py-4 align-middle">
@@ -193,9 +186,9 @@
             <nuxt-link
                 v-for="(item, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
                 :event="item.locumOptionalComplianceDocument==null ? disabled :'click'"
-                :class="item.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-light'"
+                :class="item.locumOptionalComplianceDocument==null ? '':'hover:bg-waterloo-300'"
                 :to="{path:`/locums/${user.id}/locum-compliance/${item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.id : null }`, query}"
-                class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+                class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-300" 
                 draggable="false"
             >
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-6 pr-1 py-2 md:py-4 align-middle">
@@ -252,7 +245,7 @@
             <!-- BODY -->
             <div
             v-for="(item, index) in locumMandatoryTrainings" :key="`item-${index}`"
-            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+            class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 mt-2 md:table-row text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-300" 
             draggable="false">
 
                 <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
@@ -524,19 +517,19 @@ export default {
         statusStyle(status){
 			switch(status){
 				case 'Approved':
-					return 'bg-green border-green text-white lg:px-8 sm:px-4'
+					return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
 					break;
 				case 'Expiring':
-					return 'bg-orange border-orange text-black lg:px-8 sm:px-4'
+					return 'bg-orange-500 border-orange-500 text-black lg:px-8 sm:px-4'
 					break;
 				case 'Expired':
-					return 'bg-red border-red text-white lg:px-8 sm:px-4'
+					return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
 					break;
 				case 'Rejected':
-					return 'bg-orange-dark border-orange text-black lg:px-8 sm:px-4'
+					return 'bg-orange-500 border-orange-500 text-black lg:px-8 sm:px-4'
                     break;
                 case 'Pending':
-					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-4'
+					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
 					break;
 				default:
 					return

@@ -68,7 +68,7 @@
                         color="red red"
                         class="mt-12 mx-2"/>
                     </div>
-                    <div  class="flex flex-wrap w-4/5 justify-between px-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo">
+                    <div  class="flex flex-wrap w-4/5 justify-between px-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo">
                         <div class="flex flex-col mx-6  sm:w-full md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                             <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
                             <span class="whitespace-no-wrap">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>

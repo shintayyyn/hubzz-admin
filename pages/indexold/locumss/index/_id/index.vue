@@ -1,14 +1,14 @@
 <template>
-  <div class="fixed lg:absolute pin-t pin-b pin-r pin-l flex flex-col overflow-y-auto overflow-x-hidden">
+  <div class="fixed lg:absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-y-auto overflow-x-hidden">
     <div class="page-overlap flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
-        <nuxt-link to="/locums" class="text-white hover:text-yellow-dark p-1">
+        <nuxt-link to="/locums" class="text-white hover:text-yellow-500 p-1">
           <svgicon
             name="arrow-left-solid"
             height="22"
             width="22"
-            class="hover:text-yellow-dark fill-current"
+            class="hover:text-yellow-500 fill-current"
           />
         </nuxt-link>
       </div>
@@ -18,7 +18,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                 <nuxt-link
-                class="bg-grey-dark hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                class="bg-gray-dark hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                 :to="{path:`/locums/${locumUser.id}`,query: $route.query}">
                   <strong>Profile</strong>
                 </nuxt-link>
@@ -27,7 +27,7 @@
             <div class="my-1 px-1">
               <div class="my-2 rounded-lg">
                   <nuxt-link
-                  class="hover:bg-grey rounded-lg p-3 text-white text-sm no-underline"
+                  class="hover:bg-gray rounded-lg p-3 text-white text-sm no-underline"
                   :to="{path:`/locums/${locumUser.id}/locum-jobs/Current`,query: $route.query}">
                     <strong>Jobs</strong>
                   </nuxt-link>
@@ -39,7 +39,7 @@
                 class="border-white rounded-lg p-3 text-white text-sm no-underline"
                 :to="{path:`/locums/${locumUser.id}/locum-compliance`,query: $route.query}"
                 :event="locumUser.compliance_status==='Empty' ? disabled : 'click'"
-                :class="locumUser.compliance_status==='Empty' ? 'text-grey-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
+                :class="locumUser.compliance_status==='Empty' ? 'text-gray-dark bg-red m-3 rounded-lg' :'hover:bg-waterloo-light'">
                   <strong>{{locumUser.compliance_status === 'Empty'?'No Compliance Documents Uploaded':'Compliances'}}</strong>
                 </nuxt-link>
               </div>
@@ -52,7 +52,7 @@
             <div class="flex flex-wrap overflow-hidden">
               <!--COLUMN 1-->
               <div class="w-full md:w-1/3 overflow-hidden mb-2">
-                <div class="text-grey mx-5">
+                <div class="text-gray mx-5">
                   <p class="m-2 font-semibold">Name</p>
                   <p class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Email address</p>
@@ -74,22 +74,22 @@
                   <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
-                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name1'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark">
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500">
                     English
                   </p>
-                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name2'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
@@ -98,7 +98,7 @@
               </div>
               <!--COLUMN 2-->
               <div class="w-full md:w-1/3 overflow-hidden mb-2">
-                <div class="text-grey mx-5 md:mx-10">
+                <div class="text-gray mx-5 md:mx-10">
                   <p class="m-2 mr-20 font-semibold">Headline</p>
                   <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.headline:null}}</p>
                   <p class="m-2 mt-5 mr-20 font-semibold">Short Biography</p>
@@ -161,9 +161,9 @@
                     :src="locumUser.avatar ? locumUser.avatar.file.url:null"
                   >
                   <img v-if="!locumUser.avatar" class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
-                  <p class="m-2 text-grey">Sign-up verified by email</p>
+                  <p class="m-2 text-gray">Sign-up verified by email</p>
                   <p class="m-2 text-white">{{locumUser.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified"}}</p>
-                  <p class="m-2 text-grey">Active at </p>
+                  <p class="m-2 text-gray">Active at </p>
                   <p class="m-2 text-white">{{locumUser.status == "Active" ? "Account is Active" :"Account is "+locumUser.status }}</p>
                   <select
                     class="outline-none border-2 border-transparent text-sm text-black pr-6"

@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l cursor-pointer">
+	<div class="absolute top-0 bottom-0 right-0 left-0 cursor-pointer">
 
 		<div class="sm:ml-16 h-full bg-trout shadow-lg cursor-default">
 

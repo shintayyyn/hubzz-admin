@@ -6,12 +6,12 @@
           class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
           placeholder="Search for..."
         >
-        <button class="p-2 absolute pin-t pin-r pin-b">
+        <button class="p-2 absolute top-0 right-0 bottom-0">
           <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
         </button>
       </div>
       <button
-        class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark"
+        class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-500"
       >Go</button>
     </div>
 

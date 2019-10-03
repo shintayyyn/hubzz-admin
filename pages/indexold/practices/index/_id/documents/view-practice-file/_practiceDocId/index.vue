@@ -1,25 +1,25 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout overflow-auto">
      <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex text-sm text-white py-2 px-6">
         <nuxt-link
           :to="{path:`/practices/${specificPractice.id}/documents`}"
-          class="text-white hover:text-yellow-dark p-1 mr-4"
+          class="text-white hover:text-yellow-500 p-1 mr-4"
         >
           <svgicon
             name="arrow-left-solid"
             height="22"
             width="22"
-            class="hover:text-yellow-dark fill-current"
+            class="hover:text-yellow-500 fill-current"
           />
         </nuxt-link>
 
-        <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
+        <div class="text-white hover:text-black hover:bg-yellow-500 rounded-lg inline-flex p-2">
           <a
             @click.prevent="downloadItem(specificPracticeDocument.file.url, specificPracticeDocument.file.filename)" 
-            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 mr-4">
+            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 mr-4">
              <svgicon
               name="cloud-download"
               width="21"
@@ -36,7 +36,7 @@
       <!-- BODY -->
       <div class="shadow-lg rounded-lg bg-waterloo mx-6 mt-10 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-          <div class="text-grey m-2">
+          <div class="text-gray m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{specificPracticeDocument.practice_document_type ? specificPracticeDocument.practice_document_type.name: null}}</p>
             <p class="mt-5 mr-20">Practice</p>
@@ -44,7 +44,7 @@
             <p class="mt-5 mr-20">File last uploaded</p>
             <p class="text-white underline">{{specificPracticeDocument.file ? $moment(specificPracticeDocument.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
           </div>
-          <div class="flex flex-col text-grey md:m-2">
+          <div class="flex flex-col text-gray md:m-2">
             <p class="md:mr-20">File</p>
              <embed class="w-full my-2" style="max-width: 800px"
               :src="specificPracticeDocument.file ? specificPracticeDocument.file.url:null"

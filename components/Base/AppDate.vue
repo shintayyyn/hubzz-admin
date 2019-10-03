@@ -76,7 +76,7 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
                   'bg-white border-yellow border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 1"
@@ -96,7 +96,7 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
                   'bg-white border-yellow border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 2"
@@ -116,8 +116,8 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-dark border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 3"
                 >
@@ -136,8 +136,8 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-dark border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 4"
                 >
@@ -156,8 +156,8 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-dark border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 5"
                 >
@@ -176,8 +176,8 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-dark border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 6"
                 >
@@ -196,8 +196,8 @@
                   :class="{
                   'border-yellow border-2': isSame(item.fullDate),
                   'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-light text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-dark border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 0"
                 >

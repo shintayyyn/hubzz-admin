@@ -5,11 +5,11 @@
         <div class="flex py-2">
           	<div class="relative">
               <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-                <button class="p-2 absolute pin-t pin-r pin-b focus:outline-none" @click="search = '', searchSubmit()">
+                <button class="p-2 absolute top-0 right-0 bottom-0 focus:outline-none" @click="search = '', searchSubmit()">
                   <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
                 </button>
             </div>
-        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit">Go</button>
+        <button class="rounded-lg text-sm text-white p-2 mx-1 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button>
         </div>
       <div>
         <button
@@ -80,7 +80,7 @@
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Status</strong>
           <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
-			:class="`${practice.status === 'Active' ? 'bg-green text-white lg:px-8 px-4' : 'bg-yellow text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
+			:class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
 		</div>
 		<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
@@ -102,7 +102,7 @@
 	<div v-if="itemCount > 0" class="flex justify-center">
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 			@click="goToPage(activePage - 1,search,order_by)" 
-			:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev</button>
+			:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'">Prev</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 			:class="`${activePage === page ? 'text-white' : ''}`" 
 			v-for="page in pageCount" 
@@ -111,7 +111,7 @@
 			@click="goToPage(page,search,order_by)">{{ page }}</button>
 		<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
 			@click="goToPage(activePage + 1,search,order_by)"
-			:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next</button>														
+			:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">Next</button>														
 	</div>
 	<!-- PAGINATION -->
 
@@ -432,13 +432,13 @@ export default {
 		typeStyle(status){
 			switch(status){
 				case 'Hub':
-					return 'bg-red-light text-white lg:px-8 sm:px-2'
+					return 'bg-red-300 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Spoke':
-					return 'bg-blue-light text-white lg:px-8 sm:px-2'
+					return 'bg-blue-300 text-white lg:px-8 sm:px-2'
 					break;
 				case 'Stand Alone':
-					return 'bg-indigo-light text-white lg:px-8 sm:px-2'
+					return 'bg-indigo-300 text-white lg:px-8 sm:px-2'
 					break;
 				default:
 					return

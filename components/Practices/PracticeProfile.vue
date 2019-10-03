@@ -1,9 +1,9 @@
-<template>
+\<template>
     <div class="flex flex-col rounded-lg p-4 sm:p-4">
         <div>
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
-              <div class="w-full md:w-1/2 text-grey-light text-sm p-2">
+              <div class="w-full md:w-1/2 text-gray-300 text-sm p-2">
                 <p class="flex">Practice Name</p>
                 <p class="flex items-center text-white text-sm p-2 font-semibold">
                   {{practice.surgery ? practice.surgery.name : null}} 
@@ -25,7 +25,7 @@
                 
                 <p class="flex">Practice Types</p>
                 <div v-if="practice.practice_types.length > 0">
-                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="practiceType in practice.practice_types"
                       :key="practiceType.id + '-name'">
                       {{practiceType ? practiceType.name:null}}
@@ -71,11 +71,11 @@
                 </div>
 
                 <div v-if="toEdit == false" class="border-b border-white">
-                  <p class="flex text-grey-light p-2">Phone Number</p>
+                  <p class="flex text-gray-300 p-2">Phone Number</p>
                   <p class="flex mx-4 font-semibold">{{practice && practice.phone_number ? practice.phone_number : 'N/A'}}</p>
-                  <p class="flex text-grey-light p-2">Full name to report to</p>
+                  <p class="flex text-gray-300 p-2">Full name to report to</p>
                   <p class="flex mx-4 font-semibold">{{practice && practice.report_to ? practice.report_to : 'N/A'}}</p>
-                  <p class="flex text-grey-light p-2">Extra information (Parking restrictions, transport links, etc.)</p>
+                  <p class="flex text-gray-300 p-2">Extra information (Parking restrictions, transport links, etc.)</p>
                   <p class="flex mx-4 font-semibold">{{practice && practice.extra_information ? practice.extra_information : 'N/A'}}</p>
                   <div class="my-4">
                     <span class="tool" data-tip="Practice Status is automatically set to 'Active' once Practice Verification Process is done." tabindex="1">
@@ -87,22 +87,22 @@
                       class="-mb-1 ml-2" 
                       ></svgicon>
                     </span>
-                    <span class="text-grey-light p-2">Status: </span>
-                    <span class="text-grey-light p-2 rounded-lg font-semibold" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
+                    <span class="text-gray-300 p-2">Status: </span>
+                    <span class="text-gray-300 p-2 rounded-lg font-semibold" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
                   </div>
-                  <span class="text-grey-light p-2">Active Until</span>
+                  <span class="text-gray-300 p-2">Active Until</span>
                   <p class="flex m-4 font-semibold">{{practice && practice.actived_until ? practice.actived_until : 'N/A'}}</p>
                 </div>
 
                 <div v-if="toEdit == true" class="border-b-4 border-white">
-                  <p class="flex text-grey-light p-2">Phone Number</p>
+                  <p class="flex text-gray-300 p-2">Phone Number</p>
                   <input
                     class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                     type="text"
                     aria-label="phonenumber"
                     v-model="toPutPractice.phone_number"
                   >
-                  <p class="flex text-grey-light p-2">Full name to report to</p>
+                  <p class="flex text-gray-300 p-2">Full name to report to</p>
                   <input
                     class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
                     type="text"
@@ -110,11 +110,11 @@
                     v-model='toPutPractice.report_to'
                   >
                   <p
-                    class="flex text-grey-light p-2"
+                    class="flex text-gray-300 p-2"
                   >Extra information (Parking restrictions, transport links, etc.)</p>
                   <textarea  
                     placeholder="Type Here" 
-                    class="text-grey-lightest w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    class="text-gray-lightest w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
                     name="practiceNote"
                     v-model='toPutPractice.extra_information'>
                   </textarea>
@@ -127,7 +127,7 @@
                     class="-mb-1 ml-2" 
                     ></svgicon>
                   </span>
-                  <span class="text-grey-light p-2">Status: </span>
+                  <span class="text-gray-300 p-2">Status: </span>
                   <select
                     class="mx-2 m-1 outline-none border-2 border-transparent text-black pr-6"
                     v-model='toPutPractice.status'
@@ -137,7 +137,7 @@
                     <option>Deactivated</option>
                   </select>
                   <div class="my-2">
-                    <span class="text-grey-light p-2">Active Until</span>
+                    <span class="text-gray-300 p-2">Active Until</span>
                       <input
                         type="date"
                         class="date-picker hasDatepicker valid"
@@ -154,7 +154,7 @@
                     @click.prevent="toPutPracticeInfo(practice.id,toPutPractice)"
                   >Save</button>
                 </div>
-                <p class="flex text-grey-light text-base font-bold mt-4">Change Practice Type</p>
+                <p class="flex text-gray-300 text-base font-bold mt-4">Change Practice Type</p>
                 <select
                   class="outline-none border-2 border-transparent text-black pr-6"
                   v-model='toPutPracticeType.type'
@@ -265,13 +265,13 @@ export default {
       practiceTypeStyle(type){
         switch(type){
           case 'Stand Alone':
-            return 'bg-indigo-light text-white lg:px-4 sm:px-2'
+            return 'bg-indigo-300 text-white lg:px-4 sm:px-2'
             break;
           case 'Hub':
-            return 'bg-red-light text-white lg:px-8 sm:px-2'
+            return 'bg-red-300 text-white lg:px-8 sm:px-2'
             break;
           case 'Spoke':
-            return 'bg-blue-light text-white lg:px-8 sm:px-2'
+            return 'bg-blue-300 text-white lg:px-8 sm:px-2'
             break;
           default:
             return

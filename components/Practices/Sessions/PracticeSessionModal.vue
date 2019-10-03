@@ -13,7 +13,7 @@
               <div class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
 
                 <div class="xl:w-1/2 w-full overflow-hidden">
-                  <div class="m-4 mt-5 text-grey text-white">
+                  <div class="m-4 mt-5 text-gray text-white">
                     <p class="font-semibold">Job Number</p>
                     <p class="text-white">{{job.job_number}}</p>
                     <p class="mt-5 font-semibold">Rate</p>
@@ -50,21 +50,21 @@
                       <p class="m-2 ">{{job.platform_job.profession.name}}</p>
 
                       <p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                         v-for="specialty in job.platform_job.qualifications"
                         :key="specialty.id + '-name'">
                         {{specialty ? specialty.name:null}}
                       </p>
 
                       <p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                         v-for="clinicalSystem in job.platform_job.clinical_systems"
                         :key="clinicalSystem.id + '-name1'">
                           {{clinicalSystem ? clinicalSystem.name:null}}
                       </p>
 
                       <p class="m-2 mt-5 w-1/2 font-semibold">Spoken Languages</p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                         v-for="spokenLanguage in job.platform_job.spoken_languages"
                         :key="spokenLanguage.id + '-name2'">
                         {{spokenLanguage ? spokenLanguage.name:null}}
@@ -198,20 +198,20 @@
                     <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                     
                     <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
-                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="specialty in locumUser.locum_detail.qualifications"
                       :key="specialty.id + '-name'">
                       {{specialty ? specialty.name:null}}
                     </p> 
                     
                     <p class="m-2 mt-5 mr-20 font-semibold">Clinical Systems</p>
-                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="clinicalSystem in locumUser.locum_detail.clinical_systems"
                       :key="clinicalSystem.id + '-name1'">
                         {{clinicalSystem ? clinicalSystem.name:null}}
                     </p>
                     <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
-                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
                       :key="spokenLanguage.id + '-name2'">
                       {{spokenLanguage ? spokenLanguage.name:null}}

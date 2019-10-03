@@ -1,5 +1,5 @@
 <template>
-	<div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+	<div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
 		<div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
 
 			<!-- HEADER -->
@@ -12,7 +12,7 @@
 
 			<div class="flex flex-col bg-waterloo m-4 py-2 px-4 rounded-lg overflow-auto" style="max-width: 400px;">
 				<div class="flex flex-col mb-4">
-					<label class="text-xs py-1 text-grey">Name</label>
+					<label class="text-xs py-1 text-gray">Name</label>
 					<input class="p-2 rounded" v-model="name">
 				</div>
 

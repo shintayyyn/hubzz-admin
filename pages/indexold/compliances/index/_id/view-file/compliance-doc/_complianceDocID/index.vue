@@ -1,21 +1,21 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout overflow-auto">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
     <!-- HEADER -->
     <div class="flex text-sm text-white py-2 px-6">
       <nuxt-link
         :to="{path:`/compliances/${locumUser.id}`}"
-        class="text-white hover:text-yellow-dark p-1 mr-4"
+        class="text-white hover:text-yellow-500 p-1 mr-4"
       >
         <svgicon
           name="arrow-left-solid"
           height="22"
           width="22"
-          class="hover:text-yellow-dark fill-current"
+          class="hover:text-yellow-500 fill-current"
         />
       </nuxt-link>
-      <button class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2 mr-4"
+      <button class="text-white hover:text-black hover:bg-yellow-500 rounded-lg inline-flex p-2 mr-4"
         @click.prevent="toPutLocumDetailComplianceDocs(specificLocumComplianceDocument.id,toPutLocumDetailCompliance,specificLocumComplianceDocument.expired_at)"
       >
         <svgicon
@@ -27,7 +27,7 @@
       ></svgicon>
       <span>Save</span>
         </button>
-        <div class="text-white hover:text-black hover:bg-yellow-dark rounded-lg inline-flex p-2">
+        <div class="text-white hover:text-black hover:bg-yellow-500 rounded-lg inline-flex p-2">
           <a class="text-white" v-bind:href="specificLocumComplianceDocument.file ? specificLocumComplianceDocument.file.url:null">
             <svgicon
               name="cloud-download"
@@ -44,7 +44,7 @@
       <!-- BODY -->
       <div class="flex-col shadow-lg rounded-lg bg-waterloo mx-6 mt-10">
         <div class="inline-flex text-sm m-4">
-          <div class="text-grey m-2">
+          <div class="text-gray m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{specificLocumComplianceDocument.compliance_document ? specificLocumComplianceDocument.compliance_document.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
@@ -80,11 +80,11 @@
                 <textarea 
                   v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
-                  class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                  class="text-gray-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
                   name="complianceNote">Type Here
                 </textarea>
           </div>
-          <div class="flex text-grey m-2">
+          <div class="flex text-gray m-2">
             <p class="mr-20">File</p>
             <embed
               width=800px

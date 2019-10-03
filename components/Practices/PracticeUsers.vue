@@ -49,7 +49,7 @@
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden">Status</strong>
                     <span class="inline-flex text-black text-sm py-2 px-8 rounded-full"
-                    :class="`${user.status === 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+                    :class="`${user.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2' }`"
                     >{{ user.status }}
                     </span>
                 </div>

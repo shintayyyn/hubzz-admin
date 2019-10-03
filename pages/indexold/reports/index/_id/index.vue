@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed lg:absolute overflow-x-hidden overflow-y-auto pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="fixed lg:absolute overflow-x-hidden overflow-y-auto top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg">
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/reports/" class="text-white p-1">
@@ -12,11 +12,11 @@
             class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
             placeholder="Search for..."
           >
-          <button class="-ml-5 pd-2 pin-t pin-r pin-b">
+          <button class="-ml-5 pd-2 top-0 right-0 bottom-0">
             <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
           </button>
           <button
-            class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-dark"
+            class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-500"
           >Go</button>
         </div>
         <div class="flex items-center my-2 md:my-0">
@@ -28,7 +28,7 @@
             <option>Not Paid</option>
           </select>
           <button
-            class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-dark p-2 ml-2 rounded inline-flex items-center"
+            class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-500 p-2 ml-2 rounded inline-flex items-center"
           >
               <svgicon
                 name="cloud-download"

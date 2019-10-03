@@ -1,33 +1,38 @@
 <template>
-  <div class="sidebar bg-charade " :class="{'toggled-left': $store.state.toggled_sidebar}">
+  <div class="sidebar bg-charade" :class="{'toggled-left': $store.state.toggled_sidebar}">
     <div class="sidebar-nav">
       <!-- CLOSE BUTTON -->
-      <div class="xl:mt-24"> <!-- LINKS WRAPPER -->
-      <div
-        class="close-button cursor-pointer text-2xl font-bold text-yellow-dark px-4 my-10"
-        @click="close"
-      >X</div>
-      <!-- LINKS -->
+      <div class="xl:mt-24">
+        <!-- LINKS WRAPPER -->
+        <div
+          class="close-button cursor-pointer text-2xl font-bold text-sunglow px-4 my-10"
+          @click="close"
+        >X</div>
+        <!-- LINKS -->
         <div v-for="(item, index) in lists" :key="index" class="text-sm relative">
           <span
-            class="absolute inset-y-0 left-0 border-solid bg-yellow-dark w-1 h-full"
+            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
             v-if="`/${$route.path.split('/')[1]}` == item.route"
           ></span>
           <nuxt-link :to="item.route">
-            <span @click="close" 
+            <span
+              @click="close"
               class="block font-sans no-underline p-4"
-              :class="`/${$route.path.split('/')[1]}` == item.route ? 'text-yellow-dark' : 'text-white hover:text-grey-light'">{{item.name}}</span>
+              :class="`/${$route.path.split('/')[1]}` == item.route ? 'text-yellow-500' : 'text-white hover:text-gray-400'"
+            >{{item.name}}</span>
           </nuxt-link>
         </div>
         <!-- SIGN OUT -->
         <div class="text-sm relative">
           <span
-            class="absolute pin-l border-solid bg-yellow-dark w-1 h-full"
-            v-if="`/${$route.path.split('/')[1]}` == '/sign-out'"></span>
+            class="absolute left-0 border-solid bg-yellow-500 w-1 h-full"
+            v-if="`/${$route.path.split('/')[1]}` == '/sign-out'"
+          ></span>
           <button
             @click.prevent="signout"
             class="block no-underline p-4 focus:outline-none"
-            :class="`/${$route.path.split('/')[1]}` == '/sign-out' ? 'text-yellow-dark' : 'text-white hover:text-grey-light'">
+            :class="`/${$route.path.split('/')[1]}` == '/sign-out' ? 'text-yellow-500' : 'text-white hover:text-gray-400'"
+          >
             <span class="font-sans">Sign Out</span>
           </button>
         </div>
@@ -44,7 +49,7 @@ export default {
   },
   created() {
     // $auth.user.domain
-    if (this.$auth.loggedIn){
+    if (this.$auth.loggedIn) {
       let domain = this.$auth.user.domain;
       let addedLists = [];
       let defaultLists = [
@@ -56,10 +61,10 @@ export default {
         { name: "FAQs", route: "/faqs" },
         { name: "Terms and Conditions", route: "/tncs" },
         { name: "Support", route: "/supports" },
-        { name: "Admin Management", route: "/admin-management"}
+        { name: "Admin Management", route: "/admin-management" }
       ];
 
-      if (domain === "Super Admin"){
+      if (domain === "Super Admin") {
         addedLists = [
           { name: "Compliance", route: "/compliance" },
           { name: "Users", route: "/compliance" },
@@ -74,7 +79,6 @@ export default {
       }
 
       this.lists = [...defaultLists, ...addedLists];
-
     }
   },
   methods: {
@@ -87,7 +91,7 @@ export default {
       document.body.style.overflow = "auto";
     }
   }
-}
+};
 </script>
 
 <style scoped>

@@ -1,15 +1,15 @@
 <template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex-col self-end bg-trout overflow-auto">
      <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
-        <nuxt-link :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }" class="text-white hover:text-yellow-dark p-1"> <!--GO BACK BUTTON-->
+        <nuxt-link :to="{ path: `/compliances/${locumUser.id}`, query: $route.query }" class="text-white hover:text-yellow-500 p-1"> <!--GO BACK BUTTON-->
           <svgicon
             name="arrow-left-solid"
             height="22"
             width="22"
-            class="hover:text-yellow-dark fill-current"
+            class="hover:text-yellow-500 fill-current"
           />
         </nuxt-link>
       </div>
@@ -32,7 +32,7 @@
           <div v-if="profileTab" class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
               <div class="w-1/3 overflow-hidden">
-                <div class="text-grey mx-5">
+                <div class="text-gray mx-5">
                   <p class="m-2">Name</p>
                   <p class="m-2 text-white">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</p>
                   <p class="m-2 mt-5 mr-20">Email address</p>
@@ -54,19 +54,19 @@
                   <p class="m-2 mt-5 mr-20">Profession</p>
                   <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
                   <p class="m-2 mt-5 mr-20">Speciality</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Clinical Systems</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 mr-20">Spoken Languages</p>
-                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
@@ -74,7 +74,7 @@
                 </div>
               </div>
               <div class="w-1/3 overflow-hidden">
-                <div class="text-grey mx-10">
+                <div class="text-gray mx-10">
                   <p class="m-2 mr-20">Headline</p>
                   <p class="m-2 text-white">{{locumUser.locum_detail?locumUser.locum_detail.headline:null}}</p>
                   <p class="m-2 mt-5 mr-20">Short Biography</p>
@@ -106,9 +106,9 @@
               <div class="w-1/3 overflow-hidden">
                 <div class="mx-20">
                   <img class="w-48 h rounded-full mr-4" src="~/assets/images/default-user-image.png" >
-                  <p class="m-2 text-grey">Sign-up verified by email</p>
+                  <p class="m-2 text-gray">Sign-up verified by email</p>
                   <p class="m-2 text-white">24/01/2019</p>
-                  <p class="m-2 text-grey">Active at </p>
+                  <p class="m-2 text-gray">Active at </p>
                   <p class="m-2 text-white">{{locumUser.actived_at ? $moment(locumUser.actived_at).format('MMM D, YYYY') :null}}</p>
                   <select
                     class="outline-none border-2 border-transparent text-sm text-black pr-6"

@@ -9,7 +9,7 @@
           </div>
         </div>
         
-        <button class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1"
+        <button class="inline-flex items-center cursor-pointer text-white hover:bg-yellow-500 rounded-lg p-2 m-1"
           @click.prevent="toPutLocumDetailComplianceDocs(compliance_doc.id,toPutLocumDetailCompliance,compliance_doc.expired_at)">
           <svgicon
           name="save-icon"
@@ -21,7 +21,7 @@
           <span class="px-1 font-semibold">Save</span>
         </button>
 
-        <div class="inline-flex items-center text-white hover:text-black hover:bg-yellow-dark rounded-lg p-2 m-1">
+        <div class="inline-flex items-center text-white hover:bg-yellow-500 rounded-lg p-2 m-1">
           <a 
             @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
             class="inline-flex items-center cursor-pointer text-white hover:text-black no-underline">
@@ -41,7 +41,7 @@
       <!-- BODY -->
       <div class="shadow-lg rounded-lg bg-waterloo mx-12 mb-6 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-          <div class="text-grey m-2">
+          <div class="text-gray-300 m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{compliance_doc.compliance_document ? compliance_doc.compliance_document.name: null}}</p>
             <p class="mt-5 mr-20">Locum</p>
@@ -69,7 +69,7 @@
               /> -->
               <input
                 type="date"
-                class="date-picker hasDatepicker valid"
+                class="date-picker hasDatepicker valid text-black"
                 name="expiryDate"
                 disable-min-date
                 aria-invalid="false"
@@ -78,30 +78,30 @@
               <div> <!--CHANGE THIS ASAP-->
                 <p class="mt-5 mr-20">Status</p>
                 <button
-                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-light"
-                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green border-green text-white px-4 hover:bg-green-light' : 'bg-transparent px-4 hover:bg-green-light'}`"
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-500 px-4 focus:outline-none"
+                  :class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green-500 border-green-500 text-white hover:bg-green-light' : ''}`"
                   @click.prevent="setStatusData('Approved')"
                 >Approved</button>
                 <button
-                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-light"
-                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-4 hover:bg-orange-light'}`"
+                  class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-500 px-4 focus:outline-none"
+                  :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange-500 border-orange-500 text-white hover:bg-orange-light ' : ''}`"
                   @click.prevent="setStatusData('Rejected')"
                 >Rejected</button>
               </div>
               
-              <div v-if="notesAreVisible">
+              <div class="w-full" v-if="notesAreVisible">
                 <p class="mt-5 mr-20">Reason for Rejection</p>
                 <textarea 
                     v-model="toPutLocumDetailCompliance.note" 
                     placeholder="Type Here" 
-                    class="text-grey-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    class="w-full text-gray-700 flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-orange-800 focus:outline-none" 
                     name="complianceNote"
                     >Type Here
                 </textarea>
               </div>
             </div>
           </div>
-          <div class="flex flex-col text-grey md:m-2">
+          <div class="flex flex-col text-gray-300 md:m-2">
             <p class="md:mr-20">File</p>
              <embed class="w-full my-2" style="max-width: 800px"
               :src="compliance_doc.file ? compliance_doc.file.url:null"

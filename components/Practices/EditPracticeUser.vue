@@ -10,7 +10,7 @@
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-sunglow hover:bg-yellow-dark rounded-lg py-3 px-4 text-black text-sm"
+                class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab1=true,tab2=false"
               >
                 <strong>General</strong>
@@ -18,7 +18,7 @@
             </div>
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-sunglow hover:bg-yellow-dark rounded-lg py-3 px-4 text-black text-sm"
+                class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab2=true,tab1=false"
               >
                 <strong>Change Password</strong>
@@ -29,7 +29,7 @@
       </div>
       <div class="flex sm:p-2">
         <div v-if="tab1" class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
-          <div class="w-full overflow-hidden text-grey-light text-sm p-2">
+          <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
             <div class="flex py-1">E-Mail Address 
               <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>
             </div>
@@ -84,7 +84,7 @@
               <span v-if="!toPutPracticeUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
             </div>
             <select
-              class="block appearance-none text-black w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none "
+              class="block appearance-none text-black w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none "
               :class="`${toPutPracticeUser.practice_role !== '' ? 'focus:border-orange': 'focus:border-red'}`"
               v-model="toPutPracticeUser.practice_role"
             >
@@ -96,21 +96,21 @@
             <p class="p-2">{{user.email ? user.email_verified_at: 'Not yet verified'}}</p>
             <p class="flex py-1">Status</p>
             <select
-              class="block appearance-none w-full bg-white border border-grey-light hover:border-grey px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
+              class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
               v-model="toPutPracticeUser.status"
             >
               <option>Active</option>
               <option>Disabled</option>
             </select>
             <button
-              class="bg-sunglow font-semibold hover:bg-yellow-dark rounded-lg mt-3 py-3 px-4 text-black text-sm"
+              class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
               @click.prevent ="checkForm(user.id,toPutPracticeUser)"
             >Save Changes</button>
           </div>
         </div>
         <div v-if="tab2" class="flex text-white">
           <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
-            <div class="overflow-hidden text-grey-light text-sm p-2">
+            <div class="overflow-hidden text-gray-300 text-sm p-2">
               <div v-if="errorPass[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                 {{errorPass[0]}}
               </div>

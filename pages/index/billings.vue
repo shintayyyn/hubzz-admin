@@ -29,7 +29,7 @@
         v-for="(billing, index) in billings"
         :key="`billing-${index}`"
         :to="`/billings/${billing.id}`"
-        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-dark md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
         draggable="false"
       >
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
@@ -60,7 +60,7 @@
           <strong class="block md:hidden">Status</strong>
           <span>{{ billing.status }}</span>
           <div class="py-4" v-if="billing.status=='Issued'">
-            <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-dark">Mark as paid</a>
+            <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>
           </div>
           </div>
       </nuxt-link>
@@ -174,7 +174,7 @@ export default {
 					return 'bg-yellow text-black lg:px-8 sm:px-2'
 					break;
 				case 'Deactivated':
-					return 'bg-grey text-black lg:px-8 sm:px-2'
+					return 'bg-gray text-black lg:px-8 sm:px-2'
 					break;
 				case 'Suspended':
 					return 'bg-red text-white lg:px-8 sm:px-2'
@@ -192,7 +192,7 @@ export default {
 					return 'border border-white text-white lg:px-8 sm:px-2'
 					break;
 				case 'Incomplete':
-					return 'bg-yellow-light text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-300 text-black lg:px-8 sm:px-2'
 					break;
 				case 'Pending':
 					return 'bg-yellow text-black lg:px-8 sm:px-2'

@@ -1,14 +1,14 @@
 s<template>
-  <div class="absolute pin-t pin-b pin-r pin-l flex flex-col">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="page-overlap flex-1 flex-col self-end bg-trout overflow-auto">
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6"> <!--GO BACK-->
-        <nuxt-link :to="{path:`/practices/${jobPractice.id}/sessions/${jobStatus}`, query:$route.query}" class="text-white hover:text-yellow-dark p-1">
+        <nuxt-link :to="{path:`/practices/${jobPractice.id}/sessions/${jobStatus}`, query:$route.query}" class="text-white hover:text-yellow-500 p-1">
           <svgicon
             name="arrow-left-solid"
             height="22"
             width="22"
-            class="hover:text-yellow-dark fill-current"
+            class="hover:text-yellow-500 fill-current"
           />
         </nuxt-link>
       </div>
@@ -25,7 +25,7 @@ s<template>
           <div class="inline-flex m-4">
             <div class="flex flex-wrap overflow-hidden">
               <div class="md:w-1/2 overflow-hidden">
-                <div class="text-grey text-white">
+                <div class="text-gray text-white">
                   <p class="m-2 font-semibold">Job Number</p>
                   <p class="m-2 text-white">{{specificJob.job_number}}</p>
                   <p class="m-2 mt-5 font-semibold">Rate</p>
@@ -66,19 +66,19 @@ s<template>
                   <p class="m-2 mt-5 font-semibold">Role</p>
                   <p class="m-2 text-white">{{specificJob.platform_job.profession.name}}</p>
                   <p class="m-2 mt-5 font-semibold">Speciality</p>
-                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="specialty in qualifications"
                     :key="specialty.id + '-name'">
                     {{specialty ? specialty.name:null}}
                   </p>
                   <p class="m-2 mt-5 font-semibold">Clinical Systems</p>
-                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="clinicalSystem in clinicalSystems"
                     :key="clinicalSystem.id + '-name1'">
                       {{clinicalSystem ? clinicalSystem.name:null}}
                   </p>
                   <p class="m-2 mt-5 font-semibold">Spoken Languages</p>
-                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-dark"
+                  <p class="inline-flex ml-2 my-1 sm:my-0 rounded-lg text-sm text-black p-2 bg-yellow-500"
                     v-for="spokenLanguage in spokenLanguages"
                     :key="spokenLanguage.id + '-name2'">
                     {{spokenLanguage ? spokenLanguage.name:null}}
