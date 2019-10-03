@@ -23,6 +23,8 @@ export const actions = {
             socket_id: this.$socket.id,
           }).then(() => {
             console.log('Socket Logged In')
+          }).catch(err => {
+            console.log('Socket went wrong!', err)
           })
         }
       }

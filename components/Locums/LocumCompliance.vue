@@ -28,13 +28,21 @@
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
                 <button
+<<<<<<< HEAD
                 class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green rounded-full hover:bg-green-light"
+=======
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 p-2 border border-white focus:bg-green rounded-full hover:bg-green-light"
+>>>>>>> fca06d4d31f77c8dcc9fa5c8bc42c165152fd391
                 :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green border-green text-white px-4 hover:bg-green-light text-center ' : 'bg-transparent px-2 hover:bg-green-light'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Verified')"
                 >{{user.locum_detail.gmc_or_nmc_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
+<<<<<<< HEAD
                 class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
+=======
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-light"
+>>>>>>> fca06d4d31f77c8dcc9fa5c8bc42c165152fd391
                 :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-light ' : 'bg-transparent px-2 hover:bg-orange-light'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toRejectGmcNmc()"

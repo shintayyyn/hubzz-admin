@@ -13,12 +13,10 @@
             class="absolute inset-y-0 left-0 border-solid bg-yellow-dark w-1 h-full"
             v-if="`/${$route.path.split('/')[1]}` == item.route"
           ></span>
-          <nuxt-link
-            :to="item.route"
-            class="block no-underline p-4"
-            :class="`/${$route.path.split('/')[1]}` == item.route ? 'text-yellow-dark' : 'text-white hover:text-grey-light'"
-          >
-            <span class="font-sans">{{item.name}}</span>
+          <nuxt-link :to="item.route">
+            <span @click="close" 
+              class="block font-sans no-underline p-4"
+              :class="`/${$route.path.split('/')[1]}` == item.route ? 'text-yellow-dark' : 'text-white hover:text-grey-light'">{{item.name}}</span>
           </nuxt-link>
         </div>
         <!-- SIGN OUT -->
@@ -54,8 +52,11 @@ export default {
         { name: "Locums", route: "/locums" },
         { name: "Practices", route: "/practices" },
         { name: "Reports", route: "/reports" },
-        { name: "Billing", route: "/billing" },
-        { name: "Support", route: "/support" }
+        { name: "Billing", route: "/billings" },
+        { name: "FAQs", route: "/faqs" },
+        { name: "Terms and Conditions", route: "/tncs" },
+        { name: "Support", route: "/supports" },
+        { name: "Admin Management", route: "/admin-management"}
       ];
 
       if (domain === "Super Admin"){

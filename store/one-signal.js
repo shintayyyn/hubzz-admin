@@ -13,8 +13,11 @@ export const actions = {
     const oneSignalId = await new Promise((resolve, reject) => {
       this.$OneSignal.push(() => {
         this.$OneSignal.getUserId().then(resolve).catch(reject)
+        // setTimeout(() => {
+          
+        // }, 500)
       })
-    })
+    }).catch(err => {})
 
     console.log('One Signal ID:', oneSignalId)
 

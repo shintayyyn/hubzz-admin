@@ -1,16 +1,24 @@
 <template>
     <section class="header">
         <!-- HEADER -->
-        <div class="flex justify-between text-sm text-white py-2 px-6">
+        <div class="flex justify-between text-sm text-white px-6">
             <button class="toggle text-white" @click="toggleSideBar">
                 <img src="~/assets/images/hbg.png">
             </button>
-
-            <img src="~/assets/images/hubzz-icon-transparent.png">
-
-            <div class="p-2 text-sm" v-if="$auth.loggedIn">
-                <span>{{ $auth.user.email }}</span>
+            <div class="py-3">
+               <img src="~/assets/images/hubzz-icon-transparent.png"> 
             </div>
+            <nuxt-link to="/account" class="flex flex-row p-2 text-sm cursor-pointer" v-if="$auth.loggedIn">
+                <div>
+                    <img src = "~/assets/images/default-user-image.png" class="rounded-full" width="48px" height="48px">
+                </div>
+                <div class="m-2 mt-2 text-white">
+                    {{ $auth.user.email }}
+                    <div class="font-hairline text-xs">
+                        My Account
+                    </div>
+                </div>
+            </nuxt-link>
         </div>
         <!-- HEADER -->
     </section>

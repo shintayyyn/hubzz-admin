@@ -35,14 +35,17 @@ export default {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#fa9716' },
 
   /*
   ** Global CSS
   */
   css: [
     '~/assets/css/tailwind.css',
-    '~/assets/css/main.css'
+    '~/assets/css/main.css',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
   ],
 
   /*
@@ -68,7 +71,11 @@ export default {
     {
       src: "~/plugins/google-maps",
       ssr: true
-    }
+    },
+    { 
+      src: '~plugins/nuxt-quill-plugin.js',
+      ssr: false
+     }
 
   ],
 
@@ -84,7 +91,12 @@ export default {
     //   key: 'GOOGLE MAPS KEY',
     // }],
     '@nuxtjs/onesignal',
-    '@nuxtjs/pwa',
+    ['@nuxtjs/pwa', {
+      workbox: false,
+      meta: false,
+      icon: false,
+      manifest: false,
+    }],
   ],
   /*
   ** Axios module configuration
@@ -96,10 +108,10 @@ export default {
 
   auth: {
     localStorage: {
-      prefix: 'admin.auth.',
+      prefix: 'admin.hubzz.auth.',
     },
     cookie: {
-      prefix: 'admin.auth.',
+      prefix: 'admin.hubzz.auth.',
       options: {
         path: '/',
         expires: 1825,
