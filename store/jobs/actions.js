@@ -20,6 +20,7 @@ export default{
 
             commit('ADD_LOCUM_APPLIED_JOBS', locumJob)
             commit('DEDUCT_LOCUM_AVAILABLE_JOBS', locumJob)
+            commit('DEDUCT_LOCUM_MATCHED_JOBS', locumJob)
             commit('ADD_PRACTICE_APPLIED_SESSIONS', practiceSession)
         })
         this.$socket.on("locumUnsuccessfulJob",async jobId => {
@@ -28,7 +29,7 @@ export default{
                 jobId,
                 countOnly : true
             }
-
+            
             let response = await jobsApi.fetchSpecificJob(this.$axios,locumJobParams)
             const locumJob = response.data.job
             commit('ADD_LOCUM_UNSUCCESSFUL_JOBS', locumJob)
