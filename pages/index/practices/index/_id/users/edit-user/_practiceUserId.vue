@@ -245,7 +245,6 @@ export default {
 
     validEmail:function(email) {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      console.log("whatthefuuuuuukkk")
       return re.test(email);
     },
     
@@ -275,7 +274,7 @@ export default {
 
     async toPutPracticeUserInfo(userID,toPutPracticeUser){
       try{
-        await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
+        const response = await this.$axios.put(`/api/v1/admin/practice-users/${userID}`,{
           email:toPutPracticeUser.email,
           title:toPutPracticeUser.title,
           first_name:toPutPracticeUser.first_name,

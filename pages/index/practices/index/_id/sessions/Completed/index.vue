@@ -175,7 +175,7 @@
             <nuxt-link
             v-for="(practiceCompletedJob, index) in practiceCompletedJobs"
             :key="`practiceCompletedJob-${index}`"
-             :to="`/practices/${specificPractice.id}/sessions/view-job/${practiceCompletedJob.id}`"
+             :to="`/practices/${specificPractice.id}/sessions/view-job/view-locum-job/${practiceCompletedJob.id}`"
             class="flex no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light mt-2"
             >
                 <div style="width: 20%;">
@@ -190,23 +190,23 @@
                 </div>
                 <div style="width: 15%;">
                   <div class="flex text-white text-sm p-4">
-                      <span>{{ practiceCompletedJob.platform_job.title }}</span>
+                      <span>{{ practiceCompletedJob.title }}</span>
                   </div>
                 </div>
                 <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceCompletedJob.date_start }}</span>
+                    </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceCompletedJob.date_end }}</span>
+                    </div>
+                </div>
+                 <div style="width: 16%;">
                   <div class="flex text-white text-sm p-4">
                       <span>{{ practiceCompletedJob.platform_job.date_created }}</span>
                   </div>
-                </div>
-                <div style="width: 16%;">
-                    <div class="flex text-white text-sm p-4">
-                        <span>{{ practiceCompletedJob.platform_job.date_start }}</span>
-                    </div>
-                </div>
-                <div style="width: 16%;">
-                    <div class="flex text-white text-sm p-4">
-                        <span>{{ practiceCompletedJob.platform_job.date_end }}</span>
-                    </div>
                 </div>
               
             </nuxt-link>

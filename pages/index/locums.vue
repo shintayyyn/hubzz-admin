@@ -1,0 +1,544 @@
+<template>
+	<div class="flex-1 flex flex-col overflow-hidden py-2">
+		<div>
+			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
+		</div>
+		<div class="flex flex-col md:flex-row justify-between px-6">
+			<div class="flex py-2">
+				<div class="relative">
+					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
+					<button class="absolute pin-t pin-r pin-b mr-1 px-4 py-2" @click="search = '', searchSubmit()">
+						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
+					</button>
+				</div>
+				<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-dark focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
+			</div>
+			<div class="relative flex flex-col md:flex-row md:items-center md:items-end py-2 md:py-0 md:px-4 md:px-6 -mt-2 md:mt-0">
+				<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
+				<select
+					v-model="filterCompliances"
+					class="w-full sm:w-1/2 md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+					id="grid-state"
+					>
+					<option :value="null">All</option>
+					<option>Empty</option>
+					<option>Incomplete</option>
+					<option>Pending</option>
+					<option>Expiring</option>
+					<option>Expired</option>
+					<option>Rejected</option>
+					<option>Compliant</option>
+				</select>
+			</div>
+		</div>
+		<div class="flex flex-col mx-6 text-white">
+			<div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2">
+				<div class="w-1/6" @click="sortBy('name',activePage,search,filterCompliances)">
+					Name
+					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/></div>
+				<div class="w-1/6" @click="sortBy('profession',activePage,search,filterCompliances)">
+					Profession
+					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+				</div>
+				<div class="w-1/6" @click="sortBy('created_at',activePage,search,filterCompliances)">
+					Date signed-up
+					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+				</div>
+				<div class="w-1/6" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
+					Sign-up verified
+					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+					<svgicon v-if="sortType==false && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+				</div>
+				<div class="w-1/6">Status</div>
+				<div class="w-1/6">Compliance Status</div>
+			</div>
+			<div
+				v-for="(locumUser, index) in locumUsers" 
+				:key="`locumUser-${index}`" 
+				@click="$router.push(`/locums/${locumUser.id}`)"
+			 	class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0">
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Name</strong>
+						<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Profession</strong>
+						<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Date signed-up</strong>
+						<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Sign-up verified</strong>
+						<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Status</strong>
+						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
+					</div>
+					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
+						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+					</div>
+			</div>
+		</div>
+
+		<!-- PAGINATION -->
+		<div class="flex justify-center">
+			<div >
+				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
+					@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
+					:class="activePage === 1 ? 'text-grey-dark' : 'hover:bg-yellow'">Prev
+				</button>
+
+				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
+					:class="`${activePage === page ? 'text-white' : ''}`" 
+					v-for="page in pageCount" 
+					v-if="showPage(page)"
+					:key="`page-${page}`" 
+					@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
+				</button>
+				
+				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
+					@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
+					:class="`${activePage == pageCount ? 'text-grey-dark': ''}`">Next
+				</button>														
+			</div>
+		</div>
+		<!-- PAGINATION ENDS HERE -->
+		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
+		<nuxt-child/>
+	</div>
+</template>
+
+<script>
+import AppLoading from '@/components/Base/AppLoading'
+export default {
+	components:{
+		AppLoading
+	},
+	data() {
+		return {
+			itemsPerPage: 8,
+			activePage: 1,
+						
+			filterCompliances:'',
+			search: '',
+			paramFilterSort:{
+				order_by:''
+			},
+			sort:'',
+			sortedBy:'',
+			sortType:'', 
+			order_by:'',
+			name: true,
+			profession: true,
+			created_at: true,
+			email_verified_at: true
+		}
+	},
+	// beforeCreate() {
+    // 	
+	  // },
+	created() {
+		// console.log('created')
+		// console.log('process.client', process.client)
+		// console.log('process.server', process.server)
+	},
+
+	mounted() {
+		// console.log('mounted')
+		// this.$socket.on('usersDeleted', this.usersDeletedHandler)
+	},
+
+	destroyed() {
+		// console.log('destroyed')
+		// this.$socket.off('usersDeleted', this.usersDeletedHandler)
+	},
+	watchQuery: [
+	'page',
+	'search',
+	'compliance_status'
+	],
+	async asyncData({ app, store, route }) {
+		
+		try {
+			await store.commit('locums/TOGGLE_LOADING',true)
+			let {
+				page = 1,
+				search = '',
+				order_by='',
+				compliance_status = null  
+			} = route.query
+
+			if (!compliance_status) {
+		
+			}
+			page = parseInt(page)
+			const createdRoute = route.query
+			const limit = 10
+			const offset = page * limit - limit
+			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
+			const params = { limit, offset, order_by }
+				
+			if (search) {
+				params.search = search
+			}
+			params.compliance_status = compliance_status
+			const getLocumUsersCountPromise = app.$axios.get(`/api/v1/admin/locum-users/count`, { params })
+			const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, { params })
+			
+			let response = await getLocumUsersCountPromise
+			const itemCount = response.data.data.count
+			
+			response = await getLocumUsersPromise
+			const locumUsers = response.data.data.users
+			
+			await store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
+			await store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
+			await store.commit('locums/TOGGLE_LOADING',false)
+			return {
+				filterCompliances: compliance_status,
+				itemsPerPage: limit,
+				activePage: page,
+				search,
+				order_by,
+			}
+		} catch (err) {
+			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			console.log('Get locums error!', err)
+		}
+		
+	},
+
+	computed: {
+		loadingLocums(){
+			return this.$store.state.locums.loading_locums
+		},
+		locumUsers(){
+			return this.$store.state.locums.locumUsers 
+		},
+		itemCount(){
+			return this.$store.state.locums.itemCount
+		},
+		pageCount() {
+			return Math.ceil(this.itemCount / this.itemsPerPage)
+		},
+		showPage() {
+			return page => {
+			if (page === 1) {
+				return true
+			}
+
+			if (page === this.pageCount) {
+				return true
+			}
+
+			if (page === this.activePage) {
+				return true
+			}
+
+			if (page === this.activePage + 1) {
+				return true
+			}
+
+			if (page === this.activePage - 1) {
+				return true
+			}
+
+			if (this.activePage === 1 && page < 5) {
+				return true
+			}
+
+			if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+				return true
+			}
+
+			if (this.activePage === 2 && page === 4) {
+				return true
+			}
+
+			if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+				return true
+			}
+
+			return false
+			}
+		},
+		
+	},
+
+	watch: {
+		async filterCompliances() {
+			const query = {
+				...this.$router.query
+			}
+
+			query.compliance_status = this.filterCompliances
+
+			if (this.filterCompliances === '') {
+				delete query.compliance_status
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
+
+			this.$router.push({ query })
+
+			return
+
+			const params = {}
+
+			if (this.search) {
+				params.search = this.search
+			}
+
+			if (this.filterCompliances) {
+				params.compliance_status = this.filterCompliances
+			}
+
+			this.paramFilterSort.compliance_status = this.filterCompliances
+
+			this.getLocums(this.paramFilterSort)
+		}
+	},
+
+	methods: {
+		getQuery(){
+			const query = {
+				...this.$route.query
+			}
+			const offset = parseInt(query.page)*8 - 8 
+			return offset
+		},
+		getLocums(params){
+			this.$store.dispatch("locums/fetchLocums",{
+				limit:8,
+				search:params.search,
+				compliance_status:params.compliance_status,
+				order_by:params.order_by,
+				offset: this.getQuery()
+			});
+		},
+		async sortBy(sortedBy,page,search,compliance_status) {
+			switch (sortedBy) {
+				case 'name':
+					this.sortedBy = sortedBy
+					this.name = !this.name
+					this.sortType = this.name
+				case 'profession':
+					this.sortedBy = sortedBy
+					this.profession = !this.profession
+					this.sortType = this.profession
+				break;
+				case 'created_at':
+					this.sortedBy = sortedBy
+					this.created_at = !this.created_at
+					this.sortType = this.created_at
+				break;
+				case 'email_verified_at':
+					this.sortedBy = sortedBy
+					this.email_verified_at = !this.email_verified_at
+					this.sortType = this.email_verified_at
+				break;
+			}
+			this.paramFilterSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			let order_by = await this.paramFilterSort.order_by
+			console.log(order_by)
+			let query = {
+				...this.$router.query,
+				order_by
+			}
+			if (page === 1) {
+				delete query.page
+			}
+			if(page){
+				query = {...this.$router.query,page,order_by}
+			}
+			if(search){
+				query = {...this.$router.query,search,order_by}
+			}
+			if(compliance_status){
+				query = {...this.$route.query,compliance_status,order_by}
+			}
+			if(page && search){
+				query = {...this.$router.query,page,search,order_by}
+			}
+			if(page && compliance_status){
+				query = {...this.$router.query,page,compliance_status,order_by}
+			}
+			if(search && compliance_status){
+				query = {...this.$router.query,search,compliance_status,order_by}
+			}
+			if(page && search && compliance_status){
+				query = {...this.$router.query,page,search,compliance_status}
+			}
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
+			this.$router.push({query})
+			
+			console.log('hello',this.paramFilterSort)
+			this.paramFilterSort.search = search
+			this.paramFilterSort.compliance_status = compliance_status
+			this.getLocums(this.paramFilterSort)
+		},
+		goToPage(page,search,order_by, compliance_status) {
+			if (page < 1) {
+				return
+			}
+
+			if (page > this.pageCount) {
+				return
+			}
+
+			let query = {...this.$router.query,page}
+
+			if(search){
+				query = {...this.$router.query,page,search}
+			}
+			if(order_by){
+				query = {...this.$router.query,page,order_by}
+			}
+			if(compliance_status){
+				query = {...this.$router.query,page,compliance_status}
+			}
+
+			if(search && order_by){
+				query = {...this.$router.query,page,search,order_by}
+			}
+
+			if(search && compliance_status){
+				query = {...this.$router.query,page,search,compliance_status}
+			}
+
+			if(order_by && compliance_status){
+				query = {...this.$router.query,page,order_by,compliance_status}
+			}
+
+			if(search && order_by && compliance_status){
+				query = {...this.$router.query,page,search,order_by,compliance_status}
+			}
+
+			if (page === 1) {
+				delete query.page
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
+
+			this.$router.push({ query })
+		},
+
+		searchSubmit(page,order_by,compliance_status) {
+			let search= this.search
+
+			let query = {...this.$router.query,search}
+
+			if (page === 1) {
+				delete query.page
+			}
+
+			if(page){
+				query = {...this.$router.query,page,search}
+			}
+			if(order_by){
+				query = {...this.$router.query,search,order_by}
+			}
+			if(compliance_status){
+				query = {...this.$router.query,search,compliance_status}
+			}
+			if(page && order_by){
+				query = {...this.$router.query,page,search,order_by}
+			}
+			if(page && compliance_status){
+				query = {...this.$router.query,page,search,compliance_status}
+			}
+			if(compliance_status && order_by){
+				query={...this.$router.query,search,compliance_status,order_by}
+			}
+			if(page && compliance_status && order_by){
+				query = {...this.$router.query,page,search,compliance_status,order_by}
+			}
+			if (this.search === '') {
+				delete query.search
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
+
+			this.$router.push({ query })
+		},
+
+		statusStyle(status){
+			switch(status){
+				case 'Active':
+					return 'bg-green text-white lg:px-8 sm:px-2'
+					break;
+				case 'Inactive':
+					return 'bg-yellow text-black lg:px-8 sm:px-2'
+					break;
+				case 'Deactivated':
+					return 'bg-grey text-black lg:px-8 sm:px-2'
+					break;
+				case 'Suspended':
+					return 'bg-red text-white lg:px-8 sm:px-2'
+					break;
+				case 'Dormant':
+					return 'bg-green-darker text-white lg:px-8 sm:px-2'
+					break;
+				default:
+					return
+			}
+		},
+		complianceStatusStyle(status){
+			switch(status){
+				case 'Empty':
+					return 'border border-white text-white lg:px-8 sm:px-2'
+					break;
+				case 'Incomplete':
+					return 'bg-yellow-light text-black lg:px-8 sm:px-2'
+					break;
+				case 'Pending':
+					return 'bg-yellow text-black lg:px-8 sm:px-2'
+					break;
+				case 'Expiring':
+					return 'bg-orange text-black lg:px-8 sm:px-2'
+					break;
+				case 'Expired':
+					return 'bg-red text-white lg:px-8 sm:px-2'
+					break;
+				case 'Rejected':
+					return 'bg-orange-dark text-black lg:px-8 sm:px-2'
+					break;
+				case 'Compliant':
+					return 'bg-green text-white lg:px-8 sm:px-2'
+					break;
+				default:
+					return
+			}
+		},
+		
+		usersDeletedHandler(userId) {
+			console.log('usersDeletedHandler', userId)
+		}
+	},
+
+	
+}
+</script>
+<style>
+.page-button {
+  background: linear-gradient(to top, #f2d024, #efde86);
+}
+</style>

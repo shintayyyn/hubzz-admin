@@ -191,23 +191,23 @@
                 </div>
                 <div style="width: 15%;">
                   <div class="flex text-white text-sm p-4">
-                      <span>{{ practiceUnfilledJob.platform_job.title }}</span>
+                      <span>{{ practiceUnfilledJob.title }}</span>
                   </div>
                 </div>
                 <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceUnfilledJob.date_start }}</span>
+                    </div>
+                </div>
+                <div style="width: 16%;">
+                    <div class="flex text-white text-sm p-4">
+                        <span>{{ practiceUnfilledJob.date_end }}</span>
+                    </div>
+                </div>
+                 <div style="width: 16%;">
                   <div class="flex text-white text-sm p-4">
                       <span>{{ practiceUnfilledJob.platform_job.date_created }}</span>
                   </div>
-                </div>
-                <div style="width: 16%;">
-                    <div class="flex text-white text-sm p-4">
-                        <span>{{ practiceUnfilledJob.platform_job.date_start }}</span>
-                    </div>
-                </div>
-                <div style="width: 16%;">
-                    <div class="flex text-white text-sm p-4">
-                        <span>{{ practiceUnfilledJob.platform_job.date_end }}</span>
-                    </div>
                 </div>
               
             </nuxt-link>

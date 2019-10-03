@@ -123,8 +123,8 @@
             <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell pl-1 pr-4 py-2 md:py-4 align-middle">
               <strong class="block md:hidden">Status</strong>
               <span class="inline-flex text-black text-sm py-2 px-8 rounded-full"
-                :class="`${user.actived_at ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
-                >{{ user.actived_at ? 'Active' : 'Disabled' }}
+                :class="`${user.status === 'Active' ? 'bg-green text-white lg:px-8 sm:px-2' : 'bg-yellow text-black lg:px-6 sm:px-2' }`"
+                >{{ user.status }}
               </span>
               </div>
           </nuxt-link>
