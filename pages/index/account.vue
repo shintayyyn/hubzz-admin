@@ -1,5 +1,5 @@
 <template>
-    <div class="m-6">
+    <div class="flex-1 flex flex-col overflow-hidden py-2 mx-6">
         <div class="text-4xl text-white">Account</div>
         <div class="flex flex-col rounded-lg pl-6">
             <div class="w-full overflow-hidden">

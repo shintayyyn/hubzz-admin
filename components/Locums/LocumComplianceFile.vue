@@ -2,11 +2,9 @@
     <div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
-      <div class="flex items-center text-sm text-white py-6 px-8 mr-8">
-        <div class="mr-6">
-          <div @click="goBack()" class="cursor-pointer">
-            <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
-          </div>
+      <div class="flex items-center text-sm text-white py-6 px-4 md:px-8">
+        <div @click="goBack()" class="cursor-pointer">
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
         </div>
         
         <button class="inline-flex items-center cursor-pointer text-white hover:bg-yellow-500 rounded-lg p-2 m-1"
@@ -22,9 +20,9 @@
         </button>
 
         <div class="inline-flex items-center text-white hover:bg-yellow-500 rounded-lg p-2 m-1">
-          <a 
+          <button
             @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
-            class="inline-flex items-center cursor-pointer text-white hover:text-black no-underline">
+            class="inline-flex items-center cursor-pointer no-underline">
             <svgicon
               name="cloud-download"
               width="21"
@@ -34,12 +32,12 @@
             >
             </svgicon>
             <span class="px-1 font-semibold">Download</span>
-          </a>
+          </button>
         </div>
       </div>
       <!-- HEADER -->
       <!-- BODY -->
-      <div class="shadow-lg rounded-lg bg-waterloo mx-12 mb-6 p-4">
+      <div class="shadow-lg rounded-lg bg-waterloo mx-4 md:mx-12 mb-6 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
           <div class="text-gray-300 m-2">
             <p class="mr-20">Title</p>

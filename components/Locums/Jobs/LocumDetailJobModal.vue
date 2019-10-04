@@ -2,14 +2,17 @@
     <div>
         <!-- BODY -->
         <div class="m-8 my-4 overflow-auto">
-          <div class="flex">
-            <p class="text-2xl text-white font-semibold">{{job ? job.title:null }}</p>
-            <p class="text-black p-2 bg-yellow-500 rounded ml-4">{{job.status}}</p><br>
-            <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</p><br>
+          <div class="flex items-center flex-wrap">
+            <p class="text-2xl text-white font-semibold pr-4">{{job ? job.title:null }}</p>
+            <div class="flex">
+              <p class="text-black p-2 bg-yellow-500 rounded">{{job.status}}</p><br>
+              <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</p><br>
+            </div>
+            
           </div>
-          <p class="text-white">{{"Posted On: "+job.date_created}}</p>
+          <p class="text-white my-2">{{"Posted On: "+job.date_created}}</p>
 
-          <div class="flex xs:flex-col mt-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
+          <div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
             <div class="inline-flex m-4">
               <div class="flex flex-wrap overflow-hidden">
                 <div class="xl:w-1/2 sm:w-full overflow-hidden">

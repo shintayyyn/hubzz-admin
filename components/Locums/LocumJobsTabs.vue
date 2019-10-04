@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row flex-wrap justify-start">
+  <div class="flex overflow-x-auto py-2">
     <nuxt-link
       :to="`/locums/${this.user.id}/locum-jobs/locum-current-jobs`"
       class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"

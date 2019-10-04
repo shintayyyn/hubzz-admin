@@ -1,7 +1,5 @@
 <template>
-  <div class="flex-1 flex overflow-hidden flex-col">
     <nuxt-child/>
-  </div>
 </template>
 
 <script>

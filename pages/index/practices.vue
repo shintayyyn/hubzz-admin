@@ -55,7 +55,7 @@
         v-for="(practice, index) in getAllPractices"
 		:key="`practice-${index}`"
 		@click="$router.push(`/practices/${practice.id}`)"
-        class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0" 
+        class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
       >
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>

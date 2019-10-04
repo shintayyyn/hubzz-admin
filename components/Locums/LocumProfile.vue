@@ -168,13 +168,13 @@
             <!-- <p class="m-2 text-gray">Active at </p> -->
             <div class="my-4">
               <span class="m-2 text-white">Account is</span>
-              <span :class="statusStyle(user.status)">{{user.status}}</span>
+              <span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
             </div>
           </div>
           <div class="m-6">
             <span class="text-lg text-white font-semibold">Change Locum Status</span>
             <span
-              class="tool"
+              class="tool inline-block"
               data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant."
               tabindex="1"
             >
@@ -293,19 +293,19 @@ export default {
     statusStyle(status) {
       switch (status) {
         case "Active":
-          return "bg-green text-white rounded p-1 px-2";
+          return "bg-green-500";
           break;
         case "Inactive":
-          return "bg-yellow text-black rounded p-1 px-2";
+          return "bg-yellow-500 text-black";
           break;
         case "Deactivated":
-          return "bg-gray text-black rounded p-1 px-2";
+          return "bg-gray-500 text-black";
           break;
         case "Suspended":
-          return "bg-red text-white rounded p-1 px-2";
+          return "bg-red-500";
           break;
         case "Dormant":
-          return "bg-green-darker text-white rounded p-1 px-2";
+          return "bg-green-600";
           break;
         default:
           return;

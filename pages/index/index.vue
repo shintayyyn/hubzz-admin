@@ -1,8 +1,8 @@
 <template>
-    <div class="mx-6">
+    <div class="flex-1 flex flex-col overflow-hidden py-2 px-6">
         <div class="text-4xl text-white">Dashboard</div>
         <div class="text-sm font-hairline text-white">Work in progress</div>
-        <div class="flex flex-wrap text-white -mx-1 overflow-hidden sm:-mx-2">
+        <div class="flex flex-wrap text-white -mx-1 sm:-mx-2">
             <!--------------------------- Column 1 ---------------------------->
             <div class="my-1 p-3 xl:w-1/3 w-full">
                 <div class='m-3'>

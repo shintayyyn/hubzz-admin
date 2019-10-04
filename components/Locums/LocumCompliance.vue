@@ -22,7 +22,7 @@
         </div>
         <!--GMC / NMC NUMBER-->
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
-            <div class="flex w-full sm:w-1/2 sm:justify-between">
+            <div class="flex w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">GMC / NMC / HCPC Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
             </div>
@@ -60,20 +60,20 @@
         </div>
 
         <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
-            <div class="flex w-full sm:w-1/2 sm:justify-between">
-                <p class="text-gray">MPL / NPL Number</p>
+            <div class="flex w-full sm:w-1/2 justify-between">
+                <p class="text-gray-400">MPL / NPL Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.mpl_or_npl_number ? user.locum_detail.mpl_or_npl_number.number : null }}</p>
             </div>
             <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
                 <button
-                class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
+                class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white rounded-full hover:bg-green-500 focus:outline-none"
                 :class="`${user.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600' : 'bg-transparent px-2 hover:bg-green-300'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Verified')"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange-500 rounded-full hover:bg-orange-500 focus:outline-none"
-                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange-500 text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white rounded-full hover:bg-orange-500 focus:outline-none"
+                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange-500 border-orange-500 text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toRejectMplNpl()"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>

@@ -9,9 +9,9 @@
     </transition>
     <div class="sidebar-shield" v-if="$store.state.toggled_sidebar" @click="close"></div>
     <AppNotification />
-    <div class="content bg-trout">
+    <div class="content h-screen bg-trout flex flex-col justify-between">
       <AppHeader />
-      <nuxt/>
+      <nuxt class="overflow-y-auto"/>
     </div>
     <!-- LOGOUT MODAL -->
       <!-- <div

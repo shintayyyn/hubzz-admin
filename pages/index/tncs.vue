@@ -1,10 +1,10 @@
 <template>
-    <div class="m-6">
-        <div class="px-10">
+    <div class="flex-1 flex flex-col overflow-hidden py-2">
+        <div class="px-6">
             <TermsAndConditionsTabs />
         </div>
         
-        <div class="px-10 mt-5">
+        <div class="px-6 mt-5">
             <transition name="fade" mode="out-in">
                 <component :is="activeComponent" :terms="terms" />
             </transition>
