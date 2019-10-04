@@ -75,100 +75,101 @@
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
-    props:['practice'],
-    components:{
-      AppPagination,
-      PracticeSessionModal
+  props:['practice'],
+  components:{
+    AppPagination,
+    PracticeSessionModal
+  },
+  data(){
+    return{
+      // completedJobs:[],
+      // total:0,
+      totalPages:0,
+      currentPage:1,
+      perPage:0,
+      ascendDescend:0,
+      modal:false
+    }
+  },
+  beforeDestroy() {
+    let query = Object.assign({}, this.$route.query)
+    delete query.completed_job_page
+    this.$router.push({ query })
+  },
+  watch: {
+    $route(to, from) {
+      this.currentPage = parseInt(to.query.completed_job_page)
+      this.getCompletedJobs('date_created:desc')
     },
-    data(){
-      return{
-        // completedJobs:[],
-        // total:0,
-        totalPages:0,
-        currentPage:1,
-        perPage:0,
-        ascendDescend:0,
-        modal:false
-      }
+  },
+  async created(){
+    await this.$store.commit('jobs/TOGGLE_LOADING', true)
+    const query = {
+      ...this.$route.query,
+      completed_job_page: this.$route.query.completed_job_page || 1
+    }
+    let params = {
+      viewing_practice_id : this.practice.id,
+      status : 'Completed'
+    }
+    Promise.all([
+      this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
+        // this.total = res.data.count
+        this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS_COUNT',res.data.count)
+        this.perPage = 10
+        this.totalPages = Math.ceil(this.total / this.perPage)
+      })
+    ]).then(() => {
+      this.getCompletedJobs('date_created:desc'),
+      console.log(this.completedJobs)
+    })
+  },
+  computed:{ 
+    total(){
+      return this.$store.state.jobs.practice_completed_sessions_count
     },
-    beforeDestroy() {
-      let query = Object.assign({}, this.$route.query)
-      delete query.completed_job_page
-      this.$router.push({ query })
+    completedJobs(){
+      return this.$store.state.jobs.practice_completed_sessions
     },
-    watch: {
-      $route(to, from) {
-        this.currentPage = parseInt(to.query.completed_job_page)
-        this.getCompletedJobs('date_created:desc')
-      },
-    },
-    async created(){
-      await this.$store.commit('jobs/TOGGLE_LOADING', true)
-      const query = {
-        ...this.$route.query,
-        completed_job_page: this.$route.query.completed_job_page || 1
+  },
+  methods:{
+    async getCompletedJobs(orderBy){
+      let offset = 0
+      if(this.ascendDescend == 0){
+        orderBy = orderBy.replace('desc','asc')
+        this.ascendDescend = 1
+        console.log('true',this.ascendDescend)
+      }else if(this.ascendDescend == 1){
+        orderBy = orderBy.replace('asc','desc')
+        this.ascendDescend = 0
       }
       let params = {
         viewing_practice_id : this.practice.id,
-        status : 'Completed'
+        status : 'Completed',
+        order_by : ['id:desc',orderBy],
+        limit: this.perPage,
+        offset: offset
       }
-      Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
-          // this.total = res.data.count
-          this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS_COUNT',res.data.count)
-          this.perPage = 10
-          this.totalPages = Math.ceil(this.total / this.perPage)
-        })
-      ]).then(() => {
-        this.getCompletedJobs('date_created:desc'),
-        console.log(this.completedJobs)
+      offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
+      await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res=>{
+        // this.completedJobs = res.data.jobs
+        this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS', res.data.jobs)
+        this.$store.commit('jobs/TOGGLE_LOADING',false)
+      }).catch(err=>{
+        console.log('get completed jobs error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
+      
     },
-    computed:{ 
-      total(){
-        return this.$store.state.jobs.practice_completed_sessions_count
-      },
-      completedJobs(){
-        return this.$store.state.jobs.practice_completed_sessions
-      },
-    },
-    methods:{
-      async getCompletedJobs(orderBy){
-        let offset = 0
-        if(this.ascendDescend == 0){
-          orderBy = orderBy.replace('desc','asc')
-          this.ascendDescend = 1
-          console.log('true',this.ascendDescend)
-        }else if(this.ascendDescend == 1){
-          orderBy = orderBy.replace('asc','desc')
-          this.ascendDescend = 0
-        }
-        let params = {
-          viewing_practice_id : this.practice.id,
-          status : 'Completed',
-          order_by : ['id:desc',orderBy],
-          limit: this.perPage,
-          offset: offset
-        }
-        offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
-        await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res=>{
-          // this.completedJobs = res.data.jobs
-          this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS', res.data.jobs)
-          this.$store.commit('jobs/TOGGLE_LOADING',false)
-        }).catch(err=>{
-          console.log('get completed jobs error!!!',err)
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        })
-       
-      },
-      pagechanged(e) {
-        const query = {
-          ...this.$route.query,
-          completed_job_page: e || 1
-        }
-        this.$router.push({ query })
+    async pagechanged(e) {
+      const query = {
+        ...this.$route.query,
+        completed_job_page: e || 1
       }
-        
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
+      await this.$router.push({ query })
+      await this.$store.commit('jobs/TOGGLE_LOADING', false)
     }
+  }
 }
 </script>

@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-      <div v-if="!availableJobs.length == 0" class="m-10 xl:-ml-32">
+      <div v-if="availableJobs.length > 0" class="m-10 xl:-ml-32">
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -84,9 +84,10 @@ export default {
     return {
       // availableJobs: [],
       // total: 0,
+      matchedJobs:[],
       totalPages: 0,
       currentPage: 1,
-      perPage: 0,
+      perPage: 10,
       ascendDescend: 0,
       modal:false
     }
@@ -129,11 +130,10 @@ export default {
     },
     availableJobs(){
       return this.$store.state.jobs.locum_available_jobs
-    }
+    },
   },
   methods: {
-    getAvailableJobs(orderBy) {
-
+    async getAvailableJobs(orderBy) {
       let offset = 0
       if (this.ascendDescend == 0) {
         orderBy = orderBy.replace('desc', 'asc')
@@ -146,27 +146,29 @@ export default {
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
-        locum_status : 'Available',
+        locum_status : ['Available','Matched'],
         order_by : ['id:desc',orderBy],
         limit: this.perPage,
         offset: offset
       }
 
-      
-      this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
-        console.log('available jobs', res.data.jobs)
+      await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
+        console.log('params', params)
         this.$store.commit('jobs/SET_LOCUM_AVAILABLE_JOBS', res.data.jobs)
         this.$store.commit('jobs/TOGGLE_LOADING', false)
-        // this.availableJobs = res.data.jobs
+        console.log('available jobs', this.availableJobs)
       })
-
     },
-    pagechanged(e) {
+
+    async pagechanged(e) {
       const query = {
         ...this.$route.query,
         available_job_page: e || 1
       }
-      this.$router.push({ query })
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
+      await this.$router.push({ query })
+      await this.$store.commit('jobs/TOGGLE_LOADING', false)
+  
     }
   }
 }
