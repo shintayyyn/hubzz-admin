@@ -10,9 +10,9 @@
 
     <div class="flex flex-wrap overflow-auto p-6 text-base text-white py-2">
       <div class="w-full">
-        <div class="flex items-center pd-4 border-gray-300" style="width: 400px;">
+        <div class="w-full md:w-1/3 flex items-center">
           <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 px-2 leading-tight focus:outline-none focus:border-orange"
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 p-2 leading-tight focus:outline-none focus:border-orange"
             type="text"
             :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
             v-model="search"
@@ -38,30 +38,28 @@
               @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
               class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
             >
-              <div class="flex" style="width: 100%;">
-                <div class="text-white text-xs p-4">
-                  <span class="font-bold">{{ surgery.name }}</span>
-                  <span
-                    v-if="surgery.practice_count > 0"
-                    class="p-1 rounded-lg text-sm bg-green"
-                  >Registered</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span>{{surgery.address.line_1}}</span>
-                  <span>{{surgery.address.line_2}}</span>
-                  <span>{{surgery.address.line_3}}</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span class="p-2 bg-trout rounded">CCG</span>
-                  <span>{{surgery.clinical_commissioning_group.name}}</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span class="p-2 bg-trout rounded">Practice Code</span>
-                  <span>{{ surgery.code }}</span>
-                  <br />
+              <div class="flex w-full">
+                <div class="w-full text-white text-xs p-4">
+                  <div class="w-full flex justify-between items-center">
+                    <span class="font-bold">{{ surgery.name }}</span>
+                    <span
+                      v-if="surgery.practice_count > 0"
+                      class="p-1 rounded-lg text-xs md:text-sm bg-green-500"
+                    >Registered</span>
+                  </div>
+                  <span class="block w-full py-1">{{surgery.address.line_1}}</span>
+                  <span class="block w-full py-1">{{surgery.address.line_2}}</span>
+                  <span class="block w-full py-1">{{surgery.address.line_3}}</span>
+                  <div class="flex items-center my-1">
+                     <span class="block p-2 bg-trout rounded">CCG</span>
+                    <span class="w-full px-2">{{surgery.clinical_commissioning_group.name}}</span>
+                  </div>
+                  <div class="flex items-center my-1">
+                    <span class="block p-2 bg-trout rounded whitespace-no-wrap">Practice Code</span>
+                    <span class="w-full px-2">{{ surgery.code }}</span>
+                  </div>
+                 
+                  
                 </div>
               </div>
             </div>

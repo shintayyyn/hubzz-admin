@@ -1,12 +1,12 @@
 <template>
     <div class="flex flex-col rounded-lg">
         <AppLoading :loading="loadingSurgeries" :message="'Loading Practice Surgeries'"/>
-        <div class="flex px-4 overflow-hidden">
-            <div class="flex">
-                <div class="flex-3 mx-2">
+        <div class="flex overflow-hidden">
+            <div class="flex overflow-x-auto mb-2">
+                <div class="flex-3 mx-1 whitespace-no-wrap">
                     <button
                         @click="show()"
-                        class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-right"
+                        class="inline-flex items-center no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-right"
                     >Add Surgery
                         <svgicon
                         name="add-rectangle"
@@ -16,10 +16,10 @@
                         class="mx-1 -my-1"/>
                     </button>
                 </div>
-                <div v-if="deleteSurgery == false" class="flex-3 mx-2">
+                <div v-if="deleteSurgery == false" class="flex-3 mx-1 whitespace-no-wrap">
                     <button
                         @click="deleteSurgery = true"
-                        class="inline-flex no-underline py-2 px-4 bg-red text-sm font-semibold text-white rounded-lg shadow float-right"
+                        class="inline-flex items-center no-underline py-2 px-4 bg-red text-sm font-semibold text-white rounded-lg shadow float-right"
                     >Delete Surgery
                         <svgicon
                         name="garbage"
@@ -29,10 +29,10 @@
                         class="mx-1 -my-1"/>
                     </button>
                 </div>
-                <div v-if="deleteSurgery == true" class="flex-3 mx-2">
+                <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
                    <button
                         @click="deleteSurgery = false"
-                        class="inline-flex no-underline py-2 px-4 bg-green text-sm font-semibold text-white rounded-lg shadow float-right"
+                        class="inline-flex items-center no-underline py-2 px-4 bg-green text-sm font-semibold text-white rounded-lg shadow float-right"
                     >Done
                         <svgicon
                         name="circle-check"
@@ -46,11 +46,12 @@
             </div>
         </div>
         <!-- TABLE RESPONSIVE-->
-        <div v-if="practiceChildren.length>0" class="border-separate overflow-x-auto px-6" style="border-spacing: 0 10px;"> 
+        <div v-if="practiceChildren.length>0" class="flex flex-col mx-2 text-white"> 
             <!-- HEADER -->
-            <div class="inline-flex font-bold text-white text-sm py-4"> 
-                <div class="flex p-2 mx-8 align-middle">Practice Name</div> 
-                <div class="flex p-2 mx-8 align-middle">Practice Code</div>
+            <div class="hidden md:inline-flex w-full font-bold text-white text-sm py-4"> 
+                <div v-if="deleteSurgery == true" class="px-6"></div> 
+                <div class="w-1/2">Practice Name</div> 
+                <div class="w-1/2">Practice Code</div>
                 <!-- <div class="table-cell p-2 align-middle">Practice Location</div> -->
             </div>
             <!-- END HEADER -->
@@ -60,31 +61,31 @@
             :key="`childSurgery-${index}`"
             >   
                 <div class="inline-flex w-full">
-                    <div @click="toDeleteSurgery(practice.id,childSurgery.id)" v-if="deleteSurgery == true" class='flex'>
+                    <div @click="toDeleteSurgery(practice.id,childSurgery.id)" v-if="deleteSurgery == true" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
                         <svgicon
                         name="garbage"
                         width="25"
                         height="25"
-                        color="red red"
-                        class="mt-12 mx-2"/>
+                        class="fill-current"
+                        />
                     </div>
-                    <div  class="flex flex-wrap w-4/5 justify-between px-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo">
-                        <div class="flex flex-col mx-6  sm:w-full md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+                    <div  class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0">
+                        <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                             <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-                            <span class="whitespace-no-wrap">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
+                            <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
                         </div>
-                        <div class="flex flex-col mx-6  items-center sm:w-full md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                        <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                             <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code:</strong>
                             <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :'null' }}</span>
                         </div>
-                        <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
+                        <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
                             <strong class="block md:hidden text-sm uppercase">Practice Location</strong>
                             <div class="text-white text-sm px-2 py-1">
                                 <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
                                 <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
                                 <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 
@@ -100,7 +101,7 @@
             style="font-family: Nunito"
             >This practice has no children.</div>
         </div>
-        <div v-if="!practiceChildren.length == 0" class="m-10 xl:-ml-32">
+        <div v-if="!practiceChildren.length == 0">
           <AppPagination
             :total="total"
             :totalPages="totalPages"

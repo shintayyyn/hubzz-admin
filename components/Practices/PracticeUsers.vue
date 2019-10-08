@@ -4,7 +4,7 @@
         <div class="w-full overflow-hidden">
             <div>
               <button
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
                 @click="show(surgery.id)"
               >Add User
               </button>
@@ -28,7 +28,7 @@
                 v-for="(user, index) in users"
                 :key="`user-${index}`"
                 @click="$router.push(`/practices/${practice.id}/practice-users/${user.id}`)"
-                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0" 
+                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-sunglow md:border-0" 
                 ><!--This needs to lead to a nuxt child with admin being able to modify the user-->
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Full Name</strong>

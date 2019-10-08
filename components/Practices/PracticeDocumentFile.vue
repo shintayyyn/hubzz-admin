@@ -15,10 +15,10 @@
           />
         </nuxt-link>
 
-        <div class="text-white hover:text-black hover:bg-yellow-500 rounded-lg inline-flex p-2">
+        <div class="text-white hover:text-black hover:bg-yellow-500 rounded-lg inline-flex py-2 px-4">
           <a
             @click.prevent="downloadItem(practiceDoc.file.url, practiceDoc.file.filename)" 
-            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-500 rounded-lg mr-4">
+            class="inline-flex items-center text-white hover:text-black hover:bg-yellow-500 rounded-lg">
              <svgicon
               name="cloud-download"
               width="21"
@@ -26,24 +26,24 @@
               color="transparent white"
               hover ="transparent black"
             ></svgicon>
-            <span class="mx-1 mt-1">Download</span>
+            <span class="ml-2">Download</span>
           </a>
          
         </div>
       </div>
       <!-- HEADER -->
       <!-- BODY -->
-      <div class="shadow-lg rounded-lg bg-waterloo mx-6 mt-10 p-4">
+      <div class="shadow-lg rounded-lg bg-waterloo mx-6 p-4">
         <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-          <div class="text-gray m-2">
+          <div class="text-gray-400 m-2">
             <p class="mr-20">Title</p>
             <p class="text-white">{{practiceDoc.practice_document_type ? practiceDoc.practice_document_type.name: null}}</p>
             <p class="mt-5 mr-20">Practice</p>
-            <p class="text-white underline">{{practiceDoc.practice ? practiceDoc.practice.surgery.name: null}}</p>
+            <p class="text-white">{{practiceDoc.practice ? practiceDoc.practice.surgery.name: null}}</p>
             <p class="mt-5 mr-20">File last uploaded</p>
-            <p class="text-white underline">{{practiceDoc.file ? $moment(practiceDoc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+            <p class="text-white">{{practiceDoc.file ? $moment(practiceDoc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
           </div>
-          <div class="flex flex-col text-gray md:m-2">
+          <div class="flex flex-col text-gray-400 md:m-2">
             <p class="md:mr-20">File</p>
              <embed class="w-full my-2" style="max-width: 800px"
               :src="practiceDoc.file ? practiceDoc.file.url:null"

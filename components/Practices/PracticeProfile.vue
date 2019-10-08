@@ -1,5 +1,5 @@
 \<template>
-    <div class="flex flex-col rounded-lg p-4 sm:p-4">
+    <div class="flex flex-col rounded-lg">
         <div>
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
@@ -77,7 +77,9 @@
                   <p class="flex mx-4 font-semibold">{{practice && practice.report_to ? practice.report_to : 'N/A'}}</p>
                   <p class="flex text-gray-300 p-2">Extra information (Parking restrictions, transport links, etc.)</p>
                   <p class="flex mx-4 font-semibold">{{practice && practice.extra_information ? practice.extra_information : 'N/A'}}</p>
-                  <div class="my-4">
+                  <div class="my-4 flex items-center">
+                    <span class="text-gray-300 p-2">Status: </span>
+                    <span class="text-white p-2 rounded-lg font-semibold" :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'">{{practice.status}}</span>
                     <span class="tool" data-tip="Practice Status is automatically set to 'Active' once Practice Verification Process is done." tabindex="1">
                       <svgicon
                       name="info"
@@ -87,8 +89,6 @@
                       class="-mb-1 ml-2" 
                       ></svgicon>
                     </span>
-                    <span class="text-gray-300 p-2">Status: </span>
-                    <span class="text-gray-300 p-2 rounded-lg font-semibold" :class="practice.status == 'Active' ? 'bg-green' : 'bg-red'">{{practice.status}}</span>
                   </div>
                   <span class="text-gray-300 p-2">Active Until</span>
                   <p class="flex m-4 font-semibold">{{practice && practice.actived_until ? practice.actived_until : 'N/A'}}</p>
@@ -114,33 +114,35 @@
                   >Extra information (Parking restrictions, transport links, etc.)</p>
                   <textarea  
                     placeholder="Type Here" 
-                    class="text-gray-lightest w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
+                    class="text-gray-300 w-full bg-transparent overflow-y-auto resize-none border-b focus:border-orange-500 focus:outline-none" 
                     name="practiceNote"
                     v-model='toPutPractice.extra_information'>
                   </textarea>
-                  <span class="tool" data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified at least verified once since it was created." tabindex="1">
-                    <svgicon
-                    name="info"
-                    width="21"
-                    height="21"
-                    color="white transparent black"
-                    class="-mb-1 ml-2" 
-                    ></svgicon>
-                  </span>
-                  <span class="text-gray-300 p-2">Status: </span>
-                  <select
-                    class="mx-2 m-1 outline-none border-2 border-transparent text-black pr-6"
-                    v-model='toPutPractice.status'
-                  >
-                    <option>Active</option>
-                    <option>Suspended</option>
-                    <option>Deactivated</option>
-                  </select>
+                  <div class="flex items-center">
+                    <span class="text-gray-300 p-2">Status: </span>
+                    <select
+                      class="mx-2 m-1 outline-none border-2 border-transparent text-black pr-6"
+                      v-model='toPutPractice.status'
+                    >
+                      <option>Active</option>
+                      <option>Suspended</option>
+                      <option>Deactivated</option>
+                    </select>
+                    <span class="tool" data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified at least verified once since it was created." tabindex="1">
+                      <svgicon
+                      name="info"
+                      width="21"
+                      height="21"
+                      color="white transparent black"
+                      ></svgicon>
+                    </span>
+                  </div>
+                  
                   <div class="my-2">
                     <span class="text-gray-300 p-2">Active Until</span>
                       <input
                         type="date"
-                        class="date-picker hasDatepicker valid"
+                        class="date-picker hasDatepicker valid text-black"
                         name="expiryDate"
                         disable-min-date
                         placeholder="dd/mm/yyyy"
@@ -265,13 +267,13 @@ export default {
       practiceTypeStyle(type){
         switch(type){
           case 'Stand Alone':
-            return 'bg-indigo-300 text-white lg:px-4 sm:px-2'
+            return 'bg-indigo-500 text-white lg:px-4 sm:px-2'
             break;
           case 'Hub':
-            return 'bg-red-300 text-white lg:px-8 sm:px-2'
+            return 'bg-red-500 text-white lg:px-8 sm:px-2'
             break;
           case 'Spoke':
-            return 'bg-blue-300 text-white lg:px-8 sm:px-2'
+            return 'bg-blue-500 text-white lg:px-8 sm:px-2'
             break;
           default:
             return

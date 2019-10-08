@@ -6,8 +6,8 @@
 		<div class="flex flex-col md:flex-row justify-between px-6">
 			<div class="flex py-2">
 				<div class="relative">
-					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-					<button class="absolute top-0 right-0 bottom-0 mr-1 px-4 py-2" @click="search = '', searchSubmit()">
+					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Locum by Name" v-model="search" @keyup.enter="searchSubmit">
+					<button class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
 						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
@@ -91,26 +91,36 @@
 		</div>
 
 		<!-- PAGINATION -->
-		<div class="flex justify-center">
-			<div >
-				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
-					:class="activePage === 1 ? 'text-gray-500' : 'hover:bg-yellow-500'">Prev
-				</button>
+		<div class="flex justify-center items-center my-2">
+			<button class="relative page-button p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
+				@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
+				:class="activePage === 1 ? 'text-gray-500' : 'hover:bg-yellow-500'">
+				<span class="hidden md:block">Prev</span>
+				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
+						<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
+					</svg>
+				</span>
+			</button>
 
-				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					:class="`${activePage === page ? 'text-white' : ''}`" 
-					v-for="page in pageCount" 
-					v-if="showPage(page)"
-					:key="`page-${page}`" 
-					@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
-				</button>
-				
-				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
-					:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">Next
-				</button>														
-			</div>
+			<button class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
+				:class="`${activePage === page ? 'text-white' : ''}`" 
+				v-for="page in pageCount" 
+				v-if="showPage(page)"
+				:key="`page-${page}`" 
+				@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
+			</button>
+			
+			<button class="relative page-button p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
+				@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
+				:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">
+				<span class="hidden md:block">Next</span>
+				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
+						<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+					</svg>
+				</span>
+			</button>														
 		</div>
 		<!-- PAGINATION ENDS HERE -->
 		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
