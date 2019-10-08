@@ -53,7 +53,9 @@ export const actions = {
   },
 
   async logout({getters, commit, dispatch}) {
-    await this.$axios.post('/api/v1/logout')
+    await this.$axios.post('/api/v1/logout').catch((err) => {
+      console.log('err', err)
+    })
 
     await this.$auth.logout()
 
