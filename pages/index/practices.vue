@@ -1,7 +1,7 @@
 <template>
-   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+   <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
 	<AppLoading :loading="loadingPractices" :message="'Loading Practices'"/>
-    <div class="flex px-2 justify-between flex-wrap">
+    <div class="flex justify-between flex-wrap">
         <div class="flex items-center py-2">
           	<div class="relative">
 				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Practice by Name" v-model="search" @keyup.enter="searchSubmit">
@@ -19,7 +19,7 @@
       </div>
     </div>
 	<!-- TABLE RESPONSIVE-->
-    <div v-if="itemCount > 0" class="flex flex-col mx-2 text-white"> 
+    <div v-if="itemCount > 0" class="flex flex-col text-white"> 
       <!-- HEADER -->
       <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
         <div class="w-1/6" @click="sortBy('name',activePage,search)">
@@ -129,7 +129,7 @@
 	</div>
 	<!-- PAGINATION -->
 
-	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true"></div>
+	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.go(-1)"></div>
 
     <transition name="slide" mode="out-in">
       <div class="practice-modal shadow-lg" v-if="modal">

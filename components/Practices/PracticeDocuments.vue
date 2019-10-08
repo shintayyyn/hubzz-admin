@@ -13,7 +13,8 @@
     <div
       v-for="(document,index) in specificPracticeDocumentTypes"
       :key="`surgery-${index}`"
-      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-300 my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-sunglow md:border-0"
+      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-300 my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
+      :class="document.practiceSpecificDoc ? 'cursor-pointer' : ''"
     >
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
         <strong class="block md:hidden text-sm uppercase">Title</strong>

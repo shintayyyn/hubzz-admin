@@ -123,7 +123,7 @@
 			</button>														
 		</div>
 		<!-- PAGINATION ENDS HERE -->
-		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
+		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')" @click="$router.go(-1)"></div>
 		<nuxt-child/>
 	</div>
 </template>

@@ -29,7 +29,7 @@
         <!-- BODY -->
       </div>
       <!-- TABLE -->
-      <div class="report-shield" v-if="$route.name.includes('index-reports-id')"></div>
+      <div class="report-shield" v-if="$route.name.includes('index-reports-id')" @click="$router.go(-1)"></div>
       <nuxt-child/>
   </div>
 </template>

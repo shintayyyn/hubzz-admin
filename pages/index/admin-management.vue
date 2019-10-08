@@ -14,7 +14,7 @@
                 <button
                 v-if="deleteAdminUser == true"
                 @click="deleteAdminUser = false"
-                class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green text-sm font-semibold text-white rounded-lg shadow md:float-right"
+                class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
                 >Done</button>
                 <button
                 v-if="deleteAdminUser == false"
@@ -42,13 +42,13 @@
                 :key="`user-${index}`"
                 class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
             >
-                <div @click.prevent="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
+                <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell align-middle" @click.prevent="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
                     <svgicon
                         name="delete-user"
                         width="21"
                         height="21"
                         color="red red"
-                        class="mx-3 mt-3"/>
+                        class="md:mx-3"/>
                 </div>
                 <nuxt-link :to="{ path: `/admin-management/${user.id}`,query: $route.query}" class="flex flex-col text-white sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">E-Mail</strong>
@@ -90,14 +90,14 @@
 		</div>
 		<!-- PAGINATION ENDS HERE -->
         <nuxt-child/>
-        <div class="new-user-shield" v-if="modal"></div>
+        <div class="new-user-shield" v-if="modal" @click="modal = false"></div>
         <transition name="slide" mode="out-in">
             <div class="new-user-modal" v-if="modal">
                 <CreatePracticeUser @close="modal = false" :adminCreate="adminCreate"/>
             </div>
         </transition>
         
-        <div class="admin-user-shield" v-if="$route.name.includes('index-admin-management-id')"/>
+        <div class="admin-user-shield" v-if="$route.name.includes('index-admin-management-id') || showConfirmCancelModal" @click="showConfirmCancelModal ? showConfirmCancelModal = false : $router.go(-1)"/>
    </div>
 </template>
 <script>

@@ -69,7 +69,7 @@
     <!-- END TABLE -->
     <div class="billing-shield" 
       v-if="$route.name.includes('index-billings-id')||
-      $route.name.includes('index-billings-addinvoice')"></div>
+      $route.name.includes('index-billings-addinvoice')" @click="$router.go(-1)"></div>
     <nuxt-child/>
   </div>
 </template>

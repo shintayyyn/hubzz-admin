@@ -1,18 +1,18 @@
 <template>
     <section class="header">
         <!-- HEADER -->
-        <div class="flex justify-between text-sm text-white px-4 md:px-6">
+        <div class="flex justify-between text-sm text-white px-6">
             <button class="toggle text-white" @click="toggleSideBar">
                 <img src="~/assets/images/hbg.png">
             </button>
-            <div class="py-3">
+            <nuxt-link to="/" class="py-3 cursor-pointer">
                <img src="~/assets/images/hubzz-icon-transparent.png"> 
-            </div>
-            <nuxt-link to="/account" class="flex flex-row p-2 text-sm cursor-pointer" v-if="$auth.loggedIn">
+            </nuxt-link>
+            <nuxt-link to="/account" class="flex flex-row py-2 md:p-2 text-sm cursor-pointer" v-if="$auth.loggedIn">
                 <div>
                     <img src = "~/assets/images/default-user-image.png" class="rounded-full" width="48px" height="48px">
                 </div>
-                <div class="m-2 mt-2 text-white">
+                <div class="hidden md:block m-2 mt-2 text-white">
                     {{ $auth.user.email }}
                     <div class="font-hairline text-xs">
                         My Account
