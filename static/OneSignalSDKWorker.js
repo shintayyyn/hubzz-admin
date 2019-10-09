@@ -1,1 +1,1 @@
-importScripts('/sw.js?1570489983903', 'https://cdn.onesignal.com/sdks/OneSignalSDK.js')
+importScripts('/sw.js?1570591960767', 'https://cdn.onesignal.com/sdks/OneSignalSDK.js')
