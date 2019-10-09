@@ -51,10 +51,12 @@
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
+
+      <!--DO NOT FORGET TO ADD QUERY HERE-->
       <div
         v-for="(practice, index) in getAllPractices"
-		:key="`practice-${index}`"
-		@click="$router.push(`/practices/${practice.id}`)"
+        :key="`practice-${index}`"
+        @click="$router.push(`/practices/${practice.id}`)" 
         class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
       >
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
@@ -72,7 +74,7 @@
           <span class="break-all">{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
-		<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+		    <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Expires</strong>
           <span class="break-all">{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
@@ -80,13 +82,13 @@
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Status</strong>
           <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
-			:class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
-		</div>
-		<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+			    :class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
+		    </div>
+        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
           <span class="inline-flex no-underline py-2 px-4 text-sm text-black rounded-full shadow"
-			:class="typeStyle(practice.type)">{{ practice.type }}</span>
-		</div>
+          :class="typeStyle(practice.type)">{{ practice.type }}</span>
+        </div>
 
       </div>
       <!-- END BODY -->
