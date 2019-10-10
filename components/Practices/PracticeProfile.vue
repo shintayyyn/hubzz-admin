@@ -1,4 +1,4 @@
-\<template>
+<template>
     <div class="flex flex-col rounded-lg">
         <div>
           <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">

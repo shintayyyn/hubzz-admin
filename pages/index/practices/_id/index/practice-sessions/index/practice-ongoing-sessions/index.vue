@@ -1,6 +1,6 @@
 <template>
   <div>
-    surgery sessions
+    practice ongoing sessions
   </div>
 </template>
 <script>

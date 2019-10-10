@@ -4,7 +4,7 @@
       <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
     </div>
     <PracticeSurgeriesTabs :practice="practice" :practiceSurgery="practiceSurgery"/>
-    hello
+    <nuxt-child/>
   </div>
 </template>
 <script>
@@ -20,16 +20,21 @@ export default {
     }
   },
   async asyncData({ app, route }){
-    console.log('id', route.params.id)
-    let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-    const practice = response.data.data.practice
-    response = await app.$axios.get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
-    const practiceSurgery = response.data.data.practice_surgery
+    try{
+      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.data.practice
+      response = await app.$axios.get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
+      const practiceSurgery = response.data.data.practice_surgery
 
-    return{
-      practice,
-      practiceSurgery
+      return{
+        practice,
+        practiceSurgery
+      }
+    }catch(err){
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('get practice or practice surgery error', err)
     }
+    
 
   },
   methods:{

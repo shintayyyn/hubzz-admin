@@ -78,7 +78,7 @@
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
-    props:['practice'],
+    props:['practice', 'practice_surgery'],
     components:{
       AppPagination,
       PracticeSessionModal
@@ -114,6 +114,7 @@ export default {
       }
       let params = {
         viewing_practice_id : this.practice_id,
+        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         status : 'Current'
       }
       Promise.all([
@@ -154,6 +155,7 @@ export default {
           viewing_practice_id : this.practice.id,
           status : 'Current',
           order_by : ['id:desc',orderBy],
+          surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset
         }

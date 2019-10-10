@@ -1,24 +1,15 @@
 <template>
-  <div>
-    <!-- TABS  GO HERE -->
-    <CompletedSessionsTabs :practice="practice"/>
-    <!-- <PracticeCompletedSessions :practice='practice'/> -->
-    <nuxt-child/>
-  </div>
+    <div>
+        <PracticeCompletedSessions :practice='practice'/>
+        <nuxt-child/>
+    </div>
 </template>
 <script>
-import CompletedSessionsTabs from '@/components/Practices/Sessions/CompletedSessionsTabs'
+
 import PracticeCompletedSessions from '@/components/Practices/Sessions/PracticeCompletedSessions'
 export default {
     components:{
-      CompletedSessionsTabs,
-      PracticeCompletedSessions
-    },
-    created(){
-      const query = {
-        ...this.$route.query,
-      }
-      this.$router.push(`/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/to-be-invoiced`, query)
+        PracticeCompletedSessions
     },
     computed:{
         practice(){

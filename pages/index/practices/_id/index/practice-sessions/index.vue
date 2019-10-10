@@ -1,7 +1,7 @@
 <template>
     <div class="mt-5">
         <div>
-            <AppLoading :loading="loadingJobs" :message="'Loading Sessions'"/>
+          <AppLoading :loading="loadingJobs" :message="'Loading Sessions'"/>
         </div>
         <SessionsTabs :practice="practice"/>
         <nuxt-child/>

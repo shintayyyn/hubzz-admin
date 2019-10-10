@@ -8,12 +8,12 @@
       <nuxt-link
         :to="getRoute('surgery-sessions')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path == `/practices/${practice.id}/practice-surgeries/${practiceSurgery.id}/surgery-billing`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        :class="$route.path.includes(`surgery-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Spoke Sessions</nuxt-link>
       <nuxt-link
         :to="getRoute('surgery-billing')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path == `/practices/${practice.id}/practice-surgeries/${practiceSurgery.id}/surgery-session`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        :class="$route.path.includes(`surgery-billing`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Spoke Billings</nuxt-link>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
     console.log('practicesurgery', this.practiceSurgery)
   },
   computed:{
-    getRoute(){
+    getRoute(tab){
       return(tab) =>{
         if(!tab){
           tab = ''
@@ -35,7 +35,7 @@ export default {
         }
         delete query.session_tab
         return{
-          path:tab ? `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}` : `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/${tab}` ,
+          path: tab ? `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/${tab}` : `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}` ,
           query
         }
       }

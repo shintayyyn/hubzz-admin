@@ -4,6 +4,7 @@ export function fetchPracticeSessions(axios, payload){
     payload.viewing_practice_id ? params.viewing_practice_id = payload.viewing_practice_id : null
     payload.status ? params.status = payload.status : null
     payload.order_by ? params.order_by = payload.order_by : null
+    payload.surgery_id ? params.surgery_id = payload.surgery_id : null
     payload.limit ? params.limit = payload.limit : null
     payload.offset ? params.offset = payload.offset : null
     return axios.$get(`/api/v1/admin/jobs${payload.countOnly ? '/count': ''}`, {params: params})

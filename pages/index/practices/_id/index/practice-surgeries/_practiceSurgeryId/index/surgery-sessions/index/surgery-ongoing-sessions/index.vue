@@ -1,6 +1,6 @@
 <template>
   <div>
-    surgery profile
+    surgery ongoing sessions
   </div>
 </template>
 <script>

@@ -9,7 +9,7 @@
         :to="getRoute('practice-surgeries')"
         v-if="practice.type == 'Hub' "
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path == `/practices/${practice.id}/practice-surgeries`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        :class="$route.path.includes(`/practices/${practice.id}/practice-surgeries`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Surgeries</nuxt-link>
       <nuxt-link
         :to="getRoute('practice-hub')"
