@@ -106,10 +106,11 @@ export default {
       ...this.$route.query,
       matched_job_page: this.$route.query.matched_job_page || 1
     }
+    this.currentPage = parseInt(query.matched_job_page)
     let params = {
       viewing_practice_id : this.practice.id,
       surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
-      statuus: 'Unfilled'
+      status: 'Unfilled'
     }
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res => {
@@ -139,6 +140,7 @@ export default {
         orderBy = orderBy.replace('asc', 'desc')
         this.ascendDescend = 0
       }
+      offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
       let params = {
         viewing_practice_id : this.practice.id,
         status : 'Unfilled',
@@ -147,7 +149,6 @@ export default {
         limit: this.perPage,
         offset: offset
       }
-      offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
       await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
         this.$store.commit('jobs/SET_PRACTICE_UNFILLED_SESSIONS', res.data.jobs)
         this.$store.commit('jobs/TOGGLE_LOADING',false)

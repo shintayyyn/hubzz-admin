@@ -108,6 +108,7 @@ export default {
         ...this.$route.query,
         declined_job_page: this.$route.query.declined_job_page || 1
       }
+      this.currentPage = parseInt(query.declined_job_page)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status : 'Declined'
@@ -144,6 +145,7 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
+        offset = this.perPage * (parseInt(this.$route.query.declined_job_page) - 1)
         let params = {
           viewing_locum_user_id : this.user.id,
           locum_status : 'Declined',
@@ -151,7 +153,6 @@ export default {
           limit: this.perPage,
           offset: offset
         }
-        offset = this.perPage * (parseInt(this.$route.query.declined_job_page) - 1)
           this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
             this.$store.commit('jobs/SET_LOCUM_DECLINED_JOBS', res.data.jobs)
             this.$store.commit('jobs/TOGGLE_LOADING', false)

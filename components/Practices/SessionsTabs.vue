@@ -33,7 +33,6 @@
         :class="$route.path.includes(`practice-completed-sessions`) || $route.path.includes(`surgery-completed-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Completed</nuxt-link>
       
-
       <nuxt-link
         :to="getRoute(practice_surgery ? 'surgery-unfilled-sessions':'practice-unfilled-sessions')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
@@ -69,6 +68,7 @@ export default {
         const query = {
           ...this.$route.query,
         }
+        delete query.session_tab
         return{
           path:this.practice_surgery ? `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/${tab}`: 
          `/practices/${this.practice.id}/practice-sessions/${tab}`,query 

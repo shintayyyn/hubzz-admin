@@ -112,6 +112,7 @@ export default {
         ...this.$route.query,
         current_job_page: this.$route.query.current_job_page || 1
       }
+      this.currentPage = parseInt(query.current_job_page)
       let params = {
         viewing_practice_id : this.practice_id,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
@@ -151,6 +152,7 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
+        offset = this.perPage * (parseInt(this.$route.query.current_job_page) - 1)
         let params = {
           viewing_practice_id : this.practice.id,
           status : 'Current',
@@ -159,7 +161,6 @@ export default {
           limit: this.perPage,
           offset: offset
         }
-        offset = this.perPage * (parseInt(this.$route.query.current_job_page) - 1)
         await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
           this.$store.commit('jobs/SET_PRACTICE_CURRENT_SESSIONS', res.data.jobs)
           this.$store.commit('jobs/TOGGLE_LOADING', false)

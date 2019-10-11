@@ -106,6 +106,7 @@ export default {
         ...this.$route.query,
         unsuccessful_job_page: this.$route.query.unsuccessful_job_page || 1
       }
+      this.currentPage = parseInt(query.unsuccessful_job_page)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status : 'Unsuccessful'
@@ -141,6 +142,7 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
+        offset = this.perPage * (parseInt(this.$route.query.unsuccessful_job_page) - 1)
         let params = {
           viewing_locum_user_id : this.user.id,
           locum_status : 'Unsuccessful',
@@ -148,7 +150,6 @@ export default {
           limit: this.perPage,
           offset: offset
         }
-        offset = this.perPage * (parseInt(this.$route.query.unsuccessful_job_page) - 1)
         this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
           this.$store.commit('jobs/SET_LOCUM_UNSUCCESSFUL_JOBS', res.data.jobs)
           this.$store.commit('jobs/TOGGLE_LOADING',false)

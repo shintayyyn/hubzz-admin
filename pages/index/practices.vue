@@ -22,32 +22,42 @@
     <div v-if="itemCount > 0" class="flex flex-col text-white"> 
       <!-- HEADER -->
       <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
-        <div class="w-1/6" @click="sortBy('name',activePage,search)">
-			Practice Name
-			<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-			<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-			<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
-		</div> 
-        <div class="w-1/6">Practice Code</div>
+        <div class="w-1/6" @click="sortBy('practice_name',activePage,search)">
+          Practice Name
+          <svgicon v-if="sortedBy!='practice_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='practice_name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='practice_name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div> 
+        <div class="w-1/6" @click="sortBy('practice_code',activePage,search)">
+          Practice Code
+          <svgicon v-if="sortedBy!='practice_code'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='practice_code'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='practice_code'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
         <div class="w-1/6" @click="sortBy('created_at',activePage,search)">
-			Created
-			<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-			<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-			<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
-		</div>
+          Created
+          <svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
         <div class="w-1/6" @click="sortBy('actived_until',activePage,search)">
-			Expires
-			<svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-			<svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-			<svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
-		</div>
+          Expires
+          <svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
         <div class="w-1/6" @click="sortBy('status',activePage,search)">
-			Status
-			<svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-			<svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-			<svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
-		</div>
-		<div class="w-1/6">Type</div>
+          Status
+          <svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
+        <div class="w-1/6" @click="sortBy('practice_type',activePage,search)">
+          Type
+          <svgicon v-if="sortedBy!='practice_type'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='practice_type'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='practice_type'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
@@ -152,26 +162,26 @@ export default {
 		AppLoading
 	},
 	data() {
-      return {
-        loading: false,
-        itemsPerPage:10,
-        // itemCount: 0,
-        activePage: 1,
-		// practices: [],
+    return {
+      loading: false,
+      itemsPerPage:10,
+      // itemCount: 0,
+      activePage: 1,
+      // practices: [],
 		
-		search: '',
-		paramSort:{
-			order_by:''
-		},
-		sort:'',
-		sortedBy:'',
-		sortType:'',
-		order_by:'',
-		name:true,
-		created_at:true,
-		actived_until:true,
-		status:true,
-		modal:false
+      search: '',
+      paramSort:{
+        order_by:''
+      },
+      sort:'',
+      sortedBy:'',
+      sortType:'',
+      order_by:'',
+      practice_name:true,
+      created_at:true,
+      actived_until:true,
+      status:true,
+      modal:false
 
       };
     },
@@ -191,7 +201,7 @@ export default {
 			} = route.query 
 			page = parseInt(page)
 			const createdRoute = route.query  
-  			const limit = 8
+  			const limit = 10
   			const offset = page * limit - limit
   			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
 			const params = { limit, offset, order_by }
@@ -295,13 +305,13 @@ export default {
 			const query = {
 				...this.$route.query
 			}
-			const offset = parseInt(query.page)*8 - 8 
+			const offset = parseInt(query.page)*10 - 10 
 			return offset
 		},
 
 		getPractices(params,search){
 			this.$store.dispatch("practices/fetchPractices",{
-				limit:8,
+				limit:10,
 				search:search,
 				order_by:params.order_by,
 				offset:this.getQuery()
@@ -309,15 +319,21 @@ export default {
 		},
 		async sortBy(sortedBy,page,search) {
 			switch (sortedBy) {
-				case 'name':
+				case 'practice_name':
 					this.sortedBy = sortedBy
-					this.name = !this.name
-					this.sortType = this.name
+					this.practice_name = !this.practice_name
+          this.sortType = this.practice_name
+        break;
 				case 'created_at':
 					this.sortedBy = sortedBy
 					this.created_at = !this.created_at
 					this.sortType = this.created_at
-				break;
+        break;
+        case 'practice_code':
+          this.sortedBy = sortedBy
+					this.practice_code = !this.practice_code
+					this.sortType = this.practice_code
+        break;
 				case 'actived_until':
 					this.sortedBy = sortedBy
 					this.actived_until = !this.actived_until
@@ -327,6 +343,11 @@ export default {
 					this.sortedBy = sortedBy
 					this.status = !this.status
 					this.sortType = this.status
+        break;
+        case 'practice_type':
+					this.sortedBy = sortedBy
+					this.practice_type = !this.practice_type
+					this.sortType = this.practice_type
 				break;
 			}
 			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
@@ -363,47 +384,47 @@ export default {
 			this.$router.push({ query })
 			this.getPractices(this.paramSort,this.search)
 		},
-  		goToPage(page,search,order_by) {
-  			if (page < 1) {
-  				return
-  			}
+  	goToPage(page,search,order_by) {
+      if (page < 1) {
+        return
+      }
 
-  			if (page > this.pageCount) {
-  				return
-			  }
-			  
-  			let query = {
-				...this.$router.query,
-				page
-			}
+      if (page > this.pageCount) {
+        return
+      }
+      
+      let query = {
+        ...this.$router.query,
+        page
+      }
 
-			if(search){
-				query = {
-					...this.$router.query,
-					page,search
-				}
-			}
-			if(order_by){
-				query={
-					...this.$route.query,
-					page,order_by
-				}
-			}
-			if(search && order_by){
-				query={
-					...this.$router.query,
-					page,search,order_by
-				}
-			}
+      if(search){
+        query = {
+          ...this.$router.query,
+          page,search
+        }
+      }
+      if(order_by){
+        query={
+          ...this.$route.query,
+          page,order_by
+        }
+      }
+      if(search && order_by){
+        query={
+          ...this.$router.query,
+          page,search,order_by
+        }
+      }
 
-  			if (page === 1) {
-  				delete query.page
-  			}
+      if (page === 1) {
+        delete query.page
+      }
 
-	      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-	        this.loading = true
-	      }	
-	      this.$router.push({ query })
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.loading = true
+      }	
+      this.$router.push({ query })
 		},
 
   		searchSubmit(page, order_by) {

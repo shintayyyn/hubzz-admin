@@ -112,6 +112,7 @@ export default {
         ...this.$route.query,
         current_job_page: this.$route.query.current_job_page || 1
       }
+      this.currentPage = parseInt(query.current_job_page)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status: 'Current'

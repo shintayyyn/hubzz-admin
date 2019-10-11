@@ -4,8 +4,8 @@
         <div class= "w-full overflow-auto">
           <div class="flex m-2 ">
             <div class="text-2xl text-white font-semibold">{{job ? job.title:null }}</div>
-            <div class="text-black p-2 bg-yellow rounded ml-4">{{job.status}}</div>
-            <div class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red':'bg-blue'">{{job.type}}</div>
+            <div class="text-black p-2 bg-yellow-500 rounded ml-4">{{job.status}}</div>
+            <div class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</div>
           </div>
           <div class="text-white mx-4">{{"Posted On: "+job.date_created}}</div>
           <div class="flex m-2 flex-wrap overflow-hidden ">

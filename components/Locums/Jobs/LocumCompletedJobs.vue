@@ -109,6 +109,7 @@ export default {
         ...this.$route.query,
         completed_job_page: this.$route.query.completed_job_page || 1
       }
+      this.currentPage = parseInt(query.completed_job_page)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status : ['Completed','Terminated']

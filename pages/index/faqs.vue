@@ -75,7 +75,7 @@
             class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-             <div v-html="item.answer" class="w-full h-auto mx-4"></div>
+             <div v-html="item.answer" class="w-full h-auto mx-8"></div>
           </div>
         </div>
         <!---------------------------------------------------------------------------------->

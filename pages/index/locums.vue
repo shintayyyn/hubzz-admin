@@ -136,7 +136,7 @@ export default {
 	},
 	data() {
 		return {
-			itemsPerPage: 8,
+			itemsPerPage: 10,
 			activePage: 1,
 						
 			filterCompliances:'',
@@ -211,8 +211,8 @@ export default {
 			response = await getLocumUsersPromise
 			const locumUsers = response.data.data.users
 			
-			await store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
-			await store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
+			await store.commit('locums/SET_LOCUM_COUNT',itemCount) // put the obtained data from the database to the state
+			await store.commit('locums/SET_LOCUM_USERS',locumUsers) // 'SET_DATA_PROPERTY denotes a mutation 
 			await store.commit('locums/TOGGLE_LOADING',false)
 			return {
 				filterCompliances: compliance_status,
@@ -326,12 +326,12 @@ export default {
 			const query = {
 				...this.$route.query
 			}
-			const offset = parseInt(query.page)*8 - 8 
+			const offset = parseInt(query.page)*10 - 10 
 			return offset
 		},
 		getLocums(params){
 			this.$store.dispatch("locums/fetchLocums",{
-				limit:8,
+				limit:10,
 				search:params.search,
 				compliance_status:params.compliance_status,
 				order_by:params.order_by,
@@ -396,7 +396,6 @@ export default {
 			}
 			this.$router.push({query})
 			
-			console.log('hello',this.paramFilterSort)
 			this.paramFilterSort.search = search
 			this.paramFilterSort.compliance_status = compliance_status
 			this.getLocums(this.paramFilterSort)

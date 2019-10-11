@@ -18,7 +18,6 @@ export default {
     components:{
         AppLoading,
         SessionsTabs
-
     },
     data() {
         return {
