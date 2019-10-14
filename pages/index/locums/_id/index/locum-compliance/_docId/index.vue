@@ -24,23 +24,24 @@ export default {
             return this.$store.state.locums.locumUser
         }
     },
-    async asyncData({ app, store, route }) {
-        try {
-            let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`)
-            const compliance_doc = response.data.data.locum_detail_compliance_document
+    async asyncData({ app, store, route, error }) {
+      try {
+        let response = await app.$axios.get(`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`)
+        const compliance_doc = response.data.data.locum_detail_compliance_document
 
-            response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
-            const user = response.data.data.user
-            await store.commit('locums/SET_LOCUM_USER', user)
+        response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.id}`)
+        const user = response.data.data.user
+        await store.commit('locums/SET_LOCUM_USER', user)
 
-            return{
-                compliance_doc,
-                // user
-            }
-        }catch (err) {
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-            console.log("index practices index create asyncData err", err);
+        return{
+            compliance_doc,
+            // user
         }
+      }catch (err) {
+        error({statusCode: 404})
+        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+        console.log("index practices index create asyncData err", err);
+      }
     },
 }
 </script>

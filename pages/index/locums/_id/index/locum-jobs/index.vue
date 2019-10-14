@@ -21,7 +21,7 @@ export default {
     },
     created(){
         if(this.$route.name == 'index-locums-id-index-locum-jobs-index'){
-          this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-current-jobs`, query: this.$route.query})
+          this.$router.push({path:`/locums/${this.user.id}/locum-jobs/locum-allocated-jobs`, query: this.$route.query})
         }
     },
     computed:{

@@ -13,9 +13,9 @@
       >Applied</nuxt-link>
 
       <nuxt-link
-        :to="getRoute(practice_surgery ? 'surgery-current-sessions':'practice-current-sessions')"
+        :to="getRoute(practice_surgery ? 'surgery-allocated-sessions':'practice-allocated-sessions')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path.includes(`practice-current-sessions` ) || $route.path.includes(`surgery-current-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        :class="$route.path.includes(`practice-allocated-sessions` ) || $route.path.includes(`surgery-allocated-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >Allocated(Current)</nuxt-link> <!--may locum na, pero hindi pa nag sstart-->
 
       <!--Ongoing , nag start na, by job parts -->

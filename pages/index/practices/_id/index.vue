@@ -27,7 +27,7 @@ export default {
         return this.$store.state.practices.practice
       }
     },
-    async asyncData({app,store,route}){
+    async asyncData({ app, store, route, error }){
         try{
            
             let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
@@ -37,6 +37,7 @@ export default {
                 
             }
         }catch(err){
+          error({ statusCode: 404 })
           store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
           console.log('get practice error!!!!',err)
         }

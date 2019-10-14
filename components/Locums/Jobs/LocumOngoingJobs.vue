@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
-      <div v-if="jobParts.length == 0">
+      <div v-if="locumOngoingJobParts.length == 0">
         <div
           class="mt-10 w-full text-white text-center"
           style="font-family: Nunito"
@@ -20,7 +20,7 @@
             </div>
             <!-- BODY -->
             <div 
-              v-for="(item, index) in jobParts" 
+              v-for="(item, index) in locumOngoingJobParts" 
               @click="$router.push(`/locums/${user.id}/locum-jobs/locum-matched-jobs/${item.id}`)"
               :key="`item-${index}`" 
               class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-      <div v-if="!jobParts.length == 0" class="m-10 xl:-ml-32">
+      <div v-if="!locumOngoingJobParts.length == 0" class="m-10 xl:-ml-32">
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -82,8 +82,8 @@ export default {
   },
   data() {
     return {
-      jobParts: [],
-      total:0,
+      // locumOngoingJobParts: [],
+      // total:0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
@@ -110,31 +110,31 @@ export default {
     }
     this.currentPage = parseInt(query.job_parts_page)
     let params = {
-      // viewing_locum_user_id : this.user.id,
-      // locum_status : 'Matched'
+      viewing_locum_user_id : this.user.id,
+      locum_status : 'Ongoing'
     }
     Promise.all([
       console.log(this.user),
       this.$axios.$get(`/api/v1/admin/job-parts/count`,{ params }).then(res => {
-        // this.$store.commit('jobs/SET_LOCUM_MATCHED_JOBS_COUNT', res.data.count)
+        this.$store.commit('jobs/SET_LOCUM_ONGOING_JOBS_COUNT', res.data.count)
         console.log('res',res)
-        this.total = res.data.count
+        // this.total = res.data.count
         this.perPage = 10
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
       this.getOngoingJobs('date_created:desc'),
-        console.log(this.jobParts)
+        console.log(this.locumOngoingJobParts)
     })
   },
-  // computed:{
-  //   total(){
-  //     return this.$store.state.jobs.locum_matched_jobs_count
-  //   },
-  //   jobParts(){
-  //     return this.$store.state.jobs.locum_matched_jobs
-  //   }
-  // },
+  computed:{
+    total(){
+      return this.$store.state.jobs.locum_ongoing_jobs_count
+    },
+    locumOngoingJobParts(){
+      return this.$store.state.jobs.locum_ongoing_jobs
+    }
+  },
   methods: {
     getOngoingJobs(orderBy) {
       let offset = 0
@@ -148,16 +148,16 @@ export default {
       }
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
       let params = {
-        // viewing_locum_user_id : this.user.id,
-        // locum_status : 'Matched',
+        viewing_locum_user_id : this.user.id,
+        locum_status : 'Matched',
         order_by : ['id:desc',orderBy],
         limit: this.perPage,
         offset: offset
       }
       
       this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
-        this.jobParts =  res.data.job_parts
-        // this.$store.commit('jobs/SET_LOCUM_MATCHED_JOBS', res.data.jobs)
+        // this.locumOngoingJobParts =  res.data.job_parts
+        this.$store.commit('jobs/SET_LOCUM_ONGOING_JOBS', res.data.job_parts)
         this.$store.commit('jobs/TOGGLE_LOADING', false)
       })
     },

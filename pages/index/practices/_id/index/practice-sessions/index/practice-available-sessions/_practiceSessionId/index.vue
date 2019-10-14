@@ -20,19 +20,20 @@ export default {
             practiceId:''
         }
     },
-    async asyncData({ app, store, route}){
+    async asyncData({ app, store, route, error }){
         try{
-            let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.practiceSessionId}`)
-            const job = response.data.job
-            console.log('job', job)
-            const practiceId = route.params.id
-            return{
-                job,
-                practiceId
-            }
+          let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.practiceSessionId}`)
+          const job = response.data.job
+          console.log('job', job)
+          const practiceId = route.params.id
+          return{
+              job,
+              practiceId
+          }
         }catch(err){
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-            console.log('get job error!',err)
+          error({ statusCode:404 })
+          store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+          console.log('get job error!',err)
         }
     }
 }

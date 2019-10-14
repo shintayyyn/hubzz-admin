@@ -20,7 +20,7 @@ export default {
       return this.$store.state.locums.locumUser;
     }
   },
-  async asyncData({ app, store, route }) {
+  async asyncData({ app, store, route, error }) {
     try {
       let response = await app.$axios.get(
         `/api/v1/admin/locum-users/${route.params.id}`
@@ -31,6 +31,7 @@ export default {
 
       return {};
     } catch (err) {
+      error({ statusCode: 404 })
       store.commit("SET_NOTIFICATION", {
         enabled: true,
         status: "danger",

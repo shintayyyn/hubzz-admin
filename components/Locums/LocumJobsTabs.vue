@@ -2,9 +2,9 @@
   <div class="flex overflow-x-auto py-2">
     <!-- Ongoing job is a job of the locum that has not yet started -->
     <nuxt-link
-      :to="`/locums/${this.user.id}/locum-jobs/locum-current-jobs`"
+      :to="`/locums/${this.user.id}/locum-jobs/locum-allocated-jobs`"
       class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${user.id}/locum-jobs/locum-current-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      :class="$route.path === `/locums/${user.id}/locum-jobs/locum-allocated-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
     >Allocated(Current)</nuxt-link>
     <!-- Ongoing job is a job of the locum that already has started -->
     <nuxt-link

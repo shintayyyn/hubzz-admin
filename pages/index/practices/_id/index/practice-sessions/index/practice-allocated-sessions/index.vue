@@ -1,17 +1,17 @@
 <template>
     <div>
-        <PracticeCurrentSessions :practice='practice'/>
+        <PracticeAllocatedSessions :practice='practice'/>
     </div>
 </template>
 <script>
-import PracticeCurrentSessions from '@/components/Practices/Sessions/PracticeCurrentSessions'
+import PracticeAllocatedSessions from '@/components/Practices/Sessions/PracticeAllocatedSessions'
 export default {
     components:{
-        PracticeCurrentSessions
+      PracticeAllocatedSessions
     },
     computed:{
         practice(){
-            return this.$store.state.practices.practice
+          return this.$store.state.practices.practice
         }
     },
     async asyncData({ app, store, route}){

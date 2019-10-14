@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="overflow-x-auto xl:overflow-hidden">
-          <div v-if="currentJobs.length === 0">
+          <div v-if="allocatedJobs.length === 0">
             <div
             class="mt-10 w-full text-center text-white"
-            >This practice is no currently ongoing session/s.</div>
+            >This practice is no allocatedly ongoing session/s.</div>
           </div>
           <div v-else>
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
@@ -19,8 +19,8 @@
               </div>
               <!-- BODY -->
               <nuxt-link 
-                v-for="(item, index) in currentJobs" 
-                 :to="{ path: `/practices/${practice.id}/practice-sessions/practice-current-sessions/${item.id}`}"
+                v-for="(item, index) in allocatedJobs" 
+                 :to="{ path: `/practices/${practice.id}/practice-sessions/practice-allocated-sessions/${item.id}`}"
                 :key="`item-${index}`" 
                 class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
@@ -54,7 +54,7 @@
             </div>
           </div>
           <!--PAGINATION-->
-          <div v-if="!currentJobs.length == 0" class="m-10 xl:-ml-32">
+          <div v-if="!allocatedJobs.length == 0" class="m-10 xl:-ml-32">
             <AppPagination
               :total="total"
               :totalPages="totalPages"
@@ -85,7 +85,7 @@ export default {
     },
     data(){
       return{ 
-        // currentJobs:[], 
+        // allocatedJobs:[], 
         // total:0,
         job:null,
         totalPages:0,
@@ -97,52 +97,52 @@ export default {
     },
     beforeDestroy() {
       let query = Object.assign({}, this.$route.query)
-      delete query.current_job_page
+      delete query.allocated_job_page
       this.$router.push({ query })
     },
     watch: {
       $route(to, from) {
-        this.currentPage = parseInt(to.query.current_job_page)
-        this.getCurrentJobs('date_created:desc')
+        this.currentPage = parseInt(to.query.allocated_job_page)
+        this.getAllocatedJobs('date_created:desc')
       },
 
     },
     created(){
       const query = {
         ...this.$route.query,
-        current_job_page: this.$route.query.current_job_page || 1
+        allocated_job_page: this.$route.query.allocated_job_page || 1
       }
-      this.currentPage = parseInt(query.current_job_page)
+      this.currentPage = parseInt(query.allocated_job_page)
       let params = {
         viewing_practice_id : this.practice_id,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
-        status : 'Current'
+        status : 'Allocated'
       }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
           // this.total = res.data.count
-          this.$store.commit('jobs/SET_PRACTICE_CURRENT_SESSIONS_COUNT', res.data.count)
+          this.$store.commit('jobs/SET_PRACTICE_ALLOCATED_SESSIONS_COUNT', res.data.count)
           this.perPage = 10
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
       ]).then(() => {
-        this.getCurrentJobs('date_created:desc'),
-        console.log(this.currentJobs)
+        this.getAllocatedJobs('date_created:desc'),
+        console.log(this.allocatedJobs)
       }).catch(err=>{
-        console.log('get current jobs error!!!',err)
+        console.log('get allocated jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
     computed:{
       total(){
-        return this.$store.state.jobs.practice_current_sessions_count
+        return this.$store.state.jobs.practice_allocated_sessions_count
       },
-      currentJobs(){
-        return this.$store.state.jobs.practice_current_sessions
+      allocatedJobs(){
+        return this.$store.state.jobs.practice_allocated_sessions
       }
     },
     methods:{
-      async getCurrentJobs(orderBy){ 
+      async getAllocatedJobs(orderBy){ 
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -152,21 +152,21 @@ export default {
           orderBy = orderBy.replace('asc','desc')
           this.ascendDescend = 0
         }
-        offset = this.perPage * (parseInt(this.$route.query.current_job_page) - 1)
+        offset = this.perPage * (parseInt(this.$route.query.allocated_job_page) - 1)
         let params = {
           viewing_practice_id : this.practice.id,
-          status : 'Current',
+          status : 'Allocated',
           order_by : ['id:desc',orderBy],
           surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset
         }
         await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
-          this.$store.commit('jobs/SET_PRACTICE_CURRENT_SESSIONS', res.data.jobs)
+          this.$store.commit('jobs/SET_PRACTICE_ALLOCATED_SESSIONS', res.data.jobs)
           this.$store.commit('jobs/TOGGLE_LOADING', false)
-          // this.currentJobs = res.data.jobs
+          // this.allocatedJobs = res.data.jobs
         }).catch(err=>{
-          console.log('get current jobs error!!!',err)
+          console.log('get allocated jobs error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       
@@ -174,7 +174,7 @@ export default {
       async pagechanged(e) {
         const query = {
           ...this.$route.query,
-          current_job_page: e || 1
+          allocated_job_page: e || 1
         }
         await this.$store.commit('jobs/TOGGLE_LOADING', true)
         await this.$router.push({ query })
