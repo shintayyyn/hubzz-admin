@@ -25,9 +25,9 @@
             v-model="toPostUser.title"
             aria-label="Title"
           />
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             First Name
-            <span v-if="firstNameError" class="bg-red p-1 ml-4 rounded">{{firstNameError}}</span>
+            <span v-if="firstNameError" class="bg-red-600 p-1 ml-4 rounded">{{firstNameError}}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -38,9 +38,9 @@
             @blur="verifyFirstName(toPostUser.first_name)"
             aria-label="First Name"
           />
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             Last Name
-            <span v-if="lastNameError" class="bg-red p-1 ml-4 rounded">{{lastNameError}}</span>
+            <span v-if="lastNameError" class="bg-red-600 p-1 ml-4 rounded">{{lastNameError}}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -82,14 +82,14 @@
             </div>
           </div>
 
-          <div v-if="surgery" class="flex py-1">
+          <div v-if="surgery" class="flex items-center py-1">
             Role
-            <span v-if="!toPostUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
+            <span v-if="!toPostUser.practice_role" class="bg-red-600 p-1 ml-4 rounded">Required</span>
           </div>
           <select
             v-if="surgery"
-            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            :class="`${toPostUser.practice_role !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
+            :class="`${toPostUser.practice_role !== '' ? 'focus:border-orange-500' :'focus:border-red-600'}`"
             v-model="toPostUser.practice_role"
           >
             <option>Partner</option>
@@ -99,7 +99,7 @@
           <div v-if="surgery && surgery.practice_count<1" class="flex py-1">Type</div>
           <select
             v-if="surgery && surgery.practice_count<1"
-            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
             :class="`${toPostUser.type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
             v-model="toPostUser.type"
           >

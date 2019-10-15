@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col rounded-lg">
         <div>
-          <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:w-2/3">
+          <form class="flex flex-col bg-waterloo py-2 px-4 shadow rounded-lg sm:w-full lg:max-w-2xl">
             <div class="flex flex-wrap">
               <div class="w-full md:w-1/2 text-gray-300 text-sm p-2">
                 <p class="flex">Practice Name</p>
@@ -66,8 +66,8 @@
               <div class="w-full text-sm text-white md:w-1/2 ">
                 <div class="m-2">
                   <span class="font-semibold text-lg">Other Information</span>
-                  <span class="m-1 p-2 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit ==false" @click="toEdit=true">Edit</span>
-                  <span class="m-1 p-2 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit == true" @click="toEdit=false">Cancel Editing</span>
+                  <span class="m-1 py-2 px-4 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit ==false" @click="toEdit=true">Edit</span>
+                  <span class="m-1 py-2 px-4 bg-sunglow text-black font-semibold rounded-lg cursor-pointer" v-if="toEdit == true" @click="toEdit=false">Cancel Editing</span>
                 </div>
 
                 <div v-if="toEdit == false" class="border-b border-white">

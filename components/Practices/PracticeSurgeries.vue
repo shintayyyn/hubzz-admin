@@ -6,7 +6,7 @@
             <div class="flex-3 mx-1 whitespace-no-wrap">
                 <button
                     @click="show()"
-                    class="inline-flex items-center no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-right"
+                    class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
                 >Add Surgery
                     <svgicon
                     name="add-rectangle"
@@ -19,7 +19,7 @@
             <div v-if="deleteSurgery == false" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
                     @click="deleteSurgery = true"
-                    class="inline-flex items-center no-underline py-2 px-4 bg-red text-sm font-semibold text-white rounded-lg shadow float-right"
+                    class="inline-flex items-center no-underline py-2 px-4 bg-red-600 hover:bg-red-700 text-sm font-semibold text-white rounded-lg shadow float-right"
                 >Delete Surgery
                     <svgicon
                     name="garbage"
@@ -32,7 +32,7 @@
             <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
                     @click="deleteSurgery = false"
-                    class="inline-flex items-center no-underline py-2 px-4 bg-green text-sm font-semibold text-white rounded-lg shadow float-right"
+                    class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
                 >Done
                     <svgicon
                     name="circle-check"
@@ -62,15 +62,18 @@
           :key="`childSurgery-${index}`"
           >   
           <div class="inline-flex w-full">
-            <div @click="toDeleteSurgery(practice.id,childSurgery.id)" v-if="deleteSurgery == true" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
-              <svgicon
-              name="garbage"
-              width="25"
-              height="25"
-              class="fill-current"
-              />
+            <div @click="toDeleteSurgery(practice.id,childSurgery.id)" v-if="deleteSurgery == true" class='flex items-center pr-6 cursor-pointer text-white'>
+              <span class="p-2 rounded-full bg-red-600 shadow hover:bg-red-700">
+                <svgicon
+                name="garbage"
+                width="22"
+                height="22"
+                class="fill-current"
+                />
+              </span>
+              
             </div>
-            <div class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0">
+            <div class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 text-white">
               <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                   <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
                   <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>

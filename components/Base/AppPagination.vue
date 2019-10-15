@@ -48,9 +48,8 @@
         <div class="hidden md:block pagination-item mx-1" v-for="page in pages" :key="page.name">
           <button
             type="button"
-            class="page-button p-2 px-4 rounded-lg font-bold text-sm text-black focus:outline-none"
+            class="page-button p-2 px-4 rounded-lg font-bold text-sm text-gray-800 focus:outline-none"
             @click="onClickPage(page.name)"
-            :disabled="loading || page.isDisabled"
             :class="{ active: isPageActive(page.name) }"
           >{{ page.name }}</button>
         </div>
@@ -197,18 +196,18 @@ export default {
   /* margin-right: 8px; */
 }
 .active {
-  background-color: #4aae9b;
-  color: #ffffff;
-}
-button {
-  background: linear-gradient(to top, #f2d024, #efde86);
+  background: linear-gradient(to top, #ffd500, #fadb43);
+  color: #000;
 }
 
-button:active {
+button:active :not(button:disabled){
   transform: translate(2px, 2px);
 }
 
-button:disabled svg {
+button:disabled, button:disabled svg {
+  background: linear-gradient(to top, #6b717e, #6b7386);
+  color: #aaa;
+  cursor: not-allowed;
   fill: #aaa;
 }
 </style>

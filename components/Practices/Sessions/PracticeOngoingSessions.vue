@@ -7,49 +7,48 @@
           >This practice has no ongoing sessions.</div>
         </div>
         <div v-else>
-          <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+          <div class="flex flex-col text-white p-2"> 
             <!-- HEADER -->
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-              <div class="table-cell p-2 align-middle">Job Number</div> 
-              <div class="table-cell p-2 align-middle">Practice / Surgery</div>
-              <div class="table-cell p-2 align-middle">Title</div>
-              <div class="table-cell p-2 align-middle">From</div>
-              <div class="table-cell p-2 align-middle">To</div>
-              <div class="table-cell p-2 align-middle">Created</div>
+            <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
+              <div class="w-1/6 md:px-2">Job Number</div> 
+              <div class="w-1/6 md:px-2">Practice / Surgery</div>
+              <div class="w-1/6 md:px-2">Title</div>
+              <div class="w-1/6 md:px-2">From</div>
+              <div class="w-1/6 md:px-2">To</div>
+              <div class="w-1/6 md:px-2">Created</div>
             </div>
             <!-- BODY -->
-            <nuxt-link 
+            <div 
               v-for="(item, index) in jobParts" 
-              :to="{ path: `/practices/${practice.id}/practice-sessions/practice-ongoing-sessions/${item.id}`}"
+              @click="$router.push(`/practices/${practice.id}/practice-sessions/practice-ongoing-sessions/${item.id}`)" 
               :key="`item-${index}`" 
-              class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
-              draggable="false"
+              class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:px-2 border-l-8 border-yellow-500 md:border-0 leading-tight" 
             >
-              <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
+              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                 <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-                <span class="">{{item.job_part_number}}</span>
+                <span class="break-words">{{item.job_part_number}}</span>
               </div>
-              <div class="flex flex-col xl:px-6 w-full  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                 <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-                <span class="">{{item.job.platform_job.practice.surgery.name}}</span>
+                <span class="break-words">{{item.job.platform_job.practice.surgery.name}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="">{{item.job.title}}</span>
+                <span class="break-words">{{item.job.title}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                 <strong class="block md:hidden text-sm uppercase">From</strong>
-                <span class="">{{item.date_start}}</span>
+                <span class="break-words">{{item.date_start}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
+              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                 <strong class="block md:hidden text-sm uppercase">To</strong>
-                <span class="">{{item.date_end}}</span>
+                <span class="break-words">{{item.date_end}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
+              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class="">{{item.job.date_created}}</span>
+                <span class="break-words">{{item.job.date_created}}</span>
               </div>
-            </nuxt-link>
+            </div>
           </div>
         </div>
         <div v-if="!jobParts.length == 0" class="m-10 xl:-ml-32">

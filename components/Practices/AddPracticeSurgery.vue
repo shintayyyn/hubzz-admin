@@ -73,7 +73,7 @@
               @click="changeParent(hub.surgery.id,hub.id)"
               class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
             >
-              <div class="flex" style="width: 100%;">
+              <div class="flex w-full ">
                 <div class="text-white text-xs p-4">
                   <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
                   <span class="font-bold">{{ hub.surgery.name }}</span>
@@ -101,7 +101,7 @@
     />
     <!-- PAGINATION ENDS HERE -->
 
-    <div class="practice-user-shield" v-if="modal"></div>
+    <div class="practice-user-shield" v-if="modal" @click="modal = false"></div>
     <transition name="slide" mode="out-in">
       <div
         class="shadow-lg"
