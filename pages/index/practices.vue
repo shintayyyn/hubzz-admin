@@ -46,13 +46,13 @@
           <svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6" @click="sortBy('status',activePage,search)">
+        <div class="w-1/6 text-center" @click="sortBy('status',activePage,search)">
           Status
           <svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6" @click="sortBy('practice_type',activePage,search)">
+        <div class="w-1/6 text-center" @click="sortBy('practice_type',activePage,search)">
           Type
           <svgicon v-if="sortedBy!='practice_type'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_type'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -89,13 +89,13 @@
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Status</strong>
-          <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
+          <span class="inline-flex w-full justify-center no-underline py-2 mx-4 text-sm text-black rounded-full shadow"
 			    :class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
 		    </div>
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
-          <span class="inline-flex no-underline py-2 px-4 text-sm text-black rounded-full shadow"
+          <span class="inline-flex w-full justify-center no-underline py-2 mx-4 text-sm text-black rounded-full shadow"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>
 
