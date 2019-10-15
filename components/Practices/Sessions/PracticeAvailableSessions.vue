@@ -112,7 +112,7 @@ export default {
     let params = {
       viewing_practice_id : this.practice.id,
       surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
-      status : 'Available'
+      status : 'Live'
     }
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
@@ -149,7 +149,7 @@ export default {
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
       let params = {
         viewing_practice_id : this.practice.id,
-        status : 'Available',
+        status : 'Live',
         order_by : ['id:desc',orderBy],
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,

@@ -340,28 +340,14 @@ export default {
 			});
 		},
 		async sortBy(sortedBy,page,search,compliance_status) {
-			switch (sortedBy) {
-				case 'name':
-					this.sortedBy = sortedBy
-					this.name = !this.name
-					this.sortType = this.name
-				case 'profession':
-					this.sortedBy = sortedBy
-					this.profession = !this.profession
-					this.sortType = this.profession
-				break;
-				case 'created_at':
-					this.sortedBy = sortedBy
-					this.created_at = !this.created_at
-					this.sortType = this.created_at
-				break;
-				case 'email_verified_at':
-					this.sortedBy = sortedBy
-					this.email_verified_at = !this.email_verified_at
-					this.sortType = this.email_verified_at
-				break;
-			}
-			this.paramFilterSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      if(this.sortedBy == sortedBy && this.sortType == true){
+        this.paramSort.order_by ='created_at:desc'
+        this.sortedBy = ''
+      }else{
+        this.sortedBy = sortedBy
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      }
 			let order_by = await this.paramFilterSort.order_by
 			console.log(order_by)
 			let query = {

@@ -9,6 +9,7 @@
       <div class="practice-shield" v-if="$route.name.includes('pracDocId')"></div>
       <div class="practice-shield" v-if="$route.name.includes('practiceSessionId')"></div>
       <div class="practice-shield" v-if="$route.name.includes('practiceSurgeryId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSessionPartId')"></div>
     </div>
 </template>
 <script>

@@ -21,7 +21,7 @@
             <!-- BODY -->
             <div 
               v-for="(item, index) in locumOngoingJobParts" 
-              @click="$router.push(`/locums/${user.id}/locum-jobs/locum-matched-jobs/${item.id}`)"
+              @click="$router.push(`/locums/${user.id}/locum-jobs/locum-ongoing-jobs/${item.id}`)"
               :key="`item-${index}`" 
               class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
             >
@@ -124,7 +124,7 @@ export default {
       })
     ]).then(() => {
       this.getOngoingJobs('date_created:desc'),
-        console.log(this.locumOngoingJobParts)
+      console.log('ongoing job parts',this.locumOngoingJobParts)
     })
   },
   computed:{
@@ -149,7 +149,7 @@ export default {
       offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
-        locum_status : 'Matched',
+        locum_status : 'Ongoing',
         order_by : ['id:desc',orderBy],
         limit: this.perPage,
         offset: offset

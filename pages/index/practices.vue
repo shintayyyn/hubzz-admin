@@ -181,9 +181,8 @@ export default {
       actived_until:true,
       status:true,
       modal:false
-
-      };
-    },
+    };
+  },
 
 	watchQuery: [
 	'page',
@@ -317,39 +316,14 @@ export default {
     },
     
 		async sortBy(sortedBy,page,search) {
-			switch (sortedBy) {
-				case 'practice_name':
-					this.sortedBy = sortedBy
-					this.practice_name = !this.practice_name
-          this.sortType = this.practice_name
-        break;
-				case 'created_at':
-					this.sortedBy = sortedBy
-					this.created_at = !this.created_at
-					this.sortType = this.created_at
-        break;
-        case 'practice_code':
-          this.sortedBy = sortedBy
-					this.practice_code = !this.practice_code
-					this.sortType = this.practice_code
-        break;
-				case 'actived_until':
-					this.sortedBy = sortedBy
-					this.actived_until = !this.actived_until
-					this.sortType = this.actived_until
-				break;
-				case 'status':
-					this.sortedBy = sortedBy
-					this.status = !this.status
-					this.sortType = this.status
-        break;
-        case 'practice_type':
-					this.sortedBy = sortedBy
-					this.practice_type = !this.practice_type
-					this.sortType = this.practice_type
-				break;
-			}
-			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      if(this.sortedBy == sortedBy && this.sortType == true){
+        this.paramSort.order_by ='created_at:desc'
+        this.sortedBy = ''
+      }else{
+        this.sortedBy = sortedBy
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      }
 			let order_by = await this.paramSort.order_by
 			let query = {
 				...this.$router.query,
