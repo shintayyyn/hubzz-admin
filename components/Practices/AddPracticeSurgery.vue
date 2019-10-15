@@ -125,7 +125,6 @@ export default {
     AppPagination,
     CreatePracticeUser
   },
-
   data() {
     return {
       surgeries: [],

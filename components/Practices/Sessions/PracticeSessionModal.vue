@@ -1,7 +1,7 @@
 <template>
-    <div class=m-6>
+    <div class="mx-6">
         <!-- BODY -->
-        <div class= "w-full overflow-auto">
+        <div class="w-full overflow-auto">
           <div class="flex m-2 ">
             <div class="text-2xl text-white font-semibold">{{job ? job.title:null }}</div>
             <div class="text-black p-2 bg-yellow-500 rounded ml-4">{{job.status}}</div>
@@ -275,7 +275,7 @@
         <div class="job-part-shield" v-if="modal"></div>
         <transition name="slide" mode="out-in">
           <div class="job-part-modal shadow-lg" v-if="modal">
-            <JobPartModal :jobPartId="jobPartId" @close="modal = false"/>
+            <JobPartModal :jobPartId="jobPartId" :specificJobPart="specificJobPart" @close="modal = false"/>
           </div>
         </transition>
         <nuxt-child/>
@@ -293,7 +293,8 @@ export default {
     return{
         locumUser:null,
         modal: false,
-        jobPartId: ''
+        jobPartId: '',
+        specificJobPart: ''
       }
   },
   async created(){
@@ -327,9 +328,14 @@ export default {
       }
       this.$router.push({ query })
     },
-    show(jobPartId){
+    async show(jobPartId){
       console.log('id', jobPartId)
       this.jobPartId=jobPartId
+
+      await this.$axios.$get(`/api/v1/admin/job-parts/${jobPartId}`).then(res => {
+        this.specificJobPart = res.data.job_part
+      })
+      
       this.modal=true
 		},
 
@@ -362,7 +368,7 @@ export default {
 }
 @media screen and (min-width: 1200px) {
   .job-part-modal {
-    width: 50%;
+    width: 60%;
   }
 }
 </style>

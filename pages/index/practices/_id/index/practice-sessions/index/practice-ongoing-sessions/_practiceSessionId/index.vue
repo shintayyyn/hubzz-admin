@@ -9,10 +9,12 @@
     </div>
 </template>
 <script>
+import JobPartModal from '@/components/Base/JobPartModal'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
     components:{
-        PracticeSessionModal
+      JobPartModal,
+      PracticeSessionModal
     },  
     data(){
         return{

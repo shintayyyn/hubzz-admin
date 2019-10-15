@@ -83,146 +83,144 @@
                   </div> -->
               </div>
           </div>
-            <div class="w-full md:w-1/2 ">
-              <div>
-                <!-- <p class="flex text-gray-300 text-sm p-2">Does the hub pay for the Surgery?</p> -->
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.pay_for_surgery"
-                  :type="'select'"
-                  :name="'pay_for_surgery'"
-                  :label="'Pay for surgery?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-                  />
-                </div>
-                  
-                <!-- <p class="flex text-gray-300 text-sm p-2">Verify Job Creation</p> -->
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.verify_job_creation"
-                  :type="'select'"
-                  :name="'verify_job_creation'"
-                  :label="'Verify Job Creation?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-                  />
-                </div>
-                <!-- <p class="flex text-gray-300 text-sm p-2">Session Policies</p> -->
-                <div class="">
-                  <AppInput
-                  v-model="toPutPracticeParent.allow_surgery_create_sessions"
-                  :type="'select'"
-                  :name="'allow_surgery_create_sessions'"
-                  :label="'Allow this surgery to create sessions?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.allow_surgery_appoint_locums"
-                  :type="'select'"
-                  :name="'allow_surgery_appoint_locums'"
-                  :label="'Allow this surgery to allocate applicant locums to sessions?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.allow_surgery_amend_sessions"
-                  :type="'select'"
-                  :name="'allow_surgery_amend_sessions'"
-                  :label="'Allow this surgery to amend sessions?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.allow_surgery_cancel_sessions"
-                  :type="'select'"
-                  :name="'allow_surgery_cancel_sessions'"
-                  :label="'Allow this surgery to cancel sessions?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.allow_surgery_approve_hours"
-                  :type="'select'"
-                  :name="'allow_surgery_approve_hours'"
-                  :label="'Allow this surgery to approve hours for invoicing?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.allow_surgery_complete_sessions"
-                  :type="'select'"
-                  :name="'allow_surgery_complete_sessions'"
-                  :label="'Allow this surgery to complete sessions?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
+          <!-- <div class="w-full md:w-1/2 ">
+            <div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.pay_for_surgery"
+                :type="'select'"
+                :name="'pay_for_surgery'"
+                :label="'Pay for surgery?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                />
+              </div>
+                
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.verify_job_creation"
+                :type="'select'"
+                :name="'verify_job_creation'"
+                :label="'Verify Job Creation?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                />
+              </div>
+
+              <div class="">
+                <AppInput
+                v-model="toPutPracticeParent.allow_surgery_create_sessions"
+                :type="'select'"
+                :name="'allow_surgery_create_sessions'"
+                :label="'Allow this surgery to create sessions?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
                     //{ label: 'Require HUB`s Approval', value: false },
                     { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.share_banks_to_other_surgeries"
-                  :type="'select'"
-                  :name="'share_banks_to_other_surgeries'"
-                  :label="'Allow this surgery to share its banks to other surgeries??'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.let_surgery_bill_locum"
-                  :type="'select'"
-                  :name="'let_surgery_bill_locum'"
-                  :label="'Let this surgery to handle its own billing for Locum Invoice?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
-                <div class="w-full p-1">
-                  <AppInput
-                  v-model="toPutPracticeParent.let_surgery_bill_hubzz"
-                  :type="'select'"
-                  :name="'let_surgery_bill_hubzz'"
-                  :label="'Let this surgery to handle its own billing for Hubzz?'"
-                  :placeholder="'Select...'"
-                  :items="[{ label: 'Allow to operate independently', value: true },
-                      //{ label: 'Require HUB`s Approval', value: false },
-                      { label: 'Only HUB can operate', value: false }]"
-                  />
-                </div>
+                />
               </div>
-              <button
-              class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
-              @click.prevent="updatePracticeSurgery(toPutPracticeParent)"
-              >Save</button>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.allow_surgery_appoint_locums"
+                :type="'select'"
+                :name="'allow_surgery_appoint_locums'"
+                :label="'Allow this surgery to allocate applicant locums to sessions?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.allow_surgery_amend_sessions"
+                :type="'select'"
+                :name="'allow_surgery_amend_sessions'"
+                :label="'Allow this surgery to amend sessions?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.allow_surgery_cancel_sessions"
+                :type="'select'"
+                :name="'allow_surgery_cancel_sessions'"
+                :label="'Allow this surgery to cancel sessions?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.allow_surgery_approve_hours"
+                :type="'select'"
+                :name="'allow_surgery_approve_hours'"
+                :label="'Allow this surgery to approve hours for invoicing?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.allow_surgery_complete_sessions"
+                :type="'select'"
+                :name="'allow_surgery_complete_sessions'"
+                :label="'Allow this surgery to complete sessions?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                  //{ label: 'Require HUB`s Approval', value: false },
+                  { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.share_banks_to_other_surgeries"
+                :type="'select'"
+                :name="'share_banks_to_other_surgeries'"
+                :label="'Allow this surgery to share its banks to other surgeries??'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.let_surgery_bill_locum"
+                :type="'select'"
+                :name="'let_surgery_bill_locum'"
+                :label="'Let this surgery to handle its own billing for Locum Invoice?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                v-model="toPutPracticeParent.let_surgery_bill_hubzz"
+                :type="'select'"
+                :name="'let_surgery_bill_hubzz'"
+                :label="'Let this surgery to handle its own billing for Hubzz?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Allow to operate independently', value: true },
+                    //{ label: 'Require HUB`s Approval', value: false },
+                    { label: 'Only HUB can operate', value: false }]"
+                />
+              </div>
             </div>
+            <button
+            class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float:right"
+            @click.prevent="updatePracticeSurgery(toPutPracticeParent)"
+            >Save</button>
+          </div> -->
         </div>
       </form>
     </div>
@@ -308,19 +306,19 @@ export default {
         return
       }
     },
-        async updatePracticeSurgery(){
-            try{
-                await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,
-                    this.toPutPracticeParent
-                )
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Practice Parent Updated' })
-            }catch(err){
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-                console.log("put practice error",err)
-            }
+    async updatePracticeSurgery(){
+      try{
+        await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,
+          this.toPutPracticeParent
+        )
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Practice Parent Updated' })
+      }catch(err){
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        console.log("put practice error",err)
+      }
 
-        }   
-    }
+    }   
+  }
     
 }
 </script>
