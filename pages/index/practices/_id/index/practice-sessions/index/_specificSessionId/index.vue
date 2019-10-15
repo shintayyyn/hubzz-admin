@@ -17,7 +17,7 @@ export default {
       job: ''
     }
   },
-  async asyncData({ app, store, route }){
+  async asyncData({ app, store, route, error }){
     try{
       console.log(route.params.specificSessionId)
       let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.specificSessionId}`)
@@ -28,6 +28,7 @@ export default {
         job
       }
     }catch(err){
+      error({ statusCode: 404})
       console.log('get job error!',err)
     }
   },

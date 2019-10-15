@@ -105,16 +105,15 @@ export default {
         }
     },
     async asyncData({app, store, route}){
-        try{
-            let response = await app.$axios.$get(`/api/v1/admin/locum-detail-compliance-documents`)
-            const locumDocAlert = response.data.locum_detail_compliance_documents
+      try{
+        let response = await app.$axios.$get(`/api/v1/admin/locum-detail-compliance-documents`)
+        const locumDocAlert = response.data.locum_detail_compliance_documents
 
-            await store.commit('locums/SET_LOCUM_DOC_ALERT', locumDocAlert)
-        }catch(err){
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log('Get locums error!', err)
-        }
-        
+        await store.commit('locums/SET_LOCUM_DOC_ALERT', locumDocAlert)
+      }catch(err){
+        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+        console.log('Get locums error!', err)
+      }
     }
 }
 </script>

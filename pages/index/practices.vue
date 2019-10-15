@@ -61,13 +61,11 @@
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
-
-      <!--DO NOT FORGET TO ADD QUERY HERE-->
-      <div
+      <nuxt-link
         v-for="(practice, index) in getAllPractices"
         :key="`practice-${index}`"
-        @click="$router.push(`/practices/${practice.id}`)" 
-        class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
+        :to="{path:`/practices/${practice.id}`,query:$route.query}"
+        class="w-full text-white flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
       >
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
@@ -94,20 +92,21 @@
           <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
 			    :class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
 		    </div>
+
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
           <span class="inline-flex no-underline py-2 px-4 text-sm text-black rounded-full shadow"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>
 
-      </div>
+      </nuxt-link>
       <!-- END BODY -->
     </div>
 	<div v-else>
 		<div
-            class="mt-10 w-full text-center text-white"
-            style="font-family: Nunito"
-            >There are no registered practices.</div>
+      class="mt-10 w-full text-center text-white"
+      style="font-family: Nunito"
+      >There are no registered practices.</div>
 	</div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
@@ -240,60 +239,59 @@ export default {
   	},
 
     computed: {
-		loadingPractices(){
-			return this.$store.state.practices.loading_practices
-		},
-		getAllPractices(){
-			return this.$store.getters["practices/getAllPractices"]
-		},
-		itemCount(){
-			return this.$store.state.practices.itemCount
-		},
-  		pageCount() {
-  			return Math.ceil(this.itemCount / this.itemsPerPage)
-  		},
+      loadingPractices(){
+        return this.$store.state.practices.loading_practices
+      },
+      getAllPractices(){
+        return this.$store.getters["practices/getAllPractices"]
+      },
+      itemCount(){
+        return this.$store.state.practices.itemCount
+      },
+      pageCount() {
+        return Math.ceil(this.itemCount / this.itemsPerPage)
+      },
+      showPage() {
+        return page => {
+          if (page === 1) {
+            return true
+          }
 
-	    showPage() {
-	      return page => {
-	        if (page === 1) {
-	          return true
-	        }
+          if (page === this.pageCount) {
+            return true
+          }
 
-	        if (page === this.pageCount) {
-	          return true
-	        }
+          if (page === this.activePage) {
+            return true
+          }
 
-	        if (page === this.activePage) {
-	          return true
-	        }
+          if (page === this.activePage + 1) {
+            return true
+          }
 
-	        if (page === this.activePage + 1) {
-	          return true
-	        }
+          if (page === this.activePage - 1) {
+            return true
+          }
 
-	        if (page === this.activePage - 1) {
-	          return true
-	        }
+          if (this.activePage === 1 && page < 5) {
+            return true
+          }
 
-	        if (this.activePage === 1 && page < 5) {
-	          return true
-	        }
+          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+            return true
+          }
 
-	        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-	          return true
-	        }
+          if (this.activePage === 2 && page === 4) {
+            return true
+          }
 
-	        if (this.activePage === 2 && page === 4) {
-	          return true
-	        }
+          if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+            return true
+          }
 
-	        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-	          return true
-	        }
-
-	        return false
-	      }
-	    }
+          return false
+        }
+      }
   	},
   
   	methods: {
@@ -316,7 +314,8 @@ export default {
 				order_by:params.order_by,
 				offset:this.getQuery()
 			})
-		},
+    },
+    
 		async sortBy(sortedBy,page,search) {
 			switch (sortedBy) {
 				case 'practice_name':

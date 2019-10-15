@@ -1,13 +1,13 @@
 <template>
   <div>
-    <PracticeCurrentSessions :practice="practice" :practice_surgery="practice_surgery" />
+    <PracticeAllocatedSessions :practice="practice" :practice_surgery="practice_surgery" />
   </div>
 </template>
 <script>
-import PracticeCurrentSessions from '@/components/Practices/Sessions/PracticeCurrentSessions'
+import PracticeAllocatedSessions from '@/components/Practices/Sessions/PracticeAllocatedSessions'
 export default {
   components:{
-    PracticeCurrentSessions
+    PracticeAllocatedSessions
   },
   computed:{
 

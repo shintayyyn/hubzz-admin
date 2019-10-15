@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="overflow-x-auto xl:overflow-hidden">
-          <div v-if="currentJobs.length === 0">
+          <div v-if="allocatedJobs.length === 0">
             <div
             class="mt-10 text-white w-full text-center"
             style="font-family: Nunito"
-            >This locum is not currently hired to any job.</div>
+            >This locum is not allocatedly hired to any job.</div>
           </div>
           <div v-else>
             <div class="flex flex-col text-white md:px-6" > 
@@ -20,8 +20,8 @@
               </div>
               <!-- BODY -->
               <div 
-                v-for="(item, index) in currentJobs" 
-				        @click="$router.push(`/locums/${user.id}/locum-jobs/locum-current-jobs/${item.id}`)"
+                v-for="(item, index) in allocatedJobs" 
+				        @click="$router.push(`/locums/${user.id}/locum-jobs/locum-allocated-jobs/${item.id}`)"
                 :key="`item-${index}`" 
                 class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
               >
@@ -54,7 +54,7 @@
             </div>
           </div>
           <!--PAGINATION-->
-          <div v-if="!currentJobs.length == 0" class="m-10 xl:-ml-32">
+          <div v-if="!allocatedJobs.length == 0" class="m-10 xl:-ml-32">
             <AppPagination
               :total="total"
               :totalPages="totalPages"
@@ -85,7 +85,7 @@ export default {
     },
     data(){
       return{ 
-        // currentJobs:[],
+        // allocatedJobs:[],
         // total:0,
         totalPages:0,
         currentPage:1,
@@ -96,13 +96,13 @@ export default {
     },
     beforeDestroy() {
       let query = Object.assign({}, this.$route.query)
-      delete query.current_job_page
+      delete query.allocated_job_page
       this.$router.push({ query })
     },
     watch: {
       $route(to, from) {
-        this.currentPage = parseInt(to.query.current_job_page)
-        this.getCurrentJobs('date_created:desc')
+        this.currentPage = parseInt(to.query.allocated_job_page)
+        this.getAllocatedJobs('date_created:desc')
       },
 
     },
@@ -110,34 +110,34 @@ export default {
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
-        current_job_page: this.$route.query.current_job_page || 1
+        allocated_job_page: this.$route.query.allocated_job_page || 1
       }
-      this.currentPage = parseInt(query.current_job_page)
+      this.currentPage = parseInt(query.allocated_job_page)
       let params = {
         viewing_locum_user_id : this.user.id,
-        locum_status: 'Current'
+        locum_status: 'Allocated'
       }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
-          this.$store.commit('jobs/SET_LOCUM_CURRENT_JOBS_COUNT', res.data.count)
+          this.$store.commit('jobs/SET_LOCUM_ALLOCATED_JOBS_COUNT', res.data.count)
           // this.total = res.data.count
           this.perPage = 10
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
       ]).then(() => {
-        this.getCurrentJobs('date_created:desc')
+        this.getAllocatedJobs('date_created:desc')
       })
     },
     computed:{
       total(){
-        return this.$store.state.jobs.locum_current_jobs_count
+        return this.$store.state.jobs.locum_allocated_jobs_count
       },
-      currentJobs(){
-        return this.$store.state.jobs.locum_current_jobs
+      allocatedJobs(){
+        return this.$store.state.jobs.locum_allocated_jobs
       }
     },
     methods:{
-      getCurrentJobs(orderBy){
+      getAllocatedJobs(orderBy){
         let offset = 0
         if(this.ascendDescend == 0){
           orderBy = orderBy.replace('desc','asc')
@@ -147,23 +147,24 @@ export default {
           this.ascendDescend = 0
         }
         
-        offset = this.perPage * (parseInt(this.$route.query.current_job_page) - 1)
+        offset = this.perPage * (parseInt(this.$route.query.allocated_job_page) - 1)
         let params = {
           viewing_locum_user_id : this.user.id,
-          locum_status:'Current',
+          locum_status:'Allocated',
           order_by:['id:desc',orderBy],
           limit:this.perPage,
           offset:offset
         }
         this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
-          this.$store.commit('jobs/SET_LOCUM_CURRENT_JOBS', res.data.jobs)
+          console.log('locum allocated', res.data.jobs)
+          this.$store.commit('jobs/SET_LOCUM_ALLOCATED_JOBS', res.data.jobs)
           this.$store.commit('jobs/TOGGLE_LOADING', false)
         })
       },
       async pagechanged(e) {
         const query = {
           ...this.$route.query,
-          current_job_page: e || 1
+          allocated_job_page: e || 1
         }
         await this.$store.commit('jobs/TOGGLE_LOADING', true)
         await this.$router.push({ query })

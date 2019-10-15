@@ -1,7 +1,7 @@
 <template>
     <div>
       <div class="overflow-x-auto overflow-y-hidden">
-        <div v-if="jobParts.length === 0">
+        <div v-if="ongoingJobParts.length === 0">
           <div
           class="mt-10 w-full text-center text-white"
           >This practice has no ongoing sessions.</div>
@@ -19,7 +19,7 @@
             </div>
             <!-- BODY -->
             <div 
-              v-for="(item, index) in jobParts" 
+              v-for="(item, index) in ongoingJobParts" 
               @click="$router.push(`/practices/${practice.id}/practice-sessions/practice-ongoing-sessions/${item.id}`)" 
               :key="`item-${index}`" 
               class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:px-2 border-l-8 border-yellow-500 md:border-0 leading-tight" 
@@ -51,7 +51,7 @@
             </div>
           </div>
         </div>
-        <div v-if="!jobParts.length == 0" class="m-10 xl:-ml-32">
+        <div v-if="!ongoingJobParts.length == 0" class="m-10 xl:-ml-32">
           <AppPagination
             :total="total"
             :totalPages="totalPages"
@@ -81,8 +81,8 @@ export default {
     },
     data(){
       return{
-        jobParts:[],
-        total:0,
+        // ongoingJobParts:[],
+        // total:0,
         totalPages:0,
         currentPage:1,
         perPage:0,
@@ -109,14 +109,14 @@ export default {
       }
       this.currentPage = parseInt(query.job_parts_page)
       let params = {
-        // viewing_practice_id : this.practice.id,
-        // surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
-        // status : 'Declined'
+        viewing_practice_id : this.practice.id,
+        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+        status : 'Ongoing'
       }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/job-parts/count`,{ params }).then(res=>{
-          this.total = res.data.count
-          // this.$store.commit('jobs/SET_PRACTICE_DECLINED_SESSIONS_COUNT',res.data.count)
+          // this.total = res.data.count
+          this.$store.commit('jobs/SET_PRACTICE_ONGOING_SESSIONS_COUNT',res.data.count)
           this.perPage = 10
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
@@ -127,14 +127,14 @@ export default {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
-  // computed:{
-  //   total(){
-  //     return this.$store.state.jobs.locum_matched_jobs_count
-  //   },
-  //   jobParts(){
-  //     return this.$store.state.jobs.locum_matched_jobs
-  //   }
-  // },
+  computed:{
+    total(){
+      return this.$store.state.jobs.practice_ongoing_sessions_count
+    },
+    ongoingJobParts(){
+      return this.$store.state.jobs.practice_ongoing_sessions
+    }
+  },
     methods:{
       async getOngoingSessions(orderBy){
         let offset = 0
@@ -148,16 +148,16 @@ export default {
         }
         offset = this.perPage * (parseInt(this.$route.query.job_parts_page) - 1)
         let params = {
-          // viewing_practice_id : this.practice.id,
-          // status : 'Declined',
+          viewing_practice_id : this.practice.id,
+          status : 'Ongoing',
           order_by : ['id:desc',orderBy],
-          // surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+          surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset
         }
         await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res=>{
-          this.jobParts = res.data.job_parts
-          // this.$store.commit('jobs/SET_PRACTICE_DECLINED_SESSIONS', res.data.jobs)
+          // this.jobParts = res.data.job_parts
+          this.$store.commit('jobs/SET_PRACTICE_ONGOING_SESSIONS', res.data.job_parts)
           this.$store.commit('jobs/TOGGLE_LOADING', false)
         }).catch(err=>{
           console.log('get job parts error!!!',err)

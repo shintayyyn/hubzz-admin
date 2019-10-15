@@ -1,15 +1,15 @@
 <template>
     <div>
-        <LocumCurrentJobs :user='user'/>
+        <LocumAllocatedJobs :user='user'/>
     </div>
 </template>
 <script>
 import AppLoading from '@/components/Base/AppLoading'
-import LocumCurrentJobs from '@/components/Locums/Jobs/LocumCurrentJobs'
+import LocumAllocatedJobs from '@/components/Locums/Jobs/LocumAllocatedJobs'
 export default {
     components:{
         AppLoading,
-        LocumCurrentJobs
+        LocumAllocatedJobs
     },
     computed:{
         user(){

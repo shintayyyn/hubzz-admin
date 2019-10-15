@@ -17,7 +17,7 @@ export default {
       job: ''
     }
   },
-  async asyncData({ app, store, route }){
+  async asyncData({ app, store, route, error }){
     try{
       console.log('job id',route.params.specificJobId)
       console.log('route name',route.name)
@@ -29,6 +29,7 @@ export default {
         job
       }
     }catch(err){
+      error({statusCode: 404})
       console.log('get job error!',err)
     }
   },

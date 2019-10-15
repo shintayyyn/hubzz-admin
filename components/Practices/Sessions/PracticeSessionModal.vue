@@ -1,7 +1,7 @@
 <template>
-    <div class=m-6>
+    <div class="mx-6">
         <!-- BODY -->
-        <div class= "w-full overflow-auto">
+        <div class="w-full overflow-auto">
           <div class="flex m-2 ">
             <div class="text-2xl text-white font-semibold">{{job ? job.title:null }}</div>
             <div class="text-black p-2 bg-yellow-500 rounded ml-4">{{job.status}}</div>
@@ -9,7 +9,8 @@
           </div>
           <div class="text-white mx-4">{{"Posted On: "+job.date_created}}</div>
           <div class="flex m-2 flex-wrap overflow-hidden ">
-            <div class="xl:w-3/5 w-full my-2 overflow-hidden">
+            <!-- JOB DETAILS -->
+            <div :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'xl:w-3/6 my-2 overflow-hidden':'xl:w-3/5 w-full my-2 overflow-hidden'}`">
               <div class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
 
                 <div class="xl:w-1/2 w-full overflow-hidden">
@@ -147,10 +148,10 @@
                 
               </div>
             </div>
-
-            <div class="xl:w-2/5 w-full my-2 overflow-hidden">
-              <div v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" 
-                class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
+            <!-- LOCUM DETAILS -->
+            <div v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" 
+              :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'xl:w-2/6 my-2 overflow-hidden':'xl:w-1/5 w-full my-2 overflow-hidden'}`">
+              <div class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
                 
                 <div class="flex flex-wrap overflow-hidden">
                   <div class="text-white mx-5">
@@ -251,19 +252,49 @@
                 </div>
               </div>
             </div>
+            <!-- JOB PARTS -->
+            <div v-if="job.job_parts.length > 0" :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'xl:w-1/6 overflow-hidden':'xl:w-1/5 mx-4 overflow-hidden'}`">
+              <div class="mx-2 text-white font-semibold">Job Parts</div> 
+              <div class="flex flex-col text-white">
+                <div 
+                  v-for="(item, index) in job.job_parts"
+                  @click="show(item.id)"
+                  :key="`item-${index}`"
+                  class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
+                >
+                  <div class="flex flex-col xl:w-full sm:w-full md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
+                    <span class="">{{item.job_part_number}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- BODY -->
+        <!-- BODY ENDS HERE -->
+        <div class="job-part-shield" v-if="modal"></div>
+        <transition name="slide" mode="out-in">
+          <div class="job-part-modal shadow-lg" v-if="modal">
+            <JobPartModal :jobPartId="jobPartId" :specificJobPart="specificJobPart" @close="modal = false"/>
+          </div>
+        </transition>
         <nuxt-child/>
       </div>
 </template>
 <script>
+import JobPartModal from '@/components/Base/JobPartModal'
 import { gmapApi } from 'vue2-google-maps'
 export default {
   props:['job'],
+  components:{
+    JobPartModal
+  },
   data(){
     return{
-        locumUser:null
+        locumUser:null,
+        modal: false,
+        jobPartId: '',
+        specificJobPart: ''
       }
   },
   async created(){
@@ -296,7 +327,48 @@ export default {
         locum_jobs: type
       }
       this.$router.push({ query })
-    }
+    },
+    async show(jobPartId){
+      console.log('id', jobPartId)
+      this.jobPartId=jobPartId
+
+      await this.$axios.$get(`/api/v1/admin/job-parts/${jobPartId}`).then(res => {
+        this.specificJobPart = res.data.job_part
+      })
+      
+      this.modal=true
+		},
+
   }
 }
 </script>
+<style>
+.job-part-shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
+.job-part-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px orange;
+  transition: all 0.3s ease-in-out;
+  background-color:#505561;
+  z-index: 512;
+}
+@media screen and (min-width: 1200px) {
+  .job-part-modal {
+    width: 60%;
+  }
+}
+</style>

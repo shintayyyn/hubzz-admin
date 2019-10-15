@@ -19,19 +19,20 @@ export default {
             practice:null
         }
     },
-    async asyncData({app,store,route}){
-        try{
-            let response = await app.$axios.get(`/api/v1/admin/practice-users/${route.params.pracUserId}`)
-            const user = response.data.data.user
-            const practice = response.data.data.user.practice_detail.practice
-            return{
-                user,
-                practice,    
-            }
-        }catch(err){
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-            console.log("something went wrong!",err)
+    async asyncData({ app, store, route, error }){
+      try{
+        let response = await app.$axios.get(`/api/v1/admin/practice-users/${route.params.pracUserId}`)
+        const user = response.data.data.user
+        const practice = response.data.data.user.practice_detail.practice
+        return{
+          user,
+          practice,    
         }
+      }catch(err){
+        error({statusCode: 404})
+        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+        console.log("something went wrong!",err)
+      }
     }
 }
 </script>

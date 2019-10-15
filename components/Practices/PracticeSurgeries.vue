@@ -56,9 +56,9 @@
         </div>
         <!-- END HEADER -->
         <!-- BODY -->
-        <nuxt-link
+        <!-- This table is a nuxt-link, going to surgery details -> :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}`}"  -->
+        <div
           v-for="(childSurgery,index) in practiceChildren"
-          :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}`}"
           :key="`childSurgery-${index}`"
           >   
           <div class="inline-flex w-full">
@@ -92,7 +92,7 @@
               </div> -->
             </div>
           </div>
-        </nuxt-link>
+        </div>
         <!-- END BODY -->
         <!--put -->
       </div>

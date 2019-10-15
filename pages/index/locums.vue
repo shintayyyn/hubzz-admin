@@ -59,11 +59,11 @@
 				<div class="w-1/6">Status</div>
 				<div class="w-1/6">Compliance Status</div>
 			</div>
-			<div
+			<nuxt-link
 				v-for="(locumUser, index) in locumUsers" 
 				:key="`locumUser-${index}`" 
-				@click="$router.push(`/locums/${locumUser.id}`)"
-			 	class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0">
+				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"  
+			 	class="w-full text-white flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0">
 					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Name</strong>
 						<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
@@ -87,7 +87,7 @@
 						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
 						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 rounded-full lg:px-8 sm:px-2" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
 					</div>
-			</div>
+			</nuxt-link>
 		</div>
 
 		<!-- PAGINATION -->
@@ -177,7 +177,7 @@ export default {
 	'search',
 	'compliance_status'
 	],
-	async asyncData({ app, store, route }) {
+	async asyncData({ app, store, route, error }) {
 		
 		try {
 			await store.commit('locums/TOGGLE_LOADING',true)
@@ -222,6 +222,7 @@ export default {
 				order_by,
 			}
 		} catch (err) {
+      error({ statusCode: 404 })
 			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
 			console.log('Get locums error!', err)
 		}
