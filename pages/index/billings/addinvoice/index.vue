@@ -1,5 +1,5 @@
 <template>
-  <div class="billing-modal p-8 shadow-lg">
+  <div class="billing-modal p-4 md:p-8 shadow-lg">
       <AddInvoice/>
   </div>
 </template>

@@ -81,20 +81,20 @@
 					</div>
 					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Status</strong>
-						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
+						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 lg:px-8 sm:px-2 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
 					</div>
 					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
-						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 rounded-full lg:px-8 sm:px-2" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
 					</div>
 			</nuxt-link>
 		</div>
 
 		<!-- PAGINATION -->
 		<div class="flex justify-center items-center my-2">
-			<button class="relative page-button p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
+			<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
 				@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
-				:class="activePage === 1 ? 'text-gray-500' : 'hover:bg-yellow-500'">
+				:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
 				<span class="hidden md:block">Prev</span>
 				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
@@ -104,16 +104,16 @@
 			</button>
 
 			<button class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
-				:class="`${activePage === page ? 'text-white' : ''}`" 
+				:class="`${activePage === page ? 'text-black' : ''}`" 
 				v-for="page in pageCount" 
 				v-if="showPage(page)"
 				:key="`page-${page}`" 
 				@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
 			</button>
 			
-			<button class="relative page-button p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
+			<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm hover:bg-waterloo-light focus:outline-none" 
 				@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
-				:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">
+				:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
 				<span class="hidden md:block">Next</span>
 				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
@@ -479,19 +479,19 @@ export default {
 		statusStyle(status){
 			switch(status){
 				case 'Active':
-					return 'bg-green-500 text-white lg:px-8 sm:px-2'
+					return 'bg-green-500 text-black'
 					break;
 				case 'Inactive':
-					return 'bg-yellow-500 text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-500 text-black'
 					break;
 				case 'Deactivated':
-					return 'bg-gray-500 text-black lg:px-8 sm:px-2'
+					return 'bg-gray-500 text-black'
 					break;
 				case 'Suspended':
-					return 'bg-red-500 text-white lg:px-8 sm:px-2'
+					return 'bg-red-700'
 					break;
 				case 'Dormant':
-					return 'bg-green-700 text-white lg:px-8 sm:px-2'
+					return 'bg-green-500'
 					break;
 				default:
 					return
@@ -500,25 +500,25 @@ export default {
 		complianceStatusStyle(status){
 			switch(status){
 				case 'Empty':
-					return 'border border-white text-white lg:px-8 sm:px-2'
+					return 'border border-white text-white'
 					break;
 				case 'Incomplete':
-					return 'bg-yellow-300 text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-300 text-black'
 					break;
 				case 'Pending':
-					return 'bg-yellow-500 text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-500 text-black'
 					break;
 				case 'Expiring':
-					return 'bg-orange-500 text-black lg:px-8 sm:px-2'
+					return 'bg-red-600 text-white'
 					break;
 				case 'Expired':
-					return 'bg-red-500 text-white lg:px-8 sm:px-2'
+					return 'bg-red-700 text-white'
 					break;
 				case 'Rejected':
-					return 'bg-orange-700 text-white lg:px-8 sm:px-2'
+					return 'bg-orange-500 text-white'
 					break;
 				case 'Compliant':
-					return 'bg-green-500 text-white lg:px-8 sm:px-2'
+					return 'bg-green-300 text-black'
 					break;
 				default:
 					return
@@ -536,5 +536,14 @@ export default {
 <style>
 .page-button {
   background: linear-gradient(to top, #f2d024, #efde86);
+}
+
+.page-button-disabled{
+  background: linear-gradient(to top, #6b717e, #6b7386);
+  cursor: not-allowed;
+}
+
+.page-button:active{
+  transform: translate(2px, 2px);
 }
 </style>

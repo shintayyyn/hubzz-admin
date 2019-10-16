@@ -1,7 +1,7 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
 	<AppLoading :loading="loadingPractices" :message="'Loading Practices'"/>
-    <div class="flex justify-between flex-wrap">
+    <div class="flex justify-between items-center flex-wrap">
         <div class="flex items-center py-2">
           	<div class="relative">
 				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Practice by Name" v-model="search" @keyup.enter="searchSubmit">
@@ -46,13 +46,13 @@
           <svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6" @click="sortBy('status',activePage,search)">
+        <div class="w-1/6 text-center" @click="sortBy('status',activePage,search)">
           Status
           <svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6" @click="sortBy('practice_type',activePage,search)">
+        <div class="w-1/6 text-center" @click="sortBy('practice_type',activePage,search)">
           Type
           <svgicon v-if="sortedBy!='practice_type'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_type'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -69,17 +69,17 @@
       >
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-          <span class="break-word">{{ practice.surgery ? practice.surgery.name:null }}</span>
+          <span class="break-words">{{ practice.surgery ? practice.surgery.name:null }}</span>
         </div>
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Practice Code</strong>
-          <span class="break-all">{{ practice.surgery ? practice.surgery.code:null }}</span>
+          <span class="break-words">{{ practice.surgery ? practice.surgery.code:null }}</span>
         </div>
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden text-sm uppercase">Created</strong>
-          <span class="break-all">{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+          <span class="break-words">{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
 		    <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
@@ -89,13 +89,13 @@
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Status</strong>
-          <span class="inline-flex no-underline py-2 text-sm text-black rounded-full shadow"
+          <span class="inline-flex w-full justify-center no-underline py-2 mx-4 text-sm text-black rounded-full shadow"
 			    :class="`${practice.status === 'Active' ? 'bg-green-500 text-white lg:px-8 px-4' : 'bg-yellow-500 text-black lg:px-6 px-4'}`">{{ practice.status }}</span>
 		    </div>
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
-          <span class="inline-flex no-underline py-2 px-4 text-sm text-black rounded-full shadow"
+          <span class="inline-flex w-full justify-center no-underline py-2 mx-4 text-sm text-black rounded-full shadow"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>
 
@@ -111,9 +111,9 @@
     <!-- END TABLE -->
 	<!-- PAGINATION -->
 	<div v-if="itemCount > 0" class="flex justify-center items-center my-2">
-		<button class="relative page-button p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
+		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
 			@click="goToPage(activePage - 1,search,order_by)" 
-			:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'">
+			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
 			<span class="hidden md:block">Prev</span>
 				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
@@ -127,9 +127,9 @@
 			v-if="showPage(page)"
 			:key="`page-${page}`" 
 			@click="goToPage(page,search,order_by)">{{ page }}</button>
-		<button class="relative page-button p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
+		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
 			@click="goToPage(activePage + 1,search,order_by)"
-			:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">
+			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
 			<span class="hidden md:block">Next</span>
 			<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
 				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
@@ -400,7 +400,7 @@ export default {
       this.$router.push({ query })
 		},
 
-  		searchSubmit(page, order_by) {
+  	searchSubmit(page, order_by) {
 			let search = this.search
 			let query = {
 				...this.$router.query,
@@ -461,6 +461,15 @@ export default {
 <style>
 .page-button {
   background: linear-gradient(to top, #f2d024, #efde86);
+}
+
+.page-button-disabled{
+  background: linear-gradient(to top, #6b717e, #6b7386);
+  cursor: not-allowed;
+}
+
+.page-button:active{
+  transform: translate(2px, 2px);
 }
 .card {
   min-width: 100px;

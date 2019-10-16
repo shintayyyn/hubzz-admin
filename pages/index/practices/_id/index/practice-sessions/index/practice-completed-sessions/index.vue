@@ -1,25 +1,27 @@
 <template>
   <div>
     <!-- TABS  GO HERE -->
-    <CompletedSessionsTabs :practice="practice"/>
+    <!-- <CompletedSessionsTabs :practice="practice"/> -->
     <!-- <PracticeCompletedSessions :practice='practice'/> -->
-    <nuxt-child/>
+    <!-- <nuxt-child/> -->
+
+    <PracticeCompletedSessionsParts :practice='practice' />
   </div>
 </template>
 <script>
-import CompletedSessionsTabs from '@/components/Practices/Sessions/CompletedSessionsTabs'
-import PracticeCompletedSessions from '@/components/Practices/Sessions/PracticeCompletedSessions'
+import CompletedSessionsTabs from '@/components/Practices/Sessions/CompletedSessions/CompletedSessionsTabs'
+import PracticeCompletedSessionsParts from '@/components/Practices/Sessions/PracticeCompletedSessionsParts'
 export default {
     components:{
       CompletedSessionsTabs,
-      PracticeCompletedSessions
+      PracticeCompletedSessionsParts
     },
-    created(){
-      const query = {
-        ...this.$route.query,
-      }
-      this.$router.push(`/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/to-be-invoiced`, query)
-    },
+    // created(){
+    //   const query = {
+    //     ...this.$route.query,
+    //   }
+    //   this.$router.push(`/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/to-be-invoiced`, query)
+    // },
     computed:{
         practice(){
             return this.$store.state.practices.practice

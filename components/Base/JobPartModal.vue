@@ -129,18 +129,23 @@
         <div v-if="jobPart.job.job_parts.length > 0" class="mx-4 overflow-hidden">
           <div class="mx-2 text-white font-semibold">Job Parts</div> 
             <div class="flex flex-col text-white">
-              <div 
+              <nuxt-link 
                 v-for="(item, index) in jobPart.job.job_parts"
-                @click="showJobPart(item.id)"
+                :to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
                 :key="`item-${index}`"
-                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
+                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 "
+                :class="item.id == specificJobPart.id ? 'border-solid border-4 border-orange-400':' border-l-8 border-yellow-500 md:border-0'"
               >
-                <div class="flex flex-col xl:w-full sm:w-full md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+                <!-- <div class="text-white p-4 rounded-lg bg-orange-500" 
+                  >
+
+                </div> -->
+                <div class="flex flex-col text-white xl:w-full sm:w-full md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                   <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
                   <span class="">{{item.job_part_number}}</span>
                   <span class="">{{item.status}}</span>
                 </div>
-              </div>
+              </nuxt-link> 
             </div>
           </div>
       </div>
@@ -172,10 +177,18 @@ export default {
     },
   },
   methods:{
-    async showJobPart(jobPartId){
-      await this.$axios.$get(`/api/v1/admin/job-parts/${jobPartId}`).then(res=>{
-        this.jobPart = res.data.job_part
-      })
+    async showJobPart(){
+      // await this.$axios.$get(`/api/v1/admin/job-parts/${jobPartId}`).then(res=>{
+      //   this.jobPart = res.data.job_part
+      // })
+      if(!this.jobPart.invoiced || this.jobPart.invoiced && !this.jobPart.issued && !this.jobPart.disputed){
+        console.log('u ugly')
+        
+      }else if(this.jobPart.invoiced && this.jobPart.issued && !this.jobPart.disputed){
+        console.log('u suck at life')
+      }else if(this.jobPart.invoiced && this.jobPart.issued && this.jobPart.disputed){
+        console.log('ur a horrible person')
+      }
 
     }
   }

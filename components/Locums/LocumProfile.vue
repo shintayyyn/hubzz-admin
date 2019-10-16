@@ -153,7 +153,7 @@
         <div class="w-full md:w-1/3 overflow-hidden mb-2">
           <div class="mx-5 mt-8 md:mt-0 border-b">
             <embed
-              class="object-cover w-64 h-64 rounded-full mr-4"
+              class="object-cover w-48 h-48 rounded-full mr-4"
               :src="user.avatar ? user.avatar.file.url:null"
             />
             <img

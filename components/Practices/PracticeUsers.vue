@@ -32,23 +32,23 @@
                 ><!--This needs to lead to a nuxt child with admin being able to modify the user-->
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Full Name</strong>
-                    <span class="break-word">{{ user.personal_detail.name }}</span>
+                    <span class="break-words">{{ user.personal_detail.name }}</span>
                 </div>
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Email Address</strong>
-                    <span class="break-all">{{ user.email }}</span>
+                    <span class="break-words break-all">{{ user.email }}</span>
                 </div>
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Role</strong>
-                    <span class="break-all">{{ user.practice_detail.practice_role }}</span>
+                    <span class="break-words">{{ user.practice_detail.practice_role }}</span>
                 </div>
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden text-sm uppercase">Sign-up Verified</strong>
-                    <span class="break-all">{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
+                    <span class="break-words">{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
                 </div>
                 <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
                     <strong class="block md:hidden">Status</strong>
-                    <span class="inline-flex text-black text-sm py-2 px-8 rounded-full"
+                    <span class="inline-flex w-1/3 md:w-full justify-center text-black text-sm py-2 px-8 rounded-full"
                     :class="`${user.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2' }`"
                     >{{ user.status }}
                     </span>

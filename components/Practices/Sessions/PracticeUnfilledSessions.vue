@@ -7,16 +7,17 @@
         >This practice has no unfilled session/s.</div>
       </div>
       <div v-else>
+          <SessionHeaderSort/>
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+            <!-- <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
               <div class="table-cell p-2 align-middle">Job Number</div> 
               <div class="table-cell p-2 align-middle">Practice / Surgery</div>
               <div class="table-cell p-2 align-middle">Title</div>
               <div class="table-cell p-2 align-middle">From</div>
               <div class="table-cell p-2 align-middle">To</div>
               <div class="table-cell p-2 align-middle">Created</div>
-            </div>
+            </div> -->
             <!-- BODY -->
             <nuxt-link 
               v-for="(item, index) in unfilledSessions" 
@@ -74,11 +75,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import SessionHeaderSort from '@/components/Practices/Sessions/SessionHeaderSort'
 export default {
   props: ['practice','practice_surgery'],
   components: {
     AppPagination,
     PracticeSessionModal,
+    SessionHeaderSort
   },
   data() {
     return {
