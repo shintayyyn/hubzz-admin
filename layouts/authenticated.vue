@@ -10,7 +10,7 @@
     </transition>
     <div class="sidebar-shield" v-if="$store.state.toggled_sidebar" @click="close"></div>
     <AppNotification />
-    <div class="content h-screen bg-trout flex flex-col justify-between">
+    <div class="content h-screen flex flex-col justify-between">
       <AppHeader />
       <nuxt class="overflow-y-auto"/>
     </div>
@@ -51,6 +51,7 @@ export default {
     SignOut,
     AppConfirmCancel
   },
+
   data() {
     return {
       showLogoutModal: false,
@@ -81,6 +82,7 @@ export default {
     //   document.body.style.overflow = "auto";
     // }
   },
+
   methods: {
       close() {
         this.$store.commit("TOGGLE_SIDEBAR", false);
@@ -95,6 +97,7 @@ export default {
   margin-left: 0;
   min-height: 100vh;
   max-height: 100%;
+  overflow-x: hidden;
 }
 .sidebar-shield{
   position: fixed;

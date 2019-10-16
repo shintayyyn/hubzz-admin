@@ -7,7 +7,7 @@
     <div>
       <nuxt-link
         to="/billings/addinvoice"
-        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow"
+        class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
       >Add Invoice</nuxt-link>
     </div>
 

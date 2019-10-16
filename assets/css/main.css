@@ -135,7 +135,9 @@ table tbody td {
 /* page */
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.5s;
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  transition-duration: 500ms;
 }
 .page-enter,
 .page-leave-active {
