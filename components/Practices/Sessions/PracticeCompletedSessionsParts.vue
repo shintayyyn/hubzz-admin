@@ -162,7 +162,6 @@ export default {
         // this.completedJobParts = res.data.jobs
         this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS', res.data.job_parts)
         this.$store.commit('jobs/TOGGLE_LOADING',false)
-        console.log('jajaja',this.completedJobParts)
       }).catch(err=>{
         console.log('get completed jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

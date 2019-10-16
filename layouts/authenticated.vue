@@ -4,12 +4,13 @@
     <transition name="drop" mode="out-in">
       <SignOut v-if="showLogoutModal" @modal="showLogoutModal = $event" />
     </transition>
+      <div class="signout-shield" v-if="showLogoutModal" @click="showLogoutModal = false"></div>
     <transition name="drop" mode="out-in">
       <AppConfirmCancel v-if="showConfirmCancelModal" @confirmCancelModal="showConfirmCancelModal = $event" />
     </transition>
     <div class="sidebar-shield" v-if="$store.state.toggled_sidebar" @click="close"></div>
     <AppNotification />
-    <div class="content h-screen bg-trout flex flex-col justify-between">
+    <div class="content h-screen flex flex-col justify-between">
       <AppHeader />
       <nuxt class="overflow-y-auto"/>
     </div>
@@ -50,6 +51,7 @@ export default {
     SignOut,
     AppConfirmCancel
   },
+
   data() {
     return {
       showLogoutModal: false,
@@ -80,6 +82,7 @@ export default {
     //   document.body.style.overflow = "auto";
     // }
   },
+
   methods: {
       close() {
         this.$store.commit("TOGGLE_SIDEBAR", false);
@@ -94,6 +97,7 @@ export default {
   margin-left: 0;
   min-height: 100vh;
   max-height: 100%;
+  overflow-x: hidden;
 }
 .sidebar-shield{
   position: fixed;
@@ -104,6 +108,17 @@ export default {
   background-color: #333;
   opacity: 0.5;
   z-index: 499;
+}
+
+.signout-shield{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
 }
 
 @media screen and (min-width: 1200px ){

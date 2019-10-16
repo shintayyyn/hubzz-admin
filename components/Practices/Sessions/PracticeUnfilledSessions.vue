@@ -7,7 +7,7 @@
         >This practice has no unfilled session/s.</div>
       </div>
       <div v-else>
-          <SessionHeaderSort/>
+          <AppJobHeaderSort :practice="practice" :tabType="'Unfilled'" :currentPage="currentPage" />
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
             <!-- <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
@@ -75,13 +75,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
-import SessionHeaderSort from '@/components/Practices/Sessions/SessionHeaderSort'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
   props: ['practice','practice_surgery'],
   components: {
     AppPagination,
     PracticeSessionModal,
-    SessionHeaderSort
+    AppJobHeaderSort
   },
   data() {
     return {
@@ -94,22 +94,22 @@ export default {
   },
   beforeDestroy() {
     let query = Object.assign({}, this.$route.query)
-    delete query.matched_job_page
+    delete query.job_page
     this.$router.push({ query })
   },
   watch: {
     $route(to, from) {
-      this.currentPage = parseInt(to.query.matched_job_page)
-      this.getMatchedJobs('date_created:desc')
+      this.currentPage = parseInt(to.query.job_page)
+      this.getUnfilledSessions(this.$route.query.order_by)
     },
   },
   async created() {
     await this.$store.commit('jobs/TOGGLE_LOADING',true)
     const query = {
       ...this.$route.query,
-      matched_job_page: this.$route.query.matched_job_page || 1
+      job_page: this.$route.query.job_page || 1
     }
-    this.currentPage = parseInt(query.matched_job_page)
+    this.currentPage = parseInt(query.job_page)
     let params = {
       viewing_practice_id : this.practice.id,
       surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
@@ -122,7 +122,7 @@ export default {
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
-      this.getMatchedJobs('date_created:desc')
+      this.getUnfilledSessions('date_created:desc')
     })
   },
   computed:{
@@ -134,7 +134,7 @@ export default {
     }
   },
   methods: {
-    async getMatchedJobs(orderBy) {
+    async getUnfilledSessions(orderBy) {
       let offset = 0
       if (this.ascendDescend == 0) {
         orderBy = orderBy.replace('desc', 'asc')
@@ -143,11 +143,11 @@ export default {
         orderBy = orderBy.replace('asc', 'desc')
         this.ascendDescend = 0
       }
-      offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
+      offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
       let params = {
         viewing_practice_id : this.practice.id,
         status : 'Unfilled',
-        order_by : ['id:desc',orderBy],
+        order_by : this.$route.query.order_by,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,
         offset: offset
@@ -163,7 +163,7 @@ export default {
     async pagechanged(e) {
       const query = {
         ...this.$route.query,
-        matched_job_page: e || 1
+        job_page: e || 1
       }
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       await this.$router.push({ query })

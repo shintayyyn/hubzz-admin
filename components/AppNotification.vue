@@ -29,7 +29,7 @@ export default {
           return "bg-yellow-500";
           break;
         case "upload":
-          return "bg-blue-500 text-blue-300";
+          return "bg-blue-500 text-white";
         default:
           return "bg-white";
       }

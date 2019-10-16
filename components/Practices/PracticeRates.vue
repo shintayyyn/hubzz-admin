@@ -49,6 +49,11 @@
                 @click.prevent="checkForm()"
                 >Save Changes
             </button>
+            <button
+                class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                @click="toEdit = false"
+                >Cancel
+            </button>
         </div>
       </div>
     </div>

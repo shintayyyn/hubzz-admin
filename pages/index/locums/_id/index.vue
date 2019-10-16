@@ -5,8 +5,9 @@
     </div>
     <LocumTabs :user="user" />
     <!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->
-    <div class="locum-shield" v-if="$route.name.includes('locumJobId')"></div>
-    <div class="locum-shield" v-if="$route.name.includes('locumJobPartId')"></div>
+    <div class="locum-shield" v-if="$route.name.includes('locumJobPartId')" @click="$router.go(-1)"></div>
+    <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" @click="$router.go(-1)" />
+    <div class="locum-shield" v-if="$route.name.includes('locumJobId')" @click="$router.go(-1)" ></div>
     <nuxt-child />
   </div>
 </template>
