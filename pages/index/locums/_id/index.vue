@@ -4,8 +4,8 @@
       <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current" />
     </div>
     <LocumTabs :user="user" />
-    <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" />
-    <div class="locum-shield" v-if="$route.name.includes('locumJobId')"></div>
+    <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" @click="$router.go(-1)" />
+    <div class="locum-shield" v-if="$route.name.includes('locumJobId')" @click="$router.go(-1)" ></div>
     <nuxt-child />
   </div>
 </template>

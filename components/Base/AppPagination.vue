@@ -1,15 +1,14 @@
 <template>
-  <div class="pagination flex flex-col my-2">
+  <div class="pagination flex flex-col my-2" v-if="totalPages > 1">
     <div class="flex flex-col justify-center items-center">
       <div class="flex items-center md:hidden">
         <div class="pagination-item mx-1 mb-2" v-for="page in pages" :key="page.name">
         <button
-          type="button"
-          class="page-button p-2 px-4 rounded-lg font-bold text-sm text-black focus:outline-none"
-          @click="onClickPage(page.name)"
-          :disabled="loading || page.isDisabled"
-          :class="{ active: isPageActive(page.name) }"
-        >{{ page.name }}</button>
+            type="button"
+            class="page-button p-2 px-4 rounded-lg font-bold text-sm text-gray-800 focus:outline-none"
+            @click="onClickPage(page.name)"
+            :class="{ active: isPageActive(page.name) }"
+          >{{ page.name }}</button>
         </div>
       </div>
       <div class="flex items-center">
@@ -88,7 +87,6 @@
       </div>
       
     </div>
-
   </div>
 </template>
 <script>
@@ -196,12 +194,14 @@ export default {
   /* margin-right: 8px; */
 }
 .active {
-  background: linear-gradient(to top, #ffd500, #fadb43);
+  background: linear-gradient(to top, #dbb013, #ecc94b);
   color: #000;
+  box-shadow: 0 3px 5px #333;
 }
 
 button:active :not(button:disabled){
   transform: translate(2px, 2px);
+  box-shadow: 0 0 0 transparent;
 }
 
 button:disabled, button:disabled svg {

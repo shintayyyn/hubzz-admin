@@ -1,64 +1,75 @@
 <template>
   <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
     <div class="inline-flex m-4">
-      <div class="flex flex-wrap overflow-hidden text-gray-300">
+      <div class="flex flex-wrap overflow-hidden text-gray-100">
         <!--COLUMN 1-->
         <div class="w-full md:w-1/3 overflow-hidden mb-2">
           <div class="mx-5">
             <p class="m-2 font-semibold">Name</p>
-            <p class="m-2 text-white">{{ user.personal_detail ? user.personal_detail.name : 'N/A' }}</p>
+            <p class="m-2 text-white" :class="!user.personal_detail.name && 'opacity-75'">{{ user.personal_detail.name ? user.personal_detail.name : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Email address</p>
-            <p class="m-2 text-white">{{ user.email ? user.email : 'N/A' }}</p>
+            <p class="m-2 text-white" :class="!user.email && 'opacity-75'">{{ user.email ? user.email : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Mobile phone number</p>
             <p
               class="m-2 text-white"
+              :class="!user.contact_detail.mobile_number && 'opacity-75'"
             >{{ user.contact_detail && user.contact_detail.mobile_number ? user.contact_detail.mobile_number : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Home / landline number</p>
             <p
               class="m-2 text-white"
+              :class="!user.contact_detail.home_number && 'opacity-75'"
             >{{ user.contact_detail && user.contact_detail.home_number ? user.contact_detail.home_number : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Work Number</p>
             <p
               class="m-2 text-white"
+              :class="!user.contact_detail.work_number && 'opacity-75'"
             >{{ user.contact_detail && user.contact_detail.work_number ? user.contact_detail.work_number : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
             <p
               class="ml-2 text-white"
+              :class="!user.address_detail.address.line_1 && 'opacity-75'"
             >{{ user.address_detail ? user.address_detail.address.line_1 : 'N/A' }}</p>
             <p
               class="ml-2 mt-1 text-white"
+              :class="!user.address_detail.address.line_2 && 'opacity-75'"
             >{{ user.address_detail ? user.address_detail.address.line_2 : 'N/A' }}</p>
             <p
               class="ml-2 mt-1 text-white"
+              :class="!user.address_detail.address.line_3 && 'opacity-75'"
             >{{ user.address_detail ? user.address_detail.address.line_3 : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
             <p
               class="m-2 text-white"
+              :class="!locumDetails.gmc_or_nmc_number.number && 'opacity-75'"
             >{{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
             <p
               class="m-2 text-white"
+              :class="!locumDetails.mpl_or_npl_number.number && 'opacity-75'"
             >{{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">NHS Smart Card ID Number</p>
             <p
               class="m-2 text-white"
+              :class="!locumDetails.nhs_smart_card_id_number.number && 'opacity-75'"
             >{{ locumDetails.nhs_smart_card_id_number ? locumDetails.nhs_smart_card_id_number : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
             <p
               class="m-2 text-white"
+              :class="!locumDetails.profession && 'opacity-75'"
             >{{ locumDetails.profession ? locumDetails.profession.name : 'N/A' }}</p>
 
             <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
             <p
+              :class="!user.locum_detail.qualifications && 'opacity-75'"
               class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
               v-for="specialty in user.locum_detail.qualifications"
               :key="specialty.id + '-name'"
@@ -66,6 +77,7 @@
             <p class="m-2 mt-5 mr-20">Clinical Systems</p>
             <p
               class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
+              :class="!user.locum_detail.clinical_systems && 'opacity-75'"
               v-for="clinicalSystem in user.locum_detail.clinical_systems"
               :key="clinicalSystem.id + '-name1'"
             >{{clinicalSystem ? clinicalSystem.name:'N/A'}}</p>
@@ -74,6 +86,7 @@
             <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500">English</p>
             <p
               class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
+              :class="!user.locum_detail.spoken_languages && 'opacity-75'"
               v-for="spokenLanguage in user.locum_detail.spoken_languages"
               :key="spokenLanguage.id + '-name2'"
             >{{spokenLanguage ? spokenLanguage.name:'N/A'}}</p>
@@ -83,13 +96,14 @@
         <div class="w-full md:w-1/3 overflow-hidden mb-2">
           <div class="mx-5 md:mx-10">
             <p class="m-2 mr-20 font-semibold">Headline</p>
-            <p class="m-2 text-white">{{user.locum_detail?user.locum_detail.headline:'N/A'}}</p>
+            <p class="m-2 text-white" :class="!user.locum_detail.headline && 'opacity-75'">{{user.locum_detail.headline?user.locum_detail.headline:'N/A'}}</p>
             <p class="m-2 mt-5 mr-20 font-semibold">Short Biography</p>
-            <p class="m-2 text-white">{{user.locum_detail?user.locum_detail.short_biography:'N/A'}}</p>
+            <p class="m-2 text-white" :class="!user.locum_detail.short_biography && 'opacity-75'">{{user.locum_detail.short_biography?user.locum_detail.short_biography:'N/A'}}</p>
             <p class="m-2 mt-5 mr-20 font-semibold">Special requirements</p>
             <p
               class="ml-2 text-white"
-            >{{user.locum_detail?user.locum_detail.special_requirements:'N/A'}}</p>
+              :class="!user.locum_detail.special_requirements && 'opacity-75'"
+            >{{user.locum_detail.special_requirements?user.locum_detail.special_requirements:'N/A'}}</p>
             <p class="m-2 mt-5 mr-20 font-semibold">Preferred rates</p>
             <p
               class="ml-2 text-white"
@@ -107,6 +121,7 @@
                 <a
                   class="m-2 text-white flex cursor-pointer items-center hover:text-yellow-500"
                   @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
+                  title="Click to download file"
                 >
                   <svgicon
                     name="cloud-download"
@@ -123,6 +138,7 @@
             </div>
             <div v-if="userMandatoryTrainings">
               <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+              <span v-if="userMandatoryTrainings.length == 0" class="px-2 opacity-75">No Mandatory Training Documents</span>
               <div
                 v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
                 :key="`${index}-${userMandatoryTraining.id}-`"
@@ -131,6 +147,7 @@
                   class="m-2 text-white flex cursor-pointer items-center hover:text-yellow-500"
                   :event="userMandatoryTraining.file === null ? disabled:'click'"
                   @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
+                  title="Click to download file"
                 >
                   <svgicon
                     v-if="userMandatoryTraining.file"

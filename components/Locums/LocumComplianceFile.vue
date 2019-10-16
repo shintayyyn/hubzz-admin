@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout">
+    <div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout w-full max-w-2xl">
     <!--^Removed the ff code: style="width: calc(100% - 70px);" -->
       <!-- HEADER -->
       <div class="flex items-center text-sm text-white py-6 px-4 md:px-8">
@@ -49,7 +49,7 @@
             <p class="mt-5 mr-20">Mobile phone number</p>
             <p class="text-white">{{user.contact_detail ? user.contact_detail.mobile_number : null}}</p>
             
-            <div  v-if="compliance_doc.compliance_document.id < 5" class="mt-3 mr-20">
+            <div  v-if="compliance_doc.compliance_document.id < 5" class="mt-3 mr-20 w-full">
               <div class="my-2 py-2 border-b border-white">
                 <p>Expired At </p>
                 <p class="text-white">{{$moment(compliance_doc && compliance_doc.expired_at ? compliance_doc.expired_at : null).format('DD/MM/YYYY HH:mm:ss')}}</p>
@@ -99,13 +99,15 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-col text-gray-300 md:m-2">
-            <p class="md:mr-20">File</p>
-             <embed class="w-full my-2" style="max-width: 800px"
-              :src="compliance_doc.file ? compliance_doc.file.url:null"
+          <div class="flex flex-col text-gray-400 md:m-2 lg:w-3/4">
+            <p class="md:mr-20 pb-2">File</p>
+            <div class="w-full">
+              <embed class="object-contain object-top w-full"
+              :class="compliance_doc.file.type == 'image' ? 'image' : 'document h-full'"
+              :src="compliance_doc.file.subtype === 'tiff' || compliance_doc.file.subtype === 'msword' ? convertDoc(compliance_doc.file.url) : compliance_doc.file.url"
               >
+            </div>
           </div>
-       
         </div>
       </div>
       <!-- BODY -->
@@ -185,6 +187,9 @@ export default {
             // console.log(fileUrl)
           });
         }, 
+        convertDoc(document) {
+          return `https://docs.google.com/gview?url=${document}&embedded=true`;
+        },
         getQuery(){
             const query = {
               ...this.$route.query
@@ -241,5 +246,24 @@ export default {
 }
 </script>
 <style>
+ .document {
+    width: 100%;
+    min-height: 50vh;
+  }
 
+  .image {
+    min-height: 100%;
+    max-height: 100%;
+  }
+
+  @media screen and (min-width: 768px) {
+    .document {
+      min-height: 70vh;
+    }
+
+    .image {
+      min-height: 60vh;
+      max-height: 60vh;
+    }
+  }
 </style>

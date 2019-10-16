@@ -2,7 +2,7 @@
     <section class="header">
         <!-- HEADER -->
         <div class="flex justify-between text-sm text-white px-6">
-            <button class="toggle text-white" @click="toggleSideBar">
+            <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
                 <img src="~/assets/images/hbg.png">
             </button>
             <nuxt-link to="/" class="py-3 cursor-pointer">

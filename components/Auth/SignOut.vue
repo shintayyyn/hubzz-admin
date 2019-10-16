@@ -7,16 +7,14 @@
       <div class="flex justify-center my-1">
         <div class="mx-2">
           <button
-            class="border border-solid bg-yellow-500 hover:text-white focus:outline-none text-black font-bold py-2 md:py-5 rounded-lg"
+            class="border border-solid bg-yellow-500 hover:text-red-600 focus:outline-none text-black font-bold px-4 py-2 md:py-4 rounded-lg"
             @click.prevent="logout"
-            style="width:100px;"
-          >Yes</button>
+          >Sign-out</button>
         </div>
         <div class="mx-2">
           <button
-            class="border border-solid bg-yellow-500 hover:text-white focus:outline-none text-black font-bold py-2 md:py-5 rounded-lg"
+            class="border border-solid bg-yellow-500 hover:text-white hover:bg-red-600 hover:border-red-600 focus:outline-none text-black font-bold w-24 min-w-full px-4 py-2 md:py-4 rounded-lg"
             @click.prevent="$emit('modal', false)"
-            style="width:100px;"
           >Cancel</button>
         </div>
       </div>
