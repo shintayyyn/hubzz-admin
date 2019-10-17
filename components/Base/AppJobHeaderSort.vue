@@ -2,19 +2,25 @@
   <div>
     <div class="w-4/6 mx-6 mt-6 font-semibold">
        <div class="flex flex-row text-white"> 
-        <div class="w-1/6 align-middle" @click="sortBy('job_number',currentPage,search)">
+        <div v-if="isJobParts==false" class="w-2/6 align-middle" @click="sortBy('job_number',currentPage,search)">
           Job Number
           <svgicon v-if="sortedBy!='job_number'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='job_number'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='job_number'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
+        <div v-if="isJobParts==true" class="w-2/6 align-middle" @click="sortBy('job_part_number',currentPage,search)">
+          Job Part Number
+          <svgicon v-if="sortedBy!='job_part_number'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='job_part_number'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && sortedBy=='job_part_number'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
         <div class="w-2/6 align-middle" @click="sortBy('surgery_name',currentPage,search)">
           Practice / Surgery
           <svgicon v-if="sortedBy!='surgery_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='surgery_name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='surgery_name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 align-middle" @click="sortBy('title',currentPage,search)">
+        <div class="w-2/6 align-middle" @click="sortBy('title',currentPage,search)">
           Title
           <svgicon v-if="sortedBy!='title'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='title'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -45,7 +51,7 @@
 </template>
 <script>
 export default {
-  props:['tabStatus','locumTabStatus', 'practice','locumUser', 'currentPage'],
+  props:['tabStatus','locumTabStatus', 'practice','locumUser', 'currentPage', 'isJobParts'],
   data(){
     return{
       jobs:{},
@@ -62,6 +68,9 @@ export default {
       order_by:'',
     }
   },  
+  created(){
+      console.log('hehe',this.isJobParts)
+    },
   methods:{
     getQuery(){
 			const query = {
@@ -125,12 +134,12 @@ export default {
         limit: this.perPage,
         offset: this.getQuery()
       }
-      await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then( async res => {
+      await this.$axios.$get(`/api/v1/admin/${ this.isJobParts === true ? 'job-parts' : 'jobs'}`,{ params }).then( async res => {
         if(this.practice){
-          await this.$store.commit(`jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`, res.data.jobs)
+          await this.$store.commit(`jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`, this.isJobParts === true ? res.data.job_parts : res.data.jobs)
           await this.$store.commit('jobs/TOGGLE_LOADING', false)
         }else if(this.locumUser){
-          await this.$store.commit(`jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`, res.data.jobs)
+          await this.$store.commit(`jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`, this.isJobParts === true ? res.data.job_parts : res.data.jobs)
           await this.$store.commit('jobs/TOGGLE_LOADING', false)
         }
       })

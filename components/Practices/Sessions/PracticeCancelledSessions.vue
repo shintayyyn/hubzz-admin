@@ -7,7 +7,7 @@
           >This practice had no case of cancelled session/s.</div>
         </div>
         <div v-else>
-          <AppJobHeaderSort :practice="practice" :tabStatus="'Cancelled'" :currentPage="currentPage" />
+          <AppJobHeaderSort :practice="practice" :tabStatus="'Cancelled'" :currentPage="currentPage" :isJobParts="false"/>
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
             <!-- BODY -->
             <nuxt-link 

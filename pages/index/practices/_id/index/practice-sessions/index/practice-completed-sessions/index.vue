@@ -9,11 +9,9 @@
   </div>
 </template>
 <script>
-import CompletedSessionsTabs from '@/components/Practices/Sessions/CompletedSessions/CompletedSessionsTabs'
 import PracticeCompletedSessionsParts from '@/components/Practices/Sessions/PracticeCompletedSessionsParts'
 export default {
     components:{
-      CompletedSessionsTabs,
       PracticeCompletedSessionsParts
     },
     // created(){

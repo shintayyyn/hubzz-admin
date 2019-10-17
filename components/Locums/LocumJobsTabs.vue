@@ -5,7 +5,7 @@
       :to="`/locums/${this.user.id}/locum-jobs/locum-allocated-jobs`"
       class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
       :class="$route.path === `/locums/${user.id}/locum-jobs/locum-allocated-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-    >Allocated(Current)</nuxt-link>
+    >Allocated</nuxt-link>
     <!-- Ongoing job is a job of the locum that already has started -->
     <nuxt-link
       :to="`/locums/${this.user.id}/locum-jobs/locum-ongoing-jobs`"
@@ -47,12 +47,21 @@
       class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
       :class="$route.path === `/locums/${user.id}/locum-jobs/locum-completed-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
     >Completed</nuxt-link>
+    <nuxt-link
+      :to="getRoute('locum-approved-jobs')"
+      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+      :class="$route.path === `/locums/${user.id}/locum-jobs/locum-approved-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+    >Approved</nuxt-link>
+    <nuxt-link
+      :to="getRoute('locum-withrawn-jobs')"
+      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
+      :class="$route.path === `/locums/${user.id}/locum-jobs/locum-withrawn-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+    >Withrawn</nuxt-link>
   </div>
 </template>
 <script>
 export default {
   props: ["user"],
-
   computed: {
     getRoute() {
       return tab => {

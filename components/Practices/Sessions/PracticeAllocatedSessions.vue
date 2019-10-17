@@ -7,7 +7,7 @@
             >This practice is no allocatedly ongoing session/s.</div>
           </div>
           <div v-else>
-            <AppJobHeaderSort :practice="practice" :tabStatus="'Allocated'" :currentPage="currentPage" />
+            <AppJobHeaderSort :practice="practice" :tabStatus="'Allocated'" :currentPage="currentPage" :isJobParts="false" />
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
               <!-- BODY -->
               <nuxt-link 

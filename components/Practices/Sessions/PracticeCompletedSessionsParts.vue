@@ -7,16 +7,18 @@
             >This practice has no completed session/s.</div>
           </div>
           <div v-else>
+            <AppJobHeaderSort :practice="practice" :tabStatus="'Completed'" :currentPage="currentPage" :isJobParts="true" />
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
               <!-- HEADER -->
-              <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
+              <!-- <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
                 <div class="table-cell p-2 align-middle">Job Number</div> 
                 <div class="table-cell p-2 align-middle">Practice / Surgery</div>
                 <div class="table-cell p-2 align-middle">Title</div>
                 <div class="table-cell p-2 align-middle">From</div>
                 <div class="table-cell p-2 align-middle">To</div>
                 <div class="table-cell p-2 align-middle">Created</div>
-              </div>
+                <div class="table-cell p-2 align-middle">Invoice Status</div>
+              </div> -->
               <!-- BODY -->
               <nuxt-link 
                 v-for="(item, index) in completedJobParts" 
@@ -49,14 +51,14 @@
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
                   <span class="">{{item.job.date_created}}</span>
                 </div>
-                <!-- <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
-                  <strong class="block md:hidden text-sm uppercase">Created</strong>
-                  <span class="">{{item.date_created}}</span>
-                </div> -->
+                <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+                  <strong class="block md:hidden text-sm uppercase">Invoice Status</strong>
+                  <span class="p-2 rounded-lg" :class="invoiceStatusStyle(item.invoice_status)">{{item.invoice_status}}</span>
+                </div>
               </nuxt-link>
             </div>
           </div>
-          <div v-if="!completedJobParts.length == 0" class="m-10 xl:-ml-32">
+          <div v-if="!completedJobParts.length == 0" class=" m-10 xl:-ml-32">
             <AppPagination
               :total="total"
               :totalPages="totalPages"
@@ -78,11 +80,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
   props:['practice', 'practice_surgery'],
   components:{
     AppPagination,
-    PracticeSessionModal
+    PracticeSessionModal,
+    AppJobHeaderSort
   },
   data(){
     return{
@@ -103,7 +107,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.completed_job_page)
-      this.getCompletedJobs('date_created:desc')
+      this.getCompletedJobs()
     },
   },
   async created(){
@@ -140,20 +144,11 @@ export default {
   },
   methods:{
     async getCompletedJobs(orderBy){
-      let offset = 0
-      if(this.ascendDescend == 0){
-        orderBy = orderBy.replace('desc','asc')
-        this.ascendDescend = 1
-        console.log('true',this.ascendDescend)
-      }else if(this.ascendDescend == 1){
-        orderBy = orderBy.replace('asc','desc')
-        this.ascendDescend = 0
-      }
-      offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
+      let offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
       let params = {
         viewing_practice_id : this.practice.id,
         status : 'Completed',
-        order_by : ['id:desc',orderBy],
+        order_by : orderBy ? orderBy : this.$route.query.order_by,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,
         offset: offset
@@ -168,6 +163,19 @@ export default {
       })
       
     },
+    invoiceStatusStyle(status){
+			switch(status){
+				case 'To Be Invoice':
+					return 'bg-yellow-500 text-black'
+					break;
+				case 'Disputed':
+					return 'bg-red-500 text-white'
+					break;
+				case 'Invoiced':
+					return 'bg-green-500 text-white opacity-75'
+					break;
+			}
+		},
     async pagechanged(e) {
       const query = {
         ...this.$route.query,

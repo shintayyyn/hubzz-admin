@@ -111,7 +111,7 @@ export default {
     Promise.all([
       this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
         // this.total = res.data.count
-        this.$store.commit('jobs/SET_PRACTICE_AVAILABLE_SESSIONS_COUNT', res.data.count)
+        this.$store.commit('jobs/SET_PRACTICE_LIVE_SESSIONS_COUNT', res.data.count)
         this.perPage = 10
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
@@ -140,7 +140,7 @@ export default {
         offset: offset
       }
       await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
-        this.$store.commit('jobs/SET_PRACTICE_AVAILABLE_SESSIONS', res.data.jobs)
+        this.$store.commit('jobs/SET_PRACTICE_LIVE_SESSIONS', res.data.jobs)
         this.$store.commit('jobs/TOGGLE_LOADING',false)
         // this.availableJobs = res.data.jobs
       }).catch(err=>{

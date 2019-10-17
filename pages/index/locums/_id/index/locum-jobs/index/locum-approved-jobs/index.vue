@@ -1,13 +1,13 @@
 <template>
     <div>
-        <LocumOngoingJobParts :user='user'/>
+        <LocumApprovedJobParts :user='user'/>
     </div>
 </template>
 <script>
-import LocumOngoingJobParts from '@/components/Locums/Jobs/LocumOngoingJobParts'
+import LocumApprovedJobParts from '@/components/Locums/Jobs/LocumApprovedJobParts'
 export default {
     components:{
-        LocumOngoingJobParts
+        LocumApprovedJobParts
     },
     computed:{
         user(){

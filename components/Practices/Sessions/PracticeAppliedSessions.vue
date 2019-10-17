@@ -7,7 +7,7 @@
             >This practice has no applied session/s.</div>
           </div>
           <div v-else>
-            <AppJobHeaderSort :practice="practice" :tabStatus="'Applied'" :currentPage="currentPage" />
+            <AppJobHeaderSort :practice="practice" :tabStatus="'Applied'" :currentPage="currentPage" :isJobParts="false" />
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
               <!-- BODY -->
               <nuxt-link 
