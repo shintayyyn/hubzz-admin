@@ -142,7 +142,7 @@ export default {
 						
 			filterCompliances:'',
 			search: '',
-			paramFilterSort:{
+			paramSort:{
 				order_by:''
 			},
 			sort:'',
@@ -317,9 +317,9 @@ export default {
 				params.compliance_status = this.filterCompliances
 			}
 
-			this.paramFilterSort.compliance_status = this.filterCompliances
+			this.paramSort.compliance_status = this.filterCompliances
 
-			this.getLocums(this.paramFilterSort)
+			this.getLocums(this.paramSort)
 		}
 	},
 
@@ -349,7 +349,7 @@ export default {
         this.sortType = !this.sortType
         this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
       }
-			let order_by = await this.paramFilterSort.order_by
+			let order_by = await this.paramSort.order_by
 			console.log(order_by)
 			let query = {
 				...this.$router.query,
@@ -384,9 +384,9 @@ export default {
 			}
 			this.$router.push({query})
 			
-			this.paramFilterSort.search = search
-			this.paramFilterSort.compliance_status = compliance_status
-			this.getLocums(this.paramFilterSort)
+			this.paramSort.search = search
+			this.paramSort.compliance_status = compliance_status
+			this.getLocums(this.paramSort)
 		},
 		goToPage(page,search,order_by, compliance_status) {
 			if (page < 1) {

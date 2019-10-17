@@ -7,7 +7,7 @@
             >This practice has no applied session/s.</div>
           </div>
           <div v-else>
-            <AppJobHeaderSort :practice="practice" :tabType="'Applied'" :currentPage="currentPage" />
+            <AppJobHeaderSort :practice="practice" :tabStatus="'Applied'" :currentPage="currentPage" />
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
               <!-- BODY -->
               <nuxt-link 
@@ -95,7 +95,7 @@ export default {
     watch: {
       $route(to, from) {
         this.currentPage = parseInt(to.query.job_page)
-        this.getAppliedJobs(this.$route.query.order_by,)
+        this.getAppliedJobs()
       },
     },
     async created(){
@@ -136,20 +136,11 @@ export default {
     },
     methods:{
       async getAppliedJobs(orderBy){
-        let offset = 0
-        if(this.ascendDescend == 0){
-          orderBy = orderBy.replace('desc','asc')
-          this.ascendDescend = 1
-          console.log('true',this.ascendDescend)
-        }else if(this.ascendDescend == 1){
-          orderBy = orderBy.replace('asc','desc')
-          this.ascendDescend = 0
-        }
-        offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
+        let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {
           viewing_practice_id : this.practice.id,
           status : 'Applied',
-          order_by : this.$route.query.order_by,
+          order_by :  orderBy ? orderBy : this.$route.query.order_by,
           surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset

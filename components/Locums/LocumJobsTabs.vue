@@ -63,6 +63,7 @@ export default {
           const query = {
             ...this.$route.query
           };
+          delete query.order_by
           return {
             path: `/locums/${this.user.id}/locum-jobs/${tab}`,
             query

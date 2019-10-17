@@ -45,7 +45,7 @@
 </template>
 <script>
 export default {
-  props:['tabStatus', 'tabType', 'practice', 'currentPage'],
+  props:['tabStatus','locumTabStatus', 'practice','locumUser', 'currentPage'],
   data(){
     return{
       jobs:{},
@@ -116,16 +116,23 @@ export default {
     },
     async getJobs(){
       let params = {
-        viewing_practice_id : this.practice.id,
-        status : this.tabType,
+        viewing_practice_id : this.practice ? this.practice.id : null,
+        viewing_locum_user_id: this.locumUser ? this.locumUser.id : null,
+        status : this.tabStatus ? this.tabStatus : null,
+        locum_status : this.locumTabStatus ? this.locumTabStatus : null,
         order_by : this.paramSort.order_by,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,
         offset: this.getQuery()
       }
       await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then( async res => {
-      await this.$store.commit(`jobs/SET_PRACTICE_${this.tabType.toUpperCase()}_SESSIONS`, res.data.jobs)
-      await this.$store.commit('jobs/TOGGLE_LOADING', false)
+        if(this.practice){
+          await this.$store.commit(`jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`, res.data.jobs)
+          await this.$store.commit('jobs/TOGGLE_LOADING', false)
+        }else if(this.locumUser){
+          await this.$store.commit(`jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`, res.data.jobs)
+          await this.$store.commit('jobs/TOGGLE_LOADING', false)
+        }
       })
     },  
   },  

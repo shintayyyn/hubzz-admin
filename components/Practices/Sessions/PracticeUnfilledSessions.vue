@@ -7,17 +7,8 @@
         >This practice has no unfilled session/s.</div>
       </div>
       <div v-else>
-          <AppJobHeaderSort :practice="practice" :tabType="'Unfilled'" :currentPage="currentPage" />
+          <AppJobHeaderSort :practice="practice" :tabStatus="'Unfilled'" :currentPage="currentPage" />
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
-            <!-- HEADER -->
-            <!-- <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-              <div class="table-cell p-2 align-middle">Job Number</div> 
-              <div class="table-cell p-2 align-middle">Practice / Surgery</div>
-              <div class="table-cell p-2 align-middle">Title</div>
-              <div class="table-cell p-2 align-middle">From</div>
-              <div class="table-cell p-2 align-middle">To</div>
-              <div class="table-cell p-2 align-middle">Created</div>
-            </div> -->
             <!-- BODY -->
             <nuxt-link 
               v-for="(item, index) in unfilledSessions" 
@@ -100,7 +91,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.job_page)
-      this.getUnfilledSessions(this.$route.query.order_by)
+      this.getUnfilledSessions()
     },
   },
   async created() {
@@ -135,19 +126,11 @@ export default {
   },
   methods: {
     async getUnfilledSessions(orderBy) {
-      let offset = 0
-      if (this.ascendDescend == 0) {
-        orderBy = orderBy.replace('desc', 'asc')
-        this.ascendDescend = 1
-      } else if (this.ascendDescend == 1) {
-        orderBy = orderBy.replace('asc', 'desc')
-        this.ascendDescend = 0
-      }
-      offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
+      let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
       let params = {
         viewing_practice_id : this.practice.id,
         status : 'Unfilled',
-        order_by : this.$route.query.order_by,
+        order_by : orderBy ? orderBy : this.$route.query.order_by,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,
         offset: offset

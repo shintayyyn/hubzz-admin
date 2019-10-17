@@ -33,7 +33,7 @@ export default {
         const query = {
           ...this.$route.query,
         }
-        delete query.session_tab
+        delete query.order_by
         return{
           path: tab ? `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/${tab}` : `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}` ,
           query
