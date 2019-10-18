@@ -2,7 +2,7 @@
   <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
     <div class="px-2">
       <div class="flex flex-no-wrap justify-start">
-        <div class="text-4xl mb-4 text-white">Support</div>
+        <div class="text-4xl mb-4 text-white">Inquiries</div>
       </div>
     </div>
     <!-- TABLE RESPONSIVE-->
