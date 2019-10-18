@@ -1,10 +1,10 @@
 <template>
   <div class="flex justify-start overflow-x-auto">
       <nuxt-link 
-        :to="getRoute(practice_surgery ? 'surgery-available-sessions':'practice-available-sessions')"
+        :to="getRoute(practice_surgery ? 'surgery-live-sessions':'practice-live-sessions')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path.includes(`practice-available-sessions`) || $route.path.includes(`surgery-available-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-      >Available</nuxt-link>
+        :class="$route.path.includes(`practice-live-sessions`) || $route.path.includes(`surgery-live-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >Live</nuxt-link>
       <nuxt-link
         :to="getRoute(practice_surgery ? 'surgery-applied-sessions':'practice-applied-sessions')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
@@ -67,6 +67,7 @@ export default {
           ...this.$route.query,
         }
         delete query.order_by
+        delete query.status
         return{
           path:this.practice_surgery ? `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/${tab}`: 
          `/practices/${this.practice.id}/practice-sessions/${tab}`,query 

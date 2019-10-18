@@ -9,15 +9,6 @@
         <div v-else>
           <AppJobHeaderSort :practice="practice" :tabStatus="'Ongoing'" :currentPage="currentPage" :isJobParts="true" />
           <div class="flex flex-col text-white p-2"> 
-            <!-- HEADER -->
-            <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
-              <div class="w-1/6 md:px-2">Job Number</div> 
-              <div class="w-1/6 md:px-2">Practice / Surgery</div>
-              <div class="w-1/6 md:px-2">Title</div>
-              <div class="w-1/6 md:px-2">From</div>
-              <div class="w-1/6 md:px-2">To</div>
-              <div class="w-1/6 md:px-2">Created</div>
-            </div> -->
             <!-- BODY -->
             <div 
               v-for="(item, index) in ongoingJobParts" 
@@ -120,7 +111,6 @@ export default {
       }
       Promise.all([
         this.$axios.$get(`/api/v1/admin/job-parts/count`,{ params }).then(res=>{
-          // this.total = res.data.count
           this.$store.commit('jobs/SET_PRACTICE_ONGOING_SESSIONS_COUNT',res.data.count)
           this.perPage = 10
           this.totalPages = Math.ceil(this.total / this.perPage)

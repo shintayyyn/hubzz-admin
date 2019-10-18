@@ -1,30 +1,24 @@
 <template>
   <div>
-    <div class="w-4/6 mx-6 mt-6 font-semibold">
+    <div class="w-5/6 mx-6 mt-6 font-semibold">
        <div class="flex flex-row text-white"> 
-        <div v-if="isJobParts==false" class="w-2/6 align-middle" @click="sortBy('job_number',currentPage,search)">
-          Job Number
-          <svgicon v-if="sortedBy!='job_number'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-          <svgicon v-if="sortType==true && sortedBy=='job_number'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-          <svgicon v-if="sortType==false && sortedBy=='job_number'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        <div class="w-1/6 align-middle" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
+         {{ isJobParts ? 'Job Part Number' : 'Job Number'}}
+          <svgicon v-if="sortedBy!='job_number' && sortedBy!='job_part_number' "  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
-        <div v-if="isJobParts==true" class="w-2/6 align-middle" @click="sortBy('job_part_number',currentPage,search)">
-          Job Part Number
-          <svgicon v-if="sortedBy!='job_part_number'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-          <svgicon v-if="sortType==true && sortedBy=='job_part_number'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-          <svgicon v-if="sortType==false && sortedBy=='job_part_number'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
-        </div>
-        <div class="w-2/6 align-middle" @click="sortBy('surgery_name',currentPage,search)">
+        <div class="w-1/6 align-middle" @click="sortBy(isJobParts ? 'job_surgery_name':'surgery_name',currentPage,search)">
           Practice / Surgery
-          <svgicon v-if="sortedBy!='surgery_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-          <svgicon v-if="sortType==true && sortedBy=='surgery_name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-          <svgicon v-if="sortType==false && sortedBy=='surgery_name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortedBy!='surgery_name' && sortedBy!='job_surgery_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-2/6 align-middle" @click="sortBy('title',currentPage,search)">
+        <div class="w-1/6 align-middle" @click="sortBy(isJobParts ? 'job_title':'title',currentPage,search)">
           Title
-          <svgicon v-if="sortedBy!='title'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
-          <svgicon v-if="sortType==true && sortedBy=='title'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-          <svgicon v-if="sortType==false && sortedBy=='title'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortedBy!='title' && sortedBy!='job_title'"  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && (sortedBy=='title' || sortedBy=='job_title')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
+          <svgicon v-if="sortType==false && (sortedBy=='title' || sortedBy=='job_title')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
         <div class="w-1/6 align-middle" @click="sortBy('date_start',currentPage,search)">
           From
@@ -43,6 +37,9 @@
            <svgicon v-if="sortedBy!='date_created'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_created'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='date_created'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+        </div>
+        <div v-if="tabStatus == 'Completed'" class="w-1/6 align-middle" @click="sortBy('date_created',currentPage,search)">
+          Invoice Status
         </div>
       </div>
     </div>
@@ -68,9 +65,6 @@ export default {
       order_by:'',
     }
   },  
-  created(){
-      console.log('hehe',this.isJobParts)
-    },
   methods:{
     getQuery(){
 			const query = {
@@ -136,9 +130,13 @@ export default {
       }
       await this.$axios.$get(`/api/v1/admin/${ this.isJobParts === true ? 'job-parts' : 'jobs'}`,{ params }).then( async res => {
         if(this.practice){
+          console.log('jobs', res.data.jobs)
+          console.log('job parts', res.data.job_parts)
           await this.$store.commit(`jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`, this.isJobParts === true ? res.data.job_parts : res.data.jobs)
           await this.$store.commit('jobs/TOGGLE_LOADING', false)
         }else if(this.locumUser){
+          console.log('jobs', res.data.jobs)
+          console.log('job parts', res.data.job_parts)
           await this.$store.commit(`jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`, this.isJobParts === true ? res.data.job_parts : res.data.jobs)
           await this.$store.commit('jobs/TOGGLE_LOADING', false)
         }

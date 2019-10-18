@@ -178,18 +178,6 @@ export default {
   },
   methods:{
     async showJobPart(){
-      // await this.$axios.$get(`/api/v1/admin/job-parts/${jobPartId}`).then(res=>{
-      //   this.jobPart = res.data.job_part
-      // })
-      if(!this.jobPart.invoiced || this.jobPart.invoiced && !this.jobPart.issued && !this.jobPart.disputed){
-        console.log('u ugly')
-        
-      }else if(this.jobPart.invoiced && this.jobPart.issued && !this.jobPart.disputed){
-        console.log('u suck at life')
-      }else if(this.jobPart.invoiced && this.jobPart.issued && this.jobPart.disputed){
-        console.log('ur a horrible person')
-      }
-
     }
   }
 }

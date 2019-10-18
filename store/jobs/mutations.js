@@ -103,6 +103,13 @@ export default{
             state.practice_completed_sessions.pop()
         }
     },
+    //=================APPROVED======================
+    SET_PRACTICE_APPROVED_SESSIONS(state, payload){
+      state.practice_completed_sessions = payload
+    },
+    SET_PRACTICE_APPROVED_SESSIONS_COUNT(state, payload){
+      state.practice_completed_sessions_count = payload
+    },
     //=================UNFILLED======================
     SET_PRACTICE_UNFILLED_SESSIONS(state, payload){
         state.practice_unfilled_sessions = payload

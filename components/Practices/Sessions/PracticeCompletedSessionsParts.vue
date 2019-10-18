@@ -10,15 +10,6 @@
             <AppJobHeaderSort :practice="practice" :tabStatus="'Completed'" :currentPage="currentPage" :isJobParts="true" />
             <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
               <!-- HEADER -->
-              <!-- <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-                <div class="table-cell p-2 align-middle">Job Number</div> 
-                <div class="table-cell p-2 align-middle">Practice / Surgery</div>
-                <div class="table-cell p-2 align-middle">Title</div>
-                <div class="table-cell p-2 align-middle">From</div>
-                <div class="table-cell p-2 align-middle">To</div>
-                <div class="table-cell p-2 align-middle">Created</div>
-                <div class="table-cell p-2 align-middle">Invoice Status</div>
-              </div> -->
               <!-- BODY -->
               <nuxt-link 
                 v-for="(item, index) in completedJobParts" 

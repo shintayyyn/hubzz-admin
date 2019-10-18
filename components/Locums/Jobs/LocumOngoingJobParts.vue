@@ -8,16 +8,17 @@
         >This locum has no ongoing jobs.</div>
       </div>
       <div v-else>
+        <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Ongoing'" :currentPage="currentPage" :isJobParts="true" />
           <div class="flex flex-col text-white md:px-6"> 
             <!-- HEADER -->
-            <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
+            <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
               <div class="w-1/6">Job Number</div> 
               <div class="w-1/6">Practice / Surgery</div>
               <div class="w-1/6">Title</div>
               <div class="w-1/6">From</div>
               <div class="w-1/6">To</div>
               <div class="w-1/6">Created</div>
-            </div>
+            </div> -->
             <!-- BODY -->
             <div 
               v-for="(item, index) in locumOngoingJobParts" 
@@ -74,11 +75,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
   props: ['user'],
   components: {
     AppPagination,
     LocumDetailJobModal,
+    AppJobHeaderSort
   },
   data() {
     return {
@@ -137,20 +140,11 @@ export default {
   },
   methods: {
     getOngoingJobs(orderBy) {
-      let offset = 0
-      if (this.ascendDescend == 0) {
-        orderBy = orderBy.replace('desc', 'asc')
-        this.ascendDescend = 1
-        console.log('true', this.ascendDescend)
-      } else if (this.ascendDescend == 1) {
-        orderBy = orderBy.replace('asc', 'desc')
-        this.ascendDescend = 0
-      }
-      offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
+      let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status : 'Ongoing',
-        order_by : ['id:desc',orderBy],
+        order_by : orderBy ? orderBy : this.$route.query.order_by,
         limit: this.perPage,
         offset: offset
       }
