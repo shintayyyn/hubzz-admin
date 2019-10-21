@@ -20,7 +20,7 @@ export default {
             const practice = response.data.data.practice
             await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
             return{
-
+                
             }
         }catch(err){
             store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})

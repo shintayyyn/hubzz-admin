@@ -1,19 +1,21 @@
 <template>
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white py-2 px-6">
+      <div class="flex justify-between text-sm text-white py-2">
         <nuxt-link to="/reports/" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>
       </div>
-      <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 px-4 w-full lg:w-2/3">
-        <div class="relative">
-          <input
-            class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 pr-6 focus:hubzz-yellow bg-waterloo"
-            placeholder="Search for..."
-          >
-          <button class="-ml-5 pd-2 top-0 right-0 bottom-0">
-            <svgicon name="times-solid" height="12" width="12" class="text-white fill-current"/>
-          </button>
+      <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 w-full lg:w-2/3">
+        <div class="flex">
+          <div class="relative">
+            <input
+              class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+              placeholder="Search for..."
+            >
+            <button class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1">
+              <svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
+            </button>
+          </div>
           <button
             class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-500"
           >Go</button>
@@ -39,7 +41,7 @@
           </button>
         </div>
       </div>
-      <div class="mx-4 overflow-x-auto">
+      <div class="overflow-x-auto">
         <table class="text-left text-xs w-full lg:w-2/3">
           <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
             <tr class="flex w-full mb-4">

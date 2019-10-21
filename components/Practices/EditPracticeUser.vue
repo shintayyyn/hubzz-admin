@@ -96,7 +96,7 @@
             <p class="p-2">{{user.email ? user.email_verified_at: 'Not yet verified'}}</p>
             <p class="flex py-1">Status</p>
             <select
-              class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
+              class="text-black block appearance-none w-full bg-white border border-gray-300 hover:border-gray-300 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
               v-model="toPutPracticeUser.status"
             >
               <option>Active</option>
@@ -114,22 +114,22 @@
               <div v-if="errorPass[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                 {{errorPass[0]}}
               </div>
-              <div class="flex py-1">New Password
-                <span v-if="!toChangePassword.newPassword" class="bg-red p-1 ml-4 rounded">Required</span>
+              <div class="flex items-center py-1">New Password
+                <span v-if="!toChangePassword.newPassword" class="bg-red-600 py-1 px-2 ml-4 rounded">Required</span>
               </div>
               <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                :class="`${toChangePassword.newPassword !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                :class="`${toChangePassword.newPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                 type="password"
                 aria-label="oldpassword"
                 v-model="toChangePassword.newPassword"
               >
-              <div class="flex py-1">Confirm New Password
-                <span v-if="!toChangePassword.confirmNewPassword" class="bg-red p-1 ml-4 rounded">Required</span>
+              <div class="flex items-center py-1">Confirm New Password
+                <span v-if="!toChangePassword.confirmNewPassword" class="bg-red-600 py-1 px-2 ml-4 rounded">Required</span>
               </div>
               <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                 type="password"
                 aria-label="newpassword"
                 v-model="toChangePassword.confirmNewPassword"

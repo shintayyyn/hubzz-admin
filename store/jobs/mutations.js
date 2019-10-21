@@ -57,29 +57,36 @@ export default{
         state.practice_applied_sessions.splice(index, 1)
         state.practice_applied_sessions_count = state.practice_applied_sessions_count - 1
     },
-    //================CURRENT=======================
-    SET_PRACTICE_CURRENT_SESSIONS(state, payload){
-        state.practice_current_sessions = payload
+    //================ALLOCATED=======================
+    SET_PRACTICE_ALLOCATED_SESSIONS(state, payload){
+        state.practice_allocated_sessions = payload
     },
-    SET_PRACTICE_CURRENT_SESSIONS_COUNT(state, payload){
-        state.practice_current_sessions_count = payload
+    SET_PRACTICE_ALLOCATED_SESSIONS_COUNT(state, payload){
+        state.practice_allocated_sessions_count = payload
     },
-    ADD_PRACTICE_CURRENT_SESSIONS(state, payload){
-        console.log('add practice current is working', payload)
-        state.practice_current_sessions.unshift(payload)
-        state.practice_current_sessions_count = state.practice_current_sessions_count + 1
-        if(state.practice_current_sessions_count > 10){
-            state.practice_current_sessions.pop()
+    ADD_PRACTICE_ALLOCATED_SESSIONS(state, payload){
+        console.log('add practice allocated is working', payload)
+        state.practice_allocated_sessions.unshift(payload)
+        state.practice_allocated_sessions_count = state.practice_allocated_sessions_count + 1
+        if(state.practice_allocated_sessions_count > 10){
+            state.practice_allocated_sessions.pop()
         }
     },
-    DEDUCT_PRACTICE_CURRENT_SESSIONS(state, payload){
-        console.log('deduct practice current jobs is working', payload)
+    DEDUCT_PRACTICE_ALLOCATED_SESSIONS(state, payload){
+        console.log('deduct practice allocated jobs is working', payload)
 
-        let index = state.practice_current_sessions.findIndex(
+        let index = state.practice_allocated_sessions.findIndex(
             job => job.id === payload.id
         )
-        state.practice_current_sessions.splice(index, 1)
-        state.practice_current_sessions_count = state.practice_current_sessions_count - 1
+        state.practice_allocated_sessions.splice(index, 1)
+        state.practice_allocated_sessions_count = state.practice_allocated_sessions_count - 1
+    },
+    //====================ONGOING=====================
+    SET_PRACTICE_ONGOING_SESSIONS(state, payload){
+      state.practice_ongoing_sessions = payload
+    },
+    SET_PRACTICE_ONGOING_SESSIONS_COUNT(state, payload){
+      state.practice_ongoing_sessions_coung = payload
     },
     //=================COMPLETED======================
     SET_PRACTICE_COMPLETED_SESSIONS(state, payload){
@@ -142,28 +149,39 @@ export default{
         }
     },
     // =================== LOCUM ======================
-    SET_LOCUM_CURRENT_JOBS(state, payload){
-        state.locum_current_jobs = payload
+
+    // ====================ALLOCATED=====================
+    SET_LOCUM_ALLOCATED_JOBS(state, payload){
+        state.locum_allocated_jobs = payload
     },
-    SET_LOCUM_CURRENT_JOBS_COUNT(state, payload){
-        state.locum_current_jobs_count = payload
+    SET_LOCUM_ALLOCATED_JOBS_COUNT(state, payload){
+        state.locum_allocated_jobs_count = payload
     },
-    ADD_LOCUM_CURRENT_JOBS(state, payload){
-        console.log('add locum current jobs is working', payload)
-        state.locum_current_jobs.unshift(payload)
-        state.locum_current_jobs_count = state.locum_current_jobs_count + 1
-        if(state.locum_current_jobs_count > 10){
-            state.locum_current_jobs.pop()
+    ADD_LOCUM_ALLOCATED_JOBS(state, payload){
+        console.log('add locum allocated jobs is working', payload)
+        state.locum_allocated_jobs.unshift(payload)
+        state.locum_allocated_jobs_count = state.locum_allocated_jobs_count + 1
+        if(state.locum_allocated_jobs_count > 10){
+            state.locum_allocated_jobs.pop()
         }
     },
-    DEDUCT_LOCUM_CURRENT_JOBS(state, payload){
-        console.log('deduct locum current jobs is working', payload)
-        let index = state.locum_current_jobs.findIndex(
+    DEDUCT_LOCUM_ALLOCATED_JOBS(state, payload){
+        console.log('deduct locum allocated jobs is working', payload)
+        let index = state.locum_allocated_jobs.findIndex(
             job => job.id === payload.id
         )
-        state.locum_current_jobs.splice(index, 1)
-        state.locum_current_jobs_count = state.locum_current_jobs_count - 1
+        state.locum_allocated_jobs.splice(index, 1)
+        state.locum_allocated_jobs_count = state.locum_allocated_jobs_count - 1
     },
+    //================== ONGOING =====================
+    SET_LOCUM_ONGOING_JOBS(state, payload){
+      state.locum_ongoing_jobs = payload
+    },
+    SET_LOCUM_ONGOING_JOBS_COUNT(state, payload){
+      state.locum_ongoing_jobs_count = payload
+    },
+    //ADD LOCUM ONGOING JOBS
+    //DEDUCT LOCUM ONGOING JOBS
     //=================AVAILABLE======================
     SET_LOCUM_AVAILABLE_JOBS(state, payload){
         state.locum_available_jobs = payload

@@ -25,9 +25,9 @@
             v-model="toPostUser.title"
             aria-label="Title"
           />
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             First Name
-            <span v-if="firstNameError" class="bg-red p-1 ml-4 rounded">{{firstNameError}}</span>
+            <span v-if="firstNameError" class="bg-red-600 p-1 ml-4 rounded">{{firstNameError}}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -38,9 +38,9 @@
             @blur="verifyFirstName(toPostUser.first_name)"
             aria-label="First Name"
           />
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             Last Name
-            <span v-if="lastNameError" class="bg-red p-1 ml-4 rounded">{{lastNameError}}</span>
+            <span v-if="lastNameError" class="bg-red-600 p-1 ml-4 rounded">{{lastNameError}}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -64,17 +64,17 @@
             <span>Practice Types</span>
             <span class="text-xs">(hold ctrl + click to choose)</span>
             <select
-              class="w-full text-black"
+              class="w-full text-black focus:outline-none"
               multiple="true"
               v-bind:class="{ 'fix-height': multiple === 'true' }"
               v-model="toPostUser.practice_type_id"
             >
-              <option v-for="item in practiceTypes" :key="item.id" :value="item">{{item.label}}</option>
+              <option class="px-2 py-1" v-for="item in practiceTypes" :key="item.id" :value="item">{{item.label}}</option>
             </select>
             <div
               v-for="(practice_type, index) in toPostUser.practice_type_id"
               :key="`practice_type-${index}`"
-              class="inline-flex m-1"
+              class="inline-flex my-2 mr-2"
             >
               <span
                 class="bg-yellow-500 rounded-lg p-2 text-black"
@@ -82,14 +82,14 @@
             </div>
           </div>
 
-          <div v-if="surgery" class="flex py-1">
+          <div v-if="surgery" class="flex items-center py-1">
             Role
-            <span v-if="!toPostUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
+            <span v-if="!toPostUser.practice_role" class="bg-red-600 p-1 ml-4 rounded">Required</span>
           </div>
           <select
             v-if="surgery"
-            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            :class="`${toPostUser.practice_role !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
+            :class="`${toPostUser.practice_role !== '' ? 'focus:border-orange-500' :'focus:border-red-600'}`"
             v-model="toPostUser.practice_role"
           >
             <option>Partner</option>
@@ -99,8 +99,8 @@
           <div v-if="surgery && surgery.practice_count<1" class="flex py-1">Type</div>
           <select
             v-if="surgery && surgery.practice_count<1"
-            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            :class="`${toPostUser.type !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 text-gray-800 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
+            :class="`${toPostUser.type !== '' ? 'focus:border-orange-600' :'focus:border-red-600'}`"
             v-model="toPostUser.type"
           >
             <option>Hub</option>
@@ -119,11 +119,11 @@
             />
           </div>
 
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             E-Mail Address
             <span
               v-if="emailError"
-              class="bg-red p-1 ml-4 -mt-1 rounded"
+              class="bg-red-600 p-1 ml-4 -mt-1 rounded"
             >{{emailError}}</span>
           </div>
           <input
@@ -135,9 +135,9 @@
             @blur="verifyEmail(toPostUser.email)"
             placeholder="example@example.com"
           />
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             Password
-            <span v-if="passwordError" class="bg-red p-1 ml-4 rounded">{{passwordError}}</span>
+            <span v-if="passwordError" class="bg-red-600 p-1 ml-4 rounded">{{passwordError}}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -147,11 +147,11 @@
             @blur="verifyPassword(toPostUser.password)"
             placeholder="Password"
           />
-          <div class="flex py-1">
+          <div class="flex items-center py-1">
             Confirm Password
             <span
               v-if="confirmPasswordError"
-              class="bg-red p-1 ml-4 rounded"
+              class="bg-red-600 p-1 ml-4 rounded"
             >{{confirmPasswordError}}</span>
           </div>
           <input

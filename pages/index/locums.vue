@@ -6,8 +6,8 @@
 		<div class="flex flex-col md:flex-row justify-between px-6">
 			<div class="flex py-2">
 				<div class="relative">
-					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search for..." v-model="search" @keyup.enter="searchSubmit">
-					<button class="absolute top-0 right-0 bottom-0 mr-1 px-4 py-2" @click="search = '', searchSubmit()">
+					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Locum by Name" v-model="search" @keyup.enter="searchSubmit">
+					<button class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
 						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
@@ -33,87 +33,98 @@
 		</div>
 		<div class="flex flex-col mx-6 text-white">
 			<div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2">
-				<div class="w-1/6" @click="sortBy('name',activePage,search,filterCompliances)">
+				<div class="w-1/6 pl-4 cursor-pointer" @click="sortBy('name',activePage,search,filterCompliances)">
 					Name
 					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
-					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/></div>
-				<div class="w-1/6" @click="sortBy('profession',activePage,search,filterCompliances)">
+					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
+				</div>
+				<div class="w-1/6 text-center cursor-pointer" @click="sortBy('profession',activePage,search,filterCompliances)">
 					Profession
 					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6" @click="sortBy('created_at',activePage,search,filterCompliances)">
+				<div class="w-1/6 cursor-pointer" @click="sortBy('created_at',activePage,search,filterCompliances)">
 					Date signed-up
 					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
+				<div class="w-1/6 cursor-pointer" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
 					Sign-up verified
 					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6">Status</div>
-				<div class="w-1/6">Compliance Status</div>
+				<div class="w-1/6 text-center">Status</div>
+				<div class="w-1/6 text-center">Compliance Status</div>
 			</div>
-			<div
+			<nuxt-link
 				v-for="(locumUser, index) in locumUsers" 
 				:key="`locumUser-${index}`" 
-				@click="$router.push(`/locums/${locumUser.id}`)"
-			 	class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow md:border-0">
-					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"  
+			 	class="w-full text-white flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-0 border-l-8 border-yellow-500 md:border-0">
+					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Name</strong>
 						<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
-					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center md:justify-center md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Profession</strong>
 						<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
 					</div>
-					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Date signed-up</strong>
 						<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
 					</div>
-					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Sign-up verified</strong>
 						<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
 					</div>
-					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Status</strong>
-						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
+						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 md:mx-4 lg:px-8 sm:px-2 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
 					</div>
-					<div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+					<div class="w-full md:w-1/6 md:p-2 flex flex-col md:flex-row md:items-center">
 						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
-						<span class="inline-flex text-black text-sm py-2 p-3 rounded-full" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
 					</div>
-			</div>
+			</nuxt-link>
 		</div>
 
 		<!-- PAGINATION -->
-		<div class="flex justify-center">
-			<div >
-				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
-					:class="activePage === 1 ? 'text-gray-500' : 'hover:bg-yellow-500'">Prev
-				</button>
+		<div class="flex justify-center items-center my-2">
+			<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
+				@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
+				:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
+				<span class="hidden md:block">Prev</span>
+				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
+						<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
+					</svg>
+				</span>
+			</button>
 
-				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					:class="`${activePage === page ? 'text-white' : ''}`" 
-					v-for="page in pageCount" 
-					v-if="showPage(page)"
-					:key="`page-${page}`" 
-					@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
-				</button>
-				
-				<button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light" 
-					@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
-					:class="`${activePage == pageCount ? 'text-gray-dark': ''}`">Next
-				</button>														
-			</div>
+			<button class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
+				:class="`${activePage === page ? 'text-black' : ''}`" 
+				v-for="page in pageCount" 
+				v-if="showPage(page)"
+				:key="`page-${page}`" 
+				@click="goToPage(page, search, order_by, filterCompliances)">{{ page }}
+			</button>
+			
+			<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm hover:bg-waterloo-light focus:outline-none" 
+				@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
+				:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
+				<span class="hidden md:block">Next</span>
+				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
+						<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+					</svg>
+				</span>
+			</button>														
 		</div>
 		<!-- PAGINATION ENDS HERE -->
-		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')"></div>
+		<div class="locum-shield" v-if="$route.name.includes('index-locums-id')" @click="$router.push('/locums')"></div>
 		<nuxt-child/>
 	</div>
 </template>
@@ -126,12 +137,12 @@ export default {
 	},
 	data() {
 		return {
-			itemsPerPage: 8,
+			itemsPerPage: 10,
 			activePage: 1,
 						
 			filterCompliances:'',
 			search: '',
-			paramFilterSort:{
+			paramSort:{
 				order_by:''
 			},
 			sort:'',
@@ -167,7 +178,7 @@ export default {
 	'search',
 	'compliance_status'
 	],
-	async asyncData({ app, store, route }) {
+	async asyncData({ app, store, route, error }) {
 		
 		try {
 			await store.commit('locums/TOGGLE_LOADING',true)
@@ -201,8 +212,8 @@ export default {
 			response = await getLocumUsersPromise
 			const locumUsers = response.data.data.users
 			
-			await store.commit('locums/SET_LOCUM_COUNT',itemCount) //put the obtained data from the database to the state
-			await store.commit('locums/SET_LOCUM_USERS',locumUsers)// 'SET_DATA_PROPERTY denotes a mutation 
+			await store.commit('locums/SET_LOCUM_COUNT',itemCount) // put the obtained data from the database to the state
+			await store.commit('locums/SET_LOCUM_USERS',locumUsers) // 'SET_DATA_PROPERTY denotes a mutation 
 			await store.commit('locums/TOGGLE_LOADING',false)
 			return {
 				filterCompliances: compliance_status,
@@ -212,6 +223,7 @@ export default {
 				order_by,
 			}
 		} catch (err) {
+      error({ statusCode: 404 })
 			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
 			console.log('Get locums error!', err)
 		}
@@ -305,9 +317,9 @@ export default {
 				params.compliance_status = this.filterCompliances
 			}
 
-			this.paramFilterSort.compliance_status = this.filterCompliances
+			this.paramSort.compliance_status = this.filterCompliances
 
-			this.getLocums(this.paramFilterSort)
+			this.getLocums(this.paramSort)
 		}
 	},
 
@@ -316,12 +328,12 @@ export default {
 			const query = {
 				...this.$route.query
 			}
-			const offset = parseInt(query.page)*8 - 8 
+			const offset = parseInt(query.page)*10 - 10 
 			return offset
 		},
 		getLocums(params){
 			this.$store.dispatch("locums/fetchLocums",{
-				limit:8,
+				limit:10,
 				search:params.search,
 				compliance_status:params.compliance_status,
 				order_by:params.order_by,
@@ -329,29 +341,15 @@ export default {
 			});
 		},
 		async sortBy(sortedBy,page,search,compliance_status) {
-			switch (sortedBy) {
-				case 'name':
-					this.sortedBy = sortedBy
-					this.name = !this.name
-					this.sortType = this.name
-				case 'profession':
-					this.sortedBy = sortedBy
-					this.profession = !this.profession
-					this.sortType = this.profession
-				break;
-				case 'created_at':
-					this.sortedBy = sortedBy
-					this.created_at = !this.created_at
-					this.sortType = this.created_at
-				break;
-				case 'email_verified_at':
-					this.sortedBy = sortedBy
-					this.email_verified_at = !this.email_verified_at
-					this.sortType = this.email_verified_at
-				break;
-			}
-			this.paramFilterSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-			let order_by = await this.paramFilterSort.order_by
+      if(this.sortedBy == sortedBy && this.sortType == true){
+        this.paramSort.order_by ='created_at:desc'
+        this.sortedBy = ''
+      }else{
+        this.sortedBy = sortedBy
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      }
+			let order_by = await this.paramSort.order_by
 			console.log(order_by)
 			let query = {
 				...this.$router.query,
@@ -386,10 +384,9 @@ export default {
 			}
 			this.$router.push({query})
 			
-			console.log('hello',this.paramFilterSort)
-			this.paramFilterSort.search = search
-			this.paramFilterSort.compliance_status = compliance_status
-			this.getLocums(this.paramFilterSort)
+			this.paramSort.search = search
+			this.paramSort.compliance_status = compliance_status
+			this.getLocums(this.paramSort)
 		},
 		goToPage(page,search,order_by, compliance_status) {
 			if (page < 1) {
@@ -483,19 +480,19 @@ export default {
 		statusStyle(status){
 			switch(status){
 				case 'Active':
-					return 'bg-green-500 text-white lg:px-8 sm:px-2'
+					return 'bg-green-500 text-white'
 					break;
 				case 'Inactive':
-					return 'bg-yellow-500 text-black lg:px-8 sm:px-2'
+					return 'bg-gray-500 text-black'
 					break;
 				case 'Deactivated':
-					return 'bg-gray-500 text-black lg:px-8 sm:px-2'
+					return 'bg-gray-500 text-black opacity-75'
 					break;
 				case 'Suspended':
-					return 'bg-red-500 text-white lg:px-8 sm:px-2'
+					return 'bg-red-700 text-red-300'
 					break;
 				case 'Dormant':
-					return 'bg-green-700 text-white lg:px-8 sm:px-2'
+					return 'bg-green-500 text-green-800'
 					break;
 				default:
 					return
@@ -504,25 +501,25 @@ export default {
 		complianceStatusStyle(status){
 			switch(status){
 				case 'Empty':
-					return 'border border-white text-white lg:px-8 sm:px-2'
+					return 'border border-white text-white'
 					break;
 				case 'Incomplete':
-					return 'bg-yellow-300 text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-400 text-black'
 					break;
 				case 'Pending':
-					return 'bg-yellow-500 text-black lg:px-8 sm:px-2'
+					return 'bg-orange-500 text-white'
 					break;
 				case 'Expiring':
-					return 'bg-orange-500 text-black lg:px-8 sm:px-2'
+					return 'bg-red-600 text-white'
 					break;
 				case 'Expired':
-					return 'bg-red-500 text-white lg:px-8 sm:px-2'
+					return 'bg-red-700 text-red-300'
 					break;
 				case 'Rejected':
-					return 'bg-orange-700 text-white lg:px-8 sm:px-2'
+					return 'bg-orange-700 text-white'
 					break;
 				case 'Compliant':
-					return 'bg-green-500 text-white lg:px-8 sm:px-2'
+					return 'bg-green-500 text-white'
 					break;
 				default:
 					return
@@ -540,5 +537,14 @@ export default {
 <style>
 .page-button {
   background: linear-gradient(to top, #f2d024, #efde86);
+}
+
+.page-button-disabled{
+  background: linear-gradient(to top, #6b717e, #6b7386);
+  cursor: not-allowed;
+}
+
+.page-button:active{
+  transform: translate(2px, 2px);
 }
 </style>

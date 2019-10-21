@@ -8,49 +8,49 @@
         >This locum has no available jobs.</div>
       </div>
       <div v-else>
-          <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+        <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Available'" :currentPage="currentPage" />
+          <div class="flex flex-col text-white md:px-6"> 
             <!-- HEADER -->
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-              <div class="table-cell p-2 align-middle">Job Number</div> 
-              <div class="table-cell p-2 align-middle">Practice / Surgery</div>
-              <div class="table-cell p-2 align-middle">Title</div>
-              <div class="table-cell p-2 align-middle">From</div>
-              <div class="table-cell p-2 align-middle">To</div>
-              <div class="table-cell p-2 align-middle">Created</div>
-            </div>
+            <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
+              <div class="w-1/6">Job Number</div> 
+              <div class="w-1/6">Practice / Surgery</div>
+              <div class="w-1/6">Title</div>
+              <div class="w-1/6">From</div>
+              <div class="w-1/6">To</div>
+              <div class="w-1/6">Created</div>
+            </div> -->
             <!-- BODY -->
-            <nuxt-link 
+            <div 
               v-for="(item, index) in availableJobs" 
-              :to="{ path: `/locums/${user.id}/locum-jobs/locum-available-jobs/${item.id}`}"
+              @click="$router.push(`/locums/${user.id}/locum-jobs/locum-available-jobs/${item.id}`)"
               :key="`item-${index}`" 
-              class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
-              draggable="false"
+              class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
             >
-              <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
+              <div class="flex flex-col w-1/6 sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Job Number</strong>
                 <span class="">{{item.job_number}}</span>
               </div>
-              <div class="flex flex-col xl:px-6 w-full  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+              <div class="flex flex-col w-1/6 sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
                 <span class="">{{item.platform_job.practice.surgery.name}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+              <div class="flex flex-col w-1/6 sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
                 <span class="">{{item.title}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+              <div class="flex flex-col w-1/6 sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">From</strong>
                 <span class="">{{item.date_start}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
+              <div class="flex flex-col w-1/6 sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                 <strong class="block md:hidden text-sm uppercase">To</strong>
                 <span class="">{{item.date_end}}</span>
               </div>
-              <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
+              <div class="flex flex-col w-1/6 sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
                 <span class="">{{item.date_created}}</span>
               </div>
-            </nuxt-link>
+            </div>
           </div>
         </div>
       <div v-if="availableJobs.length > 0" class="m-10 xl:-ml-32">
@@ -75,11 +75,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
   props: ['user'],
   components: {
     AppPagination,
     LocumDetailJobModal,
+    AppJobHeaderSort
   },
   data() {
     return {
@@ -101,7 +103,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.available_job_page)
-      this.getAvailableJobs('date_created:desc')
+      this.getAvailableJobs()
     },
   },
   async created() {
@@ -110,6 +112,7 @@ export default {
       ...this.$route.query,
       available_job_page: this.$route.query.available_job_page || 1
     }
+    this.currentPage = parseInt(query.available_job_page)
     let params = {
       viewing_locum_user_id : this.user.id,
       locum_status : ['Available','Matched']
@@ -122,7 +125,7 @@ export default {
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
-      this.getAvailableJobs('date_created:desc')
+      this.getAvailableJobs()
     })
   },
   computed:{
@@ -135,20 +138,11 @@ export default {
   },
   methods: {
     async getAvailableJobs(orderBy) {
-      let offset = 0
-      if (this.ascendDescend == 0) {
-        orderBy = orderBy.replace('desc', 'asc')
-        this.ascendDescend = 1
-      } else if (this.ascendDescend == 1) {
-        orderBy = orderBy.replace('asc', 'desc')
-        this.ascendDescend = 0
-      }
-
-      offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
+      let offset = parseInt(this.perPage) * (parseInt(this.$route.query.available_job_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status : ['Available','Matched'],
-        order_by : ['id:desc',orderBy],
+        order_by : orderBy ? orderBy : this.$route.query.order_by,
         limit: this.perPage,
         offset: offset
       }

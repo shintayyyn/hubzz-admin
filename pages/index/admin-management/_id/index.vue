@@ -4,81 +4,81 @@
             <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
         </div>
         <div class="flex sm:p-2">
-            <div class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
+            <div class="flex text-white bg-waterloo my-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
                 <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-                    <div class="flex py-1">E-Mail Address 
+                    <div class="flex items-center py-1">E-Mail Address 
                         <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>
                     </div>
                     <input
                         class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                        :class="`${toPutAdminUser.email !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPutAdminUser.email !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                         type="text"
                         placeholder="example@example.com"
                         v-model='toPutAdminUser.email'
                         @blur="processEmail(toPutAdminUser.email)"
                         aria-label="Email"
                     >
-                    <p class="flex py-1">Title</p>
+                    <p class="flex items-center py-1">Title</p>
                     <input
-                        class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
+                        class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange-500"
                         type="text"
                         v-model="toPutAdminUser.title"
                         placeholder="Mr. / Mrs. / Dr. / etc....."
                         aria-label="Title"
                     >
-                    <div class="flex py-1">First Name
-                        <span v-if="!toPutAdminUser.first_name" class="bg-red p-1 ml-4 rounded">Please enter your First Name</span>
+                    <div class="flex flex-wrap items-center py-1 whitespace-no-wrap">First Name
+                        <span v-if="!toPutAdminUser.first_name" class="bg-red-500 p-1 md:ml-4 rounded leading-none">Please enter your First Name</span>
                     </div>
                     <input
                         class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                        :class="`${toPutAdminUser.first_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPutAdminUser.first_name !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                         type="text"
                         v-model="toPutAdminUser.first_name"
                         placeholder="Jane"
                         aria-label="First Name"
                     >
-                    <div class="flex py-1">Last Name 
-                        <span v-if="!toPutAdminUser.last_name" class="bg-red p-1 ml-4 rounded">Please enter your Last Name</span>
+                    <div class="flex flex-wrap items-center py-1 whitespace-no-wrap">Last Name 
+                        <span v-if="!toPutAdminUser.last_name" class="bg-red-500 p-1 md:ml-4 rounded leading-none">Please enter your Last Name</span>
                     </div>
                     <input
                         class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                        :class="`${toPutAdminUser.last_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPutAdminUser.last_name !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                         type="text"
                         v-model="toPutAdminUser.last_name"
                         placeholder = "Doe"
                         aria-label="Last name"
                     > 
-                    <p class="flex py-1">Suffix</p>
+                    <p class="flex items-center py-1">Suffix</p>
                     <input
-                        class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
+                        class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange-500"
                         type="text"
                         v-model="toPutAdminUser.suffix"
                         placeholder="Ph.D"
                         aria-label="Suffix"
                     >
                     
-                    <div class="flex py-1">New Password
-                        <span v-if="!toPutAdminUser.password" class="bg-red p-1 ml-4 rounded">Required</span>
+                    <div class="flex items-center justify-between py-1">New Password
+                        <span v-if="!toPutAdminUser.password" class="bg-red-500 p-1 ml-4 rounded">Required</span>
                     </div>
                     <input
                         class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                        :class="`${toPutAdminUser.password !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPutAdminUser.password !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                         type="password"
                         aria-label="oldpassword"
                         v-model="toPutAdminUser.password"
                     >
-                    <div class="flex py-1">Confirm New Password
-                        <span v-if="!toPutAdminUser.password_confirmation" class="bg-red p-1 ml-4 rounded">Required</span>
+                    <div class="flex items-center justify-between py-1">Confirm New Password
+                        <span v-if="!toPutAdminUser.password_confirmation" class="bg-red-500 p-1 ml-4 rounded">Required</span>
                     </div>
                     <input
                         class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                        :class="`${toPutAdminUser.password_confirmation !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                        :class="`${toPutAdminUser.password_confirmation !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                         type="password"
                         aria-label="newpassword"
                         v-model="toPutAdminUser.password_confirmation"
                     >
                     <button
-                        class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
+                        class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm focus:outline-none"
                         @click.prevent ="checkForm(user.id,toPutAdminUser)"
                         >Save Changes</button>
                 </div>

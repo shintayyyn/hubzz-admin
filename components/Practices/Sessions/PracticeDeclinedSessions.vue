@@ -7,16 +7,8 @@
           >This practice has no declined session/s yet.</div>
         </div>
         <div v-else>
+          <AppJobHeaderSort :practice="practice" :tabStatus="'Declined'" :currentPage="currentPage" />
           <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
-            <!-- HEADER -->
-            <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-              <div class="table-cell p-2 align-middle">Job Number</div> 
-              <div class="table-cell p-2 align-middle">Practice / Surgery</div>
-              <div class="table-cell p-2 align-middle">Title</div>
-              <div class="table-cell p-2 align-middle">From</div>
-              <div class="table-cell p-2 align-middle">To</div>
-              <div class="table-cell p-2 align-middle">Created</div>
-            </div>
             <!-- BODY -->
             <nuxt-link 
               v-for="(item, index) in declinedJobs" 
@@ -74,11 +66,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
-    props:['practice'],
+    props:['practice', 'practice_surgery'],
     components:{
       AppPagination,
-      PracticeSessionModal
+      PracticeSessionModal,
+      AppJobHeaderSort
     },
     data(){
       return{
@@ -93,23 +87,25 @@ export default {
     },
     beforeDestroy() {
       let query = Object.assign({}, this.$route.query)
-      delete query.declined_job_page
+      delete query.job_page
       this.$router.push({ query })
     },
     watch: {
       $route(to, from) {
-        this.currentPage = parseInt(to.query.declined_job_page)
-        this.getDeclinedJobs('date_created:desc')
+        this.currentPage = parseInt(to.query.job_page)
+        this.getDeclinedJobs()
       },
     },
     async created(){
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
-        declined_job_page: this.$route.query.declined_job_page || 1
+        job_page: this.$route.query.job_page || 1
       }
+      this.currentPage = parseInt(query.job_page)
       let params = {
         viewing_practice_id : this.practice.id,
+        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         status : 'Declined'
       }
       Promise.all([
@@ -120,11 +116,7 @@ export default {
           this.totalPages = Math.ceil(this.total / this.perPage)
         })
       ]).then(() => {
-        this.getDeclinedJobs('date_created:desc'),
-        console.log(this.declinedJobs)
-      }).catch(err=>{
-        console.log('get applied jobs error!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.getDeclinedJobs('date_created:desc')
       })
     },
     computed:{ 
@@ -137,23 +129,15 @@ export default {
     },
     methods:{
       async getDeclinedJobs(orderBy){
-        let offset = 0
-        if(this.ascendDescend == 0){
-          orderBy = orderBy.replace('desc','asc')
-          this.ascendDescend = 1
-          console.log('true',this.ascendDescend)
-        }else if(this.ascendDescend == 1){
-          orderBy = orderBy.replace('asc','desc')
-          this.ascendDescend = 0
-        }
+        let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {
           viewing_practice_id : this.practice.id,
           status : 'Declined',
-          order_by : ['id:desc',orderBy],
+          order_by : orderBy ? orderBy : this.$route.query.order_by,
+          surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset
         }
-        offset = this.perPage * (parseInt(this.$route.query.declined_job_page) - 1)
         await this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res=>{
           //this.declinedJobs = res.data.jobs
           this.$store.commit('jobs/SET_PRACTICE_DECLINED_SESSIONS', res.data.jobs)
@@ -167,7 +151,7 @@ export default {
       async pagechanged(e) {
         const query = {
           ...this.$route.query,
-          declined_job_page: e || 1
+          job_page: e || 1
         }
         await this.$store.commit('jobs/TOGGLE_LOADING', true)
         await this.$router.push({ query })

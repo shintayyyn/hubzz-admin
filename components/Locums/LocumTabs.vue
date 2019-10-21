@@ -28,14 +28,16 @@ export default {
         }
         const query = {
           ...this.$route.query
-        };
+        }
+
+        delete query.order_by
         return {
           path: tab
             ? `/locums/${this.user.id}/${tab}`
             : `/locums/${this.user.id}`,
           query
-        };
-      };
+        }
+      }
     }
   }
 };

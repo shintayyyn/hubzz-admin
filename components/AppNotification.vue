@@ -20,16 +20,16 @@ export default {
     notificationStatus() {
       switch (this.$store.state.notification.status) {
         case "success":
-          return "bg-green-lighter";
+          return "bg-green-300";
           break;
         case "danger":
-          return "bg-red text-white";
+          return "bg-red-500 text-white";
           break;
         case "alert":
-          return "bg-yellow";
+          return "bg-yellow-500";
           break;
         case "upload":
-          return "bg-blue text-blue-lightest";
+          return "bg-blue-500 text-white";
         default:
           return "bg-white";
       }

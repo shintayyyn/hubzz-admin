@@ -10,22 +10,26 @@
 
     <div class="flex flex-wrap overflow-auto p-6 text-base text-white py-2">
       <div class="w-full">
-        <div class="flex items-center pd-4 border-gray-300" style="width: 400px;">
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 px-2 leading-tight focus:outline-none focus:border-orange"
-            type="text"
-            :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
-            v-model="search"
-            @keyup.enter="searchSubmit()"
-          />
-          <div class="self-end">
-            <button
-              class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500"
-              @click="searchSubmit()"
-            >Search</button>
+        <div class="flex flex-wrap justify-between items-center">
+          <div class="flex flex-no-wrap w-full md:w-2/3">
+            <input
+              class="appearance-none bg-transparent border-b w-full md:w-1/3 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-orange"
+              type="text"
+              :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
+              v-model="search"
+              @keyup.enter="searchSubmit()"
+            />
+            <div class="self-end">
+              <button
+                class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500"
+                @click="searchSubmit()"
+              >Search</button>
+            </div>
           </div>
+          <span class="py-2 md:px-4 text-sm whitespace-no-wrap" v-if="search && total !== 0 ">{{total}} results found.</span>
         </div>
       </div>
+      <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">No results found.</div>
       <div class="w-full overflow-hidden">
         <div>
           <!--TABLE-->
@@ -36,32 +40,31 @@
               v-for="(surgery, index) in surgeries"
               :key="`surgery-${index}`"
               @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
-              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
+              class="flex no-underline rounded-lg shadow my-2"
+              :class="surgery.practice_count > 0 ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
             >
-              <div class="flex" style="width: 100%;">
-                <div class="text-white text-xs p-4">
-                  <span class="font-bold">{{ surgery.name }}</span>
-                  <span
-                    v-if="surgery.practice_count > 0"
-                    class="p-1 rounded-lg text-sm bg-green"
-                  >Registered</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span>{{surgery.address.line_1}}</span>
-                  <span>{{surgery.address.line_2}}</span>
-                  <span>{{surgery.address.line_3}}</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span class="p-2 bg-trout rounded">CCG</span>
-                  <span>{{surgery.clinical_commissioning_group.name}}</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span class="p-2 bg-trout rounded">Practice Code</span>
-                  <span>{{ surgery.code }}</span>
-                  <br />
+              <div class="flex w-full">
+                <div class="w-full text-white text-xs p-4">
+                  <div class="w-full flex justify-between items-center">
+                    <span class="font-bold">{{ surgery.name }}</span>
+                    <span
+                      v-if="surgery.practice_count > 0"
+                      class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
+                    >Registered</span>
+                  </div>
+                  <span class="block w-full py-1">{{surgery.address.line_1}}</span>
+                  <span class="block w-full py-1">{{surgery.address.line_2}}</span>
+                  <span class="block w-full py-1">{{surgery.address.line_3}}</span>
+                  <div class="flex items-center my-1">
+                     <span class="block p-2 rounded"
+                      :class="surgery.practice_count > 0 ? 'bg-trout opacity-75' : 'bg-trout '"
+                     >CCG</span>
+                    <span class="w-full px-2">{{surgery.clinical_commissioning_group.name}}</span>
+                  </div>
+                  <div class="flex items-center my-1">
+                    <span class="block p-2 rounded whitespace-no-wrap" :class="surgery.practice_count > 0 ? 'bg-trout opacity-75' : 'bg-trout '">Practice Code</span>
+                    <span class="w-full px-2">{{ surgery.code }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -75,7 +78,7 @@
               @click="changeParent(hub.surgery.id,hub.id)"
               class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
             >
-              <div class="flex" style="width: 100%;">
+              <div class="flex w-full ">
                 <div class="text-white text-xs p-4">
                   <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
                   <span class="font-bold">{{ hub.surgery.name }}</span>
@@ -103,7 +106,7 @@
     />
     <!-- PAGINATION ENDS HERE -->
 
-    <div class="practice-user-shield" v-if="modal"></div>
+    <div class="practice-user-shield" v-if="modal" @click="modal = false"></div>
     <transition name="slide" mode="out-in">
       <div
         class="shadow-lg"
@@ -127,7 +130,6 @@ export default {
     AppPagination,
     CreatePracticeUser
   },
-
   data() {
     return {
       surgeries: [],
@@ -155,6 +157,9 @@ export default {
       this.currentPage = parseInt(to.query.add_practice_page);
       this.getAllSurgeries();
       this.getAllHubzz();
+    },
+    search(value){
+      this.searchSubmit()
     }
   },
 
@@ -264,7 +269,6 @@ export default {
       };
       delete query.add_practice_page;
       query.search = this.search;
-      console.log("fuck this", this.search);
       this.getData();
 
       if (this.search === "") {

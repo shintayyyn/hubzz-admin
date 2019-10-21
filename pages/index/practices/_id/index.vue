@@ -1,5 +1,5 @@
 <template>
-    <div class="practice-modal p-8 shadow-lg">
+    <div class="practice-modal p-4 md:p-8 shadow-lg">
       <div @click="goBack()" class="cursor-pointer mb-4">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
       </div>
@@ -8,6 +8,8 @@
       <div class="practice-shield" v-if="$route.name.includes('pracUserId')"></div>
       <div class="practice-shield" v-if="$route.name.includes('pracDocId')"></div>
       <div class="practice-shield" v-if="$route.name.includes('practiceSessionId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSurgeryId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSessionPartId')"></div>
     </div>
 </template>
 <script>
@@ -26,7 +28,7 @@ export default {
         return this.$store.state.practices.practice
       }
     },
-    async asyncData({app,store,route}){
+    async asyncData({ app, store, route, error }){
         try{
            
             let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
@@ -36,21 +38,54 @@ export default {
                 
             }
         }catch(err){
+          error({ statusCode: 404 })
           store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
           console.log('get practice error!!!!',err)
         }
     },
     
     methods:{
-        goBack(){
-            const query = {
-                ...this.$route.query
-            }
-            this.$router.push({path:'/practices',query})
-        },
+      goBack(){
+        const query = {
+            ...this.$route.query
+        }
+        this.$router.push({path:'/practices',query})
+      },
     }
 }
 </script>
 <style>
-
+.card {
+  min-width: 100px;
+  height: 250px;
+  box-sizing: content-box;
+}
+.practice-shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
+.practice-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-right: 0%;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border-left: solid 2px orange;
+  transition: all 0.3s ease-in-out;
+  background-color:#505561;
+  z-index: 512;
+}
+@media screen and (min-width: 1200px) {
+  .practice-modal {
+    width: 80%;
+  }
+}
 </style>

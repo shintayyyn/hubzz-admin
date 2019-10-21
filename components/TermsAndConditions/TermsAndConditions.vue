@@ -4,7 +4,7 @@
       class="mb-4 border-b border-b-2 border-gray-400 py-2"
       :class="{'border-yellow-500':setFocus}"
     >
-      <div class="text-4xl mb-4 text-white">Terms and Conditions</div>
+      <div class="text-base md:text-4xl font-bold md:font-normal mb-4 text-white">Terms and Conditions</div>
       <textarea
         rows="30"
         name="terms_and_conditions"

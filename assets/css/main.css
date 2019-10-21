@@ -1,5 +1,5 @@
-*{
-  font-family: 'Nunito', sans-serif;
+* {
+  font-family: "Nunito", sans-serif;
 }
 /* body{
   text-decoration: none;
@@ -42,7 +42,7 @@
 } */
 
 * {
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 .__jobs-section {
@@ -55,12 +55,15 @@
   transition: background-color 0.5s ease-in-out;
 }
 .__job-card {
-  background-color: #8795a1;;
+  background-color: #8795a1;
   transition: background-color 0.5s ease-in-out;
 }
 a {
   text-decoration: none;
   color: black;
+}
+button:focus {
+  outline: none;
 }
 table {
   width: 920px;
@@ -101,73 +104,84 @@ table tbody td {
 }
 
 /* modal */
-.slide-enter-active, .slide-leave-active {
-  transition: all .5s;
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.5s;
 }
-.slide-enter, .slide-leave-active {
+.slide-enter,
+.slide-leave-active {
   transform: translateX(100px);
   opacity: 0;
 }
 /* confirmation */
-.drop-enter-active, .drop-leave-active {
-  transition: all .5s;
+.drop-enter-active,
+.drop-leave-active {
+  transition: all 0.5s;
 }
-.drop-enter, .drop-leave-active {
+.drop-enter,
+.drop-leave-active {
   transform: translateY(-100px);
   opacity: 0;
 }
 /* tabs */
-.fade-enter-active, 
+.fade-enter-active,
 .fade-leave-active {
-  transition: all .5s
+  transition: all 0.5s;
 }
-.fade-enter, 
+.fade-enter,
 .fade-leave-active {
-  opacity: 0
+  opacity: 0;
 }
 /* page */
-.page-enter-active, .page-leave-active {
-  transition: all .5s;
+.page-enter-active,
+.page-leave-active {
+  transition-property: opacity;
+  transition-timing-function: ease-in-out;
+  transition-duration: 500ms;
 }
-.page-enter, .page-leave-active {
+.page-enter,
+.page-leave-active {
   transform: translateX(100px);
   opacity: 0;
 }
 /* remove */
-.shield-enter-active, 
+.shield-enter-active,
 .shield-leave-active {
-  transition: all .5s;
+  transition: all 0.5s;
 }
-.shield-enter, 
+.shield-enter,
 .shield-leave-active {
   display: none;
 }
 /*========SCROLLBAR========*/
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-}
+@media screen and (min-width: 768px) {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #505561;
-  border-radius: 3px
-}
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #505561;
+    border-radius: 3px;
+  }
 
-::-webkit-scrollbar-track:hover {
-  background: #5b616e;
-  border-radius: 3px
-}
+  ::-webkit-scrollbar-track:hover {
+    background: #5b616e;
+    border-radius: 3px;
+  }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: rgb(116, 122, 139);
-  border-radius: 3px;
-}
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(116, 122, 139);
+    border-radius: 3px;
+  }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #7b8396;
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7b8396;
+  }
 }
 /*===========TOOLTIP=========*/
 .tool {
@@ -188,7 +202,7 @@ table tbody td {
 .tool:focus::after {
   opacity: 1;
   transform: scale(1) translateY(0);
-  z-index: 100; 
+  z-index: 100;
 }
 
 .tool::before {
@@ -198,40 +212,40 @@ table tbody td {
   bottom: 100%;
   content: "";
   margin-left: -0.5em;
-  transition: all .65s cubic-bezier(.84,-0.18,.31,1.26), opacity .65s .5s;
-  transform:  scale(.6) translateY(-90%);
-} 
+  transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26),
+    opacity 0.65s 0.5s;
+  transform: scale(0.6) translateY(-90%);
+}
 
 .tool:hover::before,
 .tool:focus::before {
-  transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
+  transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
 }
-
 
 /*== speech bubble ==*/
 .tool::after {
   backdrop-filter: blur(5px);
   background: rgba(0, 0, 0, 0.3);
-  border-radius: .50em;
+  border-radius: 0.5em;
   bottom: 175%;
-  color: #EDEFF0;
+  color: #edeff0;
   content: attr(data-tip);
   margin-left: -8.75em;
   padding: 1em;
-  transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
-  transform:  scale(.6) translateY(50%);  
+  transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
+  transform: scale(0.6) translateY(50%);
   width: 17.5em;
 }
 
 .tool:hover::after,
-.tool:focus::after  {
-  transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
+.tool:focus::after {
+  transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
 }
 
 @media (max-width: 760px) {
-.tool::after { 
-      font-size: .75em;
-      margin-left: -5em;
-      width: 10em; 
-}
+  .tool::after {
+    font-size: 0.75em;
+    margin-left: -5em;
+    width: 10em;
+  }
 }

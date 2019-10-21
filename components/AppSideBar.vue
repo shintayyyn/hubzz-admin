@@ -18,7 +18,7 @@
             <span
               @click="close"
               class="block font-sans no-underline p-4"
-              :class="`/${$route.path.split('/')[1]}` == item.route ? 'text-yellow-500' : 'text-white hover:text-gray-400'"
+              :class="`/${$route.path.split('/')[1]}` == item.route ? 'text-yellow-500' : 'text-white hover:text-gray-500'"
             >{{item.name}}</span>
           </nuxt-link>
         </div>

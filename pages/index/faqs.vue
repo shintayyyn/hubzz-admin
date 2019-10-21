@@ -1,62 +1,64 @@
 <template>
-  <section>
-    <div class="px-6 mt-5">
+  <section class="flex-1 flex flex-col overflow-hidden py-2">
+    <div class="px-6">
       <div class="flex flex-no-wrap justify-start">
-        <div class="text-4xl mb-4 text-white">Frequently Asked Questions</div>
+        <div class="text-base md:text-4xl font-bold md:font-normal mb-4 text-white">Frequently Asked Questions</div>
       </div>
       <div class="rounded-lg text-white bg-charade shadow-lg pt-8 px-5 pb-5 mb-10">
-        <div class="inline-flex font-bold mt-4 mb-2">
-          <div class="flex m-1">
+        <div class="inline-flex flex-wrap font-bold mt-4 mb-2">
+          <div class="flex items-center ml-1 mr-2">
               <span>Locum</span>
           </div>
-          <nuxt-link
-          :to="{path:`/faqs/addFaq/locum`}"
-          class="flex mx-2 p-2 text-black rounded-lg bg-sunglow cursor-pointer">
-            Add 
-            <svgicon
-              name="add-rectangle"
-              width="21"
-              height="21"
-              color="black black"
-              class="mx-1 -my-1"/>
-          </nuxt-link>
-          <button v-if="deleteLocumFaq == false" @click="deleteLocumFaq = true" class="flex p-2 text-white font-bold bg-red rounded-lg cursor-pointer ">
-            <span>Delete</span>
-            <svgicon
-              name="garbage"
-              width="21"
-              height="21"
-              color="white white"
-              class="mx-1 -my-1"/>
-          </button>
-          <button v-if="deleteLocumFaq == true" @click="deleteLocumFaq = false" class="flex p-2 text-white font-bold bg-green-dark rounded-lg cursor-pointer ">
-            <span>Done</span>
-            <svgicon
-              name="circle-check"
-              width="21"
-              height="21"
-              color="white"
-              class="mx-1 -my-1"/>
-          </button>
+          <div class="flex">
+            <nuxt-link
+            :to="{path:`/faqs/addFaq/locum`}"
+            class="flex mr-2 p-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
+              <span class="mr-2">Add</span> 
+              <svgicon
+                name="add-rectangle"
+                width="21"
+                height="21"
+                color="black black"
+                />
+            </nuxt-link>
+            <button v-if="deleteLocumFaq == false" @click="deleteLocumFaq = true" class="flex p-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
+              <span class="mr-2">Delete</span>
+              <svgicon
+                name="garbage"
+                width="21"
+                height="21"
+                color="white white"
+                />
+            </button>
+            <button v-if="deleteLocumFaq == true" @click="deleteLocumFaq = false" class="flex p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
+              <span class="mr-2">Done</span>
+              <svgicon
+                name="circle-check"
+                width="21"
+                height="21"
+                color="white"
+                />
+            </button>
+          </div>
         </div>
 
         <div v-for="item in locumFaqs" :key="item.id">
           <div class="inline-flex w-full">
-            <nuxt-link v-if="deleteLocumFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer"> 
+            <nuxt-link v-if="deleteLocumFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-4"> 
               <svgicon
                 name="edit"
                 width="21"
                 height="21"
                 color="white white"
-                class="mt-5"/>
+                />
             </nuxt-link>
-            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true">
+            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true" class="flex items-center cursor-pointer mr-4">
               <svgicon
                 name="garbage"
                 width="21"
                 height="21"
                 color="red red"
-                class="mt-5"/>
+                />
             </div>
             <div
               class="flex m-1 w-full rounded-lg bg-trout p-4 justify-between cursor-pointer"
@@ -73,48 +75,48 @@
             class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-             <div v-html="item.answer" class="w-full h-auto mx-4"></div>
+             <div v-html="item.answer" class="w-full h-auto mx-8"></div>
           </div>
         </div>
         <!---------------------------------------------------------------------------------->
         <div class="inline-flex font-bold mt-4 mb-2">
-          <div class="flex m-1">
+          <div class="flex items-center m-1">
               <span>Practice</span>
           </div>
           <nuxt-link
           :to="{path:`/faqs/addFaq/practice`}"
-          class="flex mx-2 p-2 text-black rounded-lg bg-sunglow cursor-pointer">
-            Add 
+          class="flex items-center mx-2 p-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
+            <span class="mr-2">Add</span> 
             <svgicon
               name="add-rectangle"
               width="21"
               height="21"
               color="black black"
-              class="mx-1 -my-1"/>
+              />
           </nuxt-link>
-          <button v-if="deletePracticeFaq == false" @click="deletePracticeFaq = true" class="flex text-white font-bold p-2 bg-red rounded-lg cursor-pointer">
-            <span>Delete</span>
+          <button v-if="deletePracticeFaq == false" @click="deletePracticeFaq = true" class="flex items-center text-white font-bold p-2 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
+            <span class="mr-2">Delete</span>
             <svgicon
               name="garbage"
               width="21"
               height="21"
               color="white white"
-              class="mx-1 -my-1"/>
+              />
           </button>
-          <button v-if="deletePracticeFaq == true" @click="deletePracticeFaq = false" class="flex p-2 text-white font-bold bg-green-dark rounded-lg cursor-pointer ">
-            <span>Done</span>
+          <button v-if="deletePracticeFaq == true" @click="deletePracticeFaq = false" class="flex items-center p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
+            <span class="mr-2">Done</span>
             <svgicon
               name="circle-check"
               width="21"
               height="21"
               color="white"
-              class="mx-1 -my-1"/>
+              />
           </button>
         </div>
       
         <div v-for="item in practiceFaqs" :key="item.id">
           <div class="inline-flex w-full">
-            <nuxt-link v-if="deletePracticeFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer"> 
+            <nuxt-link v-if="deletePracticeFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer mr-4"> 
               <svgicon
                 name="edit"
                 width="21"
@@ -122,7 +124,7 @@
                 color="white white"
                 class="mt-5"/>
             </nuxt-link>
-            <div v-if="deletePracticeFaq == true">
+            <div v-if="deletePracticeFaq == true" class="flex cursor-pointer mr-4">
               <svgicon
                 name="garbage"
                 width="21"
@@ -145,7 +147,7 @@
             class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
             :class="{'toggled': item.toggled}"
           >
-            <div v-html="item.answer" class="w-full h-auto mx-4"></div>
+            <div v-html="item.answer" class="w-full h-auto mx-8"></div>
           </div>
         </div>
         

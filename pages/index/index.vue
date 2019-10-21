@@ -1,8 +1,8 @@
 <template>
-    <div class="mx-6">
+    <div class="flex-1 flex flex-col overflow-hidden py-2 px-6">
         <div class="text-4xl text-white">Dashboard</div>
         <div class="text-sm font-hairline text-white">Work in progress</div>
-        <div class="flex flex-wrap text-white -mx-1 overflow-hidden sm:-mx-2">
+        <div class="flex flex-wrap text-white -mx-1 sm:-mx-2">
             <!--------------------------- Column 1 ---------------------------->
             <div class="my-1 p-3 xl:w-1/3 w-full">
                 <div class='m-3'>
@@ -13,7 +13,7 @@
                     v-for="(item,index) in locumDocsAlert" 
                     :key="`item-${index}`" 
                     :to="{path:`/locums/${item.locum_detail.user.id}/locum-compliance/${item.compliance_document.id}`}"
-                    class="inline-block w-full p-3 my-1 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg ">
+                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg ">
                         <div class="font-hairline">
                             {{$moment(item.uploaded_at).format('MMMM DD, YYYY | HH:mm')}}
                         </div>
@@ -29,7 +29,6 @@
                     Activity Log
                 </div>
                 <div class="p-2 m-3 shadow-md bg-waterloo hover:bg-waterloo-light rounded-lg ">
-                    
                     <div class="flex flex-wrap overflow-hidden sm:-mx-1">
                         <div class="w-full overflow-hidden sm:my-1 sm:px-1">
                             <p class="text-white text-center">Work In Progress.</p>
@@ -105,16 +104,15 @@ export default {
         }
     },
     async asyncData({app, store, route}){
-        try{
-            let response = await app.$axios.$get(`/api/v1/admin/locum-detail-compliance-documents`)
-            const locumDocAlert = response.data.locum_detail_compliance_documents
+      try{
+        let response = await app.$axios.$get(`/api/v1/admin/locum-detail-compliance-documents`)
+        const locumDocAlert = response.data.locum_detail_compliance_documents
 
-            await store.commit('locums/SET_LOCUM_DOC_ALERT', locumDocAlert)
-        }catch(err){
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log('Get locums error!', err)
-        }
-        
+        await store.commit('locums/SET_LOCUM_DOC_ALERT', locumDocAlert)
+      }catch(err){
+        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+        console.log('Get locums error!', err)
+      }
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
-    <div class="m-6">
+    <div class="flex-1 flex flex-col overflow-hidden py-2 mx-6">
         <div class="text-4xl text-white">Account</div>
-        <div class="flex flex-col rounded-lg pl-6">
+        <div class="flex flex-col rounded-lg">
             <div class="w-full overflow-hidden">
                 <div class="flex flex-wrap -mx-1 overflow-hidden">
                     <div class="my-1 px-1 overflow-hidden">
@@ -24,39 +24,35 @@
             </div>
         </div>
         <div class="flex sm:p-2">
-            <div v-if="tab1">
-                <div class="w-full p-4 mt-4 mx-4 text-white bg-waterloo rounded-lg">
-                    <div class="font-semibold">
-                        E-Mail Address
-                    </div>
-                    <div class="text-sm m-4">
-                        {{user.email}}
-                    </div>
+            <div class="w-full md:w-auto" v-if="tab1">
+                <div class="w-full p-4 my-2 text-white bg-waterloo rounded-lg">
+                    <div class="font-semibold">E-Mail Address</div>
+                    <div class="text-sm mx-4">{{user.email}}</div>
                 </div>
             </div>
             <div v-if="tab2">
                  <div v-if="tab2" class="flex text-white">
-                    <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
+                    <div class="flex text-white text-sm bg-waterloo my-4 py-2 px-3 shadow rounded-lg">
                         <div class="overflow-hidden text-gray-300 text-sm p-2">
                             <div v-if="errorPass[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                                 {{errorPass[0]}}
                             </div>
-                        <div class="flex py-1">New Password
-                            <span v-if="!toChangePassword.newPassword" class="bg-red p-1 ml-4 rounded">Required</span>
+                        <div class="flex items-center py-1">New Password
+                            <span v-if="!toChangePassword.newPassword" class="bg-red-500 p-1 ml-4 rounded">Required</span>
                         </div>
                         <input
                             class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                            :class="`${toChangePassword.newPassword !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                            :class="`${toChangePassword.newPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                             type="password"
                             aria-label="oldpassword"
                             v-model="toChangePassword.newPassword"
                         >
-                        <div class="flex py-1">Confirm New Password
-                            <span v-if="!toChangePassword.confirmNewPassword" class="bg-red p-1 ml-4 rounded">Required</span>
+                        <div class="flex items-center py-1">Confirm New Password
+                            <span v-if="!toChangePassword.confirmNewPassword" class="bg-red-500 p-1 ml-4 rounded">Required</span>
                         </div>
                         <input
                             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                            :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+                            :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
                             type="password"
                             aria-label="newpassword"
                             v-model="toChangePassword.confirmNewPassword"
