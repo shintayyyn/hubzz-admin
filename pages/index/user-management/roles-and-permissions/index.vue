@@ -2,15 +2,12 @@
     <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
       <div class="flex flex-row-reverse px-2 justify-between flex-wrap">
         <div>
-          <button
-          class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
-          >Add New Role</button>
-          <button
+             <button
           class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
           >Delete Role</button>
           <button
-          class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
-          >Create Admin Account</button>
+          class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
+          >Add New Role</button>
         </div>
       </div>
       <div class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;">
