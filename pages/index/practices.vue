@@ -141,12 +141,11 @@
 	<!-- PAGINATION -->
 
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.push('/practices')"></div>
-
-    <transition name="slide" mode="out-in">
-      <div class="practice-modal shadow-lg" v-if="modal">
-        <AddPracticeSurgery @close="modal = false"/>
-      </div>
-    </transition>
+  <transition name="slide" mode="out-in">
+    <div class="practice-modal shadow-lg" v-if="modal">
+      <AddPracticeSurgery @close="modal = false"/>
+    </div>
+  </transition>
 
     <nuxt-child/>
   </div>
@@ -232,7 +231,7 @@ export default {
 				order_by  
   			}
   		} catch (err) {
-			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			  store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
   			console.log('Get practices error!', err)
   		}
   	},

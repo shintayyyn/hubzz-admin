@@ -23,12 +23,12 @@
         >Create Admin Account</button>
       </div>
     </div>
-    <div v-if="adminUsers.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+    <div v-if="adminUsers.length>0" class="px-2 table border-separate overflow-x-auto cursor-pointer" style="border-spacing: 0 10px;"> 
         <!-- HEADER -->
         <div class="hidden md:table-row font-bold text-white text-sm py-4">
           <div v-if="deleteAdminUser == true" class="table-cell">Delete Admin User</div> 
           <div class="table-cell p-2 align-middle">E-Mail</div> 
-          <div class="table-cell p-2 align-middle">Domain</div>
+          <div class="table-cell p-2 align-middle">Role</div>
           <div class="table-cell p-2 align-middle">Name</div>
         </div>
         <!-- END HEADER -->
@@ -51,12 +51,12 @@
             <span class="break-word">{{ user && user.email ? user.email : null }}</span>
           </nuxt-link>
           <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
-            <strong class="block md:hidden text-sm uppercase">Domain</strong>
-            <span class="break-all">{{ user && user.domain ? user.domain : null }}</span>
+            <strong class="block md:hidden text-sm uppercase">Role</strong>
+            <span class="break-all">{{ user && user.admin_detail ? user.admin_detail.role.name : null }}</span>
           </div>
           <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
             <strong class="block md:hidden text-sm uppercase">Name</strong>
-            <span class="break-all">{{ user && user.personal_detail && user.personal_detail.name ? user.personal_detail.name : null }}</span>
+            <span class="break-all">{{ user && user.personal_detail ? user.personal_detail.first_name+' '+user.personal_detail.last_name : null }}</span>
           </div>
         </div>
         <!-- END BODY -->
@@ -106,26 +106,26 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
     },
     data(){
       return{
-      itemsPerPage : 8,
-      activePage: 1,
+        itemsPerPage : 10,
+        activePage: 1,
 
-      search:'',
-      // itemCount:'',
-      // adminUsers:{},
-      adminCreate:true,
-      adminAccountId:'',
-      modal:false,
-      confirmCancel: false,
-      adminId:'',
-      deleteAdminUser:false,
-      showConfirmCancelModal: false
+        search:'',
+        // itemCount:'',
+        // adminUsers:{},
+        adminCreate:true,
+        adminAccountId:'',
+        modal:false,
+        confirmCancel: false,
+        adminId:'',
+        deleteAdminUser:false,
+        showConfirmCancelModal: false
       }
     },
     watchQuery: [
     'page',
     'search',
     ],
-    async asyncData({ app, store, route}){
+    async asyncData({ app, store, route }){
       try{
         await store.commit('adminusers/TOGGLE_LOADING', true)
         let{
@@ -134,7 +134,7 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
         } = route.query
 
         page = parseInt(page)
-        const limit = 8
+        const limit = 10
         const offset = page * limit - limit
         const params = { limit, offset }
         

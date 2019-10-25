@@ -7,8 +7,8 @@
       <div>
         <UserManagementTabs />
       </div>
-      <div class="admin-shield" v-if="$route.name.includes('index-user-management-id')"/>
-      <div class="admin-shield" v-if="$route.name.includes('index-user-management-id')"/>
+      <div class="admin-shield" v-if="$route.name.includes('index-user-management-id')" @click="$router.go(-1)"/>
+      <div class="admin-shield" v-if="$route.name.includes('roleId')" @click="$router.go(-1)"/>
       <nuxt-child/>
     </div>
 </template>

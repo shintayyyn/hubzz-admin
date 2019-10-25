@@ -32,8 +32,9 @@
         <p class="m-2">{{user.email}}</p>
         <p class="font-semibold my-2">Name</p>
         <p class="m-2">{{user.personal_detail.name}}</p>
-        <p class="font-semibold my-2">Domain</p>
-        <p class="m-2">{{user.domain}}</p>
+        <p class="font-semibold my-2">Role</p>
+        <p class="m-2">{{user.admin_detail ? user.admin_detail.role.name : 'N/A'}}</p>
+
       </div>
     </div>
     <!-- tab 2 EDIT -->
@@ -111,6 +112,20 @@
               aria-label="newpassword"
               v-model="toPutAdminUser.password_confirmation"
             >
+            <div class="flex items-center justify-between py-1">Role
+              <span v-if="!toPutAdminUser.role_id" class="bg-red-500 p-1 ml-4 rounded">Required</span>
+            </div>
+            <select 
+              v-model="toPutAdminUser.role_id"
+              class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
+              :class="`${toPutAdminUser.role_id !== '' ? 'focus:border-orange-500' :'focus:border-red-600'}`"
+            >
+              <option v-for="(role, index) in adminRoles "
+              :key="index"
+              :value="role.id">
+                {{ role.name }}
+              </option>
+            </select>
             <button
               class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm focus:outline-none"
               @click.prevent ="checkForm(user.id,toPutAdminUser)"
@@ -125,6 +140,7 @@ export default {
   data(){
     return{
       user:'',
+      adminRoles: [],
       formError:{}, 
       errors:[],
       errorPass:[],
@@ -137,7 +153,8 @@ export default {
         title:'',
         first_name:'',
         last_name:'',
-        suffix:''
+        suffix:'',
+        role_id:''
       },
     }
   },
@@ -145,13 +162,15 @@ export default {
   async asyncData({app, store, route}){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/admin-users/${route.params.id}`)
-      console.log('admin user', response.data.user)
       const user = response.data.user
+      response = await app.$axios.$get(`/api/v1/admin/admin-roles`)
+      const adminRoles = response.data.roles
       return{
         user,
         toPutAdminUser:{
-            email:response.data.user.email
-        }
+            email:user.email
+        },
+        adminRoles
       }
     }catch(err){
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
@@ -228,16 +247,8 @@ export default {
     },
 
     async toPutAdminUserInfo(user_id, toPutUserInfo){
-      console.log(toPutUserInfo)
-      this.$axios.$put(`/api/v1/admin/admin-users/${user_id}`,{
-        email:toPutUserInfo.email,
-        password:toPutUserInfo.password,
-        password_confirmation:toPutUserInfo.password_confirmation,
-        title:toPutUserInfo.title,
-        first_name:toPutUserInfo.first_name,
-        last_name:toPutUserInfo.last_name,
-        suffix:toPutUserInfo.suffix
-      }).then(()=>{
+      console.log('to admin user',toPutUserInfo)
+      await this.$axios.$put(`/api/v1/admin/admin-users/${user_id}`,toPutUserInfo).then(()=>{
         this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Edit Admin User Success!'})
       }).catch((err)=>{
         console.log('edit admin user error!',err)

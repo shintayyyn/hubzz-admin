@@ -162,6 +162,22 @@
             @blur="verifyConfirmPassword(toPostUser.password, toPostUser.password_confirmation)"
             placeholder="Password"
           />
+          <div v-if="adminCreate">
+            <div class="flex items-center justify-between py-1">Role
+              <span v-if="!toPostUser.role_id" class="bg-red-500 p-1 ml-4 rounded">Required</span>
+            </div>
+            <select 
+              v-model="toPostUser.role_id"
+              class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
+              :class="`${toPostUser.role_id !== '' ? 'focus:border-orange-500' :'focus:border-red-600'}`"
+            >
+              <option v-for="(role, index) in adminRoles "
+              :key="index"
+              :value="role.id">
+                {{ role.name }}
+              </option>
+            </select>
+          </div>
           <button
             class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
             @click.prevent="checkForm(toPostUser,toPostUser.surgery_id)"
@@ -192,6 +208,7 @@ export default {
       specificPractice: [],
       practiceTypes: "",
       multiple: "true",
+      adminRoles:[],
       toPostUser: {
         email: "",
         password: "",
@@ -204,7 +221,8 @@ export default {
         type: "Hub",
         practice_type_id: [],
         parent_surgery_id: "",
-        surgery_id: `${this.surgery ? this.surgery.id : ""}`
+        surgery_id: `${this.surgery ? this.surgery.id : ""}`,
+        role_id: ''
       }
     };
   },
@@ -226,6 +244,11 @@ export default {
           text: "Something went wrong!"
         });
       });
+    await this.$axios
+      .$get(`/api/v1/admin/admin-roles`)
+      .then(res => {
+        this.adminRoles = res.data.roles
+      })
     console.log("prac types", this.practiceTypes);
     if (this.practice) {
       console.log("Practice to be created is a spoke");
@@ -425,6 +448,7 @@ export default {
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
         } else if (this.adminCreate == true) {
+          //Create New Admin
           console.log("new admin is being created");
           await this.$axios
             .post(`/api/v1/admin/admin-users`, toPostUser)
