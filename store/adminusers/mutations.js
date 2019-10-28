@@ -2,6 +2,7 @@ export default{
     TOGGLE_LOADING(state, payload){
         state.loading_admin_users = payload
     },
+    // =============== ADMIN USERS ===============
     SET_ADMIN_COUNT(state, payload){
         state.itemCount = payload
     },
@@ -25,7 +26,8 @@ export default{
         state.adminUsers.splice(index, 1)
         state.itemCount = state.itemCount - 1
     },
-    SET_ADMIN_ROLE_COUNT(state, payload){
+    // ============== ADMIN ROLES ==============
+    SET_ADMIN_ROLES_COUNT(state, payload){
       state.adminRolesCount = payload
     },
     SET_ADMIN_ROLES(state, payload){
@@ -35,5 +37,12 @@ export default{
       state.adminRoles.push(payload)
       state.adminRolesCount = state.itemCount +1
     },
+    DELETE_ADMIN_ROLE(state, payload){
+      let index = state.adminRoles.findIndex(
+        id => id === payload.id
+      )
+      state.adminRoles.splice(index, 1)
+      state.adminRolesCount = state.adminRolesCount -1 
+    }
     
 }

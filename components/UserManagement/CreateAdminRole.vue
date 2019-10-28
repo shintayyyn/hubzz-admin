@@ -21,7 +21,7 @@
           :resize="false"
           :rows="3"
         />
-        <div class="rounded-lg shadow-md px-2 py-2 md:px-4">
+        <div class="rounded-lg px-2 py-2 md:px-4">
           <div class="flex flex-wrap justify-start">
 
             <div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
@@ -155,7 +155,7 @@ export default {
           .then(res => {
             this.$emit("addRole", res.data.role)
             this.$router.push(`/user-management/roles-and-permissions`)
-            this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+            this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Role Created Successfully'})
           })
       }
     }

@@ -5,41 +5,41 @@
         <div class="flex overflow-x-auto mb-2">
             <div class="flex-3 mx-1 whitespace-no-wrap">
                 <button
-                    @click="show()"
-                    class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
+                  @click="show()"
+                  class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
                 >Add Surgery
-                    <svgicon
-                    name="add-rectangle"
-                    width="21"
-                    height="21"
-                    color="black black"
-                    class="mx-1 -my-1"/>
+                  <svgicon
+                  name="add-rectangle"
+                  width="21"
+                  height="21"
+                  color="black black"
+                  class="mx-1 -my-1"/>
                 </button>
             </div>
             <div v-if="deleteSurgery == false" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
-                    @click="deleteSurgery = true"
-                    class="inline-flex items-center no-underline py-2 px-4 bg-red-600 hover:bg-red-700 text-sm font-semibold text-white rounded-lg shadow float-right"
+                  @click="deleteSurgery = true"
+                  class="inline-flex items-center no-underline py-2 px-4 bg-red-600 hover:bg-red-700 text-sm font-semibold text-white rounded-lg shadow float-right"
                 >Delete Surgery
-                    <svgicon
-                    name="garbage"
-                    width="21"
-                    height="21"
-                    color="white white"
-                    class="mx-1 -my-1"/>
+                  <svgicon
+                  name="garbage"
+                  width="21"
+                  height="21"
+                  color="white white"
+                  class="mx-1 -my-1"/>
                 </button>
             </div>
             <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
-                    @click="deleteSurgery = false"
-                    class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
+                  @click="deleteSurgery = false"
+                  class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
                 >Done
-                    <svgicon
-                    name="circle-check"
-                    width="21"
-                    height="21"
-                    color="white white"
-                    class="mx-1 -my-1"/>
+                  <svgicon
+                  name="circle-check"
+                  width="21"
+                  height="21"
+                  color="white white"
+                  class="mx-1 -my-1"/>
                 </button> 
             </div>
               
@@ -122,104 +122,102 @@ import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 import AppPagination from '@/components/Base/AppPagination'
 import AppLoading from '@/components/Base/AppLoading'
 export default {
-    props:['practice'],
-    components:{
-      AddPracticeSurgery,
-      AppPagination,
-      AppLoading
-    },
-    data(){
-      return{
-        // practiceChildren:{},
-        // total:0,
-        // totalPages:0,
-        deleteSurgery:false,
-        currentPage:1,
-        perPage:0,
-        modal:false,
-        loadingSurgeries:false
-      }
-    },
-    beforeDestroy(){
-      let query = Object.assign({},this.$route.query)
-      delete query.practice_children_page
-      this.$router.push({query})
-    },
-    watch: {
-      $route(to, from) {
-        this.currentPage = parseInt(to.query.practice_children_page)
-        this.getChildren()
-      },
-    },
-    computed:{
-        total(){
-          return this.$store.state.practices.practiceSpokesCount
-        },
-        practiceChildren(){
-          return this.$store.state.practices.practiceSpokes
-        },
-        totalPages(){
-          return this.$store.state.practices.practiceSpokesPageCount
-        }
-
-    },
-    async created(){
-        const query = {
-          ...this.$route.query,
-          practice_children_page: this.$route.query.practice_children_page || 1
-        }
-        try{
-          this.loadingSurgeries = true
-          await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
-            this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) //quantity of spokes
-            this.perPage = 5
-            
-            let pageCount = Math.ceil(this.total / this.perPage)
-            this.$store.commit('practices/SET_PRACTICE_SPOKES_PAGE_COUNT',pageCount) //number of pages
-            this.getChildren()
-          })
-        }catch(err){
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-          console.log("get practice surgeries error!!!!",err)
-        }
-    },
-
-    methods:{
-        show(){
-          this.modal = true
-        },
-        async getChildren(){
-          let limit = 5
-          let offset = 0
-          offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
-          let params = {limit, offset}
-      
-          await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{params}).then(res=>{
-              this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
-          }).catch(err=>{
-              console.log('get children error!!!!',err)
-              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-          })
-          this.loadingSurgeries = false
-        },
-        async toDeleteSurgery(pracId,childId){
-            await this.$axios.delete(`/api/v1/admin/practices/${pracId}/practice-surgeries/${childId}`).then(res=>{
-              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Child Surgery Successfully Removed' })
-              this.getChildren()
-            }).catch(err=>{
-              console.log('delete children error!!!!',err)
-              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-            })
-        },
-        pagechanged(e) {
-            const query = {
-              ...this.$route.query,
-              practice_children_page: e || 1
-            }
-            this.$router.push({ query })
-            this.getChildren()
-        }
+  props:['practice'],
+  components:{
+    AddPracticeSurgery,
+    AppPagination,
+    AppLoading
+  },
+  data(){
+    return{
+      // practiceChildren:{},
+      // total:0,
+      // totalPages:0,
+      deleteSurgery:false,
+      currentPage:1,
+      perPage:0,
+      modal:false,
+      loadingSurgeries:false
     }
+  },
+  beforeDestroy(){
+    let query = Object.assign({},this.$route.query)
+    delete query.practice_children_page
+    this.$router.push({query})
+  },
+  watch: {
+    $route(to, from) {
+      this.currentPage = parseInt(to.query.practice_children_page)
+      this.getChildren()
+    },
+  },
+  computed:{
+    total(){
+      return this.$store.state.practices.practiceSpokesCount
+    },
+    practiceChildren(){
+      return this.$store.state.practices.practiceSpokes
+    },
+    totalPages(){
+      return this.$store.state.practices.practiceSpokesPageCount
+    }
+
+  },
+  async created(){
+    const query = {
+      ...this.$route.query,
+      practice_children_page: this.$route.query.practice_children_page || 1
+    }
+    try{
+      this.loadingSurgeries = true
+      await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`).then(res=>{
+        this.$store.commit('practices/SET_PRACTICE_SPOKES_COUNT',res.data.count) //quantity of spokes
+        this.perPage = 5
+        let pageCount = Math.ceil(this.total / this.perPage)
+        this.$store.commit('practices/SET_PRACTICE_SPOKES_PAGE_COUNT',pageCount) //number of pages
+        this.getChildren()
+      })
+    }catch(err){
+      this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      console.log("get practice surgeries error!!!!",err)
+    }
+  },
+  methods:{
+    show(){
+      this.modal = true
+    },
+    async getChildren(){
+      let limit = 5
+      let offset = 0
+      offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
+      let params = {limit, offset}
+  
+      await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{params}).then( res => {
+        this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
+      }).catch(err=>{
+        console.log('get children error!!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      })
+      this.loadingSurgeries = false
+    },
+    async toDeleteSurgery(pracId,childId){
+      await this.$axios.delete(`/api/v1/admin/practices/${pracId}/practice-surgeries/${childId}`).then(res=>{
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Child Surgery Successfully Removed' })
+        this.getChildren()
+      }).catch(err=>{
+        console.log('delete children error!!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      })
+    },
+    pagechanged(e) {
+      const query = {
+        ...this.$route.query,
+        practice_children_page: e || 1
+      }
+      this.$router.push({ query })
+      this.getChildren()
+    }
+  }
 }
 </script>
 <style>
