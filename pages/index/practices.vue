@@ -141,12 +141,11 @@
 	<!-- PAGINATION -->
 
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.push('/practices')"></div>
-
-    <transition name="slide" mode="out-in">
-      <div class="practice-modal shadow-lg" v-if="modal">
-        <AddPracticeSurgery @close="modal = false"/>
-      </div>
-    </transition>
+  <transition name="slide" mode="out-in">
+    <div class="practice-modal shadow-lg" v-if="modal">
+      <AddPracticeSurgery @close="modal = false"/>
+    </div>
+  </transition>
 
     <nuxt-child/>
   </div>
@@ -181,86 +180,84 @@ export default {
       actived_until:true,
       status:true,
       modal:false
-
-      };
-    },
+    };
+  },
 
 	watchQuery: [
 	'page',
 	'search'
-  ],
-  async asyncData({ app, store, route }) {
-    try {
-    await store.commit('practices/TOGGLE_LOADING',true)
-      let {
-        page = 1,
-      search = '',
-      order_by=''  
-    } = route.query 
-    page = parseInt(page)
-    const createdRoute = route.query  
-      const limit = 10
-      const offset = page * limit - limit
-      order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
-    const params = { limit, offset, order_by }
-      
-      if (search) {
-        params.search = search
-    }
-      
-      const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
-    const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
-      
-    let response = null
-    
-    response = await getPracticesCountPromise
-    const itemCount = response.data.data.count
-    
-    response = await getPracticesPromise
-    const practices = response.data.data.practices
-    
-    await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
-    await store.commit('practices/SET_PRACTICES',practices)
-    await store.commit('practices/TOGGLE_LOADING',false)
-      return {
-        loading: false,
-        itemsPerPage: limit,
-        // itemCount,
-        activePage: page,
-        // practices,
-      search,
-      order_by  
-      }
-    } catch (err) {
-    store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('Get practices error!', err)
-    }
-  },
-    
-  watch: {
-    search(value){
-      this.searchSubmit()
-    }
-  },
+	],
 
-  computed: {
-    loadingPractices(){
-      return this.$store.state.practices.loading_practices
-    },
-    getAllPractices(){
-      return this.$store.getters["practices/getAllPractices"]
-    },
-    itemCount(){
-      return this.$store.state.practices.itemCount
-    },
-    pageCount() {
-      return Math.ceil(this.itemCount / this.itemsPerPage)
-    },
-    showPage() {
-      return page => {
-        if (page === 1) {
-          return true
-        }
+  	async asyncData({ app, store, route }) {
+  		try {
+			await store.commit('practices/TOGGLE_LOADING',true)
+  			let {
+  				page = 1,
+				search = '',
+				order_by=''  
+			} = route.query 
+			page = parseInt(page)
+			const createdRoute = route.query  
+  			const limit = 10
+  			const offset = page * limit - limit
+  			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
+			const params = { limit, offset, order_by }
+				
+  			if (search) {
+  				params.search = search
+			}
+				
+  			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
+			const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
+				
+			let response = null
+			
+			response = await getPracticesCountPromise
+			const itemCount = response.data.data.count
+			
+			response = await getPracticesPromise
+			const practices = response.data.data.practices
+			
+			await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
+			await store.commit('practices/SET_PRACTICES',practices)
+			await store.commit('practices/TOGGLE_LOADING',false)
+  			return {
+  				loading: false,
+  				itemsPerPage: limit,
+  				// itemCount,
+  				activePage: page,
+  				// practices,
+				search,
+				order_by  
+  			}
+  		} catch (err) {
+			  store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+  			console.log('Get practices error!', err)
+  		}
+  	},
+
+    computed: {
+      loadingPractices(){
+        return this.$store.state.practices.loading_practices
+      },
+      getAllPractices(){
+        return this.$store.getters["practices/getAllPractices"]
+      },
+      itemCount(){
+        return this.$store.state.practices.itemCount
+      },
+      pageCount() {
+        return Math.ceil(this.itemCount / this.itemsPerPage)
+      },
+      showPage() {
+        return page => {
+          if (page === 1) {
+            return true
+          }
+
+          if (page === this.pageCount) {
+            return true
+          }
 
         if (page === this.pageCount) {
           return true
@@ -299,76 +296,101 @@ export default {
     }
   },
 
+  watch: {
+    search(value){
+      this.searchSubmit()
+    }
+  },
+
   methods: {
-  show(){
-    this.modal=true
-  },
+  // show(){
+  //   this.modal=true
+  // },
 
-  getQuery(){
-    const query = {
-      ...this.$route.query
-    }
-    const offset = parseInt(query.page)*10 - 10 
-    return offset
-  },
+  // getQuery(){
+  //   const query = {
+  //     ...this.$route.query
+  //   }
+  //   const offset = parseInt(query.page)*10 - 10 
+  //   return offset
+  // },
 
-  getPractices(params,search){
-    this.$store.dispatch("practices/fetchPractices",{
-      limit:10,
-      search:search,
-      order_by:params.order_by,
-      offset:this.getQuery()
-    })
-  },
+  // getPractices(params,search){
+  //   this.$store.dispatch("practices/fetchPractices",{
+  //     limit:10,
+  //     search:search,
+  //     order_by:params.order_by,
+  //     offset:this.getQuery()
+  //   })
+  // },
   
-  async sortBy(sortedBy,page,search) {
-    switch (sortedBy) {
-      case 'practice_name':
+		show(){
+			this.modal=true
+		},
+
+		getQuery(){
+			const query = {
+				...this.$route.query
+			}
+			const offset = parseInt(query.page)*10 - 10 
+			return offset
+		},
+
+		getPractices(){
+			this.$store.dispatch("practices/fetchPractices",{
+				limit:10,
+				search:this.search,
+				order_by:this.paramSort.order_by,
+				offset:this.getQuery()
+			})
+    },
+    
+		async sortBy(sortedBy,page,search) {
+      if(this.sortedBy == sortedBy && this.sortType == true){
+        this.paramSort.order_by ='created_at:desc'
+        this.sortedBy = ''
+      }else{
         this.sortedBy = sortedBy
-        this.practice_name = !this.practice_name
-        this.sortType = this.practice_name
-      break;
-      case 'created_at':
-        this.sortedBy = sortedBy
-        this.created_at = !this.created_at
-        this.sortType = this.created_at
-      break;
-      case 'practice_code':
-        this.sortedBy = sortedBy
-        this.practice_code = !this.practice_code
-        this.sortType = this.practice_code
-      break;
-      case 'actived_until':
-        this.sortedBy = sortedBy
-        this.actived_until = !this.actived_until
-        this.sortType = this.actived_until
-      break;
-      case 'status':
-        this.sortedBy = sortedBy
-        this.status = !this.status
-        this.sortType = this.status
-      break;
-      case 'practice_type':
-        this.sortedBy = sortedBy
-        this.practice_type = !this.practice_type
-        this.sortType = this.practice_type
-      break;
-    }
-    this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-    let order_by = await this.paramSort.order_by
-    let query = {
-      ...this.$router.query,
-      order_by
-    }
-    if (page === 1) {
-      delete query.page
-    }
-    if(page){
-      query = {
-        ...this.$router.query,
-        page,order_by
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
       }
-    }
+			let order_by = await this.paramSort.order_by
+			let query = {
+				...this.$router.query,
+				order_by
+			}
+			if (page === 1) {
+				delete query.page
+			}
+			if(page){
+				query = {
+					...this.$router.query,
+					page,order_by
+				}
+			}
+			if(search){
+				query = {
+					...this.$router.query,
+					search,order_by
+				}
+			}
+			if(page & search){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
+			
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+			this.loading = true
+			}
+			this.$router.push({ query })
+			this.getPractices()
+		},
+  	goToPage(page,search,order_by) {
+      if (page < 1) {
+        return
+      }
     if(search){
       query = {
         ...this.$router.query,
@@ -463,30 +485,68 @@ export default {
         delete query.search
       }
 
-    if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-      this.loading = true
-    }
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.loading = true
+      }	
+      this.$router.push({ query })
+		},
 
-        this.$router.push({ query })
-  },
+  	searchSubmit(page, order_by) {
+			let search = this.search
+			let query = {
+				...this.$router.query,
+				search
+			}
+			if(page === 1){
+				delete query.page
+			}
+			if(page && page>1){
+				query = {
+					...this.$router.query,
+					page,search
+				}
+			}
+			if(order_by){
+				query = {
+					...this.$router.query,
+					search,order_by
+				}
+			}
+			if(page && order_by){
+				query = {
+					...this.$router.query,
+					page,search,order_by
+				}
+			}
 
-  typeStyle(status){
-    switch(status){
-      case 'Hub':
-        return 'bg-red-500 text-white lg:px-8 sm:px-2'
-        break;
-      case 'Spoke':
-        return 'bg-blue-500 text-white lg:px-8 sm:px-2'
-        break;
-      case 'Stand Alone':
-        return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
-        break;
-      default:
-        return
-    }
-  },
-    
-  }
+  			if (this.search === '') {
+  				delete query.search
+  			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
+
+	      	this.$router.push({ query })
+		},
+
+		typeStyle(status){
+			switch(status){
+				case 'Hub':
+					return 'bg-red-500 text-white lg:px-8 sm:px-2'
+					break;
+				case 'Spoke':
+					return 'bg-blue-500 text-white lg:px-8 sm:px-2'
+					break;
+				case 'Stand Alone':
+					return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
+					break;
+				default:
+					return
+			}
+		},
+		  
+  	}
 };
 </script>
 <style>

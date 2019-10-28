@@ -143,7 +143,7 @@ export default {
 						
 			filterCompliances:'',
 			search: '',
-			paramFilterSort:{
+			paramSort:{
 				order_by:''
 			},
 			sort:'',
@@ -318,12 +318,13 @@ export default {
 				params.compliance_status = this.filterCompliances
 			}
 
-			this.paramFilterSort.compliance_status = this.filterCompliances
+			this.paramSort.compliance_status = this.filterCompliances
 
-			this.getLocums(this.paramFilterSort)
+			this.getLocums(this.paramSort)
 		},
 		search(value){
 			this.searchSubmit();
+			this.getLocums(this.paramSort)
 		}
 	},
 
@@ -345,29 +346,15 @@ export default {
 			});
 		},
 		async sortBy(sortedBy,page,search,compliance_status) {
-			switch (sortedBy) {
-				case 'name':
-					this.sortedBy = sortedBy
-					this.name = !this.name
-					this.sortType = this.name
-				case 'profession':
-					this.sortedBy = sortedBy
-					this.profession = !this.profession
-					this.sortType = this.profession
-				break;
-				case 'created_at':
-					this.sortedBy = sortedBy
-					this.created_at = !this.created_at
-					this.sortType = this.created_at
-				break;
-				case 'email_verified_at':
-					this.sortedBy = sortedBy
-					this.email_verified_at = !this.email_verified_at
-					this.sortType = this.email_verified_at
-				break;
-			}
-			this.paramFilterSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-			let order_by = await this.paramFilterSort.order_by
+      if(this.sortedBy == sortedBy && this.sortType == true){
+        this.paramSort.order_by ='created_at:desc'
+        this.sortedBy = ''
+      }else{
+        this.sortedBy = sortedBy
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      }
+			let order_by = await this.paramSort.order_by
 			console.log(order_by)
 			let query = {
 				...this.$router.query,
@@ -402,9 +389,9 @@ export default {
 			}
 			this.$router.push({query})
 			
-			this.paramFilterSort.search = search
-			this.paramFilterSort.compliance_status = compliance_status
-			this.getLocums(this.paramFilterSort)
+			this.paramSort.search = search
+			this.paramSort.compliance_status = compliance_status
+			this.getLocums(this.paramSort)
 		},
 		goToPage(page,search,order_by, compliance_status) {
 			if (page < 1) {

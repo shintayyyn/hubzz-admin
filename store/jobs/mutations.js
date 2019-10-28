@@ -10,10 +10,10 @@ export default{
     },
 
     // =================== PRACTICE ================
-    SET_PRACTICE_AVAILABLE_SESSIONS(state, payload){
+    SET_PRACTICE_LIVE_SESSIONS(state, payload){
         state.practice_available_sessions = payload
     },
-    SET_PRACTICE_AVAILABLE_SESSIONS_COUNT(state, payload){
+    SET_PRACTICE_LIVE_SESSIONS_COUNT(state, payload){
         state.practice_available_sessions_count = payload
     },
     ADD_PRACTICE_AVAILABLE_SESSIONS(state, payload){
@@ -86,7 +86,7 @@ export default{
       state.practice_ongoing_sessions = payload
     },
     SET_PRACTICE_ONGOING_SESSIONS_COUNT(state, payload){
-      state.practice_ongoing_sessions_coung = payload
+      state.practice_ongoing_sessions_count = payload
     },
     //=================COMPLETED======================
     SET_PRACTICE_COMPLETED_SESSIONS(state, payload){
@@ -102,6 +102,13 @@ export default{
         if(state.practice_completed_sessions_count > 10){
             state.practice_completed_sessions.pop()
         }
+    },
+    //=================APPROVED======================
+    SET_PRACTICE_APPROVED_SESSIONS(state, payload){
+      state.practice_completed_sessions = payload
+    },
+    SET_PRACTICE_APPROVED_SESSIONS_COUNT(state, payload){
+      state.practice_completed_sessions_count = payload
     },
     //=================UNFILLED======================
     SET_PRACTICE_UNFILLED_SESSIONS(state, payload){
@@ -303,7 +310,6 @@ export default{
     //====================COMPLETED===================
     SET_LOCUM_COMPLETED_JOBS(state, payload){
         state.locum_completed_jobs = payload
-
     },
     SET_LOCUM_COMPLETED_JOBS_COUNT(state, payload){
         state.locum_completed_jobs_count = payload
@@ -316,5 +322,18 @@ export default{
             state.locum_completed_jobs.pop()
         }
     },
-    
+    // ===================APPROVED====================
+    SET_LOCUM_APPROVED_JOBS(state, payload){
+      state.locum_approved_jobs = payload
+    },
+    SET_LOCUM_APPROVED_JOBS_COUNT(state, payload){
+      state.locum_approved_jobs_count = payload
+    },
+    // ===================WITHRAWN====================
+    SET_LOCUM_WITHRAWN_JOBS(state, payload){
+      state.locum_withrawn_jobs = payload
+    },
+    SET_LOCUM_WITHRAWN_JOBS_COUNT(state, payload){
+      state.locum_withrawn_jobs_count = payload
+    }
 }   

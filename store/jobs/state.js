@@ -2,17 +2,21 @@ export default () => ({
     loading_jobs:  true,
     viewing_sessions_practice_id :'',
     viewing_jobs_locum_user_id : '',
-    //PRACTICE
+    // =========PRACTICE===========
     practice_available_sessions: [],
     practice_available_sessions_count: 0,
     practice_applied_sessions: [],
     practice_applied_sessions_count:0,
     practice_allocated_sessions: [],
     practice_allocated_sessions_count:0,
+    // job parts
     practice_ongoing_sessions: [],
     practice_ongoing_sessions_count: 0,
     practice_completed_sessions: [],
     practice_completed_sessions_count: 0,
+    practice_approved_sessions: [],
+    practice_approved_sessions_count: 0,
+    // job parts end here
     practice_unfilled_sessions: [],
     practice_unfilled_sessions_count:0,
     practice_cancelled_sessions: [],
@@ -20,11 +24,13 @@ export default () => ({
     practice_declined_sessions: [],
     practice_declined_sessions_count:0,
 
-    //LOCUM
+    // ==========LOCUM============
     locum_allocated_jobs: [],
     locum_allocated_jobs_count:0,
+    // job parts
     locum_ongoing_jobs: [],
     locum_ongoing_jobs_count:0,
+    // job parts end here
     locum_available_jobs: [],
     locum_available_jobs_count:0,
     locum_matched_jobs: [],
@@ -37,6 +43,11 @@ export default () => ({
     locum_unsuccessful_jobs_count: 0,
     locum_declined_jobs: [],
     locum_declined_jobs_count:0,
+    // job parts
     locum_completed_jobs: [],
-    locum_completed_jobs_count:0
+    locum_completed_jobs_count:0,
+    locum_approved_jobs: [],
+    locum_approved_jobs_count: 0,
+    locum_withrawn_jobs: [],
+    locum_withrawn_jobs_count: 0
 })

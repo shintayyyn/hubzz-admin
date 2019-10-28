@@ -1,0 +1,181 @@
+<template>
+    <div>
+        <div class="overflow-x-auto overflow-y-hidden">
+          <div v-if="completedJobParts.length === 0">
+            <div
+            class="mt-10 w-full text-center text-white"
+            >This practice has no completed session/s.</div>
+          </div>
+          <div v-else>
+            <AppJobHeaderSort :practice="practice" :tabStatus="'Completed'" :currentPage="currentPage" :isJobParts="true" />
+            <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+              <!-- HEADER -->
+              <!-- BODY -->
+              <nuxt-link 
+                v-for="(item, index) in completedJobParts" 
+                :to="{ path: `/practices/${practice.id}/practice-sessions/practice-completed-sessions/${item.id}`}"
+                :key="`item-${index}`" 
+                class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+                draggable="false"
+              >
+                <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Job Number</strong>
+                  <span class="">{{item.job.job_number}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6 w-full  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
+                  <span class="">{{item.job.platform_job.practice.surgery.name}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Title</strong>
+                  <span class="">{{item.job.title}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">From</strong>
+                  <span class="">{{item.date_start}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
+                  <strong class="block md:hidden text-sm uppercase">To</strong>
+                  <span class="">{{item.date_end}}</span>
+                </div>
+                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
+                  <strong class="block md:hidden text-sm uppercase">Created</strong>
+                  <span class="">{{item.job.date_created}}</span>
+                </div>
+                <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+                  <strong class="block md:hidden text-sm uppercase">Invoice Status</strong>
+                  <span class="p-2 rounded-lg" :class="invoiceStatusStyle(item.invoice_status)">{{item.invoice_status}}</span>
+                </div>
+              </nuxt-link>
+            </div>
+          </div>
+          <div v-if="!completedJobParts.length == 0" class=" m-10 xl:-ml-32">
+            <AppPagination
+              :total="total"
+              :totalPages="totalPages"
+              :currentPage="currentPage"
+              @pagechanged="pagechanged"
+            />
+          </div>
+
+          <div class="job-shield" v-if="modal"></div>
+          <transition name="slide" mode="out-in">
+            <div class="job-modal shadow-lg" v-if="modal">
+              <PracticeSessionModal @close="modal = false" :job="job" />
+            </div>
+          </transition>
+        
+      </div>
+    </div>
+</template>
+<script>
+import AppPagination from '@/components/Base/AppPagination'
+import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
+export default {
+  props:['practice', 'practice_surgery'],
+  components:{
+    AppPagination,
+    PracticeSessionModal,
+    AppJobHeaderSort
+  },
+  data(){
+    return{
+      // completedJobParts:[],
+      // total:0,
+      totalPages:0,
+      currentPage:1,
+      perPage:0,
+      ascendDescend:0,
+      modal:false
+    }
+  },
+  beforeDestroy() {
+    let query = Object.assign({}, this.$route.query)
+    delete query.completed_job_page
+    this.$router.push({ query })
+  },
+  watch: {
+    $route(to, from) {
+      this.currentPage = parseInt(to.query.completed_job_page)
+      this.getCompletedJobs()
+    },
+  },
+  async created(){
+    await this.$store.commit('jobs/TOGGLE_LOADING', true)
+    const query = {
+      ...this.$route.query,
+      completed_job_page: this.$route.query.completed_job_page || 1
+    }
+    this.currentPage = parseInt(query.completed_job_page)
+    let params = {
+      viewing_practice_id : this.practice.id,
+      surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+      status : 'Completed'
+    }
+    Promise.all([
+      this.$axios.$get(`/api/v1/admin/job-parts/count`,{ params }).then(res=>{
+        // this.total = res.data.count
+        this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS_COUNT',res.data.count)
+        this.perPage = 10
+        this.totalPages = Math.ceil(this.total / this.perPage)
+      })
+    ]).then(() => {
+      this.getCompletedJobs('date_created:desc'),
+      console.log(this.completedJobParts)
+    })
+  },
+  computed:{ 
+    total(){
+      return this.$store.state.jobs.practice_completed_sessions_count
+    },
+    completedJobParts(){
+      return this.$store.state.jobs.practice_completed_sessions
+    },
+  },
+  methods:{
+    async getCompletedJobs(orderBy){
+      let offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
+      let params = {
+        viewing_practice_id : this.practice.id,
+        status : 'Completed',
+        order_by : orderBy ? orderBy : this.$route.query.order_by,
+        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+        limit: this.perPage,
+        offset: offset
+      }
+      await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res=>{
+        // this.completedJobParts = res.data.jobs
+        this.$store.commit('jobs/SET_PRACTICE_COMPLETED_SESSIONS', res.data.job_parts)
+        this.$store.commit('jobs/TOGGLE_LOADING',false)
+      }).catch(err=>{
+        console.log('get completed jobs error!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      })
+      
+    },
+    invoiceStatusStyle(status){
+			switch(status){
+				case 'To Be Invoice':
+					return 'bg-yellow-500 text-black'
+					break;
+				case 'Disputed':
+					return 'bg-red-500 text-white'
+					break;
+				case 'Invoiced':
+					return 'bg-green-500 text-white opacity-75'
+					break;
+			}
+		},
+    async pagechanged(e) {
+      const query = {
+        ...this.$route.query,
+        completed_job_page: e || 1
+      }
+      await this.$store.commit('jobs/TOGGLE_LOADING', true)
+      await this.$router.push({ query })
+      await this.$store.commit('jobs/TOGGLE_LOADING', false)
+    }
+  }
+}
+</script>

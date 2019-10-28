@@ -8,16 +8,17 @@
             >This locum is not allocatedly hired to any job.</div>
           </div>
           <div v-else>
+            <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Allocated'" :currentPage="currentPage" />
             <div class="flex flex-col text-white md:px-6" > 
               <!-- HEADER -->
-              <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
+              <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
                 <div class="w-1/6">Job Number</div> 
                 <div class="w-1/6">Practice / Surgery</div>
                 <div class="w-1/6">Title</div>
                 <div class="w-1/6">From</div>
                 <div class="w-1/6">To</div>
                 <div class="w-1/6">Created</div>
-              </div>
+              </div> -->
               <!-- BODY -->
               <div 
                 v-for="(item, index) in allocatedJobs" 
@@ -77,11 +78,13 @@
 <script>
 import AppPagination from '@/components/Base/AppPagination'
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
+import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
     props:['user'],
     components:{
       AppPagination,
-      LocumDetailJobModal
+      LocumDetailJobModal,
+      AppJobHeaderSort
     },
     data(){
       return{ 
@@ -96,13 +99,13 @@ export default {
     },
     beforeDestroy() {
       let query = Object.assign({}, this.$route.query)
-      delete query.allocated_job_page
+      delete query.job_page
       this.$router.push({ query })
     },
     watch: {
       $route(to, from) {
-        this.currentPage = parseInt(to.query.allocated_job_page)
-        this.getAllocatedJobs('date_created:desc')
+        this.currentPage = parseInt(to.query.job_page)
+        this.getAllocatedJobs()
       },
 
     },
@@ -110,9 +113,9 @@ export default {
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
-        allocated_job_page: this.$route.query.allocated_job_page || 1
+        job_page: this.$route.query.job_page || 1
       }
-      this.currentPage = parseInt(query.allocated_job_page)
+      this.currentPage = parseInt(query.job_page)
       let params = {
         viewing_locum_user_id : this.user.id,
         locum_status: 'Allocated'
@@ -138,20 +141,11 @@ export default {
     },
     methods:{
       getAllocatedJobs(orderBy){
-        let offset = 0
-        if(this.ascendDescend == 0){
-          orderBy = orderBy.replace('desc','asc')
-          this.ascendDescend = 1
-        }else if(this.ascendDescend == 1){
-          orderBy = orderBy.replace('asc','desc')
-          this.ascendDescend = 0
-        }
-        
-        offset = this.perPage * (parseInt(this.$route.query.allocated_job_page) - 1)
+        let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {
           viewing_locum_user_id : this.user.id,
           locum_status:'Allocated',
-          order_by:['id:desc',orderBy],
+          order_by: orderBy ? orderBy : this.$route.query.order_by,
           limit:this.perPage,
           offset:offset
         }
@@ -164,7 +158,7 @@ export default {
       async pagechanged(e) {
         const query = {
           ...this.$route.query,
-          allocated_job_page: e || 1
+          job_page: e || 1
         }
         await this.$store.commit('jobs/TOGGLE_LOADING', true)
         await this.$router.push({ query })

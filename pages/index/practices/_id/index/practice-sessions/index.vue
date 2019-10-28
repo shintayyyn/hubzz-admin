@@ -10,6 +10,7 @@
 <script>
 import SessionsTabs from '@/components/Practices/SessionsTabs'
 import AppLoading from '@/components/Base/AppLoading'
+import JobPartModal from '@/components/Base/JobPartModal'
 export default {
     transition:{
         name:'fade',
@@ -20,13 +21,13 @@ export default {
         SessionsTabs
     },
     data() {
-        return {
-        }
+      return {
+      }
     },
     created(){
-        if(this.$route.name == 'index-practices-id-index-practice-sessions-index'){
-            this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-available-sessions`, query: this.$route.query})
-        }
+      if(this.$route.name == 'index-practices-id-index-practice-sessions-index'){
+        this.$router.push({path:`/practices/${this.practice.id}/practice-sessions/practice-live-sessions`, query: this.$route.query})
+      }
     },
     computed:{
       practice(){
@@ -38,13 +39,14 @@ export default {
     },
     async asyncData({app,store,route}){
         try{
-            let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-            const practice = response.data.data.practice
-            await store.commit('jobs/SET_SESSIONS_PRACTICE_ID_VIEWER', practice.id)
-            await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
-            return{
-                // practice
-            }
+          
+          let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
+          const practice = response.data.data.practice
+          await store.commit('jobs/SET_SESSIONS_PRACTICE_ID_VIEWER', practice.id)
+          await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
+          return{
+            // practice
+          }
         }catch(err){
             store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
             console.log('get practice error!!!!',err)
@@ -52,3 +54,5 @@ export default {
     }
 }
 </script>
+<style>
+</style>

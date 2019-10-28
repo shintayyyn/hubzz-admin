@@ -63,7 +63,7 @@
               class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
               v-model="password"
               type="password"
-              keyup.enter="login"
+              @keyup.enter="login"
               :class="showPasswordFocus ? 'border-yellow-500' : passwordErrorMessage ? 'border-red' : 'border-white-dark'"
               @focus="showPasswordFocus = true"
               @blur="showPasswordFocus = false, checkPassword()"
@@ -112,8 +112,8 @@ export default {
 
       loginErrorMessage: "",
 
-      email: "admin@gmail.com",
-      password: "test1234567",
+      email: "",
+      password: "",
 
       showEmailFocus: false,
       showPasswordFocus: false,

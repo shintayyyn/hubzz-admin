@@ -29,7 +29,7 @@
         v-for="(billing, index) in billings"
         :key="`billing-${index}`"
         :to="`/billings/${billing.id}`"
-        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-4 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
         draggable="false"
       >
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">

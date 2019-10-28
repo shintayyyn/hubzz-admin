@@ -60,8 +60,8 @@ export default {
         { name: "Billing", route: "/billings" },
         { name: "FAQs", route: "/faqs" },
         { name: "Terms and Conditions", route: "/tncs" },
-        { name: "Support", route: "/supports" },
-        { name: "Admin Management", route: "/admin-management" }
+        { name: "Inquiries", route: "/inquiries" },
+        { name: "User Management", route: "/user-management" }
       ];
 
       if (domain === "Super Admin") {
