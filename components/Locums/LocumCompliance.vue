@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            class="flex lg:w-2/3 no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
+            class="flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
             style="position:relative;">
             <div class="w-4/5 overflow-hidden text-sm m-4">
                 <div class="text-gray-400">
@@ -21,7 +21,7 @@
             </div>
         </div>
         <!--GMC / NMC NUMBER-->
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">GMC / NMC / HCPC Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center lg:w-2/3 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">MPL / NPL Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.mpl_or_npl_number ? user.locum_detail.mpl_or_npl_number.number : null }}</p>
@@ -100,7 +100,7 @@
         <!-- MANDATORY -->
         <p class="text-sm text-white pt-8 font-semibold">Mandatory</p>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full lg:w-2/3 table border-separate" style="border-spacing: 0 10px;"> 
+        <div class="w-full table border-separate" style="border-spacing: 0 10px;"> 
             <!-- HEADER -->
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
             <div class="table-cell p-2 align-middle">Title</div> 
@@ -177,7 +177,7 @@
     <!-- END TABLE -->  
         <!-- OPTIONAL -->
         <p class=" text-sm text-white pt-8 font-semibold">Optional</p>
-        <div class="w-full lg:w-2/3 table border-separate" style="border-spacing: 0 10px;"> 
+        <div class="w-full table border-separate" style="border-spacing: 0 10px;"> 
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
                 <div class="table-cell p-2 align-middle">Title</div> 
                 <div class="table-cell p-2 align-middle">File size</div>
@@ -232,11 +232,11 @@
         <p class=" text-sm text-white pt-8 font-semibold">Mandatory Trainings </p>
         <div v-if="locumMandatoryTrainings.length === 0">
             <div
-            class="w-full lg:w-2/3 mt-10 text-center text-white font-bold text-gray-500"
+            class="w-full mt-10 text-center text-white font-bold text-gray-500"
             >This locum has not uploaded Mandatory Training Documents.</div>
         </div>
         <!-- TABLE RESPONSIVE-->
-        <div v-else class="w-full lg:w-2/3 table border-separate" style="border-spacing: 0 10px;"> 
+        <div v-else class="w-full table border-separate" style="border-spacing: 0 10px;"> 
             <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
                 <div class="table-cell p-2 align-middle">Title</div> 
                 <div class="table-cell p-2 align-middle">File size</div>

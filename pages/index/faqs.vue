@@ -71,13 +71,13 @@
               </div>
             </div>
           </div>
-          <div
-            class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
-            :class="{'toggled': item.toggled}"
-          >
-             <div v-html="item.answer" class="w-full h-auto mx-8"></div>
+            <div
+              class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
+              :class="{'toggled': item.toggled}"
+            >
+              <div v-html="item.answer" class="w-full h-auto mx-8"></div>
+            </div>
           </div>
-        </div>
         <!---------------------------------------------------------------------------------->
         <div class="inline-flex font-bold mt-4 mb-2">
           <div class="flex items-center m-1">
@@ -237,10 +237,11 @@ export default {
 <style scoped>
 .item-answer {
   height: 0;
-  transition: all 0.3s ease-in-out;
+  transition: height 0.3s ease-in-out;
 }
 .toggled {
   height: auto;
+  transition: height 0.3s ease-in-out;
 }
 .faq-shield {
   position: fixed;

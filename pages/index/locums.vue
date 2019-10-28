@@ -1,14 +1,14 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-hidden py-2">
-		<div>
+		<!-- <div>
 			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
-		</div>
+		</div> -->
 		<div class="flex flex-col md:flex-row justify-between px-6">
 			<div class="flex py-2">
 				<div class="relative">
 					<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Locum by Name" v-model="search" @keyup.enter="searchSubmit">
-					<button class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
-						<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
+					<button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
+						<svgicon name="times-solid" height="12" width="12" class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
 				<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
@@ -60,6 +60,7 @@
 				<div class="w-1/6 text-center">Status</div>
 				<div class="w-1/6 text-center">Compliance Status</div>
 			</div>
+			<div v-if="locumUsers.length === 0" class="text-center py-4">No results found for {{search}}<br/>Try another keyword</div>
 			<nuxt-link
 				v-for="(locumUser, index) in locumUsers" 
 				:key="`locumUser-${index}`" 
@@ -320,6 +321,9 @@ export default {
 			this.paramFilterSort.compliance_status = this.filterCompliances
 
 			this.getLocums(this.paramFilterSort)
+		},
+		search(value){
+			this.searchSubmit();
 		}
 	},
 

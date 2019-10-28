@@ -1,11 +1,11 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
-	<AppLoading :loading="loadingPractices" :message="'Loading Practices'"/>
+	<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'"/> -->
     <div class="flex justify-between items-center flex-wrap">
         <div class="flex items-center py-2">
           	<div class="relative">
 				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Practice by Name" v-model="search" @keyup.enter="searchSubmit">
-				<button class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
+				<button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
 					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
 				</button>
             </div>
@@ -95,7 +95,7 @@
 
         <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
           <strong class="block md:hidden">Type</strong>
-          <span class="inline-flex w-1/3 md:w-full justify-center no-underline py-2 md:mx-4 text-sm text-black rounded-full shadow"
+          <span class="inline-flex w-1/3 md:w-full justify-center text-center no-underline py-2 md:mx-4 text-sm text-black rounded-full shadow leading-none"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>
 
@@ -188,300 +188,305 @@ export default {
 	watchQuery: [
 	'page',
 	'search'
-	],
-
-  	async asyncData({ app, store, route }) {
-  		try {
-			await store.commit('practices/TOGGLE_LOADING',true)
-  			let {
-  				page = 1,
-				search = '',
-				order_by=''  
-			} = route.query 
-			page = parseInt(page)
-			const createdRoute = route.query  
-  			const limit = 10
-  			const offset = page * limit - limit
-  			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
-			const params = { limit, offset, order_by }
-				
-  			if (search) {
-  				params.search = search
-			}
-				
-  			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
-			const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
-				
-			let response = null
-			
-			response = await getPracticesCountPromise
-			const itemCount = response.data.data.count
-			
-			response = await getPracticesPromise
-			const practices = response.data.data.practices
-			
-			await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
-			await store.commit('practices/SET_PRACTICES',practices)
-			await store.commit('practices/TOGGLE_LOADING',false)
-  			return {
-  				loading: false,
-  				itemsPerPage: limit,
-  				// itemCount,
-  				activePage: page,
-  				// practices,
-				search,
-				order_by  
-  			}
-  		} catch (err) {
-			store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-  			console.log('Get practices error!', err)
-  		}
-  	},
-
-    computed: {
-      loadingPractices(){
-        return this.$store.state.practices.loading_practices
-      },
-      getAllPractices(){
-        return this.$store.getters["practices/getAllPractices"]
-      },
-      itemCount(){
-        return this.$store.state.practices.itemCount
-      },
-      pageCount() {
-        return Math.ceil(this.itemCount / this.itemsPerPage)
-      },
-      showPage() {
-        return page => {
-          if (page === 1) {
-            return true
-          }
-
-          if (page === this.pageCount) {
-            return true
-          }
-
-          if (page === this.activePage) {
-            return true
-          }
-
-          if (page === this.activePage + 1) {
-            return true
-          }
-
-          if (page === this.activePage - 1) {
-            return true
-          }
-
-          if (this.activePage === 1 && page < 5) {
-            return true
-          }
-
-          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-            return true
-          }
-
-          if (this.activePage === 2 && page === 4) {
-            return true
-          }
-
-          if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-            return true
-          }
-
-          return false
-        }
-      }
-  	},
-  
-  	methods: {
-		show(){
-			this.modal=true
-		},
-
-		getQuery(){
-			const query = {
-				...this.$route.query
-			}
-			const offset = parseInt(query.page)*10 - 10 
-			return offset
-		},
-
-		getPractices(params,search){
-			this.$store.dispatch("practices/fetchPractices",{
-				limit:10,
-				search:search,
-				order_by:params.order_by,
-				offset:this.getQuery()
-			})
-    },
-    
-		async sortBy(sortedBy,page,search) {
-			switch (sortedBy) {
-				case 'practice_name':
-					this.sortedBy = sortedBy
-					this.practice_name = !this.practice_name
-          this.sortType = this.practice_name
-        break;
-				case 'created_at':
-					this.sortedBy = sortedBy
-					this.created_at = !this.created_at
-					this.sortType = this.created_at
-        break;
-        case 'practice_code':
-          this.sortedBy = sortedBy
-					this.practice_code = !this.practice_code
-					this.sortType = this.practice_code
-        break;
-				case 'actived_until':
-					this.sortedBy = sortedBy
-					this.actived_until = !this.actived_until
-					this.sortType = this.actived_until
-				break;
-				case 'status':
-					this.sortedBy = sortedBy
-					this.status = !this.status
-					this.sortType = this.status
-        break;
-        case 'practice_type':
-					this.sortedBy = sortedBy
-					this.practice_type = !this.practice_type
-					this.sortType = this.practice_type
-				break;
-			}
-			this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-			let order_by = await this.paramSort.order_by
-			let query = {
-				...this.$router.query,
-				order_by
-			}
-			if (page === 1) {
-				delete query.page
-			}
-			if(page){
-				query = {
-					...this.$router.query,
-					page,order_by
-				}
-			}
-			if(search){
-				query = {
-					...this.$router.query,
-					search,order_by
-				}
-			}
-			if(page & search){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
-			}
-			
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
-			}
-			this.$router.push({ query })
-			this.getPractices(this.paramSort,this.search)
-		},
-  	goToPage(page,search,order_by) {
-      if (page < 1) {
-        return
-      }
-
-      if (page > this.pageCount) {
-        return
-      }
+  ],
+  async asyncData({ app, store, route }) {
+    try {
+    await store.commit('practices/TOGGLE_LOADING',true)
+      let {
+        page = 1,
+      search = '',
+      order_by=''  
+    } = route.query 
+    page = parseInt(page)
+    const createdRoute = route.query  
+      const limit = 10
+      const offset = page * limit - limit
+      order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
+    const params = { limit, offset, order_by }
       
-      let query = {
+      if (search) {
+        params.search = search
+    }
+      
+      const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
+    const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
+      
+    let response = null
+    
+    response = await getPracticesCountPromise
+    const itemCount = response.data.data.count
+    
+    response = await getPracticesPromise
+    const practices = response.data.data.practices
+    
+    await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
+    await store.commit('practices/SET_PRACTICES',practices)
+    await store.commit('practices/TOGGLE_LOADING',false)
+      return {
+        loading: false,
+        itemsPerPage: limit,
+        // itemCount,
+        activePage: page,
+        // practices,
+      search,
+      order_by  
+      }
+    } catch (err) {
+    store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('Get practices error!', err)
+    }
+  },
+    
+  watch: {
+    search(value){
+      this.searchSubmit()
+    }
+  },
+
+  computed: {
+    loadingPractices(){
+      return this.$store.state.practices.loading_practices
+    },
+    getAllPractices(){
+      return this.$store.getters["practices/getAllPractices"]
+    },
+    itemCount(){
+      return this.$store.state.practices.itemCount
+    },
+    pageCount() {
+      return Math.ceil(this.itemCount / this.itemsPerPage)
+    },
+    showPage() {
+      return page => {
+        if (page === 1) {
+          return true
+        }
+
+        if (page === this.pageCount) {
+          return true
+        }
+
+        if (page === this.activePage) {
+          return true
+        }
+
+        if (page === this.activePage + 1) {
+          return true
+        }
+
+        if (page === this.activePage - 1) {
+          return true
+        }
+
+        if (this.activePage === 1 && page < 5) {
+          return true
+        }
+
+        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+          return true
+        }
+
+        if (this.activePage === 2 && page === 4) {
+          return true
+        }
+
+        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+          return true
+        }
+
+        return false
+      }
+    }
+  },
+
+  methods: {
+  show(){
+    this.modal=true
+  },
+
+  getQuery(){
+    const query = {
+      ...this.$route.query
+    }
+    const offset = parseInt(query.page)*10 - 10 
+    return offset
+  },
+
+  getPractices(params,search){
+    this.$store.dispatch("practices/fetchPractices",{
+      limit:10,
+      search:search,
+      order_by:params.order_by,
+      offset:this.getQuery()
+    })
+  },
+  
+  async sortBy(sortedBy,page,search) {
+    switch (sortedBy) {
+      case 'practice_name':
+        this.sortedBy = sortedBy
+        this.practice_name = !this.practice_name
+        this.sortType = this.practice_name
+      break;
+      case 'created_at':
+        this.sortedBy = sortedBy
+        this.created_at = !this.created_at
+        this.sortType = this.created_at
+      break;
+      case 'practice_code':
+        this.sortedBy = sortedBy
+        this.practice_code = !this.practice_code
+        this.sortType = this.practice_code
+      break;
+      case 'actived_until':
+        this.sortedBy = sortedBy
+        this.actived_until = !this.actived_until
+        this.sortType = this.actived_until
+      break;
+      case 'status':
+        this.sortedBy = sortedBy
+        this.status = !this.status
+        this.sortType = this.status
+      break;
+      case 'practice_type':
+        this.sortedBy = sortedBy
+        this.practice_type = !this.practice_type
+        this.sortType = this.practice_type
+      break;
+    }
+    this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+    let order_by = await this.paramSort.order_by
+    let query = {
+      ...this.$router.query,
+      order_by
+    }
+    if (page === 1) {
+      delete query.page
+    }
+    if(page){
+      query = {
         ...this.$router.query,
-        page
+        page,order_by
+      }
+    }
+    if(search){
+      query = {
+        ...this.$router.query,
+        search,order_by
+      }
+    }
+    if(page & search){
+      query = {
+        ...this.$router.query,
+        page,search,order_by
+      }
+    }
+    
+    if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+    this.loading = true
+    }
+    this.$router.push({ query })
+    this.getPractices(this.paramSort,this.search)
+  },
+  goToPage(page,search,order_by) {
+    if (page < 1) {
+      return
+    }
+
+    if (page > this.pageCount) {
+      return
+    }
+    
+    let query = {
+      ...this.$router.query,
+      page
+    }
+
+    if(search){
+      query = {
+        ...this.$router.query,
+        page,search
+      }
+    }
+    if(order_by){
+      query={
+        ...this.$route.query,
+        page,order_by
+      }
+    }
+    if(search && order_by){
+      query={
+        ...this.$router.query,
+        page,search,order_by
+      }
+    }
+
+    if (page === 1) {
+      delete query.page
+    }
+
+    if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+      this.loading = true
+    }	
+    this.$router.push({ query })
+  },
+
+    searchSubmit(page, order_by) {
+    let search = this.search
+    let query = {
+      ...this.$router.query,
+      search
+    }
+    if(page === 1){
+      delete query.page
+    }
+    if(page && page>1){
+      query = {
+        ...this.$router.query,
+        page,search
+      }
+    }
+    if(order_by){
+      query = {
+        ...this.$router.query,
+        search,order_by
+      }
+    }
+    if(page && order_by){
+      query = {
+        ...this.$router.query,
+        page,search,order_by
+      }
+    }
+
+      if (this.search === '') {
+        delete query.search
       }
 
-      if(search){
-        query = {
-          ...this.$router.query,
-          page,search
-        }
-      }
-      if(order_by){
-        query={
-          ...this.$route.query,
-          page,order_by
-        }
-      }
-      if(search && order_by){
-        query={
-          ...this.$router.query,
-          page,search,order_by
-        }
-      }
+    if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+      this.loading = true
+    }
 
-      if (page === 1) {
-        delete query.page
-      }
+        this.$router.push({ query })
+  },
 
-      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true
-      }	
-      this.$router.push({ query })
-		},
-
-  		searchSubmit(page, order_by) {
-			let search = this.search
-			let query = {
-				...this.$router.query,
-				search
-			}
-			if(page === 1){
-				delete query.page
-			}
-			if(page && page>1){
-				query = {
-					...this.$router.query,
-					page,search
-				}
-			}
-			if(order_by){
-				query = {
-					...this.$router.query,
-					search,order_by
-				}
-			}
-			if(page && order_by){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
-			}
-
-  			if (this.search === '') {
-  				delete query.search
-  			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true
-			}
-
-	      	this.$router.push({ query })
-		},
-
-		typeStyle(status){
-			switch(status){
-				case 'Hub':
-					return 'bg-red-500 text-white lg:px-8 sm:px-2'
-					break;
-				case 'Spoke':
-					return 'bg-blue-500 text-white lg:px-8 sm:px-2'
-					break;
-				case 'Stand Alone':
-					return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
-					break;
-				default:
-					return
-			}
-		},
-		  
-  	}
+  typeStyle(status){
+    switch(status){
+      case 'Hub':
+        return 'bg-red-500 text-white lg:px-8 sm:px-2'
+        break;
+      case 'Spoke':
+        return 'bg-blue-500 text-white lg:px-8 sm:px-2'
+        break;
+      case 'Stand Alone':
+        return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
+        break;
+      default:
+        return
+    }
+  },
+    
+  }
 };
 </script>
 <style>
