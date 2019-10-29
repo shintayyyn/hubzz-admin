@@ -17,12 +17,12 @@
         style="font-family:Nunito"
       ></textarea>
     </div>
-    <div class="flex justify-end">
-        <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
-            Save
-        </button>
+    <div v-if="authAdminPermissions.includes('Edit Terms and Conditions & Privacy Policy')" class="flex justify-end">
+      <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
+        Save
+      </button>
     </div>
-</div>
+  </div>
 </template>
 <script>
 export default {
@@ -35,6 +35,11 @@ export default {
       },
       setFocus: false
     }
+  },
+  computed:{
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
   methods:{
     async save(){

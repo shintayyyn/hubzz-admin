@@ -11,6 +11,7 @@
           </div>
           <div class="flex">
             <nuxt-link
+            v-if="authAdminPermissions.includes('Create New FAQ')"
             :to="{path:`/faqs/addFaq/locum`}"
             class="flex mr-2 p-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
               <span class="mr-2">Add</span> 
@@ -21,7 +22,7 @@
                 color="black black"
                 />
             </nuxt-link>
-            <button v-if="deleteLocumFaq == false" @click="deleteLocumFaq = true" class="flex p-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
+            <button v-if="deleteLocumFaq == false && authAdminPermissions.includes('Delete FAQ')" @click="deleteLocumFaq = true" class="flex p-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
               <span class="mr-2">Delete</span>
               <svgicon
                 name="garbage"
@@ -30,7 +31,7 @@
                 color="white white"
                 />
             </button>
-            <button v-if="deleteLocumFaq == true" @click="deleteLocumFaq = false" class="flex p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
+            <button v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')" @click="deleteLocumFaq = false" class="flex p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
               <span class="mr-2">Done</span>
               <svgicon
                 name="circle-check"
@@ -41,10 +42,10 @@
             </button>
           </div>
         </div>
-
+        <!-- -------------------------------------------------------------------------- -->
         <div v-for="item in locumFaqs" :key="item.id">
           <div class="inline-flex w-full">
-            <nuxt-link v-if="deleteLocumFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-4"> 
+            <nuxt-link v-if="deleteLocumFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-4"> 
               <svgicon
                 name="edit"
                 width="21"
@@ -52,7 +53,7 @@
                 color="white white"
                 />
             </nuxt-link>
-            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true" class="flex items-center cursor-pointer mr-4">
+            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')" class="flex items-center cursor-pointer mr-4">
               <svgicon
                 name="garbage"
                 width="21"
@@ -84,6 +85,7 @@
               <span>Practice</span>
           </div>
           <nuxt-link
+          v-if="authAdminPermissions.includes('Create New FAQ')"
           :to="{path:`/faqs/addFaq/practice`}"
           class="flex items-center mx-2 p-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
             <span class="mr-2">Add</span> 
@@ -94,7 +96,7 @@
               color="black black"
               />
           </nuxt-link>
-          <button v-if="deletePracticeFaq == false" @click="deletePracticeFaq = true" class="flex items-center text-white font-bold p-2 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
+          <button v-if="deletePracticeFaq == false && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = true" class="flex items-center text-white font-bold p-2 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
             <span class="mr-2">Delete</span>
             <svgicon
               name="garbage"
@@ -103,7 +105,7 @@
               color="white white"
               />
           </button>
-          <button v-if="deletePracticeFaq == true" @click="deletePracticeFaq = false" class="flex items-center p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
+          <button v-if="deletePracticeFaq == true && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = false" class="flex items-center p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
             <span class="mr-2">Done</span>
             <svgicon
               name="circle-check"
@@ -113,10 +115,10 @@
               />
           </button>
         </div>
-      
+        <!-- ---------------------------------------------------------------------------- -->
         <div v-for="item in practiceFaqs" :key="item.id">
           <div class="inline-flex w-full">
-            <nuxt-link v-if="deletePracticeFaq == false" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer mr-4"> 
+            <nuxt-link v-if="deletePracticeFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer mr-4"> 
               <svgicon
                 name="edit"
                 width="21"
@@ -124,7 +126,7 @@
                 color="white white"
                 class="mt-5"/>
             </nuxt-link>
-            <div v-if="deletePracticeFaq == true" class="flex cursor-pointer mr-4">
+            <div v-if="deletePracticeFaq == true && authAdminPermissions.includes('Edit FAQ')" class="flex cursor-pointer mr-4">
               <svgicon
                 name="garbage"
                 width="21"
@@ -150,8 +152,7 @@
             <div v-html="item.answer" class="w-full h-auto mx-8"></div>
           </div>
         </div>
-        
-
+        <!-- ---------------------------------------------------------------------------- -->
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq')"></div>
         <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-id')"></div>
       </div>
@@ -187,6 +188,9 @@ export default {
     },
     practiceFaqs(){
       return this.$store.state.faqs.practiceFaqs
+    },
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
     },
   },
   async asyncData({ app, route, store, error }) {

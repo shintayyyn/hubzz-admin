@@ -6,7 +6,7 @@
       <div class="w-1/4">Title</div>
       <div class="w-1/4">File Size</div>
       <div class="w-1/4">Last Upload Date</div>
-      <div class="w-1/4">Upload New File</div>
+      <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="w-1/4">Upload New File</div>
     </div>
     <!-- END HEADER -->
     <!-- BODY -->
@@ -40,7 +40,7 @@
         <div
           class="w-full flex md:flex-col lg:flex-row items-center justify-between md:justify-start"
         >
-          <div class="flex flex-wrap">
+          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex flex-wrap">
             <div class="flex text-white text-sm w-24 mr-4">
               <label>
                 File
@@ -53,6 +53,7 @@
               </label>
             </div>
           </div>
+
           <div v-if="document.practiceSpecificDoc" class="flex text-white text-xs py-2 xl:py-0">
             <nuxt-link
               :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
@@ -64,6 +65,7 @@
           </div>
         </div>
       </div>
+
     </div>
     <!-- END BODY -->
   </div>
@@ -92,7 +94,10 @@ export default {
   computed: {
     specificPracticeDocumentTypes() {
       return this.$store.state.practices.specificPracticeDocumentTypes;
-    }
+    },
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
 
   methods: {

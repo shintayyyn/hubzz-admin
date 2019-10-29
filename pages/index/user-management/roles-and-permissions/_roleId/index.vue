@@ -9,7 +9,7 @@
           <div class="mx-2 text-4xl">
             {{specificRole.name}}
           </div>
-          <div v-if="editingPermissions==false" @click="editingPermissions=true" class="flex m-2 p-2 px-4 rounded-lg bg-yellow-500 cursor-pointer text-black">
+          <div v-if="editingPermissions==false && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=true" class="flex m-2 p-2 px-4 rounded-lg bg-yellow-500 cursor-pointer text-black">
             <div class="mx-2 font-semibold">Edit</div>
             <div>
               <svgicon
@@ -20,7 +20,7 @@
               />
             </div>
           </div>
-          <div v-if="editingPermissions==true" @click="editingPermissions=false" class="flex m-2 p-2 px-4 rounded-lg bg-yellow-500 cursor-pointer text-black" >
+          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=false" class="flex m-2 p-2 px-4 rounded-lg bg-yellow-500 cursor-pointer text-black" >
             <div class="mx-2 font-semibold">Cancel</div>
             <div>
               <svgicon
@@ -31,7 +31,7 @@
               />
             </div>
           </div>
-          <div v-if="editingPermissions==true" @click="save()" class="flex m-2 p-2 px-4 rounded-lg bg-green-500 cursor-pointer" >
+          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="save()" class="flex m-2 p-2 px-4 rounded-lg bg-green-500 cursor-pointer" >
             <div class="mx-2 font-semibold">Save</div>
             <div>
               <svgicon
@@ -98,7 +98,7 @@
         </div>
       </div>
       <!-- EDIT ROLE PERMISSIONS -->
-      <div class="m-4" v-if="editingPermissions == true">
+      <div class="m-4" v-if="editingPermissions == true && authAdminPermissions.includes('Edit Role')">
         <!-- <div class="flex flex-wrap overflow-hidden xl:-mx-1">
           <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
             <div class="text-lg font-semibold">Locum Management</div> 
@@ -226,9 +226,14 @@ export default {
       },
     }
   },
-  created() {
+  created(){
     this.form.name = this.specificRole.name
     this.form.description = this.specificRole.description
+  },
+  computed:{
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
   async asyncData({ app, store, route }){
     try{

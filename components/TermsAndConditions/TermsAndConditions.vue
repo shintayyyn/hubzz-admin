@@ -17,9 +17,9 @@
         style="font-family:Nunito"
       ></textarea>
     </div>
-    <div class="flex justify-end">
+    <div v-if="authAdminPermissions.includes('Edit Terms and Conditions & Privacy Policy')" class="flex justify-end">
         <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
-            Save
+          Save
         </button>
     </div>
   </div>
@@ -43,6 +43,11 @@ export default {
     ]).then(()=>{
       console.log(this.form)
     })
+  },
+  computed:{
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
   methods:{
     async save(){

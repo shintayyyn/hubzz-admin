@@ -3,7 +3,7 @@
       <div class="flex flex-row-reverse px-2 justify-between flex-wrap">
         <div>
           <button
-            v-if="deletingAdminRole == false"
+            v-if="deletingAdminRole == false && authAdminPermissions.includes('Delete Role')"
             class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
             @click="deletingAdminRole = true"
           >Delete Role
@@ -15,7 +15,7 @@
             class="mx-1 -my-1"/>
           </button>
           <button
-            v-if="deletingAdminRole == true"
+            v-if="deletingAdminRole == true && authAdminPermissions.includes('Delete Role')"
             @click="deletingAdminRole = false"
             class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
           >Done
@@ -27,6 +27,7 @@
             class="mx-1 -my-1"/>
           </button>
           <button
+            v-if="authAdminPermissions.includes('Add Role')"
             class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-yellow-500 text-sm font-semibold text-black rounded-lg shadow md:float-right"
             @click="modal=true"
           >Add New Role
@@ -132,6 +133,9 @@ export default {
     },
     adminRoles(){
       return this.$store.state.adminusers.adminRoles
+    },
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
     },
   },
   async created(){

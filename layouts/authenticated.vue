@@ -82,13 +82,17 @@ export default {
     //   document.body.style.overflow = "auto";
     // }
   },
+  mounted() {
+    const user = this.$auth.user
+    this.$store.commit("auth/SET_ADMIN_USER_PERMISSIONS",user.admin_detail.role.permissions)
+  },
 
   methods: {
-      close() {
-        this.$store.commit("TOGGLE_SIDEBAR", false);
-        document.body.style.overflow = "auto";
-      }
+    close() {
+      this.$store.commit("TOGGLE_SIDEBAR", false);
+      document.body.style.overflow = "auto";
     }
+  }
 };
 </script>
 

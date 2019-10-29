@@ -8,16 +8,19 @@
     <div class="flex flex-row-reverse px-2 justify-between flex-wrap">
       <div>
         <button
-        v-if="deleteAdminUser == true"
+        v-if="deleteAdminUser == true && authAdminPermissions.includes('Delete Admin Account')"
         @click="deleteAdminUser = false"
         class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
         >Done</button>
+
         <button
-        v-if="deleteAdminUser == false"
+        v-if="deleteAdminUser == false && authAdminPermissions.includes('Delete Admin Account')"
         @click="deleteAdminUser = true"
         class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
         >Delete Admin User</button>
+
         <button
+        v-if="authAdminPermissions.includes('Create Admin Account')"
         @click="show()"
         class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
         >Create Admin Account</button>
@@ -61,7 +64,7 @@
         </div>
         <!-- END BODY -->
     </div>
-
+   
     <!-- PAGINATION -->
     <div class="flex justify-center">
       <div >
@@ -179,6 +182,9 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
       adminUsers(){
         return this.$store.getters["adminusers/getAdminUsers"]
       },
+      authAdminPermissions() {
+        return this.$store.getters["auth/permissions"]
+      },
       pageCount() {
         return Math.ceil(this.itemCount / this.itemsPerPage)
       },
@@ -225,11 +231,14 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
       },
     },
     methods:{
-      getAdminUsers(){
-        this.$store.dispatch("adminusers/fetchAdminUsers",{})
-        this.$store.dispatch("adminusers/fetchAdminUsers",{
-            limit:8
-        })
+      // getAdminUsers(){
+      //   this.$store.dispatch("adminusers/fetchAdminUsers",{})
+      //   this.$store.dispatch("adminusers/fetchAdminUsers",{
+      //     limit:8
+      //   })
+      // },
+      showAdminUserMe(){
+        console.log('adminUserMe', this.adminUserMe)
       },  
       toDeleteAdminUser(userId) {
           this.adminAccountId = userId
