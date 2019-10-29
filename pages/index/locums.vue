@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-hidden py-2">
+	<div class="flex-1 flex flex-col overflow-hidden pt-2">
 		<!-- <div>
 			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
 		</div> -->
@@ -13,85 +13,98 @@
 				</div>
 				<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
 			</div>
-			<div class="relative flex flex-col md:flex-row md:items-center md:items-end py-2 md:py-0 md:px-4 md:px-6 -mt-2 md:mt-0">
-				<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
-				<select
-					v-model="filterCompliances"
-					class="w-full sm:w-1/2 md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-					id="grid-state"
-					>
-					<option :value="null">All</option>
-					<option>Empty</option>
-					<option>Incomplete</option>
-					<option>Pending</option>
-					<option>Expiring</option>
-					<option>Expired</option>
-					<option>Rejected</option>
-					<option>Compliant</option>
-				</select>
+			<div class="flex w-full justify-end">
+				<div class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end p-2 md:py-0">
+					<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
+					<select
+						v-model="filterCompliances"
+						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+						id="grid-state"
+						>
+						<option :value="null">All</option>
+						<option>Empty</option>
+						<option>Incomplete</option>
+						<option>Pending</option>
+						<option>Expiring</option>
+						<option>Expired</option>
+						<option>Rejected</option>
+						<option>Compliant</option>
+					</select>
+				</div>
+				<div class="w-1/2 relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end p-2 md:py-0">
+					<label class="text-sm text-white md:pr-2">Sort by</label>
+					<select
+						v-model="sort"
+						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+						>
+						<option>Name</option>
+						<option>Profession</option>
+						<option>Date signed-up</option>
+						<option>Sign-up verified</option>
+					</select>
+				</div>
 			</div>
 		</div>
-		<div class="flex flex-col mx-6 text-white">
-			<div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2">
-				<div class="w-1/6 pl-4 cursor-pointer" @click="sortBy('name',activePage,search,filterCompliances)">
+		<div class="w-full overflow-x-auto px-6">
+      		<div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('name',activePage,search,filterCompliances)">
 					Name
 					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6 text-center cursor-pointer" @click="sortBy('profession',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('profession',activePage,search,filterCompliances)">
 					Profession
 					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6 cursor-pointer" @click="sortBy('created_at',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('created_at',activePage,search,filterCompliances)">
 					Date signed-up
 					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6 cursor-pointer" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
 					Sign-up verified
 					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="w-1/6 text-center">Status</div>
-				<div class="w-1/6 text-center">Compliance Status</div>
+				<div class="align-middle px-2 text-center w-1/6">Status</div>
+				<div class="align-middle px-2 text-center w-1/6">Compliance Status</div>
 			</div>
-			<div v-if="locumUsers.length === 0" class="text-center py-4">No results found for {{search}}<br/>Try another keyword</div>
+			<div v-if="locumUsers.length === 0" class="text-gray-500 leading-tight text-center py-4">No results found for {{search}}<br/>Try another keyword</div>
 			<nuxt-link
 				v-for="(locumUser, index) in locumUsers" 
 				:key="`locumUser-${index}`" 
 				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"  
-			 	class="w-full text-white flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-0 border-l-8 border-yellow-500 md:border-0">
-					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
+			 	class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light">
+					<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Name</strong>
 						<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
-					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center md:justify-center md:text-center">
+					<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Profession</strong>
 						<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
 					</div>
-					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
+					<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Date signed-up</strong>
 						<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
 					</div>
-					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
+					<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Sign-up verified</strong>
 						<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
 					</div>
-					<div class="w-full md:w-1/6 pb-3 md:p-2 flex flex-col md:flex-row md:items-center">
+					<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Status</strong>
-						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 md:mx-4 lg:px-8 sm:px-2 rounded-full" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
+						<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
 					</div>
-					<div class="w-full md:w-1/6 md:p-2 flex flex-col md:flex-row md:items-center">
+					<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
 						<strong class="block md:hidden text-sm uppercase">Compliance Status</strong>
-						<span class="inline-flex justify-center w-1/3 md:w-full text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+						<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
 					</div>
 			</nuxt-link>
 		</div>
-
 		<!-- PAGINATION -->
 		<div class="flex justify-center items-center my-2">
 			<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
@@ -325,6 +338,20 @@ export default {
 		search(value){
 			this.searchSubmit();
 			this.getLocums(this.paramSort)
+		},
+		sort(value){
+			if (value === 'Name'){
+				this.sortBy('name', this.activePage, this.search, this.filterCompliances)
+			}
+			if (value === 'Profession'){
+				this.sortBy('profession', this.activePage, this.search, this.filterCompliances)
+			}
+			if (value === 'Date signed-up'){
+				this.sortBy('created_at', this.activePage, this.search, this.filterCompliances)
+			}
+			if (value === 'Sign-up verified'){
+				this.sortBy('email_verified_at', this.activePage, this.search, this.filterCompliances)
+			}
 		}
 	},
 

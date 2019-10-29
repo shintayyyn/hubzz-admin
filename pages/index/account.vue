@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex sm:p-2">
+        <div class="flex">
             <div class="w-full md:w-auto" v-if="tab1">
                 <div class="w-full p-4 my-2 text-white bg-waterloo rounded-lg">
                     <div class="font-semibold">E-Mail Address</div>

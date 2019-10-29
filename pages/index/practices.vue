@@ -17,42 +17,56 @@
           class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
         >Add Practice</button>
       </div>
+      <div class="w-1/2 relative md:hidden flex flex-col justify-end md:items-end pb-2">
+					<label class="text-sm text-white md:pr-2">Sort by</label>
+					<select
+						v-model="sort"
+						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+						>
+						<option>Practice Name</option>
+						<option>Practice Code</option>
+						<option>Created</option>
+						<option>Expires</option>
+						<option>Status</option>
+						<option>Type</option>
+					</select>
+				</div>
     </div>
 	<!-- TABLE RESPONSIVE-->
-    <div v-if="itemCount > 0" class="flex flex-col text-white"> 
+    <div v-if="itemCount > 0" class="w-full overflow-x-auto"> 
       <!-- HEADER -->
-      <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
-        <div class="w-1/6 pl-4 cursor-pointer" @click="sortBy('practice_name',activePage,search)">
+      <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+        <div class="align-middle px-2 w-1/6" @click="sortBy('practice_name',activePage,search)">
           Practice Name
           <svgicon v-if="sortedBy!='practice_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='practice_name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
-        <div class="w-1/6 pl-4 cursor-pointer md:text-center" @click="sortBy('practice_code',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('practice_code',activePage,search)">
           Practice Code
           <svgicon v-if="sortedBy!='practice_code'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_code'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='practice_code'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 pl-4 cursor-pointer" @click="sortBy('created_at',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('created_at',activePage,search)">
           Created
           <svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 pl-4 cursor-pointer" @click="sortBy('actived_until',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('actived_until',activePage,search)">
           Expires
           <svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 text-center cursor-pointer" @click="sortBy('status',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('status',activePage,search)">
           Status
           <svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 text-center cursor-pointer" @click="sortBy('practice_type',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('practice_type',activePage,search)">
           Type
           <svgicon v-if="sortedBy!='practice_type'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_type'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -65,37 +79,37 @@
         v-for="(practice, index) in getAllPractices"
         :key="`practice-${index}`"
         :to="{path:`/practices/${practice.id}`,query:$route.query}"
-        class="w-full text-white flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
+        class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
       >
-        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-          <span class="break-words">{{ practice.surgery ? practice.surgery.name:null }}</span>
+          <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
         </div>
 
-        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Practice Code</strong>
           <span class="break-words md:text-center w-full">{{ practice.surgery ? practice.surgery.code:null }}</span>
         </div>
 
-        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Created</strong>
-          <span class="break-words">{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+          <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
-		    <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+		    <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Expires</strong>
-          <span class="break-all">{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
+          <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
 
-        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Status</strong>
-          <span class="inline-flex w-1/3 md:w-full justify-center no-underline py-2 md:mx-4 text-sm text-white rounded-full shadow"
+          <span class="inline-flex justify-center no-underline py-2 md:mx-4 text-sm text-white rounded-full shadow"
 			    :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
 		    </div>
 
-        <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Type</strong>
-          <span class="inline-flex w-1/3 md:w-full justify-center text-center no-underline py-2 md:mx-4 text-sm text-black rounded-full shadow leading-none"
+          <span class="inline-flex justify-center text-center no-underline py-2 md:mx-4 text-sm text-black rounded-full shadow"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>
 
@@ -299,7 +313,27 @@ export default {
   watch: {
     search(value){
       this.searchSubmit()
-    }
+    },
+    sort(value){
+			if (value === 'Practice Name'){
+				this.sortBy('practice_name', this.activePage, this.search)
+			}
+			if (value === 'Practice Code'){
+				this.sortBy('practice_code', this.activePage, this.search)
+			}
+			if (value === 'Created'){
+				this.sortBy('created_at', this.activePage, this.search)
+			}
+			if (value === 'Expires'){
+				this.sortBy('actived_until', this.activePage, this.search)
+      }
+      if (value === 'Status'){
+				this.sortBy('status', this.activePage, this.search)
+      }
+      if (value === 'Type'){
+				this.sortBy('practice_type', this.activePage, this.search)
+			}
+		}
   },
 
   methods: {

@@ -8,35 +8,35 @@
         </div>
         <div v-else>
           <AppJobHeaderSort :practice="practice" :tabStatus="'Ongoing'" :currentPage="currentPage" :isJobParts="true" />
-          <div class="flex flex-col text-white p-2"> 
+          <div class="w-full overflow-x-auto" > 
             <!-- BODY -->
             <div 
               v-for="(item, index) in ongoingJobParts" 
               @click="$router.push(`/practices/${practice.id}/practice-sessions/practice-ongoing-sessions/${item.id}`)" 
               :key="`item-${index}`" 
-              class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:px-2 border-l-8 border-yellow-500 md:border-0 leading-tight" 
+              class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
             >
-              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Job Number</strong>
                 <span class="break-words">{{item.job_part_number}}</span>
               </div>
-              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
                 <span class="break-words">{{item.job.platform_job.practice.surgery.name}}</span>
               </div>
-              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
                 <span class="break-words">{{item.job.title}}</span>
               </div>
-              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">From</strong>
                 <span class="break-words">{{item.date_start}}</span>
               </div>
-              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">To</strong>
                 <span class="break-words">{{item.date_end}}</span>
               </div>
-              <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
                 <span class="break-words">{{item.job.date_created}}</span>
               </div>

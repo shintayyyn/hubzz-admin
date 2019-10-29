@@ -8,43 +8,43 @@
           </div>
           <div v-else>
             <AppJobHeaderSort :practice="practice" :tabStatus="'Completed'" :currentPage="currentPage" :isJobParts="true" />
-            <div class="table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+            <div class="w-full overflow-x-auto"> 
               <!-- HEADER -->
               <!-- BODY -->
               <nuxt-link 
                 v-for="(item, index) in completedJobParts" 
                 :to="{ path: `/practices/${practice.id}/practice-sessions/practice-completed-sessions/${item.id}`}"
                 :key="`item-${index}`" 
-                class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+                class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
               >
-                <div class="flex flex-col xl:px-6 sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 py-2 md:py-4 align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Job Number</strong>
                   <span class="">{{item.job.job_number}}</span>
                 </div>
-                <div class="flex flex-col xl:px-6 w-full  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
                   <span class="">{{item.job.platform_job.practice.surgery.name}}</span>
                 </div>
-                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Title</strong>
                   <span class="">{{item.job.title}}</span>
                 </div>
-                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">From</strong>
                   <span class="">{{item.date_start}}</span>
                 </div>
-                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:px-1 py-2 md:py-4 align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">To</strong>
                   <span class="">{{item.date_end}}</span>
                 </div>
-                <div class="flex flex-col xl:px-6  sm:w-1/2 md:w-auto md:table-cell sm:pl-1 sm:pr-4 py-2 md:py-4  align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
                   <span class="">{{item.job.date_created}}</span>
                 </div>
-                <div class="w-full md:w-1/6 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                  <strong class="block md:hidden text-sm uppercase">Invoice Status</strong>
-                  <span class="p-2 rounded-lg" :class="invoiceStatusStyle(item.invoice_status)">{{item.invoice_status}}</span>
+                <div class="flex items-center md:flex-col md:justify-center w-1/2 md:w-64 px-1 xl:px-2 py-2 leading-tight align-middle md:text-center">
+                  <strong class="block md:hidden text-sm uppercase whitespace-no-wrap">Invoice Status</strong>
+                  <div class="py-2 px-4 rounded-lg whitespace-no-wrap text-center mx-2" :class="invoiceStatusStyle(item.invoice_status)">{{item.invoice_status}}</div>
                 </div>
               </nuxt-link>
             </div>
