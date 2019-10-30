@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<!-- PAGINATION ENDS HERE -->
-    <div class="support-shield" v-if="$route.name.includes('index-supports-id')" @click="$router.go(-1)"></div>
+    <div class="support-shield" v-if="$route.name.includes('index-inquiries-id')" @click="$router.go(-1)"></div>
     <nuxt-child/>
   </div>
 </template>

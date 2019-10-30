@@ -48,7 +48,7 @@ export default {
       const query = {
           ...this.$route.query
       }
-      this.$router.push({path:'/supports',query})
+      this.$router.push({path:'/inquiries',query})
     },
   }
 };
