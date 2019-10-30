@@ -18,8 +18,8 @@
       <!-- BODY -->
       <nuxt-link
         v-for="(email, index) in emails"
-          :key="`support-${index}`"
-          :to="{ path:`/supports/${email.id}`, query:$route.query}"
+          :key="`emails-${index}`"
+          :to="{ path:`/inquiries/${email.id}`, query:$route.query}"
         class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
       >
         <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
