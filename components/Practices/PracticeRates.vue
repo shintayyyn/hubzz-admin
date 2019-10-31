@@ -15,12 +15,13 @@
             {{practice.rates.length > 0 ? '£'+practice.rates[1].rate : 'N/A'}}
           </div>
           <button
+            v-if="authAdminPermissions.includes('Edit Practice Rates')"
             class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
             @click="toEdit = true"
             >Edit
           </button>
         </div>
-        <div v-if="toEdit == true" class="w-full overflow-hidden text-gray-300 text-sm p-2">
+        <div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Rates')" class="w-full overflow-hidden text-gray-300 text-sm p-2">
             <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
                 {{errors[0]}}
             </div>
@@ -74,9 +75,11 @@ export default {
         othersError:''
       }
   },
-  created(){
+  computed:{
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
-
   methods: {
     getQuery(){
       const query = {

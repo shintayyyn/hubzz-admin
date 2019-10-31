@@ -14,7 +14,7 @@
         ></quill-editor>
       </no-ssr>
     </div>
-    <div class="flex justify-end">
+    <div v-if="authAdminPermissions.includes('Edit Terms and Conditions & Privacy Policy')" class="flex justify-end">
         <button @click="save()" class="my-4 font-semibold py-2 px-4 rounded-lg bg-sunglow text-black">
             Save
         </button>
@@ -66,6 +66,11 @@ export default {
     ]).then(()=>{
       console.log(this.form)
     })
+  },
+  computed:{
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
   methods:{
     onEditorBlur(editor) {

@@ -13,6 +13,7 @@
         </div>
       <div>
         <button
+          v-if="authAdminPermissions.includes('Add Practice') && authAdminPermissions.includes('Add Practice User')"
           @click="show()"
           class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
         >Add Practice</button>
@@ -262,6 +263,9 @@ export default {
       },
       pageCount() {
         return Math.ceil(this.itemCount / this.itemsPerPage)
+      },
+      authAdminPermissions() {
+        return this.$store.getters["auth/permissions"]
       },
       showPage() {
         return page => {

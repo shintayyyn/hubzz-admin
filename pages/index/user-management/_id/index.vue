@@ -14,7 +14,7 @@
               <strong>User Info</strong>
             </button>
           </div>
-          <div class="my-1 px-1 overflow-hidden">
+          <div v-if="authAdminPermissions.includes('Edit Admin Account')" class="my-1 px-1 overflow-hidden">
             <button
               class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
               @click="tab2=true,tab1=false"
@@ -38,7 +38,7 @@
       </div>
     </div>
     <!-- tab 2 EDIT -->
-    <div v-if="tab2" class="flex sm:p-2">
+    <div v-if="tab2 && authAdminPermissions.includes('Edit Admin Account')" class="flex sm:p-2">
       <div class="flex text-white bg-waterloo my-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
         <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
           <div class="flex items-center py-1">E-Mail Address 
@@ -127,7 +127,7 @@
               </option>
             </select>
             <button
-              class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm focus:outline-none"
+              class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black font-semibold text-sm focus:outline-none"
               @click.prevent ="checkForm(user.id,toPutAdminUser)"
               >Save Changes</button>
         </div>
@@ -176,6 +176,11 @@ export default {
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('get admin user error!!!', err)
     }
+  },
+  computed:{
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
   methods:{
     getAdminUsers(){

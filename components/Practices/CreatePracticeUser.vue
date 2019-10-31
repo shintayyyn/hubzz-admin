@@ -181,7 +181,7 @@
           <button
             class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
             @click.prevent="checkForm(toPostUser,toPostUser.surgery_id)"
-          >Add Practice User</button>
+          >Create</button>
         </div>
       </div>
     </div>

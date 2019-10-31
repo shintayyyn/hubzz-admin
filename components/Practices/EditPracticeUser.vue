@@ -5,6 +5,7 @@
           <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
         </nuxt-link>
       </div>
+      <!-- TABS -->
       <div class="flex flex-col rounded-lg pl-6">
         <div class="w-full overflow-hidden">
           <div class="flex flex-wrap -mx-1 overflow-hidden">
@@ -16,7 +17,7 @@
                 <strong>General</strong>
               </button>
             </div>
-            <div class="my-1 px-1 overflow-hidden">
+            <div v-if="authAdminPermissions.includes('Edit Practice User')" class="my-1 px-1 overflow-hidden">
               <button
                 class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
                 @click="tab2=true,tab1=false"
@@ -27,9 +28,12 @@
           </div>
         </div>
       </div>
+      <!-- TABS END HERE -->
+
       <div class="flex sm:p-2">
+        <!-- TAB 1 -->
         <div v-if="tab1" class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
-          <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
+          <div v-if="authAdminPermissions.includes('Edit Practice User')" class="w-full overflow-hidden text-gray-300 text-sm p-2">
             <div class="flex py-1">E-Mail Address 
               <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>
             </div>
@@ -107,7 +111,25 @@
               @click.prevent ="checkForm(user.id,toPutPracticeUser)"
             >Save Changes</button>
           </div>
+          <div v-if="!authAdminPermissions.includes('Edit Practice User')" class="w-full overflow-hidden text-gray-400 text-sm p-2">
+            <div class="flex py-2">E-Mail Address</div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.email}}</div>
+            <div class="flex py-2">Title</div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.title ? toPutPracticeUser.title : 'N/A' }}</div>
+            <div class="flex py-2">First Name</div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.first_name ? toPutPracticeUser.first_name : 'N/A' }}</div>
+            <div class="flex py-2">Last Name</div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.last_name ? toPutPracticeUser.last_name : 'N/A' }}</div>
+            <div class="flex py-2">Suffix </div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.suffix ? toPutPracticeUser.suffix : 'N/A' }}</div>
+            <div class="flex py-2">Role </div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.practice_role ? toPutPracticeUser.practice_role : 'N/A' }}</div>
+            <div class="flex py-2">Status </div>
+            <div class="flex px-2 text-white">{{toPutPracticeUser.status ? toPutPracticeUser.status : 'N/A' }}</div>
+          </div>
         </div>
+        
+        <!-- TAB 2 -->
         <div v-if="tab2" class="flex text-white">
           <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
             <div class="overflow-hidden text-gray-300 text-sm p-2">
@@ -177,6 +199,11 @@ export default {
         status:this.user.status
     },
     console.log("Route name: ",this.$route.name) 
+  },
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
   },
   methods: {
     processForm:function(userInfo){

@@ -2,7 +2,7 @@
     <div>
         <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'"/>
         <div class="w-full overflow-hidden">
-            <div>
+            <div v-if="authAdminPermissions.includes('Add Practice User')">
               <button
                 class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
                 @click="show(surgery.id)"
@@ -108,16 +108,18 @@ export default {
         },
     },
     computed:{
-        total(){
-            return this.$store.state.practices.practiceUsersCount
-        },
-        users(){
-            return this.$store.state.practices.practiceUsers
-        },
-        totalPages(){
-            return this.$store.state.practices.practiceUsersPageCount
-        }
-
+      total(){
+          return this.$store.state.practices.practiceUsersCount
+      },
+      users(){
+          return this.$store.state.practices.practiceUsers
+      },
+      totalPages(){
+          return this.$store.state.practices.practiceUsersPageCount
+      },
+      authAdminPermissions() {
+        return this.$store.getters["auth/permissions"]
+      },
     },
     async created(){
         const query = {

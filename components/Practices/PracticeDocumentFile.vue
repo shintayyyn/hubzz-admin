@@ -77,8 +77,10 @@ export default {
         console.log(this.practiceDoc)
     },
 
-    computed:{
-        
+    computed: {
+      authAdminPermissions() {
+        return this.$store.getters["auth/permissions"]
+      },
     },
     
     methods:{

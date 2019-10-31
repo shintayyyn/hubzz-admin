@@ -6,10 +6,14 @@ export const state = () => ({
     text: ''
   },
   toggled_sidebar: false,
-  totalPages:0
+  totalPages:0,
 })
 
-export const getters = {}
+export const getters = {
+  getAdminUserMe(state){
+    return state.admin_user_logged_in
+  }
+}
 
 export const mutations = {
   SET_SOCKET(state, payload){
@@ -29,12 +33,12 @@ export const actions = {
   async login({getters, commit, dispatch}, {email, password}) {
     const socketId = this.$socket.id
 
-    const response = await this.$axios.post('/api/v1/admin/login', {
+    let response = await this.$axios.post('/api/v1/admin/login', {
       email,
       password,
       socket_id: socketId
     })
-
+  
     const token = response.data.data.token.token
 
     this.$axios.setToken(token, 'Bearer')
@@ -49,11 +53,13 @@ export const actions = {
       console.log('Socket Logged In')
     }
 
+    // await this.$store.commit('SET_ADMIN_USER_LOGGED_IN', response.data.data.user)
+    
     dispatch('one-signal/setOneSignalUser')
   },
 
   async logout({getters, commit, dispatch}) {
-    await this.$axios.post('/api/v1/logout').catch((err) => {
+    await this.$axios.post('/api/v1/admin/logout').catch((err) => {
       console.log('err', err)
     })
 
