@@ -1,6 +1,6 @@
 <template>
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white py-2">
+      <div class="flex justify-between text-sm text-white">
         <nuxt-link to="/reports/" class="text-white p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
         </nuxt-link>

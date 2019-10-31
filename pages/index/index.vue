@@ -1,11 +1,11 @@
 <template>
     <div class="flex-1 flex flex-col overflow-hidden py-2 px-6">
-        <div class="text-4xl text-white">Dashboard</div>
+        <div class="text-xl md:text-4xl text-white">Dashboard</div>
         <div class="text-sm font-hairline text-white">Work in progress</div>
         <div class="flex flex-wrap text-white -mx-1 sm:-mx-2">
             <!------------------------------ Column 1 -------------------------------->
-            <div class="my-1 p-3 xl:w-1/3 w-full">
-                <div class='m-3'>
+            <div class="my-1 md:p-3 xl:w-1/3 w-full">
+                <div class='my-3'>
                     Locums
                 </div>
                 <div class="h-72 overflow-y-auto overflow-x-hidden px-2">
@@ -13,7 +13,7 @@
                     v-for="(item,index) in locumDocsAlert" 
                     :key="`item-${index}`" 
                     :to="{path:`/locums/${item.locum_detail.user.id}/locum-compliance/${item.compliance_document.id}`}"
-                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg ">
+                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light rounded-lg">
                         <div class="font-hairline">
                             {{$moment(item.uploaded_at).format('MMMM DD, YYYY | HH:mm')}}
                         </div>

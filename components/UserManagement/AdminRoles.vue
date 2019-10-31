@@ -1,10 +1,10 @@
 <template>
-    <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
-      <div class="flex flex-row-reverse px-2 justify-between flex-wrap">
+    <div class="flex-1 flex flex-col overflow-auto">
+      <div class="flex md:flex-row-reverse pt-1 md:py-1 justify-between flex-wrap">
         <div>
           <button
             v-if="deletingAdminRole == false"
-            class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
+            class="inline-flex items-center no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
             @click="deletingAdminRole = true"
           >Delete Role
             <svgicon
@@ -17,7 +17,7 @@
           <button
             v-if="deletingAdminRole == true"
             @click="deletingAdminRole = false"
-            class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
+            class="inline-flex items-center no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
           >Done
           <svgicon
             name="circle-check"
@@ -27,7 +27,7 @@
             class="mx-1 -my-1"/>
           </button>
           <button
-            class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-yellow-500 text-sm font-semibold text-black rounded-lg shadow md:float-right"
+            class="inline-flex items-center no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-yellow-500 text-sm font-semibold text-black rounded-lg shadow md:float-right"
             @click="modal=true"
           >Add New Role
             <svgicon
@@ -39,12 +39,12 @@
           </button>
         </div>
       </div>
-      <div class="flex flex-col mx-2 text-white">
+      <div v-if="adminRoles.length" class="w-full h-full overflow-x-auto px-2">
         <!-- HEADER -->
-        <div class="hidden md:inline-flex w-full font-bold text-white text-sm py-4">
-          <div class="w-1/2">Role Name</div> 
-          <div class="w-1/2">Date Created</div>
-          <div class="w-1/2">Description</div>
+        <div class="hidden md:flex items-center text-white justify-around font-semibold">
+          <div class="align-middle px-2 text-center w-1/3">Role Name</div> 
+          <div class="align-middle px-2 text-center w-1/3">Date Created</div>
+          <div class="align-middle px-2 text-center w-1/3">Description</div>
         </div>
         <!-- END HEADER -->
         <!-- BODY -->
@@ -64,16 +64,16 @@
             </div>
             <nuxt-link 
             :to="{ path:`/user-management/roles-and-permissions/${role.id}`}"
-              class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 text-white">
-              <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Role Name</strong>
                 <span class="break-word">{{ role.name }}</span>
               </div>
-              <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Date Created</strong>
                 <span class="break-all">{{ $moment(role.created_at).format('MMM D, YYYY')}}</span>
               </div>
-              <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Description</strong>
                 <span class="break-all">{{ role.description }}</span>
               </div>
@@ -81,6 +81,7 @@
           </div>
         </div>
       </div>
+      <div v-else class="text-center text-gray-400 py-4">No admin roles</div>
       <div v-if="!adminRoles.length == 0">
         <AppPagination
           :total="total"

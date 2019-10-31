@@ -1,24 +1,21 @@
 <template>
-  <div class="rounded-lg shadow-lg pt-10 px-5 pb-5 font-bold text-sm">
-    <div
-      class="mb-4 border-b border-b-2 border-gray-400 py-2"
-      :class="{'border-yellow-500':setFocus}"
-    >
-      <div class="text-base md:text-4xl font-bold md:font-normal mb-4 text-white">Terms and Conditions</div>
-      <textarea
-        rows="30"
-        name="terms_and_conditions"
-        id="terms_and_conditions"
-        @focus="setFocus = true"
-        @blur="setFocus = false"
-        v-html="form.terms_and_conditions"
-        v-model="form.terms_and_conditions"
-        class="appearance-none text-white bg-transparent border-none w-full px-2 leading-tight font-bold focus:outline-none"
-        style="font-family:Nunito"
-      ></textarea>
+  <div class="rounded-lg shadow-lg md:pt-10 px-2 md:px-4 text-white">
+    <div>
+      <!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Terms and Conditions</div> -->
+      <no-ssr placeholder="Loading...">
+        <quill-editor
+          class="bg-white text-black"
+          ref="myTextEditor"
+          v-model="form.terms_and_conditions"
+          :options="editorOption"
+          @blur="onEditorBlur($event)"
+          @focus="onEditorFocus($event)"
+          @ready="onEditorReady($event)"
+        ></quill-editor>
+      </no-ssr>
     </div>
     <div class="flex justify-end">
-        <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
+        <button @click="save()" class="my-4 font-semibold py-2 px-4 rounded-lg bg-sunglow text-black">
             Save
         </button>
     </div>
@@ -33,7 +30,33 @@ export default {
         terms_and_conditions:'',
         privacy_policy:''
       },
-      setFocus: false
+      setFocus: false,
+      editorOption: {
+        placeholder: "Please type the answer to the FAQ",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"],
+            ["blockquote", "code-block"],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ script: "sub" }, { script: "super" }],
+            [{ indent: "-1" }, { indent: "+1" }],
+            [{ direction: "rtl" }],
+            [{ size: ["small", false, "large", "huge"] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ font: [] }],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            ["clean"],
+            ["link"]
+          ]
+        }
+      }
+    }
+  },
+  computed: {
+    editor() {
+      return this.$refs.myTextEditor.quill;
     }
   },
   created() {
@@ -45,6 +68,15 @@ export default {
     })
   },
   methods:{
+    onEditorBlur(editor) {
+      console.log("editor blur!", editor);
+    },
+    onEditorFocus(editor) {
+      console.log("editor focus!", editor);
+    },
+    onEditorReady(editor) {
+      console.log("editor ready!", editor);
+    },
     async save(){
       try{
         await this.$axios.put('/api/v1/admin/terms-and-conditions',this.form)
@@ -58,8 +90,8 @@ export default {
 }
 </script>
 <style scoped>
-textarea {
-  resize: none;
+.ql-toolbar.ql-snow{
+  display: flex;
 }
 </style>
 

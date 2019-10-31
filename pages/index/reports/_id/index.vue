@@ -1,5 +1,5 @@
 <template>
-  <div class="report-modal p-8 shadow-lg">
+  <div class="report-modal p-4 md:p-8 shadow-lg">
     <ReportModal/>
   </div>
 </template>

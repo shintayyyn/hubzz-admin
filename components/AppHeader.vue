@@ -1,7 +1,7 @@
 <template>
     <section class="header">
         <!-- HEADER -->
-        <div class="flex justify-between items-center text-sm text-white px-6">
+        <div class="flex justify-between items-center text-sm text-white px-4 md:px-6">
             <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
                 <img src="~/assets/images/hbg.png">
             </button>

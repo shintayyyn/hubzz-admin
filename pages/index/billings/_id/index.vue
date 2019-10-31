@@ -1,15 +1,15 @@
 <template>
-    <div class="billing-modal p-8 shadow-lg">
+    <div class="billing-modal p-4 md:p-8 shadow-lg">
       <!-- HEADER -->
-      <div class="flex justify-between text-sm text-white py-2 px-6">
-        <nuxt-link to="/billings" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+      <div class="flex justify-between text-sm text-white py-2">
+        <nuxt-link to="/billings" class="text-white hover:text-sunglow p-1">
+          <svgicon name="arrow-left-solid" height="22" width="22" class="fill-current"/>
         </nuxt-link>
       </div>
       <!-- HEADER -->
-      <div class="flex flex-col bg-waterloo m-4 py-2 px-4 rounded-lg" style="width: 400px;">
+      <div class="flex flex-col bg-waterloo my-4 py-2 px-4 rounded-lg">
         <div class="flex flex-col">
-          <label class="text-sm" style="color: #CDD0D8;">Name</label>
+          <label class="text-sm text-gray-200">Name</label>
         </div>
       </div>
     </div>
@@ -17,7 +17,6 @@
 
 <script>
 export default {
-
   async asyncData({ app, route }) {
     try {
       let response = await app.$axios.get(

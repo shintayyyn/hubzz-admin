@@ -1,5 +1,5 @@
 <template>
-   <div class="flex-1 flex flex-col py-2 px-6 overflow-y-auto">
+   <div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
 	<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'"/> -->
     <div class="flex justify-between items-center flex-wrap">
         <div class="flex items-center py-2">
@@ -33,7 +33,7 @@
 				</div>
     </div>
 	<!-- TABLE RESPONSIVE-->
-    <div v-if="itemCount > 0" class="w-full overflow-x-auto"> 
+    <div v-if="itemCount > 0" class="w-full"> 
       <!-- HEADER -->
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
         <div class="align-middle px-2 w-1/6" @click="sortBy('practice_name',activePage,search)">
@@ -81,35 +81,35 @@
         :to="{path:`/practices/${practice.id}`,query:$route.query}"
         class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
       >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
           <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Practice Code</strong>
           <span class="break-words md:text-center w-full">{{ practice.surgery ? practice.surgery.code:null }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Created</strong>
           <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
-		    <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+		    <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Expires</strong>
           <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Status</strong>
-          <span class="inline-flex justify-center no-underline py-2 md:mx-4 text-sm text-white rounded-full shadow"
+          <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
 			    :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
 		    </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Type</strong>
-          <span class="inline-flex justify-center text-center no-underline py-2 md:mx-4 text-sm text-black rounded-full shadow"
+          <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>
 
@@ -357,230 +357,228 @@ export default {
   //     offset:this.getQuery()
   //   })
   // },
-  
-		show(){
-			this.modal=true
-		},
-
-		getQuery(){
-			const query = {
-				...this.$route.query
-			}
-			const offset = parseInt(query.page)*10 - 10 
-			return offset
-		},
-
-		getPractices(){
-			this.$store.dispatch("practices/fetchPractices",{
-				limit:10,
-				search:this.search,
-				order_by:this.paramSort.order_by,
-				offset:this.getQuery()
-			})
+    show(){
+      this.modal=true
     },
-    
-		async sortBy(sortedBy,page,search) {
-      if(this.sortedBy == sortedBy && this.sortType == true){
-        this.paramSort.order_by ='created_at:desc'
-        this.sortedBy = ''
-      }else{
-        this.sortedBy = sortedBy
-        this.sortType = !this.sortType
-        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+
+    getQuery(){
+      const query = {
+        ...this.$route.query
       }
-			let order_by = await this.paramSort.order_by
-			let query = {
-				...this.$router.query,
-				order_by
-			}
-			if (page === 1) {
-				delete query.page
-			}
-			if(page){
-				query = {
-					...this.$router.query,
-					page,order_by
-				}
-			}
-			if(search){
-				query = {
-					...this.$router.query,
-					search,order_by
-				}
-			}
-			if(page & search){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
-			}
-			
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-			this.loading = true
-			}
-			this.$router.push({ query })
-			this.getPractices()
-		},
-  	goToPage(page,search,order_by) {
+      const offset = parseInt(query.page)*10 - 10 
+      return offset
+    },
+
+    getPractices(){
+      this.$store.dispatch("practices/fetchPractices",{
+        limit:10,
+        search:this.search,
+        order_by:this.paramSort.order_by,
+        offset:this.getQuery()
+      })
+    },
+      
+    async sortBy(sortedBy,page,search) {
+        if(this.sortedBy == sortedBy && this.sortType == true){
+          this.paramSort.order_by ='created_at:desc'
+          this.sortedBy = ''
+        }else{
+          this.sortedBy = sortedBy
+          this.sortType = !this.sortType
+          this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+        }
+        let order_by = await this.paramSort.order_by
+        let query = {
+          ...this.$router.query,
+          order_by
+        }
+        if (page === 1) {
+          delete query.page
+        }
+        if(page){
+          query = {
+            ...this.$router.query,
+            page,order_by
+          }
+        }
+        if(search){
+          query = {
+            ...this.$router.query,
+            search,order_by
+          }
+        }
+        if(page & search){
+          query = {
+            ...this.$router.query,
+            page,search,order_by
+          }
+        }
+        
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.loading = true
+        }
+        this.$router.push({ query })
+        this.getPractices()
+      },
+    goToPage(page,search,order_by) {
+        if (page < 1) {
+          return
+        }
+      if(search){
+        query = {
+          ...this.$router.query,
+          search,order_by
+        }
+      }
+      if(page & search){
+        query = {
+          ...this.$router.query,
+          page,search,order_by
+        }
+      }
+      
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+      this.loading = true
+      }
+      this.$router.push({ query })
+      this.getPractices(this.paramSort,this.search)
+    },
+    goToPage(page,search,order_by) {
       if (page < 1) {
         return
       }
-    if(search){
-      query = {
-        ...this.$router.query,
-        search,order_by
-      }
-    }
-    if(page & search){
-      query = {
-        ...this.$router.query,
-        page,search,order_by
-      }
-    }
-    
-    if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-    this.loading = true
-    }
-    this.$router.push({ query })
-    this.getPractices(this.paramSort,this.search)
-  },
-  goToPage(page,search,order_by) {
-    if (page < 1) {
-      return
-    }
 
-    if (page > this.pageCount) {
-      return
-    }
-    
-    let query = {
-      ...this.$router.query,
-      page
-    }
-
-    if(search){
-      query = {
+      if (page > this.pageCount) {
+        return
+      }
+      
+      let query = {
         ...this.$router.query,
-        page,search
+        page
       }
-    }
-    if(order_by){
-      query={
-        ...this.$route.query,
-        page,order_by
-      }
-    }
-    if(search && order_by){
-      query={
-        ...this.$router.query,
-        page,search,order_by
-      }
-    }
 
-    if (page === 1) {
-      delete query.page
-    }
-
-    if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-      this.loading = true
-    }	
-    this.$router.push({ query })
-  },
-
-    searchSubmit(page, order_by) {
-    let search = this.search
-    let query = {
-      ...this.$router.query,
-      search
-    }
-    if(page === 1){
-      delete query.page
-    }
-    if(page && page>1){
-      query = {
-        ...this.$router.query,
-        page,search
+      if(search){
+        query = {
+          ...this.$router.query,
+          page,search
+        }
       }
-    }
-    if(order_by){
-      query = {
-        ...this.$router.query,
-        search,order_by
+      if(order_by){
+        query={
+          ...this.$route.query,
+          page,order_by
+        }
       }
-    }
-    if(page && order_by){
-      query = {
-        ...this.$router.query,
-        page,search,order_by
+      if(search && order_by){
+        query={
+          ...this.$router.query,
+          page,search,order_by
+        }
       }
-    }
 
-      if (this.search === '') {
-        delete query.search
+      if (page === 1) {
+        delete query.page
       }
 
       if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
         this.loading = true
       }	
       this.$router.push({ query })
-		},
+    },
 
-  	searchSubmit(page, order_by) {
-			let search = this.search
-			let query = {
-				...this.$router.query,
-				search
-			}
-			if(page === 1){
-				delete query.page
-			}
-			if(page && page>1){
-				query = {
-					...this.$router.query,
-					page,search
-				}
-			}
-			if(order_by){
-				query = {
-					...this.$router.query,
-					search,order_by
-				}
-			}
-			if(page && order_by){
-				query = {
-					...this.$router.query,
-					page,search,order_by
-				}
-			}
+    searchSubmit(page, order_by) {
+      let search = this.search
+      let query = {
+        ...this.$router.query,
+        search
+      }
+      if(page === 1){
+        delete query.page
+      }
+      if(page && page>1){
+        query = {
+          ...this.$router.query,
+          page,search
+        }
+      }
+      if(order_by){
+        query = {
+          ...this.$router.query,
+          search,order_by
+        }
+      }
+      if(page && order_by){
+        query = {
+          ...this.$router.query,
+          page,search,order_by
+        }
+      }
 
-  			if (this.search === '') {
-  				delete query.search
-  			}
+        if (this.search === '') {
+          delete query.search
+        }
 
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true
-			}
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.loading = true
+        }	
+        this.$router.push({ query })
+    },
 
-	      	this.$router.push({ query })
-		},
+    searchSubmit(page, order_by) {
+      let search = this.search
+      let query = {
+        ...this.$router.query,
+        search
+      }
+      if(page === 1){
+        delete query.page
+      }
+      if(page && page>1){
+        query = {
+          ...this.$router.query,
+          page,search
+        }
+      }
+      if(order_by){
+        query = {
+          ...this.$router.query,
+          search,order_by
+        }
+      }
+      if(page && order_by){
+        query = {
+          ...this.$router.query,
+          page,search,order_by
+        }
+      }
 
-		typeStyle(status){
-			switch(status){
-				case 'Hub':
-					return 'bg-red-500 text-white lg:px-8 sm:px-2'
-					break;
-				case 'Spoke':
-					return 'bg-blue-500 text-white lg:px-8 sm:px-2'
-					break;
-				case 'Stand Alone':
-					return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
-					break;
-				default:
-					return
-			}
-		},
+        if (this.search === '') {
+          delete query.search
+        }
+
+      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+        this.loading = true
+      }
+          this.$router.push({ query })
+    },
+
+    typeStyle(status){
+      switch(status){
+        case 'Hub':
+          return 'bg-red-500 text-white lg:px-8 sm:px-2'
+          break;
+        case 'Spoke':
+          return 'bg-blue-500 text-white lg:px-8 sm:px-2'
+          break;
+        case 'Stand Alone':
+          return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
+          break;
+        default:
+          return
+      }
+    },
 		  
-  	}
+  }
 };
 </script>
 <style>
