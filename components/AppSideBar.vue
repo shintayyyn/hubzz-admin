@@ -5,7 +5,7 @@
       <div class="xl:mt-24">
         <!-- LINKS WRAPPER -->
         <div
-          class="close-button cursor-pointer text-2xl font-bold text-sunglow px-4 my-10"
+          class="close-button cursor-pointer text-2xl font-bold text-sunglow px-4 mt-4 md:my-10"
           @click="close"
         >X</div>
         <!-- LINKS -->

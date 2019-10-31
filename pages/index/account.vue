@@ -1,6 +1,6 @@
 <template>
     <div class="flex-1 flex flex-col overflow-hidden py-2 mx-6">
-        <div class="text-4xl text-white">Account</div>
+        <div class="text-xl md:text-4xl text-white">Account</div>
         <div class="flex flex-col rounded-lg">
             <div class="w-full overflow-hidden">
                 <div class="flex flex-wrap -mx-1 overflow-hidden">
@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <div class="flex sm:p-2">
+        <div class="flex">
             <div class="w-full md:w-auto" v-if="tab1">
                 <div class="w-full p-4 my-2 text-white bg-waterloo rounded-lg">
                     <div class="font-semibold">E-Mail Address</div>

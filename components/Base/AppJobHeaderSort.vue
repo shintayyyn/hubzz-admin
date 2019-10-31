@@ -1,49 +1,62 @@
 <template>
   <div>
-    <div class="w-5/6 mx-6 mt-6 font-semibold">
-       <div class="flex flex-row text-white"> 
-        <div class="w-1/6 align-middle" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
+    <div class="w-full md:mt-6">
+      <div class="md:hidden flex items-center text-white">
+        <label for="sort" class="text-sm whitespace-no-wrap">Sort by</label>
+        <select 
+          v-model="sort"
+					class="outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 focus:hubzz-yellow bg-waterloo ml-2"
+        >
+          <option selected>Job Number</option>
+          <option>Practice/Surgery</option>
+          <option>Title</option>
+          <option>From</option>
+          <option>To</option>
+          <option>Created</option>
+      </select>
+      </div>
+       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
          {{ isJobParts ? 'Job Part Number' : 'Job Number'}}
           <svgicon v-if="sortedBy!='job_number' && sortedBy!='job_part_number' "  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
-        <div class="w-1/6 align-middle" @click="sortBy(isJobParts ? 'job_surgery_name':'surgery_name',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy(isJobParts ? 'job_surgery_name':'surgery_name',currentPage,search)">
           Practice / Surgery
           <svgicon v-if="sortedBy!='surgery_name' && sortedBy!='job_surgery_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 align-middle" @click="sortBy(isJobParts ? 'job_title':'title',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy(isJobParts ? 'job_title':'title',currentPage,search)">
           Title
           <svgicon v-if="sortedBy!='title' && sortedBy!='job_title'"  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='title' || sortedBy=='job_title')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && (sortedBy=='title' || sortedBy=='job_title')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 align-middle" @click="sortBy('date_start',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('date_start',currentPage,search)">
           From
           <svgicon v-if="sortedBy!='date_start'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_start'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='date_start'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 align-middle" @click="sortBy('date_end',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('date_end',currentPage,search)">
           To
            <svgicon v-if="sortedBy!='date_end'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_end'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='date_end'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="w-1/6 align-middle" @click="sortBy('date_created',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('date_created',currentPage,search)">
           Created
            <svgicon v-if="sortedBy!='date_created'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_created'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='date_created'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div v-if="tabStatus == 'Completed'" class="w-1/6 align-middle" @click="sortBy('date_created',currentPage,search)">
+        <div class="align-middle px-2 text-center w-64" v-if="tabStatus == 'Completed'" @click="sortBy('date_created',currentPage,search)">
           Invoice Status
         </div>
       </div>
     </div>
-   
   </div>
 </template>
 <script>
@@ -65,6 +78,28 @@ export default {
       order_by:'',
     }
   },  
+  watch: {
+    sort(value){
+      if (value === 'Job Number'){
+        this.sortBy(this.isJobParts ? 'job_part_number':'job_number', this.currentPage, this.search)
+      }
+      if (value === 'Practice/Surgery'){
+        this.sortBy(this.isJobParts ? 'job_surgery_name':'surgery_name', this.currentPage, this.search)
+      }
+      if (value === 'Title'){
+        this.sortBy(this.isJobParts ? 'job_title':'title', this.currentPage, this.search)
+      }
+      if (value === 'From'){
+        this.sortBy('date_start', this.currentPage, this.search)
+      }
+      if (value === 'To'){
+        this.sortBy('date_end', this.currentPage, this.search)
+      }
+      if (value === 'Created'){
+        this.sortBy('date_end', this.currentPage, this.search)
+      }
+    }
+  },
   methods:{
     getQuery(){
 			const query = {

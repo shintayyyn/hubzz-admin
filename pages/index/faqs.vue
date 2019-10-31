@@ -1,11 +1,9 @@
 <template>
   <section class="flex-1 flex flex-col overflow-hidden py-2">
-    <div class="px-6">
-      <div class="flex flex-no-wrap justify-start">
-        <div class="text-base md:text-4xl font-bold md:font-normal mb-4 text-white">Frequently Asked Questions</div>
-      </div>
-      <div class="rounded-lg text-white bg-charade shadow-lg pt-8 px-5 pb-5 mb-10">
-        <div class="inline-flex flex-wrap font-bold mt-4 mb-2">
+    <div class="px-4 md:px-6">
+      <div class="text-xl md:text-4xl text-white pb-4">Frequently Asked Questions</div>
+      <div class="rounded-lg text-white bg-charade shadow-lg p-3 md:p-5">
+        <div class="w-full inline-flex flex-wrap justify-between font-bold my-2">
           <div class="flex items-center ml-1 mr-2">
               <span>Locum</span>
           </div>
@@ -45,116 +43,121 @@
         <!-- -------------------------------------------------------------------------- -->
         <div v-for="item in locumFaqs" :key="item.id">
           <div class="inline-flex w-full">
-            <nuxt-link v-if="deleteLocumFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-4"> 
+            <nuxt-link v-if="deleteLocumFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-2 md:mr-4"> 
               <svgicon
                 name="edit"
                 width="21"
                 height="21"
-                color="white white"
+                class="fill-current text-white hover:text-sunglow"
                 />
             </nuxt-link>
-            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')" class="flex items-center cursor-pointer mr-4">
+            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')" class="flex items-center cursor-pointer mr-2 md:mr-4">
               <svgicon
                 name="garbage"
                 width="21"
                 height="21"
-                color="red red"
+                class="fill-current text-red-800 hover:text-red-600"
                 />
             </div>
             <div
-              class="flex m-1 w-full rounded-lg bg-trout p-4 justify-between cursor-pointer"
+              class="flex my-1 w-full rounded-lg bg-trout hover:bg-gray-700 p-2 md:p-4 justify-between cursor-pointer"
               @click="toggleFaqOn(item)"
             >
-              <div>{{item.question}}</div>
-              <div class="font-bold text-lg">
+              <div class="leading-tight">{{item.question}}</div>
+              <div class="font-bold text-lg flex items-center">
                 <svgicon name="arrow-right" height="20" width="20" color="white white" v-if="!item.toggled" />
                 <svgicon name="arrow-up" height="20" width="20" color="white transparent" v-else/>
               </div>
             </div>
           </div>
-          <div
-            class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
-            :class="{'toggled': item.toggled}"
-          >
-             <div v-html="item.answer" class="w-full h-auto mx-8"></div>
-          </div>
+          <transition name="drop-down">
+            <div
+              class="flex justify-start item-answer font-bold text-sm overflow-hidden"
+              v-if="item.toggled"
+            >
+              <div v-html="item.answer" class="w-full ml-8 md:mx-8 md:px-4 py-2 h-auto"></div>
+            </div>
+          </transition>
         </div>
         <!---------------------------------------------------------------------------------->
-        <div class="inline-flex font-bold mt-4 mb-2">
-          <div class="flex items-center m-1">
+        <div class="w-full inline-flex flex-wrap justify-between font-bold my-2">
+          <div class="flex items-center ml-1 mr-2">
               <span>Practice</span>
           </div>
-          <nuxt-link
-          v-if="authAdminPermissions.includes('Create New FAQ')"
-          :to="{path:`/faqs/addFaq/practice`}"
-          class="flex items-center mx-2 p-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
-            <span class="mr-2">Add</span> 
-            <svgicon
-              name="add-rectangle"
-              width="21"
-              height="21"
-              color="black black"
-              />
-          </nuxt-link>
-          <button v-if="deletePracticeFaq == false && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = true" class="flex items-center text-white font-bold p-2 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
-            <span class="mr-2">Delete</span>
-            <svgicon
-              name="garbage"
-              width="21"
-              height="21"
-              color="white white"
-              />
-          </button>
-          <button v-if="deletePracticeFaq == true && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = false" class="flex items-center p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
-            <span class="mr-2">Done</span>
-            <svgicon
-              name="circle-check"
-              width="21"
-              height="21"
-              color="white"
-              />
-          </button>
+          <div class="flex">
+            <nuxt-link
+            v-if="authAdminPermissions.includes('Create New FAQ')"
+            :to="{path:`/faqs/addFaq/practice`}"
+            class="flex items-center mx-2 p-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
+              <span class="mr-2">Add</span> 
+              <svgicon
+                name="add-rectangle"
+                width="21"
+                height="21"
+                color="black black"
+                />
+            </nuxt-link>
+            <button  v-if="deletePracticeFaq == false && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = true" class="flex items-center text-white font-bold p-2 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
+              <span class="mr-2">Delete</span>
+              <svgicon
+                name="garbage"
+                width="21"
+                height="21"
+                color="white white"
+                />
+            </button>
+            <button v-if="deletePracticeFaq == true && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = false" class="flex items-center p-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
+              <span class="mr-2">Done</span>
+              <svgicon
+                name="circle-check"
+                width="21"
+                height="21"
+                color="white"
+                />
+            </button>
+          </div>
+          
         </div>
         <!-- ---------------------------------------------------------------------------- -->
         <div v-for="item in practiceFaqs" :key="item.id">
           <div class="inline-flex w-full">
-            <nuxt-link v-if="deletePracticeFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex cursor-pointer mr-4"> 
+            <nuxt-link v-if="deletePracticeFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-2 md:mr-4"> 
               <svgicon
                 name="edit"
                 width="21"
                 height="21"
-                color="white white"
-                class="mt-5"/>
+                class="fill-current text-white hover:text-sunglow mt-5"
+                />
             </nuxt-link>
-            <div v-if="deletePracticeFaq == true && authAdminPermissions.includes('Edit FAQ')" class="flex cursor-pointer mr-4">
+            <div v-if="deletePracticeFaq == true && authAdminPermissions.includes('Edit FAQ')" class="flex items-center cursor-pointer mr-2 md:mr-4">
               <svgicon
                 name="garbage"
                 width="21"
                 height="21"
-                color="red red"
-                class="mt-5"/>
+                class="fill-current text-red-800 hover:text-red-600 mt-5"
+                />
             </div>
             <div
-              class="flex m-1 w-full rounded-lg bg-trout p-4 justify-between cursor-pointer"
+              class="flex m-1 w-full rounded-lg bg-trout hover:bg-gray-700 p-2 md:p-4 justify-between cursor-pointer"
               @click="toggleFaqOn(item)"
             >
-              <div>{{item.question}}</div>
-              <div class="font-bold text-lg">
+              <div class="leading-tight">{{item.question}}</div>
+              <div class="font-bold text-lg flex items-center">
                 <svgicon name="arrow-right" height="20" width="20" color="white white" v-if="!item.toggled" />
                 <svgicon name="arrow-up" height="20" width="20" color="white transparent" v-else/>
               </div>
             </div>
           </div>
-          <div
-            class="flex justify-start w-full h-auto mx-4 item-answer font-bold text-sm overflow-hidden"
-            :class="{'toggled': item.toggled}"
-          >
-            <div v-html="item.answer" class="w-full h-auto mx-8"></div>
-          </div>
+          <transition name="drop-down">
+            <div
+              class="flex justify-start item-answer font-bold text-sm overflow-hidden"
+              v-if="item.toggled"
+            >
+              <div v-html="item.answer" class="w-full ml-8 md:mx-8 md:px-4 py-2 h-auto"></div>
+            </div>
+          </transition>
         </div>
-        <!-- ---------------------------------------------------------------------------- -->
-        <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq')"></div>
-        <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-id')"></div>
+        <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq') || $route.name.includes('index-faqs-index-id')" @click="$router.go(-1)"></div>
       </div>
        <nuxt-child/>
     </div>
@@ -240,11 +243,12 @@ export default {
 </script>
 <style scoped>
 .item-answer {
-  height: 0;
-  transition: all 0.3s ease-in-out;
+  word-wrap: break-word;
+  height: auto;
+    transition: all 0.5s;
 }
 .toggled {
-  height: auto;
+    transition: all 0.5s;
 }
 .faq-shield {
   position: fixed;

@@ -4,7 +4,7 @@
     <div class="text-sm font-hairline text-white">Work in progress</div>
     <div class="flex flex-wrap text-white -mx-1 sm:-mx-2">
         <!------------------------------ Column 1 -------------------------------->
-        <div class="my-1 p-3 xl:w-1/3 w-full">
+        <div class="my-1 p-3 md:w-1/3 w-full">
             <div class='m-3'>
                 Locums
             </div>
@@ -37,7 +37,7 @@
             </div>
         </div>
         <!------------------------------ Column 2 ------------------------------>
-        <div class="my-1 p-3 xl:w-1/3 w-full overflow-hidden sm:my-2 sm:px-2">
+        <div class="my-1 p-3 md:w-1/3 w-full overflow-hidden sm:my-2 sm:px-2">
             <div class='m-3'>
                 Practices
             </div> 
@@ -63,7 +63,7 @@
             </div>
         </div>
         <!------------------------------ Column 3 ----------------------------->
-        <div class="my-1 p-3 xl:w-1/3 w-full overflow-hidden sm:my-2 sm:px-2">
+        <div class="my-1 p-3 md:w-1/3 w-full overflow-hidden sm:my-2 sm:px-2">
             <div class='m-3'>
                 Billings
             </div>

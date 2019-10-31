@@ -132,6 +132,19 @@ table tbody td {
 .fade-leave-active {
   opacity: 0;
 }
+
+/* toggle */
+.drop-down-enter-active,
+.drop-down-leave-active {
+  transition: all 0.5s;
+}
+
+.drop-down-enter,
+.drop-down-leave-active {
+  transform: translateY(-5px);
+  opacity: 0;
+}
+
 /* page */
 .page-enter-active,
 .page-leave-active {
@@ -247,5 +260,24 @@ table tbody td {
     font-size: 0.75em;
     margin-left: -5em;
     width: 10em;
+  }
+}
+
+/* quill editor */
+.ql-toolbar.ql-snow {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ql-toolbar.ql-snow .ql-formats {
+  display: flex;
+  background: #eee;
+  margin: 4px 3px !important;
+}
+
+@media screen and (max-width: 767px) {
+  /* quill editor */
+  .ql-container.ql-snow .ql-editor {
+    padding: 8px;
   }
 }

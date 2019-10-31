@@ -5,68 +5,69 @@
         <AppConfirmCancel @close="showConfirmCancelModal = false" :adminAccountId="adminAccountId"/>
       </div>
     </transition>
-    <div class="flex flex-row-reverse px-2 justify-between flex-wrap">
+    <div class="flex md:flex-row-reverse pt-1 md:py-1 justify-between flex-wrap">
       <div>
         <button
         v-if="deleteAdminUser == true && authAdminPermissions.includes('Delete Admin Account')"
         @click="deleteAdminUser = false"
-        class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
+        class="inline-flex no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
         >Done</button>
 
         <button
         v-if="deleteAdminUser == false && authAdminPermissions.includes('Delete Admin Account')"
         @click="deleteAdminUser = true"
-        class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
+        class="inline-flex no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
         >Delete Admin User</button>
 
         <button
         v-if="authAdminPermissions.includes('Create Admin Account')"
         @click="show()"
-        class="inline-flex no-underline m-1 py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
+        class="inline-flex no-underline my-1 md:my-2 md:mr-1 py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
         >Create Admin Account</button>
       </div>
     </div>
-    <div v-if="adminUsers.length>0" class="px-2 table border-separate overflow-x-auto cursor-pointer" style="border-spacing: 0 10px;"> 
+    <div v-if="adminUsers.length>0" class="w-full h-full overflow-x-auto px-1"> 
         <!-- HEADER -->
-        <div class="hidden md:table-row font-bold text-white text-sm py-4">
-          <div v-if="deleteAdminUser == true" class="table-cell">Delete Admin User</div> 
-          <div class="table-cell p-2 align-middle">E-Mail</div> 
-          <div class="table-cell p-2 align-middle">Role</div>
-          <div class="table-cell p-2 align-middle">Name</div>
+        <div class="hidden md:flex items-center text-white font-semibold">
+          <div class="align-middle px-2 w-1/6" v-if="deleteAdminUser == true">Delete Admin User</div> 
+          <div class="align-middle px-2" :class="deleteAdminUser ? 'w-1/4' : 'w-1/3'">E-Mail</div> 
+          <div class="align-middle px-2 text-center" :class="deleteAdminUser ? 'w-1/4' : 'w-1/3'">Role</div>
+          <div class="align-middle px-2 text-center" :class="deleteAdminUser ? 'w-1/4' : 'w-1/3'">Name</div>
         </div>
         <!-- END HEADER -->
         <!-- BODY -->
         <div
           v-for="(user, index) in adminUsers"
           :key="`user-${index}`"
-          class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
         >
-          <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell align-middle" @click.prevent="toDeleteAdminUser(user.id)" v-if="deleteAdminUser == true">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center" v-if="deleteAdminUser == true">
             <svgicon
+            @click.prevent="toDeleteAdminUser(user.id)"
               name="delete-user"
               width="21"
               height="21"
               color="red red"
-              class="md:mx-3"/>
+              class="cursor-pointer"/>
           </div>
-          <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" class="flex flex-col text-white sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+          <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" class="flex flex-col md:justify-center sm:w-1/2 px-1 xl:px-2 py-2 align-middle text-white cursor-pointer" :class="deleteAdminUser ? ' md:w-1/4' : 'md:w-1/3'">
             <strong class="block md:hidden text-sm uppercase">E-Mail</strong>
             <span class="break-word">{{ user && user.email ? user.email : null }}</span>
           </nuxt-link>
-          <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <div class="flex flex-col md:justify-center sm:w-1/2 px-1 xl:px-2 py-2 align-middle md:text-center" :class="deleteAdminUser ? 'md:w-1/4' : 'md:w-1/3'">
             <strong class="block md:hidden text-sm uppercase">Role</strong>
             <span class="break-all">{{ user && user.admin_detail ? user.admin_detail.role.name : null }}</span>
           </div>
-          <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+          <div class="flex flex-col md:justify-center sm:w-1/2 px-1 xl:px-2 py-2 align-middle md:text-center" :class="deleteAdminUser ? 'md:w-1/4' : 'md:w-1/3'">
             <strong class="block md:hidden text-sm uppercase">Name</strong>
-            <span class="break-all">{{ user && user.personal_detail ? user.personal_detail.first_name+' '+user.personal_detail.last_name : null }}</span>
+            <span class="break-all">{{ user && user.personal_detail ? user.personal_detail.name : null }}</span>
           </div>
         </div>
         <!-- END BODY -->
     </div>
    
     <!-- PAGINATION -->
-    <div class="flex justify-center">
+    <div class="flex justify-center" v-if="pageCount > 1">
       <div >
         <button class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
           @click="goToPage(activePage - 1 ,search)" 
@@ -180,6 +181,7 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
         return this.$store.state.adminusers.itemCount
       },
       adminUsers(){
+        console.log("asd", this.$store.getters["adminusers/getAdminUsers"])
         return this.$store.getters["adminusers/getAdminUsers"]
       },
       authAdminPermissions() {

@@ -1,8 +1,6 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-6">
-    <div class="flex flex-no-wrap justify-start">
-      <div class="text-4xl text-white">Reports</div>
-    </div>
+  <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
+    <div class="text-xl md:text-4xl text-white">Reports</div>
     <div class="text-sm mb-4 text-white">Work in progress.</div>
     <!-- TABLE -->
       <div class="flex flex-col">
@@ -11,12 +9,12 @@
           v-for="(report, index) in reports"
           :key="`report-${index}`"
           :to="`/reports/${report.id}`"
-          class="inline-flex no-underline w-full p-3 rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
+          class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light my-2"
         >
-          <div class="flex-1 ml-2 text-sm text-white ">
-            <span class="font-semibold mr-4">{{report.code}} </span>
-            <span>{{report.description}}</span>
-            <div class="flex-1 float-right text-xs px-2 md:px-4">
+          <div class="flex flex-no-wrap text-sm text-white w-full">
+            <span class="px-2 whitespace-no-wrap font-semibold">{{report.code}} </span>
+            <span class="px-2 w-full">{{report.description}}</span>
+            <div  class="flex items-center px-1 md:px-0">
               <svgicon
                 name="arrow-right"
                 width="21"

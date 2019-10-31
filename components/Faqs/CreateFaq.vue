@@ -4,7 +4,7 @@
             <div class="text-xl my-2">Question</div>
             <input
                 v-model="form.question" 
-                class="appearance-none block w-full bg-gray-lighter text-gray-darker rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" 
+                class="appearance-none block w-full bg-gray-300 text-gray-800 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:text-black" 
                 type="text" 
                 placeholder="Please type the question here">
         </div>
@@ -22,7 +22,7 @@
           </quill-editor>
         </no-ssr>
         <div class="flex justify-start">
-        <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">
+        <button @click="save()" class="font-semibold my-2 py-2 px-4 rounded-lg bg-sunglow text-black">
             Save
         </button>
     </div>

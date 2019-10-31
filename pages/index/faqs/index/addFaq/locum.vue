@@ -1,10 +1,10 @@
 <template>
-    <div class="p-8 text-white">
+    <div class="p-4 md:p-8 text-white">
         <div @click="goBack()" class="cursor-pointer">
             <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
         </div>
-        <div class="text-4xl text-white">Add a FAQ for Locums</div>
-        <div class="m-8">
+        <div class="mt-4 text-2xl md:text-4xl text-white">Add a FAQ for Locums</div>
+        <div class="md:mx-8">
             <CreateFaq :domain="domain"/>
         </div>
         <div class="add-faq-shield" v-if="$route.name.includes('index-faqs-add')"></div>

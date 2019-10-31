@@ -1,10 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
-    <div class="px-2">
-      <div class="flex flex-no-wrap justify-start">
-        <div class="text-4xl mb-4 text-white">Inquiries</div>
-      </div>
-    </div>
+    <div class="text-xl md:text-4xl text-white">Inquiries</div>
     <!-- TABLE RESPONSIVE-->
     <div v-if="emails.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
       <!-- HEADER -->

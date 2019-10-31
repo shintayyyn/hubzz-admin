@@ -9,7 +9,7 @@
       </div>
       <div v-else>
         <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Matched'" :currentPage="currentPage" />
-          <div class="flex flex-col text-white md:px-6"> 
+          <div class="w-full overflow-x-auto" > 
             <!-- HEADER -->
             <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
               <div class="w-1/6">Job Number</div> 
@@ -24,29 +24,29 @@
               v-for="(item, index) in matchedJobs" 
               @click="$router.push(`/locums/${user.id}/locum-jobs/locum-matched-jobs/${item.id}`)"
               :key="`item-${index}`" 
-              class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
+              class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
             >
-              <div class="flex flex-col sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Job Number</strong>
                 <span class="">{{item.job_number}}</span>
               </div>
-              <div class="flex flex-col sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
                 <span class="">{{item.platform_job.practice.surgery.name}}</span>
               </div>
-              <div class="flex flex-col sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
                 <span class="">{{item.title}}</span>
               </div>
-              <div class="flex flex-col sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">From</strong>
                 <span class="">{{item.date_start}}</span>
               </div>
-              <div class="flex flex-col sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">To</strong>
                 <span class="">{{item.date_end}}</span>
               </div>
-              <div class="flex flex-col sm:w-1/2 md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
                 <span class="">{{item.date_created}}</span>
               </div>

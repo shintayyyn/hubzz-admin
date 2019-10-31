@@ -1,9 +1,9 @@
 <template>
   <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
     <div class="inline-flex">
-      <div class="flex flex-wrap overflow-hidden text-gray-300">
+      <div class="w-full flex flex-wrap overflow-hidden text-gray-300">
         <!--COLUMN 1-->
-        <div class="w-full md:w-1/3 overflow-hidden mb-2">
+        <div class="w-full md:w-1/3 overflow-hidden mb-2 md:px-10">
           <div class="mx-3 my-4 md:my-6">
             <p class="m-2">Name</p>
             <p class="mx-4 font-semibold" :class="!user.personal_detail.name && 'opacity-75'">{{ user.personal_detail.name ? user.personal_detail.name : 'N/A' }}</p>
@@ -93,7 +93,7 @@
           </div>
         </div>
         <!--COLUMN 2-->
-        <div class="w-full md:w-1/3 overflow-hidden mb-2">
+        <div class="w-full md:w-1/3 overflow-hidden mb-2 md:px-10">
           <div class="mx-3 my-4 md:my-6">
             <p class="m-2 mr-20 ">Headline</p>
             <p class="mx-4 font-semibold" :class="!user.locum_detail.headline && 'opacity-75'">{{user.locum_detail.headline?user.locum_detail.headline:'N/A'}}</p>
@@ -168,8 +168,7 @@
           </div>
         </div>
         <!--COLUMN 3-->
-
-        <div class="w-full md:w-1/3 overflow-hidden mb-2">
+        <div class="w-full md:w-1/3 overflow-hidden mb-2 md:px-10">
           <div class="mx-3 my-4 md:my-6 border-b text-center pb-3">
             <embed
               class="object-cover w-48 h-48 rounded-full mx-auto"
