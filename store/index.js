@@ -53,7 +53,7 @@ export const actions = {
       console.log('Socket Logged In')
     }
 
-    await this.$store.commit('SET_ADMIN_USER_LOGGED_IN', response.data.data.user)
+    // await this.$store.commit('SET_ADMIN_USER_LOGGED_IN', response.data.data.user)
     
     dispatch('one-signal/setOneSignalUser')
   },
