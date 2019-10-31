@@ -21,6 +21,14 @@ export default {
       practice_surgery: '',
     }
   },
+
+  created(){
+    const query = {
+      ...this.$route.query,
+    }
+    this.$router.push(`/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-live-sessions`, query)
+  },
+
   async asyncData({ app, route, }){
     try{
       let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
@@ -37,13 +45,6 @@ export default {
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('get practice/practice surgery error', err)
     }
-  },
-
-  created(){
-    const query = {
-      ...this.$route.query,
-    }
-    this.$router.push(`/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-available-sessions`, query)
   },
 }
 </script>

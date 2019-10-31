@@ -1,13 +1,13 @@
 <template>
   <div>
-    <PracticeOngoingSessionsParts :practice="practice" :practice_surgery="practice_surgery"/>
+    <PracticeApprovedSessionsParts :practice="practice" :practice_surgery="practice_surgery"/>
   </div>
 </template>
 <script>
-import PracticeOngoingSessionsParts from '@/components/Practices/Sessions/PracticeOngoingSessionsParts'
+import PracticeApprovedSessionsParts from '@/components/Practices/Sessions/PracticeApprovedSessionsParts'
 export default {
   components:{
-    PracticeOngoingSessionsParts
+    PracticeApprovedSessionsParts
   },
   data(){
     return{

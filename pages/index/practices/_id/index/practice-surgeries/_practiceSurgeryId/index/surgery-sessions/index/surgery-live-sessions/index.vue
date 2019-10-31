@@ -29,6 +29,7 @@ export default {
         practice_surgery
       }
     }catch(err){
+      this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       console.log('get sessions error',err)
     }
   }

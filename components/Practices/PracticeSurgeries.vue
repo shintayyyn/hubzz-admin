@@ -57,9 +57,10 @@
         <!-- END HEADER -->
         <!-- BODY -->
         <!-- This table is a nuxt-link, going to surgery details -> :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}`}"  -->
-        <div
+        <nuxt-link
           v-for="(childSurgery,index) in practiceChildren"
           :key="`childSurgery-${index}`"
+          :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}`}"
           >   
           <div class="inline-flex w-full">
             <div @click="toDeleteSurgery(practice.id,childSurgery.id)" v-if="deleteSurgery == true" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
@@ -89,7 +90,8 @@
               </div> -->
             </div>
           </div>
-        </div>
+        </nuxt-link>
+
         <!-- END BODY -->
         <!--put -->
       </div>

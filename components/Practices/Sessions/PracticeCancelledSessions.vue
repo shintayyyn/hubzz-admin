@@ -12,7 +12,7 @@
             <!-- BODY -->
             <nuxt-link 
               v-for="(item, index) in cancelledJobs" 
-               :to="{ path: `/practices/${practice.id}/practice-sessions/practice-cancelled-sessions/${item.id}`}"
+              :to="{ path: `/practices/${practice.id}/practice-sessions/practice-cancelled-sessions/${item.id}`}"
               :key="`item-${index}`" 
               class="flex flex-col cursor-pointer xl:rounded-lg sm:flex-row sm:flex-wrap py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 md:table-row text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
               draggable="false"
