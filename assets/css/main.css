@@ -126,7 +126,7 @@ table tbody td {
 /* tabs */
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.5s;
+  transition: opacity 0.5s ease;
 }
 .fade-enter,
 .fade-leave-active {
@@ -264,6 +264,10 @@ table tbody td {
 }
 
 /* quill editor */
+.ql-editor {
+  max-height: 100vh;
+  overflow-y: auto;
+}
 .ql-toolbar.ql-snow {
   display: flex;
   flex-wrap: wrap;

@@ -2,13 +2,13 @@
   <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
     <div class="text-xl md:text-4xl text-white">Inquiries</div>
     <!-- TABLE RESPONSIVE-->
-    <div v-if="emails.length>0" class="px-2 table border-separate overflow-x-auto" style="border-spacing: 0 10px;"> 
+    <div v-if="emails.length > 0" class="w-full"> 
       <!-- HEADER -->
-      <div class="hidden md:table-row font-bold text-white text-sm py-4"> 
-        <div class="table-cell p-2 align-middle">Sender Name</div> 
-        <div class="table-cell p-2 align-middle">Account Type</div>
-        <div class="table-cell p-2 align-middle">Account Role</div>
-        <div class="table-cell p-2 align-middle">Date Sent</div>
+      <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+        <div class="align-middle px-2 w-1/4">Sender Name</div> 
+        <div class="align-middle px-2 text-center w-1/4">Account Type</div>
+        <div class="align-middle px-2 text-center w-1/4">Account Role</div>
+        <div class="align-middle px-2 text-center w-1/4">Date Sent</div>
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
@@ -16,23 +16,23 @@
         v-for="(email, index) in emails"
           :key="`emails-${index}`"
           :to="{ path:`/inquiries/${email.id}`, query:$route.query}"
-        class="flex flex-col sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col cursor-pointer md:flex-row px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
       >
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 md:pl-2 pr-1 py-2 md:py-4 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle">
           <strong class="block md:hidden text-sm uppercase">Sender E-Mail</strong>
-          <span class="break-word">{{ email.sender.email }}</span>
+          <span>{{ email.sender.email }}</span>
         </div>
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Account Type</strong>
-          <span class="break-all">{{ email.sender.domain }}</span>
+          <span>{{ email.sender.domain }}</span>
         </div>
-        <div class="flex flex-col sm:w-1/2 md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Account Domain</strong>
-          <span class="break-all">{{ email.sender.domain }}</span>
+          <span>{{ email.sender.domain }}</span>
         </div>
-        <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 py-2 md:py-4 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Date Sent</strong>
-          <span class="break-all">{{$moment(email.sender.created_at).format('MMM DD,YYYY | HH:MM:ss') }}</span>
+          <span>{{$moment(email.sender.created_at).format('MMM DD,YYYY | HH:MM:ss') }}</span>
         </div>
       </nuxt-link>
       <!-- END BODY -->

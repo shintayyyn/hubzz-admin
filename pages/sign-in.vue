@@ -16,7 +16,7 @@
           >
             <div
               v-if="loginErrorMessage"
-              class="rounded-lg bg-red -mt-10 m-2 p-2 flex items-center justify-between"
+              class="rounded-lg bg-red-600 -mt-10 m-2 p-2 flex items-center justify-between"
               style="width: 100%;"
             >
               <div class="flex-1 flex justify-center items-center">
@@ -36,7 +36,7 @@
               <label class="text-white text-sm my-1 py-1">Email address</label>
               <div class="m-1 flex-auto flex justify-end">
                 <span
-                  class="text-xs bg-red p-1 text-white"
+                  class="text-xs bg-red-600 px-2 py-1 text-white rounded-lg"
                   v-if="emailErrorMessage && !showEmailFocus"
                 >{{ emailErrorMessage }}</span>
               </div>
@@ -54,7 +54,7 @@
               <label class="text-white text-sm my-1 py-1">Password</label>
               <div class="m-1 flex-auto flex justify-end">
                 <span
-                  class="text-xs bg-red p-1 text-white"
+                  class="text-xs bg-red-600 rounded-lg px-2 py-1 text-white"
                   v-if="passwordErrorMessage && !showPasswordFocus"
                 >{{ passwordErrorMessage }}</span>
               </div>

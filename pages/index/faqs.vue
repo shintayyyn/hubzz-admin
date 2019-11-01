@@ -60,7 +60,7 @@
                 />
             </div>
             <div
-              class="flex my-1 w-full rounded-lg bg-trout hover:bg-gray-700 p-2 md:p-4 justify-between cursor-pointer"
+              class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo p-2 md:p-4 justify-between cursor-pointer"
               @click="toggleFaqOn(item)"
             >
               <div class="leading-tight">{{item.question}}</div>
@@ -75,7 +75,7 @@
               class="flex justify-start item-answer font-bold text-sm overflow-hidden"
               v-if="item.toggled"
             >
-              <div v-html="item.answer" class="w-full ml-8 md:mx-8 md:px-4 py-2 h-auto"></div>
+              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto mx-8"></div>
             </div>
           </transition>
         </div>
@@ -138,7 +138,7 @@
                 />
             </div>
             <div
-              class="flex m-1 w-full rounded-lg bg-trout hover:bg-gray-700 p-2 md:p-4 justify-between cursor-pointer"
+              class="flex m-1 w-full rounded-lg bg-trout hover:bg-waterloo p-2 md:p-4 justify-between cursor-pointer"
               @click="toggleFaqOn(item)"
             >
               <div class="leading-tight">{{item.question}}</div>
@@ -153,7 +153,7 @@
               class="flex justify-start item-answer font-bold text-sm overflow-hidden"
               v-if="item.toggled"
             >
-              <div v-html="item.answer" class="w-full ml-8 md:mx-8 md:px-4 py-2 h-auto"></div>
+              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto mx-8"></div>
             </div>
           </transition>
         </div>

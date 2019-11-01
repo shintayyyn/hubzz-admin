@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg shadow-lg md:pt-10 px-2 md:px-4 text-white">
+  <div class="rounded-lg shadow-lg md:pt-10 px-2 md:px-10 text-white">
     <div>
       <!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Terms and Conditions</div> -->
       <no-ssr placeholder="Loading...">

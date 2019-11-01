@@ -9,16 +9,16 @@
       >Add Invoice</nuxt-link>
     </div>
     <!-- TABLE RESPONSIVE-->
-    <div class="w-full"> 
+    <div class="w-full text-md"> 
       <!-- HEADER -->
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-        <div class="align-middle px-2 w-1/6">Invoice Number</div> 
-        <div class="align-middle px-2 text-center w-1/6">Practice / Surgery</div>
-        <div class="align-middle px-2 text-center w-1/6">Created</div>
-        <div class="align-middle px-2 text-center w-1/6">Issued</div>
-        <div class="align-middle px-2 text-center w-1/6">Job Numbers</div>
-        <div class="align-middle px-2 text-center w-1/6">£ Amount</div>
-        <div class="align-middle px-2 text-center w-1/6">Status</div>
+        <div class="flex-1  align-middle px-2">Invoice Number</div> 
+        <div class="flex-1  align-middle px-2 text-center">Practice / Surgery</div>
+        <div class="flex-1  align-middle px-2 text-center">Created</div>
+        <div class="flex-1  align-middle px-2 text-center">Issued</div>
+        <div class="flex-1  align-middle px-2 ">Job Numbers</div>
+        <div class="flex-1  align-middle px-2 text-center">£ Amount</div>
+        <div class="flex-1  align-middle px-2 text-center">Status</div>
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
@@ -26,35 +26,35 @@
         v-for="(billing, index) in billings"
         :key="`billing-${index}`"
         :to="`/billings/${billing.id}`"
-        class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col cursor-pointer md:flex-row md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
         draggable="false"
       >
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle">
-          <strong class="block md:hidden text-sm uppercase">Invoice Number</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
+          <strong class="block md:hidden text-xs uppercase">Invoice Number</strong>
           <span class="break-all">{{ billing.invnum }}</span>
         </div>
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle md:text-center md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
+          <strong class="block md:hidden text-xs uppercase">Practice / Surgery</strong>
           <span class="break-word">{{ billing.practice }}</span>
         </div>
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Created</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
+          <strong class="block md:hidden text-xs uppercase">Created</strong>
           <span class="break-all">{{ billing.created }}</span>
         </div>
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Issued</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
+          <strong class="block md:hidden text-xs uppercase">Issued</strong>
           <span class="break-all">{{ billing.issued }}</span>
         </div>
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Job Numbers</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
+          <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
           <span class="break-all">{{ billing.jobnums }}</span>
         </div>
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">£ Amount</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
+          <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
           <span class="break-all">{{ billing.amount }}</span>
         </div>
-        <div class="flex flex-col md:justify-center md:w-1/6 px-2 py-2 align-middle md:text-center md:leading-none">
-          <strong class="block md:hidden">Status</strong>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
+          <strong class="block md:hidden text-xs uppercase">Status</strong>
           <span>{{ billing.status }}</span>
           <div class="py-4" v-if="billing.status=='Issued'">
             <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>

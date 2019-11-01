@@ -4,10 +4,7 @@
             <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
         </div>
         <div class="mt-4 text-2xl md:text-4xl text-white">Add a FAQ for Practices</div>
-        <div class="md:mx-8">
-            <CreateFaq :domain="domain"/>
-        </div>
-            
+        <CreateFaq :domain="domain"/>
         <div class="add-faq-shield" v-if="$route.name.includes('index-faqs-add')"></div>
         <nuxt-child/>
     </div>
@@ -37,5 +34,3 @@ export default {
     
 }
 </script>
-<style>
-</style>

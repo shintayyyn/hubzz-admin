@@ -24,6 +24,7 @@
 						v-model="sort"
 						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
 						>
+            <option value selected>All</option>
 						<option>Practice Name</option>
 						<option>Practice Code</option>
 						<option>Created</option>
@@ -80,36 +81,36 @@
         v-for="(practice, index) in getAllPractices"
         :key="`practice-${index}`"
         :to="{path:`/practices/${practice.id}`,query:$route.query}"
-        class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col cursor-pointer md:flex-row py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
       >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle">
-          <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
+        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
+          <strong class="block md:hidden text-xs uppercase">Practice Name</strong>
           <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Practice Code</strong>
+        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase">Practice Code</strong>
           <span class="break-words md:text-center w-full">{{ practice.surgery ? practice.surgery.code:null }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Created</strong>
+        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase">Created</strong>
           <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
-		    <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden text-sm uppercase">Expires</strong>
+		    <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase">Expires</strong>
           <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden">Status</strong>
+        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase">Status</strong>
           <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
 			    :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
 		    </div>
 
-        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 px-2 py-2 align-middle md:text-center">
-          <strong class="block md:hidden">Type</strong>
+        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase">Type</strong>
           <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
           :class="typeStyle(practice.type)">{{ practice.type }}</span>
         </div>

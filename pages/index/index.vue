@@ -8,7 +8,7 @@
             <div class='m-3'>
                 Locums
             </div>
-            <div class="h-72 overflow-y-auto overflow-x-hidden px-2">
+            <div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
                 <nuxt-link
                 v-for="(item,index) in locumDocsAlert" 
                 :key="`item-${index}`" 
@@ -41,8 +41,8 @@
             <div class='m-3'>
                 Practices
             </div> 
-            <div class="border-b border-white ">
-                <div class="p-2 m-3 shadow-md bg-waterloo hover:bg-waterloo-light rounded-lg ">
+            <div class="border-b border-white">
+                <div class="p-2 m-3 shadow-md bg-waterloo hover:bg-waterloo-light rounded-lg">
                     <div class="flex flex-wrap overflow-hidden sm:-mx-1">
                         <div class="w-full overflow-hidden sm:my-1 sm:px-1">
                             <p class="text-white text-center">Work In Progress </p>

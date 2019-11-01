@@ -1,11 +1,11 @@
 <template>
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/reports/" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+        <nuxt-link to="/reports/" class="text-white hover:text-sunglow p-1">
+          <svgicon name="arrow-left-solid" height="22" width="22" class="fill-current"/>
         </nuxt-link>
       </div>
-      <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 w-full lg:w-2/3">
+      <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 w-full max-w-xl">
         <div class="flex">
           <div class="relative">
             <input
@@ -35,61 +35,51 @@
                 name="cloud-download"
                 width="21"
                 height="21"
-                color="transparent white"
+                class="fill-current"
             ></svgicon>
             <span class="px-1">Download CSV</span>
           </button>
         </div>
       </div>
-      <div class="overflow-x-auto">
-        <table class="text-left text-xs w-full lg:w-2/3">
-          <thead class="bg-waterloo flex text-white border-white pt-3 pl-2">
-            <tr class="flex w-full mb-4">
-              <th class="p-1 w-full">Practice</th>
-              <th class="p-1 w-full">Invoice Number</th>
-              <th class="p-1 w-full">Job Numbers</th>
-              <th class="p-1 w-full">Date Paid</th>
-              <th class="p-1 w-full">£ Amount</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white flex flex-col text-xs items-center justify-between w-full">
-            <tr class="flex w-full mb-4">
-              <td class="p-1 w-1/4">DR BAKER AND PARTNERS</td>
-              <td class="p-1 w-1/4">0000000003</td>
-              <td class="p-1 w-1/4">H0000000101</td>
-              <td class="p-1 w-1/4">07/03/2019</td>
-              <td class="p-1 w-1/4">100.00</td>
-            </tr>
-            <tr class="flex w-full mb-4">
-              <td class="p-1 w-1/4">DR BAKER AND PARTNERS</td>
-              <td class="p-1 w-1/4">0000000003</td>
-              <td class="p-1 w-1/4">H0000000101</td>
-              <td class="p-1 w-1/4">07/03/2019</td>
-              <td class="p-1 w-1/4">100.00</td>
-            </tr>
-            <tr class="flex w-full mb-4">
-              <td class="p-1 w-1/4">DR BAKER AND PARTNERS</td>
-              <td class="p-1 w-1/4">0000000003</td>
-              <td class="p-1 w-1/4">H0000000101</td>
-              <td class="p-1 w-1/4">07/03/2019</td>
-              <td class="p-1 w-1/4">100.00</td>
-            </tr>
-            <tr class="flex w-full mb-4">
-              <td class="p-1 w-1/4">DR BAKER AND PARTNERS</td>
-              <td class="p-1 w-1/4">0000000003</td>
-              <td class="p-1 w-1/4">H0000000101</td>
-              <td class="p-1 w-1/4">07/03/2019</td>
-              <td class="p-1 w-1/4">100.00</td>
-            </tr>
-            <tr class="flex w-full mb-4">
-              <td class="p-1 w-1/4">DR BAKER AND PARTNERS</td>
-              <td class="p-1 w-1/4">0000000003</td>
-              <td class="p-1 w-1/4">H0000000101</td>
-              <td class="p-1 w-1/4">07/03/2019</td>
-              <td class="p-1 w-1/4">100.00</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- <div class="w-full max-w-xl text-sm text-white">
+        <div class="hidden md:flex leading-tight items-center font-bold">
+          <span class="flex-1 p-2">Practice</span>
+          <span class="flex-1 p-2">Invoice Number</span>
+          <span class="flex-1 p-2">Job Numbers</span>
+          <span class="flex-1 p-2 text-center">Date Paid</span>
+          <span class="flex-1 p-2 text-center">£ Amount</span>
+        </div>
+        <div v-for="item in reports" :key="item.id" class="flex flex-col md:flex-row md:items-center bg-waterloo p-2 md:p-0 my-2 border-l-8 border-sunglow md:border-0 rounded-lg">
+          <span class="flex-1 px-2 py-1 md:p-2 leading-tight">
+            <span class="font-bold md:hidden block">Practice</span>
+            {{item.practice}}</span>
+          <span class="flex-1 px-2 py-1 md:p-2"><span class="font-bold md:hidden block">Invoice Number</span>{{item.invoice_number}} </span>
+          <span class="flex-1 px-2 py-1 md:p-2 flex flex-col">
+            <span class="font-bold md:hidden block">Job Numbers</span>
+            <span v-for="(job, index) in item.job_numbers" :key="index">{{job}}</span>
+          </span>
+          <span class="flex-1 px-2 py-1 md:p-2 md:text-center"><span class="font-bold md:hidden block">Date Paid</span>{{item.date_paid}} </span>
+          <span class="flex-1 px-2 py-1 md:p-2 md:text-center"><span class="font-bold md:hidden block">£ Amount</span>{{item.amount}} </span>
+        </div>
+      </div> -->
+      <div class="w-full max-w-xl text-xs overflow-x-auto">
+        <div class="flex bg-waterloo text-white font-bold">
+          <span class="flex-1 p-2">Practice</span>
+          <span class="flex-1 p-2">Invoice Number</span>
+          <span class="flex-1 p-2">Job Numbers</span>
+          <span class="flex-1 p-2 text-center">Date Paid</span>
+          <span class="flex-1 p-2 text-center">£ Amount</span>
+        </div>
+        <div v-for="item in reports" :key="item.id" class="flex items-center bg-white">
+          <span class="flex-1 p-2 leading-tight">
+            {{item.practice}}</span>
+          <span class="flex-1 p-2">{{item.invoice_number}} </span>
+          <span class="flex-1 p-2 flex flex-col">
+            <span v-for="(job, index) in item.job_numbers" :key="index">{{job}}</span>
+          </span>
+          <span class="flex-1 p-2 text-center">{{item.date_paid}} </span>
+          <span class="flex-1 p-2 text-center">{{item.amount}} </span>
+        </div>
       </div>
     </div>
 </template>
@@ -116,7 +106,49 @@ export default {
 
   data() {
     return {
-      qualification: null
+      qualification: null,
+      reports: [
+        {
+          id: 1,
+          practice: 'DR BAKER AND PARTNERS',
+          invoice_number: '0000000003',
+          job_numbers: ['H0000000101','H0000000102'],
+          date_paid: '07/03/2019',
+          amount: '100.00'
+        },
+        {
+          id: 2,
+          practice: 'DR BAKER AND PARTNERS',
+          invoice_number: '0000000003',
+          job_numbers: ['H0000000101'],
+          date_paid: '07/03/2019',
+          amount: '100.00'
+        },
+        {
+          id: 3,
+          practice: 'DR BAKER AND PARTNERS',
+          invoice_number: '0000000003',
+          job_numbers: ['H0000000101'],
+          date_paid: '07/03/2019',
+          amount: '100.00'
+        },
+        {
+          id: 4,
+          practice: 'DR BAKER AND PARTNERS',
+          invoice_number: '0000000003',
+          job_numbers: ['H0000000101'],
+          date_paid: '07/03/2019',
+          amount: '100.00'
+        },
+        {
+          id: 5,
+          practice: 'DR BAKER AND PARTNERS',
+          invoice_number: '0000000003',
+          job_numbers: ['H0000000101'],
+          date_paid: '07/03/2019',
+          amount: '100.00'
+        }
+      ]
     };
   }
 };

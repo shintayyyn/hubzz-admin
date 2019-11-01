@@ -5,63 +5,65 @@
         <AppConfirmCancel @close="showConfirmCancelModal = false" :adminAccountId="adminAccountId"/>
       </div>
     </transition>
-    <div class="flex md:flex-row-reverse pt-1 md:py-1 justify-between flex-wrap">
-      <div>
-        <button
-        v-if="deleteAdminUser == true && authAdminPermissions.includes('Delete Admin Account')"
-        @click="deleteAdminUser = false"
-        class="inline-flex no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
-        >Done</button>
-
-        <button
-        v-if="deleteAdminUser == false && authAdminPermissions.includes('Delete Admin Account')"
-        @click="deleteAdminUser = true"
-        class="inline-flex no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
-        >Delete Admin User</button>
-
-        <button
-        v-if="authAdminPermissions.includes('Create Admin Account')"
-        @click="show()"
-        class="inline-flex no-underline my-1 md:my-2 md:mr-1 py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
-        >Create Admin Account</button>
-      </div>
+    <div class="flex md:flex-row pt-1 md:py-1 flex-wrap">
+      <button
+      v-if="authAdminPermissions.includes('Create Admin Account')"
+      @click="show()"
+      class="inline-flex no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
+      >Create Admin Account</button>
+      <button
+      v-if="deleteAdminUser == true && authAdminPermissions.includes('Delete Admin Account')"
+      @click="deleteAdminUser = false"
+      class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow"
+      >Done</button>
+      <button
+      v-if="deleteAdminUser == false && authAdminPermissions.includes('Delete Admin Account')"
+      @click="deleteAdminUser = true"
+      class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-sm font-semibold text-white rounded-lg shadow"
+      >Delete Admin User</button>
     </div>
-    <div v-if="adminUsers.length>0" class="w-full h-full overflow-x-auto px-1"> 
+    <div v-if="adminUsers.length>0" class="w-full p-2"> 
         <!-- HEADER -->
-        <div class="hidden md:flex items-center text-white font-semibold">
-          <div class="align-middle px-2 w-1/6" v-if="deleteAdminUser == true">Delete Admin User</div> 
-          <div class="align-middle px-2" :class="deleteAdminUser ? 'w-1/4' : 'w-1/3'">E-Mail</div> 
-          <div class="align-middle px-2 text-center" :class="deleteAdminUser ? 'w-1/4' : 'w-1/3'">Role</div>
-          <div class="align-middle px-2 text-center" :class="deleteAdminUser ? 'w-1/4' : 'w-1/3'">Name</div>
+        <div class="hidden md:flex items-center text-white justify-between font-semibold ">
+          <div class="align-middle px-5" v-if="deleteAdminUser == true"></div> 
+          <div class="align-middle px-2 w-1/3">E-Mail</div> 
+          <div class="align-middle px-2 text-center w-1/3">Role</div>
+          <div class="align-middle px-2 text-center w-1/3">Name</div>
         </div>
         <!-- END HEADER -->
         <!-- BODY -->
         <div
           v-for="(user, index) in adminUsers"
           :key="`user-${index}`"
-          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+          class="flex"
         >
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center" v-if="deleteAdminUser == true">
+          <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center" v-if="deleteAdminUser == true">
             <svgicon
-            @click.prevent="toDeleteAdminUser(user.id)"
+              @click.prevent="toDeleteAdminUser(user.id)"
               name="delete-user"
               width="21"
               height="21"
               color="red red"
               class="cursor-pointer"/>
           </div>
-          <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" class="flex flex-col md:justify-center sm:w-1/2 px-1 xl:px-2 py-2 align-middle text-white cursor-pointer" :class="deleteAdminUser ? ' md:w-1/4' : 'md:w-1/3'">
-            <strong class="block md:hidden text-sm uppercase">E-Mail</strong>
-            <span class="break-word">{{ user && user.email ? user.email : null }}</span>
-          </nuxt-link>
-          <div class="flex flex-col md:justify-center sm:w-1/2 px-1 xl:px-2 py-2 align-middle md:text-center" :class="deleteAdminUser ? 'md:w-1/4' : 'md:w-1/3'">
-            <strong class="block md:hidden text-sm uppercase">Role</strong>
-            <span class="break-all">{{ user && user.admin_detail ? user.admin_detail.role.name : null }}</span>
+          <div
+          class="w-full flex flex-col cursor-pointer md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+          >
+            <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" 
+            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+              <strong class="block md:hidden text-xs uppercase">E-Mail</strong>
+              <span class="break-word">{{ user && user.email ? user.email : null }}</span>
+            </nuxt-link>
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3">
+              <strong class="block md:hidden text-xs uppercase">Role</strong>
+              <span class="break-all">{{ user && user.admin_detail ? user.admin_detail.role.name : null }}</span>
+            </div>
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3">
+              <strong class="block md:hidden text-xs uppercase">Name</strong>
+              <span class="break-all">{{ user && user.personal_detail ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}` : null }}</span>
+            </div>
           </div>
-          <div class="flex flex-col md:justify-center sm:w-1/2 px-1 xl:px-2 py-2 align-middle md:text-center" :class="deleteAdminUser ? 'md:w-1/4' : 'md:w-1/3'">
-            <strong class="block md:hidden text-sm uppercase">Name</strong>
-            <span class="break-all">{{ user && user.personal_detail ? user.personal_detail.name : null }}</span>
-          </div>
+
         </div>
         <!-- END BODY -->
     </div>

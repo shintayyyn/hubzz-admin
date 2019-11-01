@@ -1,86 +1,84 @@
 <template>
     <div class="flex-1 flex flex-col overflow-auto">
-      <div class="flex md:flex-row-reverse pt-1 md:py-1 justify-between flex-wrap">
-        <div>
-          <button
-            v-if="deletingAdminRole == false && authAdminPermissions.includes('Delete Role')"
-            class="inline-flex items-center no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-red-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
-            @click="deletingAdminRole = true"
-          >Delete Role
-            <svgicon
-            name="garbage"
-            width="21"
-            height="21"
-            color="white white"
-            class="mx-1 -my-1"/>
-          </button>
-          <button
-            v-if="deletingAdminRole == true && authAdminPermissions.includes('Delete Role')"
-            @click="deletingAdminRole = false"
-            class="inline-flex items-center no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-green-500 text-sm font-semibold text-white rounded-lg shadow md:float-right"
-          >Done
+      <div class="flex md:flex-row pt-1 md:py-1 flex-wrap">
+        <button
+          v-if="authAdminPermissions.includes('Add Role')"
+          class="inline-flex items-center no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
+          @click="modal=true"
+        >Add New Role
+          <svgicon
+          name="add-rectangle"
+          width="21"
+          height="21"
+          color="black black"
+          class="mx-1 -my-1"/>
+        </button>
+        <button
+          v-if="deletingAdminRole == false && authAdminPermissions.includes('Delete Role')"
+          class="inline-flex items-center no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-sm font-semibold text-white rounded-lg shadow"
+          @click="deletingAdminRole = true"
+        >Delete Role
+          <svgicon
+          name="garbage"
+          width="21"
+          height="21"
+          color="white white"
+          class="mx-1 -my-1"/>
+        </button>
+        <button
+          v-if="deletingAdminRole == true && authAdminPermissions.includes('Delete Role')"
+          @click="deletingAdminRole = false"
+          class="inline-flex items-center no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow"
+        >Done
           <svgicon
             name="circle-check"
             width="21"
             height="21"
             color="white white"
             class="mx-1 -my-1"/>
-          </button>
-          <button
-            v-if="authAdminPermissions.includes('Add Role')"
-            class="inline-flex items-center no-underline my-1 md:my-2 md:ml-1 py-2 px-4 bg-yellow-500 text-sm font-semibold text-black rounded-lg shadow md:float-right"
-            @click="modal=true"
-          >Add New Role
-            <svgicon
-            name="add-rectangle"
-            width="21"
-            height="21"
-            color="black black"
-            class="mx-1 -my-1"/>
-          </button>
-        </div>
+        </button>
       </div>
-      <div v-if="adminRoles.length" class="w-full h-full overflow-x-auto px-2">
+      <div v-if="adminRoles.length" class="w-full p-2">
         <!-- HEADER -->
         <div class="hidden md:flex items-center text-white justify-around font-semibold">
-          <div class="align-middle px-2 text-center w-1/3">Role Name</div> 
-          <div class="align-middle px-2 text-center w-1/3">Date Created</div>
-          <div class="align-middle px-2 text-center w-1/3">Description</div>
+          <div class="pr-3 md:px-4" v-if="deletingAdminRole == true"></div>
+          <div class="align-middle px-2 w-1/3">Role Name</div> 
+          <div class="align-middle px-2 w-1/3">Date Created</div>
+          <div class="align-middle px-2 w-1/3">Description</div>
         </div>
         <!-- END HEADER -->
         <!-- BODY -->
-        <!-- class="flex flex-col cursor-pointer sm:flex-row sm:flex-wrap justify-between px-2 py-2 border-l-8 border-yellow-500 md:border-l-0 md:table-row my-2 text-white no-underline shadow-lg rounded-lg bg-waterloo hover:bg-waterloo-light"  -->
         <div
           v-for="(role, index) in adminRoles"
           :key="`role-${index}`"
+          class="flex"
         >
-          <div class="inline-flex w-full">
-            <div @click="toDeleteAdminRole(role.id)" v-if="deletingAdminRole == true" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
-              <svgicon
-              name="garbage"
-              width="22"
-              height="22"
-              class="fill-current"
-              />
-            </div>
-            <nuxt-link 
-            :to="{ path:`/user-management/roles-and-permissions/${role.id}`}"
-              class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light">
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Role Name</strong>
-                <span class="break-word">{{ role.name }}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Date Created</strong>
-                <span class="break-all">{{ $moment(role.created_at).format('MMM D, YYYY')}}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Description</strong>
-                <span class="break-all">{{ role.description }}</span>
-              </div>
-            </nuxt-link>
+          <div @click="toDeleteAdminRole(role.id)" v-if="deletingAdminRole == true" class='flex items-center pr-3 cursor-pointer text-red-600 hover:text-red-700'>
+            <svgicon
+            name="garbage"
+            width="22"
+            height="22"
+            class="fill-current"
+            />
           </div>
+          <nuxt-link 
+          :to="{ path:`/user-management/roles-and-permissions/${role.id}`}"
+          class="w-full flex flex-col md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light">
+            <div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
+              <strong class="block md:hidden text-xs uppercase">Role Name</strong>
+              <span>{{ role.name }}</span>
+            </div>
+            <div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
+              <strong class="block md:hidden text-xs uppercase">Date Created</strong>
+              <span>{{ $moment(role.created_at).format('MMM D, YYYY')}}</span>
+            </div>
+            <div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
+              <strong class="block md:hidden text-xs uppercase">Description</strong>
+              <span>{{ role.description }}</span>
+            </div>
+          </nuxt-link>
         </div>
+
       </div>
       <div v-else class="text-center text-gray-400 py-4">No admin roles</div>
       <div v-if="!adminRoles.length == 0">

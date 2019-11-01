@@ -1,8 +1,8 @@
 <template>
-  <div class="modal-container text-white">
+  <div class="modal-container max-w-2xl text-white">
     <div class="p-4 md:p-8">
       <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current" />
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </div>
       <div class="flex flex-col mt-4">
         <AppInput
@@ -21,10 +21,8 @@
           :resize="false"
           :rows="3"
         />
-        <div class="rounded-lg px-2 py-2 md:px-4">
           <div class="flex flex-wrap justify-start">
-
-            <div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
+            <div class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1" v-for="(role, index) in permissions" :key="index">
               <div class="flex flex-col">
                 <div class="w-full flex flex-row items-center">
                   <input
@@ -47,9 +45,7 @@
                 </div>
               </div>
             </div>
-            
           </div>
-        </div>
         <div class="my-4 text-black">
           <AppButton :label="'Create'" @click="create" />
         </div>
@@ -166,9 +162,9 @@ export default {
 .modal-container {
   z-index: 510
 }
-@media screen and (min-width: 1200px) {
+/* @media screen and (min-width: 1200px) {
   .modal-container {
     width: 80%
   }
-}
+} */
 </style>

@@ -1,15 +1,16 @@
 <template>
   <div class="role-modal">
-    <div class="m-6 text-white">
+    <div class="p-4 md:p-6 text-white">
       <div @click="goBack()" class="cursor-pointer pb-4">
-        <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current" />
+        <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white hover:text-sunglow fill-current" />
       </div>
-      <div class="">
-        <div class="flex flex-row">
-          <div class="mx-2 text-4xl">
-            {{specificRole.name}}
-          </div>
-          <div v-if="editingPermissions==false && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=true" class="flex m-2 p-2 px-4 rounded-lg bg-yellow-500 cursor-pointer text-black">
+      <div class="flex flex-row items-start justify-between flex-wrap">
+        <div class="leading-tight">
+          <div class="text-2xl md:text-4xl">{{specificRole.name}}</div>
+          <div class="text-sm italic">{{specificRole.description}}</div>
+        </div>
+        <div class="flex py-1">
+          <div v-if="editingPermissions==false && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=true" class="flex mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black">
             <div class="mx-2 font-semibold">Edit</div>
             <div>
               <svgicon
@@ -20,7 +21,7 @@
               />
             </div>
           </div>
-          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=false" class="flex m-2 p-2 px-4 rounded-lg bg-yellow-500 cursor-pointer text-black" >
+          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=false" class="flex mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black" >
             <div class="mx-2 font-semibold">Cancel</div>
             <div>
               <svgicon
@@ -31,7 +32,7 @@
               />
             </div>
           </div>
-          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="save()" class="flex m-2 p-2 px-4 rounded-lg bg-green-500 cursor-pointer" >
+          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="save()" class="flex ml-1 md:ml-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer" >
             <div class="mx-2 font-semibold">Save</div>
             <div>
               <svgicon
@@ -43,55 +44,52 @@
             </div>
           </div>
         </div>
-        <div class="text-sm mx-4">
-          {{specificRole.description}}
-        </div>
       </div>
       <!-- SHOW ROLE PERMISSIONS -->
-      <div class="m-4" v-if="editingPermissions == false">
-        <div class="flex flex-wrap overflow-hidden xl:-mx-1">
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
+      <div class="my-2 md:my-4" v-if="editingPermissions == false">
+        <div class="flex flex-wrap overflow-hidden">
+          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">Locum Management</div> 
             <div 
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="">
+              class="px-2">
               {{ permission.category === 'Locum' ? permission.name : null}}
             </div>
           </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
+          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">Practice Management</div>
             <div 
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="">
+              class="px-2">
               {{ permission.category === 'Practice' ? permission.name : null}}
             </div>
           </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
+          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">Billing and Reports Management</div>
             <div 
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="">
+              class="px-2">
               {{ permission.category === 'Billing' ? permission.name : null}}
             </div>
           </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
+          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">Miscellaneous</div>
             <div 
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="">
+              class="px-2">
               {{ permission.category === 'Misc' ? permission.name : null}}
             </div>
           </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
+          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">User Management</div>
             <div 
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="">
+              class="px-2">
               {{ permission.category === 'User Management' ? permission.name : null}}
             </div>
           </div>
@@ -185,7 +183,7 @@
           />
         </div>
         <div class="flex flex-wrap overflow-hidden">
-           <div class="w-1/5 overflow-hidden" v-for="(role, index) in allPermissions" :key="index">
+           <div class="w-full md:w-1/3 overflow-hidden pb-3" v-for="(role, index) in allPermissions" :key="index">
             <div class="">
               <input
                 type="checkbox"

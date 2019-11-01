@@ -13,7 +13,7 @@
         >
           <div class="flex flex-no-wrap text-sm text-white w-full">
             <span class="px-2 whitespace-no-wrap font-semibold">{{report.code}} </span>
-            <span class="px-2 w-full">{{report.description}}</span>
+            <span class="px-2 w-full leading-tight">{{report.description}}</span>
             <div  class="flex items-center px-1 md:px-0">
               <svgicon
                 name="arrow-right"
