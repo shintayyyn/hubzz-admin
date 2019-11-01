@@ -110,7 +110,7 @@ export default {
     this.currentPage = parseInt(query.completed_job_page)
     let params = {
       viewing_practice_id : this.practice.id,
-      surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+      job_surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
       status : 'Completed'
     }
     Promise.all([
@@ -140,7 +140,7 @@ export default {
         viewing_practice_id : this.practice.id,
         status : 'Completed',
         order_by : orderBy ? orderBy : this.$route.query.order_by,
-        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+        job_surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         limit: this.perPage,
         offset: offset
       }

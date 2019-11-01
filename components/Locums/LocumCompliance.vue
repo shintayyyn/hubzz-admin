@@ -46,7 +46,7 @@
                     <div class="border rounded-lg mx-2 p-2">
                         <textarea
                             v-model="notes" 
-                            placeholder="Reason for Rejection (Optional)" 
+                            placeholder="Reason for Rejection" 
                             class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
                             name="complianceNote"
                             >
@@ -83,7 +83,7 @@
                     <div class="border rounded-lg mx-2 p-2">
                         <textarea
                             v-model="notes" 
-                            placeholder="Reason for Rejection (Optional)" 
+                            placeholder="Reason for Rejection" 
                             class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
                             name="complianceNote"
                             >

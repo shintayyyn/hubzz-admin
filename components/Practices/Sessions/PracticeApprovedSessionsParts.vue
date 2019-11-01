@@ -76,7 +76,7 @@ import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
 export default {
-    props:['practice'],
+    props:['practice','practice_surgery'],
     components:{
       AppPagination,
       PracticeSessionModal,
@@ -113,7 +113,7 @@ export default {
       this.currentPage = parseInt(query.job_parts_page)
       let params = {
         viewing_practice_id : this.practice.id,
-        surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+        job_surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         status : 'Approved'
       }
       Promise.all([
@@ -145,7 +145,7 @@ export default {
           viewing_practice_id : this.practice.id,
           status : 'Approved',
           order_by : orderBy ? orderBy : this.$route.query.order_by,
-          surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
+          job_surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset
         }

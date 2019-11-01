@@ -15,7 +15,7 @@
             <div class="text-lg text-white font-semibold m-2 mt-6"> Pay for Surgery / Job Creation (OLD)</div>
             <div
               @click="editPayForSurgery = !editPayForSurgery" 
-              class="text-sm font-semibold text-black bg-yellow-500 p-2 mt-5 rounded-lg cursor-pointer"
+              class="text-sm font-semibold bg-yellow-500 p-2 mt-5 rounded-lg cursor-pointer"
               :class="`${editPayForSurgery == false ? 'text-black bg-yellow-500' : 'text-black bg-green-500'}`">
               {{editPayForSurgery == false ? 'Edit' : 'Done'}}</div>
           </div>
@@ -94,7 +94,6 @@
                     { label: 'Only HUB can operate', value: false }]"
                 />
               </div>
-              dsadsadasdasdasd
               <div class="w-full p-1">
                 <AppInput
                   v-model="form.allow_surgery_appoint_locums"

@@ -4,7 +4,7 @@
           <div v-if="allocatedJobs.length === 0">
             <div
             class="mt-10 w-full text-center text-white"
-            >This practice is no allocatedly ongoing session/s.</div>
+            >This practice is no allocated session/s.</div>
           </div>
           <div v-else>
             <AppJobHeaderSort :practice="practice" :tabStatus="'Allocated'" :currentPage="currentPage" :isJobParts="false" />
@@ -12,7 +12,7 @@
               <!-- BODY -->
               <nuxt-link 
                 v-for="(item, index) in allocatedJobs" 
-                 :to="{ path: `/practices/${practice.id}/practice-sessions/practice-allocated-sessions/${item.id}`}"
+                :to="{ path: `/practices/${practice.id}/practice-sessions/practice-allocated-sessions/${item.id}`}"
                 :key="`item-${index}`" 
               class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
                 draggable="false"
