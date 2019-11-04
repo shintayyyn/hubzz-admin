@@ -37,15 +37,16 @@
           :key="`user-${index}`"
           class="flex"
         >
-          <div class="flex justify-center items-center md:w-10 align-middle md:text-center" v-if="deleteAdminUser == true">
+          <div class="flex justify-center items-center md:w-10 align-middle md:text-center" v-if="deleteAdminUser == true ">
             <svgicon
-              v-if="$auth.user.id != user.id"
+              v-if="$auth.user.id != user.id && !user.admin_detail.role.name.includes('Super')"
               @click.prevent="toDeleteAdminUser(user.id)"
               name="delete-user"
               width="21"
               height="21"
               class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
             />
+            <span v-else-if="user.admin_detail && user.admin_detail.role.name.includes('Super')" class="hidden md:inline text-sm text-yellow-500">GOD</span>
             <span v-else class="hidden md:inline text-sm text-gray-500">You</span>
           </div>
           <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" 
