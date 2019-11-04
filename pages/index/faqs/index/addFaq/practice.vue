@@ -1,7 +1,7 @@
 <template>
     <div class="p-4 md:p-8 text-white">
         <div @click="goBack()" class="cursor-pointer">
-            <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
+            <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white hover:text-sunglow fill-current"/>
         </div>
         <div class="mt-4 text-2xl md:text-4xl text-white">Add a FAQ for Practices</div>
         <CreateFaq :domain="domain"/>

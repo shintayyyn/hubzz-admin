@@ -3,7 +3,7 @@
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white">
         <div @click="goBack()" class="text-white p-1 mb-3 cursor-pointer">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
         </div>
       </div>
       <!-- HEADER -->

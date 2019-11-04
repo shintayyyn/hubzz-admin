@@ -1,7 +1,7 @@
 <template>
     <div class="faq-modal p-8 shadow-lg">
         <div @click="goBack()" class="cursor-pointer">
-            <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current"/>
+            <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white hover:text-sunglow fill-current"/>
         </div>
         <EditFaq :faqs="faqs"/>
     </div>

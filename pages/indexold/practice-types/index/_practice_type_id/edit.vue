@@ -6,7 +6,7 @@
 			<!-- HEADER -->
 			<div class="flex justify-between text-sm text-white py-2 px-6">
 				<nuxt-link :to="{ path: `/practice-types`, query: $route.query }" class="text-white p-1">
-					<svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+					<svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
 				</nuxt-link>
 			</div>
 			<!-- HEADER -->

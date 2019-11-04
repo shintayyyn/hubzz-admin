@@ -3,7 +3,7 @@
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout shadow-lg sm:p-2" >
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="{path:`/practices/${specificPractice.id}/users`}" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
         </nuxt-link>
       </div>
       <div class="text-white pl-4 pt-2">

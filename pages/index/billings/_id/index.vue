@@ -3,17 +3,17 @@
       <!-- HEADER -->
       <div class="flex items-center text-sm text-white py-2">
         <nuxt-link to="/billings" class="text-white hover:text-sunglow p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
         </nuxt-link>
-        <span class="px-4">Not yet working.</span>
       </div>
       <!-- HEADER -->
-      <!-- <div class="flex flex-col bg-waterloo my-4 py-2 px-4 rounded-lg">
-        <div class="flex flex-col">
-          <label class="text-sm text-gray-200">Name</label>
-          <label class="text-sm text-gray-200">{{ qualification.name}}</label>
+      <div class="max-w-2xl">
+        <div class="flex items-center text-white py-2">
+          <p>Invoice Number: <span class="font-bold">0000000001</span></p>
+          <p class="px-3 py-1 mx-2 rounded text-black bg-green-300 uppercase font-bold">Paid</p>
         </div>
-      </div> -->
+        <embed class="object-contain object-top w-full h-full document" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/>
+      </div>
     </div>
 </template>
 
@@ -69,6 +69,16 @@ export default {
 @media screen and (min-width: 1200px) {
   .billing-modal {
     width: 80%;
+  }
+}
+.document {
+  width: 100%;
+  min-height: 50vh;
+}
+
+@media screen and (min-width: 768px) {
+  .document {
+    min-height: 80vh;
   }
 }
 </style>

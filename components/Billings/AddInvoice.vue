@@ -2,7 +2,7 @@
   <div>
     <div class="flex justify-between text-sm text-white">
       <nuxt-link to="/billings" class="text-white px-1 pb-2">
-        <svgicon name="arrow-left-solid" height="22" width="22" class="text-white hover:text-sunglow fill-current focus:outline-none" />
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current focus:outline-none" />
       </nuxt-link>
     </div>
     <!-- HEADER -->
@@ -25,12 +25,12 @@
       </div>
     </div>
     <div class="md:m-4">
-      <div class="invoice flex flex-col bg-white py-2 px-4">
-        <div class="flex flex-wrap -mx-1 pt-4 overflow-hidden">
-          <div class="my-2 px-1 w-3/5 overflow-hidden">
+      <div class="invoice flex flex-col bg-white p-4">
+        <div class="flex flex-wrap overflow-hidden">
+          <div class="px-1 w-3/5 overflow-hidden">
             <!-- Column Content -->
           </div>
-          <div class="my-2 px-1 w-full sm:w-2/5 overflow-hidden">
+          <div class="mb-2 px-1 w-full sm:w-2/5 overflow-hidden">
             <p class="text-sm text-right">
               Hubzz Limited
               Mws, 601 London Road
@@ -40,12 +40,12 @@
             </p>
           </div>
         </div>
-        <div class="flex flex-wrap -mx-1 overflow-hidden">
+        <div class="flex flex-wrap overflow-hidden">
           <div class="my-1 px-1 w-2/3 overflow-hidden">
-            <div class="border border-black rounded-lg p-4 text-sm">
+            <div class="border-2 border-gray-300 rounded-lg p-4 text-sm">
               <div class="pb-2">To: Accounts Department</div>
               <select
-                class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                class="block appearance-none font-bold w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
               >
                 <option>Select the Practice for this Invoice</option>
                 <option>Option 2</option>
@@ -60,10 +60,10 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-wrap -mx-1 overflow-hidden">
+        <div class="flex flex-wrap overflow-hidden">
           <div class="my-1 px-1 w-full overflow-hidden">
             <select
-              class="block appearance-none text-sm w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
             >
               <option>Select the Practice for this Invoice</option>
               <option>Option 2</option>
@@ -72,9 +72,9 @@
           </div>
 
           <div class="my-1 px-1 w-full overflow-hidden">
-            <div class="flex flex-col border-b-2">
+            <div class="flex flex-col border-b border-gray-400 pb-2">
               <!--HEADER-->
-              <div class="flex items-center justify-center my-1 py-2 bg-black">
+              <div class="flex items-center justify-center py-2 bg-black">
                 <div class="w-2/3">
                   <div class="text-white text-sm text-left px-4">
                     <strong>Description</strong>
@@ -85,32 +85,43 @@
                     <strong>Total</strong>
                   </div>
                 </div>
-                <div class="px-2">
-                <button
-                  class="bg-black border text-white font-bold flex items-center justify-center w-6 h-6 rounded-full focus:outline-none"
-                >+</button>
-              </div>
+                <div class="mr-2">
+                  <span class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">+</span>
+                </div>
               </div>
               <!--HEADER-->
               <div class="flex justify-center py-1">
-                  <div class="w-2/3 text-sm px-4">
-                    <strong>Sample</strong>
-                  </div>
-                  <div class="w-1/3 text-sm">
-                    <strong>1200</strong>
-                  </div>
+                <div class="w-2/3 text-sm mx-1">
+                  <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
+                </div>
+                <div class="w-1/3 text-sm mx-1">
+                  <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
+                </div>
+                <div class="mr-2 flex items-center">
+                  <span class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
+                </div>
+              </div>
+              <div class="flex justify-center py-1">
+                <div class="w-2/3 text-sm mx-1">
+                  <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
+                </div>
+                <div class="w-1/3 text-sm mx-1">
+                  <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
+                </div>
+                <div class="mr-2 flex items-center">
+                  <span class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="my-1 px-2 w-full overflow-hidden">
-            <div class="flex flex-wrap -mx-1 overflow-hidden">
-              <div class="my-1 px-1 w-2/3 overflow-hidden">Total</div>
-              <div class="my-1 px-1 w-1/3 overflow-hidden">£1200</div>
-              
+          <div class="my-1 px-1 w-full overflow-hidden">
+            <div class="flex flex-wrap">
+              <div class="my-1 px-1 w-2/3 font-bold">Total</div>
+              <div class="my-1 px-1 w-1/3 text-right">£1200</div>
             </div>
           </div>
         </div>
-        <div class="border border-black rounded-lg p-2 text-sm">
+        <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
           <br />Account name: XXX
           <br />Bank: XXX

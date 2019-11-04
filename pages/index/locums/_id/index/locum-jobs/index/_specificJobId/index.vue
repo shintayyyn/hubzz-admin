@@ -1,7 +1,7 @@
 <template>
     <div class="practice-modal">
       <div @click="goBack()" class="cursor-pointer m-6">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </div>
       <PracticeSessionModal :job="job"/>
     </div>

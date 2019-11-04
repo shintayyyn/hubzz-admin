@@ -3,7 +3,7 @@
     <!-- HEADER -->
     <div class="flex justify-between text-sm text-white py-2 px-6">
       <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current" />
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </div>
     </div>
     <!-- HEADER -->
@@ -13,7 +13,7 @@
         <div class="flex flex-wrap justify-between items-center">
           <div class="flex flex-no-wrap w-full md:w-2/3">
             <input
-              class="appearance-none bg-transparent border-b w-full md:w-1/3 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-orange"
+              class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-orange"
               type="text"
               :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
               v-model="search"
@@ -399,7 +399,6 @@ export default {
           .then(res => {
             this.practiceCount = res.data.count;
           });
-
       if (this.practiceCount > 0) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,

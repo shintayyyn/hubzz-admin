@@ -2,7 +2,7 @@
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
         <nuxt-link to="/reports/" class="text-white hover:text-sunglow p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
         </nuxt-link>
       </div>
       <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 w-full max-w-xl">
@@ -22,9 +22,9 @@
         </div>
         <div class="flex items-center my-2 md:my-0">
           <select
-            class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:hubzz-yellow bg-waterloo"
+            class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:outline-none bg-waterloo"
           >
-            <option>Filter by..</option>
+            <option disabled value selected class="bg-gray-700">Filter by</option>
             <option>Paid</option>
             <option>Not Paid</option>
           </select>
@@ -35,6 +35,7 @@
                 name="cloud-download"
                 width="21"
                 height="21"
+                color="transparent fill"
                 class="fill-current"
             ></svgicon>
             <span class="px-1">Download CSV</span>

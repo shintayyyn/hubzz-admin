@@ -1,7 +1,7 @@
 <template>
   <div class="locum-modal p-4 md:p-8 shadow-lg">
     <div @click="goBack()" class="cursor-pointer pb-4">
-      <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white fill-current" />
+      <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white hover:text-sunglow fill-current" />
     </div>
     <LocumTabs :user="user" />
     <!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->

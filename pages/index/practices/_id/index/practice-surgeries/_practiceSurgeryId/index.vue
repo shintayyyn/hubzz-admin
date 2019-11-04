@@ -1,7 +1,7 @@
 <template>
   <div class="spoke-modal p-4 md:p-8 shadow-lg">
     <div @click="goBack()" class="cursor-pointer mb-4">
-      <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+      <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
     </div>
     <PracticeSurgeriesTabs :practice="practice" :practiceSurgery="practiceSurgery"/>
     <nuxt-child/>

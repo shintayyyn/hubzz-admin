@@ -3,16 +3,18 @@
     <!-- HEADER -->
     <div v-if="!isNuxtChild" class="flex justify-between text-sm text-white">
       <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current" />
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </div>
     </div>
-    <div class="flex m-2 ">
-      <div class="text-2xl text-white font-semibold">{{jobPart.job ? jobPart.job.title:null }}</div>
-      <div class="text-black p-2 bg-yellow-500 rounded ml-4">{{jobPart.status}}</div>
-      <div class="text-black p-2 text-white rounded ml-4" :class="jobPart.job && jobPart.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{jobPart.job ? jobPart.job.type : null}}</div>
+    <div class="flex flex-wrap my-4">
+      <div class="text-2xl text-white font-semibold mr-4">{{jobPart.job ? jobPart.job.title:null }}</div>
+      <div class="flex">
+        <div class="text-black p-2 bg-yellow-500 rounded">{{jobPart.status}}</div>
+        <div class="text-black p-2 text-white rounded ml-4" :class="jobPart.job && jobPart.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{jobPart.job ? jobPart.job.type : null}}</div>
+      </div>
     </div>
     <div class="flex flex-wrap">
-      <div class="flex flex-wrap h-full xl:w-2/3 sm:w-full overflow-auto text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
+      <div class="flex order-2 md:order-1 flex-wrap h-full xl:w-2/3 sm:w-full overflow-auto text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
         <!-- INFOS RIGHT -->
         <div class="xl:w-1/2 w-full overflow-hidden">
           <div class="m-4 mt-5 text-gray text-white">
@@ -32,12 +34,18 @@
         <div class="text-white xl:w-1/2 w-full overflow-hidden">
           <div class="m-2 mt-5">
             <p class="font-semibold">Duration</p>
-            <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
-            <span class="text-sm font-semibold">{{jobPart.date_start}}</span> <br><br>
-            <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">To</span>
-            <span class="text-sm font-semibold">{{jobPart.date_end}}</span> <br><br>
-            <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
-            <span class="text-sm  ont-semibold">{{ jobPart.job ? jobPart.job.shift.name : null}}</span> <br><br>
+            <div class="flex items-center py-2 mx-2 text-sm">
+              <span class="w-16 text-black"><span class="bg-white p-2 rounded-lg"> From </span></span>
+              <span class="font-semibold">{{jobPart.date_start}}</span>
+            </div>
+            <div class="flex items-center py-2 mx-2 text-sm">
+              <span class="w-16 text-black"><span class="bg-white p-2 rounded-lg"> To </span></span>
+              <span class="font-semibold">{{jobPart.date_end}}</span>
+            </div>
+            <div class="flex items-center py-2 mx-2 text-sm">
+              <span class="w-16 text-black"><span class="bg-white p-2 rounded-lg"> Shift </span></span>
+              <span class="font-semibold">{{ jobPart.job ? jobPart.job.shift.name : null}}</span>
+            </div>
             <p class="mt-5 font-semibold">Invoiced?</p>
             <p class="text-white">{{jobPart.invoiced ? 'Yes': 'No'}}</p>
             <p class="mt-5 font-semibold">Issued?</p>
@@ -100,12 +108,12 @@
           </div>
         </div>
         <!-- GOOGLE MAPS -->
-        <div class="w-full m-4 overflow-hidden" v-if="jobPart.job ? jobPart.job.platform_job : null">
-          <div class="m-2 text-white">
-            <p class="font-semibold">
-              Practice<br>
-              {{jobPart.job ? jobPart.job.platform_job.practice.surgery.name : null}}
-            </p>
+        <div class="w-full m-2 md:m-4 overflow-hidden" v-if="jobPart.job ? jobPart.job.platform_job : null">
+          <div class="text-white pb-2">
+            <div class="font-semibold">
+              Practice
+              <p>{{jobPart.job ? jobPart.job.platform_job.practice.surgery.name : null}}</p>
+            </div>
             <p>
               {{jobPart.job ? jobPart.job.platform_job.practice.surgery.address.line_1 : null}}
               {{jobPart.job ? jobPart.job.platform_job.practice.surgery.address.line_2 : null}}
@@ -113,7 +121,7 @@
             </p>
           </div>
         
-          <div class="w-full mx-2 ">
+          <div class="w-full">
             <GmapMap
               :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
               :zoom="15"
@@ -125,22 +133,18 @@
           </div>
         </div>
       </div>
-      <div class="xl:w-1/3 sm:w-full">
-        <div v-if="jobPart.job.job_parts.length > 0" class="mx-4 overflow-hidden">
+      <div class="flex order-1 md:order-2 w-full xl:w-1/3">
+        <div v-if="jobPart.job.job_parts.length > 0" class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
           <div class="mx-2 text-white font-semibold">Job Parts</div> 
             <div class="flex flex-col text-white">
               <nuxt-link 
                 v-for="(item, index) in jobPart.job.job_parts"
-                :to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
+                :to="item.id != specificJobPart.id && `/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
                 :key="`item-${index}`"
-                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 "
-                :class="item.id == specificJobPart.id ? 'border-solid border-4 border-orange-400':' border-l-8 border-yellow-500 md:border-0'"
+                class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-1 md:my-2 shadow-lg cursor-pointer border-l-8 p-4"
+                :class="item.id === specificJobPart.id ? 'border-yellow-500':'border-waterloo-light md:border-0 md:pl-6'"
               >
-                <!-- <div class="text-white p-4 rounded-lg bg-orange-500" 
-                  >
-
-                </div> -->
-                <div class="flex flex-col text-white xl:w-full sm:w-full md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+                <div class="flex flex-col text-white leading-tight">
                   <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
                   <span class="">{{item.job_part_number}}</span>
                   <span class="">{{item.status}}</span>

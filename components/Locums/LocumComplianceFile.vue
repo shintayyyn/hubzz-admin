@@ -4,7 +4,7 @@
     <!-- HEADER -->
     <div class="flex items-center text-sm text-white py-6 px-4 md:px-8">
       <div @click="goBack()" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </div>
       
       <button class="inline-flex items-center cursor-pointer text-white hover:bg-yellow-500 rounded-lg p-2 m-1"

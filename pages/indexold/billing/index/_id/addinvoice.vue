@@ -4,7 +4,7 @@
       <!-- HEADER -->
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link to="/billing" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="22" width="22" class="text-white fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
         </nuxt-link>
       </div>
       <!-- HEADER -->
@@ -60,7 +60,7 @@
               <div class="border border-black rounded-lg p-4 text-sm">
                 <div class="pb-2">To: Accounts Department</div>
                 <select
-                  class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                  class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded leading-tight focus:outline-none"
                 >
                   <option>Select the Practice for this Invoice</option>
                   <option>Option 2</option>
@@ -78,7 +78,7 @@
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 w-full overflow-hidden">
               <select
-                class="block appearance-none text-sm w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                class="block appearance-none text-sm w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded leading-tight focus:outline-none"
               >
                 <option>Select the Practice for this Invoice</option>
                 <option>Option 2</option>
@@ -112,7 +112,7 @@
                 <div class="my-1 px-1 w-1/5 overflow-hidden">£</div>
                 <div class="my-1 px-1 w-1/5 overflow-hidden">
                   <button
-                    class="bg-black hover:bg-gray-dark text-white font-bold px-2 py-1 rounded-full float-right"
+                    class="bg-black hover:bg-gray-dark text-white font-bold rounded-full float-right"
                   >+</button>
                 </div>
               </div>

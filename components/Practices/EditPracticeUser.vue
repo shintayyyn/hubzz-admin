@@ -2,7 +2,7 @@
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout mt-4">
       <div class="flex justify-between text-sm text-white py-2 px-6">
         <nuxt-link :to="{path:`/practices/${practice.id}/practice-users`,query:$route.query}" class="text-white p-1">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+          <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
         </nuxt-link>
       </div>
       <!-- TABS -->
@@ -97,7 +97,7 @@
               <option>Practice Staff</option>
             </select>
             <p class="flex py-1">Sign-Up verified by e-mail</p>
-            <p class="p-2">{{user.email ? user.email_verified_at: 'Not yet verified'}}</p>
+            <p class="p-2" :class="user.email && 'bg-waterloo-light rounded'">{{user.email ? $moment(user.email_verified_at).format('ddd, YYYY MMM DD, HH:MM A'): 'Not yet verified'}}</p>
             <p class="flex py-1">Status</p>
             <select
               class="text-black block appearance-none w-full bg-white border border-gray-300 hover:border-gray-300 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"

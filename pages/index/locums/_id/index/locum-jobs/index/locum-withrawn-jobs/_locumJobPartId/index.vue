@@ -2,7 +2,7 @@
   <div class="job-modal shadow-lg">
     <div class="mt-6 mx-8 my-2">
       <nuxt-link :to="{ path: `/locums/${locumId}/locum-jobs/locum-ongoing-jobs`}" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white fill-current"/>
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
     </div>
      <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>

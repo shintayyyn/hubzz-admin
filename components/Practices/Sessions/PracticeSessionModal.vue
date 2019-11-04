@@ -1,35 +1,36 @@
 <template>
-    <div class="mx-6">
+    <div class="px-4 md:px-6">
         <!-- BODY -->
         <div class="w-full overflow-auto">
-          <div class="flex m-2 ">
-            <div class="text-2xl text-white font-semibold">{{job ? job.title:null }}</div>
-            <div class="text-black p-2 bg-yellow-500 rounded ml-4">{{job.status}}</div>
-            <div class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</div>
+          <div class="flex flex-wrap items-center md:m-2">
+            <div class="text-2xl text-white font-semibold mr-4">{{job ? job.title:null }}</div>
+            <div class="flex">
+              <div class="text-black p-2 bg-yellow-500 rounded">{{job.status}}</div>
+              <div class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</div>
+            </div>
           </div>
-          <div class="text-white mx-4">{{"Posted On: "+job.date_created}}</div>
-          <div class="flex m-2 flex-wrap overflow-hidden ">
+          <div class="text-white mt-2 md:mx-4">{{"Posted On: "+job.date_created}}</div>
+          <div class="flex flex-col md:flex-row md:m-2 overflow-hidden mb-4">
             <!-- JOB DETAILS -->
-            <div :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'xl:w-3/6 my-2 overflow-hidden':'xl:w-3/5 w-full my-2 overflow-hidden'}`">
-              <div class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
-
+            <div class="w-full overflow-hidden flex order-2 md:order-1" :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`">
+              <div class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4">
                 <div class="xl:w-1/2 w-full overflow-hidden">
-                  <div class="m-4 mt-5 text-gray text-white">
+                  <div class="text-gray-200">
                     <p class="font-semibold">Job Number</p>
-                    <p class="text-white">{{job.job_number}}</p>
-                    <p class="mt-5 font-semibold">Rate</p>
-                    <p class="text-white no-underline">{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
-                    <p class="mt-5 font-semibold">Total Hours</p>
-                    <p class="text-white">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
-                    <p class="mt-5 font-semibold">Job Description</p>
-                    <p class="text-white">{{job.description}}</p>
-                    <p class="mt-5 font-semibold">Extra Information</p>
-                    <p class="text-white">{{job.platform_job ? job.platform_job.extra_information : 'N/A'}}</p>
+                    <p class="text-white pb-2">{{job.job_number}}</p>
+                    <p class="font-semibold">Rate</p>
+                    <p class="text-white pb-2 no-underline">{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
+                    <p class="font-semibold">Total Hours</p>
+                    <p class="text-white pb-2">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
+                    <p class="font-semibold">Job Description</p>
+                    <p class="text-white pb-2">{{job.description}}</p>
+                    <p class="font-semibold">Extra Information</p>
+                    <p class="text-white pb-2">{{job.platform_job ? job.platform_job.extra_information : 'N/A'}}</p>
                   </div>
                 </div>
 
                 <div class="text-white xl:w-1/2 w-full overflow-hidden">
-                  <div class="m-2 mt-5">
+                  <div class="pb-2">
                     <p class="font-semibold">Duration</p>
                     <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
                     <span class="text-sm font-semibold">{{job.date_start}}</span> <br><br>
@@ -37,66 +38,63 @@
                     <span class="text-sm font-semibold">{{job.date_end}}</span> <br><br>
                     <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
                     <span class="text-sm  ont-semibold">{{job.shift.name}}</span> <br><br>
-                    <p class="m-2 mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
+                    <p class=" font-semibold">Auto-assigns this job to the first applicant</p>
                     
-                    <div v-if="job.platform_job">
-                      <div class="m-2 mt-5">
+                    <template v-if="job.platform_job">
+                      <div class="pb-2">
                         <span>This job is </span>
                         <span class="font-semibold">{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
                         <span> of</span>
                         <span class="font-semibold">IR35</span> 
                       </div>
 
-                      <p class="m-2 mt-5 font-semibold">Role</p>
-                      <p class="m-2 ">{{job.platform_job.profession.name}}</p>
+                      <p class="font-semibold">Role</p>
+                      <p class="ml-2 mb-2">{{job.platform_job.profession.name}}</p>
 
-                      <p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
+                      <p class=" w-1/2 font-semibold">Speciality</p>
                       <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                         v-for="specialty in job.platform_job.qualifications"
                         :key="specialty.id + '-name'">
                         {{specialty ? specialty.name:null}}
                       </p>
 
-                      <p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
+                      <p class=" w-1/2 font-semibold">Clinical Systems</p>
                       <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                         v-for="clinicalSystem in job.platform_job.clinical_systems"
                         :key="clinicalSystem.id + '-name1'">
                           {{clinicalSystem ? clinicalSystem.name:null}}
                       </p>
 
-                      <p class="m-2 mt-5 w-1/2 font-semibold">Spoken Languages</p>
+                      <p class=" w-1/2 font-semibold">Spoken Languages</p>
                       <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                         v-for="spokenLanguage in job.platform_job.spoken_languages"
                         :key="spokenLanguage.id + '-name2'">
                         {{spokenLanguage ? spokenLanguage.name:null}}
                       </p>
 
-                      <div v-if="job.platform_job.compliance_documents.length > 0">
+                      <template v-if="job.platform_job.compliance_documents.length > 0">
                         <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
                         <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documents"
                           :key="`${index}-${gpComplianceDocs.name}`"
                           >
                             <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
                         </div>
-                      </div>
+                      </template>
 
-                      <div v-if="job.platform_job.mandatory_trainings.length > 0">
+                      <template v-if="job.platform_job.mandatory_trainings.length > 0">
                         <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
                         <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
                           :key="`${index}-${mandatoryTrainings.name}`"
                           >
                             <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
                         </div>
-                      </div>
-                    </div>
-                    <div v-else-if="job.private_job">
-                      
-                    </div>
+                      </template>
+                    </template>
                   </div>
                 </div>
 
-                <div class="w-full m-4 overflow-hidden" v-if="job.platform_job">
-                  <div class="m-2 text-white">
+                <div class="w-full overflow-hidden" v-if="job.platform_job">
+                  <div class="text-white pb-2">
                     <p class="font-semibold">
                       Practice<br>
                       {{job.platform_job.practice.surgery.name}}
@@ -108,7 +106,7 @@
                     </p>
                   </div>
                 
-                  <div class="w-full mx-2 ">
+                  <div class="w-full">
                     <!-- google map -->
                     <GmapMap
                       :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
@@ -120,8 +118,8 @@
                     </GmapMap>
                   </div>
                 </div>
-                <div class="w-full m-4 overflow-hidden" v-if="job.private_job">
-                  <div class="text-white">
+                <div class="w-full overflow-hidden" v-if="job.private_job">
+                  <div class="text-white pb-2">
                     <p class="font-semibold">
                       Practice<br>
                       {{job.private_job.private_practice.surgery.name}}
@@ -149,8 +147,8 @@
               </div>
             </div>
             <!-- LOCUM DETAILS -->
-            <div v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" 
-              :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'xl:w-2/6 my-2 overflow-hidden':'xl:w-1/5 w-full my-2 overflow-hidden'}`">
+            <div v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" class="w-full overflow-hidden flex order-2"  
+              :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`">
               <div class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
                 
                 <div class="flex flex-wrap overflow-hidden">
@@ -253,16 +251,16 @@
               </div>
             </div>
             <!-- JOB PARTS -->
-            <div v-if="job.job_parts.length > 0" :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'xl:w-1/6 overflow-hidden':'xl:w-1/5 mx-4 overflow-hidden'}`">
-              <div class="mx-2 text-white font-semibold">Job Parts</div> 
+            <div v-if="job.job_parts.length > 0" class="w-full overflow-hidden flex flex-col order-1" :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6':'md:w-2/5 md:px-4'}`">
+              <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">Job Parts</div> 
               <div class="flex flex-col text-white">
                 <div 
                   v-for="(item, index) in job.job_parts"
                   @click="show(item.id)"
                   :key="`item-${index}`"
-                  class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-yellow-500 md:border-0" 
+                  class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-2 md:p-4 md:p-2 border-l-8 border-yellow-500 md:border-0"
                 >
-                  <div class="flex flex-col xl:w-full sm:w-full md:w-1/6 md:table-cell p-2 md:py-4 align-middle">
+                  <div class="flex flex-col w-full p-2 md:py-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
                     <span class="">{{item.job_part_number}}</span>
                   </div>
