@@ -16,7 +16,7 @@
       </select>
       </div>
        <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
+        <div class="align-middle px-2 w-1/6" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
          {{ isJobParts ? 'Job Part Number' : 'Job Number'}}
           <svgicon v-if="sortedBy!='job_number' && sortedBy!='job_part_number' "  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>

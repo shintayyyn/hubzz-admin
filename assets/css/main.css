@@ -285,3 +285,47 @@ table tbody td {
     padding: 8px;
   }
 }
+
+/* Customized Checkbox */
+/* To use, just add customize-select class to the wrapper */
+.customized-select {
+  position: relative;
+}
+
+.customized-select input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.customized-select input[type="checkbox"] + label {
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+
+.customized-select input[type="checkbox"] + label::before {
+  content: "";
+  margin: 0 10px auto auto;
+  display: inline-block;
+  vertical-align: text-top;
+  width: 18px;
+  height: 18px;
+  background: #eee;
+}
+
+.customized-select input[type="checkbox"]:checked + label:before {
+  background: #e7bf2d;
+}
+
+.customized-select input[type="checkbox"]:checked + label:after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  background: white;
+  width: 2px;
+  height: 2px;
+  box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white,
+    4px -6px 0 white, 4px -8px 0 white;
+  transform: rotate(45deg);
+}

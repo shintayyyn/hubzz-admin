@@ -25,7 +25,7 @@
     <div v-if="adminUsers.length>0" class="w-full p-2"> 
         <!-- HEADER -->
         <div class="hidden md:flex items-center text-white justify-between font-semibold ">
-          <div class="align-middle px-5" v-if="deleteAdminUser == true"></div> 
+          <div class="align-middle w-10" v-if="deleteAdminUser == true"></div> 
           <div class="align-middle px-2 w-1/3">E-Mail</div> 
           <div class="align-middle px-2 text-center w-1/3">Role</div>
           <div class="align-middle px-2 text-center w-1/3">Name</div>
@@ -37,23 +37,24 @@
           :key="`user-${index}`"
           class="flex"
         >
-          <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center" v-if="deleteAdminUser == true">
+          <div class="flex justify-center items-center md:w-10 align-middle md:text-center" v-if="deleteAdminUser == true">
             <svgicon
+              v-if="$auth.user.id != user.id"
               @click.prevent="toDeleteAdminUser(user.id)"
               name="delete-user"
               width="21"
               height="21"
-              color="red red"
-              class="cursor-pointer"/>
+              class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
+            />
+            <span v-else class="hidden md:inline text-sm text-gray-500">You</span>
           </div>
-          <div
-          class="w-full flex flex-col cursor-pointer md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+          <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" 
+          class="w-full flex flex-col md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
           >
-            <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" 
-            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
               <strong class="block md:hidden text-xs uppercase">E-Mail</strong>
-              <span class="break-word">{{ user && user.email ? user.email : null }}</span>
-            </nuxt-link>
+              <span class="break-word">{{ user && user.email ? user.email : null }} </span>
+            </div>
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3">
               <strong class="block md:hidden text-xs uppercase">Role</strong>
               <span class="break-all">{{ user && user.admin_detail ? user.admin_detail.role.name : null }}</span>
@@ -62,8 +63,7 @@
               <strong class="block md:hidden text-xs uppercase">Name</strong>
               <span class="break-all">{{ user && user.personal_detail ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}` : null }}</span>
             </div>
-          </div>
-
+            </nuxt-link>
         </div>
         <!-- END BODY -->
     </div>

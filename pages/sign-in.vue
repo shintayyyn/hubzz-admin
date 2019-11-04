@@ -2,16 +2,16 @@
   <div class="flex flex-col h-full md:flex-row overflow-auto w-full xl:justify-center">
     <div class="flex flex-col h-full items-center md:flex-row md:h-full w-full">
       <div
-        class="bg-logo flex lg:w-auto md:h-full overflow-hidden w-full p-8 sm:p-5 md:p4"
+        class="bg-logo flex lg:w-auto md:h-full overflow-hidden w-full p-4 md:p-8"
         :style="{ backgroundImage: `url(${backgroundUrl})` }"
       >
-        <img class="m-auto" src="~/assets/images/hubzz-logo.png" />
+        <img class="mx-auto md:my-auto" src="~/assets/images/hubzz-logo.png" />
       </div>
 
       <div class="lg:mx-auto lg:w-auto md:h-full py-10 w-full">
         <div class="relative w-full flex justify-center md:h-full md:items-center px-4 md:px-0">
           <div
-            class="form w-full flex flex-col pt-16 px-10 py-6 rounded-lg shadow-lg"
+            class="form w-full flex flex-col p-4 md:px-10 md:py-6 rounded-lg shadow-lg"
             style="background-color: #55565A;"
           >
             <div
@@ -32,17 +32,17 @@
                 <svgicon name="times-solid" height="24" width="24" class="text-white fill-current" />
               </button>
             </div>
-            <div class="flex flex-wrap justify-between">
-              <label class="text-white text-sm my-1 py-1">Email address</label>
-              <div class="m-1 flex-auto flex justify-end">
+            <div class="flex flex-wrap justify-between items-center py-1">
+              <label class="text-white text-sm">Email address</label>
+              <div class="flex justify-end">
                 <span
-                  class="text-xs bg-red-600 px-2 py-1 text-white rounded-lg"
+                  class="text-xs bg-red-600 px-2 py-1 text-white rounded-lg flex items-center"
                   v-if="emailErrorMessage && !showEmailFocus"
                 >{{ emailErrorMessage }}</span>
               </div>
             </div>
             <input
-              class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
+              class="bg-transparent text-white py-2  mb-4 outline-none border-b"
               v-model="email"
               @keyup.enter="login"
               :class="showEmailFocus ? 'border-yellow-500' : emailErrorMessage ? 'border-red' : 'border-white-dark'"
@@ -50,35 +50,38 @@
               @blur="showEmailFocus = false, checkEmail()"
             />
 
-            <div class="flex flex-wrap justify-between">
-              <label class="text-white text-sm my-1 py-1">Password</label>
-              <div class="m-1 flex-auto flex justify-end">
+            <div class="flex flex-wrap justify-between items-center py-1">
+              <label class="text-white text-sm">Password</label>
+              <div class="flex justify-end">
                 <span
-                  class="text-xs bg-red-600 rounded-lg px-2 py-1 text-white"
+                  class="text-xs bg-red-600 px-2 py-1 text-white rounded-lg flex items-center"
                   v-if="passwordErrorMessage && !showPasswordFocus"
                 >{{ passwordErrorMessage }}</span>
               </div>
             </div>
-            <input
-              class="bg-transparent text-white py-2 mt-2 mb-8 outline-none border-b"
-              v-model="password"
-              type="password"
-              @keyup.enter="login"
-              :class="showPasswordFocus ? 'border-yellow-500' : passwordErrorMessage ? 'border-red' : 'border-white-dark'"
-              @focus="showPasswordFocus = true"
-              @blur="showPasswordFocus = false, checkPassword()"
-            />
-
+            <div class="relative w-full mb-4">
+              <input
+                class="w-full bg-transparent text-white py-2 outline-none border-b pr-6"
+                v-model="password"
+                :type="togglePassword()"
+                @keyup.enter="login"
+                :class="showPasswordFocus ? 'border-yellow-500' : passwordErrorMessage ? 'border-red' : 'border-white-dark'"
+                @focus="showPasswordFocus = true"
+                @blur="showPasswordFocus = false, checkPassword()"
+              />
+              <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full" v-if="password">
+                <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
+                <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
+              </button>
+            </div>
             <button
               @click="login"
-              class="self-center rounded-lg p-5 font-bold"
-              style="background-color: #FFDA3A;"
+              class="self-center rounded-lg px-6 py-4 font-bold bg-sunglow"
               v-if="!loggingIn"
             >Sign-in</button>
             <button
               @click="login"
-              class="self-center rounded-lg p-5 font-bold"
-              style="background-color: #FFDA3A;"
+              class="self-center rounded-lg px-6 py-4 font-bold bg-sunglow"
               v-if="loggingIn"
             >Loading...</button>
           </div>
@@ -119,11 +122,20 @@ export default {
       showPasswordFocus: false,
 
       emailErrorMessage: "",
-      passwordErrorMessage: ""
+      passwordErrorMessage: "",
+
+      passwordToggle: false
     };
   },
 
-  methods: {
+methods: {
+    togglePassword(){
+      if (this.passwordToggle) {
+        return 'text'
+      }else{
+        return 'password'
+      }
+    },
     checkEmail() {
       if (!this.email) {
         this.emailErrorMessage = "Required";
@@ -196,7 +208,7 @@ export default {
 </script>
 <style scoped>
 .bg-logo {
-  flex: 0 0 25%;
+  /* flex: 0 0 25%; */
   background-size: 175%;
   background-position: top right;
   background-repeat: no-repeat;

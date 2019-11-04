@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-auto">
     <div class="text-2xl md:text-4xl text-white">Billing</div>
-    <!-- <div class="text-sm mb-4 text-white">Work in progress.</div> -->
+    <div class="text-sm mb-4 text-white">Work in progress.</div>
     <div>
       <nuxt-link
         to="/billings/addinvoice"
@@ -26,7 +26,7 @@
         v-for="(billing, index) in billings"
         :key="`billing-${index}`"
         :to="`/billings/${billing.id}`"
-        class="flex flex-col cursor-pointer md:flex-row md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
         draggable="false"
       >
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
@@ -47,7 +47,7 @@
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
           <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-          <span class="break-all">{{ billing.jobnums }}</span>
+          <span v-for="(item, index) in billing.jobnums" :key="index" class="">{{ item }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
@@ -82,7 +82,7 @@ export default {
             practice: "OLDHAM",
             created: "10/02/2019",
             issued: "15/02/2019",
-            jobnums: "H00000000101",
+            jobnums: ["H00000000101"],
             amount: "£100.00",
             status: "Paid"
         },
@@ -92,17 +92,17 @@ export default {
             practice: "TROUTBECK",
             created: "10/02/2019",
             issued: "14/02/2019",
-            jobnums: "H00000000102",
+            jobnums: ["H00000000102-1", "H00000000102-2"],
             amount: "£200.00",
             status: "Issued"
         },
         {
             id:'3',
-            invnum: "0000000001",
+            invnum: "0000000003",
             practice: "INSPIRE",
             created: "10/02/2019",
             issued: "15/02/2019",
-            jobnums: "H00000000103",
+            jobnums: ["H00000000103"],
             amount: "£100.00",
             status: "Paid"
         }

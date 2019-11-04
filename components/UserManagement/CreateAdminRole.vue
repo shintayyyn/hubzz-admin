@@ -24,7 +24,7 @@
           <div class="flex flex-wrap justify-start">
             <div class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1" v-for="(role, index) in permissions" :key="index">
               <div class="flex flex-col">
-                <div class="w-full flex flex-row items-center">
+                <div class="customized-select w-full flex flex-row items-center">
                   <input
                     type="checkbox"
                     :id="role.permissions"
@@ -35,7 +35,7 @@
                 </div>
                 <div class="flex flex-col px-1">
                   <div
-                    class="w-full flex flex-row items-center"
+                    class="customized-select w-full flex flex-row items-center"
                     v-for="permission in role.permissions"
                     :key="permission.id"
                   >

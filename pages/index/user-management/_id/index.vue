@@ -121,12 +121,13 @@
         <select 
           v-model="toPutAdminUser.role_id"
           class="appearance-none w-full mb-4 bg-transparent border-b border-gray-300 px-4 py-2 pr-8 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.role_id !== '' ? 'focus:border-sunglow' :'focus:border-red-600'}`"
+          :class="`${toPutAdminUser.role_id !== '' ? 'focus:border-sunglow' :'focus:border-red-600'}`" 
         >
-          <option value disabled selected>Select Role</option>
-          <option v-for="(role, index) in adminRoles "
+          <option disabled value selected class="text-gray-500">Select Role</option>
+          <option v-for="(role, index) in adminRoles"
           :key="index"
-          :value="role.id">
+          :value="role.id"
+          class="text-black">
             {{ role.name }}
           </option>
         </select>

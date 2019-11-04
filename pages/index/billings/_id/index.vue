@@ -1,17 +1,19 @@
 <template>
     <div class="billing-modal p-4 md:p-8 shadow-lg">
       <!-- HEADER -->
-      <div class="flex justify-between text-sm text-white py-2">
+      <div class="flex items-center text-sm text-white py-2">
         <nuxt-link to="/billings" class="text-white hover:text-sunglow p-1">
           <svgicon name="arrow-left-solid" height="22" width="22" class="fill-current"/>
         </nuxt-link>
+        <span class="px-4">Not yet working.</span>
       </div>
       <!-- HEADER -->
-      <div class="flex flex-col bg-waterloo my-4 py-2 px-4 rounded-lg">
+      <!-- <div class="flex flex-col bg-waterloo my-4 py-2 px-4 rounded-lg">
         <div class="flex flex-col">
           <label class="text-sm text-gray-200">Name</label>
+          <label class="text-sm text-gray-200">{{ qualification.name}}</label>
         </div>
-      </div>
+      </div> -->
     </div>
 </template>
 
@@ -35,9 +37,9 @@ export default {
 
   data() {
     return {
-      qualification: null
+      qualification: null,
     };
-  }
+  },
 };
 </script>
 <style>

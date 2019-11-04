@@ -19,9 +19,9 @@
                     </div>
                     <div class="w-full flex flex-col sm:my-1 sm:px-1">
                         <span>Locum </span>
-                        <span class="font-bold">{{item.locum_detail.user.personal_detail.name}}</span>
+                        <span class="font-bold px-2">{{item.locum_detail.user.personal_detail.name}}</span>
                         <span>Uploaded Compliance Document</span>
-                        <span class="font-bold">{{item.compliance_document.name}}</span>
+                        <span class="font-bold px-2">{{item.compliance_document.name}}</span>
                     </div>
                 </nuxt-link>
             </div>
