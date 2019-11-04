@@ -110,7 +110,7 @@ export default {
 
         await store.commit('locums/SET_LOCUM_DOC_ALERT', locumDocAlert)
       }catch(err){
-        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+        // store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
         console.log('Get locums error!', err)
       }
     }

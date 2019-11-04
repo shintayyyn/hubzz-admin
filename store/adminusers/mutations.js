@@ -35,7 +35,7 @@ export default{
     },
     ADD_ADMIN_ROLE(state, payload){
       state.adminRoles.push(payload)
-      state.adminRolesCount = state.itemCount +1
+      state.adminRolesCount = state.adminRolesCount +1
     },
     DELETE_ADMIN_ROLE(state, payload){
       let index = state.adminRoles.findIndex(

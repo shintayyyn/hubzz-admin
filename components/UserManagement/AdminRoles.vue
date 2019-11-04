@@ -7,11 +7,11 @@
           @click="modal=true"
         >Add New Role
           <svgicon
-          name="add-rectangle"
-          width="21"
-          height="21"
-          color="black black"
-          class="mx-1 -my-1"/>
+            name="add-rectangle"
+            width="21"
+            height="21"
+            color="black black"
+            class="mx-1 -my-1"/>
         </button>
         <button
           v-if="deletingAdminRole == false && authAdminPermissions.includes('Delete Role')"
@@ -19,11 +19,11 @@
           @click="deletingAdminRole = true"
         >Delete Role
           <svgicon
-          name="garbage"
-          width="21"
-          height="21"
-          color="white white"
-          class="mx-1 -my-1"/>
+            name="garbage"
+            width="21"
+            height="21"
+            color="white white"
+            class="mx-1 -my-1"/>
         </button>
         <button
           v-if="deletingAdminRole == true && authAdminPermissions.includes('Delete Role')"
@@ -151,14 +151,6 @@ export default {
       })
     }catch(err){
       console.log('get roles count error', err)
-    }
-  },
-  async getRoles({ app, route, store}){
-    
-    try{
-      
-    }catch(err){
-      console.log('get roles error!', err)
     }
   },
   methods:{

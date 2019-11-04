@@ -86,6 +86,12 @@ export default {
     this.getPermissions()
   },
   methods: {
+    async getAdminRoles(){
+      this.$store.dispatch("adminusers/fetchAdminRoles", {
+        limit: 10
+      });
+      this.$store.commit("adminusers/ADD_ADMIN_USER", this.form);
+    },
     getPermissions() {
       this.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
         res.data.permissions.forEach(permission => {
@@ -133,7 +139,7 @@ export default {
         item.done = checked
       })
     },
-    create() {
+    async create() {
       this.formError = []
       // this.Validate(this.form, ["permission_id"])
       if (!this.formError.length) {
@@ -153,6 +159,7 @@ export default {
             this.$router.push(`/user-management/roles-and-permissions`)
             this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Role Created Successfully'})
           })
+        await this.getAdminRoles()
       }
     }
   }
