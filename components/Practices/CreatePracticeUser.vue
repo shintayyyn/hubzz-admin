@@ -107,7 +107,7 @@
             <option>Stand Alone</option>
             <option>Spoke</option>
           </select>
-          <div v-if="toPostUser.type == 'Spoke'" class="flex py-1">
+          <div v-if="toPostUser.type == 'Spoke'" class="py-1">
             Parent Surgery ID
             <input
               class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"

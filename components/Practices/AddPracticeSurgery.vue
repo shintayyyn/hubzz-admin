@@ -76,18 +76,14 @@
               v-for="(hub, index) in hubzz"
               :key="`hub-${index}`"
               @click="changeParent(hub.surgery.id,hub.id)"
-              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 cursor-pointer"
+              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
             >
-              <div class="flex w-full ">
-                <div class="text-white text-xs p-4">
-                  <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
-                  <span class="font-bold">{{ hub.surgery.name }}</span>
-                  <br />
-                  <br />
-                  <br />
-                  <span class="p-2 bg-trout rounded">Practice Code</span>
+              <div class="flex flex-col text-white text-xs">
+                <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
+                <span class="font-bold">{{ hub.surgery.name }}</span>
+                <div class="flex items-center my-1">
+                  <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
                   <span>{{ hub.surgery.code }}</span>
-                  <br />
                 </div>
               </div>
             </div>

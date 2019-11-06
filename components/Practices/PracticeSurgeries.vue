@@ -16,9 +16,9 @@
                   class="mx-1 -my-1"/>
                 </button>
             </div>
-            <div v-if="deleteSurgery == false" class="flex-3 mx-1 whitespace-no-wrap">
+            <div v-if="deleteSurgery == false && practiceChildren.length>0" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
-                  @click="deleteSurgery = true"
+                  @click="deleteSurgery = true && practiceChildren.length>0"
                   class="inline-flex items-center no-underline py-2 px-4 bg-red-600 hover:bg-red-700 text-sm font-semibold text-white rounded-lg shadow float-right"
                 >Delete Surgery
                   <svgicon
@@ -77,7 +77,7 @@
                   <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
               </div>
               <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code:</strong>
+                <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code</strong>
                 <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :'null' }}</span>
               </div>
               <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">

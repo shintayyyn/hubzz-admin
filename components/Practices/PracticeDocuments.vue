@@ -2,19 +2,18 @@
   <!-- TABLE RESPONSIVE-->
   <div class="flex flex-col mx-2 text-white">
     <!-- HEADER -->
-    <div class="w-full hidden md:flex text-sm lg:text-base font-bold pb-3">
+    <div class="w-full hidden md:flex text-sm lg:text-base font-bold pb-3 md:px-2">
       <div class="w-1/4">Title</div>
-      <div class="w-1/4">File Size</div>
-      <div class="w-1/4">Last Upload Date</div>
-      <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="w-1/4">Upload New File</div>
+      <div class="w-1/4 text-center">File Size</div>
+      <div class="w-1/4 text-center">Last Upload Date</div>
+      <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="w-1/4 text-center">Upload New File</div>
     </div>
     <!-- END HEADER -->
     <!-- BODY -->
     <div
       v-for="(document,index) in specificPracticeDocumentTypes"
       :key="`surgery-${index}`"
-      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-300 my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
-      :class="document.practiceSpecificDoc ? 'cursor-pointer' : ''"
+      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
     >
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
         <strong class="block md:hidden text-sm uppercase">Title</strong>
@@ -22,42 +21,46 @@
           class="whitespace-no-wrap"
         >{{ document.practiceDocType ? document.practiceDocType.name:null }}</span>
       </div>
-      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">File Size</strong>
         <span
           class="break-all"
         >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.file ? (document.practiceSpecificDoc.file.size / 1048576).toFixed(2) + " Mb":null }}</span>
       </div>
-      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Last Upload Date</strong>
         <span
           class="break-all"
         >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.created_at ? $moment(document.practiceSpecificDoc.updated_at ? document.practiceSpecificDoc.updated_at : document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null }}</span>
       </div>
 
-      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+      <div class="w-full md:w-1/4 py-2  flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Upload New File</strong>
         <div
-          class="w-full flex md:flex-col lg:flex-row items-center justify-between md:justify-start"
+          class="w-full flex md:flex-col lg:flex-row items-center justify-between"
         >
-          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex flex-wrap">
-            <div class="flex text-white text-sm w-24 mr-4">
+          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex md:justify-center" :class="document.practiceSpecificDoc ? 'w-1/2' : 'w-full'">
+            <div class="flex justify-center text-white text-sm">
               <label>
-                File
+                <!-- File -->
                 <input
                   type="file"
                   id="file"
                   :ref="`file-${document.practiceDocType.id}`"
                   v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"
                 />
+                <span class="cursor-pointer flex items-center text-center rounded-full text-white px-6 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600 '">
+                  <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
+                  <span class="pl-2"> {{ document.practiceSpecificDoc ? 'Update' : 'Upload' }} File</span>
+                </span>
               </label>
             </div>
           </div>
 
-          <div v-if="document.practiceSpecificDoc" class="flex text-white text-xs py-2 xl:py-0">
+          <div v-if="document.practiceSpecificDoc" class="w-1/2 flex justify-center text-white text-xs py-2 xl:py-0">
             <nuxt-link
               :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
-              class="bg-blue-500 flex items-center text-center rounded-full text-white no-underline px-6 py-2"
+              class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full text-white no-underline px-6 py-2"
             >
               <svgicon name="folder" width="16" height="16" color="white white"></svgicon>
               <span class="pl-2">View File</span>
@@ -356,7 +359,18 @@ button:focus {
 }
 #file {
   color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
 }
+/* #file::-webkit-file-upload-button{
+  background: #ff8b6e;
+  appearance: none;
+  border: 0;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-size: .75rem;
+} */
 .practice-document-shield {
   position: fixed;
   top: 0;

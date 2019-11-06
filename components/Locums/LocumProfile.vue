@@ -1,10 +1,10 @@
 <template>
   <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
     <div class="inline-flex">
-      <div class="w-full flex flex-wrap overflow-hidden text-gray-300">
+      <div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
         <!--COLUMN 1-->
-        <div class="w-full md:w-1/3 overflow-hidden mb-2 md:px-4">
-          <div class="mx-3 my-4 md:my-6">
+        <div class="flex flex-col order-2 md:order-1 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
+          <div class="mx-3 md:my-6">
             <p class="mt-2">Name</p>
             <p class="font-bold pl-2" :class="!user.personal_detail.name && 'opacity-75'">{{ user.personal_detail.name ? user.personal_detail.name : 'N/A' }}</p>
 
@@ -93,8 +93,8 @@
           </div>
         </div>
         <!--COLUMN 2-->
-        <div class="w-full md:w-1/3 overflow-hidden mb-2 md:px-4">
-          <div class="mx-3 my-4 md:my-6">
+        <div class="flex flex-col order-3 md:order-2 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
+          <div class="mx-3 md:my-6">
             <p class="mt-2">Headline</p>
             <p class="font-bold pl-2" :class="!user.locum_detail.headline && 'opacity-75'">{{user.locum_detail.headline?user.locum_detail.headline:'N/A'}}</p>
             <p class="mt-2">Short Biography</p>
@@ -129,8 +129,7 @@
                     name="cloud-download"
                     width="21"
                     height="21"
-                    color="white"
-                    class=""
+                    color="transparent white"
                   ></svgicon>
                   <span
                     class="w-full pl-2 leading-tight"
@@ -155,8 +154,7 @@
                     name="cloud-download"
                     width="21"
                     height="21"
-                    color="white"
-                    class=""
+                    color="transparent white"
                   ></svgicon>
                   <span
                     class="w-full pl-2 leading-tight"
@@ -167,15 +165,15 @@
           </div>
         </div>
         <!--COLUMN 3-->
-        <div class="w-full md:w-1/3 overflow-hidden mb-2 md:px-4">
-          <div class="mx-3 my-4 md:my-6 border-b text-center pb-3">
+        <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
+          <div class="mx-3 md:my-6 border-b text-center pb-3">
             <embed
               class="object-cover w-48 h-48 rounded-full mx-auto"
               :src="user.avatar ? user.avatar.file.url:null"
             />
             <img
               v-if="!user.avatar"
-              class="w-48 rounded-full mr-4"
+              class="w-48 rounded-full mx-auto"
               src="~/assets/images/default-user-image.png"
             />
             <p class="m-2 text-gray">Sign-up verified by email</p>
@@ -188,7 +186,7 @@
               <span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
             </div>
           </div>
-          <div class="mx-3 my-4">
+          <div class="mx-3 mt-4">
             <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
             <span
               class="tool inline-block"

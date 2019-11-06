@@ -46,8 +46,8 @@
           <div class="flex flex-col text-gray-400 md:m-2 lg:w-3/4">
             <p class="md:mr-20 pb-2">File</p>
             <div class="w-full">
-              <embed class="object-contain object-top w-full"
-              :class="practiceDoc.file.type == 'image' ? 'image' : 'document h-full'"
+              <embed class="object-contain w-full"
+              :class="practiceDoc.file.type == 'image' ? 'image object-left-top' : 'object-top document h-full'"
               :src="practiceDoc.file.subtype === 'tiff' || practiceDoc.file.subtype === 'msword' ? convertDoc(practiceDoc.file.url) : practiceDoc.file.url"
               >
             </div>

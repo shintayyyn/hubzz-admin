@@ -11,7 +11,8 @@
           <div class="flex flex-wrap -mx-1 overflow-hidden">
             <div class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
+                class="rounded-lg py-3 px-4 text-sm"
+                :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
                 @click="tab1=true,tab2=false"
               >
                 <strong>General</strong>
@@ -19,7 +20,8 @@
             </div>
             <div v-if="authAdminPermissions.includes('Edit Practice User')" class="my-1 px-1 overflow-hidden">
               <button
-                class="bg-sunglow hover:bg-yellow-500 rounded-lg py-3 px-4 text-black text-sm"
+                class="rounded-lg py-3 px-4 text-sm"
+                :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
                 @click="tab2=true,tab1=false"
               >
                 <strong>Change Password</strong>

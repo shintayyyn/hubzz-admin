@@ -1,6 +1,6 @@
 <template>
-  <div>
-    surgery billing
+  <div class="px-4 text-white">
+    Surgery Billing
   </div>
 </template>
 <script>

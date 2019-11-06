@@ -176,18 +176,18 @@ table tbody td {
 
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #505561;
+    background: transparent;
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-track:hover {
-    background: #5b616e;
+    background: rgba(0, 0, 0, 0.116);
     border-radius: 3px;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgb(116, 122, 139);
+    background: #a1a8b9;
     border-radius: 3px;
   }
 

@@ -1,57 +1,60 @@
 <template>
     <div class="flex flex-col rounded-lg">
-      <div class="w-full flex text-white text-sm bg-waterloo py-2 px-3 shadow rounded-lg" style="max-width: 600px">
-        
-        <div v-if="toEdit == false" class="w-full overflow-hidden text-gray-300 text-sm p-2">
+      <div class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg" style="max-width: 600px">
+        <div v-if="toEdit == false" class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2">
+          <button
+              v-if="authAdminPermissions.includes('Edit Practice Rates')"
+              class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
+              @click="toEdit = true"
+              >Edit
+            </button>
           <div class="flex py-1">
             GP Rate
           </div>
-          <div class="text-white text-lg font-semibold mx-6 mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none">
+          <div class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none">
             {{practice.rates.length > 0 ?'£'+practice.rates[0].rate : 'N/A'}}
           </div>
           <div class="flex py-1">Others Rate
           </div>
-            <div class="text-white text-lg font-semibold mx-6 mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none">
+            <div class="text-white text-lg font-semibold mx-3 leading-tight focus:outline-none">
             {{practice.rates.length > 0 ? '£'+practice.rates[1].rate : 'N/A'}}
           </div>
-          <button
-            v-if="authAdminPermissions.includes('Edit Practice Rates')"
-            class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
-            @click="toEdit = true"
-            >Edit
-          </button>
+          
         </div>
         <div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Rates')" class="w-full overflow-hidden text-gray-300 text-sm p-2">
-            <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">
-                {{errors[0]}}
+            <div v-if="errors.length > 0" class="mb-2">
+              <p class="rounded bg-red-500 mb-1 px-2 py-1" v-for="(error, index) in errors" :key="index">{{ error }}</p>
+                <!-- {{errors[0]}} -->
             </div>
-            <div class="flex py-1">GP Rate
-                <span v-if="gpError" class="bg-red p-1 ml-4 rounded">{{gpError}}</span>
+            <div class="flex items-center justify-between py-1">GP Rate
+                <!-- <span v-if="gpError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{gpError}}</span> -->
             </div>
             <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                type="text"
+                :class="gpError && 'border-red-600'"
+                type="number"
                 v-model="toPutPracticeRate.gp_rate"
                 @blur="verifyGpRate()"
                 aria-label=""
             >
-            <div class="flex py-1">Others Rate
-                <span v-if="othersError" class="bg-red p-1 ml-4 rounded">{{othersError}}</span>
+            <div class="flex items-center justify-between py-1">Others Rate
+                <!-- <span v-if="othersError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{othersError}}</span> -->
             </div>
             <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                type="text"
+                :class="othersError && 'border-red-600'"
+                type="number"
                 v-model="toPutPracticeRate.others_rate"
                 @blur="verifyOthersRate()"
                 aria-label="newtext"
             >
             <button
-                class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
                 @click.prevent="checkForm()"
                 >Save Changes
             </button>
             <button
-                class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-sunglow text-sm text-black rounded-lg shadow float-left"
+                class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
                 @click="toEdit = false"
                 >Cancel
             </button>

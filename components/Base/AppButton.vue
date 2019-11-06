@@ -3,7 +3,7 @@
     <button
       @click.prevent="$emit('click')"
       :disabled="disabled"
-      class="button rounded-lg py-2 px-4 font-bold text-lg focus:outline-none"
+      class="button rounded-lg py-2 px-4 font-bold md:text-lg focus:outline-none"
       :class="[disabled ? 'hover:text-gray-700 disabled-button' : 'hover:text-white', inClass]"
       :style="inStyle"
     >{{label}}</button>
@@ -32,6 +32,10 @@ export default {
 <style >
 .button {
   background: linear-gradient(to top, #f2d024, #efde86);
+  color: #000;
+}
+.button:hover {
+  background: linear-gradient(to top, #e6c520, #f1d130);
 }
 .button:active {
   transform: translate(2px, 2px);

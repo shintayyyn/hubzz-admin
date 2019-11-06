@@ -81,7 +81,7 @@
         v-for="(practice, index) in getAllPractices"
         :key="`practice-${index}`"
         :to="{path:`/practices/${practice.id}`,query:$route.query}"
-        class="flex flex-col cursor-pointer md:flex-row py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+        class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
       >
         <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
           <strong class="block md:hidden text-xs uppercase">Practice Name</strong>

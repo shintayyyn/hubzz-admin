@@ -50,7 +50,7 @@
             <template v-if="type === 'select'">
               <select
                 :value="value"
-                class="border-b-2 focus:border-yellow-400 focus:outline-none py-1 font-bold text-xs sm:text-sm w-full"
+                class="bg-transparent appearance-none cursor-pointer border-b-2 focus:border-yellow-400 focus:outline-none py-1 font-bold text-xs sm:text-sm w-full"
                 :class="error ? 'border-red-500':''"
                 @input="$emit('input', $event.target.value)"
                 :style="inStyle"
@@ -63,6 +63,7 @@
                   :key="index"
                   :value="item.value"
                   :selected="value === item.value"
+                  class="text-black"
                 >{{item.label}}</option>
               </select>
             </template>
