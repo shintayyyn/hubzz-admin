@@ -228,6 +228,7 @@ export default {
     };
   },
   async created() {
+    console.log("Route name: ",this.$route.name) 
     console.log("surgery", this.surgery);
     console.log("practice", this.practice);
     await this.$axios

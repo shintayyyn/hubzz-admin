@@ -15,38 +15,38 @@
           <option>Created</option>
       </select>
       </div>
-       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-        <div class="align-middle px-2 w-1/6" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
+       <div class="hidden md:flex items-center text-sm text-white justify-around font-semibold"> 
+        <div class="align-middle px-2 w-1/6 cursor-pointer" @click="sortBy(isJobParts ? 'job_part_number':'job_number',currentPage,search)">
          {{ isJobParts ? 'Job Part Number' : 'Job Number'}}
           <svgicon v-if="sortedBy!='job_number' && sortedBy!='job_part_number' "  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && (sortedBy=='job_number' || sortedBy=='job_part_number')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy(isJobParts ? 'job_surgery_name':'surgery_name',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy(isJobParts ? 'job_surgery_name':'surgery_name',currentPage,search)">
           Practice / Surgery
           <svgicon v-if="sortedBy!='surgery_name' && sortedBy!='job_surgery_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && (sortedBy=='surgery_name' || sortedBy=='job_surgery_name')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy(isJobParts ? 'job_title':'title',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy(isJobParts ? 'job_title':'title',currentPage,search)">
           Title
           <svgicon v-if="sortedBy!='title' && sortedBy!='job_title'"  class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && (sortedBy=='title' || sortedBy=='job_title')" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && (sortedBy=='title' || sortedBy=='job_title')" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('date_start',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_start',currentPage,search)">
           From
           <svgicon v-if="sortedBy!='date_start'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_start'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='date_start'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('date_end',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_end',currentPage,search)">
           To
            <svgicon v-if="sortedBy!='date_end'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_end'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='date_end'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('date_created',currentPage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_created',currentPage,search)">
           Created
            <svgicon v-if="sortedBy!='date_created'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_created'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>

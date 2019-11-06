@@ -5,7 +5,6 @@
         </transition>
         <nuxt-child/>
     </div>
-    
 </template>
 <script>
 import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'

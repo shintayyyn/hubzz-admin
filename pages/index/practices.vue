@@ -38,37 +38,37 @@
     <div v-if="itemCount > 0" class="w-full"> 
       <!-- HEADER -->
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-        <div class="align-middle px-2 w-1/6" @click="sortBy('practice_name',activePage,search)">
+        <div class="align-middle px-2 w-1/6 cursor-pointer" @click="sortBy('practice_name',activePage,search)">
           Practice Name
           <svgicon v-if="sortedBy!='practice_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='practice_name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('practice_code',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('practice_code',activePage,search)">
           Practice Code
           <svgicon v-if="sortedBy!='practice_code'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_code'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='practice_code'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('created_at',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('created_at',activePage,search)">
           Created
           <svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('actived_until',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('actived_until',activePage,search)">
           Expires
           <svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('status',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('status',activePage,search)">
           Status
           <svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6" @click="sortBy('practice_type',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('practice_type',activePage,search)">
           Type
           <svgicon v-if="sortedBy!='practice_type'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_type'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -126,7 +126,7 @@
     </div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
-	<div v-if="itemCount > 0" class="flex justify-center items-center my-2">
+	<div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
 		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
 			@click="goToPage(activePage - 1,search,order_by)" 
 			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">

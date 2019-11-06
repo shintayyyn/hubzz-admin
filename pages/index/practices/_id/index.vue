@@ -5,11 +5,11 @@
       </div>
       <PracticeTabs :practice="practice"/>
       <nuxt-child/>
-      <div class="practice-shield" v-if="$route.name.includes('pracUserId')"></div>
-      <div class="practice-shield" v-if="$route.name.includes('pracDocId')"></div>
-      <div class="practice-shield" v-if="$route.name.includes('practiceSessionId')"></div>
-      <div class="practice-shield" v-if="$route.name.includes('practiceSurgeryId')"></div>
-      <div class="practice-shield" v-if="$route.name.includes('practiceSessionPartId')"></div>
+      <div class="practice-shield" v-if="$route.name.includes('pracUserId')" @click="$router.go(-1)"></div>
+      <div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="$router.go(-1)"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSessionId')" @click="$router.go(-1)"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSurgeryId')" @click="$router.go(-1)"></div>
+      <div class="practice-shield" v-if="$route.name.includes('practiceSessionPartId')" @click="$router.go(-1)"></div>
     </div>
 </template>
 <script>

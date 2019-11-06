@@ -246,7 +246,7 @@
           </form>
     </div>
         
-    <div class="practice-shield" v-if="modal == true"></div>
+    <div class="practice-shield" v-if="modal == true" @click="modal=false"></div>
     <transition name="slide" mode="out-in">
       <div class="change-parent-modal shadow-lg" v-if="modal">
         <AddPracticeSurgery :practice="practice" :practiceHub="practiceHub" @close="modal = false"/>

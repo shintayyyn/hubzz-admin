@@ -63,8 +63,7 @@
                 @pagechanged="pagechanged"
             />
         </div> 
-        <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId')"></div>
-        <div class="edit-practice-user-shield" v-if="modal"></div>
+        <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal" @click="modal ? modal=false : $router.go(-1)"></div>
         <transition name="slide" mode="out-in">
             <div class="practice-user-modal shadow-lg" v-if="modal">
                 <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total"/>

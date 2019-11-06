@@ -166,7 +166,6 @@ export default {
       add_practice_page: this.$route.query.add_practice_page || 1
     };
     this.getData();
-    console.log("rg", this.registeredPractice)
   },
 
   methods: {
@@ -265,7 +264,7 @@ export default {
       const query = {
         ...this.$route.query
       };
-      delete query.add_practice_page;
+
       query.search = this.search;
       this.getData();
 

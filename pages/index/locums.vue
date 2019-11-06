@@ -47,25 +47,25 @@
 		</div>
 		<div class="w-full px-6">
       		<div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-				<div class="align-middle px-2 w-1/6" @click="sortBy('name',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 w-1/6 cursor-pointer" @click="sortBy('name',activePage,search,filterCompliances)">
 					Name
 					<svgicon v-if="sortedBy!='name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('profession',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('profession',activePage,search,filterCompliances)">
 					Profession
 					<svgicon v-if="sortedBy!='profession'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='profession'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='profession'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('created_at',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('created_at',activePage,search,filterCompliances)">
 					Date signed-up
 					<svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
 					<svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
 				</div>
-				<div class="align-middle px-2 text-center w-1/6" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
+				<div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('email_verified_at',activePage,search,filterCompliances)">
 					Sign-up verified
 					<svgicon v-if="sortedBy!='email_verified_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
 					<svgicon v-if="sortType==true && sortedBy=='email_verified_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -106,7 +106,7 @@
 			</nuxt-link>
 		</div>
 		<!-- PAGINATION -->
-		<div class="flex justify-center items-center my-2">
+		<div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
 			<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
 				@click="goToPage(activePage - 1, search, order_by, filterCompliances)" 
 				:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">

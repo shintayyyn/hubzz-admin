@@ -37,9 +37,9 @@
       <div class="w-full md:w-1/4 py-2  flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Upload New File</strong>
         <div
-          class="w-full flex md:flex-col lg:flex-row items-center justify-between"
+          class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center"
         >
-          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex md:justify-center" :class="document.practiceSpecificDoc ? 'w-1/2' : 'w-full'">
+          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex items-center md:justify-center px-1" :class="document.practiceSpecificDoc ? '' : 'w-full'">
             <div class="flex justify-center text-white text-sm">
               <label>
                 <!-- File -->
@@ -49,21 +49,21 @@
                   :ref="`file-${document.practiceDocType.id}`"
                   v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"
                 />
-                <span class="cursor-pointer flex items-center text-center rounded-full text-white px-6 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600 '">
+                <span class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600 '">
                   <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
-                  <span class="pl-2"> {{ document.practiceSpecificDoc ? 'Update' : 'Upload' }} File</span>
+                  <span class="pl-2"> {{ document.practiceSpecificDoc ? 'Update' : 'Upload' }}</span>
                 </span>
               </label>
             </div>
           </div>
 
-          <div v-if="document.practiceSpecificDoc" class="w-1/2 flex justify-center text-white text-xs py-2 xl:py-0">
+          <div v-if="document.practiceSpecificDoc" class=" flex items-center justify-center text-white text-xs px-1 py-2 xl:py-0">
             <nuxt-link
               :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
               class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full text-white no-underline px-6 py-2"
             >
               <svgicon name="folder" width="16" height="16" color="white white"></svgicon>
-              <span class="pl-2">View File</span>
+              <span class="pl-2">View</span>
             </nuxt-link>
           </div>
         </div>
