@@ -415,6 +415,7 @@ export default {
                 status: "success",
                 text: "New Practice User Created"
               });
+            this.$emit('userCreated')
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
@@ -438,6 +439,7 @@ export default {
                 status: "success",
                 text: "Added new user"
               });
+            this.$emit('userCreated')
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
@@ -459,6 +461,7 @@ export default {
                 status: "success",
                 text: "New Admin Account Successfully Created"
               });
+            this.$emit('userCreated')
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {

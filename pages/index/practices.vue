@@ -98,7 +98,7 @@
           <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
         </div>
 
-		    <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
           <strong class="block md:hidden text-xs uppercase">Expires</strong>
           <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
         </div>
@@ -106,8 +106,8 @@
         <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
           <strong class="block md:hidden text-xs uppercase">Status</strong>
           <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
-			    :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
-		    </div>
+          :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
+        </div>
 
         <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
           <strong class="block md:hidden text-xs uppercase">Type</strong>
@@ -118,12 +118,12 @@
       </nuxt-link>
       <!-- END BODY -->
     </div>
-	<div v-else>
-		<div
-      class="mt-10 w-full text-center text-white"
-      style="font-family: Nunito"
-      >There are no registered practices.</div>
-	</div>
+    <div v-else>
+      <div
+        class="mt-10 w-full text-center text-white"
+        style="font-family: Nunito"
+        >There are no registered practices.</div>
+    </div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
 	<div v-if="itemCount > 0" class="flex justify-center items-center my-2">

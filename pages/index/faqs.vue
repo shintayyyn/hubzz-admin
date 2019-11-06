@@ -65,8 +65,7 @@
             >
               <div class="leading-tight">{{item.question}}</div>
               <div class="font-bold text-lg flex items-center">
-                <svgicon name="arrow-right" height="20" width="20" color="white white" v-if="!item.toggled" />
-                <svgicon name="arrow-up" height="20" width="20" color="white transparent" v-else/>
+                <svgicon name="arrow-right" height="20" width="20" color="white white" :class="item.toggled ? 'rotate' : 'arrow'" />
               </div>
             </div>
           </div>
@@ -143,8 +142,7 @@
             >
               <div class="leading-tight">{{item.question}}</div>
               <div class="font-bold text-lg flex items-center">
-                <svgicon name="arrow-right" height="20" width="20" color="white white" v-if="!item.toggled" />
-                <svgicon name="arrow-up" height="20" width="20" color="white transparent" v-else/>
+                <svgicon name="arrow-right" height="20" width="20" color="white white" :class="item.toggled ? 'rotate' : 'arrow'" />
               </div>
             </div>
           </div>
@@ -259,5 +257,14 @@ export default {
   background-color: #333;
   opacity: 0.5;
   z-index: 511;
+}
+.rotate {
+  transform: rotate(90deg);
+  transition: transform .3s ease-in-out;
+}
+
+.arrow{
+  transform: rotate(0deg);
+  transition: transform .3s ease-in-out;
 }
 </style>

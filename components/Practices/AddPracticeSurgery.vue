@@ -27,6 +27,7 @@
             </div>
           </div>
           <span class="py-2 md:px-4 text-sm whitespace-no-wrap" v-if="search && total !== 0 ">{{total}} results found.</span>
+
         </div>
       </div>
       <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">No results found.</div>
@@ -41,14 +42,14 @@
               :key="`surgery-${index}`"
               @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
               class="flex no-underline rounded-lg shadow my-2"
-              :class="surgery.practice_count > 0 ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
+              :class="registeredPractice.includes(surgery.id) ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
             >
               <div class="flex w-full">
                 <div class="w-full text-white text-xs p-4">
                   <div class="w-full flex justify-between items-center">
                     <span class="font-bold">{{ surgery.name }}</span>
                     <span
-                      v-if="surgery.practice_count > 0"
+                      v-if="registeredPractice.includes(surgery.id)"
                       class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
                     >Registered</span>
                   </div>
@@ -57,12 +58,12 @@
                   <span class="block w-full py-1">{{surgery.address.line_3}}</span>
                   <div class="flex items-center my-1">
                      <span class="block p-2 rounded"
-                      :class="surgery.practice_count > 0 ? 'bg-trout opacity-75' : 'bg-trout '"
+                      :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '"
                      >CCG</span>
                     <span class="w-full px-2">{{surgery.clinical_commissioning_group.name}}</span>
                   </div>
                   <div class="flex items-center my-1">
-                    <span class="block p-2 rounded whitespace-no-wrap" :class="surgery.practice_count > 0 ? 'bg-trout opacity-75' : 'bg-trout '">Practice Code</span>
+                    <span class="block p-2 rounded whitespace-no-wrap" :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '">Practice Code</span>
                     <span class="w-full px-2">{{ surgery.code }}</span>
                   </div>
                 </div>
@@ -109,10 +110,9 @@
         :class="practice ? 'practice-user-modal-small' : 'practice-user-modal'"
         v-if="modal"
       >
-        <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery" />
+        <CreatePracticeUser @close="modal=false" @userCreated="modal=false, $emit('close')" :practice="practice" :surgery="surgery" />
       </div>
     </transition>
-
     <nuxt-child />
   </div>
 </template>
@@ -139,7 +139,8 @@ export default {
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
-      loading: false
+      loading: false,
+      registeredPractice: []
     };
   },
 
@@ -165,6 +166,7 @@ export default {
       add_practice_page: this.$route.query.add_practice_page || 1
     };
     this.getData();
+    console.log("rg", this.registeredPractice)
   },
 
   methods: {
@@ -245,8 +247,7 @@ export default {
       this.loading = true;
       const limit = this.perPage;
       let offset = 0;
-      offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       const params = { limit, offset };
       if (this.search) {
         params.search = this.search;
@@ -256,6 +257,7 @@ export default {
         .$get(`/api/v1/admin/surgeries`, { params })
         .then(res => {
           this.surgeries = res.data.surgeries;
+          this.surgeries.map(item => this.isRegistered(item.id))
         });
       this.loading = false;
     },
@@ -286,7 +288,6 @@ export default {
       console.log("hubzz", this.hubzz);
       this.loading = false;
     },
-
     async newHubOrSpoke(surgeryId) {
       if (!this.practice || (this.practice && this.practice.type == "Hub")) {
         await this.$axios
@@ -412,6 +413,15 @@ export default {
         add_practice_page: e || 1
       };
       this.$router.push({ query });
+    },
+    isRegistered(id){
+      this.$axios
+      .get(`/api/v1/admin/surgeries/${id}`)
+      .then(res => {
+        if (res.data.data.surgery.practice_count > 0){
+          this.registeredPractice.push(id)
+        }
+      });
     }
   }
 };
