@@ -42,57 +42,61 @@
           <!-- BODY -->
           <div v-if="!practice||practice&&practice.type=='Hub'">
             <!--IF PRACTICE IS A HUB / NEW PRACTICE IS BEING CREATED-->
-            <div
-              v-for="(surgery, index) in surgeries"
-              :key="`surgery-${index}`"
-              @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
-              class="flex no-underline rounded-lg shadow my-2"
-              :class="registeredPractice.includes(surgery.id) ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
-            >
-              <div class="flex w-full">
-                <div class="w-full text-white text-xs p-4">
-                  <div class="w-full flex justify-between items-center">
-                    <span class="font-bold">{{ surgery.name }}</span>
-                    <span
-                      v-if="registeredPractice.includes(surgery.id)"
-                      class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
-                    >Registered</span>
-                  </div>
-                  <span class="block w-full py-1">{{surgery.address.line_1}}</span>
-                  <span class="block w-full py-1">{{surgery.address.line_2}}</span>
-                  <span class="block w-full py-1">{{surgery.address.line_3}}</span>
-                  <div class="flex items-center my-1">
-                     <span class="block p-2 rounded"
-                      :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '"
-                     >CCG</span>
-                    <span class="w-full px-2">{{surgery.clinical_commissioning_group.name}}</span>
-                  </div>
-                  <div class="flex items-center my-1">
-                    <span class="block p-2 rounded whitespace-no-wrap" :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '">Practice Code</span>
-                    <span class="w-full px-2">{{ surgery.code }}</span>
+            <transition-group name="slide" tag="p">
+              <div
+                v-for="(surgery, index) in surgeries"
+                :key="`surgery-${index}`"
+                @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
+                class="flex no-underline rounded-lg shadow my-2"
+                :class="registeredPractice.includes(surgery.id) ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
+              >
+                <div class="flex w-full">
+                  <div class="w-full text-white text-xs p-4">
+                    <div class="w-full flex justify-between items-center">
+                      <span class="font-bold">{{ surgery.name }}</span>
+                      <span
+                        v-if="registeredPractice.includes(surgery.id)"
+                        class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
+                      >Registered</span>
+                    </div>
+                    <span class="block w-full py-1">{{surgery.address.line_1}}</span>
+                    <span class="block w-full py-1">{{surgery.address.line_2}}</span>
+                    <span class="block w-full py-1">{{surgery.address.line_3}}</span>
+                    <div class="flex items-center my-1">
+                      <span class="block p-2 rounded"
+                        :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '"
+                      >CCG</span>
+                      <span class="w-full px-2">{{surgery.clinical_commissioning_group.name}}</span>
+                    </div>
+                    <div class="flex items-center my-1">
+                      <span class="block p-2 rounded whitespace-no-wrap" :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '">Practice Code</span>
+                      <span class="w-full px-2">{{ surgery.code }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </transition-group>
           </div>
 
           <div v-if="practice&&practice.type == 'Spoke'">
             <!--IF PRACTICE IS A SPOKE-->
-            <div
-              v-for="(hub, index) in hubzz"
-              :key="`hub-${index}`"
-              @click="changeParent(hub.surgery.id,hub.id)"
-              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
-            >
-              <div class="flex flex-col text-white text-xs">
-                <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
-                <span class="font-bold">{{ hub.surgery.name }}</span>
-                <div class="flex items-center my-1">
-                  <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
-                  <span>{{ hub.surgery.code }}</span>
+            <transition-group name="slide" tag="p">
+              <div
+                v-for="(hub, index) in hubzz"
+                :key="`hub-${index}`"
+                @click="changeParent(hub.surgery.id,hub.id)"
+                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
+              >
+                <div class="flex flex-col text-white text-xs">
+                  <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
+                  <span class="font-bold">{{ hub.surgery.name }}</span>
+                  <div class="flex items-center my-1">
+                    <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
+                    <span>{{ hub.surgery.code }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </transition-group>
           </div>
           <!--TABLE ENDS HERE-->
         </div>

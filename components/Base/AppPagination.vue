@@ -5,7 +5,7 @@
         <div class="pagination-item mx-1 mb-2" v-for="page in pages" :key="page.name">
         <button
             type="button"
-            class="page-button px-4 py-2 rounded-lg font-bold text-sm text-gray-800 focus:outline-none"
+            class="page-button md:px-4 p-2 w-10 min-w-0 rounded-lg font-bold text-sm text-gray-800 focus:outline-none"
             @click="onClickPage(page.name)"
             :class="{ active: isPageActive(page.name) }"
           >{{ page.name }}</button>

@@ -1,5 +1,5 @@
 <template>
-  <div class="support-modal p-8 shadow-lg">
+  <div class="support-modal p-4 md:p-8 shadow-lg">
     <transition name="fade" mode="out-in">
         <SupportInfo :email="email"/>
     </transition>
