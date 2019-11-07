@@ -34,8 +34,8 @@
                 @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Verified')"
                 >{{user.locum_detail.gmc_or_nmc_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-orange-500 rounded-full hover:bg-orange-500 focus:outline-none"
-                :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange-500 border-orange-500 text-white px-4 hover:bg-orange-600 ' : 'bg-transparent px-2 hover:bg-orange-500'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-yellow-500 rounded-full hover:bg-yellow-500 focus:outline-none"
+                :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-yellow-500 border-yellow-500 text-white px-4 hover:bg-yellow-600 ' : 'bg-transparent px-2 hover:bg-yellow-500'}`"
                 v-if="user.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toRejectGmcNmc()"
                 >{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
@@ -72,8 +72,8 @@
                 @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Verified')"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
                 <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white rounded-full hover:bg-orange-500 focus:outline-none"
-                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange-500 border-orange-500 text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white rounded-full hover:bg-yellow-500 focus:outline-none"
+                :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-yellow-500 border-yellow-500 text-white px-4 hover:bg-yellow-300' : 'bg-transparent px-2 hover:bg-yellow-300'}`"
                 v-if="user.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toRejectMplNpl()"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
@@ -521,13 +521,13 @@ export default {
 					return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
 					break;
 				case 'Expiring':
-					return 'bg-orange-500 border-orange-500 text-black lg:px-8 sm:px-4'
+					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
 					break;
 				case 'Expired':
 					return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
 					break;
 				case 'Rejected':
-					return 'bg-orange-500 border-orange-500 text-black lg:px-8 sm:px-4'
+					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
                     break;
                 case 'Pending':
 					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'

@@ -363,14 +363,6 @@ button:focus {
   appearance: none;
   display: none;
 }
-/* #file::-webkit-file-upload-button{
-  background: #ff8b6e;
-  appearance: none;
-  border: 0;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-size: .75rem;
-} */
 .practice-document-shield {
   position: fixed;
   top: 0;
@@ -389,7 +381,7 @@ button:focus {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color: #505561;
   z-index: 512;

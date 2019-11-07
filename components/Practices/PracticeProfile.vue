@@ -6,20 +6,20 @@
           <!-- VIEW PRIMARY INFORMATION -->
           <div class="w-full md:w-1/2 text-gray-300 text-sm p-2">
             <p class="flex">Practice Name</p>
-            <p class="flex items-center text-white text-sm p-2 font-semibold">
-              {{practice.surgery ? practice.surgery.name : null}} 
+            <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
+              <span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
               <span
-              class="py-2 px-4 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
+              class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
               :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
             </p>
             
             <p class="flex">Practice Code</p>
             <p class="flex text-white text-sm p-2 font-semibold">{{practice.surgery ? practice.surgery.code : null}}</p>
             <p class="flex">Address</p>
-            <p class="flex text-white text-sm p-2 font-semibold">
-              {{practice.surgery.address ? practice.surgery.address.line_1 : null}} <br>
-              {{practice.surgery.address ? practice.surgery.address.line_2 : null}} <br>
-              {{practice.surgery.address ? practice.surgery.address.line_3 : null}} <br>
+            <p class="flex flex-col text-white text-sm p-2 font-semibold">
+              <span v-if="practice.surgery.address && practice.surgery.address.line_1">{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
+              <span v-if="practice.surgery.address && practice.surgery.address.line_2">{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
+              <span v-if="practice.surgery.address && practice.surgery.address.line_3">{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
             </p>
             <p class="flex">CCG</p>
             <p class="flex text-white text-sm p-2 font-semibold">{{practice.surgery.clinical_commissioning_group ? practice.surgery.clinical_commissioning_group.name:null}}</p>
@@ -98,14 +98,14 @@
             <div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')" class="border-b-4 border-white">
               <p class="flex text-gray-300 p-2">Phone Number</p>
               <input
-                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
                 type="text"
                 aria-label="phonenumber"
                 v-model="toPutPractice.phone_number"
               >
               <p class="flex text-gray-300 p-2">Full name to report to</p>
               <input
-                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
                 type="text"
                 aria-label="fullName"
                 v-model='toPutPractice.report_to'
@@ -115,7 +115,7 @@
               >Extra information (Parking restrictions, transport links, etc.)</p>
               <textarea  
                 placeholder="Type Here" 
-                class="text-gray-300 w-full bg-transparent overflow-y-auto resize-none border-b focus:border-orange-500 focus:outline-none" 
+                class="text-gray-300 w-full bg-transparent overflow-y-auto resize-none border-b focus:border-yellow-500 focus:outline-none" 
                 name="practiceNote"
                 v-model='toPutPractice.extra_information'>
               </textarea>

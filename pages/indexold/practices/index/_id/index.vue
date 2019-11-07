@@ -150,7 +150,7 @@
               <div class="w-full md:w-1/2 ">
                 <p class="flex text-gray-300 text-sm p-2">Phone Number</p>
                 <input
-                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
                   type="text"
                   aria-label="phonenumber"
                   :placeholder="specificPractice.phone_number"
@@ -158,7 +158,7 @@
                 >
                 <p class="flex text-gray-300 text-sm p-2">Full name to report to</p>
                 <input
-                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                  class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
                   type="text"
                   placeholder
                   aria-label="fullName"
@@ -169,7 +169,7 @@
                 >Extra information (Parking restrictions, transport links, etc.)</p>
                  <textarea  
                   placeholder="Type Here" 
-                  class="text-gray-lightest text-sm w-full bg-transparent overflow-auto resize border-b focus:border-orange" 
+                  class="text-gray-lightest text-sm w-full bg-transparent overflow-auto resize border-b focus:border-yellow" 
                   name="practiceNote"
                   v-model='toPutPractice.extra_information'>
                 </textarea>

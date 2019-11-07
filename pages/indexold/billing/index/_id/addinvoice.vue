@@ -16,7 +16,7 @@
                   name="save-icon"
                   width="21"
                   height="21"
-                  color="transparent orange"
+                  color="transparent yellow"
               ></svgicon>
               <span class="pt-1 pl-1">Save Changes</span>
             </button>
@@ -32,7 +32,7 @@
                   name="email"
                   width="21"
                   height="21"
-                  color="transparent orange"
+                  color="transparent yellow"
               ></svgicon>
               <span class="pt-1 pl-1">Save and Archive as Final</span>
             </button>

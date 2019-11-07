@@ -16,7 +16,7 @@
             </div>
           <p class="flex">Title</p>
           <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
             type="text"
             placeholder="Mr. / Mrs. / Dr. / etc....."
             v-model='toPostPracticeUser.title'
@@ -27,7 +27,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostPracticeUser.first_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostPracticeUser.first_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="text"
             placeholder="Jane"
             v-model='toPostPracticeUser.first_name'
@@ -39,7 +39,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostPracticeUser.last_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostPracticeUser.last_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="text"
             v-model='toPostPracticeUser.last_name'
             @blur="verifyLastName(toPostPracticeUser.last_name)"
@@ -59,7 +59,7 @@
           </div>
           <select
             class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-            :class="`${toPostPracticeUser.practice_role !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostPracticeUser.practice_role !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             v-model='toPostPracticeUser.practice_role'
           >
             <option>Partner</option>
@@ -71,7 +71,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostPracticeUser.email !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostPracticeUser.email !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             id="email"
             type="text"
             v-model='toPostPracticeUser.email'
@@ -83,7 +83,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostPracticeUser.password !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostPracticeUser.password !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="password"
             v-model='toPostPracticeUser.password'
             @blur="verifyPassword(toPostPracticeUser.password)"
@@ -94,7 +94,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostPracticeUser.password_confirmation !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostPracticeUser.password_confirmation !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="password"
             v-model='toPostPracticeUser.password_confirmation'
             @blur="verifyConfirmPassword(toPostPracticeUser.password, toPostPracticeUser.password_confirmation)"

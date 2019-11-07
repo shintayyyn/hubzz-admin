@@ -88,8 +88,8 @@
                 @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
               >Verified</button>
               <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-300"
-                :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300 ' : 'bg-transparent px-2 hover:bg-orange-300'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-yellow rounded-full hover:bg-yellow-300"
+                :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-yellow border-yellow text-white px-4 hover:bg-yellow-300 ' : 'bg-transparent px-2 hover:bg-yellow-300'}`"
                 v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
                 @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
               >Rejected</button>
@@ -109,8 +109,8 @@
                 @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
               >Verified</button>
               <button
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-orange rounded-full hover:bg-orange-300"
-                :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 p-2 px-4 border border-white focus:bg-yellow rounded-full hover:bg-yellow-300"
+                :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-yellow border-yellow text-white px-4 hover:bg-yellow-300' : 'bg-transparent px-2 hover:bg-yellow-300'}`"
                 v-if="locumUser.locum_detail.mpl_or_npl_number.status"
                 @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
               >Rejected</button>
@@ -538,13 +538,13 @@ export default {
 					return 'bg-green border-green text-white lg:px-8 sm:px-4'
 					break;
 				case 'Expiring':
-					return 'bg-orange border-orange text-black lg:px-8 sm:px-4'
+					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-4'
 					break;
 				case 'Expired':
 					return 'bg-red border-red text-white lg:px-8 sm:px-4'
 					break;
 				case 'Rejected':
-					return 'bg-orange-dark border-orange text-black lg:px-8 sm:px-4'
+					return 'bg-yellow-dark border-yellow text-black lg:px-8 sm:px-4'
           break;
         case 'Pending':
 					return 'bg-yellow border-yellow text-black lg:px-8 sm:px-4'

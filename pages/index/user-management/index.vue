@@ -5,7 +5,7 @@
         <AppConfirmCancel @close="showConfirmCancelModal = false" :adminAccountId="adminAccountId"/>
       </div>
     </transition>
-    <div class="flex md:flex-row pt-1 md:py-1 flex-wrap">
+    <div class="flex md:flex-row px-4 pt-1 md:py-1 flex-wrap">
       <button
       v-if="authAdminPermissions.includes('Create Admin Account')"
       @click="show()"
@@ -22,7 +22,7 @@
       class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-sm font-semibold text-white rounded-lg shadow"
       >Delete Admin User</button>
     </div>
-    <div v-if="adminUsers.length>0" class="w-full p-2"> 
+    <div v-if="adminUsers.length>0" class="w-full px-4 md:px-4"> 
         <!-- HEADER -->
         <div class="hidden md:flex items-center text-white justify-between font-semibold ">
           <div class="align-middle w-10" v-if="deleteAdminUser == true"></div> 
@@ -307,7 +307,7 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

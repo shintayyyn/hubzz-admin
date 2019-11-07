@@ -3,6 +3,7 @@
 		<!-- <div>
 			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
 		</div> -->
+		<div class="text-xl md:text-4xl text-white px-4 md:px-6">Locums</div>
 		<div class="flex flex-col md:flex-row justify-between px-4 md:px-6">
 			<div class="flex py-2">
 				<div class="relative">
@@ -11,7 +12,7 @@
 						<svgicon name="times-solid" height="12" width="12" class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
-				<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
+				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button> -->
 			</div>
 			<div class="flex w-full justify-end">
 				<div class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end p-2 md:py-0">
@@ -75,35 +76,37 @@
 				<div class="align-middle px-2 text-center w-1/6">Compliance Status</div>
 			</div>
 			<div v-if="locumUsers.length === 0" class="text-gray-500 leading-tight text-center py-4">No results found for {{search}}<br/>Try another keyword</div>
-			<nuxt-link
-				v-for="(locumUser, index) in locumUsers" 
-				:key="`locumUser-${index}`" 
-				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"  
-			 	class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light">
-					<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
-						<strong class="block md:hidden text-xs uppercase">Name</strong>
-						<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
-					<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-						<strong class="block md:hidden text-xs uppercase">Profession</strong>
-						<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
-					</div>
-					<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-						<strong class="block md:hidden text-xs uppercase">Date signed-up</strong>
-						<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
-					</div>
-					<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-						<strong class="block md:hidden text-xs uppercase">Sign-up verified</strong>
-						<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
-					</div>
-					<div class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-						<strong class="block md:hidden text-xs uppercase">Status</strong>
-						<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
-					</div>
-					<div class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-						<strong class="block md:hidden text-xs uppercase">Compliance Status</strong>
-						<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
-					</div>
-			</nuxt-link>
+      		<transition-group name="slide" tag="p">
+				<nuxt-link
+					v-for="(locumUser, index) in locumUsers" 
+					:key="`locumUser-${index}`" 
+					:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"  
+					class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light">
+						<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
+							<strong class="block md:hidden text-xs uppercase">Name</strong>
+							<span class="">{{ locumUser.personal_detail ? locumUser.personal_detail.name : null }}</span></div>
+						<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+							<strong class="block md:hidden text-xs uppercase">Profession</strong>
+							<span class="">{{ locumUser.locum_detail && locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</span>
+						</div>
+						<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+							<strong class="block md:hidden text-xs uppercase">Date signed-up</strong>
+							<span class="">{{ $moment(locumUser.created_at).format('MMM D, YYYY') }}</span>
+						</div>
+						<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+							<strong class="block md:hidden text-xs uppercase">Sign-up verified</strong>
+							<span class="">{{ locumUser.email_verified_at ? $moment(locumUser.email_verified_at).format('MMM D, YYYY') : 'Not yet verified' }}</span>
+						</div>
+						<div class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+							<strong class="block md:hidden text-xs uppercase">Status</strong>
+							<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" :class="statusStyle(locumUser.status)">{{ locumUser.status  }}</span>
+						</div>
+						<div class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+							<strong class="block md:hidden text-xs uppercase">Compliance Status</strong>
+							<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
+						</div>
+				</nuxt-link>
+      		</transition-group>
 		</div>
 		<!-- PAGINATION -->
 		<div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
@@ -521,7 +524,7 @@ export default {
 					return 'bg-yellow-400 text-black'
 					break;
 				case 'Pending':
-					return 'bg-orange-500 text-white'
+					return 'bg-yellow-500 text-white'
 					break;
 				case 'Expiring':
 					return 'bg-red-600 text-white'
@@ -530,7 +533,7 @@ export default {
 					return 'bg-red-700 text-red-300'
 					break;
 				case 'Rejected':
-					return 'bg-orange-700 text-white'
+					return 'bg-yellow-700 text-white'
 					break;
 				case 'Compliant':
 					return 'bg-green-500 text-white'

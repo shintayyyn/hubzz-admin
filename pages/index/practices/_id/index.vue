@@ -1,7 +1,7 @@
 <template>
     <div class="practice-modal p-4 md:p-8 shadow-lg">
-      <div @click="goBack()" class="cursor-pointer mb-4">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+      <div class="mb-4">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="cursor-pointer text-white hover:text-sunglow fill-current" @click="goBack()" />
       </div>
       <PracticeTabs :practice="practice"/>
       <nuxt-child/>
@@ -78,7 +78,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

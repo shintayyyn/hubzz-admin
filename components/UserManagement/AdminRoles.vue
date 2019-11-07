@@ -1,6 +1,6 @@
 <template>
     <div class="flex-1 flex flex-col overflow-auto">
-      <div class="flex md:flex-row pt-1 md:py-1 flex-wrap">
+      <div class="flex md:flex-row pt-1 md:py-1 flex-wrap px-4">
         <button
           v-if="authAdminPermissions.includes('Add Role')"
           class="inline-flex items-center no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
@@ -38,7 +38,7 @@
             class="mx-1 -my-1"/>
         </button>
       </div>
-      <div v-if="adminRoles.length" class="w-full p-2">
+      <div v-if="adminRoles.length" class="w-full px-4">
         <!-- HEADER -->
         <div class="hidden md:flex items-center text-white justify-around font-semibold">
           <div class="pr-3 md:px-4" v-if="deletingAdminRole == true"></div>
@@ -74,7 +74,7 @@
             </div>
             <div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
               <strong class="block md:hidden text-xs uppercase">Description</strong>
-              <span>{{ role.description }}</span>
+              <span class="w-full whitespace-no-wrap truncate">{{ role.description }}</span>
             </div>
           </nuxt-link>
         </div>
@@ -205,7 +205,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

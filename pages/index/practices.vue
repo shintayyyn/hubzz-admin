@@ -1,16 +1,17 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
 	<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'"/> -->
+		<div class="text-xl md:text-4xl text-white">Practices</div>
     <div class="flex justify-between items-center flex-wrap">
-        <div class="flex items-center py-2">
-          	<div class="relative">
-				<input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Practice by Name" v-model="search" @keyup.enter="searchSubmit">
-				<button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
-					<svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
-				</button>
-            </div>
-        	<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button>
+      <div class="flex items-center py-2">
+        <div class="relative">
+          <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo" placeholder="Search Practice by Name" v-model="search" @keyup.enter="searchSubmit">
+          <button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
+            <svgicon name="times-solid" height="12" width="12" class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"/>
+          </button>
         </div>
+        <!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button> -->
+      </div>
       <div>
         <button
           v-if="authAdminPermissions.includes('Add Practice') && authAdminPermissions.includes('Add Practice User')"
@@ -23,7 +24,7 @@
 					<select
 						v-model="sort"
 						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-						>
+          >
             <option value selected>All</option>
 						<option>Practice Name</option>
 						<option>Practice Code</option>
@@ -77,45 +78,47 @@
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
-      <nuxt-link
-        v-for="(practice, index) in getAllPractices"
-        :key="`practice-${index}`"
-        :to="{path:`/practices/${practice.id}`,query:$route.query}"
-        class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
-      >
-        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
-          <strong class="block md:hidden text-xs uppercase">Practice Name</strong>
-          <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
-        </div>
+      <transition-group name="slide" tag="p">
+        <nuxt-link
+          v-for="(practice, index) in getAllPractices"
+          :key="`practice-${index}`"
+          :to="{path:`/practices/${practice.id}`,query:$route.query}"
+          class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+        >
+          <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
+            <strong class="block md:hidden text-xs uppercase">Practice Name</strong>
+            <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
+          </div>
 
-        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase">Practice Code</strong>
-          <span class="break-words md:text-center w-full">{{ practice.surgery ? practice.surgery.code:null }}</span>
-        </div>
+          <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+            <strong class="block md:hidden text-xs uppercase">Practice Code</strong>
+            <span class="break-words md:text-center w-full">{{ practice.surgery ? practice.surgery.code:null }}</span>
+          </div>
 
-        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase">Created</strong>
-          <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
-        </div>
+          <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+            <strong class="block md:hidden text-xs uppercase">Created</strong>
+            <span>{{ $moment(practice.created_at).format('MMM D, YYYY | hh:mm A') }}</span>
+          </div>
 
-        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase">Expires</strong>
-          <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
-        </div>
+          <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+            <strong class="block md:hidden text-xs uppercase">Expires</strong>
+            <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
+          </div>
 
-        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase">Status</strong>
-          <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
-          :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
-        </div>
+          <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+            <strong class="block md:hidden text-xs uppercase">Status</strong>
+            <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
+            :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
+          </div>
 
-        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase">Type</strong>
-          <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-          :class="typeStyle(practice.type)">{{ practice.type }}</span>
-        </div>
+          <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+            <strong class="block md:hidden text-xs uppercase">Type</strong>
+            <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
+            :class="typeStyle(practice.type)">{{ practice.type }}</span>
+          </div>
 
-      </nuxt-link>
+        </nuxt-link>
+      </transition-group>
       <!-- END BODY -->
     </div>
     <div v-else>
@@ -622,7 +625,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

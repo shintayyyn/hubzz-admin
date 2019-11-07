@@ -41,7 +41,7 @@
             </div>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="`${toPutPracticeUser.email !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+              :class="`${toPutPracticeUser.email !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
               type="text"
               placeholder="example@example.com"
               v-model='toPutPracticeUser.email'
@@ -50,7 +50,7 @@
             >
             <p class="flex py-1">Title</p>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
               type="text"
               v-model="toPutPracticeUser.title"
               placeholder="Mr. / Mrs. / Dr. / etc....."
@@ -61,7 +61,7 @@
             </div>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="`${toPutPracticeUser.first_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+              :class="`${toPutPracticeUser.first_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
               type="text"
               v-model="toPutPracticeUser.first_name"
               placeholder="Jane"
@@ -72,7 +72,7 @@
             </div>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="`${toPutPracticeUser.last_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+              :class="`${toPutPracticeUser.last_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
               type="text"
               v-model="toPutPracticeUser.last_name"
               placeholder = "Doe"
@@ -80,7 +80,7 @@
             > 
             <p class="flex py-1">Suffix</p>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-orange"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
               type="text"
               v-model="toPutPracticeUser.suffix"
               placeholder="Ph.D"
@@ -91,7 +91,7 @@
             </div>
             <select
               class="block appearance-none text-black w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none "
-              :class="`${toPutPracticeUser.practice_role !== '' ? 'focus:border-orange': 'focus:border-red'}`"
+              :class="`${toPutPracticeUser.practice_role !== '' ? 'focus:border-yellow': 'focus:border-red'}`"
               v-model="toPutPracticeUser.practice_role"
             >
               <option>Partner</option>
@@ -143,7 +143,7 @@
               </div>
               <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                :class="`${toChangePassword.newPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
+                :class="`${toChangePassword.newPassword !== '' ? 'focus:border-yellow-500' :'focus:border-red-500'}`"
                 type="password"
                 aria-label="oldpassword"
                 v-model="toChangePassword.newPassword"
@@ -153,7 +153,7 @@
               </div>
               <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
+                :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-yellow-500' :'focus:border-red-500'}`"
                 type="password"
                 aria-label="newpassword"
                 v-model="toChangePassword.confirmNewPassword"

@@ -1,5 +1,5 @@
 <template>
-  <div class="support-modal p-8 shadow-lg">
+  <div class="support-modal p-4 md:p-8 shadow-lg">
     <transition name="fade" mode="out-in">
         <SupportInfo :email="email"/>
     </transition>
@@ -69,7 +69,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow: auto;
-    border-left: solid 2px orange;
+    border-left: solid 2px yellow;
     transition: all 0.3s ease-in-out;
     background-color:#505561;
     z-index: 512;
