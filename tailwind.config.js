@@ -33,7 +33,7 @@ module.exports = {
         800: "#9b2c2c",
         900: "#742a2a"
       },
-      orange: {
+      yellow: {
         100: "#fffaf0",
         200: "#feebc8",
         300: "#fbd38d",

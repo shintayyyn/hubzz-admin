@@ -8,6 +8,7 @@
           ref="myTextEditor"
           v-model="form.terms_and_conditions"
           :options="editorOption"
+          :disabled="!authAdminPermissions.includes('Edit Terms and Conditions & Privacy Policy')"
           @blur="onEditorBlur($event)"
           @focus="onEditorFocus($event)"
           @ready="onEditorReady($event)"

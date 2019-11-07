@@ -21,7 +21,7 @@
             style="width: 400px;"
           >
             <input
-              class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3  px-2 leading-tight focus:outline-none focus:border-orange"
+              class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3  px-2 leading-tight focus:outline-none focus:border-yellow"
               type="text"
               placeholder="Search for surgery by name, etc."
               v-model="search" @keyup.enter="searchSubmit"

@@ -195,13 +195,13 @@ export default {
 					return 'bg-yellow text-black lg:px-8 sm:px-2'
 					break;
 				case 'Expiring':
-					return 'bg-orange text-black lg:px-8 sm:px-2'
+					return 'bg-yellow text-black lg:px-8 sm:px-2'
 					break;
 				case 'Expired':
 					return 'bg-red text-white lg:px-8 sm:px-2'
 					break;
 				case 'Rejected':
-					return 'bg-orange-dark text-black lg:px-8 sm:px-2'
+					return 'bg-yellow-dark text-black lg:px-8 sm:px-2'
 					break;
 				case 'Compliant':
 					return 'bg-green text-white lg:px-8 sm:px-2'

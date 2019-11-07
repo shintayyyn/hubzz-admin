@@ -1,14 +1,14 @@
 <template>
   <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto">
     <!-- HEADER -->
-    <div class="flex justify-between text-sm text-white pt-4 px-4 md:px-8">
+    <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
       <div @click="$emit('close')" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </div>
     </div>
     <!-- HEADER -->
 
-    <div class="flex flex-wrap overflow-auto p-4 md:p-8 text-base text-white py-2">
+    <div class="flex flex-wrap overflow-auto px-4 md:px-8 text-base text-white py-2">
       <div class="w-full">
         <div class="flex flex-wrap justify-between items-center">
           <div class="flex flex-no-wrap w-full md:w-2/3">
@@ -456,7 +456,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color: #505561;
   z-index: 512;

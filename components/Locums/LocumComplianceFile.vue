@@ -81,8 +81,8 @@
                 @click.prevent="setStatusData('Approved')"
               >Approved</button>
               <button
-                class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-orange-500 px-4 focus:outline-none"
-                :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-orange-500 border-orange-500 text-white hover:bg-orange-light ' : ''}`"
+                class="inline-flex text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-yellow-500 px-4 focus:outline-none"
+                :class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-yellow-500 border-yellow-500 text-white hover:bg-yellow-light ' : ''}`"
                 @click.prevent="setStatusData('Rejected')"
               >Rejected</button>
             </div>
@@ -92,7 +92,7 @@
               <textarea 
                   v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
-                  class="w-full text-gray-700 flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-orange-800 focus:outline-none" 
+                  class="w-full text-gray-700 flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-yellow-800 focus:outline-none" 
                   name="complianceNote"
                   >Type Here
               </textarea>

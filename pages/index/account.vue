@@ -28,8 +28,36 @@
         <div class="flex">
             <div class="w-full md:w-auto" v-if="tab1">
                 <div class="w-full p-4 my-2 text-white bg-waterloo rounded-lg">
+                    <div class="font-semibold">Name</div>
+                    <div class="text-sm mx-2 pb-2">{{user.personal_detail.name}}</div>
+                    
                     <div class="font-semibold">E-Mail Address</div>
-                    <div class="text-sm mx-4">{{user.email}}</div>
+                    <div class="text-sm mx-2 pb-2">{{user.email}}</div>
+
+                    <!-- <div class="font-semibold">Role</div>
+                    <div class="text-sm mx-2 pb-2">{{user.admin_detail.role.name}}</div>
+                    
+                    <div class="font-semibold">Permissions</div>
+                    <div class="flex flex-col md:flex-row text-sm">
+                        <div class="w-full md:w-1/3 px-2">
+                            <p class="font-bold">Practice Management</p>
+                            <div v-for="item in user.admin_detail.role.permissions.filter(item => item.category === 'Practice')" :key="item.id" class="px-2">
+                                <span>{{item.name}}</span>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3 pt-2 md:pt-0 px-2">
+                            <p class="font-bold">Misc Management</p>
+                            <div v-for="item in user.admin_detail.role.permissions.filter(item => item.category === 'Misc')" :key="item.id" class="px-2">
+                                <span>{{item.name}}</span>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-1/3 pt-2 md:pt-0 px-2">
+                            <p class="font-bold">User Management</p>
+                            <div v-for="item in user.admin_detail.role.permissions.filter(item => item.category === 'User Management')" :key="item.id" class="px-2">
+                                <span>{{item.name}}</span>
+                            </div>
+                        </div>
+                    </div> -->
                 </div>
             </div>
             <div v-if="tab2">
@@ -44,7 +72,7 @@
                         </div>
                         <input
                             class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                            :class="`${toChangePassword.newPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
+                            :class="`${toChangePassword.newPassword !== '' ? 'focus:border-yellow-500' :'focus:border-red-500'}`"
                             type="password"
                             aria-label="oldpassword"
                             v-model="toChangePassword.newPassword"
@@ -54,7 +82,7 @@
                         </div>
                         <input
                             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                            :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-orange-500' :'focus:border-red-500'}`"
+                            :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-yellow-500' :'focus:border-red-500'}`"
                             type="password"
                             aria-label="newpassword"
                             v-model="toChangePassword.confirmNewPassword"
@@ -89,6 +117,7 @@
             try{
                 let response = await app.$axios.get(`/api/v1/admin/me`)
                 const user = response.data.data.user
+                console.log(user)
                 return{
                     user
                 }

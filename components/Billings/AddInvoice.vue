@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-between text-sm text-white">
-      <nuxt-link to="/billings" class="text-white px-1 pb-2">
+      <nuxt-link to="/billings" class="text-white pb-2">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current focus:outline-none" />
       </nuxt-link>
     </div>

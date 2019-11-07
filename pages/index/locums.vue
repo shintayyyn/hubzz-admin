@@ -3,6 +3,7 @@
 		<!-- <div>
 			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
 		</div> -->
+		<div class="text-xl md:text-4xl text-white px-4 md:px-6">Locums</div>
 		<div class="flex flex-col md:flex-row justify-between px-4 md:px-6">
 			<div class="flex py-2">
 				<div class="relative">
@@ -539,7 +540,7 @@ export default {
 					return 'bg-yellow-400 text-black'
 					break;
 				case 'Pending':
-					return 'bg-orange-500 text-white'
+					return 'bg-yellow-500 text-white'
 					break;
 				case 'Expiring':
 					return 'bg-red-600 text-white'
@@ -548,7 +549,7 @@ export default {
 					return 'bg-red-700 text-red-300'
 					break;
 				case 'Rejected':
-					return 'bg-orange-700 text-white'
+					return 'bg-yellow-700 text-white'
 					break;
 				case 'Compliant':
 					return 'bg-green-500 text-white'

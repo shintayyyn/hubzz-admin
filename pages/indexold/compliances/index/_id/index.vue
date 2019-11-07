@@ -82,8 +82,8 @@
           @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
-          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-300"
-          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300 ' : 'bg-transparent px-2 hover:bg-orange-300'}`"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-yellow rounded-full hover:bg-yellow-300"
+          :class="`${locumUser.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-yellow border-yellow text-white px-4 hover:bg-yellow-300 ' : 'bg-transparent px-2 hover:bg-yellow-300'}`"
 					v-if="locumUser.locum_detail.gmc_or_nmc_number.status"
           @click.prevent="toPutGmcNmc(locumUser.locum_detail.gmc_or_nmc_number.status,locumUser.id,'Rejected')"
         >Rejected</button>
@@ -99,8 +99,8 @@
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Verified')"
         >Verified</button>
         <button
-          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-orange rounded-full hover:bg-orange-300"
-          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-orange border-orange text-white px-4 hover:bg-orange-300' : 'bg-transparent px-2 hover:bg-orange-300'}`"
+          class="inline-flex text-white text-sm m-2 p-2 border border-white focus:bg-yellow rounded-full hover:bg-yellow-300"
+          :class="`${locumUser.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-yellow border-yellow text-white px-4 hover:bg-yellow-300' : 'bg-transparent px-2 hover:bg-yellow-300'}`"
 					v-if="locumUser.locum_detail.mpl_or_npl_number.status"
           @click.prevent="toPutMplNpl(locumUser.locum_detail.mpl_or_npl_number.status,locumUser.id,'Rejected')"
         >Rejected</button>

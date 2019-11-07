@@ -167,7 +167,7 @@
         <div>
           <p class="flex">Role Name</p>
           <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
             type="text"
             placeholder="Super Admin"
             v-model="form.name"
@@ -175,7 +175,7 @@
           />
           <p class="flex">Role Description</p>
           <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
             type="text"
             placeholder="Super Admin"
             v-model="form.description"
@@ -345,7 +345,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

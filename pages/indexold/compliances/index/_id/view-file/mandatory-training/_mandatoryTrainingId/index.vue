@@ -88,7 +88,7 @@
             <p class="mt-5 mr-20">Note to Locum</p>
                 <textarea v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
-                  class="text-gray-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-orange" 
+                  class="text-gray-lightest flex-1 py-2 px-4 bg-transparent overflow-auto resize border-b focus:border-yellow" 
                   name="complianceNote">Type Here
                 </textarea>
           </div>

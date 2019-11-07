@@ -19,7 +19,7 @@
           <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">{{errors[0]}}</div>
           <p class="flex">Title</p>
           <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
             type="text"
             placeholder="Mr. / Mrs. / Dr. / etc....."
             v-model="toPostUser.title"
@@ -31,7 +31,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.first_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostUser.first_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="text"
             placeholder="Jane"
             v-model="toPostUser.first_name"
@@ -44,7 +44,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.last_name !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostUser.last_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="text"
             v-model="toPostUser.last_name"
             @blur="verifyLastName(toPostUser.last_name)"
@@ -89,7 +89,7 @@
           <select
             v-if="surgery"
             class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
-            :class="`${toPostUser.practice_role !== '' ? 'focus:border-orange-500' :'focus:border-red-600'}`"
+            :class="`${toPostUser.practice_role !== '' ? 'focus:border-yellow-500' :'focus:border-red-600'}`"
             v-model="toPostUser.practice_role"
           >
             <option>Partner</option>
@@ -100,7 +100,7 @@
           <select
             v-if="surgery && surgery.practice_count<1"
             class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 text-gray-800 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-            :class="`${toPostUser.type !== '' ? 'focus:border-orange-600' :'focus:border-red-600'}`"
+            :class="`${toPostUser.type !== '' ? 'focus:border-yellow-600' :'focus:border-red-600'}`"
             v-model="toPostUser.type"
           >
             <option>Hub</option>
@@ -111,7 +111,7 @@
             Parent Surgery ID
             <input
               class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-              :class="`${toPostUser.parent_surgery_id !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+              :class="`${toPostUser.parent_surgery_id !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
               id="parent"
               type="text"
               v-model="toPostUser.parent_surgery_id"
@@ -128,7 +128,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.email !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostUser.email !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             id="email"
             type="text"
             v-model="toPostUser.email"
@@ -141,7 +141,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.password !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostUser.password !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="password"
             v-model="toPostUser.password"
             @blur="verifyPassword(toPostUser.password)"
@@ -156,7 +156,7 @@
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.password_confirmation !== '' ? 'focus:border-orange' :'focus:border-red'}`"
+            :class="`${toPostUser.password_confirmation !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
             type="password"
             v-model="toPostUser.password_confirmation"
             @blur="verifyConfirmPassword(toPostUser.password, toPostUser.password_confirmation)"
@@ -169,7 +169,7 @@
             <select 
               v-model="toPostUser.role_id"
               class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
-              :class="`${toPostUser.role_id !== '' ? 'focus:border-orange-500' :'focus:border-red-600'}`"
+              :class="`${toPostUser.role_id !== '' ? 'focus:border-yellow-500' :'focus:border-red-600'}`"
             >
               <option value disabled selected>Select Role</option>
               <option v-for="(role, index) in adminRoles "

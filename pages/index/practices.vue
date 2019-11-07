@@ -1,6 +1,7 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
 	<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'"/> -->
+		<div class="text-xl md:text-4xl text-white">Practices</div>
     <div class="flex justify-between items-center flex-wrap">
       <div class="flex items-center py-2">
         <div class="relative">
@@ -23,7 +24,7 @@
 					<select
 						v-model="sort"
 						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-						>
+          >
             <option value selected>All</option>
 						<option>Practice Name</option>
 						<option>Practice Code</option>
@@ -622,7 +623,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px orange;
+  border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

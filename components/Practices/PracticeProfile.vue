@@ -98,14 +98,14 @@
             <div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')" class="border-b-4 border-white">
               <p class="flex text-gray-300 p-2">Phone Number</p>
               <input
-                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
                 type="text"
                 aria-label="phonenumber"
                 v-model="toPutPractice.phone_number"
               >
               <p class="flex text-gray-300 p-2">Full name to report to</p>
               <input
-                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-orange"
+                class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
                 type="text"
                 aria-label="fullName"
                 v-model='toPutPractice.report_to'
@@ -115,7 +115,7 @@
               >Extra information (Parking restrictions, transport links, etc.)</p>
               <textarea  
                 placeholder="Type Here" 
-                class="text-gray-300 w-full bg-transparent overflow-y-auto resize-none border-b focus:border-orange-500 focus:outline-none" 
+                class="text-gray-300 w-full bg-transparent overflow-y-auto resize-none border-b focus:border-yellow-500 focus:outline-none" 
                 name="practiceNote"
                 v-model='toPutPractice.extra_information'>
               </textarea>
