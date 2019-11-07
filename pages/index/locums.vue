@@ -11,7 +11,7 @@
 						<svgicon name="times-solid" height="12" width="12" class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"/>
 					</button>
 				</div>
-				<button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button>
+				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button> -->
 			</div>
 			<div class="flex w-full justify-end">
 				<div class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end p-2 md:py-0">

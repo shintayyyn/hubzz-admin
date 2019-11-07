@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-lg shadow-lg md:pt-10 px-2 md:px-10 text-white">
+  <div class="rounded-lg shadow-lg p-4 md:p-8 text-white">
     <div>
       <!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Privacy Policy</div> -->
       <no-ssr placeholder="Loading...">
@@ -15,7 +15,7 @@
       </no-ssr>
     </div>
     <div v-if="authAdminPermissions.includes('Edit Terms and Conditions & Privacy Policy')" class="flex justify-end">
-        <button @click="save()" class="my-4 font-semibold py-2 px-4 rounded-lg bg-sunglow text-black">
+        <button @click="save()" class="mt-4 font-semibold py-2 px-4 rounded-lg bg-sunglow text-black">
             Save
         </button>
     </div>

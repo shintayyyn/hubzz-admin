@@ -1,30 +1,35 @@
 <template>
   <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto">
     <!-- HEADER -->
-    <div class="flex justify-between text-sm text-white py-2 px-6">
+    <div class="flex justify-between text-sm text-white pt-4 px-4 md:px-8">
       <div @click="$emit('close')" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </div>
     </div>
     <!-- HEADER -->
 
-    <div class="flex flex-wrap overflow-auto p-6 text-base text-white py-2">
+    <div class="flex flex-wrap overflow-auto p-4 md:p-8 text-base text-white py-2">
       <div class="w-full">
         <div class="flex flex-wrap justify-between items-center">
           <div class="flex flex-no-wrap w-full md:w-2/3">
-            <input
-              class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-orange"
-              type="text"
-              :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
-              v-model="search"
-              @keyup.enter="searchSubmit()"
-            />
-            <div class="self-end">
+            <div class="w-full md:w-auto relative">
+              <input
+                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow"
+                type="text"
+                :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
+                v-model="search"
+                @keyup.enter="searchSubmit()"
+              />
+              <button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
+                <svgicon name="times-solid" height="12" width="12" class="text-white hover:text-sunglow fill-current -mx-2 md:-mx-6"/>
+              </button>
+            </div>
+            <!-- <div class="self-end">
               <button
                 class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500"
                 @click="searchSubmit()"
               >Search</button>
-            </div>
+            </div> -->
           </div>
           <span class="py-2 md:px-4 text-sm whitespace-no-wrap" v-if="search && total !== 0 ">{{total}} results found.</span>
 
@@ -165,6 +170,7 @@ export default {
       ...this.$route.query,
       add_practice_page: this.$route.query.add_practice_page || 1
     };
+
     this.getData();
   },
 
@@ -215,10 +221,8 @@ export default {
       const params = { limit, offset };
       if (this.search) {
         params.search = this.search;
-        console.log("hello", params);
       }
-
-      if (this.practice && this.practice.type == "Spoke") {
+      if (this.practice && this.practice.type === "Spoke") {
         params.type = "Hub";
         await this.$axios
           .$get(`/api/v1/admin/practices/count`, { params })
@@ -230,7 +234,7 @@ export default {
           });
       } else if (
         !this.practice ||
-        (this.practice && this.practice.type == "Hub")
+        (this.practice && this.practice.type === "Hub")
       ) {
         await this.$axios
           .$get(`/api/v1/admin/surgeries/count`, { params })
@@ -250,7 +254,6 @@ export default {
       const params = { limit, offset };
       if (this.search) {
         params.search = this.search;
-        console.log("hello", params);
       }
       await this.$axios
         .$get(`/api/v1/admin/surgeries`, { params })
@@ -274,17 +277,20 @@ export default {
     },
     async getAllHubzz() {
       this.loading = true;
+      const limit = this.perPage;
       let offset = 0;
-      offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      let type = "Hub";
+      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      const params = { type, limit, offset };
+      if (this.search) {
+        params.search = this.search;
+      }
       await this.$axios
-        .$get(
-          `/api/v1/admin/practices?type=Hub&limit=${this.perPage}&offset=${offset}`
-        )
+        .$get(`/api/v1/admin/practices`, { params })
         .then(res => {
           this.hubzz = res.data.practices;
+          this.hubzz.map(item => this.isRegistered(item.id))
         });
-      console.log("hubzz", this.hubzz);
       this.loading = false;
     },
     async newHubOrSpoke(surgeryId) {

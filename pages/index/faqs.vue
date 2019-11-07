@@ -74,7 +74,7 @@
               class="flex justify-start item-answer font-bold text-sm overflow-hidden"
               v-if="item.toggled"
             >
-              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto mx-8"></div>
+              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto" :class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"></div>
             </div>
           </transition>
         </div>
@@ -125,7 +125,7 @@
                 name="edit"
                 width="21"
                 height="21"
-                class="fill-current text-white hover:text-sunglow mt-5"
+                class="fill-current text-white hover:text-sunglow"
                 />
             </nuxt-link>
             <div v-if="deletePracticeFaq == true && authAdminPermissions.includes('Edit FAQ')" class="flex items-center cursor-pointer mr-2 md:mr-4">
@@ -133,7 +133,7 @@
                 name="garbage"
                 width="21"
                 height="21"
-                class="fill-current text-red-800 hover:text-red-600 mt-5"
+                class="fill-current text-red-800 hover:text-red-600"
                 />
             </div>
             <div
@@ -151,7 +151,7 @@
               class="flex justify-start item-answer font-bold text-sm overflow-hidden"
               v-if="item.toggled"
             >
-              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto mx-8"></div>
+              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto" :class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"></div>
             </div>
           </transition>
         </div>

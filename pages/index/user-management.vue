@@ -1,5 +1,5 @@
 <template>
-    <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
+    <div class="flex-1 flex flex-col overflow-auto">
       <!-- <div>
         <div class="text-4xl text-white leading-none">User Management</div>
         <div class="text-xs mb-4 text-white">Work in progress.</div>

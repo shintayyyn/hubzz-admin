@@ -8,11 +8,11 @@
             <nuxt-link to="/" class="py-3 cursor-pointer">
                <img src="~/assets/images/hubzz-icon-transparent.png"> 
             </nuxt-link>
-            <nuxt-link to="/account" class="flex flex-row py-2 md:p-2 text-sm cursor-pointer" v-if="$auth.loggedIn">
+            <nuxt-link to="/account" class="flex flex-row py-2 text-sm cursor-pointer" v-if="$auth.loggedIn">
                 <div>
                     <img src = "~/assets/images/default-user-image.png" class="rounded-full" width="48px" height="48px">
                 </div>
-                <div class="hidden md:block m-2 mt-2 text-white">
+                <div class="hidden md:block ml-2 mt-2 text-white">
                     {{ $auth.user.email }}
                     <div class="font-hairline text-xs">
                         My Account

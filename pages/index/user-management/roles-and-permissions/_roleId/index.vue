@@ -1,49 +1,49 @@
 <template>
   <div class="role-modal">
     <div class="p-4 md:p-6 text-white">
-      <div @click="goBack()" class="cursor-pointer pb-4">
-        <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white hover:text-sunglow fill-current" />
+      <div  class="pb-4">
+        <svgicon name="arrow-left-solid" height="32" widht="32" class="cursor-pointer text-white hover:text-sunglow fill-current" @click="goBack()"/>
       </div>
       <div class="flex flex-row items-start justify-between flex-wrap">
-        <div class="leading-tight">
-          <div class="text-2xl md:text-4xl">{{specificRole.name}}</div>
-          <div class="text-sm italic">{{specificRole.description}}</div>
+        <div class="flex items-center justify-between w-full leading-tight">
+          <div class="text-2xl md:text-4xl font-bold md:font-normal">{{specificRole.name}}</div>
+           <div class="flex py-1 text-sm md:text-base">
+            <div v-if="editingPermissions==false && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=true" class="flex items-center mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black">
+              <div class="mx-2 font-semibold">Edit</div>
+              <div>
+                <svgicon
+                name="edit"
+                width="21"
+                height="21"
+                color="black black"
+                />
+              </div>
+            </div>
+            <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=false" class="flex items-center mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black" >
+              <div class="mx-2 font-semibold">Cancel</div>
+              <div>
+                <svgicon
+                name="times-solid"
+                width="21"
+                height="21"
+                color="black black"
+                />
+              </div>
+            </div>
+            <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="save()" class="flex items-center ml-1 md:ml-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer" >
+              <div class="mx-2 font-semibold">Save</div>
+              <div>
+                <svgicon
+                name="circle-check"
+                width="21"
+                height="21"
+                color="white white"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex py-1">
-          <div v-if="editingPermissions==false && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=true" class="flex mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black">
-            <div class="mx-2 font-semibold">Edit</div>
-            <div>
-              <svgicon
-              name="edit"
-              width="21"
-              height="21"
-              color="black black"
-              />
-            </div>
-          </div>
-          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=false" class="flex mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black" >
-            <div class="mx-2 font-semibold">Cancel</div>
-            <div>
-              <svgicon
-              name="times-solid"
-              width="21"
-              height="21"
-              color="black black"
-              />
-            </div>
-          </div>
-          <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="save()" class="flex ml-1 md:ml-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer" >
-            <div class="mx-2 font-semibold">Save</div>
-            <div>
-              <svgicon
-              name="circle-check"
-              width="21"
-              height="21"
-              color="white white"
-              />
-            </div>
-          </div>
-        </div>
+        <div class="text-sm italic">{{specificRole.description}}</div>
       </div>
       <!-- SHOW ROLE PERMISSIONS -->
       <div class="my-2 md:my-4" v-if="editingPermissions == false">

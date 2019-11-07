@@ -6,20 +6,20 @@
           <!-- VIEW PRIMARY INFORMATION -->
           <div class="w-full md:w-1/2 text-gray-300 text-sm p-2">
             <p class="flex">Practice Name</p>
-            <p class="flex items-center text-white text-sm p-2 font-semibold">
-              {{practice.surgery ? practice.surgery.name : null}} 
+            <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
+              <span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
               <span
-              class="py-2 px-4 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
+              class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
               :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
             </p>
             
             <p class="flex">Practice Code</p>
             <p class="flex text-white text-sm p-2 font-semibold">{{practice.surgery ? practice.surgery.code : null}}</p>
             <p class="flex">Address</p>
-            <p class="flex text-white text-sm p-2 font-semibold">
-              {{practice.surgery.address ? practice.surgery.address.line_1 : null}} <br>
-              {{practice.surgery.address ? practice.surgery.address.line_2 : null}} <br>
-              {{practice.surgery.address ? practice.surgery.address.line_3 : null}} <br>
+            <p class="flex flex-col text-white text-sm p-2 font-semibold">
+              <span v-if="practice.surgery.address && practice.surgery.address.line_1">{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
+              <span v-if="practice.surgery.address && practice.surgery.address.line_2">{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
+              <span v-if="practice.surgery.address && practice.surgery.address.line_3">{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
             </p>
             <p class="flex">CCG</p>
             <p class="flex text-white text-sm p-2 font-semibold">{{practice.surgery.clinical_commissioning_group ? practice.surgery.clinical_commissioning_group.name:null}}</p>

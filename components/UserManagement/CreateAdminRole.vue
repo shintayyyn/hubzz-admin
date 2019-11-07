@@ -1,9 +1,7 @@
 <template>
   <div class="modal-container max-w-2xl text-white">
     <div class="p-4 md:p-8">
-      <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
-      </div>
+      <svgicon name="arrow-left-solid" height="32" width="32" class="cursor-pointer text-white hover:text-sunglow fill-current" @click="$emit('close')"/>
       <div class="flex flex-col mt-4">
         <AppInput
           v-model="form.name"
@@ -160,6 +158,7 @@ export default {
             this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Role Created Successfully'})
           })
         await this.getAdminRoles()
+        this.$emit('close')
       }
     }
   }

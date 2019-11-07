@@ -1,6 +1,6 @@
 <template>
     <div class="job-modal shadow-lg">
-        <div class="mt-6 mx-8 my-2">
+        <div class="mt-4 md:mt-6 mx-4 md:mx-8">
             <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-live-sessions`}" class="cursor-pointer">
                 <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
             </nuxt-link>

@@ -1,11 +1,11 @@
 <template>
   <div class="pagination flex flex-col my-2" v-if="totalPages > 1">
     <div class="flex flex-col justify-center items-center">
-      <div class="flex items-center md:hidden">
+      <div class="flex items-center flex-wrap justify-center md:hidden">
         <div class="pagination-item mx-1 mb-2" v-for="page in pages" :key="page.name">
         <button
             type="button"
-            class="page-button p-2 px-4 rounded-lg font-bold text-sm text-gray-800 focus:outline-none"
+            class="page-button px-4 py-2 rounded-lg font-bold text-sm text-gray-800 focus:outline-none"
             @click="onClickPage(page.name)"
             :class="{ active: isPageActive(page.name) }"
           >{{ page.name }}</button>
