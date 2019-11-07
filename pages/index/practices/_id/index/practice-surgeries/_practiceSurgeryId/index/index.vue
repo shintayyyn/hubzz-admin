@@ -23,6 +23,8 @@
           <div class="mx-2">{{practice_surgery.pay_for_surgery === false ? 'No' : 'Yes'}}</div>
           <div class="font-semibold text-sm">Verify job creation</div>
           <div class="mx-2">{{practice_surgery.verify_job_creation === false ? 'No' : 'Yes'}}</div>
+          <div class="font-semibold text-sm">Share Banks to Other Surgeries</div>
+          <div class="mx-2">{{practice_surgery.share_banks_to_other_surgeries === false ? 'No' : 'Yes'}}</div>
         </div>
         <!--------------EDIT PAY FOR SURGERY / VERIFY JOB CREATION------------------>
         <div v-if="editPayForSurgery === true" class="bg-waterloo-light rounded-lg shadow-md p-2 my-4">
@@ -47,171 +49,14 @@
                 :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
               />
             </div>
-          </div>
-          <div class="flex flex-row justify-start px-2 mb-2 md:px-4 md:mb-4">
-            <AppButton :label="'Save'" @click="save" :inStyle="'padding:5px 10px'" />
-          </div>
-        </div>
-
-        <!--------------SESSION POLICIES-------------->
-        <div class="flex flex-row items-center">
-          <div class="text-lg text-white font-semibold">Session Policies</div>
-          <div
-            @click="editSessionPolicies = !editSessionPolicies" 
-            class="text-sm font-semibold text-black bg-yellow-500 px-3 py-1 mx-2 rounded-lg cursor-pointer"
-            :class="`${editSessionPolicies == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-green-500 hover:bg-green-600'}`">
-            {{editSessionPolicies == false ? 'Edit' : 'Done'}}</div>
-        </div>
-        <div v-if="editSessionPolicies === false" class="mt-2 mb-4 mx-2">
-          <div class="font-semibold text-sm">Allow this surgery to create sessions?</div>
-          <div class="mx-2">{{practice_surgery.allow_surgery_create_sessions === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Allow this surgery to allocate applicant locums to sessions?</div>
-          <div class="mx-2">{{practice_surgery.allow_surgery_appoint_locums === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Allow this surgery to amend sessions?</div>
-          <div class="mx-2">{{practice_surgery.allow_surgery_amend_sessions === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Allow this surgery to cancel sessions?</div>
-          <div class="mx-2">{{practice_surgery.allow_surgery_cancel_sessions === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Allow this surgery to approve hours for invoicing?</div>
-          <div class="mx-2">{{practice_surgery.allow_surgery_approve_hours === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Allow this surgery to complete sessions?</div>
-          <div class="mx-2">{{practice_surgery.allow_surgery_complete_sessions === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Allow this surgery to share its banks to other surgeries?</div>
-          <div class="mx-2">{{practice_surgery.share_banks_to_other_surgeries === false ? 'No' : 'Yes'}}</div>
-        </div>
-        <!-------------EDIT SESSION POLICIES-------------->
-        <div v-if="editSessionPolicies === true" class="bg-waterloo-light rounded-lg shadow-md p-2 my-4">
-          <div class="flex flex-col flex-wrap justify-between">
-            <div class="w-full px-2 md:px-4">
+            <div class="w-full p-1">
               <AppInput
-                v-model="form.allow_surgery_create_sessions"
-                :type="'select'"
-                :name="'allow_surgery_create_sessions'"
-                :label="'Allow this surgery to create sessions?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.allow_surgery_appoint_locums"
-                :type="'select'"
-                :name="'allow_surgery_appoint_locums'"
-                :label="'Allow this surgery to allocate applicant locums to sessions?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.allow_surgery_amend_sessions"
-                :type="'select'"
-                :name="'allow_surgery_amend_sessions'"
-                :label="'Allow this surgery to amend sessions?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.allow_surgery_cancel_sessions"
-                :type="'select'"
-                :name="'allow_surgery_cancel_sessions'"
-                :label="'Allow this surgery to cancel sessions?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.allow_surgery_approve_hours"
-                :type="'select'"
-                :name="'allow_surgery_approve_hours'"
-                :label="'Allow this surgery to approve hours for invoicing?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.allow_surgery_complete_sessions"
-                :type="'select'"
-                :name="'allow_surgery_complete_sessions'"
-                :label="'Allow this surgery to complete sessions?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.share_banks_to_other_surgeries"
-                :type="'select'"
-                :name="'share_banks_to_other_surgeries'"
-                :label="'Allow this surgery to share its banks to other surgeries??'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-          </div>
-          <div class="flex flex-row justify-start px-2 mb-2 md:px-4 md:mb-4">
-            <AppButton :label="'Save'" @click="save" :inStyle="'padding:5px 10px'" />
-          </div>
-        </div>
-        
-        <!--------------BLILLING POLICIES-------------->
-        <div class="flex flex-row items-center">
-          <div class="text-lg text-white font-semibold">Billing Policies</div>
-          <div
-            @click="editBillingPolicies = !editBillingPolicies" 
-            class="text-sm font-semibold text-black bg-yellow-500 px-3 py-1 mx-2 rounded-lg cursor-pointer"
-            :class="`${editBillingPolicies == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-green-500 hover:bg-green-600'}`">
-            {{editBillingPolicies == false ? 'Edit' : 'Done'}}</div>
-        </div>
-        <div v-if="editBillingPolicies === false" class="mt-2 mx-2">
-          <div class="font-semibold text-sm">Let this surgery to handle its own billing for Locum Invoice?</div>
-          <div class="mx-2">{{practice_surgery.pay_for_surgery === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Let this surgery to handle its own billing for HUBZZ? </div>
-          <div class="mx-2">{{practice_surgery.verify_job_creation === false ? 'No' : 'Yes'}}</div>
-        </div>
-        <!--------------EDIT BILLING POLICIES------------------>
-        <div v-if="editBillingPolicies === true" class="bg-waterloo-light rounded-lg shadow-md p-2 my-4">
-          <div class="flex flex-col flex-wrap justify-between">
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.let_surgery_bill_locum"
-                :type="'select'"
-                :name="'let_surgery_bill_locum'"
-                :label="'Let this surgery to handle its own billing for Locum Invoice?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                v-model="form.let_surgery_bill_hubzz"
-                :type="'select'"
-                :name="'let_surgery_bill_hubzz'"
-                :label="'Let this surgery to handle its own billing for Hubzz?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Allow to operate independently', value: true },
-                  //{ label: 'Require HUB`s Approval', value: false },
-                  { label: 'Only HUB can operate', value: false }]"
-              />
+                  v-model="form.create_job_rate_limit"
+                  :type="'number'"
+                  :name="'create_job_rate_limit'"
+                  :label="'Job Rates Limit £'"
+                  :inStyle="'text-align:right'"
+                />
             </div>
           </div>
           <div class="flex flex-row justify-start px-2 mb-2 md:px-4 md:mb-4">
@@ -244,15 +89,8 @@ export default {
       form: {
         pay_for_surgery: "",
         verify_job_creation: "",
-        allow_surgery_create_sessions: "",
-        allow_surgery_appoint_locums: "",
-        allow_surgery_amend_sessions: "",
-        allow_surgery_cancel_sessions: "",
-        allow_surgery_approve_hours: "",
-        allow_surgery_complete_sessions: "",
         share_banks_to_other_surgeries: "",
-        let_surgery_bill_locum: "",
-        let_surgery_bill_hubzz: "",
+        create_job_rate_limit: "",
       },
     }
   },
@@ -295,7 +133,6 @@ export default {
           //   res.data.practice_surgery
           // );
           this.$store.commit("SET_NOTIFICATION", { enabled: true, status: "success", text: "Surgery Update Success"});
-          //this.$router.push("/profile/branches-surgeries");
         });
     }
   }

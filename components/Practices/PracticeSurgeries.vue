@@ -7,7 +7,7 @@
                 <button
                   @click="show()"
                   class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
-                >Add Surgery
+                >Invite Spoke for this Hub
                   <svgicon
                   name="add-rectangle"
                   width="21"
@@ -16,7 +16,7 @@
                   class="mx-1 -my-1"/>
                 </button>
             </div>
-            <div v-if="deleteSurgery == false && practiceChildren.length>0" class="flex-3 mx-1 whitespace-no-wrap">
+            <!-- <div v-if="deleteSurgery == false && practiceChildren.length>0" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
                   @click="deleteSurgery = true && practiceChildren.length>0"
                   class="inline-flex items-center no-underline py-2 px-4 bg-red-600 hover:bg-red-700 text-sm font-semibold text-white rounded-lg shadow float-right"
@@ -28,7 +28,7 @@
                   color="white white"
                   class="mx-1 -my-1"/>
                 </button>
-            </div>
+            </div> -->
             <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
                   @click="deleteSurgery = false"
@@ -57,40 +57,59 @@
         <!-- END HEADER -->
         <!-- BODY -->
         <!-- This table is a nuxt-link, going to surgery details -> :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}`}"  -->
-        <nuxt-link
+        <div
           v-for="(childSurgery,index) in practiceChildren"
           :key="`childSurgery-${index}`"
-          :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}`}"
           >   
-          <div class="inline-flex w-full">
-            <div @click="toDeleteSurgery(practice.id,childSurgery.id)" v-if="deleteSurgery == true" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
-              <svgicon
-              name="garbage"
-              width="22"
-              height="22"
-              class="fill-current"
-              />
-            </div>
-            <div class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 text-white">
-              <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                  <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-                  <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
-              </div>
-              <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code</strong>
-                <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :'null' }}</span>
-              </div>
-              <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Practice Location</strong>
-                <div class="text-white text-sm px-2 py-1">
-                  <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
-                  <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
-                  <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
+            <div >
+              <div @click="showTerminationModal = true" v-if="childSurgery.termination_requested_at" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
+                <div class="p-1 bg-white rounded-lg">
+                  <svgicon
+                    name="exclamation-circle-solid"
+                    width="22"
+                    height="22"
+                    class="fill-current"
+                    />
                 </div>
-              </div> -->
+              </div>
+              <nuxt-link 
+                :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}` }" 
+              >
+                <div class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 text-white">
+                  <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+                      <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
+                      <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
+                  </div>
+                  <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+                    <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code</strong>
+                    <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</span>
+                  </div>
+                  <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Practice Location</strong>
+                    <div class="text-white text-sm px-2 py-1">
+                      <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
+                      <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
+                      <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
+                    </div>
+                  </div> -->
+                </div>
+              </nuxt-link>
+              <transition name="fade" mode="out-in">
+                <div class="confirm-termination-modal shadow-lg" v-if="showTerminationModal==true">
+                  <div class="p-2 m-4 text-white">
+                    <div> Hub Requested Termination for This Spoke </div> 
+                    <div>{{childSurgery.termination_requested_at}}</div>
+                    <div>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</div>
+                    <div>{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</div>
+                    <div>{{childSurgery.note}}</div>
+                    <div>
+                      <div class="p-2 rounded-lg bg-red-600" @click="toDeleteSurgery(practice.id,childSurgery.id)">Delete This</div>
+                    </div>
+                  </div>
+                </div>
+              </transition>
             </div>
-          </div>
-        </nuxt-link>
+        </div>
 
         <!-- END BODY -->
         <!--put -->
@@ -111,12 +130,13 @@
       </div>
 
       <!-- END TABLE -->
-      <div class="add-practice-shield" v-if="modal" @click="modal = false"></div>
+      <div class="add-practice-shield" v-if="modal || showTerminationModal" @click="closeModals()"></div>
       <transition name="slide" mode="out-in">
-      <div class="add-practice-modal shadow-lg" v-if="modal">
-          <AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
-      </div>
+        <div class="add-practice-modal shadow-lg" v-if="modal">
+            <AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
+        </div>
       </transition>
+      
   </div>
 </template>
 <script>
@@ -139,7 +159,8 @@ export default {
       currentPage:1,
       perPage:0,
       modal:false,
-      loadingSurgeries:false
+      loadingSurgeries:false,
+      showTerminationModal: false
     }
   },
   beforeDestroy(){
@@ -163,7 +184,6 @@ export default {
     totalPages(){
       return this.$store.state.practices.practiceSpokesPageCount
     }
-
   },
   async created(){
     const query = {
@@ -188,6 +208,10 @@ export default {
     show(){
       this.modal = true
     },
+    closeModals(){
+      this.modal = false
+      this.showTerminationModal = false
+    },
     async getChildren(){
       let limit = 5
       let offset = 0
@@ -210,6 +234,9 @@ export default {
         console.log('delete children error!!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
+    },
+    goToChild(link) {
+      this.$router.push()
     },
     pagechanged(e) {
       const query = {
@@ -245,6 +272,21 @@ export default {
   margin-right: 0%;
   width: 100%;
   height: 100%;
+  overflow: auto;
+  border-left: solid 2px orange;
+  transition: all 0.3s ease-in-out;
+  background-color:#505561;
+  z-index: 512;
+}
+
+.confirm-termination-modal {
+  position: fixed;
+  top: 150px;
+  right: 450px;
+  border-radius: 25px;
+  margin-right: 0%;
+  width: 50%;
+  height: 50%;
   overflow: auto;
   border-left: solid 2px orange;
   transition: all 0.3s ease-in-out;

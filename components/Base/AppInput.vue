@@ -1,18 +1,18 @@
 <template>
   <section>
-    <!-- text / email / password / date / time / select / textarea / multicheckbox -->
+    <!-- text / email / password / time / select / textarea / multicheckbox / number -->
     <template
-      v-if="['text','time','email','password', 'select', 'textarea', 'multi-checkbox'].includes(type)"
+      v-if="['text','time','email','password', 'select', 'textarea', 'multi-checkbox', 'number'].includes(type)"
     >
-      <div class="flex flex-col py-2 mb-6">
-        <div class="relative flex flex-row flex-no-wrap justify-between">
+      <div class="flex flex-col py-2 mb-3 md:mb-6">
+        <div class="relative flex flex-wrap leading-none" :class="info ? 'flex-wrap justify-between' : 'items-center'">
           <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
-          <div class="flex">
-            <div class="bg-gray-300 rounded-lg px-4 py-1 text-xs sm:text-sm" v-if="info">{{info}}</div>
+          <div class="flex " v-if="info || error">
+            <div class="bg-gray-300 rounded px-1 md:px-4 py-1 text-xs sm:text-sm" v-if="info">{{info}}</div>
             <div
-              class="absolute rounded-lg right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
-              v-if="error"
-            >{{error.message}}</div>
+              class="text-red-500 text-xs px-2"
+              v-if="error && (type === 'select' || type.includes('checkbox'))"
+            >{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
           </div>
         </div>
         <template v-if="type === 'multi-checkbox'">
@@ -23,49 +23,65 @@
           >
             <input
               :value="item.value"
+              :id="`${name}-${index}`"
               type="checkbox"
               @input="inputMultiCheck"
-              :checked="value.includes(item.value)"
+              :checked="Array.isArray(value) ? value.includes(item.value) : value"
             />
-            <div class="mx-1"></div>
-            <label :for="item.name" class="text-xs sm:text-sm">{{item.label}}</label>
+            <label :for="`${name}-${index}`" class="text-xs sm:text-sm flex items-center">{{item.label}}</label>
           </div>
         </template>
         <template v-else>
           <div class="flex flex-row justify-start mt-1">
-            <template v-if="['text','time','email','password'].includes(type)">
-              <input
-                :value="value"
-                :type="type"
-                :placeholder="placeholder"
-                class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-                :class="error ? 'border-red-500' : ''"
-                @input="$emit('input', $event.target.value)"
-                @keypress.enter="$emit('submit')"
-                @blur="$emit('blur')"
-                :style="inStyle"
-                :checked="value"
-              />
+            <template v-if="['text','time','email','password', 'number'].includes(type)">
+              <div class="flex flex-col w-full">
+                <input
+                  :value="value"
+                  :type="type"
+                  :placeholder="placeholder"
+                  class="border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                  :class="error ? 'border-red-500' : ''"
+                  @input="$emit('input', $event.target.value)"
+                  @keypress.enter="$emit('submit')"
+                  @blur="$emit('blur')"
+                  :style="inStyle"
+                  :checked="value"
+                  :min="type === 'number' && 0"
+                />
+                <div v-if="error"
+                  class="text-red-500 py-1 text-xs text-white"
+                >{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
+              </div>
             </template>
             <template v-if="type === 'select'">
-              <select
-                :value="value"
-                class="bg-transparent appearance-none cursor-pointer border-b-2 focus:border-yellow-400 focus:outline-none py-1 font-bold text-xs sm:text-sm w-full"
-                :class="error ? 'border-red-500':''"
-                @input="$emit('input', $event.target.value)"
-                :style="inStyle"
-                @change="$emit('change', $event.target.value)"
-                @blur="$emit('blur')"
-              >
-                <option value disabled selected v-if="placeholder">{{placeholder}}</option>
-                <option
-                  v-for="(item, index) in items"
-                  :key="index"
-                  :value="item.value"
-                  :selected="value === item.value"
-                  class="text-black"
-                >{{item.label}}</option>
-              </select>
+              <div class="w-full relative customized-select py-8 flex items-center">
+                <select
+                  ref="inputSelect"
+                  :value="value"
+                  class="absolute border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                  :class="[(error && !disabled) && 'border-red-500', disabled ? 'border-gray-400' : 'cursor-pointer']"
+                  @input="$emit('input', $event.target.value)"
+                  :style="inStyle"
+                  @change="$emit('change', $event.target.value)"
+                  @blur="$emit('blur')"
+                  :disabled="disabled"
+                >
+                  <option value disabled selected v-if="placeholder">{{placeholder}}</option>
+                  <option
+                    v-for="(item, index) in items"
+                    :key="index"
+                    :value="item.value"
+                    :selected="value === item.value"
+                  >{{item.label}}</option>
+                </select>
+                <span class="absolute right-0">
+                  <svgicon
+                    name="arrow-up"
+                    class="h-full w-10 p-2 fill-current"
+                    style="transform: rotate(180deg)"
+                  />
+                </span>
+              </div>
             </template>
             <template v-if="type === 'textarea'">
               <textarea
@@ -74,7 +90,7 @@
                 :rows="rows"
                 :value="value"
                 :placeholder="placeholder"
-                class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
+                class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
                 :class="[error ? 'border-red-500':'', resize ? '' : 'resize-none']"
                 @input="$emit('input', $event.target.value)"
                 @blur="$emit('blur', $event)"
@@ -90,30 +106,35 @@
       <div class="flex flex-col py-2 mb-2">
         <div class="flex justify-end">
           <div
-            class="rounded-lg bg-red-500 p-1 text-xs sm:text-sm text-white"
+            class="rounded-lg bg-red-500 px-2 py-1 text-xs sm:text-sm text-white"
             v-if="error"
-          >{{error.message}}</div>
+          >{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
         </div>
         <div class="flex flex-row flex-no-wrap justify-start items-center">
-          <input type="checkbox" @change="$emit('input', $event.target.checked)" :checked="value" />
-          <div class="mx-1"></div>
-          <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
+          <input
+            type="checkbox"
+            :id="name"
+            @change="$emit('input', $event.target.checked)"
+            :checked="value"
+            :disabled="disabled"
+          />
+          <label :for="name" class="text-xs sm:text-sm py-1 flex items-center">{{label}}</label>
         </div>
       </div>
     </template>
 
     <!-- multiemail -->
     <template v-if="type === 'multiemail'">
-      <div class="flex flex-col py-2 mb-6">
-        <div class="relative flex flex-row flex-no-wrap justify-between">
+      <div class="flex flex-col py-2 mb-3 md:mb-6">
+        <div class="relative flex flex-row flex-wrap justify-between">
           <div class="flex flex-wrap justify-start">
             <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
-            <span class="ml-2 bg-gray-300 rounded-lg px-4 py-1 text-xs">Seperate with commas</span>
+            <span class="ml-2 bg-gray-300 rounded px-4 py-1 text-xs">Seperate with commas</span>
           </div>
           <div
-            class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
+            class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
             v-if="error"
-          >{{error.message}}</div>
+          >{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
         </div>
         <div class="flex flex-row justify-start mt-1">
           <input
@@ -131,14 +152,14 @@
     <!-- search -->
     <template v-if="type === 'search'">
       <div v-if="type === 'search'" class="flex flex-col">
-        <div v-if="label" class="relative flex flex-row flex-no-wrap justify-between">
+        <div v-if="label" class="relative flex flex-row flex-wrap justify-between">
           <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
           <div class="flex">
-            <div class="bg-gray-300 rounded-lg px-4 py-1 text-xs sm:text-sm" v-if="info">{{info}}</div>
+            <div class="bg-gray-300 rounded px-4 py-1 text-xs sm:text-sm" v-if="info">{{info}}</div>
             <div
-              class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
+              class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
               v-if="error"
-            >{{error.message}}</div>
+            >{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
           </div>
         </div>
         <div
@@ -191,7 +212,12 @@ export default {
       type: Boolean
     },
     // for multicheckbox
-    lists: Array
+    lists: Array,
+    //
+    disabled: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     // for multi checkbox
