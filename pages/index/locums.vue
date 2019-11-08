@@ -518,16 +518,16 @@ export default {
 					return 'bg-green-500 text-white'
 					break;
 				case 'Inactive':
-					return 'bg-gray-500 text-black'
+					return 'bg-gray-500 text-gray-700'
 					break;
 				case 'Deactivated':
-					return 'bg-gray-500 text-black opacity-75'
+					return 'bg-red-800 text-red-400'
 					break;
 				case 'Suspended':
-					return 'bg-red-700 text-red-300'
+					return 'bg-red-600 text-white'
 					break;
 				case 'Dormant':
-					return 'bg-green-500 text-green-800'
+					return 'bg-orange-500 text-white'
 					break;
 				default:
 					return
@@ -539,19 +539,19 @@ export default {
 					return 'border border-white text-white'
 					break;
 				case 'Incomplete':
-					return 'bg-yellow-400 text-black'
+					return 'bg-orange-600 text-white'
 					break;
 				case 'Pending':
-					return 'bg-yellow-500 text-white'
+					return 'bg-gray-500 text-gray-800'
 					break;
 				case 'Expiring':
-					return 'bg-red-600 text-white'
+					return 'bg-red-400 text-white'
 					break;
 				case 'Expired':
-					return 'bg-red-700 text-red-300'
+					return 'bg-red-800 text-red-400'
 					break;
 				case 'Rejected':
-					return 'bg-yellow-700 text-white'
+					return 'bg-red-600 text-white'
 					break;
 				case 'Compliant':
 					return 'bg-green-500 text-white'

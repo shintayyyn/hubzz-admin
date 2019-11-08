@@ -1,7 +1,7 @@
 <template>
-  <div class="text-white">
+  <div class="">
     <div class="mb-6 md:mb-0">
-      <div class="text-xl my-2">Question</div>
+      <div class="text-xl my-2 text-white">Question</div>
       <input
         v-model="form.question"
         class="appearance-none block w-full bg-gray-lighter text-gray-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
@@ -10,10 +10,10 @@
       />
     </div>
     <!-- quill-editor -->
-    <div class="text-xl my-2">Answer</div>
+    <div class="text-xl my-2 text-white">Answer</div>
     <no-ssr placeholder="Loading...">
       <quill-editor
-        class="bg-white text-black"
+        class="bg-white"
         ref="myTextEditor"
         v-model="form.answer"
         :options="editorOption"
@@ -23,7 +23,7 @@
       ></quill-editor>
     </no-ssr>
     <div class="flex justify-start">
-      <button @click="save()" class="m-2 font-semibold p-2 rounded-lg bg-sunglow">Save</button>
+      <button @click="save()" class="my-2 font-semibold py-2 px-4 rounded-lg bg-sunglow hover:bg-sunglow-dark">Save</button>
     </div>
   </div>
 </template>
