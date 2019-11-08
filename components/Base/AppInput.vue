@@ -2,17 +2,34 @@
   <section>
     <!-- text / email / password / date / time / select / textarea / multicheckbox -->
     <template
-      v-if="['text','time','email','password', 'select', 'textarea', 'multi-checkbox'].includes(type)"
+      v-if="
+        [
+          'text',
+          'time',
+          'email',
+          'password',
+          'select',
+          'textarea',
+          'multi-checkbox'
+        ].includes(type)
+      "
     >
       <div class="flex flex-col py-2 mb-6">
         <div class="relative flex flex-row flex-no-wrap justify-between">
-          <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
+          <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
           <div class="flex">
-            <div class="bg-gray-300 rounded-lg px-4 py-1 text-xs sm:text-sm" v-if="info">{{info}}</div>
             <div
-              class="absolute rounded-lg right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
+              class="bg-gray-300 rounded-lg px-4 py-1 text-xs sm:text-sm"
+              v-if="info"
+            >
+              {{ info }}
+            </div>
+            <div
+              class="absolute rounded-lg right-0 bg-red-600 px-2 py-1 text-xs sm:text-sm text-white"
               v-if="error"
-            >{{error.message}}</div>
+            >
+              {{ error.message }}
+            </div>
           </div>
         </div>
         <template v-if="type === 'multi-checkbox'">
@@ -28,18 +45,22 @@
               :checked="value.includes(item.value)"
             />
             <div class="mx-1"></div>
-            <label :for="item.name" class="text-xs sm:text-sm">{{item.label}}</label>
+            <label :for="item.name" class="text-xs sm:text-sm">{{
+              item.label
+            }}</label>
           </div>
         </template>
         <template v-else>
           <div class="flex flex-row justify-start mt-1">
-            <template v-if="['text','time','email','password'].includes(type)">
+            <template
+              v-if="['text', 'time', 'email', 'password'].includes(type)"
+            >
               <input
                 :value="value"
                 :type="type"
                 :placeholder="placeholder"
                 class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-                :class="error ? 'border-red-500' : ''"
+                :class="error ? 'border-red-600' : ''"
                 @input="$emit('input', $event.target.value)"
                 @keypress.enter="$emit('submit')"
                 @blur="$emit('blur')"
@@ -51,20 +72,23 @@
               <select
                 :value="value"
                 class="bg-transparent appearance-none cursor-pointer border-b-2 focus:border-yellow-400 focus:outline-none py-1 font-bold text-xs sm:text-sm w-full"
-                :class="error ? 'border-red-500':''"
+                :class="error ? 'border-red-600' : ''"
                 @input="$emit('input', $event.target.value)"
                 :style="inStyle"
                 @change="$emit('change', $event.target.value)"
                 @blur="$emit('blur')"
               >
-                <option value disabled selected v-if="placeholder">{{placeholder}}</option>
+                <option value disabled selected v-if="placeholder">{{
+                  placeholder
+                }}</option>
                 <option
                   v-for="(item, index) in items"
                   :key="index"
                   :value="item.value"
                   :selected="value === item.value"
                   class="text-black"
-                >{{item.label}}</option>
+                  >{{ item.label }}</option
+                >
               </select>
             </template>
             <template v-if="type === 'textarea'">
@@ -75,7 +99,10 @@
                 :value="value"
                 :placeholder="placeholder"
                 class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-                :class="[error ? 'border-red-500':'', resize ? '' : 'resize-none']"
+                :class="[
+                  error ? 'border-red-600' : '',
+                  resize ? '' : 'resize-none'
+                ]"
                 @input="$emit('input', $event.target.value)"
                 @blur="$emit('blur', $event)"
               ></textarea>
@@ -90,14 +117,20 @@
       <div class="flex flex-col py-2 mb-2">
         <div class="flex justify-end">
           <div
-            class="rounded-lg bg-red-500 p-1 text-xs sm:text-sm text-white"
+            class="rounded-lg bg-red-600 p-1 text-xs sm:text-sm text-white"
             v-if="error"
-          >{{error.message}}</div>
+          >
+            {{ error.message }}
+          </div>
         </div>
         <div class="flex flex-row flex-no-wrap justify-start items-center">
-          <input type="checkbox" @change="$emit('input', $event.target.checked)" :checked="value" />
+          <input
+            type="checkbox"
+            @change="$emit('input', $event.target.checked)"
+            :checked="value"
+          />
           <div class="mx-1"></div>
-          <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
+          <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
         </div>
       </div>
     </template>
@@ -107,13 +140,19 @@
       <div class="flex flex-col py-2 mb-6">
         <div class="relative flex flex-row flex-no-wrap justify-between">
           <div class="flex flex-wrap justify-start">
-            <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
-            <span class="ml-2 bg-gray-300 rounded-lg px-4 py-1 text-xs">Seperate with commas</span>
+            <label :for="name" class="text-xs sm:text-sm py-1">{{
+              label
+            }}</label>
+            <span class="ml-2 bg-gray-300 rounded-lg px-4 py-1 text-xs"
+              >Seperate with commas</span
+            >
           </div>
           <div
-            class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
+            class="absolute right-0 bg-red-600 p-1 text-xs sm:text-sm text-white"
             v-if="error"
-          >{{error.message}}</div>
+          >
+            {{ error.message }}
+          </div>
         </div>
         <div class="flex flex-row justify-start mt-1">
           <input
@@ -121,7 +160,7 @@
             type="email"
             :placeholder="placeholder"
             class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-            :class="error ? 'border-red-500':''"
+            :class="error ? 'border-red-600' : ''"
             @input="$emit('input', $event.target.value)"
           />
         </div>
@@ -131,14 +170,24 @@
     <!-- search -->
     <template v-if="type === 'search'">
       <div v-if="type === 'search'" class="flex flex-col">
-        <div v-if="label" class="relative flex flex-row flex-no-wrap justify-between">
-          <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
+        <div
+          v-if="label"
+          class="relative flex flex-row flex-no-wrap justify-between"
+        >
+          <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
           <div class="flex">
-            <div class="bg-gray-300 rounded-lg px-4 py-1 text-xs sm:text-sm" v-if="info">{{info}}</div>
             <div
-              class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
+              class="bg-gray-300 rounded-lg px-4 py-1 text-xs sm:text-sm"
+              v-if="info"
+            >
+              {{ info }}
+            </div>
+            <div
+              class="absolute right-0 bg-red-600 p-1 text-xs sm:text-sm text-white"
               v-if="error"
-            >{{error.message}}</div>
+            >
+              {{ error.message }}
+            </div>
           </div>
         </div>
         <div
@@ -149,7 +198,7 @@
             :type="type"
             :placeholder="placeholder"
             class="focus:outline-none pl-4 pr-6 py-4 font-bold text-xs sm:text-sm w-full rounded-lg"
-            :class="error? 'border-red-500':''"
+            :class="error ? 'border-red-600' : ''"
             @input="$emit('input', $event.target.value)"
             :style="inStyle"
             @keypress.enter="$emit('submit')"
@@ -157,7 +206,12 @@
             :checked="value"
           />
           <span class="absolute right-0 px-2 py-2 bg-white">
-            <svgicon name="search" height="21" width="21" class="text-gray-500 fill-current" />
+            <svgicon
+              name="search"
+              height="21"
+              width="21"
+              class="text-gray-500 fill-current"
+            />
           </span>
         </div>
       </div>

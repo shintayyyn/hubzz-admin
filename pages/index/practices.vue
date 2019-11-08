@@ -78,7 +78,7 @@
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
-      <transition-group name="slide" tag="p">
+      <!-- <transition-group name="slide" tag="p"> -->
         <nuxt-link
           v-for="(practice, index) in getAllPractices"
           :key="`practice-${index}`"
@@ -118,7 +118,7 @@
           </div>
 
         </nuxt-link>
-      </transition-group>
+      <!-- </transition-group> -->
       <!-- END BODY -->
     </div>
     <div v-else>
@@ -171,6 +171,7 @@
 </template>
 
 <script>
+import debounce from "lodash.debounce";
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 import AppLoading from '@/components/Base/AppLoading'
 export default {
@@ -345,26 +346,6 @@ export default {
   },
 
   methods: {
-  // show(){
-  //   this.modal=true
-  // },
-
-  // getQuery(){
-  //   const query = {
-  //     ...this.$route.query
-  //   }
-  //   const offset = parseInt(query.page)*10 - 10 
-  //   return offset
-  // },
-
-  // getPractices(params,search){
-  //   this.$store.dispatch("practices/fetchPractices",{
-  //     limit:10,
-  //     search:search,
-  //     order_by:params.order_by,
-  //     offset:this.getQuery()
-  //   })
-  // },
     show(){
       this.modal=true
     },
@@ -494,7 +475,7 @@ export default {
       this.$router.push({ query })
     },
 
-    searchSubmit(page, order_by) {
+    searchSubmit: debounce(function(page, order_by) {
       let search = this.search
       let query = {
         ...this.$router.query,
@@ -530,45 +511,7 @@ export default {
           this.loading = true
         }	
         this.$router.push({ query })
-    },
-
-    searchSubmit(page, order_by) {
-      let search = this.search
-      let query = {
-        ...this.$router.query,
-        search
-      }
-      if(page === 1){
-        delete query.page
-      }
-      if(page && page>1){
-        query = {
-          ...this.$router.query,
-          page,search
-        }
-      }
-      if(order_by){
-        query = {
-          ...this.$router.query,
-          search,order_by
-        }
-      }
-      if(page && order_by){
-        query = {
-          ...this.$router.query,
-          page,search,order_by
-        }
-      }
-
-        if (this.search === '') {
-          delete query.search
-        }
-
-      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true
-      }
-          this.$router.push({ query })
-    },
+    }, 500),
 
     typeStyle(status){
       switch(status){

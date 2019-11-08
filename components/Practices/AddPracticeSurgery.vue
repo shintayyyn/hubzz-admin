@@ -1,14 +1,23 @@
 <template>
-  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto">
+  <div
+    class="absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto"
+  >
     <!-- HEADER -->
     <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
       <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          width="32"
+          class="text-white hover:text-sunglow fill-current"
+        />
       </div>
     </div>
     <!-- HEADER -->
 
-    <div class="flex flex-wrap overflow-auto px-4 md:px-8 text-base text-white py-2">
+    <div
+      class="flex flex-wrap overflow-auto px-4 md:px-8 text-base text-white py-2"
+    >
       <div class="w-full">
         <div class="flex flex-wrap justify-between items-center">
           <div class="flex flex-no-wrap w-full md:w-2/3">
@@ -16,12 +25,27 @@
               <input
                 class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow"
                 type="text"
-                :placeholder="`${!practice||practice && practice.type == 'Hub' ? 'Search for Surgery by Name, etc....': 'Search for Hub by Name, etc....'}`"
+                :placeholder="
+                  `${
+                    !practice || (practice && practice.type == 'Hub')
+                      ? 'Search for Surgery by Name, etc....'
+                      : 'Search for Hub by Name, etc....'
+                  }`
+                "
                 v-model="search"
                 @keyup.enter="searchSubmit()"
               />
-              <button v-if="search" class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1" @click="search = '', searchSubmit()">
-                <svgicon name="times-solid" height="12" width="12" class="text-white hover:text-sunglow fill-current -mx-2 md:-mx-6"/>
+              <button
+                v-if="search"
+                class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+                @click="(search = ''), searchSubmit()"
+              >
+                <svgicon
+                  name="times-solid"
+                  height="12"
+                  width="12"
+                  class="text-white hover:text-sunglow fill-current -mx-2 md:-mx-6"
+                />
               </button>
             </div>
             <!-- <div class="self-end">
@@ -31,24 +55,37 @@
               >Search</button>
             </div> -->
           </div>
-          <span class="py-2 md:px-4 text-sm whitespace-no-wrap" v-if="search && total !== 0 ">{{total}} results found.</span>
-
+          <span
+            class="py-2 md:px-4 text-sm whitespace-no-wrap"
+            v-if="search && total !== 0"
+            >{{ total }} results found.</span
+          >
         </div>
       </div>
-      <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">No results found.</div>
+      <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">
+        No results found.
+      </div>
       <div class="w-full overflow-hidden">
         <div>
           <!--TABLE-->
           <!-- BODY -->
-          <div v-if="!practice||practice&&practice.type=='Hub'">
+          <div v-if="!practice || (practice && practice.type == 'Hub')">
             <!--IF PRACTICE IS A HUB / NEW PRACTICE IS BEING CREATED-->
             <transition-group name="slide" tag="p">
               <div
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
-                @click="practice &&practice.type=='Hub' ? newHubOrSpoke(surgery.id):show(surgery.id)"
+                @click="
+                  practice && practice.type == 'Hub'
+                    ? newHubOrSpoke(surgery.id)
+                    : show(surgery.id)
+                "
                 class="flex no-underline rounded-lg shadow my-2"
-                :class="registeredPractice.includes(surgery.id) ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
+                :class="
+                  registeredPractice.includes(surgery.id)
+                    ? 'bg-waterloo opacity-75'
+                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'
+                "
               >
                 <div class="flex w-full">
                   <div class="w-full text-white text-xs p-4">
@@ -57,19 +94,42 @@
                       <span
                         v-if="registeredPractice.includes(surgery.id)"
                         class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
-                      >Registered</span>
+                        >Registered</span
+                      >
                     </div>
-                    <span class="block w-full py-1">{{surgery.address.line_1}}</span>
-                    <span class="block w-full py-1">{{surgery.address.line_2}}</span>
-                    <span class="block w-full py-1">{{surgery.address.line_3}}</span>
+                    <span class="block w-full py-1">{{
+                      surgery.address.line_1
+                    }}</span>
+                    <span class="block w-full py-1">{{
+                      surgery.address.line_2
+                    }}</span>
+                    <span class="block w-full py-1">{{
+                      surgery.address.line_3
+                    }}</span>
                     <div class="flex items-center my-1">
-                      <span class="block p-2 rounded"
-                        :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '"
-                      >CCG</span>
-                      <span class="w-full px-2">{{surgery.clinical_commissioning_group.name}}</span>
+                      <span
+                        class="block p-2 rounded"
+                        :class="
+                          registeredPractice.includes(surgery.id)
+                            ? 'bg-trout opacity-75'
+                            : 'bg-trout '
+                        "
+                        >CCG</span
+                      >
+                      <span class="w-full px-2">{{
+                        surgery.clinical_commissioning_group.name
+                      }}</span>
                     </div>
                     <div class="flex items-center my-1">
-                      <span class="block p-2 rounded whitespace-no-wrap" :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '">Practice Code</span>
+                      <span
+                        class="block p-2 rounded whitespace-no-wrap"
+                        :class="
+                          registeredPractice.includes(surgery.id)
+                            ? 'bg-trout opacity-75'
+                            : 'bg-trout '
+                        "
+                        >Practice Code</span
+                      >
                       <span class="w-full px-2">{{ surgery.code }}</span>
                     </div>
                   </div>
@@ -78,13 +138,13 @@
             </transition-group>
           </div>
 
-          <div v-if="practice&&practice.type == 'Spoke'">
+          <div v-if="practice && practice.type == 'Spoke'">
             <!--IF PRACTICE IS A SPOKE-->
             <transition-group name="slide" tag="p">
               <div
                 v-for="(hub, index) in hubzz"
                 :key="`hub-${index}`"
-                @click="changeParent(hub.surgery.id,hub.id)"
+                @click="changeParent(hub.surgery.id, hub.id)"
                 class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
               >
                 <div class="flex flex-col text-white text-xs">
@@ -119,7 +179,12 @@
         :class="practice ? 'practice-user-modal-small' : 'practice-user-modal'"
         v-if="modal"
       >
-        <CreatePracticeUser @close="modal=false" @userCreated="modal=false, $emit('close')" :practice="practice" :surgery="surgery" />
+        <CreatePracticeUser
+          @close="modal = false"
+          @userCreated="(modal = false), $emit('close')"
+          :practice="practice"
+          :surgery="surgery"
+        />
       </div>
     </transition>
     <nuxt-child />
@@ -127,6 +192,7 @@
 </template>
 
 <script>
+import debounce from "lodash.debounce";
 import AppPagination from "@/components/Base/AppPagination";
 import CreatePracticeUser from "@/components/Practices/CreatePracticeUser";
 export default {
@@ -164,8 +230,8 @@ export default {
       this.getAllSurgeries();
       this.getAllHubzz();
     },
-    search(value){
-      this.searchSubmit()
+    search(value) {
+      this.searchSubmit();
     }
   },
 
@@ -254,7 +320,8 @@ export default {
       this.loading = true;
       const limit = this.perPage;
       let offset = 0;
-      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      offset =
+        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       const params = { limit, offset };
       if (this.search) {
         params.search = this.search;
@@ -263,11 +330,11 @@ export default {
         .$get(`/api/v1/admin/surgeries`, { params })
         .then(res => {
           this.surgeries = res.data.surgeries;
-          this.surgeries.map(item => this.isRegistered(item.id))
+          this.surgeries.map(item => this.isRegistered(item.id));
         });
       this.loading = false;
     },
-    async searchSubmit() {
+    searchSubmit: debounce(async function() {
       const query = {
         ...this.$route.query
       };
@@ -278,13 +345,14 @@ export default {
       if (this.search === "") {
         delete query.search;
       }
-    },
+    }, 500),
     async getAllHubzz() {
       this.loading = true;
       const limit = this.perPage;
       let offset = 0;
       let type = "Hub";
-      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      offset =
+        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       const params = { type, limit, offset };
       if (this.search) {
         params.search = this.search;
@@ -293,7 +361,7 @@ export default {
         .$get(`/api/v1/admin/practices`, { params })
         .then(res => {
           this.hubzz = res.data.practices;
-          this.hubzz.map(item => this.isRegistered(item.id))
+          this.hubzz.map(item => this.isRegistered(item.id));
         });
       this.loading = false;
     },
@@ -423,12 +491,10 @@ export default {
       };
       this.$router.push({ query });
     },
-    isRegistered(id){
-      this.$axios
-      .get(`/api/v1/admin/surgeries/${id}`)
-      .then(res => {
-        if (res.data.data.surgery.practice_count > 0){
-          this.registeredPractice.push(id)
+    isRegistered(id) {
+      this.$axios.get(`/api/v1/admin/surgeries/${id}`).then(res => {
+        if (res.data.data.surgery.practice_count > 0) {
+          this.registeredPractice.push(id);
         }
       });
     }

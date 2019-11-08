@@ -2,21 +2,40 @@
   <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
     <div class="flex justify-between text-sm text-white py-2 px-6">
       <div @click="$emit('close')" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          width="32"
+          class="text-white hover:text-sunglow fill-current"
+        />
       </div>
     </div>
     <div class="ml-4">
       <div class="text-white pl-4 pt-2">
-        <div class="text-lg font-bold" v-if="practice && practice.type=='Hub'">Create Spoke User</div>
+        <div
+          class="text-lg font-bold"
+          v-if="practice && practice.type == 'Hub'"
+        >
+          Create Spoke User
+        </div>
         <div class="text-lg font-bold" v-else>Create User</div>
-        <div v-if="surgery" class="text-xs font-hairline">Surgery: {{surgery.name}}</div>
+        <div v-if="surgery" class="text-xs font-hairline">
+          Surgery: {{ surgery.name }}
+        </div>
       </div>
 
       <div
-        class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm sm:w-max lg:w-1/2"
+        class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm max-w-lg"
       >
         <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-          <div v-if="errors[0]" class="p-2 rounded text-black bg-sunglow mb-2">{{errors[0]}}</div>
+          <!-- <div
+            v-if="errors.length > 0"
+            class="p-2 rounded text-black bg-sunglow mb-2"
+          >
+            <ul v-for="(error, index) in errors" :key="index">
+              <li>{{ error }}</li>
+            </ul>
+          </div> -->
           <p class="flex">Title</p>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
@@ -27,27 +46,43 @@
           />
           <div class="flex items-center py-1">
             First Name
-            <span v-if="firstNameError" class="bg-red-600 p-1 ml-4 rounded">{{firstNameError}}</span>
+            <span v-if="firstNameError" class="bg-red-600 p-1 ml-4 rounded">{{
+              firstNameError
+            }}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.first_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+            :class="
+              `${
+                toPostUser.first_name !== ''
+                  ? 'focus:border-yellow'
+                  : 'focus:border-red'
+              }`
+            "
             type="text"
             placeholder="Jane"
             v-model="toPostUser.first_name"
-            @blur="verifyFirstName(toPostUser.first_name)"
+            @blur="validate('toPostUser.first_name')"
             aria-label="First Name"
           />
           <div class="flex items-center py-1">
             Last Name
-            <span v-if="lastNameError" class="bg-red-600 p-1 ml-4 rounded">{{lastNameError}}</span>
+            <span v-if="lastNameError" class="bg-red-600 p-1 ml-4 rounded">{{
+              lastNameError
+            }}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.last_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+            :class="
+              `${
+                toPostUser.last_name !== ''
+                  ? 'focus:border-yellow'
+                  : 'focus:border-red'
+              }`
+            "
             type="text"
             v-model="toPostUser.last_name"
-            @blur="verifyLastName(toPostUser.last_name)"
+            @blur="validate('toPostUser.last_name')"
             placeholder="Doe"
             aria-label="Last Name"
           />
@@ -60,7 +95,7 @@
             aria-label="Suffix"
           />
 
-          <div v-if="surgery && surgery.practice_count<1" class="w-full">
+          <div v-if="surgery && surgery.practice_count < 1" class="w-full">
             <span>Practice Types</span>
             <span class="text-xs">(hold ctrl + click to choose)</span>
             <select
@@ -69,38 +104,62 @@
               v-bind:class="{ 'fix-height': multiple === 'true' }"
               v-model="toPostUser.practice_type_id"
             >
-              <option class="px-2 py-1" v-for="item in practiceTypes" :key="item.id" :value="item">{{item.label}}</option>
+              <option
+                class="px-2 py-1"
+                v-for="item in practiceTypes"
+                :key="item.id"
+                :value="item"
+                >{{ item.label }}</option
+              >
             </select>
             <div
               v-for="(practice_type, index) in toPostUser.practice_type_id"
               :key="`practice_type-${index}`"
               class="inline-flex my-2 mr-2"
             >
-              <span
-                class="bg-yellow-500 rounded-lg p-2 text-black"
-              >{{toPostUser.practice_type_id[index].label}}</span>
+              <span class="bg-yellow-500 rounded-lg p-2 text-black">{{
+                toPostUser.practice_type_id[index].label
+              }}</span>
             </div>
           </div>
 
           <div v-if="surgery" class="flex items-center py-1">
             Role
-            <span v-if="!toPostUser.practice_role" class="bg-red-600 p-1 ml-4 rounded">Required</span>
+            <span
+              v-if="!toPostUser.practice_role"
+              class="bg-red-600 p-1 ml-4 rounded"
+              >Required</span
+            >
           </div>
           <select
             v-if="surgery"
             class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
-            :class="`${toPostUser.practice_role !== '' ? 'focus:border-yellow-500' :'focus:border-red-600'}`"
+            :class="
+              `${
+                toPostUser.practice_role !== ''
+                  ? 'focus:border-yellow-500'
+                  : 'focus:border-red-600'
+              }`
+            "
             v-model="toPostUser.practice_role"
           >
             <option>Partner</option>
             <option>Practice Manager</option>
             <option>Practice Staff</option>
           </select>
-          <div v-if="surgery && surgery.practice_count<1" class="flex py-1">Type</div>
+          <div v-if="surgery && surgery.practice_count < 1" class="flex py-1">
+            Type
+          </div>
           <select
-            v-if="surgery && surgery.practice_count<1"
+            v-if="surgery && surgery.practice_count < 1"
             class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 text-gray-800 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-            :class="`${toPostUser.type !== '' ? 'focus:border-yellow-600' :'focus:border-red-600'}`"
+            :class="
+              `${
+                toPostUser.type !== ''
+                  ? 'focus:border-yellow-600'
+                  : 'focus:border-red-600'
+              }`
+            "
             v-model="toPostUser.type"
           >
             <option>Hub</option>
@@ -111,7 +170,13 @@
             Parent Surgery ID
             <input
               class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-              :class="`${toPostUser.parent_surgery_id !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+              :class="
+                `${
+                  toPostUser.parent_surgery_id !== ''
+                    ? 'focus:border-yellow'
+                    : 'focus:border-red'
+                }`
+              "
               id="parent"
               type="text"
               v-model="toPostUser.parent_surgery_id"
@@ -119,32 +184,46 @@
             />
           </div>
 
-          <div class="flex items-center py-1">
+          <div class="flex items-center py-1 mb-4">
             E-Mail Address
-            <span
-              v-if="emailError"
-              class="bg-red-600 p-1 ml-4 -mt-1 rounded"
-            >{{emailError}}</span>
           </div>
           <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.email !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+            :class="
+              errors.length > 0 && isError('email')
+                ? 'border-red-600'
+                : 'focus:border-yellow-500'
+            "
             id="email"
             type="text"
             v-model="toPostUser.email"
-            @blur="verifyEmail(toPostUser.email)"
+            @blur="validate('toPostUser.email')"
             placeholder="example@example.com"
           />
+          <div
+            v-if="errors.length > 0 && isError('email')"
+            class="text-red-800 text-xs my-1"
+          >
+            {{ errorMessage("email") }}
+          </div>
           <div class="flex items-center py-1">
             Password
-            <span v-if="passwordError" class="bg-red-600 p-1 ml-4 rounded">{{passwordError}}</span>
+            <span v-if="passwordError" class="bg-red-600 p-1 ml-4 rounded">{{
+              passwordError
+            }}</span>
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.password !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+            :class="
+              `${
+                toPostUser.password !== ''
+                  ? 'focus:border-yellow'
+                  : 'focus:border-red'
+              }`
+            "
             type="password"
             v-model="toPostUser.password"
-            @blur="verifyPassword(toPostUser.password)"
+            @blur="validate('toPostUser.password')"
             placeholder="Password"
           />
           <div class="flex items-center py-1">
@@ -152,37 +231,59 @@
             <span
               v-if="confirmPasswordError"
               class="bg-red-600 p-1 ml-4 rounded"
-            >{{confirmPasswordError}}</span>
+              >{{ confirmPasswordError }}</span
+            >
           </div>
           <input
             class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="`${toPostUser.password_confirmation !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+            :class="
+              `${
+                toPostUser.password_confirmation !== ''
+                  ? 'focus:border-yellow'
+                  : 'focus:border-red'
+              }`
+            "
             type="password"
             v-model="toPostUser.password_confirmation"
-            @blur="verifyConfirmPassword(toPostUser.password, toPostUser.password_confirmation)"
+            @blur="validate('toPostUser.password_confirmation')"
             placeholder="Password"
           />
           <div v-if="adminCreate">
-            <div class="flex items-center justify-between py-1">Role
-              <span v-if="!toPostUser.role_id" class="bg-red-500 p-1 ml-4 rounded">Required</span>
+            <div class="flex items-center justify-between py-1">
+              Role
+              <span
+                v-if="!toPostUser.role_id"
+                class="bg-red-500 p-1 ml-4 rounded"
+                >Required</span
+              >
             </div>
-            <select 
+            <select
               v-model="toPostUser.role_id"
               class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
-              :class="`${toPostUser.role_id !== '' ? 'focus:border-yellow-500' :'focus:border-red-600'}`"
+              :class="
+                `${
+                  toPostUser.role_id !== ''
+                    ? 'focus:border-yellow-500'
+                    : 'focus:border-red-600'
+                }`
+              "
             >
               <option value disabled selected>Select Role</option>
-              <option v-for="(role, index) in adminRoles "
-              :key="index"
-              :value="role.id">
+              <option
+                v-for="(role, index) in adminRoles"
+                :key="index"
+                :value="role.id"
+              >
                 {{ role.name }}
               </option>
             </select>
           </div>
           <button
             class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
-            @click.prevent="checkForm(toPostUser,toPostUser.surgery_id)"
-          >Create</button>
+            @click.prevent="checkForm(toPostUser, toPostUser.surgery_id)"
+          >
+            Create
+          </button>
         </div>
       </div>
     </div>
@@ -209,7 +310,7 @@ export default {
       specificPractice: [],
       practiceTypes: "",
       multiple: "true",
-      adminRoles:[],
+      adminRoles: [],
       toPostUser: {
         email: "",
         password: "",
@@ -223,12 +324,13 @@ export default {
         practice_type_id: [],
         parent_surgery_id: "",
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
-        role_id: ''
+        role_id: ""
       }
     };
   },
   async created() {
-    console.log("Route name: ",this.$route.name) 
+    console.log("Errors", this.errors);
+    console.log("Route name: ", this.$route.name);
     console.log("surgery", this.surgery);
     console.log("practice", this.practice);
     await this.$axios
@@ -246,11 +348,9 @@ export default {
           text: "Something went wrong!"
         });
       });
-    await this.$axios
-      .$get(`/api/v1/admin/admin-roles`)
-      .then(res => {
-        this.adminRoles = res.data.roles
-      })
+    await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
+      this.adminRoles = res.data.roles;
+    });
     console.log("prac types", this.practiceTypes);
     if (this.practice) {
       console.log("Practice to be created is a spoke");
@@ -298,86 +398,104 @@ export default {
       console.log("payload", payload);
       this.$store.commit("practices/UPDATE_PRACTICE_USERS_PAGE_COUNT", payload);
     },
-    verifyEmail: function(inputEmail) {
-      this.emailError = "";
-
-      if (!inputEmail) {
-        this.emailError = "Required";
-      } else if (!this.validEmail(inputEmail)) {
-        this.emailError = "Please input a Valid E-Mail Address";
-      }
+    isError(field) {
+      return this.errors.filter(error => error.field === field.toString());
     },
-    verifyFirstName: function(inputFirstName) {
-      this.firstNameError = "";
-
-      if (!inputFirstName) {
-        this.firstNameError = "Required";
+    errorMessage(field) {
+      if (this.errors.find(error => error.field === field.toString())) {
+        let error = this.errors.find(error => error.field === field.toString());
+        return error.message;
       }
+      return;
     },
-    verifyLastName: function(inputLastName) {
-      this.lastNameError = "";
-
-      if (!inputLastName) {
-        this.lastNameError = "Required";
+    validate(field) {
+      return;
+      let index = this.errors.findIndex(err => err.field === field);
+      if (!field) {
+        this.errors.push({
+          field: field,
+          message: "Required"
+        });
+        console.log(this.errors);
+      } else {
+        console.log("qwewq", index);
+        if (index <= 0) {
+          this.errors.splice(index, 1);
+        }
       }
+      console.log(field, index, !field);
     },
-
-    verifyPassword: function(inputPassword) {
-      this.passwordError = "";
-
-      if (!inputPassword) {
-        this.passwordError = "Please type your password.";
-      } else if (inputPassword < 6) {
-        this.passwordError = "Password must be at least 6 characters";
-      }
-    },
-
-    verifyConfirmPassword: function(inputPassword, inputConfirmPassword) {
-      this.confirmPasswordError = "";
-
-      if (!inputConfirmPassword) {
-        this.confirmPasswordError = "Please type again your new password.";
-      } else if (inputConfirmPassword !== inputPassword) {
-        this.confirmPasswordError = "Passwords do not match";
-      } else if (inputPassword < 6 || inputConfirmPassword < 6) {
-        this.confirmPasswordError = "Password must be at least 6 characters";
-      }
-    },
-
-    checkForm: function(userInfo, surgID) {
-      this.errors = [];
+    validation(userInfo) {
       if (!userInfo.first_name) {
-        this.errors.push("Please input your First Name.");
+        this.errors.push({
+          field: "first_name",
+          message: "Please input your First Name"
+        });
       }
 
       if (!userInfo.last_name) {
-        this.errors.push("Please input your Last Name");
+        this.errors.push({
+          field: "last_name",
+          message: "Please input your Last Name"
+        });
       }
 
       if (!userInfo.email) {
-        this.errors.push("Please input your E-mail");
-      } else if (!this.validEmail(userInfo.email)) {
-        this.errors.push("Please input a Valid E-Mail Address");
+        this.errors.push({
+          field: "email",
+          message: "Please input your E-mail"
+        });
+      } if (userInfo.email) {
+        let index = this.errors.findIndex(err => err.name === "email");
+        this.errors.splice(index, 1);
       }
 
+      if (userInfo.email && this.validEmail(userInfo.email)) {
+        this.errors.push({
+          field: "email",
+          message: "Please input a Valid E-Mail Address"
+        });
+      } else {
+        let index = this.errors.findIndex(err => err.name === "email");
+        this.errors.splice(index, 1);
+      }
+
+      console.log(
+        "find email",
+        this.errors.map(err => err.field === "email"),
+        this.errors
+      );
+
       if (!userInfo.password) {
-        userInfo.password = "";
-        this.errors.push("Please type your new password.");
+        // userInfo.password = "password";
+        this.errors.push({
+          field: "password",
+          message: "Please type your new password"
+        });
+      } else if (userInfo.password.length < 6) {
+        this.errors.push({
+          field: "password",
+          message: "Password must be at least 6 characters"
+        });
       }
 
       if (!userInfo.password_confirmation) {
-        userInfo.password_confirmation = "";
-        this.errors.push("Please type again your new password.");
+        // userInfo.password_confirmation = ;
+        this.errors.push({
+          field: "password_confirmation",
+          message: "Please type again your new password"
+        });
+      } else if (userInfo.password_confirmation !== userInfo.password) {
+        this.errors.push({
+          field: "password_confirmation",
+          message: "Please ensure that inputted passwords match"
+        });
       }
-
-      if (userInfo.password_confirmation !== userInfo.password) {
-        this.errors.push("Please ensure that inputted passwords match.");
-      }
-
-      if (userInfo.password.length < 6 || userInfo.password_confirmation < 6) {
-        this.errors.push("Password must be at least 6 characters");
-      }
-
+    },
+    checkForm: function(userInfo, surgID) {
+      this.errors = [];
+      this.validation(userInfo);
+      console.log("count", this.errors.length);
       if (!this.errors.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -416,7 +534,7 @@ export default {
                 status: "success",
                 text: "New Practice User Created"
               });
-            this.$emit('userCreated')
+              this.$emit("userCreated");
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
@@ -440,7 +558,7 @@ export default {
                 status: "success",
                 text: "Added new user"
               });
-            this.$emit('userCreated')
+              this.$emit("userCreated");
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
@@ -462,7 +580,7 @@ export default {
                 status: "success",
                 text: "New Admin Account Successfully Created"
               });
-            this.$emit('userCreated')
+              this.$emit("userCreated");
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
@@ -486,5 +604,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
