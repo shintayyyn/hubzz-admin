@@ -23,15 +23,15 @@ export default {
         }
     },
     computed:{
-        practice(){
-            return this.$store.state.practices.practice
-        },
-        practiceHub(){
-            return this.$store.state.practices.practiceHub
-        },
-        practiceParent(){
-            return this.$store.state.practices.practiceParent
-        }
+      practice(){
+        return this.$store.state.practices.practice
+      },
+      practiceHub(){
+        return this.$store.state.practices.practiceHub
+      },
+      practiceParent(){
+        return this.$store.state.practices.practiceParent
+      }
     },
     async asyncData({ app, store, route, error }){
       try{
@@ -39,16 +39,14 @@ export default {
         //Practice Parent is the Practice's data as a Specific Practice
         let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
         const practice = response.data.data.practice
-
+        
         response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
         const practiceHub = response.data.data.practice
-              
-        let practiceParent = ''
-        if (practiceHub.parent_surgery && practiceHub.parent_surgery.practice) {
-            response = await app.$axios.get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
-            practiceParent = response.data.data.practice
-            await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
-        }
+      
+        response = await app.$axios.get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
+        const practiceParent = response.data.data.practice
+        await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
+        
         await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
         await store.commit('practices/SET_PRACTICE_HUB',practiceHub)
       

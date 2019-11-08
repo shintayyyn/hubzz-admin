@@ -15,6 +15,14 @@
       :key="`surgery-${index}`"
       class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
     >
+      <div v-if="document.practiceSpecificDoc" class="p-2 m-2 bg-green-500 rounded-lg">
+        <svgicon
+          name="circle-check"
+          width="23"
+          height="23"
+          color="white"
+          />
+      </div>
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
         <strong class="block md:hidden text-sm uppercase">Title</strong>
         <span
@@ -33,7 +41,6 @@
           class="break-all"
         >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.created_at ? $moment(document.practiceSpecificDoc.updated_at ? document.practiceSpecificDoc.updated_at : document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null }}</span>
       </div>
-
       <div class="w-full md:w-1/4 py-2  flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Upload New File</strong>
         <div
@@ -65,6 +72,7 @@
               <svgicon name="folder" width="16" height="16" color="white white"></svgicon>
               <span class="pl-2">View</span>
             </nuxt-link>
+            
           </div>
         </div>
       </div>

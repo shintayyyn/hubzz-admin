@@ -3,11 +3,12 @@
       <div class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg" style="max-width: 600px">
         <div v-if="toEdit == false" class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2">
           <button
-              v-if="authAdminPermissions.includes('Edit Practice Rates')"
-              class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
-              @click="toEdit = true"
-              >Edit
-            </button>
+            v-if="authAdminPermissions.includes('Edit Practice Rates')"
+            class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
+            @click="toEdit = true"
+            >
+            {{practice.rates.length > 0 ? 'Edit': 'Add'}}
+          </button>
           <div class="flex py-1">
             GP Rate
           </div>
