@@ -141,25 +141,25 @@
       </form>
     </div>
     <div v-if="!practiceParent && practiceHub">
-          <form class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg sm:w-full lg:w-2/3">
-            <div class="m-4">
-              <div class="inline-flex text-lg">
-                <div class="flex">
-                  <svgicon name="alert" width="48" height="48" color="white"/>
-                </div>
-                <div class="flex">
-                  <p v-if="practiceHub.parent_surgery" class="mt-4">This surgery is not yet a registered practice in HUBZZ.</p>
-                  <p v-else>This practice has no Hub yet.</p>
-                </div>
-              </div>
+      <form class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg sm:w-full lg:w-2/3">
+        <div class="m-4">
+          <div class="inline-flex text-lg">
+            <div class="flex">
+              <svgicon name="alert" width="48" height="48" color="white"/>
             </div>
-            <div v-if="practiceHub.parent_surgery" class="text-gray-300 text-sm m-4">
-              <p class="font-semibold">Surgery Name</p>
-              <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.name : ''}}</p>
-              <p class="font-semibold">Surgery Code</p>
-              <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.code : ''}}</p>
+            <div class="flex">
+              <p v-if="practiceHub.parent_surgery" class="mt-4">This surgery is not yet a registered practice in HUBZZ.</p>
+              <p v-else>This practice has no Hub yet.</p>
             </div>
-          </form>
+          </div>
+        </div>
+        <div v-if="practiceHub.parent_surgery" class="text-gray-300 text-sm m-4">
+          <p class="font-semibold">Surgery Name</p>
+          <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.name : ''}}</p>
+          <p class="font-semibold">Surgery Code</p>
+          <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.code : ''}}</p>
+        </div>
+      </form>
     </div>
         
     <div class="practice-shield" v-if="modal == true" @click="modal=false"></div>

@@ -445,7 +445,7 @@ export default {
       //         surgery_id:surgeryId
       //       }).then(async res=>{
       //         await this.getPracticeHub(this.practice.id)
-      //         await this.getPracticeParent(parentId)
+      //         await this.getPracticeParent(parentId)c
       //         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Added'})
       //       })
       //     }

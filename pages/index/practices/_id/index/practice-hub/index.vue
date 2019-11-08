@@ -42,11 +42,15 @@ export default {
         
         response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
         const practiceHub = response.data.data.practice
-      
-        response = await app.$axios.get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
-        const practiceParent = response.data.data.practice
+        let practiceParent = ''
+        console.log('practice hub', practiceHub)
+        if (practiceHub.parent_surgery && practiceHub.parent_surgery.practice) {
+            response = await app.$axios.get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
+            practiceParent = response.data.data.practice
+            await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
+        }
+
         await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
-        
         await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
         await store.commit('practices/SET_PRACTICE_HUB',practiceHub)
       
