@@ -76,7 +76,7 @@
 				<div class="align-middle px-2 text-center w-1/6">Compliance Status</div>
 			</div>
 			<div v-if="locumUsers.length === 0" class="text-gray-500 leading-tight text-center py-4">No results found for {{search}}<br/>Try another keyword</div>
-      		<transition-group name="slide" tag="p">
+      		<!-- <transition-group name="fade" tag="p"> -->
 				<nuxt-link
 					v-for="(locumUser, index) in locumUsers" 
 					:key="`locumUser-${index}`" 
@@ -106,7 +106,7 @@
 							<span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" :class="complianceStatusStyle(locumUser.compliance_status)">{{ locumUser.compliance_status  }}</span>
 						</div>
 				</nuxt-link>
-      		</transition-group>
+      		<!-- </transition-group> -->
 		</div>
 		<!-- PAGINATION -->
 		<div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
@@ -147,6 +147,7 @@
 </template>
 
 <script>
+import debounce from "lodash.debounce";
 import AppLoading from '@/components/Base/AppLoading'
 export default {
 	components:{
@@ -358,14 +359,14 @@ export default {
 			});
 		},
 		async sortBy(sortedBy,page,search,compliance_status) {
-      if(this.sortedBy == sortedBy && this.sortType == true){
-        this.paramSort.order_by ='created_at:desc'
-        this.sortedBy = ''
-      }else{
-        this.sortedBy = sortedBy
-        this.sortType = !this.sortType
-        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-      }
+			if(this.sortedBy == sortedBy && this.sortType == true){
+				this.paramSort.order_by ='created_at:desc'
+				this.sortedBy = ''
+			}else{
+				this.sortedBy = sortedBy
+				this.sortType = !this.sortType
+				this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+			}
 			let order_by = await this.paramSort.order_by
 			console.log(order_by)
 			let query = {
@@ -453,7 +454,7 @@ export default {
 			this.$router.push({ query })
 		},
 
-		searchSubmit(page,order_by,compliance_status) {
+		searchSubmit: debounce(function(page,order_by,compliance_status) {
 			let search= this.search
 
 			let query = {...this.$router.query,search}
@@ -492,7 +493,7 @@ export default {
 			}
 
 			this.$router.push({ query })
-		},
+		}, 500),
 
 		statusStyle(status){
 			switch(status){
@@ -500,16 +501,16 @@ export default {
 					return 'bg-green-500 text-white'
 					break;
 				case 'Inactive':
-					return 'bg-gray-500 text-black'
+					return 'bg-gray-500 text-gray-700'
 					break;
 				case 'Deactivated':
-					return 'bg-gray-500 text-black opacity-75'
+					return 'bg-red-800 text-red-400'
 					break;
 				case 'Suspended':
-					return 'bg-red-700 text-red-300'
+					return 'bg-red-600 text-white'
 					break;
 				case 'Dormant':
-					return 'bg-green-500 text-green-800'
+					return 'bg-orange-500 text-white'
 					break;
 				default:
 					return
@@ -521,19 +522,19 @@ export default {
 					return 'border border-white text-white'
 					break;
 				case 'Incomplete':
-					return 'bg-yellow-400 text-black'
+					return 'bg-orange-600 text-white'
 					break;
 				case 'Pending':
-					return 'bg-yellow-500 text-white'
+					return 'bg-gray-500 text-gray-800'
 					break;
 				case 'Expiring':
-					return 'bg-red-600 text-white'
+					return 'bg-red-400 text-white'
 					break;
 				case 'Expired':
-					return 'bg-red-700 text-red-300'
+					return 'bg-red-800 text-red-400'
 					break;
 				case 'Rejected':
-					return 'bg-yellow-700 text-white'
+					return 'bg-red-600 text-white'
 					break;
 				case 'Compliant':
 					return 'bg-green-500 text-white'

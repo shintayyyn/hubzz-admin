@@ -121,12 +121,24 @@ module.exports = {
         800: "#97266d",
         900: "#702459"
       },
+      orange: {
+        100: "#FFF5E6",
+        200: "#FFE6BF",
+        300: "#FFD799",
+        400: "#FFB84D",
+        500: "#FF9A00",
+        600: "#E68B00",
+        700: "#995C00",
+        800: "#734500",
+        900: "#4D2E00"
+      },
       sunglow: "#FFC72C",
       "sunglow-dark": "#e4b32b",
       waterloo: "#7B8396",
       "waterloo-light": "#9ba2b1",
       trout: "#505561",
-      charade: "#2C2F38"
+      charade: "#2C2F38",
+      "charade-dark": "#1b1d22"
     },
 
     screens: {
