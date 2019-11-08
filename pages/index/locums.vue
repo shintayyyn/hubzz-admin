@@ -173,24 +173,6 @@ export default {
 			email_verified_at: true
 		}
 	},
-	// beforeCreate() {
-    // 	
-	  // },
-	created() {
-		// console.log('created')
-		// console.log('process.client', process.client)
-		// console.log('process.server', process.server)
-	},
-
-	mounted() {
-		// console.log('mounted')
-		// this.$socket.on('usersDeleted', this.usersDeletedHandler)
-	},
-
-	destroyed() {
-		// console.log('destroyed')
-		// this.$socket.off('usersDeleted', this.usersDeletedHandler)
-	},
 	watchQuery: [
 	'page',
 	'search',

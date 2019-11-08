@@ -69,7 +69,7 @@
         <div>
           <!--TABLE-->
           <!-- BODY -->
-          <div v-if="!practice || (practice && practice.type == 'Hub')">
+          <div v-if="!practice">
             <!--IF PRACTICE IS A HUB / NEW PRACTICE IS BEING CREATED-->
             <transition-group name="slide" tag="p">
               <div
@@ -158,6 +158,26 @@
               </div>
             </transition-group>
           </div>
+
+          <div v-if="practice && practice.type == 'Hub'">
+            <!--IF PRACTICE IS A SPOKE-->
+            <div
+              v-for="(spoke, index) in spokes"
+              :key="`spoke-${index}`"
+              @click="changeParent(spoke.surgery.id, spoke.id)"
+              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
+            >
+              <div class="flex flex-col text-white text-xs">
+                <!-- <span class="font-hairline">{{"I AM THE ID "+spoke.id}}</span> -->
+                <span class="font-bold">{{ spoke.surgery.name }}</span>
+                <div class="flex items-center my-1">
+                  <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
+                  <span>{{ spoke.surgery.code }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!--TABLE ENDS HERE-->
         </div>
       </div>
@@ -207,6 +227,7 @@ export default {
       surgery: null,
       search: "",
       hubzz: [],
+      spokes: [],
       hub: null,
       practiceCount: null,
       modal: false,
@@ -229,6 +250,7 @@ export default {
       this.currentPage = parseInt(to.query.add_practice_page);
       this.getAllSurgeries();
       this.getAllHubzz();
+      this.getAllSpokes();
     },
     search(value) {
       this.searchSubmit();
@@ -236,6 +258,7 @@ export default {
   },
 
   created() {
+    console.log('practice hub', this.practice)
     const query = {
       ...this.$route.query,
       add_practice_page: this.$route.query.add_practice_page || 1
@@ -283,6 +306,7 @@ export default {
         payload
       );
     },
+
     async getData() {
       const limit = this.perPage;
       let offset = 0;
@@ -302,10 +326,17 @@ export default {
             this.totalPages = Math.ceil(this.total / this.perPage);
             this.getAllHubzz();
           });
-      } else if (
-        !this.practice ||
-        (this.practice && this.practice.type === "Hub")
-      ) {
+      } else if ((this.practice && this.practice.type == "Hub")) {
+        params.type = "Spoke";
+        await this.$axios
+          .$get(`/api/v1/admin/practices/count`, { params })
+          .then(res => {
+            this.total = res.data.count;
+            this.perPage = 8;
+            this.totalPages = Math.ceil(this.total / this.perPage);
+            this.getAllSpokes();
+          });
+      } else if (!this.practice) {
         await this.$axios
           .$get(`/api/v1/admin/surgeries/count`, { params })
           .then(res => {
@@ -316,6 +347,7 @@ export default {
           });
       }
     },
+
     async getAllSurgeries() {
       this.loading = true;
       const limit = this.perPage;
@@ -334,7 +366,12 @@ export default {
         });
       this.loading = false;
     },
+<<<<<<< HEAD
     searchSubmit: debounce(async function() {
+=======
+
+    async searchSubmit() {
+>>>>>>> 692f277a6080a2d90e77523f85ae4b72688ba77f
       const query = {
         ...this.$route.query
       };
@@ -345,7 +382,12 @@ export default {
       if (this.search === "") {
         delete query.search;
       }
+<<<<<<< HEAD
     }, 500),
+=======
+    },
+
+>>>>>>> 692f277a6080a2d90e77523f85ae4b72688ba77f
     async getAllHubzz() {
       this.loading = true;
       const limit = this.perPage;
@@ -365,6 +407,22 @@ export default {
         });
       this.loading = false;
     },
+
+    async getAllSpokes() {
+      this.loading = true;
+      let offset = 0;
+      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      await this.$axios
+        .$get(
+          `/api/v1/admin/practices?type=Spoke&limit=${this.perPage}&offset=${offset}`
+        )
+        .then(res => {
+          this.spokes = res.data.practices;
+        });
+      console.log("spokes", this.spokes);
+      this.loading = false;
+    },
+
     async newHubOrSpoke(surgeryId) {
       if (!this.practice || (this.practice && this.practice.type == "Hub")) {
         await this.$axios
