@@ -425,32 +425,32 @@ export default {
       }
       console.log(field, index, !field);
     },
-    validation(userInfo) {
-      if (!userInfo.first_name) {
+    validation() {
+      if (!this.toPostUser.first_name) {
         this.errors.push({
           field: "first_name",
           message: "Please input your First Name"
         });
       }
 
-      if (!userInfo.last_name) {
+      if (!this.toPostUser.last_name) {
         this.errors.push({
           field: "last_name",
           message: "Please input your Last Name"
         });
       }
 
-      if (!userInfo.email) {
+      if (!this.toPostUser.email) {
         this.errors.push({
           field: "email",
           message: "Please input your E-mail"
         });
-      } if (userInfo.email) {
+      } if (this.toPostUser.email) {
         let index = this.errors.findIndex(err => err.name === "email");
         this.errors.splice(index, 1);
       }
 
-      if (userInfo.email && this.validEmail(userInfo.email)) {
+      if (this.toPostUser.email && this.validEmail(this.toPostUser.email)) {
         this.errors.push({
           field: "email",
           message: "Please input a Valid E-Mail Address"
@@ -466,38 +466,38 @@ export default {
         this.errors
       );
 
-      if (!userInfo.password) {
-        // userInfo.password = "password";
+      if (!this.toPostUser.password) {
+        // this.toPostUser.password = "password";
         this.errors.push({
           field: "password",
           message: "Please type your new password"
         });
-      } else if (userInfo.password.length < 6) {
+      } else if (this.toPostUser.password.length < 6) {
         this.errors.push({
           field: "password",
           message: "Password must be at least 6 characters"
         });
       }
 
-      if (!userInfo.password_confirmation) {
-        // userInfo.password_confirmation = ;
+      if (!this.toPostUser.password_confirmation) {
+        // this.toPostUser.password_confirmation = ;
         this.errors.push({
           field: "password_confirmation",
           message: "Please type again your new password"
         });
-      } else if (userInfo.password_confirmation !== userInfo.password) {
+      } else if (this.toPostUser.password_confirmation !== this.toPostUser.password) {
         this.errors.push({
           field: "password_confirmation",
           message: "Please ensure that inputted passwords match"
         });
       }
     },
-    checkForm: function(userInfo, surgID) {
+    checkForm: function(surgID) {
       this.errors = [];
-      this.validation(userInfo);
+      this.validation(this.toPostUser);
       console.log("count", this.errors.length);
       if (!this.errors.length) {
-        this.toPostUserInfo(userInfo, surgID);
+        this.toPostUserInfo(this.toPostUser, surgID);
       }
     },
 

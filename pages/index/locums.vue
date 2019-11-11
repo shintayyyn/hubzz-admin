@@ -14,6 +14,7 @@
 				</div>
 				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button> -->
 			</div>
+      <!-- FILTER SELECTS -->
 			<div class="flex w-full justify-end">
 				<div class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end p-2 md:py-0">
 					<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
@@ -45,6 +46,7 @@
 					</select>
 				</div>
 			</div>
+      <!-- FILTER SELECTS END HERE -->
 		</div>
 		<div class="w-full px-6">
       		<div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -227,7 +229,6 @@ export default {
 			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
 			console.log('Get locums error!', err)
 		}
-		
 	},
 
 	computed: {
@@ -548,8 +549,6 @@ export default {
 			console.log('usersDeletedHandler', userId)
 		}
 	},
-
-	
 }
 </script>
 <style>

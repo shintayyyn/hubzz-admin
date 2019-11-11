@@ -2,14 +2,17 @@
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-auto">
     <div class="text-2xl md:text-4xl text-white">Billing</div>
     <div class="text-sm mb-4 text-white">Work in progress.</div>
-    <div>
-      <nuxt-link
-        to="/billings/addinvoice"
-        class="inline-flex no-underline py-2 px-4 my-1 md:mb-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
-      >Add Invoice</nuxt-link>
+    <div class="flex">
+      <div class="flex">
+        <nuxt-link
+          to="/billings/addinvoice"
+          class="inline-flex no-underline py-2 px-4 my-1 md:mb-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
+        >Add Invoice</nuxt-link>
+      </div>
     </div>
+    
     <!-- TABLE RESPONSIVE-->
-    <div class="w-full text-md"> 
+    <div v-if="invoiced==true" class="w-full text-md"> 
       <!-- HEADER -->
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
         <div class="flex-1  align-middle px-2">Invoice Number</div> 
@@ -23,43 +26,43 @@
       <!-- END HEADER -->
       <!-- BODY -->
       <nuxt-link
-        v-for="(billing, index) in billings"
+        v-for="(practiceInvoice, index) in practiceInvoices"
         :key="`billing-${index}`"
-        :to="`/billings/${billing.id}`"
+        :to="`/billings/${practiceInvoice.id}`"
         class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
         draggable="false"
       >
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
           <strong class="block md:hidden text-xs uppercase">Invoice Number</strong>
-          <span class="break-all">{{ billing.invnum }}</span>
+          <span class="break-all">{{ practiceInvoice.invoice_number }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">Practice / Surgery</strong>
-          <span class="break-word">{{ billing.practice }}</span>
+          <span class="break-word">{{ practiceInvoice.practice.surgery.name }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">Created</strong>
-          <span class="break-all">{{ billing.created }}</span>
+          <span class="break-all">{{ $moment(practiceInvoice.date_created).format('MMM DD, YYYY | HH:ss:mm') }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">Issued</strong>
-          <span class="break-all">{{ billing.issued }}</span>
+          <span class="break-all">{{ $moment(practiceInvoice.issued_at).format('MMM DD, YYYY | HH:SS:MM') }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
           <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-          <span v-for="(item, index) in billing.jobnums" :key="index" class="">{{ item }}</span>
+          <span v-for="(item, index) in practiceInvoice.practice_invoice_items" :key="index" class="">{{ item }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-          <span class="break-all">{{ billing.amount }}</span>
+          <span class="break-all">{{ practiceInvoice.total_amount }}</span>
         </div>
         <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">Status</strong>
-          <span>{{ billing.status }}</span>
-          <div class="py-4" v-if="billing.status=='Issued'">
+          <!-- <span>{{ practiceInvoice.status }}</span> -->
+          <div class="py-4" v-if="!practiceInvoice.paid && !practiceInvoice.paid_at">
             <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>
           </div>
-          </div>
+        </div>
       </nuxt-link>
       <!-- END BODY -->
     </div>
@@ -106,8 +109,39 @@ export default {
             amount: "£100.00",
             status: "Paid"
         }
-      ]
+      ],
+      toBeInvoicedCount: '',
+      practicesToBeInvoiced: [],
+      practiceInvoicesCount: '',
+      practiceInvoices: [],
+      invoiced:true,
     };
+  },
+  async asyncData({ app, route, store }){
+    try{
+      let response =  await app.$axios.get(`/api/v1/admin/practices-to-be-invoiced/count`)
+      const toBeInvoicedCount = response.data.data.count
+      
+      response = await app.$axios.get(`/api/v1/admin/practices-to-be-invoiced`)
+      const practicesToBeInvoiced = response.data.data.practices
+    
+      response = await app.$axios.get(`/api/v1/admin/practice-invoices/count`)
+      const practiceInvoicesCount = response.data.data.count
+
+      response = await app.$axios.get(`/api/v1/admin/practice-invoices`)
+      const practiceInvoices = response.data.data.practice_invoices
+
+      return{
+        toBeInvoicedCount,
+        practicesToBeInvoiced,
+        practiceInvoicesCount,
+        practiceInvoices
+      }
+    }catch(err){
+      error({ statusCode: 404 })
+      console.log('Get invoices error!', err)
+    }
+    
   },
   methods: {
 	goToPage(page) {
