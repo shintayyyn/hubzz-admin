@@ -39,32 +39,33 @@
         >
           <div class="flex justify-center items-center md:w-10 align-middle md:text-center" v-if="deleteAdminUser == true ">
             <svgicon
-              v-if="$auth.user.id != user.id && !user.admin_detail.role.name.includes('God')"
+              v-if="$auth.user.id != user.id"
               @click.prevent="toDeleteAdminUser(user.id)"
               name="delete-user"
               width="21"
               height="21"
               class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
             />
-            <span v-else-if="$auth.user.id === user.id" class="hidden md:inline text-sm text-gray-500">You</span>
-            <span v-else-if="user.admin_detail && user.admin_detail.role.name.includes('God')" class="hidden md:inline text-sm text-yellow-500">God</span>
+            <span v-if="$auth.user.id === user.id" class="hidden md:inline text-sm text-gray-500">You</span>
+            <!-- <span v-if="user.admin_detail.role && user.admin_detail.role.name.includes('God')" class="hidden md:inline text-sm text-yellow-500">God</span> -->
           </div>
+
           <nuxt-link :to="{ path: `/user-management/${user.id}`,query: $route.query}" 
-          class="w-full flex flex-col md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
-          >
+            class="w-full flex flex-col md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+            >
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
               <strong class="block md:hidden text-xs uppercase">E-Mail</strong>
               <span class="break-word">{{ user && user.email ? user.email : null }} </span>
             </div>
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3">
               <strong class="block md:hidden text-xs uppercase">Role</strong>
-              <span class="break-all">{{ user && user.admin_detail ? user.admin_detail.role.name : null }}</span>
+              <span class="break-all">{{ user && user.admin_detail && user.admin_detail.role && user.admin_detail.role.name ? user.admin_detail.role.name : null }}</span>
             </div>
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3">
               <strong class="block md:hidden text-xs uppercase">Name</strong>
               <span class="break-all">{{ user && user.personal_detail ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}` : null }}</span>
             </div>
-            </nuxt-link>
+          </nuxt-link>
         </div>
         <!-- END BODY -->
     </div>
@@ -184,7 +185,6 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
         return this.$store.state.adminusers.itemCount
       },
       adminUsers(){
-        console.log("asd", this.$store.getters["adminusers/getAdminUsers"])
         return this.$store.getters["adminusers/getAdminUsers"]
       },
       authAdminPermissions() {

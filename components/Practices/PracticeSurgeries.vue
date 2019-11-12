@@ -39,7 +39,8 @@
           <div v-if="deleteSurgery == true" class="px-6"></div> 
           <div class="w-1/2">Practice Name</div> 
           <div class="w-1/2">Practice Code</div>
-          <!-- <div class="table-cell p-2 align-middle">Practice Location</div> -->
+          <div class="w-1/2">Invited At</div>
+          <div class="w-1/2">Status</div>
         </div>
         <!-- END HEADER -->
         <!-- BODY -->
@@ -59,6 +60,7 @@
                     />
                 </div>
               </div>
+              <!-- TABLE -->
               <nuxt-link 
                 :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}` }" 
               >
@@ -71,6 +73,17 @@
                     <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code</strong>
                     <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</span>
                   </div>
+                   <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+                    <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Invited At</strong>
+                    <span class=" break-all">{{ childSurgery ? $moment(childSurgery.created_at).format('MMM-DD-YYYY | HH:mm:ss') :null }}</span>
+                  </div>
+                  <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+                    <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Status</strong>
+                    <span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" 
+                    :class="statusStyle(checkStatus(childSurgery))">
+                      {{ checkStatus(childSurgery) }}
+                    </span>
+                  </div>
                   <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Practice Location</strong>
                     <div class="text-white text-sm px-2 py-1">
@@ -81,6 +94,7 @@
                   </div> -->
                 </div>
               </nuxt-link>
+              <!-- TABLE ENDS HERE-->
               <transition name="fade" mode="out-in">
                 <div class="confirm-termination-modal shadow-lg" v-if="showTerminationModal==true">
                   <div class="p-2 m-4 text-white">
@@ -250,8 +264,46 @@ export default {
       }
       this.$router.push({ query })
       this.getChildren()
-    }
-  }
+    },
+    statusStyle(status){
+			switch(status){
+				case 'Active':
+					return 'bg-green-500 text-white'
+					break;
+				case 'Rejected':
+					return 'bg-gray-500 text-gray-700'
+					break;
+				case 'Termination Requested':
+          return 'bg-orange-500 text-white'
+					break;
+				case 'Terminated':
+					return 'bg-red-800 text-red-400'
+					break;
+				default:
+					return 'bg-yellow-400 text-black'
+			}
+    },
+    checkStatus(invitation){
+      console.log('invitation', invitation)
+      let result = 'Invited'
+      if(invitation.invitation_accepted_at){
+        result = 'Active'
+      }
+      
+      if(invitation.invitation_rejected_at){
+        result = 'Rejected'
+      }
+      
+      if(invitation.termination_requested_at){
+        result = 'Termination Requested'
+      }
+      
+      if(invitation.terminated_at){
+        result = 'Terminated'
+      }
+      return result
+    },
+  },
 }
 </script>
 <style>

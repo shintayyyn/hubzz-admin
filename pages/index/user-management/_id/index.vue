@@ -35,7 +35,7 @@
         <p class="font-semibold">Name</p>
         <p class="mx-1 mb-2">{{user.personal_detail.name}}</p>
         <p class="font-semibold">Role</p>
-        <p class="mx-1">{{user.admin_detail ? user.admin_detail.role.name : 'N/A'}}</p>
+        <p class="mx-1">{{user.admin_detail.role ? user.admin_detail.role.name : 'N/A'}}</p>
 
       </div>
     </div>

@@ -35,7 +35,7 @@ export default {
         await this.$axios
           .$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
           .then(() => {
-            // this.getAdminUsers()
+            this.$store.getters["adminusers/getAdminUsers"]
             this.$emit("close");
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
