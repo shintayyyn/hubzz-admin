@@ -113,6 +113,7 @@
                     <div class="flex w-1/2 my-4 cursor-pointer">
                       <div class="flex-1 p-2 mx-2 rounded-lg bg-red-600" @click="toDeleteSurgery(practice.id,childSurgery.id)">Delete Entire Surgery</div>
                       <div class="flex-1 p-2 mx-2 rounded-lg bg-yellow-600" @click="toDeleteParent(childSurgery.practice.id)">Terminate from Parent</div>
+                      <div class="flex-1 p-2 mx-2 rounded-lg bg-green-600" @click="toRejectRequest(childSurgery.id)">Reject Termination Request</div>
                     </div>
                   </div>
                 </div>
@@ -250,9 +251,20 @@ export default {
       }).then( res => {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is Successfully Terminated' })
       }).catch(err => {
-         console.log('delete children error!!!!',err)
+         console.log('remove parent error!!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
+    },
+    async toRejectRequest(childId) {
+      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}/reject-termination-request`)
+        .then( res => {
+          console.log('id', this.practice.id)
+           console.log('child id', childId)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Request is Successfully Rejected' })
+        }).catch(err => {
+          console.log('reject request error!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
     },
     goToChild(link) {
       this.$router.push()
