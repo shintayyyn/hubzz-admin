@@ -195,15 +195,15 @@ export default {
         });
         this.form.permission_id = ids;
         this.$axios.$post(`/api/v1/admin/admin-roles`, this.form).then(res => {
-          this.$emit("addRole", res.data.role);
-          this.$router.push(`/user-management/roles-and-permissions`);
+          this.$emit("addRole", res.data.role),
+          this.$router.push(`/user-management/roles-and-permissions`),
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",
             text: "Role Created Successfully"
-          });
-        });
-        await this.getAdminRoles();
+          }),
+          this.getAdminRoles()
+        })
         this.$emit("close");
       }
     }
