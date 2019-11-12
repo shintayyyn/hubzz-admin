@@ -16,19 +16,6 @@
                   class="mx-1 -my-1"/>
                 </button>
             </div>
-            <!-- <div v-if="deleteSurgery == false && practiceChildren.length>0" class="flex-3 mx-1 whitespace-no-wrap">
-                <button
-                  @click="deleteSurgery = true && practiceChildren.length>0"
-                  class="inline-flex items-center no-underline py-2 px-4 bg-red-600 hover:bg-red-700 text-sm font-semibold text-white rounded-lg shadow float-right"
-                >Delete Surgery
-                  <svgicon
-                  name="garbage"
-                  width="21"
-                  height="21"
-                  color="white white"
-                  class="mx-1 -my-1"/>
-                </button>
-            </div> -->
             <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
                 <button
                   @click="deleteSurgery = false"
@@ -98,12 +85,20 @@
                 <div class="confirm-termination-modal shadow-lg" v-if="showTerminationModal==true">
                   <div class="p-2 m-4 text-white">
                     <div> Hub Requested Termination for This Spoke </div> 
-                    <div>{{childSurgery.termination_requested_at}}</div>
+                    <div>{{$moment(childSurgery.termination_requested_at).format('MMM D, YYYY | HH:MM:ss')}}</div>
                     <div>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</div>
                     <div>{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</div>
-                    <div>{{childSurgery.note}}</div>
-                    <div>
-                      <div class="p-2 rounded-lg bg-red-600" @click="toDeleteSurgery(practice.id,childSurgery.id)">Delete This</div>
+                    <div>{{ childSurgery.practice ? childSurgery.practice.id: null }}</div>
+                    <div>{{ childSurgery.practice ? childSurgery.practice.phone_number: null }}</div>
+                    <div>{{ childSurgery.practice ? childSurgery.practice.report_to: null }}</div>
+                    <div>{{ childSurgery.practice ? childSurgery.practice.email: null }}</div>
+                    <div class="rounded-lg m-2 p-2 bg-charade">
+                      Note from Practice Hub: 
+                      <div class="m-2 ">{{childSurgery.note}}</div>
+                    </div>
+                    <div class="flex w-1/2 my-4 cursor-pointer">
+                      <div class="flex-1 p-2 mx-2 rounded-lg bg-red-600" @click="toDeleteSurgery(practice.id,childSurgery.id)">Delete Entire Surgery</div>
+                      <div class="flex-1 p-2 mx-2 rounded-lg bg-yellow-600" @click="toDeleteParent(childSurgery.practice.id)">Terminate from Parent</div>
                     </div>
                   </div>
                 </div>
@@ -226,12 +221,22 @@ export default {
       })
       this.loadingSurgeries = false
     },
-    async toDeleteSurgery(pracId,childId){
-      await this.$axios.delete(`/api/v1/admin/practices/${pracId}/practice-surgeries/${childId}`).then(res=>{
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Child Surgery Successfully Removed' })
+    async toDeleteSurgery(childId){
+      await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`).then( res => {
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is terminated and Invitation is Successfully Deleted' })
         this.getChildren()
-      }).catch(err=>{
+      }).catch(err => {
         console.log('delete children error!!!!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      })
+    },
+    async toDeleteParent(childPracId){
+      await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
+        practice_id: childPracId
+      }).then( res => {
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is Successfully Terminated' })
+      }).catch(err => {
+         console.log('delete children error!!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },

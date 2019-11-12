@@ -129,7 +129,7 @@
                   <option>Suspended</option>
                   <option>Deactivated</option>
                 </select>
-                <span class="tool" data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified at least verified once since it was created." tabindex="1">
+                <span class="tool" data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified at least once, since the day it was created." tabindex="1">
                   <svgicon
                   name="info"
                   width="21"
