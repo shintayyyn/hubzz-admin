@@ -450,15 +450,15 @@ export default {
         this.errors.splice(index, 1);
       }
 
-      if (this.toPostUser.email && this.validEmail(this.toPostUser.email)) {
-        this.errors.push({
-          field: "email",
-          message: "Please input a Valid E-Mail Address"
-        });
-      } else {
-        let index = this.errors.findIndex(err => err.name === "email");
-        this.errors.splice(index, 1);
-      }
+      // if (this.toPostUser.email && this.validEmail(this.toPostUser.email)) {
+      //   this.errors.push({
+      //     field: "email",
+      //     message: "Please input a Valid E-Mail Address"
+      //   });
+      // } else {
+      //   let index = this.errors.findIndex(err => err.name === "email");
+      //   this.errors.splice(index, 1);
+      // }
 
       console.log(
         "find email",

@@ -197,7 +197,7 @@ export default {
       await this.$axios
         .$get(`/api/v1/admin/admin-roles/`, { params })
         .then(res => {
-          this.$store.commit("adminusers/SET_ADMIN_ROLES", res.data.roles);
+          this.$store.commit("adminusers/SET_ADMIN_ROLES", res.data.roles)
         })
         .catch(err => {
           console.log("get roles error!", err);
@@ -208,6 +208,7 @@ export default {
           });
         });
     },
+
     async toDeleteAdminRole(roleId) {
       await this.$axios
         .delete(`/api/v1/admin/admin-roles/${roleId}`)
@@ -216,7 +217,10 @@ export default {
             enabled: true,
             status: "success",
             text: "Admin Role Successfully Deleted"
-          });
+          })
+          this.$store.dispatch("adminusers/fetchAdminRoles",{
+            limit:10
+          })
         })
         .catch(err => {
           console.log("delete admin role error!!", err);
@@ -226,6 +230,9 @@ export default {
             text: "Something Went Wrong!"
           });
         });
+    },
+    updateList(){
+      
     },
     pagechanged(e) {
       const query = {
@@ -269,7 +276,7 @@ export default {
   }
 }
 
-.multiline-trucate {
+.multiline-truncate {
   display: -webkit-box;
   webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
