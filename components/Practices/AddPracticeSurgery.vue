@@ -258,7 +258,7 @@ export default {
   },
 
   created() {
-    console.log('practice hub', this.practice)
+    console.log("practice hub", this.practice);
     const query = {
       ...this.$route.query,
       add_practice_page: this.$route.query.add_practice_page || 1
@@ -326,7 +326,7 @@ export default {
             this.totalPages = Math.ceil(this.total / this.perPage);
             this.getAllHubzz();
           });
-      } else if ((this.practice && this.practice.type == "Hub")) {
+      } else if (this.practice && this.practice.type == "Hub") {
         params.type = "Spoke";
         await this.$axios
           .$get(`/api/v1/admin/practices/count`, { params })
@@ -366,12 +366,7 @@ export default {
         });
       this.loading = false;
     },
-<<<<<<< HEAD
     searchSubmit: debounce(async function() {
-=======
-
-    async searchSubmit() {
->>>>>>> 692f277a6080a2d90e77523f85ae4b72688ba77f
       const query = {
         ...this.$route.query
       };
@@ -382,12 +377,7 @@ export default {
       if (this.search === "") {
         delete query.search;
       }
-<<<<<<< HEAD
     }, 500),
-=======
-    },
-
->>>>>>> 692f277a6080a2d90e77523f85ae4b72688ba77f
     async getAllHubzz() {
       this.loading = true;
       const limit = this.perPage;
@@ -411,7 +401,8 @@ export default {
     async getAllSpokes() {
       this.loading = true;
       let offset = 0;
-      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      offset =
+        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       await this.$axios
         .$get(
           `/api/v1/admin/practices?type=Spoke&limit=${this.perPage}&offset=${offset}`
