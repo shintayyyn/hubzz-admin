@@ -516,7 +516,8 @@ export default {
 				default:
 					return
 			}
-		},
+    },
+    
 		complianceStatusStyle(status){
 			switch(status){
 				case 'Empty':
