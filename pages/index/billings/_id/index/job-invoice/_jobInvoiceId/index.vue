@@ -5,27 +5,31 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
       </div>
     </div>
-     <div class="max-w-2xl">
-        <div class="flex items-center text-white py-2">
-          <p>Invoice Number: <span class="font-bold">0000000001</span></p>
-          <p class="px-3 py-1 mx-2 rounded text-black bg-green-300 uppercase font-bold">Paid</p>
-        </div>
-        <embed class="object-contain object-top w-full h-full document" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/>
+    <div @click="file()" class="p-4 bg-orange-500">
+      hahahahaa
+    </div>
+    <div ref="content" class="max-w-2xl">
+      <div class="flex items-center text-white py-2">
+        <p>Invoice Number: <span class="font-bold">0000000001</span></p>
+        <p class="px-3 py-1 mx-2 rounded text-black bg-green-300 uppercase font-bold">Paid</p>
       </div>
+      <!-- <embed class="object-contain object-top w-full h-full document" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/> -->
+    </div>
   </div>
 </template>
 <script>
+import jsPDF from 'jspdf'
+import 'jspdf-autotable';
 export default {
   data () {
     return{
-      locum: '',
     }
   },
   async asyncData({ app, route, store }){
     try{
       // let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.locumInvoiceId}`)
       // const locum = response.data.data.locum
-      console.log('this is the "invoice" id:',route.params.locumInvoiceId)
+      console.log('this is the "invoice" id:',route.params.jobInvoiceId)
       return{
         locum
       }
@@ -34,6 +38,23 @@ export default {
     }
   },
   methods:{
+    createFile(){
+      return{}
+      const jsPDF = require('jspdf');
+        require('jspdf-autotable');
+        let doc = new jsPDF
+        doc.text('Hello world!', 10, 10)
+    },  
+    async file(){
+      if (process.browser) {
+        let doc = new jsPDF();
+        const contentHtml = this.$refs.content.innerHTML;
+        doc.fromHTML(contentHtml, 15, 15, {
+          width: 170
+        });
+        doc.save("sample.pdf");
+      }
+    },
     goBack(){
       const query = {
         ...this.$route.query

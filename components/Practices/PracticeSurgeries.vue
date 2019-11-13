@@ -7,7 +7,7 @@
                 <button
                   @click="show()"
                   class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
-                >Invite Spoke for this Hub
+                >Add Spoke for this Hub
                   <svgicon
                   name="add-rectangle"
                   width="21"

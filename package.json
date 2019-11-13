@@ -23,6 +23,7 @@
     "dotenv": "^7.0.0",
     "highlight.js": "^9.15.9",
     "jspdf": "^1.5.3",
+    "jspdf-autotable": "^3.2.10",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.24.0",
     "nuxt": "^2.8.1",

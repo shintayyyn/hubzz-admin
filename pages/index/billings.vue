@@ -18,15 +18,12 @@
       <div
         class="hidden md:flex items-center text-white justify-around font-semibold"
       >
-        <div class="flex-1  align-middle px-2">Invoice Number</div>
-        <div class="flex-1  align-middle px-2 text-center">
-          Practice / Surgery
-        </div>
-        <div class="flex-1  align-middle px-2 text-center">Created</div>
-        <div class="flex-1  align-middle px-2 text-center">Issued</div>
-        <div class="flex-1  align-middle px-2 ">Job Numbers</div>
-        <div class="flex-1  align-middle px-2 text-center">£ Amount</div>
-        <div class="flex-1  align-middle px-2 text-center">Status</div>
+        <div class="flex-1 align-middle px-2 text-center">Practice / Surgery</div>
+        <div class="flex-1 align-middle px-2 text-center">Created</div>
+        <div class="flex-1 align-middle px-2 text-center">Issued</div>
+        <div class="flex-1 align-middle px-2 ">Job Numbers</div>
+        <div class="flex-1 align-middle px-2 text-center">£ Amount</div>
+        <div class="flex-1 align-middle px-2 text-center">Status</div>
       </div>
       <!-- END HEADER -->
       <!-- BODY -->
@@ -37,45 +34,29 @@
         class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
         draggable="false"
       >
-        <div
-          class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-        >
-          <strong class="block md:hidden text-xs uppercase"
-            >Invoice Number</strong
-          >
-          <span class="break-all">{{ practiceInvoice.invoice_number }}</span>
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
+          <strong class="block md:hidden text-xs uppercase">
+            Practice / Surgery
+          </strong>
+          <span class="break-word">
+            {{practiceInvoice.practice.surgery.name}}
+          </span>
         </div>
-        <div
-          class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-        >
-          <strong class="block md:hidden text-xs uppercase"
-            >Practice / Surgery</strong
-          >
-          <span class="break-word">{{
-            practiceInvoice.practice.surgery.name
-          }}</span>
-        </div>
-        <div
-          class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-        >
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">Created</strong>
-          <span class="break-all">{{
-            $moment(practiceInvoice.date_created).format(
-              "MMM DD, YYYY | HH:ss:mm"
-            )
-          }}</span>
+          <span class="break-all">
+            {{$moment(practiceInvoice.date_created).format("MMM DD, YYYY | HH:ss:mm")}}
+          </span>
         </div>
         <div
           class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
         >
           <strong class="block md:hidden text-xs uppercase">Issued</strong>
-          <span class="break-all">{{
-            $moment(practiceInvoice.issued_at).format("MMM DD, YYYY | HH:SS:MM")
-          }}</span>
+          <span class="break-all">
+            {{$moment(practiceInvoice.issued_at).format("MMM DD, YYYY | HH:SS:MM")}}
+          </span>
         </div>
-        <div
-          class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-        >
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
           <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
           <span
             v-for="(item, index) in practiceInvoice.practice_invoice_items"
@@ -84,27 +65,16 @@
             >{{ item }}</span
           >
         </div>
-        <div
-          class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-        >
+        <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
           <span class="break-all">{{ practiceInvoice.total_amount }}</span>
         </div>
-        <div
-          class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-        >
+        <!-- <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
           <strong class="block md:hidden text-xs uppercase">Status</strong>
-          <!-- <span>{{ practiceInvoice.status }}</span> -->
-          <div
-            class="py-4"
-            v-if="!practiceInvoice.paid && !practiceInvoice.paid_at"
-          >
-            <a
-              class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white"
-              >Mark as paid</a
-            >
+          <div class="py-4" v-if="!practiceInvoice.paid && !practiceInvoice.paid_at">
+            <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>
           </div>
-        </div>
+        </div> -->
       </nuxt-link>
       <!-- END BODY -->
     </div>

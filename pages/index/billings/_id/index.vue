@@ -23,7 +23,7 @@
             <!-- HEADER -->
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
               <div class="flex-1  align-middle px-2">Invoice Number</div> 
-              <div class="flex-1  align-middle px-2 text-center">Practice / Surgery</div>
+              <div class="flex-1  align-middle px-2 text-center">Locum Name</div>
               <div class="flex-1  align-middle px-2 text-center">Created</div>
               <div class="flex-1  align-middle px-2 text-center">Issued</div>
               <div class="flex-1  align-middle px-2 ">Job Numbers</div>
@@ -32,40 +32,40 @@
             </div>
             <!-- HEADER ENDS HERE -->
             <nuxt-link
-              v-for="(locumInvoice, index) in sampleLocumInvoices"
+              v-for="(jobInvoice, index) in sampleJobInvoices"
               :key="`billing-${index}`"
-              :to="`/billings/${practice.id}/locum-invoice/${locumInvoice.id}`"
+              :to="`/billings/${practice.id}/job-invoice/${jobInvoice.id}`"
               class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo" 
               draggable="false"
             >
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
                 <strong class="block md:hidden text-xs uppercase">Invoice Number</strong>
-                <span class="break-all">{{ locumInvoice.invoice_number }}</span>
+                <span class="break-all">{{ jobInvoice.invoice_number }}</span>
               </div>
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
                 <strong class="block md:hidden text-xs uppercase">Practice / Surgery</strong>
-                <span class="break-word">{{ locumInvoice.locum_name }}</span>
+                <span class="break-word">{{ jobInvoice.locum_name }}</span>
               </div>
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
                 <strong class="block md:hidden text-xs uppercase">Created</strong>
-                <span class="break-all">{{ $moment(locumInvoice.date_created).format('MMM DD, YYYY | HH:ss:mm') }}</span>
+                <span class="break-all">{{ $moment(jobInvoice.date_created).format('MMM DD, YYYY | HH:ss:mm') }}</span>
               </div>
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
                 <strong class="block md:hidden text-xs uppercase">Issued</strong>
-                <span class="break-all">{{ $moment(locumInvoice.issued_at).format('MMM DD, YYYY | HH:SS:MM') }}</span>
+                <span class="break-all">{{ $moment(jobInvoice.issued_at).format('MMM DD, YYYY | HH:SS:MM') }}</span>
               </div>
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
                 <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-                <span v-for="(item, index) in locumInvoice.job_numbers" :key="index" class="">{{ item }}</span>
+                <span v-for="(item, index) in jobInvoice.job_numbers" :key="index" class="">{{ item }}</span>
               </div>
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
                 <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-                <span class="break-all">{{ locumInvoice.total_amount }}</span>
+                <span class="break-all">{{ jobInvoice.total_amount }}</span>
               </div>
               <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
                 <strong class="block md:hidden text-xs uppercase">Status</strong>
-                <!-- <span>{{ locumInvoice.status }}</span> -->
-                <div class="py-4" v-if="!locumInvoice.paid && !locumInvoice.paid_at">
+                <!-- <span>{{ jobInvoice.status }}</span> -->
+                <div class="py-4" v-if="!jobInvoice.paid && !jobInvoice.paid_at">
                   <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>
                 </div>
               </div>
@@ -110,10 +110,10 @@
                 <p class="text-gray-400">Billing Cycle</p>
                 <p class="m-2 text-white font-semibold">WiP</p>
                 <p class="text-gray-400">Rates</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.practice.rates[0].type ? practiceInvoice.practice.rates[0].type : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.practice.rates[0].rate ? '£ '+practiceInvoice.practice.rates[0].rate : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.practice.rates[1].type ? practiceInvoice.practice.rates[1].type : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.practice.rates[1].rate ? '£ '+practiceInvoice.practice.rates[1].rate : 'N/A'}}</p>
+                <p class="m-2 text-white font-semibold">{{practice.rates[0].type ? practice.rates[0].type : 'N/A'}}</p>
+                <p class="m-2 text-white font-semibold">{{practice.rates[0].rate ? '£ '+practice.rates[0].rate : 'N/A'}}</p>
+                <p class="m-2 text-white font-semibold">{{practice.rates[1].type ? practice.rates[1].type : 'N/A'}}</p>
+                <p class="m-2 text-white font-semibold">{{practice.rates[1].rate ? '£ '+practice.rates[1].rate : 'N/A'}}</p>
                 <p class="text-gray-400">Payment Details</p>
                 <p class="m-2 text-white font-semibold">WiP</p>
               </div>
@@ -131,7 +131,7 @@ export default {
     return {
       practiceInvoice: '',
       practice: '',
-      sampleLocumInvoices:[
+      sampleJobInvoices:[
         {
           id:'1',
           invoice_number: "0000000001",
