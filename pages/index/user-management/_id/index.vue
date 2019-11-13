@@ -44,93 +44,107 @@
     <div v-if="tab2 && authAdminPermissions.includes('Edit Admin Account')"
       class="flex text-white bg-waterloo my-2 p-2 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
       <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-        <div class="flex items-center justify-between  whitespace-no-wrap flex-wrap">E-Mail Address 
-            <span v-if="formError.emailError" class="bg-red-500 px-2 py-1 rounded leading-none">{{formError.emailError}}</span>
+        <div class="mb-3">
+          <div>E-Mail Address </div>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('email') ? 'border-red-800' :'focus:border-sunglow'"
+            type="text"
+            placeholder="example@example.com"
+            v-model='toPutAdminUser.email'
+            aria-label="Email"
+            @blur="CheckEmptyField(toPutAdminUser.email, 'email')"
+          >
+          <span v-if="errorMessage('email')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('email')}}</span>
         </div>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.email !== '' ? 'focus:border-sunglow' :'focus:border-red-500'}`"
-          type="text"
-          placeholder="example@example.com"
-          v-model='toPutAdminUser.email'
-          @blur="processEmail(toPutAdminUser.email)"
-          aria-label="Email"
-        >
-        <label>Title</label>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
-          type="text"
-          v-model="toPutAdminUser.title"
-          placeholder="Mr. / Mrs. / Dr. / etc....."
-          aria-label="Title"
-        >
-        <div class="flex items-center justify-between  whitespace-no-wrap flex-wrap">First Name
-            <span v-if="!toPutAdminUser.first_name" class="bg-red-500 px-2 py-1 rounded leading-none">Please enter your First Name</span>
+        <div class="mb-3">
+          <label class="">Title</label>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
+            type="text"
+            v-model="toPutAdminUser.title"
+            placeholder="Mr. / Mrs. / Dr. / etc....."
+            aria-label="Title"
+          >
         </div>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.first_name !== '' ? 'focus:border-sunglow' :'focus:border-red-500'}`"
-          type="text"
-          v-model="toPutAdminUser.first_name"
-          placeholder="Jane"
-          aria-label="First Name"
-        >
-        <div class="flex items-center justify-between  whitespace-no-wrap flex-wrap">Last Name 
-          <span v-if="!toPutAdminUser.last_name" class="bg-red-500 px-2 py-1 rounded leading-none">Please enter your Last Name</span>
+        <div class="mb-3">
+          <div class="">First Name</div>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('first_name') ? 'border-red-800' :'focus:border-sunglow'"
+            type="text"
+            v-model="toPutAdminUser.first_name"
+            placeholder="Jane"
+            aria-label="First Name"
+            @blur="CheckEmptyField(toPutAdminUser.first_name, 'first_name')"
+          >
+          <span v-if="errorMessage('first_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('first_name')}}</span>
         </div>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.last_name !== '' ? 'focus:border-sunglow' :'focus:border-red-500'}`"
-          type="text"
-          v-model="toPutAdminUser.last_name"
-          placeholder = "Doe"
-          aria-label="Last name"
-        > 
-        <label>Suffix</label>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
-          type="text"
-          v-model="toPutAdminUser.suffix"
-          placeholder="Ph.D"
-          aria-label="Suffix"
-        >
-        
-        <div class="flex items-center justify-between  whitespace-no-wrap flex-wrap">New Password
-          <span v-if="!toPutAdminUser.password" class="bg-red-500 px-2 py-1 rounded leading-none">Required</span>
+        <div class="mb-3">
+          <div class="">Last Name</div>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('last_name') ? 'border-red-800' :'focus:border-sunglow'"
+            type="text"
+            v-model="toPutAdminUser.last_name"
+            placeholder = "Doe"
+            aria-label="Last name"
+            @blur="CheckEmptyField(toPutAdminUser.last_name, 'last_name')"
+          > 
+          <span v-if="errorMessage('last_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('last_name')}}</span>
         </div>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.password !== '' ? 'focus:border-sunglow' :'focus:border-red-500'}`"
-          type="password"
-          aria-label="oldpassword"
-          v-model="toPutAdminUser.password"
-        >
-        <div class="flex items-center justify-between  whitespace-no-wrap flex-wrap">Confirm New Password
-          <span v-if="!toPutAdminUser.password_confirmation" class="bg-red-500 px-2 py-1 rounded leading-none">Required</span>
+        <div class="mb-3">
+          <label>Suffix</label>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
+            type="text"
+            v-model="toPutAdminUser.suffix"
+            placeholder="Ph.D"
+            aria-label="Suffix"
+          >
         </div>
-        <input
-          class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.password_confirmation !== '' ? 'focus:border-sunglow' :'focus:border-red-500'}`"
-          type="password"
-          aria-label="newpassword"
-          v-model="toPutAdminUser.password_confirmation"
-        >
-        <div class="flex items-center justify-between  whitespace-no-wrap flex-wrap">Role
-          <span v-if="!toPutAdminUser.role_id" class="bg-red-500 px-2 py-1 rounded leading-none">Required</span>
+        <div class="mb-3">
+          <div class="">New Password</div>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('password') ? 'border-red-800' :'focus:border-sunglow'"
+            type="password"
+            aria-label="oldpassword"
+            v-model="toPutAdminUser.password"
+            @blur="CheckEmptyField(toPutAdminUser.password, 'password')"
+          >
+          <span v-if="errorMessage('password', 'Enter your new password')" class="text-red-800 text-xs leading-none capitalize">{{errorMessage('password', 'Enter your new password')}}</span>
         </div>
-        <select 
-          v-model="toPutAdminUser.role_id"
-          class="appearance-none w-full mb-4 bg-transparent border-b border-gray-300 px-4 py-2 pr-8 leading-tight focus:outline-none"
-          :class="`${toPutAdminUser.role_id !== '' ? 'focus:border-sunglow' :'focus:border-red-600'}`" 
-        >
-          <option disabled value selected class="text-gray-500">Select Role</option>
-          <option v-for="(role, index) in adminRoles"
-          :key="index"
-          :value="role.id"
-          class="text-black">
-            {{ role.name }}
-          </option>
-        </select>
+        <div class="mb-3">
+          <div class="">Confirm New Password</div>
+          <input
+            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-sunglow'"
+            type="password"
+            aria-label="newpassword"
+            v-model="toPutAdminUser.password_confirmation"
+            @blur="CheckEmptyField(toPutAdminUser.password_confirmation, 'password_confirmation')"
+          >
+          <span v-if="errorMessage('password_confirmation')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
+        </div>
+        <div class="mb-3">
+          <div class="">Role</div>
+          <select 
+            v-model="toPutAdminUser.role_id"
+            class="appearance-none w-full bg-transparent border-b border-gray-300 px-4 py-2 pr-8 leading-tight focus:outline-none"
+            :class="errorMessage('role_id') ? 'border-red-800' :'focus:border-sunglow'"
+            @blur="CheckEmptyField(toPutAdminUser.role_id, 'role_id')"
+          >
+            <option disabled value selected class="text-gray-500">Select Role</option>
+            <option v-for="(role, index) in adminRoles"
+            :key="index"
+            :value="role.id"
+            class="text-black">
+              {{ role.name }}
+            </option>
+          </select>
+          <span v-if="errorMessage('role_id')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
+        </div>
         <button
           class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black font-semibold text-sm focus:outline-none"
           @click.prevent ="checkForm(user.id,toPutAdminUser)"
@@ -146,9 +160,7 @@ export default {
     return{
       user:'',
       adminRoles: [],
-      formError:{}, 
-      errors:[],
-      errorPass:[],
+      formError:[], 
       tab1:true,
       tab2:false,
       toPutAdminUser:{
@@ -171,10 +183,18 @@ export default {
       response = await app.$axios.$get(`/api/v1/admin/admin-roles`)
       const adminRoles = response.data.roles
       console.log(" admin" ,adminRoles)
+      console.log("qweqwe", user)
       return{
         user,
         toPutAdminUser:{
-            email:user.email
+            email:user.email,
+            password:'',
+            password_confirmation:'',
+            title:'',
+            first_name:'',
+            last_name:'',
+            suffix:'',
+            role_id:''
         },
         adminRoles
       }
@@ -183,10 +203,61 @@ export default {
       console.log('get admin user error!!!', err)
     }
   },
+  created() {
+    console.log("errprs", this.formError)
+  },
   computed:{
     authAdminPermissions() {
       return this.$store.getters["auth/permissions"]
     },
+  },
+  watch: {
+    "toPutAdminUser.email"(value) {
+      const error = this.ValidateEmail(value);
+      if (error) {
+        this.formError.push(error);
+      } else {
+        let index = this.formError.findIndex(item => item.field === "email");
+        let errors = this.formError.filter(item => item.field === "email");
+        if (index >= 0) {
+          this.formError.splice(index, errors.length);
+        }
+      }
+    },
+    "toPutAdminUser.password"(value) {
+      if (value && value.length < 6) {
+        this.formError.push({
+          field: "password",
+          message: "Password Must Be Atleast 6 Characters"
+        });
+      } else {
+        let index = this.formError.findIndex(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        let error = this.formError.filter(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, error.length);
+        }
+      }
+    },
+    "toPutAdminUser.password_confirmation"(value) {
+      const error = this.ValidateSamePassword(this.toPutAdminUser.password, value);
+      if (error) {
+        this.formError.push(error);
+      } else {
+        let index = this.formError.findIndex(
+          item => item.field === "password_confirmation"
+        );
+        let errors = this.formError.filter(
+          item => item.field === "password_confirmation"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, errors.length);
+        }
+      }
+    }
   },
   methods:{
     getAdminUsers(){
@@ -220,34 +291,46 @@ export default {
       }
     },
 
+    errorMessage(field, message) {
+      if (this.formError.find(error => error.field === field.toString())) {
+        let error = this.formError.find(
+          error => error.field === field.toString()
+        );
+        return message ? message : error.message;
+      }
+      return;
+    },
+
     checkForm(uID,userInfo) {
-      this.errors = []
-      if(!userInfo.first_name){
-        this.errors.push("Please input your First Name.")
-      }
-      if(!userInfo.last_name){
-        this.errors.push("Please input your Last Name")
-      }
-      if(!userInfo.email) {
-        this.errors.push("Please input your E-mail")
-      } else if(!this.validEmail(userInfo.email)) {
-        this.errors.push("Please input a Valid E-Mail Address")        
-      } 
-      if(!userInfo.password){
-        userInfo.password = ''
-        this.errors.push("Please type your new password.")
-      }
-      if(!userInfo.password_confirmation){
-        userInfo.password_confirmation = ''
-        this.errors.push("Please type again your new password.")
-      }
-      if(userInfo.password_confirmation !== userInfo.password){
-        this.errors.push("Please ensure that inputted passwords match.")
-      }
-      if(userInfo.password.length < 6 || userInfo.password_confirmation < 6){
-        this.errors.push("Password must be at least 6 characters")
-      }
-      if(!this.errors.length){
+      console.log("error on save", this.formError)
+      this.formError = []
+      this.Validate(this.toPutAdminUser, ["title", "suffix"])
+      // if(!userInfo.first_name){
+      //   this.errors.push("Please input your First Name.")
+      // }
+      // if(!userInfo.last_name){
+      //   this.errors.push("Please input your Last Name")
+      // }
+      // if(!userInfo.email) {
+      //   this.errors.push("Please input your E-mail")
+      // } else if(!this.validEmail(userInfo.email)) {
+      //   this.errors.push("Please input a Valid E-Mail Address")        
+      // } 
+      // if(!userInfo.password){
+      //   userInfo.password = ''
+      //   this.errors.push("Please type your new password.")
+      // }
+      // if(!userInfo.password_confirmation){
+      //   userInfo.password_confirmation = ''
+      //   this.errors.push("Please type again your new password.")
+      // }
+      // if(userInfo.password_confirmation !== userInfo.password){
+      //   this.errors.push("Please ensure that inputted passwords match.")
+      // }
+      // if(userInfo.password.length < 6 || userInfo.password_confirmation < 6){
+      //   this.errors.push("Password must be at least 6 characters")
+      // }
+      if(!this.formError.length){
         this.toPutAdminUserInfo(uID,userInfo)
       }
     },

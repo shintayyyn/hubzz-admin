@@ -20,7 +20,7 @@
           class="relative flex flex-wrap leading-none"
           :class="info ? 'flex-wrap justify-between' : 'items-center'"
         >
-          <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
+          <label :for="name" class="text-xs sm:text-sm py-1 pr-2">{{ label }}</label>
           <div class="flex " v-if="info || error">
             <div
               class="bg-gray-300 rounded px-1 md:px-4 py-1 text-xs sm:text-sm"
@@ -29,7 +29,7 @@
               {{ info }}
             </div>
             <div
-              class="text-red-500 text-xs px-2"
+              class="text-red-800 text-xs"
               v-if="error && (type === 'select' || type.includes('checkbox'))"
             >
               {{
@@ -73,8 +73,8 @@
                   :value="value"
                   :type="type"
                   :placeholder="placeholder"
-                  class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
-                  :class="error ? 'border-red-500' : ''"
+                  class="bg-transparent border-b-2 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                  :class="error ? 'border-red-500' : 'focus:border-yellow-500'"
                   @input="$emit('input', $event.target.value)"
                   @keypress.enter="$emit('submit')"
                   @blur="$emit('blur')"
@@ -97,9 +97,9 @@
                 <select
                   ref="inputSelect"
                   :value="value"
-                  class="absolute border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                  class="bg-transparent appearance-none absolute border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
                   :class="[
-                    error && !disabled && 'border-red-500',
+                    error && !disabled && 'border-red-800',
                     disabled ? 'border-gray-400' : 'cursor-pointer'
                   ]"
                   @input="$emit('input', $event.target.value)"
@@ -116,6 +116,7 @@
                     :key="index"
                     :value="item.value"
                     :selected="value === item.value"
+                    class="text-black"
                     >{{ item.label }}</option
                   >
                 </select>

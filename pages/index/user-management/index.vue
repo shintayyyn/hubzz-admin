@@ -54,13 +54,16 @@
 				:key="`user-${index}`"
 				class="flex"
 			>
+				{{ getUsers(user) }}
 				<div
-					class="flex justify-center items-center md:w-10 align-middle md:text-center"
+					class="flex justify-center items-center w-10 align-middle text-center"
 					v-if="deleteAdminUser == true"
 				>
 					<svgicon
 						v-if="
 							$auth.user.id != user.id &&
+								user.admin_detail &&
+								user.admin_detail.role &&
 								!user.admin_detail.role.name.includes('God')
 						"
 						@click.prevent="toDeleteAdminUser(user.id)"
@@ -71,14 +74,16 @@
 					/>
 					<span
 						v-else-if="$auth.user.id === user.id"
-						class="hidden md:inline text-sm text-gray-500"
+						class="text-sm text-gray-500"
 						>You</span
 					>
 					<span
 						v-else-if="
-							user.admin_detail && user.admin_detail.role.name.includes('God')
+							user.admin_detail &&
+								user.admin_detail.role &&
+								user.admin_detail.role.name.includes('God')
 						"
-						class="hidden md:inline text-sm text-yellow-500"
+						class="text-sm text-yellow-500"
 						>God</span
 					>
 				</div>
@@ -356,6 +361,9 @@ export default {
 			}
 
 			this.$router.push({ query });
+		},
+		getUsers(item) {
+			console.log("users", item);
 		}
 	}
 };

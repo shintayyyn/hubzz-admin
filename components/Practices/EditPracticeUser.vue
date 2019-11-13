@@ -32,82 +32,118 @@
       </div>
       <!-- TABS END HERE -->
 
-      <div class="flex sm:p-2">
+      <div class="flex sm:p-2 max-w-lg">
         <!-- TAB 1 -->
-        <div v-if="tab1" class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
+        <div v-if="tab1" class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full">
           <div v-if="authAdminPermissions.includes('Edit Practice User')" class="w-full overflow-hidden text-gray-300 text-sm p-2">
-            <div class="flex py-1">E-Mail Address 
-              <span v-if="formError.emailError" class="bg-red p-1 ml-4 -mt-1 rounded float-right">{{formError.emailError}}</span>
-            </div>
+            
+            
+            <div class="flex py-1">E-Mail Address</div>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="`${toPutPracticeUser.email !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('email') ? 'border-red-800' :'focus:border-yellow'"
               type="text"
               placeholder="example@example.com"
               v-model='toPutPracticeUser.email'
-              @blur="processEmail(toPutPracticeUser.email)"
+					    @blur="CheckEmptyField(toPutPracticeUser.email, 'email')"
               aria-label="Email"
             >
+            <div v-if="formError.filter(item => item.field === 'email')"
+              class="text-red-800 text-xs capitalize pt-1"
+            >
+              {{ errorMessage("email") }}
+            </div>
+
             <p class="flex py-1">Title</p>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
               type="text"
               v-model="toPutPracticeUser.title"
               placeholder="Mr. / Mrs. / Dr. / etc....."
               aria-label="Title"
             >
-            <div class="flex py-1">First Name
-              <span v-if="!toPutPracticeUser.first_name" class="bg-red p-1 ml-4 rounded">Please enter your First Name</span>
-            </div>
+            
+            
+            <div class="flex py-1">First Name</div>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="`${toPutPracticeUser.first_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('first_name') ? 'border-red-800' :'focus:border-yellow'"
               type="text"
               v-model="toPutPracticeUser.first_name"
               placeholder="Jane"
               aria-label="First Name"
+					    @blur="CheckEmptyField(toPutPracticeUser.first_name, 'first_name')"
             >
-            <div class="flex py-1">Last Name 
-              <span v-if="!toPutPracticeUser.last_name" class="bg-red p-1 ml-4 rounded">Please enter your Last Name</span>
+            <div v-if="formError.filter(item => item.field === 'first_name')"
+              class="text-red-800 text-xs capitalize pt-1"
+            >
+              {{ errorMessage("first_name") }}
             </div>
+            
+            
+            <div class="flex py-1">Last Name</div>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="`${toPutPracticeUser.last_name !== '' ? 'focus:border-yellow' :'focus:border-red'}`"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('last_name') ? 'border-red-800' :'focus:border-yellow'"
               type="text"
               v-model="toPutPracticeUser.last_name"
               placeholder = "Doe"
               aria-label="Last name"
-            > 
+					    @blur="CheckEmptyField(toPutPracticeUser.last_name, 'last_name')"
+            >
+            <div v-if="formError.filter(item => item.field === 'last_name')"
+              class="text-red-800 text-xs capitalize pt-1"
+            >
+              {{ errorMessage("last_name") }}
+            </div>
+
+
             <p class="flex py-1">Suffix</p>
             <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
               type="text"
               v-model="toPutPracticeUser.suffix"
               placeholder="Ph.D"
               aria-label="Suffix"
             >
-            <div class="flex py-1">Role 
-              <span v-if="!toPutPracticeUser.practice_role" class="bg-red p-1 ml-4 rounded">Required</span>
-            </div>
+            
+            
+            <div class="flex py-1">Role</div>
             <select
               class="block appearance-none text-black w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none "
-              :class="`${toPutPracticeUser.practice_role !== '' ? 'focus:border-yellow': 'focus:border-red'}`"
+              :class="errorMessage('practice_role') ? 'border-red-800' :'focus:border-yellow'"
               v-model="toPutPracticeUser.practice_role"
+					    @blur="CheckEmptyField(toPutPracticeUser.practice_role, 'practice_role')"
             >
               <option>Partner</option>
               <option>Practice Manager</option>
               <option>Practice Staff</option>
             </select>
+            <div v-if="formError.filter(item => item.field === 'practice_role')"
+              class="text-red-800 text-xs capitalize pt-1"
+            >
+              {{ errorMessage("practice_role") }}
+            </div>
+
+
             <p class="flex py-1">Sign-Up verified by e-mail</p>
             <p class="p-2" :class="user.email && 'bg-waterloo-light rounded'">{{user.email ? $moment(user.email_verified_at).format('ddd, YYYY MMM DD, HH:MM A'): 'Not yet verified'}}</p>
             <p class="flex py-1">Status</p>
             <select
               class="text-black block appearance-none w-full bg-white border border-gray-300 hover:border-gray-300 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
+              :class="errorMessage('status') ? 'border-red-800' :'focus:border-yellow'"
               v-model="toPutPracticeUser.status"
+					    @blur="CheckEmptyField(toPutPracticeUser.status, 'status')"
             >
               <option>Active</option>
               <option>Disabled</option>
             </select>
+            <div v-if="formError.filter(item => item.field === 'status')"
+              class="text-red-800 text-xs capitalize pt-1"
+            >
+              {{ errorMessage("status") }}
+            </div>
+
             <button
               class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
               @click.prevent ="checkForm(user.id,toPutPracticeUser)"
@@ -132,32 +168,37 @@
         </div>
         
         <!-- TAB 2 -->
-        <div v-if="tab2" class="flex text-white">
-          <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg">
-            <div class="overflow-hidden text-gray-300 text-sm p-2">
-              <div v-if="errorPass[0]" class="p-2 rounded text-black bg-sunglow mb-2">
-                {{errorPass[0]}}
-              </div>
-              <div class="flex items-center py-1">New Password
-                <span v-if="!toChangePassword.newPassword" class="bg-red-600 py-1 px-2 ml-4 rounded">Required</span>
-              </div>
-              <input
-                class="appearance-none bg-transparent border-b w-full text-white mr-3 mb-3 py-3 px-2 leading-tight focus:outline-none"
-                :class="`${toChangePassword.newPassword !== '' ? 'focus:border-yellow-500' :'focus:border-red-500'}`"
-                type="password"
-                aria-label="oldpassword"
-                v-model="toChangePassword.newPassword"
-              >
-              <div class="flex items-center py-1">Confirm New Password
-                <span v-if="!toChangePassword.confirmNewPassword" class="bg-red-600 py-1 px-2 ml-4 rounded">Required</span>
-              </div>
+        <div v-if="tab2" class="flex text-white w-full">
+          <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg w-full">
+            <div class="overflow-hidden text-gray-300 text-sm p-2 w-full">
+              <div class="flex items-center py-1">New Password</div>
               <input
                 class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-                :class="`${toChangePassword.confirmNewPassword !== '' ? 'focus:border-yellow-500' :'focus:border-red-500'}`"
+                :class="errorMessage('password') ? 'border-red-800' :'focus:border-yellow'"
                 type="password"
-                aria-label="newpassword"
-                v-model="toChangePassword.confirmNewPassword"
+                aria-label="password"
+                v-model="toChangePassword.password"
+					      @blur="CheckEmptyField(toChangePassword.password, 'password')"
               >
+              <div v-if="formError.filter(item => item.field === 'password')"
+                class="text-red-800 text-xs capitalize pt-1"
+              >
+                {{ errorMessage("password") }}
+              </div>
+              <div class="flex items-center py-1">Confirm New Password</div>
+              <input
+                class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+                :class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-yellow'"
+                type="password"
+                aria-label="password_confirmation"
+                v-model="toChangePassword.password_confirmation"
+					      @blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
+              >
+              <div v-if="formError.filter(item => item.field === 'password_confirmation')"
+                class="text-red-800 text-xs capitalize pt-1"
+              >
+                {{ errorMessage("password_confirmation") }}
+              </div>
               <button
                 class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
                 @click.prevent="checkPasswordInfo(user.id,toChangePassword)"
@@ -175,7 +216,7 @@ export default {
   data(){
     return{
         practice:null,
-        formError:{}, 
+        formError:[], 
         errors:[],
         errorPass:[],
         userTabs: 0, 
@@ -183,8 +224,8 @@ export default {
         tab2: false,
         toPutPracticeUser:{},
         toChangePassword:{
-            newPassword:'',
-            confirmNewPassword:''
+            password:'',
+            password_confirmation:''
         }
     }
   },
@@ -207,74 +248,90 @@ export default {
       return this.$store.getters["auth/permissions"]
     },
   },
+  watch: {
+    "toPutPracticeUser.email"(value) {
+      const error = this.ValidateEmail(value);
+      if (error) {
+        this.formError.push(error);
+      } else {
+        let index = this.formError.findIndex(item => item.field === "email");
+        let errors = this.formError.filter(item => item.field === "email");
+        if (index >= 0) {
+          this.formError.splice(index, errors.length);
+        }
+      }
+    },
+    "toChangePassword.password"(value) {
+      if (value && value.length < 6) {
+        this.formError.push({
+          field: "password",
+          message: "Password Must Be Atleast 6 Characters"
+        });
+      } else {
+        let index = this.formError.findIndex(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        let error = this.formError.filter(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, error.length);
+        }
+      }
+    },
+    "toChangePassword.password_confirmation"(value) {
+      const error = this.ValidateSamePassword(this.toChangePassword.password, value);
+      if (error) {
+        this.formError.push(error);
+      } else {
+        let index = this.formError.findIndex(
+          item => item.field === "password_confirmation"
+        );
+        let errors = this.formError.filter(
+          item => item.field === "password_confirmation"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, errors.length);
+        }
+      }
+    }
+  },
   methods: {
-    processForm:function(userInfo){
-      if(!userInfo.first_name){
-        this.formError.fnameError = "Please Input your First Name"
-      }
-      if(!userInfo.last_name){
-        this.formError.lnameError = "Please input your Last Name"
-      }
-      
-    },
-    
-    processEmail:function(inputEmail){
-      this.formError = {
-        emailError:''
-      }
-      if(!inputEmail) {
-       this.formError.emailError = "Required"
-      } else if(!this.validEmail(inputEmail)) {
-       this.formError.emailError = "Please input a Valid E-Mail Address"       
-      }
-    },
-
+    errorMessage(field, message) {
+			if (this.formError.find(error => error.field === field.toString())) {
+				let error = this.formError.find(
+					error => error.field === field.toString()
+				);
+				return message ? message : error.message;
+			}
+			return;
+		},
     checkForm:function(uID,userInfo) {
-      this.errors = []
-      if(!userInfo.first_name){
-        this.errors.push("Please input your First Name.")
-      }
-      if(!userInfo.last_name){
-        this.errors.push("Please input your Last Name")
-      }
-      if(!userInfo.email) {
-        this.errors.push("Please input your E-mail")
-      } else if(!this.validEmail(userInfo.email)) {
-        this.errors.push("Please input a Valid E-Mail Address")        
-      }
-      if(!this.errors.length){
+      this.formError = []
+      this.Validate(this.toPutPracticeUser, ["title", "suffix"])
+      console.log("errrrer", this.formError)
+      // if(!userInfo.first_name){
+      //   this.errors.push("Please input your First Name.")
+      // }
+      // if(!userInfo.last_name){
+      //   this.errors.push("Please input your Last Name")
+      // }
+      // if(!userInfo.email) {
+      //   this.errors.push("Please input your E-mail")
+      // } else if(!this.validEmail(userInfo.email)) {
+      //   this.errors.push("Please input a Valid E-Mail Address")        
+      // }
+      if(!this.formError.length){
         
         this.toPutPracticeUserInfo(uID,userInfo)
       }
 
     },
-
-    validEmail:function(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
-    },
-
     checkPasswordInfo:function(uID,changePass){
-      this.errorPass = [];     
-
-      if(!changePass.newPassword){
-        changePass.newPassword = ''
-        this.errorPass.push("Please type your new password.")
-      }
-      if(!changePass.confirmNewPassword){
-        changePass.confirmNewPassword = ''
-        this.errorPass.push("Please type again your new password.")
-      }
-      if(changePass.confirmNewPassword !== changePass.newPassword){
-        this.errorPass.push("Please ensure that inputted passwords match.")
-      }
-      if(changePass.newPassword.length < 6 || changePass.confirmNewPassword < 6){
-        this.errorPass.push("Password must be at least 6 characters")
-      }
-      if(!this.errorPass.length){
+      this.Validate(this.toChangePassword)
+      if(!this.formError.length){
         this.toChangeUserPassword(uID,changePass)
       }
-
     },
 
     async toPutPracticeUserInfo(userID,toPutPracticeUser){

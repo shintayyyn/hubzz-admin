@@ -13,7 +13,7 @@
     <div
       v-for="(document,index) in specificPracticeDocumentTypes"
       :key="`surgery-${index}`"
-      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
+      class="w-full flex flex-col md:flex-row md:items-center rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
     >
       <div v-if="document.practiceSpecificDoc" class="p-2 m-2 bg-green-500 rounded-lg">
         <svgicon
@@ -56,7 +56,7 @@
                   :ref="`file-${document.practiceDocType.id}`"
                   v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"
                 />
-                <span class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600 '">
+                <span class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500 '">
                   <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
                   <span class="pl-2"> {{ document.practiceSpecificDoc ? 'Update' : 'Upload' }}</span>
                 </span>
