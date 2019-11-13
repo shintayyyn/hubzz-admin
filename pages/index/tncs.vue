@@ -46,7 +46,6 @@ export default {
       const terms = response.data.data.terms
       const tnc = response.data.data.terms.terms_and_conditions
       const privacypolicy = response.data.data.terms.privacy_policy
-      console.log(terms)
       return{
           terms,
           tnc,

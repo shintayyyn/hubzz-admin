@@ -48,79 +48,61 @@
         <div
           v-for="(childSurgery,index) in practiceChildren"
           :key="`childSurgery-${index}`"
+          class="flex"
           >   
-            <div >
-              <div @click="showTerminationModal = true" v-if="childSurgery.termination_requested_at" class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
-                <div class="p-1 bg-white rounded-lg">
-                  <svgicon
-                    name="exclamation-circle-solid"
-                    width="22"
-                    height="22"
-                    class="fill-current"
-                    />
-                </div>
-              </div>
-              <!-- TABLE -->
-              <nuxt-link 
-                :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}` }" 
-              >
-                <div class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 text-white">
-                  <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                      <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-                      <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
-                  </div>
-                  <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                    <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code</strong>
-                    <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</span>
-                  </div>
-                   <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                    <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Invited At</strong>
-                    <span class=" break-all">{{ childSurgery ? $moment(childSurgery.created_at).format('MMM-DD-YYYY | HH:mm:ss') :null }}</span>
-                  </div>
-                  <div class="w-full md:w-1/2 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-                    <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Status</strong>
-                    <span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" 
-                    :class="statusStyle(checkStatus(childSurgery))">
-                      {{ checkStatus(childSurgery) }}
-                    </span>
-                  </div>
-                  <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
-                    <strong class="block md:hidden text-sm uppercase">Practice Location</strong>
-                    <div class="text-white text-sm px-2 py-1">
-                      <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
-                      <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
-                      <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
-                    </div>
-                  </div> -->
-                </div>
-              </nuxt-link>
-              <!-- TABLE ENDS HERE-->
-              <transition name="fade" mode="out-in">
-                <div class="confirm-termination-modal shadow-lg" v-if="showTerminationModal==true">
-                  <div class="p-2 m-4 text-white">
-                    <div> Hub Requested Termination for This Spoke </div> 
-                    <div>{{$moment(childSurgery.termination_requested_at).format('MMM D, YYYY | HH:MM:ss')}}</div>
-                    <div>{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</div>
-                    <div>{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</div>
-                    <div>{{ childSurgery.practice ? childSurgery.practice.id: null }}</div>
-                    <div>{{ childSurgery.practice ? childSurgery.practice.phone_number: null }}</div>
-                    <div>{{ childSurgery.practice ? childSurgery.practice.report_to: null }}</div>
-                    <div>{{ childSurgery.practice ? childSurgery.practice.email: null }}</div>
-                    <div class="rounded-lg m-2 p-2 bg-charade">
-                      Note from Practice Hub: 
-                      <div class="m-2 ">{{childSurgery.note}}</div>
-                    </div>
-                    <div class="flex w-1/2 my-4 cursor-pointer">
-                      <div class="flex-1 p-2 mx-2 rounded-lg bg-red-600" @click="toDeleteSurgery(practice.id,childSurgery.id)">Delete Entire Surgery</div>
-                      <div class="flex-1 p-2 mx-2 rounded-lg bg-yellow-600" @click="toDeleteParent(childSurgery.practice.id)">Terminate from Parent</div>
-                      <div class="flex-1 p-2 mx-2 rounded-lg bg-green-600" @click="toRejectRequest(childSurgery.id)">Reject Termination Request</div>
-                    </div>
-                  </div>
-                </div>
-              </transition>
+            
+          <div 
+            @click="viewTerminationModal(childSurgery.id)" v-if="childSurgery.termination_requested_at" 
+            class='flex items-center pr-6 cursor-pointer text-red-600 hover:text-red-700'>
+            <div class="p-1 bg-white rounded-lg">
+              <svgicon
+                name="exclamation-circle-solid"
+                width="22"
+                height="22"
+                class="fill-current"
+                />
             </div>
+          </div>
+          <!-- TABLE -->
+          <nuxt-link 
+            :to="{path:`/practices/${practice.id}/practice-surgeries/${childSurgery.id}` }" 
+            class="w-full flex flex-col md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+          >
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+                <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
+                <span class="break-word">{{ childSurgery.surgery ? childSurgery.surgery.name :null }}</span>
+            </div>
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+              <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Practice Code</strong>
+              <span class=" break-all">{{ childSurgery.surgery ? childSurgery.surgery.code :null }}</span>
+            </div>
+              <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+              <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Invited At</strong>
+              <span class=" break-all">{{ childSurgery ? $moment(childSurgery.created_at).format('MMM-DD-YYYY | HH:mm:ss') :null }}</span>
+            </div>
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+              <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Status</strong>
+              <span class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1" 
+              :class="statusStyle(checkStatus(childSurgery))">
+                {{ checkStatus(childSurgery) }}
+              </span>
+            </div>
+            <!-- <div class="flex flex-col sm:w-full md:w-auto md:table-cell px-1 md:py-4 align-middle">
+              <strong class="block md:hidden text-sm uppercase">Practice Location</strong>
+              <div class="text-white text-sm px-2 py-1">
+                <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_1 :null }}</span><br>
+                <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_2 :null }}</span><br>
+                <span>{{ childSurgery.surgery.address ? childSurgery.surgery.address.line_3 :null }}</span><br>
+              </div>
+            </div> -->
+          </nuxt-link>
+          <!-- TABLE ENDS HERE-->
         </div>
-
+        <transition name="fade" mode="out-in">
+          <div class="confirm-termination-modal justify-center xl:mx-32 xs:mx-4 shadow-lg" v-if="terminationModal">
+            <TerminateSurgery @close="terminationModal = false" :practice="practice" :childSurgery="specificChildSurgery"/>
+          </div>
+        </transition>
         <!-- END BODY -->
         <!--put -->
       </div>
@@ -140,10 +122,10 @@
       </div>
 
       <!-- END TABLE -->
-      <div class="add-practice-shield" v-if="modal || showTerminationModal" @click="closeModals()"></div>
+      <div class="add-practice-shield" v-if="modal || terminationModal" @click="closeModals()"></div>
       <transition name="slide" mode="out-in">
         <div class="add-practice-modal shadow-lg" v-if="modal">
-            <AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
+          <AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
         </div>
       </transition>
       
@@ -153,12 +135,14 @@
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 import AppPagination from '@/components/Base/AppPagination'
 import AppLoading from '@/components/Base/AppLoading'
+import TerminateSurgery from '@/components/Practices/TerminateSurgery'
 export default {
   props:['practice'],
   components:{
     AddPracticeSurgery,
     AppPagination,
-    AppLoading
+    AppLoading,
+    TerminateSurgery
   },
   data(){
     return{
@@ -170,7 +154,8 @@ export default {
       perPage:0,
       modal:false,
       loadingSurgeries:false,
-      showTerminationModal: false
+      terminationModal: false,
+      specificChildSurgery:'',
     }
   },
   beforeDestroy(){
@@ -218,9 +203,15 @@ export default {
     show(){
       this.modal = true
     },
+    async viewTerminationModal(childId){
+      await this.$axios.get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`).then(res=> {
+        this.specificChildSurgery = res.data.data.practice_surgery
+      })
+      this.terminationModal = true
+    },
     closeModals(){
       this.modal = false
-      this.showTerminationModal = false
+      this.terminationModal = false
     },
     async getChildren(){
       let limit = 5
@@ -228,7 +219,7 @@ export default {
       offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
       let params = {limit, offset}
   
-      await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{params}).then( res => {
+      await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,{params}).then(res => {
         this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
       }).catch(err=>{
         console.log('get children error!!!!',err)
@@ -236,36 +227,7 @@ export default {
       })
       this.loadingSurgeries = false
     },
-    async toDeleteSurgery(childId){
-      await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`).then( res => {
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is terminated and Invitation is Successfully Deleted' })
-        this.getChildren()
-      }).catch(err => {
-        console.log('delete children error!!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-      })
-    },
-    async toDeleteParent(childPracId){
-      await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
-        practice_id: childPracId
-      }).then( res => {
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is Successfully Terminated' })
-      }).catch(err => {
-         console.log('remove parent error!!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-      })
-    },
-    async toRejectRequest(childId) {
-      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}/reject-termination-request`)
-        .then( res => {
-          console.log('id', this.practice.id)
-           console.log('child id', childId)
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Request is Successfully Rejected' })
-        }).catch(err => {
-          console.log('reject request error!',err)
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        })
-    },
+
     goToChild(link) {
       this.$router.push()
     },
@@ -296,7 +258,6 @@ export default {
 			}
     },
     checkStatus(invitation){
-      console.log('invitation', invitation)
       let result = 'Invited'
       if(invitation.invitation_accepted_at){
         result = 'Active'
@@ -350,14 +311,16 @@ export default {
 
 .confirm-termination-modal {
   position: fixed;
-  top: 150px;
-  right: 450px;
+  top: 20%;
+  /* left: 10%; */
   border-radius: 25px;
   margin-right: 0%;
-  width: 50%;
+  width: 800px;
+  max-width: 80%;
   height: 50%;
   overflow: auto;
   border-left: solid 2px orange;
+  border-right: solid 2px orange;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

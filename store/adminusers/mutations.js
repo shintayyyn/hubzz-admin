@@ -7,7 +7,6 @@ export default{
       state.itemCount = payload
     },
     SET_ADMIN_USERS(state, payload){
-      console.log('payload', payload)
       state.adminUsers = payload
     },
     ADD_ADMIN_USER(state, payload){
