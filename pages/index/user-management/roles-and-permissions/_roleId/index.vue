@@ -1,102 +1,148 @@
 <template>
   <div class="role-modal">
     <div class="p-4 md:p-6 text-white">
-      <div  class="pb-4">
-        <svgicon name="arrow-left-solid" height="32" widht="32" class="cursor-pointer text-white hover:text-sunglow fill-current" @click="goBack()"/>
+      <div class="pb-4">
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          widht="32"
+          class="cursor-pointer text-white hover:text-sunglow fill-current"
+          @click="goBack()"
+        />
       </div>
       <div class="flex flex-row items-start justify-between flex-wrap">
         <div class="flex items-center justify-between w-full leading-tight">
-          <div class="text-2xl md:text-4xl font-bold md:font-normal">{{specificRole.name}}</div>
-           <div class="flex py-1 text-sm md:text-base">
-            <div v-if="editingPermissions==false && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=true" class="flex items-center mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black">
+          <div class="text-2xl md:text-4xl font-bold md:font-normal">
+            {{ specificRole.name }}
+          </div>
+          <div class="flex py-1 text-sm md:text-base">
+            <div
+              v-if="
+                editingPermissions == false &&
+                  authAdminPermissions.includes('Edit Role')
+              "
+              @click="editingPermissions = true"
+              class="flex items-center mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black"
+            >
               <div class="mx-2 font-semibold">Edit</div>
               <div>
                 <svgicon
-                name="edit"
-                width="21"
-                height="21"
-                color="black black"
+                  name="edit"
+                  width="21"
+                  height="21"
+                  color="black black"
                 />
               </div>
             </div>
-            <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="editingPermissions=false" class="flex items-center mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black" >
+            <div
+              v-if="
+                editingPermissions == true &&
+                  authAdminPermissions.includes('Edit Role')
+              "
+              @click="editingPermissions = false"
+              class="flex items-center mr-1 md:mr-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer text-black"
+            >
               <div class="mx-2 font-semibold">Cancel</div>
               <div>
                 <svgicon
-                name="times-solid"
-                width="21"
-                height="21"
-                color="black black"
+                  name="times-solid"
+                  width="21"
+                  height="21"
+                  color="black black"
                 />
               </div>
             </div>
-            <div v-if="editingPermissions==true && authAdminPermissions.includes('Edit Role')" @click="save()" class="flex items-center ml-1 md:ml-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer" >
+            <div
+              v-if="
+                editingPermissions == true &&
+                  authAdminPermissions.includes('Edit Role')
+              "
+              @click="save()"
+              class="flex items-center ml-1 md:ml-2 py-1 px-2 md:px-4 md:py-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+            >
               <div class="mx-2 font-semibold">Save</div>
               <div>
                 <svgicon
-                name="circle-check"
-                width="21"
-                height="21"
-                color="white white"
+                  name="circle-check"
+                  width="21"
+                  height="21"
+                  color="white white"
                 />
               </div>
             </div>
           </div>
         </div>
-        <div class="text-sm italic">{{specificRole.description}}</div>
+        <div class="text-sm italic">{{ specificRole.description }}</div>
       </div>
       <!-- SHOW ROLE PERMISSIONS -->
       <div class="my-2 md:my-4" v-if="editingPermissions == false">
         <div class="flex flex-wrap overflow-hidden">
           <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">Locum Management</div> 
-            <div 
+            <div class="text-lg font-semibold">Locum Management</div>
+            <div
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="px-2">
-              {{ permission.category === 'Locum' ? permission.name : null}}
+              class="px-2"
+            >
+              {{ permission.category === "Locum" ? permission.name : null }}
             </div>
           </div>
           <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">Practice Management</div>
-            <div 
+            <div
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="px-2">
-              {{ permission.category === 'Practice' ? permission.name : null}}
+              class="px-2"
+            >
+              {{ permission.category === "Practice" ? permission.name : null }}
             </div>
           </div>
           <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">Billing and Reports Management</div>
-            <div 
+            <div class="text-lg font-semibold">
+              Billing and Reports Management
+            </div>
+            <div
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="px-2">
-              {{ permission.category === 'Billing' ? permission.name : null}}
+              class="px-2"
+            >
+              {{ permission.category === "Billing" ? permission.name : null }}
             </div>
           </div>
           <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">Miscellaneous</div>
-            <div 
+            <div
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="px-2">
-              {{ permission.category === 'Misc' ? permission.name : null}}
+              class="px-2"
+            >
+              {{ permission.category === "Misc" ? permission.name : null }}
             </div>
           </div>
           <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
             <div class="text-lg font-semibold">User Management</div>
-            <div 
+            <div
               v-for="(permission, index) in rolePermissions"
               :key="`permission-${index}`"
-              class="px-2">
-              {{ permission.category === 'User Management' ? permission.name : null}}
+              class="px-2"
+            >
+              {{
+                permission.category === "User Management"
+                  ? permission.name
+                  : null
+              }}
             </div>
           </div>
         </div>
       </div>
       <!-- EDIT ROLE PERMISSIONS -->
-      <div class="m-4" v-if="editingPermissions == true && authAdminPermissions.includes('Edit Role')">
+      <div
+        class="m-4"
+        v-if="
+          editingPermissions == true &&
+            authAdminPermissions.includes('Edit Role')
+        "
+      >
         <!-- <div class="flex flex-wrap overflow-hidden xl:-mx-1">
           <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
             <div class="text-lg font-semibold">Locum Management</div> 
@@ -183,7 +229,11 @@
           />
         </div>
         <div class="flex flex-wrap overflow-hidden">
-           <div class="w-full md:w-1/3 overflow-hidden pb-3" v-for="(role, index) in allPermissions" :key="index">
+          <div
+            class="w-full md:w-1/3 overflow-hidden pb-3"
+            v-for="(role, index) in allPermissions"
+            :key="index"
+          >
             <div class="">
               <input
                 type="checkbox"
@@ -191,7 +241,9 @@
                 :checked="isChecked(role.permissions)"
                 @change="checkAll(index, $event.target.checked)"
               />
-              <label class="font-bold text-xl pl-1" :for="role.permissions">{{role.category}} Management</label>
+              <label class="font-bold text-xl pl-1" :for="role.permissions"
+                >{{ role.category }} Management</label
+              >
             </div>
             <div class="px-1">
               <div
@@ -199,8 +251,15 @@
                 v-for="permission in role.permissions"
                 :key="permission.id"
               >
-                <input v-model="permission.done" :id="permission.id" type="checkbox" :checked="permission.done" />
-                <label class="text-sm pl-1" :for="permission.id">{{permission.name}}</label>
+                <input
+                  v-model="permission.done"
+                  :id="permission.id"
+                  type="checkbox"
+                  :checked="permission.done"
+                />
+                <label class="text-sm pl-1" :for="permission.id">{{
+                  permission.name
+                }}</label>
               </div>
             </div>
           </div>
@@ -211,9 +270,9 @@
 </template>
 <script>
 export default {
-  data(){
-    return{
-      specificRole: '',
+  data() {
+    return {
+      specificRole: "",
       rolePermissions: [],
       allPermissions: [],
       editingPermissions: false,
@@ -221,81 +280,87 @@ export default {
         name: "",
         description: "",
         permission_id: []
-      },
+      }
+    };
+  },
+  created() {
+    this.form.name = this.specificRole.name;
+    this.form.description = this.specificRole.description;
+  },
+  computed: {
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"];
     }
   },
-  created(){
-    this.form.name = this.specificRole.name
-    this.form.description = this.specificRole.description
-  },
-  computed:{
-    authAdminPermissions() {
-      return this.$store.getters["auth/permissions"]
-    },
-  },
-  async asyncData({ app, store, route }){
-    try{
-      let response = await app.$axios.$get(`/api/v1/admin/admin-roles/${route.params.roleId}`)
-      const specificRole = response.data.role
-      let rolePermissions = response.data.role.permissions
-      let allPermissions = []
-      await app.$axios.$get(`/api/v1/admin/admin-permissions`).then( res => {
+  async asyncData({ app, store, route }) {
+    try {
+      let response = await app.$axios.$get(
+        `/api/v1/admin/admin-roles/${route.params.roleId}`
+      );
+      const specificRole = response.data.role;
+      let rolePermissions = response.data.role.permissions;
+      let allPermissions = [];
+      await app.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
         res.data.permissions.forEach(permission => {
           let hasPermission = rolePermissions.find(
             item => item.id === permission.id
-          )
+          );
           if (hasPermission) {
-            allPermissions.push({ ...permission, done: true})
+            allPermissions.push({ ...permission, done: true });
           } else {
-            allPermissions.push({ ...permission, done: false})
+            allPermissions.push({ ...permission, done: false });
           }
-        })
-      })
-      let categories = []
+        });
+      });
+      let categories = [];
       allPermissions.forEach(permission => {
         if (categories.length === 0) {
           categories.push({
             category: permission.category,
             permissions: []
-          })
+          });
         } else {
           let hasSameCategory = categories.find(
             item => item.category === permission.category
-          )
+          );
           if (!hasSameCategory) {
             categories.push({
               category: permission.category,
               permissions: []
-            })
+            });
           }
         }
-      })
+      });
       allPermissions.forEach(permission => {
         let foundCategory = categories.find(
           item => item.category === permission.category
-        )
-        foundCategory.permissions.push(permission)
-      })
-      allPermissions = categories
-      console.log('allpermissions', allPermissions)
-      return{
+        );
+        foundCategory.permissions.push(permission);
+      });
+      allPermissions = categories;
+      console.log("allpermissions", allPermissions);
+      return {
         specificRole,
         rolePermissions,
-        allPermissions,
-      }
-    }catch(err){
-       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get users error',err)
+        allPermissions
+      };
+    } catch (err) {
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      });
+      console.log("get users error", err);
     }
   },
   methods: {
     isChecked(permissions) {
-      return !permissions.map(item => item.done).includes(false)
+      return !permissions.map(item => item.done).includes(false);
     },
     checkAll(index, checked) {
       this.allPermissions[index].permissions.forEach(item => {
-        item.done = checked
-      })
+        item.done = checked;
+      });
     },
     goBack() {
       const query = {
@@ -304,7 +369,10 @@ export default {
       if (query.job_status) {
         delete query.job_status;
       }
-      this.$router.push({ path: "/user-management/roles-and-permissions", query });
+      this.$router.push({
+        path: "/user-management/roles-and-permissions",
+        query
+      });
     },
     save() {
       let ids = [];
@@ -316,15 +384,25 @@ export default {
         });
       });
       this.form.permission_id = ids;
-      this.$axios.$put(`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,this.form).then(res => {
-        this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Role Updated Successfully'})
-        this.$emit("updateRole", res.data.role);
-        this.specificRole.name = res.data.role.name
-        this.specificRole.description = res.data.role.description
-      });
+      this.$axios
+        .$put(
+          `/api/v1/admin/admin-roles/${this.$route.params.roleId}`,
+          this.form
+        )
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Role Updated Successfully"
+          });
+          this.$emit("updateRole", res.data.role);
+          this.specificRole.name = res.data.role.name;
+          this.specificRole.description = res.data.role.description;
+          this.editingPermissions = false;
+        });
     }
   }
-}
+};
 </script>
 <style>
 .role-shield {
@@ -337,7 +415,7 @@ export default {
   opacity: 0.5;
   z-index: 511;
 }
-.role-modal{
+.role-modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -347,7 +425,7 @@ export default {
   overflow: auto;
   border-left: solid 2px yellow;
   transition: all 0.3s ease-in-out;
-  background-color:#505561;
+  background-color: #505561;
   z-index: 512;
 }
 

@@ -126,6 +126,7 @@
                   v-model='toPutPractice.status'
                 >
                   <option>Active</option>
+                  <option>Inactive</option>
                   <option>Suspended</option>
                   <option>Deactivated</option>
                 </select>

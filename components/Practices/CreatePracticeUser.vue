@@ -29,10 +29,10 @@
       >
         <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
           <!-- <div
-            v-if="errors.length > 0"
+            v-if="formError.length > 0"
             class="p-2 rounded text-black bg-sunglow mb-2"
           >
-            <ul v-for="(error, index) in errors" :key="index">
+            <ul v-for="(error, index) in formError" :key="index">
               <li>{{ error }}</li>
             </ul>
           </div> -->
@@ -44,65 +44,94 @@
             v-model="toPostUser.title"
             aria-label="Title"
           />
-          <div class="flex items-center py-1">
-            First Name
-            <span v-if="firstNameError" class="bg-red-600 p-1 ml-4 rounded">{{
-              firstNameError
-            }}</span>
+          <div class="relative flex flex-col py-1 mt-2">
+            <label>First Name</label>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('first_name') && 'border-red-800'"
+              type="text"
+              placeholder="Jane"
+              v-model="toPostUser.first_name"
+              @blur="CheckEmptyField(toPostUser.first_name, 'first_name')"
+              aria-label="First Name"
+            />
+            <svgicon
+              v-if="errorMessage('first_name')"
+              name="exclamation-mark"
+              width="14"
+              height="14"
+              class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
+            />
+            <div
+              v-if="formError.filter(item => item.field === 'first_name')"
+              class="text-red-800 text-xs capitalize"
+            >
+              <span>
+                {{ errorMessage("first_name") }}
+              </span>
+            </div>
           </div>
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="
-              `${
-                toPostUser.first_name !== ''
-                  ? 'focus:border-yellow'
-                  : 'focus:border-red'
-              }`
-            "
-            type="text"
-            placeholder="Jane"
-            v-model="toPostUser.first_name"
-            @blur="validate('toPostUser.first_name')"
-            aria-label="First Name"
-          />
-          <div class="flex items-center py-1">
+          <div class="relative flex flex-col py-1 mt-2">
             Last Name
-            <span v-if="lastNameError" class="bg-red-600 p-1 ml-4 rounded">{{
-              lastNameError
-            }}</span>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('last_name') && 'border-red-800'"
+              type="text"
+              v-model="toPostUser.last_name"
+              @blur="CheckEmptyField(toPostUser.last_name, 'last_name')"
+              placeholder="Doe"
+              aria-label="Last Name"
+            />
+            <svgicon
+              v-if="errorMessage('last_name')"
+              name="exclamation-mark"
+              width="14"
+              height="14"
+              class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
+            />
+            <div
+              v-if="formError.filter(item => item.field === 'last_name')"
+              class="text-red-800 text-xs capitalize"
+            >
+              {{ errorMessage("last_name") }}
+            </div>
           </div>
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="
-              `${
-                toPostUser.last_name !== ''
-                  ? 'focus:border-yellow'
-                  : 'focus:border-red'
-              }`
-            "
-            type="text"
-            v-model="toPostUser.last_name"
-            @blur="validate('toPostUser.last_name')"
-            placeholder="Doe"
-            aria-label="Last Name"
-          />
-          <p class="flex">Suffix</p>
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            type="text"
-            placeholder="Ph.D"
-            v-model="toPostUser.suffix"
-            aria-label="Suffix"
-          />
+          <div class="relative flex flex-col py-1 mt-2">
+            <label>Suffix</label>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+              type="text"
+              placeholder="Ph.D"
+              v-model="toPostUser.suffix"
+              aria-label="Suffix"
+            />
+          </div>
 
-          <div v-if="surgery && surgery.practice_count < 1" class="w-full">
-            <span>Practice Types</span>
-            <span class="text-xs">(hold ctrl + click to choose)</span>
+          <div
+            v-if="surgery && surgery.practice_count < 1"
+            class="flex flex-col py-1 mt-2"
+          >
+            <div class="relative pb-1">
+              <span>Practice Types </span>
+              <span class="text-xs">(hold ctrl + click to choose)</span>
+              <span class="absolute right-0 top-0 h-full flex items-center">
+                <svgicon
+                  v-if="errorMessage('practice_type_id')"
+                  name="exclamation-mark"
+                  width="14"
+                  height="14"
+                  class="fill-current text-red-800 mr-2"
+                />
+              </span>
+            </div>
             <select
               class="w-full text-black focus:outline-none"
               multiple="true"
               v-bind:class="{ 'fix-height': multiple === 'true' }"
               v-model="toPostUser.practice_type_id"
+              @blur="
+                CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')
+              "
             >
               <option
                 class="px-2 py-1"
@@ -112,6 +141,7 @@
                 >{{ item.label }}</option
               >
             </select>
+
             <div
               v-for="(practice_type, index) in toPostUser.practice_type_id"
               :key="`practice_type-${index}`"
@@ -121,152 +151,174 @@
                 toPostUser.practice_type_id[index].label
               }}</span>
             </div>
+            <div
+              v-if="formError.filter(item => item.field === 'practice_type_id')"
+              class="text-red-800 text-xs capitalize pt-1"
+            >
+              {{ errorMessage("practice_type_id") }}
+            </div>
           </div>
 
-          <div v-if="surgery" class="flex items-center py-1">
+          <div v-if="surgery" class="relative flex flex-col py-1 mt-2">
             Role
-            <span
-              v-if="!toPostUser.practice_role"
-              class="bg-red-600 p-1 ml-4 rounded"
-              >Required</span
+            <select
+              v-if="surgery"
+              class="appearance-none w-full bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
+              :class="errorMessage('practice_role') && 'border-red-800'"
+              v-model="toPostUser.practice_role"
+              @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
             >
+              <option>Partner</option>
+              <option>Practice Manager</option>
+              <option>Practice Staff</option>
+            </select>
+            <div
+              v-if="formError.filter(item => item.field === 'practice_role')"
+              class="text-red-800 text-xs capitalize"
+            >
+              {{ errorMessage("practice_role") }}
+            </div>
           </div>
-          <select
-            v-if="surgery"
-            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
-            :class="
-              `${
-                toPostUser.practice_role !== ''
-                  ? 'focus:border-yellow-500'
-                  : 'focus:border-red-600'
-              }`
-            "
-            v-model="toPostUser.practice_role"
-          >
-            <option>Partner</option>
-            <option>Practice Manager</option>
-            <option>Practice Staff</option>
-          </select>
-          <div v-if="surgery && surgery.practice_count < 1" class="flex py-1">
-            Type
-          </div>
-          <select
-            v-if="surgery && surgery.practice_count < 1"
-            class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 text-gray-800 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-            :class="
-              `${
-                toPostUser.type !== ''
-                  ? 'focus:border-yellow-600'
-                  : 'focus:border-red-600'
-              }`
-            "
-            v-model="toPostUser.type"
-          >
-            <option>Hub</option>
-            <option>Stand Alone</option>
-            <option>Spoke</option>
-          </select>
-          <div v-if="toPostUser.type == 'Spoke'" class="py-1">
-            Parent Surgery ID
-            <input
-              class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-              :class="
-                `${
-                  toPostUser.parent_surgery_id !== ''
-                    ? 'focus:border-yellow'
-                    : 'focus:border-red'
-                }`
-              "
-              id="parent"
-              type="text"
-              v-model="toPostUser.parent_surgery_id"
-              placeholder="Parent ID"
-            />
+          <div class="relative flex flex-col py-1 mt-2">
+            <label v-if="surgery && surgery.practice_count < 1">
+              Type
+            </label>
+            <select
+              v-if="surgery && surgery.practice_count < 1"
+              class="appearance-none w-full bg-white border-b border-gray-300 hover:border-gray-500 text-gray-800 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
+              v-model="toPostUser.type"
+            >
+              <option>Hub</option>
+              <option>Stand Alone</option>
+              <option>Spoke</option>
+            </select>
+            <div
+              v-if="toPostUser.type == 'Spoke'"
+              class="relative flex flex-col py-1 mt-2"
+            >
+              Parent Surgery ID
+              <input
+                class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+                :class="errorMessage('parent_surgery_id') && 'border-red-800'"
+                id="parent"
+                type="text"
+                @blur="
+                  CheckEmptyField(
+                    toPostUser.parent_surgery_id,
+                    'parent_surgery_id'
+                  )
+                "
+                v-model="toPostUser.parent_surgery_id"
+                placeholder="Parent ID"
+              />
+              <svgicon
+                v-if="errorMessage('parent_surgery_id')"
+                name="exclamation-mark"
+                width="14"
+                height="14"
+                class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
+              />
+              <div
+                v-if="formError.filter(item => item.field === 'email')"
+                class="text-red-800 text-xs capitalize"
+              >
+                {{ errorMessage("parent_surgery_id") }}
+              </div>
+            </div>
           </div>
 
-          <div class="flex items-center py-1 mb-4">
+          <div class="relative flex flex-col py-1 mt-2 mb-4">
             E-Mail Address
-          </div>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="
-              errors.length > 0 && isError('email')
-                ? 'border-red-600'
-                : 'focus:border-yellow-500'
-            "
-            id="email"
-            type="text"
-            v-model="toPostUser.email"
-            @blur="validate('toPostUser.email')"
-            placeholder="example@example.com"
-          />
-          <div
-            v-if="errors.length > 0 && isError('email')"
-            class="text-red-800 text-xs my-1"
-          >
-            {{ errorMessage("email") }}
-          </div>
-          <div class="flex items-center py-1">
-            Password
-            <span v-if="passwordError" class="bg-red-600 p-1 ml-4 rounded">{{
-              passwordError
-            }}</span>
-          </div>
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="
-              `${
-                toPostUser.password !== ''
-                  ? 'focus:border-yellow'
-                  : 'focus:border-red'
-              }`
-            "
-            type="password"
-            v-model="toPostUser.password"
-            @blur="validate('toPostUser.password')"
-            placeholder="Password"
-          />
-          <div class="flex items-center py-1">
-            Confirm Password
-            <span
-              v-if="confirmPasswordError"
-              class="bg-red-600 p-1 ml-4 rounded"
-              >{{ confirmPasswordError }}</span
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('email') && 'border-red-800'"
+              id="email"
+              type="text"
+              v-model="toPostUser.email"
+              @blur="CheckEmptyField(toPostUser.email, 'email')"
+              placeholder="example@example.com"
+            />
+            <svgicon
+              v-if="errorMessage('email')"
+              name="exclamation-mark"
+              width="14"
+              height="14"
+              class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
+            />
+            <div
+              v-if="formError.filter(item => item.field === 'email')"
+              class="text-red-800 text-xs capitalize"
             >
+              {{ errorMessage("email") }}
+            </div>
           </div>
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-            :class="
-              `${
-                toPostUser.password_confirmation !== ''
-                  ? 'focus:border-yellow'
-                  : 'focus:border-red'
-              }`
-            "
-            type="password"
-            v-model="toPostUser.password_confirmation"
-            @blur="validate('toPostUser.password_confirmation')"
-            placeholder="Password"
-          />
+
+          <div class="relative flex flex-col py-1 mt-2">
+            Password
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('password') && 'border-red-800'"
+              type="password"
+              v-model="toPostUser.password"
+              @blur="CheckEmptyField(toPostUser.password, 'password')"
+              placeholder="Password"
+            />
+            <svgicon
+              v-if="errorMessage('password')"
+              name="exclamation-mark"
+              width="14"
+              height="14"
+              class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
+            />
+            <div
+              v-if="formError.filter(item => item.field === 'password')"
+              class="text-red-800 text-xs capitalize"
+            >
+              {{ errorMessage("password") }}
+            </div>
+          </div>
+
+          <div class="relative flex flex-col py-1 mt-2">
+            Confirm Password
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('password_confirmation') && 'border-red-800'"
+              type="password"
+              v-model="toPostUser.password_confirmation"
+              @blur="
+                CheckEmptyField(
+                  toPostUser.password_confirmation,
+                  'password_confirmation'
+                )
+              "
+              placeholder="Password"
+            />
+            <svgicon
+              v-if="errorMessage('password_confirmation')"
+              name="exclamation-mark"
+              width="14"
+              height="14"
+              class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
+            />
+            <div
+              v-if="
+                formError.filter(item => item.field === 'password_confirmation')
+              "
+              class="text-red-800 text-xs capitalize"
+            >
+              {{ errorMessage("password_confirmation") }}
+            </div>
+          </div>
+
           <div v-if="adminCreate">
             <div class="flex items-center justify-between py-1">
               Role
-              <span
-                v-if="!toPostUser.role_id"
-                class="bg-red-500 p-1 ml-4 rounded"
-                >Required</span
-              >
             </div>
             <select
               v-model="toPostUser.role_id"
-              class="appearance-none w-full mb-4 bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
-              :class="
-                `${
-                  toPostUser.role_id !== ''
-                    ? 'focus:border-yellow-500'
-                    : 'focus:border-red-600'
-                }`
-              "
+              class="appearance-none w-full bg-white border-b border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 text-gray-800 rounded shadow leading-tight focus:outline-none"
+              :class="errorMessage('password_confirmation') && 'border-red-800'"
+              @blur="CheckEmptyField(toPostUser.role_id, 'role_id')"
             >
               <option value disabled selected>Select Role</option>
               <option
@@ -277,6 +329,12 @@
                 {{ role.name }}
               </option>
             </select>
+            <div
+              v-if="formError.filter(item => item.field === 'role_id')"
+              class="text-red-800 text-xs capitalize"
+            >
+              {{ errorMessage("role_id") }}
+            </div>
           </div>
           <button
             class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
@@ -300,12 +358,7 @@ export default {
   props: ["practice", "surgery", "user", "adminCreate", "userCount"],
   data() {
     return {
-      emailError: "",
-      firstNameError: "",
-      lastNameError: "",
-      passwordError: "",
-      confirmPasswordError: "",
-      errors: [],
+      formError: [],
       specificSurgery: [],
       specificPractice: [],
       practiceTypes: "",
@@ -329,10 +382,6 @@ export default {
     };
   },
   async created() {
-    console.log("Errors", this.errors);
-    console.log("Route name: ", this.$route.name);
-    console.log("surgery", this.surgery);
-    console.log("practice", this.practice);
     await this.$axios
       .$get(`/api/v1/admin/practice-types`)
       .then(res => {
@@ -354,6 +403,55 @@ export default {
     console.log("prac types", this.practiceTypes);
     if (this.practice) {
       console.log("Practice to be created is a spoke");
+    }
+  },
+
+  watch: {
+    "toPostUser.email"(value) {
+      const error = this.ValidateEmail(value);
+      if (error) {
+        this.formError.push(error);
+      } else {
+        let index = this.formError.findIndex(item => item.field === "email");
+        let errors = this.formError.filter(item => item.field === "email");
+        if (index >= 0) {
+          this.formError.splice(index, errors.length);
+        }
+      }
+    },
+    "toPostUser.password"(value) {
+      if (value && value.length < 6) {
+        this.formError.push({
+          field: "password",
+          message: "Password Must Be Atleast 6 Characters"
+        });
+      } else {
+        let index = this.formError.findIndex(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        let error = this.formError.filter(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, error.length);
+        }
+      }
+    },
+    "toPostUser.password_confirmation"(value) {
+      const error = this.ValidateSamePassword(this.toPostUser.password, value);
+      if (error) {
+        this.formError.push(error);
+      } else {
+        let index = this.formError.findIndex(
+          item => item.field === "password_confirmation"
+        );
+        let errors = this.formError.filter(
+          item => item.field === "password_confirmation"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, errors.length);
+        }
+      }
     }
   },
 
@@ -398,112 +496,26 @@ export default {
       console.log("payload", payload);
       this.$store.commit("practices/UPDATE_PRACTICE_USERS_PAGE_COUNT", payload);
     },
-    isError(field) {
-      return this.errors.filter(error => error.field === field.toString());
-    },
     errorMessage(field) {
-      if (this.errors.find(error => error.field === field.toString())) {
-        let error = this.errors.find(error => error.field === field.toString());
+      if (this.formError.find(error => error.field === field.toString())) {
+        let error = this.formError.find(
+          error => error.field === field.toString()
+        );
         return error.message;
       }
       return;
     },
-    validate(field) {
-      return;
-      let index = this.errors.findIndex(err => err.field === field);
-      if (!field) {
-        this.errors.push({
-          field: field,
-          message: "Required"
-        });
-        console.log(this.errors);
-      } else {
-        console.log("qwewq", index);
-        if (index <= 0) {
-          this.errors.splice(index, 1);
-        }
+    checkForm: function(userInfo, surgID) {
+      this.formError = [];
+      let list = ["title", "suffix"];
+      !this.adminCreate && list.push("role_id");
+      this.adminCreate && list.push("practice_type_id", "surgery_id");
+      userInfo.type !== "Spoke" && list.push("parent_surgery_id");
+      this.Validate(this.toPostUser, list);
+      console.log(userInfo.type, this.formError);
+      if (!this.formError.length) {
+        this.toPostUserInfo(userInfo, surgID);
       }
-      console.log(field, index, !field);
-    },
-    validation() {
-      if (!this.toPostUser.first_name) {
-        this.errors.push({
-          field: "first_name",
-          message: "Please input your First Name"
-        });
-      }
-
-      if (!this.toPostUser.last_name) {
-        this.errors.push({
-          field: "last_name",
-          message: "Please input your Last Name"
-        });
-      }
-
-      if (!this.toPostUser.email) {
-        this.errors.push({
-          field: "email",
-          message: "Please input your E-mail"
-        });
-      } if (this.toPostUser.email) {
-        let index = this.errors.findIndex(err => err.name === "email");
-        this.errors.splice(index, 1);
-      }
-
-      // if (this.toPostUser.email && this.validEmail(this.toPostUser.email)) {
-      //   this.errors.push({
-      //     field: "email",
-      //     message: "Please input a Valid E-Mail Address"
-      //   });
-      // } else {
-      //   let index = this.errors.findIndex(err => err.name === "email");
-      //   this.errors.splice(index, 1);
-      // }
-
-      console.log(
-        "find email",
-        this.errors.map(err => err.field === "email"),
-        this.errors
-      );
-
-      if (!this.toPostUser.password) {
-        // this.toPostUser.password = "password";
-        this.errors.push({
-          field: "password",
-          message: "Please type your new password"
-        });
-      } else if (this.toPostUser.password.length < 6) {
-        this.errors.push({
-          field: "password",
-          message: "Password must be at least 6 characters"
-        });
-      }
-
-      if (!this.toPostUser.password_confirmation) {
-        // this.toPostUser.password_confirmation = ;
-        this.errors.push({
-          field: "password_confirmation",
-          message: "Please type again your new password"
-        });
-      } else if (this.toPostUser.password_confirmation !== this.toPostUser.password) {
-        this.errors.push({
-          field: "password_confirmation",
-          message: "Please ensure that inputted passwords match"
-        });
-      }
-    },
-    checkForm: function(surgID) {
-      this.errors = [];
-      this.validation(this.toPostUser);
-      console.log("count", this.errors.length);
-      if (!this.errors.length) {
-        this.toPostUserInfo(this.toPostUser, surgID);
-      }
-    },
-
-    validEmail: function(email) {
-      var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return re.test(email);
     },
     async getPracticeTypes() {
       await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
@@ -559,6 +571,7 @@ export default {
                 text: "Added new user"
               });
               this.$emit("userCreated");
+              this.$emit("close");
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
@@ -581,6 +594,7 @@ export default {
                 text: "New Admin Account Successfully Created"
               });
               this.$emit("userCreated");
+              this.$emit("close");
             })
             .catch(err => {
               this.$store.commit("SET_NOTIFICATION", {

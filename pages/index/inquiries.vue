@@ -21,33 +21,33 @@
         class="flex flex-col cursor-pointer md:flex-row px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
       >
         <div
-          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle"
+          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-none align-middle"
         >
-          <strong class="block md:hidden text-sm uppercase"
+          <strong class="block md:hidden text-xs uppercase"
             >Sender E-Mail</strong
           >
           <span>{{ email.sender.email }}</span>
         </div>
         <div
-          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle md:text-center"
+          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-none align-middle md:text-center"
         >
-          <strong class="block md:hidden text-sm uppercase"
+          <strong class="block md:hidden text-xs uppercase"
             >Account Type</strong
           >
           <span>{{ email.sender.domain }}</span>
         </div>
         <div
-          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle md:text-center"
+          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-none align-middle md:text-center"
         >
-          <strong class="block md:hidden text-sm uppercase"
+          <strong class="block md:hidden text-xs uppercase"
             >Account Domain</strong
           >
           <span>{{ email.sender.domain }}</span>
         </div>
         <div
-          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-tight align-middle md:text-center"
+          class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-none align-middle md:text-center"
         >
-          <strong class="block md:hidden text-sm uppercase">Date Sent</strong>
+          <strong class="block md:hidden text-xs uppercase">Date Sent</strong>
           <span>{{
             $moment(email.sender.created_at).format("MMM DD,YYYY | HH:MM:ss")
           }}</span>
