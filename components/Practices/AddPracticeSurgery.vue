@@ -23,14 +23,12 @@
           <div class="flex flex-no-wrap w-full md:w-2/3">
             <div class="w-full md:w-auto relative">
               <input
-                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow"
+                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
                 type="text"
                 :placeholder="
-                  `${
                     !practice || (practice && practice.type == 'Hub')
                       ? 'Search for Surgery by Name, etc....'
                       : 'Search for Hub by Name, etc....'
-                  }`
                 "
                 v-model="search"
                 @keyup.enter="searchSubmit()"
@@ -76,7 +74,7 @@
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
                 @click="show(surgery.id)"
-                class="flex no-underline rounded-lg shadow my-2"
+                class="flex no-underline rounded-lg shadow my-2 transition-hover"
                 :class="
                   registeredPractice.includes(surgery.id)
                     ? 'bg-waterloo opacity-75'
@@ -183,7 +181,7 @@
     />
     <!-- PAGINATION ENDS HERE -->
 
-    <div class="practice-user-shield" v-if="createPracticeModal" @click="createPracticeModal = false"></div>
+    <div class="practice-user-shield" v-if="createPracticeModal || setSpokePermissionModal" @click="shieldClickaway()"></div>
     <transition name="slide" mode="out-in">
       <div
         class="shadow-lg"
@@ -375,19 +373,8 @@ export default {
         });
       this.loading = false;
     },
-    searchSubmit: debounce(async function() {
-      const query = {
-        ...this.$route.query
-      };
 
-      query.search = this.search;
-      this.getData();
-
-      if (this.search === "") {
-        delete query.search;
-      }
-    }, 500),
-
+   
     async getAllHubzz() {
       this.loading = true;
       const limit = this.perPage;
@@ -423,61 +410,10 @@ export default {
       console.log("spokes", this.practiceSpokes);
       this.loading = false
     },
-    
+
     async newChildSpoke(surgeryId) {
       this.practiceSpokeSurgeryId = surgeryId
       this.setSpokePermissionModal = true
-    },
-
-    async changeParent(surgeryId, parentId) {
-      console.log("the practice", this.practice);
-      if (this.practiceHub.parent_surgery) {
-        if (this.practiceHub.parent_surgery.id == surgeryId) {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: "That surgery is the current Practice Parent"
-          });
-        } else {
-          await this.$axios
-            .$post(
-              `/api/v1/admin/practices/${this.practice.id}/parent-surgery`,
-              {
-                surgery_id: surgeryId
-              }
-            )
-            .then(async res => {
-              await this.getPracticeHub(this.practice.id);
-              await this.getPracticeParent(parentId);
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "success",
-                text: "Parent Surgery Added"
-              });
-            })
-            .catch(err => {
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "danger",
-                text: "Something went wrong!"
-              });
-            });
-        }
-      } else {
-        await this.$axios
-          .$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`, {
-            surgery_id: surgeryId
-          })
-          .then(async res => {
-            await this.getPracticeHub(this.practice.id);
-            await this.getPracticeParent(this.practice.id);
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Parent Surgery Changed"
-            });
-          });
-      }
     },
 
     async show(id) {
@@ -500,6 +436,24 @@ export default {
         this.createPracticeModal = true;
       }
     },
+
+    shieldClickaway(){
+      this.createPracticeModal = false,
+      this.setSpokePermissionModal = false
+    },
+
+    searchSubmit: debounce(async function() {
+      const query = {
+        ...this.$route.query
+      };
+
+      query.search = this.search;
+      this.getData();
+
+      if (this.search === "") {
+        delete query.search;
+      }
+    }, 500),
 
     pagechanged(e) {
       const query = {

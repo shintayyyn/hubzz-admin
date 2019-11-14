@@ -40,7 +40,10 @@
 									@change="checkAll(index, $event.target.checked)"
 								/>
 								<label class="font-bold text-xl pl-1" :for="role.permissions"
-									>{{ role.category }} Management</label
+									>{{
+										role.category === "User Management" ? "User" : role.category
+									}}
+									Management</label
 								>
 							</div>
 							<div class="flex flex-col px-1">

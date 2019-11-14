@@ -234,7 +234,7 @@
             v-for="(role, index) in allPermissions"
             :key="index"
           >
-            <div class="">
+            <div class="customized-select">
               <input
                 type="checkbox"
                 :id="role.permissions"
@@ -242,12 +242,12 @@
                 @change="checkAll(index, $event.target.checked)"
               />
               <label class="font-bold text-xl pl-1" :for="role.permissions"
-                >{{ role.category }} Management</label
+                >{{ role.category === "User Management" ? "User" : role.category }} Management</label
               >
             </div>
             <div class="px-1">
               <div
-                class=""
+                class="customized-select"
                 v-for="permission in role.permissions"
                 :key="permission.id"
               >

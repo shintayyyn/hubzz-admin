@@ -88,6 +88,11 @@ export default {
 
   },
   methods:{
+    getPracticeSpokes(practiceId) {
+      this.$store.dispatch("practices/fetchSpokes", {
+        practice_id: practiceId
+      });
+    },
     async newChildSpoke() {
       if(this.practice.type == "Hub") {
         if (!this.formError.length){
@@ -105,6 +110,7 @@ export default {
               status: "success",
               text: "Practice Child Added"
             });
+            this.getPracticeSpokes(this.practice.id)
             this.$emit("practiceSpokePosted");
           })
         }

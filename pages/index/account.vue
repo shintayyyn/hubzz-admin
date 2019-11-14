@@ -6,18 +6,18 @@
 				<div class="flex flex-wrap -mx-1 overflow-hidden">
 					<div class="my-1 px-1 overflow-hidden">
 						<button
-							class="rounded-lg py-3 px-4 text-black text-sm"
+							class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
 							:class="
 								tab1 === true ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'
 							"
-							@click="(tab1 = true), (tab2 = false)"
+							@click="(tab1 = true), (tab2 = false), (formError = [])"
 						>
 							<strong>General</strong>
 						</button>
 					</div>
 					<div class="my-1 px-1 overflow-hidden">
 						<button
-							class="rounded-lg py-3 px-4 text-black text-sm"
+							class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
 							:class="
 								tab2 === true ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'
 							"
@@ -29,16 +29,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex max-w-md">
-			<div class="w-full" v-if="tab1">
-				<div class="w-full p-4 my-2 text-white bg-waterloo rounded-lg">
-					<div class="font-semibold">Name</div>
-					<div class="text-sm mx-2 pb-2">{{ user.personal_detail.name }}</div>
+		<div class="flex ">
+			<div
+				class="w-full p-4 my-2 text-white max-w-lg bg-waterloo rounded-lg transition-hover"
+				v-if="tab1"
+			>
+				<div class="font-semibold">Name</div>
+				<div class="text-sm mx-2 pb-2">{{ user.personal_detail.name }}</div>
 
-					<div class="font-semibold">E-Mail Address</div>
-					<div class="text-sm mx-2 pb-2">{{ user.email }}</div>
+				<div class="font-semibold">E-Mail Address</div>
+				<div class="text-sm mx-2 pb-2">{{ user.email }}</div>
 
-					<!-- <div class="font-semibold">Role</div>
+				<!-- <div class="font-semibold">Role</div>
                     <div class="text-sm mx-2 pb-2">{{user.admin_detail.role.name}}</div>
                     
                     <div class="font-semibold">Permissions</div>
@@ -62,33 +64,26 @@
                             </div>
                         </div>
                     </div> -->
-				</div>
 			</div>
 			<div
 				v-if="tab2"
-				class="w-full flex text-white text-sm bg-waterloo my-2 py-2 px-3 shadow rounded-lg text-white"
+				class="w-full flex text-sm max-w-lg bg-waterloo-dark my-2 py-2 px-3 shadow rounded-lg transition-hover"
 			>
 				<div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-					<div class="flex items-center py-1">New Password</div>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-						type="password"
-						aria-label="oldpassword"
+					<AppInput
 						v-model="toChangePassword.password"
+						:type="'password'"
+						:label="'New Password'"
+						:error="formError.find(item => item.field === 'password')"
 						@blur="CheckEmptyField(toChangePassword.password, 'password')"
 					/>
-					<div
-						v-if="formError.filter(item => item.field === 'password')"
-						class="text-red-800 text-xs capitalize pt-1"
-					>
-						{{ errorMessage("password") }}
-					</div>
-					<div class="flex items-center py-1 mt-2">Confirm New Password</div>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-						type="password"
-						aria-label="newpassword"
+					<AppInput
 						v-model="toChangePassword.password_confirmation"
+						:type="'password'"
+						:label="'Confirm New Password'"
+						:error="
+							formError.find(item => item.field === 'password_confirmation')
+						"
 						@blur="
 							CheckEmptyField(
 								toChangePassword.password_confirmation,
@@ -96,14 +91,6 @@
 							)
 						"
 					/>
-					<div
-						v-if="
-							formError.filter(item => item.field === 'password_confirmation')
-						"
-						class="text-red-800 text-xs capitalize pt-1"
-					>
-						{{ errorMessage("password_confirmation") }}
-					</div>
 					<button
 						class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
 						@click.prevent="checkPasswordInfo(user.id, toChangePassword)"
@@ -116,7 +103,11 @@
 	</div>
 </template>
 <script>
+import AppInput from "@/components/Base/AppInput";
 export default {
+	components: {
+		AppInput
+	},
 	data() {
 		return {
 			user: "",

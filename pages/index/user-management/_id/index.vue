@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-user-modal p-4 md:p-8 shadow-lg text-white">
+  <div class="admin-user-modal p-4 md:p-8 shadow-lg text-white ">
     <div @click="goBack()" class="cursor-pointer">
       <svgicon name="arrow-left-solid" height="32" widht="32" class="text-white hover:text-sunglow fill-current"/>
     </div>
@@ -8,7 +8,7 @@
         <div class="flex flex-wrap -mx-1 overflow-hidden">
           <div class="my-1 px-1 overflow-hidden">
             <button
-              class="rounded-lg py-3 px-4 text-black text-sm"
+              class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
               :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
               @click="tab1=true,tab2=false"
             >
@@ -17,7 +17,7 @@
           </div>
           <div v-if="authAdminPermissions.includes('Edit Admin Account')" class="my-1 px-1 overflow-hidden">
             <button
-              class="rounded-lg py-3 px-4 text-black text-sm"
+              class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
               :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
               @click="tab2=true,tab1=false"
             >
@@ -28,130 +28,128 @@
       </div>
     </div>
     <!-- tab 1 VIEW -->
-    <div v-if="tab1" class="flex text-white bg-waterloo my-2 p-2 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
-      <div class="w-full overflow-hidden text-gray-300 leading-tight text-sm p-2">
-        <p class="font-semibold">E-mail Address</p>
-        <p class="mx-1 mb-2">{{user.email}}</p>
-        <p class="font-semibold">Name</p>
-        <p class="mx-1 mb-2">{{user.personal_detail.name}}</p>
-        <p class="font-semibold">Role</p>
-        <p class="mx-1">{{user.admin_detail.role ? user.admin_detail.role.name : 'N/A'}}</p>
+      <div v-if="tab1" class="flex text-white bg-waterloo my-2 p-2 shadow rounded-lg text-sm max-w-lg transition-hover">
+        <div class="w-full overflow-hidden text-gray-300 leading-tight text-sm p-2">
+          <p class="font-semibold">E-mail Address</p>
+          <p class="mx-1 mb-2">{{user.email}}</p>
+          <p class="font-semibold">Name</p>
+          <p class="mx-1 mb-2">{{user.personal_detail.name}}</p>
+          <p class="font-semibold">Role</p>
+          <p class="mx-1">{{user.admin_detail.role ? user.admin_detail.role.name : 'N/A'}}</p>
 
+        </div>
       </div>
-    </div>
-
-    <!-- tab 2 EDIT -->
-    <div v-if="tab2 && authAdminPermissions.includes('Edit Admin Account')"
-      class="flex text-white bg-waterloo my-2 p-2 shadow rounded-lg text-sm w-full md:w-3/5 lg:w-2/5">
-      <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-        <div class="mb-3">
-          <div>E-Mail Address </div>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('email') ? 'border-red-800' :'focus:border-sunglow'"
-            type="text"
-            placeholder="example@example.com"
-            v-model='toPutAdminUser.email'
-            aria-label="Email"
-            @blur="CheckEmptyField(toPutAdminUser.email, 'email')"
-          >
-          <span v-if="errorMessage('email')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('email')}}</span>
+       <!-- tab 2 EDIT -->
+      <div v-if="tab2 && authAdminPermissions.includes('Edit Admin Account')"
+        class="flex text-white bg-waterloo my-2 p-2 shadow rounded-lg text-sm max-w-lg transition-hover">
+        <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
+          <div class="mb-3">
+            <div>E-Mail Address </div>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('email') ? 'border-red-800' :'focus:border-sunglow'"
+              type="text"
+              placeholder="example@example.com"
+              v-model='toPutAdminUser.email'
+              aria-label="Email"
+              @blur="CheckEmptyField(toPutAdminUser.email, 'email')"
+            >
+            <span v-if="errorMessage('email')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('email')}}</span>
+          </div>
+          <div class="mb-3">
+            <label class="">Title</label>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
+              type="text"
+              v-model="toPutAdminUser.title"
+              placeholder="Mr. / Mrs. / Dr. / etc....."
+              aria-label="Title"
+            >
+          </div>
+          <div class="mb-3">
+            <div class="">First Name</div>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('first_name') ? 'border-red-800' :'focus:border-sunglow'"
+              type="text"
+              v-model="toPutAdminUser.first_name"
+              placeholder="Jane"
+              aria-label="First Name"
+              @blur="CheckEmptyField(toPutAdminUser.first_name, 'first_name')"
+            >
+            <span v-if="errorMessage('first_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('first_name')}}</span>
+          </div>
+          <div class="mb-3">
+            <div class="">Last Name</div>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('last_name') ? 'border-red-800' :'focus:border-sunglow'"
+              type="text"
+              v-model="toPutAdminUser.last_name"
+              placeholder = "Doe"
+              aria-label="Last name"
+              @blur="CheckEmptyField(toPutAdminUser.last_name, 'last_name')"
+            > 
+            <span v-if="errorMessage('last_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('last_name')}}</span>
+          </div>
+          <div class="mb-3">
+            <label>Suffix</label>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
+              type="text"
+              v-model="toPutAdminUser.suffix"
+              placeholder="Ph.D"
+              aria-label="Suffix"
+            >
+          </div>
+          <div class="mb-3">
+            <div class="">New Password</div>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('password') ? 'border-red-800' :'focus:border-sunglow'"
+              type="password"
+              aria-label="oldpassword"
+              v-model="toPutAdminUser.password"
+              @blur="CheckEmptyField(toPutAdminUser.password, 'password')"
+            >
+            <span v-if="errorMessage('password', 'Enter your new password')" class="text-red-800 text-xs leading-none capitalize">{{errorMessage('password', 'Enter your new password')}}</span>
+          </div>
+          <div class="mb-3">
+            <div class="">Confirm New Password</div>
+            <input
+              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+              :class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-sunglow'"
+              type="password"
+              aria-label="newpassword"
+              v-model="toPutAdminUser.password_confirmation"
+              @blur="CheckEmptyField(toPutAdminUser.password_confirmation, 'password_confirmation')"
+            >
+            <span v-if="errorMessage('password_confirmation')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
+          </div>
+          <div class="mb-3">
+            <div class="">Role</div>
+            <select 
+              v-model="toPutAdminUser.role_id"
+              class="appearance-none w-full bg-transparent border-b border-gray-300 px-4 py-2 pr-8 leading-tight focus:outline-none"
+              :class="errorMessage('role_id') ? 'border-red-800' :'focus:border-sunglow'"
+              @blur="CheckEmptyField(toPutAdminUser.role_id, 'role_id')"
+            >
+              <option disabled value selected class="text-gray-500">Select Role</option>
+              <option v-for="(role, index) in adminRoles"
+              :key="index"
+              :value="role.id"
+              class="text-black">
+                {{ role.name }}
+              </option>
+            </select>
+            <span v-if="errorMessage('role_id')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
+          </div>
+          <button
+            class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black font-semibold text-sm focus:outline-none"
+            @click.prevent ="checkForm(user.id,toPutAdminUser)"
+            >Save Changes</button>
         </div>
-        <div class="mb-3">
-          <label class="">Title</label>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
-            type="text"
-            v-model="toPutAdminUser.title"
-            placeholder="Mr. / Mrs. / Dr. / etc....."
-            aria-label="Title"
-          >
-        </div>
-        <div class="mb-3">
-          <div class="">First Name</div>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('first_name') ? 'border-red-800' :'focus:border-sunglow'"
-            type="text"
-            v-model="toPutAdminUser.first_name"
-            placeholder="Jane"
-            aria-label="First Name"
-            @blur="CheckEmptyField(toPutAdminUser.first_name, 'first_name')"
-          >
-          <span v-if="errorMessage('first_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('first_name')}}</span>
-        </div>
-        <div class="mb-3">
-          <div class="">Last Name</div>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('last_name') ? 'border-red-800' :'focus:border-sunglow'"
-            type="text"
-            v-model="toPutAdminUser.last_name"
-            placeholder = "Doe"
-            aria-label="Last name"
-            @blur="CheckEmptyField(toPutAdminUser.last_name, 'last_name')"
-          > 
-          <span v-if="errorMessage('last_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('last_name')}}</span>
-        </div>
-        <div class="mb-3">
-          <label>Suffix</label>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
-            type="text"
-            v-model="toPutAdminUser.suffix"
-            placeholder="Ph.D"
-            aria-label="Suffix"
-          >
-        </div>
-        <div class="mb-3">
-          <div class="">New Password</div>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('password') ? 'border-red-800' :'focus:border-sunglow'"
-            type="password"
-            aria-label="oldpassword"
-            v-model="toPutAdminUser.password"
-            @blur="CheckEmptyField(toPutAdminUser.password, 'password')"
-          >
-          <span v-if="errorMessage('password', 'Enter your new password')" class="text-red-800 text-xs leading-none capitalize">{{errorMessage('password', 'Enter your new password')}}</span>
-        </div>
-        <div class="mb-3">
-          <div class="">Confirm New Password</div>
-          <input
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-sunglow'"
-            type="password"
-            aria-label="newpassword"
-            v-model="toPutAdminUser.password_confirmation"
-            @blur="CheckEmptyField(toPutAdminUser.password_confirmation, 'password_confirmation')"
-          >
-          <span v-if="errorMessage('password_confirmation')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
-        </div>
-        <div class="mb-3">
-          <div class="">Role</div>
-          <select 
-            v-model="toPutAdminUser.role_id"
-            class="appearance-none w-full bg-transparent border-b border-gray-300 px-4 py-2 pr-8 leading-tight focus:outline-none"
-            :class="errorMessage('role_id') ? 'border-red-800' :'focus:border-sunglow'"
-            @blur="CheckEmptyField(toPutAdminUser.role_id, 'role_id')"
-          >
-            <option disabled value selected class="text-gray-500">Select Role</option>
-            <option v-for="(role, index) in adminRoles"
-            :key="index"
-            :value="role.id"
-            class="text-black">
-              {{ role.name }}
-            </option>
-          </select>
-          <span v-if="errorMessage('role_id')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
-        </div>
-        <button
-          class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black font-semibold text-sm focus:outline-none"
-          @click.prevent ="checkForm(user.id,toPutAdminUser)"
-          >Save Changes</button>
       </div>
-    </div>
-   
   </div>
 </template>
 <script>

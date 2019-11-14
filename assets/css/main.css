@@ -333,3 +333,7 @@ table tbody td {
 		4px -6px 0 white, 4px -8px 0 white;
 	transform: rotate(45deg);
 }
+
+.transition-hover {
+	transition: all 0.3s ease;
+}
