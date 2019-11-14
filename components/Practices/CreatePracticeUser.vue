@@ -192,39 +192,6 @@
               <option>Stand Alone</option>
               <option>Spoke</option>
             </select>
-            <div
-              v-if="toPostUser.type == 'Spoke'"
-              class="relative flex flex-col py-1 mt-2"
-            >
-              Parent Surgery ID
-              <input
-                class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
-                :class="errorMessage('parent_surgery_id') && 'border-red-800'"
-                id="parent"
-                type="text"
-                @blur="
-                  CheckEmptyField(
-                    toPostUser.parent_surgery_id,
-                    'parent_surgery_id'
-                  )
-                "
-                v-model="toPostUser.parent_surgery_id"
-                placeholder="Parent ID"
-              />
-              <svgicon
-                v-if="errorMessage('parent_surgery_id')"
-                name="exclamation-mark"
-                width="14"
-                height="14"
-                class="fill-current text-red-800 mr-2 absolute right-0 bottom-0 mb-8"
-              />
-              <div
-                v-if="formError.filter(item => item.field === 'email')"
-                class="text-red-800 text-xs capitalize"
-              >
-                {{ errorMessage("parent_surgery_id") }}
-              </div>
-            </div>
           </div>
 
           <div class="relative flex flex-col py-1 mt-2 mb-4">
@@ -375,7 +342,6 @@ export default {
         practice_role: "Partner",
         type: "Hub",
         practice_type_id: [],
-        parent_surgery_id: "",
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
         role_id: ""
       }
@@ -510,7 +476,6 @@ export default {
       let list = ["title", "suffix"];
       !this.adminCreate && list.push("role_id");
       this.adminCreate && list.push("practice_type_id", "surgery_id");
-      userInfo.type !== "Spoke" && list.push("parent_surgery_id");
       this.Validate(this.toPostUser, list);
       console.log(userInfo.type, this.formError);
       if (!this.formError.length) {

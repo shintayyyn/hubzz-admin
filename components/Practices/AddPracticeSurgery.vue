@@ -75,11 +75,7 @@
               <div
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
-                @click="
-                  practice && practice.type == 'Hub'
-                    ? newHubOrSpoke(surgery.id)
-                    : show(surgery.id)
-                "
+                @click="show(surgery.id)"
                 class="flex no-underline rounded-lg shadow my-2"
                 :class="
                   registeredPractice.includes(surgery.id)
@@ -97,15 +93,9 @@
                         >Registered</span
                       >
                     </div>
-                    <span class="block w-full py-1">{{
-                      surgery.address.line_1
-                    }}</span>
-                    <span class="block w-full py-1">{{
-                      surgery.address.line_2
-                    }}</span>
-                    <span class="block w-full py-1">{{
-                      surgery.address.line_3
-                    }}</span>
+                    <span class="block w-full py-1">{{surgery.address.line_1}}</span>
+                    <span class="block w-full py-1">{{surgery.address.line_2}}</span>
+                    <span class="block w-full py-1">{{surgery.address.line_3}}</span>
                     <div class="flex items-center my-1">
                       <span
                         class="block p-2 rounded"
@@ -160,15 +150,15 @@
           </div>
 
           <div v-if="practice && practice.type == 'Hub'">
-            <!--IF PRACTICE IS A SPOKE-->
+            <!--IF PRACTICE IS A HUB-->
+            <transition-group name="slide" tag="p">
             <div
-              v-for="(spoke, index) in spokes"
+              v-for="(spoke, index) in practiceSpokes"
               :key="`spoke-${index}`"
-              @click="changeParent(spoke.surgery.id, spoke.id)"
+              @click="newChildSpoke(spoke.surgery.id)"
               class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
             >
               <div class="flex flex-col text-white text-xs">
-                <!-- <span class="font-hairline">{{"I AM THE ID "+spoke.id}}</span> -->
                 <span class="font-bold">{{ spoke.surgery.name }}</span>
                 <div class="flex items-center my-1">
                   <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
@@ -176,6 +166,7 @@
                 </div>
               </div>
             </div>
+            </transition-group>
           </div>
 
           <!--TABLE ENDS HERE-->
@@ -192,21 +183,34 @@
     />
     <!-- PAGINATION ENDS HERE -->
 
-    <div class="practice-user-shield" v-if="modal" @click="modal = false"></div>
+    <div class="practice-user-shield" v-if="createPracticeModal" @click="createPracticeModal = false"></div>
     <transition name="slide" mode="out-in">
       <div
         class="shadow-lg"
         :class="practice ? 'practice-user-modal-small' : 'practice-user-modal'"
-        v-if="modal"
+        v-if="createPracticeModal"
       >
         <CreatePracticeUser
-          @close="modal = false"
-          @userCreated="(modal = false), $emit('close')"
+          @close="createPracticeModal = false"
+          @userCreated="(createPracticeModal = false), $emit('close')"
           :practice="practice"
           :surgery="surgery"
         />
       </div>
+      <!-- ===================SET PERMISSIONS OF PRACTICE SPOKE=================== -->
+      <div
+        class="practice-user-modal-small shadow-lg"
+        v-if="setSpokePermissionModal"
+      >
+        <SetSpokePermissions
+          @close="setSpokePermissionModal = false"
+          @practiceSpokeCreated="(setSpokePermissionModal = false), $emit('close')"
+          :practice="practice"
+          :surgeryId="practiceSpokeSurgeryId"
+        />
+      </div>
     </transition>
+
     <nuxt-child />
   </div>
 </template>
@@ -215,11 +219,13 @@
 import debounce from "lodash.debounce";
 import AppPagination from "@/components/Base/AppPagination";
 import CreatePracticeUser from "@/components/Practices/CreatePracticeUser";
+import SetSpokePermissions from "@/components/Practices/SetSpokePermissions"
 export default {
   props: ["practice", "practiceHub", "spokesCount"],
   components: {
     AppPagination,
-    CreatePracticeUser
+    CreatePracticeUser,
+    SetSpokePermissions
   },
   data() {
     return {
@@ -227,10 +233,13 @@ export default {
       surgery: null,
       search: "",
       hubzz: [],
-      spokes: [],
+      practiceSpokes: [],
       hub: null,
       practiceCount: null,
-      modal: false,
+      createPracticeModal: false,
+      setSpokePermissionModal:false,
+      practiceSpokeSurgeryId:'',
+
       total: 0,
       totalPages: 0,
       currentPage: 1,
@@ -263,7 +272,6 @@ export default {
       ...this.$route.query,
       add_practice_page: this.$route.query.add_practice_page || 1
     };
-
     this.getData();
   },
 
@@ -379,6 +387,7 @@ export default {
         delete query.search;
       }
     }, 500),
+
     async getAllHubzz() {
       this.loading = true;
       const limit = this.perPage;
@@ -409,62 +418,18 @@ export default {
           `/api/v1/admin/practices?type=Spoke&limit=${this.perPage}&offset=${offset}`
         )
         .then(res => {
-          this.spokes = res.data.practices;
+          this.practiceSpokes = res.data.practices;
         });
-      console.log("spokes", this.spokes);
-      this.loading = false;
+      console.log("spokes", this.practiceSpokes);
+      this.loading = false
+    },
+    
+    async newChildSpoke(surgeryId) {
+      this.practiceSpokeSurgeryId = surgeryId
+      this.setSpokePermissionModal = true
     },
 
-    async newHubOrSpoke(surgeryId) {
-      if (!this.practice || (this.practice && this.practice.type == "Hub")) {
-        await this.$axios
-          .$post(
-            `/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,
-            {
-              parent_practice_id: this.practice.id,
-              surgery_id: surgeryId
-            }
-          )
-          .then(async res => {
-            await this.getPracticeSpokes(this.practice.id);
-            await this.getPracticeSpokesCount(this.practice.id);
-            await this.updatePracticeSpokesPageCount();
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Practice Child Added"
-            });
-          });
-      }
-      // else if(practice&&practice.type == 'Spoke'){
-      //   if(this.practiceHub.parent_surgery){
-      //     if(this.practiceHub.parent_surgery.id == surgeryId){
-      //       this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'danger', text:'That surgery is the current Practice Parent'})
-      //     }else{
-      //       await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
-      //         surgery_id:surgeryId
-      //       }).then(async res=>{
-      //         await this.getPracticeHub(this.practice.id)
-      //         await this.getPracticeParent(parentId)c
-      //         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Added'})
-      //       })
-      //     }
-      //   }else{
-      //     await this.$axios.$post(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,{
-      //       surgery_id:surgeryId
-      //     }).then(async res=>{
-      //       await this.getPracticeHub(this.practice.id)
-      //       await this.getPracticeParent(this.practice.id)
-      //       this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success', text:'Parent Surgery Changed'})
-      //     })
-      //   }
-      // }
-    },
     async changeParent(surgeryId, parentId) {
-      console.log(
-        "this is the parent of the spoke",
-        this.practiceHub.parent_surgery
-      );
       console.log("the practice", this.practice);
       if (this.practiceHub.parent_surgery) {
         if (this.practiceHub.parent_surgery.id == surgeryId) {
@@ -514,6 +479,7 @@ export default {
           });
       }
     },
+
     async show(id) {
       await this.$axios.$get(`/api/v1/admin/surgeries/${id}`).then(res => {
         this.surgery = res.data.surgery;
@@ -531,9 +497,10 @@ export default {
         });
       } else {
         console.log("The surgery opened is", this.surgery);
-        this.modal = true;
+        this.createPracticeModal = true;
       }
     },
+
     pagechanged(e) {
       const query = {
         ...this.$route.query,
@@ -541,6 +508,7 @@ export default {
       };
       this.$router.push({ query });
     },
+
     isRegistered(id) {
       this.$axios.get(`/api/v1/admin/surgeries/${id}`).then(res => {
         if (res.data.data.surgery.practice_count > 0) {

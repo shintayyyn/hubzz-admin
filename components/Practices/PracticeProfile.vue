@@ -269,6 +269,7 @@ export default {
         })
         await this.getPractices()
         await this.getPractice()
+        this.toEdit = false
         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

@@ -1,12 +1,5 @@
 <template>
   <div class="flex flex-col">
-    <div>
-      <!-- <button
-        @click="show()"
-        class="no-underline py-2 px-4 mb-4 bg-sunglow font-semibold text-sm text-black rounded-lg shadow">
-          <span> {{ practiceParent ? 'Change' : 'Add' }} Parent</span>
-      </button> -->
-    </div>
     <div v-if="practiceParent">
       <form class="flex flex-col bg-waterloo p-2 md:px-4 shadow rounded-lg sm:w-full lg:w-2/3">
         <div class="flex flex-wrap">
@@ -71,14 +64,6 @@
               <div v-if="!practiceParent.gp_compliance_documents.length > 0 || !practiceParent.others_compliance_documents.length > 0  || !practiceParent.mandatory_trainings.length > 0">
               <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice Hub yet.</p>
               </div>
-              
-              <!-- <div v-if="practiceParent && practiceParent.type=='Spoke'">
-              <p class="flex m-2 text-base font-bold underline"> HUB info</p>
-              <p class="flex">Practice Name</p>
-              <p class="flex text-gray-300 text-sm p-2 font-semibold">{{practiceParentHub.name}}</p>
-              <p class="flex">Phone Number</p>
-              <p class="flex text-gray-300 text-sm p-2 font-semibold">{{practiceParent.practice_parent.phone_number}}</p>
-              </div> -->
             </div>
           </div>
           <div class="w-full mx-2">
@@ -100,7 +85,7 @@
               <div class="text-gray-300 text-sm">Share Banks to Other Surgeries</div>
               <div class="text-white m-2 semibold">{{practiceHub.share_banks_to_other_surgeries === true ? 'Yes' : 'No'}}</div>
               <div class="text-gray-300 text-sm">Create Job Rates Limit</div>
-              <div class="text-white m-2 semibold">{{practiceHub.create_job_rate_limit === true ? 'Yes' : 'No'}}</div>
+              <div class="text-white m-2 semibold">{{practiceHub.create_job_rate_limit}}</div>
             </div>
             <div v-if="editPermissions == true" class="text-white w-full">
               <div class="w-full px-1">
@@ -141,7 +126,17 @@
 					      @blur="CheckEmptyField(toPutPracticeParent.share_banks_to_other_surgeries, 'share_banks_to_other_surgeries')"
                 />
               </div>
-              
+              <div class="w-full p-1">
+                <AppInput
+                  v-model="toPutPracticeParent.create_job_rate_limit"
+                  :type="'number'"
+                  :name="'create_job_rate_limit'"
+                  :label="'Job Rates Limit £'"
+                  :inStyle="'text-align:right'"
+                  :error="formError.find(item => item.field === 'share_banks_to_other_surgeries')"
+					        @blur="CheckEmptyField(toPutPracticeParent.share_banks_to_other_surgeries, 'share_banks_to_other_surgeries')"
+                  />
+              </div>
             </div>
           </div>
         </div>

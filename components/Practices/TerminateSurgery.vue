@@ -24,7 +24,7 @@
         <div class="m-2 ">{{childSurgery ? childSurgery.note:null}}</div>
       </div>
       <div class="flex justify-center my-4 cursor-pointer">
-        <div class="flex-1 p-2 ml-1 rounded-lg bg-red-600" @click="toDeleteSurgery(practice.id,childSurgery.id)">Delete Entire Surgery</div>
+        <div class="flex-1 p-2 ml-1 rounded-lg bg-red-600" @click="toDeleteSurgery(childSurgery.id)">Delete Entire Surgery</div>
         <div class="flex-1 p-2 ml-1 rounded-lg bg-yellow-600" @click="toDeleteParent(childSurgery.practice_id)">Terminate from Parent</div>
         <div class="flex-1 p-2 ml-1 rounded-lg bg-green-600" @click="toRejectRequest(childSurgery.id)">Reject Termination Request</div>
       </div>
@@ -46,10 +46,9 @@ export default {
   },
   
   methods:{
-    async toDeleteSurgery(childId){
-      await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`).then(res => {
+    async toDeleteSurgery(){
+      await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${this.childSurgery.id}`).then(res => {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is terminated and Invitation is Successfully Deleted' })
-        this.getChildren()
       }).catch(err => {
         console.log('delete children error!!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

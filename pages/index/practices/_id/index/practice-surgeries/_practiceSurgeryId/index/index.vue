@@ -11,23 +11,25 @@
       <div class="flex flex-col">
         <!--------------PAY FOR SURGERY-------------->
         <div class="flex flex-row items-center">
-          <div class="text-lg text-white font-semibold"> Pay for Surgery / Job Creation (OLD)</div>
+          <div class="text-lg text-white font-semibold"> Pay for Surgery / Job Creation</div>
           <div
-            @click="editPayForSurgery = !editPayForSurgery" 
+            @click="editPermissions = !editPermissions" 
             class="text-sm font-semibold bg-yellow-500 px-3 py-1 mx-2 rounded-lg cursor-pointer"
-            :class="`${editPayForSurgery == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-green-500 hover:bg-green-600'}`">
-            {{editPayForSurgery == false ? 'Edit' : 'Done'}}</div>
+            :class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-green-500 hover:bg-green-600'}`">
+            {{editPermissions == false ? 'Edit' : 'Done'}}</div>
         </div>
-        <div v-if="editPayForSurgery === false" class="mt-2 mb-4 mx-2">
+        <div v-if="editPermissions === false" class="mt-2 mb-4 mx-2">
           <div class="font-semibold text-sm">Pay for Surgery</div>
           <div class="mx-2">{{practice_surgery.pay_for_surgery === false ? 'No' : 'Yes'}}</div>
           <div class="font-semibold text-sm">Verify job creation</div>
           <div class="mx-2">{{practice_surgery.verify_job_creation === false ? 'No' : 'Yes'}}</div>
           <div class="font-semibold text-sm">Share Banks to Other Surgeries</div>
           <div class="mx-2">{{practice_surgery.share_banks_to_other_surgeries === false ? 'No' : 'Yes'}}</div>
+          <div class="font-semibold text-sm">Create Job Rates Limit</div>
+          <div class="mx-2">{{'£'+practice_surgery.create_job_rate_limit}}</div>
         </div>
         <!--------------EDIT PAY FOR SURGERY / VERIFY JOB CREATION------------------>
-        <div v-if="editPayForSurgery === true" class="bg-waterloo-light rounded-lg shadow-md p-2 my-4">
+        <div v-if="editPermissions === true" class="bg-waterloo-light rounded-lg shadow-md p-2 my-4">
           <div class="flex flex-col flex-wrap justify-between">
             <div class="w-full px-2 md:px-4">
               <AppInput
@@ -49,7 +51,17 @@
                 :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
               />
             </div>
-            <div class="w-full p-1">
+            <div class="w-full px-2 md:px-4">
+              <AppInput
+                v-model="form.share_banks_to_other_surgeries"
+                :type="'select'"
+                :name="'share_banks_to_other_surgeries'"
+                :label="'Share Banks to Other Surgeries'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+              />
+            </div>
+            <div class="w-full px-2 md:px-4">
               <AppInput
                   v-model="form.create_job_rate_limit"
                   :type="'number'"
@@ -83,9 +95,7 @@ export default {
     return{
       practice: '',
       practice_surgery: '',
-      editPayForSurgery: false,
-      editSessionPolicies: false,
-      editBillingPolicies: false,
+      editPermissions: false,
       form: {
         pay_for_surgery: "",
         verify_job_creation: "",
