@@ -12,19 +12,19 @@ Vue.mixin({
 			if (!(inputField instanceof Array) && !inputField) {
 				this.formError.push({
 					field: fieldName,
-					message: `${fieldName.replace(/_/g, " ")} is Required`
+					message: `${fieldName.replace(/_/g, " ")} is required`
 				});
 			}
 			if (inputField instanceof Array && !inputField.length) {
 				this.formError.push({
 					field: fieldName,
-					message: `${fieldName.replace(/_/g, " ")} is Required`
+					message: `${fieldName.replace(/_/g, " ")} is required`
 				});
 			}
 			if (typeof inputField === "boolean" && inputField === false) {
 				this.formError.push({
 					field: fieldName,
-					message: `${fieldName.replace(/_/g, " ")} is Required`
+					message: `${fieldName.replace(/_/g, " ")} is required`
 				});
 			}
 		},
@@ -38,13 +38,13 @@ Vue.mixin({
 						if (!lists) {
 							this.formError.push({
 								field: key,
-								message: `${key.replace(/_/g, " ")} is Required`
+								message: `${key.replace(/_/g, " ")} is required`
 							});
 						}
 						if (lists && !lists.includes(key)) {
 							this.formError.push({
 								field: key,
-								message: `${key.replace(/_/g, " ")} is Required`
+								message: `${key.replace(/_/g, " ")} is required`
 							});
 						}
 					}
@@ -53,7 +53,7 @@ Vue.mixin({
 						if (!lists) {
 							this.formError.push({
 								field: key,
-								message: `${key.replace(/_/g, " ")} is Required`
+								message: `${key.replace(/_/g, " ")} is required`
 							});
 						}
 						if (lists && !lists.includes(key)) {

@@ -10,7 +10,7 @@
         />
       </div>
     </div>
-    <div class="ml-4">
+    <div class="">
       <div class="text-white pl-4 pt-2">
         <div
           class="text-lg font-bold"
@@ -25,26 +25,47 @@
       </div>
 
       <div
-        class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm max-w-lg"
+        class="flex text-white m-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg"
       >
         <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-          <!-- <div
-            v-if="formError.length > 0"
-            class="p-2 rounded text-black bg-sunglow mb-2"
-          >
-            <ul v-for="(error, index) in formError" :key="index">
-              <li>{{ error }}</li>
-            </ul>
-          </div> -->
-          <p class="flex">Title</p>
-          <input
-            class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
-            type="text"
-            placeholder="Mr. / Mrs. / Dr. / etc....."
+          <AppInput 
             v-model="toPostUser.title"
-            aria-label="Title"
+            :type="'text'"
+            :label="'Title'"
+            :placeholder="'Mr. / Mrs. / Dr. / etc.....'"
           />
-          <div class="relative flex flex-col py-1 mt-2">
+          <AppInput 
+            v-model="toPostUser.first_name"
+            :type="'text'"
+            :label="'First Name'"
+            :placeholder="'Jane'"
+            :error="formError.find(item => item.field === 'first_name')"
+            @blur="CheckEmptyField(toPostUser.first_name, 'first_name')"
+          />
+          <AppInput 
+            v-model="toPostUser.last_name"
+            :type="'text'"
+            :label="'Last Name'"
+            :placeholder="'Doe'"
+            :error="formError.find(item => item.field === 'last_name')"
+            @blur="CheckEmptyField(toPostUser.last_name, 'last_name')"
+          />
+          <AppInput 
+            v-model="toPostUser.suffix"
+            :type="'text'"
+            :label="'Suffix'"
+            :placeholder="'Ph.D'"
+          />
+          
+          <!-- <p class="flex">Title</p>
+            <input
+              class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
+              type="text"
+              placeholder="Mr. / Mrs. / Dr. / etc....."
+              v-model="toPostUser.title"
+              aria-label="Title"
+          /> -->
+          <!-- <div class="relative flex flex-col py-1 mt-2">
             <label>First Name</label>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -70,8 +91,8 @@
                 {{ errorMessage("first_name") }}
               </span>
             </div>
-          </div>
-          <div class="relative flex flex-col py-1 mt-2">
+          </div> -->
+          <!-- <div class="relative flex flex-col py-1 mt-2">
             Last Name
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -95,8 +116,8 @@
             >
               {{ errorMessage("last_name") }}
             </div>
-          </div>
-          <div class="relative flex flex-col py-1 mt-2">
+          </div> -->
+          <!-- <div class="relative flex flex-col py-1 mt-2">
             <label>Suffix</label>
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -105,7 +126,7 @@
               v-model="toPostUser.suffix"
               aria-label="Suffix"
             />
-          </div>
+          </div> -->
 
           <div
             v-if="surgery && surgery.practice_count < 1"
@@ -114,15 +135,6 @@
             <div class="relative pb-1">
               <span>Practice Types </span>
               <span class="text-xs">(hold ctrl + click to choose)</span>
-              <span class="absolute right-0 top-0 h-full flex items-center">
-                <svgicon
-                  v-if="errorMessage('practice_type_id')"
-                  name="exclamation-mark"
-                  width="14"
-                  height="14"
-                  class="fill-current text-red-800 mr-2"
-                />
-              </span>
             </div>
             <select
               class="w-full text-black focus:outline-none"
@@ -141,25 +153,54 @@
                 >{{ item.label }}</option
               >
             </select>
-
-            <div
-              v-for="(practice_type, index) in toPostUser.practice_type_id"
-              :key="`practice_type-${index}`"
-              class="inline-flex my-2 mr-2"
-            >
-              <span class="bg-yellow-500 rounded-lg p-2 text-black">{{
-                toPostUser.practice_type_id[index].label
-              }}</span>
-            </div>
             <div
               v-if="formError.filter(item => item.field === 'practice_type_id')"
-              class="text-red-800 text-xs capitalize pt-1"
+              class="text-red-500 text-xs pt-1"
             >
               {{ errorMessage("practice_type_id") }}
             </div>
+            <div class="flex items-start flex-wrap py-1">
+              <div
+                v-for="(practice_type, index) in toPostUser.practice_type_id"
+                :key="`practice_type-${index}`"
+                class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
+              >
+                {{toPostUser.practice_type_id[index].label}}
+              </div>
+            </div>
+            
+            
           </div>
 
-          <div v-if="surgery" class="relative flex flex-col py-1 mt-2">
+          <template v-if="surgery">
+            <AppInput 
+              v-model="toPostUser.practice_role"
+              :type="'select'"
+              :label="'Role'"
+              :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
+              :error="formError.find(item => item.field === 'practice_role')"
+              @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
+            />
+          </template>
+          <template v-if="surgery && surgery.practice_count < 1">
+            <AppInput 
+              v-model="toPostUser.type"
+              :type="'select'"
+              :label="'Type'"
+              :items="[{label: 'Hub', value: 'Hub'}, {label: 'Stand Alone', value: 'Stand Alone'}, {label: 'Spoke', value: 'Spoke'}]"
+            />
+            <AppInput
+              v-if="toPostUser.type == 'Spoke'"
+              v-model="toPostUser.parent_surgery_id"
+              :type="'text'"
+              :label="'Parent Surgery ID'"
+              :placeholder="'Parent ID'"
+              :error="formError.find(item => item.field === 'parent_surgery_id')"
+              @blur="CheckEmptyField(toPostUser.parent_surgery_id, 'parent_surgery_id')"
+            />
+          </template>
+
+          <!-- <div v-if="surgery" class="relative flex flex-col py-1 mt-2">
             Role
             <select
               v-if="surgery"
@@ -178,8 +219,8 @@
             >
               {{ errorMessage("practice_role") }}
             </div>
-          </div>
-          <div class="relative flex flex-col py-1 mt-2">
+          </div> -->
+          <!-- <div class="relative flex flex-col py-1 mt-2">
             <label v-if="surgery && surgery.practice_count < 1">
               Type
             </label>
@@ -225,9 +266,36 @@
                 {{ errorMessage("parent_surgery_id") }}
               </div>
             </div>
-          </div>
+          </div> -->
 
-          <div class="relative flex flex-col py-1 mt-2 mb-4">
+          <AppInput
+            v-model="toPostUser.email"
+            :type="'email'"
+            :label="'E-Mail Address'"
+            :placeholder="'example@example.com'"
+            :error="formError.find(item => item.field === 'email')"
+            @blur="CheckEmptyField(toPostUser.email, 'email')"
+          />
+
+          <AppInput
+            v-model="toPostUser.password"
+            :type="'password'"
+            :label="'Password'"
+            :placeholder="'Password'"
+            :error="formError.find(item => item.field === 'password')"
+            @blur="CheckEmptyField(toPostUser.password, 'password')"
+          />
+
+          <AppInput
+            v-model="toPostUser.password_confirmation"
+            :type="'password'"
+            :label="'Confirm Password'"
+            :placeholder="'Confirm Password'"
+            :error="formError.find(item => item.field === 'password_confirmation')"
+            @blur="CheckEmptyField(toPostUser.password_confirmation, 'password_confirmation')"
+          />
+
+          <!-- <div class="relative flex flex-col py-1 mt-2 mb-4">
             E-Mail Address
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -251,9 +319,9 @@
             >
               {{ errorMessage("email") }}
             </div>
-          </div>
+          </div> -->
 
-          <div class="relative flex flex-col py-1 mt-2">
+          <!-- <div class="relative flex flex-col py-1 mt-2">
             Password
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -276,9 +344,9 @@
             >
               {{ errorMessage("password") }}
             </div>
-          </div>
+          </div> -->
 
-          <div class="relative flex flex-col py-1 mt-2">
+          <!-- <div class="relative flex flex-col py-1 mt-2">
             Confirm Password
             <input
               class="appearance-none bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -308,9 +376,19 @@
             >
               {{ errorMessage("password_confirmation") }}
             </div>
-          </div>
+          </div> -->
 
-          <div v-if="adminCreate">
+          <AppInput 
+            v-if="adminCreate"
+            v-model="toPostUser.role_id"
+            :type="'select'"
+            :label="'Type'"
+            :items="adminRoles"
+            :error="formError.find(item => item.field === 'role_id')"
+            @blur="CheckEmptyField(toPostUser.role_id, 'role_id')"
+          />
+
+          <!-- <div v-if="adminCreate">
             <div class="flex items-center justify-between py-1">
               Role
             </div>
@@ -335,7 +413,7 @@
             >
               {{ errorMessage("role_id") }}
             </div>
-          </div>
+          </div> -->
           <button
             class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
             @click.prevent="checkForm(toPostUser, toPostUser.surgery_id)"
@@ -350,10 +428,12 @@
 </template>
 
 <script>
+import AppInput from "@/components/Base/AppInput";
 import AppFilterSearch from "@/components/Base/AppFilterSearch";
 export default {
   components: {
-    AppFilterSearch
+    AppFilterSearch,
+    AppInput
   },
   props: ["practice", "surgery", "user", "adminCreate", "userCount"],
   data() {
@@ -501,7 +581,9 @@ export default {
         let error = this.formError.find(
           error => error.field === field.toString()
         );
-        return error.message;
+        
+        return error.message.charAt(0).toUpperCase() +
+                  error.message.slice(1).replace(/_/g, " ")
       }
       return;
     },

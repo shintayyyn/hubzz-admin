@@ -23,14 +23,12 @@
           <div class="flex flex-no-wrap w-full md:w-2/3">
             <div class="w-full md:w-auto relative">
               <input
-                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow"
+                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
                 type="text"
                 :placeholder="
-                  `${
                     !practice || (practice && practice.type == 'Hub')
                       ? 'Search for Surgery by Name, etc....'
                       : 'Search for Hub by Name, etc....'
-                  }`
                 "
                 v-model="search"
                 @keyup.enter="searchSubmit()"
@@ -80,7 +78,7 @@
                     ? newHubOrSpoke(surgery.id)
                     : show(surgery.id)
                 "
-                class="flex no-underline rounded-lg shadow my-2"
+                class="flex no-underline rounded-lg shadow my-2 transition-hover"
                 :class="
                   registeredPractice.includes(surgery.id)
                     ? 'bg-waterloo opacity-75'

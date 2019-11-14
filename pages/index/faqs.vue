@@ -58,7 +58,7 @@
                 />
             </div>
             <div
-              class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo p-2 md:p-4 justify-between cursor-pointer"
+              class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
               @click="toggleFaqOn(item)"
             >
               <div class="leading-tight">{{item.question}}</div>
@@ -133,7 +133,7 @@
                 />
             </div>
             <div
-              class="flex m-1 w-full rounded-lg bg-trout hover:bg-waterloo p-2 md:p-4 justify-between cursor-pointer"
+              class="flex m-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
               @click="toggleFaqOn(item)"
             >
               <div class="leading-tight">{{item.question}}</div>

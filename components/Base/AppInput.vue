@@ -19,17 +19,18 @@
         <div
           class="relative flex flex-wrap justify-between leading-none"
         >
-          <label :for="name" class="text-xs sm:text-sm py-1 pr-2">{{ label }}</label>
-          <div class="flex " v-if="info || error">
+          <label :for="name" class="text-xs sm:text-sm py-1 pr-2">{{ label }}<span v-if="multiple" class="text-xs"> (hold ctrl + click to choose)</span></label>
+          
+          <div class="flex items-center" v-if="info || error">
             <div
-              class="bg-gray-300 rounded px-1 md:px-4 py-1 text-xs sm:text-sm"
+              class="bg-gray-300 text-black rounded px-1 md:px-4 py-1 text-xs sm:text-sm"
               v-if="info"
             >
               {{ info }}
             </div>
             <div
               class="bg-red-700 text-white p-2 rounded-lg text-xs"
-              v-if="error && (type === 'select' || type.includes('checkbox'))"
+              v-if="error && (type.includes('checkbox'))"
             >
               {{
                 error.message.charAt(0).toUpperCase() +
@@ -90,42 +91,56 @@
               </div>
             </template>
             <template v-if="type === 'select'">
-              <div
-                class="w-full relative customized-select py-8 flex items-center"
-              >
-                <select
-                  ref="inputSelect"
-                  :value="value"
-                  class="bg-transparent appearance-none absolute border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
-                  :class="[
-                    error && !disabled && 'border-red-800',
-                    disabled ? 'border-gray-400' : 'cursor-pointer'
-                  ]"
-                  @input="$emit('input', $event.target.value)"
-                  :style="inStyle"
-                  @change="$emit('change', $event.target.value)"
-                  @blur="$emit('blur')"
-                  :disabled="disabled"
+              <div class="flex flex-col w-full items-start">
+                <div
+                  class="flex w-full relative customized-select pt-4 pb-5"
+                  :class="multiple ? 'flex-col' : 'items-center'"
                 >
-                  <option value disabled selected v-if="placeholder">{{
-                    placeholder
-                  }}</option>
-                  <option
-                    v-for="(item, index) in items"
-                    :key="index"
-                    :value="item.value"
-                    :selected="value === item.value"
-                    class="text-black"
-                    >{{ item.label }}</option
+                  <select
+                    ref="inputSelect"
+                    :value="value"
+                    class="appearance-none border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                    :class="[
+                      error && !disabled && 'border-red-500',
+                      disabled ? 'border-gray-400' : 'cursor-pointer',
+                      multiple ? 'bg-white mt-4' : 'bg-transparent absolute'
+                    ]"
+                    :multiple="multiple"
+                    @input="$emit('input', $event.target.value)"
+                    :style="inStyle"
+                    @change="$emit('change', $event.target.value)"
+                    @blur="$emit('blur')"
+                    :disabled="disabled"
                   >
-                </select>
-                <span class="absolute right-0">
-                  <svgicon
-                    name="arrow-up"
-                    class="h-full w-10 p-2 fill-current"
-                    style="transform: rotate(180deg)"
-                  />
-                </span>
+                    <option value disabled selected v-if="placeholder">{{
+                      placeholder
+                    }}</option>
+                    <option
+                      v-for="(item, index) in items"
+                      :key="index"
+                      :value="item.value"
+                      :selected="value === item.value"
+                      class="text-black"
+                      >{{ item.label ? item.label : item.name }}</option
+                    >
+                  </select>
+                  <span class="absolute right-0" v-if="!multiple">
+                    <svgicon
+                      name="arrow-up"
+                      class="h-full w-10 p-2 fill-current"
+                      style="transform: rotate(180deg)"
+                    />
+                  </span>
+                </div>
+                <div
+                  class="text-red-500 pt-1 text-xs"
+                  v-if="error && (type === 'select' || type.includes('checkbox'))"
+                >
+                  {{
+                    error.message.charAt(0).toUpperCase() +
+                      error.message.slice(1).replace(/_/g, " ")
+                  }}
+                </div>
               </div>
             </template>
             <template v-if="type === 'textarea'">
@@ -293,6 +308,7 @@ export default {
     inStyle: String,
     // for select
     items: Array,
+    multiple: Boolean,
     // for textarea
     cols: {
       default: 30,
