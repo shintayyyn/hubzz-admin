@@ -357,6 +357,7 @@ export default {
       const params = { limit, offset };
       if (this.search) {
         params.search = this.search;
+        params.offset = 0;
       }
       await this.$axios
         .$get(`/api/v1/admin/surgeries`, { params })

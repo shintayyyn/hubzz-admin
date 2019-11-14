@@ -3,10 +3,8 @@
     <div class="px-4 md:px-6">
       <div class="text-xl md:text-4xl text-white pb-4">Frequently Asked Questions</div>
       <div class="rounded-lg text-white bg-charade shadow-lg p-3 md:p-5">
-        <div class="w-full inline-flex flex-wrap justify-between font-bold my-2">
-          <div class="flex items-center ml-1 mr-2">
-              <span>Locum</span>
-          </div>
+        <div class="w-full inline-flex flex-wrap justify-between font-bold mb-2">
+          <div class="flex items-center ml-1 mr-2">Locum</div>
           <div class="flex">
             <nuxt-link
             v-if="authAdminPermissions.includes('Create New FAQ')"
@@ -80,9 +78,7 @@
         </div>
         <!---------------------------------------------------------------------------------->
         <div class="w-full inline-flex flex-wrap justify-between font-bold my-2">
-          <div class="flex items-center ml-1 mr-2">
-              <span>Practice</span>
-          </div>
+          <div class="flex items-center ml-1 mr-2">Practice</div>
           <div class="flex">
             <nuxt-link
             v-if="authAdminPermissions.includes('Create New FAQ')"

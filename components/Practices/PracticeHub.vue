@@ -81,10 +81,10 @@
               </div> -->
             </div>
           </div>
-          <div class="w-full mx-2 md:w-1/2 ">
+          <div class="w-full mx-2">
             <div class="flex items-center">
               <div class="text-white font-semibold text-xl">Permissions</div>
-              <div class="px-4 py-2 mx-2 bg-sunglow hover:bg-sunglow-dark rounded-lg font-semibold text-sm cursor-pointer" @click="editPermissions = !editPermissions">
+              <div class="px-4 py-2 mx-2 bg-sunglow hover:bg-sunglow-dark rounded-lg font-semibold text-sm cursor-pointer" @click="editPermissions = !editPermissions, formError=[]">
                 {{ editPermissions === true ? 'Cancel' : 'Edit'}}
               </div>
               <button v-if="editPermissions == true"
@@ -102,7 +102,7 @@
               <div class="text-gray-300 text-sm">Create Job Rates Limit</div>
               <div class="text-white m-2 semibold">{{practiceHub.create_job_rate_limit === true ? 'Yes' : 'No'}}</div>
             </div>
-            <div v-if="editPermissions == true" class="text-white">
+            <div v-if="editPermissions == true" class="text-white w-full">
               <div class="w-full px-1">
                 <AppInput
                 v-model="toPutPracticeParent.pay_for_surgery"
@@ -226,8 +226,7 @@ export default {
     },
     async updatePracticeSurgery(){
       this.Validate(this.toPutPracticeParent)
-      console.log(this.formError)
-      if (this.formError.length > 0){
+      if (!this.formError.length){
         try{
           await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,
             this.toPutPracticeParent

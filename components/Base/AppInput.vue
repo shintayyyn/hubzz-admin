@@ -17,8 +17,7 @@
     >
       <div class="flex flex-col py-2 mb-3 md:mb-6">
         <div
-          class="relative flex flex-wrap leading-none"
-          :class="info ? 'flex-wrap justify-between' : 'items-center'"
+          class="relative flex flex-wrap justify-between leading-none"
         >
           <label :for="name" class="text-xs sm:text-sm py-1 pr-2">{{ label }}</label>
           <div class="flex " v-if="info || error">
@@ -29,7 +28,7 @@
               {{ info }}
             </div>
             <div
-              class="text-red-800 text-xs"
+              class="bg-red-700 text-white p-2 rounded-lg text-xs"
               v-if="error && (type === 'select' || type.includes('checkbox'))"
             >
               {{
@@ -82,7 +81,7 @@
                   :checked="value"
                   :min="type === 'number' && 0"
                 />
-                <div v-if="error" class="text-red-500 py-1 text-xs text-white">
+                <div v-if="error" class="text-red-500 py-1 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                       error.message.slice(1).replace(/_/g, " ")
@@ -130,20 +129,31 @@
               </div>
             </template>
             <template v-if="type === 'textarea'">
-              <textarea
-                id
-                :cols="cols"
-                :rows="rows"
-                :value="value"
-                :placeholder="placeholder"
-                class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
-                :class="[
-                  error ? 'border-red-500' : '',
-                  resize ? '' : 'resize-none'
-                ]"
-                @input="$emit('input', $event.target.value)"
-                @blur="$emit('blur', $event)"
-              ></textarea>
+              <div class="flex flex-col w-full">
+                <textarea
+                  id
+                  :cols="cols"
+                  :rows="rows"
+                  :value="value"
+                  :placeholder="placeholder"
+                  class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
+                  :class="[
+                    error ? 'border-red-500' : '',
+                    resize ? '' : 'resize-none'
+                  ]"
+                  @input="$emit('input', $event.target.value)"
+                  @blur="$emit('blur', $event)"
+                ></textarea>
+                <div
+                  class="text-red-500 py-1 text-xs"
+                  v-if="error"
+                >
+                  {{
+                    error.message.charAt(0).toUpperCase() +
+                      error.message.slice(1).replace(/_/g, " ")
+                  }}
+                </div>
+              </div>
             </template>
           </div>
         </template>
