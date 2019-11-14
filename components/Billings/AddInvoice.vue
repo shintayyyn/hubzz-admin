@@ -9,12 +9,14 @@
     <div class="flex flex-wrap overflow-hidden md:pl-4 mb-1">
       <div class="px-1">
         <button
+        @click="file()"
           class="inline-flex items-center py-2 px-4 my-1 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow focus:outline-none"
         >
           <svgicon name="save-icon" width="21" height="21" color="transparent black"></svgicon>
           <span class="pl-1">Save Changes</span>
         </button>
       </div>
+
       <div class="px-1">
         <button
           class="inline-flex items-center py-2 px-4 my-1 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
@@ -24,7 +26,9 @@
         </button>
       </div>
     </div>
-    <div class="md:m-4">
+    <!-- HEADER ENDS HERE -->
+    <!-- BODY -->
+    <div id='toPrint' class="md:m-4">
       <div class="invoice flex flex-col bg-white p-4">
         <div class="flex flex-wrap overflow-hidden">
           <div class="px-1 w-3/5 overflow-hidden">
@@ -60,8 +64,10 @@
             </div>
           </div>
         </div>
+        
         <div class="flex flex-wrap overflow-hidden">
           <div class="my-1 px-1 w-full overflow-hidden">
+            <!-- Choose Practice -->
             <select
               class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
             >
@@ -75,43 +81,52 @@
             <div class="flex flex-col border-b border-gray-400 pb-2">
               <!--HEADER-->
               <div class="flex items-center justify-center py-2 bg-black">
-                <div class="w-2/3">
+                <div class="w-2/4">
                   <div class="text-white text-sm text-left px-4">
                     <strong>Description</strong>
                   </div>
                 </div>
-                <div class="w-1/3">
-                  <div class="text-white text-sm text-center">
+                <div class="w-1/4">
+                  <div class="text-white text-sm text-left">
+                    <strong>Job Number</strong>
+                  </div>
+                </div>
+                <div class="w-1/4">
+                  <div class="text-white text-sm text-left">
                     <strong>Total</strong>
                   </div>
                 </div>
+                <!-- Add fields -->
                 <div class="mr-2">
-                  <span class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">+</span>
+                  <span
+                    @click="addInvoiceItem()" 
+                    class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">+</span>
                 </div>
               </div>
-              <!--HEADER-->
-              <div class="flex justify-center py-1">
-                <div class="w-2/3 text-sm mx-1">
-                  <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
-                </div>
-                <div class="w-1/3 text-sm mx-1">
-                  <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
-                </div>
-                <div class="mr-2 flex items-center">
-                  <span class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
+              <!--HEADER ENDS HERE-->
+              <!-- Invoice items -->
+              <div 
+                v-for="(item, index) in invoiceItems"
+                :key="`item-${index}`"
+              >
+                <div class="flex w-full justify-center py-1">
+                  <div class="w-2/4 text-sm mx-1">
+                    <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
+                  </div>
+                  <div class="w-1/4 text-sm mx-1">
+                    <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" placeholder="Job Number"/>
+                  </div>
+                  <div class="w-1/4 text-sm mx-1">
+                    <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
+                  </div>
+                  <div class="mr-2 flex items-center">
+                    <span
+                    @click="deductInvoiceItem(item.id)"
+                    class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
+                  </div>
                 </div>
               </div>
-              <div class="flex justify-center py-1">
-                <div class="w-2/3 text-sm mx-1">
-                  <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
-                </div>
-                <div class="w-1/3 text-sm mx-1">
-                  <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
-                </div>
-                <div class="mr-2 flex items-center">
-                  <span class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
-                </div>
-              </div>
+             
             </div>
           </div>
           <div class="my-1 px-1 w-full overflow-hidden">
@@ -133,13 +148,55 @@
     </div>
   </div>
 </template>
-
 <script>
+// import jsPDF from 'jspdf'
+const html2canvas = require('html2canvas')
+// import html2canvas from 'html2canvas'
 export default {
   transition: "subpage",
-
   data() {
-    return {};
+    return {
+      invoiceItems:[{
+        id: 1,
+        job_part_id: '',
+        description: '',
+        total: 0,
+      },],
+    };
+  },
+  methods:{
+    async addInvoiceItem(){
+      // deduct 1 when dealing with ID for array
+      console.log('it workds')
+      const newItem = {
+        job_part_id: '',
+        description: '',
+        total: 0,
+      }
+      console.log('dsda', this.invoiceItems.length)
+      newItem.id = this.invoiceItems.length + 1
+      console.log('newItem', newItem)
+      await this.invoiceItems.push(newItem)
+    },
+
+    async deductInvoiceItem(itemId){
+      const mapInvoiceItems = this.invoiceItems.map(invoiceItem => invoiceItem.id)
+      console.log('invoiceitems1',this.invoiceItems)
+      console.log('mapinvoiceitem1',mapInvoiceItems.indexOf(itemId))
+
+      await this.invoiceItems.splice(mapInvoiceItems.indexOf(itemId),1)
+      console.log('invoiceitems2',this.invoiceItems)
+      // console.log('mapinvoiceitem2',mapInvoiceItems)
+    },
+
+    file(){
+      const doc = this.$jsPDF()
+      html2canvas(document.querySelector("#toPrint")).then(canvas => {
+        const image = canvas.toDataURL("image/png")
+        doc.addImage(image,'PNG',1,1);
+        doc.save("sample.pdf")
+      })
+    },
   }
 };
 </script>

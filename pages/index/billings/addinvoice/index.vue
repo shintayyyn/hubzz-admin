@@ -41,7 +41,7 @@ export default {
     min-width: calc(100% - 70px);
   }
   .invoice {
-    width: 550px;
+    width: 800px;
   }
 }
 

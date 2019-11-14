@@ -87,6 +87,10 @@ export default {
     {
       src: "@/plugins/mixin.js",
       ssr: true
+    },
+    {
+      src: "@/plugins/jspdf.js",
+      mode: 'client'
     }
   ],
 
