@@ -93,7 +93,7 @@
                 :key="`practice_type-${index}`"
                 class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
               >
-                {{toPostUser.practice_type_id[index].label}}
+                <!-- {{toPostUser.practice_type_id[index].label}} -->
               </div>
             </div> 
           </div>
@@ -114,15 +114,6 @@
               :type="'select'"
               :label="'Type'"
               :items="[{label: 'Hub', value: 'Hub'}, {label: 'Stand Alone', value: 'Stand Alone'}, {label: 'Spoke', value: 'Spoke'}]"
-            />
-            <AppInput
-              v-if="toPostUser.type == 'Spoke'"
-              v-model="toPostUser.parent_surgery_id"
-              :type="'text'"
-              :label="'Parent Surgery ID'"
-              :placeholder="'Parent ID'"
-              :error="formError.find(item => item.field === 'parent_surgery_id')"
-              @blur="CheckEmptyField(toPostUser.parent_surgery_id, 'parent_surgery_id')"
             />
           </template>
           <AppInput

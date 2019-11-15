@@ -28,12 +28,12 @@
     </div>
     <!-- HEADER ENDS HERE -->
     <!-- BODY -->
+
+    <!-- FIRST PAGE -->
     <div id='toPrint' class="md:m-4">
       <div class="invoice flex flex-col bg-white p-4">
-        <div class="flex flex-wrap overflow-hidden">
-          <div class="px-1 w-3/5 overflow-hidden">
-            <!-- Column Content -->
-          </div>
+        <!-- ADDRESS  -->
+        <div class="flex justify-end verflow-hidden"> 
           <div class="mb-2 px-1 w-full sm:w-2/5 overflow-hidden">
             <p class="text-sm text-right">
               Hubzz Limited
@@ -44,6 +44,8 @@
             </p>
           </div>
         </div>
+
+        <!-- SELECT ADDRESSEE??? -->
         <div class="flex flex-wrap overflow-hidden">
           <div class="my-1 px-1 w-2/3 overflow-hidden">
             <div class="border-2 border-gray-300 rounded-lg p-4 text-sm">
@@ -66,8 +68,8 @@
         </div>
         
         <div class="flex flex-wrap overflow-hidden">
+          <!-- Choose Practice -->
           <div class="my-1 px-1 w-full overflow-hidden">
-            <!-- Choose Practice -->
             <select
               class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
             >
@@ -77,11 +79,12 @@
             </select>
           </div>
 
+          <!-- List -->
           <div class="my-1 px-1 w-full overflow-hidden">
             <div class="flex flex-col border-b border-gray-400 pb-2">
               <!--HEADER-->
               <div class="flex items-center justify-center py-2 bg-black">
-                <div class="w-2/4">
+                <div class="w-3/4">
                   <div class="text-white text-sm text-left px-4">
                     <strong>Description</strong>
                   </div>
@@ -91,9 +94,14 @@
                     <strong>Job Number</strong>
                   </div>
                 </div>
+                <!-- <div class="w-1/4">
+                  <div class="text-white text-sm text-left">
+                    <strong>Hours</strong>
+                  </div>
+                </div> -->
                 <div class="w-1/4">
                   <div class="text-white text-sm text-left">
-                    <strong>Total</strong>
+                    <strong>Amount</strong>
                   </div>
                 </div>
                 <!-- Add fields -->
@@ -110,15 +118,39 @@
                 :key="`item-${index}`"
               >
                 <div class="flex w-full justify-center py-1">
-                  <div class="w-2/4 text-sm mx-1">
-                    <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
+                  
+                  <div class="w-3/4 text-sm mx-1">
+                    <textarea 
+                      v-model="item.description"
+                      rows = "2"
+                      maxlength="45"
+                      class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" 
+                      placeholder="Enter Description"></textarea>
                   </div>
+
                   <div class="w-1/4 text-sm mx-1">
-                    <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" placeholder="Job Number"/>
+                    <input 
+                      v-model="item.job_part"
+                      class="border-b-2 border-gray-300 w-full h-full focus:outline-none" 
+                      placeholder="Job Part Number"/>
                   </div>
+
+                  <!-- <div class="w-1/4 text-sm mx-1">
+                    <input 
+                      v-model="item.hours"
+                      class="border-b-2 border-gray-300 w-full h-full focus:outline-none" 
+                      type="number"
+                      placeholder="Hours"/>
+                  </div> -->
+
                   <div class="w-1/4 text-sm mx-1">
-                    <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
+                    <input 
+                      v-model="item.amount"
+                      class="border-b-2 border-gray-300 w-full h-full focus:outline-none" 
+                      type="number" 
+                      placeholder="Enter Amount"/>
                   </div>
+
                   <div class="mr-2 flex items-center">
                     <span
                     @click="deductInvoiceItem(item.id)"
@@ -126,14 +158,37 @@
                   </div>
                 </div>
               </div>
-             
             </div>
           </div>
+        </div>
+        <!-- TOTAL / FOOTER (ANCHOR THIS ALONG WITH TOTAL THING BELOW) -->
+        <div>
           <div class="my-1 px-1 w-full overflow-hidden">
             <div class="flex flex-wrap">
-              <div class="my-1 px-1 w-2/3 font-bold">Total</div>
-              <div class="my-1 px-1 w-1/3 text-right">£1200</div>
+              <div class="my-1 px-1 w-3/4 font-bold">Total</div>
+              <div class="my-1 px-1 w-1/4 text-left">{{'£ ' + amountTotal}}</div>
             </div>
+          </div>
+          <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
+            Payment by BACS:
+            <br />Account name: XXX
+            <br />Bank: XXX
+            <br />Sort code: XXX
+            <br />Account number: XXX
+            <br />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FIRST PAGE ENDS HERE -->
+
+    <!-- TOTAL / FOOTER (ANCHOR THIS ALONG WITH TOTAL THING BELOW) -->
+    <div id="footer" class="bg-white " v-if="doNotShow==false">
+      <div class="m-1 p-2">
+        <div class="my-1 px-1 w-full overflow-hidden">
+          <div class="flex flex-wrap">
+            <div class="my-1 px-1 w-3/4 font-bold">Total</div>
+            <div class="my-1 px-1 w-1/4 text-left">{{'£ ' + amountTotal}}</div>
           </div>
         </div>
         <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
@@ -146,32 +201,49 @@
         </div>
       </div>
     </div>
+  <!-- BODY ENDS HERE-->
   </div>
 </template>
 <script>
-// import jsPDF from 'jspdf'
-const html2canvas = require('html2canvas')
-// import html2canvas from 'html2canvas'
+
 export default {
   transition: "subpage",
   data() {
     return {
       invoiceItems:[{
         id: 1,
-        job_part_id: '',
+        job_part: '',
         description: '',
-        total: 0,
+        hours: '',
+        amount: 0,
       },],
-    };
+      invoiceItemsOtherPage:[{
+        id:11,
+        job_part: '',
+        description: '',
+        hours: '',
+        amount: 0,
+      },],
+      doNotShow: true
+    }
+  },
+  computed: {
+    amountTotal: function () {
+      const reducer = (accumulator, currentValue) => accumulator + currentValue
+      let array = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.amount))
+      let sum = array.reduce(reducer)
+      return sum
+    }
   },
   methods:{
     async addInvoiceItem(){
       // deduct 1 when dealing with ID for array
       console.log('it workds')
       const newItem = {
-        job_part_id: '',
+        job_part: '',
         description: '',
-        total: 0,
+        hours: '',
+        amount: 0,
       }
       console.log('dsda', this.invoiceItems.length)
       newItem.id = this.invoiceItems.length + 1
@@ -181,19 +253,52 @@ export default {
 
     async deductInvoiceItem(itemId){
       const mapInvoiceItems = this.invoiceItems.map(invoiceItem => invoiceItem.id)
-      console.log('invoiceitems1',this.invoiceItems)
-      console.log('mapinvoiceitem1',mapInvoiceItems.indexOf(itemId))
-
       await this.invoiceItems.splice(mapInvoiceItems.indexOf(itemId),1)
-      console.log('invoiceitems2',this.invoiceItems)
-      // console.log('mapinvoiceitem2',mapInvoiceItems)
     },
+    anchorTotal(){
+      console.log('it worked')
+      this.$html2canvas(document.querySelector("#footer")).then(canvas => {
+         const doc = this.$jsPDF('p', 'mm', 'a4')
+          var imgWidth = 380; 
+          var pageHeight = 300;  
+          var imgHeight = canvas.height * imgWidth / canvas.width;
+          var heightLeft = imgHeight;
+          var position = 0;
+          let imgData = canvas.toDataURL("image/png")
 
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            heightLeft -= pageHeight;
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            doc.addPage();
+          }
+        
+      })
+    },
     file(){
-      const doc = this.$jsPDF()
-      html2canvas(document.querySelector("#toPrint")).then(canvas => {
-        const image = canvas.toDataURL("image/png")
-        doc.addImage(image,'PNG',1,1);
+      // this.html2canvas(document.querySelector("#toPrint")).then(canvas => {
+      //   const image = canvas.toDataURL("image/png")
+      //   doc.addImage(image,'PNG',1,1);
+      //   doc.save("sample.pdf")
+      // })
+      this.$html2canvas(document.querySelector("#toPrint")).then(canvas => {
+        // Max 9 for entire first page 
+        // Max 12 to fill first page with record
+        // doc.addImage(image,'PNG',1,1);
+        const doc = this.$jsPDF('p', 'mm', 'a4')
+        var imgWidth = 380; 
+        var pageHeight = 300;  
+        var imgHeight = canvas.height * imgWidth / canvas.width;
+        var heightLeft = imgHeight;
+        var position = 0;
+        let imgData = canvas.toDataURL("image/png")
+
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          heightLeft -= pageHeight;
+          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          doc.addPage();
+        }
         doc.save("sample.pdf")
       })
     },

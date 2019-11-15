@@ -91,6 +91,10 @@ export default {
     {
       src: "@/plugins/jspdf.js",
       mode: 'client'
+    },
+    {
+      src: "@/plugins/html2canvas.js",
+      mode: 'client'
     }
   ],
 
