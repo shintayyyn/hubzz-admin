@@ -93,7 +93,7 @@
                 :key="`practice_type-${index}`"
                 class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
               >
-                <!-- {{toPostUser.practice_type_id[index].label}} -->
+                {{toPostUser.practice_type_id[index].label}}
               </div>
             </div> 
           </div>
