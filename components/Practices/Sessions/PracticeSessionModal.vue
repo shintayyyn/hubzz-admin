@@ -270,7 +270,7 @@
           </div>
         </div>
         <!-- BODY ENDS HERE -->
-        <div class="job-part-shield" v-if="modal"@click="modal=false"></div>
+        <div class="job-part-shield" v-if="modal" @click="modal=false"></div>
         <transition name="slide" mode="out-in">
           <div class="job-part-modal shadow-lg" v-if="modal">
             <JobPartModal :jobPartId="jobPartId" :specificJobPart="specificJobPart" @close="modal = false"/>

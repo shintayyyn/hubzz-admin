@@ -49,6 +49,8 @@ export default {
     async toDeleteSurgery(){
       await this.$axios.delete(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${this.childSurgery.id}`).then(res => {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is terminated and Invitation is Successfully Deleted' })
+        this.getPracticeSpokes(this.practice.id)
+        this.$emit('close')
       }).catch(err => {
         console.log('delete children error!!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
@@ -59,6 +61,8 @@ export default {
         practice_id: childPracId
       }).then( res => {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Spoke is Successfully Terminated' })
+        this.getPracticeSpokes(this.practice.id)
+        this.$emit('close')
       }).catch(err => {
         console.log('remove parent error!!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
@@ -67,13 +71,18 @@ export default {
     async toRejectRequest(childId) {
       await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}/reject-termination-request`)
       .then( res => {
-        console.log('id', this.practice.id)
-        console.log('child id', childId)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Request is Successfully Rejected' })
+        this.getPracticeSpokes(this.practice.id)
+        this.$emit('close')
       }).catch(err => {
         console.log('reject request error!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
+    },
+    getPracticeSpokes(practiceId) {
+      this.$store.dispatch("practices/fetchSpokes", {
+        practice_id: practiceId
+      });
     },
   }
   

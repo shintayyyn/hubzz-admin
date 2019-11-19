@@ -78,7 +78,7 @@
             </div>
               <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
               <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Invited At</strong>
-              <span class=" break-all">{{ childSurgery ? $moment(childSurgery.created_at).format('MMM-DD-YYYY | HH:mm:ss') :null }}</span>
+              <span class=" break-all">{{ childSurgery ? $moment(childSurgery.created_at).format('MMM DD, YYYY | HH:mm:ss') :null }}</span>
             </div>
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
               <strong class=" block md:hidden text-sm uppercase pr-2 align-middle">Status</strong>
@@ -120,8 +120,8 @@
           @pagechanged="pagechanged"
         />
       </div>
-
       <!-- END TABLE -->
+      
       <div class="add-practice-shield" v-if="modal || terminationModal" @click="closeModals()"></div>
       <transition name="slide" mode="out-in">
         <div class="add-practice-modal shadow-lg" v-if="modal">
