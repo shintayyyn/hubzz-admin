@@ -34,11 +34,13 @@
             >
               {{
                 error.message.charAt(0).toUpperCase() +
-                  error.message.slice(1).replace(/_/g, " ")
+                error.message.slice(1).replace(/_/g, " ")
               }}
             </div>
           </div>
         </div>
+
+        <!-- multi-checkbox -->
         <template v-if="type === 'multi-checkbox'">
           <div
             class="flex flex-row justify-start items-center mt-1"
@@ -61,11 +63,12 @@
             >
           </div>
         </template>
+
         <template v-else>
           <div class="flex flex-row justify-start mt-1">
             <template
               v-if="
-                ['text', 'time', 'email', 'password', 'number'].includes(type)
+                ['text', 'time', 'email', 'number'].includes(type)
               "
             >
               <div class="flex flex-col w-full">
@@ -85,11 +88,43 @@
                 <div v-if="error" class="text-red-500 py-1 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
-                      error.message.slice(1).replace(/_/g, " ")
+                    error.message.slice(1).replace(/_/g, " ")
                   }}
                 </div>
               </div>
+
             </template>
+
+            <template v-if=" type === 'password' ">
+              <div class="relative w-full mb-4">
+                <input
+                  class="w-full bg-transparent text-white py-2 outline-none border-b pr-6"
+                  :value="value"
+                  :type="togglePassword()"
+                  :placeholder="placeholder"
+                  :class="error ? 'border-red-500' : 'focus:border-yellow-500'"
+                  @input="$emit('input', $event.target.value)"
+                  @keypress.enter="$emit('submit')"
+                  @blur="$emit('blur')"
+                  @focus="showPasswordFocus = true"
+                  :style="inStyle"
+                />
+                <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full">
+                  <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
+                  <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
+                </button>
+                
+                <div v-if="error" class="text-red-500 -py-1 text-xs">
+                  {{
+                    error.message.charAt(0).toUpperCase() +
+                    error.message.slice(1).replace(/_/g, " ")
+                  }}
+                </div>
+                
+              </div>
+            </template>
+
+            <!-- select -->
             <template v-if="type === 'select'">
               <div class="flex flex-col w-full items-start">
                 <div
@@ -143,6 +178,8 @@
                 </div>
               </div>
             </template>
+
+            <!-- text area -->
             <template v-if="type === 'textarea'">
               <div class="flex flex-col w-full">
                 <textarea
@@ -330,7 +367,26 @@ export default {
       default: false
     }
   },
+  data(){
+    return{
+      passwordValue: '',
+      // show/hide password
+      passwordToggle: false,
+    }
+  },
+  computed:{
+    setPassword: function () {
+      return this.value
+    }
+  }, 
   methods: {
+    togglePassword(){
+      if (this.passwordToggle) {
+        return 'text'
+      }else{
+        return 'password'
+      }
+    },
     // for multi checkbox
     inputMultiCheck(e) {
       if (e.target.checked) {

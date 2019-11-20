@@ -124,24 +124,42 @@
             :error="formError.find(item => item.field === 'email')"
             @blur="CheckEmptyField(toPostUser.email, 'email')"
           />
-
-          <AppInput
-            v-model="toPostUser.password"
-            :type="'password'"
-            :label="'Password'"
-            :placeholder="'Password'"
-            :error="formError.find(item => item.field === 'password')"
-            @blur="CheckEmptyField(toPostUser.password, 'password')"
-          />
-
-          <AppInput
-            v-model="toPostUser.password_confirmation"
-            :type="'password'"
-            :label="'Confirm Password'"
-            :placeholder="'Confirm Password'"
-            :error="formError.find(item => item.field === 'password_confirmation')"
-            @blur="CheckEmptyField(toPostUser.password_confirmation, 'password_confirmation')"
-          />
+          
+          <div class="flex flex-col b rounded-lg">
+            <div class="">
+              <button
+               @click="generateRandomPassword()" class="flex p-2 bg-white text-black rounded-lg">
+               <span class="px-2 pt-1"> Generate Random Password</span> 
+                <svgicon
+                  name="dices" 
+                  width="30" 
+                  height="30"
+                  color="black"
+                />
+              </button>
+            </div>
+            <div>
+              <AppInput
+                v-model="toPostUser.password"
+                :type="'password'"
+                :label="'Password'"
+                :placeholder="'Password'"
+                :error="formError.find(item => item.field === 'password')"
+                @blur="CheckEmptyField(toPostUser.password, 'password')"
+              />  
+            </div>
+            <div>
+              <AppInput
+                v-model="toPostUser.password_confirmation"
+                :type="'password'"
+                :label="'Confirm Password'"
+                :placeholder="'Confirm Password'"
+                :error="formError.find(item => item.field === 'password_confirmation')"
+                @blur="CheckEmptyField(toPostUser.password_confirmation, 'password_confirmation')"
+              />
+            </div>
+          </div>
+          
           <AppInput 
             v-if="adminCreate"
             v-model="toPostUser.role_id"
@@ -176,11 +194,16 @@ export default {
   data() {
     return {
       formError: [],
+
       specificSurgery: [],
       specificPractice: [],
+
       practiceTypes: "",
+
       multiple: "true",
+
       adminRoles: [],
+      
       toPostUser: {
         email: "",
         password: "",
@@ -194,7 +217,8 @@ export default {
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
         role_id: ""
-      }
+      },
+      showPasswordFocus: false,
     };
   },
   async created() {
@@ -216,6 +240,7 @@ export default {
     await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
       this.adminRoles = res.data.roles;
     });
+    console.log('roles',this.adminRoles)
     console.log("prac types", this.practiceTypes);
     if (this.practice) {
       console.log("Practice to be created is a spoke");
@@ -342,6 +367,21 @@ export default {
       console.log("practice types", this.practiceTypes);
     },
 
+    togglePassword(){
+      if (this.passwordToggle) {
+        return 'text'
+      }else{
+        return 'password'
+      }
+    },
+
+    generateRandomPassword () {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!&*'.split('')
+      const password = Array(6).fill().map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
+      this.toPostUser.password = password
+      this.toPostUser.password_confirmation = password
+    },
+
     async toPostUserInfo(toPostUser, toPostSurgeryID) {
       try {
         if (
@@ -398,6 +438,7 @@ export default {
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
         } else if (this.adminCreate == true) {
+
           //Create New Admin
           console.log("new admin is being created");
           await this.$axios

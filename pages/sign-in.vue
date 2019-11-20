@@ -59,6 +59,7 @@
                 >{{ passwordErrorMessage }}</span>
               </div>
             </div>
+            
             <div class="relative w-full mb-4">
               <input
                 class="w-full bg-transparent text-white py-2 outline-none border-b pr-6"
@@ -74,6 +75,7 @@
                 <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
               </button>
             </div>
+
             <button
               @click="login"
               class="self-center rounded-lg px-6 py-4 font-bold bg-sunglow"

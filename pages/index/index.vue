@@ -100,13 +100,34 @@
 				</div>
 			</div>
 		</div>
+
+    <div class="shield" v-if="promptModal" @click="closeModals()"></div>
+    <transition name="slide" mode="out-in">
+      <div class="confirm-termination-modal xl:mx-96 xs:mx-4 shadow-lg shadow-lg" v-if="promptModal">
+        <ChangePasswordPrompt @close="promptModal = false"/>
+      </div>
+    </transition>
+
 	</div>
 </template>
 <script>
+import ChangePasswordPrompt from '@/components/UserManagement/ChangePasswordPrompt'
 export default {
+  components:{
+    ChangePasswordPrompt
+  },
 	data() {
-		return {};
-	},
+		return {
+      me: '',
+      promptModal: false
+    };
+  },
+  async created(){
+    console.log('me', this.me)
+    if(!this.me.password_updated_at){
+      this.promptModal = true
+    }
+  },
 	computed: {
 		locumDocsAlert() {
 			return this.$store.state.locums.locumDocAlert;
@@ -114,16 +135,56 @@ export default {
 	},
 	async asyncData({ app, store, route }) {
 		try {
+
 			let response = await app.$axios.$get(
 				`/api/v1/admin/locum-detail-compliance-documents`
 			);
 			const locumDocAlert = response.data.locum_detail_compliance_documents;
 
-			await store.commit("locums/SET_LOCUM_DOC_ALERT", locumDocAlert);
+      await store.commit("locums/SET_LOCUM_DOC_ALERT", locumDocAlert);
+      
+      response = await app.$axios.$get(`/api/v1/admin/me`)
+      const me = response.data.user
+      return{
+        me
+      }
 		} catch (err) {
 			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
 			console.log("Get locums error!", err);
 		}
-	}
+  },
+  methods:{
+    closeModals(){
+      this.promptModal = false
+    },
+  }
 };
 </script>
+<style>
+.shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
+.confirm-termination-modal {
+  position: fixed;
+  top: 20%;
+  /* left: 10%; */
+  border-radius: 25px;
+  margin-right: 0%;
+  width: 800px;
+  max-width: 80%;
+  height: 50%;
+  overflow: auto;
+  border-left: solid 2px orange;
+  border-right: solid 2px orange;
+  transition: all 0.3s ease-in-out;
+  background-color:#505561;
+  z-index: 512;
+}
+</style>
