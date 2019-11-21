@@ -1,6 +1,6 @@
 <template>
    <div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
-	<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'"/> -->
+	  <AppLoading :loading="loadingPractices" :message="'Loading Practices'"/>
 		<div class="text-xl md:text-4xl text-white">Practices</div>
     <div class="flex justify-between items-center flex-wrap">
       <div class="flex items-center py-2">
@@ -108,7 +108,7 @@
           <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
             <strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
             <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
-            :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500'}`">{{ practice.status }}</span>
+            :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'}`">{{ practice.status }}</span>
           </div>
 
           <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
