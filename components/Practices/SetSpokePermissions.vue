@@ -11,53 +11,104 @@
       </div>
     </div>
     <div class="mx-6">
-      <div class="w-full px-1">
-        <AppInput
-        v-model="newPracticeChild.pay_for_surgery"
-        :type="'select'"
-        :name="'pay_for_surgery'"
-        :label="'Pay for surgery?'"
-        :placeholder="'Select...'"
-        :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-        :error="formError.find(item => item.field === 'pay_for_surgery')"
-        @blur="CheckEmptyField(newPracticeChild.pay_for_surgery, 'pay_for_surgery')"
-        />
-      </div>
-      <div class="w-full px-1">
-        <AppInput
-        v-model="newPracticeChild.verify_job_creation"
-        :type="'select'"
-        :name="'verify_job_creation'"
-        :label="'Verify Job Creation?'"
-        :placeholder="'Select...'"
-        :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-        :error="formError.find(item => item.field === 'verify_job_creation')"
-        @blur="CheckEmptyField(newPracticeChild.verify_job_creation, 'verify_job_creation')"
-        />
-      </div>
-      <div class="w-full px-1">
-        <AppInput
-        v-model="newPracticeChild.share_banks_to_other_surgeries"
-        :type="'select'"
-        :name="'share_banks_to_other_surgeries'"
-        :label="'Allow this surgery to share its banks to other surgeries??'"
-        :placeholder="'Select...'"
-        :items="[{ label: 'Yes', value: true },
-          { label: 'No', value: false }]"
-        :error="formError.find(item => item.field === 'share_banks_to_other_surgeries')"
-        @blur="CheckEmptyField(newPracticeChild.share_banks_to_other_surgeries, 'share_banks_to_other_surgeries')"
-        />
-      </div>
-      <div class="w-full p-1">
-        <AppInput
-          v-model="newPracticeChild.create_job_rate_limit"
-          :type="'number'"
-          :name="'create_job_rate_limit'"
-          :label="'Job Rates Limit £'"
-          :inStyle="'text-align:right'"
-          :error="formError.find(item => item.field === 'create_job_rate_limit')"
-          @blur="CheckEmptyField(newPracticeChild.create_job_rate_limit, 'create_job_rate_limit')"
+      <div class="flex flex-col flex-wrap justify-between">
+        <div class="w-full p-1">
+          <AppInput
+            v-model="form.allow_surgery_create_sessions"
+            :type="'select'"
+            :name="'allow_surgery_create_sessions'"
+            :label="'Allow Spoke to Create Jobs/Sessions?'"
+            :placeholder="'Select...'"
+            :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+            :error="formError.find(item => item.field === 'allow_surgery_create_sessions')"
+            @blur="CheckEmptyField(form.allow_surgery_create_sessions, 'allow_surgery_create_sessions')"
           />
+        </div>
+        <!-- SET MAX RATES ;  NOT REQUIRED -->
+        <div class="p-2 mx-2 bg-gray-500 rounded-lg" v-if="surgeryCreateSessions == 'true' || form.allow_surgery_create_sessions == 'true'" >
+          <div class="w-full p-1">
+            <AppInput
+              v-model="form.max_hourly_rate_limit"
+              :type="'number'"
+              :name="'max_hourly_rate_limit'"
+              :label="'Set max hourly rate limit for Spoke'"
+              :inStyle="'text-align:right'"
+            />
+          </div>
+          <div class="w-full p-1">
+            <AppInput
+              v-model="form.max_halfday_rate_limit"
+              :type="'number'"
+              :name="'max_halfday_rate_limit'"
+              :label="'Set max half day rate limit for Spoke'"
+              :inStyle="'text-align:right'"
+            />
+          </div>
+          <div class="w-full p-1">
+            <AppInput
+              v-model="form.max_wholeday_rate_limit"
+              :type="'number'"
+              :name="'max_wholeday_rate_limit'"
+              :label="'Set max whole day rate limit for Spoke'"
+              :inStyle="'text-align:right'"
+            />
+          </div>
+          <div class="w-full p-1">
+            <AppInput
+              v-model="form.max_ooh_rate_limit"
+              :type="'number'"
+              :name="'max_ooh_rate_limit'"
+              :label="'Set max out-of-hours rate limit for Spoke'"
+              :inStyle="'text-align:right'"
+            />
+          </div>
+          <div class="w-full p-1">
+            <AppInput
+              v-model="form.max_excess_hours"
+              :type="'number'"
+              :name="'max_excess_hours'"
+              :label="'Set max excess hours'"
+              :inStyle="'text-align:right'"
+            />
+          </div>
+        </div>
+        <!-- SET MAX RATES END HERE -->
+        <div class="w-full p-1">
+          <AppInput
+            v-model="form.allow_surgery_bill_locum"
+            :type="'select'"
+            :name="'allow_surgery_bill_locum'"
+            :label="'Allow Spoke to handle its own billing for Locum?'"
+            :placeholder="'Select...'"
+            :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+            :error="formError.find(item => item.field === 'allow_surgery_bill_locum')"
+            @blur="CheckEmptyField(form.allow_surgery_bill_locum, 'allow_surgery_bill_locum')"
+          />
+        </div>
+        <div class="w-full p-1">
+          <AppInput
+            v-model="form.allow_surgery_bill_hubzz"
+            :type="'select'"
+            :name="'allow_surgery_bill_hubzz'"
+            :label="'Allow Spoke to handle its own billing for HUBZZ?'"
+            :placeholder="'Select...'"
+            :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+            :error="formError.find(item => item.field === 'allow_surgery_bill_hubzz')"
+            @blur="CheckEmptyField(form.allow_surgery_bill_hubzz, 'allow_surgery_bill_hubzz')"
+          />
+        </div>
+        <div class="w-full p-1">
+          <AppInput
+            v-model="form.share_banks_to_other_surgeries"
+            :type="'select'"
+            :name="'share_banks_to_other_surgeries'"
+            :label="'Share Banks to Other Surgeries'"
+            :placeholder="'Select...'"
+            :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+            :error="formError.find(item => item.field === 'share_banks_to_other_surgeries')"
+            @blur="CheckEmptyField(form.share_banks_to_other_surgeries, 'share_banks_to_other_surgeries')"
+          />
+        </div>
       </div>
       <button
         class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float:right font-bold"
@@ -75,13 +126,24 @@ export default {
   props:['practice','surgeryId'],
   data(){
     return{
-      newPracticeChild:{
-        pay_for_surgery: '',
-        verify_job_creation: '',
-        share_banks_to_other_surgeries: '',
-        create_job_rate_limit: '',
+      form:{
+        surgery_id: this.surgeryId,
+        allow_surgery_create_sessions: "",
+        max_hourly_rate_limit: "",
+        max_halfday_rate_limit: "",
+        max_wholeday_rate_limit: "",
+        max_ooh_rate_limit: "",
+        max_excess_hours: "",
+        allow_surgery_bill_locum: "",
+        allow_surgery_bill_hubzz: "",
+        share_banks_to_other_surgeries: "",
       },
       formError: []
+    }
+  },
+  computed:{
+    surgeryCreateSessions: function () {
+      return this.form.allow_surgery_create_sessions
     }
   },
   created(){
@@ -96,15 +158,7 @@ export default {
     async newChildSpoke() {
       if(this.practice.type == "Hub") {
         if (!this.formError.length){
-          await this.$axios.post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,
-            {
-              surgery_id: this.surgeryId,
-              pay_for_surgery: this.newPracticeChild.pay_for_surgery,
-              verify_job_creation: this.newPracticeChild.verify_job_creation,
-              share_banks_to_other_surgeries: this.newPracticeChild.share_banks_to_other_surgeries,
-              create_job_rate_limit: this.newPracticeChild.create_job_rate_limit,
-            }
-          ).then(async res=> {
+          await this.$axios.post(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`,this.form).then(res=> {
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "success",
