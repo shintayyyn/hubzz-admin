@@ -1,10 +1,10 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-hidden pt-2">
-		<!-- <div>
-			<AppLoading :loading="loadingLocums" :message="'Loading Locums'"/>
-		</div> -->
-		<div class="text-xl md:text-4xl text-white px-4 md:px-6">Locums</div>
-		<div class="flex flex-col md:flex-row justify-between px-4 md:px-6">
+	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
+		<div>
+			<AppLoading :loading="loadingLocums" :message="'Loading Locums'" />
+		</div>
+		<div class="text-xl md:text-4xl text-white">Locums</div>
+		<div class="flex flex-col md:flex-row justify-between">
 			<div class="flex py-2">
 				<div class="relative">
 					<input
@@ -31,7 +31,7 @@
 			<!-- FILTER SELECTS -->
 			<div class="flex w-full justify-end">
 				<div
-					class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end p-2 md:py-0"
+					class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end py-2 pr-2 md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2"
 						>Filter by Compliance Status</label
@@ -52,7 +52,7 @@
 					</select>
 				</div>
 				<div
-					class="w-1/2 relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end p-2 md:py-0"
+					class="w-1/2 relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end py-2  md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2">Sort by</label>
 					<select
@@ -68,7 +68,7 @@
 			</div>
 			<!-- FILTER SELECTS END HERE -->
 		</div>
-		<div class="w-full px-6">
+		<div class="w-full ">
 			<div
 				class="hidden md:flex items-center text-white justify-around font-semibold"
 			>
@@ -255,7 +255,7 @@
 				>
 					<strong class="block md:hidden text-xs uppercase">Status</strong>
 					<span
-						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1"
+						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
 						:class="statusStyle(locumUser.status)"
 						>{{ locumUser.status }}</span
 					>
@@ -267,7 +267,7 @@
 						>Compliance Status</strong
 					>
 					<span
-						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full lg:px-8 sm:px-2 w-32 min-w-0 my-1"
+						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
 						:class="complianceStatusStyle(locumUser.compliance_status)"
 						>{{ locumUser.compliance_status }}</span
 					>

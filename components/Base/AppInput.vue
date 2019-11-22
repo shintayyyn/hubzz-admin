@@ -109,7 +109,7 @@
                   @focus="showPasswordFocus = true"
                   :style="inStyle"
                 />
-                <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full">
+                <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full" :class="error && '-mt-2'">
                   <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
                   <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
                 </button>
@@ -156,7 +156,7 @@
                       :value="item.value"
                       :selected="value === item.value"
                       class="text-black"
-                      >{{ item.label ? item.label : item.name }}</option
+                      >{{ item.label }}</option
                     >
                   </select>
                   <span class="absolute right-0" v-if="!multiple">

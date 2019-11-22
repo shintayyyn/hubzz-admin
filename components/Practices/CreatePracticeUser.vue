@@ -238,10 +238,12 @@ export default {
         });
       });
     await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
-      this.adminRoles = res.data.roles;
+      res.data.roles.forEach(item => {
+        this.adminRoles.push({value: item.id, label: item.name})
+      })
+      let default_role = res.data.roles.find((item, index) => index === 0)
+      this.toPostUser.role_id = default_role.id
     });
-    console.log('roles',this.adminRoles)
-    console.log("prac types", this.practiceTypes);
     if (this.practice) {
       console.log("Practice to be created is a spoke");
     }
@@ -268,13 +270,30 @@ export default {
         });
       } else {
         let index = this.formError.findIndex(
-          item => item.message === "Password Must Be Atleast 6 Characters"
+          item => item.field === "password"
         );
         let error = this.formError.filter(
-          item => item.message === "Password Must Be Atleast 6 Characters"
+          item => item.field === "password"
         );
-        if (index >= 0) {
+        console.log("pass", index, value.length, index >= 0 || value.length >= 6)
+        if (index >= 0 || value.length >= 6) {
           this.formError.splice(index, error.length);
+        }
+      }
+      if(this.toPostUser.password_confirmation){
+        const error = this.ValidateSamePassword(value, this.toPostUser.password_confirmation);
+        if (error) {
+          this.formError.push(error);
+        } else {
+          let index = this.formError.findIndex(
+            item => item.field === "password_confirmation"
+          );
+          let errors = this.formError.filter(
+            item => item.field === "password_confirmation"
+          );
+          if (index >= 0) {
+            this.formError.splice(index, errors.length);
+          }
         }
       }
     },
@@ -347,12 +366,12 @@ export default {
       return;
     },
     checkForm: function(userInfo, surgID) {
+      console.log("pass", userInfo.password, userInfo.password.length)
       this.formError = [];
       let list = ["title", "suffix"];
       !this.adminCreate && list.push("role_id");
       this.adminCreate && list.push("practice_type_id", "surgery_id");
       this.Validate(this.toPostUser, list);
-      console.log(userInfo.type, this.formError);
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
