@@ -1,44 +1,42 @@
 <template>
     <div class="new-practice-user-modal shadow-lg">
         <transition name = "slide" mode = "out-in">
-            <CreatePracticeUser :practice="practice" :surgery="surgery"/>
+            <CreateUser :practice="practice" :surgery="surgery"/>
         </transition>
         <nuxt-child/>
     </div>
 </template>
 <script>
-import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
+import CreateUser from '@/components/UserManagement/CreateUser'
 export default {
-    components:{
-        CreatePracticeUser
-    },
-    data(){
-        return{
-            practice:null,
-            surgery:null
-        }
-    },
-
-    async asyncData({app,store,route}){
-
-        try{
-            const response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-            const practice = response.data.data.practice
-            const surgery = response.data.data.practice.surgery
-            return{
-                practice,
-                surgery
-            }
-        
-        }catch(err){
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'warning', text:'Something went wrong!'})
-            console.log("index practices index create asyncData err", err);
-        }
-    },
-
-    methods:{
-
+  components:{
+      CreateUser
+  },
+  data(){
+    return{
+        practice:null,
+        surgery:null
     }
+  },
+  async asyncData({app,store,route}){
+    try{
+      const response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.practice
+      const surgery = response.data.practice.surgery
+      return{
+        practice,
+        surgery
+      }
+      
+    }catch(err){
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'warning', text:'Something went wrong!'})
+      console.log("index practices index create asyncData err", err);
+    }
+  },
+
+  methods:{
+
+  }
 };
 </script>
 <style>

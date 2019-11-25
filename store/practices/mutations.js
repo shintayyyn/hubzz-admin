@@ -59,14 +59,16 @@ export default{
         state.practiceUsers = payload
     },
     ADD_PRACTICE_USER(state, payload){
-        let index = state.practiceUsers.findIndex(practiceUser => practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
-        if(index >= 0){
-            state.practiceUsers.unshift(payload.user)
-            state.practiceUsersCount = state.practiceUsersCount + 1
-            if(state.practiceUsersCount > 5){
-                state.practiceUsers.pop()
-            }
-        }
+      console.log('practiceUser',state.practiceUsers)
+      let index = state.practiceUsers.findIndex(practiceUser => 
+        practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
+      if(index >= 0){
+          state.practiceUsers.unshift(payload.user)
+          state.practiceUsersCount = state.practiceUsersCount + 1
+          if(state.practiceUsersCount > 5){
+              state.practiceUsers.pop()
+          }
+      }
     },
     SET_PRACTICE_USERS_PAGE_COUNT(state, payload){
         state.practiceUsersPageCount = payload 

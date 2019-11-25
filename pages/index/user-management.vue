@@ -1,9 +1,5 @@
 <template>
     <div class="flex-1 flex flex-col overflow-auto">
-      <!-- <div>
-        <div class="text-4xl text-white leading-none">User Management</div>
-        <div class="text-xs mb-4 text-white">Work in progress.</div>
-      </div> -->
       <div>
         <UserManagementTabs />
       </div>
@@ -12,12 +8,12 @@
     </div>
 </template>
 <script>
-import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
+import CreateUser from '@/components/UserManagement/CreateUser'
 import AppConfirmCancel from '@/components/AppConfirmCancel'
 import UserManagementTabs from '@/components/UserManagement/UserManagementTabs'
   export default {
     components:{
-      CreatePracticeUser,
+      CreateUser,
       AppConfirmCancel,
       UserManagementTabs
     },

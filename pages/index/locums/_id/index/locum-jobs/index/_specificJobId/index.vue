@@ -21,8 +21,8 @@ export default {
     try{
       console.log('job id',route.params.specificJobId)
       console.log('route name',route.name)
-      let response = await app.$axios.get(`/api/v1/admin/jobs/${route.params.specificJobId}`)
-      const job = response.data.data.job
+      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.specificJobId}`)
+      const job = response.data.job
 
       store.commit('jobs/TOGGLE_LOADING', false)
       return{

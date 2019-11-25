@@ -66,19 +66,19 @@
         <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal" @click="modal ? modal=false : $router.go(-1)"></div>
         <transition name="slide" mode="out-in">
             <div class="practice-user-modal shadow-lg" v-if="modal">
-                <CreatePracticeUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total"/>
+                <CreateUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total"/>
             </div>
         </transition>
     </div>
 </template>
 <script>
-import CreatePracticeUser from '@/components/Practices/CreatePracticeUser'
+import CreateUser from '@/components/UserManagement/CreateUser'
 import AppPagination from '@/components/Base/AppPagination'
 import AppLoading from '@/components/Base/AppLoading'
 export default {
     props:['practice'],
     components:{
-        CreatePracticeUser,
+        CreateUser,
         AppPagination,
         AppLoading
     },

@@ -15,6 +15,19 @@
         </div>
         <embed class="object-contain object-top w-full h-full document" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/>
       </div> -->
+      <div class="flex justify-start overflow-x-auto my-2">
+        <nuxt-link
+          :to="getRoute('practice-invoices')" 
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="$route.path == `/billings/${$route.params.id}/practice-invoices` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        >Practice Invoices</nuxt-link>
+        <nuxt-link
+          :to="getRoute('locum-invoices')"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="$route.path.includes(`/billings/${$route.params.id}/locum-invoices`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        >Locum Jobs Billing</nuxt-link>
+      </div>
+
 
       <div class="flex w-full overflow-hidden">
         <div class="w-3/4 overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
@@ -71,10 +84,9 @@
               </div>
             </nuxt-link>
           </div>
-          
         </div>
 
-        <div class="w-1/4 overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
+        <!-- <div class="w-1/4 overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
           <div class="m-2">
             <div>
               <p class="m-2 text-white text-xl font-semibold">Practice</p>
@@ -119,7 +131,8 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
+        
       </div>
       <nuxt-child/>
     </div>
@@ -187,18 +200,36 @@ export default {
   },
   async asyncData({ app, route, store }) {
     try {
-      let response = await app.$axios.get(`/api/v1/admin/practice-invoices/${route.params.id}`)
-      const practiceInvoice = response.data.data.practice_invoice
-      response = await app.$axios.get(`/api/v1/admin/practices/${practiceInvoice.practice.id}`)
-      const practice = response.data.data.practice
+      // let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.id}`)
+      // const practiceInvoice = response.data.practice_invoice
+      // response = await app.$axios.$get(`/api/v1/admin/practices/${practiceInvoice.practice.id}`)
+      // const practice = response.data.practice
 
-      return {
-        practiceInvoice,
-        practice
-      }
+      // return {
+      //   practiceInvoice,
+      //   practice
+      // }
     } catch (err) {
-      error({ statusCode: 404 }),
-      console.log('Get specific invoice error!', err)
+      // error({ statusCode: 404 }),
+      // console.log('Get specific invoice error!', err)
+    }
+  },
+  computed:{
+    getRoute(){
+      return(tab) =>{
+        if(!tab){
+          tab = ''
+        }
+        const query = {
+          ...this.$route.query,
+        }
+        delete query.order_by
+        delete query.status
+        return{
+          path: tab ? `/billings/${this.$route.params.id}/${tab}` : `/billings/${this.$route.params.id}`,
+          query
+        }
+      }
     }
   },
   methods: {

@@ -4,7 +4,7 @@ export default{
         //-------------------PRACTICES-------------------
         this.$socket.on("createdPractice",  (payload) => {
             commit('ADD_PRACTICE', payload.payload.practice)
-            commit('ADD_PRACTICE_USER', payload.payload.user)
+            // commit('ADD_PRACTICE_USER', payload.payload.user)
         }),
         this.$socket.on("deletePractice", practice => {
             commit('DELETE_PRACTICE', practice)

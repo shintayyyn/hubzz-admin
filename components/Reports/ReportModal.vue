@@ -91,11 +91,11 @@ export default {
 
   // async asyncData({ app, route }) {
   //   try {
-  //     let response = await app.$axios.get(
+  //     let response = await app.$axios.$get(
   //       `/api/v1/qualifications/${route.params.id}`
   //     );
 
-  //     const qualification = response.data.data.qualification;
+  //     const qualification = response.data.qualification;
 
   //     return {
   //       qualification

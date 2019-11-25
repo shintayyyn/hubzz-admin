@@ -136,8 +136,8 @@ export default {
   },
   async asyncData({ app, route, store }){
     try{
-      // let response = await app.$axios.get(`/api/v1/admin/locum-users/${route.params.locumInvoiceId}`)
-      // const locum = response.data.data.locum
+      // let response = await app.$axios.$get(`/api/v1/admin/locum-users/${route.params.locumInvoiceId}`)
+      // const locum = response.data.locum
       console.log('this is the "invoice" id:',route.params.jobInvoiceId)
       return{
         locum

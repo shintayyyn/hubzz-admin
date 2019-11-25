@@ -181,10 +181,10 @@ export default {
   },
   async asyncData({ app, route, }){
     try{
-      let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-      const practice = response.data.data.practice
-      response = await app.$axios.get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
-      const practice_surgery = response.data.data.practice_surgery
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.practice
+      response = await app.$axios.$get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
+      const practice_surgery = response.data.practice_surgery
       console.log('pracsurg', practice_surgery)
       return{
         practice,

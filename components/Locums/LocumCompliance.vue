@@ -486,7 +486,7 @@ export default {
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:verifyReject
                     })
-                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
                     await this.getLocums()
 
@@ -494,7 +494,7 @@ export default {
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:'Pending'
                     })
-                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
                     await this.getLocums()
 
@@ -502,7 +502,7 @@ export default {
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{
                         status:'Pending'
                     })
-                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.data.user.locum_detail.mpl_or_npl_number.status
+                    //this.user.locum_detail.mpl_or_npl_number.status = response.data.user.locum_detail.mpl_or_npl_number.status
                     this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved. Status reverted back to pending' })
                     await this.getLocums()
 

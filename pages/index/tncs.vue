@@ -42,10 +42,10 @@ export default {
 	},
 	async asyncData({ app, store, route }) {
 		try {
-			let response = await app.$axios.get(`/api/v1/admin/terms-and-conditions`);
-			const terms = response.data.data.terms;
-			const tnc = response.data.data.terms.terms_and_conditions;
-			const privacypolicy = response.data.data.terms.privacy_policy;
+			let response = await app.$axios.$get(`/api/v1/admin/terms-and-conditions`);
+			const terms = response.data.terms;
+			const tnc = response.data.terms.terms_and_conditions;
+			const privacypolicy = response.data.terms.privacy_policy;
 			return {
 				terms,
 				tnc,

@@ -13,14 +13,13 @@
 		</div>
 
 		<!-- TABLE RESPONSIVE-->
-		<div v-if="invoiced == true" class="w-full text-md">
-			<div v-if="!practiceInvoices.length" class="text-white py-2">
+			<div v-if="practiceCount <= 0" class="text-white py-2">
 				No invoice available at the moment.
 			</div>
 			<!-- HEADER -->
 			<div
 				class="hidden md:flex items-center text-white justify-around font-semibold"
-				v-if="practiceInvoices.length > 0"
+				v-if="practiceCount > 0"
 			>
 				<div class="flex-1 align-middle px-2 text-center">
 					Practice / Surgery
@@ -34,72 +33,35 @@
 			<!-- END HEADER -->
 			<!-- BODY -->
 			<nuxt-link
-				v-for="(practiceInvoice, index) in practiceInvoices"
+				v-for="(practice, index) in practices"
 				:key="`billing-${index}`"
-				:to="`/billings/${practiceInvoice.id}`"
+				:to="`/billings/${practice.id}`"
 				class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
 				draggable="false"
 			>
-				<div
-					class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">
-						Practice / Surgery
-					</strong>
-					<span class="break-word">
-						{{ practiceInvoice.practice.surgery.name }}
-					</span>
-				</div>
-				<div
-					class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">Created</strong>
-					<span class="break-all">
-						{{
-							$moment(practiceInvoice.date_created).format(
-								"MMM DD, YYYY | HH:ss:mm"
-							)
-						}}
-					</span>
-				</div>
-				<div
-					class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">Issued</strong>
-					<span class="break-all">
-						{{
-							$moment(practiceInvoice.issued_at).format(
-								"MMM DD, YYYY | HH:SS:MM"
-							)
-						}}
-					</span>
-				</div>
-				<div
-					class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-					<span
-						v-for="(item, index) in practiceInvoice.practice_invoice_items"
-						:key="index"
-						class=""
-						>{{ item }}</span
-					>
-				</div>
-				<div
-					class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-					<span class="break-all">{{ practiceInvoice.total_amount }}</span>
-				</div>
-				<!-- <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
-          <strong class="block md:hidden text-xs uppercase">Status</strong>
-          <div class="py-4" v-if="!practiceInvoice.paid && !practiceInvoice.paid_at">
-            <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>
-          </div>
-        </div> -->
+				<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
+          <strong class="block md:hidden text-xs uppercase">Practice Name</strong>
+          <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
+        </div>
+
+        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase">Expires</strong>
+          <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
+        </div>
+
+        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
+          <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
+          :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'}`">{{ practice.status }}</span>
+        </div>
+
+        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+          <strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
+          <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
+          :class="typeStyle(practice.type)">{{ practice.type }}</span>
+        </div>
 			</nuxt-link>
 			<!-- END BODY -->
-		</div>
 		<!-- END TABLE -->
 		<div
 			class="billing-shield"
@@ -117,70 +79,30 @@
 export default {
 	data() {
 		return {
-			billings: [
-				{
-					id: "1",
-					invnum: "0000000001",
-					practice: "OLDHAM",
-					created: "10/02/2019",
-					issued: "15/02/2019",
-					jobnums: ["H00000000101"],
-					amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "2",
-					invnum: "0000000002",
-					practice: "TROUTBECK",
-					created: "10/02/2019",
-					issued: "14/02/2019",
-					jobnums: ["H00000000102-1", "H00000000102-2"],
-					amount: "£200.00",
-					status: "Issued"
-				},
-				{
-					id: "3",
-					invnum: "0000000003",
-					practice: "INSPIRE",
-					created: "10/02/2019",
-					issued: "15/02/2019",
-					jobnums: ["H00000000103"],
-					amount: "£100.00",
-					status: "Paid"
-				}
-			],
-			toBeInvoicedCount: "",
-			practicesToBeInvoiced: [],
-			practiceInvoicesCount: "",
-			practiceInvoices: [],
-			invoiced: true
+			// toBeInvoicedCount: "",
+			// practicesToBeInvoiced: [],
+			// practiceInvoicesCount: "",
+			// practiceInvoices: [],
+      // invoiced: true
+      practiceCount:0,
+      practices:[]
 		};
 	},
 	async asyncData({ app, route, store }) {
 		try {
-			let response = await app.$axios.get(
-				`/api/v1/admin/practices-to-be-invoiced/count`
-			);
-			const toBeInvoicedCount = response.data.data.count;
-
-			response = await app.$axios.get(`/api/v1/admin/practices-to-be-invoiced`);
-			const practicesToBeInvoiced = response.data.data.practices;
-
-			response = await app.$axios.get(`/api/v1/admin/practice-invoices/count`);
-			const practiceInvoicesCount = response.data.data.count;
-
-			response = await app.$axios.get(`/api/v1/admin/practice-invoices`);
-			const practiceInvoices = response.data.data.practice_invoices;
-
+			let response = await app.$axios.$get(`/api/v1/admin/practices/count`);
+      const practiceCount = response.data.count
+      console.log('practicecount', practiceCount)
+      response = await app.$axios.$get(`/api/v1/admin/practices`)
+      const practices = response.data.practices
+      console.log('practices', practices)
 			return {
-				toBeInvoicedCount,
-				practicesToBeInvoiced,
-				practiceInvoicesCount,
-				practiceInvoices
+        practiceCount,
+        practices
 			};
 		} catch (err) {
 			error({ statusCode: 404 });
-			console.log("Get invoices error!", err);
+			console.log("Get practices error!", err);
 		}
 	},
 	methods: {
@@ -235,6 +157,22 @@ export default {
 			}
 			this.sortBy = toSortBy;
 		},
+
+    typeStyle(status){
+      switch(status){
+        case 'Hub':
+          return 'bg-red-500 text-white lg:px-8 sm:px-2'
+          break;
+        case 'Spoke':
+          return 'bg-blue-500 text-white lg:px-8 sm:px-2'
+          break;
+        case 'Stand Alone':
+          return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
+          break;
+        default:
+          return
+      }
+    },
 
 		statusStyle(status) {
 			switch (status) {

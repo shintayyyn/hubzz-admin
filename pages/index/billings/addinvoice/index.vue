@@ -218,8 +218,8 @@ export default {
   },
   async asyncData({ app, route, store }) {
     try {
-      let response = await app.$axios.get(`/api/v1/admin/practices`)
-      const practices = response.data.data.practices
+      let response = await app.$axios.$get(`/api/v1/admin/practices`)
+      const practices = response.data.practices
 
       return{
         practices

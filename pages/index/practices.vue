@@ -157,7 +157,7 @@
 			</span>
 		</button>														
 	</div>
-	<!-- PAGINATION -->
+	<!-- PAGINATION ENDS HERE -->
 
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.push('/practices')"></div>
   <transition name="slide" mode="out-in">
@@ -227,16 +227,16 @@ export default {
   				params.search = search
 			}
 				
-  			const getPracticesCountPromise = app.$axios.get(`/api/v1/admin/practices/count`, { params })
-			const getPracticesPromise = app.$axios.get(`/api/v1/admin/practices`, { params })
+  			const getPracticesCountPromise = app.$axios.$get(`/api/v1/admin/practices/count`, { params })
+			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, { params })
 				
 			let response = null
 			
 			response = await getPracticesCountPromise
-			const itemCount = response.data.data.count
+			const itemCount = response.data.count
 			
 			response = await getPracticesPromise
-			const practices = response.data.data.practices
+			const practices = response.data.practices
 			
 			await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
 			await store.commit('practices/SET_PRACTICES',practices)
@@ -368,51 +368,28 @@ export default {
     },
       
     async sortBy(sortedBy,page,search) {
-        if(this.sortedBy == sortedBy && this.sortType == true){
-          this.paramSort.order_by ='created_at:desc'
-          this.sortedBy = ''
-        }else{
-          this.sortedBy = sortedBy
-          this.sortType = !this.sortType
-          this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
-        }
-        let order_by = await this.paramSort.order_by
-        let query = {
+      if(this.sortedBy == sortedBy && this.sortType == true){
+        this.paramSort.order_by ='created_at:desc'
+        this.sortedBy = ''
+      }else{
+        this.sortedBy = sortedBy
+        this.sortType = !this.sortType
+        this.paramSort.order_by = await `${sortedBy}:${this.sortType ? 'asc' : 'desc'}`
+      }
+      let order_by = await this.paramSort.order_by
+      let query = {
+        ...this.$router.query,
+        order_by
+      }
+      if (page === 1) {
+        delete query.page
+      }
+      if(page){
+        query = {
           ...this.$router.query,
-          order_by
+          page,order_by
         }
-        if (page === 1) {
-          delete query.page
-        }
-        if(page){
-          query = {
-            ...this.$router.query,
-            page,order_by
-          }
-        }
-        if(search){
-          query = {
-            ...this.$router.query,
-            search,order_by
-          }
-        }
-        if(page & search){
-          query = {
-            ...this.$router.query,
-            page,search,order_by
-          }
-        }
-        
-        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true
-        }
-        this.$router.push({ query })
-        this.getPractices()
-      },
-    goToPage(page,search,order_by) {
-        if (page < 1) {
-          return
-        }
+      }
       if(search){
         query = {
           ...this.$router.query,
@@ -430,7 +407,7 @@ export default {
       this.loading = true
       }
       this.$router.push({ query })
-      this.getPractices(this.paramSort,this.search)
+      this.getPractices()
     },
     goToPage(page,search,order_by) {
       if (page < 1) {
@@ -528,7 +505,6 @@ export default {
           return
       }
     },
-		  
   }
 };
 </script>

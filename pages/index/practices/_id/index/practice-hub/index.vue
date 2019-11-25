@@ -37,16 +37,16 @@ export default {
       try{
         //Practice Hub is the Practice's data as the Hub
         //Practice Parent is the Practice's data as a Specific Practice
-        let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
-        const practice = response.data.data.practice
+        let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+        const practice = response.data.practice
         
-        response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
-        const practiceHub = response.data.data.practice
+        response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
+        const practiceHub = response.data.practice
         let practiceParent = ''
         console.log('practice hub', practiceHub)
         if (practiceHub.parent_surgery && practiceHub.parent_surgery.practice) {
-            response = await app.$axios.get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
-            practiceParent = response.data.data.practice
+            response = await app.$axios.$get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
+            practiceParent = response.data.practice
             await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
         }
 

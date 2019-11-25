@@ -26,10 +26,10 @@ export default {
     },
     async asyncData({ app, store, route, error }){
       try{
-        let response = await app.$axios.get(`/api/v1/admin/practice-documents/${route.params.pracDocId}`)
-        const practiceDoc = response.data.data.practice_document
-        response = await app.$axios.get(`/api/v1/admin/practices/${practiceDoc.practice.id}`)
-        const practice = response.data.data.practice
+        let response = await app.$axios.$get(`/api/v1/admin/practice-documents/${route.params.pracDocId}`)
+        const practiceDoc = response.data.practice_document
+        response = await app.$axios.$get(`/api/v1/admin/practices/${practiceDoc.practice.id}`)
+        const practice = response.data.practice
         await store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
 
         return{
