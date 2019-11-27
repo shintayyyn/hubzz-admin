@@ -13,55 +13,81 @@
 		</div>
 
 		<!-- TABLE RESPONSIVE-->
-			<div v-if="practiceCount <= 0" class="text-white py-2">
-				No invoice available at the moment.
+		<div v-if="practiceCount <= 0" class="text-white py-2">
+			No invoice available at the moment.
+		</div>
+		<!-- HEADER -->
+		<div
+			class="hidden md:flex items-center text-white justify-around font-semibold"
+			v-if="practiceCount > 0"
+		>
+			<div class="flex-1 align-middle px-2">
+				Practice / Surgery
 			</div>
-			<!-- HEADER -->
+			<div class="flex-1 align-middle px-2 text-center">Expires</div>
+			<div class="flex-1 align-middle px-2 text-center">Status</div>
+			<div class="flex-1 align-middle px-2 text-center">Type</div>
+			<!-- <div class="flex-1 align-middle px-2 text-center">£ Amount</div> -->
+			<!-- <div class="flex-1 align-middle px-2 text-center">Status</div> -->
+		</div>
+		<!-- END HEADER -->
+		<!-- BODY -->
+		<nuxt-link
+			v-for="(practice, index) in practices"
+			:key="`billing-${index}`"
+			:to="`/billings/${practice.id}`"
+			class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
+			draggable="false"
+		>
 			<div
-				class="hidden md:flex items-center text-white justify-around font-semibold"
-				v-if="practiceCount > 0"
+				class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none"
 			>
-				<div class="flex-1 align-middle px-2 text-center">
-					Practice / Surgery
-				</div>
-				<div class="flex-1 align-middle px-2 text-center">Created</div>
-				<div class="flex-1 align-middle px-2 text-center">Issued</div>
-				<div class="flex-1 align-middle px-2 ">Job Numbers</div>
-				<div class="flex-1 align-middle px-2 text-center">£ Amount</div>
-				<div class="flex-1 align-middle px-2 text-center">Status</div>
+				<strong class="block md:hidden text-xs uppercase"
+					>Practice / Surgery</strong
+				>
+				<span>{{ practice.surgery ? practice.surgery.name : null }}</span>
 			</div>
-			<!-- END HEADER -->
-			<!-- BODY -->
-			<nuxt-link
-				v-for="(practice, index) in practices"
-				:key="`billing-${index}`"
-				:to="`/billings/${practice.id}`"
-				class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-				draggable="false"
+
+			<div
+				class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
 			>
-				<div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none">
-          <strong class="block md:hidden text-xs uppercase">Practice Name</strong>
-          <span>{{ practice.surgery ? practice.surgery.name:null }}</span>
-        </div>
+				<strong class="block md:hidden text-xs uppercase">Expires</strong>
+				<span>{{
+					practice && practice.actived_until
+						? $moment(practice.actived_until).format("MMM D, YYYY | hh:mm A")
+						: "Unavailable"
+				}}</span>
+			</div>
 
-        <div class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase">Expires</strong>
-          <span>{{ practice && practice.actived_until ?  $moment(practice.actived_until).format('MMM D, YYYY | hh:mm A'): 'Unavailable' }}</span>
-        </div>
+			<div
+				class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
+			>
+				<strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
+				<span
+					class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
+					:class="
+						`${
+							practice.status === 'Active'
+								? 'bg-green-500'
+								: 'bg-gray-500 text-gray-700'
+						}`
+					"
+					>{{ practice.status }}</span
+				>
+			</div>
 
-        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
-          <span class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
-          :class="`${practice.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'}`">{{ practice.status }}</span>
-        </div>
-
-        <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-          <strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-          <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-          :class="typeStyle(practice.type)">{{ practice.type }}</span>
-        </div>
-			</nuxt-link>
-			<!-- END BODY -->
+			<div
+				class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
+			>
+				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
+				<span
+					class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
+					:class="typeStyle(practice.type)"
+					>{{ practice.type }}</span
+				>
+			</div>
+		</nuxt-link>
+		<!-- END BODY -->
 		<!-- END TABLE -->
 		<div
 			class="billing-shield"
@@ -83,22 +109,22 @@ export default {
 			// practicesToBeInvoiced: [],
 			// practiceInvoicesCount: "",
 			// practiceInvoices: [],
-      // invoiced: true
-      practiceCount:0,
-      practices:[]
+			// invoiced: true
+			practiceCount: 0,
+			practices: []
 		};
 	},
 	async asyncData({ app, route, store }) {
 		try {
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`);
-      const practiceCount = response.data.count
-      console.log('practicecount', practiceCount)
-      response = await app.$axios.$get(`/api/v1/admin/practices`)
-      const practices = response.data.practices
-      console.log('practices', practices)
+			const practiceCount = response.data.count;
+			console.log("practicecount", practiceCount);
+			response = await app.$axios.$get(`/api/v1/admin/practices`);
+			const practices = response.data.practices;
+			console.log("practices", practices);
 			return {
-        practiceCount,
-        practices
+				practiceCount,
+				practices
 			};
 		} catch (err) {
 			error({ statusCode: 404 });
@@ -158,21 +184,21 @@ export default {
 			this.sortBy = toSortBy;
 		},
 
-    typeStyle(status){
-      switch(status){
-        case 'Hub':
-          return 'bg-red-500 text-white lg:px-8 sm:px-2'
-          break;
-        case 'Spoke':
-          return 'bg-blue-500 text-white lg:px-8 sm:px-2'
-          break;
-        case 'Stand Alone':
-          return 'bg-indigo-600 text-white lg:px-8 sm:px-2'
-          break;
-        default:
-          return
-      }
-    },
+		typeStyle(status) {
+			switch (status) {
+				case "Hub":
+					return "bg-red-500 text-white lg:px-8 sm:px-2";
+					break;
+				case "Spoke":
+					return "bg-blue-500 text-white lg:px-8 sm:px-2";
+					break;
+				case "Stand Alone":
+					return "bg-indigo-600 text-white lg:px-8 sm:px-2";
+					break;
+				default:
+					return;
+			}
+		},
 
 		statusStyle(status) {
 			switch (status) {
