@@ -349,7 +349,6 @@ export default {
 			this.$router.push({ query });
 		},
 		getUsers(item) {
-			console.log("users", item);
 		}
 	}
 };

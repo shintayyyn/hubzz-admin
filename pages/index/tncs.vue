@@ -20,7 +20,7 @@ export default {
 		TermsAndConditions,
 		PrivacyPolicy,
 		TermsAndConditionsTabs
-	},
+  },
 	computed: {
 		activeComponent() {
 			return this.$route.query.active_tab;

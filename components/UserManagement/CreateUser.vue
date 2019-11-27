@@ -160,15 +160,6 @@
             </div>
           </div>
           
-          <!-- <AppInput 
-            v-if="adminCreate"
-            v-model="toPostUser.role_id"
-            :type="'select'"
-            :label="'Type'"
-            :items="adminRoles"
-            :error="formError.find(item => item.field === 'role_id')"
-            @blur="CheckEmptyField(toPostUser.role_id, 'role_id')"
-          /> -->
 
           <div v-if="adminCreate" class="flex flex-col py-1 mt-2">
             <div class="relative pb-1">
@@ -283,7 +274,6 @@ export default {
         this.adminRoles.push({value: item.id, label: item.name})
       })
       let default_role = res.data.roles.find((item, index) => index === 0)
-      this.toPostUser.role_id = default_role.id
     });
     if (this.practice) {
       console.log("Practice to be created is a spoke");
@@ -407,10 +397,10 @@ export default {
       return;
     },
     checkForm: function(userInfo, surgID) {
-      console.log("pass", userInfo.password, userInfo.password.length)
+      // console.log("pass", userInfo.password, userInfo.password.length)
       this.formError = [];
       let list = ["title", "suffix"];
-      !this.adminCreate && list.push("role_id");
+      !this.adminCreate && list.push("roles_id");
       this.adminCreate && list.push("practice_type_id", "surgery_id");
       this.Validate(this.toPostUser, list);
       if (!this.formError.length) {
@@ -508,12 +498,12 @@ export default {
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
         } else if (this.adminCreate == true) {
-
           //Create New Admin
           console.log("new admin is being created");
-          this.toPostUser.roles_id = await this.toPostUser.roles_id.map(
+          this.toPostUser.roles_id = this.toPostUser.roles_id.map(
             item => item.value
           );
+          console.log('to post user', toPostUser)
           await this.$axios
             .post(`/api/v1/admin/admin-users`, toPostUser)
             .then(res => {
