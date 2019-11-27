@@ -35,13 +35,13 @@ export default {
           || route.query.status.toLowerCase() === 'approved'
         )
       console.log(route.params.specificSessionId)
-      let response = await app.$axios.get(`/api/v1/admin/${isJobParts === true ? 'job-parts' : 'jobs'}/${route.params.specificSessionId}`)
+      let response = await app.$axios.$get(`/api/v1/admin/${isJobParts === true ? 'job-parts' : 'jobs'}/${route.params.specificSessionId}`)
       let job = ''
 
       if(isJobParts == true){
-        job = response.data.data.job_part
+        job = response.data.job_part
       }else{
-        job = response.data.data.job
+        job = response.data.job
       }
       
       console.log('job',job)

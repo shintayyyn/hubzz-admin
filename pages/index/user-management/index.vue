@@ -163,7 +163,7 @@
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
 		<transition name="slide" mode="out-in">
 			<div class="new-user-modal" v-if="modal">
-				<CreatePracticeUser @close="modal = false" :adminCreate="adminCreate" />
+				<CreateUser @close="modal = false" :adminCreate="adminCreate" />
 			</div>
 		</transition>
 
@@ -179,11 +179,11 @@
 	</div>
 </template>
 <script>
-import CreatePracticeUser from "@/components/Practices/CreatePracticeUser";
+import CreateUser from "@/components/UserManagement/CreateUser";
 import AppConfirmCancel from "@/components/AppConfirmCancel";
 export default {
 	components: {
-		CreatePracticeUser,
+		CreateUser,
 		AppConfirmCancel
 	},
 	data() {
@@ -217,19 +217,19 @@ export default {
 			if (search) {
 				params.search = search;
 			}
-			const getAdminUsersCount = await app.$axios.get(
+			const getAdminUsersCount = await app.$axios.$get(
 				`/api/v1/admin/admin-users/count`,
 				{ params }
 			);
-			const getAdminUsers = await app.$axios.get(`/api/v1/admin/admin-users`, {
+			const getAdminUsers = await app.$axios.$get(`/api/v1/admin/admin-users`, {
 				params
 			});
 
 			let response = await getAdminUsersCount;
-			const itemCount = response.data.data.count;
+			const itemCount = response.data.count;
 
 			response = await getAdminUsers;
-			const adminUsers = response.data.data.users;
+			const adminUsers = response.data.users;
 
 			//store users and count here
 			await store.commit("adminusers/SET_ADMIN_COUNT", itemCount);
@@ -316,12 +316,6 @@ export default {
 		}
 	},
 	methods: {
-		// getAdminUsers(){
-		//   this.$store.dispatch("adminusers/fetchAdminUsers",{})
-		//   this.$store.dispatch("adminusers/fetchAdminUsers",{
-		//     limit:8
-		//   })
-		// },
 		showAdminUserMe() {
 			console.log("adminUserMe", this.adminUserMe);
 		},
@@ -329,14 +323,6 @@ export default {
 			this.adminAccountId = userId;
 			this.showConfirmCancelModal = true;
 		},
-		// async toDeleteAdminUser(userId){
-		//     await this.$axios.$delete(`/api/v1/admin/admin-users/${userId}`).then(()=>{
-		//         this.getAdminUsers()
-		//         this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'success', text: 'Admin Account Successfully Deleted'})
-		//     }).catch((err)=>{
-		//         this.$store.commit('SET_NOTIFICATION',{ enabled:true, status: 'danger', text: 'Something Went Wrong!'})
-		//     })
-		// },
 		show() {
 			this.modal = true;
 		},

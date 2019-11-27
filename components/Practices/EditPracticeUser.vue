@@ -354,11 +354,11 @@ export default {
 
     async toChangeUserPassword(userID,toChangePassword){
       try{
-        console.log(toChangePassword.newPassword)
-        console.log(toChangePassword.confirmNewPassword)
+        console.log(toChangePassword.password)
+        console.log(toChangePassword.password_confirmation)
         await this.$axios.put(`/api/v1/admin/users/${userID}/change-password`,{
-          password:toChangePassword.newPassword,
-          password_confirmation:toChangePassword.confirmNewPassword
+          password:toChangePassword.password,
+          password_confirmation:toChangePassword.password_confirmation
         })
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved Changes' })
       }catch(err){

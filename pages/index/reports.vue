@@ -76,9 +76,9 @@ export default {
 	},
 	async asyncData({ app }) {
 		try {
-			let response = await app.$axios.get(`/api/v1/qualifications`);
+			let response = await app.$axios.$get(`/api/v1/qualifications`);
 
-			const qualifications = response.data.data.qualifications;
+			const qualifications = response.data.qualifications;
 
 			return {
 				qualifications

@@ -24,10 +24,10 @@ export default {
   },
   async asyncData({ app, store, route, error }) {
     try {
-      let response = await app.$axios.get(
+      let response = await app.$axios.$get(
         `/api/v1/admin/locum-users/${route.params.id}`
       );
-      const user = response.data.data.user;
+      const user = response.data.user;
 
       await store.commit("locums/SET_LOCUM_USER", user);
 

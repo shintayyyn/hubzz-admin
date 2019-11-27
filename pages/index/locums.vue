@@ -403,19 +403,19 @@ export default {
 				params.search = search;
 			}
 			params.compliance_status = compliance_status;
-			const getLocumUsersCountPromise = app.$axios.get(
+			const getLocumUsersCountPromise = app.$axios.$get(
 				`/api/v1/admin/locum-users/count`,
 				{ params }
 			);
-			const getLocumUsersPromise = app.$axios.get(`/api/v1/admin/locum-users`, {
+			const getLocumUsersPromise = app.$axios.$get(`/api/v1/admin/locum-users`, {
 				params
 			});
 
 			let response = await getLocumUsersCountPromise;
-			const itemCount = response.data.data.count;
+			const itemCount = response.data.count;
 
 			response = await getLocumUsersPromise;
-			const locumUsers = response.data.data.users;
+			const locumUsers = response.data.users;
 
 			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
 			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation

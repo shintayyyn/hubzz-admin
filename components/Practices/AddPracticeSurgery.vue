@@ -68,7 +68,7 @@
           <!--TABLE-->
           <!-- BODY -->
           <div v-if="!practice">
-            <!--IF PRACTICE IS A HUB / NEW PRACTICE IS BEING CREATED-->
+            <!--IF NEW PRACTICE IS BEING CREATED-->
             <transition-group name="slide" tag="p">
               <div
                 v-for="(surgery, index) in surgeries"
@@ -188,7 +188,7 @@
         :class="practice ? 'practice-user-modal-small' : 'practice-user-modal'"
         v-if="createPracticeModal"
       >
-        <CreatePracticeUser
+        <CreateUser
           @close="createPracticeModal = false"
           @userCreated="(createPracticeModal = false), $emit('close')"
           :practice="practice"
@@ -216,13 +216,13 @@
 <script>
 import debounce from "lodash.debounce";
 import AppPagination from "@/components/Base/AppPagination";
-import CreatePracticeUser from "@/components/Practices/CreatePracticeUser";
+import CreateUser from "@/components/UserManagement/CreateUser";
 import SetSpokePermissions from "@/components/Practices/SetSpokePermissions"
 export default {
   props: ["practice", "practiceHub", "spokesCount"],
   components: {
     AppPagination,
-    CreatePracticeUser,
+    CreateUser,
     SetSpokePermissions
   },
   data() {

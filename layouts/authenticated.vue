@@ -84,7 +84,8 @@ export default {
   },
   mounted() {
     const user = this.$auth.user
-    this.$store.commit("auth/SET_ADMIN_USER_PERMISSIONS",user.admin_detail.role.permissions)
+    console.log('user', user)
+    this.$store.commit("auth/SET_ADMIN_USER_PERMISSIONS",user)
   },
 
   methods: {

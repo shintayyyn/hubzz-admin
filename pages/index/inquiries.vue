@@ -121,11 +121,11 @@ export default {
 			const offset = page * limit - limit;
 			const params = { limit, offset };
 
-			let response = await app.$axios.get(`/api/v1/admin/supports/count`);
-			const itemCount = response.data.data.count;
+			let response = await app.$axios.$get(`/api/v1/admin/supports/count`);
+			const itemCount = response.data.count;
 
-			response = await app.$axios.get(`/api/v1/admin/supports`, { params });
-			const emails = response.data.data.emails;
+			response = await app.$axios.$get(`/api/v1/admin/supports`, { params });
+			const emails = response.data.emails;
 
 			return {
 				itemsPerPage: limit,

@@ -294,7 +294,7 @@ export default {
           }
         );
         await this.getLocums();
-        // this.user.status = response.data.data.user.status
+        // this.user.status = response.data.user.status
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "success",

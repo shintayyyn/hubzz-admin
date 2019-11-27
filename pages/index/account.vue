@@ -124,8 +124,8 @@ export default {
 	},
 	async asyncData({ app, route }) {
 		try {
-			let response = await app.$axios.get(`/api/v1/admin/me`);
-			const user = response.data.data.user;
+			let response = await app.$axios.$get(`/api/v1/admin/me`);
+			const user = response.data.user;
 			console.log(user);
 			return {
 				user

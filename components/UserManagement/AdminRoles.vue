@@ -1,7 +1,7 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
 		<div class="flex md:flex-row pt-1 md:py-1 flex-wrap px-4">
-			<button
+			<!-- <button
 				v-if="authAdminPermissions.includes('Add Role')"
 				class="inline-flex items-center no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
 				@click="modal = true"
@@ -14,8 +14,8 @@
 					color="black black"
 					class="mx-1 -my-1"
 				/>
-			</button>
-			<button
+			</button> -->
+			<!-- <button
 				v-if="
 					deletingAdminRole == false &&
 						authAdminPermissions.includes('Delete Role')
@@ -31,7 +31,7 @@
 					color="white white"
 					class="mx-1 -my-1"
 				/>
-			</button>
+			</button> -->
 			<button
 				v-if="
 					deletingAdminRole == true &&

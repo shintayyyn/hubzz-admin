@@ -21,9 +21,9 @@ export default {
     },
     async asyncData({ app, store, route, error }){
       try{
-        let response = await app.$axios.get(`/api/v1/admin/practice-users/${route.params.pracUserId}`)
-        const user = response.data.data.user
-        const practice = response.data.data.user.practice_detail.practice
+        let response = await app.$axios.$get(`/api/v1/admin/practice-users/${route.params.pracUserId}`)
+        const user = response.data.user
+        const practice = response.data.user.practice_detail.practice
         return{
           user,
           practice,    

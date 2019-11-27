@@ -160,7 +160,7 @@
             </div>
           </div>
           
-          <AppInput 
+          <!-- <AppInput 
             v-if="adminCreate"
             v-model="toPostUser.role_id"
             :type="'select'"
@@ -168,7 +168,47 @@
             :items="adminRoles"
             :error="formError.find(item => item.field === 'role_id')"
             @blur="CheckEmptyField(toPostUser.role_id, 'role_id')"
-          />
+          /> -->
+
+          <div v-if="adminCreate" class="flex flex-col py-1 mt-2">
+            <div class="relative pb-1">
+              <span>Admin Role/s </span>
+              <span class="text-xs">(hold ctrl + click to choose)</span>
+            </div>
+            <select
+              class="w-full text-black focus:outline-none"
+              multiple="true"
+              v-bind:class="{ 'fix-height': multiple === 'true' }"
+              v-model="toPostUser.roles_id"
+              @blur="
+                CheckEmptyField(toPostUser.roles_id, 'roles_id')
+              "
+            >
+              <option
+                class="px-2 py-1"
+                v-for="item in adminRoles"
+                :key="item.id"
+                :value="item"
+                >{{ item.label }}</option
+              >
+            </select>
+            <div
+              v-if="formError.filter(item => item.field === 'roles_id')"
+              class="text-red-500 text-xs pt-1"
+            >
+              {{ errorMessage("roles_id") }}
+            </div>
+            <div class="flex items-start flex-wrap py-1">
+              <div
+                v-for="(practice_type, index) in toPostUser.roles_id"
+                :key="`practice_type-${index}`"
+                class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
+              >
+                {{toPostUser.roles_id[index].label}}
+              </div>
+            </div> 
+          </div>
+
           <button
             class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
             @click.prevent="checkForm(toPostUser, toPostUser.surgery_id)"
@@ -216,8 +256,9 @@ export default {
         type: "Hub",
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
-        role_id: ""
+        roles_id: []
       },
+
       showPasswordFocus: false,
     };
   },
@@ -376,15 +417,6 @@ export default {
         this.toPostUserInfo(userInfo, surgID);
       }
     },
-    async getPracticeTypes() {
-      await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
-        this.practiceTypes = [];
-        res.data.practice_types.forEach(item => {
-          this.practiceTypes.push({ label: item.name, value: item.id });
-        });
-      });
-      console.log("practice types", this.practiceTypes);
-    },
 
     togglePassword(){
       if (this.passwordToggle) {
@@ -399,6 +431,25 @@ export default {
       const password = Array(6).fill().map(() => chars[Math.floor(Math.random() * chars.length)]).join('')
       this.toPostUser.password = password
       this.toPostUser.password_confirmation = password
+    },
+
+    async getPracticeTypes() {
+      await this.$axios.$get(`/api/v1/admin/practice-types`).then(res => {
+        this.practiceTypes = [];
+        res.data.practice_types.forEach(item => {
+          this.practiceTypes.push({ label: item.name, value: item.id });
+        });
+      });
+      console.log("practice types", this.practiceTypes);
+    },
+    
+    async getAdminRoles() {
+      await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
+        this.adminRoles = []
+        res.data.roles.forEach(item => {
+          this.adminRoles.push({ label: item.name, value: item.id})
+        })
+      })
     },
 
     async toPostUserInfo(toPostUser, toPostSurgeryID) {
@@ -460,6 +511,9 @@ export default {
 
           //Create New Admin
           console.log("new admin is being created");
+          this.toPostUser.roles_id = await this.toPostUser.roles_id.map(
+            item => item.value
+          );
           await this.$axios
             .post(`/api/v1/admin/admin-users`, toPostUser)
             .then(res => {

@@ -18,8 +18,8 @@ export default {
     },
     async asyncData({app, route}){
         try{
-            let response = await app.$axios.get(`/api/v1/admin/faqs/${route.params.id}`)
-            const faqs = response.data.data.faqs
+            let response = await app.$axios.$get(`/api/v1/admin/faqs/${route.params.id}`)
+            const faqs = response.data.faqs
             console.log(faqs)
             return{
                 faqs
