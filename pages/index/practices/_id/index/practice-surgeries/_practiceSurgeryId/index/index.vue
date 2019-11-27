@@ -19,39 +19,113 @@
             {{editPermissions == false ? 'Edit' : 'Done'}}</div>
         </div>
         <div v-if="editPermissions === false" class="mt-2 mb-4 mx-2">
-          <div class="font-semibold text-sm">Pay for Surgery</div>
-          <div class="mx-2">{{practice_surgery.pay_for_surgery === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Verify job creation</div>
-          <div class="mx-2">{{practice_surgery.verify_job_creation === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Share Banks to Other Surgeries</div>
-          <div class="mx-2">{{practice_surgery.share_banks_to_other_surgeries === false ? 'No' : 'Yes'}}</div>
-          <div class="font-semibold text-sm">Create Job Rates Limit</div>
-          <div class="mx-2">{{'£'+practice_surgery.create_job_rate_limit}}</div>
+          <div class="mx-4 m-2">
+            <p class="font-semibold">Does Hub allow creation of Jobs/Sessions?</p>
+            <p class="text-sm mx-6">{{practice_surgery.allow_surgery_create_sessions === true ? 'Yes':'No'}}</p>
+            <div class="bg-gray-500 p-2 rounded-lg" v-if="practice_surgery.allow_surgery_create_sessions === true">
+              <p class="font-semibold">Rate Limits(Only effective when allowed to create jobs)</p>
+              <p class="font-semibold">Maximum Hourly Rate Limit</p>
+              <p class="text-sm mx-6">{{practice_surgery.max_hourly_rate_limit ?'£ '+  practice_surgery.max_hourly_rate_limit : 'N/A'}}</p>
+              <p class="font-semibold">Maximum Half Day Rate Limit</p>
+              <p class="text-sm mx-6">{{practice_surgery.max_halfday_rate_limit ?'£ '+  practice_surgery.max_halfday_rate_limit : 'N/A'}}</p>
+              <p class="font-semibold">Maximum Whole Day Rate Limit</p>
+              <p class="text-sm mx-6">{{practice_surgery.max_wholeday_rate_limit ?'£ '+  practice_surgery.max_wholeday_rate_limit : 'N/A'}}</p>
+              <p class="font-semibold">Maximum Out-of-Hours Rate Limit</p>
+              <p class="text-sm mx-6">{{practice_surgery.max_ooh_rate_limit ?'£ '+  practice_surgery.max_ooh_rate_limit : 'N/A'}}</p>
+              <p class="font-semibold">Maximum Excess Hours</p>
+              <p class="text-sm mx-6">{{practice_surgery.max_ooh_rate_limit ?'£ '+ practice_surgery.max_ooh_rate_limit : 'N/A'}}</p>
+            </div>
+            <p class="font-semibold">Does Hub permit billing of Locums?</p>
+            <p class="text-sm mx-6">{{practice_surgery.allow_surgery_bill_locum === true ? 'Yes':'No'}}</p>
+            <p class="font-semibold">Does Hub permit billing for Hubzz?</p>
+            <p class="text-sm mx-6">{{practice_surgery.allow_surgery_bill_hubzz === true ? 'Yes':'No'}}</p>
+            <p class="font-semibold">Can other Spokes see your Banks?</p>
+            <p class="text-sm mx-6">{{practice_surgery.share_banks_to_other_surgeries === true ? 'Yes':'No'}}</p>
+          </div>
         </div>
-        <!--------------EDIT PAY FOR SURGERY / VERIFY JOB CREATION------------------>
+        <!--------------EDIT PERMISSIONS------------------>
         <div v-if="editPermissions === true" class="bg-waterloo-light rounded-lg shadow-md p-2 my-4">
           <div class="flex flex-col flex-wrap justify-between">
-            <div class="w-full px-2 md:px-4">
+            <div class="w-full p-1">
               <AppInput
-                v-model="form.pay_for_surgery"
+                v-model="form.allow_surgery_create_sessions"
                 :type="'select'"
-                :name="'pay_for_surgery'"
-                :label="'Pay for surgery'"
+                :name="'allow_surgery_create_sessions'"
+                :label="'Allow Spoke to Create Jobs/Sessions?'"
                 :placeholder="'Select...'"
                 :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
               />
             </div>
-            <div class="w-full px-2 md:px-4">
+            <!-- SET MAX RATES ;  NOT REQUIRED -->
+            <div class="p-2 mx-2 bg-gray-500 rounded-lg" v-if="surgeryCreateSessions == 'true' || form.allow_surgery_create_sessions == 'true'" >
+              <div class="w-full p-1">
+                <AppInput
+                  v-model="form.max_hourly_rate_limit"
+                  :type="'number'"
+                  :name="'max_hourly_rate_limit'"
+                  :label="'Set max hourly rate limit for Spoke'"
+                  :inStyle="'text-align:right'"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                  v-model="form.max_halfday_rate_limit"
+                  :type="'number'"
+                  :name="'max_halfday_rate_limit'"
+                  :label="'Set max half day rate limit for Spoke'"
+                  :inStyle="'text-align:right'"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                  v-model="form.max_wholeday_rate_limit"
+                  :type="'number'"
+                  :name="'max_wholeday_rate_limit'"
+                  :label="'Set max whole day rate limit for Spoke'"
+                  :inStyle="'text-align:right'"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                  v-model="form.max_ooh_rate_limit"
+                  :type="'number'"
+                  :name="'max_ooh_rate_limit'"
+                  :label="'Set max out-of-hours rate limit for Spoke'"
+                  :inStyle="'text-align:right'"
+                />
+              </div>
+              <div class="w-full p-1">
+                <AppInput
+                  v-model="form.max_excess_hours"
+                  :type="'number'"
+                  :name="'max_excess_hours'"
+                  :label="'Allow Spoke to Create Jobs/Sessions?'"
+                  :inStyle="'text-align:right'"
+                />
+              </div>
+            </div>
+            <!-- SET MAX RATES END HERE -->
+            <div class="w-full p-1">
               <AppInput
-                v-model="form.verify_job_creation"
+                v-model="form.allow_surgery_bill_locum"
                 :type="'select'"
-                :name="'verify_job_creation'"
-                :label="'Verify job creation'"
+                :name="'allow_surgery_bill_locum'"
+                :label="'Allow Spoke to handle its own billing for Locum?'"
                 :placeholder="'Select...'"
                 :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
               />
             </div>
-            <div class="w-full px-2 md:px-4">
+            <div class="w-full p-1">
+              <AppInput
+                v-model="form.allow_surgery_bill_hubzz"
+                :type="'select'"
+                :name="'allow_surgery_bill_hubzz'"
+                :label="'Allow Spoke to handle its own billing for HUBZZ?'"
+                :placeholder="'Select...'"
+                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+              />
+            </div>
+            <div class="w-full p-1">
               <AppInput
                 v-model="form.share_banks_to_other_surgeries"
                 :type="'select'"
@@ -60,15 +134,6 @@
                 :placeholder="'Select...'"
                 :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
               />
-            </div>
-            <div class="w-full px-2 md:px-4">
-              <AppInput
-                  v-model="form.create_job_rate_limit"
-                  :type="'number'"
-                  :name="'create_job_rate_limit'"
-                  :label="'Job Rates Limit £'"
-                  :inStyle="'text-align:right'"
-                />
             </div>
           </div>
           <div class="flex flex-row justify-start px-2 mb-2 md:px-4 md:mb-4">
@@ -97,11 +162,21 @@ export default {
       practice_surgery: '',
       editPermissions: false,
       form: {
-        pay_for_surgery: "",
-        verify_job_creation: "",
+        allow_surgery_create_sessions: "",
+        max_hourly_rate_limit: "",
+        max_halfday_rate_limit: "",
+        max_wholeday_rate_limit: "",
+        max_ooh_rate_limit: "",
+        max_excess_hours: "",
+        allow_surgery_bill_locum: "",
+        allow_surgery_bill_hubzz: "",
         share_banks_to_other_surgeries: "",
-        create_job_rate_limit: "",
       },
+    }
+  },
+  computed:{
+    surgeryCreateSessions: function () {
+      return this.form.allow_surgery_create_sessions
     }
   },
   async asyncData({ app, route, }){
@@ -110,6 +185,7 @@ export default {
       const practice = response.data.data.practice
       response = await app.$axios.get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
       const practice_surgery = response.data.data.practice_surgery
+      console.log('pracsurg', practice_surgery)
       return{
         practice,
         practice_surgery
@@ -119,18 +195,16 @@ export default {
       console.log('get practice/practice surgery error', err)
     }
   },
-  created() {
-    this.form.pay_for_surgery = this.practice_surgery.pay_for_surgery
-    this.form.verify_job_creation = this.practice_surgery.verify_job_creation
+  async created() {
     this.form.allow_surgery_create_sessions = this.practice_surgery.allow_surgery_create_sessions
-    this.form.allow_surgery_appoint_locums = this.practice_surgery.allow_surgery_appoint_locums
-    this.form.allow_surgery_amend_sessions = this.practice_surgery.allow_surgery_amend_sessions
-    this.form.allow_surgery_cancel_sessions = this.practice_surgery.allow_surgery_amend_sessions
-    this.form.allow_surgery_approve_hours = this.practice_surgery.allow_surgery_approve_hours
-    this.form.allow_surgery_complete_sessions = this.practice_surgery.allow_surgery_complete_sessions
+    this.form.max_hourly_rate_limit = this.practice_surgery.max_hourly_rate_limit
+    this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit
+    this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit
+    this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit
+    this.form.max_excess_hours = this.practice_surgery.max_excess_hours
+    this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum
+    this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz
     this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries
-    this.form.let_surgery_bill_locum = this.practice_surgery.let_surgery_bill_locum
-    this.form.let_surgery_bill_hubzz = this.practice_surgery.let_surgery_bill_hubzz
     console.log('form', this.form)
   },
   

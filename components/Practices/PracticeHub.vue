@@ -143,16 +143,15 @@
       </form>
     </div>
     <div v-if="!practiceParent && practiceHub">
-      <form class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg sm:w-full lg:w-2/3">
+      <form class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg max-w-3xl">
         <div class="m-4">
-          <div class="inline-flex text-lg">
-            <div class="flex">
-              <svgicon name="alert" width="48" height="48" color="white"/>
-            </div>
-            <div class="flex">
-              <p v-if="practiceHub.parent_surgery" class="mt-4">This surgery is not yet a registered practice in HUBZZ.</p>
-              <p v-else>This practice has no Hub yet.</p>
-            </div>
+          <div class="inline-flex items-center text-lg">
+            <span class="flex">
+              <svgicon name="alert" width="32" height="32" color="white"/>
+            </span>
+            <p class="px-2">
+              {{ practiceHub.parent_surgery ? 'This surgery is not yet a registered practice in HUBZZ.' : 'This practice has no Hub yet.'}}
+            </p>
           </div>
         </div>
         <div v-if="practiceHub.parent_surgery" class="text-gray-300 text-sm m-4">
