@@ -277,7 +277,6 @@
 		</div>
 		<!-- PAGINATION -->
 		<div
-			v-if="itemCount > itemsPerPage"
 			class="flex justify-center items-center my-2"
 		>
 			<button

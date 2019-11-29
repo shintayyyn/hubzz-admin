@@ -129,7 +129,7 @@
     </div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
-	<div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
+	<div class="flex justify-center items-center my-2">
 		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
 			@click="goToPage(activePage - 1,search,order_by)" 
 			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">

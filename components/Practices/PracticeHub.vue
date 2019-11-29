@@ -8,11 +8,7 @@
               <p class="flex">Practice Name</p>
               <p class="flex items-center text-white text-sm p-2 font-semibold">
               {{practiceParent.surgery ? practiceParent.surgery.name : null}} 
-              <span
-              class="py-2 px-4 ml-2 text-sm text-white rounded-lg shadow font-extrabold"
-              :class="practiceTypeStyle(practiceParent.type)">{{practiceParent.type}}</span>
               </p>
-              
               <p class="flex">Practice Code</p>
               <p class="flex text-white text-sm p-2 font-semibold">{{practiceParent.surgery ? practiceParent.surgery.code : null}}</p>
               <p class="flex">Address</p>
@@ -66,79 +62,6 @@
               </div>
             </div>
           </div>
-          <div class="w-full mx-2">
-            <div class="flex items-center">
-              <div class="text-white font-semibold text-xl">Permissions</div>
-              <div class="px-4 py-2 mx-2 bg-sunglow hover:bg-sunglow-dark rounded-lg font-semibold text-sm cursor-pointer" @click="editPermissions = !editPermissions, formError=[]">
-                {{ editPermissions === true ? 'Cancel' : 'Edit'}}
-              </div>
-              <button v-if="editPermissions == true"
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float:right font-bold"
-                @click.prevent="updatePracticeSurgery(toPutPracticeParent)"
-                >Save</button>
-            </div>
-            <div v-if="editPermissions == false">
-              <div class="text-gray-300 text-sm">Pay for Surgery</div>
-              <div class="text-white m-2 semibold">{{practiceHub.pay_for_surgery === true ? 'Yes' : 'No'}}</div>
-              <div class="text-gray-300 text-sm">Verify job creation</div>
-              <div class="text-white m-2 semibold">{{practiceHub.verify_job_creation === true ? 'Yes' : 'No'}}</div>
-              <div class="text-gray-300 text-sm">Share Banks to Other Surgeries</div>
-              <div class="text-white m-2 semibold">{{practiceHub.share_banks_to_other_surgeries === true ? 'Yes' : 'No'}}</div>
-              <div class="text-gray-300 text-sm">Create Job Rates Limit</div>
-              <div class="text-white m-2 semibold">{{practiceHub.create_job_rate_limit}}</div>
-            </div>
-            <div v-if="editPermissions == true" class="text-white w-full">
-              <div class="w-full px-1">
-                <AppInput
-                v-model="toPutPracticeParent.pay_for_surgery"
-                :type="'select'"
-                :name="'pay_for_surgery'"
-                :label="'Pay for surgery?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-                :error="formError.find(item => item.field === 'pay_for_surgery')"
-					      @blur="CheckEmptyField(toPutPracticeParent.pay_for_surgery, 'pay_for_surgery')"
-                />
-              </div>
-                
-              <div class="w-full px-1">
-                <AppInput
-                v-model="toPutPracticeParent.verify_job_creation"
-                :type="'select'"
-                :name="'verify_job_creation'"
-                :label="'Verify Job Creation?'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-                :error="formError.find(item => item.field === 'verify_job_creation')"
-					      @blur="CheckEmptyField(toPutPracticeParent.verify_job_creation, 'verify_job_creation')"
-                />
-              </div>
-              <div class="w-full px-1">
-                <AppInput
-                v-model="toPutPracticeParent.share_banks_to_other_surgeries"
-                :type="'select'"
-                :name="'share_banks_to_other_surgeries'"
-                :label="'Allow this surgery to share its banks to other surgeries??'"
-                :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true },
-                  { label: 'No', value: false }]"
-                :error="formError.find(item => item.field === 'share_banks_to_other_surgeries')"
-					      @blur="CheckEmptyField(toPutPracticeParent.share_banks_to_other_surgeries, 'share_banks_to_other_surgeries')"
-                />
-              </div>
-              <div class="w-full p-1">
-                <AppInput
-                  v-model="toPutPracticeParent.create_job_rate_limit"
-                  :type="'number'"
-                  :name="'create_job_rate_limit'"
-                  :label="'Job Rates Limit £'"
-                  :inStyle="'text-align:right'"
-                  :error="formError.find(item => item.field === 'share_banks_to_other_surgeries')"
-					        @blur="CheckEmptyField(toPutPracticeParent.share_banks_to_other_surgeries, 'share_banks_to_other_surgeries')"
-                  />
-              </div>
-            </div>
-          </div>
         </div>
       </form>
     </div>
@@ -163,7 +86,6 @@
         </div>
       </form>
     </div>
-        
     <div class="practice-shield" v-if="modal == true" @click="modal=false"></div>
     <transition name="slide" mode="out-in">
       <div class="change-parent-modal shadow-lg" v-if="modal">
@@ -185,14 +107,6 @@ export default {
   data(){
     return{
       modal:false,
-      editPermissions: false,
-      toPutPracticeParent:{
-        pay_for_surgery: this.practiceHub.practice_surgeries.pay_for_surgery,
-        verify_job_creation: this.practiceHub.practice_surgeries.verify_job_creation,
-        share_banks_to_other_surgeries: this.practiceHub.practice_surgeries.share_banks_to_other_surgeries,
-        create_job_rate_limit: this.practiceHub.practice_surgeries.create_job_rate_limit
-      },
-      formError: []
     }
   },
   created(){

@@ -45,7 +45,7 @@ export default {
   
   computed:{
     getRoute(){
-      return(tab) =>{
+      return(tab) => {
         if(!tab){
           tab = ''
         }
@@ -54,7 +54,7 @@ export default {
         }
         delete query.order_by
         delete query.status
-        return{
+        return {
           path: tab ? `/practices/${this.practice.id}/${tab}` : `/practices/${this.practice.id}`,
           query
         }

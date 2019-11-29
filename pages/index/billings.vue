@@ -69,7 +69,7 @@
 				$route.name.includes('index-billings-id') ||
 					$route.name.includes('index-billings-addinvoice')
 			"
-			@click="$router.go(-1)"
+			@click="$router.push(`/billings`)"
 		></div>
 		<nuxt-child />
 	</div>
