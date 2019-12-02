@@ -46,18 +46,18 @@
                 />
               </button>
             </div>
-            <!-- <div class="self-end">
-              <button
-                class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500"
-                @click="searchSubmit()"
-              >Search</button>
-            </div> -->
           </div>
-          <span
-            class="py-2 md:px-4 text-sm whitespace-no-wrap"
-            v-if="search && total !== 0"
-            >{{ total }} results found.</span
-          >
+          <div class="flex items-center">
+            <span
+              class="py-2 md:px-2 text-sm whitespace-no-wrap"
+              v-if="search && total !== 0"
+              >{{ total }} results found.</span>
+            <button
+                class="float-right bg-yellow-500 hover:bg-sunglow text-black px-4 py-2 rounded-lg"
+                @click="toggleRegisteredPractice = !toggleRegisteredPractice">
+                {{toggleRegisteredPractice ? 'Show' : 'Hide'}} Registered Practice</button>
+            </div>
+          
         </div>
       </div>
       <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">
@@ -76,9 +76,10 @@
                 @click="show(surgery.id)"
                 class="flex no-underline rounded-lg shadow my-2 transition-hover"
                 :class="
-                  registeredPractice.includes(surgery.id)
+                  [registeredPractice.includes(surgery.id)
                     ? 'bg-waterloo opacity-75'
-                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'
+                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer', 
+                    toggleRegisteredPractice && registeredPractice.includes(surgery.id) && 'hidden']
                 "
               >
                 <div class="flex w-full">
@@ -243,7 +244,9 @@ export default {
       currentPage: 1,
       perPage: 0,
       loading: false,
-      registeredPractice: []
+      registeredPractice: [],
+
+      toggleRegisteredPractice: false
     };
   },
 

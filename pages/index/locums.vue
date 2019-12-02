@@ -203,7 +203,6 @@
 			>
 				No results found for {{ search }}<br />Try another keyword
 			</div>
-			<!-- <transition-group name="fade" tag="p"> -->
 			<nuxt-link
 				v-for="(locumUser, index) in locumUsers"
 				:key="`locumUser-${index}`"
@@ -273,9 +272,15 @@
 					>
 				</div>
 			</nuxt-link>
-			<!-- </transition-group> -->
 		</div>
 		<!-- PAGINATION -->
+		<AppPagination
+			v-if="itemCount > itemsPerPage"
+			:total="total"
+			:totalPages="totalPages"
+			:currentPage="currentPage"
+			@pagechanged="pagechanged"
+		/>
 		<div
 			v-if="itemCount > itemsPerPage"
 			class="flex justify-center items-center my-2"
@@ -352,14 +357,19 @@
 <script>
 import debounce from "lodash.debounce";
 import AppLoading from "@/components/Base/AppLoading";
+import AppPagination from "@/components/Base/AppPagination";
+
 export default {
 	components: {
-		AppLoading
+		AppLoading,
+		AppPagination
 	},
 	data() {
 		return {
-			itemsPerPage: 10,
+			itemsPerPage: 5,
 			activePage: 1,
+
+			currentPage: 1,
 
 			filterCompliances: "",
 			search: "",
@@ -391,7 +401,7 @@ export default {
 			}
 			page = parseInt(page);
 			const createdRoute = route.query;
-			const limit = 10;
+			const limit = 5;
 			const offset = page * limit - limit;
 			order_by =
 				createdRoute && createdRoute.order_by
@@ -407,9 +417,12 @@ export default {
 				`/api/v1/admin/locum-users/count`,
 				{ params }
 			);
-			const getLocumUsersPromise = app.$axios.$get(`/api/v1/admin/locum-users`, {
-				params
-			});
+			const getLocumUsersPromise = app.$axios.$get(
+				`/api/v1/admin/locum-users`,
+				{
+					params
+				}
+			);
 
 			let response = await getLocumUsersCountPromise;
 			const itemCount = response.data.count;
@@ -490,6 +503,9 @@ export default {
 
 				return false;
 			};
+		},
+		total() {
+			return this.locumUsers.lengths;
 		}
 	},
 

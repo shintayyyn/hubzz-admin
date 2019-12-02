@@ -407,10 +407,9 @@ export default {
       return;
     },
     checkForm: function(userInfo, surgID) {
-      console.log("pass", userInfo.password, userInfo.password.length)
       this.formError = [];
       let list = ["title", "suffix"];
-      !this.adminCreate && list.push("role_id");
+      !this.adminCreate && list.push("roles_id");
       this.adminCreate && list.push("practice_type_id", "surgery_id");
       this.Validate(this.toPostUser, list);
       if (!this.formError.length) {

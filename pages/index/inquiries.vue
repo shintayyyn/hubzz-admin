@@ -60,8 +60,16 @@
 		</div>
 		<!-- END TABLE -->
 		<!-- PAGINATION -->
-		<div v-if="emails.length > itemsPerPage" class="flex justify-center">
-			<div>
+		<AppPagination
+			v-if="emails.length !== 0"
+			:total="total"
+			:totalPages="totalPages"
+			:currentPage="currentPage"
+			@pagechanged="pagechanged"
+		/>
+		<!--<div v-if="emails.length > itemsPerPage" class="flex justify-center">
+			  
+			 <div>
 				<button
 					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
 					@click="goToPage(activePage - 1)"
@@ -88,8 +96,8 @@
 				>
 					Next
 				</button>
-			</div>
-		</div>
+			</div> 
+		</div>-->
 		<!-- PAGINATION ENDS HERE -->
 		<div
 			class="support-shield"
@@ -101,13 +109,18 @@
 </template>
 
 <script>
+import AppPagination from "@/components/Base/AppPagination";
 export default {
+	components: {
+		AppPagination
+	},
 	data() {
 		return {
 			emails: [],
 			itemsPerPage: 8,
 			activePage: 1,
-			itemCount: 0
+			itemCount: 0,
+			currentPage: 1
 		};
 	},
 	watchQuery: ["page"],
@@ -142,9 +155,17 @@ export default {
 			console.log("index emails index asyncData err", err);
 		}
 	},
-
+	watch: {
+		$route(to, from) {
+			this.currentPage = parseInt(to.query.practice_users_page);
+			// this.getAllPracticeUsers()
+		}
+	},
 	computed: {
-		pageCount() {
+		total() {
+			return this.emails.length;
+		},
+		totalPages() {
 			return Math.ceil(this.itemCount / this.itemsPerPage);
 		},
 		showPage() {
