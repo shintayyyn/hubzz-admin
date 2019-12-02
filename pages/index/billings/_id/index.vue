@@ -7,14 +7,6 @@
         </nuxt-link>
       </div>
       <!-- HEADER ENDS HERE -->
-
-      <!-- <div class="max-w-2xl">
-        <div class="flex items-center text-white py-2">
-          <p>Invoice Number: <span class="font-bold">0000000001</span></p>
-          <p class="px-3 py-1 mx-2 rounded text-black bg-green-300 uppercase font-bold">Paid</p>
-        </div>
-        <embed class="object-contain object-top w-full h-full document" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/>
-      </div> -->
       <div class="flex justify-start overflow-x-auto my-2">
         <nuxt-link
           :to="getRoute('practice-invoices')" 
@@ -27,117 +19,9 @@
           :class="$route.path.includes(`/billings/${$route.params.id}/locum-invoices`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
         >Locum Jobs Billing</nuxt-link>
       </div>
-
-
-      <div class="flex w-full overflow-hidden">
-        <div class="w-3/4 overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
-          <p class="m-3 text-white text-xl font-semibold ">Invoice Records</p>
-          <div class="m-2"> 
-            <!-- HEADER -->
-            <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-              <div class="flex-1  align-middle px-2">Invoice Number</div> 
-              <div class="flex-1  align-middle px-2 text-center">Locum Name</div>
-              <div class="flex-1  align-middle px-2 text-center">Created</div>
-              <div class="flex-1  align-middle px-2 text-center">Issued</div>
-              <div class="flex-1  align-middle px-2 ">Job Numbers</div>
-              <div class="flex-1  align-middle px-2 text-center">£ Amount</div>
-              <div class="flex-1  align-middle px-2 text-center">Status</div>
-            </div>
-            <!-- HEADER ENDS HERE -->
-            <nuxt-link
-              v-for="(jobInvoice, index) in sampleJobInvoices"
-              :key="`billing-${index}`"
-              :to="`/billings/${practice.id}/job-invoice/${jobInvoice.id}`"
-              class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo" 
-              draggable="false"
-            >
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
-                <strong class="block md:hidden text-xs uppercase">Invoice Number</strong>
-                <span class="break-all">{{ jobInvoice.invoice_number }}</span>
-              </div>
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
-                <strong class="block md:hidden text-xs uppercase">Practice / Surgery</strong>
-                <span class="break-word">{{ jobInvoice.locum_name }}</span>
-              </div>
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
-                <strong class="block md:hidden text-xs uppercase">Created</strong>
-                <span class="break-all">{{ $moment(jobInvoice.date_created).format('MMM DD, YYYY | HH:ss:mm') }}</span>
-              </div>
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
-                <strong class="block md:hidden text-xs uppercase">Issued</strong>
-                <span class="break-all">{{ $moment(jobInvoice.issued_at).format('MMM DD, YYYY | HH:SS:MM') }}</span>
-              </div>
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
-                <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-                <span v-for="(item, index) in jobInvoice.job_numbers" :key="index" class="">{{ item }}</span>
-              </div>
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
-                <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-                <span class="break-all">{{ jobInvoice.total_amount }}</span>
-              </div>
-              <div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none">
-                <strong class="block md:hidden text-xs uppercase">Status</strong>
-                <!-- <span>{{ jobInvoice.status }}</span> -->
-                <div class="py-4" v-if="!jobInvoice.paid && !jobInvoice.paid_at">
-                  <a class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white">Mark as paid</a>
-                </div>
-              </div>
-            </nuxt-link>
-          </div>
-        </div>
-
-        <!-- <div class="w-1/4 overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
-          <div class="m-2">
-            <div>
-              <p class="m-2 text-white text-xl font-semibold">Practice</p>
-              <div class="m-3 text-white">
-                <p class="text-gray-400">Practice Name</p>
-                <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-                  <span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
-                  <span
-                  class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
-                  :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
-                </p>
-                <p class="text-gray-400">Phone Number</p>
-                <p class="m-2 text-white font-semibold">{{practice.phone_number}}</p>
-                <p class="text-gray-400">Report To</p>
-                <p class="m-2 text-white font-semibold">{{practice.report_to ? practice.report_to : 'N/A'}}</p>
-                <p class="text-gray-400">E-mail</p>
-                <p class="m-2 text-white font-semibold">{{practice.email ? practice.email : 'N/A'}}</p>
-                  <p class="text-gray-400">Address</p>
-                <p class="flex flex-col text-white text-sm p-2 font-semibold">
-                  <span v-if="practice.surgery.address && practice.surgery.address.line_1">{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
-                  <span v-if="practice.surgery.address && practice.surgery.address.line_2">{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
-                  <span v-if="practice.surgery.address && practice.surgery.address.line_3">{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
-                </p>
-              </div>
-            </div>
-            <div>
-              <p class="m-2 text-white text-xl font-semibold">Billing Info</p>
-              <div class="m-3 text-white">
-                <p class="text-gray-400">Invoice Number</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.invoice_number}}</p>
-                <p class="text-gray-400">Total Amount</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.total_amount}}</p>
-                <p class="text-gray-400">Billing Cycle</p>
-                <p class="m-2 text-white font-semibold">WiP</p>
-                <p class="text-gray-400">Rates</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[0].type ? practice.rates[0].type : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[0].rate ? '£ '+practice.rates[0].rate : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[1].type ? practice.rates[1].type : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[1].rate ? '£ '+practice.rates[1].rate : 'N/A'}}</p>
-                <p class="text-gray-400">Payment Details</p>
-                <p class="m-2 text-white font-semibold">WiP</p>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        
-      </div>
-      <nuxt-child/>
+  <nuxt-child/>
     </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -199,20 +83,11 @@ export default {
     }
   },
   async asyncData({ app, route, store }) {
-    try {
-      // let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.id}`)
-      // const practiceInvoice = response.data.practice_invoice
-      // response = await app.$axios.$get(`/api/v1/admin/practices/${practiceInvoice.practice.id}`)
-      // const practice = response.data.practice
-
-      // return {
-      //   practiceInvoice,
-      //   practice
-      // }
-    } catch (err) {
-      // error({ statusCode: 404 }),
-      // console.log('Get specific invoice error!', err)
+    try {} catch (err) {
     }
+  },
+  created(){
+    this.$router.push(`/billings/${this.$route.params.id}/practice-invoices`)
   },
   computed:{
     getRoute(){
@@ -253,42 +128,42 @@ export default {
 };
 </script>
 <style>
- .billing-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
+.billing-shield {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #333;
+	opacity: 0.5;
+	z-index: 511;
 }
 .billing-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px yellow;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: hidden auto;
+	border-left: solid 2px yellow;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
 }
 @media screen and (min-width: 1200px) {
-  .billing-modal {
-    width: 80%;
-  }
+	.billing-modal {
+		width: 80%;
+	}
 }
 .document {
-  width: 100%;
-  min-height: 50vh;
+	width: 100%;
+	min-height: 50vh;
 }
 
 @media screen and (min-width: 768px) {
-  .document {
-    min-height: 80vh;
-  }
+	.document {
+		min-height: 80vh;
+	}
 }
 </style>

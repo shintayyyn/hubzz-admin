@@ -113,7 +113,7 @@
 				:totalPages="totalPages"
 				:currentPage="currentPage"
 				@pagechanged="pagechanged"
-			/>s
+			/>
 		</div>
 		<div
 			class="role-shield"

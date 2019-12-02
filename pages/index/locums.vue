@@ -277,7 +277,6 @@
 		</div>
 		<!-- PAGINATION -->
 		<div
-			v-if="itemCount > itemsPerPage"
 			class="flex justify-center items-center my-2"
 		>
 			<button
@@ -413,12 +412,12 @@ export default {
 
 			let response = await getLocumUsersCountPromise;
 			const itemCount = response.data.count;
+      await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
 
 			response = await getLocumUsersPromise;
 			const locumUsers = response.data.users;
+      await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
 
-			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
-			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
 			await store.commit("locums/TOGGLE_LOADING", false);
 			return {
 				filterCompliances: compliance_status,

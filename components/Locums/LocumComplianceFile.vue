@@ -191,15 +191,15 @@ export default {
           return `https://docs.google.com/gview?url=${document}&embedded=true`;
         },
         getQuery(){
-            const query = {
-              ...this.$route.query
-            }
-            const offset = parseInt(query.page)*8 - 8 
-            return offset
+          const query = {
+            ...this.$route.query
+          }
+          const offset = parseInt(query.page)*10 - 10 
+          return offset
         },
         getLocums(){
           this.$store.dispatch("locums/fetchLocums",{
-            limit:8,
+            limit:10,
             order_by:'created_at:desc',
             offset: this.getQuery()
           });

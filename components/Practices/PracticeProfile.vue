@@ -159,7 +159,7 @@
               >Save</button>
             </div>
 
-            <div v-if="toEdit == true && authAdminPermissions.includes('Change Practice Type')">
+            <div v-if="toEdit == true && authAdminPermissions.includes('Change Practice Type') && !practiceParent">
               <p class="flex text-gray-300 text-base font-bold mt-4">Change Practice Type</p>
               <select
                 class="outline-none border-2 border-transparent text-black pr-6"

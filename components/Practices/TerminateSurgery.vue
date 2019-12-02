@@ -19,9 +19,9 @@
       <div>{{ childSurgery ? childSurgery.surgery.practice.phone_number: null }}</div>
       <div>{{ childSurgery ? childSurgery.surgery.practice.report_to: null }}</div>
       <div>{{ childSurgery ? childSurgery.surgery.practice.email: null }}</div>
-      <div class="rounded-lg m-2 p-2 bg-charade">
+      <div class="m-2 ">
         Note from Practice Hub: 
-        <div class="m-2 ">{{childSurgery ? childSurgery.note:null}}</div>
+        <div class="m-2 p-2 bg-charade rounded-lg">{{childSurgery ? childSurgery.note:null}}</div>
       </div>
       <div class="flex justify-center my-4 cursor-pointer">
         <div class="flex-1 p-2 ml-1 rounded-lg bg-red-600" @click="toDeleteSurgery(childSurgery.id)">Delete Entire Surgery</div>

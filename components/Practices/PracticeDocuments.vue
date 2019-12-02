@@ -161,14 +161,8 @@ export default {
         });
       }
     },
-    async handleFileUpload(
-      refName,
-      documentId,
-      practiceID,
-      practiceDocumentID,
-      practiceSpecificDocument
-    ) {
-      await console.log(
+    async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
+       console.log(
         "Infos uploaded: \n",
         "refname: ",
         refName,
@@ -184,7 +178,8 @@ export default {
       this.$store.commit("SET_NOTIFICATION", {
         enabled: true,
         status: "upload",
-        text: "Uploading"
+        text: "Uploading",
+        doNotClose: true,
       });
       const el = this.$refs[refName][0];
       if (el.files && el.files.length === 0) {
@@ -232,6 +227,9 @@ export default {
                 {
                   headers: {
                     "Content-Type": "multipart/form-data"
+                  },
+                  onUploadProgress: function (progressEvent) {
+                    console.log('ew')
                   }
                 }
               )
@@ -262,7 +260,7 @@ export default {
                       practiceSpecificDoc
                     };
                   }
-                );
+                )
                 await this.$store.commit(
                   "practices/SET_PRACTICE_DOCUMENTS",
                   specificPracticeDocumentTypes
