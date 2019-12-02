@@ -16,11 +16,12 @@
     <!-- HEADER -->
 
     <div
-      class="flex flex-wrap overflow-auto px-4 md:px-8 text-base text-white py-2"
+      class="flex flex-col px-4 md:px-8 text-base text-white py-2"
+      style="min-height: 70vh"
     >
       <div class="w-full">
-        <div class="flex flex-wrap justify-between items-center">
-          <div class="flex flex-no-wrap w-full md:w-2/3">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-no-wrap w-full md:w-auto">
             <div class="w-full md:w-auto relative">
               <input
                 class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
@@ -48,22 +49,24 @@
             </div>
           </div>
           <div class="flex items-center">
+            <div v-if="total === 0" class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500">
+              No results found.
+            </div>
             <span
               class="py-2 md:px-2 text-sm whitespace-no-wrap"
               v-if="search && total !== 0"
               >{{ total }} results found.</span>
             <button
-                class="float-right bg-yellow-500 hover:bg-sunglow text-black px-4 py-2 rounded-lg"
-                @click="toggleRegisteredPractice = !toggleRegisteredPractice">
-                {{toggleRegisteredPractice ? 'Show' : 'Hide'}} Registered Practice</button>
+              v-if="total !== 0"
+              class="float-right bg-yellow-500 hover:bg-sunglow text-black px-4 py-1 rounded-lg text-sm"
+              @click="toggleRegisteredPractice = !toggleRegisteredPractice">
+              {{toggleRegisteredPractice ? 'Show' : 'Hide'}} Registered Practice</button>
             </div>
           
         </div>
       </div>
-      <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">
-        No results found.
-      </div>
-      <div class="w-full overflow-hidden">
+      
+      <div class="w-full overflow-y-auto px-2">
         <div>
           <!--TABLE-->
           <!-- BODY -->
