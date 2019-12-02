@@ -35,29 +35,6 @@
 					</select>
 				</div>
     </div>
-
-   <AppTable
-			v-if="getAllPractices.length > 0"
-			:total="getAllPractices.length"
-			:items="getAllPractices"
-			:loading="loading"
-			:currentPage="currentPage"
-			:perPage="itemsPerPage"
-			:columns="columns"
-			:routerLink="'/practices'"
-			@pagechanged="pagechanged"
-		>
-			<template v-slot:locumStatus>
-				<div class="flex items-center justify-center">
-          asdadsf
-        </div>
-			</template>
-      <template v-slot:type>
-				<div class="flex items-center justify-center">
-          asd
-        </div>
-			</template>
-		</AppTable>
 	<!-- TABLE RESPONSIVE-->
     <div v-if="itemCount > 0" class="w-full" style="min-height: 70vh"> 
       <!-- HEADER -->
@@ -152,13 +129,12 @@
     </div>
     <!-- END TABLE -->
 	<!-- PAGINATION -->
-  <!-- <AppPagination
-    v-if="getAllPractices.length !== 0"
+  <AppPagination
     :total="total"
     :totalPages="totalPages"
     :currentPage="currentPage"
     @pagechanged="pagechanged"
-  /> -->
+  />
 	<!-- <div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
 		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
 			@click="goToPage(currentPage - 1,search,order_by)" 
@@ -205,18 +181,16 @@ import debounce from "lodash.debounce";
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 import AppLoading from '@/components/Base/AppLoading'
 import AppPagination from "@/components/Base/AppPagination";
-import AppTable from "@/components/Base/AppTable";
 export default {
 	components:{
 		AddPracticeSurgery,
     AppLoading,
-    AppPagination,
-    AppTable
+    AppPagination
 	},
 	data() {
     return {
       loading: false,
-      itemsPerPage:2,
+      itemsPerPage: 10,
       // itemCount: 0,
       currentPage: 1,
       // practices: [],
@@ -233,39 +207,7 @@ export default {
       created_at:true,
       actived_until:true,
       status:true,
-      modal:false,
-
-      columns: [
-        {
-          name: 'Practice Name',
-          dataIndex: 'surgery.name'
-        },
-        {
-          name: 'Practice Code',
-          dataIndex: 'surgery.code',
-          sortable: true
-        },
-        {
-          name: 'Created',
-          dataIndex: 'created_at',
-          class: "localDate",
-          sortable: true
-        },
-        {
-          name: 'Expires',
-          dataIndex: 'actived_until'
-        },
-        {
-          name: 'Status',
-          dataIndex: 'slot',
-          slotName: 'locumStatus'
-        },
-        {
-          name: 'Type',
-          dataIndex: 'slot',
-          slotName: 'type'
-        }
-      ]
+      modal:false
     };
   },
 
@@ -284,7 +226,7 @@ export default {
     } = route.query 
     page = parseInt(page)
     const createdRoute = route.query  
-      const limit = 2
+      const limit = 10
       const offset = page * limit - limit
       order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
     const params = { limit, offset, order_by }
@@ -430,7 +372,7 @@ export default {
       const query = {
         ...this.$route.query
       }
-      const offset = parseInt(query.page)*2 - 2 
+      const offset = parseInt(query.page)*10 - 10 
       return offset
     },
 

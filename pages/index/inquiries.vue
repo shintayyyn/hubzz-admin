@@ -11,6 +11,7 @@
 				<div class="align-middle px-2 text-center w-1/4">Account Type</div>
 				<div class="align-middle px-2 text-center w-1/4">Account Role</div>
 				<div class="align-middle px-2 text-center w-1/4">Date Sent</div>
+				<div class="align-middle px-2 text-center w-1/4">Acknowledged At</div>
 			</div>
 			<!-- END HEADER -->
 			<!-- BODY -->
@@ -50,6 +51,23 @@
 					<strong class="block md:hidden text-xs uppercase">Date Sent</strong>
 					<span>{{
 						$moment(email.sender.created_at).format("MMM DD,YYYY | HH:MM:ss")
+					}}</span>
+				</div>
+				<!-- <div
+					class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-none align-middle md:text-center"
+				><strong class="block md:hidden text-xs uppercase">Acknowledged By</strong>
+					<span>{{email.acknowledged_by_user_id ? email.acknowledged_by_user_id : 'Not Yet Ack'}}</span>
+        </div> -->
+				<div
+					class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 p-1 md:p-2 leading-none align-middle md:text-center"
+				>
+					<strong class="block md:hidden text-xs uppercase"
+						>Acknowledged At</strong
+					>
+					<span>{{
+						email.acknowledged_at
+							? $moment(email.acknowledged_at).format("MMM DD,YYYY | HH:MM:ss")
+							: "Pending"
 					}}</span>
 				</div>
 			</nuxt-link>
@@ -116,35 +134,37 @@ export default {
 	},
 	data() {
 		return {
-			emails: [],
-			itemsPerPage: 8,
-			activePage: 1,
-			itemCount: 0,
-			currentPage: 1
+			// emails: [],
+			// itemCount: 0,
+			itemsPerPage: 10,
+			activePage: 1
 		};
 	},
 	watchQuery: ["page"],
+
 	async asyncData({ app, store, route }) {
 		try {
 			//put loading here if needed
 			let { page = 1, search = "" } = route.query;
 
 			page = parseInt(page);
-			const limit = 8;
+			const limit = 10;
 			const offset = page * limit - limit;
 			const params = { limit, offset };
 
 			let response = await app.$axios.$get(`/api/v1/admin/supports/count`);
 			const itemCount = response.data.count;
+			await store.commit("supports/SET_EMAILS_COUNT", itemCount);
 
 			response = await app.$axios.$get(`/api/v1/admin/supports`, { params });
 			const emails = response.data.emails;
+			await store.commit("supports/SET_EMAILS", emails);
 
 			return {
 				itemsPerPage: limit,
-				activePage: page,
-				itemCount,
-				emails
+				activePage: page
+				// itemCount,
+				// emails
 			};
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
@@ -162,6 +182,15 @@ export default {
 		}
 	},
 	computed: {
+		loadingSupportEmail() {
+			return this.$store.state.supports.loading_support_emails;
+		},
+		emails() {
+			return this.$store.state.supports.emails;
+		},
+		itemCount() {
+			return this.$store.state.supports.itemCount;
+		},
 		total() {
 			return this.emails.length;
 		},

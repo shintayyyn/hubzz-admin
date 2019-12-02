@@ -35,7 +35,13 @@
           <p class="font-semibold">Name</p>
           <p class="mx-1 mb-2">{{user.personal_detail.name}}</p>
           <p class="font-semibold">Role</p>
-          <p class="mx-1">{{user.admin_detail.role ? user.admin_detail.role.name : 'N/A'}}</p>
+          <div v-if="user.admin_detail.roles.length > 0">
+            <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
+              v-for="adminRoles in user.admin_detail.roles"
+                :key="adminRoles.id + '-name'">
+                {{adminRoles ? adminRoles.name:null}}
+            </p>
+          </div>
 
         </div>
       </div>
@@ -126,24 +132,46 @@
             >
             <span v-if="errorMessage('password_confirmation')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
           </div>
-          <div class="mb-3">
-            <div class="">Role</div>
-            <select 
-              v-model="toPutAdminUser.role_id"
-              class="appearance-none w-full bg-transparent border-b border-gray-300 px-4 py-2 pr-8 leading-tight focus:outline-none"
-              :class="errorMessage('role_id') ? 'border-red-800' :'focus:border-sunglow'"
-              @blur="CheckEmptyField(toPutAdminUser.role_id, 'role_id')"
+
+          <div class="flex flex-col py-1 mt-2">
+            <div class="relative pb-1">
+              <span>Admin Role/s </span>
+              <span class="text-xs">(hold ctrl + click to choose)</span>
+            </div>
+            <select
+              class="w-full text-black focus:outline-none"
+              multiple="true"
+              v-bind:class="{ 'fix-height': multiple === 'true' }"
+              v-model="toPutAdminUser.roles_id"
+              @blur="
+                CheckEmptyField(toPutAdminUser.roles_id, 'roles_id')
+              "
             >
-              <option disabled value selected class="text-gray-500">Select Role</option>
-              <option v-for="(role, index) in adminRoles"
-              :key="index"
-              :value="role.id"
-              class="text-black">
-                {{ role.name }}
-              </option>
+              <option
+                class="px-2 py-1"
+                v-for="item in adminRoles"
+                :key="item.id"
+                :value="item"
+                >{{ item.label }}</option
+              >
             </select>
-            <span v-if="errorMessage('role_id')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
+            <div
+              v-if="formError.filter(item => item.field === 'roles_id')"
+              class="text-red-500 text-xs pt-1"
+            >
+              {{ errorMessage("roles_id") }}
+            </div>
+            <div class="flex items-start flex-wrap py-1">
+              <div
+                v-for="(practice_type, index) in toPutAdminUser.roles_id"
+                :key="`practice_type-${index}`"
+                class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
+              >
+                {{toPutAdminUser.roles_id[index].label}}
+              </div>
+            </div> 
           </div>
+
           <button
             class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black font-semibold text-sm focus:outline-none"
             @click.prevent ="checkForm(user.id,toPutAdminUser)"
@@ -159,6 +187,7 @@ export default {
       user:'',
       adminRoles: [],
       formError:[], 
+      multiple: true,
       tab1:true,
       tab2:false,
       toPutAdminUser:{
@@ -169,7 +198,7 @@ export default {
         first_name:'',
         last_name:'',
         suffix:'',
-        role_id:''
+        roles_id:[],
       },
     }
   },
@@ -178,10 +207,9 @@ export default {
     try{
       let response = await app.$axios.$get(`/api/v1/admin/admin-users/${route.params.id}`)
       const user = response.data.user
-      response = await app.$axios.$get(`/api/v1/admin/admin-roles`)
-      const adminRoles = response.data.roles
-      console.log(" admin" ,adminRoles)
-      console.log("qweqwe", user)
+      // response = await app.$axios.$get(`/api/v1/admin/admin-roles`)
+      
+      // const adminRoles = response.data.roles
       return{
         user,
         toPutAdminUser:{
@@ -192,17 +220,22 @@ export default {
             first_name:'',
             last_name:'',
             suffix:'',
-            role_id:''
+            roles_id:[],
         },
-        adminRoles
+        // adminRoles
       }
     }catch(err){
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('get admin user error!!!', err)
     }
   },
-  created() {
-    console.log("errprs", this.formError)
+  async created() {
+    await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
+      res.data.roles.forEach(item => {
+        this.adminRoles.push({value: item.id, label: item.name})
+      })
+      let default_role = res.data.roles.find((item, index) => index === 0)
+    });
   },
   computed:{
     authAdminPermissions() {
@@ -300,34 +333,10 @@ export default {
     },
 
     checkForm(uID,userInfo) {
-      console.log("error on save", this.formError)
+      console.log("error on save",userInfo)
       this.formError = []
       this.Validate(this.toPutAdminUser, ["title", "suffix"])
-      // if(!userInfo.first_name){
-      //   this.errors.push("Please input your First Name.")
-      // }
-      // if(!userInfo.last_name){
-      //   this.errors.push("Please input your Last Name")
-      // }
-      // if(!userInfo.email) {
-      //   this.errors.push("Please input your E-mail")
-      // } else if(!this.validEmail(userInfo.email)) {
-      //   this.errors.push("Please input a Valid E-Mail Address")        
-      // } 
-      // if(!userInfo.password){
-      //   userInfo.password = ''
-      //   this.errors.push("Please type your new password.")
-      // }
-      // if(!userInfo.password_confirmation){
-      //   userInfo.password_confirmation = ''
-      //   this.errors.push("Please type again your new password.")
-      // }
-      // if(userInfo.password_confirmation !== userInfo.password){
-      //   this.errors.push("Please ensure that inputted passwords match.")
-      // }
-      // if(userInfo.password.length < 6 || userInfo.password_confirmation < 6){
-      //   this.errors.push("Password must be at least 6 characters")
-      // }
+
       if(!this.formError.length){
         this.toPutAdminUserInfo(uID,userInfo)
       }
@@ -340,6 +349,9 @@ export default {
 
     async toPutAdminUserInfo(user_id, toPutUserInfo){
       console.log('to admin user',toPutUserInfo)
+      toPutUserInfo.roles_id = toPutUserInfo.roles_id.map(
+        item => item.value
+      );
       await this.$axios.$put(`/api/v1/admin/admin-users/${user_id}`,toPutUserInfo).then(()=>{
         this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Edit Admin User Success!'})
       }).catch((err)=>{
@@ -347,6 +359,7 @@ export default {
         this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       })
       await this.getAdminUsers()
+      this.$router.push('/user-management')
     }
   }
 }

@@ -95,7 +95,7 @@
 				$route.name.includes('index-billings-id') ||
 					$route.name.includes('index-billings-addinvoice')
 			"
-			@click="$router.go(-1)"
+			@click="$router.push(`/billings`)"
 		></div>
 		<nuxt-child />
 	</div>
@@ -118,10 +118,8 @@ export default {
 		try {
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`);
 			const practiceCount = response.data.count;
-			console.log("practicecount", practiceCount);
 			response = await app.$axios.$get(`/api/v1/admin/practices`);
 			const practices = response.data.practices;
-			console.log("practices", practices);
 			return {
 				practiceCount,
 				practices

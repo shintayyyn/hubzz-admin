@@ -76,7 +76,17 @@
 											column.class.includes('localDate') &&
 											dataCell(item, column) !== '(none)'
 									"
-									>{{ dataCell(item, column) | localDate }}</template
+								>
+									{{ dataCell(item, column) | localDate }}</template
+								>
+								<template
+									v-if="
+										column.class &&
+											column.class.includes('localDate') &&
+											dataCell(item, column) !== '(none)'
+									"
+								>
+									{{ dataCell(item, column) | localDate }}</template
 								>
 								<template v-else>{{ dataCell(item, column) }}</template>
 							</template>

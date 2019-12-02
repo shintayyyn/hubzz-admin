@@ -26,7 +26,7 @@
 						/>
 					</button>
 				</div>
-				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button> -->
+				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
 			</div>
 			<!-- FILTER SELECTS -->
 			<div class="flex w-full justify-end">
@@ -68,13 +68,13 @@
 			</div>
 			<!-- FILTER SELECTS END HERE -->
 		</div>
-		<div class="w-full ">
+		<div class="w-full" style="min-height: 70vh">
 			<div
 				class="hidden md:flex items-center text-white justify-around font-semibold"
 			>
 				<div
 					class="align-middle px-2 w-1/6 cursor-pointer"
-					@click="sortBy('name', activePage, search, filterCompliances)"
+					@click="sortBy('name', currentPage, search, filterCompliances)"
 				>
 					Name
 					<svgicon
@@ -104,7 +104,7 @@
 				</div>
 				<div
 					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('profession', activePage, search, filterCompliances)"
+					@click="sortBy('profession', currentPage, search, filterCompliances)"
 				>
 					Profession
 					<svgicon
@@ -134,7 +134,7 @@
 				</div>
 				<div
 					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('created_at', activePage, search, filterCompliances)"
+					@click="sortBy('created_at', currentPage, search, filterCompliances)"
 				>
 					Date signed-up
 					<svgicon
@@ -165,7 +165,7 @@
 				<div
 					class="align-middle px-2 text-center w-1/6 cursor-pointer"
 					@click="
-						sortBy('email_verified_at', activePage, search, filterCompliances)
+						sortBy('email_verified_at', currentPage, search, filterCompliances)
 					"
 				>
 					Sign-up verified
@@ -275,22 +275,20 @@
 		</div>
 		<!-- PAGINATION -->
 		<AppPagination
-			v-if="itemCount > itemsPerPage"
 			:total="total"
 			:totalPages="totalPages"
 			:currentPage="currentPage"
 			@pagechanged="pagechanged"
 		/>
-		<div
-			v-if="itemCount > itemsPerPage"
+		<!-- <div
 			class="flex justify-center items-center my-2"
 		>
 			<button
 				class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-				@click="goToPage(activePage - 1, search, order_by, filterCompliances)"
+				@click="goToPage(currentPage - 1, search, order_by, filterCompliances)"
 				:class="
 					`${
-						activePage == pageCount
+						currentPage == totalPages
 							? 'text-gray-500 page-button-disabled'
 							: 'page-button'
 					}`
@@ -311,8 +309,8 @@
 
 			<button
 				class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-				:class="`${activePage === page ? 'text-black' : ''}`"
-				v-for="page in pageCount"
+				:class="`${currentPage === page ? 'text-black' : ''}`"
+				v-for="page in totalPages"
 				v-if="showPage(page)"
 				:key="`page-${page}`"
 				@click="goToPage(page, search, order_by, filterCompliances)"
@@ -322,10 +320,10 @@
 
 			<button
 				class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm hover:bg-waterloo-light focus:outline-none"
-				@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
+				@click="goToPage(currentPage + 1, search, order_by, filterCompliances)"
 				:class="
 					`${
-						activePage == pageCount
+						currentPage == totalPages
 							? 'text-gray-500 page-button-disabled'
 							: 'page-button'
 					}`
@@ -343,7 +341,7 @@
 					</svg>
 				</span>
 			</button>
-		</div>
+		</div> -->
 		<!-- PAGINATION ENDS HERE -->
 		<div
 			class="locum-shield"
@@ -366,9 +364,7 @@ export default {
 	},
 	data() {
 		return {
-			itemsPerPage: 5,
-			activePage: 1,
-
+			itemsPerPage: 8,
 			currentPage: 1,
 
 			filterCompliances: "",
@@ -401,7 +397,7 @@ export default {
 			}
 			page = parseInt(page);
 			const createdRoute = route.query;
-			const limit = 5;
+			const limit = 8;
 			const offset = page * limit - limit;
 			order_by =
 				createdRoute && createdRoute.order_by
@@ -426,17 +422,17 @@ export default {
 
 			let response = await getLocumUsersCountPromise;
 			const itemCount = response.data.count;
+			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
 
 			response = await getLocumUsersPromise;
 			const locumUsers = response.data.users;
-
-			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
 			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
+
 			await store.commit("locums/TOGGLE_LOADING", false);
 			return {
 				filterCompliances: compliance_status,
 				itemsPerPage: limit,
-				activePage: page,
+				currentPage: page,
 				search,
 				order_by
 			};
@@ -457,7 +453,7 @@ export default {
 		itemCount() {
 			return this.$store.state.locums.itemCount;
 		},
-		pageCount() {
+		totalPages() {
 			return Math.ceil(this.itemCount / this.itemsPerPage);
 		},
 		showPage() {
@@ -466,37 +462,40 @@ export default {
 					return true;
 				}
 
-				if (page === this.pageCount) {
+				if (page === this.totalPages) {
 					return true;
 				}
 
-				if (page === this.activePage) {
+				if (page === this.currentPage) {
 					return true;
 				}
 
-				if (page === this.activePage + 1) {
+				if (page === this.currentPage + 1) {
 					return true;
 				}
 
-				if (page === this.activePage - 1) {
+				if (page === this.currentPage - 1) {
 					return true;
 				}
 
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
+				if (this.currentPage === 1 && page < 5) {
 					return true;
 				}
 
 				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
+					this.currentPage === this.totalPages &&
+					page > this.totalPages - 4
+				) {
+					return true;
+				}
+
+				if (this.currentPage === 2 && page === 4) {
+					return true;
+				}
+
+				if (
+					this.currentPage === this.totalPages - 1 &&
+					page === this.totalPages - 3
 				) {
 					return true;
 				}
@@ -551,7 +550,7 @@ export default {
 			if (value === "Name") {
 				this.sortBy(
 					"name",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -559,7 +558,7 @@ export default {
 			if (value === "Profession") {
 				this.sortBy(
 					"profession",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -567,7 +566,7 @@ export default {
 			if (value === "Date signed-up") {
 				this.sortBy(
 					"created_at",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -575,7 +574,7 @@ export default {
 			if (value === "Sign-up verified") {
 				this.sortBy(
 					"email_verified_at",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -588,12 +587,12 @@ export default {
 			const query = {
 				...this.$route.query
 			};
-			const offset = parseInt(query.page) * 10 - 10;
+			const offset = parseInt(query.page) * 8 - 8;
 			return offset;
 		},
 		getLocums(params) {
 			this.$store.dispatch("locums/fetchLocums", {
-				limit: 10,
+				limit: 8,
 				search: params.search,
 				compliance_status: params.compliance_status,
 				order_by: params.order_by,
@@ -655,7 +654,7 @@ export default {
 				return;
 			}
 
-			if (page > this.pageCount) {
+			if (page > this.totalPages) {
 				return;
 			}
 
@@ -803,6 +802,14 @@ export default {
 
 		usersDeletedHandler(userId) {
 			console.log("usersDeletedHandler", userId);
+		},
+		pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
+			this.$router.push({ query });
+			this.getLocums(this.paramSort);
 		}
 	}
 };

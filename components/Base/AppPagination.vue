@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full pagination flex flex-col">
-		<div class="w-full flex flex-wrap justify-between py-2 text-sm">
+		<!-- <div class="w-full flex flex-wrap justify-between py-2 text-sm">
 			<div class="text-gray-500">
 				<div>{{ pageInfo(perPage, currentPage, total) }}</div>
 			</div>
@@ -22,8 +22,7 @@
 					items
 				</div>
 			</div>
-		</div>
-
+		</div> -->
 		<div
 			class="flex flex-col justify-center items-center py-2"
 			v-if="totalPages > 1"
@@ -38,7 +37,7 @@
 						type="button"
 						class="page-button rounded-lg py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
 						@click="onClickPage(page.name)"
-						:disabled="loading || page.isDisabled"
+						:disabled="loading || (page.isDisabled && !isPageActive(page.name))"
 						:class="{ active: isPageActive(page.name) }"
 					>
 						{{ page.name }}
@@ -92,7 +91,7 @@
 						type="button"
 						class="rounded-lg page-button py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
 						@click="onClickPage(page.name)"
-						:disabled="loading || page.isDisabled"
+						:disabled="loading || (page.isDisabled && !isPageActive(page.name))"
 						:class="{ active: isPageActive(page.name) }"
 					>
 						{{ page.name }}
@@ -155,8 +154,8 @@ export default {
 			required: true
 		},
 		total: {
-			type: Number,
-			required: true
+			type: Number
+			// required: true
 		},
 		currentPage: {
 			type: Number,
@@ -224,6 +223,9 @@ export default {
 			if ((newValue, oldValue)) {
 				this.$emit("limitchanged", newValue);
 			}
+		},
+		currentPage(value) {
+			console.log("currentPage", value);
 		}
 	},
 	data() {
@@ -256,6 +258,7 @@ export default {
 			this.$emit("pagechanged", this.totalPages);
 		},
 		isPageActive(page) {
+			console.log(this.currentPage, page);
 			return this.currentPage === page;
 		}
 	}
@@ -294,7 +297,7 @@ button:active :not(button:disabled) {
 
 button:disabled,
 button:disabled svg {
-	background: #e2e2e2;
+	background: #696c71;
 	color: #999999;
 	cursor: not-allowed;
 	fill: #999999;

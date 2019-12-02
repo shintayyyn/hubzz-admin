@@ -63,16 +63,20 @@ export default {
     notify() {
       return this.$store.state.notification.enabled;
     },
+    doNotClose () {
+      return this.$store.state.notification.doNotClose;
+    }
   },
 
   watch: {
     notify(value) {
-      if (value) {
+      if (value && !this.doNotClose) {
+
         setTimeout(() => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: false,
             status: "",
-            text: ""
+            text: "",
           });
         }, 2000);
       }

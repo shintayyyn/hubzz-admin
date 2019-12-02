@@ -1,4 +1,4 @@
-export default () =>({
+export default () => ({
     loading_locums: true,
     //--------------Locum Tab---------------
     locumUsers: [],

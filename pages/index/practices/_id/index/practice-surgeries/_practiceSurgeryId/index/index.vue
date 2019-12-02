@@ -205,7 +205,6 @@ export default {
     this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum
     this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz
     this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries
-    console.log('form', this.form)
   },
   
   methods:{
