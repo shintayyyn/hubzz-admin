@@ -85,12 +85,6 @@
         </div>
       </form>
     </div>
-    <div class="practice-shield" v-if="modal == true" @click="modal=false"></div>
-    <transition name="slide" mode="out-in">
-      <div class="change-parent-modal shadow-lg" v-if="modal">
-        <AddPracticeSurgery :practice="practice" :practiceHub="practiceHub" @close="modal = false"/>
-      </div>
-    </transition>
   </div>
 </template>
 <script>
@@ -105,7 +99,6 @@ export default {
 
   data(){
     return{
-      modal:false,
     }
   },
   created(){

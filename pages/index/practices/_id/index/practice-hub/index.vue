@@ -88,7 +88,6 @@
             </div>
           </form>
         </div>
-        <div class="practice-shield" v-if="modal == true" @click="modal=false"></div>
       </transition>
     </div>
     <nuxt-child/>
@@ -99,14 +98,14 @@ import PracticeHub from '@/components/Practices/PracticeHub'
 export default {
     middleware: 'changedPracticeType',
     components:{
-        PracticeHub
+      PracticeHub
     },
     data(){
-        return{
-            // practice:'',
-            // practiceHub:'',
-            // practiceParent:''
-        }
+      return{
+        // practice:'',
+        // practiceHub:'',
+        // practiceParent:''
+      }
     },
     computed:{
       practice(){
