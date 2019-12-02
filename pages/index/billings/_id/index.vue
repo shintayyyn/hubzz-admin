@@ -128,42 +128,42 @@ export default {
 };
 </script>
 <style>
- .billing-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
+.billing-shield {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #333;
+	opacity: 0.5;
+	z-index: 511;
 }
 .billing-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px yellow;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: hidden auto;
+	border-left: solid 2px yellow;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
 }
 @media screen and (min-width: 1200px) {
-  .billing-modal {
-    width: 80%;
-  }
+	.billing-modal {
+		width: 80%;
+	}
 }
 .document {
-  width: 100%;
-  min-height: 50vh;
+	width: 100%;
+	min-height: 50vh;
 }
 
 @media screen and (min-width: 768px) {
-  .document {
-    min-height: 80vh;
-  }
+	.document {
+		min-height: 80vh;
+	}
 }
 </style>

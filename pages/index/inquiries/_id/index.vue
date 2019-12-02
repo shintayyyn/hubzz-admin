@@ -1,7 +1,7 @@
 <template>
   <div class="support-modal p-4 md:p-8 shadow-lg">
     <transition name="fade" mode="out-in">
-        <SupportInfo :email="email"/>
+      <SupportInfo :email="email"/>
     </transition>
   </div>
 </template>
@@ -14,32 +14,32 @@ export default {
   },
   
   data(){
-        return{
-            email: null,
-        }
-    },
-    async asyncData({app,route}){
-        try{
-            let response =  await app.$axios.$get(`/api/v1/admin/supports/${route.params.id}`)
-            const email = response.data.email
-            return{
-                email
-            }
-        }catch(err){
-            console.log('getSupportinfo error!',err)
-        }
-    },
-    methods:{
-        goBack(){
-            const query = {
-                ...this.$route.query
-            }
-            if(query.session_tab){
-                delete query.session_tab
-            }
-            this.$router.push({path:'/supports',query})
-        },
+    return{
+      email: null,
     }
+  },
+  async asyncData({app,route}){
+    try{
+      let response =  await app.$axios.$get(`/api/v1/admin/supports/${route.params.id}`)
+      const email = response.data.email
+      return{
+        email
+      }
+    }catch(err){
+      console.log('getSupportinfo error!',err)
+    }
+  },
+  methods:{
+    goBack(){
+      const query = {
+        ...this.$route.query
+      }
+      if(query.session_tab){
+        delete query.session_tab
+      }
+      this.$router.push({path:'/supports',query})
+    },
+  }
 }
 </script>
 <style>

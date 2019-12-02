@@ -227,7 +227,7 @@ export default {
   				params.search = search
 			}
 				
-  			const getPracticesCountPromise = app.$axios.$get(`/api/v1/admin/practices/count`, { params })
+  		const getPracticesCountPromise = app.$axios.$get(`/api/v1/admin/practices/count`, { params })
 			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, { params })
 				
 			let response = null
@@ -282,41 +282,41 @@ export default {
             return true
           }
 
-        if (page === this.pageCount) {
-          return true
-        }
+          if (page === this.pageCount) {
+            return true
+          }
 
-        if (page === this.activePage) {
-          return true
-        }
+          if (page === this.activePage) {
+            return true
+          }
 
-        if (page === this.activePage + 1) {
-          return true
-        }
+          if (page === this.activePage + 1) {
+            return true
+          }
 
-        if (page === this.activePage - 1) {
-          return true
-        }
+          if (page === this.activePage - 1) {
+            return true
+          }
 
-        if (this.activePage === 1 && page < 5) {
-          return true
-        }
+          if (this.activePage === 1 && page < 5) {
+            return true
+          }
 
-        if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-          return true
-        }
+          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+            return true
+          }
 
-        if (this.activePage === 2 && page === 4) {
-          return true
-        }
+          if (this.activePage === 2 && page === 4) {
+            return true
+          }
 
-        if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-          return true
-        }
+          if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
+            return true
+          }
 
-        return false
+          return false
+        }
       }
-    }
   },
 
   watch: {
