@@ -26,7 +26,7 @@
 						/>
 					</button>
 				</div>
-				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button> -->
+				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
 			</div>
 			<!-- FILTER SELECTS -->
 			<div class="flex w-full justify-end">
@@ -68,13 +68,11 @@
 			</div>
 			<!-- FILTER SELECTS END HERE -->
 		</div>
-		<div class="w-full ">
-			<div
-				class="hidden md:flex items-center text-white justify-around font-semibold"
-			>
+		<div class="w-full" style="min-height: 70vh">
+			<div class="hidden md:flex items-center text-white justify-around font-semibold">
 				<div
 					class="align-middle px-2 w-1/6 cursor-pointer"
-					@click="sortBy('name', activePage, search, filterCompliances)"
+					@click="sortBy('name', currentPage, search, filterCompliances)"
 				>
 					Name
 					<svgicon
@@ -104,7 +102,7 @@
 				</div>
 				<div
 					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('profession', activePage, search, filterCompliances)"
+					@click="sortBy('profession', currentPage, search, filterCompliances)"
 				>
 					Profession
 					<svgicon
@@ -134,7 +132,7 @@
 				</div>
 				<div
 					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('created_at', activePage, search, filterCompliances)"
+					@click="sortBy('created_at', currentPage, search, filterCompliances)"
 				>
 					Date signed-up
 					<svgicon
@@ -165,7 +163,7 @@
 				<div
 					class="align-middle px-2 text-center w-1/6 cursor-pointer"
 					@click="
-						sortBy('email_verified_at', activePage, search, filterCompliances)
+						sortBy('email_verified_at', currentPage, search, filterCompliances)
 					"
 				>
 					Sign-up verified
@@ -197,13 +195,9 @@
 				<div class="align-middle px-2 text-center w-1/6">Status</div>
 				<div class="align-middle px-2 text-center w-1/6">Compliance Status</div>
 			</div>
-			<div
-				v-if="locumUsers.length === 0"
-				class="text-gray-500 leading-tight text-center py-4"
-			>
-				No results found for {{ search }}<br />Try another keyword
+			<div v-if="locumUsers.length === 0" class="text-gray-500 leading-tight text-center py-4">
+				No results found for {{ search }}<br/>Try another keyword
 			</div>
-			<!-- <transition-group name="fade" tag="p"> -->
 			<nuxt-link
 				v-for="(locumUser, index) in locumUsers"
 				:key="`locumUser-${index}`"
@@ -260,89 +254,30 @@
 						>{{ locumUser.status }}</span
 					>
 				</div>
-				<div
-					class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Compliance Status</strong
-					>
+				<div class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+					<strong class="block md:hidden text-xs uppercase">Compliance Status</strong>
 					<span
 						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
 						:class="complianceStatusStyle(locumUser.compliance_status)"
-						>{{ locumUser.compliance_status }}</span
-					>
+						>{{ locumUser.compliance_status }}
+          </span>
 				</div>
 			</nuxt-link>
-			<!-- </transition-group> -->
+      <!-- PAGINATION -->
+      <div class="flex justify-center bottom-0 items-center my-2">
+        <AppPagination
+          :total="total"
+          :totalPages="totalPages"
+          :currentPage="currentPage"
+          @pagechanged="pagechanged"
+        />
+      </div>
+      <!-- PAGINATION ENDS HERE -->
 		</div>
-		<!-- PAGINATION -->
-		<div
-			class="flex justify-center items-center my-2"
-		>
-			<button
-				class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-				@click="goToPage(activePage - 1, search, order_by, filterCompliances)"
-				:class="
-					`${
-						activePage == pageCount
-							? 'text-gray-500 page-button-disabled'
-							: 'page-button'
-					}`
-				"
-			>
-				<span class="hidden md:block">Prev</span>
-				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						class="fill-current"
-					>
-						<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
-					</svg>
-				</span>
-			</button>
-
-			<button
-				class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-				:class="`${activePage === page ? 'text-black' : ''}`"
-				v-for="page in pageCount"
-				v-if="showPage(page)"
-				:key="`page-${page}`"
-				@click="goToPage(page, search, order_by, filterCompliances)"
-			>
-				{{ page }}
-			</button>
-
-			<button
-				class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm hover:bg-waterloo-light focus:outline-none"
-				@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
-				:class="
-					`${
-						activePage == pageCount
-							? 'text-gray-500 page-button-disabled'
-							: 'page-button'
-					}`
-				"
-			>
-				<span class="hidden md:block">Next</span>
-				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						class="fill-current"
-					>
-						<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-					</svg>
-				</span>
-			</button>
-		</div>
-		<!-- PAGINATION ENDS HERE -->
 		<div
 			class="locum-shield"
 			v-if="$route.name.includes('index-locums-id')"
-			@click="$router.push('/locums')"
+			@click="$router.push({path: `/locums`, query:$route.query})"
 		></div>
 		<nuxt-child />
 	</div>
@@ -351,19 +286,22 @@
 <script>
 import debounce from "lodash.debounce";
 import AppLoading from "@/components/Base/AppLoading";
+import AppPagination from "@/components/Base/AppPagination";
+
 export default {
 	components: {
-		AppLoading
+		AppLoading,
+		AppPagination
 	},
 	data() {
 		return {
 			itemsPerPage: 10,
-			activePage: 1,
+			currentPage: 1,
 
 			filterCompliances: "",
 			search: "",
 			paramSort: {
-				order_by: ""
+				order_by: "created_at:desc"
 			},
 			sort: "",
 			sortedBy: "",
@@ -402,27 +340,22 @@ export default {
 				params.search = search;
 			}
 			params.compliance_status = compliance_status;
-			const getLocumUsersCountPromise = app.$axios.$get(
-				`/api/v1/admin/locum-users/count`,
-				{ params }
-			);
-			const getLocumUsersPromise = app.$axios.$get(`/api/v1/admin/locum-users`, {
-				params
-			});
+			const getLocumUsersCountPromise = app.$axios.$get(`/api/v1/admin/locum-users/count`,{ params });
+			const getLocumUsersPromise = app.$axios.$get(`/api/v1/admin/locum-users`,{ params });
 
 			let response = await getLocumUsersCountPromise;
 			const itemCount = response.data.count;
-      await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
+			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
 
 			response = await getLocumUsersPromise;
 			const locumUsers = response.data.users;
-      await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
+			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
 
 			await store.commit("locums/TOGGLE_LOADING", false);
 			return {
 				filterCompliances: compliance_status,
 				itemsPerPage: limit,
-				activePage: page,
+				currentPage: page,
 				search,
 				order_by
 			};
@@ -443,52 +376,11 @@ export default {
 		itemCount() {
 			return this.$store.state.locums.itemCount;
 		},
-		pageCount() {
+		totalPages() {
 			return Math.ceil(this.itemCount / this.itemsPerPage);
 		},
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.pageCount) {
-					return true;
-				}
-
-				if (page === this.activePage) {
-					return true;
-				}
-
-				if (page === this.activePage + 1) {
-					return true;
-				}
-
-				if (page === this.activePage - 1) {
-					return true;
-				}
-
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
-				) {
-					return true;
-				}
-
-				return false;
-			};
+		total() {
+			return this.locumUsers.length;
 		}
 	},
 
@@ -534,7 +426,7 @@ export default {
 			if (value === "Name") {
 				this.sortBy(
 					"name",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -542,7 +434,7 @@ export default {
 			if (value === "Profession") {
 				this.sortBy(
 					"profession",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -550,7 +442,7 @@ export default {
 			if (value === "Date signed-up") {
 				this.sortBy(
 					"created_at",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -558,7 +450,7 @@ export default {
 			if (value === "Sign-up verified") {
 				this.sortBy(
 					"email_verified_at",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -632,59 +524,6 @@ export default {
 			this.paramSort.search = search;
 			this.paramSort.compliance_status = compliance_status;
 			this.getLocums(this.paramSort);
-		},
-		goToPage(page, search, order_by, compliance_status) {
-			if (page < 1) {
-				return;
-			}
-
-			if (page > this.pageCount) {
-				return;
-			}
-
-			let query = { ...this.$router.query, page };
-
-			if (search) {
-				query = { ...this.$router.query, page, search };
-			}
-			if (order_by) {
-				query = { ...this.$router.query, page, order_by };
-			}
-			if (compliance_status) {
-				query = { ...this.$router.query, page, compliance_status };
-			}
-
-			if (search && order_by) {
-				query = { ...this.$router.query, page, search, order_by };
-			}
-
-			if (search && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status };
-			}
-
-			if (order_by && compliance_status) {
-				query = { ...this.$router.query, page, order_by, compliance_status };
-			}
-
-			if (search && order_by && compliance_status) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by,
-					compliance_status
-				};
-			}
-
-			if (page === 1) {
-				delete query.page;
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-
-			this.$router.push({ query });
 		},
 
 		searchSubmit: debounce(function(page, order_by, compliance_status) {
@@ -783,9 +622,16 @@ export default {
 					return;
 			}
 		},
-
 		usersDeletedHandler(userId) {
 			console.log("usersDeletedHandler", userId);
+		},
+		pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
+			this.$router.push({ query });
+			this.getLocums(this.paramSort);
 		}
 	}
 };

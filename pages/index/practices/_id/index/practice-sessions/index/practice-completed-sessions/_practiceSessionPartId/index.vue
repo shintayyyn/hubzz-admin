@@ -1,44 +1,44 @@
 <template>
-    <div class="job-modal shadow-lg">
-        <div class="mt-6 mx-8 my-2">
-            <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-completed-sessions`}" class="cursor-pointer">
-                <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
-            </nuxt-link>
-        </div>
-        <!-- <PracticeSessionModal :job="job"/> -->
-        <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
+  <div class="job-modal shadow-lg">
+    <div class="mt-6 mx-8 my-2">
+      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-completed-sessions`}" class="cursor-pointer">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+      </nuxt-link>
     </div>
+    <!-- <PracticeSessionModal :job="job"/> -->
+    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
+  </div>
 </template>
 <script>
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 import JobPartModal from '@/components/Base/JobPartModal'
 export default {
-    components:{
-        PracticeSessionModal,
-        JobPartModal
-    },  
-    data(){
-        return{
-            specificJobPart:'',
-            practiceId:''
-        }
-    },
-    async asyncData({ app, store, route, error}){
-        try{
-          let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
-          const specificJobPart = response.data.job_part
-          console.log('job part', specificJobPart)
-          const practiceId = route.params.id
-          return{
-              specificJobPart,
-              practiceId
-          }
-        }catch(err){
-          error({ statusCode: 404 })
-          store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-          console.log('get job error!',err)
-        }
+  components:{
+    PracticeSessionModal,
+    JobPartModal
+  },  
+  data(){
+    return{
+      specificJobPart:'',
+      practiceId:''
     }
+  },
+  async asyncData({ app, store, route, error}){
+    try{
+      let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
+      const specificJobPart = response.data.job_part
+      console.log('job part', specificJobPart)
+      const practiceId = route.params.id
+      return{
+        specificJobPart,
+        practiceId
+      }
+    }catch(err){
+      error({ statusCode: 404 })
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('get job error!',err)
+    }
+  }
 }
 </script>
 <style>

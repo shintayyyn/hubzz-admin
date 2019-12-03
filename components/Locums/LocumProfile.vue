@@ -251,7 +251,6 @@ export default {
     this.qualifications = this.user.locum_detail.qualifications;
     this.clinicalSystems = this.user.locum_detail.clinical_systems;
     this.spokenLanguages = this.user.locum_detail.spoken_languages;
-    console.log("qweqwe", this.getLocums)
   },
 
   methods: {

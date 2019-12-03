@@ -35,41 +35,42 @@
 					</select>
 				</div>
     </div>
-	<!-- TABLE RESPONSIVE-->
-    <div v-if="itemCount > 0" class="w-full"> 
+
+	  <!-- TABLE RESPONSIVE-->
+    <div v-if="itemCount > 0" class="w-full" style="min-height: 70vh"> 
       <!-- HEADER -->
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-        <div class="align-middle px-2 w-1/6 cursor-pointer" @click="sortBy('practice_name',activePage,search)">
+        <div class="align-middle px-2 w-1/6 cursor-pointer" @click="sortBy('practice_name',currentPage,search)">
           Practice Name
           <svgicon v-if="sortedBy!='practice_name'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_name'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='practice_name'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div> 
-        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('practice_code',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('practice_code',currentPage,search)">
           Practice Code
           <svgicon v-if="sortedBy!='practice_code'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_code'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='practice_code'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('created_at',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('created_at',currentPage,search)">
           Created
           <svgicon v-if="sortedBy!='created_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='created_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='created_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('actived_until',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('actived_until',currentPage,search)">
           Expires
           <svgicon v-if="sortedBy!='actived_until'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='actived_until'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='actived_until'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('status',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('status',currentPage,search)">
           Status
           <svgicon v-if="sortedBy!='status'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='status'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
           <svgicon v-if="sortType==false && sortedBy=='status'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white"/>
         </div>
-        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('practice_type',activePage,search)">
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('practice_type',currentPage,search)">
           Type
           <svgicon v-if="sortedBy!='practice_type'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='practice_type'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white"/>
@@ -120,52 +121,34 @@
         </nuxt-link>
       <!-- </transition-group> -->
       <!-- END BODY -->
+       <!-- PAGINATION -->
+        <div class="flex justify-center bottom-0 items-center my-2">
+          <AppPagination
+            :total="total"
+            :totalPages="totalPages"
+            :currentPage="currentPage"
+            @pagechanged="pagechanged"
+          />
+        </div>
+	    <!-- PAGINATION ENDS HERE -->
     </div>
     <div v-else>
       <div
-        class="mt-10 w-full text-center text-white"
+        class="mt-2 w-full text-center text-white"
         style="font-family: Nunito"
         >There are no registered practices.</div>
     </div>
+   
+    
     <!-- END TABLE -->
-	<!-- PAGINATION -->
-	<div class="flex justify-center items-center my-2">
-		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-			@click="goToPage(activePage - 1,search,order_by)" 
-			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
-			<span class="hidden md:block">Prev</span>
-				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
-						<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
-					</svg>
-				</span>
-		</button>
-		<button class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
-			:class="`${activePage === page ? 'text-white' : ''}`" 
-			v-for="page in pageCount" 
-			v-if="showPage(page)"
-			:key="`page-${page}`" 
-			@click="goToPage(page,search,order_by)">{{ page }}</button>
-		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
-			@click="goToPage(activePage + 1,search,order_by)"
-			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
-			<span class="hidden md:block">Next</span>
-			<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
-					<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-				</svg>
-			</span>
-		</button>														
-	</div>
-	<!-- PAGINATION ENDS HERE -->
 
+    
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.push('/practices')"></div>
   <transition name="slide" mode="out-in">
     <div class="practice-modal shadow-lg" v-if="modal">
       <AddPracticeSurgery @close="modal = false"/>
     </div>
   </transition>
-
     <nuxt-child/>
   </div>
 </template>
@@ -174,17 +157,19 @@
 import debounce from "lodash.debounce";
 import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
 import AppLoading from '@/components/Base/AppLoading'
+import AppPagination from "@/components/Base/AppPagination";
 export default {
 	components:{
 		AddPracticeSurgery,
-		AppLoading
+    AppLoading,
+    AppPagination
 	},
 	data() {
     return {
       loading: false,
-      itemsPerPage:10,
+      itemsPerPage: 10,
       // itemCount: 0,
-      activePage: 1,
+      currentPage: 1,
       // practices: [],
 		
       search: '',
@@ -208,139 +193,104 @@ export default {
 	'search'
 	],
 
-  	async asyncData({ app, store, route }) {
-  		try {
-			await store.commit('practices/TOGGLE_LOADING',true)
-  			let {
-  				page = 1,
-				search = '',
-				order_by=''  
-			} = route.query 
-			page = parseInt(page)
-			const createdRoute = route.query  
-  			const limit = 10
-  			const offset = page * limit - limit
-  			order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
-			const params = { limit, offset, order_by }
-				
-  			if (search) {
-  				params.search = search
-			}
-				
-  		const getPracticesCountPromise = app.$axios.$get(`/api/v1/admin/practices/count`, { params })
-			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, { params })
-				
-			let response = null
-			
-			response = await getPracticesCountPromise
-			const itemCount = response.data.count
-			
-			response = await getPracticesPromise
-			const practices = response.data.practices
-			
-			await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
-			await store.commit('practices/SET_PRACTICES',practices)
-			await store.commit('practices/TOGGLE_LOADING',false)
-  			return {
-  				loading: false,
-  				itemsPerPage: limit,
-  				// itemCount,
-  				activePage: page,
-  				// practices,
-				search,
-				order_by  
-  			}
-  		} catch (err) {
-			  store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-  			console.log('Get practices error!', err)
-  		}
-  	},
-
-    computed: {
-      loadingPractices(){
-        return this.$store.state.practices.loading_practices
-      },
-      getAllPractices(){
-        return this.$store.getters["practices/getAllPractices"]
-      },
-      itemCount(){
-        return this.$store.state.practices.itemCount
-      },
-      pageCount() {
-        return Math.ceil(this.itemCount / this.itemsPerPage)
-      },
-      authAdminPermissions() {
-        return this.$store.getters["auth/permissions"]
-      },
-      showPage() {
-        return page => {
-          if (page === 1) {
-            return true
-          }
-
-          if (page === this.pageCount) {
-            return true
-          }
-
-          if (page === this.pageCount) {
-            return true
-          }
-
-          if (page === this.activePage) {
-            return true
-          }
-
-          if (page === this.activePage + 1) {
-            return true
-          }
-
-          if (page === this.activePage - 1) {
-            return true
-          }
-
-          if (this.activePage === 1 && page < 5) {
-            return true
-          }
-
-          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-            return true
-          }
-
-          if (this.activePage === 2 && page === 4) {
-            return true
-          }
-
-          if (this.activePage === this.pageCount - 1 && page === this.pageCount - 3) {
-            return true
-          }
-
-          return false
-        }
+  async asyncData({ app, store, route }) {
+    try {
+    await store.commit('practices/TOGGLE_LOADING',true)
+      let {
+        page = 1,
+      search = '',
+      order_by=''  
+    } = route.query 
+    page = parseInt(page)
+    const createdRoute = route.query  
+      const limit = 10
+      const offset = page * limit - limit
+      order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : 'created_at:desc'
+    const params = { limit, offset, order_by }
+      
+      if (search) {
+        params.search = search
+    }
+      
+      const getPracticesCountPromise = app.$axios.$get(`/api/v1/admin/practices/count`, { params })
+    const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, { params })
+      
+    let response = null
+    
+    response = await getPracticesCountPromise
+    const itemCount = response.data.count
+    
+    response = await getPracticesPromise
+    const practices = response.data.practices
+    
+    await store.commit('practices/SET_PRACTICE_COUNT',itemCount)
+    await store.commit('practices/SET_PRACTICES',practices)
+    await store.commit('practices/TOGGLE_LOADING',false)
+      return {
+        loading: false,
+        itemsPerPage: limit,
+        // itemCount,
+        currentPage: page,
+        // practices,
+      search,
+      order_by  
       }
+    } catch (err) {
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('Get practices error!', err)
+    }
+  },
+
+  computed: {
+    loadingPractices(){
+      return this.$store.state.practices.loading_practices
+    },
+    getAllPractices(){
+      return this.$store.getters["practices/getAllPractices"]
+    },
+    itemCount(){
+      return this.$store.state.practices.itemCount
+    },
+    pageCount() {
+      return Math.ceil(this.itemCount / this.itemsPerPage)
+    },
+    authAdminPermissions() {
+      return this.$store.getters["auth/permissions"]
+    },
+    totalPages() {
+      return Math.ceil(this.itemCount / this.itemsPerPage);
+    },
+    total() {
+      return this.getAllPractices.length;
+    }
   },
 
   watch: {
+    $route(to, from) {
+			this.currentPage = parseInt(to.query.page);
+			this.getPractices();
+		},
     search(value){
       this.searchSubmit()
     },
     sort(value){
 			if (value === 'Practice Name'){
-				this.sortBy('practice_name', this.activePage, this.search)
+				this.sortBy('practice_name', this.currentPage, this.search)
 			}
 			if (value === 'Practice Code'){
-				this.sortBy('practice_code', this.activePage, this.search)
+				this.sortBy('practice_code', this.currentPage, this.search)
 			}
 			if (value === 'Created'){
-				this.sortBy('created_at', this.activePage, this.search)
+				this.sortBy('created_at', this.currentPage, this.search)
 			}
 			if (value === 'Expires'){
-				this.sortBy('actived_until', this.activePage, this.search)
+				this.sortBy('actived_until', this.currentPage, this.search)
       }
       if (value === 'Status'){
-				this.sortBy('status', this.activePage, this.search)
+				this.sortBy('status', this.currentPage, this.search)
       }
       if (value === 'Type'){
-				this.sortBy('practice_type', this.activePage, this.search)
+				this.sortBy('practice_type', this.currentPage, this.search)
 			}
 		}
   },
@@ -409,48 +359,48 @@ export default {
       this.$router.push({ query })
       this.getPractices()
     },
-    goToPage(page,search,order_by) {
-      if (page < 1) {
-        return
-      }
+    // goToPage(page,search,order_by) {
+    //   if (page < 1) {
+    //     return
+    //   }
 
-      if (page > this.pageCount) {
-        return
-      }
+    //   if (page > this.pageCount) {
+    //     return
+    //   }
       
-      let query = {
-        ...this.$router.query,
-        page
-      }
+    //   let query = {
+    //     ...this.$router.query,
+    //     page
+    //   }
 
-      if(search){
-        query = {
-          ...this.$router.query,
-          page,search
-        }
-      }
-      if(order_by){
-        query={
-          ...this.$route.query,
-          page,order_by
-        }
-      }
-      if(search && order_by){
-        query={
-          ...this.$router.query,
-          page,search,order_by
-        }
-      }
+    //   if(search){
+    //     query = {
+    //       ...this.$router.query,
+    //       page,search
+    //     }
+    //   }
+    //   if(order_by){
+    //     query={
+    //       ...this.$route.query,
+    //       page,order_by
+    //     }
+    //   }
+    //   if(search && order_by){
+    //     query={
+    //       ...this.$router.query,
+    //       page,search,order_by
+    //     }
+    //   }
 
-      if (page === 1) {
-        delete query.page
-      }
+    //   if (page === 1) {
+    //     delete query.page
+    //   }
 
-      if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-        this.loading = true
-      }	
-      this.$router.push({ query })
-    },
+    //   if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+    //     this.loading = true
+    //   }	
+    //   this.$router.push({ query })
+    // },
 
     searchSubmit: debounce(function(page, order_by) {
       let search = this.search
@@ -505,6 +455,14 @@ export default {
           return
       }
     },
+    pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
+			this.$router.push({ query });
+			this.getPractices(this.paramSort);
+		}
   }
 };
 </script>

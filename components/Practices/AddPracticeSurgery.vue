@@ -16,11 +16,12 @@
     <!-- HEADER -->
 
     <div
-      class="flex flex-wrap overflow-auto px-4 md:px-8 text-base text-white py-2"
+      class="flex flex-col px-4 md:px-8 text-base text-white py-2"
+      style="min-height: 70vh"
     >
       <div class="w-full">
-        <div class="flex flex-wrap justify-between items-center">
-          <div class="flex flex-no-wrap w-full md:w-2/3">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-no-wrap w-full md:w-auto">
             <div class="w-full md:w-auto relative">
               <input
                 class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
@@ -46,24 +47,26 @@
                 />
               </button>
             </div>
-            <!-- <div class="self-end">
-              <button
-                class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500"
-                @click="searchSubmit()"
-              >Search</button>
-            </div> -->
           </div>
-          <span
-            class="py-2 md:px-4 text-sm whitespace-no-wrap"
-            v-if="search && total !== 0"
-            >{{ total }} results found.</span
-          >
+          <div class="flex items-center">
+            <div v-if="total === 0" class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500">
+              No results found.
+            </div>
+            <span
+              class="py-2 md:px-2 text-sm whitespace-no-wrap"
+              v-if="search && total !== 0"
+              >{{ total }} results found.</span>
+            <button
+              v-if="total !== 0"
+              class="float-right bg-yellow-500 hover:bg-sunglow text-black px-4 py-1 rounded-lg text-sm"
+              @click="toggleRegisteredPractice = !toggleRegisteredPractice">
+              {{toggleRegisteredPractice ? 'Show' : 'Hide'}} Registered Practice</button>
+            </div>
+          
         </div>
       </div>
-      <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">
-        No results found.
-      </div>
-      <div class="w-full overflow-hidden">
+      
+      <div class="w-full overflow-y-auto px-2">
         <div>
           <!--TABLE-->
           <!-- BODY -->
@@ -76,9 +79,10 @@
                 @click="show(surgery.id)"
                 class="flex no-underline rounded-lg shadow my-2 transition-hover"
                 :class="
-                  registeredPractice.includes(surgery.id)
+                  [registeredPractice.includes(surgery.id)
                     ? 'bg-waterloo opacity-75'
-                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'
+                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer', 
+                    toggleRegisteredPractice && registeredPractice.includes(surgery.id) && 'hidden']
                 "
               >
                 <div class="flex w-full">
@@ -243,7 +247,9 @@ export default {
       currentPage: 1,
       perPage: 0,
       loading: false,
-      registeredPractice: []
+      registeredPractice: [],
+
+      toggleRegisteredPractice: false
     };
   },
 

@@ -397,7 +397,6 @@ export default {
       return;
     },
     checkForm: function(userInfo, surgID) {
-      // console.log("pass", userInfo.password, userInfo.password.length)
       this.formError = [];
       let list = ["title", "suffix"];
       !this.adminCreate && list.push("roles_id");
