@@ -115,7 +115,16 @@
               :label="'Type'"
               :items="[{label: 'Hub', value: 'Hub'}, {label: 'Stand Alone', value: 'Stand Alone'}, {label: 'Spoke', value: 'Spoke'}]"
             />
+            <template v-if="toPostUser.type == 'Hub'">
+              <AppInput 
+                v-model="toPostUser.hub_type"
+                :type="'select'"
+                :label="'Type'"
+                :items="[{label: 'Type 1', value: 'Type 1'}, {label: 'Type 2', value: 'Type 2'}]"
+              />
+            </template>
           </template>
+          
           <AppInput
             v-model="toPostUser.email"
             :type="'email'"
@@ -245,6 +254,7 @@ export default {
         suffix: "",
         practice_role: "Partner",
         type: "Hub",
+        hub_type: "Type 1",
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
         roles_id: []

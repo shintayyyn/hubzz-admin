@@ -11,6 +11,10 @@
               <span
               class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
               :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
+              <span
+              v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+              class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
+              :class="practiceTypeStyle(practice.hub_type)">{{practice.hub_type == 'Type 2' ? 'Health Board' : null}}</span>
             </p>
             
             <p class="flex">Practice Code</p>
@@ -169,6 +173,16 @@
                 <option>Spoke</option>
                 <option>Stand Alone</option>
               </select>
+
+              <select
+                class="outline-none border-2 border-transparent text-black pr-6"
+                v-if="toPutPracticeType.type === 'Hub'"
+                v-model='toPutPracticeType.hub_type'
+              >
+                <option>Type 1</option>
+                <option>Type 2</option>
+              </select>
+
               <button
                 class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-black font-semibold rounded-lg shadow float:right"
                 @click.prevent="toChangePracticeType(practice.id,toPutPracticeType)"
@@ -196,7 +210,8 @@ export default {
       },
       toEdit:false,
       toPutPracticeType:{
-        type:this.practice.type
+        type:this.practice.type,
+        hub_type:this.practice.hub_type,
       },
     }
   },
@@ -212,7 +227,7 @@ export default {
           this.practiceParent = res.data.practice.parent_surgery
         })
       ]).then(()=>{
-        console.log('get parent')
+        console.log('get parent done')
       })
     }
   },
@@ -237,22 +252,11 @@ export default {
         id:this.practice.id
       })
     },
-    async toPutPracticeInfo(practiceID,toPutPractice){
+    async toPutPracticeInfo(practiceID){
       try{
-          const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,{
-            phone_number:toPutPractice.phone_number,
-            report_to:toPutPractice.report_to,
-            extra_information:toPutPractice.extra_information,
-            status:toPutPractice.status,
-            actived_until:toPutPractice.actived_until
-          })
-          // this.practice.phone_number = response.data.practice.phone_number
-          // this.practice.report_to = response.data.practice.report_to,
-          // this.practice.extra_information = response.data.extra_information,
-          // this.practice.status = response.data.practice.status,
-          // this.practice.actived_until = response.data.practice.actived_until
-          
+          const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,this.toPutPractice)
           await this.getPractices()
+          await this.getPractice()
           this.toEdit = false  
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
           
@@ -262,11 +266,9 @@ export default {
       }
 
     },
-    async toChangePracticeType(practiceID,toPutPracticeType){
+    async toChangePracticeType(practiceID){
       try{
-        const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,{
-          type:toPutPracticeType.type
-        })
+        const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,this.toPutPracticeType)
         await this.getPractices()
         await this.getPractice()
         this.toEdit = false
@@ -288,8 +290,11 @@ export default {
         case 'Spoke':
           return 'bg-blue-500 text-white lg:px-8 sm:px-2'
           break;
+        case 'Type 2':
+          return 'bg-purple-500 text-white lg:px-8 sm:px-2'
+          break;
         default:
-          return
+          
       }
     },   
   }
