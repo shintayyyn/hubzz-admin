@@ -99,7 +99,7 @@
           <!-- TABLE ENDS HERE-->
         </div>
         <transition name="fade" mode="out-in">
-          <div class="confirm-termination-modal justify-center xl:mx-32 xs:mx-4 shadow-lg" v-if="terminationModal">
+          <div class="confirm-termination-modal  justify-center xl:mx-32 xs:mx-2 shadow-lg" v-if="terminationModal">
             <TerminateSurgery @close="terminationModal = false" :practice="practice" :childSurgery="specificChildSurgery"/>
           </div>
         </transition>
