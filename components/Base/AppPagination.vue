@@ -223,9 +223,6 @@ export default {
 			if ((newValue, oldValue)) {
 				this.$emit("limitchanged", newValue);
 			}
-		},
-		currentPage(value) {
-			console.log("currentPage", value);
 		}
 	},
 	data() {
@@ -258,7 +255,6 @@ export default {
 			this.$emit("pagechanged", this.totalPages);
 		},
 		isPageActive(page) {
-			console.log(this.currentPage, page);
 			return this.currentPage === page;
 		}
 	}

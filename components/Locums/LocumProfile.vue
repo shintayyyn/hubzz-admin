@@ -1,5 +1,5 @@
 <template>
-  <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
+  <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow mx-4 md:mx-8">
     <div class="inline-flex">
       <div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
         <!--COLUMN 1-->
@@ -251,7 +251,6 @@ export default {
     this.qualifications = this.user.locum_detail.qualifications;
     this.clinicalSystems = this.user.locum_detail.clinical_systems;
     this.spokenLanguages = this.user.locum_detail.spoken_languages;
-    console.log("qweqwe", this.getLocums)
   },
 
   methods: {

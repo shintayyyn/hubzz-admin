@@ -378,7 +378,7 @@ export default {
 
     getPractices(){
       this.$store.dispatch("practices/fetchPractices",{
-        limit:2,
+        limit:10,
         search:this.search,
         order_by:this.paramSort.order_by,
         offset:this.getQuery()

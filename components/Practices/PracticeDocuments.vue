@@ -210,6 +210,9 @@ export default {
         let file = this.files.find(({ id }) => id === practiceDocumentID);
         if (file) {
           file = file.file;
+
+          console.log("file", file)
+          return
           // console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
           // console.log(file)
 
@@ -261,6 +264,7 @@ export default {
                     };
                   }
                 )
+
                 await this.$store.commit(
                   "practices/SET_PRACTICE_DOCUMENTS",
                   specificPracticeDocumentTypes

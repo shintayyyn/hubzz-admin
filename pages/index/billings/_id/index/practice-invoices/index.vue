@@ -1,6 +1,8 @@
 <template>
 	<div class="flex w-full overflow-hidden">
-		<div class="max-w-3xl overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
+		<div
+			class="max-w-2xl w-full overflow-hidden my-1 mx-1 rounded-lg bg-waterloo"
+		>
 			<p class="m-3 text-white text-xl font-semibold ">Invoice Records</p>
 			<div class="m-2">
 				<!-- HEADER -->

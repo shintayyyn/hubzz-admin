@@ -1,30 +1,32 @@
 <template>
-	<div class="locum-modal p-4 md:p-8 shadow-lg">
-		<div @click="$router.go(-1)" class="cursor-pointer pb-4">
-			<svgicon
-				name="arrow-left-solid"
-				height="32"
-				widht="32"
-				class="text-white hover:text-sunglow fill-current"
+	<div class="locum-modal shadow-lg">
+		<div class="px-4 md:px-8">
+			<div @click="$router.push('/locums')" class="cursor-pointer py-4">
+				<svgicon
+					name="arrow-left-solid"
+					height="32"
+					widht="32"
+					class="text-white hover:text-sunglow fill-current"
+				/>
+			</div>
+			<LocumTabs :user="user" />
+			<!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->
+			<div
+				class="locum-shield"
+				v-if="$route.name.includes('locumJobPartId')"
+				@click="$router.go(-1)"
+			></div>
+			<div
+				class="locum-shield"
+				v-if="$route.name.includes('index-locum-compliance-docId')"
+				@click="$router.go(-1)"
 			/>
+			<div
+				class="locum-shield"
+				v-if="$route.name.includes('locumJobId')"
+				@click="$router.go(-1)"
+			></div>
 		</div>
-		<LocumTabs :user="user" />
-		<!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->
-		<div
-			class="locum-shield"
-			v-if="$route.name.includes('locumJobPartId')"
-			@click="$router.go(-1)"
-		></div>
-		<div
-			class="locum-shield"
-			v-if="$route.name.includes('index-locum-compliance-docId')"
-			@click="$router.go(-1)"
-		/>
-		<div
-			class="locum-shield"
-			v-if="$route.name.includes('locumJobId')"
-			@click="$router.go(-1)"
-		></div>
 		<nuxt-child />
 	</div>
 </template>

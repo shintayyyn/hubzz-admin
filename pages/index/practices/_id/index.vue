@@ -6,7 +6,7 @@
 				height="32"
 				width="32"
 				class="cursor-pointer text-white hover:text-sunglow fill-current"
-				@click="$router.go(-1)"
+				@click="$router.push('/practices')"
 			/>
 		</div>
 		<PracticeTabs :practice="practice" />

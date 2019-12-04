@@ -611,7 +611,7 @@ export default {
 				}`;
 			}
 			let order_by = await this.paramSort.order_by;
-			console.log(order_by);
+			// console.log(order_by);
 			let query = {
 				...this.$router.query,
 				order_by
