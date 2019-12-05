@@ -104,7 +104,7 @@
 		<div
 			class="locum-shield"
 			v-if="$route.name.includes('index-locums-id')"
-			@click="$router.push('/locums')"
+			@click="$router.push({ path: `/locums`, query: $route.query })"
 		></div>
 		<nuxt-child />
 	</div>
@@ -124,13 +124,13 @@ export default {
 	},
 	data() {
 		return {
-			itemsPerPage: 8,
+			itemsPerPage: 10,
 			currentPage: 1,
 
 			filterCompliances: "",
 			search: "",
 			paramSort: {
-				order_by: ""
+				order_by: "created_at:desc"
 			},
 			sort: "",
 			sortedBy: "",
@@ -195,7 +195,7 @@ export default {
 			}
 			page = parseInt(page);
 			const createdRoute = route.query;
-			const limit = 8;
+			const limit = 10;
 			const offset = page * limit - limit;
 			order_by =
 				createdRoute && createdRoute.order_by
@@ -213,9 +213,7 @@ export default {
 			);
 			const getLocumUsersPromise = app.$axios.$get(
 				`/api/v1/admin/locum-users`,
-				{
-					params
-				}
+				{ params }
 			);
 
 			let response = await getLocumUsersCountPromise;
@@ -254,6 +252,9 @@ export default {
 		},
 		totalPages() {
 			return Math.ceil(this.itemCount / this.itemsPerPage);
+		},
+		total() {
+			return this.locumUsers.length;
 		},
 		showPage() {
 			return page => {
@@ -383,7 +384,7 @@ export default {
 			const query = {
 				...this.$route.query
 			};
-			const offset = parseInt(query.page) * 8 - 8;
+			const offset = parseInt(query.page) * 10 - 10;
 			return offset;
 		},
 		getLocums(params) {
@@ -444,59 +445,6 @@ export default {
 			this.paramSort.search = search;
 			this.paramSort.compliance_status = compliance_status;
 			this.getLocums(this.paramSort);
-		},
-		goToPage(page, search, order_by, compliance_status) {
-			if (page < 1) {
-				return;
-			}
-
-			if (page > this.totalPages) {
-				return;
-			}
-
-			let query = { ...this.$router.query, page };
-
-			if (search) {
-				query = { ...this.$router.query, page, search };
-			}
-			if (order_by) {
-				query = { ...this.$router.query, page, order_by };
-			}
-			if (compliance_status) {
-				query = { ...this.$router.query, page, compliance_status };
-			}
-
-			if (search && order_by) {
-				query = { ...this.$router.query, page, search, order_by };
-			}
-
-			if (search && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status };
-			}
-
-			if (order_by && compliance_status) {
-				query = { ...this.$router.query, page, order_by, compliance_status };
-			}
-
-			if (search && order_by && compliance_status) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by,
-					compliance_status
-				};
-			}
-
-			if (page === 1) {
-				delete query.page;
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-
-			this.$router.push({ query });
 		},
 
 		searchSubmit: debounce(function(page, order_by, compliance_status) {
@@ -595,7 +543,6 @@ export default {
 					return;
 			}
 		},
-
 		usersDeletedHandler(userId) {
 			console.log("usersDeletedHandler", userId);
 		},

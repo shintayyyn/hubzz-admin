@@ -35,7 +35,8 @@
 					</select>
 				</div>
     </div>
-	<!-- TABLE RESPONSIVE-->
+
+	  <!-- TABLE RESPONSIVE-->
     <div v-if="itemCount > 0" class="w-full" style="min-height: 70vh"> 
       <!-- HEADER -->
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -120,6 +121,16 @@
         </nuxt-link>
       <!-- </transition-group> -->
       <!-- END BODY -->
+       <!-- PAGINATION -->
+        <div class="flex justify-center bottom-0 items-center my-2">
+          <AppPagination
+            :total="total"
+            :totalPages="totalPages"
+            :currentPage="currentPage"
+            @pagechanged="pagechanged"
+          />
+        </div>
+	    <!-- PAGINATION ENDS HERE -->
     </div>
     <div v-else>
       <div
@@ -127,22 +138,17 @@
         style="font-family: Nunito"
         >There are no registered practices.</div>
     </div>
+   
+    
     <!-- END TABLE -->
-	<!-- PAGINATION -->
-  <AppPagination
-    :total="total"
-    :totalPages="totalPages"
-    :currentPage="currentPage"
-    @pagechanged="pagechanged"
-  />
 
+    
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.push('/practices')"></div>
   <transition name="slide" mode="out-in">
     <div class="practice-modal shadow-lg" v-if="modal">
       <AddPracticeSurgery @close="modal = false"/>
     </div>
   </transition>
-
     <nuxt-child/>
   </div>
 </template>
@@ -250,51 +256,6 @@ export default {
     },
     authAdminPermissions() {
       return this.$store.getters["auth/permissions"]
-    },
-    showPage() {
-      return page => {
-        if (page === 1) {
-          return true
-        }
-
-        if (page === this.pageCount) {
-          return true
-        }
-
-      if (page === this.pageCount) {
-        return true
-        }
-
-        if (page === this.currentPage) {
-          return true
-        }
-
-        if (page === this.currentPage + 1) {
-          return true
-        }
-
-        if (page === this.currentPage - 1) {
-          return true
-        }
-
-        if (this.currentPage === 1 && page < 5) {
-          return true
-        }
-
-        if (this.currentPage === this.pageCount && page > this.pageCount - 4) {
-          return true
-        }
-
-        if (this.currentPage === 2 && page === 4) {
-          return true
-        }
-
-        if (this.currentPage === this.pageCount - 1 && page === this.pageCount - 3) {
-          return true
-        }
-
-      return false
-      }
     },
     totalPages() {
       return Math.ceil(this.itemCount / this.itemsPerPage);

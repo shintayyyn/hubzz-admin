@@ -54,7 +54,6 @@
 				:key="`user-${index}`"
 				class="flex"
 			>
-				{{ getUsers(user) }}
 				<div
 					class="flex justify-center items-center w-10 align-middle text-center"
 					v-if="deleteAdminUser == true"
@@ -64,7 +63,7 @@
 							$auth.user.id != user.id &&
 								user.admin_detail &&
 								user.admin_detail.role &&
-								!user.admin_detail.role.name.includes('God')
+								!user.admin_detail.role.name.includes('Super')
 						"
 						@click.prevent="toDeleteAdminUser(user.id)"
 						name="delete-user"
@@ -80,8 +79,8 @@
 					<span
 						v-else-if="
 							user.admin_detail &&
-								user.admin_detail.role &&
-								user.admin_detail.role.name.includes('God')
+							user.admin_detail.roles &&
+              user.admin_detail.roles[0].name == 'Super Admin'
 						"
 						class="text-sm text-yellow-500"
 						>God</span
@@ -128,36 +127,12 @@
 		</div>
 
 		<!-- PAGINATION -->
-		<div class="flex justify-center" v-if="pageCount > 1">
-			<div>
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1, search)"
-					:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'"
-				>
-					Prev
-				</button>
-
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light"
-					:class="`${activePage === page ? 'text-white' : ''}`"
-					v-for="page in pageCount"
-					v-if="showPage(page)"
-					:key="`page-${page}`"
-					@click="goToPage(page, search)"
-				>
-					{{ page }}
-				</button>
-
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light"
-					@click="goToPage(activePage + 1, search)"
-					:class="`${activePage == pageCount ? 'text-gray-dark' : ''}`"
-				>
-					Next
-				</button>
-			</div>
-		</div>
+    <AppPagination
+      :total="total"
+      :totalPages="totalPages"
+      :currentPage="currentPage"
+      @pagechanged="pagechanged"
+    />
 		<!-- PAGINATION ENDS HERE -->
 
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
@@ -181,17 +156,20 @@
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser";
 import AppConfirmCancel from "@/components/AppConfirmCancel";
+import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		CreateUser,
-		AppConfirmCancel
+    AppConfirmCancel,
+    AppPagination
 	},
 	data() {
 		return {
 			itemsPerPage: 10,
-			activePage: 1,
-
-			search: "",
+			currentPage: 1,
+      params: {},
+      search: "",
+      
 			// itemCount:'',
 			// adminUsers:{},
 			adminCreate: true,
@@ -237,7 +215,7 @@ export default {
 			await store.commit("adminusers/TOGGLE_LOADING", false);
 			return {
 				itemsPerPage: limit,
-				activePage: page,
+				currentPage: page,
 				search
 				//itemCount, //store
 				//adminUsers //store
@@ -257,67 +235,37 @@ export default {
 		},
 		loadingAdminUsers() {
 			return this.$store.state.adminusers.loading_admin_users;
-		},
-		itemCount() {
-			return this.$store.state.adminusers.itemCount;
-		},
-		adminUsers() {
+    },
+    adminUsers() {
 			return this.$store.getters["adminusers/getAdminUsers"];
 		},
 		authAdminPermissions() {
 			return this.$store.getters["auth/permissions"];
 		},
-		pageCount() {
-			return Math.ceil(this.itemCount / this.itemsPerPage);
-		},
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.pageCount) {
-					return true;
-				}
-
-				if (page === this.activePage) {
-					return true;
-				}
-
-				if (page === this.activePage + 1) {
-					return true;
-				}
-
-				if (page === this.activePage - 1) {
-					return true;
-				}
-
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
-				) {
-					return true;
-				}
-
-				return false;
-			};
-		}
+		itemCount() {
+			return this.$store.state.adminusers.itemCount;
+    },
+    totalPages() {
+      return Math.ceil(this.itemCount/this.itemsPerPage)
+    },
+    total() {
+      return this.adminUsers.length;
+    },
 	},
 	methods: {
-		showAdminUserMe() {
-			console.log("adminUserMe", this.adminUserMe);
+    getQuery() {
+			const query = {
+				...this.$route.query
+			};
+			const offset = parseInt(query.page) * 10 - 10;
+			return offset;
+		},
+		getAdmins(params) {
+			this.$store.dispatch("adminusers/fetchAdminUsers", {
+				limit: 10,
+				search: params.search,
+				offset: this.getQuery()
+			});
 		},
 		toDeleteAdminUser(userId) {
 			this.adminAccountId = userId;
@@ -326,37 +274,18 @@ export default {
 		show() {
 			this.modal = true;
 		},
-
-		goToPage(page, search) {
-			if (page < 1) {
-				return;
-			}
-
-			if (page > this.pageCount) {
-				return;
-			}
-
-			let query = { ...this.$router.query, page };
-
-			if (search) {
-				query = { ...this.$router.query, page, search };
-			}
-
-			if (page === 1) {
-				delete query.page;
-			}
-
+    pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
 			this.$router.push({ query });
+			this.getAdmins(this.params);
 		},
-		getUsers(item) {
-		}
 	}
 };
 </script>
 <style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
 .new-user-shield {
 	position: fixed;
 	top: 0;

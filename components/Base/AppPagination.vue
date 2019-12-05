@@ -35,7 +35,7 @@
 		</div>
 		<div
 			class="flex flex-col justify-center items-center py-2"
-			v-if="totalPages > 1"
+			v-if="total > 0"
 		>
 			<div class="flex">
 				<div
@@ -47,7 +47,7 @@
 						type="button"
 						class="page-button rounded-lg py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
 						@click="onClickPage(page.name)"
-						:disabled="loading || (page.isDisabled && !isPageActive(page.name))"
+						:disabled="loading || (page.isDisabled && isPageActive(page.name))"
 						:class="{ active: isPageActive(page.name) }"
 					>
 						{{ page.name }}
@@ -101,7 +101,7 @@
 						type="button"
 						class="rounded-lg page-button py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
 						@click="onClickPage(page.name)"
-						:disabled="loading || (page.isDisabled && !isPageActive(page.name))"
+						:disabled="loading || (page.isDisabled && isPageActive(page.name))"
 						:class="{ active: isPageActive(page.name) }"
 					>
 						{{ page.name }}

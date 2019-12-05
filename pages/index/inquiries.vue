@@ -1,6 +1,32 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
+    <div>
+			<AppLoading :loading="loadingSupportEmail" :message="'Loading Inquiries'" />
+		</div>
 		<div class="text-xl md:text-4xl text-white">Inquiries</div>
+    <div class="flex py-2">
+      <div class="relative">
+        <input
+          class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+          placeholder="Search Locum by Name"
+          v-model="search"
+          @keyup.enter="searchSubmit"
+        />
+        <button
+          v-if="search"
+          class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+          @click="(search = ''), searchSubmit()"
+        >
+          <svgicon
+            name="times-solid"
+            height="12"
+            width="12"
+            class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+          />
+        </button>
+      </div>
+      <!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
+    </div>
 		<!-- TABLE RESPONSIVE-->
 		<div v-if="emails.length > 0" class="w-full">
 			<!-- HEADER -->
@@ -77,6 +103,7 @@
 			<div>There are currently no messages of concern.</div>
 		</div>
 		<!-- END TABLE -->
+
 		<!-- PAGINATION -->
 		<AppPagination
 			v-if="emails.length !== 0"
@@ -85,37 +112,6 @@
 			:currentPage="currentPage"
 			@pagechanged="pagechanged"
 		/>
-		<!--<div v-if="emails.length > itemsPerPage" class="flex justify-center">
-			  
-			 <div>
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1)"
-					:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'"
-				>
-					Prev
-				</button>
-
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light"
-					:class="`${activePage === page ? 'text-white' : ''}`"
-					v-for="page in pageCount"
-					v-if="showPage(page)"
-					:key="`page-${page}`"
-					@click="goToPage(page)"
-				>
-					{{ page }}
-				</button>
-
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light"
-					@click="goToPage(activePage + 1)"
-					:class="`${activePage == pageCount ? 'text-gray-dark' : ''}`"
-				>
-					Next
-				</button>
-			</div> 
-		</div>-->
 		<!-- PAGINATION ENDS HERE -->
 		<div
 			class="support-shield"
@@ -127,30 +123,45 @@
 </template>
 
 <script>
+import debounce from "lodash.debounce";
+import AppLoading from "@/components/Base/AppLoading";
 import AppPagination from "@/components/Base/AppPagination";
 export default {
 	components: {
+    AppLoading,
 		AppPagination
 	},
 	data() {
 		return {
 			// emails: [],
-			// itemCount: 0,
-			itemsPerPage: 10,
+      // itemCount: 0,
+      itemsPerPage: 10,
+      currentPage: 1,
+
+      params: {},
+      search: "",
 			activePage: 1
 		};
 	},
-	watchQuery: ["page"],
+	watchQuery: ["page", "search"],
 
 	async asyncData({ app, store, route }) {
 		try {
-			//put loading here if needed
-			let { page = 1, search = "" } = route.query;
+      //put loading here if needed
+      await store.commit("supports/TOGGLE_LOADING", true)
+      let { 
+        page = 1, 
+        search = "" 
+      } = route.query;
 
 			page = parseInt(page);
 			const limit = 10;
 			const offset = page * limit - limit;
-			const params = { limit, offset };
+      const params = { limit, offset };
+      
+      if (search) {
+        params.search = search;
+      }
 
 			let response = await app.$axios.$get(`/api/v1/admin/supports/count`);
 			const itemCount = response.data.count;
@@ -158,11 +169,13 @@ export default {
 
 			response = await app.$axios.$get(`/api/v1/admin/supports`, { params });
 			const emails = response.data.emails;
-			await store.commit("supports/SET_EMAILS", emails);
-
+      await store.commit("supports/SET_EMAILS", emails);
+      
+      await store.commit("supports/TOGGLE_LOADING", false)
 			return {
 				itemsPerPage: limit,
-				activePage: page
+        activePage: page,
+        currentPage: page
 				// itemCount,
 				// emails
 			};
@@ -176,10 +189,10 @@ export default {
 		}
 	},
 	watch: {
-		$route(to, from) {
-			this.currentPage = parseInt(to.query.practice_users_page);
-			// this.getAllPracticeUsers()
-		}
+    search(value) {
+			this.searchSubmit();
+			this.getInquiries(this.params);
+		},
 	},
 	computed: {
 		loadingSupportEmail() {
@@ -197,76 +210,55 @@ export default {
 		totalPages() {
 			return Math.ceil(this.itemCount / this.itemsPerPage);
 		},
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.pageCount) {
-					return true;
-				}
-
-				if (page === this.activePage) {
-					return true;
-				}
-
-				if (page === this.activePage + 1) {
-					return true;
-				}
-
-				if (page === this.activePage - 1) {
-					return true;
-				}
-
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
-				) {
-					return true;
-				}
-
-				return false;
-			};
-		}
 	},
 	methods: {
+    getQuery() {
+			const query = {
+				...this.$route.query
+			};
+			const offset = parseInt(query.page) * 10 - 10;
+			return offset;
+		},
+    getInquiries(params){
+      this.$store.dispatch("supports/fetchSupports", {
+        search: params.search,
+        limit: 10,
+        offset: this.getQuery()
+      })
+    },
 		show() {
 			this.modal = true;
-		},
+    },
+    searchSubmit: debounce(function(page,) {
+			let search = this.search;
 
-		goToPage(page, search) {
-			if (page < 1) {
-				return;
-			}
-
-			if (page > this.pageCount) {
-				return;
-			}
-
-			let query = { ...this.$router.query, page };
-
-			if (search) {
-				query = { ...this.$router.query, page, search };
-			}
+			let query = { ...this.$router.query, search };
 
 			if (page === 1) {
 				delete query.page;
 			}
+			if (page) {
+				query = { ...this.$router.query, page, search };
+      }
+      
+			if (this.search === "") {
+				delete query.search;
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true;
+			}
 
 			this.$router.push({ query });
+		}, 500),
+    pagechanged(e) {
+      console.log('jhahjaa')
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
+			this.$router.push({ query });
+			this.getInquiries(this.params);
 		}
 	}
 };
