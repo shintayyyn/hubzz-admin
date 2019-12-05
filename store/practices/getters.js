@@ -1,8 +1,18 @@
-export default{
-  getAllPractices(state){
-    return state.allPractices
-  },
-  getAllSpokes(state){
-    return state.practiceSpokes
-  }
-}
+export default {
+	getAllPractices(state) {
+		let users = [];
+		state.allPractices.forEach(user => {
+			users.push({
+				...user,
+				practice_name: user.surgery.name,
+				practice_code: user.surgery.code,
+				practice_type: user.type
+			});
+		});
+		return users;
+	},
+	getAllSpokes(state) {
+		return state.practiceSpokes;
+	},
+	getPracticeUsers(state) {}
+};

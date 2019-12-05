@@ -1,8 +1,5 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
-		<div>
-			<AppLoading :loading="loadingLocums" :message="'Loading Locums'" />
-		</div>
 		<div class="text-xl md:text-4xl text-white">Locums</div>
 		<div class="flex flex-col md:flex-row justify-between">
 			<div class="flex py-2">
@@ -78,8 +75,10 @@
 			:columns="columns"
 			:loading="loadingLocums"
 			:routerLink="`/locums`"
+			:orderBy="paramSort.order_by"
 			@pagechanged="pagechanged"
 			@limitchanged="limitchanged"
+			@sorted="sorted"
 		>
 			<template v-slot:status_slot="slotProps">
 				<div
@@ -130,7 +129,7 @@ export default {
 			filterCompliances: "",
 			search: "",
 			paramSort: {
-				order_by: "created_at:desc"
+				order_by: ["created_at:desc"]
 			},
 			sort: "",
 			sortedBy: "",
@@ -144,12 +143,12 @@ export default {
 			columns: [
 				{
 					name: "Name",
-					dataIndex: "personal_detail.name",
+					dataIndex: "personal_detail_name",
 					sortable: true
 				},
 				{
 					name: "Profession",
-					dataIndex: "locum_detail.profession.name",
+					dataIndex: "profession_name",
 					class: "text-center",
 					sortable: true
 				},
@@ -167,14 +166,16 @@ export default {
 				},
 				{
 					name: "Status",
-					dataIndex: "slot",
+					dataIndex: "status",
 					class: "text-center",
+					slot: true,
 					slotName: "status_slot"
 				},
 				{
 					name: "Compliance Status",
-					dataIndex: "slot",
+					dataIndex: "compliance_status",
 					class: "text-center",
+					slot: true,
 					slotName: "compliance_slot"
 				}
 			]
@@ -222,7 +223,7 @@ export default {
 
 			response = await getLocumUsersPromise;
 			const locumUsers = response.data.users;
-			console.log(locumUsers);
+
 			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
 
 			await store.commit("locums/TOGGLE_LOADING", false);
@@ -245,7 +246,8 @@ export default {
 			return this.$store.state.locums.loading_locums;
 		},
 		locumUsers() {
-			return this.$store.state.locums.locumUsers;
+			// return this.$store.state.locums.locumUsers;
+			return this.$store.getters["locums/getLocumUsers"];
 		},
 		itemCount() {
 			return this.$store.state.locums.itemCount;
@@ -304,7 +306,6 @@ export default {
 			};
 		}
 	},
-
 	watch: {
 		async filterCompliances() {
 			const query = {
@@ -344,6 +345,7 @@ export default {
 			this.getLocums(this.paramSort);
 		},
 		sort(value) {
+			// for mobile responsive filter
 			if (value === "Name") {
 				this.sortBy(
 					"name",
@@ -555,11 +557,14 @@ export default {
 			this.getLocums(this.paramSort);
 		},
 		async limitchanged(limit) {
-			// this.current_page = 1;
-			// this.itemsPerPage = limit;
-			// this.loadingLocums = true;
-			// await this.getLocums(this.paramSort);
-			// this.loadingLocums = false;
+			this.current_page = 1;
+			this.itemsPerPage = limit;
+			await this.getLocums(this.paramSort);
+		},
+		sorted(order_by) {
+			this.current_page = 1;
+			this.paramSort.order_by = order_by;
+			this.getLocums(this.paramSort);
 		}
 	}
 };

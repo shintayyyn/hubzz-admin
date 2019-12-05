@@ -27,7 +27,6 @@
 				@click="$router.go(-1)"
 			></div>
 		</div>
-		<LocumTabs :user="user" />
 		<!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->
 		<div
 			class="locum-shield text-white"

@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div v-if="!completedJobs.length == 0" class="m-10 xl:-ml-32">
+        <div v-if="!completedJobs.length == 0" class="">
           <AppPagination
             :total="total"
             :totalPages="totalPages"

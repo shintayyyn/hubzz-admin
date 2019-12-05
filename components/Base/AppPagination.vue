@@ -1,10 +1,12 @@
 <template>
-	<div class="w-full pagination flex flex-col">
+	<div
+		class="w-full pagination flex flex-col md:flex-row justfify-between items-center"
+	>
 		<div class="w-full flex flex-wrap justify-between py-2 text-sm">
 			<div class="text-gray-500">
 				<div>{{ pageInfo(perPage, currentPage, total) }}</div>
 			</div>
-			<div class="pl-2 text-white">
+			<div class="hidden pl-2 text-white">
 				<div>
 					List
 					<select
@@ -35,7 +37,7 @@
 		</div>
 		<div
 			class="flex flex-col justify-center items-center py-2"
-			v-if="total > 0"
+			v-if="total > 0 && totalPages > 1"
 		>
 			<div class="flex">
 				<div
@@ -290,6 +292,11 @@ button:disabled svg {
 	background: linear-gradient(to top, #dbb013, #ecc94b);
 	color: #000;
 	box-shadow: 0 3px 5px #333;
+}
+button.active:disabled {
+	color: #f2d024;
+	box-shadow: inset 0px 0px 0px 2px #dbb013;
+	cursor: default;
 }
 
 button:active {
