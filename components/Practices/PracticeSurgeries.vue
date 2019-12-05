@@ -195,7 +195,7 @@ export default {
         this.getChildren()
       })
     }catch(err){
-      this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+      this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
       console.log("get practice surgeries error!!!!",err)
     }
   },
@@ -223,7 +223,7 @@ export default {
         this.$store.commit('practices/SET_PRACTICE_SPOKES', res.data.practice_surgeries)
       }).catch(err=>{
         console.log('get children error!!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
       })
       this.loadingSurgeries = false
     },

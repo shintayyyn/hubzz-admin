@@ -261,21 +261,21 @@ export default {
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
           
       }catch(err){
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-          console.log("put locum profile info error",err);
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
+          console.log("put locum profile info error",err.message);
       }
 
     },
     async toChangePracticeType(practiceID){
       try{
-        const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,this.toPutPracticeType)
+        await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,this.toPutPracticeType)
         await this.getPractices()
         await this.getPractice()
         this.toEdit = false
         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})
       }catch(err){
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-        console.log('change practice type error!',err)
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
+        console.log('change practice type error!',err.message)
       }
     },
 

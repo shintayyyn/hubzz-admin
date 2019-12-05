@@ -25,7 +25,7 @@
       </div>
       <div class="flex justify-center my-4 cursor-pointer">
         <div class="flex-1 p-2 ml-1 rounded-lg bg-red-600" @click="toDeleteSurgery(childSurgery.id)">Delete Entire Surgery</div>
-        <div class="flex-1 p-2 ml-1 rounded-lg bg-yellow-600" @click="toDeleteParent(childSurgery.practice_id)">Terminate from Parent</div>
+        <!-- <div class="flex-1 p-2 ml-1 rounded-lg bg-yellow-600" @click="toDeleteParent(childSurgery.practice_id)">Terminate from Parent</div> -->
         <div class="flex-1 p-2 ml-1 rounded-lg bg-green-600" @click="toRejectRequest(childSurgery.id)">Reject Termination Request</div>
       </div>
     </div>
@@ -53,7 +53,7 @@ export default {
         this.$emit('close')
       }).catch(err => {
         console.log('delete children error!!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
       })
     },
     async toDeleteParent(childPracId){
@@ -65,7 +65,7 @@ export default {
         this.$emit('close')
       }).catch(err => {
         console.log('remove parent error!!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
       })
     },
     async toRejectRequest(childId) {
@@ -76,7 +76,7 @@ export default {
         this.$emit('close')
       }).catch(err => {
         console.log('reject request error!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
       })
     },
     getPracticeSpokes(practiceId) {

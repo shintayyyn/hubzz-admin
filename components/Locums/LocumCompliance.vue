@@ -373,7 +373,7 @@ export default {
                 await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
                 await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
             }catch(err){
-                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
                 console.log("get data error!!", err);
             }
         },
@@ -442,7 +442,7 @@ export default {
                 this.notes = ''
             
             }catch(err){
-                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text: err.response.data.message})
                 console.log("index practices index put GMC/NMC err", err);
                 
             }
@@ -511,7 +511,7 @@ export default {
                 this.notes = ''
             }catch(err){
                 
-                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
                 console.log("index practices index put MPL/NPL err", err);
             }
         },
