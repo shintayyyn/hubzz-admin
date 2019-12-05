@@ -1,8 +1,5 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
-		<div>
-			<AppLoading :loading="loadingLocums" :message="'Loading Locums'" />
-		</div>
 		<div class="text-xl md:text-4xl text-white">Locums</div>
 		<div class="flex flex-col md:flex-row justify-between">
 			<div class="flex py-2">
@@ -68,216 +65,45 @@
 			</div>
 			<!-- FILTER SELECTS END HERE -->
 		</div>
-		<div class="w-full" style="min-height: 70vh">
-			<div class="hidden md:flex items-center text-white justify-around font-semibold">
+
+		<AppTable
+			v-if="itemCount > 0"
+			:total="itemCount"
+			:items="locumUsers"
+			:currentPage="currentPage"
+			:perPage="itemsPerPage"
+			:columns="columns"
+			:loading="loadingLocums"
+			:routerLink="`/locums`"
+			:orderBy="paramSort.order_by"
+			@pagechanged="pagechanged"
+			@limitchanged="limitchanged"
+			@sorted="sorted"
+		>
+			<template v-slot:status_slot="slotProps">
 				<div
-					class="align-middle px-2 w-1/6 cursor-pointer"
-					@click="sortBy('name', currentPage, search, filterCompliances)"
+					class="px-4 py-1 rounded-full w-32 text-center"
+					:class="statusStyle(slotProps.item.status)"
 				>
-					Name
-					<svgicon
-						v-if="sortedBy != 'name'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'name'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'name'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
+					{{ slotProps.item.status }}
 				</div>
+			</template>
+			<template v-slot:compliance_slot="slotProps">
 				<div
-					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('profession', currentPage, search, filterCompliances)"
+					class="px-4 py-1 rounded-full w-32 text-center"
+					:class="complianceStatusStyle(slotProps.item.compliance_status)"
 				>
-					Profession
-					<svgicon
-						v-if="sortedBy != 'profession'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'profession'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'profession'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
+					{{ slotProps.item.compliance_status }}
 				</div>
-				<div
-					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('created_at', currentPage, search, filterCompliances)"
-				>
-					Date signed-up
-					<svgicon
-						v-if="sortedBy != 'created_at'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'created_at'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'created_at'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-				</div>
-				<div
-					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="
-						sortBy('email_verified_at', currentPage, search, filterCompliances)
-					"
-				>
-					Sign-up verified
-					<svgicon
-						v-if="sortedBy != 'email_verified_at'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'email_verified_at'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'email_verified_at'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-				</div>
-				<div class="align-middle px-2 text-center w-1/6">Status</div>
-				<div class="align-middle px-2 text-center w-1/6">Compliance Status</div>
-			</div>
-			<div v-if="locumUsers.length === 0" class="text-gray-500 leading-tight text-center py-4">
-				No results found for {{ search }}<br/>Try another keyword
-			</div>
-			<nuxt-link
-				v-for="(locumUser, index) in locumUsers"
-				:key="`locumUser-${index}`"
-				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"
-				class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-			>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">Name</strong>
-					<span class="">{{
-						locumUser.personal_detail ? locumUser.personal_detail.name : null
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase">Profession</strong>
-					<span class="">{{
-						locumUser.locum_detail && locumUser.locum_detail.profession
-							? locumUser.locum_detail.profession.name
-							: null
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Date signed-up</strong
-					>
-					<span class="">{{
-						$moment(locumUser.created_at).format("MMM D, YYYY")
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Sign-up verified</strong
-					>
-					<span class="">{{
-						locumUser.email_verified_at
-							? $moment(locumUser.email_verified_at).format("MMM D, YYYY")
-							: "Not yet verified"
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase">Status</strong>
-					<span
-						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
-						:class="statusStyle(locumUser.status)"
-						>{{ locumUser.status }}</span
-					>
-				</div>
-				<div class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-					<strong class="block md:hidden text-xs uppercase">Compliance Status</strong>
-					<span
-						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
-						:class="complianceStatusStyle(locumUser.compliance_status)"
-						>{{ locumUser.compliance_status }}
-          </span>
-				</div>
-			</nuxt-link>
-      <!-- PAGINATION -->
-      <div class="flex justify-center bottom-0 items-center my-2">
-        <AppPagination
-          :total="total"
-          :totalPages="totalPages"
-          :currentPage="currentPage"
-          @pagechanged="pagechanged"
-        />
-      </div>
-      <!-- PAGINATION ENDS HERE -->
+			</template>
+		</AppTable>
+		<div v-else class="mt-2 w-full text-center text-white">
+			No registered locums.
 		</div>
 		<div
 			class="locum-shield"
 			v-if="$route.name.includes('index-locums-id')"
-			@click="$router.push({path: `/locums`, query:$route.query})"
+			@click="$router.push({ path: `/locums`, query: $route.query })"
 		></div>
 		<nuxt-child />
 	</div>
@@ -287,11 +113,13 @@
 import debounce from "lodash.debounce";
 import AppLoading from "@/components/Base/AppLoading";
 import AppPagination from "@/components/Base/AppPagination";
+import AppTable from "@/components/Base/AppTable";
 
 export default {
 	components: {
 		AppLoading,
-		AppPagination
+		AppPagination,
+		AppTable
 	},
 	data() {
 		return {
@@ -301,7 +129,7 @@ export default {
 			filterCompliances: "",
 			search: "",
 			paramSort: {
-				order_by: "created_at:desc"
+				order_by: ["created_at:desc"]
 			},
 			sort: "",
 			sortedBy: "",
@@ -310,7 +138,47 @@ export default {
 			name: true,
 			profession: true,
 			created_at: true,
-			email_verified_at: true
+			email_verified_at: true,
+
+			columns: [
+				{
+					name: "Name",
+					dataIndex: "personal_detail_name",
+					sortable: true
+				},
+				{
+					name: "Profession",
+					dataIndex: "profession_name",
+					class: "text-center",
+					sortable: true
+				},
+				{
+					name: "Date Signed-up",
+					dataIndex: "created_at",
+					class: "localDate text-center",
+					sortable: true
+				},
+				{
+					name: "Sign-up verified",
+					dataIndex: "email_verified_at",
+					class: "localDate text-center",
+					sortable: true
+				},
+				{
+					name: "Status",
+					dataIndex: "status",
+					class: "text-center",
+					slot: true,
+					slotName: "status_slot"
+				},
+				{
+					name: "Compliance Status",
+					dataIndex: "compliance_status",
+					class: "text-center",
+					slot: true,
+					slotName: "compliance_slot"
+				}
+			]
 		};
 	},
 	watchQuery: ["page", "search", "compliance_status"],
@@ -340,8 +208,14 @@ export default {
 				params.search = search;
 			}
 			params.compliance_status = compliance_status;
-			const getLocumUsersCountPromise = app.$axios.$get(`/api/v1/admin/locum-users/count`,{ params });
-			const getLocumUsersPromise = app.$axios.$get(`/api/v1/admin/locum-users`,{ params });
+			const getLocumUsersCountPromise = app.$axios.$get(
+				`/api/v1/admin/locum-users/count`,
+				{ params }
+			);
+			const getLocumUsersPromise = app.$axios.$get(
+				`/api/v1/admin/locum-users`,
+				{ params }
+			);
 
 			let response = await getLocumUsersCountPromise;
 			const itemCount = response.data.count;
@@ -349,6 +223,7 @@ export default {
 
 			response = await getLocumUsersPromise;
 			const locumUsers = response.data.users;
+
 			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
 
 			await store.commit("locums/TOGGLE_LOADING", false);
@@ -371,7 +246,8 @@ export default {
 			return this.$store.state.locums.loading_locums;
 		},
 		locumUsers() {
-			return this.$store.state.locums.locumUsers;
+			// return this.$store.state.locums.locumUsers;
+			return this.$store.getters["locums/getLocumUsers"];
 		},
 		itemCount() {
 			return this.$store.state.locums.itemCount;
@@ -381,9 +257,55 @@ export default {
 		},
 		total() {
 			return this.locumUsers.length;
+		},
+		showPage() {
+			return page => {
+				if (page === 1) {
+					return true;
+				}
+
+				if (page === this.totalPages) {
+					return true;
+				}
+
+				if (page === this.currentPage) {
+					return true;
+				}
+
+				if (page === this.currentPage + 1) {
+					return true;
+				}
+
+				if (page === this.currentPage - 1) {
+					return true;
+				}
+
+				if (this.currentPage === 1 && page < 5) {
+					return true;
+				}
+
+				if (
+					this.currentPage === this.totalPages &&
+					page > this.totalPages - 4
+				) {
+					return true;
+				}
+
+				if (this.currentPage === 2 && page === 4) {
+					return true;
+				}
+
+				if (
+					this.currentPage === this.totalPages - 1 &&
+					page === this.totalPages - 3
+				) {
+					return true;
+				}
+
+				return false;
+			};
 		}
 	},
-
 	watch: {
 		async filterCompliances() {
 			const query = {
@@ -423,6 +345,7 @@ export default {
 			this.getLocums(this.paramSort);
 		},
 		sort(value) {
+			// for mobile responsive filter
 			if (value === "Name") {
 				this.sortBy(
 					"name",
@@ -468,7 +391,7 @@ export default {
 		},
 		getLocums(params) {
 			this.$store.dispatch("locums/fetchLocums", {
-				limit: 10,
+				limit: this.itemsPerPage,
 				search: params.search,
 				compliance_status: params.compliance_status,
 				order_by: params.order_by,
@@ -631,6 +554,16 @@ export default {
 				page: e || 1
 			};
 			this.$router.push({ query });
+			this.getLocums(this.paramSort);
+		},
+		async limitchanged(limit) {
+			this.current_page = 1;
+			this.itemsPerPage = limit;
+			await this.getLocums(this.paramSort);
+		},
+		sorted(order_by) {
+			this.current_page = 1;
+			this.paramSort.order_by = order_by;
 			this.getLocums(this.paramSort);
 		}
 	}

@@ -44,7 +44,7 @@
           </div>
           
         </div>
-         <div v-if="ongoingJobParts.length > 0" class="m-10 xl:-ml-32">
+         <div v-if="ongoingJobParts.length > 0" class="">
           <AppPagination
             :total="total"
             :totalPages="totalPages"

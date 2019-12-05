@@ -1,31 +1,43 @@
 <template>
-	<div class="w-full pagination flex flex-col">
-		<!-- <div class="w-full flex flex-wrap justify-between py-2 text-sm">
+	<div
+		class="w-full pagination flex flex-col md:flex-row justfify-between items-center"
+	>
+		<div class="w-full flex flex-wrap justify-between py-2 text-sm">
 			<div class="text-gray-500">
 				<div>{{ pageInfo(perPage, currentPage, total) }}</div>
 			</div>
-			<div class="pl-2 text-white">
+			<div class="hidden pl-2 text-white">
 				<div>
 					List
 					<select
 						v-model="selectedLimit"
 						class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none px-2 mx-2"
 					>
-						<option :value="5" v-if="total > 5">5</option>
-						<option :value="10" v-if="total > 10">10</option>
-						<option :value="15" v-if="total > 15">15</option>
-						<option :value="20" v-if="total > 20">20</option>
-						<option :value="30" v-if="total > 30">30</option>
-						<option :value="50" v-if="total > 50">50</option>
-						<option :value="total">All</option>
+						<option class="text-black " :value="5" v-if="total > 5">5</option>
+						<option class="text-black " :value="10" v-if="total > 10"
+							>10</option
+						>
+						<option class="text-black " :value="15" v-if="total > 15"
+							>15</option
+						>
+						<option class="text-black " :value="20" v-if="total > 20"
+							>20</option
+						>
+						<option class="text-black " :value="30" v-if="total > 30"
+							>30</option
+						>
+						<option class="text-black " :value="50" v-if="total > 50"
+							>50</option
+						>
+						<option class="text-black " :value="total">All</option>
 					</select>
 					items
 				</div>
 			</div>
-		</div> -->
+		</div>
 		<div
 			class="flex flex-col justify-center items-center py-2"
-			v-if="total > 0"
+			v-if="total > 0 && totalPages > 1"
 		>
 			<div class="flex">
 				<div
@@ -280,6 +292,11 @@ button:disabled svg {
 	background: linear-gradient(to top, #dbb013, #ecc94b);
 	color: #000;
 	box-shadow: 0 3px 5px #333;
+}
+button.active:disabled {
+	color: #f2d024;
+	box-shadow: inset 0px 0px 0px 2px #dbb013;
+	cursor: default;
 }
 
 button:active {

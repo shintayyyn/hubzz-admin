@@ -1,98 +1,95 @@
 <template>
 	<section class="relative">
-		<div class="relative flex flex-col overflow-x-auto w-full px-2 mt-4">
-			<AppLoading :loading="loading" spinner />
+		<div class="relative ">
+			<AppLoading :loading="loading" :message="'Loading'" spinner />
 			<div
-				:style="`min-width: ${customWidth}px`"
-				class="row flex justify-start font-bold leading-none text-sm text-white"
+				class="flex flex-col w-full px-2 py-2 mt-4 overflow-x-auto"
+				:style="minHeight && `min-height: ${minHeight}`"
 			>
 				<div
-					class="flex-1 flex items-center px-2"
-					v-for="(column, index) in columns"
-					:key="`${column}-${index}`"
-					:class="[
-						column.class &&
-							column.class.includes('text-center') &&
-							'justify-center',
-						column.sortable && 'cursor-pointer'
-					]"
-					@click="column.sortable && sort(column.dataIndex)"
-				>
-					<span class="pr-1">{{ column.name }}</span>
-					<svgicon
-						v-if="column.sortable"
-						:name="sortIcon(column.dataIndex)"
-						height="12"
-						width="12"
-						color="#fff"
-					/>
-				</div>
-			</div>
-			<div
-				v-for="item in items"
-				:key="item.id"
-				:style="`min-width: ${customWidth}px`"
-				class="row py-2"
-			>
-				<nuxt-link
-					:to="{ path: `${routerLink}/${item.id}`, query: { ...$route.query } }"
-					:event="!routerLink ? '' : 'click'"
+					:style="`min-width: ${customWidth}px`"
+					class="row hidden md:flex justify-start font-bold leading-none text-sm text-white"
 				>
 					<div
-						class="flex justify-start shadow-md rounded-lg items-center py-3 bg-waterloo text-white"
-						:class="
-							routerLink
-								? 'transition-hover hover:bg-waterloo-dark'
-								: 'cursor-default'
-						"
+						class="flex-1 flex items-center px-2"
+						v-for="(column, index) in columns"
+						:key="`${column}-${index}`"
+						:class="[
+							column.class &&
+								column.class.includes('text-center') &&
+								'justify-center',
+							column.sortable && 'cursor-pointer'
+						]"
+						@click="column.sortable && sort(column.dataIndex)"
+					>
+						<span class="pr-1">{{ column.name }}</span>
+						<svgicon
+							v-if="column.sortable"
+							:name="sortIcon(column.dataIndex)"
+							height="12"
+							width="12"
+							color="#fff"
+						/>
+					</div>
+				</div>
+				<div v-for="item in items" :key="item.id" class="row py-2">
+					<nuxt-link
+						:to="{
+							path: `${routerLink}/${item.id}`,
+							query: { ...$route.query }
+						}"
+						:event="!routerLink ? '' : 'click'"
 					>
 						<div
-							v-for="(column, index) in columns"
-							:key="index"
-							class="flex-1 truncate px-2"
-							:class="[
-								column.class &&
-									column.class.includes('text-center') &&
-									'text-center',
-								column.customClass
-							]"
+							class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
+							:class="
+								routerLink
+									? 'transition-hover hover:bg-waterloo-dark'
+									: 'cursor-default'
+							"
 						>
-							<template v-if="Array.isArray(dataCell(item, column))">
-								<div
-									v-for="(item, index) in dataCell(item, column)"
-									:key="`${item}-${index}`"
-									:class="column.customClass"
-								>
-									{{ item }}
-								</div>
-							</template>
-							<template v-else>
-								<template v-if="column.dataIndex.includes('slot')">
-									<slot :name="column.slotName" v-bind:item="item"></slot>
+							<div
+								v-for="(column, index) in columns"
+								:key="index"
+								class="flex flex-col md:flex-1 truncate px-2 leading-tight py-1 md:py-0"
+								:class="[
+									column.class &&
+										column.class.includes('text-center') &&
+										'md:text-center md:items-center',
+									column.customClass
+								]"
+							>
+								<span class="md:hidden pr-1 font-bold">{{ column.name }}</span>
+								<template v-if="Array.isArray(dataCell(item, column))">
+									<div
+										v-for="(item, index) in dataCell(item, column)"
+										:key="`${item}-${index}`"
+										:class="column.customClass"
+									>
+										{{ item }}
+									</div>
 								</template>
-								<template
-									v-if="
-										column.class &&
-											column.class.includes('localDate') &&
-											dataCell(item, column) !== '(none)'
-									"
-								>
-									{{ dataCell(item, column) | localDate }}</template
-								>
-								<template
-									v-if="
-										column.class &&
-											column.class.includes('localDate') &&
-											dataCell(item, column) !== '(none)'
-									"
-								>
-									{{ dataCell(item, column) | localDate }}</template
-								>
-								<template v-else>{{ dataCell(item, column) }}</template>
-							</template>
+								<template v-else>
+									<template v-if="column.slot">
+										<slot :name="column.slotName" v-bind:item="item"></slot>
+									</template>
+									<template v-else>
+										<template
+											v-if="
+												column.class &&
+													column.class.includes('localDate') &&
+													dataCell(item, column) !== '(none)'
+											"
+										>
+											{{ dataCell(item, column) | localDate }}
+										</template>
+										<template v-else>{{ dataCell(item, column) }}</template>
+									</template>
+								</template>
+							</div>
 						</div>
-					</div>
-				</nuxt-link>
+					</nuxt-link>
+				</div>
 			</div>
 		</div>
 		<div class="bottom-0 w-full">
@@ -146,7 +143,8 @@ export default {
 		},
 		customWidth: {
 			type: Number
-		}
+		},
+		minHeight: String
 	},
 	components: {
 		AppLoading,
@@ -191,17 +189,16 @@ export default {
 			this.$emit("limitchanged", limit);
 		},
 		sortIcon(dataIndex) {
-			let sortSvg = "sort";
-			return sortSvg;
-			let index = this.params.findIndex(item => item === `${dataIndex}:desc`);
-
-			if (index >= 0) {
-				sortSvg = "sort-descend";
+			if (!this.params.some(item => item.includes(dataIndex))) {
+				return "sort";
 			} else {
-				sortSvg = "sort-ascend";
+				let index = this.params.findIndex(item => item === `${dataIndex}:desc`);
+				if (index >= 0) {
+					return "sort-descend";
+				} else {
+					return "sort-ascend";
+				}
 			}
-
-			return sortSvg;
 		},
 		dataCell(item, column) {
 			var dataIndexArr = column.dataIndex.split(".");
@@ -286,7 +283,12 @@ export default {
 };
 </script>
 <style scoped>
-.row {
-	min-width: 1200px;
+@media screen and (min-width: 768px) {
+	.row {
+		min-width: 1200px;
+	}
+}
+.loading-shield {
+	opacity: 0.5;
 }
 </style>

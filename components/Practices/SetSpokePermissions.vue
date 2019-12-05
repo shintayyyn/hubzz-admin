@@ -140,7 +140,7 @@
 						v-model="form.share_banks_to_other_surgeries"
 						:type="'select'"
 						:name="'share_banks_to_other_surgeries'"
-						:label="'Share Banks to Other Surgeries'"
+						:label="'Share this spoke`s bank/s to other surgeries?'"
 						:placeholder="'Select...'"
 						:items="[
 							{ label: 'Yes', value: true },

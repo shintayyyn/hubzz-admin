@@ -55,7 +55,7 @@
             </div>
           </div>
           <!--PAGINATION-->
-          <div v-if="!allocatedJobs.length == 0" class="m-10 xl:-ml-32">
+          <div v-if="!allocatedJobs.length == 0" class="">
             <AppPagination
               :total="total"
               :totalPages="totalPages"
