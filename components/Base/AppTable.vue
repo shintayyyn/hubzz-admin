@@ -1,10 +1,13 @@
 <template>
 	<section class="relative">
-		<div class="relative flex flex-col overflow-x-auto w-full px-2 mt-4">
+		<div
+			class="relative flex flex-col w-full px-2 mt-4 md:overflow-x-auto"
+			:style="minHeight && `min-height: ${minHeight}`"
+		>
 			<AppLoading :loading="loading" spinner />
 			<div
 				:style="`min-width: ${customWidth}px`"
-				class="row flex justify-start font-bold leading-none text-sm text-white"
+				class="hidden md:flex justify-start font-bold leading-none text-sm text-white"
 			>
 				<div
 					class="flex-1 flex items-center px-2"
@@ -28,18 +31,13 @@
 					/>
 				</div>
 			</div>
-			<div
-				v-for="item in items"
-				:key="item.id"
-				:style="`min-width: ${customWidth}px`"
-				class="row py-2"
-			>
+			<div v-for="item in items" :key="item.id" class="py-2">
 				<nuxt-link
 					:to="{ path: `${routerLink}/${item.id}`, query: { ...$route.query } }"
 					:event="!routerLink ? '' : 'click'"
 				>
 					<div
-						class="flex justify-start shadow-md rounded-lg items-center py-3 bg-waterloo text-white"
+						class="flex flex-col md:flex-row md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
 						:class="
 							routerLink
 								? 'transition-hover hover:bg-waterloo-dark'
@@ -49,14 +47,15 @@
 						<div
 							v-for="(column, index) in columns"
 							:key="index"
-							class="flex-1 truncate px-2"
+							class="flex flex-col md:flex-1 truncate px-2 leading-tight py-1 md:py-0"
 							:class="[
 								column.class &&
 									column.class.includes('text-center') &&
-									'text-center',
+									'md:text-center',
 								column.customClass
 							]"
 						>
+							<span class="md:hidden pr-1 font-bold">{{ column.name }}</span>
 							<template v-if="Array.isArray(dataCell(item, column))">
 								<div
 									v-for="(item, index) in dataCell(item, column)"
@@ -70,15 +69,6 @@
 								<template v-if="column.dataIndex.includes('slot')">
 									<slot :name="column.slotName" v-bind:item="item"></slot>
 								</template>
-								<template
-									v-if="
-										column.class &&
-											column.class.includes('localDate') &&
-											dataCell(item, column) !== '(none)'
-									"
-								>
-									{{ dataCell(item, column) | localDate }}</template
-								>
 								<template
 									v-if="
 										column.class &&
@@ -146,7 +136,8 @@ export default {
 		},
 		customWidth: {
 			type: Number
-		}
+		},
+		minHeight: String
 	},
 	components: {
 		AppLoading,
@@ -285,8 +276,4 @@ export default {
 	}
 };
 </script>
-<style scoped>
-.row {
-	min-width: 1200px;
-}
-</style>
+<style scoped></style>

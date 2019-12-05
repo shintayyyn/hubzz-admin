@@ -135,35 +135,6 @@
     :currentPage="currentPage"
     @pagechanged="pagechanged"
   />
-	<!-- <div v-if="itemCount > itemsPerPage" class="flex justify-center items-center my-2">
-		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-			@click="goToPage(currentPage - 1,search,order_by)" 
-			:class="`${currentPage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
-			<span class="hidden md:block">Prev</span>
-				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
-						<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
-					</svg>
-				</span>
-		</button>
-		<button class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
-			:class="`${currentPage === page ? 'text-white' : ''}`" 
-			v-for="page in pageCount" 
-			v-if="showPage(page)"
-			:key="`page-${page}`" 
-			@click="goToPage(page,search,order_by)">{{ page }}</button>
-		<button class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none" 
-			@click="goToPage(currentPage + 1,search,order_by)"
-			:class="`${activePage == pageCount ? 'text-gray-500 page-button-disabled': 'page-button'}`">
-			<span class="hidden md:block">Next</span>
-			<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="fill-current">
-					<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-				</svg>
-			</span>
-		</button>														
-	</div> -->
-	<!-- PAGINATION ENDS HERE -->
 
 	<div class="practice-shield" v-if="$route.name.includes('index-practices-id') || modal == true" @click="modal ? modal = false : $router.push('/practices')"></div>
   <transition name="slide" mode="out-in">

@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full pagination flex flex-col">
-		<!-- <div class="w-full flex flex-wrap justify-between py-2 text-sm">
+		<div class="w-full flex flex-wrap justify-between py-2 text-sm">
 			<div class="text-gray-500">
 				<div>{{ pageInfo(perPage, currentPage, total) }}</div>
 			</div>
@@ -11,18 +11,28 @@
 						v-model="selectedLimit"
 						class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none px-2 mx-2"
 					>
-						<option :value="5" v-if="total > 5">5</option>
-						<option :value="10" v-if="total > 10">10</option>
-						<option :value="15" v-if="total > 15">15</option>
-						<option :value="20" v-if="total > 20">20</option>
-						<option :value="30" v-if="total > 30">30</option>
-						<option :value="50" v-if="total > 50">50</option>
-						<option :value="total">All</option>
+						<option class="text-black " :value="5" v-if="total > 5">5</option>
+						<option class="text-black " :value="10" v-if="total > 10"
+							>10</option
+						>
+						<option class="text-black " :value="15" v-if="total > 15"
+							>15</option
+						>
+						<option class="text-black " :value="20" v-if="total > 20"
+							>20</option
+						>
+						<option class="text-black " :value="30" v-if="total > 30"
+							>30</option
+						>
+						<option class="text-black " :value="50" v-if="total > 50"
+							>50</option
+						>
+						<option class="text-black " :value="total">All</option>
 					</select>
 					items
 				</div>
 			</div>
-		</div> -->
+		</div>
 		<div
 			class="flex flex-col justify-center items-center py-2"
 			v-if="totalPages > 1"
