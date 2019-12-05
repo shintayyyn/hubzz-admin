@@ -49,7 +49,7 @@
             </div>
           </div>
           <div class="flex items-center">
-            <div v-if="total === 0" class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500">
+            <div v-if="total === 0 && search" class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500">
               No results found.
             </div>
             <span
@@ -154,20 +154,20 @@
           <div v-if="practice && practice.type == 'Hub'">
             <!--IF PRACTICE IS A HUB-->
             <transition-group name="slide" tag="p">
-            <div
-              v-for="(spoke, index) in practiceSpokes"
-              :key="`spoke-${index}`"
-              @click="newChildSpoke(spoke.surgery.id)"
-              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
-            >
-              <div class="flex flex-col text-white text-xs">
-                <span class="font-bold">{{ spoke.surgery.name }}</span>
-                <div class="flex items-center my-1">
-                  <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
-                  <span>{{ spoke.surgery.code }}</span>
+              <div
+                v-for="(spoke, index) in practiceSpokes"
+                :key="`spoke-${index}`"
+                @click="newChildSpoke(spoke.surgery.id)"
+                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
+              >
+                <div class="flex flex-col text-white text-xs">
+                  <span class="font-bold">{{ spoke.surgery.name }}{{ spoke.surgery.id }}</span>
+                  <div class="flex items-center my-1">
+                    <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
+                    <span>{{ spoke.surgery.code }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
             </transition-group>
           </div>
 
@@ -271,7 +271,6 @@ export default {
   },
 
   created() {
-    console.log("practice hub", this.practice);
     const query = {
       ...this.$route.query,
       add_practice_page: this.$route.query.add_practice_page || 1
@@ -412,8 +411,8 @@ export default {
         )
         .then(res => {
           this.practiceSpokes = res.data.practices;
+          this.practiceSpokes.map(item => this.isRegistered(item.id));
         });
-      console.log("spokes", this.practiceSpokes);
       this.loading = false
     },
 

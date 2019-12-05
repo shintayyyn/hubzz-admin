@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            class="flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
+            class="mx-4 md:mx-8 flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
             style="position:relative;">
             <div class="w-4/5 overflow-hidden text-sm m-4">
                 <div class="text-gray-400">
@@ -21,7 +21,7 @@
             </div>
         </div>
         <!--GMC / NMC NUMBER-->
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex flex-col md:flex-row w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">GMC / NMC / HCPC Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex flex-col md:flex-row w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">MPL / NPL Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.mpl_or_npl_number ? user.locum_detail.mpl_or_npl_number.number : null }}</p>
@@ -98,9 +98,9 @@
         </div>
         <!--GMC / NMC NUMBER ENDS HERE-->
         <!-- MANDATORY -->
-        <p class="text-sm text-white pt-8 font-semibold">Mandatory</p>
+        <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">Mandatory</p>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full overflow-x-auto" > 
+        <div class="w-full overflow-x-auto p-4 md:p-8" > 
             <!-- HEADER -->
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/6">Title</div> 
@@ -174,10 +174,10 @@
             </div>
             </nuxt-link>
         </div>
-    <!-- END TABLE -->  
+        <!-- END TABLE -->  
         <!-- OPTIONAL -->
-        <p class=" text-sm text-white pt-8 font-semibold">Optional</p>
-        <div class="w-full overflow-x-auto" > 
+        <p class=" text-sm text-white px-4 md:px-8 pt-8 font-semibold">Optional</p>
+        <div class="w-full overflow-x-auto p-4 md:p-8" > 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/4">Title</div> 
                 <div class="align-middle px-2 text-center w-1/4">File size</div>
@@ -230,14 +230,14 @@
         <!-- END TABLE -->
 
         <!-- MANDATORY TRAININGS -->
-        <p class=" text-sm text-white pt-8 font-semibold">Mandatory Trainings </p>
+        <p class=" text-sm text-white px-4 md:px-8 md:pt-8 font-semibold">Mandatory Trainings </p>
         <div v-if="locumMandatoryTrainings.length === 0">
             <div
-            class="w-full mt-10 text-center text-white font-bold text-gray-500"
-            >This locum has not uploaded Mandatory Training Documents.</div>
+            class="w-full text-white font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8"
+            >This locum has not uploaded any Mandatory Training Documents.</div>
         </div>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full overflow-x-auto" v-if="locumMandatoryTrainings.length > 0"> 
+        <div class="w-full overflow-x-auto p-4 md:p-8" v-if="locumMandatoryTrainings.length > 0"> 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 text-center w-1/3">Title</div> 
                 <div class="align-middle px-2 text-center w-1/3">File size</div>

@@ -223,9 +223,6 @@ export default {
 			if ((newValue, oldValue)) {
 				this.$emit("limitchanged", newValue);
 			}
-		},
-		currentPage(value) {
-			// console.log("currentPage", value);
 		}
 	},
 	data() {

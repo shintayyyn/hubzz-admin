@@ -132,7 +132,7 @@ export default {
         };
     },
     async created(){
-      console.log('comp doc', this.compliance_doc)
+      // console.log('comp doc', this.compliance_doc)
     },
     methods:{
         setStatusData(incomingStatus){
@@ -233,10 +233,11 @@ export default {
             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err })
           }
         },
-        goBack(type) {
+        goBack() {
           const query = {
             ...this.$route.query,
           }
+          // console.log("type", this.$route)
           if(query.job_status){
             delete query.job_status
           }
