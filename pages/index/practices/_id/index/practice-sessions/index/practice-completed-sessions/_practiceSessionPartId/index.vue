@@ -1,24 +1,13 @@
 <template>
-	<div class="job-modal shadow-lg">
-		<div class="mt-6 mx-4 md:mx-8 my-2">
-			<nuxt-link
-				:to="{
-					path: `/practices/${practiceId}/practice-sessions/practice-completed-sessions`
-				}"
-				class="cursor-pointer"
-			>
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="text-white hover:text-sunglow fill-current"
-				/>
-			</nuxt-link>
-		</div>
-		<!-- <PracticeSessionModal :job="job"/> -->
-		<!-- <PracticeSessionModal :job="job"/> -->
-		<JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true" />
-	</div>
+  <div class="job-modal shadow-lg">
+    <div class="mt-6 mx-8 my-2">
+      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-completed-sessions`}" class="cursor-pointer">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+      </nuxt-link>
+    </div>
+    <!-- <PracticeSessionModal :job="job"/> -->
+    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
+  </div>
 </template>
 <script>
 import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal";

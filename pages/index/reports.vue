@@ -43,7 +43,7 @@
 	export default {
 		data() {
 			return {
-				reports: [
+				reports: [] || [
 					{
 						id: "1",
 						code: "REP-001",

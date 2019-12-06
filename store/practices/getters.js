@@ -2,7 +2,6 @@ export default {
 	getAllPractices(state) {
 		let users = [];
 		state.allPractices.forEach(user => {
-			console.log("user", user);
 			users.push({
 				...user,
 				practice_name: user.surgery.name,

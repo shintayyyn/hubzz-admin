@@ -93,7 +93,12 @@
 				</div>
 			</template>
 		</AppTable>
-
+    <!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+      <strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
+      <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
+      :class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
+      </span>
+    </div> -->
 		<template v-else>
 			<div class="mt-2 w-full text-center text-white">
 				There are no registered practices.

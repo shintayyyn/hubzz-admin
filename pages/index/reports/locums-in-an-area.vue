@@ -9,32 +9,44 @@
         </nuxt-link>
       </div>
 
-   <!--    <div class="flex justify-between flex-col md:flex-row py-2 md:py-4 w-full max-w-xl">
-        <div class="flex">
-          <div class="relative">
-            <input
-              class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-              placeholder="Search for..."
-            >
-            <button class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1">
-              <svgicon name="times-solid" height="12" width="12" class="text-white fill-current -mx-2 md:-mx-6"/>
+      <div class="flex flex-col py-2 w-full">
+        <div class="flex flex-wrap items-start flex-col md:flex-row py-1">
+          <div class="relative p-1">
+            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow bg-waterloo" placeholder="Search Area">
+            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:border-red-500 hover:border-red-500 focus:text-red-500 hover:text-red-500">
+              <svgicon name="times-solid" height="12" width="12" class="fill-current"/>
             </button>
           </div>
-          <button
-            class="rounded-lg text-xs text-white p-2 mx-1 hover:text-black hover:bg-yellow-500"
-          >Go</button>
-        </div>
 
-        <div class="flex items-center my-2 md:my-0">
-          <select
-            class="outline-none rounded-lg border-2 border-transparent text-xs text-white p-2 -pl-12 focus:outline-none bg-waterloo"
-          >
-            <option disabled value selected class="bg-gray-700">Filter by</option>
-            <option>Paid</option>
-            <option>Not Paid</option>
-          </select>
+          <div class="relative p-1">
+            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow bg-waterloo" placeholder="Search Profession">
+            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:border-red-500 hover:border-red-500 focus:text-red-500 hover:text-red-500">
+              <svgicon name="times-solid" height="12" width="12" class="fill-current"/>
+            </button>
+          </div>
+
+<!--           <div class="flex items-center my-2 md:my-0">
+            <select class="rounded-lg border-2 border-transparent text-sm text-white p-2 -pl-12 bg-waterloo">
+              <option class="bg-gray-700">Filter by</option>
+              <option v-for="status in statuses">{{ status }}</option>
+            </select>
+          </div> -->
+
+          <div class="flex p-1">
+            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 focus:bg-yellow-500">Reset</button>
+            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 focus:bg-yellow-500">Go</button>
+          </div>
+
+          <div class="flex-1 p-1 flex justify-end">
+            <a class="rounded-lg text-xs text-white hover:text-black focus:text-black hover:bg-yellow-500 focus:bg-yellow-500 p-2 rounded inline-flex items-center" :href="downloadCSVLink" download="locums_in_an_area.csv">
+              <svgicon name="cloud-download" width="21" height="21" color="transparent fill" class="fill-current"></svgicon>
+              <span class="px-1">Download CSV</span>
+            </a>
+          </div>
+
         </div>
-      </div> -->
+      </div>
+
 
       <div class="w-full text-xs overflow-x-auto">
         <div class="flex bg-waterloo text-white font-bold">
@@ -115,13 +127,6 @@
         </div>
       </div>
 
-      <div class="flex justify-end">
-        <button class="rounded-lg text-xs text-white hover:text-black hover:bg-yellow-500 p-2 m-2 rounded inline-flex items-center">
-          <svgicon name="cloud-download" width="21" height="21" color="transparent fill" class="fill-current"></svgicon>
-          <span class="px-1">Download CSV</span>
-        </button>
-      </div>
-
       <div v-if="loading">
         <span>Loading...</span>
       </div>
@@ -156,9 +161,16 @@
         }
 
         const [
+          professions,
           count,
           locumsInAnArea
         ] = await Promise.all([
+          app.$axios.get(`/api/v1/professions`, {
+            limit: 1000000,
+          }).then((response) => {
+            return response.data.data.professions
+          }),
+          
           app.$axios.get(`/api/v1/admin/reports/locums-in-an-area/count`, {
             params
           }).then((response) => {
@@ -173,6 +185,7 @@
         ])
 
         return {
+          professions,
           orderBy,
           limit,
           loading: false,
@@ -188,6 +201,14 @@
 
     data() {
       return {
+        professions: [],
+        statuses: [
+          'Inactive',
+          'Active',
+          'Dormant',
+          'Suspended',
+          'Deactivated',
+        ],
         orderBy: [],
         limit: 20,
         loading: false,
@@ -267,6 +288,10 @@
 
       getLocumsInAnAreaKey() {
         return (v) => `${v.area}-${v.profession}-${v.number_locums_registered}-${v.status}`
+      },
+
+      downloadCSVLink() {
+        return `${process.env.API_URL}/api/v1/admin/reports/locums-in-an-area/locums_in_an_area.csv`
       }
     },
 
@@ -298,7 +323,7 @@
         }
 
         this.$router.replace(this.$router.resolve({ query }).href)
-      }
+      },
     },
   }
 </script>

@@ -225,13 +225,11 @@ export default {
 					status: "alert",
 					text: "Password Succesfully Changed"
 				});
-				// alert('Saved')
 			} catch (err) {
-				// alert('Something went wrong!')
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "danger",
-					text: "Something went wrong!"
+					text: err.response.data.message
 				});
 				console.log("change password error", err);
 			}

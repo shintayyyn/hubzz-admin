@@ -202,7 +202,7 @@ export default {
       await store.commit('faqs/SET_PRACTICE_FAQS',practiceFaqs)
 
     }catch(err){
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
       console.log('faqs error!', err)
     }
   },
@@ -228,7 +228,7 @@ export default {
           this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Delete Faq Successful'})
         }).catch(err=>{
           console.log('delete faq error!',err)
-          this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+          this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
         })
     }
   }

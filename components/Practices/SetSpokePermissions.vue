@@ -206,9 +206,10 @@ export default {
 			});
 		},
 		async newChildSpoke() {
+      console.log('it worked')
 			if (this.practice.type == "Hub") {
 				this.formError = [];
-				this.Validate(this.form);
+				// this.Validate(this.form);
 				if (!this.formError.length) {
 					await this.$axios
 						.post(
@@ -226,7 +227,8 @@ export default {
 						})
 						.catch(err => {
 							this.formError.push(err.response.data.error_messages);
-						});
+            });
+          await this.$emit('close')
 				}
 			}
 		}

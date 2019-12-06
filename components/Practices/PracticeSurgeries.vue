@@ -217,7 +217,7 @@ export default {
 			this.$store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
-				text: "Something went wrong!"
+				text: err.response.data.message
 			});
 			console.log("get practice surgeries error!!!!", err);
 		}
@@ -264,7 +264,7 @@ export default {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
-						text: "Something went wrong!"
+						text: err.response.data.message
 					});
 				});
 			this.loadingSurgeries = false;

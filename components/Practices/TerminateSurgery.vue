@@ -65,12 +65,12 @@
 			>
 				Delete Entire Surgery
 			</div>
-			<div
+			<!-- <div
 				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-yellow-700 bg-yellow-600"
 				@click="toDeleteParent(childSurgery.practice_id)"
 			>
 				Terminate from Parent
-			</div>
+			</div> -->
 			<div
 				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
 				@click="toRejectRequest(childSurgery.id)"
@@ -113,7 +113,7 @@ export default {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
-						text: "Something went wrong!"
+						text: err.response.data.message
 					});
 				});
 		},
@@ -136,7 +136,7 @@ export default {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
-						text: "Something went wrong!"
+						text: err.response.data.message
 					});
 				});
 		},
@@ -159,7 +159,7 @@ export default {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
-						text: "Something went wrong!"
+						text: err.response.data.message
 					});
 				});
 		},
