@@ -1,7 +1,7 @@
 <template>
 	<section class="relative">
 		<div class="relative ">
-			<AppLoading :loading="loading" :message="'Loading'" spinner />
+			<AppLoading :loading="loading" :message="loadingMessage" spinner />
 			<div
 				class="flex flex-col w-full px-2 py-2 mt-4 overflow-x-auto"
 				:style="minHeight && `min-height: ${minHeight}`"
@@ -32,7 +32,12 @@
 						/>
 					</div>
 				</div>
-				<div v-for="item in items" :key="item.id" class="row py-2">
+				<div
+					v-for="item in items"
+					:key="item.id"
+					class="row py-2"
+					:style="`min-width: ${customWidth}px`"
+				>
 					<nuxt-link
 						:to="{
 							path: `${routerLink}/${item.id}`,
@@ -121,6 +126,10 @@ export default {
 		loading: {
 			type: Boolean,
 			default: false
+		},
+		loadingMessage: {
+			type: String,
+			default: "Loading"
 		},
 		currentPage: {
 			type: Number,

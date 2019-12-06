@@ -68,7 +68,6 @@
 			:routerLink="`/practices`"
 			:orderBy="paramSort.order_by"
 			@pagechanged="pagechanged"
-			@limitchanged="limitchanged"
 			@sorted="sorted"
 		>
 			<template v-slot:status_slot="slotProps">
@@ -282,7 +281,7 @@ export default {
 	watch: {
 		$route(to, from) {
 			this.currentPage = parseInt(to.query.page);
-			this.getPractices();
+			// this.getPractices(this.paramSort);
 		},
 		search(value) {
 			this.searchSubmit();
@@ -320,14 +319,15 @@ export default {
 			};
 			const offset =
 				parseInt(query.page) * this.itemsPerPage - this.itemsPerPage;
+
 			return offset;
 		},
 
-		getPractices() {
+		getPractices(params) {
 			this.$store.dispatch("practices/fetchPractices", {
 				limit: this.itemsPerPage,
 				search: this.search,
-				order_by: this.paramSort.order_by,
+				order_by: params.order_by,
 				offset: this.getQuery()
 			});
 		},
@@ -378,7 +378,7 @@ export default {
 				this.loading = true;
 			}
 			this.$router.push({ query });
-			this.getPractices();
+			this.getPractices(this.paramSort);
 		},
 		searchSubmit: debounce(function(page, order_by) {
 			let search = this.search;
@@ -442,16 +442,24 @@ export default {
 				...this.$route.query,
 				page: e || 1
 			};
+
 			this.$router.push({ query });
 			this.getPractices(this.paramSort);
 		},
-		async limitchanged(limit) {
-			this.currentPage = 1;
-			this.itemsPerPage = limit;
-			await this.getPractices(this.paramSort);
-		},
 		sorted(order_by) {
+			// go back to page 1
 			this.currentPage = 1;
+			let query = {
+				...this.$router.query,
+				order_by
+			};
+			let page = this.currentPage;
+			query = {
+				...this.$router.query,
+				page,
+				order_by
+			};
+			this.$router.push({ query });
 			this.paramSort.order_by = order_by;
 			this.getPractices(this.paramSort);
 		}

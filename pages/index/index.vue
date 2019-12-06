@@ -179,10 +179,18 @@ export default {
 	border-radius: 25px;
 	width: 800px;
 	max-width: 95%;
+	/* max-height: 80%; */
 	min-height: 50%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
+	.confirm-termination-modal {
+		max-height: 50%;
+		min-height: 50%;
+	}
 }
 </style>

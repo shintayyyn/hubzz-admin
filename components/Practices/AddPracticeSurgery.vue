@@ -14,7 +14,6 @@
       </div>
     </div>
     <!-- HEADER -->
-
     <div
       class="flex flex-col px-4 md:px-8 text-base text-white py-2"
       style="min-height: 70vh"
@@ -24,7 +23,7 @@
           <div class="flex flex-no-wrap w-full md:w-auto">
             <div class="w-full md:w-auto relative">
               <input
-                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
+                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 mb-2 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
                 type="text"
                 :placeholder="
                     !practice || (practice && practice.type == 'Hub')
@@ -56,13 +55,7 @@
               class="py-2 md:px-2 text-sm whitespace-no-wrap"
               v-if="search && total !== 0"
               >{{ total }} results found.</span>
-            <button
-              v-if="total !== 0"
-              class="float-right bg-yellow-500 hover:bg-sunglow text-black px-4 py-1 rounded-lg text-sm"
-              @click="toggleRegisteredPractice = !toggleRegisteredPractice">
-              {{toggleRegisteredPractice ? 'Show' : 'Hide'}} Registered Practice</button>
             </div>
-          
         </div>
       </div>
       
@@ -177,6 +170,7 @@
     </div>
     <!-- PAGINATION -->
     <AppPagination
+      class="px-4 md:px-6"
       :total="total"
       :totalPages="totalPages"
       :currentPage="currentPage"
