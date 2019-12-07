@@ -29,7 +29,7 @@
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('practiceSurgeryId')"
-			@click="$router.go(-1)"
+			@click="$router.push(`/practices/${$route.params.id}/practice-surgeries`)"
 		></div>
 		<div
 			class="practice-shield"
@@ -70,7 +70,6 @@ export default {
 			console.log("get practice error!!!!", err);
 		}
 	},
-
 	methods: {
 		goBack() {
 			const query = {

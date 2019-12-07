@@ -1,55 +1,71 @@
 <template>
-  <div class="flex flex-col py-2 mb-6 leading-normal" v-on-clickaway="toggledOff">
+  <div class="flex flex-col py-2 mb-2 md:mb-4 leading-normal" v-on-clickaway="toggledOff">
     <div class="relative flex flex-row flex-no-wrap justify-between">
-      <label :for="name" class="text-xs sm:text-sm py-1">{{label}}</label>
-      <div
-        class="absolute right-0 bg-red p-1 text-xs sm:text-base text-white"
+      <label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{label}}</label>
+      <!-- <div
+        class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
         v-if="error"
-      >{{error.message}}</div>
+      >{{error.message}}</div>-->
     </div>
     <div class="flex flex-row justify-start mt-1">
-      <input
-        :value="value"
-        type="input"
-        placeholder="mm/dd/yyyy"
-        class="border-b-2 focus:border-yellow focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
-        :class="{ inClass, 'border-red': error}"
-        @click="modal = true"
-        @keypress="validateInput($event)"
-        @input="$emit('input', $event.target.value)"
-        :style="inStyle"
-      />
+      <div class="flex flex-col w-full">
+        <input
+          :value="value"
+          type="input"
+          :placeholder="format"
+          class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
+          :class="{ inClass, 'border-red-500': error}"
+          @click="modal = true"
+          @keypress="validateInput($event)"
+          @input="$emit('input', $event.target.value)"
+          :style="inStyle"
+          :format="format"
+          :disabled="disabled"
+        />
+        <div
+          class="text-red-500 text-xs py-1 text-white rounded"
+          v-if="error"
+        >{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
+      </div>
     </div>
     <transition name="fade">
-      <div class="relative z-10" v-if="modal">
-        <div
-          class="absolute border rounded-tr-lg rounded-bl-lg rounded-br-lg calendar bg-waterloo shadow-md"
-        >
-          <div class="p-2 flex flex-row flex-no-wrap justify-start border-b-2 border-yellow">
-            <div class="m-1 w-1/2 text-left">
-              <select v-model="selectedMonth" class="text-xs sm:text-sm">
+      <div class="relative md:static z-10 flex justify-start" v-if="modal">
+        <div class="absolute rounded-b-lg calendar bg-waterloo shadow-md">
+          <div
+            class="p-2 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
+          >
+            <div class="m-1 w-1/2 flex flex-no-wrap">
+              <select
+                v-model="selectedMonth"
+                class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+              >
                 <option
                   :value="month.value"
                   v-for="(month, index) in filteredMonths"
                   :key="index"
+                  class="text-black"
                 >{{month.label}}</option>
               </select>
-              <select v-model="selectedYear" class="text-xs sm:text-sm">
-                <option :value="year" v-for="(year, index) in yearLists" :key="index">{{year}}</option>
+              <select
+                v-model="selectedYear"
+                class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+              >
+                <option :value="year" v-for="(year, index) in yearLists" :key="index" class="text-black">{{year}}</option>
               </select>
             </div>
             <div class="m-1 w-1/2 flex flex-no-wrap justify-end">
-              <span class="cursor-pointer" @click="adjustMonth('previous')">
+              <span class=" mr-1" @click="adjustMonth('previous')"
+                  :class="(selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M')) && isAfter ? 'cursor-not-allowed' : 'cursor-pointer'"
+              >
                 <svgicon
                   name="arrow-left"
                   height="12"
                   width="12"
-                  :color="selectedYear === new Date().getFullYear() && selectedMonth === new Date().getMonth() ? 'gray' : ''"
+                  :color="(selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M')) && isAfter ? '#ccc' : '#fff'"
                 />
               </span>
-              <span class="mx-4"></span>
-              <span class="cursor-pointer" @click="adjustMonth('next')">
-                <svgicon name="arrow-right" height="12" width="12" />
+              <span class="cursor-pointer ml-1" @click="adjustMonth('next')">
+                <svgicon name="arrow-right" height="12" width="12" color="#fff" />
               </span>
             </div>
           </div>
@@ -74,10 +90,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-white border-yellow border-2': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
                 }"
                   v-if="item.day === 1"
                 >
@@ -94,10 +110,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-white border-yellow border-2': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
                 }"
                   v-if="item.day === 2"
                 >
@@ -114,10 +130,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 3"
                 >
@@ -134,10 +150,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 4"
                 >
@@ -154,10 +170,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 5"
                 >
@@ -174,10 +190,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 6"
                 >
@@ -194,10 +210,10 @@
                   @click="select(item.fullDate)"
                   class="rounded-full relative p-1 flex justify-center items-center date-cell"
                   :class="{
-                  'border-yellow border-2': isSame(item.fullDate),
-                  'text-gray': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-gray-300 text-white': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow border-2 text-black': isSelectedDate(item.date)
+                  'border-yellow-500 border-2': isSame(item.fullDate),
+                  'text-gray-500': isDisabled(item.fullDate), 
+                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                 }"
                   v-if="item.day === 0"
                 >
@@ -214,18 +230,18 @@
 <script>
 import { mixin as clickaway } from "vue-clickaway";
 let months = [
-  { label: "Jan", value: 0 },
-  { label: "Feb", value: 1 },
-  { label: "Mar", value: 2 },
-  { label: "Apr", value: 3 },
-  { label: "May", value: 4 },
-  { label: "Jun", value: 5 },
-  { label: "Jul", value: 6 },
-  { label: "Aug", value: 7 },
-  { label: "Sep", value: 8 },
-  { label: "Oct", value: 9 },
-  { label: "Nov", value: 10 },
-  { label: "Dec", value: 11 }
+  { label: "Jan", value: "1" },
+  { label: "Feb", value: "2" },
+  { label: "Mar", value: "3" },
+  { label: "Apr", value: "4" },
+  { label: "May", value: "5" },
+  { label: "Jun", value: "6" },
+  { label: "Jul", value: "7" },
+  { label: "Aug", value: "8" },
+  { label: "Sep", value: "9" },
+  { label: "Oct", value: "10" },
+  { label: "Nov", value: "11" },
+  { label: "Dec", value: "12" }
 ];
 export default {
   mixins: [clickaway],
@@ -236,8 +252,14 @@ export default {
     error: Object,
     inStyle: String,
     inClass: String,
+    format: String,
     // disabled all dates past the current date
-    isAfter: Boolean
+    isAfter: Boolean,
+    format: {
+      type: String,
+      default: "YYYY-MM-DD"
+    },
+    disabled: Boolean
   },
   data() {
     return {
@@ -245,39 +267,43 @@ export default {
       months,
       monthLists: [],
       yearLists: [],
-      selectedMonth: "",
-      selectedYear: new Date().getFullYear(),
+      selectedMonth: this.$moment.utc().format("M"),
+      selectedYear: this.$moment.utc().format("YYYY"),
       daysInMonth: []
     };
   },
   created() {
+      console.log("month",this.selectedMonth)
     // get current month and year
-    let d = new Date();
-    this.selectedMonth = d.getMonth();
+    if (this.value) {
+      this.selectedMonth = this.$moment(this.value, this.format).format("M");
+      this.selectedYear = this.$moment(this.value, this.format).format("YYYY");
+    }
     // get month list
     this.getMonthLists();
     // get year list
     this.getYearLists();
+    this.getDaysInMonth(this.selectedMonth, this.selectedYear);
   },
   watch: {
     selectedMonth(value) {
-      this.getDaysInMonth(value, this.selectedYear);
+      this.getDaysInMonth(value.toString(), this.selectedYear);
     },
     selectedYear(value) {
       // set selected month to this current month if selected year === current year
-      if (value === new Date().getFullYear()) {
+      if (value === this.$moment().format("YYYY")) {
         this.selectedMonth = this.filteredMonths[0].value;
       }
-      this.getDaysInMonth(this.selectedMonth, value);
+      this.getDaysInMonth(this.selectedMonth.toString(), value);
     }
   },
   computed: {
     filteredMonths() {
       // if selected year === current year, get only the current month up to last month,
       // if not, get all the months
-      if (this.selectedYear === new Date().getFullYear()) {
+      if (this.selectedYear === this.$moment().format("YYYY")) {
         return this.months.filter(
-          month => month.value >= new Date().getMonth()
+          month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
         );
       }
       return this.months;
@@ -286,37 +312,58 @@ export default {
   methods: {
     getMonthLists() {
       for (let i = this.selectedMonth; i <= this.months.length; i++) {
-        this.monthLists.push(i);
+        this.monthLists.push(`${i}`);
       }
     },
     getYearLists() {
-      for (let i = 0; i <= 10; i++) {
-        this.yearLists.push(this.selectedYear + i);
+      let yearsBefore = [];
+      if (!this.isAfter) {
+        for (let i = 0; i <= 2; i++) {
+          this.yearLists.push(
+            this.$moment(this.selectedYear, "YYYY")
+              .subtract(i, "years")
+              .format("YYYY")
+          );
+        }
       }
+      for (let i = 0; i <= 10; i++) {
+        this.yearLists.push(
+          this.$moment(this.selectedYear, "YYYY")
+            .add(i, "years")
+            .format("YYYY")
+        );
+      }
+
+      this.yearLists.sort(function(a, b) {
+        return a - b;
+      });
     },
     isSelectedDate(date) {
-      let selectedDate = this.$moment(
-        `${this.selectedMonth + 1}-${date}-${this.selectedYear}`
-      ).format("MM/DD/YYYY");
-      return this.$moment(selectedDate).isSame(this.value);
+      let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`;
+      return this.$moment(selectedDate, "YYYY-MM-D").isSame(this.value);
     },
     isSame(date) {
-      let newDate = this.$moment(new Date()).format("MM-DD-YYYY");
-      return this.$moment(date).isSame(newDate);
+      let newDate = this.$moment().format("MM-DD-YYYY");
+      return this.$moment(date, "MM-DD-YYYY").isSame(newDate);
     },
     isDisabled(date) {
-      let newDate = this.$moment(new Date()).format("MM-DD-YYYY");
-      if (this.isAfter) {
-        return this.$moment(date).isAfter(newDate);
-      }
-      return this.$moment(date).isBefore(newDate);
+      return false;
+      // let newDate = this.$moment.utc().format("MM-DD-YYYY");
+      // if (this.isAfter) {
+      //   return this.$moment(date, "MM-DD-YYYY").isAfter(
+      //     this.$moment(newDate, "MM-DD-YYYY")
+      //   );
+      // }
+      // return this.$moment(date, "MM-DD-YYYY").isBefore(
+      //   this.$moment(newDate, "MM-DD-YYYY")
+      // );
     },
     toggledOff() {
       // get to the selected date
       if (this.value) {
-        let month = this.$moment(this.value).format("MM");
-        let year = this.$moment(this.value).format("YYYY");
-        this.selectedMonth = month - 1;
+        let month = this.$moment(this.value, "YYYY-MM-DD").format("M");
+        let year = this.$moment(this.value, "YYYY-MM-DD").format("YYYY");
+        this.selectedMonth = month;
         this.selectedYear = year;
       }
       this.modal = false;
@@ -327,40 +374,51 @@ export default {
           month => month.value === this.selectedMonth
         );
         // return if selected month and year === current month and year
-        if (index === 0 && this.selectedYear === new Date().getFullYear()) {
+        if (
+          (this.selectedMonth.toString() === this.$moment().format("M") &&
+          this.selectedYear.toString() === this.$moment().format("YYYY")) &&
+          this.isAfter
+        ) {
           return;
         }
-        if (index === 0) {
-          this.selectedMonth = 11;
-          this.selectedYear--;
-        } else {
+        this.selectedYear = parseInt(this.selectedYear);
+        if (index === 0 || this.selectedMonth != 1) {
           this.selectedMonth--;
+        } else {
+          this.selectedMonth = 12;
+          this.selectedYear--;
         }
       }
       if (type === "next") {
-        if (this.selectedMonth === 11) {
+        if (this.selectedMonth === 12 || this.selectedMonth === '12') {
           this.selectedYear++;
-          this.selectedMonth = 0;
+          this.selectedMonth = 1;
         } else {
+          this.selectedMonth = parseInt(this.selectedMonth)
           this.selectedMonth++;
         }
       }
+
     },
     getDaysInMonth(month, selectedYear) {
-      let date = new Date(selectedYear, month, 1);
+      let date = this.$moment(`${selectedYear}-${month}-01`, "YYYY-MM-DD");
       let days = [];
-      while (date.getMonth() === month) {
-        days.push(new Date(date));
-        date.setDate(date.getDate() + 1);
-      }
-      this.daysInMonth = [];
-      days.forEach(day => {
-        this.daysInMonth.push({
-          day: day.getDay(),
-          date: day.getDate(),
-          fullDate: this.$moment(day).format("MM-DD-YYYY")
+      while (date.format("M") === month) {
+        days.push({
+          day: parseInt(date.format("d")),
+          date: parseInt(date.format("D")),
+          fullDate: date.format("MM-DD-YYYY")
         });
-      });
+        date = date.add(1, "days");
+      }
+      this.daysInMonth = days;
+      // days.forEach(day => {
+      //   this.daysInMonth.push({
+      //     day: day.getDay(),
+      //     date: day.getDate(),
+      //     fullDate: this.$moment(day).format("MM-DD-YYYY")
+      //   });
+      // });
     },
     validateInput(e) {
       if ((e.key >= 0 && e.key <= 9) || e.key === "/") {
@@ -372,7 +430,10 @@ export default {
     select(date) {
       if (!this.isDisabled(date)) {
         this.modal = false;
-        this.$emit("input", this.$moment(date).format("MM/DD/YYYY"));
+        this.$emit(
+          "input",
+          this.$moment(date, "MM-DD-YYYY").format(this.format)
+        );
       }
     }
   }

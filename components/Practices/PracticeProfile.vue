@@ -99,7 +99,7 @@
               <p class="flex m-4 font-semibold">{{practice && practice.actived_until ? practice.actived_until : 'N/A'}}</p>
             </div>
 
-            <div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')" class="border-b-4 border-white">
+            <div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')">
               <p class="flex text-gray-300 p-2">Phone Number</p>
               <input
                 class="appearance-none text-white bg-transparent border-b w-full mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
@@ -145,16 +145,13 @@
               </div>
               
               <div class="my-2">
-                <span class="text-gray-300 p-2">Active Until</span>
-                  <input
-                    type="date"
-                    class="date-picker hasDatepicker valid text-black"
-                    name="expiryDate"
-                    disable-min-date
-                    placeholder="dd/mm/yyyy"
-                    aria-invalid="false"
-                    v-model='toPutPractice.actived_until'
-                  >
+                  <AppDate
+                    v-model="toPutPractice.actived_until"
+                    :name="'actived_until'"
+                    :label="'Active Until'"
+                    @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
+                    isAfter
+                  />
               </div>
               
               <button
@@ -196,7 +193,11 @@
   </div>
 </template>
 <script>
+import AppDate from "@/components/Base/AppDate";
 export default {
+  components: {
+    AppDate
+  },
   props:['practice'],
   data(){
     return{
@@ -221,6 +222,7 @@ export default {
     }
   },
   async created(){
+    console.log(this.practice.actived_until)
     if(this.practice.type == 'Spoke'){
       Promise.all([
         this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`).then(res=>{

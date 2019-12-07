@@ -10,17 +10,17 @@
       </div>
 
       <div class="flex flex-col py-2 w-full">
-        <div class="flex flex-wrap items-start flex-col md:flex-row py-1">
+        <div class="flex flex-wrap items-center flex-col md:flex-row py-1">
           <div class="relative p-1">
-            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow bg-waterloo" placeholder="Search Area">
-            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:border-red-500 hover:border-red-500 focus:text-red-500 hover:text-red-500">
+            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow transition-hover bg-waterloo" placeholder="Search Area">
+            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:outline-none hover:text-red-500 transition-hover">
               <svgicon name="times-solid" height="12" width="12" class="fill-current"/>
             </button>
           </div>
 
           <div class="relative p-1">
-            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow bg-waterloo" placeholder="Search Profession">
-            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:border-red-500 hover:border-red-500 focus:text-red-500 hover:text-red-500">
+            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow transition-hover bg-waterloo" placeholder="Search Profession">
+            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:outline-none hover:text-red-500 transition-hover">
               <svgicon name="times-solid" height="12" width="12" class="fill-current"/>
             </button>
           </div>
@@ -32,9 +32,9 @@
             </select>
           </div> -->
 
-          <div class="flex p-1">
-            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 focus:bg-yellow-500">Reset</button>
-            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 focus:bg-yellow-500">Go</button>
+          <div class="flex items-center p-1">
+            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 transition-hover focus:bg-yellow-500">Reset</button>
+            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 transition-hover focus:bg-yellow-500">Go</button>
           </div>
 
           <div class="flex-1 p-1 flex justify-end">
@@ -67,10 +67,10 @@
             </button>
           </div>
 
-          <div class="flex-1 p-2">
+          <div class="flex-1 flex justify-center items-center p-2">
             <span>Profession</span>
 
-            <button @click="setOrderBy('profession')">
+            <button class="px-1" @click="setOrderBy('profession')">
               <span v-if="getColumnOrderByDirection('profession') === null">              
                 <svgicon name="sort" height="12" width="12" color="white"/>
               </span>
@@ -84,10 +84,10 @@
             </button>
           </div>
 
-          <div class="flex-1 p-2">
+          <div class="flex-1 flex justify-center items-center p-2">
             <span>Number Locums Registered</span>
 
-            <button @click="setOrderBy('number_locums_registered')">
+            <button class="px-1" @click="setOrderBy('number_locums_registered')">
               <span v-if="getColumnOrderByDirection('number_locums_registered') === null">              
                 <svgicon name="sort" height="12" width="12" color="white"/>
               </span>
@@ -101,10 +101,10 @@
             </button>
           </div>
 
-          <div class="flex-1 p-2">
+          <div class="flex-1 flex justify-center items-center p-2">
             <span>Status</span>
 
-            <button @click="setOrderBy('status')">
+            <button class="px-1" @click="setOrderBy('status')">
               <span v-if="getColumnOrderByDirection('status') === null">              
                 <svgicon name="sort" height="12" width="12" color="white"/>
               </span>
@@ -121,9 +121,9 @@
 
         <div v-for="locumsInAnArea in locumsInAnArea" :key="getLocumsInAnAreaKey(locumsInAnArea)" class="flex bg-white">
           <span class="flex-1 p-2">{{ locumsInAnArea.area }}</span>
-          <span class="flex-1 p-2">{{ locumsInAnArea.profession }}</span>
-          <span class="flex-1 p-2">{{ locumsInAnArea.number_locums_registered }} </span>
-          <span class="flex-1 p-2">{{ locumsInAnArea.status }} </span>
+          <span class="flex-1 p-2 text-center">{{ locumsInAnArea.profession }}</span>
+          <span class="flex-1 p-2 text-center">{{ locumsInAnArea.number_locums_registered }} </span>
+          <span class="flex-1 p-2 text-center">{{ locumsInAnArea.status }} </span>
         </div>
       </div>
 

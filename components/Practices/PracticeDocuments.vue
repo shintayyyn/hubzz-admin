@@ -175,18 +175,28 @@ export default {
         "prac document: ",
         practiceSpecificDocument
       );
-      this.$store.commit("SET_NOTIFICATION", {
-        enabled: true,
-        status: "upload",
-        text: "Uploading",
-        doNotClose: true,
-      });
+      // if (!types.includes(practiceSpecificDocument.file.subtype)){
+      //   this.$store.commit("SET_NOTIFICATION", {
+      //     enabled: true,
+      //     status: "danger",
+      //     text: "!!",
+      //     doNotClose: true,
+      //   });
+      //   return
+      // }
+      // this.$store.commit("SET_NOTIFICATION", {
+      //   enabled: true,
+      //   status: "upload",
+      //   text: "Uploading",
+      //   doNotClose: true,
+      // });
       const el = this.$refs[refName][0];
       if (el.files && el.files.length === 0) {
         return;
       }
       const file = el.files[0];
-
+      let types = ["pdf", "jpeg", "msword", "tiff"];
+      console.log("legit file", file.name, file)
       const fileReader = new FileReader();
 
       fileReader.readAsDataURL(file);

@@ -83,7 +83,7 @@
 											v-if="
 												column.class &&
 													column.class.includes('localDate') &&
-													dataCell(item, column) !== '(none)'
+													dataCell(item, column) !== 'Unavailable'
 											"
 										>
 											{{ dataCell(item, column) | localDate }}
@@ -284,7 +284,7 @@ export default {
 				str = "Yes";
 			}
 			if (str === null) {
-				str = "(none)";
+				str = "Unavailable";
 			}
 			return str;
 		}
