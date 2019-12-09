@@ -142,19 +142,14 @@ export default {
 			// itemCount: 0,
 			currentPage: 1,
 			// practices: [],
-
+      sortedBy: "",
+			sortType: "",
+			order_by: "",
 			search: "",
 			paramSort: {
 				order_by: []
 			},
 			sort: "",
-			sortedBy: "",
-			sortType: "",
-			order_by: "",
-			practice_name: true,
-			created_at: true,
-			actived_until: true,
-			status: true,
 			modal: false,
 
 			//app table columns
@@ -209,13 +204,14 @@ export default {
 			await store.commit("practices/TOGGLE_LOADING", true);
 			let { page = 1, search = "", order_by = "" } = route.query;
 			page = parseInt(page);
-			const createdRoute = route.query;
+			const createdRoute = route.query.order_by;
 			const limit = 10;
 			const offset = page * limit - limit;
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
-					: "created_at:desc";
+          : "created_at:desc";
+          
 			const params = { limit, offset, order_by };
 
 			if (search) {
@@ -230,9 +226,7 @@ export default {
 				params
 			});
 
-			let response = null;
-
-			response = await getPracticesCountPromise;
+			let response = await getPracticesCountPromise;
 			const itemCount = response.data.count;
 
 			response = await getPracticesPromise;
@@ -323,8 +317,7 @@ export default {
 			const query = {
 				...this.$route.query
 			};
-			const offset =
-				parseInt(query.page) * this.itemsPerPage - this.itemsPerPage;
+			const offset = parseInt(query.page) * this.itemsPerPage - this.itemsPerPage;
 			return offset;
 		},
 
@@ -442,23 +435,24 @@ export default {
 					return;
 			}
 		},
-		pagechanged(e) {
+		async pagechanged(e, paramsFromAppTable) {
+      // console.log('params from app table', paramsFromAppTable)
 			const query = {
 				...this.$route.query,
 				page: e || 1
 			};
 			this.$router.push({ query });
-			this.getPractices(this.paramSort);
+			await this.getPractices(this.paramSort);
 		},
 		async limitchanged(limit) {
 			this.currentPage = 1;
-			this.itemsPerPage = limit;
+			this.itemsPerPage = await limit;
 			await this.getPractices(this.paramSort);
 		},
-		sorted(order_by) {
+		async sorted(order_by) {
 			this.currentPage = 1;
-			this.paramSort.order_by = order_by;
-			this.getPractices(this.paramSort);
+			this.paramSort.order_by = await order_by;
+			await this.getPractices(this.paramSort);
 		}
 	}
 };

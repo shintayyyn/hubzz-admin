@@ -162,13 +162,17 @@ export default {
 	},
 	created() {},
 	mounted() {
+    console.log('orderBy', this.orderBy)
 		this.params = this.orderBy;
 	},
 	methods: {
 		sort(dataIndex) {
 			if (!this.params.some(item => item.includes(`${dataIndex}`))) {
 				this.params = [];
-				this.params.push(`${dataIndex}:desc`);
+        this.params.push(`${dataIndex}:desc`);
+        console.log('dataIndex', dataIndex)
+        console.log('params', this.params)
+        // this.$router.push({query: this.params})
 			} else {
 				let index = this.params.findIndex(item => item === `${dataIndex}:desc`);
 				if (index >= 0) {
@@ -183,7 +187,7 @@ export default {
 			this.$emit("sorted", this.params);
 		},
 		pagechanged(e) {
-			this.$emit("pagechanged", e);
+			this.$emit("pagechanged", e, this.params);
 		},
 		limitchanged(limit) {
 			this.$emit("limitchanged", limit);

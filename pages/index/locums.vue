@@ -129,7 +129,7 @@ export default {
 			filterCompliances: "",
 			search: "",
 			paramSort: {
-				order_by: ["created_at:desc"]
+				order_by: []
 			},
 			sort: "",
 			sortedBy: "",
@@ -548,23 +548,23 @@ export default {
 		usersDeletedHandler(userId) {
 			console.log("usersDeletedHandler", userId);
 		},
-		pagechanged(e) {
+		async pagechanged(e) {
 			const query = {
 				...this.$route.query,
 				page: e || 1
 			};
 			this.$router.push({ query });
-			this.getLocums(this.paramSort);
+			await this.getLocums(this.paramSort);
 		},
 		async limitchanged(limit) {
 			this.current_page = 1;
 			this.itemsPerPage = limit;
 			await this.getLocums(this.paramSort);
 		},
-		sorted(order_by) {
+		async sorted(order_by) {
 			this.current_page = 1;
 			this.paramSort.order_by = order_by;
-			this.getLocums(this.paramSort);
+			await this.getLocums(this.paramSort);
 		}
 	}
 };
