@@ -2,8 +2,8 @@
 	<div
 		class="w-full pagination flex flex-col md:flex-row justfify-between items-center"
 	>
-		<div class="w-full flex flex-wrap justify-between py-2 text-sm">
-			<div class="text-gray-500">
+		<div class="w-full flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+			<div class="text-gray-500 w-full md:w-auto text-center md:text-left">
 				<div>{{ pageInfo(perPage, currentPage, total) }}</div>
 			</div>
 			<div class="hidden pl-2 text-white">
@@ -245,11 +245,11 @@ export default {
 	methods: {
 		pageInfo(perPage, currentPage, total) {
 			return ` Showing ${perPage * currentPage + 1 - perPage} to
-      ${
-				Math.ceil(total / perPage) === currentPage
-					? total
-					: currentPage * perPage
-			} of ${total} items`;
+      		${
+						Math.ceil(total / perPage) === currentPage
+							? total
+							: currentPage * perPage
+					} of ${total} items`;
 		},
 		onClickFirstPage() {
 			this.$emit("pagechanged", 1);
@@ -273,18 +273,6 @@ export default {
 };
 </script>
 <style scoped>
-/* .active {
-  background-color: #4aae9b;
-  color: #ffffff;
-}
-button {
-  background: linear-gradient(to top, #f2d024, #efde86);
-}
-
-button:disabled svg {
-  fill: #aaa;
-} */
-
 .page-button {
 	background: linear-gradient(to top, #f2d024, #efde86);
 }

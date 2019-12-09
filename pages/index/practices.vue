@@ -56,55 +56,55 @@
 				</select>
 			</div>
 		</div>
-
-		<AppTable
-			v-if="itemCount > 0"
-			:total="itemCount"
-			:items="getAllPractices"
-			:currentPage="currentPage"
-			:perPage="itemsPerPage"
-			:columns="columns"
-			:loading="loadingPractices"
-			:routerLink="`/practices`"
-			:orderBy="paramSort.order_by"
-			@pagechanged="pagechanged"
-			@limitchanged="limitchanged"
-			@sorted="sorted"
-		>
-			<template v-slot:status_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full w-32 text-center"
-					:class="
-						`${
-							slotProps.item.status === 'Active'
-								? 'bg-green-500'
-								: 'bg-gray-500 text-gray-700'
-						}`
-					"
-				>
-					{{ slotProps.item.status }}
+		<transition name="fade">
+			<AppTable
+				v-if="itemCount > 0"
+				:total="itemCount"
+				:items="getAllPractices"
+				:currentPage="currentPage"
+				:perPage="params.limit"
+				:columns="columns"
+				:loading="loadingPractices"
+				:routerLink="`/practices`"
+				:orderBy="params.order_by"
+				@pagechanged="pagechanged"
+				@sorted="sorted"
+			>
+				<template v-slot:status_slot="slotProps">
+					<div
+						class="px-4 py-1 rounded-full w-32 text-center"
+						:class="
+							`${
+								slotProps.item.status === 'Active'
+									? 'bg-green-500'
+									: 'bg-gray-500 text-gray-700'
+							}`
+						"
+					>
+						{{ slotProps.item.status }}
+					</div>
+				</template>
+				<template v-slot:type_slot="slotProps">
+					<div
+						class="rounded-full text-center"
+						:class="typeStyle(slotProps.item.type)"
+					>
+						{{ slotProps.item.type }}
+					</div>
+				</template>
+			</AppTable>
+			<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
+				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
+				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
+				</span>
+			</div> -->
+			<template v-else>
+				<div class="mt-2 w-full text-center text-white">
+					There are no registered practices.
 				</div>
 			</template>
-			<template v-slot:type_slot="slotProps">
-				<div
-					class="rounded-full text-center"
-					:class="typeStyle(slotProps.item.type)"
-				>
-					{{ slotProps.item.type }}
-				</div>
-			</template>
-		</AppTable>
-    <!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-      <strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-      <span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-      :class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
-      </span>
-    </div> -->
-		<template v-else>
-			<div class="mt-2 w-full text-center text-white">
-				There are no registered practices.
-			</div>
-		</template>
+		</transition>
 
 		<!-- END TABLE -->
 
@@ -138,7 +138,6 @@ export default {
 	data() {
 		return {
 			loading: false,
-			itemsPerPage: 10,
 			// itemCount: 0,
 			currentPage: 1,
 			// practices: [],
@@ -146,9 +145,15 @@ export default {
 			sortType: "",
 			order_by: "",
 			search: "",
-			paramSort: {
+			params: {
+				limit: 10,
+				offset: 0,
 				order_by: []
 			},
+			// params: {
+			// 	order_by: [],
+			// 	offset: 0
+			// },
 			sort: "",
 			modal: false,
 
@@ -188,7 +193,7 @@ export default {
 				{
 					name: "Type",
 					slot: true,
-					dataIndex: "practice_type",
+					dataIndex: "type",
 					class: "text-center",
 					slotName: "type_slot",
 					sortable: true
@@ -202,7 +207,7 @@ export default {
 	async asyncData({ app, store, route }) {
 		try {
 			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = "" } = route.query;
+			let { page = 1, search = "", order_by = [] } = route.query;
 			page = parseInt(page);
 			const createdRoute = route.query.order_by;
 			const limit = 10;
@@ -228,19 +233,17 @@ export default {
 
 			let response = await getPracticesCountPromise;
 			const itemCount = response.data.count;
+			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
 
 			response = await getPracticesPromise;
 			const practices = response.data.practices;
-
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
 			await store.commit("practices/SET_PRACTICES", practices);
+
 			await store.commit("practices/TOGGLE_LOADING", false);
 			return {
 				loading: false,
 				itemsPerPage: limit,
-				// itemCount,
 				currentPage: page,
-				// practices,
 				search,
 				order_by
 			};
@@ -265,13 +268,13 @@ export default {
 			return this.$store.state.practices.itemCount;
 		},
 		pageCount() {
-			return Math.ceil(this.itemCount / this.itemsPerPage);
+			return Math.ceil(this.itemCount / this.params.limit);
 		},
 		authAdminPermissions() {
 			return this.$store.getters["auth/permissions"];
 		},
 		totalPages() {
-			return Math.ceil(this.itemCount / this.itemsPerPage);
+			return Math.ceil(this.itemCount / this.params.limit);
 		},
 		total() {
 			return this.getAllPractices.length;
@@ -280,8 +283,8 @@ export default {
 
 	watch: {
 		$route(to, from) {
-			this.currentPage = parseInt(to.query.page);
-			this.getPractices();
+			// this.currentPage = parseInt(to.query.page);
+			this.getPractices(this.params);
 		},
 		search(value) {
 			this.searchSubmit();
@@ -303,7 +306,7 @@ export default {
 				this.sortBy("status", this.currentPage, this.search);
 			}
 			if (value === "Type") {
-				this.sortBy("practice_type", this.currentPage, this.search);
+				this.sortBy("type", this.currentPage, this.search);
 			}
 		}
 	},
@@ -313,35 +316,37 @@ export default {
 			this.modal = true;
 		},
 
-		getQuery() {
-			const query = {
-				...this.$route.query
-			};
-			const offset = parseInt(query.page) * this.itemsPerPage - this.itemsPerPage;
-			return offset;
-		},
+		// getQuery() {
+		// 	const query = {
+		// 		...this.$route.query
+		// 	};
+		// 	const offset =
+		// 		parseInt(query.page) * this.params.limit - this.params.limit;
 
-		getPractices() {
+		// 	return offset;
+		// },
+
+		getPractices(params) {
 			this.$store.dispatch("practices/fetchPractices", {
-				limit: this.itemsPerPage,
+				limit: this.params.limit,
 				search: this.search,
-				order_by: this.paramSort.order_by,
-				offset: this.getQuery()
+				order_by: params.order_by,
+				offset: params.offset
 			});
 		},
 
 		async sortBy(sortedBy, page, search) {
 			if (this.sortedBy == sortedBy && this.sortType == true) {
-				this.paramSort.order_by = "created_at:desc";
+				this.params.order_by = "created_at:desc";
 				this.sortedBy = "";
 			} else {
 				this.sortedBy = sortedBy;
 				this.sortType = !this.sortType;
-				this.paramSort.order_by = await `${sortedBy}:${
+				this.params.order_by = await `${sortedBy}:${
 					this.sortType ? "asc" : "desc"
 				}`;
 			}
-			let order_by = await this.paramSort.order_by;
+			let order_by = await this.params.order_by;
 			let query = {
 				...this.$router.query,
 				order_by
@@ -376,7 +381,7 @@ export default {
 				this.loading = true;
 			}
 			this.$router.push({ query });
-			this.getPractices();
+			this.getPractices(this.params);
 		},
 		searchSubmit: debounce(function(page, order_by) {
 			let search = this.search;
@@ -435,24 +440,24 @@ export default {
 					return;
 			}
 		},
-		async pagechanged(e, paramsFromAppTable) {
-      // console.log('params from app table', paramsFromAppTable)
+		pagechanged(page) {
 			const query = {
 				...this.$route.query,
-				page: e || 1
+				page: page || 1
 			};
-			this.$router.push({ query });
-			await this.getPractices(this.paramSort);
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getPractices(this.params);
 		},
-		async limitchanged(limit) {
+		sorted(order_by) {
+			// go back to page 1
 			this.currentPage = 1;
-			this.itemsPerPage = await limit;
-			await this.getPractices(this.paramSort);
-		},
-		async sorted(order_by) {
-			this.currentPage = 1;
-			this.paramSort.order_by = await order_by;
-			await this.getPractices(this.paramSort);
+			let query = {
+				...this.$router.query,
+				order_by
+			};
+			this.params.order_by = order_by;
+			this.getPractices(this.params);
 		}
 	}
 };

@@ -56,7 +56,17 @@
             :label="'Suffix'"
             :placeholder="'Ph.D'"
           />
-          <div
+          <AppFilterSearch
+            v-model="toPostUser.practice_type_id"
+            :name="'practice_type_id'"
+            :label="'Practice Types'"
+            :placeholder="'Select...'"
+            :error="formError.find(item => item.field === 'practice_type_id')"
+            :items="practiceTypes"
+            @add="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
+            @remove="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
+          />
+          <!-- <div
             v-if="surgery && surgery.practice_count < 1"
             class="flex flex-col py-1 mt-2"
           >
@@ -96,7 +106,7 @@
                 {{toPostUser.practice_type_id[index].label}}
               </div>
             </div> 
-          </div>
+          </div> -->
 
           <template v-if="surgery">
             <AppInput 
@@ -238,7 +248,7 @@ export default {
       specificSurgery: [],
       specificPractice: [],
 
-      practiceTypes: "",
+      practiceTypes: [],
 
       multiple: "true",
 

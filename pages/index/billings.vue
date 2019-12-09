@@ -12,83 +12,122 @@
 			</div>
 		</div>
 
-		<!-- TABLE RESPONSIVE-->
-		<div v-if="practiceCount <= 0" class="text-white py-2">
-			No invoice available at the moment.
-		</div>
-		<!-- HEADER -->
-		<div
-			class="hidden md:flex items-center text-white justify-around font-semibold"
+		<!-- <AppTable
 			v-if="practiceCount > 0"
+			:total="practiceCount"
+			:items="practices"
+			:currentPage="currentPage"
+			:perPage="itemsPerPage"
+			:columns="columns"
+			:loading="loading"
+			:routerLink="`/practices`"
+			:orderBy="paramSort.order_by"
+			@pagechanged="pagechanged"
+			@sorted="sorted"
 		>
-			<div class="flex-1 align-middle px-2">
-				Practice / Surgery
-			</div>
-			<div class="flex-1 align-middle px-2 text-center">Expires</div>
-			<div class="flex-1 align-middle px-2 text-center">Status</div>
-			<div class="flex-1 align-middle px-2 text-center">Type</div>
-			<!-- <div class="flex-1 align-middle px-2 text-center">£ Amount</div> -->
-			<!-- <div class="flex-1 align-middle px-2 text-center">Status</div> -->
-		</div>
-		<!-- END HEADER -->
-		<!-- BODY -->
-		<nuxt-link
-			v-for="(practice, index) in practices"
-			:key="`billing-${index}`"
-			:to="`/billings/${practice.id}`"
-			class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-			draggable="false"
-		>
-			<div
-				class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none"
-			>
-				<strong class="block md:hidden text-xs uppercase"
-					>Practice / Surgery</strong
-				>
-				<span>{{ practice.surgery ? practice.surgery.name : null }}</span>
-			</div>
-
-			<div
-				class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
-			>
-				<strong class="block md:hidden text-xs uppercase">Expires</strong>
-				<span>{{
-					practice && practice.actived_until
-						? $moment(practice.actived_until).format("MMM D, YYYY | hh:mm A")
-						: "Unavailable"
-				}}</span>
-			</div>
-
-			<div
-				class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
-			>
-				<strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
-				<span
-					class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
+			<template v-slot:status_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full w-32 text-center"
 					:class="
 						`${
-							practice.status === 'Active'
+							slotProps.item.status === 'Active'
 								? 'bg-green-500'
 								: 'bg-gray-500 text-gray-700'
 						}`
 					"
-					>{{ practice.status }}</span
 				>
-			</div>
+					{{ slotProps.item.status }}
+				</div>
+			</template>
+			<template v-slot:type_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full text-center"
+					:class="typeStyle(slotProps.item.type)"
+				>
+					{{ slotProps.item.type }}
+				</div>
+			</template>
+		</AppTable> -->
 
+		<template>
+			<!-- TABLE RESPONSIVE-->
+			<!-- <div v-if="practiceCount <= 0" class="text-white py-2">
+				No invoice available at the moment.
+			</div> -->
+			<!-- HEADER -->
 			<div
-				class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
+				class="hidden md:flex items-center text-white justify-around font-semibold"
+				v-if="practiceCount > 0"
 			>
-				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-				<span
-					class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-					:class="typeStyle(practice.type)"
-					>{{ practice.type }}</span
-				>
+				<div class="flex-1 align-middle px-2">
+					Practice / Surgery
+				</div>
+				<div class="flex-1 align-middle px-2 text-center">Expires</div>
+				<div class="flex-1 align-middle px-2 text-center">Status</div>
+				<div class="flex-1 align-middle px-2 text-center">Type</div>
+				<!-- <div class="flex-1 align-middle px-2 text-center">£ Amount</div> -->
+				<!-- <div class="flex-1 align-middle px-2 text-center">Status</div> -->
 			</div>
-		</nuxt-link>
-		<!-- END BODY -->
-		<!-- END TABLE -->
+			<!-- END HEADER -->
+			<!-- BODY -->
+			<nuxt-link
+				v-for="(practice, index) in practices"
+				:key="`billing-${index}`"
+				:to="`/billings/${practice.id}`"
+				class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
+				draggable="false"
+			>
+				<div
+					class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none"
+				>
+					<strong class="block md:hidden text-xs uppercase"
+						>Practice / Surgery</strong
+					>
+					<span>{{ practice.surgery ? practice.surgery.name : null }}</span>
+				</div>
+
+				<div
+					class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
+				>
+					<strong class="block md:hidden text-xs uppercase">Expires</strong>
+					<span>{{
+						practice && practice.actived_until
+							? $moment(practice.actived_until).format("MMM D, YYYY | hh:mm A")
+							: "Unavailable"
+					}}</span>
+				</div>
+
+				<div
+					class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
+				>
+					<strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
+					<span
+						class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
+						:class="
+							`${
+								practice.status === 'Active'
+									? 'bg-green-500'
+									: 'bg-gray-500 text-gray-700'
+							}`
+						"
+						>{{ practice.status }}</span
+					>
+				</div>
+
+				<div
+					class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
+				>
+					<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
+					<span
+						class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
+						:class="typeStyle(practice.type)"
+						>{{ practice.type }}</span
+					>
+				</div>
+			</nuxt-link>
+			<!-- END BODY -->
+			<!-- END TABLE -->
+		</template>
 		<div
 			class="billing-shield"
 			v-if="
@@ -102,7 +141,11 @@
 </template>
 
 <script>
+import AppTable from "@/components/Base/AppTable";
 export default {
+	components: {
+		AppTable
+	},
 	data() {
 		return {
 			// toBeInvoicedCount: "",
@@ -111,8 +154,45 @@ export default {
 			// practiceInvoices: [],
 			// invoiced: true
 			practiceCount: 0,
-			practices: []
+			practices: [],
+			// for app table
+			itemsPerPage: 10,
+			currentPage: 1,
+			paramSort: {
+				orderBy: []
+			},
+			loading: false,
+			columns: [
+				{
+					name: "Practice/Surgery",
+					dataIndex: "surgery.name"
+				},
+				{
+					name: "Expires",
+					dataIndex: "actived_until",
+					class: "text-center localDate"
+				},
+				{
+					name: "Status",
+					slot: true,
+					dataIndex: "status",
+					class: "text-center",
+					slotName: "status_slot"
+				},
+				{
+					name: "Type",
+					slot: true,
+					dataIndex: "type",
+					class: "text-center",
+					slotName: "type_slot"
+				}
+			]
 		};
+	},
+	computed: {
+		itemCount() {
+			return this.practiceCount;
+		}
 	},
 	async asyncData({ app, route, store }) {
 		try {
@@ -125,7 +205,7 @@ export default {
 				practices
 			};
 		} catch (err) {
-			error({ statusCode: 404 });
+			// error({ statusCode: 404 });
 			console.log("Get practices error!", err);
 		}
 	},
@@ -175,6 +255,8 @@ export default {
 			this.$router.push({ query });
 		},
 
+		getBilling() {},
+
 		sortData: function(toSortBy) {
 			if ((toSortBy = this.sortBy)) {
 				this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
@@ -185,13 +267,13 @@ export default {
 		typeStyle(status) {
 			switch (status) {
 				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2";
+					return "bg-red-500 text-white lg:px-10 sm:px-2";
 					break;
 				case "Spoke":
-					return "bg-blue-500 text-white lg:px-8 sm:px-2";
+					return "bg-blue-500 text-white lg:px-10 sm:px-2";
 					break;
 				case "Stand Alone":
-					return "bg-indigo-600 text-white lg:px-8 sm:px-2";
+					return "bg-indigo-600 text-white lg:px-10 sm:px-2";
 					break;
 				default:
 					return;
@@ -201,13 +283,13 @@ export default {
 		statusStyle(status) {
 			switch (status) {
 				case "Active":
-					return "bg-green text-white lg:px-8 sm:px-2";
+					return "bg-green text-white lg:px-10 sm:px-2";
 					break;
 				case "Inactive":
-					return "bg-yellow text-black lg:px-8 sm:px-2";
+					return "bg-yellow text-black lg:px-10 sm:px-2";
 					break;
 				case "Deactivated":
-					return "bg-gray text-black lg:px-8 sm:px-2";
+					return "bg-gray text-black lg:px-10 sm:px-2";
 					break;
 				case "Suspended":
 					return "bg-red text-white lg:px-8 sm:px-2";
@@ -245,6 +327,16 @@ export default {
 				default:
 					return;
 			}
+		},
+		pagechanged(e) {
+			return;
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
+
+			this.$router.push({ query });
+			// this.getPractices(this.paramSort);
 		}
 	}
 };

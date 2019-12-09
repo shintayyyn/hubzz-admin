@@ -23,9 +23,7 @@
 						/>
 					</button>
 				</div>
-				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
 			</div>
-			<!-- FILTER SELECTS -->
 			<div class="flex w-full justify-end">
 				<div
 					class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end py-2 pr-2 md:p-2 md:py-0"
@@ -63,7 +61,6 @@
 					</select>
 				</div>
 			</div>
-			<!-- FILTER SELECTS END HERE -->
 		</div>
 
 		<AppTable
@@ -71,11 +68,11 @@
 			:total="itemCount"
 			:items="locumUsers"
 			:currentPage="currentPage"
-			:perPage="itemsPerPage"
+			:perPage="params.limit"
 			:columns="columns"
 			:loading="loadingLocums"
 			:routerLink="`/locums`"
-			:orderBy="paramSort.order_by"
+			:orderBy="params.order_by"
 			@pagechanged="pagechanged"
 			@limitchanged="limitchanged"
 			@sorted="sorted"
@@ -123,13 +120,14 @@ export default {
 	},
 	data() {
 		return {
-			itemsPerPage: 10,
 			currentPage: 1,
 
 			filterCompliances: "",
 			search: "",
-			paramSort: {
-				order_by: []
+			params: {
+				limit: 10,
+				offset: 0,
+				order_by: ["created_at:desc"]
 			},
 			sort: "",
 			sortedBy: "",
@@ -188,7 +186,7 @@ export default {
 			let {
 				page = 1,
 				search = "",
-				order_by = "",
+				order_by = [],
 				compliance_status = null
 			} = route.query;
 
@@ -253,57 +251,10 @@ export default {
 			return this.$store.state.locums.itemCount;
 		},
 		totalPages() {
-			return Math.ceil(this.itemCount / this.itemsPerPage);
+			return Math.ceil(this.itemCount / this.params.limit);
 		},
 		total() {
 			return this.locumUsers.length;
-		},
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.totalPages) {
-					return true;
-				}
-
-				if (page === this.currentPage) {
-					return true;
-				}
-
-				if (page === this.currentPage + 1) {
-					return true;
-				}
-
-				if (page === this.currentPage - 1) {
-					return true;
-				}
-
-				if (this.currentPage === 1 && page < 5) {
-					return true;
-				}
-
-				if (
-					this.currentPage === this.totalPages &&
-					page > this.totalPages - 4
-				) {
-					return true;
-				}
-
-				if (this.currentPage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.currentPage === this.totalPages - 1 &&
-					page === this.totalPages - 3
-				) {
-					return true;
-				}
-
-				return false;
-			};
 		}
 	},
 	watch: {
@@ -336,13 +287,13 @@ export default {
 				params.compliance_status = this.filterCompliances;
 			}
 
-			this.paramSort.compliance_status = this.filterCompliances;
+			this.params.compliance_status = this.filterCompliances;
 
-			this.getLocums(this.paramSort);
+			this.getLocums(this.params);
 		},
 		search(value) {
 			this.searchSubmit();
-			this.getLocums(this.paramSort);
+			this.getLocums(this.params);
 		},
 		sort(value) {
 			// for mobile responsive filter
@@ -391,25 +342,25 @@ export default {
 		},
 		getLocums(params) {
 			this.$store.dispatch("locums/fetchLocums", {
-				limit: this.itemsPerPage,
+				limit: this.params.limit,
 				search: params.search,
 				compliance_status: params.compliance_status,
 				order_by: params.order_by,
-				offset: this.getQuery()
+				offset: params.offset
 			});
 		},
 		async sortBy(sortedBy, page, search, compliance_status) {
 			if (this.sortedBy == sortedBy && this.sortType == true) {
-				this.paramSort.order_by = "created_at:desc";
+				this.params.order_by = "created_at:desc";
 				this.sortedBy = "";
 			} else {
 				this.sortedBy = sortedBy;
 				this.sortType = !this.sortType;
-				this.paramSort.order_by = await `${sortedBy}:${
+				this.params.order_by = await `${sortedBy}:${
 					this.sortType ? "asc" : "desc"
 				}`;
 			}
-			let order_by = await this.paramSort.order_by;
+			let order_by = await this.params.order_by;
 			// console.log(order_by);
 			let query = {
 				...this.$router.query,
@@ -444,9 +395,9 @@ export default {
 			}
 			this.$router.push({ query });
 
-			this.paramSort.search = search;
-			this.paramSort.compliance_status = compliance_status;
-			this.getLocums(this.paramSort);
+			this.params.search = search;
+			this.params.compliance_status = compliance_status;
+			this.getLocums(this.params);
 		},
 
 		searchSubmit: debounce(function(page, order_by, compliance_status) {
@@ -548,23 +499,24 @@ export default {
 		usersDeletedHandler(userId) {
 			console.log("usersDeletedHandler", userId);
 		},
-		async pagechanged(e) {
+		pagechanged(page) {
 			const query = {
 				...this.$route.query,
-				page: e || 1
+				page: page || 1
 			};
-			this.$router.push({ query });
-			await this.getLocums(this.paramSort);
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getLocums(this.params);
 		},
 		async limitchanged(limit) {
 			this.current_page = 1;
-			this.itemsPerPage = limit;
-			await this.getLocums(this.paramSort);
+			this.params.limit = limit;
+			await this.getLocums(this.params);
 		},
 		async sorted(order_by) {
 			this.current_page = 1;
-			this.paramSort.order_by = order_by;
-			await this.getLocums(this.paramSort);
+			this.params.order_by = order_by;
+			this.getLocums(this.params);
 		}
 	}
 };

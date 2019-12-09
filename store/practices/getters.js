@@ -5,8 +5,7 @@ export default {
 			users.push({
 				...user,
 				practice_name: user.surgery.name,
-				practice_code: user.surgery.code,
-				practice_type: user.type
+				practice_code: user.surgery.code
 			});
 		});
 		return users;
