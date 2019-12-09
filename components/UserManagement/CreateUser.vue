@@ -486,7 +486,7 @@ export default {
               this.$store.commit("SET_NOTIFICATION", {
                 enabled: true,
                 status: "danger",
-                text: "Something Went Wrong!"
+                text: err.response.data.message
               });
             });
           await this.getPractices();
@@ -511,7 +511,7 @@ export default {
               this.$store.commit("SET_NOTIFICATION", {
                 enabled: true,
                 status: "danger",
-                text: "Something Went Wrong!"
+                text: err.response.data.message
               });
             });
           await this.getPracticeUsers();
@@ -538,7 +538,7 @@ export default {
               this.$store.commit("SET_NOTIFICATION", {
                 enabled: true,
                 status: "danger",
-                text: "Something Went Wrong!"
+                text: err.response.data.message
               });
             });
           await this.getAdminUsers();
@@ -547,7 +547,7 @@ export default {
         store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
-          text: "Something went wrong!"
+          text: err.response.data.message
         });
         console.log("index put locum detail compliance documents error.", err);
       }

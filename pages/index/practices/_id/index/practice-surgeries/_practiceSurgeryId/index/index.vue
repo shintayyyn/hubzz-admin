@@ -2,10 +2,10 @@
   <div class="max-w-xl bg-waterloo rounded-lg text-white my-4 mx-1">
     <div class="p-4 md:p-8">
       <div class="flex flex-row items-center mb-4">
-        <div class="leading-loose font-bold text-md sm:text-lg">{{practice_surgery.surgery.name}}</div>
+        <div class="leading-loose font-bold text-md sm:text-lg">{{practice_surgery.child_practice.surgery.name}}</div>
         <div
           class="mx-2 text-sm sm:text-sm p-2 text-white-700 font-bold bg-blue-400 rounded-lg"
-        >{{practice_surgery.surgery.code}}</div>
+        >{{practice_surgery.child_practice.surgery.code}}</div>
       </div>
 
       <div class="flex flex-col">
@@ -56,9 +56,6 @@
                   <p class="">{{practice_surgery.max_ooh_rate_limit ?'£ '+ practice_surgery.max_ooh_rate_limit : 'N/A'}}</p>
                 </div>
               </div>
-              
-             
-              
               
             </div>
             <div class="flex items-center pb-2">
@@ -241,7 +238,7 @@ export default {
         practice_surgery
       }
     }catch(err){
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text: err.response.data.message})
       console.log('get practice/practice surgery error', err)
     }
   },

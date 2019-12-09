@@ -12,65 +12,55 @@
 				Hub Requested Termination for this Spoke
 			</div>
 		</div>
+
 		<div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Date Requested:</span>
 				<div>
-					{{
-						$moment(
-							childSurgery ? childSurgery.termination_requested_at : null
-						).format("MMM D, YYYY | HH:MM:ss")
-					}}
+					{{$moment(childSurgery.termination_requested_at).format("MMM D, YYYY | HH:MM:ss")}}
 				</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Practice Name:</span>
-				<div>{{ childSurgery ? childSurgery.surgery.name : null }}</div>
+				<div>{{ childSurgery.child_practice.surgery.name }}</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Practice Code:</span>
-				<div>{{ childSurgery ? childSurgery.surgery.code : null }}</div>
+				<div>{{ childSurgery.child_practice.surgery.code }}</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Practice ID:</span>
 				<div>
-					{{ childSurgery ? childSurgery.surgery.practice.id : null }}
+					{{ childSurgery.child_practice.id }}
 				</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Phone Number:</span>
-				{{ childSurgery ? childSurgery.surgery.practice.phone_number : null }}
+				{{ childSurgery.child_practice.phone_number }}
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Report to:</span>
-				{{ childSurgery ? childSurgery.surgery.practice.report_to : null }}
+				{{ childSurgery.child_practice.report_to }}
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Email:</span>
-				{{ childSurgery ? childSurgery.surgery.practice.email : null }}
+				{{ childSurgery.child_practice.email }}
 			</div>
 			<div class="my-2">
 				<span class="font-bold">Note from Practice Hub:</span>
 				<div class="md:m-2 p-2 bg-charade rounded-lg overflow-y-auto">
-					{{ childSurgery ? childSurgery.note : null }}
+					{{ childSurgery.note }}
 				</div>
 			</div>
 		</div>
-		<div
-			class="flex flex-col md:flex-row justify-center cursor-pointer mb-4 md:mb-0"
-		>
+
+		<div class="flex flex-col md:flex-row justify-center cursor-pointer mb-4 md:mb-0">
 			<div
 				class="flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
 				@click="toDeleteSurgery(childSurgery.id)"
 			>
-				Delete Entire Surgery
+				Remove Spoke
 			</div>
-			<!-- <div
-				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-yellow-700 bg-yellow-600"
-				@click="toDeleteParent(childSurgery.practice_id)"
-			>
-				Terminate from Parent
-			</div> -->
 			<div
 				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
 				@click="toRejectRequest(childSurgery.id)"
@@ -91,7 +81,9 @@ export default {
 		};
 	},
 
-	created() {},
+  created() {
+    console.log('childSurgery', this.childSurgery)
+  },
 
 	methods: {
 		async toDeleteSurgery() {
@@ -103,7 +95,7 @@ export default {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
-						text: "Spoke is terminated and Invitation is Successfully Deleted"
+						text: "Spoke is Terminated Successfully"
 					});
 					this.getPracticeSpokes(this.practice.id);
 					this.$emit("close");

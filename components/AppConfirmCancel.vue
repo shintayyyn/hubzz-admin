@@ -48,7 +48,7 @@ export default {
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "danger",
-              text: "Something Went Wrong!"
+              text: err.response.data.message
             });
           });
       }
