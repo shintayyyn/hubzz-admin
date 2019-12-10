@@ -201,21 +201,20 @@
                 class="-mb-1 ml-2"
               ></svgicon>
             </span>
-            <br/>
             <div class="flex items-center">
-              <select
-                class="outline-none border-2 border-transparent text-sm text-black w-full mr-2"
-                id="grid-state"
+              <AppInput
+                class="w-full mr-2"
                 v-model="selectedStatus"
-              >
-                <option>Active</option>
-                <option>Inactive</option>
-                <option>Deactivated</option>
-              </select>
-              <button
-                class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow"
-                @click.prevent="changeLocumUserStatus(user.id,selectedStatus)"
-              >Save</button>
+                :type="'select'"
+                :name="'status'"
+                :placeholder="'Select...'"
+                :items="[
+                  { label: 'Active', value: 'Active' },
+                  { label: 'Inactive', value: 'Inactive' },
+                  { label: 'Deactivated', value: 'Deactivated' }
+                ]"
+              />
+              <AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)"/>
             </div>
           </div>
         </div>
@@ -225,9 +224,14 @@
 </template>
 
 <script>
+import AppInput from '@/components/Base/AppInput'
+import AppButton from '@/components/Base/AppButton'
 export default {
   props: ["user"],
-  components: {},
+  components: {
+    AppButton,
+    AppInput
+  },
   data() {
     return {
       disabled: "true",

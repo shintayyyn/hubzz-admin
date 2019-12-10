@@ -185,8 +185,8 @@ export default {
 		},
 		async create() {
 			this.formError = [];
-      // this.validate();
-      console.log('form', this.form)
+			// this.validate();
+			console.log("form", this.form);
 			this.Validate(this.form, ["permission_id"]);
 			console.log(this.formError, this.form);
 			if (!this.formError.length) {
@@ -197,8 +197,8 @@ export default {
 							ids.push(permission.id);
 						}
 					});
-        });
-        console.log('ids', ids)
+				});
+				console.log("ids", ids);
 				this.form.permission_id = ids;
 				this.$axios.$post(`/api/v1/admin/admin-roles`, this.form).then(res => {
 					this.$emit("addRole", res.data.role),

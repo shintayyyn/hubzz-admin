@@ -15,11 +15,11 @@
         ].includes(type)
       "
     >
-      <div class="flex flex-col py-2 mb-3 md:mb-6">
+      <div class="flex flex-col py-2">
         <div
           class="relative flex flex-wrap justify-between leading-none"
         >
-          <label :for="name" class="text-xs sm:text-sm py-1 pr-2">{{ label }}<span v-if="multiple" class="text-xs"> (hold ctrl + click to choose)</span></label>
+          <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }}</label>
           
           <div class="flex items-center" v-if="info || error">
             <div
@@ -43,7 +43,7 @@
         <!-- multi-checkbox -->
         <template v-if="type === 'multi-checkbox'">
           <div
-            class="flex flex-row justify-start items-center mt-1"
+            class="flex flex-row justify-start items-center"
             v-for="(item, index) in lists"
             :key="index"
           >
@@ -65,7 +65,7 @@
         </template>
 
         <template v-else>
-          <div class="flex flex-row justify-start mt-1">
+          <div class="flex flex-row justify-start">
             <template
               v-if="
                 ['text', 'time', 'email', 'number'].includes(type)
@@ -265,7 +265,7 @@
             }}
           </div>
         </div>
-        <div class="flex flex-row justify-start mt-1">
+        <div class="flex flex-row justify-start">
           <input
             :value="value"
             type="email"
@@ -305,13 +305,13 @@
           </div>
         </div>
         <div
-          class="relative flex flex-row justify-start items-center border-2 mb-2 focus:border-yellow-400 rounded-lg"
+          class="w-full relative flex flex-row justify-start items-center mb-2 focus:border-yellow-400 rounded-lg bg-waterloo"
         >
           <input
             :value="value"
             :type="type"
             :placeholder="placeholder"
-            class="focus:outline-none pl-4 pr-6 py-4 font-bold text-xs sm:text-sm w-full rounded-lg"
+            class="appearance-none w-full rounded-lg border-2 border-transparent text-sm text-white p-2 bg-transparent focus:outline-none"
             :class="error ? 'border-red-600' : ''"
             @input="$emit('input', $event.target.value)"
             :style="inStyle"
@@ -319,14 +319,7 @@
             @blur="$emit('blur')"
             :checked="value"
           />
-          <span class="absolute right-0 px-2 py-2 bg-white">
-            <svgicon
-              name="search"
-              height="21"
-              width="21"
-              class="text-gray-500 fill-current"
-            />
-          </span>
+          <span v-if="value" class="absolute right-0 h-full p-2 cursor-pointer hover:text-sunglow bg-waterloo rounded-r-lg" @click="(value='')">x</span>
         </div>
       </div>
     </template>

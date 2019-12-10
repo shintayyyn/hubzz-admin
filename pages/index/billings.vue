@@ -3,25 +3,31 @@
 		<div class="text-2xl md:text-4xl text-white">Billing</div>
 		<div class="text-sm mb-4 text-white">Work in progress.</div>
 		<div class="flex">
-			<div class="flex">
+			<AppButton
+				:label="'Add Invoice'"
+				:nuxtLink="'/billings/addinvoice'"
+				class="text-sm"
+			/>
+			<!-- <div class="flex">
 				<nuxt-link
 					to="/billings/addinvoice"
 					class="inline-flex no-underline py-2 px-4 my-1 md:mb-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
 					>Add Invoice</nuxt-link
 				>
-			</div>
+			</div> -->
 		</div>
 
-		<!-- <AppTable
+		<AppTable
 			v-if="practiceCount > 0"
 			:total="practiceCount"
-			:items="practices"
+			:items="getAllPractices"
 			:currentPage="currentPage"
-			:perPage="itemsPerPage"
+			:perPage="params.limit"
 			:columns="columns"
-			:loading="loading"
-			:routerLink="`/practices`"
-			:orderBy="paramSort.order_by"
+			:loading="loadingPractices"
+			:routerLink="`/billings`"
+			:orderBy="params.order_by"
+			:customWidth="200"
 			@pagechanged="pagechanged"
 			@sorted="sorted"
 		>
@@ -41,93 +47,14 @@
 			</template>
 			<template v-slot:type_slot="slotProps">
 				<div
-					class="px-4 py-1 rounded-full text-center"
+					class="rounded-full text-center px-4 py-1 w-32"
 					:class="typeStyle(slotProps.item.type)"
 				>
 					{{ slotProps.item.type }}
 				</div>
 			</template>
-		</AppTable> -->
+		</AppTable>
 
-		<template>
-			<!-- TABLE RESPONSIVE-->
-			<!-- <div v-if="practiceCount <= 0" class="text-white py-2">
-				No invoice available at the moment.
-			</div> -->
-			<!-- HEADER -->
-			<div
-				class="hidden md:flex items-center text-white justify-around font-semibold"
-				v-if="practiceCount > 0"
-			>
-				<div class="flex-1 align-middle px-2">
-					Practice / Surgery
-				</div>
-				<div class="flex-1 align-middle px-2 text-center">Expires</div>
-				<div class="flex-1 align-middle px-2 text-center">Status</div>
-				<div class="flex-1 align-middle px-2 text-center">Type</div>
-				<!-- <div class="flex-1 align-middle px-2 text-center">£ Amount</div> -->
-				<!-- <div class="flex-1 align-middle px-2 text-center">Status</div> -->
-			</div>
-			<!-- END HEADER -->
-			<!-- BODY -->
-			<nuxt-link
-				v-for="(practice, index) in practices"
-				:key="`billing-${index}`"
-				:to="`/billings/${practice.id}`"
-				class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-				draggable="false"
-			>
-				<div
-					class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Practice / Surgery</strong
-					>
-					<span>{{ practice.surgery ? practice.surgery.name : null }}</span>
-				</div>
-
-				<div
-					class="flex flex-col md:justify-center md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase">Expires</strong>
-					<span>{{
-						practice && practice.actived_until
-							? $moment(practice.actived_until).format("MMM D, YYYY | hh:mm A")
-							: "Unavailable"
-					}}</span>
-				</div>
-
-				<div
-					class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase pb-1">Status</strong>
-					<span
-						class="inline-flex justify-center no-underline px-8 py-2 text-sm text-white rounded-full shadow w-32 min-w-0"
-						:class="
-							`${
-								practice.status === 'Active'
-									? 'bg-green-500'
-									: 'bg-gray-500 text-gray-700'
-							}`
-						"
-						>{{ practice.status }}</span
-					>
-				</div>
-
-				<div
-					class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-					<span
-						class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-						:class="typeStyle(practice.type)"
-						>{{ practice.type }}</span
-					>
-				</div>
-			</nuxt-link>
-			<!-- END BODY -->
-			<!-- END TABLE -->
-		</template>
 		<div
 			class="billing-shield"
 			v-if="
@@ -142,9 +69,11 @@
 
 <script>
 import AppTable from "@/components/Base/AppTable";
+import AppButton from "@/components/Base/AppButton";
 export default {
 	components: {
-		AppTable
+		AppTable,
+		AppButton
 	},
 	data() {
 		return {
@@ -156,50 +85,90 @@ export default {
 			practiceCount: 0,
 			practices: [],
 			// for app table
-			itemsPerPage: 10,
 			currentPage: 1,
-			paramSort: {
-				orderBy: []
+
+			params: {
+				limit: 10,
+				offset: 0,
+				order_by: ["created_at:desc"]
 			},
+
 			loading: false,
 			columns: [
 				{
 					name: "Practice/Surgery",
-					dataIndex: "surgery.name"
+					dataIndex: "practice_name",
+					sortable: true
 				},
 				{
 					name: "Expires",
 					dataIndex: "actived_until",
-					class: "text-center localDate"
+					class: "text-center localDate",
+					sortable: true
 				},
 				{
 					name: "Status",
 					slot: true,
 					dataIndex: "status",
 					class: "text-center",
-					slotName: "status_slot"
+					slotName: "status_slot",
+					sortable: true
 				},
 				{
 					name: "Type",
 					slot: true,
 					dataIndex: "type",
 					class: "text-center",
-					slotName: "type_slot"
+					slotName: "type_slot",
+					sortable: true
 				}
 			]
 		};
 	},
 	computed: {
+		loadingPractices() {
+			return this.$store.state.practices.loading_practices;
+		},
+		getAllPractices() {
+			return this.$store.getters["practices/getAllPractices"];
+		},
 		itemCount() {
-			return this.practiceCount;
+			return this.$store.state.practices.itemCount;
+		},
+		pageCount() {
+			return Math.ceil(this.itemCount / this.params.limit);
+		},
+		totalPages() {
+			return Math.ceil(this.itemCount / this.params.limit);
+		},
+		total() {
+			return this.getAllPractices.length;
 		}
 	},
 	async asyncData({ app, route, store }) {
 		try {
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`);
+			await store.commit("practices/TOGGLE_LOADING", true);
+			let { page = 1, search = "", order_by = [] } = route.query;
+			page = parseInt(page);
+			const createdRoute = route.query;
+			const limit = 10;
+			const offset = page * limit - limit;
+			order_by =
+				createdRoute && createdRoute.order_by
+					? createdRoute.order_by
+					: "created_at:desc";
+			const params = { limit, offset, order_by };
+			console.log(params);
+			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
+				params
+			});
 			const practiceCount = response.data.count;
-			response = await app.$axios.$get(`/api/v1/admin/practices`);
+			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount);
+
+			response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
 			const practices = response.data.practices;
+			await store.commit("practices/SET_PRACTICES", practices);
+			await store.commit("practices/TOGGLE_LOADING", false);
 			return {
 				practiceCount,
 				practices
@@ -255,7 +224,14 @@ export default {
 			this.$router.push({ query });
 		},
 
-		getBilling() {},
+		getBilling(params) {
+			this.$store.dispatch("practices/fetchPractices", {
+				limit: this.params.limit,
+				search: this.search,
+				order_by: params.order_by,
+				offset: params.offset
+			});
+		},
 
 		sortData: function(toSortBy) {
 			if ((toSortBy = this.sortBy)) {
@@ -267,13 +243,13 @@ export default {
 		typeStyle(status) {
 			switch (status) {
 				case "Hub":
-					return "bg-red-500 text-white lg:px-10 sm:px-2";
+					return "bg-red-500 text-white ";
 					break;
 				case "Spoke":
-					return "bg-blue-500 text-white lg:px-10 sm:px-2";
+					return "bg-blue-500 text-white";
 					break;
 				case "Stand Alone":
-					return "bg-indigo-600 text-white lg:px-10 sm:px-2";
+					return "bg-indigo-600 text-white";
 					break;
 				default:
 					return;
@@ -328,15 +304,24 @@ export default {
 					return;
 			}
 		},
-		pagechanged(e) {
-			return;
+		pagechanged(page) {
 			const query = {
 				...this.$route.query,
-				page: e || 1
+				page: page || 1
 			};
-
-			this.$router.push({ query });
-			// this.getPractices(this.paramSort);
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getBilling(this.params);
+		},
+		sorted(order_by) {
+			// go back to page 1
+			this.currentPage = 1;
+			let query = {
+				...this.$router.query,
+				order_by
+			};
+			this.params.order_by = order_by;
+			this.getBilling(this.params);
 		}
 	}
 };

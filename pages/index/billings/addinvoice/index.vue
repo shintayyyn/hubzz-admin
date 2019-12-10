@@ -12,35 +12,14 @@
 				</nuxt-link>
 			</div>
 			<!-- HEADER -->
-			<div class="flex flex-wrap overflow-hidden md:pl-3 mb-1 pb-1">
-				<div class="px-1">
-					<button
-						@click="exportToPdf()"
-						class="inline-flex items-center py-2 px-4 my-1 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow focus:outline-none"
-					>
-						<svgicon
-							name="save-icon"
-							width="21"
-							height="21"
-							color="transparent black"
-						></svgicon>
-						<span class="pl-1">Save Changes</span>
-					</button>
-				</div>
-
-				<div class="px-1">
-					<button
-						class="inline-flex items-center py-2 px-4 my-1 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
-					>
-						<svgicon
-							name="email"
-							width="21"
-							height="21"
-							color="black"
-						></svgicon>
-						<span class="pl-1">Save and Archive as Final</span>
-					</button>
-				</div>
+			<div class="flex flex-wrap overflow-hidden md:pl-3 mb-1 pb-1 text-sm">
+				<AppButton
+					class="mr-2"
+					:label="'Save Changes'"
+					:icon="'save-icon'"
+					@click="exportToPdf()"
+				/>
+				<AppButton :label="'Save and Archive as Final'" :icon="'email'" />
 			</div>
 			<!-- HEADER ENDS HERE -->
 
@@ -229,9 +208,11 @@
 
 <script>
 import AppLoading from "@/components/Base/AppLoading";
+import AppButton from "@/components/Base/AppButton";
 export default {
 	components: {
-		AppLoading
+		AppLoading,
+		AppButton
 	},
 	data() {
 		return {

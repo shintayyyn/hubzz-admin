@@ -27,34 +27,37 @@
 				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button> -->
 			</div>
 			<div>
-				<button
+				<AppButton
 					v-if="
 						authAdminPermissions.includes('Add Practice') &&
 							authAdminPermissions.includes('Add Practice User')
 					"
+					:label="'Add Practice'"
 					@click="show()"
-					class="inline-flex no-underline py-2 px-4 md:my-2 bg-sunglow text-sm font-semibold text-black rounded-lg shadow md:float-right"
-				>
-					Add Practice
-				</button>
+				/>
 			</div>
-			<div
-				class="w-1/2 relative md:hidden flex flex-col justify-end md:items-end pb-2"
-			>
-				<label class="text-sm text-white md:pr-2">Sort by</label>
-				<select
-					v-model="sort"
-					class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-				>
-					<option value selected>All</option>
-					<option>Practice Name</option>
-					<option>Practice Code</option>
-					<option>Created</option>
-					<option>Expires</option>
-					<option>Status</option>
-					<option>Type</option>
-				</select>
-			</div>
+			<AppInput
+				class="w-full sm:w-1/2 mr-2 text-white md:hidden"
+				v-model="sort"
+				:type="'select'"
+				:name="'status'"
+				:items="[
+					{ label: 'All', value: null },
+					{ label: 'Practice Name', value: 'practice_name' },
+					{ label: 'Practice Code', value: 'practice_code' },
+					{ label: 'Created', value: 'created_at' },
+					{ label: 'Expires', value: 'actived_until' },
+					{ label: 'Status', value: 'status' },
+					{ label: 'Type', value: 'type' }
+				]"
+			/>
+			<!-- <AppInput
+				v-model="search"
+				:type="'search'"
+				:name="'search_text'"
+				:placeholder="'Search Messages'"
+				@keydown.enter="search"
+			/> -->
 		</div>
 		<transition name="fade">
 			<AppTable
@@ -86,7 +89,7 @@
 				</template>
 				<template v-slot:type_slot="slotProps">
 					<div
-						class="rounded-full text-center"
+						class="px-4 py-1 rounded-full w-32 text-center"
 						:class="typeStyle(slotProps.item.type)"
 					>
 						{{ slotProps.item.type }}
@@ -128,30 +131,28 @@ import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery";
 import AppLoading from "@/components/Base/AppLoading";
 import AppPagination from "@/components/Base/AppPagination";
 import AppTable from "@/components/Base/AppTable";
+import AppButton from "@/components/Base/AppButton";
+import AppInput from "@/components/Base/AppInput";
 export default {
 	components: {
 		AddPracticeSurgery,
 		AppLoading,
 		AppPagination,
-		AppTable
+		AppTable,
+		AppButton,
+		AppInput
 	},
 	data() {
 		return {
 			loading: false,
-			// itemCount: 0,
 			currentPage: 1,
-			// practices: [],
 
 			search: "",
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: []
+				order_by: ["created_at:desc"]
 			},
-			// params: {
-			// 	order_by: [],
-			// 	offset: 0
-			// },
 			sort: "",
 			sortedBy: "",
 			sortType: "",
@@ -287,31 +288,14 @@ export default {
 
 	watch: {
 		$route(to, from) {
-			// this.currentPage = parseInt(to.query.page);
 			this.getPractices(this.params);
 		},
 		search(value) {
 			this.searchSubmit();
 		},
 		sort(value) {
-			if (value === "Practice Name") {
-				this.sortBy("practice_name", this.currentPage, this.search);
-			}
-			if (value === "Practice Code") {
-				this.sortBy("practice_code", this.currentPage, this.search);
-			}
-			if (value === "Created") {
-				this.sortBy("created_at", this.currentPage, this.search);
-			}
-			if (value === "Expires") {
-				this.sortBy("actived_until", this.currentPage, this.search);
-			}
-			if (value === "Status") {
-				this.sortBy("status", this.currentPage, this.search);
-			}
-			if (value === "Type") {
-				this.sortBy("type", this.currentPage, this.search);
-			}
+			this.params.order_by = value;
+			this.sortBy(value, this.currentPage, this.search);
 		}
 	},
 
@@ -319,16 +303,6 @@ export default {
 		show() {
 			this.modal = true;
 		},
-
-		// getQuery() {
-		// 	const query = {
-		// 		...this.$route.query
-		// 	};
-		// 	const offset =
-		// 		parseInt(query.page) * this.params.limit - this.params.limit;
-
-		// 	return offset;
-		// },
 
 		getPractices(params) {
 			this.$store.dispatch("practices/fetchPractices", {
@@ -340,51 +314,7 @@ export default {
 		},
 
 		async sortBy(sortedBy, page, search) {
-			if (this.sortedBy == sortedBy && this.sortType == true) {
-				this.params.order_by = "created_at:desc";
-				this.sortedBy = "";
-			} else {
-				this.sortedBy = sortedBy;
-				this.sortType = !this.sortType;
-				this.params.order_by = await `${sortedBy}:${
-					this.sortType ? "asc" : "desc"
-				}`;
-			}
-			let order_by = await this.params.order_by;
-			let query = {
-				...this.$router.query,
-				order_by
-			};
-			if (page === 1) {
-				delete query.page;
-			}
-			if (page) {
-				query = {
-					...this.$router.query,
-					page,
-					order_by
-				};
-			}
-			if (search) {
-				query = {
-					...this.$router.query,
-					search,
-					order_by
-				};
-			}
-			if (page & search) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by
-				};
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-			this.$router.push({ query });
+			this.params.order_by = [sortedBy];
 			this.getPractices(this.params);
 		},
 		searchSubmit: debounce(function(page, order_by) {

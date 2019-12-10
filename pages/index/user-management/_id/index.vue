@@ -9,8 +9,8 @@
           <div class="my-1 px-1 overflow-hidden">
             <button
               class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
-              :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
-              @click="tab1=true,tab2=false"
+              :class="tab1 ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
+              @click="tab1=true,tab2=false,tab3=false"
             >
               <strong>User Info</strong>
             </button>
@@ -18,10 +18,19 @@
           <div v-if="authAdminPermissions.includes('Edit Admin Account')" class="my-1 px-1 overflow-hidden">
             <button
               class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
-              :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
-              @click="tab2=true,tab1=false"
+              :class="tab2 ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
+              @click="tab2=true,tab1=false,tab3=false"
             >
               <strong>Edit Info</strong>
+            </button>
+          </div>
+          <div v-if="authAdminPermissions.includes('Edit Admin Account')" class="my-1 px-1 overflow-hidden">
+            <button
+              class="rounded-lg py-3 px-4 text-black text-sm transition-hover"
+              :class="tab3 ? 'bg-sunglow hover:bg-yellow-500' : 'text-white'"
+              @click="tab2=false,tab1=false,tab3=true"
+            >
+              <strong>Change Password</strong>
             </button>
           </div>
         </div>
@@ -47,93 +56,53 @@
       </div>
        <!-- tab 2 EDIT -->
       <div v-if="tab2 && authAdminPermissions.includes('Edit Admin Account')"
-        class="flex text-white bg-waterloo my-2 p-2 shadow rounded-lg text-sm max-w-lg transition-hover">
-        <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
-          <div class="mb-3">
-            <div>E-Mail Address </div>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="errorMessage('email') ? 'border-red-800' :'focus:border-sunglow'"
-              type="text"
-              placeholder="example@example.com"
-              v-model='toPutAdminUser.email'
-              aria-label="Email"
-              @blur="CheckEmptyField(toPutAdminUser.email, 'email')"
-            >
-            <span v-if="errorMessage('email')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('email')}}</span>
-          </div>
-          <div class="mb-3">
-            <label class="">Title</label>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
-              type="text"
-              v-model="toPutAdminUser.title"
-              placeholder="Mr. / Mrs. / Dr. / etc....."
-              aria-label="Title"
-            >
-          </div>
-          <div class="mb-3">
-            <div class="">First Name</div>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="errorMessage('first_name') ? 'border-red-800' :'focus:border-sunglow'"
-              type="text"
-              v-model="toPutAdminUser.first_name"
-              placeholder="Jane"
-              aria-label="First Name"
-              @blur="CheckEmptyField(toPutAdminUser.first_name, 'first_name')"
-            >
-            <span v-if="errorMessage('first_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('first_name')}}</span>
-          </div>
-          <div class="mb-3">
-            <div class="">Last Name</div>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="errorMessage('last_name') ? 'border-red-800' :'focus:border-sunglow'"
-              type="text"
-              v-model="toPutAdminUser.last_name"
-              placeholder = "Doe"
-              aria-label="Last name"
-              @blur="CheckEmptyField(toPutAdminUser.last_name, 'last_name')"
-            > 
-            <span v-if="errorMessage('last_name')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('last_name')}}</span>
-          </div>
-          <div class="mb-3">
-            <label>Suffix</label>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-sunglow"
-              type="text"
-              v-model="toPutAdminUser.suffix"
-              placeholder="Ph.D"
-              aria-label="Suffix"
-            >
-          </div>
-          <div class="mb-3">
-            <div class="">New Password</div>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="errorMessage('password') ? 'border-red-800' :'focus:border-sunglow'"
-              type="password"
-              aria-label="oldpassword"
-              v-model="toPutAdminUser.password"
-              @blur="CheckEmptyField(toPutAdminUser.password, 'password')"
-            >
-            <span v-if="errorMessage('password', 'Enter your new password')" class="text-red-800 text-xs leading-none capitalize">{{errorMessage('password', 'Enter your new password')}}</span>
-          </div>
-          <div class="mb-3">
-            <div class="">Confirm New Password</div>
-            <input
-              class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-              :class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-sunglow'"
-              type="password"
-              aria-label="newpassword"
-              v-model="toPutAdminUser.password_confirmation"
-              @blur="CheckEmptyField(toPutAdminUser.password_confirmation, 'password_confirmation')"
-            >
-            <span v-if="errorMessage('password_confirmation')" class="text-red-800 text-xs leading-none capitalize">{{ errorMessage('password_confirmation')}}</span>
-          </div>
+        class="flex text-white bg-waterloo my-2 p-4 shadow rounded-lg text-sm max-w-lg transition-hover">
+        <div class="w-full">
+          <AppInput
+            v-model="toPutAdminUser.email"
+            :type="'email'"
+            :name="'email'"
+            :label="'Email'"
+            :error="formError.find(item => item.field === 'email')"
+          />
+          <AppInput
+            v-model="toPutAdminUser.title"
+            :type="'text'"
+            :name="'title'"
+            :label="'Title'"
+          />
+          <AppInput
+            v-model="toPutAdminUser.first_name"
+            :type="'text'"
+            :name="'first_name'"
+            :label="'First Name'"
+            :error="formError.find(item => item.field === 'first_name')"
+          />
+          <AppInput
+            v-model="toPutAdminUser.last_name"
+            :type="'text'"
+            :name="'last_name'"
+            :label="'Last Name'"
+            :error="formError.find(item => item.field === 'last_name')"
+          />
+          <AppInput
+            v-model="toPutAdminUser.suffix"
+            :type="'text'"
+            :name="'suffix'"
+            :label="'Suffix'"
+          />
 
-          <div class="flex flex-col py-1 mt-2">
+          <AppFilterSearch
+            v-model="toPutAdminUser.roles_id"
+            :name="'roles_id'"
+            :label="'Admin Role/s'"
+            :placeholder="'Select...'"
+            :error="formError.find(item => item.field === 'roles_id')"
+            :items="adminRoles"
+            @add="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
+            @remove="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
+          />
+          <!-- <div class="flex flex-col py-1 mt-2">
             <div class="relative pb-1">
               <span>Admin Role/s </span>
               <span class="text-xs">(hold ctrl + click to choose)</span>
@@ -170,7 +139,7 @@
                 {{toPutAdminUser.roles_id[index].label}}
               </div>
             </div> 
-          </div>
+          </div> -->
 
           <button
             class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black font-semibold text-sm focus:outline-none"
@@ -178,10 +147,45 @@
             >Save Changes</button>
         </div>
       </div>
+      <!-- tab 3 change pass -->
+      <div v-if="tab3 && authAdminPermissions.includes('Edit Admin Account')" class="flex flex-col justify-start items-start text-white bg-waterloo my-2 p-4 shadow rounded-lg text-sm max-w-lg transition-hover">
+        <div class="w-full">
+        <AppInput
+					v-model="toPutAdminUser.password"
+					:type="'password'"
+					:name="'old_password'"
+					:label="'Current Password'"
+					:error="formError.find(item => item.field === 'old_password')"
+				/>
+        <AppInput
+					v-model="toPutAdminUser.new_password"
+					:type="'password'"
+					:name="'new_password'"
+					:label="'New Password'"
+					:error="formError.find(item => item.field === 'new_password')"
+				/>
+        <AppInput
+					v-model="toPutAdminUser.password_confirmation"
+					:type="'password'"
+					:name="'password_confirmation'"
+					:label="'Confirm Password'"
+					:error="formError.find(item => item.field === 'password_confirmation')"
+				/>
+        </div>
+        <AppButton :label="'Save Changes'" @click ="changePassword(toPutAdminUser.password, toPutAdminUser.new_password, toPutAdminUser.password_confirmation)"/>
+      </div>
   </div>
 </template>
 <script>
+import AppInput from '@/components/Base/AppInput';
+import AppButton from '@/components/Base/AppButton';
+import AppFilterSearch from '@/components/Base/AppFilterSearch';
 export default {
+  components: {
+    AppInput,
+    AppButton,
+    AppFilterSearch
+  },
   data(){
     return{
       user:'',
@@ -190,9 +194,11 @@ export default {
       multiple: true,
       tab1:true,
       tab2:false,
+      tab3:false,
       toPutAdminUser:{
         email:'',
         password:'',
+        new_password: '',
         password_confirmation:'',
         title:'',
         first_name:'',
@@ -208,19 +214,16 @@ export default {
       let response = await app.$axios.$get(`/api/v1/admin/admin-users/${route.params.id}`)
       const user = response.data.user
       // response = await app.$axios.$get(`/api/v1/admin/admin-roles`)
-      
       // const adminRoles = response.data.roles
       return{
         user,
         toPutAdminUser:{
             email:user.email,
-            password:'',
-            password_confirmation:'',
             title:'',
             first_name:'',
             last_name:'',
             suffix:'',
-            roles_id:[],
+            adminRoles: [],
         },
         // adminRoles
       }
@@ -259,6 +262,24 @@ export default {
       if (value && value.length < 6) {
         this.formError.push({
           field: "password",
+          message: "Password Must Be Atleast 6 Characters"
+        });
+      } else {
+        let index = this.formError.findIndex(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        let error = this.formError.filter(
+          item => item.message === "Password Must Be Atleast 6 Characters"
+        );
+        if (index >= 0) {
+          this.formError.splice(index, error.length);
+        }
+      }
+    },
+       "toPutAdminUser.new_password"(value) {
+      if (value && value.length < 6) {
+        this.formError.push({
+          field: "new_password",
           message: "Password Must Be Atleast 6 Characters"
         });
       } else {
@@ -333,9 +354,8 @@ export default {
     },
 
     checkForm(uID,userInfo) {
-      console.log("error on save",userInfo)
       this.formError = []
-      this.Validate(this.toPutAdminUser, ["title", "suffix"])
+      this.Validate(this.toPutAdminUser, ["title", "suffix", "password", "password_confirmation"])
 
       if(!this.formError.length){
         this.toPutAdminUserInfo(uID,userInfo)
@@ -345,6 +365,24 @@ export default {
     validEmail(email) {
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
+    },
+
+    changePassword(old_password, new_password, password_confirmation){
+      let form = {old_password, new_password, password_confirmation}
+      this.formError = []
+      this.Validate(form)
+
+      console.log(this.user)
+
+      return
+      if (!this.formError){
+        this.$axios
+        .$put(`/api/v1/admin/admin-users/${user_id}`, form)
+        .then(res => {
+          
+        });
+      }
+      // /api/v1/admin/users/{user_id}/change-password
     },
 
     async toPutAdminUserInfo(user_id, toPutUserInfo){

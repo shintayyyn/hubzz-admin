@@ -353,6 +353,9 @@ export default {
       console.log("get users error", err);
     }
   },
+  created(){
+      console.log("allpermissions", this.allPermissions);
+  },
   methods: {
     isChecked(permissions) {
       return !permissions.map(item => item.done).includes(false);

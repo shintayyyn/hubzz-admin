@@ -66,48 +66,6 @@
             @add="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
             @remove="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
           />
-          <!-- <div
-            v-if="surgery && surgery.practice_count < 1"
-            class="flex flex-col py-1 mt-2"
-          >
-            <div class="relative pb-1">
-              <span>Practice Types </span>
-              <span class="text-xs">(hold ctrl + click to choose)</span>
-            </div>
-            <select
-              class="w-full text-black focus:outline-none"
-              multiple="true"
-              v-bind:class="{ 'fix-height': multiple === 'true' }"
-              v-model="toPostUser.practice_type_id"
-              @blur="
-                CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')
-              "
-            >
-              <option
-                class="px-2 py-1"
-                v-for="item in practiceTypes"
-                :key="item.id"
-                :value="item"
-                >{{ item.label }}</option
-              >
-            </select>
-            <div
-              v-if="formError.filter(item => item.field === 'practice_type_id')"
-              class="text-red-500 text-xs pt-1"
-            >
-              {{ errorMessage("practice_type_id") }}
-            </div>
-            <div class="flex items-start flex-wrap py-1">
-              <div
-                v-for="(practice_type, index) in toPostUser.practice_type_id"
-                :key="`practice_type-${index}`"
-                class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
-              >
-                {{toPostUser.practice_type_id[index].label}}
-              </div>
-            </div> 
-          </div> -->
-
           <template v-if="surgery">
             <AppInput 
               v-model="toPostUser.practice_role"

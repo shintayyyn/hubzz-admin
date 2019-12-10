@@ -296,6 +296,20 @@ table tbody td {
 	position: relative;
 }
 
+/* For drop-down */
+.customized-select select {
+	appearance: none;
+	padding: 10px 15px;
+	background: transparent;
+	padding-right: 40px;
+	z-index: 1;
+}
+
+.customized-select select option {
+	color: #000;
+}
+
+/* For checkbox  */
 .customized-select input[type="checkbox"] {
 	position: absolute;
 	opacity: 0;

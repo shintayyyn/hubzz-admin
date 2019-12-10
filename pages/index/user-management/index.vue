@@ -8,36 +8,78 @@
 				/>
 			</div>
 		</transition>
-		<div class="flex md:flex-row px-4 pt-1 md:py-1 flex-wrap">
-			<button
+		<div class="flex items-center px-4 md:px-6 py-2 text-sm">
+			<AppButton
 				v-if="authAdminPermissions.includes('Create Admin Account')"
+				:label="'Create Admin Account'"
+				:icon="'add-user'"
+				:iconSize="'16'"
+				class="mr-2"
 				@click="show()"
-				class="inline-flex no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
-			>
-				Create Admin Account
-			</button>
-			<button
-				v-if="
-					deleteAdminUser == true &&
-						authAdminPermissions.includes('Delete Admin Account')
-				"
-				@click="deleteAdminUser = false"
-				class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow"
-			>
-				Done
-			</button>
-			<button
-				v-if="
-					deleteAdminUser == false &&
-						authAdminPermissions.includes('Delete Admin Account')
-				"
-				@click="deleteAdminUser = true"
-				class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-sm font-semibold text-white rounded-lg shadow"
-			>
-				Delete Admin User
-			</button>
+			/>
+			<template v-if="authAdminPermissions.includes('Delete Admin Account')">
+				<AppButton
+					class="text-white"
+					v-if="authAdminPermissions.includes('Add Role')"
+					:label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
+					:icon="deleteAdminUser ? 'circle-check' : 'garbage'"
+					:iconSize="deleteAdminUser ? '21' : '16'"
+					:background="deleteAdminUser ? 'green' : 'red'"
+					@click="deleteAdminUser = !deleteAdminUser"
+				/>
+			</template>
 		</div>
-		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-4">
+		<!-- <AppTable
+			:total="total"
+			:items="adminUsers"
+			:currentPage="currentPage"
+			:perPage="itemsPerPage"
+			:columns="columns"
+			:loading="loadingAdminUsers"
+			:loadingMessage="'Loading Surgeries'"
+			:routerLink="`/user-management`"
+			@pagechanged="pagechanged"
+		>
+			<template v-slot:delete="slotProps" v-if="deleteAdminUser == true">
+				<div
+					class="flex justify-center items-center w-10 align-middle text-center"
+				>
+					<svgicon
+						v-if="
+							$auth.user.id != slotProps.item.id &&
+								slotProps.item.admin_detail &&
+								slotProps.item.admin_detail.role &&
+								!slotProps.item.admin_detail.role.name.includes('Super')
+						"
+						@click.prevent="toDeleteAdminUser(user.id)"
+						name="delete-user"
+						width="21"
+						height="21"
+						class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
+					/>
+					<span
+						v-else-if="$auth.user.id === slotProps.item.id"
+						class="text-sm text-gray-500"
+						>You</span
+					>
+					<span
+						v-else-if="
+							slotProps.item.admin_detail &&
+								slotProps.item.admin_detail.roles &&
+								slotProps.item.admin_detail.roles[0].name == 'Super Admin'
+						"
+						class="text-sm text-yellow-500"
+						>God</span
+					>
+				</div>
+			</template>
+			<template v-slot:name="slotProps">
+				<span>{{
+					`${slotProps.item.personal_detail.first_name} ${slotProps.item.personal_detail.last_name}`
+				}}</span>
+			</template>
+		</AppTable> -->
+		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6">
 			<!-- HEADER -->
 			<div
 				class="hidden md:flex items-center text-white justify-between font-semibold "
@@ -79,8 +121,8 @@
 					<span
 						v-else-if="
 							user.admin_detail &&
-							user.admin_detail.roles &&
-              user.admin_detail.roles[0].name == 'Super Admin'
+								user.admin_detail.roles &&
+								user.admin_detail.roles[0].name == 'Super Admin'
 						"
 						class="text-sm text-yellow-500"
 						>God</span
@@ -127,12 +169,12 @@
 		</div>
 
 		<!-- PAGINATION -->
-    <AppPagination
-      :total="total"
-      :totalPages="totalPages"
-      :currentPage="currentPage"
-      @pagechanged="pagechanged"
-    />
+		<AppPagination
+			:total="total"
+			:totalPages="totalPages"
+			:currentPage="currentPage"
+			@pagechanged="pagechanged"
+		/>
 		<!-- PAGINATION ENDS HERE -->
 
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
@@ -156,20 +198,24 @@
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser";
 import AppConfirmCancel from "@/components/AppConfirmCancel";
-import AppPagination from "@/components/Base/AppPagination"
+import AppPagination from "@/components/Base/AppPagination";
+import AppButton from "@/components/Base/AppButton";
+import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
 		CreateUser,
-    AppConfirmCancel,
-    AppPagination
+		AppConfirmCancel,
+		AppPagination,
+		AppButton,
+		AppTable
 	},
 	data() {
 		return {
 			itemsPerPage: 10,
 			currentPage: 1,
-      params: {},
-      search: "",
-      
+			params: {},
+			search: "",
+
 			// itemCount:'',
 			// adminUsers:{},
 			adminCreate: true,
@@ -178,7 +224,33 @@ export default {
 			confirmCancel: false,
 			adminId: "",
 			deleteAdminUser: false,
-			showConfirmCancelModal: false
+			showConfirmCancelModal: false,
+			columns: [
+				{
+					name: "",
+					slot: true,
+					slotName: "delete",
+					dataIndex: "",
+					class: "text-center"
+				},
+				{
+					name: "E-mail",
+					dataIndex: "email",
+					class: "text-center"
+				},
+				{
+					name: "Name",
+					slot: true,
+					slotName: "name",
+					dataIndex: "",
+					class: "text-center"
+				},
+				{
+					name: "Role",
+					dataIndex: "admin_detail.role.name",
+					class: "text-center"
+				}
+			]
 		};
 	},
 	watchQuery: ["page", "search"],
@@ -235,8 +307,8 @@ export default {
 		},
 		loadingAdminUsers() {
 			return this.$store.state.adminusers.loading_admin_users;
-    },
-    adminUsers() {
+		},
+		adminUsers() {
 			return this.$store.getters["adminusers/getAdminUsers"];
 		},
 		authAdminPermissions() {
@@ -244,16 +316,16 @@ export default {
 		},
 		itemCount() {
 			return this.$store.state.adminusers.itemCount;
-    },
-    totalPages() {
-      return Math.ceil(this.itemCount/this.itemsPerPage)
-    },
-    total() {
-      return this.adminUsers.length;
-    },
+		},
+		totalPages() {
+			return Math.ceil(this.itemCount / this.itemsPerPage);
+		},
+		total() {
+			return this.adminUsers.length;
+		}
 	},
 	methods: {
-    getQuery() {
+		getQuery() {
 			const query = {
 				...this.$route.query
 			};
@@ -274,14 +346,14 @@ export default {
 		show() {
 			this.modal = true;
 		},
-    pagechanged(e) {
+		pagechanged(e) {
 			const query = {
 				...this.$route.query,
 				page: e || 1
 			};
 			this.$router.push({ query });
 			this.getAdmins(this.params);
-		},
+		}
 	}
 };
 </script>

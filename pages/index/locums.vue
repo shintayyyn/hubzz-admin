@@ -275,8 +275,6 @@ export default {
 
 			this.$router.push({ query });
 
-			return;
-
 			const params = {};
 
 			if (this.search) {
@@ -288,6 +286,8 @@ export default {
 			}
 
 			this.params.compliance_status = this.filterCompliances;
+
+			console.log("qwe", this.params.compliance_status);
 
 			this.getLocums(this.params);
 		},

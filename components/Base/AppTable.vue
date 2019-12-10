@@ -2,10 +2,7 @@
 	<section class="relative">
 		<div class="relative ">
 			<AppLoading :loading="loading" :message="loadingMessage" spinner />
-			<div
-				class="flex flex-col w-full px-2 py-2 mt-4 overflow-x-auto"
-				:style="minHeight && `min-height: ${minHeight}`"
-			>
+			<div class="flex flex-col w-full px-2 py-2 mt-4 overflow-x-auto">
 				<div
 					:style="`min-width: ${customWidth}px`"
 					class="row hidden md:flex justify-start font-bold leading-none text-sm text-white"
@@ -60,7 +57,7 @@
 								:class="[
 									column.class &&
 										column.class.includes('text-center') &&
-										'md:text-center md:items-center',
+										'md:text-center md:items-center md:justify-center',
 									column.customClass
 								]"
 							>
@@ -152,8 +149,7 @@ export default {
 		},
 		customWidth: {
 			type: Number
-		},
-		minHeight: String
+		}
 	},
 	components: {
 		AppLoading,

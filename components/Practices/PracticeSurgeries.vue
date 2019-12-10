@@ -3,7 +3,12 @@
 		<div class="flex overflow-hidden">
 			<div class="flex overflow-x-auto mb-2">
 				<div class="flex-3 mx-1 whitespace-no-wrap">
-					<button
+					<AppButton
+						:label="'Add Spoke for this Hub'"
+						@click="show()"
+						:icon="'add-rectangle'"
+					/>
+					<!-- <button
 						@click="show()"
 						class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
 					>
@@ -15,7 +20,7 @@
 							color="black black"
 							class="mx-1 -my-1"
 						/>
-					</button>
+					</button> -->
 				</div>
 				<div
 					v-if="deleteSurgery == true"
@@ -121,6 +126,7 @@ import AppPagination from "@/components/Base/AppPagination";
 import AppLoading from "@/components/Base/AppLoading";
 import TerminateSurgery from "@/components/Practices/TerminateSurgery";
 import AppTable from "@/components/Base/AppTable";
+import AppButton from "@/components/Base/AppButton";
 export default {
 	props: ["practice"],
 	components: {
@@ -128,7 +134,8 @@ export default {
 		AppPagination,
 		AppLoading,
 		TerminateSurgery,
-		AppTable
+		AppTable,
+		AppButton
 	},
 	data() {
 		return {

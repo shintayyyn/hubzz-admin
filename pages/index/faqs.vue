@@ -1,266 +1,334 @@
 <template>
-  <section class="flex-1 flex flex-col overflow-hidden py-2">
-    <div class="px-4 md:px-6">
-      <div class="text-xl md:text-4xl text-white pb-4">Frequently Asked Questions</div>
-      <div class="rounded-lg text-white bg-charade shadow-lg p-3 md:p-5">
-        <div class="w-full inline-flex flex-wrap justify-between font-bold mb-2">
-          <div class="flex items-center ml-1 mr-2">Locum</div>
-          <div class="flex">
-            <nuxt-link
-            v-if="authAdminPermissions.includes('Create New FAQ')"
-            :to="{path:`/faqs/addFaq/locum`}"
-            class="flex mr-2 px-4 py-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
-              <span class="mr-2">Add</span> 
-              <svgicon
-                name="add-rectangle"
-                width="21"
-                height="21"
-                color="black black"
-                />
-            </nuxt-link>
-            <button v-if="deleteLocumFaq == false && authAdminPermissions.includes('Delete FAQ')" @click="deleteLocumFaq = true" class="flex px-4 py-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
-              <span class="mr-2">Delete</span>
-              <svgicon
-                name="garbage"
-                width="21"
-                height="21"
-                color="white white"
-                />
-            </button>
-            <button v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')" @click="deleteLocumFaq = false" class="flex px-4 py-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
-              <span class="mr-2">Done</span>
-              <svgicon
-                name="circle-check"
-                width="21"
-                height="21"
-                color="white"
-                />
-            </button>
-          </div>
-        </div>
-        <!-- -------------------------------------------------------------------------- -->
-        <div v-for="item in locumFaqs" :key="item.id">
-          <div class="inline-flex w-full">
-            <nuxt-link v-if="deleteLocumFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-2 md:mr-4"> 
-              <svgicon
-                name="edit"
-                width="21"
-                height="21"
-                class="fill-current text-white hover:text-sunglow"
-                />
-            </nuxt-link>
-            <div @click="toDeleteFaq(item.id)" v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')" class="flex items-center cursor-pointer mr-2 md:mr-4">
-              <svgicon
-                name="garbage"
-                width="21"
-                height="21"
-                class="fill-current text-red-800 hover:text-red-600"
-                />
-            </div>
-            <div
-              class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
-              @click="toggleFaqOn(item)"
-            >
-              <div class="leading-tight">{{item.question}}</div>
-              <div class="font-bold text-lg flex items-center">
-                <svgicon name="arrow-right" height="20" width="20" color="white white" :class="item.toggled ? 'rotate' : 'arrow'" />
-              </div>
-            </div>
-          </div>
-          <transition name="drop-down">
-            <div
-              class="flex justify-start item-answer font-bold text-sm overflow-hidden"
-              v-if="item.toggled"
-            >
-              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto" :class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"></div>
-            </div>
-          </transition>
-        </div>
-        <!---------------------------------------------------------------------------------->
-        <div class="w-full inline-flex flex-wrap justify-between font-bold my-2">
-          <div class="flex items-center ml-1 mr-2">Practice</div>
-          <div class="flex">
-            <nuxt-link
-            v-if="authAdminPermissions.includes('Create New FAQ')"
-            :to="{path:`/faqs/addFaq/practice`}"
-            class="flex items-center mx-2 px-4 py-2 text-black rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer focus:outline-none">
-              <span class="mr-2">Add</span> 
-              <svgicon
-                name="add-rectangle"
-                width="21"
-                height="21"
-                color="black black"
-                />
-            </nuxt-link>
-            <button  v-if="deletePracticeFaq == false && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = true" class="flex items-center text-white font-bold px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg cursor-pointer focus:outline-none">
-              <span class="mr-2">Delete</span>
-              <svgicon
-                name="garbage"
-                width="21"
-                height="21"
-                color="white white"
-                />
-            </button>
-            <button v-if="deletePracticeFaq == true && authAdminPermissions.includes('Delete FAQ')" @click="deletePracticeFaq = false" class="flex items-center px-4 py-2 text-white font-bold bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer focus:outline-none">
-              <span class="mr-2">Done</span>
-              <svgicon
-                name="circle-check"
-                width="21"
-                height="21"
-                color="white"
-                />
-            </button>
-          </div>
-          
-        </div>
-        <!-- ---------------------------------------------------------------------------- -->
-        <div v-for="item in practiceFaqs" :key="item.id">
-          <div class="inline-flex w-full">
-            <nuxt-link v-if="deletePracticeFaq == false && authAdminPermissions.includes('Edit FAQ')" :to="{path:`/faqs/${item.id}`}" class="flex items-center cursor-pointer mr-2 md:mr-4"> 
-              <svgicon
-                name="edit"
-                width="21"
-                height="21"
-                class="fill-current text-white hover:text-sunglow"
-                />
-            </nuxt-link>
-            <div v-if="deletePracticeFaq == true && authAdminPermissions.includes('Edit FAQ')" class="flex items-center cursor-pointer mr-2 md:mr-4">
-              <svgicon
-                name="garbage"
-                width="21"
-                height="21"
-                class="fill-current text-red-800 hover:text-red-600"
-                />
-            </div>
-            <div
-              class="flex m-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
-              @click="toggleFaqOn(item)"
-            >
-              <div class="leading-tight">{{item.question}}</div>
-              <div class="font-bold text-lg flex items-center">
-                <svgicon name="arrow-right" height="20" width="20" color="white white" :class="item.toggled ? 'rotate' : 'arrow'" />
-              </div>
-            </div>
-          </div>
-          <transition name="drop-down">
-            <div
-              class="flex justify-start item-answer font-bold text-sm overflow-hidden"
-              v-if="item.toggled"
-            >
-              <div v-html="item.answer" class="w-full md:px-4 py-2 h-auto" :class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"></div>
-            </div>
-          </transition>
-        </div>
-        <div class="faq-shield" v-if="$route.name.includes('index-faqs-index-addFaq') || $route.name.includes('index-faqs-index-id')" @click="$router.go(-1)"></div>
-      </div>
-       <nuxt-child/>
-    </div>
-  </section>
+	<section class="flex-1 flex flex-col overflow-hidden py-2">
+		<div class="px-4 md:px-6">
+			<div class="text-xl md:text-4xl text-white pb-4">
+				Frequently Asked Questions
+			</div>
+			<div class="rounded-lg text-white bg-charade shadow-lg p-3 md:p-5">
+				<div
+					class="w-full inline-flex flex-wrap justify-between font-bold mb-2"
+				>
+					<div class="flex items-center mr-2">Locum</div>
+					<div class="flex items-center">
+						<AppButton
+							v-if="authAdminPermissions.includes('Create New FAQ')"
+							:label="'Add'"
+							:icon="'add-rectangle'"
+							:nuxtLink="{ path: `/faqs/addFaq/locum` }"
+							class="text-sm"
+						/>
+						<AppButton
+							v-if="
+								authAdminPermissions.includes('Delete FAQ') &&
+									locumFaqs.length > 0
+							"
+							:label="deleteLocumFaq ? 'Done' : 'Delete'"
+							:icon="deleteLocumFaq ? 'circle-check' : 'garbage'"
+							:iconSize="'18'"
+							:background="deleteLocumFaq ? 'green' : 'red'"
+							class="text-white ml-2 text-sm"
+							@click="deleteLocumFaq = !deleteLocumFaq"
+						/>
+					</div>
+				</div>
+				<!-- -------------------------------------------------------------------------- -->
+				<div v-for="item in locumFaqs" :key="item.id">
+					<div class="inline-flex w-full">
+						<nuxt-link
+							v-if="
+								deleteLocumFaq == false &&
+									authAdminPermissions.includes('Edit FAQ')
+							"
+							:to="{ path: `/faqs/${item.id}` }"
+							class="flex items-center cursor-pointer mr-2 md:mr-4"
+						>
+							<svgicon
+								name="edit"
+								width="21"
+								height="21"
+								class="fill-current text-white hover:text-sunglow"
+							/>
+						</nuxt-link>
+						<div
+							v-if="
+								deleteLocumFaq == true &&
+									authAdminPermissions.includes('Delete FAQ')
+							"
+							@click="toDeleteFaq(item.id)"
+							class="flex items-center cursor-pointer mr-2 md:mr-4"
+						>
+							<svgicon
+								name="garbage"
+								width="21"
+								height="21"
+								class="fill-current text-red-800 hover:text-red-600"
+							/>
+						</div>
+						<div
+							class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
+							@click="toggleFaqOn(item)"
+						>
+							<div class="leading-tight text-sm md:text-base pr-1">
+								{{ item.question }}
+							</div>
+							<div class="font-bold text-lg flex items-center">
+								<svgicon
+									name="arrow-right"
+									height="16"
+									width="16"
+									color="white white"
+									:class="item.toggled ? 'rotate' : 'arrow'"
+								/>
+							</div>
+						</div>
+					</div>
+					<transition name="drop-down">
+						<div
+							class="flex justify-start item-answer font-bold text-sm overflow-hidden"
+							v-if="item.toggled"
+						>
+							<div
+								v-html="item.answer"
+								class="w-full md:px-4 py-2 h-auto"
+								:class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"
+							></div>
+						</div>
+					</transition>
+				</div>
+				<div v-if="locumFaqs.length === 0" class="text-waterloo">
+					No Frequently Asked Questions for Locum
+				</div>
+				<!---------------------------------------------------------------------------------->
+				<div
+					class="w-full inline-flex flex-wrap justify-between font-bold my-2"
+				>
+					<div class="flex items-center mr-2">Practice</div>
+					<div class="flex">
+						<AppButton
+							v-if="authAdminPermissions.includes('Create New FAQ')"
+							:label="'Add'"
+							:icon="'add-rectangle'"
+							:nuxtLink="{ path: `/faqs/addFaq/practice` }"
+							class="text-sm"
+						/>
+						<AppButton
+							v-if="
+								authAdminPermissions.includes('Delete FAQ') &&
+									practiceFaqs.length > 0
+							"
+							:label="deletePracticeFaq ? 'Done' : 'Delete'"
+							:icon="deletePracticeFaq ? 'circle-check' : 'garbage'"
+							:iconSize="'18'"
+							:background="deletePracticeFaq ? 'green' : 'red'"
+							class="text-white ml-2 text-sm"
+							@click="deletePracticeFaq = !deletePracticeFaq"
+						/>
+					</div>
+				</div>
+				<!-- ---------------------------------------------------------------------------- -->
+				<div v-for="item in practiceFaqs" :key="item.id">
+					<div class="inline-flex w-full">
+						<nuxt-link
+							v-if="
+								deletePracticeFaq == false &&
+									authAdminPermissions.includes('Edit FAQ')
+							"
+							:to="{ path: `/faqs/${item.id}` }"
+							class="flex items-center cursor-pointer mr-2 md:mr-4"
+						>
+							<svgicon
+								name="edit"
+								width="21"
+								height="21"
+								class="fill-current text-white hover:text-sunglow"
+							/>
+						</nuxt-link>
+						<div
+							v-if="
+								deletePracticeFaq == true &&
+									authAdminPermissions.includes('Edit FAQ')
+							"
+							@click="toDeleteFaq(item.id)"
+							class="flex items-center cursor-pointer mr-2 md:mr-4"
+						>
+							<svgicon
+								name="garbage"
+								width="21"
+								height="21"
+								class="fill-current text-red-800 hover:text-red-600"
+							/>
+						</div>
+						<div
+							class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
+							@click="toggleFaqOn(item)"
+						>
+							<div class="leading-tight text-sm md:text-base pr-1">
+								{{ item.question }}
+							</div>
+							<div class="font-bold text-lg flex items-center">
+								<svgicon
+									name="arrow-right"
+									height="16"
+									width="16"
+									color="white white"
+									:class="item.toggled ? 'rotate' : 'arrow'"
+								/>
+							</div>
+						</div>
+					</div>
+					<transition name="drop-down">
+						<div
+							class="flex justify-start item-answer font-bold text-sm overflow-hidden"
+							v-if="item.toggled"
+						>
+							<div
+								v-html="item.answer"
+								class="w-full md:px-4 py-2 h-auto"
+								:class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"
+							></div>
+						</div>
+					</transition>
+				</div>
+				<div v-if="practiceFaqs.length === 0" class="text-waterloo">
+					No Frequently Asked Questions for Practice
+				</div>
+				<div
+					class="faq-shield"
+					v-if="
+						$route.name.includes('index-faqs-index-addFaq') ||
+							$route.name.includes('index-faqs-index-id')
+					"
+					@click="$router.go(-1)"
+				></div>
+			</div>
+			<nuxt-child />
+		</div>
+	</section>
 </template>
 <script>
+import AppButton from "@/components/Base/AppButton";
+import AppConfirmCancel from "~/components/AppConfirmCancel";
 export default {
-  data(){
-    return{
-      deleteLocumFaq:false,
-      deletePracticeFaq:false,
-      editorOption: {
-        theme: 'bubble',
-        placeholder: "Edit Faqs",
-        modules: {
-          toolbar: [
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'font': [] }],
-            [{ 'align': [] }],
-          ]
-        }
-      }
-    }
-  },
-  computed:{
-    locumFaqs(){
-      return this.$store.state.faqs.locumFaqs
-    },
-    practiceFaqs(){
-      return this.$store.state.faqs.practiceFaqs
-    },
-    authAdminPermissions() {
-      return this.$store.getters["auth/permissions"]
-    },
-  },
-  async asyncData({ app, route, store, error }) {
-    try{
-      let response = await app.$axios.$get(`/api/v1/admin/faqs?domain=Locum`)
-      let locumFaqs = response.data.faqs
+	components: {
+		AppButton,
+		AppConfirmCancel
+	},
+	data() {
+		return {
+			deleteLocumFaq: false,
+			deletePracticeFaq: false,
+			editorOption: {
+				theme: "bubble",
+				placeholder: "Edit Faqs",
+				modules: {
+					toolbar: [
+						["bold", "italic", "underline", "strike"],
+						[{ list: "ordered" }, { list: "bullet" }],
+						[{ header: [1, 2, 3, 4, 5, 6, false] }],
+						[{ color: [] }, { background: [] }],
+						[{ font: [] }],
+						[{ align: [] }]
+					]
+				}
+			},
+			showConfirmCancelModal: false
+		};
+	},
+	computed: {
+		locumFaqs() {
+			return this.$store.state.faqs.locumFaqs;
+		},
+		practiceFaqs() {
+			return this.$store.state.faqs.practiceFaqs;
+		},
+		authAdminPermissions() {
+			return this.$store.getters["auth/permissions"];
+		}
+	},
+	async asyncData({ app, route, store, error }) {
+		try {
+			let response = await app.$axios.$get(`/api/v1/admin/faqs?domain=Locum`);
+			let locumFaqs = response.data.faqs;
 
-      response = await app.$axios.$get('/api/v1/admin/faqs?domain=Practice')
-      let practiceFaqs = response.data.faqs
+			response = await app.$axios.$get("/api/v1/admin/faqs?domain=Practice");
+			let practiceFaqs = response.data.faqs;
 
-      await store.commit('faqs/SET_LOCUM_FAQS', locumFaqs)
-      await store.commit('faqs/SET_PRACTICE_FAQS',practiceFaqs)
-
-    }catch(err){
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
-      console.log('faqs error!', err)
-    }
-  },
-  methods:{
-    getLocumFaqs(){
-      this.$store.dispatch("faqs/fetchLocumFaqs")
-    },
-    getPracticeFaqs(){
-      this.$store.dispatch("faqs/fetchPracticeFaqs")
-    },
-    async toggleFaqOn(itemFaq){
-      if(itemFaq.domain == 'Locum'){
-        this.$store.commit('faqs/TOGGLE_LOCUM_FAQ',itemFaq)
-      }
-      if(itemFaq.domain == 'Practice'){
-        this.$store.commit('faqs/TOGGLE_PRACTICE_FAQ',itemFaq)
-      }
-    },
-    async toDeleteFaq(faqId){
-        await this.$axios.delete(`/api/v1/admin/faqs/${faqId}`).then(()=>{
-          this.getLocumFaqs()
-          this.getPracticeFaqs()
-          this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Delete Faq Successful'})
-        }).catch(err=>{
-          console.log('delete faq error!',err)
-          this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
-        })
-    }
-  }
-  
-}
+			await store.commit("faqs/SET_LOCUM_FAQS", locumFaqs);
+			await store.commit("faqs/SET_PRACTICE_FAQS", practiceFaqs);
+		} catch (err) {
+			store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: err.response.data.message
+			});
+			console.log("faqs error!", err);
+		}
+	},
+	methods: {
+		getLocumFaqs() {
+			this.$store.dispatch("faqs/fetchLocumFaqs");
+		},
+		getPracticeFaqs() {
+			this.$store.dispatch("faqs/fetchPracticeFaqs");
+		},
+		async toggleFaqOn(itemFaq) {
+			if (itemFaq.domain == "Locum") {
+				this.$store.commit("faqs/TOGGLE_LOCUM_FAQ", itemFaq);
+			}
+			if (itemFaq.domain == "Practice") {
+				this.$store.commit("faqs/TOGGLE_PRACTICE_FAQ", itemFaq);
+			}
+		},
+		async toDeleteFaq(faqId) {
+			await this.$axios
+				.delete(`/api/v1/admin/faqs/${faqId}`)
+				.then(() => {
+					this.getLocumFaqs();
+					this.getPracticeFaqs();
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Delete Faq Successful"
+					});
+				})
+				.catch(err => {
+					console.log("delete faq error!", err);
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
+		}
+	}
+};
 </script>
 <style scoped>
 .item-answer {
-  word-wrap: break-word;
-  height: auto;
-    transition: all 0.5s;
+	word-wrap: break-word;
+	height: auto;
+	transition: all 0.5s;
 }
 .toggled {
-    transition: all 0.5s;
+	transition: all 0.5s;
 }
 .faq-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #333;
+	opacity: 0.5;
+	z-index: 511;
 }
 .rotate {
-  transform: rotate(90deg);
-  transition: transform .3s ease-in-out;
+	transform: rotate(90deg);
+	transition: transform 0.3s ease-in-out;
 }
 
-.arrow{
-  transform: rotate(0deg);
-  transition: transform .3s ease-in-out;
+.arrow {
+	transform: rotate(0deg);
+	transition: transform 0.3s ease-in-out;
 }
 </style>

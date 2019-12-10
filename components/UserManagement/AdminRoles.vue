@@ -1,56 +1,28 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
-		<div class="flex md:flex-row pt-1 md:py-1 flex-wrap px-4">
-			<button
+		<div class="flex px-4 md:px-8 py-2 text-sm">
+			<AppButton
 				v-if="authAdminPermissions.includes('Add Role')"
-				class="inline-flex items-center no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
+				:label="'Add New Role'"
+				:icon="'add-rectangle'"
+				class="mr-2"
 				@click="modal = true"
-			>
-				Add New Role
-				<svgicon
-					name="add-rectangle"
-					width="21"
-					height="21"
-					color="black black"
-					class="mx-1 -my-1"
+			/>
+			<template v-if="authAdminPermissions.includes('Delete Role')">
+				<AppButton
+					class="text-white"
+					v-if="authAdminPermissions.includes('Add Role')"
+					:label="deletingAdminRole ? 'Done' : 'Delete Role'"
+					:icon="deletingAdminRole ? 'circle-check' : 'garbage'"
+					:iconSize="deletingAdminRole ? '21' : '16'"
+					:background="deletingAdminRole ? 'green' : 'red'"
+					@click="deletingAdminRole = !deletingAdminRole"
 				/>
-			</button>
-			<button
-				v-if="
-					deletingAdminRole == false &&
-						authAdminPermissions.includes('Delete Role')
-				"
-				class="inline-flex items-center no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-sm font-semibold text-white rounded-lg shadow"
-				@click="deletingAdminRole = true"
-			>
-				Delete Role
-				<svgicon
-					name="garbage"
-					width="21"
-					height="21"
-					color="white white"
-					class="mx-1 -my-1"
-				/>
-			</button>
-			<button
-				v-if="
-					deletingAdminRole == true &&
-						authAdminPermissions.includes('Delete Role')
-				"
-				@click="deletingAdminRole = false"
-				class="inline-flex items-center no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow"
-			>
-				Done
-				<svgicon
-					name="circle-check"
-					width="21"
-					height="21"
-					color="white white"
-					class="mx-1 -my-1"
-				/>
-			</button>
+			</template>
 		</div>
-		<div v-if="adminRoles.length" class="w-full px-4">
+
+		<!--  -->
+		<div v-if="adminRoles.length" class="w-full px-4 md:px-8">
 			<!-- HEADER -->
 			<div
 				class="hidden md:flex items-center text-white justify-around font-semibold"
@@ -115,6 +87,8 @@
 				@pagechanged="pagechanged"
 			/>
 		</div>
+		<!--  -->
+
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -134,10 +108,14 @@
 <script>
 import CreateAdminRole from "@/components/UserManagement/CreateAdminRole";
 import AppPagination from "@/components/Base/AppPagination";
+import AppTable from "@/components/Base/AppTable";
+import AppButton from "@/components/Base/AppButton";
 export default {
 	components: {
 		CreateAdminRole,
-		AppPagination
+		AppPagination,
+		AppButton,
+		AppTable
 	},
 	data() {
 		return {
@@ -186,8 +164,8 @@ export default {
 		} catch (err) {
 			console.log("get roles count error", err);
 		}
-  },
-  
+	},
+
 	methods: {
 		async getAdminRoles() {
 			let limit = 10;

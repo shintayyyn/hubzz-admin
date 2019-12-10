@@ -14,7 +14,7 @@
 						v-for="(item, index) in locumDocsAlert"
 						:key="`item-${index}`"
 						:to="{
-							path: `/locums/${item.locum_detail.user.id}/locum-compliance/${item.compliance_document.id}`
+							path: `/locums/${item.locum_user.id}/locum-compliance/${item.compliance_document.id}`
 						}"
 						class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 					>
@@ -23,9 +23,7 @@
 						</div>
 						<div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
 							<span class="uppercase text-xs font-bold">Locum </span>
-							<span class="pb-2">{{
-								item.locum_detail.user.personal_detail.name
-							}}</span>
+							<span class="pb-2">{{ item.locum_user.name }}</span>
 							<span class="uppercase text-xs font-bold"
 								>Uploaded Compliance Document</span
 							>

@@ -32,9 +32,9 @@
             </select>
           </div> -->
 
-          <div class="flex items-center p-1">
-            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 transition-hover focus:bg-yellow-500">Reset</button>
-            <button class="border rounded-lg text-xs text-white py-2 px-3 mx-1 hover:text-black focus:text-black hover:bg-yellow-500 transition-hover focus:bg-yellow-500">Go</button>
+          <div class="flex items-center text-sm p-1">
+            <AppButton :label="'Reset'" class="mr-2"/>
+            <AppButton :label="'Go'" />
           </div>
 
           <div class="flex-1 p-1 flex justify-end">
@@ -137,7 +137,11 @@
 </template>
 
 <script>
+import AppButton from '@/components/Base/AppButton'
   export default {
+    components: {
+      AppButton
+    },
     watchQuery: [
       'order_by',
     ],

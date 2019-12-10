@@ -1,6 +1,7 @@
 /* eslint-disable */
 require('./add-circle')
 require('./add-rectangle')
+require('./add-user')
 require('./alert')
 require('./ani-double-ring')
 require('./arrow-left-solid')
