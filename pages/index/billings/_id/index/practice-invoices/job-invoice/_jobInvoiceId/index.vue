@@ -166,7 +166,7 @@ export default {
       const query = {
         ...this.$route.query
       }
-      this.$router.push({path:`/billings/${this.$route.params.id}`,query})
+      this.$router.push({path:`/billings/${this.$route.params.id}/practice-invoices`,query})
     },
   }
 
