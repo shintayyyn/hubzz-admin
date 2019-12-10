@@ -175,11 +175,11 @@ export default {
 	components: {
 		AppInput
 	},
-	props: ["practice", "surgeryId"],
+	props: ["practice", "practiceSpokeId"],
 	data() {
 		return {
 			form: {
-				surgery_id: this.surgeryId,
+				child_practice_id: this.practiceSpokeId,
 				allow_surgery_create_sessions: "",
 				max_hourly_rate_limit: "",
 				max_halfday_rate_limit: "",

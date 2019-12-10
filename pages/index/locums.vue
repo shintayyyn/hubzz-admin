@@ -513,7 +513,7 @@ export default {
 			this.params.limit = limit;
 			await this.getLocums(this.params);
 		},
-		sorted(order_by) {
+		async sorted(order_by) {
 			this.current_page = 1;
 			this.params.order_by = order_by;
 			this.getLocums(this.params);

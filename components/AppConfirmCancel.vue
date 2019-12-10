@@ -26,29 +26,7 @@
 </template>
 <script>
 export default {
-	// props: ["adminAccountId"],
-	props: {
-		modal: {
-			type: Boolean,
-			default: false
-		},
-		status: {
-			type: String,
-			default: "alert"
-		},
-		label: {
-			type: String,
-			required: true
-		},
-		confirmLabel: {
-			type: String,
-			default: "Confirm"
-		},
-		cancelLabel: {
-			type: String,
-			default: "Cancel"
-		}
-	},
+	props: ["adminAccountId"],
 	created() {
 		console.log("account id", this.adminAccountId);
 	},
@@ -71,7 +49,7 @@ export default {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",
-							text: "Something Went Wrong!"
+							text: err.response.data.message
 						});
 					});
 			}

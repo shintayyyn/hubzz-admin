@@ -394,7 +394,7 @@ export default {
         this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'success', text:'Edit Admin User Success!'})
       }).catch((err)=>{
         console.log('edit admin user error!',err)
-        this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+        this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text: err.response.data.message})
       })
       await this.getAdminUsers()
       this.$router.push('/user-management')

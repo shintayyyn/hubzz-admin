@@ -152,11 +152,11 @@ export default {
 			columns: [
 				{
 					name: "Practice Name",
-					dataIndex: "surgery.name"
+					dataIndex: "child_practice.surgery.name"
 				},
 				{
 					name: "Practice Code",
-					dataIndex: "surgery.name",
+					dataIndex: "child_practice.surgery.code",
 					class: "text-center"
 				},
 				{
@@ -251,8 +251,7 @@ export default {
 		async getChildren() {
 			let limit = 5;
 			let offset = 0;
-			offset =
-				this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
+			offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
 			let params = { limit, offset };
 
 			await this.$axios
@@ -264,7 +263,8 @@ export default {
 					this.$store.commit(
 						"practices/SET_PRACTICE_SPOKES",
 						res.data.practice_surgeries
-					);
+          );
+          console.log('practice children', res.data.practice_surgeries)
 				})
 				.catch(err => {
 					console.log("get children error!!!!", err);

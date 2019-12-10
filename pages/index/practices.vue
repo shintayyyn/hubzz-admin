@@ -51,13 +51,6 @@
 					{ label: 'Type', value: 'type' }
 				]"
 			/>
-			<!-- <AppInput
-				v-model="search"
-				:type="'search'"
-				:name="'search_text'"
-				:placeholder="'Search Messages'"
-				@keydown.enter="search"
-			/> -->
 		</div>
 		<transition name="fade">
 			<AppTable
@@ -146,7 +139,6 @@ export default {
 		return {
 			loading: false,
 			currentPage: 1,
-
 			search: "",
 			params: {
 				limit: 10,
@@ -154,13 +146,6 @@ export default {
 				order_by: ["created_at:desc"]
 			},
 			sort: "",
-			sortedBy: "",
-			sortType: "",
-			order_by: "",
-			practice_name: true,
-			created_at: true,
-			actived_until: true,
-			status: true,
 			modal: false,
 
 			//app table columns
@@ -215,13 +200,14 @@ export default {
 			await store.commit("practices/TOGGLE_LOADING", true);
 			let { page = 1, search = "", order_by = [] } = route.query;
 			page = parseInt(page);
-			const createdRoute = route.query;
+			const createdRoute = route.query.order_by;
 			const limit = 10;
 			const offset = page * limit - limit;
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
+
 			const params = { limit, offset, order_by };
 
 			if (search) {

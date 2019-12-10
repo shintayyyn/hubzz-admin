@@ -150,7 +150,7 @@
               <div
                 v-for="(spoke, index) in practiceSpokes"
                 :key="`spoke-${index}`"
-                @click="newChildSpoke(spoke.surgery.id)"
+                @click="newChildSpoke(spoke.id)"
                 class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
               >
                 <div class="flex flex-col text-white text-xs">
@@ -202,7 +202,7 @@
           @close="setSpokePermissionModal = false"
           @practiceSpokeCreated="(setSpokePermissionModal = false), $emit('close')"
           :practice="practice"
-          :surgeryId="practiceSpokeSurgeryId"
+          :practiceSpokeId="practiceSpokeId"
         />
       </div>
     </transition>
@@ -234,7 +234,7 @@ export default {
       practiceCount: null,
       createPracticeModal: false,
       setSpokePermissionModal:false,
-      practiceSpokeSurgeryId:'',
+      practiceSpokeId:'',
 
       total: 0,
       totalPages: 0,
@@ -407,11 +407,12 @@ export default {
           this.practiceSpokes = res.data.practices;
           this.practiceSpokes.map(item => this.isRegistered(item.id));
         });
+      console.log('practiceSpokes', this.practiceSpokes)
       this.loading = false
     },
 
-    async newChildSpoke(surgeryId) {
-      this.practiceSpokeSurgeryId = surgeryId
+    async newChildSpoke(practiceId) {
+      this.practiceSpokeId = practiceId
       this.setSpokePermissionModal = true
     },
 

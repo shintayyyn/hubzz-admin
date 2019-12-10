@@ -1,15 +1,17 @@
 <template>
 	<div class="practice-modal p-4 md:p-8 shadow-lg">
-		<div class="mb-4">
-			<svgicon
-				name="arrow-left-solid"
-				height="32"
-				width="32"
-				class="cursor-pointer text-white hover:text-sunglow fill-current"
-				@click="$router.push('/practices')"
-			/>
-		</div>
-		<PracticeTabs :practice="practice" />
+		<nuxt-link 
+      :to="{path:'/practices', query:$route.query}">
+      <div class="mb-4">
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          width="32"
+          class="cursor-pointer text-white hover:text-sunglow fill-current"
+        />
+      </div>
+		</nuxt-link>
+		<PracticeTabs :practice="practice"/>
 		<nuxt-child />
 		<div
 			class="practice-shield"
