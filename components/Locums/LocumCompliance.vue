@@ -239,7 +239,7 @@
         <!-- TABLE RESPONSIVE-->
         <div class="w-full overflow-x-auto p-4 md:p-8" v-if="locumMandatoryTrainings.length > 0"> 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-                <div class="align-middle px-2 text-center w-1/3">Title</div> 
+                <div class="align-middle px-2 w-1/3">Title</div> 
                 <div class="align-middle px-2 text-center w-1/3">File size</div>
                 <div class="align-middle px-2 text-center w-1/3">File uploaded</div>
             </div>
@@ -249,19 +249,19 @@
             class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
             draggable="false">
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Title</strong>
                     <span :class="item.file ? 'truncate' : 'break-word leading-none'">{{ item.mandatory_training.name }}</span>
                 </div>
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
                     <strong class="block md:hidden text-sm uppercase">File size</strong>
                     <span>
                     {{( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes'}}
                     </span>
                 </div>
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
                     <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
                     <span class="break-all">{{ item.expired_at ? $moment(item.expired_at).diff($moment(), 'days')  : null }}</span>
                 </div>

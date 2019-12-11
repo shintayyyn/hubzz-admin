@@ -71,7 +71,7 @@
           <div class="w-full text-sm text-white md:w-1/2">
             <div class="flex flex-wrap justify-between items-center">
               <span class="text-lg mr-2 font-bold">Other Information</span>
-					    <AppButton v-if="authAdminPermissions.includes('Edit Practice Other Information')" :label="toEdit ? 'Edit' : 'Cancel Editing'"  @click="toEdit=!toEdit"/>
+					    <AppButton v-if="authAdminPermissions.includes('Edit Practice Other Information')" :label="toEdit ? 'Cancel Editing' : 'Edit'"  @click="toEdit=!toEdit"/>
             </div>
 
             <div v-if="toEdit == false">
@@ -268,6 +268,7 @@ export default {
 
     },
     async toChangePracticeType(practiceID){
+      console.log(practiceID)
       try{
         await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,this.toPutPracticeType)
         await this.getPractices()

@@ -28,7 +28,7 @@
 			<div
 				id="toPrint"
 				class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
-				:class="!doNotShow && 'display'"
+				:class="!hide && 'display'"
 			>
 				<AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
 				<div>
@@ -47,16 +47,22 @@
 							<div class="w-full md:w-2/3">
 								<div
 									class="border-2 border-gray-300 rounded-lg p-4 text-sm"
-									:class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
+									:class="hide ? 'md:w-2/3' : 'w-2/3'"
 								>
-									<div class="pb-2">To: Accounts Department</div>
-									<select
-										class="block appearance-none font-bold w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
-									>
-										<option>Select the Addressee</option>
-										<option>Select the Addressee</option>
-										<option>Select the Addressee</option>
-									</select>
+									<AppInput
+										class="w-full mr-2"
+										v-model="addressee"
+										:type="'select'"
+										:name="'addressee'"
+										:label="'To: Accounts Department'"
+										:placeholder="'Select...'"
+										:inClass="'border-gray-400'"
+										:items="[
+											{ label: 'Select the Addressee', value: '1' },
+											{ label: 'Select the Addressee', value: '2' },
+											{ label: 'Select the Addressee', value: '3' }
+										]"
+									/>
 								</div>
 							</div>
 						</div>
@@ -77,14 +83,11 @@
 						</div>
 					</div>
 
-					<div
-						class="flex flex-col overflow-x-auto"
-						:class="doNotShow && 'mx-4'"
-					>
+					<div class="flex flex-col overflow-x-auto" :class="hide && 'mx-4'">
 						<div
-							:class="!doNotShow && 'px-4'"
+							:class="!hide && 'px-4'"
 							:ref="'items-header'"
-							:style="`min-width: ${doNotShow ? '733px' : ''}`"
+							:style="`min-width: ${hide ? '733px' : ''}`"
 						>
 							<div class="flex items-center justify-center py-2 bg-black">
 								<div class="w-3/6">
@@ -98,17 +101,17 @@
 									</div>
 								</div>
 								<!-- <div class="w-1/6">
-                    <div class="text-white text-sm text-left">
-                      <strong>Hours</strong>
-                    </div>
-                  </div> -->
+									<div class="text-white text-sm text-left">
+									<strong>Hours</strong>
+									</div>
+								</div> -->
 								<div class="w-2/6">
 									<div class="text-white text-sm text-right px-4">
 										<strong>Amount</strong>
 									</div>
 								</div>
 								<!-- Add fields -->
-								<div class="mr-2" v-if="doNotShow">
+								<div class="mr-2" v-if="hide">
 									<span
 										@click="addInvoiceItem()"
 										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
@@ -120,16 +123,16 @@
 						<div
 							v-for="(item, index) in invoiceItems"
 							:key="`item-${index}`"
-							:class="!doNotShow && 'px-4'"
+							:class="!hide && 'px-4'"
 							:ref="`item-${index}`"
-							:style="`min-width: ${doNotShow ? '733px' : ''}`"
+							:style="`min-width: ${hide ? '733px' : ''}`"
 						>
 							<div
 								class="flex w-full justify-center border-b border-gray-500 py-1"
 							>
 								<div class="w-3/6 text-sm mx-1">
 									<textarea
-										v-if="doNotShow"
+										v-if="hide"
 										v-model="item.description"
 										rows="2"
 										class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
@@ -142,7 +145,7 @@
 
 								<div class="w-2/6 text-sm mx-1">
 									<input
-										v-if="doNotShow"
+										v-if="hide"
 										v-model="item.job_part"
 										class="border-b-2 border-gray-300 w-full h-full focus:outline-none px-2"
 										placeholder="Job Part Number"
@@ -162,10 +165,10 @@
 
 								<div class="w-2/6 text-sm mx-1">
 									<input
-										v-if="doNotShow"
+										v-if="hide"
 										v-model="item.amount"
 										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
-										:class="!doNotShow && 'pr-3'"
+										:class="!hide && 'pr-3'"
 										type="number"
 										min="0"
 										placeholder="Enter Amount"
@@ -173,7 +176,7 @@
 									<p v-else class="px-2 py-1 text-right">{{ item.amount }}</p>
 								</div>
 
-								<div class="mr-2 flex items-center" v-if="doNotShow">
+								<div class="mr-2 flex items-center" v-if="hide">
 									<span
 										@click="deductInvoiceItem(item.id)"
 										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
@@ -209,10 +212,12 @@
 <script>
 import AppLoading from "@/components/Base/AppLoading";
 import AppButton from "@/components/Base/AppButton";
+import AppInput from "@/components/Base/AppInput";
 export default {
 	components: {
 		AppLoading,
-		AppButton
+		AppButton,
+		AppInput
 	},
 	data() {
 		return {
@@ -233,7 +238,7 @@ export default {
 				}
 			],
 			invoice: {},
-			doNotShow: true,
+			hide: true,
 			practices: [],
 			chosenPractice: [],
 			loading: false
@@ -313,7 +318,7 @@ export default {
 		},
 
 		async exportToPdf() {
-			this.doNotShow = false;
+			this.hide = false;
 			this.loading = true;
 			if (process.client) {
 				document.body.style.cursor = "wait";
@@ -476,7 +481,7 @@ export default {
 
 			yPosition = yPosition + imgHeightPdfFooter;
 
-			this.doNotShow = true;
+			this.hide = true;
 			doc.save("sample.pdf");
 			this.loading = false;
 			if (process.client) {

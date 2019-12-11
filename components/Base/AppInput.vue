@@ -53,6 +53,8 @@
               type="checkbox"
               @input="inputMultiCheck"
               :checked="Array.isArray(value) ? value.includes(item.value) : value"
+              :class="inClass"
+              :style="inStyle"
             />
             <label
               :for="`${name}-${index}`"
@@ -74,7 +76,7 @@
                   :type="type"
                   :placeholder="placeholder"
                   class="bg-transparent border-b-2 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
-                  :class="error ? 'border-red-500' : 'focus:border-yellow-500'"
+                  :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
                   @input="$emit('input', $event.target.value)"
                   @keypress.enter="$emit('submit')"
                   @blur="$emit('blur')"
@@ -99,7 +101,7 @@
                   :value="value"
                   :type="togglePassword()"
                   :placeholder="placeholder"
-                  :class="error ? 'border-red-500' : 'focus:border-yellow-500'"
+                  :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
                   @input="$emit('input', $event.target.value)"
                   @keypress.enter="$emit('submit')"
                   @blur="$emit('blur')"
@@ -135,7 +137,8 @@
                     :class="[
                       error && !disabled && 'border-red-500',
                       disabled ? 'border-gray-400' : 'cursor-pointer',
-                      multiple ? 'bg-white mt-4' : 'bg-transparent absolute'
+                      multiple ? 'bg-white mt-4' : 'bg-transparent absolute',
+                      inClass
                     ]"
                     :multiple="multiple"
                     @input="$emit('input', $event.target.value)"
@@ -188,7 +191,8 @@
                   class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
                   :class="[
                     error ? 'border-red-500' : '',
-                    resize ? '' : 'resize-none'
+                    resize ? '' : 'resize-none',
+                    inClass
                   ]"
                   @input="$emit('input', $event.target.value)"
                   @blur="$emit('blur', $event)"
@@ -230,6 +234,8 @@
             @change="$emit('input', $event.target.checked)"
             :checked="value"
             :disabled="disabled"
+            :class="inClass"
+            :style="inStyle"
           />
           <label
             :for="name"
@@ -268,7 +274,8 @@
             type="email"
             :placeholder="placeholder"
             class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-            :class="error ? 'border-red-600' : ''"
+            :class="[error ? 'border-red-600' : '', inClass]"
+            :style="inStyle"
             @input="$emit('input', $event.target.value)"
           />
         </div>
@@ -309,7 +316,7 @@
             :type="type"
             :placeholder="placeholder"
             class="appearance-none w-full rounded-lg border-2 border-transparent focus:border-sunglow text-sm text-white p-2 bg-waterloo focus:outline-none transition-hover"
-            :class="error ? 'border-red-600' : ''"
+            :class="[error ? 'border-red-600' : '', inClass]"
             @input="$emit('input', $event.target.value)"
             :style="inStyle"
             @keypress.enter="$emit('submit')"
@@ -332,6 +339,7 @@ export default {
     error: Object,
     info: String,
     inStyle: String,
+    inClass: String,
     // for select
     items: Array,
     multiple: Boolean,

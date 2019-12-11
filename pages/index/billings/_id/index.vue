@@ -12,64 +12,97 @@
 			</nuxt-link>
 		</div>
 		<!-- HEADER ENDS HERE -->
-    <div class="p-3 text-gray-300 max-w-2xl w-full rounded-lg text-sm bg-waterloo">
-      <p class="flex">Practice Name</p>
-      <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-        <span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
-        <span
-        class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
-        :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
-        <span
-        v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
-        class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
-        :class="practiceTypeStyle(practice.hub_type)">{{practice.hub_type == 'Type 2' ? 'Health Board' : null}}</span>
-      </p>
+		<div
+			class="p-3 text-gray-300 max-w-2xl w-full rounded-lg text-sm bg-waterloo"
+		>
+			<p class="flex">Practice Name</p>
+			<p
+				class="flex flex-wrap items-center text-white text-sm p-2 font-semibold"
+			>
+				<span class="mr-2">{{
+					practice.surgery ? practice.surgery.name : null
+				}}</span>
+				<span
+					class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
+					:class="practiceTypeStyle(practice.type)"
+					>{{ practice.type }}</span
+				>
+				<span
+					v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+					class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
+					:class="practiceTypeStyle(practice.hub_type)"
+					>{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span
+				>
+			</p>
 
-      <p class="flex">Practice Code</p>
-      <p class="flex text-white text-sm p-2 font-semibold">{{practice.surgery ? practice.surgery.code : null}}</p>
-      <p class="flex">Address</p>
-      <p class="flex flex-col text-white text-sm p-2 font-semibold">
-        <span v-if="practice.surgery.address && practice.surgery.address.line_1">{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
-        <span v-if="practice.surgery.address && practice.surgery.address.line_2">{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
-        <span v-if="practice.surgery.address && practice.surgery.address.line_3">{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
-      </p>
-    </div>
+			<p class="flex">Practice Code</p>
+			<p class="flex text-white text-sm p-2 font-semibold">
+				{{ practice.surgery ? practice.surgery.code : null }}
+			</p>
+			<p class="flex">Address</p>
+			<p class="flex flex-col text-white text-sm p-2 font-semibold">
+				<span
+					v-if="practice.surgery.address && practice.surgery.address.line_1"
+					>{{
+						practice.surgery.address ? practice.surgery.address.line_1 : null
+					}}</span
+				>
+				<span
+					v-if="practice.surgery.address && practice.surgery.address.line_2"
+					>{{
+						practice.surgery.address ? practice.surgery.address.line_2 : null
+					}}</span
+				>
+				<span
+					v-if="practice.surgery.address && practice.surgery.address.line_3"
+					>{{
+						practice.surgery.address ? practice.surgery.address.line_3 : null
+					}}</span
+				>
+			</p>
+		</div>
 		<div class="flex overflow-x-auto my-2">
-      <div class="inline-flex justify-start">
-        <nuxt-link
-          :to="getRoute('practice-invoices')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
-            $route.path == `/billings/${$route.params.id}/practice-invoices`
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'
-          "
-          >Practice Invoices
-        
-        </nuxt-link>
-        <nuxt-link
-          :to="getRoute('hubzz-invoices')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
-            $route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'
-          "
-          >HUBZZ Invoices
-        </nuxt-link>
-      </div>
-      <div v-if="$route.name.includes('practice-invoices')" class="inline-flex justify-end">
-        <nuxt-link
-          :to="`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
-            $route.path.includes(`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`)
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'
-          "
-          >Issue HUBZZ Invoice
-        </nuxt-link>
-      </div>
+			<div class="inline-flex justify-start">
+				<nuxt-link
+					:to="getRoute('practice-invoices')"
+					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+					:class="
+						$route.path == `/billings/${$route.params.id}/practice-invoices`
+							? 'bg-waterloo hover:bg-gray-500'
+							: 'hover:bg-waterloo'
+					"
+					>Practice Invoices
+				</nuxt-link>
+				<nuxt-link
+					:to="getRoute('hubzz-invoices')"
+					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+					:class="
+						$route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
+							? 'bg-waterloo hover:bg-gray-500'
+							: 'hover:bg-waterloo'
+					"
+					>HUBZZ Invoices
+				</nuxt-link>
+			</div>
+			<div
+				v-if="$route.name.includes('practice-invoices')"
+				class="inline-flex justify-end"
+			>
+				<nuxt-link
+					:to="
+						`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`
+					"
+					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+					:class="
+						$route.path.includes(
+							`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`
+						)
+							? 'bg-waterloo hover:bg-gray-500'
+							: 'hover:bg-waterloo'
+					"
+					>Issue HUBZZ Invoice
+				</nuxt-link>
+			</div>
 		</div>
 		<nuxt-child />
 	</div>
@@ -78,20 +111,22 @@
 export default {
 	data() {
 		return {
-			practice: "",
+			practice: ""
 		};
 	},
 	async asyncData({ app, route, store }) {
 		try {
-      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
-      const practice = response.data.practice
-      console.log('practice', practice)
-      return{
-        practice
-      }
+			let response = await app.$axios.$get(
+				`/api/v1/admin/practices/${route.params.id}`
+			);
+			const practice = response.data.practice;
+			console.log("practice", practice);
+			return {
+				practice
+			};
 		} catch (err) {
-			console.log('Get specific invoice error!', err)
-    }
+			console.log("Get specific invoice error!", err);
+		}
 	},
 	created() {
 		this.$router.push(`/billings/${this.$route.params.id}/practice-invoices`);
