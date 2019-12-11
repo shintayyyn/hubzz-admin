@@ -27,7 +27,7 @@
       <div
         class="flex text-white m-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg"
       >
-        <div class="w-full overflow-hidden text-gray-300 text-sm p-2">
+        <div class="w-full text-gray-300 text-sm p-2">
           <AppInput 
             v-model="toPostUser.title"
             :type="'text'"
@@ -137,53 +137,19 @@
             </div>
           </div>
           
-
-          <div v-if="adminCreate" class="flex flex-col py-1 mt-2">
-            <div class="relative pb-1">
-              <span>Admin Role/s </span>
-              <span class="text-xs">(hold ctrl + click to choose)</span>
-            </div>
-            <select
-              class="w-full text-black focus:outline-none"
-              multiple="true"
-              v-bind:class="{ 'fix-height': multiple === 'true' }"
-              v-model="toPostUser.roles_id"
-              @blur="
-                CheckEmptyField(toPostUser.roles_id, 'roles_id')
-              "
-            >
-              <option
-                class="px-2 py-1"
-                v-for="item in adminRoles"
-                :key="item.id"
-                :value="item"
-                >{{ item.label }}</option
-              >
-            </select>
-            <div
-              v-if="formError.filter(item => item.field === 'roles_id')"
-              class="text-red-500 text-xs pt-1"
-            >
-              {{ errorMessage("roles_id") }}
-            </div>
-            <div class="flex items-start flex-wrap py-1">
-              <div
-                v-for="(practice_type, index) in toPostUser.roles_id"
-                :key="`practice_type-${index}`"
-                class="inline-flex items-center mt-1 mr-2 bg-yellow-500 rounded-lg p-2 text-black"
-              >
-                {{toPostUser.roles_id[index].label}}
-              </div>
-            </div> 
-          </div>
-
-          <button
-            class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg float-left"
-            @click.prevent="checkForm(toPostUser, toPostUser.surgery_id)"
-          >
-            Create
-          </button>
-        </div>
+          <AppFilterSearch
+            v-if="adminCreate"
+            v-model="toPostUser.roles_id"
+            :name="'roles_id'"
+            :label="'Admin Role/s'"
+            :placeholder="'Select...'"
+            :error="formError.find(item => item.field === 'roles_id')"
+            :items="adminRoles"
+            @add="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
+            @remove="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
+          />
+          <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)"/>
+         </div>
       </div>
     </div>
     <nuxt-child />
@@ -192,11 +158,13 @@
 
 <script>
 import AppInput from "@/components/Base/AppInput";
+import AppButton from "@/components/Base/AppButton";
 import AppFilterSearch from "@/components/Base/AppFilterSearch";
 export default {
   components: {
     AppFilterSearch,
-    AppInput
+    AppInput,
+    AppButton
   },
   props: ["practice", "surgery", "user", "adminCreate", "userCount"],
   data() {

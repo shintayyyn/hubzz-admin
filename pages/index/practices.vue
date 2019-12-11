@@ -1,8 +1,8 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
+	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
 		<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
-		<div class="text-xl md:text-4xl text-white">Practices</div>
-		<div class="flex justify-between items-center flex-wrap">
+		<div class="px-2 text-xl md:text-4xl text-white">Practices</div>
+		<div class="px-2 flex justify-between items-center flex-wrap">
 			<div class="flex items-center py-2">
 				<div class="relative">
 					<input
@@ -32,12 +32,13 @@
 						authAdminPermissions.includes('Add Practice') &&
 							authAdminPermissions.includes('Add Practice User')
 					"
+					class="text-sm"
 					:label="'Add Practice'"
 					@click="show()"
 				/>
 			</div>
 			<AppInput
-				class="w-full sm:w-1/2 mr-2 text-white md:hidden"
+				class="w-full sm:w-1/2 md:mr-2 text-white md:hidden"
 				v-model="sort"
 				:type="'select'"
 				:name="'status'"

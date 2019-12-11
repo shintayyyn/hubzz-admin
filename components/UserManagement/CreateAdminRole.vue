@@ -25,6 +25,7 @@
 					:resize="false"
 					:rows="3"
 				/>
+
 				<div class="flex flex-wrap justify-start">
 					<div
 						class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
@@ -32,36 +33,33 @@
 						:key="index"
 					>
 						<div class="flex flex-col">
-							<div class="customized-select w-full flex flex-row items-center">
+							<div class=" w-full flex flex-row items-center">
 								<input
 									type="checkbox"
-									:id="role.permissions"
+									:id="role.category"
 									:checked="isChecked(role.permissions)"
 									@change="checkAll(index, $event.target.checked)"
 								/>
-								<label class="font-bold text-xl pl-1" :for="role.permissions"
-									>{{
-										role.category === "User Management" ? "User" : role.category
-									}}
-									Management</label
+								<label class="font-bold text-xl pl-1" :for="role.category"
+									>{{ role.category }} Management</label
 								>
 							</div>
-							<div class="flex flex-col px-1">
-								<div
-									class="customized-select w-full flex flex-row items-center"
-									v-for="permission in role.permissions"
-									:key="permission.id"
+							<div
+								class="w-full flex flex-row justify-start items-center mb-1"
+								v-for="permission in role.permissions"
+								:key="permission.id"
+							>
+								<input
+									v-model="permission.done"
+									type="checkbox"
+									:id="permission.id"
+									:checked="permission.done"
+								/>
+								<label
+									:for="permission.id"
+									class="text-xs sm:text-sm flex items-center"
+									>{{ permission.name }}</label
 								>
-									<input
-										v-model="permission.done"
-										type="checkbox"
-										:id="permission.id"
-										:checked="permission.done"
-									/>
-									<label :for="permission.id" class="text-sm pl-1">{{
-										permission.name
-									}}</label>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -105,16 +103,6 @@ export default {
 	mounted() {
 		this.getPermissions();
 	},
-	// watch: {
-	// 	"form.name"(value) {
-	// 		if (!value) {
-	// 			this.formError.push({
-	// 				field: "name",
-	// 				message: "Role Name is Required"
-	// 			});
-	// 		}
-	// 	}
-	// },
 	methods: {
 		async getAdminRoles() {
 			this.$store.dispatch("adminusers/fetchAdminRoles", {
@@ -125,7 +113,11 @@ export default {
 		getPermissions() {
 			this.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
 				res.data.permissions.forEach(permission => {
-					this.permissions.push({ ...permission, done: false });
+					this.permissions.push({
+						...permission,
+						label: permission.name,
+						done: false
+					});
 				});
 				this.setCategory();
 			});
@@ -150,6 +142,7 @@ export default {
 					}
 				}
 			});
+			console.log("asd", categories);
 			this.setPermissions(categories);
 		},
 		setPermissions(categories) {

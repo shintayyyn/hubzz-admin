@@ -8,7 +8,7 @@
 					{{ info }}
 				</div>
 				<div
-					class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white"
+					class="absolute right-0 bg-red-300 text-red-700 py-1 px-2 text-xs"
 					v-if="error"
 				>
 					{{ error.message }}
@@ -146,10 +146,10 @@ export default {
 <style scoped>
 .option-list {
 	transition: all 0.3s ease-in-out;
-	height: 0;
+	max-height: 0;
 }
 .slide-down {
 	transition: all 0.3s ease-in-out;
-	height: 200px;
+	max-height: 200px;
 }
 </style>

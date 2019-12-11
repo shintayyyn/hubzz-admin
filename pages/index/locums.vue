@@ -1,7 +1,7 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
-		<div class="text-xl md:text-4xl text-white">Locums</div>
-		<div class="flex flex-col md:flex-row justify-between">
+	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+		<div class="px-2 text-xl md:text-4xl text-white">Locums</div>
+		<div class="px-2 flex flex-col md:flex-row justify-between">
 			<div class="flex py-2">
 				<div class="relative">
 					<input
@@ -24,9 +24,9 @@
 					</button>
 				</div>
 			</div>
-			<div class="flex w-full justify-end">
+			<div class="flex flex-col w-full justify-end">
 				<div
-					class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end py-2 pr-2 md:p-2 md:py-0"
+					class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2"
 						>Filter by Compliance Status</label
@@ -47,7 +47,7 @@
 					</select>
 				</div>
 				<div
-					class="w-1/2 relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end py-2  md:p-2 md:py-0"
+					class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2  md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2">Sort by</label>
 					<select

@@ -15,7 +15,7 @@
 				:icon="'add-user'"
 				:iconSize="'16'"
 				class="mr-2"
-				@click="show()"
+				@click="modal = true"
 			/>
 			<template v-if="authAdminPermissions.includes('Delete Admin Account')">
 				<AppButton
@@ -170,6 +170,7 @@
 
 		<!-- PAGINATION -->
 		<AppPagination
+			class="px-4 md:px-6"
 			:total="total"
 			:totalPages="totalPages"
 			:currentPage="currentPage"
@@ -342,9 +343,6 @@ export default {
 		toDeleteAdminUser(userId) {
 			this.adminAccountId = userId;
 			this.showConfirmCancelModal = true;
-		},
-		show() {
-			this.modal = true;
 		},
 		pagechanged(e) {
 			const query = {

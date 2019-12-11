@@ -43,7 +43,7 @@
         <!-- multi-checkbox -->
         <template v-if="type === 'multi-checkbox'">
           <div
-            class="flex flex-row justify-start items-center"
+            class="flex flex-row justify-start items-center mt-1"
             v-for="(item, index) in lists"
             :key="index"
           >
@@ -52,15 +52,12 @@
               :id="`${name}-${index}`"
               type="checkbox"
               @input="inputMultiCheck"
-              :checked="
-                Array.isArray(value) ? value.includes(item.value) : value
-              "
+              :checked="Array.isArray(value) ? value.includes(item.value) : value"
             />
             <label
               :for="`${name}-${index}`"
               class="text-xs sm:text-sm flex items-center"
-              >{{ item.label }}</label
-            >
+            >{{item.label}}</label>
           </div>
         </template>
 
@@ -85,7 +82,7 @@
                   :checked="value"
                   :min="type === 'number' && 0"
                 />
-                <div v-if="error" class="text-red-500 py-1 text-xs">
+                <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                     error.message.slice(1).replace(/_/g, " ")
@@ -114,7 +111,7 @@
                   <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
                 </button>
                 
-                <div v-if="error" class="text-red-500 -py-1 text-xs">
+                <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                     error.message.slice(1).replace(/_/g, " ")
@@ -168,7 +165,7 @@
                   </span>
                 </div>
                 <div
-                  class="text-red-500 pt-1 text-xs"
+                  class="px-2 pt-1 text-xs"
                   v-if="error && (type === 'select' || type.includes('checkbox'))"
                 >
                   {{
@@ -197,7 +194,7 @@
                   @blur="$emit('blur', $event)"
                 ></textarea>
                 <div
-                  class="text-red-500 py-1 text-xs"
+                  class="bg-red-300 text-red-700 py-1 px-2 text-xs"
                   v-if="error"
                 >
                   {{
@@ -217,7 +214,7 @@
       <div class="flex flex-col py-2 mb-2">
         <div class="flex justify-end">
           <div
-            class="rounded-lg bg-red-500 px-2 py-1 text-xs sm:text-sm text-white"
+            class="rounded-lg bg-red-500 bg-red-300 text-red-700 py-1 px-2 text-xs sm:text-sm text-white"
             v-if="error"
           >
             {{
@@ -305,19 +302,18 @@
           </div>
         </div>
         <div
-          class="w-full relative flex flex-row justify-start items-center mb-2 focus:border-yellow-400 rounded-lg bg-waterloo"
+          class="w-full relative flex flex-row justify-start items-center focus:border-yellow-400 rounded-lg bg-waterloo"
         >
           <input
             :value="value"
             :type="type"
             :placeholder="placeholder"
-            class="appearance-none w-full rounded-lg border-2 border-transparent text-sm text-white p-2 bg-transparent focus:outline-none"
+            class="appearance-none w-full rounded-lg border-2 border-transparent focus:border-sunglow text-sm text-white p-2 bg-waterloo focus:outline-none transition-hover"
             :class="error ? 'border-red-600' : ''"
             @input="$emit('input', $event.target.value)"
             :style="inStyle"
             @keypress.enter="$emit('submit')"
             @blur="$emit('blur')"
-            :checked="value"
           />
           <span v-if="value" class="absolute right-0 h-full p-2 cursor-pointer hover:text-sunglow bg-waterloo rounded-r-lg" @click="(value='')">x</span>
         </div>

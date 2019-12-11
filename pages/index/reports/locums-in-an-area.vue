@@ -9,46 +9,29 @@
         </nuxt-link>
       </div>
 
-      <div class="flex flex-col py-2 w-full">
-        <div class="flex flex-wrap items-center flex-col md:flex-row py-1">
-          <div class="relative p-1">
-            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow transition-hover bg-waterloo" placeholder="Search Area">
-            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:outline-none hover:text-red-500 transition-hover">
-              <svgicon name="times-solid" height="12" width="12" class="fill-current"/>
-            </button>
-          </div>
-
-          <div class="relative p-1">
-            <input class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-8 focus:border-sunglow hover:border-sunglow transition-hover bg-waterloo" placeholder="Search Profession">
-            <button class="absolute top-0 right-0 bottom-0 border border-transparent rounded-lg m-2 flex items-center justify-center text-white p-2 border-1 focus:outline-none hover:text-red-500 transition-hover">
-              <svgicon name="times-solid" height="12" width="12" class="fill-current"/>
-            </button>
-          </div>
-
-<!--           <div class="flex items-center my-2 md:my-0">
-            <select class="rounded-lg border-2 border-transparent text-sm text-white p-2 -pl-12 bg-waterloo">
-              <option class="bg-gray-700">Filter by</option>
-              <option v-for="status in statuses">{{ status }}</option>
-            </select>
-          </div> -->
-
-          <div class="flex items-center text-sm p-1">
-            <AppButton :label="'Reset'" class="mr-2"/>
-            <AppButton :label="'Go'" />
-          </div>
-
-          <div class="flex-1 p-1 flex justify-end">
-            <a class="rounded-lg text-xs text-white hover:text-black focus:text-black hover:bg-yellow-500 focus:bg-yellow-500 p-2 rounded inline-flex items-center" :href="downloadCSVLink" download="locums_in_an_area.csv">
-              <svgicon name="cloud-download" width="21" height="21" color="transparent fill" class="fill-current"></svgicon>
-              <span class="px-1">Download CSV</span>
-            </a>
-          </div>
-
+      <div class="w-full flex flex-col md:flex-row justify-between">
+        <div class="w-full md:w-auto flex items-center flex-wrap">
+          <AppInput class="w-full md:w-auto my-1 md:mr-1" :type="'search'" :placeholder="'Search Area'"/>
+          <AppInput class="w-full md:w-auto my-1 md:mr-1" :type="'search'" :placeholder="'Search Profession'"/>
+          <AppButton :label="'Reset'" class="text-xs md:text-sm mt-1 md:mt-0 mr-1"/>
+          <AppButton :label="'Go'" class="text-xs md:text-sm mt-1 md:mt-0 "/>
         </div>
+        <div class="flex justify-end -mt-10 py-1 md:mt-0 md:py-0 md:items-center">
+          <a class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm" :href="downloadCSVLink" download="locums_in_an_area.csv">
+            <svgicon name="cloud-download" width="21" height="21" color="transparent fill" class="fill-current mr-2"></svgicon>
+            <span>Download CSV</span>
+          </a>
+        </div>
+        <!--<div class="flex items-center my-2 md:my-0">
+          <select class="rounded-lg border-2 border-transparent text-sm text-white p-2 -pl-12 bg-waterloo">
+            <option class="bg-gray-700">Filter by</option>
+            <option v-for="status in statuses">{{ status }}</option>
+          </select>
+        </div> -->
       </div>
 
 
-      <div class="w-full text-xs overflow-x-auto">
+      <div class="w-full text-xs overflow-x-auto mt-1">
         <div class="flex bg-waterloo text-white font-bold">
           <div class="flex-1 p-2">
             <span>Area</span>
@@ -138,9 +121,11 @@
 
 <script>
 import AppButton from '@/components/Base/AppButton'
+import AppInput from '@/components/Base/AppInput'
   export default {
     components: {
-      AppButton
+      AppButton,
+      AppInput
     },
     watchQuery: [
       'order_by',
