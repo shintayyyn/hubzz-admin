@@ -12,27 +12,64 @@
 			</nuxt-link>
 		</div>
 		<!-- HEADER ENDS HERE -->
-		<div class="flex justify-start overflow-x-auto my-2">
-			<nuxt-link
-				:to="getRoute('practice-invoices')"
-				class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-				:class="
-					$route.path == `/billings/${$route.params.id}/practice-invoices`
-						? 'bg-waterloo hover:bg-gray-500'
-						: 'hover:bg-waterloo'
-				"
-				>Practice Invoices</nuxt-link
-			>
-			<nuxt-link
-				:to="getRoute('locum-invoices')"
-				class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-				:class="
-					$route.path.includes(`/billings/${$route.params.id}/locum-invoices`)
-						? 'bg-waterloo hover:bg-gray-500'
-						: 'hover:bg-waterloo'
-				"
-				>Locum Jobs Billing</nuxt-link
-			>
+    <div class="p-3 text-gray-300 max-w-2xl w-full rounded-lg text-sm bg-waterloo">
+      <p class="flex">Practice Name</p>
+      <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
+        <span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
+        <span
+        class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
+        :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
+        <span
+        v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+        class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
+        :class="practiceTypeStyle(practice.hub_type)">{{practice.hub_type == 'Type 2' ? 'Health Board' : null}}</span>
+      </p>
+
+      <p class="flex">Practice Code</p>
+      <p class="flex text-white text-sm p-2 font-semibold">{{practice.surgery ? practice.surgery.code : null}}</p>
+      <p class="flex">Address</p>
+      <p class="flex flex-col text-white text-sm p-2 font-semibold">
+        <span v-if="practice.surgery.address && practice.surgery.address.line_1">{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
+        <span v-if="practice.surgery.address && practice.surgery.address.line_2">{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
+        <span v-if="practice.surgery.address && practice.surgery.address.line_3">{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
+      </p>
+    </div>
+		<div class="flex overflow-x-auto my-2">
+      <div class="inline-flex justify-start">
+        <nuxt-link
+          :to="getRoute('practice-invoices')"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="
+            $route.path == `/billings/${$route.params.id}/practice-invoices`
+              ? 'bg-waterloo hover:bg-gray-500'
+              : 'hover:bg-waterloo'
+          "
+          >Practice Invoices
+        
+        </nuxt-link>
+        <nuxt-link
+          :to="getRoute('hubzz-invoices')"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="
+            $route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
+              ? 'bg-waterloo hover:bg-gray-500'
+              : 'hover:bg-waterloo'
+          "
+          >HUBZZ Invoices
+        </nuxt-link>
+      </div>
+      <div v-if="$route.name.includes('practice-invoices')" class="inline-flex justify-end">
+        <nuxt-link
+          :to="`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="
+            $route.path.includes(`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`)
+              ? 'bg-waterloo hover:bg-gray-500'
+              : 'hover:bg-waterloo'
+          "
+          >Issue HUBZZ Invoice
+        </nuxt-link>
+      </div>
 		</div>
 		<nuxt-child />
 	</div>
@@ -41,65 +78,20 @@
 export default {
 	data() {
 		return {
-			practiceInvoice: "",
 			practice: "",
-			sampleJobInvoices: [
-				{
-					id: "1",
-					invoice_number: "0000000001",
-					locum_name: "Squidward Q. Tentacles",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000101"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "2",
-					invoice_number: "0000000002",
-					locum_name: "Sandra Jennifer J. Cheeks",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000102"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "3",
-					invoice_number: "0000000003",
-					locum_name: "Eugene Harold A. Krabs",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000103"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "4",
-					invoice_number: "0000000004",
-					locum_name: "Spongebob B. SquarePants",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000104"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "5",
-					invoice_number: "0000000005",
-					locum_name: "Patrick A. Star",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000105"],
-					total_amount: "£100.00",
-					status: "Paid"
-				}
-			]
 		};
 	},
 	async asyncData({ app, route, store }) {
 		try {
-		} catch (err) {}
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.practice
+      console.log('practice', practice)
+      return{
+        practice
+      }
+		} catch (err) {
+			console.log('Get specific invoice error!', err)
+    }
 	},
 	created() {
 		this.$router.push(`/billings/${this.$route.params.id}/practice-invoices`);
