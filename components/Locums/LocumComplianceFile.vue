@@ -69,7 +69,6 @@
                 v-model="toPutLocumDetailCompliance.expired_at"
                 :name="'expired_at'"
                 :label="'Change Expiration Date / Status'"
-                isAfter
               />
             </div>
             <div> <!--CHANGE THIS ASAP-->

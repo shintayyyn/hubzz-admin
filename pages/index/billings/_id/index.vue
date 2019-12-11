@@ -58,19 +58,12 @@
           >HUBZZ Invoices
         </nuxt-link>
       </div>
-      <div v-if="$route.name.includes('practice-invoices')" class="inline-flex justify-end">
-        <nuxt-link
-          :to="`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
-            $route.path.includes(`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`)
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'
-          "
-          >Issue HUBZZ Invoice
-        </nuxt-link>
-      </div>
 		</div>
+    <div
+			class="billing-shield"
+			v-if="$route.name.includes('issue-hubzz-invoice')"
+			@click="$router.push(`/billings/${route.params.id}/practice-invoices`)"
+		></div>
 		<nuxt-child />
 	</div>
 </template>

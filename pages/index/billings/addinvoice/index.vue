@@ -269,7 +269,6 @@ export default {
 	methods: {
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
-			console.log("it workds");
 			const newItem = {
 				job_part: "",
 				description: "",
