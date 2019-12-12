@@ -1,13 +1,5 @@
 <template>
 	<div class="w-full overflow-hidden">
-    <div class="lg:w-3/4 sm:w-full mx-2">
-      <AppButton
-				:label="'Issue HUBZZ Invoice'"
-				:nuxtLink="`/billings/${$route.params.id}/practice-invoices/issue-hubzz-invoice`"
-				class="float-right my-2 text-sm"
-			/>
-    </div>
-    
     <div>
       <div class="max-w-2xl w-full overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
         <p class="m-3 text-white text-xl font-semibold ">Practice Invoices</p>
@@ -27,7 +19,7 @@
           <nuxt-link
             v-for="(locumInvoice, index) in locumInvoices"
             :key="`billing-${index}`"
-            :to="`/billings/${practice.id}/practice-invoices/job-invoice/${locumInvoice.id}`"
+            :to="`/billings/${practice.id}/practice-invoices/${locumInvoice.id}`"
             class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo"
             draggable="false"
           >
@@ -90,7 +82,6 @@
         </div>
       </div>
     </div>
-		
 	</div>
 </template>
 <script>

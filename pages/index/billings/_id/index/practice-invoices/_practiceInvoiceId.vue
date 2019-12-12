@@ -5,10 +5,6 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
       </div>
     </div>
-    <div @click="file()" class="p-4 w-1/4 bg-orange-500">
-      test
-    </div>
-
     <div id="toPrint" ref="content" class="md:m-4">
       <div class="invoice flex flex-col bg-white p-4">
         <div class="flex flex-wrap overflow-hidden">
@@ -29,33 +25,19 @@
           <div class="my-1 px-1 w-2/3 overflow-hidden">
             <div class="border-2 border-gray-300 rounded-lg p-4 text-sm">
               <div class="pb-2">To: Accounts Department</div>
-              <select
-                class="block appearance-none font-bold w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
-              >
-                <option>Select the Practice for this Invoice</option>
-                <option>Option 2</option>
-                <option>Option 3</option>
-              </select>
+              <div class="font-semibold">
+                <p>{{practiceInvoice.practice.surgery.name}}</p>
+              </div>
             </div>
           </div>
           <div class="my-1 px-1 w-1/3 overflow-hidden">
             <div class="text-sm float-right text-right content-end">
               <strong>INVOICE</strong>
-              <br />Not yet issued
+              <br />{{practiceInvoice.issued_at ? $moment(practiceInvoice.issued_at).format("MMM DD, YYYY | HH:ss:mm") : 'Not yet issued'}}
             </div>
           </div>
         </div>
         <div class="flex flex-wrap overflow-hidden">
-          <div class="my-1 px-1 w-full overflow-hidden">
-            <select
-              class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
-            >
-              <option>Select the Practice for this Invoice</option>
-              <option>Option 2</option>
-              <option>Option 3</option>
-            </select>
-          </div>
-
           <div class="my-1 px-1 w-full overflow-hidden">
             <div class="flex flex-col border-b border-gray-400 pb-2">
               <!--HEADER-->
@@ -75,6 +57,7 @@
                 </div>
               </div>
               <!--HEADER-->
+
               <div class="flex justify-center py-1">
                 <div class="w-2/3 text-sm mx-1">
                   <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
@@ -116,13 +99,6 @@
         </div>
       </div>
     </div>
-    <!-- <div ref="content" class="max-w-2xl">
-      <div class="flex items-center text-white py-2">
-        <p>Invoice Number: <span class="font-bold">0000000001</span></p>
-        <p class="px-3 py-1 mx-2 rounded text-black bg-green-300 uppercase font-bold">Paid</p>
-      </div>
-      <embed class="object-contain object-top w-full h-full document" src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"/>
-    </div> -->
   </div>
 </template>
 <script>
@@ -132,15 +108,16 @@ import 'jspdf-autotable';
 export default {
   data () {
     return{
+      practiceInvoice: ''
     }
   },
   async asyncData({ app, route, store }){
     try{
-      // let response = await app.$axios.$get(`/api/v1/admin/locum-users/${route.params.locumInvoiceId}`)
-      // const locum = response.data.locum
-      console.log('this is the "invoice" id:',route.params.jobInvoiceId)
+      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.practiceInvoiceId}`)
+      const practiceInvoice = response.data.practice_invoice
+      console.log('practiceInvoice', practiceInvoice)
       return{
-        locum
+        practiceInvoice
       }
     }catch(err){
       console.log('Get locum invoice error!', err)
@@ -173,16 +150,6 @@ export default {
 }
 </script>
 <style>
- .locum-invoice-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
 .locum-invoice-modal {
   position: fixed;
   top: 0;
@@ -191,7 +158,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px yellow;
+  border-left: solid 2px #FFC72C;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

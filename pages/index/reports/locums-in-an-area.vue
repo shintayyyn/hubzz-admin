@@ -326,7 +326,7 @@ import AppInput from '@/components/Base/AppInput'
     width: 100%;
     height: 100%;
     overflow: auto;
-    border-left: solid 2px yellow;
+    border-left: solid 2px #FFC72C;
     transition: all 0.3s ease-in-out;
     background-color:#505561;
     z-index: 512;

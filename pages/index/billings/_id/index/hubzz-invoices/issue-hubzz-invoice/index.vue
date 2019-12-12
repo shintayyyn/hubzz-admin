@@ -8,19 +8,19 @@
     <div class="flex flex-row text-white">
       <div class="mx-2">
         <AppDate
-          v-model="toFilterByDate.date_start"
+          v-model="toFilter.date_start"
           :name="'date_start'"
           :label="'From'"
         />
       </div>
       <div class="mx-2">
         <AppDate
-          v-model="toFilterByDate.date_end"
+          v-model="toFilter.date_end"
           :name="'date_end'"
           :label="'To'"
         />
       </div>
-      <div @click="toGetApprovedJobParts()">
+      <div @click="chooseJobPartsModal = true">
         <p class="p-2 bg-sunglow font-semibold text-black rounded-lg my-8 cursor-pointer">Go</p>
       </div>
       <div class="mx-2 float-right">
@@ -29,6 +29,19 @@
         </div>
       </div>
     </div>
+    <!-- <div>
+      <div
+        class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
+      >
+        <input
+          type="checkbox"
+          id="disputed"
+          value="true"
+          v-model="includeDisputed"
+        />
+        <label for="disputed">Include Disputed Invoices?</label>
+      </div>
+    </div> -->
     	<!-- FIRST PAGE -->
 			<div
 				id="toPrint"
@@ -201,120 +214,34 @@
       ></div>
 
       <transition name="slide" mode="out-in">
-        <div class="choose-job-parts-modal shadow-lg" v-if="chooseJobParts">
-          <div class="m-4">
-            <div @click="chooseJobParts = false" class="text-white hover:text-sunglow p-1">
-              <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
-            </div>
-            <div class="max-w-2xl w-full overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
-            <p class="m-3 text-white text-xl font-semibold ">Approved Job Parts</p>
-              <div class="m-2">
-                <!-- HEADER -->
-                <div class="hidden md:flex items-center text-white justify-around font-semibold">
-                  <div class="flex-1 align-middle px-2">Select</div>
-                  <div class="flex-1 align-middle px-2 text-center">Job Part Number</div>
-                  <div class="flex-1 align-middle px-2 text-center">Approved At</div>
-                  <div class="flex-1 align-middle px-2 text-center">Date Start</div>
-                  <div class="flex-1 align-middle px-2 text-center">Date End</div>
-                  <div class="flex-1 align-middle px-2 text-center">£ Amount</div>
-                  <div class="flex-1 align-middle px-2 text-center">Status</div>
-                </div>
-                <!-- HEADER ENDS HERE -->
-                <div
-                  v-for="(approved_job_part, index) in approved_job_parts"
-                  :key="`approved_job_part-${index}`"
-                  class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo"
-                  draggable="false"
-                >
-                  <!-- checkbox -->
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">Select</strong>
-                    <input
-                      type="checkbox"
-                      :id="approved_job_part.id"
-                      :value="approved_job_part"
-                      v-model="chosenJobParts"
-                    />
-                    <label :for="approved_job_part.id"></label>
-                  </div>
-                  <!-- checkbox ends here -->
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">Job Part Number</strong>
-                    <span class="break-all">{{ approved_job_part.job_part_number }}</span>
-                  </div>
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">Date Start</strong>
-                    <span class="break-word">{{ $moment(approved_job_part.approved_at).format("MMM DD, YYYY | HH:ss:mm") }}</span>
-                  </div>
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">Date Start</strong>
-                    <span class="break-word">{{ $moment(approved_job_part.date_start).format("MMM DD, YYYY | HH:ss:mm") }}</span>
-                  </div>
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">Date End</strong>
-                    <span class="break-all">{{$moment(approved_job_part.date_end).format("MMM DD, YYYY | HH:ss:mm")}}</span>
-                  </div>
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-                    <span class="break-all">{{ parseFloat(approved_job_parts.final_hours) * parseFloat(approved_job_parts.practice_rate) }}</span>
-                  </div>
-                  <div
-                    class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-                  >
-                    <strong class="block md:hidden text-xs uppercase">Status</strong>
-                    <!-- <span>{{ approved_job_part.status }}</span> -->
-                    <div class="py-4" v-if="!approved_job_part.paid && !approved_job_part.paid_at">
-                      <a
-                        class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white"
-                        >Mark as paid</a
-                      >
-                    </div>
-                  </div>
-                </div>
-
-                <AppButton
-                :label="'Confirm'"
-                @click="toProcessInvoiceItems()"
-                />
-              </div>
-            </div>
-          </div>
+        <div class="choose-job-parts-modal shadow-lg" v-if="chooseJobPartsModal">
+          <ChooseJobParts @close="chooseJobPartsModal = false" :filter="toFilter"/>
         </div>
       </transition>
   </div>
 </template>
-
 <script>
 import AppButton from '@/components/Base/AppButton'
 import AppDate from '@/components/Base/AppDate'
 import AppLoading from '@/components/Base/AppLoading'
-
+import ChooseJobParts from '@/components/Billings/ChooseJobParts'
 export default {
   components:{
     AppButton,
     AppDate,
     AppLoading,
+    ChooseJobParts,
   },  
   data(){
     return {
       loading: false,
-      chooseJobParts:false,
-
-      toFilterByDate:{
+      chooseJobPartsModal: false,
+      includeDisputed: false,
+      toFilter:{
         date_start: '',
         date_end: '',
+        status: '',
+        invoice_status: '',
       },
       practice: '',
       approved_job_parts: '',
@@ -362,10 +289,13 @@ export default {
     }
   },
   methods:{
+    chooseJobPartsModal(){
+      this.chooseJobParts = true
+    },
     async toGetApprovedJobParts(){
       let params = {
-        approved_at_date_start: this.toFilterByDate.date_start,
-        approved_at_date_end:this.toFilterByDate.date_end,
+        approved_at_date_start: this.toFilter.date_start,
+        approved_at_date_end:this.toFilter.date_end,
         status: 'Approved'
       }
       await this.$axios.$get(`/api/v1/admin/job-parts`,{ params }).then(res => {
@@ -405,8 +335,8 @@ export default {
     async toPostPracticeInvoiceItem(){
       console.log('practice', this.practice.id)
       this.toPostPracticeInvoice.practice_id = this.practice.id,
-      this.toPostPracticeInvoice.date_start = this.toFilterByDate.date_start,
-      this.toPostPracticeInvoice.date_end = this.toFilterByDate.date_end
+      this.toPostPracticeInvoice.date_start = this.toFilter.date_start,
+      this.toPostPracticeInvoice.date_end = this.toFilter.date_end
       this.toPostPracticeInvoice.items = this.invoiceItems
       this.toPostPracticeInvoice.total_amount = this.amountTotal
 
@@ -646,7 +576,7 @@ export default {
       const query = {
         ...this.$route.query
       }
-      this.$router.push({path:`/billings/${this.$route.params.id}/practice-invoices`,query})
+      this.$router.push({path:`/billings/${this.$route.params.id}/hubzz-invoices`,query})
     },
   }
 }
@@ -677,7 +607,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px yellow;
+	border-left: solid 2px #FFC72C;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

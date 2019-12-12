@@ -1,59 +1,110 @@
 <template>
-	<div class="flex w-full overflow-hidden">
-
-		<!-- <div class="w-1/4 overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
-          <div class="m-2">
-            <div>
-              <p class="m-2 text-white text-xl font-semibold">Practice</p>
-              <div class="m-3 text-white">
-                <p class="text-gray-400">Practice Name</p>
-                <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-                  <span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
-                  <span
-                  class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
-                  :class="practiceTypeStyle(practice.type)">{{practice.type}}</span>
-                </p>
-                <p class="text-gray-400">Phone Number</p>
-                <p class="m-2 text-white font-semibold">{{practice.phone_number}}</p>
-                <p class="text-gray-400">Report To</p>
-                <p class="m-2 text-white font-semibold">{{practice.report_to ? practice.report_to : 'N/A'}}</p>
-                <p class="text-gray-400">E-mail</p>
-                <p class="m-2 text-white font-semibold">{{practice.email ? practice.email : 'N/A'}}</p>
-                  <p class="text-gray-400">Address</p>
-                <p class="flex flex-col text-white text-sm p-2 font-semibold">
-                  <span v-if="practice.surgery.address && practice.surgery.address.line_1">{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
-                  <span v-if="practice.surgery.address && practice.surgery.address.line_2">{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
-                  <span v-if="practice.surgery.address && practice.surgery.address.line_3">{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
-                </p>
-              </div>
+	<div class="w-full overflow-hidden">
+    <div class="lg:w-3/4 md:w-full sm:w-full mx-2">
+      <AppButton
+        :label="'Issue HUBZZ Invoice'"
+        :nuxtLink="`/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`"
+        class="float-right my-2 text-sm"
+      />
+    </div>
+    <div
+			class="max-w-2xl w-full overflow-hidden my-1 mx-1 rounded-lg bg-waterloo"
+		>
+			<p class="m-3 text-white text-xl font-semibold ">Invoice Records</p>
+			<div class="m-2">
+				<!-- HEADER -->
+				<div
+					class="hidden md:flex items-center text-white justify-around font-semibold"
+				>
+					<div class="flex-1  align-middle px-2">Invoice Number</div>
+					<div class="flex-1  align-middle px-2 text-center">Practice / Surgery</div>
+					<div class="flex-1  align-middle px-2 text-center">Issued At</div>
+					<div class="flex-1  align-middle px-2 ">Job Numbers</div>
+					<div class="flex-1  align-middle px-2 text-center">£ Amount</div>
+					<div class="flex-1  align-middle px-2 text-center">Status</div>
+				</div>
+				<!-- HEADER ENDS HERE -->
+				<nuxt-link
+					v-for="(practiceInvoice, index) in practiceInvoices"
+					:key="`billing-${index}`"
+					:to="`/billings/${$route.params.id}/hubzz-invoices/${practiceInvoice.id}`"
+					class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo"
+					draggable="false"
+				>
+					<div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
+					>
+						<strong class="block md:hidden text-xs uppercase"
+							>Invoice Number</strong
+						>
+						<span class="break-all">{{ practiceInvoice.invoice_number }}</span>
+					</div>
+					<div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
+					>
+						<strong class="block md:hidden text-xs uppercase"
+							>Practice / Surgery</strong
+						>
+						<span class="break-word">{{ practiceInvoice.practice.surgery.name }}</span>
+					</div>
+					<div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
+					>
+						<strong class="block md:hidden text-xs uppercase">Issued At</strong>
+						<span class="break-all">{{
+							$moment(practiceInvoice.issued_at).format("MMM DD, YYYY | HH:SS:MM")
+						}}</span>
+					</div>
+					<div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
+					>
+						<strong class="block md:hidden text-xs uppercase"
+							>Job Numbers</strong
+						>
+						<span
+							v-for="(item, index) in practiceInvoice.practice_invoice_items"
+							:key="index"
+							class=""
+							>{{ item.job_part.job_part_number }}</span>
+					</div>
+					<div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
+					>
+						<strong class="block md:hidden text-xs uppercase">£ Amount</strong>
+						<span class="break-all">£{{ practiceInvoice.total_amount }}</span>
+					</div>
+					<div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
+					>
+						<strong class="block md:hidden text-xs uppercase">Status</strong>
+						<!-- <span>{{ practiceInvoice.status }}</span> -->
+						<div class="py-4" v-if="!practiceInvoice.paid && !practiceInvoice.paid_at">
+							<a
+								class="px-4 py-2 whitespace-no-wrap rounded-full bg-yellow-500 text-white"
+								>Mark as paid</a
+							>
+						</div>
+            <div v-else>
+              <div
+								class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white"
+								>Mark as paid</div
+							>
             </div>
-            <div>
-              <p class="m-2 text-white text-xl font-semibold">Billing Info</p>
-              <div class="m-3 text-white">
-                <p class="text-gray-400">Invoice Number</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.invoice_number}}</p>
-                <p class="text-gray-400">Total Amount</p>
-                <p class="m-2 text-white font-semibold">{{practiceInvoice.total_amount}}</p>
-                <p class="text-gray-400">Billing Cycle</p>
-                <p class="m-2 text-white font-semibold">WiP</p>
-                <p class="text-gray-400">Rates</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[0].type ? practice.rates[0].type : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[0].rate ? '£ '+practice.rates[0].rate : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[1].type ? practice.rates[1].type : 'N/A'}}</p>
-                <p class="m-2 text-white font-semibold">{{practice.rates[1].rate ? '£ '+practice.rates[1].rate : 'N/A'}}</p>
-                <p class="text-gray-400">Payment Details</p>
-                <p class="m-2 text-white font-semibold">WiP</p>
-              </div>
-            </div>
-          </div>
-        </div> -->
+					</div>
+				</nuxt-link>
+			</div>
+		</div>
 	</div>
 </template>
 <script>
+import AppButton from '@/components/Base/AppButton'
 export default {
+  components:{
+    AppButton
+  },
 	data() {
 		return {
-			practiceInvoice: "",
+			practiceInvoices: "",
 			practice: "",
 			sampleJobInvoices: [
 				{
@@ -111,17 +162,18 @@ export default {
 	},
 	async asyncData({ app, route, store }) {
 		try {
-			// let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.id}`)
-			// const practiceInvoice = response.data.practice_invoice
-			// response = await app.$axios.$get(`/api/v1/admin/practices/${practiceInvoice.practice.id}`)
-			// const practice = response.data.practice
-			// return {
-			//   practiceInvoice,
-			//   practice
-			// }
+      let params = {
+        viewing_practice_id : route.params.id
+      }
+      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices`,{ params })
+      const practiceInvoices = response.data.practice_invoices
+      console.log('hubzz invoices', practiceInvoices)
+			return {
+        practiceInvoices
+			}
 		} catch (err) {
-			// error({ statusCode: 404 }),
-			// console.log('Get specific invoice error!', err)
+			error({ statusCode: 404 }),
+			console.log('Get specific invoice error!', err)
 		}
 	},
 	methods: {

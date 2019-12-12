@@ -64,6 +64,16 @@
 		<div class="flex overflow-x-auto my-2">
       <div class="inline-flex justify-start">
         <nuxt-link
+          :to="getRoute('hubzz-invoices')"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="
+            $route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
+              ? 'bg-waterloo hover:bg-gray-500'
+              : 'hover:bg-waterloo'
+          "
+          >HUBZZ Invoices
+        </nuxt-link>
+        <nuxt-link
           :to="getRoute('practice-invoices')"
           class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
           :class="
@@ -73,16 +83,6 @@
           "
           >Practice Invoices
         
-        </nuxt-link>
-        <nuxt-link
-          :to="getRoute('hubzz-invoices')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
-            $route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'
-          "
-          >HUBZZ Invoices
         </nuxt-link>
       </div>
 		</div>
@@ -107,7 +107,6 @@ export default {
 				`/api/v1/admin/practices/${route.params.id}`
 			);
 			const practice = response.data.practice;
-			console.log("practice", practice);
 			return {
 				practice
 			};
@@ -116,7 +115,7 @@ export default {
 		}
 	},
 	created() {
-		this.$router.push(`/billings/${this.$route.params.id}/practice-invoices`);
+		this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`);
 	},
 	computed: {
 		getRoute() {
@@ -176,7 +175,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: hidden auto;
-	border-left: solid 2px yellow;
+	border-left: solid 2px #FFC72C;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
