@@ -26,14 +26,14 @@
             <div class="border-2 border-gray-300 rounded-lg p-4 text-sm">
               <div class="pb-2">To: Accounts Department</div>
               <div class="font-semibold">
-                <p>{{practiceInvoice.practice.surgery.name}}</p>
+                <!-- <p>{{locumInvoice.practice.surgery.name}}</p> -->
               </div>
             </div>
           </div>
           <div class="my-1 px-1 w-1/3 overflow-hidden">
             <div class="text-sm float-right text-right content-end">
               <strong>INVOICE</strong>
-              <br />{{practiceInvoice.issued_at ? $moment(practiceInvoice.issued_at).format("MMM DD, YYYY | HH:ss:mm") : 'Not yet issued'}}
+              <br />{{locumInvoice.issued_at ? $moment(locumInvoice.issued_at).format("MMM DD, YYYY | HH:ss:mm") : 'Not yet issued'}}
             </div>
           </div>
         </div>
@@ -108,16 +108,16 @@ import 'jspdf-autotable';
 export default {
   data () {
     return{
-      practiceInvoice: ''
+      locumInvoice: ''
     }
   },
   async asyncData({ app, route, store }){
     try{
-      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.practiceInvoiceId}`)
-      const practiceInvoice = response.data.practice_invoice
-      console.log('practiceInvoice', practiceInvoice)
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/locum-invoices/${route.params.practiceInvoiceId}`)
+      const locumInvoice = response.data.locum_invoice
+      console.log('locumInvoice', locumInvoice)
       return{
-        practiceInvoice
+        locumInvoice
       }
     }catch(err){
       console.log('Get locum invoice error!', err)

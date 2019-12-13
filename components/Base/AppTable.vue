@@ -72,10 +72,14 @@
 									</div>
 								</template>
 								<template v-else>
-									<template v-if="column.slot">
-										<slot :name="column.slotName" v-bind:item="item"></slot>
-									</template>
+                  
+									<template v-if="column.slotName">
+                    <div @click="$emit(column.eventName, item)">
+										  <slot :name="column.slotName" v-bind:item="item">dsa</slot>
+                    </div>
+                  </template>
 									<template v-else>
+                    
 										<template
 											v-if="
 												column.class &&

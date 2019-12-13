@@ -31,6 +31,7 @@ export function fetchJobParts(axios, payload){
   payload.status ? params.status = payload.status : null
   payload.locum_status ? params.locum_status = payload.locum_status : null
   payload.order_by ? params.order_by = payload.order_by : null
+  payload.invoice_status ? params.invoice_status = payload.invoice_status : null
   payload.limit ? params.limit = payload.limit : null
   payload.offset ? params.offset = payload.offset : null
   payload.viewing_locum_user_id ? params.viewing_locum_user_id = payload.viewing_locum_user_id : null

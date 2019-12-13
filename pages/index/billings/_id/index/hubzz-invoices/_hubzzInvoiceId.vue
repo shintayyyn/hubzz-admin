@@ -1,27 +1,42 @@
 <template>
   <div class="hubzz-invoice-modal">
-    <div class="flex items-center text-sm text-white py-2">
+    <div class="items-center text-sm text-white py-2 m-6">
       <div @click="goBack()" class="text-white hover:text-sunglow p-1">
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
       </div>
+      <div>
+        <HubzzInvoice 
+          :forViewing="true"
+          :practice="practice" 
+          :practiceInvoice="practiceInvoice"/>
+      </div>
     </div>
-    hello world
   </div>
 </template>
 <script>
+import HubzzInvoice from '@/components/Billings/HubzzInvoice'
 export default {
+  components:{
+    HubzzInvoice
+  },
   data(){
     return{
-
+      practiceInvoice: '',
+      practice: ''
     }
   },
-  async asyncData({ app, route, params}){
+  async asyncData({ app, route, params }){
     try{
+      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`)
+      const practiceInvoice = response.data.practice_invoice
+      response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.practice
       return{
-
+        practiceInvoice,
+        practice
       }
     }catch(err){
-
+      console.log('get invoice error', err)
     }
   },
   methods:{

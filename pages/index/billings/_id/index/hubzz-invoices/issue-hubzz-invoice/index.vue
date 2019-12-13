@@ -8,15 +8,16 @@
     <div class="flex flex-row text-white">
       <div class="mx-2">
         <AppDate
-          v-model="toFilter.date_start"
-          :name="'date_start'"
+          v-model="toFilter.approved_at_date_start"
+          :name="'approved_at_date_start'"
           :label="'From'"
         />
       </div>
       <div class="mx-2">
         <AppDate
-          v-model="toFilter.date_end"
-          :name="'date_end'"
+          v-model="toFilter.approved_at_date_end"
+          :name="'approved_at_date_end'"
+
           :label="'To'"
         />
       </div>
@@ -28,20 +29,21 @@
           <p class="p-2 bg-sunglow font-semibold text-black rounded-lg my-8 cursor-pointer">Confirm</p>
         </div>
       </div>
-    </div>
-    <!-- <div>
       <div
-        class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
+        class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none"
       >
         <input
           type="checkbox"
           id="disputed"
-          value="true"
+          value=true
           v-model="includeDisputed"
         />
-        <label for="disputed">Include Disputed Invoices?</label>
+        <label for="disputed">Show Disputed Invoices</label>
       </div>
-    </div> -->
+    </div>
+    <div>
+      
+    </div>
     	<!-- FIRST PAGE -->
 			<div
 				id="toPrint"
@@ -62,9 +64,9 @@
 							</div>
 						</div>
 						<div class="flex">
-							<div class="w-full md:w-2/3">
+							<div class="flex lg:w-full md:w-2/3">
 								<div
-									class="border-2 border-gray-300 rounded-lg p-4 text-sm"
+									class=" border-2 border-gray-300 rounded-lg p-4 text-sm"
 									:class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
 								>
 									<div class="pb-2">To: Accounts Department</div>
@@ -76,13 +78,18 @@
 										<option>Select the Addressee</option>
 									</select>
 								</div>
+                
 							</div>
+              <div class="flex justify-end">
+                <div class="font-semibold text-lg float-right">
+                  INVOICE
+                </div>
+              </div>
 						</div>
 						<div class="py-2 pt-6 px-2">
 							<p class="font-semibold">{{practice ? practice.surgery.name : null}}</p>
 						</div>
 					</div>
-
 					<div
 						class="flex flex-col overflow-x-auto"
 						:class="doNotShow && 'mx-4'"
@@ -93,21 +100,12 @@
 							:style="`min-width: ${doNotShow ? '733px' : ''}`"
 						>
 							<div class="flex items-center justify-center py-2 bg-black">
-								<div class="w-3/6">
+								<div class="w-4/6">
 									<div class="text-white text-sm text-left px-4">
 										<strong>Description</strong>
 									</div>
 								</div>
-								<div class="w-2/6">
-									<div class="text-white text-sm text-left px-2">
-										<strong>Job Number</strong>
-									</div>
-								</div>
-								<!-- <div class="w-1/6">
-                    <div class="text-white text-sm text-left">
-                      <strong>Hours</strong>
-                    </div>
-                  </div> -->
+
 								<div class="w-2/6">
 									<div class="text-white text-sm text-right px-4">
 										<strong>£ Amount</strong>
@@ -133,7 +131,7 @@
 							<div
 								class="flex w-full justify-center border-b border-gray-500 py-1"
 							>
-								<div class="w-3/6 text-sm mx-1">
+								<div class="w-2/3 text-sm mx-1">
 									<textarea
 										v-if="doNotShow"
 										v-model="item.description"
@@ -145,28 +143,14 @@
 										{{ item.description ? item.description : "No Description" }}
 									</p>
 								</div>
-
-								<div class="w-2/6 text-sm mx-1">
-									<input
-										v-if="doNotShow"
-										v-model="item.job_part"
-										class="border-b-2 border-gray-300 w-full h-full focus:outline-none px-2"
-										placeholder="Job Part Number"
-									/>
-									<p v-else class="px-2 py-1">
-										{{ item.job_part ? item.job_part : "No Job Part Number" }}
-									</p>
-								</div>
-
 								<!-- <div class="w-2/6 text-sm mx-1">
-                    <input 
-                      v-model="item.hours"
-                      class="border-b-2 border-gray-300 w-full h-full focus:outline-none" 
-                      type="number"
-                      placeholder="Hours"/>
-                  </div> -->
-
-								<div class="w-2/6 text-sm mx-1">
+                  <input 
+                    v-model="item.hours"
+                    class="border-b-2 border-gray-300 w-full h-full focus:outline-none" 
+                    type="number"
+                    placeholder="Hours"/>
+                </div> -->
+								<div class="w-1/3 text-sm mx-1">
 									<input
 										v-if="doNotShow"
 										v-model="item.total"
@@ -209,13 +193,18 @@
 			<!-- FIRST PAGE ENDS HERE -->
       <div
         class="issue-hubzz-invoice-shield"
-        v-if="chooseJobParts == true"
-        @click="chooseJobParts = false"
+        v-if="chooseJobPartsModal == true"
+        @click="chooseJobPartsModal = false"
       ></div>
 
       <transition name="slide" mode="out-in">
         <div class="choose-job-parts-modal shadow-lg" v-if="chooseJobPartsModal">
-          <ChooseJobParts @close="chooseJobPartsModal = false" :filter="toFilter"/>
+          <ChooseJobParts
+            :filter="toFilter"
+            :includeDisputed="includeDisputed"
+            @close="chooseJobPartsModal = false"
+            @chosenJobParts="toProcessInvoiceItems"
+           />
         </div>
       </transition>
   </div>
@@ -237,12 +226,15 @@ export default {
       loading: false,
       chooseJobPartsModal: false,
       includeDisputed: false,
+
       toFilter:{
-        date_start: '',
-        date_end: '',
+        viewing_practice_id: this.$route.params.id,
+        approved_at_date_start: '',
+        approved_at_date_end: '',
         status: '',
-        invoice_status: '',
+        invoice_status: this.includeDisputed == true ? 'Disputed' : null,
       },
+
       practice: '',
       approved_job_parts: '',
 
@@ -261,7 +253,7 @@ export default {
   },
   computed: {
 		amountTotal: function() {
-			if (this.invoiceItems.length > 1) {
+			if (this.invoiceItems.length > 0) {
 				const reducer = (accumulator, currentValue) =>
 					accumulator + currentValue;
 				let array = this.invoiceItems.map(invoiceItem =>
@@ -289,39 +281,23 @@ export default {
     }
   },
   methods:{
-    chooseJobPartsModal(){
-      this.chooseJobParts = true
-    },
-    async toGetApprovedJobParts(){
-      let params = {
-        approved_at_date_start: this.toFilter.date_start,
-        approved_at_date_end:this.toFilter.date_end,
-        status: 'Approved'
-      }
-      await this.$axios.$get(`/api/v1/admin/job-parts`,{ params }).then(res => {
-        console.log('res', res)
-        this.approved_job_parts = res.data.job_parts
-      })
-
-      this.chooseJobParts = true
-      this.showHubzzInvoice = true 
-    },
-
-    async toProcessInvoiceItems(){
-      for(let i = 0; i < this.chosenJobParts.length ; i++){
+    toProcessInvoiceItems (chosenJobParts){
+      console.table('asd', chosenJobParts)
+      this.chooseJobPartsModal = false
+      for(let i = 0; i < chosenJobParts.length ; i++){
         const newItem = {
-          job_part_id: this.chosenJobParts[i].id,
-          description: 'Job Number '+this.chosenJobParts[i].job_part_number+
-          ' for £'+this.chosenJobParts[i].practice_rate + 
-          ' from '+this.chosenJobParts[i].date_start+
-          ' to '+this.chosenJobParts[i].date_end,
-          hours: this.chosenJobParts[i].final_hours,
-          total: parseFloat(this.chosenJobParts[i].final_hours * this.chosenJobParts[i].practice_rate)
+          job_part_id: chosenJobParts[i].id,
+          description: 'Job Number '+chosenJobParts[i].job_part_number+
+          ' for £'+chosenJobParts[i].practice_rate + 
+          ' from '+chosenJobParts[i].date_start+
+          ' to '+chosenJobParts[i].date_end,
+          hours: chosenJobParts[i].final_hours,
+          total: parseFloat(chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate)
         };
         newItem.id = this.invoiceItems.length + 1;
-        await this.invoiceItems.push(newItem);
+        this.invoiceItems.push(newItem);
 
-        this.chooseJobParts = false
+        this.chooseJobPartsModal = false
       }
     },  
 
@@ -335,8 +311,8 @@ export default {
     async toPostPracticeInvoiceItem(){
       console.log('practice', this.practice.id)
       this.toPostPracticeInvoice.practice_id = this.practice.id,
-      this.toPostPracticeInvoice.date_start = this.toFilter.date_start,
-      this.toPostPracticeInvoice.date_end = this.toFilter.date_end
+      this.toPostPracticeInvoice.date_start = this.toFilter.approved_at_date_start,
+      this.toPostPracticeInvoice.date_end = this.toFilter.approved_at_date_end,
       this.toPostPracticeInvoice.items = this.invoiceItems
       this.toPostPracticeInvoice.total_amount = this.amountTotal
 
@@ -413,7 +389,6 @@ export default {
 
 			// ITEMS
 			let totalJobParts = this.invoiceItems.length;
-
 			for (let i = 0; i < totalJobParts; i++) {
 				// minus the current item invoice height to the pageHeight
 				pageHeight = pageHeight - this.$refs[`item-${i}`][0].offsetHeight;

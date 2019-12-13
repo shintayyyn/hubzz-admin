@@ -89,7 +89,7 @@
     <div
 			class="billing-shield"
 			v-if="$route.name.includes('issue-hubzz-invoice')"
-			@click="$router.push(`/billings/${route.params.id}/practice-invoices`)"
+			@click="$router.push(`/billings/${$route.params.id}/practice-invoices`)"
 		></div>
 		<nuxt-child />
 	</div>

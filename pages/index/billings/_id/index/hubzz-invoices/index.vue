@@ -1,14 +1,14 @@
 <template>
-	<div class="w-full overflow-hidden">
-    <div class="lg:w-3/4 md:w-full sm:w-full mx-2">
+	<div class="max-w-2xl w-full overflow-hidden">
+    <div class="mx-2 float-right">
       <AppButton
         :label="'Issue HUBZZ Invoice'"
         :nuxtLink="`/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`"
-        class="float-right my-2 text-sm"
+        class="t my-2 text-sm"
       />
     </div>
     <div
-			class="max-w-2xl w-full overflow-hidden my-1 mx-1 rounded-lg bg-waterloo"
+			class="w-full overflow-hidden my-1 mx-1 rounded-lg bg-orange-500 bg-waterloo"
 		>
 			<p class="m-3 text-white text-xl font-semibold ">Invoice Records</p>
 			<div class="m-2">
@@ -16,12 +16,12 @@
 				<div
 					class="hidden md:flex items-center text-white justify-around font-semibold"
 				>
-					<div class="flex-1  align-middle px-2">Invoice Number</div>
-					<div class="flex-1  align-middle px-2 text-center">Practice / Surgery</div>
-					<div class="flex-1  align-middle px-2 text-center">Issued At</div>
-					<div class="flex-1  align-middle px-2 ">Job Numbers</div>
-					<div class="flex-1  align-middle px-2 text-center">£ Amount</div>
-					<div class="flex-1  align-middle px-2 text-center">Status</div>
+					<div class="flex-1 align-middle px-2">Invoice Number</div>
+					<div class="flex-1 align-middle px-2 text-center">Practice / Surgery</div>
+					<div class="flex-1 align-middle px-2 text-center">Issued At</div>
+					<div class="flex-1 align-middle px-2 ">Job Numbers</div>
+					<div class="flex-1 align-middle px-2 text-center">£ Amount</div>
+					<div class="flex-1 align-middle px-2 text-center">Status</div>
 				</div>
 				<!-- HEADER ENDS HERE -->
 				<nuxt-link
@@ -98,66 +98,50 @@
 </template>
 <script>
 import AppButton from '@/components/Base/AppButton'
+import AppTable from '@/components/Base/AppTable'
 export default {
   components:{
-    AppButton
+    AppButton,
+    AppTable
   },
 	data() {
 		return {
 			practiceInvoices: "",
-			practice: "",
-			sampleJobInvoices: [
-				{
-					id: "1",
-					invoice_number: "0000000001",
-					locum_name: "Squidward Q. Tentacles",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000101"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "2",
-					invoice_number: "0000000002",
-					locum_name: "Sandra Jennifer J. Cheeks",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000102"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "3",
-					invoice_number: "0000000003",
-					locum_name: "Eugene Harold A. Krabs",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000103"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "4",
-					invoice_number: "0000000004",
-					locum_name: "Spongebob B. SquarePants",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000104"],
-					total_amount: "£100.00",
-					status: "Paid"
-				},
-				{
-					id: "5",
-					invoice_number: "0000000005",
-					locum_name: "Patrick A. Star",
-					date_created: "2019-11-11T03:06:20.478Z",
-					issued_at: "2019-11-07T00:00:00.000Z",
-					job_numbers: ["H00000000105"],
-					total_amount: "£100.00",
-					status: "Paid"
-				}
-			]
+      practice: "",
+
+      columns: [
+        {
+          name: "Invoice Number",
+          dataIndex:"invoice_number",
+          class:"text-center",
+          sortable: true
+        },
+        {
+          name: 'Practice',
+          dataIndex:"practice.surgery.name",
+          class:"text-center",
+          sortable: 'true'
+        },
+        {
+          name: 'Issued At',
+          dataIndex:"invoice_number",
+          class:"text-center",
+          sortable: 'true'
+        },
+        {
+          name: 'Job Numbers',
+          dataIndex:'practice_invoice_items',
+          class:"text-center",
+          sortable: 'false'
+        },
+        {
+          name: '£ Amount',
+          dataIndex: 'total_amount',
+          class:"text-center",
+          sortable: 'false'
+        }
+      ]
+
 		};
 	},
 	async asyncData({ app, route, store }) {
