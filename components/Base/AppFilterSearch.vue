@@ -78,7 +78,7 @@ export default {
 		error: Object,
 		items: Array,
 		info: String,
-		defaultItem: String
+    defaultItem: String,
 	},
 	data() {
 		return {

@@ -12,13 +12,7 @@
     </div>
     <div class="">
       <div class="text-white pl-4 pt-2">
-        <div
-          class="text-lg font-bold"
-          v-if="practice && practice.type == 'Hub'"
-        >
-          Create Spoke User
-        </div>
-        <div class="text-lg font-bold" v-else>Create User</div>
+        <div class="text-lg font-bold">Create User</div>
         <div v-if="surgery" class="text-xs font-hairline">
           Surgery: {{ surgery.name }}
         </div>
@@ -28,6 +22,7 @@
         class="flex text-white m-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg"
       >
         <div class="w-full text-gray-300 text-sm p-2">
+          <!-- USER PERSONAL DETAILS -->
           <AppInput 
             v-model="toPostUser.title"
             :type="'text'"
@@ -56,17 +51,107 @@
             :label="'Suffix'"
             :placeholder="'Ph.D'"
           />
-          <AppFilterSearch
-            v-model="toPostUser.practice_type_id"
-            :name="'practice_type_id'"
-            :label="'Practice Types'"
-            :placeholder="'Select...'"
-            :error="formError.find(item => item.field === 'practice_type_id')"
-            :items="practiceTypes"
-            @add="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
-            @remove="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
-          />
+          <!-- USER PERSONAL DETAILS ENDS HERE -->
+
+          <!-- PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED -->
           <template v-if="surgery">
+            <template v-if="surgery && surgery.practice_count < 1">
+              <AppInput 
+                v-model="toPostUser.type"
+                :type="'select'"
+                :label="'Type'"
+                :items="[{label: 'Hub', value: 'Hub'}, {label: 'Stand Alone', value: 'Stand Alone'}, {label: 'Spoke', value: 'Spoke'}]"
+              />
+              <template v-if="toPostUser.type == 'Hub'">
+                <AppInput 
+                  v-model="toPostUser.hub_type"
+                  :type="'select'"
+                  :label="'Hub Type'"
+                  :items="[{label: 'Type 1', value: 'Type 1'}, {label: 'Type 2', value: 'Type 2'}]"
+                />
+              </template>
+            </template>
+            <AppInput 
+              v-model="toPostUser.code"
+              :type="'text'"
+              :label="'Surgery Code'"
+              :placeholder="'Surgery Code'"
+              :error="formError.find(item => item.field === 'code')"
+              @blur="CheckEmptyField(toPostUser.code, 'code')"
+            />
+            <AppInput 
+              v-model="toPostUser.name"
+              :type="'text'"
+              :label="'Surgery Name'"
+              :placeholder="'Surgery Name'"
+              :error="formError.find(item => item.field === 'name')"
+              @blur="CheckEmptyField(toPostUser.name, 'name')"
+            />
+            <AppInput 
+              v-model="toPostUser.phone_number"
+              :type="'text'"
+              :label="'Phone Number'"
+              :placeholder="'Phone Number'"
+              :error="formError.find(item => item.field === 'phone_number')"
+              @blur="CheckEmptyField(toPostUser.phone_number, 'phone_number')"
+            />
+            <AppInput 
+              v-model="toPostUser.address_line_1"
+              :type="'text'"
+              :label="'Surgery Address - Line 1'"
+              :placeholder="'Surgery Address - Line 1'"
+              :error="formError.find(item => item.field === 'address_line_1')"
+              @blur="CheckEmptyField(toPostUser.address_line_1, 'address_line_1')"
+            />
+            <AppInput 
+              v-model="toPostUser.address_line_2"
+              :type="'text'"
+              :label="'Surgery Address - Line 2'"
+              :placeholder="'Surgery Address - Line 2'"
+              :error="formError.find(item => item.field === 'address_line_2')"
+              @blur="CheckEmptyField(toPostUser.address_line_2, 'address_line_2')"
+            />
+            <AppInput 
+              v-model="toPostUser.address_line_3"
+              :type="'text'"
+              :label="'Surgery Address - Line 3'"
+              :placeholder="'Surgery Address - Line 3'"
+              :error="formError.find(item => item.field === 'address_line_3')"
+              @blur="CheckEmptyField(toPostUser.address_line_3, 'address_line_3')"
+            />
+            <!-- <AppInput 
+              v-model="toPostUser.postcode"
+              :type="'select'"
+              :label="'Post Code'"
+              :items="postCodes"
+            /> -->
+            <AppPostCode
+              v-model="toPostUser.postcode"
+              :name="'postcode'"
+              :label="'Post code'"
+              :error="formError.find(item => item.field === 'postcode')"
+              :inStyle="'background-color:#dae1e7;border-color:white'"
+              @blur="CheckEmptyField(toPostUser.postcode, 'postcode')"
+            />
+            Coordinate X {{toPostUser.coordinate_x}} Coordinate Y{{toPostUser.coordinate_y}}
+            <AppInput 
+              v-model="toPostUser.clinical_commissioning_group_name"
+              :type="'text'"
+              :label="'Clinical Commissioning Group'"
+              :placeholder="'Doe'"
+              :error="formError.find(item => item.field === 'clinical_commissioning_group_name')"
+              @blur="CheckEmptyField(toPostUser.clinical_commissioning_group_name, 'clinical_commissioning_group_name')"
+            />
+            <AppFilterSearch
+              v-model="toPostUser.practice_type_id"
+              :name="'practice_type_id'"
+              :label="'Practice Types'"
+              :placeholder="'Select...'"
+              :error="formError.find(item => item.field === 'practice_type_id')"
+              :items="practiceTypes"
+              @add="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
+              @remove="CheckEmptyField(toPostUser.practice_type_id, 'practice_type_id')"
+            />
             <AppInput 
               v-model="toPostUser.practice_role"
               :type="'select'"
@@ -76,23 +161,9 @@
               @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
             />
           </template>
-          <template v-if="surgery && surgery.practice_count < 1">
-            <AppInput 
-              v-model="toPostUser.type"
-              :type="'select'"
-              :label="'Type'"
-              :items="[{label: 'Hub', value: 'Hub'}, {label: 'Stand Alone', value: 'Stand Alone'}, {label: 'Spoke', value: 'Spoke'}]"
-            />
-            <template v-if="toPostUser.type == 'Hub'">
-              <AppInput 
-                v-model="toPostUser.hub_type"
-                :type="'select'"
-                :label="'Type'"
-                :items="[{label: 'Type 1', value: 'Type 1'}, {label: 'Type 2', value: 'Type 2'}]"
-              />
-            </template>
-          </template>
-          
+          <!-- PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED -->
+
+          <!-- EMAIL ADDRESS AND PASSWORD - FOR USER CREDENTIALS  -->
           <AppInput
             v-model="toPostUser.email"
             :type="'email'"
@@ -136,7 +207,9 @@
               />
             </div>
           </div>
-          
+          <!-- EMAIL ADDRESS AND PASSWORD - FOR USER CREDENTIALS  -->
+
+          <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED -->
           <AppFilterSearch
             v-if="adminCreate"
             v-model="toPostUser.roles_id"
@@ -148,6 +221,8 @@
             @add="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
             @remove="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
           />
+          <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED -->
+
           <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)"/>
          </div>
       </div>
@@ -155,51 +230,87 @@
     <nuxt-child />
   </div>
 </template>
-
 <script>
+import debounce from "lodash.debounce";
 import AppInput from "@/components/Base/AppInput";
 import AppButton from "@/components/Base/AppButton";
 import AppFilterSearch from "@/components/Base/AppFilterSearch";
+import AppPostCode from "@/components/Base/AppPostCode"
 export default {
   components: {
     AppFilterSearch,
     AppInput,
-    AppButton
+    AppButton,
+    AppPostCode,
   },
   props: ["practice", "surgery", "user", "adminCreate", "userCount"],
   data() {
     return {
       formError: [],
-
       specificSurgery: [],
       specificPractice: [],
-
       practiceTypes: [],
-
       multiple: "true",
-
       adminRoles: [],
-      
+      coordinates: "",
+      postCodes: [],
       toPostUser: {
-        email: "",
-        password: "",
-        password_confirmation: "",
+        // USER PERSONAL DETAILS
         title: "",
         first_name: "",
         last_name: "",
         suffix: "",
-        practice_role: "Partner",
-        type: "Hub",
-        hub_type: "Type 1",
+
+        //  PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED
+        practice_role: `${this.surgery ? "Partner" : ""}`,
+        type: `${this.surgery ? "Hub" : ""}`,
+        hub_type: `${this.surgery ? "Type 1" : ""}`,
+        code: `${this.surgery ? this.surgery.code : ""}`,
+        name: `${this.surgery ? this.surgery.name : ""}`,
+        phone_number: `${this.surgery ? this.surgery.phone_number : ""}`,
+        address_line_1: `${this.surgery ? this.surgery.address_line_1 : ""}`,
+        address_line_2: `${this.surgery ? this.surgery.address_line_2 : ""}`,
+        address_line_3: `${this.surgery ? this.surgery.address_line_3 : ""}`,
+        postcode: `${this.surgery ? this.surgery.postcode : ""}`,
+        coordinate_x: "",
+        coordinate_y: "",
+        clinical_commissioning_group_name: `${this.surgery ? this.surgery.clinical_commissioning_group_name : ""}`,
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
+
+        // USER CREDENTIALS
+        email: "",
+        password: "",
+        password_confirmation: "",
+
+        // FOR ADMIN ROLES ; IF ADMIN IS BEING CREATED
         roles_id: []
       },
 
       showPasswordFocus: false,
     };
   },
+
   async created() {
+    console.log('surgery', this.surgery)
+
+    if(this.surgery){
+      await this.$axios
+      .$post(`/api/v1/postcode-to-coordinates`,{ postcode: this.surgery.postcode})
+      .then(res => {
+        console.log('res', res)
+        this.toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x,
+        this.toPostUser.coordinate_y = res.data.postcode_coordinate.coordinate_y
+      })
+      .catch(err => {
+        store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
+        });
+      })
+    }
+    
     await this.$axios
       .$get(`/api/v1/admin/practice-types`)
       .then(res => {
@@ -212,7 +323,7 @@ export default {
         store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
-          text: "Something went wrong!"
+          text: err.response.data.message
         });
       });
     await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
@@ -221,9 +332,22 @@ export default {
       })
       let default_role = res.data.roles.find((item, index) => index === 0)
     });
-    if (this.practice) {
-      console.log("Practice to be created is a spoke");
-    }
+
+   await this.$axios.$get(`/api/v1/postcode-coordinates`).then(res => {
+      res.data.postcode_coordinates.forEach(item => {
+        this.postCodes.push({value: item.postcode, label: item.postcode})
+      })
+      // let default_post_code = res.data.roles.find((item, index) => index === 0)
+    })
+    console.log('practice details', this.toPostUser)
+    // if (this.practice) {
+    //   console.log("Practice to be created is a spoke");
+    // }
+
+  },
+
+  computed: {
+
   },
 
   watch: {
@@ -289,10 +413,30 @@ export default {
           this.formError.splice(index, errors.length);
         }
       }
+    },
+    "toPostUser.postcode"(value) {
+      console.log('value', value)
+      this.$axios.$get(`/api/v1/postcode-coordinates?search=${value}`)
+      .then(res => {
+        console.log('res', res.data.postcode_coordinates)
+        this.toPostUser.coordinate_x  = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_x : null
+        this.toPostUser.coordinate_y = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_y : null
+      })
     }
   },
 
   methods: {
+   getPostCodes: debounce(function(input) {
+      const params = {
+        postcode: input
+      };
+      this.$axios.$post(`/api/v1/postcode-to-coordinates`, { params })
+      .then(res => {
+        
+      }).catch(err => {
+
+      })
+    }, 250),
     getQuery() {
       const query = {
         ...this.$route.query
@@ -346,8 +490,26 @@ export default {
       this.formError = [];
       let list = ["title", "suffix"];
       !this.adminCreate && list.push("roles_id");
-      this.adminCreate && list.push("practice_type_id", "surgery_id");
+      this.adminCreate && 
+        list.push("practice_type_id",
+          "surgery_id", 
+          "practice_role",
+          "type",
+          "hub_type",
+          "code",
+          "name",
+          "phone_number",
+          "address_line_1",
+          "address_line_2",
+          "address_line_3",
+          "postcode",
+          "coordinate_x",
+          "coordinate_y",
+          "clinical_commissioning_group_name",
+          ), 
+      console.log('validate')
       this.Validate(this.toPostUser, list);
+      console.log('dsadsadsa',this.formError)
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -388,6 +550,7 @@ export default {
     },
 
     async toPostUserInfo(toPostUser, toPostSurgeryID) {
+      console.log('dssadsa',this.surgery)
       try {
         if (
           (this.surgery && this.surgery.practice_count < 1) ||
@@ -398,24 +561,56 @@ export default {
           this.toPostUser.practice_type_id = await this.toPostUser.practice_type_id.map(
             item => item.value
           );
-          await this.$axios
-            .post(`/api/v1/admin/practices`, toPostUser)
+          if(!toPostUser.coordinate_x || !toPostUser.coordinate_y){
+            await this.$axios.$post(`/api/v1/postcode-to-coordinates`,{postcode:toPostUser.postcode})
             .then(res => {
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "success",
-                text: "New Practice User Created"
-              });
-              this.$emit("userCreated");
-            })
-            .catch(err => {
+              toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x,
+              toPostUser.coordinate_y = res.data.postcode_coordinate.coordinate_y
+            }).catch(err => {
               this.$store.commit("SET_NOTIFICATION", {
                 enabled: true,
                 status: "danger",
                 text: err.response.data.message
               });
-            });
-          await this.getPractices();
+            })
+            await this.$axios
+              .post(`/api/v1/admin/practices`, toPostUser)
+              .then(res => {
+                this.$store.commit("SET_NOTIFICATION", {
+                  enabled: true,
+                  status: "success",
+                  text: "New Practice User Created"
+                });
+                this.$emit("userCreated");
+              })
+              .catch(err => {
+                this.$store.commit("SET_NOTIFICATION", {
+                  enabled: true,
+                  status: "danger",
+                  text: err.response.data.message
+                });
+              });
+            await this.getPractices();
+          }else{
+            await this.$axios
+              .post(`/api/v1/admin/practices`, toPostUser)
+              .then(res => {
+                this.$store.commit("SET_NOTIFICATION", {
+                  enabled: true,
+                  status: "success",
+                  text: "New Practice User Created"
+                });
+                this.$emit("userCreated");
+              })
+              .catch(err => {
+                this.$store.commit("SET_NOTIFICATION", {
+                  enabled: true,
+                  status: "danger",
+                  text: err.response.data.message
+                });
+              });
+            await this.getPractices();
+          }
         } else if (
           (this.surgery && this.surgery.practice_count > 0) ||
           (this.practice && this.practice.user_count > 0)

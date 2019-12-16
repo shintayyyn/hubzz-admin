@@ -303,7 +303,8 @@ export default {
 		async sortBy(sortedBy, page, search) {
 			this.params.order_by = [sortedBy];
 			this.getPractices(this.params);
-		},
+    },
+    
 		searchSubmit: debounce(function(page, order_by) {
 			let search = this.search;
 			let query = {

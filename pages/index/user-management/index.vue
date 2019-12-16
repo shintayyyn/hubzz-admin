@@ -84,7 +84,7 @@
 			<div
 				class="hidden md:flex items-center text-white justify-between font-semibold "
 			>
-				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
+				<div class="align-middle w-10" v-if="deleteAdminUser == true">dsadsa</div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
 				<div class="align-middle px-2 text-center w-1/3">Role</div>
 				<div class="align-middle px-2 text-center w-1/3">Name</div>

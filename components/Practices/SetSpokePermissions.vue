@@ -206,7 +206,7 @@ export default {
 			});
 		},
 		async newChildSpoke() {
-      console.log('it worked')
+      console.log('it worked',this.form)
 			if (this.practice.type == "Hub") {
 				this.formError = [];
 				// this.Validate(this.form);
