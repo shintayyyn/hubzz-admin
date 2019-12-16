@@ -5,7 +5,7 @@
 		<p class="font-semibold">E-mail Address</p>
 		<p class="mx-1 mb-2">{{ user.email }}</p>
 		<p class="font-semibold">Name</p>
-		<p class="mx-1 mb-2">{{ user.personal_detail.name }}</p>
+		<p class="mx-1 mb-2">{{ user.personal_detail.first_name }} {{ user.personal_detail.last_name }}</p>
 		<p class="font-semibold">Role</p>
 		<div v-if="user.admin_detail.roles.length > 0">
 			<p
@@ -20,7 +20,10 @@
 </template>
 <script>
 export default {
-	props: ["user"]
+  props: ["user"],
+  // created(){
+    
+  // }
 };
 </script>
 <style>

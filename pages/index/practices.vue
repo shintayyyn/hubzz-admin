@@ -151,6 +151,11 @@ export default {
 
 			//app table columns
 			columns: [
+        {
+          name: "Practice ID",
+          dataIndex: "id",
+          sortable: false,
+        },
 				{
 					name: "Practice Name",
 					dataIndex: "practice_name",
