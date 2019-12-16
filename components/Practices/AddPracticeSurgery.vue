@@ -14,16 +14,16 @@
       </div>
     </div>
     <!-- HEADER -->
-
     <div
-      class="flex flex-wrap overflow-auto px-4 md:px-8 text-base text-white py-2"
+      class="flex flex-col px-4 md:px-8 text-base text-white py-2"
+      style="min-height: 70vh"
     >
       <div class="w-full">
-        <div class="flex flex-wrap justify-between items-center">
-          <div class="flex flex-no-wrap w-full md:w-2/3">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-no-wrap w-full md:w-auto">
             <div class="w-full md:w-auto relative">
               <input
-                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
+                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 mb-2 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
                 type="text"
                 :placeholder="
                     !practice || (practice && practice.type == 'Hub')
@@ -46,24 +46,20 @@
                 />
               </button>
             </div>
-            <!-- <div class="self-end">
-              <button
-                class="rounded-lg text-xs text-black p-2 mx-1 my-2 bg-yellow-500"
-                @click="searchSubmit()"
-              >Search</button>
-            </div> -->
           </div>
-          <span
-            class="py-2 md:px-4 text-sm whitespace-no-wrap"
-            v-if="search && total !== 0"
-            >{{ total }} results found.</span
-          >
+          <div class="flex items-center">
+            <div v-if="total === 0 && search" class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500">
+              No results found.
+            </div>
+            <span
+              class="py-2 md:px-2 text-sm whitespace-no-wrap"
+              v-if="search && total !== 0"
+              >{{ total }} results found.</span>
+            </div>
         </div>
       </div>
-      <div v-if="total === 0" class="w-full text-center py-4 text-gray-500">
-        No results found.
-      </div>
-      <div class="w-full overflow-hidden">
+      
+      <div class="w-full overflow-y-auto px-2">
         <div>
           <!--TABLE-->
           <!-- BODY -->
@@ -76,9 +72,10 @@
                 @click="show(surgery.id)"
                 class="flex no-underline rounded-lg shadow my-2 transition-hover"
                 :class="
-                  registeredPractice.includes(surgery.id)
+                  [registeredPractice.includes(surgery.id)
                     ? 'bg-waterloo opacity-75'
-                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'
+                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer', 
+                    toggleRegisteredPractice && registeredPractice.includes(surgery.id) && 'hidden']
                 "
               >
                 <div class="flex w-full">
@@ -150,20 +147,20 @@
           <div v-if="practice && practice.type == 'Hub'">
             <!--IF PRACTICE IS A HUB-->
             <transition-group name="slide" tag="p">
-            <div
-              v-for="(spoke, index) in practiceSpokes"
-              :key="`spoke-${index}`"
-              @click="newChildSpoke(spoke.surgery.id)"
-              class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
-            >
-              <div class="flex flex-col text-white text-xs">
-                <span class="font-bold">{{ spoke.surgery.name }}</span>
-                <div class="flex items-center my-1">
-                  <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
-                  <span>{{ spoke.surgery.code }}</span>
+              <div
+                v-for="(spoke, index) in practiceSpokes"
+                :key="`spoke-${index}`"
+                @click="newChildSpoke(spoke.id)"
+                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
+              >
+                <div class="flex flex-col text-white text-xs">
+                  <span class="font-bold">{{ spoke.surgery.name }}{{ spoke.surgery.id }}</span>
+                  <div class="flex items-center my-1">
+                    <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
+                    <span>{{ spoke.surgery.code }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
             </transition-group>
           </div>
 
@@ -173,6 +170,7 @@
     </div>
     <!-- PAGINATION -->
     <AppPagination
+      class="px-4 md:px-6"
       :total="total"
       :totalPages="totalPages"
       :currentPage="currentPage"
@@ -204,7 +202,7 @@
           @close="setSpokePermissionModal = false"
           @practiceSpokeCreated="(setSpokePermissionModal = false), $emit('close')"
           :practice="practice"
-          :surgeryId="practiceSpokeSurgeryId"
+          :practiceSpokeId="practiceSpokeId"
         />
       </div>
     </transition>
@@ -236,14 +234,16 @@ export default {
       practiceCount: null,
       createPracticeModal: false,
       setSpokePermissionModal:false,
-      practiceSpokeSurgeryId:'',
+      practiceSpokeId:'',
 
       total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
       loading: false,
-      registeredPractice: []
+      registeredPractice: [],
+
+      toggleRegisteredPractice: false
     };
   },
 
@@ -265,7 +265,6 @@ export default {
   },
 
   created() {
-    console.log("practice hub", this.practice);
     const query = {
       ...this.$route.query,
       add_practice_page: this.$route.query.add_practice_page || 1
@@ -406,13 +405,14 @@ export default {
         )
         .then(res => {
           this.practiceSpokes = res.data.practices;
+          this.practiceSpokes.map(item => this.isRegistered(item.id));
         });
-      console.log("spokes", this.practiceSpokes);
+      console.log('practiceSpokes', this.practiceSpokes)
       this.loading = false
     },
 
-    async newChildSpoke(surgeryId) {
-      this.practiceSpokeSurgeryId = surgeryId
+    async newChildSpoke(practiceId) {
+      this.practiceSpokeId = practiceId
       this.setSpokePermissionModal = true
     },
 
@@ -498,7 +498,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px yellow;
+  border-left: solid 2px #FFC72C;
   transition: all 0.3s ease-in-out;
   background-color: #505561;
   z-index: 512;

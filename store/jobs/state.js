@@ -16,6 +16,9 @@ export default () => ({
     practice_completed_sessions_count: 0,
     practice_approved_sessions: [],
     practice_approved_sessions_count: 0,
+    // for billings
+    practice_billing_sessions_count: 0,
+    practice_billing_sessions: [],
     // job parts end here
     practice_unfilled_sessions: [],
     practice_unfilled_sessions_count:0,

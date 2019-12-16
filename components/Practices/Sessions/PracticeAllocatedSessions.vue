@@ -46,7 +46,7 @@
             </div>
           </div>
           <!--PAGINATION-->
-          <div v-if="!allocatedJobs.length == 0" class="m-10 xl:-ml-32">
+          <div v-if="!allocatedJobs.length == 0" class="">
             <AppPagination
               :total="total"
               :totalPages="totalPages"
@@ -192,7 +192,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px yellow;
+  border-left: solid 2px #FFC72C;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

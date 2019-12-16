@@ -1,6 +1,6 @@
 <template>
     <div class="job-modal shadow-lg">
-        <div class="mt-6 mx-8 my-2">
+        <div class="mt-6 mx-4 md:mx-8 my-2">
             <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-completed-jobs` }" class="cursor-pointer">
                 <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
             </nuxt-link>
@@ -49,7 +49,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px yellow;
+  border-left: solid 2px #FFC72C;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

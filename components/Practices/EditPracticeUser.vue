@@ -347,7 +347,7 @@ export default {
         })
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved Changes' })
       }catch(err){
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
         console.log("index put locum detail compliance documents error", err);
       }
     },
@@ -362,7 +362,7 @@ export default {
         })
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved Changes' })
       }catch(err){
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
         console.log("index put locum detail compliance documents error",err);
       }
     },

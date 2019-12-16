@@ -1,6 +1,7 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8">
 		<div class="text-4xl text-white">Dashboard</div>
+
 		<div class="text-sm font-hairline text-white">Work in progress</div>
 		<div class="flex flex-wrap items-start text-white">
 			<!------------------------------ Column 1 -------------------------------->
@@ -14,7 +15,7 @@
 						v-for="(item, index) in locumDocsAlert"
 						:key="`item-${index}`"
 						:to="{
-							path: `/locums/${item.locum_detail.user.id}/locum-compliance/${item.compliance_document.id}`
+							path: `/locums/${item.locum_user.id}/locum-compliance/${item.compliance_document.id}`
 						}"
 						class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 					>
@@ -23,9 +24,7 @@
 						</div>
 						<div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
 							<span class="uppercase text-xs font-bold">Locum </span>
-							<span class="pb-2">{{
-								item.locum_detail.user.personal_detail.name
-							}}</span>
+							<span class="pb-2">{{ item.locum_user.name }}</span>
 							<span class="uppercase text-xs font-bold"
 								>Uploaded Compliance Document</span
 							>
@@ -179,10 +178,18 @@ export default {
 	border-radius: 25px;
 	width: 800px;
 	max-width: 95%;
+	/* max-height: 80%; */
 	min-height: 50%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
+	.confirm-termination-modal {
+		max-height: 50%;
+		min-height: 50%;
+	}
 }
 </style>

@@ -15,11 +15,11 @@
         ].includes(type)
       "
     >
-      <div class="flex flex-col py-2 mb-3 md:mb-6">
+      <div class="flex flex-col py-2">
         <div
           class="relative flex flex-wrap justify-between leading-none"
         >
-          <label :for="name" class="text-xs sm:text-sm py-1 pr-2">{{ label }}<span v-if="multiple" class="text-xs"> (hold ctrl + click to choose)</span></label>
+          <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }}</label>
           
           <div class="flex items-center" v-if="info || error">
             <div
@@ -52,20 +52,19 @@
               :id="`${name}-${index}`"
               type="checkbox"
               @input="inputMultiCheck"
-              :checked="
-                Array.isArray(value) ? value.includes(item.value) : value
-              "
+              :checked="Array.isArray(value) ? value.includes(item.value) : value"
+              :class="inClass"
+              :style="inStyle"
             />
             <label
               :for="`${name}-${index}`"
               class="text-xs sm:text-sm flex items-center"
-              >{{ item.label }}</label
-            >
+            >{{item.label}}</label>
           </div>
         </template>
 
         <template v-else>
-          <div class="flex flex-row justify-start mt-1">
+          <div class="flex flex-row justify-start">
             <template
               v-if="
                 ['text', 'time', 'email', 'number'].includes(type)
@@ -77,7 +76,7 @@
                   :type="type"
                   :placeholder="placeholder"
                   class="bg-transparent border-b-2 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
-                  :class="error ? 'border-red-500' : 'focus:border-yellow-500'"
+                  :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
                   @input="$emit('input', $event.target.value)"
                   @keypress.enter="$emit('submit')"
                   @blur="$emit('blur')"
@@ -85,7 +84,7 @@
                   :checked="value"
                   :min="type === 'number' && 0"
                 />
-                <div v-if="error" class="text-red-500 py-1 text-xs">
+                <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                     error.message.slice(1).replace(/_/g, " ")
@@ -102,7 +101,7 @@
                   :value="value"
                   :type="togglePassword()"
                   :placeholder="placeholder"
-                  :class="error ? 'border-red-500' : 'focus:border-yellow-500'"
+                  :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
                   @input="$emit('input', $event.target.value)"
                   @keypress.enter="$emit('submit')"
                   @blur="$emit('blur')"
@@ -114,7 +113,7 @@
                   <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
                 </button>
                 
-                <div v-if="error" class="text-red-500 -py-1 text-xs">
+                <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                     error.message.slice(1).replace(/_/g, " ")
@@ -138,7 +137,8 @@
                     :class="[
                       error && !disabled && 'border-red-500',
                       disabled ? 'border-gray-400' : 'cursor-pointer',
-                      multiple ? 'bg-white mt-4' : 'bg-transparent absolute'
+                      multiple ? 'bg-white mt-4' : 'bg-transparent absolute',
+                      inClass
                     ]"
                     :multiple="multiple"
                     @input="$emit('input', $event.target.value)"
@@ -168,7 +168,7 @@
                   </span>
                 </div>
                 <div
-                  class="text-red-500 pt-1 text-xs"
+                  class="px-2 pt-1 text-xs"
                   v-if="error && (type === 'select' || type.includes('checkbox'))"
                 >
                   {{
@@ -191,13 +191,14 @@
                   class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
                   :class="[
                     error ? 'border-red-500' : '',
-                    resize ? '' : 'resize-none'
+                    resize ? '' : 'resize-none',
+                    inClass
                   ]"
                   @input="$emit('input', $event.target.value)"
                   @blur="$emit('blur', $event)"
                 ></textarea>
                 <div
-                  class="text-red-500 py-1 text-xs"
+                  class="bg-red-300 text-red-700 py-1 px-2 text-xs"
                   v-if="error"
                 >
                   {{
@@ -217,7 +218,7 @@
       <div class="flex flex-col py-2 mb-2">
         <div class="flex justify-end">
           <div
-            class="rounded-lg bg-red-500 px-2 py-1 text-xs sm:text-sm text-white"
+            class="rounded-lg bg-red-500 bg-red-300 text-red-700 py-1 px-2 text-xs sm:text-sm text-white"
             v-if="error"
           >
             {{
@@ -233,6 +234,8 @@
             @change="$emit('input', $event.target.checked)"
             :checked="value"
             :disabled="disabled"
+            :class="inClass"
+            :style="inStyle"
           />
           <label
             :for="name"
@@ -265,13 +268,14 @@
             }}
           </div>
         </div>
-        <div class="flex flex-row justify-start mt-1">
+        <div class="flex flex-row justify-start">
           <input
             :value="value"
             type="email"
             :placeholder="placeholder"
             class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
-            :class="error ? 'border-red-600' : ''"
+            :class="[error ? 'border-red-600' : '', inClass]"
+            :style="inStyle"
             @input="$emit('input', $event.target.value)"
           />
         </div>
@@ -305,28 +309,20 @@
           </div>
         </div>
         <div
-          class="relative flex flex-row justify-start items-center border-2 mb-2 focus:border-yellow-400 rounded-lg"
+          class="w-full relative flex flex-row justify-start items-center focus:border-yellow-400 rounded-lg bg-waterloo"
         >
           <input
             :value="value"
             :type="type"
             :placeholder="placeholder"
-            class="focus:outline-none pl-4 pr-6 py-4 font-bold text-xs sm:text-sm w-full rounded-lg"
-            :class="error ? 'border-red-600' : ''"
+            class="appearance-none w-full rounded-lg border-2 border-transparent focus:border-sunglow text-sm text-white p-2 bg-waterloo focus:outline-none transition-hover"
+            :class="[error ? 'border-red-600' : '', inClass]"
             @input="$emit('input', $event.target.value)"
             :style="inStyle"
             @keypress.enter="$emit('submit')"
             @blur="$emit('blur')"
-            :checked="value"
           />
-          <span class="absolute right-0 px-2 py-2 bg-white">
-            <svgicon
-              name="search"
-              height="21"
-              width="21"
-              class="text-gray-500 fill-current"
-            />
-          </span>
+          <span v-if="value" class="absolute right-0 h-full p-2 cursor-pointer hover:text-sunglow bg-waterloo rounded-r-lg" @click="(value='')">x</span>
         </div>
       </div>
     </template>
@@ -343,6 +339,7 @@ export default {
     error: Object,
     info: String,
     inStyle: String,
+    inClass: String,
     // for select
     items: Array,
     multiple: Boolean,

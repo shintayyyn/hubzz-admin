@@ -27,6 +27,14 @@ Vue.mixin({
 					message: `${fieldName.replace(/_/g, " ")} is required`
 				});
 			}
+			if (fieldName.includes("password")) {
+				if (inputField.length < 6) {
+					this.formError.push({
+						field: fieldName,
+						message: "Password Must Be Atleast 6 Characters"
+					});
+				}
+			}
 		},
 		Validate(form, lists) {
 			console.log("form", form, lists);

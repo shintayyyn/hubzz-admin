@@ -140,7 +140,7 @@ export default {
                 this.getAllPracticeUsers()
             })
         }catch(err){
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
             console.log(err)
         }
        
@@ -163,7 +163,7 @@ export default {
                 this.$store.commit('practices/SET_PRACTICE_USERS', res.data.users)
             }).catch(err=>{
                 console.log('get users error!',err)
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
             })
             this.loadingPracticeUsers = false
         },
@@ -208,7 +208,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px yellow;
+  border-left: solid 2px #FFC72C;
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;

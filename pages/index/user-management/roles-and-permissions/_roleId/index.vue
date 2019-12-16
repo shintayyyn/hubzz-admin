@@ -143,73 +143,6 @@
             authAdminPermissions.includes('Edit Role')
         "
       >
-        <!-- <div class="flex flex-wrap overflow-hidden xl:-mx-1">
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
-            <div class="text-lg font-semibold">Locum Management</div> 
-            <div 
-              v-for="(role, index) in allPermissions"
-              :key="`role-${index}`"
-              class="">
-              <input type="checkbox"
-                v-if="role.category === 'Locum'" 
-                :id="role.id" 
-                :checked="isChecked(role.permissions)">
-              <label for="checkbox">{{ role.category === 'Locum' ? role.name : null}}</label>
-            </div>
-          </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
-            <div class="text-lg font-semibold">Practice Management</div> 
-            <div 
-              v-for="(role, index) in allPermissions"
-              :key="`role-${index}`"
-              class="">
-              <input type="checkbox" 
-                v-if="role.category === 'Practice'" 
-                :id="role.id" 
-                :checked="isChecked(role.permissions)">
-              <label for="checkbox">{{ role.category === 'Practice' ? role.name : null}}</label>
-            </div>
-          </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
-            <div class="text-lg font-semibold">Billing and Reports Management</div> 
-            <div 
-              v-for="(role, index) in allPermissions"
-              :key="`role-${index}`"
-              class="">
-              <input type="checkbox" 
-                v-if="role.category === 'Billings'" 
-                :id="role.id" 
-                :checked="isChecked(role.permissions)">
-              <label for="checkbox">{{ role.category === 'Billings' ? role.name : null}}</label>
-            </div>
-          </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
-            <div class="text-lg font-semibold">Miscellaneous</div> 
-            <div 
-              v-for="(role, index) in allPermissions"
-              :key="`role-${index}`"
-              class="">
-              <input type="checkbox" 
-                v-if="role.category === 'Misc'" 
-                :id="role.id" 
-                :checked="isChecked(role.permissions)">
-              <label for="checkbox">{{ role.category === 'Misc' ? role.name : null}}</label>
-            </div>
-          </div>
-          <div class="xl:w-1/5 w-full overflow-hidden xl:my-1 xl:px-1">
-            <div class="text-lg font-semibold">User Management</div> 
-            <div 
-              v-for="(role, index) in allPermissions"
-              :key="`role-${index}`"
-              class="">
-              <input type="checkbox" 
-                v-if="role.category === 'User Management'" 
-                :id="role.id" 
-                :checked="isChecked(role.permissions)">
-              <label for="checkbox">{{ role.category === 'User Management' ? role.name : null}}</label>
-            </div>
-          </div>
-        </div> -->
         <div>
           <p class="flex">Role Name</p>
           <input
@@ -353,6 +286,9 @@ export default {
       console.log("get users error", err);
     }
   },
+  created(){
+      console.log("allpermissions", this.allPermissions);
+  },
   methods: {
     isChecked(permissions) {
       return !permissions.map(item => item.done).includes(false);
@@ -423,7 +359,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  border-left: solid 2px yellow;
+  border-left: solid 2px #FFC72C;
   transition: all 0.3s ease-in-out;
   background-color: #505561;
   z-index: 512;

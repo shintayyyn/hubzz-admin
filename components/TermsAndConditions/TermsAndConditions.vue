@@ -25,19 +25,18 @@
 					'Edit Terms and Conditions & Privacy Policy'
 				)
 			"
-			class="flex justify-end"
+			class="flex justify-end pt-2"
 		>
-			<button
-				@click="save()"
-				class="mt-4 font-semibold py-2 px-4 rounded-lg bg-sunglow text-black"
-			>
-				Save
-			</button>
+			<AppButton :label="'Save'" @click="save()" />
 		</div>
 	</div>
 </template>
 <script>
+import AppButton from "@/components/Base/AppButton";
 export default {
+	components: {
+		AppButton
+	},
 	props: ["terms"],
 	data() {
 		return {
@@ -98,15 +97,26 @@ export default {
 			console.log("editor ready!", editor);
 		},
 		async save() {
-			try {
-				await this.$axios.put("/api/v1/admin/terms-and-conditions", this.form);
+			if (this.form.terms_and_conditions) {
+				try {
+					await this.$axios.put(
+						"/api/v1/admin/terms-and-conditions",
+						this.form
+					);
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Terms and Conditions Updated"
+					});
+				} catch (err) {
+					console.log("update tncs error!", err);
+				}
+			} else {
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
-					status: "success",
-					text: "Terms and Conditions Updated"
+					status: "danger",
+					text: "Terms and Condition can't be empty."
 				});
-			} catch (err) {
-				console.log("update tncs error!", err);
 			}
 		}
 	}

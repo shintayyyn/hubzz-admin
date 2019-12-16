@@ -1,7 +1,7 @@
 <template>
     <div>
         <div
-            class="flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
+            class="mx-4 md:mx-8 flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
             style="position:relative;">
             <div class="w-4/5 overflow-hidden text-sm m-4">
                 <div class="text-gray-400">
@@ -21,7 +21,7 @@
             </div>
         </div>
         <!--GMC / NMC NUMBER-->
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex flex-col md:flex-row w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">GMC / NMC / HCPC Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
             <div class="flex flex-col md:flex-row w-full sm:w-1/2 justify-between">
                 <p class="text-gray-400">MPL / NPL Number</p>
                 <p class="mx-3 sm:mx-0">{{ user.locum_detail.mpl_or_npl_number ? user.locum_detail.mpl_or_npl_number.number : null }}</p>
@@ -98,9 +98,9 @@
         </div>
         <!--GMC / NMC NUMBER ENDS HERE-->
         <!-- MANDATORY -->
-        <p class="text-sm text-white pt-8 font-semibold">Mandatory</p>
+        <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">Mandatory</p>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full overflow-x-auto" > 
+        <div class="w-full overflow-x-auto p-4 md:p-8" > 
             <!-- HEADER -->
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/6">Title</div> 
@@ -120,64 +120,64 @@
                 class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
                 draggable="false"
             >
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="break-word">{{ item && item.mandatoryComplianceDocument ? item.mandatoryComplianceDocument.name : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">File size</strong>
-                <span>{{ item.locumMandatoryComplianceDocument ? 
-                    (item.locumMandatoryComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-                </span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-                <span>{{ item.locumMandatoryComplianceDocument &&
-                    item.locumMandatoryComplianceDocument.file &&
-                    item.locumMandatoryComplianceDocument.file.created_at ? 
-                    $moment(item.locumMandatoryComplianceDocument.file.created_at)
-                    .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-                <span class="break-all">{{ item.locumMandatoryComplianceDocument && 
-                    item.locumMandatoryComplianceDocument.expired_at ? 
-                    $moment(item.locumMandatoryComplianceDocument.expired_at)
-                    .format('DD/MM/YYYY')  : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-                <span class="break-all">{{ item.locumMandatoryComplianceDocument && 
-                    item.locumMandatoryComplianceDocument.expired_at ? 
-                    $moment(item.locumMandatoryComplianceDocument.expired_at)
-                    .diff($moment(), 'days')  : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
-                <strong class="block md:hidden">Status</strong>
-                <div v-if="item.locumMandatoryComplianceDocument == null"
-                class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full">
-                    <span>Empty</span>
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Title</strong>
+                    <span :class="item && item.locumMandatoryComplianceDocument ? 'truncate' : 'break-word'">{{ item && item.mandatoryComplianceDocument ? item.mandatoryComplianceDocument.name : null }}</span>
                 </div>
-                <div
-                v-if="item.locumMandatoryComplianceDocument"
-                class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
-                :class="statusStyle(item.locumMandatoryComplianceDocument && item.locumMandatoryComplianceDocument.status ? item.locumMandatoryComplianceDocument.status:null)">
-                <span>
-                    {{item.locumMandatoryComplianceDocument && item.locumMandatoryComplianceDocument.status ? item.locumMandatoryComplianceDocument.status:null}}
-                </span>
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">File size</strong>
+                    <span>{{ item.locumMandatoryComplianceDocument ? 
+                        (item.locumMandatoryComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
+                    </span>
                 </div>
-            </div>
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
+                    <span>{{ item.locumMandatoryComplianceDocument &&
+                        item.locumMandatoryComplianceDocument.file &&
+                        item.locumMandatoryComplianceDocument.file.created_at ? 
+                        $moment(item.locumMandatoryComplianceDocument.file.created_at)
+                        .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
+                </div>
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
+                    <span class="break-all">{{ item.locumMandatoryComplianceDocument && 
+                        item.locumMandatoryComplianceDocument.expired_at ? 
+                        $moment(item.locumMandatoryComplianceDocument.expired_at)
+                        .format('DD/MM/YYYY')  : null }}</span>
+                </div>
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
+                    <span class="break-all">{{ item.locumMandatoryComplianceDocument && 
+                        item.locumMandatoryComplianceDocument.expired_at ? 
+                        $moment(item.locumMandatoryComplianceDocument.expired_at)
+                        .diff($moment(), 'days')  : null }}</span>
+                </div>
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden">Status</strong>
+                    <div v-if="item.locumMandatoryComplianceDocument == null"
+                    class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full">
+                        <span>Empty</span>
+                    </div>
+                    <div
+                    v-if="item.locumMandatoryComplianceDocument"
+                    class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
+                    :class="statusStyle(item.locumMandatoryComplianceDocument && item.locumMandatoryComplianceDocument.status ? item.locumMandatoryComplianceDocument.status:null)">
+                    <span>
+                        {{item.locumMandatoryComplianceDocument && item.locumMandatoryComplianceDocument.status ? item.locumMandatoryComplianceDocument.status:null}}
+                    </span>
+                    </div>
+                </div>
             </nuxt-link>
         </div>
-    <!-- END TABLE -->  
+        <!-- END TABLE -->  
         <!-- OPTIONAL -->
-        <p class=" text-sm text-white pt-8 font-semibold">Optional</p>
-        <div class="w-full overflow-x-auto" > 
+        <p class=" text-sm text-white px-4 md:px-8 pt-8 font-semibold">Optional</p>
+        <div class="w-full overflow-x-auto p-4 md:p-8" > 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/4">Title</div> 
                 <div class="align-middle px-2 text-center w-1/4">File size</div>
@@ -192,54 +192,54 @@
                 class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
                 draggable="false"
             >
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="break-word">{{ item.optionalComplianceDocument.name }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">File size</strong>
-                <span>
-                {{ item.locumOptionalComplianceDocument ? (item.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
-                </span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-                <span>{{ item.locumOptionalComplianceDocument ? 
-                        $moment(item.locumOptionalComplianceDocument.file.created_at)
-                        .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
-            </div>
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
-                <strong class="block md:hidden">Status</strong>
-                <div
-                v-if="item.locumOptionalComplianceDocument == null"
-                class="text-center text-white text-sm py-2 sm:mx-2 border border-white rounded-full">
-                    <span>Empty</span>
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Title</strong>
+                    <span :class="item.locumOptionalComplianceDocument ? 'truncate' : 'break-word leading-none'">{{ item.optionalComplianceDocument.name }}</span>
                 </div>
-                <div
-                v-if="item.locumOptionalComplianceDocument"
-                class="text-center text-white text-sm py-2 sm:mx-2 border border-white rounded-full">
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">File size</strong>
                     <span>
-                        Present
+                    {{ item.locumOptionalComplianceDocument ? (item.locumOptionalComplianceDocument.file.size / 1048576).toFixed(2) + 'Mb' : null }}
                     </span>
                 </div>
-            </div>
+
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
+                    <span>{{ item.locumOptionalComplianceDocument ? 
+                            $moment(item.locumOptionalComplianceDocument.file.created_at)
+                            .format('DD/MM/YYYY HH:mm:ss') : null }}</span>
+                </div>
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden">Status</strong>
+                    <div
+                    v-if="item.locumOptionalComplianceDocument == null"
+                    class="text-center text-white text-sm py-2 sm:mx-2 border border-white rounded-full">
+                        <span>Empty</span>
+                    </div>
+                    <div
+                    v-if="item.locumOptionalComplianceDocument"
+                    class="text-center text-white text-sm py-2 sm:mx-2 border border-white rounded-full">
+                        <span>
+                            Present
+                        </span>
+                    </div>
+                </div>
             </nuxt-link>
         </div>
         <!-- END TABLE -->
 
         <!-- MANDATORY TRAININGS -->
-        <p class=" text-sm text-white pt-8 font-semibold">Mandatory Trainings </p>
+        <p class=" text-sm text-white px-4 md:px-8 md:pt-8 font-semibold">Mandatory Trainings </p>
         <div v-if="locumMandatoryTrainings.length === 0">
             <div
-            class="w-full mt-10 text-center text-white font-bold text-gray-500"
-            >This locum has not uploaded Mandatory Training Documents.</div>
+            class="w-full text-white font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8"
+            >This locum has not uploaded any Mandatory Training Documents.</div>
         </div>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full overflow-x-auto" v-if="locumMandatoryTrainings.length > 0"> 
+        <div class="w-full overflow-x-auto p-4 md:p-8" v-if="locumMandatoryTrainings.length > 0"> 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-                <div class="align-middle px-2 text-center w-1/3">Title</div> 
+                <div class="align-middle px-2 w-1/3">Title</div> 
                 <div class="align-middle px-2 text-center w-1/3">File size</div>
                 <div class="align-middle px-2 text-center w-1/3">File uploaded</div>
             </div>
@@ -249,19 +249,19 @@
             class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
             draggable="false">
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Title</strong>
-                    <span class="break-word">{{ item.mandatory_training.name }}</span>
+                    <span :class="item.file ? 'truncate' : 'break-word leading-none'">{{ item.mandatory_training.name }}</span>
                 </div>
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
                     <strong class="block md:hidden text-sm uppercase">File size</strong>
                     <span>
                     {{( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes'}}
                     </span>
                 </div>
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
                     <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
                     <span class="break-all">{{ item.expired_at ? $moment(item.expired_at).diff($moment(), 'days')  : null }}</span>
                 </div>
@@ -373,7 +373,7 @@ export default {
                 await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
                 await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
             }catch(err){
-                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
                 console.log("get data error!!", err);
             }
         },
@@ -442,7 +442,7 @@ export default {
                 this.notes = ''
             
             }catch(err){
-                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text: err.response.data.message})
                 console.log("index practices index put GMC/NMC err", err);
                 
             }
@@ -511,7 +511,7 @@ export default {
                 this.notes = ''
             }catch(err){
                 
-                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+                this.$store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:err.response.data.message})
                 console.log("index practices index put MPL/NPL err", err);
             }
         },

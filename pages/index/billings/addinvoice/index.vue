@@ -1,237 +1,20 @@
 <template>
 	<div class="billing-modal shadow-lg">
-		<div class="relative p-4 md:p-8">
-			<div class="flex justify-between text-sm text-white">
-				<nuxt-link to="/billings" class="text-white pb-2">
-					<svgicon
-						name="arrow-left-solid"
-						height="32"
-						width="32"
-						class="text-white hover:text-sunglow fill-current focus:outline-none"
-					/>
-				</nuxt-link>
-			</div>
-			<!-- HEADER -->
-			<div class="flex flex-wrap overflow-hidden md:pl-3 mb-1 pb-1">
-				<div class="px-1">
-					<button
-						@click="exportToPdf()"
-						class="inline-flex items-center py-2 px-4 my-1 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow focus:outline-none"
-					>
-						<svgicon
-							name="save-icon"
-							width="21"
-							height="21"
-							color="transparent black"
-						></svgicon>
-						<span class="pl-1">Save Changes</span>
-					</button>
-				</div>
-
-				<div class="px-1">
-					<button
-						class="inline-flex items-center py-2 px-4 my-1 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
-					>
-						<svgicon
-							name="email"
-							width="21"
-							height="21"
-							color="black"
-						></svgicon>
-						<span class="pl-1">Save and Archive as Final</span>
-					</button>
-				</div>
-			</div>
-			<!-- HEADER ENDS HERE -->
-
-			<!-- BODY -->
-			<!-- FIRST PAGE -->
-			<div
-				id="toPrint"
-				class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
-				:class="!doNotShow && 'display'"
-			>
-				<AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
-				<div>
-					<div class="flex flex-col p-4" ref="pdf-header">
-						<div>
-							<div class="text-sm text-right">
-								<p>Hubzz Limited Mws,</p>
-								<p>601 London Road</p>
-								<p>Westcliff-On-Sea SS0 9PE</p>
-								<p>billing@hubzz.co.uk</p>
-								<p>Registered Company</p>
-								<p>10832559</p>
-							</div>
-						</div>
-						<div class="flex">
-							<div class="w-full md:w-2/3">
-								<div
-									class="border-2 border-gray-300 rounded-lg p-4 text-sm"
-									:class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
-								>
-									<div class="pb-2">To: Accounts Department</div>
-									<select
-										class="block appearance-none font-bold w-full bg-white border-b-2 border-gray-300 hover:border-gray py-2 leading-tight focus:outline-none"
-									>
-										<option>Select the Addressee</option>
-										<option>Select the Addressee</option>
-										<option>Select the Addressee</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="py-2">
-							<label class="text-sm text-black font-semibold"
-								>Choose Practice</label
-							>
-							<select
-								v-model="chosenPractice"
-								class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-500 py-2 leading-tight focus:outline-none"
-							>
-								<option
-									v-for="(practice, index) in practices"
-									:key="`practice-${index}`"
-									>{{ practice.surgery.name }}</option
-								>
-							</select>
-						</div>
-					</div>
-
-					<div
-						class="flex flex-col overflow-x-auto"
-						:class="doNotShow && 'mx-4'"
-					>
-						<div
-							:class="!doNotShow && 'px-4'"
-							:ref="'items-header'"
-							:style="`min-width: ${doNotShow ? '733px' : ''}`"
-						>
-							<div class="flex items-center justify-center py-2 bg-black">
-								<div class="w-3/6">
-									<div class="text-white text-sm text-left px-4">
-										<strong>Description</strong>
-									</div>
-								</div>
-								<div class="w-2/6">
-									<div class="text-white text-sm text-left px-2">
-										<strong>Job Number</strong>
-									</div>
-								</div>
-								<!-- <div class="w-1/6">
-                    <div class="text-white text-sm text-left">
-                      <strong>Hours</strong>
-                    </div>
-                  </div> -->
-								<div class="w-2/6">
-									<div class="text-white text-sm text-right px-4">
-										<strong>Amount</strong>
-									</div>
-								</div>
-								<!-- Add fields -->
-								<div class="mr-2" v-if="doNotShow">
-									<span
-										@click="addInvoiceItem()"
-										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-										>+</span
-									>
-								</div>
-							</div>
-						</div>
-						<div
-							v-for="(item, index) in invoiceItems"
-							:key="`item-${index}`"
-							:class="!doNotShow && 'px-4'"
-							:ref="`item-${index}`"
-							:style="`min-width: ${doNotShow ? '733px' : ''}`"
-						>
-							<div
-								class="flex w-full justify-center border-b border-gray-500 py-1"
-							>
-								<div class="w-3/6 text-sm mx-1">
-									<textarea
-										v-if="doNotShow"
-										v-model="item.description"
-										rows="2"
-										class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
-										placeholder="Enter Description"
-									></textarea>
-									<p v-else class="px-2 py-1">
-										{{ item.description ? item.description : "No Description" }}
-									</p>
-								</div>
-
-								<div class="w-2/6 text-sm mx-1">
-									<input
-										v-if="doNotShow"
-										v-model="item.job_part"
-										class="border-b-2 border-gray-300 w-full h-full focus:outline-none px-2"
-										placeholder="Job Part Number"
-									/>
-									<p v-else class="px-2 py-1">
-										{{ item.job_part ? item.job_part : "No Job Part Number" }}
-									</p>
-								</div>
-
-								<!-- <div class="w-2/6 text-sm mx-1">
-                    <input 
-                      v-model="item.hours"
-                      class="border-b-2 border-gray-300 w-full h-full focus:outline-none" 
-                      type="number"
-                      placeholder="Hours"/>
-                  </div> -->
-
-								<div class="w-2/6 text-sm mx-1">
-									<input
-										v-if="doNotShow"
-										v-model="item.amount"
-										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
-										:class="!doNotShow && 'pr-3'"
-										type="number"
-										min="0"
-										placeholder="Enter Amount"
-									/>
-									<p v-else class="px-2 py-1 text-right">{{ item.amount }}</p>
-								</div>
-
-								<div class="mr-2 flex items-center" v-if="doNotShow">
-									<span
-										@click="deductInvoiceItem(item.id)"
-										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-										>-</span
-									>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div ref="items-total" class="flex justify-betwen px-4 pt-2">
-						<div class="my-1 px-1 w-3/4 font-bold">Total</div>
-						<div class="my-1 px-1 w-1/4 text-right">
-							{{ "£ " + amountTotal }}
-						</div>
-					</div>
-				</div>
-				<div class="p-4" ref="pdf-footer">
-					<div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
-						Payment by BACS:
-						<br />Account name: XXX <br />Bank: XXX <br />Sort code: XXX
-						<br />Account number: XXX
-						<br />
-					</div>
-				</div>
-			</div>
-			<!-- FIRST PAGE ENDS HERE -->
-			<!-- BODY ENDS HERE-->
-		</div>
+		<HubzzInvoice/>
 	</div>
 </template>
 
 <script>
+import HubzzInvoice from "@/components/Billings/HubzzInvoice"
 import AppLoading from "@/components/Base/AppLoading";
+import AppButton from "@/components/Base/AppButton";
+import AppInput from "@/components/Base/AppInput";
 export default {
 	components: {
-		AppLoading
+    HubzzInvoice,
+		AppLoading,
+		AppButton,
+		AppInput
 	},
 	data() {
 		return {
@@ -252,7 +35,7 @@ export default {
 				}
 			],
 			invoice: {},
-			doNotShow: true,
+			hide: true,
 			practices: [],
 			chosenPractice: [],
 			loading: false
@@ -288,7 +71,6 @@ export default {
 	methods: {
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
-			console.log("it workds");
 			const newItem = {
 				job_part: "",
 				description: "",
@@ -332,7 +114,7 @@ export default {
 		},
 
 		async exportToPdf() {
-			this.doNotShow = false;
+			this.hide = false;
 			this.loading = true;
 			if (process.client) {
 				document.body.style.cursor = "wait";
@@ -495,7 +277,7 @@ export default {
 
 			yPosition = yPosition + imgHeightPdfFooter;
 
-			this.doNotShow = true;
+			this.hide = true;
 			doc.save("sample.pdf");
 			this.loading = false;
 			if (process.client) {
@@ -584,7 +366,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: hidden auto;
-	border-left: solid 2px yellow;
+	border-left: solid 2px #FFC72C;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

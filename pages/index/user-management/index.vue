@@ -8,41 +8,83 @@
 				/>
 			</div>
 		</transition>
-		<div class="flex md:flex-row px-4 pt-1 md:py-1 flex-wrap">
-			<button
+		<div class="flex items-center px-4 md:px-6 py-2 text-sm">
+			<AppButton
 				v-if="authAdminPermissions.includes('Create Admin Account')"
-				@click="show()"
-				class="inline-flex no-underline my-1 md:my-2 mr-1 py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow"
-			>
-				Create Admin Account
-			</button>
-			<button
-				v-if="
-					deleteAdminUser == true &&
-						authAdminPermissions.includes('Delete Admin Account')
-				"
-				@click="deleteAdminUser = false"
-				class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow"
-			>
-				Done
-			</button>
-			<button
-				v-if="
-					deleteAdminUser == false &&
-						authAdminPermissions.includes('Delete Admin Account')
-				"
-				@click="deleteAdminUser = true"
-				class="inline-flex no-underline my-1 md:my-2 ml-1 py-2 px-4 bg-red-500 hover:bg-red-600 text-sm font-semibold text-white rounded-lg shadow"
-			>
-				Delete Admin User
-			</button>
+				:label="'Create Admin Account'"
+				:icon="'add-user'"
+				:iconSize="'16'"
+				class="mr-2"
+				@click="modal = true"
+			/>
+			<template v-if="authAdminPermissions.includes('Delete Admin Account')">
+				<AppButton
+					class="text-white"
+					v-if="authAdminPermissions.includes('Add Role')"
+					:label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
+					:icon="deleteAdminUser ? 'circle-check' : 'garbage'"
+					:iconSize="deleteAdminUser ? '21' : '16'"
+					:background="deleteAdminUser ? 'green' : 'red'"
+					@click="deleteAdminUser = !deleteAdminUser"
+				/>
+			</template>
 		</div>
-		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-4">
+		<!-- <AppTable
+			:total="total"
+			:items="adminUsers"
+			:currentPage="currentPage"
+			:perPage="itemsPerPage"
+			:columns="columns"
+			:loading="loadingAdminUsers"
+			:loadingMessage="'Loading Surgeries'"
+			:routerLink="`/user-management`"
+			@pagechanged="pagechanged"
+		>
+			<template v-slot:delete="slotProps" v-if="deleteAdminUser == true">
+				<div
+					class="flex justify-center items-center w-10 align-middle text-center"
+				>
+					<svgicon
+						v-if="
+							$auth.user.id != slotProps.item.id &&
+								slotProps.item.admin_detail &&
+								slotProps.item.admin_detail.role &&
+								!slotProps.item.admin_detail.role.name.includes('Super')
+						"
+						@click.prevent="toDeleteAdminUser(user.id)"
+						name="delete-user"
+						width="21"
+						height="21"
+						class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
+					/>
+					<span
+						v-else-if="$auth.user.id === slotProps.item.id"
+						class="text-sm text-gray-500"
+						>You</span
+					>
+					<span
+						v-else-if="
+							slotProps.item.admin_detail &&
+								slotProps.item.admin_detail.roles &&
+								slotProps.item.admin_detail.roles[0].name == 'Super Admin'
+						"
+						class="text-sm text-yellow-500"
+						>God</span
+					>
+				</div>
+			</template>
+			<template v-slot:name="slotProps">
+				<span>{{
+					`${slotProps.item.personal_detail.first_name} ${slotProps.item.personal_detail.last_name}`
+				}}</span>
+			</template>
+		</AppTable> -->
+		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6">
 			<!-- HEADER -->
 			<div
 				class="hidden md:flex items-center text-white justify-between font-semibold "
 			>
-				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
+				<div class="align-middle w-10" v-if="deleteAdminUser == true">dsadsa</div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
 				<div class="align-middle px-2 text-center w-1/3">Role</div>
 				<div class="align-middle px-2 text-center w-1/3">Name</div>
@@ -54,7 +96,6 @@
 				:key="`user-${index}`"
 				class="flex"
 			>
-				{{ getUsers(user) }}
 				<div
 					class="flex justify-center items-center w-10 align-middle text-center"
 					v-if="deleteAdminUser == true"
@@ -64,7 +105,7 @@
 							$auth.user.id != user.id &&
 								user.admin_detail &&
 								user.admin_detail.role &&
-								!user.admin_detail.role.name.includes('God')
+								!user.admin_detail.role.name.includes('Super')
 						"
 						@click.prevent="toDeleteAdminUser(user.id)"
 						name="delete-user"
@@ -80,8 +121,8 @@
 					<span
 						v-else-if="
 							user.admin_detail &&
-								user.admin_detail.role &&
-								user.admin_detail.role.name.includes('God')
+								user.admin_detail.roles &&
+								user.admin_detail.roles[0].name == 'Super Admin'
 						"
 						class="text-sm text-yellow-500"
 						>God</span
@@ -128,36 +169,13 @@
 		</div>
 
 		<!-- PAGINATION -->
-		<div class="flex justify-center" v-if="pageCount > 1">
-			<div>
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black"
-					@click="goToPage(activePage - 1, search)"
-					:class="activePage === 1 ? 'text-gray-dark' : 'hover:bg-yellow'"
-				>
-					Prev
-				</button>
-
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light"
-					:class="`${activePage === page ? 'text-white' : ''}`"
-					v-for="page in pageCount"
-					v-if="showPage(page)"
-					:key="`page-${page}`"
-					@click="goToPage(page, search)"
-				>
-					{{ page }}
-				</button>
-
-				<button
-					class="page-button p-2 px-4 m-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light"
-					@click="goToPage(activePage + 1, search)"
-					:class="`${activePage == pageCount ? 'text-gray-dark' : ''}`"
-				>
-					Next
-				</button>
-			</div>
-		</div>
+		<AppPagination
+			class="px-4 md:px-6"
+			:total="total"
+			:totalPages="totalPages"
+			:currentPage="currentPage"
+			@pagechanged="pagechanged"
+		/>
 		<!-- PAGINATION ENDS HERE -->
 
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
@@ -181,17 +199,24 @@
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser";
 import AppConfirmCancel from "@/components/AppConfirmCancel";
+import AppPagination from "@/components/Base/AppPagination";
+import AppButton from "@/components/Base/AppButton";
+import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
 		CreateUser,
-		AppConfirmCancel
+		AppConfirmCancel,
+		AppPagination,
+		AppButton,
+		AppTable
 	},
 	data() {
 		return {
 			itemsPerPage: 10,
-			activePage: 1,
-
+			currentPage: 1,
+			params: {},
 			search: "",
+
 			// itemCount:'',
 			// adminUsers:{},
 			adminCreate: true,
@@ -200,7 +225,33 @@ export default {
 			confirmCancel: false,
 			adminId: "",
 			deleteAdminUser: false,
-			showConfirmCancelModal: false
+			showConfirmCancelModal: false,
+			columns: [
+				{
+					name: "",
+					slot: true,
+					slotName: "delete",
+					dataIndex: "",
+					class: "text-center"
+				},
+				{
+					name: "E-mail",
+					dataIndex: "email",
+					class: "text-center"
+				},
+				{
+					name: "Name",
+					slot: true,
+					slotName: "name",
+					dataIndex: "",
+					class: "text-center"
+				},
+				{
+					name: "Role",
+					dataIndex: "admin_detail.role.name",
+					class: "text-center"
+				}
+			]
 		};
 	},
 	watchQuery: ["page", "search"],
@@ -237,7 +288,7 @@ export default {
 			await store.commit("adminusers/TOGGLE_LOADING", false);
 			return {
 				itemsPerPage: limit,
-				activePage: page,
+				currentPage: page,
 				search
 				//itemCount, //store
 				//adminUsers //store
@@ -258,105 +309,53 @@ export default {
 		loadingAdminUsers() {
 			return this.$store.state.adminusers.loading_admin_users;
 		},
-		itemCount() {
-			return this.$store.state.adminusers.itemCount;
-		},
 		adminUsers() {
 			return this.$store.getters["adminusers/getAdminUsers"];
 		},
 		authAdminPermissions() {
 			return this.$store.getters["auth/permissions"];
 		},
-		pageCount() {
+		itemCount() {
+			return this.$store.state.adminusers.itemCount;
+		},
+		totalPages() {
 			return Math.ceil(this.itemCount / this.itemsPerPage);
 		},
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.pageCount) {
-					return true;
-				}
-
-				if (page === this.activePage) {
-					return true;
-				}
-
-				if (page === this.activePage + 1) {
-					return true;
-				}
-
-				if (page === this.activePage - 1) {
-					return true;
-				}
-
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
-				) {
-					return true;
-				}
-
-				return false;
-			};
+		total() {
+			return this.adminUsers.length;
 		}
 	},
 	methods: {
-		showAdminUserMe() {
-			console.log("adminUserMe", this.adminUserMe);
+		getQuery() {
+			const query = {
+				...this.$route.query
+			};
+			const offset = parseInt(query.page) * 10 - 10;
+			return offset;
+		},
+		getAdmins(params) {
+			this.$store.dispatch("adminusers/fetchAdminUsers", {
+				limit: 10,
+				search: params.search,
+				offset: this.getQuery()
+			});
 		},
 		toDeleteAdminUser(userId) {
 			this.adminAccountId = userId;
 			this.showConfirmCancelModal = true;
 		},
-		show() {
-			this.modal = true;
-		},
-
-		goToPage(page, search) {
-			if (page < 1) {
-				return;
-			}
-
-			if (page > this.pageCount) {
-				return;
-			}
-
-			let query = { ...this.$router.query, page };
-
-			if (search) {
-				query = { ...this.$router.query, page, search };
-			}
-
-			if (page === 1) {
-				delete query.page;
-			}
-
+		pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				page: e || 1
+			};
 			this.$router.push({ query });
-		},
-		getUsers(item) {
+			this.getAdmins(this.params);
 		}
 	}
 };
 </script>
 <style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
 .new-user-shield {
 	position: fixed;
 	top: 0;
@@ -375,7 +374,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px yellow;
+	border-left: solid 2px #FFC72C;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

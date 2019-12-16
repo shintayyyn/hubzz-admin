@@ -1,10 +1,7 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
-		<div>
-			<AppLoading :loading="loadingLocums" :message="'Loading Locums'" />
-		</div>
-		<div class="text-xl md:text-4xl text-white">Locums</div>
-		<div class="flex flex-col md:flex-row justify-between">
+	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+		<div class="px-2 text-xl md:text-4xl text-white">Locums</div>
+		<div class="px-2 flex flex-col md:flex-row justify-between">
 			<div class="flex py-2">
 				<div class="relative">
 					<input
@@ -26,12 +23,10 @@
 						/>
 					</button>
 				</div>
-				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(activePage,order_by,filterCompliances)">Go</button> -->
 			</div>
-			<!-- FILTER SELECTS -->
-			<div class="flex w-full justify-end">
+			<div class="flex flex-col w-full justify-end">
 				<div
-					class="w-1/2 md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end py-2 pr-2 md:p-2 md:py-0"
+					class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2"
 						>Filter by Compliance Status</label
@@ -52,7 +47,7 @@
 					</select>
 				</div>
 				<div
-					class="w-1/2 relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end py-2  md:p-2 md:py-0"
+					class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2  md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2">Sort by</label>
 					<select
@@ -66,283 +61,46 @@
 					</select>
 				</div>
 			</div>
-			<!-- FILTER SELECTS END HERE -->
 		</div>
-		<div class="w-full ">
-			<div
-				class="hidden md:flex items-center text-white justify-around font-semibold"
-			>
-				<div
-					class="align-middle px-2 w-1/6 cursor-pointer"
-					@click="sortBy('name', activePage, search, filterCompliances)"
-				>
-					Name
-					<svgicon
-						v-if="sortedBy != 'name'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'name'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'name'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-				</div>
-				<div
-					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('profession', activePage, search, filterCompliances)"
-				>
-					Profession
-					<svgicon
-						v-if="sortedBy != 'profession'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'profession'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'profession'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-				</div>
-				<div
-					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="sortBy('created_at', activePage, search, filterCompliances)"
-				>
-					Date signed-up
-					<svgicon
-						v-if="sortedBy != 'created_at'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'created_at'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'created_at'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-				</div>
-				<div
-					class="align-middle px-2 text-center w-1/6 cursor-pointer"
-					@click="
-						sortBy('email_verified_at', activePage, search, filterCompliances)
-					"
-				>
-					Sign-up verified
-					<svgicon
-						v-if="sortedBy != 'email_verified_at'"
-						class="inline align-baseline"
-						name="sort"
-						height="12"
-						width="12"
-						color="white black"
-					/>
-					<svgicon
-						v-if="sortType == true && sortedBy == 'email_verified_at'"
-						class="inline align-baseline"
-						name="sort-ascend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-					<svgicon
-						v-if="sortType == false && sortedBy == 'email_verified_at'"
-						class="inline align-baseline"
-						name="sort-descend"
-						height="12"
-						width="12"
-						color="white"
-					/>
-				</div>
-				<div class="align-middle px-2 text-center w-1/6">Status</div>
-				<div class="align-middle px-2 text-center w-1/6">Compliance Status</div>
-			</div>
-			<div
-				v-if="locumUsers.length === 0"
-				class="text-gray-500 leading-tight text-center py-4"
-			>
-				No results found for {{ search }}<br />Try another keyword
-			</div>
-			<!-- <transition-group name="fade" tag="p"> -->
-			<nuxt-link
-				v-for="(locumUser, index) in locumUsers"
-				:key="`locumUser-${index}`"
-				:to="{ path: `/locums/${locumUser.id}`, query: $route.query }"
-				class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-			>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none"
-				>
-					<strong class="block md:hidden text-xs uppercase">Name</strong>
-					<span class="">{{
-						locumUser.personal_detail ? locumUser.personal_detail.name : null
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase">Profession</strong>
-					<span class="">{{
-						locumUser.locum_detail && locumUser.locum_detail.profession
-							? locumUser.locum_detail.profession.name
-							: null
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Date signed-up</strong
-					>
-					<span class="">{{
-						$moment(locumUser.created_at).format("MMM D, YYYY")
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Sign-up verified</strong
-					>
-					<span class="">{{
-						locumUser.email_verified_at
-							? $moment(locumUser.email_verified_at).format("MMM D, YYYY")
-							: "Not yet verified"
-					}}</span>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase">Status</strong>
-					<span
-						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
-						:class="statusStyle(locumUser.status)"
-						>{{ locumUser.status }}</span
-					>
-				</div>
-				<div
-					class="flex flex-col md:justify-center md:items-center md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center"
-				>
-					<strong class="block md:hidden text-xs uppercase"
-						>Compliance Status</strong
-					>
-					<span
-						class="inline-flex justify-center text-black text-sm py-2 p-3 md:mx-4 rounded-full shadow lg:px-8 sm:px-2 w-32 min-w-0 my-1"
-						:class="complianceStatusStyle(locumUser.compliance_status)"
-						>{{ locumUser.compliance_status }}</span
-					>
-				</div>
-			</nuxt-link>
-			<!-- </transition-group> -->
-		</div>
-		<!-- PAGINATION -->
-		<div
-			class="flex justify-center items-center my-2"
+
+		<AppTable
+			v-if="itemCount > 0"
+			:total="itemCount"
+			:items="locumUsers"
+			:currentPage="currentPage"
+			:perPage="params.limit"
+			:columns="columns"
+			:loading="loadingLocums"
+			:routerLink="`/locums`"
+			:orderBy="params.order_by"
+			@pagechanged="pagechanged"
+			@limitchanged="limitchanged"
+			@sorted="sorted"
 		>
-			<button
-				class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-				@click="goToPage(activePage - 1, search, order_by, filterCompliances)"
-				:class="
-					`${
-						activePage == pageCount
-							? 'text-gray-500 page-button-disabled'
-							: 'page-button'
-					}`
-				"
-			>
-				<span class="hidden md:block">Prev</span>
-				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						class="fill-current"
-					>
-						<path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
-					</svg>
-				</span>
-			</button>
-
-			<button
-				class="page-button p-2 px-4 mx-1 rounded-lg font-bold text-sm text-black hover:bg-waterloo-light focus:outline-none"
-				:class="`${activePage === page ? 'text-black' : ''}`"
-				v-for="page in pageCount"
-				v-if="showPage(page)"
-				:key="`page-${page}`"
-				@click="goToPage(page, search, order_by, filterCompliances)"
-			>
-				{{ page }}
-			</button>
-
-			<button
-				class="relative p-4 md:py-2 mx-1 rounded-lg font-bold text-sm hover:bg-waterloo-light focus:outline-none"
-				@click="goToPage(activePage + 1, search, order_by, filterCompliances)"
-				:class="
-					`${
-						activePage == pageCount
-							? 'text-gray-500 page-button-disabled'
-							: 'page-button'
-					}`
-				"
-			>
-				<span class="hidden md:block">Next</span>
-				<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						class="fill-current"
-					>
-						<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-					</svg>
-				</span>
-			</button>
+			<template v-slot:status_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full w-32 text-center"
+					:class="statusStyle(slotProps.item.status)"
+				>
+					{{ slotProps.item.status }}
+				</div>
+			</template>
+			<template v-slot:compliance_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full w-32 text-center"
+					:class="complianceStatusStyle(slotProps.item.compliance_status)"
+				>
+					{{ slotProps.item.compliance_status }}
+				</div>
+			</template>
+		</AppTable>
+		<div v-else class="mt-2 w-full text-center text-white">
+			No registered locums.
 		</div>
-		<!-- PAGINATION ENDS HERE -->
 		<div
 			class="locum-shield"
 			v-if="$route.name.includes('index-locums-id')"
-			@click="$router.push('/locums')"
+			@click="$router.push({ path: `/locums`, query: $route.query })"
 		></div>
 		<nuxt-child />
 	</div>
@@ -351,19 +109,25 @@
 <script>
 import debounce from "lodash.debounce";
 import AppLoading from "@/components/Base/AppLoading";
+import AppPagination from "@/components/Base/AppPagination";
+import AppTable from "@/components/Base/AppTable";
+
 export default {
 	components: {
-		AppLoading
+		AppLoading,
+		AppPagination,
+		AppTable
 	},
 	data() {
 		return {
-			itemsPerPage: 10,
-			activePage: 1,
+			currentPage: 1,
 
 			filterCompliances: "",
 			search: "",
-			paramSort: {
-				order_by: ""
+			params: {
+				limit: 10,
+				offset: 0,
+				order_by: ["created_at:desc"]
 			},
 			sort: "",
 			sortedBy: "",
@@ -372,7 +136,47 @@ export default {
 			name: true,
 			profession: true,
 			created_at: true,
-			email_verified_at: true
+			email_verified_at: true,
+
+			columns: [
+				{
+					name: "Name",
+					dataIndex: "personal_detail_name",
+					sortable: true
+				},
+				{
+					name: "Profession",
+					dataIndex: "profession_name",
+					class: "text-center",
+					sortable: true
+				},
+				{
+					name: "Date Signed-up",
+					dataIndex: "created_at",
+					class: "localDate text-center",
+					sortable: true
+				},
+				{
+					name: "Sign-up verified",
+					dataIndex: "email_verified_at",
+					class: "localDate text-center",
+					sortable: true
+				},
+				{
+					name: "Status",
+					dataIndex: "status",
+					class: "text-center",
+					slot: true,
+					slotName: "status_slot"
+				},
+				{
+					name: "Compliance Status",
+					dataIndex: "compliance_status",
+					class: "text-center",
+					slot: true,
+					slotName: "compliance_slot"
+				}
+			]
 		};
 	},
 	watchQuery: ["page", "search", "compliance_status"],
@@ -382,7 +186,7 @@ export default {
 			let {
 				page = 1,
 				search = "",
-				order_by = "",
+				order_by = [],
 				compliance_status = null
 			} = route.query;
 
@@ -406,23 +210,25 @@ export default {
 				`/api/v1/admin/locum-users/count`,
 				{ params }
 			);
-			const getLocumUsersPromise = app.$axios.$get(`/api/v1/admin/locum-users`, {
-				params
-			});
+			const getLocumUsersPromise = app.$axios.$get(
+				`/api/v1/admin/locum-users`,
+				{ params }
+			);
 
 			let response = await getLocumUsersCountPromise;
 			const itemCount = response.data.count;
-      await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
+			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
 
 			response = await getLocumUsersPromise;
 			const locumUsers = response.data.users;
-      await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
+
+			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
 
 			await store.commit("locums/TOGGLE_LOADING", false);
 			return {
 				filterCompliances: compliance_status,
 				itemsPerPage: limit,
-				activePage: page,
+				currentPage: page,
 				search,
 				order_by
 			};
@@ -438,60 +244,19 @@ export default {
 			return this.$store.state.locums.loading_locums;
 		},
 		locumUsers() {
-			return this.$store.state.locums.locumUsers;
+			// return this.$store.state.locums.locumUsers;
+			return this.$store.getters["locums/getLocumUsers"];
 		},
 		itemCount() {
 			return this.$store.state.locums.itemCount;
 		},
-		pageCount() {
-			return Math.ceil(this.itemCount / this.itemsPerPage);
+		totalPages() {
+			return Math.ceil(this.itemCount / this.params.limit);
 		},
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.pageCount) {
-					return true;
-				}
-
-				if (page === this.activePage) {
-					return true;
-				}
-
-				if (page === this.activePage + 1) {
-					return true;
-				}
-
-				if (page === this.activePage - 1) {
-					return true;
-				}
-
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
-				) {
-					return true;
-				}
-
-				return false;
-			};
+		total() {
+			return this.locumUsers.length;
 		}
 	},
-
 	watch: {
 		async filterCompliances() {
 			const query = {
@@ -510,8 +275,6 @@ export default {
 
 			this.$router.push({ query });
 
-			return;
-
 			const params = {};
 
 			if (this.search) {
@@ -522,19 +285,22 @@ export default {
 				params.compliance_status = this.filterCompliances;
 			}
 
-			this.paramSort.compliance_status = this.filterCompliances;
+			this.params.compliance_status = this.filterCompliances;
 
-			this.getLocums(this.paramSort);
+			console.log("qwe", this.params.compliance_status);
+
+			this.getLocums(this.params);
 		},
 		search(value) {
 			this.searchSubmit();
-			this.getLocums(this.paramSort);
+			this.getLocums(this.params);
 		},
 		sort(value) {
+			// for mobile responsive filter
 			if (value === "Name") {
 				this.sortBy(
 					"name",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -542,7 +308,7 @@ export default {
 			if (value === "Profession") {
 				this.sortBy(
 					"profession",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -550,7 +316,7 @@ export default {
 			if (value === "Date signed-up") {
 				this.sortBy(
 					"created_at",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -558,7 +324,7 @@ export default {
 			if (value === "Sign-up verified") {
 				this.sortBy(
 					"email_verified_at",
-					this.activePage,
+					this.currentPage,
 					this.search,
 					this.filterCompliances
 				);
@@ -576,26 +342,26 @@ export default {
 		},
 		getLocums(params) {
 			this.$store.dispatch("locums/fetchLocums", {
-				limit: 10,
+				limit: this.params.limit,
 				search: params.search,
 				compliance_status: params.compliance_status,
 				order_by: params.order_by,
-				offset: this.getQuery()
+				offset: params.offset
 			});
 		},
 		async sortBy(sortedBy, page, search, compliance_status) {
 			if (this.sortedBy == sortedBy && this.sortType == true) {
-				this.paramSort.order_by = "created_at:desc";
+				this.params.order_by = "created_at:desc";
 				this.sortedBy = "";
 			} else {
 				this.sortedBy = sortedBy;
 				this.sortType = !this.sortType;
-				this.paramSort.order_by = await `${sortedBy}:${
+				this.params.order_by = await `${sortedBy}:${
 					this.sortType ? "asc" : "desc"
 				}`;
 			}
-			let order_by = await this.paramSort.order_by;
-			console.log(order_by);
+			let order_by = await this.params.order_by;
+			// console.log(order_by);
 			let query = {
 				...this.$router.query,
 				order_by
@@ -629,62 +395,9 @@ export default {
 			}
 			this.$router.push({ query });
 
-			this.paramSort.search = search;
-			this.paramSort.compliance_status = compliance_status;
-			this.getLocums(this.paramSort);
-		},
-		goToPage(page, search, order_by, compliance_status) {
-			if (page < 1) {
-				return;
-			}
-
-			if (page > this.pageCount) {
-				return;
-			}
-
-			let query = { ...this.$router.query, page };
-
-			if (search) {
-				query = { ...this.$router.query, page, search };
-			}
-			if (order_by) {
-				query = { ...this.$router.query, page, order_by };
-			}
-			if (compliance_status) {
-				query = { ...this.$router.query, page, compliance_status };
-			}
-
-			if (search && order_by) {
-				query = { ...this.$router.query, page, search, order_by };
-			}
-
-			if (search && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status };
-			}
-
-			if (order_by && compliance_status) {
-				query = { ...this.$router.query, page, order_by, compliance_status };
-			}
-
-			if (search && order_by && compliance_status) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by,
-					compliance_status
-				};
-			}
-
-			if (page === 1) {
-				delete query.page;
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-
-			this.$router.push({ query });
+			this.params.search = search;
+			this.params.compliance_status = compliance_status;
+			this.getLocums(this.params);
 		},
 
 		searchSubmit: debounce(function(page, order_by, compliance_status) {
@@ -783,9 +496,27 @@ export default {
 					return;
 			}
 		},
-
 		usersDeletedHandler(userId) {
 			console.log("usersDeletedHandler", userId);
+		},
+		pagechanged(page) {
+			const query = {
+				...this.$route.query,
+				page: page || 1
+			};
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getLocums(this.params);
+		},
+		async limitchanged(limit) {
+			this.current_page = 1;
+			this.params.limit = limit;
+			await this.getLocums(this.params);
+		},
+		async sorted(order_by) {
+			this.current_page = 1;
+			this.params.order_by = order_by;
+			this.getLocums(this.params);
 		}
 	}
 };

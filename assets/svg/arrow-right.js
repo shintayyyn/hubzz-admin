@@ -2,9 +2,9 @@
 var icon = require('vue-svgicon')
 icon.register({
   'arrow-right': {
-    width: 512,
-    height: 512,
-    viewBox: '0 0 512 512',
-    data: '<path pid="0" d="M160 115.4L180.7 96 352 256 180.7 416 160 396.7 310.5 256z"/>'
+    width: 306,
+    height: 306,
+    viewBox: '0 0 306 306',
+    data: '<path pid="0" d="M94.35 0l-35.7 35.7L175.95 153 58.65 270.3l35.7 35.7 153-153z"/>'
   }
 })

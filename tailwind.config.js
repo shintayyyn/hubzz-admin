@@ -134,12 +134,14 @@ module.exports = {
 			},
 			sunglow: "#FFC72C",
 			"sunglow-dark": "#e4b32b",
-			waterloo: "#7B8396",
 			"waterloo-light": "#9ba2b1",
+			waterloo: "#7B8396",
 			"waterloo-dark": "#606673",
 			trout: "#505561",
+			"trout-dark": "3b3f47",
 			charade: "#2C2F38",
-			"charade-dark": "#1b1d22"
+			"charade-dark": "#1b1d22",
+			shield: "#333"
 		},
 
 		screens: {
@@ -376,9 +378,9 @@ module.exports = {
 			"16": "4rem",
 			"20": "5rem",
 			"24": "6rem",
-      "32": "8rem",
-      "64": "16rem",
-      "96": "24rem",
+			"32": "8rem",
+			"64": "16rem",
+			"96": "24rem",
 			"-px": "1px",
 			"-0": "-0",
 			"-1": "-0.25rem",
@@ -412,7 +414,8 @@ module.exports = {
 			"20": 20,
 			"30": 30,
 			"40": 40,
-			"50": 50
+			"50": 50,
+			"511": 511
 		},
 
 		opacity: {

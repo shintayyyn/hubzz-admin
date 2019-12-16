@@ -127,11 +127,13 @@ export default {
         
         response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
         const practiceHub = response.data.practice
+
         let practiceParent = ''
         console.log('practice hub', practiceHub)
-        if (practiceHub.parent_surgery && practiceHub.parent_surgery.practice) {
-            response = await app.$axios.$get(`/api/v1/admin/practices/${practiceHub.parent_surgery.practice.id}`)
+        if (practiceHub.parent_practice) {
+            response = await app.$axios.$get(`/api/v1/admin/practices/${practiceHub.parent_practice.id}`)
             practiceParent = response.data.practice
+            console.log('parent', practiceParent)
             await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
         }
 

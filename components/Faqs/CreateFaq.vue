@@ -36,19 +36,16 @@
 		>
 			{{ errorMessage("answer", "Answer is Required") }}
 		</div>
-		<div class="flex justify-start">
-			<button
-				@click="save()"
-				class="font-semibold my-2 py-2 px-4 rounded-lg bg-sunglow text-black"
-			>
-				Save
-			</button>
-		</div>
+		<AppButton :label="'Save'" @click="save()" />
 	</div>
 </template>
 
 <script>
+import AppButton from "@/components/Base/AppButton";
 export default {
+	components: {
+		AppButton
+	},
 	props: ["domain"],
 	data() {
 		return {
