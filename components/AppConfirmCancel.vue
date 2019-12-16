@@ -4,21 +4,21 @@
 			class="confirmcancel-modal border-solid rounded-b-lg bg-yellow-500 px-6 py-2"
 		>
 			<div class="flex justify-center py-2">
-				<div class>{{ label }}</div>
+				<div class>Are you sure you want to delete this Admin Account?</div>
 			</div>
 			<div class="flex justify-center mb-2">
 				<button
 					class="border border-solid bg-yellow-500 hover:text-white focus:outline-none text-black font-bold py-2 px-4 mx-2 rounded-lg"
 					@click.prevent="$emit('confirm')"
 				>
-					{{ confirmLabel }}
+				  Confirm
 				</button>
 				<!-- @click="performAction()" -->
 				<button
 					class="border border-solid bg-yellow-500 hover:text-white focus:outline-none text-black font-bold py-2 px-4 mx-2 rounded-lg"
-					@click.prevent="$emit('close')"
+					@click="performAction()"
 				>
-					{{ cancelLabel }}
+					Cancel
 				</button>
 			</div>
 		</div>

@@ -84,9 +84,9 @@
 			<div
 				class="hidden md:flex items-center text-white justify-between font-semibold "
 			>
-				<div class="align-middle w-10" v-if="deleteAdminUser == true">dsadsa</div>
+				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
-				<div class="align-middle px-2 text-center w-1/3">Role</div>
+				<div class="align-middle px-2 w-1/3">Roles</div>
 				<div class="align-middle px-2 text-center w-1/3">Name</div>
 			</div>
 			<!-- END HEADER -->
@@ -103,9 +103,7 @@
 					<svgicon
 						v-if="
 							$auth.user.id != user.id &&
-								user.admin_detail &&
-								user.admin_detail.role &&
-								!user.admin_detail.role.name.includes('Super')
+							!user.admin_detail.roles[0].name.includes('Super Admin')
 						"
 						@click.prevent="toDeleteAdminUser(user.id)"
 						name="delete-user"
@@ -140,18 +138,18 @@
 							>{{ user && user.email ? user.email : null }}
 						</span>
 					</div>
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3"
+          
+          <div
+						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
 					>
-						<strong class="block md:hidden text-xs uppercase">Role</strong>
-						<span class="break-all">{{
-							user &&
-							user.admin_detail &&
-							user.admin_detail.role &&
-							user.admin_detail.role.name
-								? user.admin_detail.role.name
-								: null
-						}}</span>
+						<strong class="block md:hidden text-xs uppercase"
+							>Job Numbers</strong
+						>
+						<span
+							v-for="(role, index) in user.admin_detail.roles"
+							:key="index"
+							class=""
+							>{{ role.name }}</span>
 					</div>
 					<div
 						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3"
@@ -253,7 +251,10 @@ export default {
 				}
 			]
 		};
-	},
+  },
+  created(){
+    console.log('me', this.$auth.user)
+  },
 	watchQuery: ["page", "search"],
 	async asyncData({ app, store, route }) {
 		try {

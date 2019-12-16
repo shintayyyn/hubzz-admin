@@ -3,20 +3,20 @@
 		class="text-white bg-waterloo my-2 p-4 shadow rounded-lg text-sm max-w-lg"
 	>
 		<AppInput
-			v-model="toPutAdminUser.new_password"
+			v-model="form.new_password"
 			:type="'password'"
 			:name="'password'"
 			:label="'New Password'"
 			:error="formError.find(item => item.field === 'password')"
 		/>
 		<AppInput
-			v-model="toPutAdminUser.password_confirmation"
+			v-model="form.password_confirmation"
 			:type="'password'"
 			:name="'password_confirmation'"
 			:label="'Confirm Password'"
 			:error="formError.find(item => item.field === 'password_confirmation')"
 		/>
-		<AppButton :label="'Save Changes'" @click="changePassword(user.id, form)" />
+		<AppButton :label="'Save Changes'" @click="changePassword()" />
 	</div>
 </template>
 <script>
@@ -38,10 +38,13 @@ export default {
 			},
 			formError: []
 		};
-	},
+  },
+  created(){
+    console.log('user', this.user)
+  },
 	methods: {
-		changePassword(id, form) {
-			console.log("dont know what to do");
+		async changePassword() {
+			await this.$axios.$put(`/api/v1/me/change-password`, {form})
 		}
 	}
 };
