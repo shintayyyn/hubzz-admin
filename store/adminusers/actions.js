@@ -7,6 +7,7 @@ export default{
     },
     async fetchAdminUsers({ commit }, payload) {
       const response = await adminApi.fetchAdminUsers(this.$axios, payload)
+      console.log('response', response.data.users)
       return commit('SET_ADMIN_USERS', response.data.users)
     },
     async fetchAdminRolesCount({ commit }, payload) {

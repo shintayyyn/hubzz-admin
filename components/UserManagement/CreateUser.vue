@@ -346,10 +346,6 @@ export default {
 
   },
 
-  computed: {
-
-  },
-
   watch: {
     "toPostUser.email"(value) {
       const error = this.ValidateEmail(value);
@@ -415,10 +411,8 @@ export default {
       }
     },
     "toPostUser.postcode"(value) {
-      console.log('value', value)
       this.$axios.$get(`/api/v1/postcode-coordinates?search=${value}`)
       .then(res => {
-        console.log('res', res.data.postcode_coordinates)
         this.toPostUser.coordinate_x  = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_x : null
         this.toPostUser.coordinate_y = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_y : null
       })
@@ -465,7 +459,7 @@ export default {
     getAdminUsers() {
       this.$store.dispatch("adminusers/fetchAdminUsersCount", {});
       this.$store.dispatch("adminusers/fetchAdminUsers", {
-        limit: 8
+        limit: 10
       });
       this.$store.commit("adminusers/ADD_ADMIN_USER", this.toPostUser);
     },
@@ -652,6 +646,7 @@ export default {
                 status: "success",
                 text: "New Admin Account Successfully Created"
               });
+              this.getAdminUsers();
               this.$emit("userCreated");
               this.$emit("close");
             })
@@ -662,7 +657,6 @@ export default {
                 text: err.response.data.message
               });
             });
-          await this.getAdminUsers();
         }
       } catch (err) {
         store.commit("SET_NOTIFICATION", {

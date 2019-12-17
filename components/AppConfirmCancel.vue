@@ -9,14 +9,16 @@
 			<div class="flex justify-center mb-2">
 				<button
 					class="border border-solid bg-yellow-500 hover:text-white focus:outline-none text-black font-bold py-2 px-4 mx-2 rounded-lg"
-					@click.prevent="$emit('confirm')"
+          @click="performAction()"
+
 				>
+        	<!-- @click.prevent="$emit('confirm')" -->
 				  Confirm
 				</button>
 				<!-- @click="performAction()" -->
 				<button
 					class="border border-solid bg-yellow-500 hover:text-white focus:outline-none text-black font-bold py-2 px-4 mx-2 rounded-lg"
-					@click="performAction()"
+					@click.prevent="$emit('close')"
 				>
 					Cancel
 				</button>
@@ -31,12 +33,22 @@ export default {
 		console.log("account id", this.adminAccountId);
 	},
 	methods: {
+    getAdminUsers() {
+      this.$store.dispatch("adminusers/fetchAdminUsersCount", {});
+      this.$store.dispatch("adminusers/fetchAdminUsers", {
+        limit: 10
+      });
+      this.$store.commit("adminusers/ADD_ADMIN_USER", this.toPostUser);
+    },
 		async performAction() {
+      console.log('it works')
 			if (this.adminAccountId) {
 				await this.$axios
 					.$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
-					.then(() => {
-						this.$store.getters["adminusers/getAdminUsers"];
+					.then(res => {
+            console.log(res)
+            this.$store.getters["adminusers/getAdminUsers"];
+            // this.getAdminUsers()
 						this.$emit("close");
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,

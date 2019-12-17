@@ -145,11 +145,14 @@
 						<strong class="block md:hidden text-xs uppercase"
 							>Job Numbers</strong
 						>
-						<span
-							v-for="(role, index) in user.admin_detail.roles"
-							:key="index"
-							class=""
-							>{{ role.name }}</span>
+            <div v-if="user && user.admin_detail && user.admin_detail.roles">
+              <div
+                v-for="(role, index) in user.admin_detail.roles"
+                :key="`role-${index}`"
+                class=""
+                >{{ role.name }}</div>
+            </div>
+						
 					</div>
 					<div
 						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3"
@@ -186,11 +189,8 @@
 		<div
 			class="new-user-shield"
 			v-if="showConfirmCancelModal"
-			@click="
-				showConfirmCancelModal
-					? (showConfirmCancelModal = false)
-					: $router.go(-1)
-			"
+			@click="showConfirmCancelModal? (showConfirmCancelModal = false): $router.go(-1)"
+      @close="showConfirmCancelModal = false"
 		/>
 	</div>
 </template>
@@ -254,6 +254,7 @@ export default {
   },
   created(){
     console.log('me', this.$auth.user)
+    console.log('admin users', this.adminUsers)
   },
 	watchQuery: ["page", "search"],
 	async asyncData({ app, store, route }) {
@@ -344,6 +345,32 @@ export default {
 		toDeleteAdminUser(userId) {
 			this.adminAccountId = userId;
 			this.showConfirmCancelModal = true;
+    },
+    async performAction() {
+      console.log('it works')
+			if (this.adminAccountId) {
+        console.log('rere')
+				await this.$axios
+					.$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
+					.then(res => {
+            console.log(res)
+						this.$store.getters["adminusers/getAdminUsers"];
+						this.$emit("close");
+						this.$store.commit("SET_NOTIFICATION", {
+							enabled: true,
+							status: "success",
+							text: "Admin Account Successfully Deleted"
+						});
+					})
+					.catch(err => {
+						console.log("delete error", err);
+						this.$store.commit("SET_NOTIFICATION", {
+							enabled: true,
+							status: "danger",
+							text: err.response.data.message
+						});
+					});
+			}
 		},
 		pagechanged(e) {
 			const query = {

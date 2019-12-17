@@ -19,30 +19,13 @@
 						:name="'allow_surgery_create_sessions'"
 						:label="'Allow Spoke to Create Jobs/Sessions?'"
 						:placeholder="'Select...'"
-						:items="[
-							{ label: 'Yes', value: true },
-							{ label: 'No', value: false }
-						]"
-						:error="
-							formError.find(
-								item => item.field === 'allow_surgery_create_sessions'
-							)
-						"
-						@blur="
-							CheckEmptyField(
-								form.allow_surgery_create_sessions,
-								'allow_surgery_create_sessions'
-							)
-						"
+						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
 				</div>
 				<!-- SET MAX RATES ;  NOT REQUIRED -->
 				<div
 					class="p-2 mx-2 bg-gray-500 rounded-lg"
-					v-if="
-						surgeryCreateSessions == 'true' ||
-							form.allow_surgery_create_sessions == 'true'
-					"
+					v-if="surgeryCreateSessions == 'true' ||form.allow_surgery_create_sessions == 'true'"
 				>
 					<div class="w-full p-1">
 						<AppInput
@@ -98,19 +81,7 @@
 						:name="'allow_surgery_bill_locum'"
 						:label="'Allow Spoke to handle its own billing for Locum?'"
 						:placeholder="'Select...'"
-						:items="[
-							{ label: 'Yes', value: true },
-							{ label: 'No', value: false }
-						]"
-						:error="
-							formError.find(item => item.field === 'allow_surgery_bill_locum')
-						"
-						@blur="
-							CheckEmptyField(
-								form.allow_surgery_bill_locum,
-								'allow_surgery_bill_locum'
-							)
-						"
+						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
 				</div>
 				<div class="w-full p-1">
@@ -120,19 +91,7 @@
 						:name="'allow_surgery_bill_hubzz'"
 						:label="'Allow Spoke to handle its own billing for HUBZZ?'"
 						:placeholder="'Select...'"
-						:items="[
-							{ label: 'Yes', value: true },
-							{ label: 'No', value: false }
-						]"
-						:error="
-							formError.find(item => item.field === 'allow_surgery_bill_hubzz')
-						"
-						@blur="
-							CheckEmptyField(
-								form.allow_surgery_bill_hubzz,
-								'allow_surgery_bill_hubzz'
-							)
-						"
+						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
 				</div>
 				<div class="w-full p-1">
@@ -142,21 +101,7 @@
 						:name="'share_banks_to_other_surgeries'"
 						:label="'Share this spoke`s bank/s to other surgeries?'"
 						:placeholder="'Select...'"
-						:items="[
-							{ label: 'Yes', value: true },
-							{ label: 'No', value: false }
-						]"
-						:error="
-							formError.find(
-								item => item.field === 'share_banks_to_other_surgeries'
-							)
-						"
-						@blur="
-							CheckEmptyField(
-								form.share_banks_to_other_surgeries,
-								'share_banks_to_other_surgeries'
-							)
-						"
+						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
 				</div>
 			</div>
@@ -209,7 +154,8 @@ export default {
       console.log('it worked',this.form)
 			if (this.practice.type == "Hub") {
 				this.formError = [];
-				// this.Validate(this.form);
+        // this.Validate(this.form);
+        console.log('formerror', this.formError)
 				if (!this.formError.length) {
 					await this.$axios
 						.post(
@@ -226,6 +172,11 @@ export default {
 							this.$emit("practiceSpokePosted");
 						})
 						.catch(err => {
+              this.$store.commit("SET_NOTIFICATION", {
+                enabled: true,
+                status: "danger",
+                text: err.response.data.message
+              })
 							this.formError.push(err.response.data.error_messages);
             });
           await this.$emit('close')

@@ -154,6 +154,7 @@ export default {
         {
           name: "Practice ID",
           dataIndex: "id",
+          class: "text-center",
           sortable: false,
         },
 				{

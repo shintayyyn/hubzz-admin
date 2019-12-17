@@ -1,5 +1,5 @@
 export default{
     getAdminUsers(state){
-        return state.adminUsers
+      return state.adminUsers
     }
 }

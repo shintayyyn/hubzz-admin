@@ -92,7 +92,7 @@
               <textarea 
                   v-model="toPutLocumDetailCompliance.note" 
                   placeholder="Type Here" 
-                  class="w-full text-gray-700 flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-yellow-800 focus:outline-none" 
+                  class="w-full text-white flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-sunglow focus:outline-none" 
                   name="complianceNote"
                   >Type Here
               </textarea>

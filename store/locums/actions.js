@@ -13,6 +13,7 @@ export default {
 		this.$socket.on(
 			"updateLocumComplianceDocument",
 			async locumDetailComplianceDocument => {
+        console.log('route', this.$route )
 				let locumUser = locumDetailComplianceDocument.locum_detail.user; // old locum user
 				const response = await locumApi.fetchSpecificLocum(
 					this.$axios,

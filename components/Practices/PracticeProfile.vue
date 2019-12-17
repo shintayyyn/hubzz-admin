@@ -84,7 +84,7 @@
               <div class="flex items-center mb-2">
                 <span class="text-gray-300 mr-2 font-bold">Status: </span>
                 <span class="text-white px-4 py-1 rounded-lg " :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'">{{practice.status}}</span>
-                <span class="tool" data-tip="Practice Status is automatically set to 'Active' once Practice Verification Process is done." tabindex="1">
+                <span class="tool" data-tip="Manual status control will only work when verification requirements are already completed (Documents and Rates)." tabindex="1">
                   <svgicon
                   name="info"
                   width="21"

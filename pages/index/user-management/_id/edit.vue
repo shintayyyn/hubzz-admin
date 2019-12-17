@@ -45,7 +45,7 @@
 			:label="'Admin Role/s'"
 			:placeholder="'Select...'"
 			:error="formError.find(item => item.field === 'roles_id')"
-			:items="adminRoles"
+			:items="filteredAdminRoles"
 			@add="CheckEmptyField(form.roles_id, 'roles_id')"
 			@remove="CheckEmptyField(form.roles_id, 'roles_id')"
 		/>
@@ -67,13 +67,14 @@ export default {
 	data() {
 		return {
 			form: {
-				email: "",
-				title: "",
-				first_name: "",
-				last_name: "",
-				suffix: "",
+				email:'',
+				title:'',
+				first_name:'',
+				last_name:'',
+				suffix:'',
 				roles_id: []
-			},
+      },
+      filteredAdminRoles: [],
 			formError: []
 		};
 	},
@@ -82,13 +83,27 @@ export default {
 		this.form.title = this.user.personal_detail.title;
 		this.form.first_name = this.user.personal_detail.first_name;
 		this.form.last_name = this.user.personal_detail.last_name;
-		this.form.suffix = this.user.personal_detail.suffix;
+    this.form.suffix = this.user.personal_detail.suffix;
+    
 		this.user.admin_detail.roles.forEach(item => {
 			this.form.roles_id.push({
-				id: item.id,
+				value: item.id,
 				label: item.name
-			});
-		});
+      });
+    });
+
+    this.adminRoles.forEach(item => {
+      const found = this.user.admin_detail.roles.find(userRole => userRole.id === item.value)
+      console.log('item')
+      if(!found){
+        this.filteredAdminRoles.push({
+          value:item.value,
+          label: item.label,
+        })
+      }
+    })
+    console.log('user roles', this.user.admin_detail.roles)
+    console.log('filtered',this.filteredAdminRoles)
 	},
 	methods: {
 		getAdminUsers() {

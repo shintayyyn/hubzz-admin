@@ -10,7 +10,7 @@
     <div class="flex flex-row justify-start mt-1">
       <div class="flex flex-col w-full">
         <input
-          :value="value"
+          :value="$moment(value).format('YYYY-MM-DD')"
           type="input"
           :placeholder="format"
           class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
@@ -273,9 +273,10 @@ export default {
     };
   },
   created() {
-      console.log("month",this.selectedMonth)
+    console.log("month",this.selectedMonth)
     // get current month and year
     if (this.value) {
+      // this.value = this.$moment(this.value).format('YYYY-MM-DD')
       this.selectedMonth = this.$moment(this.value, this.format).format("M");
       this.selectedYear = this.$moment(this.value, this.format).format("YYYY");
     }

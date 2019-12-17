@@ -258,11 +258,21 @@ export default {
     save() {
       this.$axios.$put(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}`,this.form)
         .then(res => {
-          // this.$store.commit(
-          //   "profile/UPDATE_SURGERY",
-          //   res.data.practice_surgery
-          // );
-          this.$store.commit("SET_NOTIFICATION", { enabled: true, status: "success", text: "Surgery Update Success"});
+          console.log('res', res)
+          this.practice_surgery.allow_surgery_create_sessions = res.data.practice_surgery.allow_surgery_create_sessions
+          this.practice_surgery.max_hourly_rate_limit = res.data.practice_surgery.max_hourly_rate_limit
+          this.practice_surgery.max_halfday_rate_limit = res.data.practice_surgery.max_halfday_rate_limit
+          this.practice_surgery.max_wholeday_rate_limit = res.data.practice_surgery.max_wholeday_rate_limit
+          this.practice_surgery.max_ooh_rate_limit = res.data.practice_surgery.max_ooh_rate_limit
+          this.practice_surgery.max_excess_hours = res.data.practice_surgery.max_excess_hours
+          this.practice_surgery.allow_surgery_bill_locum = res.data.practice_surgery.allow_surgery_bill_locum
+          this.practice_surgery.allow_surgery_bill_hubzz = res.data.practice_surgery.allow_surgery_bill_hubzz
+          this.practice_surgery.share_banks_to_other_surgeries = res.data.practice_surgery.share_banks_to_other_surgeries
+          this.$store.commit(
+            "profile/UPDATE_SURGERY",
+            res.data.practice_surgery
+          );
+          this.$store.commit("SET_NOTIFICATION", { enabled: true, status: "success", text: "Successfully Updated Spoke Permissions"});
           this.editPermissions = false
         });
     }

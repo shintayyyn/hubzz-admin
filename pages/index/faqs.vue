@@ -32,69 +32,67 @@
 					</div>
 				</div>
 				<!-- -------------------------------------------------------------------------- -->
-				<div v-for="item in locumFaqs" :key="item.id">
-					<div class="inline-flex w-full">
-						<nuxt-link
-							v-if="
-								deleteLocumFaq == false &&
-									authAdminPermissions.includes('Edit FAQ')
-							"
-							:to="{ path: `/faqs/${item.id}` }"
-							class="flex items-center cursor-pointer mr-2 md:mr-4"
-						>
-							<svgicon
-								name="edit"
-								width="21"
-								height="21"
-								class="fill-current text-white hover:text-sunglow"
-							/>
-						</nuxt-link>
-						<div
-							v-if="
-								deleteLocumFaq == true &&
-									authAdminPermissions.includes('Delete FAQ')
-							"
-							@click="toDeleteFaq(item.id)"
-							class="flex items-center cursor-pointer mr-2 md:mr-4"
-						>
-							<svgicon
-								name="garbage"
-								width="21"
-								height="21"
-								class="fill-current text-red-800 hover:text-red-600"
-							/>
-						</div>
-						<div
-							class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
-							@click="toggleFaqOn(item)"
-						>
-							<div class="leading-tight text-sm md:text-base pr-1">
-								{{ item.question }}
-							</div>
-							<div class="font-bold text-lg flex items-center">
-								<svgicon
-									name="arrow-right"
-									height="16"
-									width="16"
-									color="white white"
-									:class="item.toggled ? 'rotate' : 'arrow'"
-								/>
-							</div>
-						</div>
-					</div>
-					<transition name="drop-down">
-						<div
-							class="flex justify-start item-answer font-bold text-sm overflow-hidden"
-							v-if="item.toggled"
-						>
-							<div
-								v-html="item.answer"
-								class="w-full md:px-4 py-2 h-auto"
-								:class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"
-							></div>
-						</div>
-					</transition>
-				</div>
+				<div v-for="item in locumFaqs" :key="item.id" class="inline-flex w-full">
+          <nuxt-link
+            v-if="
+              deleteLocumFaq == false &&
+                authAdminPermissions.includes('Edit FAQ')
+            "
+            :to="{ path: `/faqs/${item.id}` }"
+            class="flex items-center cursor-pointer mr-2 md:mr-4"
+          >
+            <svgicon
+              name="edit"
+              width="21"
+              height="21"
+              class="fill-current text-white hover:text-sunglow"
+            />
+          </nuxt-link>
+          <div
+            v-if="
+              deleteLocumFaq == true &&
+                authAdminPermissions.includes('Delete FAQ')
+            "
+            @click="toDeleteFaq(item.id)"
+            class="flex items-center cursor-pointer mr-2 md:mr-4"
+          >
+            <svgicon
+              name="garbage"
+              width="21"
+              height="21"
+              class="fill-current text-red-800 hover:text-red-600"
+            />
+          </div>
+          <div class="w-full my-1">
+            <div
+              class="flex bg-trout hover:bg-waterloo-dark transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
+              @click="toggleFaqOn(item)"
+            >
+              <div>{{item.question}}</div>
+              <div>
+                <svgicon
+                  name="arrow-right"
+                  height="15"
+                  width="15"
+                  :class="item.toggled ? 'rotate' : 'arrow'"
+                  color="white white"
+                />
+              </div>
+            </div>
+            <transition name="drop-down" mode="out-in">
+              <div v-if="item.toggled">
+                <no-ssr>
+                  <quill-editor
+                    class="border-none"
+                    :options="options"
+                    :content="item.answer"
+                    disabled
+                  ></quill-editor>
+                </no-ssr>
+              </div>
+            </transition>
+          </div>
+        </div>
 				<div v-if="locumFaqs.length === 0" class="text-waterloo">
 					No Frequently Asked Questions for Locum
 				</div>
@@ -126,69 +124,67 @@
 					</div>
 				</div>
 				<!-- ---------------------------------------------------------------------------- -->
-				<div v-for="item in practiceFaqs" :key="item.id">
-					<div class="inline-flex w-full">
-						<nuxt-link
-							v-if="
-								deletePracticeFaq == false &&
-									authAdminPermissions.includes('Edit FAQ')
-							"
-							:to="{ path: `/faqs/${item.id}` }"
-							class="flex items-center cursor-pointer mr-2 md:mr-4"
-						>
-							<svgicon
-								name="edit"
-								width="21"
-								height="21"
-								class="fill-current text-white hover:text-sunglow"
-							/>
-						</nuxt-link>
-						<div
-							v-if="
-								deletePracticeFaq == true &&
-									authAdminPermissions.includes('Edit FAQ')
-							"
-							@click="toDeleteFaq(item.id)"
-							class="flex items-center cursor-pointer mr-2 md:mr-4"
-						>
-							<svgicon
-								name="garbage"
-								width="21"
-								height="21"
-								class="fill-current text-red-800 hover:text-red-600"
-							/>
-						</div>
-						<div
-							class="flex my-1 w-full rounded-lg bg-trout hover:bg-waterloo-dark transition-hover p-2 md:p-4 justify-between cursor-pointer"
-							@click="toggleFaqOn(item)"
-						>
-							<div class="leading-tight text-sm md:text-base pr-1">
-								{{ item.question }}
-							</div>
-							<div class="font-bold text-lg flex items-center">
-								<svgicon
-									name="arrow-right"
-									height="16"
-									width="16"
-									color="white white"
-									:class="item.toggled ? 'rotate' : 'arrow'"
-								/>
-							</div>
-						</div>
-					</div>
-					<transition name="drop-down">
-						<div
-							class="flex justify-start item-answer font-bold text-sm overflow-hidden"
-							v-if="item.toggled"
-						>
-							<div
-								v-html="item.answer"
-								class="w-full md:px-4 py-2 h-auto"
-								:class="authAdminPermissions.includes('Delete FAQ') && 'mx-8'"
-							></div>
-						</div>
-					</transition>
-				</div>
+				<div v-for="item in practiceFaqs" :key="item.id" class="inline-flex w-full">
+          <nuxt-link
+            v-if="
+              deletePracticeFaq == false &&
+                authAdminPermissions.includes('Edit FAQ')
+            "
+            :to="{ path: `/faqs/${item.id}` }"
+            class="flex items-center cursor-pointer mr-2 md:mr-4"
+          >
+            <svgicon
+              name="edit"
+              width="21"
+              height="21"
+              class="fill-current text-white hover:text-sunglow"
+            />
+          </nuxt-link>
+          <div
+            v-if="
+              deletePracticeFaq == true &&
+                authAdminPermissions.includes('Delete FAQ')
+            "
+            @click="toDeleteFaq(item.id)"
+            class="flex items-center cursor-pointer mr-2 md:mr-4"
+          >
+            <svgicon
+              name="garbage"
+              width="21"
+              height="21"
+              class="fill-current text-red-800 hover:text-red-600"
+            />
+          </div>
+          <div class="w-full my-1">
+            <div
+              class="flex bg-trout hover:bg-waterloo-dark transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
+              @click="toggleFaqOn(item)"
+            >
+              <div>{{item.question}}</div>
+              <div>
+                <svgicon
+                  name="arrow-right"
+                  height="15"
+                  width="15"
+                  :class="item.toggled ? 'rotate' : 'arrow'"
+                  color="white white"
+                />
+              </div>
+            </div>
+            <transition name="drop-down" mode="out-in">
+              <div v-if="item.toggled">
+                <no-ssr>
+                  <quill-editor
+                    class="border-none"
+                    :options="options"
+                    :content="item.answer"
+                    disabled
+                  ></quill-editor>
+                </no-ssr>
+              </div>
+            </transition>
+          </div>
+        </div>
 				<div v-if="practiceFaqs.length === 0" class="text-waterloo">
 					No Frequently Asked Questions for Practice
 				</div>
@@ -216,21 +212,12 @@ export default {
 	data() {
 		return {
 			deleteLocumFaq: false,
-			deletePracticeFaq: false,
-			editorOption: {
-				theme: "bubble",
-				placeholder: "Edit Faqs",
-				modules: {
-					toolbar: [
-						["bold", "italic", "underline", "strike"],
-						[{ list: "ordered" }, { list: "bullet" }],
-						[{ header: [1, 2, 3, 4, 5, 6, false] }],
-						[{ color: [] }, { background: [] }],
-						[{ font: [] }],
-						[{ align: [] }]
-					]
-				}
-			},
+      deletePracticeFaq: false,
+      options: {
+        modules: {
+          toolbar: null
+        }
+      },
 			showConfirmCancelModal: false
 		};
 	},
@@ -305,7 +292,6 @@ export default {
 </script>
 <style scoped>
 .item-answer {
-	word-wrap: break-word;
 	height: auto;
 	transition: all 0.5s;
 }
