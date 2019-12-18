@@ -2,7 +2,7 @@
 	<div class="flex flex-col rounded-lg">
 		<div class="flex overflow-hidden">
 			<div class="flex overflow-x-auto mb-2">
-				<div class="flex-3 mx-1 whitespace-no-wrap">
+				<div v-if="practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
 					<AppButton
 						:label="'Add Spoke for this Hub'"
 						@click="show()"
@@ -87,7 +87,7 @@
 				class="mt-10 text-white w-full text-center"
 				style="font-family: Nunito"
 			>
-				This practice has no children.
+				<p>This practice has no children.</p>
 			</div>
 		</div>
 		<transition name="fade" mode="out-in">

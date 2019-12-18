@@ -401,7 +401,7 @@ export default {
         this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       await this.$axios
         .$get(
-          `/api/v1/admin/practices?type=Stand%20Alone&type=Spoke&limit=${this.perPage}&offset=${offset}`
+          `/api/v1/admin/practices?status=Active&type=Stand%20Alone&type=Spoke&limit=${this.perPage}&offset=${offset}`
         )
         .then(res => {
           this.practiceSpokes = res.data.practices;
