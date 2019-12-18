@@ -51,6 +51,7 @@
               :total="total"
               :totalPages="totalPages"
               :currentPage="currentPage"
+              :perPage="perPage"
               @pagechanged="pagechanged"
             />
           </div>

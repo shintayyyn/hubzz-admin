@@ -250,6 +250,7 @@ export default {
   },
 
   created() {
+    console.log('locum',this.user)
     this.locumDetails = this.user.locum_detail;
     this.userComplianceDocuments = this.user.locum_detail.compliance_documents;
     this.qualifications = this.user.locum_detail.qualifications;
@@ -290,25 +291,29 @@ export default {
 
     async changeLocumUserStatus(locumID, activeDisabled) {
       try {
-        const response = await this.$axios.put(
-          "/api/v1/admin/locum-users/" + locumID + "/status",
-          {
-            status: activeDisabled
-          }
-        );
+        console.log('locum details', this.user)
+        const response = await this.$axios.put(`/api/v1/admin/locum-users/${locumID}/status`,{ status: activeDisabled });
+        console.log('response', response)
         await this.getLocums();
-        // this.user.status = response.data.user.status
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Saved"
-        });
+        if(this.user.compliance_status !== 'Compliant'){
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "alert",
+            text: "You cannot make a Locum 'Active' if the Locum is not Compliant"
+          });
+        }else{
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Saved"
+          });
+        }
       } catch (err) {
         console.log("index practices index put status err", err);
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
-          text: "Something went wrong!!"
+          text: err.response.data.message
         });
       }
     },

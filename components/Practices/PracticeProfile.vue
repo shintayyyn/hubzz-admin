@@ -221,7 +221,7 @@ export default {
     }
   },
   async created(){
-    console.log(this.practice.actived_until)
+    console.log(this.practice)
     if(this.practice.type == 'Spoke'){
       Promise.all([
         this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`).then(res=>{
@@ -255,25 +255,33 @@ export default {
     },
     async toPutPracticeInfo(practiceID){
       try{
-          const response = await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,this.toPutPractice)
-          await this.getPractices()
-          await this.getPractice()
-          this.toEdit = false  
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+        await this.$axios.put(`/api/v1/admin/practices/${practiceID}`,this.toPutPractice)
+        await this.getPractices()
+        await this.getPractice()
+
+        let response = await this.$axios.$get(`/api/v1/admin/practice-documents?practice_id=${practiceID}`);
+        const practiceDocs = response.data.practice_documents.length
+        if(!this.practice.rates.length < 2 && practiceDocs < 2){
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Upload practice documents and set the practice rates first.' })
+        }else{
+          this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})
+        }
+        this.toEdit = false  
+        
           
       }catch(err){
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
-          console.log("put locum profile info error",err.message);
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
+        console.log("put locum profile info error",err.message);
       }
 
     },
     async toChangePracticeType(practiceID){
-      console.log(practiceID)
       try{
         await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`,this.toPutPracticeType)
         await this.getPractices()
         await this.getPractice()
         this.toEdit = false
+        
         this.$store.commit('SET_NOTIFICATION',{enabled:true, status:'success',text:'Saved'})
       }catch(err){
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })

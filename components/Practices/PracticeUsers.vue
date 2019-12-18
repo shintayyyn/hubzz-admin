@@ -60,6 +60,7 @@
           :total="total"
           :totalPages="totalPages"
           :currentPage="currentPage"
+          :perPage="perPage"
           @pagechanged="pagechanged"
         />
     </div> 
@@ -90,7 +91,7 @@ export default {
       // users:[],
       // totalPages:0,
       currentPage:1,
-      perPage:0,
+      perPage:10,
       surgery:null,
       query:null
     }

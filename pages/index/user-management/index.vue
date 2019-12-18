@@ -175,6 +175,7 @@
 			:total="total"
 			:totalPages="totalPages"
 			:currentPage="currentPage"
+      :perPage="itemsPerPage"
 			@pagechanged="pagechanged"
 		/>
 		<!-- PAGINATION ENDS HERE -->
