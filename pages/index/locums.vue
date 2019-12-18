@@ -139,6 +139,12 @@ export default {
 			email_verified_at: true,
 
 			columns: [
+        {
+          name: "User ID",
+          dataIndex: "id",
+          class: "text-center",
+          sortable: false,
+        },
 				{
 					name: "Name",
 					dataIndex: "personal_detail_name",

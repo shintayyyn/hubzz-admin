@@ -41,7 +41,7 @@ export default {
   },
   created(){
     if(this.$auth.user.id === this.user.id){
-      this.$router.push(`/account`)
+      this.$router.push(`/account/change-password`)
     } 
   },
   watch: {

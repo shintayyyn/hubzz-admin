@@ -89,6 +89,14 @@
 						{{ slotProps.item.type }}
 					</div>
 				</template>
+        <template v-slot:hub_type_slot="slotProps">
+					<div
+						class="px-4 py-1 rounded-full w-32 text-center"
+						:class="hubTypeStyle(slotProps.item.hub_type)"
+					>
+						{{ slotProps.item.hub_type }}
+					</div>
+				</template>
 			</AppTable>
 			<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
 				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
@@ -195,7 +203,14 @@ export default {
 					class: "text-center",
 					slotName: "type_slot",
 					sortable: true
-				}
+        },
+        {
+          name: "Hub Type",
+          slot: true,
+          dataIndex: "hub_type",
+          slotName: "hub_type_slot",
+          class: "text-center",
+        }
 			]
 		};
 	},
@@ -351,10 +366,22 @@ export default {
 				this.loading = true;
 			}
 			this.$router.push({ query });
-		}, 500),
+    }, 500),
+    
+    hubTypeStyle(hubType) {
+      switch (hubType) {
+        case "Type 1":
+          return "bg-red-500 text-white px-4 py-1 w-32";
+          break;
+        case "Type 2":
+          return "bg-purple-500 text-white px-4 py-1 w-32"
+        default:
+          return "bg-gray-300 text-white px-4 w-32"
+      }
+    },
 
-		typeStyle(status) {
-			switch (status) {
+		typeStyle(type) {
+			switch (type) {
 				case "Hub":
 					return "bg-red-500 text-white px-4 py-1 w-32";
 					break;

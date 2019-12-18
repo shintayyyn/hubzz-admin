@@ -38,7 +38,7 @@ export default {
 	created() {},
 	methods: {
 		goTo() {
-			this.$router.push("/account");
+			this.$router.push("/account/change-password");
 		}
 	}
 };

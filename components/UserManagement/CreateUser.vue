@@ -54,7 +54,7 @@
           <!-- USER PERSONAL DETAILS ENDS HERE -->
 
           <!-- PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED -->
-          <template v-if="surgery">
+          <template v-if="surgery && !practice">
             <template v-if="surgery && surgery.practice_count < 1">
               <AppInput 
                 v-model="toPostUser.type"
@@ -293,7 +293,7 @@ export default {
 
   async created() {
     console.log('surgery', this.surgery)
-
+    console.log('practice', this.practice)
     if(this.surgery){
       await this.$axios
       .$post(`/api/v1/postcode-to-coordinates`,{ postcode: this.surgery.postcode})
@@ -339,7 +339,7 @@ export default {
       })
       // let default_post_code = res.data.roles.find((item, index) => index === 0)
     })
-    console.log('practice details', this.toPostUser)
+    // console.log('practice details', this.toPostUser)
     // if (this.practice) {
     //   console.log("Practice to be created is a spoke");
     // }
@@ -372,7 +372,7 @@ export default {
         let error = this.formError.filter(
           item => item.field === "password"
         );
-        console.log("pass", index, value.length, index >= 0 || value.length >= 6)
+        // console.log("pass", index, value.length, index >= 0 || value.length >= 6)
         if (index >= 0 || value.length >= 6) {
           this.formError.splice(index, error.length);
         }
@@ -468,7 +468,6 @@ export default {
         userCount: this.userCount,
         perPage: 5
       };
-      console.log("payload", payload);
       this.$store.commit("practices/UPDATE_PRACTICE_USERS_PAGE_COUNT", payload);
     },
     errorMessage(field) {
@@ -481,11 +480,14 @@ export default {
       return;
     },
     checkForm: function(userInfo, surgID) {
+      console.log('admin create', this.adminCreate)
       this.formError = [];
       let list = ["title", "suffix"];
       !this.adminCreate && list.push("roles_id");
-      this.adminCreate && 
-        list.push("practice_type_id",
+      // this.adminCreate || this.practice && 
+      if(this.adminCreate || this.practice){
+        list.push(
+          "practice_type_id",
           "surgery_id", 
           "practice_role",
           "type",
@@ -500,10 +502,11 @@ export default {
           "coordinate_x",
           "coordinate_y",
           "clinical_commissioning_group_name",
-          ), 
-      console.log('validate')
+        )
+      }
+        
+      console.log('list', list)
       this.Validate(this.toPostUser, list);
-      console.log('dsadsadsa',this.formError)
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -544,7 +547,6 @@ export default {
     },
 
     async toPostUserInfo(toPostUser, toPostSurgeryID) {
-      console.log('dssadsa',this.surgery)
       try {
         if (
           (this.surgery && this.surgery.practice_count < 1) ||
@@ -610,7 +612,8 @@ export default {
           (this.practice && this.practice.user_count > 0)
         ) {
           //Add user to the practice
-          console.log("this surgery is registered. user is being added");
+          console.log("this surgery is registered. user is being added", this.surgery);
+          console.log('user', toPostUser)
           await this.$axios
             .post(`/api/v1/admin/practice-users`, toPostUser)
             .then(res => {
