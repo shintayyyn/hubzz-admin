@@ -122,28 +122,6 @@
               </div>
             </transition-group>
           </div>
-
-          <div v-if="practice && practice.type == 'Spoke'">
-            <!--IF PRACTICE IS A SPOKE-->
-            <transition-group name="slide" tag="p">
-              <div
-                v-for="(hub, index) in hubzz"
-                :key="`hub-${index}`"
-                @click="changeParent(hub.surgery.id, hub.id)"
-                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
-              >
-                <div class="flex flex-col text-white text-xs">
-                  <!-- <span class="font-hairline">{{"I AM THE ID "+hub.id}}</span> -->
-                  <span class="font-bold">{{ hub.surgery.name }}</span>
-                  <div class="flex items-center my-1">
-                    <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
-                    <span>{{ hub.surgery.code }}</span>
-                  </div>
-                </div>
-              </div>
-            </transition-group>
-          </div>
-
           <div v-if="practice && practice.type == 'Hub'">
             <!--IF PRACTICE IS A HUB-->
             <transition-group name="slide" tag="p">
@@ -174,6 +152,7 @@
       :total="total"
       :totalPages="totalPages"
       :currentPage="currentPage"
+      :perPage="perPage"
       @pagechanged="pagechanged"
       :loading="loading"
     />
@@ -239,7 +218,7 @@ export default {
       total: 0,
       totalPages: 0,
       currentPage: 1,
-      perPage: 0,
+      perPage: 10,
       loading: false,
       registeredPractice: [],
 
@@ -315,31 +294,22 @@ export default {
     async getData() {
       const limit = this.perPage;
       let offset = 0;
-      offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      
       const params = { limit, offset };
       if (this.search) {
         params.search = this.search;
       }
-      if (this.practice && this.practice.type === "Spoke") {
-        params.type = "Hub";
+      if (this.practice && this.practice.type == "Hub") {
+        params.status = 'Active',
+        params.type = ['Stand Alone', 'Spoke'],
         await this.$axios
           .$get(`/api/v1/admin/practices/count`, { params })
           .then(res => {
             this.total = res.data.count;
-            this.perPage = 8;
+            this.perPage = 10;
             this.totalPages = Math.ceil(this.total / this.perPage);
-            this.getAllHubzz();
-          });
-      } else if (this.practice && this.practice.type == "Hub") {
-        params.type = "Spoke";
-        await this.$axios
-          .$get(`/api/v1/admin/practices/count`, { params })
-          .then(res => {
-            this.total = res.data.count;
-            this.perPage = 8;
-            this.totalPages = Math.ceil(this.total / this.perPage);
-            this.getAllSpokes();
+            this.getAllSpokes(params);
           });
       } else if (!this.practice) {
         await this.$axios
@@ -373,36 +343,12 @@ export default {
       this.loading = false;
     },
 
-   
-    async getAllHubzz() {
-      this.loading = true;
-      const limit = this.perPage;
-      let offset = 0;
-      let type = "Hub";
-      offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
-      const params = { type, limit, offset };
-      if (this.search) {
-        params.search = this.search;
-      }
-      await this.$axios
-        .$get(`/api/v1/admin/practices`, { params })
-        .then(res => {
-          this.hubzz = res.data.practices;
-          this.hubzz.map(item => this.isRegistered(item.id));
-        });
-      this.loading = false;
-    },
-
-    async getAllSpokes() {
+    async getAllSpokes(params) {
       this.loading = true;
       let offset = 0;
-      offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       await this.$axios
-        .$get(
-          `/api/v1/admin/practices?status=Active&type=Stand%20Alone&type=Spoke&limit=${this.perPage}&offset=${offset}`
-        )
+        .$get(`/api/v1/admin/practices/`,{ params })
         .then(res => {
           this.practiceSpokes = res.data.practices;
           this.practiceSpokes.map(item => this.isRegistered(item.id));
