@@ -53,6 +53,14 @@
 					{{ slotProps.item.type }}
 				</div>
 			</template>
+      <template v-slot:hub_type_slot="slotProps">
+					<div
+						class="px-4 py-1 rounded-full w-32 text-center"
+						:class="hubTypeStyle(slotProps.item.hub_type)"
+					>
+						{{ slotProps.item.hub_type }}
+					</div>
+				</template>
 		</AppTable>
 
 		<div
@@ -77,13 +85,9 @@ export default {
 	},
 	data() {
 		return {
-			// toBeInvoicedCount: "",
-			// practicesToBeInvoiced: [],
-			// practiceInvoicesCount: "",
-			// practiceInvoices: [],
-			// invoiced: true
 			practiceCount: 0,
 			practices: [],
+      
 			// for app table
 			currentPage: 1,
 
@@ -121,7 +125,14 @@ export default {
 					class: "text-center",
 					slotName: "type_slot",
 					sortable: true
-				}
+        },
+        {
+          name: "Hub Type",
+          slot: true,
+          dataIndex: "hub_type",
+          slotName: "hub_type_slot",
+          class: "text-center",
+        }
 			]
 		};
 	},
@@ -254,9 +265,21 @@ export default {
 				default:
 					return;
 			}
-		},
+    },
+    
+    hubTypeStyle(hubType) {
+      switch (hubType) {
+        case "Type 1":
+          return "bg-red-500 text-white px-4 py-1 w-32";
+          break;
+        case "Type 2":
+          return "bg-purple-500 text-white px-4 py-1 w-32"
+        default:
+          return "bg-gray-300 text-white px-4 w-32"
+      }
+    },
 
-		statusStyle(status) {
+    statusStyle(status) {
 			switch (status) {
 				case "Active":
 					return "bg-green text-white lg:px-10 sm:px-2";
@@ -276,34 +299,8 @@ export default {
 				default:
 					return;
 			}
-		},
-		complianceStatusStyle(status) {
-			switch (status) {
-				case "Empty":
-					return "border border-white text-white lg:px-8 sm:px-2";
-					break;
-				case "Incomplete":
-					return "bg-yellow-300 text-black lg:px-8 sm:px-2";
-					break;
-				case "Pending":
-					return "bg-yellow text-black lg:px-8 sm:px-2";
-					break;
-				case "Expiring":
-					return "bg-yellow text-black lg:px-8 sm:px-2";
-					break;
-				case "Expired":
-					return "bg-red text-white lg:px-8 sm:px-2";
-					break;
-				case "Rejected":
-					return "bg-yellow-dark text-black lg:px-8 sm:px-2";
-					break;
-				case "Compliant":
-					return "bg-green text-white lg:px-8 sm:px-2";
-					break;
-				default:
-					return;
-			}
-		},
+    },
+
 		pagechanged(page) {
 			const query = {
 				...this.$route.query,

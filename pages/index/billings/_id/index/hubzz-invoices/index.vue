@@ -7,108 +7,70 @@
         class="t my-2 text-sm"
       />
     </div>
-    <div
-			class="w-full overflow-hidden my-1 mx-1 rounded-lg bg-orange-500 bg-waterloo"
+    <div class="w-full overflow-hidden my-1 mx-1 rounded-lg">
+      <AppTable
+			v-if="hubzzInvoicesCount> 0"
+			:total="hubzzInvoicesCount"
+			:items="hubzzInvoices"
+			:currentPage="currentPage"
+			:perPage="params.limit"
+			:columns="columns"
+			:loading="loadingHubzzInvoices"
+			:routerLink="`/billings/${$route.params.id}/hubzz-invoices`"
+			:orderBy="params.order_by"
+			:customWidth="200"
+			@pagechanged="pagechanged"
+			@sorted="sorted"
 		>
-			<p class="m-3 text-white text-xl font-semibold ">Invoice Records</p>
-			<div class="m-2">
-				<!-- HEADER -->
-				<div
-					class="hidden md:flex items-center text-white justify-around font-semibold"
-				>
-					<div class="flex-1 align-middle px-2">Invoice Number</div>
-					<div class="flex-1 align-middle px-2 text-center">Practice / Surgery</div>
-					<div class="flex-1 align-middle px-2 text-center">Issued At</div>
-					<div class="flex-1 align-middle px-2 ">Job Numbers</div>
-					<div class="flex-1 align-middle px-2 text-center">£ Amount</div>
-					<div class="flex-1 align-middle px-2 text-center">Status</div>
+			<template v-slot:total_amount_slot="slotProps">
+				<div>
+					{{'£ '+slotProps.item.total_amount }}
 				</div>
-				<!-- HEADER ENDS HERE -->
-				<nuxt-link
-					v-for="(practiceInvoice, index) in practiceInvoices"
-					:key="`billing-${index}`"
-					:to="`/billings/${$route.params.id}/hubzz-invoices/${practiceInvoice.id}`"
-					class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo"
-					draggable="false"
-				>
-					<div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase"
-							>Invoice Number</strong
-						>
-						<span class="break-all">{{ practiceInvoice.invoice_number }}</span>
-					</div>
-					<div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase"
-							>Practice / Surgery</strong
-						>
-						<span class="break-word">{{ practiceInvoice.practice.surgery.name }}</span>
-					</div>
-					<div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase">Issued At</strong>
-						<span class="break-all">{{
-							$moment(practiceInvoice.issued_at).format("MMM DD, YYYY | HH:SS:MM")
-						}}</span>
-					</div>
-					<div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase"
-							>Job Numbers</strong
-						>
-						<span
-							v-for="(item, index) in practiceInvoice.practice_invoice_items"
-							:key="index"
-							class=""
-							>{{ item.job_part.job_part_number }}</span>
-					</div>
-					<div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-						<span class="break-all">£{{ practiceInvoice.total_amount }}</span>
-					</div>
-					<div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase">Status</strong>
-						<!-- <span>{{ practiceInvoice.status }}</span> -->
-						<div class="py-4" v-if="!practiceInvoice.paid && !practiceInvoice.paid_at">
-							<a
-								class="px-4 py-2 whitespace-no-wrap rounded-full bg-yellow-500 text-white"
-								>Mark as paid</a
-							>
-						</div>
-            <div v-else>
-              <div
-								class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white"
-								>Mark as paid</div
-							>
-            </div>
-					</div>
-				</nuxt-link>
-			</div>
+			</template>
+
+			<template v-slot:paid_at="slotProps">
+        <div>
+					{{ slotProps.item.paid_at ? slotProps.item.paid_at : "Not yet paid" }}
+				</div>
+			</template>
+
+      <!-- <template v-slot:hub_type_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full w-32 text-center"
+          :class="hubTypeStyle(slotProps.item.hub_type)"
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
+      </template> -->
+
+		</AppTable>
+
 		</div>
 	</div>
 </template>
 <script>
+import AppLoading from "@/components/Base/AppLoading"
 import AppButton from '@/components/Base/AppButton'
 import AppTable from '@/components/Base/AppTable'
 export default {
   components:{
+    AppLoading,
     AppButton,
-    AppTable
+    AppTable,
   },
 	data() {
 		return {
-			practiceInvoices: "",
+      loading:false,
+      currentPage: 1,
+      params: {
+        limit: 10,
+        offset: 0,
+        order_by:["created_at:desc"]
+      },
+			// practiceInvoices: [],
+      // practiceInvoicesCount: 0,
       practice: "",
-
+      sort: "",
       columns: [
         {
           name: "Invoice Number",
@@ -118,49 +80,96 @@ export default {
         },
         {
           name: 'Practice',
-          dataIndex:"practice.surgery.name",
+          dataIndex:"practice.name",
           class:"text-center",
           sortable: 'true'
         },
         {
           name: 'Issued At',
-          dataIndex:"invoice_number",
-          class:"text-center",
+          dataIndex:"issued_at",
+          class:"text-center localDate",
           sortable: 'true'
-        },
-        {
-          name: 'Job Numbers',
-          dataIndex:'practice_invoice_items',
-          class:"text-center",
-          sortable: 'false'
         },
         {
           name: '£ Amount',
           dataIndex: 'total_amount',
+          slotName: "total_amount_slot",
           class:"text-center",
           sortable: 'false'
+        },
+        {
+          name:'Paid',
+          dataIndex: 'paid_at',
+          slotName: 'paid_at',
+          class:"text-center",
         }
       ]
-
 		};
 	},
 	async asyncData({ app, route, store }) {
 		try {
+      await store.commit("billings/TOGGLE_LOADING", true)
+      let {
+        page = 1,
+        order_by = []
+      } = route.query
+      
+      const practice_id = route.params.id
+      const viewing_practice_id = route.params.id
+      const limit = 10
+      const offset = page * limit - limit
       let params = {
-        viewing_practice_id : route.params.id
+        practice_id,
+        viewing_practice_id,
+        limit,
+        offset,
+        order_by
       }
-      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices`,{ params })
-      const practiceInvoices = response.data.practice_invoices
-      console.log('hubzz invoices', practiceInvoices)
+      
+      console.log('params', params)
+
+      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/count`,{ params })
+      await store.commit("billings/SET_HUBZZ_INVOICES_COUNT", response.data.count)
+
+      response = await app.$axios.$get(`/api/v1/admin/practice-invoices`, { params })
+      await store.commit("billings/SET_HUBZZ_INVOICES", response.data.practice_invoices)
+
+      await store.commit("billings/TOGGLE_LOADING", false);
 			return {
-        practiceInvoices
+        loading: false,
+        perPage: limit,
+        currentPage: page,
+        order_by
 			}
 		} catch (err) {
-			error({ statusCode: 404 }),
-			console.log('Get specific invoice error!', err)
+			store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			});
+			console.log('Get hubzz invoices error!', err)
 		}
 	},
+  computed: {
+    loadingHubzzInvoices() {
+      return this.$store.state.billings.loading_invoices;
+    },
+    hubzzInvoicesCount() {
+      return this.$store.state.billings.hubzz_invoices_count;
+    },
+    hubzzInvoices() {
+      return this.$store.state.billings.hubzz_invoices;
+    }
+  },
 	methods: {
+    getHubzzInvoices(params) {
+      this.$store.dispatch("billings/fetchHubzzInvoices", {
+        limit: this.params.limit,
+        order_by: this.params.order_by,
+        offset: params.offset
+      })
+    },
+
 		practiceTypeStyle(type) {
 			switch (type) {
 				case "Stand Alone":
@@ -175,6 +184,25 @@ export default {
 				default:
 					return;
 			}
+    },
+    pagechanged(page) {
+			const query = {
+				...this.$route.query,
+				page: page || 1
+			};
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getPractices(this.params);
+    },
+    sorted(order_by) {
+			// go back to page 1
+			this.currentPage = 1;
+			let query = {
+				...this.$router.query,
+				order_by
+			};
+			this.params.order_by = order_by;
+			this.getPractices(this.params);
 		}
 	}
 };

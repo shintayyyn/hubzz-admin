@@ -1,0 +1,23 @@
+import * as billingApi from '@/api/billings'
+import { fetchPracticeInvoices } from '../../api/billings'
+export default{
+  async fetchHubzzInvoices ({ commit }, payload){
+    commit('TOGGLE_LOADING', true)
+    const response = await billingApi.fetchHubzzInvoices(this.$axios, payload)
+    commit('TOGGLE_LOADING', false)
+    if(payload.countOnly){
+      return commit ('SET_HUBZZ_INVOICES_COUNT', response.data.count)
+    }
+    return commit ('SET_HUBZZ_INVOICES', response.data.practice_invoices)
+  },
+
+  async fetchPracticeInvoices({ commit }, payload){
+    commit('TOGGLE_LOADING', true)
+    const response = await billingApi.fetchPracticeInvoices(this.$axios, payload)
+    commit('TOGGLE_LOADING', false)
+    if(payload.countOnly){
+      return commit ('SET_PRACTICE_INVOICES_COUNT', response.data.count)
+    }
+    return commit('SET_HUBZZ_INVOICES', response.data.locum_invoices)
+  }
+}

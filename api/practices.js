@@ -1,4 +1,4 @@
-export function fetchPractices(axios,payload){
+export function fetchPractices(axios, payload){
     let params = {}
     payload.search ? params.search = payload.search : null
     payload.type ? params.type = payload.type : null

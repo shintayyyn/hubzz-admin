@@ -68,7 +68,7 @@
 			:total="itemCount"
 			:items="locumUsers"
 			:currentPage="currentPage"
-			:perPage="params.limit"
+			:perPage="perPage"
 			:columns="columns"
 			:loading="loadingLocums"
 			:routerLink="`/locums`"
@@ -128,7 +128,8 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"]
-			},
+      },
+      perPage: 0,
 			sort: "",
 			sortedBy: "",
 			sortType: "",
@@ -233,7 +234,7 @@ export default {
 			await store.commit("locums/TOGGLE_LOADING", false);
 			return {
 				filterCompliances: compliance_status,
-				itemsPerPage: limit,
+				perPage: limit,
 				currentPage: page,
 				search,
 				order_by

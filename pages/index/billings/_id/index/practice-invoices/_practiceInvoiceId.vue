@@ -111,6 +111,9 @@ export default {
       locumInvoice: ''
     }
   },
+  created(){
+    console.log('invoice id', this.$route.name)
+  },
   async asyncData({ app, route, store }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/locum-invoices/${route.params.practiceInvoiceId}`)

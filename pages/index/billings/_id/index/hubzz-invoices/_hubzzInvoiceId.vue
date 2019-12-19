@@ -4,12 +4,12 @@
       <div @click="goBack()" class="text-white hover:text-sunglow p-1">
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
       </div>
-      <div>
+      <!-- <div>
         <HubzzInvoice 
           :forViewing="true"
           :practice="practice" 
           :practiceInvoice="practiceInvoice"/>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

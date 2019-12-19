@@ -59,7 +59,7 @@
 				:total="itemCount"
 				:items="getAllPractices"
 				:currentPage="currentPage"
-				:perPage="params.limit"
+				:perPage="perPage"
 				:columns="columns"
 				:loading="loadingPractices"
 				:routerLink="`/practices`"
@@ -148,7 +148,8 @@ export default {
 		return {
 			loading: false,
 			currentPage: 1,
-			search: "",
+      search: "",
+      perPage: 0,
 			params: {
 				limit: 10,
 				offset: 0,
@@ -255,7 +256,7 @@ export default {
 			await store.commit("practices/TOGGLE_LOADING", false);
 			return {
 				loading: false,
-				itemsPerPage: limit,
+				perPage: limit,
 				currentPage: page,
 				search,
 				order_by
@@ -367,19 +368,7 @@ export default {
 			}
 			this.$router.push({ query });
     }, 500),
-    
-    hubTypeStyle(hubType) {
-      switch (hubType) {
-        case "Type 1":
-          return "bg-red-500 text-white px-4 py-1 w-32";
-          break;
-        case "Type 2":
-          return "bg-purple-500 text-white px-4 py-1 w-32"
-        default:
-          return "bg-gray-300 text-white px-4 w-32"
-      }
-    },
-
+  
 		typeStyle(type) {
 			switch (type) {
 				case "Hub":
@@ -394,7 +383,20 @@ export default {
 				default:
 					return;
 			}
-		},
+    },
+
+    hubTypeStyle(hubType) {
+      switch (hubType) {
+        case "Type 1":
+          return "bg-red-500 text-white px-4 py-1 w-32";
+          break;
+        case "Type 2":
+          return "bg-purple-500 text-white px-4 py-1 w-32"
+        default:
+          return "bg-gray-300 text-white px-4 w-32"
+      }
+    },
+    
 		pagechanged(page) {
 			const query = {
 				...this.$route.query,

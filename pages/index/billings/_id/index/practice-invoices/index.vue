@@ -1,119 +1,179 @@
 <template>
-	<div class="w-full overflow-hidden">
-    <div>
-      <div class="max-w-2xl w-full overflow-hidden my-1 mx-1 rounded-lg bg-waterloo">
-        <p class="m-3 text-white text-xl font-semibold ">Practice Invoices</p>
-        <div class="m-2">
-          <!-- HEADER -->
-          <div
-            class="hidden md:flex items-center text-white justify-around font-semibold"
-          >
-            <div class="flex-1 align-middle px-2">Invoice Number</div>
-            <div class="flex-1 align-middle px-2 text-center">Locum Name</div>
-            <div class="flex-1 align-middle px-2 text-center">Job Numbers</div>
-            <div class="flex-1 align-middle px-2 text-center">Issued</div>
-            <div class="flex-1 align-middle px-2 text-center">£ Amount</div>
-            <div class="flex-1 align-middle px-2 text-center">Status</div>
+	<div class="max-w-2xl w-full overflow-hidden">
+    <div class="w-full overflow-hidden my-1 mx-1 rounded-lg">
+      <AppTable
+        v-if="practiceInvoicesCount> 0"
+        :total="practiceInvoicesCount"
+        :items="practiceInvoices"
+        :currentPage="currentPage"
+        :perPage="params.limit"
+        :columns="columns"
+        :loading="loadingpracticeInvoices"
+        :routerLink="`/billings/${$route.params.id}/practice-invoices`"
+        :orderBy="params.order_by"
+        :customWidth="200"
+        @pagechanged="pagechanged"
+        @sorted="sorted"
+      >
+        <template v-slot:total_amount_slot="slotProps">
+          <div>
+            {{'£ '+slotProps.item.total_amount }}
           </div>
-          <!-- HEADER ENDS HERE -->
-          <nuxt-link
-            v-for="(locumInvoice, index) in locumInvoices"
-            :key="`billing-${index}`"
-            :to="`/billings/${practice.id}/practice-invoices/${locumInvoice.id}`"
-            class="flex flex-col cursor-pointer md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo-light hover:bg-waterloo"
-            draggable="false"
+        </template>
+
+        <template v-slot:paid_at="slotProps">
+          <div>
+            {{ slotProps.item.paid_at ? slotProps.item.paid_at : "Not yet paid" }}
+          </div>
+        </template>
+
+        <!-- <template v-slot:hub_type_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center"
+            :class="hubTypeStyle(slotProps.item.hub_type)"
           >
-            <div
-              class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-            >
-              <strong class="block md:hidden text-xs uppercase"
-                >Invoice Number</strong
-              >
-              <span class="break-all">{{ locumInvoice.invoice_number }}</span>
-            </div>
-            <div
-              class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-            >
-              <strong class="block md:hidden text-xs uppercase"
-                >Locum Name</strong
-              >
-              <span class="break-word">{{ locumInvoice.locum_user.name }}</span>
-            </div>
-            <div
-              class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-            >
-              <strong class="block md:hidden text-xs uppercase">Issued</strong>
-              <span class="break-all">{{
-                $moment(locumInvoice.issued_at).format("MMM DD, YYYY | HH:ss:mm")
-              }}</span>
-            </div>
-            <div
-              class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-            >
-              <strong class="block md:hidden text-xs uppercase"
-                >Job Numbers</strong
-              >
-              <span
-                v-for="(item, index) in locumInvoice.items"
-                :key="index"
-                class=""
-                >{{ item.job_part.job_part_number }}</span
-              >
-            </div>
-            <div
-              class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-            >
-              <strong class="block md:hidden text-xs uppercase">£ Amount</strong>
-              <span class="break-all">{{ locumInvoice.total_amount }}</span>
-            </div>
-            <div
-              class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle md:text-center leading-none"
-            >
-              <strong class="block md:hidden text-xs uppercase">Status</strong>
-              <!-- <span>{{ locumInvoice.status }}</span> -->
-              <div class="py-4" v-if="!locumInvoice.paid && !locumInvoice.paid_at">
-                <a
-                  class="px-4 py-2 whitespace-no-wrap rounded-full bg-green-500 text-white"
-                  >Mark as paid</a
-                >
-              </div>
-            </div>
-          </nuxt-link>
-        </div>
-      </div>
-    </div>
+            {{ slotProps.item.hub_type }}
+          </div>
+        </template> -->
+      </AppTable>
+		</div>
+    <div
+			class="billing-shield"
+			v-if="$route.name.includes('practice-invoices-practiceInvoiceId')"
+			@click="$router.push(`/billings/${$route.params.id}/practice-invoices`)"
+		></div>
 	</div>
 </template>
 <script>
+import AppLoading from "@/components/Base/AppLoading"
 import AppButton from '@/components/Base/AppButton'
+import AppTable from '@/components/Base/AppTable'
 export default {
   components:{
-    AppButton
+    AppLoading,
+    AppButton,
+    AppTable,
   },
 	data() {
 		return {
-      practiceInvoice: '',
-      locumInvoices: '',
-			practice: '',
+      loading:false,
+      currentPage: 1,
+      params: {
+        limit: 10,
+        offset: 0,
+        order_by:["created_at:desc"]
+      },
+			// practiceInvoices: [],
+      // practiceInvoicesCount: 0,
+      practice: "",
+      sort: "",
+      columns: [
+        {
+          name: "Invoice Number",
+          dataIndex:"invoice_number",
+          class:"text-center",
+          sortable: true
+        },
+        {
+          name: 'Locum E-Mail',
+          dataIndex:"locum_user.email",
+          class:"text-center",
+          sortable: 'true'
+        },
+        {
+          name: 'Locum Name',
+          dataIndex:"locum_user.name",
+          class:"text-center",
+          sortable: 'true'
+        },
+        {
+          name: 'Issued At',
+          dataIndex:"issued_at",
+          class:"text-center localDate",
+          sortable: 'true'
+        },
+        // {
+        //   name: '£ Amount',
+        //   dataIndex: 'total_amount',
+        //   slotName: "total_amount_slot",
+        //   class:"text-center",
+        //   sortable: 'false'
+        // },
+        // {
+        //   name:'Paid',
+        //   dataIndex: 'paid_at',
+        //   slotName: 'paid_at',
+        //   class:"text-center",
+        // }
+      ]
 		};
-	},
+  },
+  created(){
+    console.log('invoice id', this.$route.params.id)
+  },
 	async asyncData({ app, route, store }) {
 		try {
-			let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/locum-invoices`)
-			const locumInvoices = response.data.locum_invoices
-			response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
-      const practice = response.data.practice
+      await store.commit("billings/TOGGLE_LOADING", true)
+      let {
+        page = 1,
+        order_by = []
+      } = route.query
       
-      console.log('locumInvoices', locumInvoices)
+      const practice_id = route.params.id
+      const limit = 10
+      const offset = page * limit - limit
+
+      let params = {
+        practice_id,
+        limit,
+        offset,
+        order_by
+      }
+      
+      console.log('params', route.name)
+
+      let response = await app.$axios.$get(`/api/v1/admin/locum-invoices/count`,{ params })
+      await store.commit("billings/SET_PRACTICE_INVOICES_COUNT", response.data.count)
+
+      response = await app.$axios.$get(`/api/v1/admin/locum-invoices`, { params })
+      await store.commit("billings/SET_PRACTICE_INVOICES", response.data.locum_invoices)
+
+      await store.commit("billings/TOGGLE_LOADING", false);
 			return {
-			  locumInvoices,
-			  practice
+        loading: false,
+        perPage: limit,
+        currentPage: page,
+        order_by
 			}
 		} catch (err) {
-			console.log('Get specific invoice error!', err)
+			store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			});
+			console.log('Get practice invoices error!', err)
 		}
 	},
+  computed: {
+    loadingpracticeInvoices() {
+      return this.$store.state.billings.loading_invoices;
+    },
+    practiceInvoicesCount() {
+      return this.$store.state.billings.practice_invoices_count;
+    },
+    practiceInvoices() {
+      return this.$store.state.billings.practice_invoices;
+    }
+  },
 	methods: {
+    getpracticeInvoices(params) {
+      this.$store.dispatch("billings/fetchpracticeInvoices", {
+        limit: this.params.limit,
+        order_by: this.params.order_by,
+        offset: params.offset
+      })
+    },
+
 		practiceTypeStyle(type) {
 			switch (type) {
 				case "Stand Alone":
@@ -128,9 +188,39 @@ export default {
 				default:
 					return;
 			}
+    },
+    pagechanged(page) {
+			const query = {
+				...this.$route.query,
+				page: page || 1
+			};
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getPractices(this.params);
+    },
+    sorted(order_by) {
+			// go back to page 1
+			this.currentPage = 1;
+			let query = {
+				...this.$router.query,
+				order_by
+			};
+			this.params.order_by = order_by;
+			this.getPractices(this.params);
 		}
 	}
 };
 </script>
 
-<style></style>
+<style>
+.billing-shield {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #333;
+	opacity: 0.5;
+	z-index: 511;
+}
+</style>
