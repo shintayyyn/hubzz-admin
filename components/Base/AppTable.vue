@@ -1,6 +1,6 @@
 <template>
 	<section class="relative">
-		<div class="relative ">
+		<div class="relative">
 			<AppLoading :loading="loading" :message="loadingMessage" spinner />
 			<div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
 				<div
@@ -53,7 +53,7 @@
 							<div
 								v-for="(column, index) in columns"
 								:key="index"
-								class="flex flex-col md:flex-1 truncate px-2 leading-tight py-1 md:py-0"
+								class="flex flex-col md:block flex-1 truncate px-2 leading-tight py-1 md:py-0"
 								:class="[
 									column.class &&
 										column.class.includes('text-center') &&
@@ -67,28 +67,22 @@
 										v-for="(item, index) in dataCell(item, column)"
 										:key="`${item}-${index}`"
 										:class="column.customClass"
-									>
-										{{ item }}
-									</div>
+									>{{ item }}</div>
 								</template>
 								<template v-else>
-                  
 									<template v-if="column.slotName">
-                    <div @click="$emit(column.eventName, item)">
-										  <slot :name="column.slotName" v-bind:item="item">dsa</slot>
-                    </div>
-                  </template>
+										<div @click="$emit(column.eventName, item)">
+											<slot :name="column.slotName" v-bind:item="item">dsa</slot>
+										</div>
+									</template>
 									<template v-else>
-                    
 										<template
 											v-if="
 												column.class &&
 													column.class.includes('localDate') &&
 													dataCell(item, column) !== 'Unavailable'
 											"
-										>
-											{{ dataCell(item, column) | localDate }}
-										</template>
+										>{{ dataCell(item, column) | localDate }}</template>
 										<template v-else>{{ dataCell(item, column) }}</template>
 									</template>
 								</template>

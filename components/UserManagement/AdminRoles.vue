@@ -24,9 +24,7 @@
 		<!--  -->
 		<div v-if="adminRoles.length" class="w-full px-4 md:px-8">
 			<!-- HEADER -->
-			<div
-				class="hidden md:flex items-center text-white justify-around font-semibold"
-			>
+			<div class="hidden md:flex items-center text-white justify-around font-semibold">
 				<div class="pr-3 md:px-4" v-if="deletingAdminRole == true"></div>
 				<div class="align-middle px-2 w-1/3">Role Name</div>
 				<div class="align-middle px-2 w-1/3">Date Created</div>
@@ -34,11 +32,7 @@
 			</div>
 			<!-- END HEADER -->
 			<!-- BODY -->
-			<div
-				v-for="(role, index) in adminRoles"
-				:key="`role-${index}`"
-				class="flex"
-			>
+			<div v-for="(role, index) in adminRoles" :key="`role-${index}`" class="flex">
 				<div
 					@click="toDeleteAdminRole(role.id)"
 					v-if="deletingAdminRole == true"
@@ -50,30 +44,19 @@
 					:to="{ path: `/user-management/roles-and-permissions/${role.id}` }"
 					class="w-full flex flex-col md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
 				>
-					<div
-						class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none"
-					>
+					<div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
 						<strong class="block md:hidden text-xs uppercase">Role Name</strong>
 						<span>{{ role.name }}</span>
 					</div>
-					<div
-						class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase"
-							>Date Created</strong
-						>
+					<div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
+						<strong class="block md:hidden text-xs uppercase">Date Created</strong>
 						<span>{{ $moment(role.created_at).format("MMM D, YYYY") }}</span>
 					</div>
-					<div
-						class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase"
-							>Description</strong
-						>
+					<div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
+						<strong class="block md:hidden text-xs uppercase">Description</strong>
 						<span
 							style="display:-webkit-box;webkit-line-clamp:2;-webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
-							>{{ role.description }}</span
-						>
+						>{{ role.description }}</span>
 					</div>
 				</nuxt-link>
 			</div>
@@ -81,11 +64,11 @@
 		<div v-else class="text-center text-gray-400 py-4">No admin roles</div>
 		<div v-if="!adminRoles.length == 0">
 			<AppPagination
-        class="px-4 md:px-6"
+				class="px-4 md:px-8"
 				:total="total"
 				:totalPages="totalPages"
 				:currentPage="currentPage"
-        :perPage="perPage"
+				:perPage="perPage"
 				@pagechanged="pagechanged"
 			/>
 		</div>
@@ -241,7 +224,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
