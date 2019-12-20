@@ -81,14 +81,14 @@
 		<div v-else class="text-center text-gray-400 py-4">No admin roles</div>
 		<div v-if="!adminRoles.length == 0">
 			<AppPagination
+        class="px-4 md:px-6"
 				:total="total"
 				:totalPages="totalPages"
 				:currentPage="currentPage"
+        :perPage="perPage"
 				@pagechanged="pagechanged"
 			/>
 		</div>
-		<!--  -->
-
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -123,7 +123,7 @@ export default {
 			modal: false,
 			deletingAdminRole: false,
 			currentPage: 1,
-			perPage: 0,
+			perPage: 10,
 			totalPages: 0
 		};
 	},

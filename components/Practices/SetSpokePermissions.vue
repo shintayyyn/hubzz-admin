@@ -18,6 +18,7 @@
 						:type="'select'"
 						:name="'allow_surgery_create_sessions'"
 						:label="'Allow Spoke to Create Jobs/Sessions?'"
+            :error="formError.find(item => item.field === 'allow_surgery_create_sessions')"
 						:placeholder="'Select...'"
 						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
@@ -33,6 +34,7 @@
 							:type="'number'"
 							:name="'max_hourly_rate_limit'"
 							:label="'Set max hourly rate limit for Spoke'"
+              :error="formError.find(item => item.field === 'max_hourly_rate_limit')"
 							:inStyle="'text-align:right'"
 						/>
 					</div>
@@ -42,6 +44,7 @@
 							:type="'number'"
 							:name="'max_halfday_rate_limit'"
 							:label="'Set max half day rate limit for Spoke'"
+              :error="formError.find(item => item.field === 'max_halfday_rate_limit')"
 							:inStyle="'text-align:right'"
 						/>
 					</div>
@@ -51,6 +54,7 @@
 							:type="'number'"
 							:name="'max_wholeday_rate_limit'"
 							:label="'Set max whole day rate limit for Spoke'"
+              :error="formError.find(item => item.field === 'max_wholeday_rate_limit')"
 							:inStyle="'text-align:right'"
 						/>
 					</div>
@@ -60,6 +64,7 @@
 							:type="'number'"
 							:name="'max_ooh_rate_limit'"
 							:label="'Set max out-of-hours rate limit for Spoke'"
+              :error="formError.find(item => item.field === 'max_ooh_rate_limit')"
 							:inStyle="'text-align:right'"
 						/>
 					</div>
@@ -69,6 +74,7 @@
 							:type="'number'"
 							:name="'max_excess_hours'"
 							:label="'Set max excess hours'"
+              :error="formError.find(item => item.field === 'max_excess_hours')"
 							:inStyle="'text-align:right'"
 						/>
 					</div>
@@ -80,6 +86,7 @@
 						:type="'select'"
 						:name="'allow_surgery_bill_locum'"
 						:label="'Allow Spoke to handle its own billing for Locum?'"
+            :error="formError.find(item => item.field === 'allow_surgery_bill_locum')"
 						:placeholder="'Select...'"
 						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
@@ -90,6 +97,7 @@
 						:type="'select'"
 						:name="'allow_surgery_bill_hubzz'"
 						:label="'Allow Spoke to handle its own billing for HUBZZ?'"
+            :error="formError.find(item => item.field === 'allow_surgery_bill_hubzz')"
 						:placeholder="'Select...'"
 						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
@@ -100,6 +108,7 @@
 						:type="'select'"
 						:name="'share_banks_to_other_surgeries'"
 						:label="'Share this spoke`s bank/s to other surgeries?'"
+            :error="formError.find(item => item.field === 'share_banks_to_other_surgeries')"
 						:placeholder="'Select...'"
 						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
 					/>
@@ -107,7 +116,7 @@
 			</div>
 			<button
 				class="inline-flex no-underline py-2 px-4 my-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float:right font-bold"
-				@click.prevent="newChildSpoke()"
+				@click.prevent="publish()"
 			>
 				Save
 			</button>
@@ -149,8 +158,21 @@ export default {
 			this.$store.dispatch("practices/fetchSpokes", {
 				practice_id: practiceId
 			});
-		},
-		async newChildSpoke() {
+    },
+    publish(){
+      let notRequired = [
+        "max_hourly_rate_limit",
+        "max_halfday_rate_limit",
+        "max_wholeday_rate_limit",
+        "max_ooh_rate_limit",
+        "max_excess_hours",
+      ]
+      this.Validate(this.form, notRequired)
+      if(!this.formError.length) {
+        this.addSpoke()
+      }
+    },
+		async addSpoke() {
       console.log('it worked',this.form)
 			if (this.practice.type == "Hub") {
 				this.formError = [];
