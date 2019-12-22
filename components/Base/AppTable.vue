@@ -53,7 +53,7 @@
 							<div
 								v-for="(column, index) in columns"
 								:key="index"
-								class="flex flex-col md:block flex-1 truncate px-2 leading-tight py-1 md:py-0"
+								class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0"
 								:class="[
 									column.class &&
 										column.class.includes('text-center') &&
@@ -71,9 +71,7 @@
 								</template>
 								<template v-else>
 									<template v-if="column.slotName">
-										<div @click="$emit(column.eventName, item)">
-											<slot :name="column.slotName" v-bind:item="item">dsa</slot>
-										</div>
+										<slot :name="column.slotName" v-bind:item="item" @click="$emit(column.eventName, item)"></slot>
 									</template>
 									<template v-else>
 										<template
