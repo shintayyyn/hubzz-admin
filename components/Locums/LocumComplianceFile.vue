@@ -6,7 +6,7 @@
       </div>
       
       <button class="inline-flex items-center cursor-pointer text-white hover:bg-yellow-500 rounded-lg p-2 m-1"
-        @click.prevent="toPutLocumDetailComplianceDocs(compliance_doc.id,toPutLocumDetailCompliance,compliance_doc.expired_at)">
+        @click.prevent="publish()">
         <svgicon
         name="save-icon"
         width="21"
@@ -69,6 +69,7 @@
                 v-model="toPutLocumDetailCompliance.expired_at"
                 :name="'expired_at'"
                 :label="'Change Expiration Date / Status'"
+                :error="formError.find(item => item.field === 'date_start')"
               />
             </div>
             <div> <!--CHANGE THIS ASAP-->
@@ -116,127 +117,138 @@
 <script>
 import AppDate from '@/components/Base/AppDate'
 export default {
-    props:["user","compliance_doc"],
-    components:{
-      AppDate
+  props:["user","compliance_doc"],
+  components:{
+    AppDate
+  },
+  data() {
+    return {
+      toPutLocumDetailCompliance:{
+        expired_at:this.compliance_doc.expired_at,
+        status:this.compliance_doc.status,
+        note:this.compliance_doc.note
+      },
+      notesAreVisible:false,
+      formError:[],
+    };
+  },
+  methods:{
+    publish(){
+      this.formError = [];
+
+      let notRequired = []
+
+      if(this.toPutLocumDetailCompliance.status === "Approved"){
+        notRequired.push("status")
+        notRequired.push("note")
+      }
+
+      if(this.toPutLocumDetailCompliance.status === "Rejected"){
+        notRequired.push("note")
+        notRequired.push("expired_at")
+      }
+    
+      this.Validate(this.toPutLocumDetailCompliance, notRequired)
+      this.toPutLocumDetailComplianceDocs()
+      console.log('errors', this.formError)
     },
-    data() {
-        return {
-        toPutLocumDetailCompliance:{
-          expired_at:this.compliance_doc.expired_at,
-          status:this.compliance_doc.status,
-          note:this.compliance_doc.note
-        },
-        notesAreVisible:false,
-        };
+    setStatusData(incomingStatus){
+      if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Approved'){
+        this.toPutLocumDetailCompliance.status = ''
+        this.notesAreVisible = false
+      }else if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Rejected'){
+        this.toPutLocumDetailCompliance.status = 'Rejected'
+        this.notesAreVisible = true
+        this.toPutLocumDetailCompliance.expired_at = null
+      }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Rejected'){
+        this.toPutLocumDetailCompliance.status = ''
+        this.notesAreVisible = true
+        this.toPutLocumDetailCompliance.expired_at = null
+      }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Approved'){
+        this.toPutLocumDetailCompliance.status = 'Approved'
+        this.notesAreVisible = false
+      }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === ''  && incomingStatus === 'Approved'){  
+        this.toPutLocumDetailCompliance.status = incomingStatus
+        this.notesAreVisible = false
+      }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === '' && incomingStatus === 'Rejected'){
+        this.toPutLocumDetailCompliance.status = incomingStatus
+        this.notesAreVisible = true
+        this.toPutLocumDetailCompliance.expired_at = null
+      }   
     },
-    methods:{
-        setStatusData(incomingStatus){
-          if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Approved'){
 
-              this.toPutLocumDetailCompliance.status = ''
-              this.notesAreVisible = false
-
-          }else if(this.toPutLocumDetailCompliance.status === 'Approved' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expiring' && incomingStatus === 'Rejected'){
-              
-              this.toPutLocumDetailCompliance.status = 'Rejected'
-              this.notesAreVisible = true
-              this.toPutLocumDetailCompliance.expired_at = null
-
-          }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Rejected' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Rejected'){
-              
-              this.toPutLocumDetailCompliance.status = ''
-              this.notesAreVisible = true
-              this.toPutLocumDetailCompliance.expired_at = null
-
-          }else if(this.toPutLocumDetailCompliance.status === 'Rejected' && incomingStatus === 'Approved' || this.toPutLocumDetailCompliance.status === 'Expired' && incomingStatus === 'Approved'){
-              
-              this.toPutLocumDetailCompliance.status = 'Approved'
-              this.notesAreVisible = false
-
-          }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === ''  && incomingStatus === 'Approved'){
-              
-              this.toPutLocumDetailCompliance.status = incomingStatus
-              this.notesAreVisible = false
-
-          }else if(this.toPutLocumDetailCompliance.status === 'Pending' || this.toPutLocumDetailCompliance.status === '' && incomingStatus === 'Rejected'){
-              this.toPutLocumDetailCompliance.status = incomingStatus
-              this.notesAreVisible = true
-              this.toPutLocumDetailCompliance.expired_at = null
-          }   
-        },
-
-        downloadItem (fileUrl, fileFilename) {
-          const axios = require('axios');
-          axios({
-            url: fileUrl,
-            method: 'GET',
-            responseType: 'blob', // important
-          }).then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', fileFilename);
-            document.body.appendChild(link);
-            link.click();
-          });
-        }, 
-        convertDoc(document) {
-          return `https://docs.google.com/gview?url=${document}&embedded=true`;
-        },
-        getQuery(){
-          const query = {
-            ...this.$route.query
+    downloadItem (fileUrl, fileFilename) {
+      const axios = require('axios');
+      axios({
+        url: fileUrl,
+        method: 'GET',
+        responseType: 'blob', // important
+      }).then(response => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', fileFilename);
+        document.body.appendChild(link);
+        link.click();
+      });
+    }, 
+    convertDoc(document) {
+      return `https://docs.google.com/gview?url=${document}&embedded=true`;
+    },
+    getQuery(){
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page)*10 - 10 
+      return offset
+    },
+    getLocums(){
+      this.$store.dispatch("locums/fetchLocums",{
+        limit:10,
+        order_by:'created_at:desc',
+        offset: this.getQuery()
+      });
+    },
+    
+    async toPutLocumDetailComplianceDocs(){
+      try{
+        if(this.toPutLocumDetailCompliance.status == 'Rejected'){
+          if(this.toPutLocumDetailCompliance.note){
+            await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+this.compliance_doc.id,{
+              status:this.toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : this.toPutLocumDetailCompliance.status,
+              expired_at:this.toPutLocumDetailCompliance.expired_at,
+              note:this.toPutLocumDetailCompliance.note
+            })
+            await this.getLocums()
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+          }else if(this.toPutLocumDetailCompliance.note == ''){
+            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes are required' })
           }
-          const offset = parseInt(query.page)*10 - 10 
-          return offset
-        },
-        getLocums(){
-          this.$store.dispatch("locums/fetchLocums",{
-            limit:10,
-            order_by:'created_at:desc',
-            offset: this.getQuery()
-          });
-        },
-        
-        async toPutLocumDetailComplianceDocs(locumDocID,toPutLocumDetailCompliance){
-          try{
-            if(toPutLocumDetailCompliance.status == 'Rejected'){
-              if(toPutLocumDetailCompliance.note){
-                await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-                  status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
-                  expired_at:toPutLocumDetailCompliance.expired_at,
-                  note:toPutLocumDetailCompliance.note
-                })
-                await this.getLocums()
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-              }else if(toPutLocumDetailCompliance.note == ''){
-                this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes are required' })
-              }
-              
-            }else if(toPutLocumDetailCompliance.status == 'Approved' || toPutLocumDetailCompliance.status == 'Expired' || toPutLocumDetailCompliance.statis == ''){
-              await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+locumDocID,{
-                status:toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : toPutLocumDetailCompliance.status,
-                expired_at:toPutLocumDetailCompliance.expired_at,
-              })
-              await this.getLocums()
-              this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
-            }
-          }catch(err){
-            console.log('compliance file verification error',err);
-            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err })
-          }
-        },
-        goBack() {
-          const query = {
-            ...this.$route.query,
-          }
-          if(query.job_status){
-            delete query.job_status
-          }
-          this.$router.push({path:`/locums/${this.user.id}/locum-compliance`,query })
+          
+        }else if(this.toPutLocumDetailCompliance.status == 'Approved' || this.toPutLocumDetailCompliance.status == 'Expired' || this.toPutLocumDetailCompliance.status == ''){
+          await this.$axios.put('/api/v1/admin/locum-detail-compliance-documents/'+this.compliance_doc.id,{
+            status:this.toPutLocumDetailCompliance.status == "Expiring" ? "Approved" : this.toPutLocumDetailCompliance.status,
+            expired_at:this.toPutLocumDetailCompliance.expired_at,
+          })
+          await this.getLocums()
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: 'Saved' })
+
         }
+      }catch(err){
+        console.log('compliance file verification error',err);
+        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
+      }
+    },
+    goBack() {
+      const query = {
+        ...this.$route.query,
+      }
+      if(query.job_status){
+        delete query.job_status
+      }
+      this.$router.push({path:`/locums/${this.user.id}/locum-compliance`,query })
     }
+  }
 }
 </script>
 <style>

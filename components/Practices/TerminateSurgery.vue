@@ -56,13 +56,13 @@
 
 		<div class="flex flex-col md:flex-row justify-center cursor-pointer mb-4 md:mb-0">
 			<div
-				class="flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
+				class="flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
 				@click="toDeleteSurgery(childSurgery.id)"
 			>
-				Remove Spoke
+				Approve Termination Rquest
 			</div>
 			<div
-				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
+				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
 				@click="toRejectRequest(childSurgery.id)"
 			>
 				Reject Termination Request

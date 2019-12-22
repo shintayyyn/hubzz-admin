@@ -36,76 +36,6 @@
             >
           </nuxt-link>
         </div>
-        <!-- MENU WITH DROPDOWN -->
-        <!-- <div
-          v-for="(item, index) in menu"
-          :key="index"
-          class="text-sm relative"
-        >
-          <span
-            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
-            v-if="`/${$route.path.split('/')[1]}` == item.route"
-          ></span>
-          <nuxt-link :to="item.route" v-if="!item.subMenu">
-            <span
-              @click="close"
-              class="block font-sans no-underline p-4"
-              :class="
-                `/${$route.path.split('/')[1]}` == item.route
-                  ? 'text-yellow-500'
-                  : 'text-white hover:text-gray-500'
-              "
-              >{{ item.name }}</span
-            >
-          </nuxt-link>
-
-          <div v-else class="text-white">
-            <div
-              class="p-4 cursor-pointer flex items-center justify-between"
-              :class="item.toggle && 'bg-charade-dark'"
-              @click="
-                item.toggle === false
-                  ? (item.toggle = true)
-                  : (item.toggle = false)
-              "
-            >
-              {{ item.name }}
-              <svgicon
-                name="arrow-right"
-                height="20"
-                width="20"
-                color="white white"
-                :class="item.toggle ? 'rotate' : 'arrow'"
-              />
-            </div>
-            <div v-if="item.toggle">
-              <transition-group name="fade">
-                <div
-                  class="px-4 text-sm relative"
-                  v-for="(item, index) in item.subMenu"
-                  :key="index"
-                >
-                  <span
-                    class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
-                    v-if="`/${$route.path.split('/')[1]}` == item.route"
-                  ></span>
-                  <nuxt-link :to="item.route" v-if="!item.subMenu">
-                    <span
-                      @click="close"
-                      class="block font-sans no-underline p-4"
-                      :class="
-                        `/${$route.path.split('/')[1]}` == item.route
-                          ? 'text-yellow-500'
-                          : 'text-white hover:text-gray-500'
-                      "
-                      >{{ item.name }}</span
-                    >
-                  </nuxt-link>
-                </div>
-              </transition-group>
-            </div>
-          </div>
-        </div> -->
         <!-- SIGN OUT -->
         <div class="text-sm relative">
           <span
@@ -153,19 +83,19 @@ export default {
         { name: "User Management", route: "/user-management" }
       ];
 
-      if (domain === "Super Admin") {
-        addedLists = [
-          { name: "Compliance", route: "/compliance" },
-          { name: "Users", route: "/compliance" },
-          { name: "Compliance Documents", route: "/compliance" },
-          { name: "Profession Categories", route: "/compliance" },
-          { name: "Profession", route: "/compliance" },
-          { name: "Qualifications", route: "/compliance" },
-          { name: "Practice Types", route: "/compliance" },
-          { name: "Clinical Commissioning Groups", route: "/compliance" },
-          { name: "Surgeries", route: "/compliance" }
-        ];
-      }
+      // if (domain === "Super Admin") {
+      //   addedLists = [
+      //     { name: "Compliance", route: "/compliance" },
+      //     { name: "Users", route: "/compliance" },
+      //     { name: "Compliance Documents", route: "/compliance" },
+      //     { name: "Profession Categories", route: "/compliance" },
+      //     { name: "Profession", route: "/compliance" },
+      //     { name: "Qualifications", route: "/compliance" },
+      //     { name: "Practice Types", route: "/compliance" },
+      //     { name: "Clinical Commissioning Groups", route: "/compliance" },
+      //     { name: "Surgeries", route: "/compliance" }
+      //   ];
+      // }
 
       this.lists = [...defaultLists, ...addedLists];
 

@@ -72,8 +72,6 @@
 				@pagechanged="pagechanged"
 			/>
 		</div>
-		<!--  -->
-
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -108,7 +106,7 @@ export default {
 			modal: false,
 			deletingAdminRole: false,
 			currentPage: 1,
-			perPage: 0,
+			perPage: 10,
 			totalPages: 0
 		};
 	},

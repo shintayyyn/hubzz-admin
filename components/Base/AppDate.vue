@@ -2,10 +2,10 @@
 	<div class="flex flex-col py-2 mb-2 md:mb-4 leading-normal" v-on-clickaway="toggledOff">
 		<div class="relative flex flex-row flex-no-wrap justify-between">
 			<label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{label}}</label>
-			<!-- <div
-        class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
-        v-if="error"
-			>{{error.message}}</div>-->
+			<div
+				class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
+				v-if="error"
+			>{{error.message}}</div>
 		</div>
 		<div class="flex flex-row justify-start mt-1">
 			<div class="flex flex-col w-full">
@@ -22,10 +22,12 @@
 					:format="format"
 					:disabled="disabled"
 				/>
-				<div
-					class="text-red-500 text-xs py-1 text-white rounded"
-					v-if="error"
-				>{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
+				<transition name="drop-down">
+					<div
+						v-if="error"
+						class="text-red-500 py-1 text-xs text-white"
+					>{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
+				</transition>
 			</div>
 		</div>
 		<transition name="fade">

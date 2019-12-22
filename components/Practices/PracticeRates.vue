@@ -46,7 +46,7 @@
 					</p>
 				</div> -->
 				<div class="flex items-center justify-between py-1">
-					GP Rate
+					GP Rate (Per Hour)
 					<!-- <span v-if="gpError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{gpError}}</span> -->
 				</div>
 				<input
@@ -65,7 +65,7 @@
 					{{ errorMessage("gp_rate") }}
 				</div>
 				<div class="flex items-center justify-between py-1">
-					Others Rate
+					Others Rate (Per Hour)
 					<!-- <span v-if="othersError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{othersError}}</span> -->
 				</div>
 				<input
