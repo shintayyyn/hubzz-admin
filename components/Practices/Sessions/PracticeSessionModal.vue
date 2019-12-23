@@ -226,7 +226,7 @@
                             name="cloud-download"
                             width="21"
                             height="21"
-                            color="transparent white"
+                            color="white"
                           ></svgicon>
                           <span class="pb-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
                         </a>
@@ -240,7 +240,7 @@
                             name="cloud-download"
                             width="21"
                             height="21"
-                            color="transparent white"
+                            color="white"
                           ></svgicon>
                           <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
                         </a>

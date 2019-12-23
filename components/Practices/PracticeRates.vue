@@ -12,23 +12,15 @@
 					v-if="authAdminPermissions.includes('Edit Practice Rates')"
 					class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
 					@click="toEdit = true"
-				>
-					{{ practice.rates.length > 0 ? "Edit" : "Add" }}
-				</button>
-				<div class="flex py-1">
-					GP Rate
-				</div>
+				>{{ practice.rates.length > 0 ? "Edit" : "Add" }}</button>
+				<div class="flex py-1">GP Rate</div>
 				<div
 					class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
-				>
-					{{ practice.rates.length > 0 ? "£" + practice.rates[0].rate : "N/A" }}
-				</div>
+				>{{ practice.rates.length > 0 ? "£" + practice.rates[0].rate : "N/A" }}</div>
 				<div class="flex py-1">Others Rate</div>
 				<div
 					class="text-white text-lg font-semibold mx-3 leading-tight focus:outline-none"
-				>
-					{{ practice.rates.length > 0 ? "£" + practice.rates[1].rate : "N/A" }}
-				</div>
+				>{{ practice.rates.length > 0 ? "£" + practice.rates[1].rate : "N/A" }}</div>
 			</div>
 			<div
 				v-if="
@@ -44,26 +36,23 @@
 					>
 						{{ error.message }}
 					</p>
-				</div> -->
+				</div>-->
 				<div class="flex items-center justify-between py-1">
 					GP Rate (Per Hour)
 					<!-- <span v-if="gpError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{gpError}}</span> -->
 				</div>
 				<input
-					class="appearance-none bg-transparent border-b w-full text-white
-				mr-3 py-3 px-2 leading-tight focus:outline-none"
+					class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
 					:class="errorMessage('gp_rate') && 'border-red-800'"
 					type="number"
 					v-model.number="toPutPracticeRate.gp_rate"
-					aria-label=""
+					aria-label
 					@blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')"
 				/>
 				<div
 					v-if="formError.filter(item => item.field === 'gp_rate')"
 					class="text-red-800 text-xs capitalize pt-1"
-				>
-					{{ errorMessage("gp_rate") }}
-				</div>
+				>{{ errorMessage("gp_rate") }}</div>
 				<div class="flex items-center justify-between py-1">
 					Others Rate (Per Hour)
 					<!-- <span v-if="othersError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{othersError}}</span> -->
@@ -79,21 +68,15 @@
 				<div
 					v-if="formError.filter(item => item.field === 'others_rate')"
 					class="text-red-800 text-xs capitalize pt-1"
-				>
-					{{ errorMessage("others_rate") }}
-				</div>
+				>{{ errorMessage("others_rate") }}</div>
 				<button
 					class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
 					@click.prevent="checkForm()"
-				>
-					Save Changes
-				</button>
+				>Save Changes</button>
 				<button
-					class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
+					class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-gray-400 hover:bg-gray-500 text-sm rounded-lg text-black shadow float-left"
 					@click="(toEdit = false), (formError = [])"
-				>
-					Cancel
-				</button>
+				>Cancel</button>
 			</div>
 		</div>
 	</div>
