@@ -115,7 +115,7 @@
             <nuxt-link
                 v-for="(item, index) in mandatoryComplianceDocuments" :key="`item-${index}`"
                 :event="item.locumMandatoryComplianceDocument==null ? disabled :'click'" 
-                :class="item.locumMandatoryComplianceDocument==null? 'cursor-auto':' hover:bg-waterloo-light ' "
+                :class="item.locumMandatoryComplianceDocument==null ? 'cursor-auto':' hover:bg-waterloo-light ' "
                 :to="{path:`/locums/${user.id}/locum-compliance/${item.locumMandatoryComplianceDocument ? item.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
                 class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
                 draggable="false"

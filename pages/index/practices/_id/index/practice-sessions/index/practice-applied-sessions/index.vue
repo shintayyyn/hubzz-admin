@@ -1,6 +1,6 @@
 <template>
     <div>
-        <PracticeAppliedSessions :practice='practice'/>
+      <PracticeAppliedSessions :practice='practice'/>
     </div>
 </template>
 <script>
