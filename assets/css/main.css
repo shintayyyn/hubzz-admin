@@ -283,6 +283,9 @@ table tbody td {
 	margin: 4px 3px !important;
 }
 
+.ql-container.ql-snow {
+	border: 0 !important;
+}
 @media screen and (max-width: 767px) {
 	/* quill editor */
 	.ql-container.ql-snow .ql-editor {

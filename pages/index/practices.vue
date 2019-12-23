@@ -59,7 +59,7 @@
 				:total="itemCount"
 				:items="getAllPractices"
 				:currentPage="currentPage"
-				:perPage="perPage"
+				:perPage="params.limit"
 				:columns="columns"
 				:loading="loadingPractices"
 				:routerLink="`/practices`"
@@ -69,7 +69,7 @@
 			>
 				<template v-slot:status_slot="slotProps">
 					<div
-						class="px-4 py-1 rounded-full text-center w-32"
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="
 							`${
 								slotProps.item.status === 'Active'
@@ -81,13 +81,13 @@
 				</template>
 				<template v-slot:type_slot="slotProps">
 					<div
-						class="px-4 py-1 rounded-full text-center w-32"
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="typeStyle(slotProps.item.type)"
 					>{{ slotProps.item.type }}</div>
 				</template>
 				<template v-slot:hub_type_slot="slotProps">
 					<div
-						class="px-4 py-1 rounded-full text-center w-32"
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="hubTypeStyle(slotProps.item.hub_type)"
 					>{{ slotProps.item.hub_type }}</div>
 				</template>
@@ -289,7 +289,7 @@ export default {
 
 	watch: {
 		$route(to, from) {
-			this.getPractices(this.params);
+			// this.getPractices(this.params);
 		},
 		search(value) {
 			this.searchSubmit();
