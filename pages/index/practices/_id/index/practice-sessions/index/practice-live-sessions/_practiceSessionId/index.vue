@@ -1,41 +1,41 @@
 <template>
-    <div class="job-modal shadow-lg">
-        <div class="mt-4 md:mt-6 mx-4 md:mx-8">
-            <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-live-sessions`}" class="cursor-pointer">
-                <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
-            </nuxt-link>
-        </div>
-        <PracticeSessionModal :job="job"/>
+  <div class="job-modal shadow-lg">
+    <div class="mt-4 md:mt-6 mx-4 md:mx-8">
+      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-live-sessions`}" class="cursor-pointer">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+      </nuxt-link>
     </div>
+    <PracticeSessionModal :job="job"/>
+  </div>
 </template>
 <script>
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
-    components:{
-        PracticeSessionModal
-    },  
-    data(){
-        return{
-            job:'',
-            practiceId:''
-        }
-    },
-    async asyncData({ app, store, route, error }){
-        try{
-          let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.practiceSessionId}`)
-          const job = response.data.job
-          console.log('job', job)
-          const practiceId = route.params.id
-          return{
-              job,
-              practiceId
-          }
-        }catch(err){
-          error({ statusCode:404 })
-          store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-          console.log('get job error!',err)
-        }
+  components:{
+    PracticeSessionModal
+  },  
+  data(){
+    return{
+      job:'',
+      practiceId:''
     }
+  },
+  async asyncData({ app, store, route, error }){
+    try{
+      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.practiceSessionId}`)
+      const job = response.data.job
+      console.log('job', job)
+      const practiceId = route.params.id
+      return{
+          job,
+          practiceId
+      }
+    }catch(err){
+      error({ statusCode:404 })
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('get job error!',err)
+    }
+  }
 }
 </script>
 <style>

@@ -9,7 +9,9 @@
 				@click="$emit('close')"
 			/>
 			<div class="py-2 font-bold text-lg leading-tight">
-				Hub Requested Termination for this Spoke
+				{{ !childSurgery.invitation_accepted_at || childSurgery.invitataion_rejected_at ? 
+        'Cancellation of Invitation Request':
+        'Hub Requested Termination for this Spoke' }}
 			</div>
 		</div>
 

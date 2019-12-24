@@ -143,7 +143,6 @@ export default {
       await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res => {
         this.$store.commit('jobs/SET_PRACTICE_LIVE_SESSIONS', res.data.jobs)
         this.$store.commit('jobs/TOGGLE_LOADING',false)
-        // this.availableJobs = res.data.jobs
       }).catch(err=>{
         console.log('get available jobs error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })

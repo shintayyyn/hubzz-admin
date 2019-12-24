@@ -5,28 +5,28 @@
           <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
         </nuxt-link>
     </div>
-    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
+    <PracticeSessionModal :job_part="job_part" />
   </div>
 </template>
 <script>
-import JobPartModal from '@/components/Base/JobPartModal'
+import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {
   components:{
-    JobPartModal,
+    PracticeSessionModal
   },  
   data(){
     return{
-        specificJobPart:'',
+        job_part:'',
         practiceId:''
     }
   },
   async asyncData({ app, store, route, error }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
-      const specificJobPart = response.data.job_part
+      const job_part = response.data.job_part
       const practiceId = route.params.id
       return{
-        specificJobPart,
+        job_part,
         practiceId
       }
     }catch(err){
