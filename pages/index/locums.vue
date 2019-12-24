@@ -1,7 +1,7 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
 		<div class="px-2 text-xl md:text-4xl text-white">Locums</div>
-		<div class="px-2 flex flex-col md:flex-row justify-between">
+		<div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
 			<div class="flex py-2">
 				<div class="relative">
 					<input
@@ -26,11 +26,9 @@
 			</div>
 			<div class="flex flex-col w-full justify-end">
 				<div
-					class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:p-2 md:py-0"
+					class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
 				>
-					<label class="text-sm text-white md:pr-2"
-						>Filter by Compliance Status</label
-					>
+					<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
 					<select
 						v-model="filterCompliances"
 						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
@@ -47,7 +45,7 @@
 					</select>
 				</div>
 				<div
-					class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2  md:p-2 md:py-0"
+					class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
 				>
 					<label class="text-sm text-white md:pr-2">Sort by</label>
 					<select
@@ -79,24 +77,18 @@
 		>
 			<template v-slot:status_slot="slotProps">
 				<div
-					class="px-4 py-1 rounded-full w-32 text-center"
+					class="px-4 py-1 rounded-full w-32 text-center mx-auto"
 					:class="statusStyle(slotProps.item.status)"
-				>
-					{{ slotProps.item.status }}
-				</div>
+				>{{ slotProps.item.status }}</div>
 			</template>
 			<template v-slot:compliance_slot="slotProps">
 				<div
-					class="px-4 py-1 rounded-full w-32 text-center"
+					class="px-4 py-1 rounded-full w-32 text-center mx-auto"
 					:class="complianceStatusStyle(slotProps.item.compliance_status)"
-				>
-					{{ slotProps.item.compliance_status }}
-				</div>
+				>{{ slotProps.item.compliance_status }}</div>
 			</template>
 		</AppTable>
-		<div v-else class="mt-2 w-full text-center text-white">
-			No registered locums.
-		</div>
+		<div v-else class="mt-2 w-full text-center text-white">No registered locums.</div>
 		<div
 			class="locum-shield"
 			v-if="$route.name.includes('index-locums-id')"
@@ -128,8 +120,8 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"]
-      },
-      perPage: 0,
+			},
+			perPage: 0,
 			sort: "",
 			sortedBy: "",
 			sortType: "",
@@ -140,12 +132,12 @@ export default {
 			email_verified_at: true,
 
 			columns: [
-        {
-          name: "User ID",
-          dataIndex: "id",
-          class: "text-center",
-          sortable: false,
-        },
+				{
+					name: "User ID",
+					dataIndex: "id",
+					class: "text-center",
+					sortable: false
+				},
 				{
 					name: "Name",
 					dataIndex: "personal_detail_name",

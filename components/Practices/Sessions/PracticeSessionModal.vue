@@ -412,7 +412,7 @@
                             name="cloud-download"
                             width="21"
                             height="21"
-                            color="transparent white"
+                            color="white"
                           ></svgicon>
                           <span class="pb-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
                         </a>
@@ -423,19 +423,14 @@
                         :key="`${index}-${specificMandatoryDoc.id}-`"
                         class="text-white flex flex-col"
                       >
-                        <a class="m-2 " v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
-                          <div>
-                            <svgicon
-                              name="cloud-download"
-                              width="21"
-                              height="21"
-                              color="transparent white"
-                            />
-                          </div>
-                          <div>
-                            <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
-                          </div>
-                          
+                        <a class="m-2 text-white" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
+                          <svgicon
+                            name="cloud-download"
+                            width="21"
+                            height="21"
+                            color="white"
+                          ></svgicon>
+                          <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
                         </a>
                       </div>
                     </div>

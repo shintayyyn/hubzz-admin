@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <div class="choose-job-parts-modal shadow-lg">
-      <div class="m-4">
-        <div @click="$emit('close')" class="text-white hover:text-sunglow p-1">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
-        </div>
-        <!-- <div class="max-w-2xl w-full overflow-auto my-1 mx-1 rounded-lg bg-waterloo">
+	<div>
+		<div class="choose-job-parts-modal shadow-lg">
+			<div class="m-4">
+				<div @click="$emit('close')" class="text-white hover:text-sunglow p-1">
+					<svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
+				</div>
+				<!-- <div class="max-w-2xl w-full overflow-auto my-1 mx-1 rounded-lg bg-waterloo">
           <p class="m-3 text-white text-xl font-semibold ">Approved Job Parts</p>
           <div class="m-2">
             <div class="hidden md:flex items-center text-white justify-around font-semibold">
@@ -79,83 +79,70 @@
             </div>
             
           </div>
-        </div> -->
-        <AppTable
-          v-if="jobPartCount > 0"
-          :total="jobPartCount"
-          :items="jobParts"
-          :currentPage="currentPage"
-          :perPage="params.limit"
-          :columns="columns"
-          :loading="loadingSessions"
-          :orderBy="params.order_by"
-          :customWidth="200"
-          @checkClicked="toggleCheck"
-          @pagechanged="pagechanged"
-          @sorted="sorted"
-        >
-          <template
-            v-slot:checker="slotProps"
-          >
-              <input
-                type="checkbox"
-                :id="slotProps.item"
-                :value="slotProps.item"
-                v-model="chosenJobParts"
-              />
-              <label :for="slotProps.item"></label>
-          </template>
+				</div>-->
+				<AppTable
+					v-if="jobPartCount > 0"
+					:total="jobPartCount"
+					:items="jobParts"
+					:currentPage="currentPage"
+					:perPage="params.limit"
+					:columns="columns"
+					:loading="loadingSessions"
+					:orderBy="params.order_by"
+					:customWidth="200"
+					@checkClicked="toggleCheck"
+					@pagechanged="pagechanged"
+					@sorted="sorted"
+				>
+					<template v-slot:checker="slotProps">
+						<input type="checkbox" :id="slotProps.item" :value="slotProps.item" v-model="chosenJobParts" />
+						<label :for="slotProps.item"></label>
+					</template>
 
-          <template v-slot:status_slot="slotProps">
-            <div
-              class="rounded-full text-center px-4 py-1 w-32"
-              :class="statusStyle(slotProps.item.invoice_status)"
-            >
-              {{ slotProps.item.invoice_status }}
-            </div>
-          </template>
-        </AppTable>
-        <AppButton
-          :label="'Confirm'"
-          @click="emitChosenJobParts()"
-        />
-      </div>
-    </div>
-  </div>
+					<template v-slot:status_slot="slotProps">
+						<div
+							class="rounded-full text-center px-4 py-1 w-32"
+							:class="statusStyle(slotProps.item.invoice_status)"
+						>{{ slotProps.item.invoice_status }}</div>
+					</template>
+				</AppTable>
+				<AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
+			</div>
+		</div>
+	</div>
 </template>
 <script>
-import AppTable from '@/components/Base/AppTable'
-import AppButton from '@/components/Base/AppButton'
+import AppTable from "@/components/Base/AppTable";
+import AppButton from "@/components/Base/AppButton";
 export default {
-  props:['filter','includeDisputed'],
-  components:{
-    AppButton,
-    AppTable
-  },
-  data(){
-    return{
-      // jobPartCount: 0,
-      // jobParts: [],
-      chosenJobParts: [],
-      
-      // for app table
+	props: ["filter", "includeDisputed"],
+	components: {
+		AppButton,
+		AppTable
+	},
+	data() {
+		return {
+			// jobPartCount: 0,
+			// jobParts: [],
+			chosenJobParts: [],
+
+			// for app table
 			currentPage: 1,
-      params: {
-        ...this.filter,
+			params: {
+				...this.filter,
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"]
 			},
-      loading: false,
-      columns: [
-        {
-          name: "Check",
-          dataIndex: "checker",
-          class: "text-center",
-          slotName:"checker",
-          eventName: 'checkClicked',
-
-        },
+			loading: false,
+			columns: [
+				{
+					name: "Check",
+					dataIndex: "checker",
+					class: "text-center",
+					slotName: "checker",
+					eventName: "checkClicked"
+				},
 				{
 					name: "Job Part Number",
 					dataIndex: "job_part_number",
@@ -166,26 +153,26 @@ export default {
 					dataIndex: "approved_At",
 					class: "text-center localDate",
 					sortable: true
-        },
-        {
+				},
+				{
 					name: "Date Start",
 					dataIndex: "date_start",
 					class: "text-center localDate",
 					sortable: true
-        },
-        {
+				},
+				{
 					name: "Date End",
 					dataIndex: "date_end",
 					class: "text-center localDate",
 					sortable: true
-        },
-        // {
+				},
+				// {
 				// 	name: "£ Amount",
 				// 	dataIndex: "total_amount",
-        //   class: "text-center",
-        //   slotName: "status_slot",
+				//   class: "text-center",
+				//   slotName: "status_slot",
 				// 	sortable: true
-        // },
+				// },
 				{
 					name: "Status",
 					slot: true,
@@ -193,75 +180,82 @@ export default {
 					class: "text-center",
 					slotName: "status_slot",
 					sortable: true
-        },
-        
-		
+				}
 			]
-    }
-  },
-  async created(){
-    await this.$store.commit("jobs/TOGGLE_LOADING", true)
-    let { page = 1, order_by = [] } = this.$route.query
-    page = parseInt(page)
-    const createdRoute = this.$route.query
-    const limit = 10
-    const offset = page * limit - limit
-    order_by = createdRoute && createdRoute.order_by ? createdRoute.order_by : "date_end:asc"
-    let params = {
-      ...this.filter,
-      limit,
-      offset,
-      order_by
-    }
-    if(this.includeDisputed) {
-      params = {
-        ...params,
-        invoice_status: 'Disputed'
-      }
-    }
-    let jobPartCount, jobParts = ''
+		};
+	},
+	async created() {
+		await this.$store.commit("jobs/TOGGLE_LOADING", true);
+		let { page = 1, order_by = [] } = this.$route.query;
+		page = parseInt(page);
+		const createdRoute = this.$route.query;
+		const limit = 10;
+		const offset = page * limit - limit;
+		order_by =
+			createdRoute && createdRoute.order_by
+				? createdRoute.order_by
+				: "date_end:asc";
+		let params = {
+			...this.filter,
+			limit,
+			offset,
+			order_by
+		};
+		if (this.includeDisputed) {
+			params = {
+				...params,
+				invoice_status: "Disputed"
+			};
+		}
+		let jobPartCount,
+			jobParts = "";
 
-    await this.$axios.$get(`/api/v1/admin/job-parts/count`, { params }).then(res => {
-      jobPartCount = res.data.count
-    })
+		await this.$axios
+			.$get(`/api/v1/admin/job-parts/count`, { params })
+			.then(res => {
+				jobPartCount = res.data.count;
+			});
 
-    await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT", jobPartCount)
+		await this.$store.commit(
+			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
+			jobPartCount
+		);
 
-    await this.$axios.$get(`/api/v1/admin/job-parts`,{ params }).then(res => {
-      console.log('res', res)
-      jobParts = res.data.job_parts
-    })
-    await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
-    await this.$store.commit("jobs/TOGGLE_LOADING", false)
-  },
-  computed: {
-    loadingSessions() {
-      return this.$store.state.jobs.loading_jobs
-    },
-    jobParts() {
-      return this.$store.state.jobs.practice_billing_sessions
-    },
-    jobPartCount() {
-      return this.$store.state.jobs.practice_billing_sessions_count
-    }
-  },
-  methods: {
-    toggleCheck(item){
-      const index = this.chosenJobParts.findIndex((jobPart) => {
-        return jobPart.id === item.id
-      })
+		await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+			console.log("res", res);
+			jobParts = res.data.job_parts;
+		});
+		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts);
+		await this.$store.commit("jobs/TOGGLE_LOADING", false);
+	},
+	computed: {
+		loadingSessions() {
+			return this.$store.state.jobs.loading_jobs;
+		},
+		jobParts() {
+			return this.$store.state.jobs.practice_billing_sessions;
+		},
+		jobPartCount() {
+			return this.$store.state.jobs.practice_billing_sessions_count;
+		}
+	},
+	methods: {
+		toggleCheck(item) {
+			const index = this.chosenJobParts.findIndex(jobPart => {
+				return jobPart.id === item.id;
+			});
 
-      if (index > -1) {
-        this.chosenJobParts.splice(index, 1)
-      } else {
-        this.chosenJobParts.push(item)
-      }
-      console.log('toggleCheck', item)
-    },
-    emitChosenJobParts (event) {
-      this.$emit('chosenJobParts', this.chosenJobParts)
-    },
-    getJobParts(params) {
+			if (index > -1) {
+				this.chosenJobParts.splice(index, 1);
+			} else {
+				this.chosenJobParts.push(item);
+			}
+			console.log("toggleCheck", item);
+		},
+		emitChosenJobParts(event) {
+			this.$emit("chosenJobParts", this.chosenJobParts);
+		},
+		getJobParts(params) {
 			this.$store.dispatch("jobs/fetchJobParts", {
 				limit: this.params.limit,
 				search: this.search,
@@ -270,7 +264,7 @@ export default {
 			});
 		},
 
-    pagechanged(page) {
+		pagechanged(page) {
 			const query = {
 				...this.$route.query,
 				page: page || 1
@@ -278,8 +272,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getJobParts(this.params);
-    },
-    sorted(order_by) {
+		},
+		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;
 			let query = {
@@ -289,7 +283,7 @@ export default {
 			this.params.order_by = order_by;
 			this.getJobParts(this.params);
 		},
-    statusStyle(status) {
+		statusStyle(status) {
 			switch (status) {
 				case "Disputed":
 					return "bg-red-500 text-white ";
@@ -297,17 +291,16 @@ export default {
 				case "Invoiced":
 					return "bg-blue-500 text-white";
 					break;
-				case "To Be Invoice":
+				case "To Be Invoiced":
 					return "bg-indigo-600 text-white";
 					break;
 				default:
 					return;
 			}
-		},
-  }
-}
+		}
+	}
+};
 </script>
 
 <style>
-
 </style>

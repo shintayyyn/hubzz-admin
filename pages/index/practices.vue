@@ -59,7 +59,7 @@
 				:total="itemCount"
 				:items="getAllPractices"
 				:currentPage="currentPage"
-				:perPage="perPage"
+				:perPage="params.limit"
 				:columns="columns"
 				:loading="loadingPractices"
 				:routerLink="`/practices`"
@@ -69,7 +69,7 @@
 			>
 				<template v-slot:status_slot="slotProps">
 					<div
-						class="px-4 py-1 rounded-full w-32 text-center"
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="
 							`${
 								slotProps.item.status === 'Active'
@@ -77,25 +77,19 @@
 									: 'bg-gray-500 text-gray-700'
 							}`
 						"
-					>
-						{{ slotProps.item.status }}
-					</div>
+					>{{ slotProps.item.status }}</div>
 				</template>
 				<template v-slot:type_slot="slotProps">
 					<div
-						class="px-4 py-1 rounded-full w-32 text-center"
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="typeStyle(slotProps.item.type)"
-					>
-						{{ slotProps.item.type }}
-					</div>
+					>{{ slotProps.item.type }}</div>
 				</template>
-        <template v-slot:hub_type_slot="slotProps">
+				<template v-slot:hub_type_slot="slotProps">
 					<div
-						class="px-4 py-1 rounded-full w-32 text-center"
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="hubTypeStyle(slotProps.item.hub_type)"
-					>
-						{{ slotProps.item.hub_type }}
-					</div>
+					>{{ slotProps.item.hub_type }}</div>
 				</template>
 			</AppTable>
 			<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
@@ -103,11 +97,9 @@
 				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
 				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
 				</span>
-			</div> -->
+			</div>-->
 			<template v-else>
-				<div class="mt-2 w-full text-center text-white">
-					There are no registered practices.
-				</div>
+				<div class="mt-2 w-full text-center text-white">There are no registered practices.</div>
 			</template>
 		</transition>
 
@@ -148,8 +140,8 @@ export default {
 		return {
 			loading: false,
 			currentPage: 1,
-      search: "",
-      perPage: 0,
+			search: "",
+			perPage: 0,
 			params: {
 				limit: 10,
 				offset: 0,
@@ -160,12 +152,12 @@ export default {
 
 			//app table columns
 			columns: [
-        {
-          name: "Practice ID",
-          dataIndex: "id",
-          class: "text-center",
-          sortable: false,
-        },
+				{
+					name: "Practice ID",
+					dataIndex: "id",
+					class: "text-center",
+					sortable: false
+				},
 				{
 					name: "Practice Name",
 					dataIndex: "practice_name",
@@ -204,14 +196,14 @@ export default {
 					class: "text-center",
 					slotName: "type_slot",
 					sortable: true
-        },
-        {
-          name: "Hub Type",
-          slot: true,
-          dataIndex: "hub_type",
-          slotName: "hub_type_slot",
-          class: "text-center",
-        }
+				},
+				{
+					name: "Hub Type",
+					slot: true,
+					dataIndex: "hub_type",
+					slotName: "hub_type_slot",
+					class: "text-center"
+				}
 			]
 		};
 	},
@@ -297,7 +289,7 @@ export default {
 
 	watch: {
 		$route(to, from) {
-			this.getPractices(this.params);
+			// this.getPractices(this.params);
 		},
 		search(value) {
 			this.searchSubmit();
@@ -325,8 +317,8 @@ export default {
 		async sortBy(sortedBy, page, search) {
 			this.params.order_by = [sortedBy];
 			this.getPractices(this.params);
-    },
-    
+		},
+
 		searchSubmit: debounce(function(page, order_by) {
 			let search = this.search;
 			let query = {
@@ -367,15 +359,15 @@ export default {
 				this.loading = true;
 			}
 			this.$router.push({ query });
-    }, 500),
-  
+		}, 500),
+
 		typeStyle(type) {
 			switch (type) {
 				case "Hub":
-					return "bg-red-500 text-white px-4 py-1 w-32";
+					return "bg-red-500 text-white px-4 py-1";
 					break;
 				case "Spoke":
-					return "bg-blue-500 text-white px-4 py-1 w-32";
+					return "bg-blue-500 text-white px-4 py-1";
 					break;
 				case "Stand Alone":
 					return "bg-indigo-600 text-white px-6 md:px-5 py-1";
@@ -383,20 +375,20 @@ export default {
 				default:
 					return;
 			}
-    },
+		},
 
-    hubTypeStyle(hubType) {
-      switch (hubType) {
-        case "Type 1":
-          return "bg-red-500 text-white px-4 py-1 w-32";
-          break;
-        case "Type 2":
-          return "bg-purple-500 text-white px-4 py-1 w-32"
-        default:
-          return "bg-gray-300 text-white px-4 w-32"
-      }
-    },
-    
+		hubTypeStyle(hubType) {
+			switch (hubType) {
+				case "Type 1":
+					return "bg-red-500 text-white px-4 py-1";
+					break;
+				case "Type 2":
+					return "bg-purple-500 text-white px-4 py-1";
+				default:
+					return "";
+			}
+		},
+
 		pagechanged(page) {
 			const query = {
 				...this.$route.query,
@@ -455,7 +447,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

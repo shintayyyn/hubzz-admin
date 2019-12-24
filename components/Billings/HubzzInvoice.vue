@@ -1,193 +1,189 @@
 <template>
-  <div class="relative text-black">
-    <!-- HEADER -->
-    <div class="flex flex-wrap overflow-hidden md:pl-3 mb-1 pb-1 text-sm">
-      <AppButton
-        class="mr-2"
-        :label="forViewing ? 'Download' : 'Save'"
-        :icon="forViewing ? 'cloud-download' : 'save-icon'"
-        @click="exportToPdf()"
-      />
-      <AppButton :label="'Save and Archive as Final'" :icon="'email'" />
-    </div>
-    <!-- HEADER ENDS HERE -->
+	<div class="text-black">
+		<!-- HEADER -->
+		<div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
+			<AppButton
+				class="mr-2"
+				:label="forViewing ? 'Download' : 'Save'"
+				:icon="forViewing ? 'cloud-download' : 'save-icon'"
+				@click="exportToPdf()"
+			/>
+			<AppButton :label="'Save and Archive as Final'" :icon="'email'" />
+		</div>
+		<!-- HEADER ENDS HERE -->
 
-    <!-- BODY -->
-    <!-- FIRST PAGE -->
-    <div
-      id="toPrint"
-      class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
-      :class="!doNotShow && 'display'"
-    >
-      <AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
-      <div>
-        <div class="flex flex-col p-4" ref="pdf-header">
-          <div>
-            <div class="text-sm text-right">
-              <p>Hubzz Limited Mws,</p>
-              <p>601 London Road</p>
-              <p>Westcliff-On-Sea SS0 9PE</p>
-              <p>billing@hubzz.co.uk</p>
-              <p>Registered Company</p>
-              <p>10832559</p>
-            </div>
-          </div>
-          <div class="flex">
-            <div class="w-full md:w-2/3">
-              <div
-                class="border-2 border-gray-300 rounded-lg p-4 text-sm"
-                :class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
-              >
-                <AppInput
-                  v-if="forViewing == false"
-                  class="w-full mr-2"
-                  :type="'select'"
-                  :name="'addressee'"
-                  :label="'To: Accounts Department'"
-                  :placeholder="'Select...'"
-                  :inClass="'border-gray-400'"
-                  :items="[
-                    { label: 'Select the Addressee', value: '1' },
-                    { label: 'Select the Addressee', value: '2' },
-                    { label: 'Select the Addressee', value: '3' }
-                  ]"
-                />
-                <div v-else class="font-semibold">
-                  <div>To: Accounts Department</div>
-                  <div class="m-2">
-                    <p>{{practice.surgery.name}}</p>
-                    <p>{{practice.surgery.address.line_1}}</p>
-                    <p>{{practice.surgery.address.line_2}}</p>
-                    <p>{{practice.surgery.address.line_3}}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-if="forViewing == false" class="py-2">
-            <label class="text-sm text-black font-semibold"
-              >Choose Practice</label
-            >
-            <select
-              v-model="chosenPractice"
-              class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-500 py-2 leading-tight focus:outline-none"
-            >
-              <option
-                v-for="(practice, index) in practices"
-                :key="`practice-${index}`"
-                >{{ practice.surgery.name }}</option
-              >
-            </select>
-          </div>
-        </div>
+		<!-- BODY -->
+		<!-- FIRST PAGE -->
+		<AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
+		<div
+			id="toPrint"
+			class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
+			:class="!doNotShow && 'display'"
+		>
+			<div>
+				<div class="flex flex-col p-4" ref="pdf-header">
+					<div>
+						<div class="text-sm text-right">
+							<p>Hubzz Limited Mws,</p>
+							<p>601 London Road</p>
+							<p>Westcliff-On-Sea SS0 9PE</p>
+							<p>billing@hubzz.co.uk</p>
+							<p>Registered Company</p>
+							<p>10832559</p>
+						</div>
+					</div>
+					<div class="flex">
+						<div class="w-full md:w-2/3">
+							<div
+								class="border-2 border-gray-300 rounded-lg p-4 text-sm"
+								:class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
+							>
+								<AppInput
+									v-if="!forViewing"
+									class="w-full mr-2"
+									:type="'select'"
+									:name="'addressee'"
+									:label="'To: Accounts Department'"
+									:placeholder="'Select...'"
+									:inClass="'border-gray-400'"
+									:items="[
+										{ label: 'Select the Addressee', value: '1' },
+										{ label: 'Select the Addressee', value: '2' },
+										{ label: 'Select the Addressee', value: '3' }
+									]"
+								/>
+								<div v-else class="font-semibold">
+									<div>To: Accounts Department</div>
+									<div class="w-full m-2">
+										<p>{{practice.surgery.name}}</p>
+										<p>{{practice.surgery.address.line_1}}</p>
+										<p>{{practice.surgery.address.line_2}}</p>
+										<p>{{practice.surgery.address.line_3}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div v-if="forViewing == false" class="py-2">
+						<AppInput
+							v-model="chosenPractice"
+							v-if="!forViewing"
+							class="w-full mr-2"
+							:type="'select'"
+							:name="'addressee'"
+							:label="'Select Practice'"
+							:placeholder="'Select...'"
+							:inClass="'border-gray-400'"
+							:items="[
+								{ label: 'Select the Addressee', value: '1' },
+								{ label: 'Select the Addressee', value: '2' },
+								{ label: 'Select the Addressee', value: '3' }
+							]"
+						/>
+						<!-- <label class="text-sm text-black font-semibold">Select Practice</label>
+						<select
+							v-model="chosenPractice"
+							class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-500 py-2 leading-tight focus:outline-none"
+						>
+							<option
+								v-for="(practice, index) in practices"
+								:key="`practice-${index}`"
+							>{{ practice.surgery.name }}</option>
+						</select>-->
+					</div>
+				</div>
 
-        <div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
-          <div
-            :class="!doNotShow && 'px-4'"
-            :ref="'items-header'"
-            :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
-            <div class="flex items-center justify-center py-2 bg-black">
-              <div class="w-4/6">
-                <div class="text-white text-sm text-left px-4">
-                  <strong>Description</strong>
-                </div>
-              </div>
-              <!-- <div class="w-1/6">
-                <div class="text-white text-sm text-left">
-                <strong>Hours</strong>
-                </div>
-              </div> -->
-              <div class="w-2/6">
-                <div class="text-white text-sm text-right px-4">
-                  <strong>£Amount</strong>
-                </div>
-              </div>
-              <!-- Add fields -->
-              <div v-if="forViewing == false">
-                <div class="mr-2" v-if="doNotShow">
-                  <span
-                    @click="addInvoiceItem()"
-                    class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-                    >+</span
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            v-for="(item, index) in invoiceItems"
-            :key="`item-${index}`"
-            :class="!doNotShow && 'px-4'"
-            :ref="`item-${index}`"
-            :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
-            <div
-              class="flex w-full justify-center border-b border-gray-500 py-1"
-            >
-              <div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
-                <textarea
-                  v-if="doNotShow"
-                  v-model="item.description"
-                  rows="2"
-                  class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
-                  placeholder="Enter Descriptionewqewqewqewqewq"
-                ></textarea>
-                <p v-else class="px-2 py-1">
-                  {{ item.description ? item.description : "No Description" }}
-                </p>
-              </div>
-              <div v-else class="px-2 py-1">
-                {{item.description}}
-              </div>
-              <div class="w-1/3 text-sm mx-1">
-                <div v-if="forViewing == false">
-                  <input
-                  v-if="doNotShow"
-                  v-model="item.amount"
-                  class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
-                  :class="!doNotShow && 'pr-3'"
-                  type="number"
-                  min="0"
-                  placeholder="Enter Amount"
-                />
-                </div>
-                
-                <p v-else class="px-2 py-1 text-right">{{ item.amount }}</p>
-              </div>
-              <div v-if="forViewing == false">
-                <div class="mr-2 flex items-center" v-if="doNotShow">
-                <span
-                  @click="deductInvoiceItem(item.id)"
-                  class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-                  >-</span
-                >
-              </div>
-              </div>
-              
-            </div>
-          </div>
-        </div>
+				<div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+					<div
+						:class="!doNotShow && 'px-4'"
+						:ref="'items-header'"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex items-center justify-center py-2 bg-black">
+							<div class="w-4/6">
+								<div class="text-white text-sm text-left px-4">
+									<strong>Description</strong>
+								</div>
+							</div>
+							<div class="w-2/6">
+								<div class="text-white text-sm text-right px-4">
+									<strong>£Amount</strong>
+								</div>
+							</div>
+							<div v-if="forViewing == false">
+								<div class="mr-2" v-if="doNotShow">
+									<span
+										@click="addInvoiceItem()"
+										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>+</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						v-for="(item, index) in invoiceItems"
+						:key="`item-${index}`"
+						:class="!doNotShow && 'px-4'"
+						:ref="`item-${index}`"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex w-full justify-center border-b border-gray-500 py-1">
+							<div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
+								<textarea
+									v-if="doNotShow"
+									v-model="item.description"
+									rows="2"
+									class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
+									placeholder="Enter Description"
+								></textarea>
+								<p v-else class="px-2 py-1">{{ item.description ? item.description : "No Description" }}</p>
+							</div>
+							<div v-else class="px-2 py-1">{{item.description}}</div>
+							<div class="w-1/3 text-sm mx-1">
+								<template v-if="forViewing == false">
+									<input
+										v-if="doNotShow"
+										v-model="item.amount"
+										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
+										:class="!doNotShow && 'pr-3'"
+										type="number"
+										min="0"
+										placeholder="Enter Amount"
+									/>
+								</template>
+								<p v-else class="px-2 py-1 text-right">{{ item.amount }}</p>
+							</div>
+							<template v-if="forViewing == false">
+								<div class="mr-2 flex items-center" v-if="doNotShow">
+									<span
+										@click="deductInvoiceItem(item.id)"
+										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>-</span>
+								</div>
+							</template>
+						</div>
+					</div>
+				</div>
 
-        <div ref="items-total" class="flex justify-betwen px-4 pt-2">
-          <div class="my-1 px-1 w-3/4 font-bold">Total</div>
-          <div class="my-1 px-1 w-1/4 text-right">
-            {{ "£ " + amountTotal }}
-          </div>
-        </div>
-      </div>
-      <div class="p-4" ref="pdf-footer">
-        <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
-          Payment by BACS:
-          <br />Account name: XXX <br />Bank: XXX <br />Sort code: XXX
-          <br />Account number: XXX
-          <br />
-        </div>
-      </div>
-    </div>
-    <!-- FIRST PAGE ENDS HERE -->
-    <!-- BODY ENDS HERE-->
-  </div>
+				<div ref="items-total" class="flex justify-betwen px-4 pt-2">
+					<div class="my-1 px-1 w-3/4 font-bold">Total</div>
+					<div class="my-1 px-1 w-1/4 text-right">{{ "£ " + amountTotal }}</div>
+				</div>
+			</div>
+			<div class="p-4" ref="pdf-footer">
+				<div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
+					Payment by BACS:
+					<br />Account name: XXX
+					<br />Bank: XXX
+					<br />Sort code: XXX
+					<br />Account number: XXX
+					<br />
+				</div>
+			</div>
+		</div>
+		<!-- FIRST PAGE ENDS HERE -->
+		<!-- BODY ENDS HERE-->
+	</div>
 </template>
 
 <script>
@@ -195,7 +191,7 @@ import AppLoading from "@/components/Base/AppLoading";
 import AppButton from "@/components/Base/AppButton";
 import AppInput from "@/components/Base/AppInput";
 export default {
-  props:["forViewing" ,"practice", "practiceInvoice"],
+	props: ["forViewing", "practice", "practiceInvoice"],
 	components: {
 		AppLoading,
 		AppButton,
@@ -218,20 +214,23 @@ export default {
 			loading: false
 		};
 	},
-	created(){
-    console.log('practiceInvoice', this.practiceInvoice)
-    console.log('practice', this.practice)
-    const practiceInvoiceItems = this.practiceInvoice.practice_invoice_items
-    for(let i = 0; i < practiceInvoiceItems.length ; i++){
-        const newItem = {
-          job_part_id: practiceInvoiceItems[i].job_part.id,
-          description: practiceInvoiceItems[i].description,
-          amount: practiceInvoiceItems[i].total
-        };
-        newItem.id = this.invoiceItems.length + 1;
-        this.invoiceItems.push(newItem);
-      }
-  },
+	created() {
+		console.log("practiceInvoice", this.practiceInvoice);
+		console.log("practice", this.practice);
+
+		if (this.practiceInvoice) {
+			const practiceInvoiceItems = this.practiceInvoice.practice_invoice_items;
+			for (let i = 0; i < practiceInvoiceItems.length; i++) {
+				const newItem = {
+					job_part_id: practiceInvoiceItems[i].job_part.id,
+					description: practiceInvoiceItems[i].description,
+					amount: practiceInvoiceItems[i].total
+				};
+				newItem.id = this.invoiceItems.length + 1;
+				this.invoiceItems.push(newItem);
+			}
+		}
+	},
 	computed: {
 		amountTotal: function() {
 			if (this.invoiceItems.length > 0) {
@@ -545,7 +544,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: hidden auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

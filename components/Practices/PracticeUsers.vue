@@ -1,216 +1,261 @@
 <template>
-  <div>
-    <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'"/>
-    <div class="w-full overflow-hidden">
-      <div v-if="authAdminPermissions.includes('Add Practice User')">
-        <button
-          class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
-          @click="show(surgery.id)"
-        >Add User
-        </button>
-      </div>
-    </div>
-    <div class="text-white " v-if="users.length == 0">
-      <div
-      class="mt-10 w-full text-center"
-      style="font-family: Nunito"
-      >This practice has no users.</div>
-    </div>
-    <div v-else class="flex flex-col text-white mt-4"> 
-      <div class="w-full hidden md:flex text-sm font-bold pb-2 px-2"> 
-        <div class="w-1/5">Full Name</div> 
-        <div class="w-1/5 text-center">Email Address</div>
-        <div class="w-1/5 text-center">Role</div>
-        <div class="w-1/5 text-center">Sign-Up Verified</div>
-        <div class="w-1/5 text-center">Status</div>
-      </div>
-      <div
-        v-for="(user, index) in users"
-        :key="`user-${index}`"
-        @click="$router.push(`/practices/${practice.id}/practice-users/${user.id}`)"
-        class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-4 md:p-2 border-l-8 border-sunglow md:border-0" 
-        ><!--This needs to lead to a nuxt child with admin being able to modify the user-->
-        <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
-          <strong class="block md:hidden text-sm uppercase">Full Name</strong>
-          <span class="break-words">{{ user.personal_detail.name }}</span>
-        </div>
-        <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
-          <strong class="block md:hidden text-sm uppercase">Email Address</strong>
-          <span class="break-words break-all">{{ user.email }}</span>
-        </div>
-        <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
-          <strong class="block md:hidden text-sm uppercase">Role</strong>
-          <span class="break-words">{{ user.practice_detail.practice_role }}</span>
-        </div>
-        <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
-          <strong class="block md:hidden text-sm uppercase">Sign-up Verified</strong>
-          <span class="break-words">{{ user.email_verified_at ? $moment(user.email_verified_at).format('MMM D, YYYY | hh:mm A') : null }}</span>
-        </div>
-        <div class="w-full md:w-1/5 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
-          <strong class="block md:hidden">Status</strong>
-          <span class="inline-flex w-1/3 md:w-auto justify-center text-black text-sm py-2 px-8 rounded-full"
-          :class="`${user.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2' }`"
-          >{{ user.status }}
-          </span>
-        </div>
-      </div> 
-    </div>
-    <div v-if="!users.length == 0">
-        <AppPagination
-          :total="total"
-          :totalPages="totalPages"
-          :currentPage="currentPage"
-          :perPage="perPage"
-          @pagechanged="pagechanged"
-        />
-    </div> 
-    <div class="edit-practice-user-shield" v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal" @click="modal ? modal=false : $router.go(-1)"></div>
-    <transition name="slide" mode="out-in">
-      <div class="practice-user-modal shadow-lg" v-if="modal">
-        <CreateUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total"/>
-      </div>
-    </transition>
-  </div>
+	<div>
+		<AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
+		<div class="w-full overflow-hidden">
+			<div v-if="authAdminPermissions.includes('Add Practice User')">
+				<button
+					class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
+					@click="show(surgery.id)"
+				>Add User</button>
+			</div>
+		</div>
+		<transition name="fade">
+			<AppTable
+				v-if="total > 0"
+				:total="total"
+				:items="users"
+				:currentPage="currentPage"
+				:perPage="params.limit"
+				:columns="columns"
+				:routerLink="`/practices/${practice.id}/practice-users`"
+				:orderBy="params.order_by"
+				@pagechanged="pagechanged"
+				@sorted="sorted"
+			>
+				<template v-slot:status_slot="slotProps">
+					<div
+						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+						:class="slotProps.item.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2'"
+					>{{ slotProps.item.status }}</div>
+				</template>
+			</AppTable>
+			<template v-else>
+				<div class="mt-2 w-full text-center text-white">This practice has no users.</div>
+			</template>
+		</transition>
+
+		<div
+			class="edit-practice-user-shield"
+			v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal"
+			@click="modal ? modal=false : $router.go(-1)"
+		></div>
+		<transition name="slide" mode="out-in">
+			<div class="practice-user-modal shadow-lg" v-if="modal">
+				<CreateUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total" />
+			</div>
+		</transition>
+	</div>
 </template>
 <script>
-import CreateUser from '@/components/UserManagement/CreateUser'
-import AppPagination from '@/components/Base/AppPagination'
-import AppLoading from '@/components/Base/AppLoading'
+import CreateUser from "@/components/UserManagement/CreateUser";
+import AppPagination from "@/components/Base/AppPagination";
+import AppLoading from "@/components/Base/AppLoading";
+import AppTable from "@/components/Base/AppTable";
 export default {
-  props:['practice'],
-  components:{
-    CreateUser,
-    AppPagination,
-    AppLoading
-  },
-  data(){
-    return {
-      loadingPracticeUsers:false,
-      modal:false,
-      // total:0,
-      // users:[],
-      // totalPages:0,
-      currentPage:1,
-      perPage:10,
-      surgery:null,
-      query:null
-    }
-  },
-  beforeDestroy(){
-      let query = Object.assign({}, this.$route.query)
-      delete query.practice_users_page
-      this.$router.push({ query })
-  },
-  watch:{
-    $route(to, from){
-      this.currentPage = parseInt(to.query.practice_users_page)
-      this.getAllPracticeUsers() 
-    },
-  },
-  computed:{
-    total(){
-        return this.$store.state.practices.practiceUsersCount
-    },
-    users(){
-        return this.$store.state.practices.practiceUsers
-    },
-    totalPages(){
-        return this.$store.state.practices.practiceUsersPageCount
-    },
-    authAdminPermissions() {
-      return this.$store.getters["auth/permissions"]
-    },
-  },
-  async created(){
-    const query = {
-      ...this.$route.query,
-      practice_users_page: this.$route.query.practice_users_page || 1
-    }
-    this.loading = true
-    let practice_id = this.practice.id
-    let params = {
-      practice_id
-    } 
-    try{
-      this.loadingPracticeUsers = true
-      await this.$axios.$get(`/api/v1/admin/practice-users/count`,{params}).then(res=>{
-        this.$store.commit(`practices/SET_PRACTICE_USERS_COUNT`,res.data.count)
-        this.perPage = 5
-        let pageCount = Math.ceil(this.total / this.perPage)
-        this.$store.commit('practices/SET_PRACTICE_USERS_PAGE_COUNT',pageCount)
-        this.getAllPracticeUsers()
-      })
-    }catch(err){
-      this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
-      console.log(err)
-    }
-    
-    const response = await this.$axios.$get(`/api/v1/admin/surgeries?code_includes=${this.practice.surgery.code}`)
-    this.surgery = response.data.surgeries[0]
-    console.log('surgery', this.surgery)
-  }, 
-  methods:{
-    async getAllPracticeUsers(){
-      let practice_id = this.practice.id
-      let limit = 5
-      let offset = 0
-      offset = this.perPage*(parseInt(this.$route.query.practice_users_page)-1)
-      let params = {
-        practice_id,
-        order_by:'created_at:desc',
-        limit,
-        offset,
-      } 
-      await this.$axios.$get(`/api/v1/admin/practice-users`,{params}).then(res=>{
-        this.$store.commit('practices/SET_PRACTICE_USERS', res.data.users)
-      }).catch(err=>{
-        console.log('get users error!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
-      })
-      this.loadingPracticeUsers = false
-    },
-    
-    show(id){
-      this.modal = true
-    },
-    pagechanged(e) {
-      const query = {
-        ...this.$route.query,
-        practice_users_page: e || 1
-      }
-      this.$router.push({ query })
-      this.getAllPracticeUsers()
-    }
-  },  
-}
+	props: ["practice"],
+	components: {
+		CreateUser,
+		AppPagination,
+		AppLoading,
+		AppTable
+	},
+	data() {
+		return {
+			loadingPracticeUsers: false,
+			modal: false,
+			// total:0,
+			// users:[],
+			// totalPages:0,
+			currentPage: 1,
+			perPage: 10,
+
+			params: {
+				limit: 10,
+				offset: 0,
+				order_by: ["created_at:desc"]
+			},
+
+			surgery: null,
+			query: null,
+
+			columns: [
+				{
+					name: "Full Name",
+					dataIndex: "personal_detail.name"
+				},
+				{
+					name: "Email Address",
+					dataIndex: "email",
+					class: "text-center"
+				},
+				{
+					name: "Role",
+					dataIndex: "practice_detail.practice_role",
+					class: "text-center"
+				},
+				{
+					name: "Sign-Up Verified",
+					dataIndex: "email_verified_at",
+					class: "text-center"
+				},
+				{
+					name: "Status",
+					dataIndex: "status",
+					slot: true,
+					slotName: "status_slot",
+					class: "text-center",
+					sortable: true
+				}
+			]
+		};
+	},
+	beforeDestroy() {
+		let query = Object.assign({}, this.$route.query);
+		delete query.practice_users_page;
+		this.$router.push({ query });
+	},
+	watch: {
+		$route(to, from) {
+			this.currentPage = parseInt(to.query.practice_users_page);
+			this.getAllPracticeUsers();
+		}
+	},
+	computed: {
+		total() {
+			return this.$store.state.practices.practiceUsersCount;
+		},
+		users() {
+			return this.$store.state.practices.practiceUsers;
+		},
+		totalPages() {
+			return this.$store.state.practices.practiceUsersPageCount;
+		},
+		authAdminPermissions() {
+			return this.$store.getters["auth/permissions"];
+		}
+	},
+	async created() {
+		const query = {
+			...this.$route.query,
+			practice_users_page: this.$route.query.practice_users_page || 1
+		};
+		this.loading = true;
+		let practice_id = this.practice.id;
+		let params = {
+			practice_id
+		};
+		try {
+			this.loadingPracticeUsers = true;
+			await this.$axios
+				.$get(`/api/v1/admin/practice-users/count`, { params })
+				.then(res => {
+					this.$store.commit(
+						`practices/SET_PRACTICE_USERS_COUNT`,
+						res.data.count
+					);
+					this.perPage = 5;
+					let pageCount = Math.ceil(this.total / this.perPage);
+					this.$store.commit(
+						"practices/SET_PRACTICE_USERS_PAGE_COUNT",
+						pageCount
+					);
+					this.getAllPracticeUsers();
+				});
+		} catch (err) {
+			this.$store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: err.response.data.message
+			});
+			console.log(err);
+		}
+
+		const response = await this.$axios.$get(
+			`/api/v1/admin/surgeries?code_includes=${this.practice.surgery.code}`
+		);
+		this.surgery = response.data.surgeries[0];
+		console.log("surgery", this.surgery);
+	},
+	methods: {
+		async getAllPracticeUsers() {
+			let practice_id = this.practice.id;
+			let limit = 5;
+			let offset = 0;
+			offset =
+				this.perPage * (parseInt(this.$route.query.practice_users_page) - 1);
+			let params = {
+				practice_id,
+				order_by: "created_at:desc",
+				limit,
+				offset
+			};
+			await this.$axios
+				.$get(`/api/v1/admin/practice-users`, { params })
+				.then(res => {
+					this.$store.commit("practices/SET_PRACTICE_USERS", res.data.users);
+				})
+				.catch(err => {
+					console.log("get users error!", err);
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
+			this.loadingPracticeUsers = false;
+		},
+
+		show(id) {
+			this.modal = true;
+		},
+		pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				practice_users_page: e || 1
+			};
+			this.$router.push({ query });
+			this.getAllPracticeUsers();
+		},
+		sorted(order_by) {
+			// go back to page 1
+			this.currentPage = 1;
+			let query = {
+				...this.$router.query,
+				order_by
+			};
+			this.params.order_by = order_by;
+			this.getAllPracticeUsers(this.params);
+		}
+	}
+};
 </script>
 <style>
 .edit-practice-user-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #333;
+	opacity: 0.5;
+	z-index: 511;
 }
 .edit-practice-user-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #FFC72C;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	border-left: solid 2px #ffc72c;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
 }
 @media screen and (min-width: 1200px) {
-  .edit-practice-user-modal {
-    width: 70%;
-  }
+	.edit-practice-user-modal {
+		width: 70%;
+	}
 }
 </style>

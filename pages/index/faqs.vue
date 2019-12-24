@@ -1,13 +1,9 @@
 <template>
 	<section class="flex-1 flex flex-col overflow-hidden py-2">
 		<div class="px-4 md:px-6">
-			<div class="text-xl md:text-4xl text-white pb-4">
-				Frequently Asked Questions
-			</div>
+			<div class="text-xl md:text-4xl text-white pb-4">Frequently Asked Questions</div>
 			<div class="rounded-lg text-white bg-charade shadow-lg p-3 md:p-5">
-				<div
-					class="w-full inline-flex flex-wrap justify-between font-bold mb-2"
-				>
+				<div class="w-full inline-flex flex-wrap justify-between font-bold mb-2">
 					<div class="flex items-center mr-2">Locum</div>
 					<div class="flex items-center">
 						<AppButton
@@ -33,73 +29,64 @@
 				</div>
 				<!-- -------------------------------------------------------------------------- -->
 				<div v-for="item in locumFaqs" :key="item.id" class="inline-flex w-full">
-          <nuxt-link
-            v-if="
+					<nuxt-link
+						v-if="
               deleteLocumFaq == false &&
                 authAdminPermissions.includes('Edit FAQ')
             "
-            :to="{ path: `/faqs/${item.id}` }"
-            class="flex items-center cursor-pointer mr-2 md:mr-4"
-          >
-            <svgicon
-              name="edit"
-              width="21"
-              height="21"
-              class="fill-current text-white hover:text-sunglow"
-            />
-          </nuxt-link>
-          <div
-            v-if="
+						:to="{ path: `/faqs/${item.id}` }"
+						class="flex items-center cursor-pointer mr-2 md:mr-4"
+					>
+						<svgicon
+							name="edit"
+							width="21"
+							height="21"
+							class="fill-current text-white hover:text-sunglow"
+						/>
+					</nuxt-link>
+					<div
+						v-if="
               deleteLocumFaq == true &&
                 authAdminPermissions.includes('Delete FAQ')
             "
-            @click="toDeleteFaq(item.id)"
-            class="flex items-center cursor-pointer mr-2 md:mr-4"
-          >
-            <svgicon
-              name="garbage"
-              width="21"
-              height="21"
-              class="fill-current text-red-800 hover:text-red-600"
-            />
-          </div>
-          <div class="w-full my-1">
-            <div
-              class="flex bg-trout hover:bg-waterloo-dark transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
-              @click="toggleFaqOn(item)"
-            >
-              <div>{{item.question}}</div>
-              <div>
-                <svgicon
-                  name="arrow-right"
-                  height="15"
-                  width="15"
-                  :class="item.toggled ? 'rotate' : 'arrow'"
-                  color="white white"
-                />
-              </div>
-            </div>
-            <transition name="drop-down" mode="out-in">
-              <div v-if="item.toggled">
-                <no-ssr>
-                  <quill-editor
-                    class="border-none"
-                    :options="options"
-                    :content="item.answer"
-                    disabled
-                  ></quill-editor>
-                </no-ssr>
-              </div>
-            </transition>
-          </div>
-        </div>
-				<div v-if="locumFaqs.length === 0" class="text-waterloo">
-					No Frequently Asked Questions for Locum
+						@click="toDeleteFaq(item.id)"
+						class="flex items-center cursor-pointer mr-2 md:mr-4"
+					>
+						<svgicon
+							name="garbage"
+							width="21"
+							height="21"
+							class="fill-current text-red-800 hover:text-red-600"
+						/>
+					</div>
+					<div class="w-full my-1">
+						<div
+							class="flex bg-trout hover:bg-waterloo-dark transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
+							@click="toggleFaqOn(item)"
+						>
+							<div>{{item.question}}</div>
+							<div>
+								<svgicon
+									name="arrow-right"
+									height="15"
+									width="15"
+									:class="item.toggled ? 'rotate' : 'arrow'"
+									color="white white"
+								/>
+							</div>
+						</div>
+						<transition name="drop-down" mode="out-in">
+							<div v-if="item.toggled">
+								<no-ssr>
+									<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
+								</no-ssr>
+							</div>
+						</transition>
+					</div>
 				</div>
+				<div v-if="locumFaqs.length === 0" class="text-waterloo">No Frequently Asked Questions for Locum</div>
 				<!---------------------------------------------------------------------------------->
-				<div
-					class="w-full inline-flex flex-wrap justify-between font-bold my-2"
-				>
+				<div class="w-full inline-flex flex-wrap justify-between font-bold my-2">
 					<div class="flex items-center mr-2">Practice</div>
 					<div class="flex">
 						<AppButton
@@ -125,69 +112,65 @@
 				</div>
 				<!-- ---------------------------------------------------------------------------- -->
 				<div v-for="item in practiceFaqs" :key="item.id" class="inline-flex w-full">
-          <nuxt-link
-            v-if="
+					<nuxt-link
+						v-if="
               deletePracticeFaq == false &&
                 authAdminPermissions.includes('Edit FAQ')
             "
-            :to="{ path: `/faqs/${item.id}` }"
-            class="flex items-center cursor-pointer mr-2 md:mr-4"
-          >
-            <svgicon
-              name="edit"
-              width="21"
-              height="21"
-              class="fill-current text-white hover:text-sunglow"
-            />
-          </nuxt-link>
-          <div
-            v-if="
+						:to="{ path: `/faqs/${item.id}` }"
+						class="flex items-center cursor-pointer mr-2 md:mr-4"
+					>
+						<svgicon
+							name="edit"
+							width="21"
+							height="21"
+							class="fill-current text-white hover:text-sunglow"
+						/>
+					</nuxt-link>
+					<div
+						v-if="
               deletePracticeFaq == true &&
                 authAdminPermissions.includes('Delete FAQ')
             "
-            @click="toDeleteFaq(item.id)"
-            class="flex items-center cursor-pointer mr-2 md:mr-4"
-          >
-            <svgicon
-              name="garbage"
-              width="21"
-              height="21"
-              class="fill-current text-red-800 hover:text-red-600"
-            />
-          </div>
-          <div class="w-full my-1">
-            <div
-              class="flex bg-trout hover:bg-waterloo-dark transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
-              @click="toggleFaqOn(item)"
-            >
-              <div>{{item.question}}</div>
-              <div>
-                <svgicon
-                  name="arrow-right"
-                  height="15"
-                  width="15"
-                  :class="item.toggled ? 'rotate' : 'arrow'"
-                  color="white white"
-                />
-              </div>
-            </div>
-            <transition name="drop-down" mode="out-in">
-              <div v-if="item.toggled">
-                <no-ssr>
-                  <quill-editor
-                    class="border-none"
-                    :options="options"
-                    :content="item.answer"
-                    disabled
-                  ></quill-editor>
-                </no-ssr>
-              </div>
-            </transition>
-          </div>
-        </div>
-				<div v-if="practiceFaqs.length === 0" class="text-waterloo">
-					No Frequently Asked Questions for Practice
+						@click="toDeleteFaq(item.id)"
+						class="flex items-center cursor-pointer mr-2 md:mr-4"
+					>
+						<svgicon
+							name="garbage"
+							width="21"
+							height="21"
+							class="fill-current text-red-800 hover:text-red-600"
+						/>
+					</div>
+					<div class="w-full my-1">
+						<div
+							class="flex bg-trout hover:bg-waterloo-dark transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
+							@click="toggleFaqOn(item)"
+						>
+							<div>{{item.question}}</div>
+							<div>
+								<svgicon
+									name="arrow-right"
+									height="15"
+									width="15"
+									:class="item.toggled ? 'rotate' : 'arrow'"
+									color="white white"
+								/>
+							</div>
+						</div>
+						<transition name="drop-down" mode="out-in">
+							<div v-if="item.toggled">
+								<no-ssr>
+									<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
+								</no-ssr>
+							</div>
+						</transition>
+					</div>
 				</div>
+				<div
+					v-if="practiceFaqs.length === 0"
+					class="text-waterloo"
+				>No Frequently Asked Questions for Practice</div>
 				<div
 					class="faq-shield"
 					v-if="
@@ -212,12 +195,12 @@ export default {
 	data() {
 		return {
 			deleteLocumFaq: false,
-      deletePracticeFaq: false,
-      options: {
-        modules: {
-          toolbar: null
-        }
-      },
+			deletePracticeFaq: false,
+			options: {
+				modules: {
+					toolbar: null
+				}
+			},
 			showConfirmCancelModal: false
 		};
 	},

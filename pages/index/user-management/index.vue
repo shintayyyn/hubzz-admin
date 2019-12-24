@@ -2,10 +2,7 @@
 	<div class="flex-1 flex flex-col overflow-auto">
 		<transition name="fade" mode="out-in">
 			<div v-if="showConfirmCancelModal == true">
-				<AppConfirmCancel
-					@close="showConfirmCancelModal = false"
-					:adminAccountId="adminAccountId"
-				/>
+				<AppConfirmCancel @close="showConfirmCancelModal = false" :adminAccountId="adminAccountId" />
 			</div>
 		</transition>
 		<div class="flex items-center px-4 md:px-6 py-2 text-sm">
@@ -78,12 +75,10 @@
 					`${slotProps.item.personal_detail.first_name} ${slotProps.item.personal_detail.last_name}`
 				}}</span>
 			</template>
-		</AppTable> -->
+		</AppTable>-->
 		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6">
 			<!-- HEADER -->
-			<div
-				class="hidden md:flex items-center text-white justify-between font-semibold "
-			>
+			<div class="hidden md:flex items-center text-white justify-between font-semibold">
 				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
 				<div class="align-middle px-2 w-1/3">Roles</div>
@@ -91,11 +86,7 @@
 			</div>
 			<!-- END HEADER -->
 			<!-- BODY -->
-			<div
-				v-for="(user, index) in adminUsers"
-				:key="`user-${index}`"
-				class="flex"
-			>
+			<div v-for="(user, index) in adminUsers" :key="`user-${index}`" class="flex">
 				<div
 					class="flex justify-center items-center w-10 align-middle text-center"
 					v-if="deleteAdminUser == true"
@@ -111,11 +102,7 @@
 						height="21"
 						class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
 					/>
-					<span
-						v-else-if="$auth.user.id === user.id"
-						class="text-sm text-gray-500"
-						>You</span
-					>
+					<span v-else-if="$auth.user.id === user.id" class="text-sm text-gray-500">You</span>
 					<span
 						v-else-if="
 							user.admin_detail &&
@@ -123,8 +110,7 @@
 								user.admin_detail.roles[0].name == 'Super Admin'
 						"
 						class="text-sm text-yellow-500"
-						>God</span
-					>
+					>God</span>
 				</div>
 				<nuxt-link
 					:to="{ path: `/user-management/${user.id}`, query: $route.query }"
@@ -134,35 +120,30 @@
 						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
 					>
 						<strong class="block md:hidden text-xs uppercase">E-Mail</strong>
-						<span class="break-word"
-							>{{ user && user.email ? user.email : null }}
-						</span>
+						<span class="break-word">{{ user && user.email ? user.email : null }}</span>
 					</div>
-          
-          <div
-						class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none"
-					>
-						<strong class="block md:hidden text-xs uppercase"
-							>Job Numbers</strong
-						>
-            <div v-if="user && user.admin_detail && user.admin_detail.roles">
-              <div
-                v-for="(role, index) in user.admin_detail.roles"
-                :key="`role-${index}`"
-                class=""
-                >{{ role.name }}</div>
-            </div>
-						
+
+					<div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
+						<strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
+						<div v-if="user && user.admin_detail && user.admin_detail.roles">
+							<div
+								v-for="(role, index) in user.admin_detail.roles"
+								:key="`role-${index}`"
+								class
+							>{{ role.name }}</div>
+						</div>
 					</div>
 					<div
 						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3"
 					>
 						<strong class="block md:hidden text-xs uppercase">Name</strong>
-						<span class="break-all">{{
+						<span class="break-all">
+							{{
 							user && user.personal_detail
-								? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
-								: null
-						}}</span>
+							? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
+							: null
+							}}
+						</span>
 					</div>
 				</nuxt-link>
 			</div>
@@ -175,7 +156,7 @@
 			:total="total"
 			:totalPages="totalPages"
 			:currentPage="currentPage"
-      :perPage="itemsPerPage"
+			:perPage="itemsPerPage"
 			@pagechanged="pagechanged"
 		/>
 		<!-- PAGINATION ENDS HERE -->
@@ -191,7 +172,7 @@
 			class="new-user-shield"
 			v-if="showConfirmCancelModal"
 			@click="showConfirmCancelModal? (showConfirmCancelModal = false): $router.go(-1)"
-      @close="showConfirmCancelModal = false"
+			@close="showConfirmCancelModal = false"
 		/>
 	</div>
 </template>
@@ -252,11 +233,11 @@ export default {
 				}
 			]
 		};
-  },
-  created(){
-    console.log('me', this.$auth.user)
-    console.log('admin users', this.adminUsers)
-  },
+	},
+	created() {
+		console.log("me", this.$auth.user);
+		console.log("admin users", this.adminUsers);
+	},
 	watchQuery: ["page", "search"],
 	async asyncData({ app, store, route }) {
 		try {
@@ -346,15 +327,15 @@ export default {
 		toDeleteAdminUser(userId) {
 			this.adminAccountId = userId;
 			this.showConfirmCancelModal = true;
-    },
-    async performAction() {
-      console.log('it works')
+		},
+		async performAction() {
+			console.log("it works");
 			if (this.adminAccountId) {
-        console.log('rere')
+				console.log("rere");
 				await this.$axios
 					.$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
 					.then(res => {
-            console.log(res)
+						console.log(res);
 						this.$store.getters["adminusers/getAdminUsers"];
 						this.$emit("close");
 						this.$store.commit("SET_NOTIFICATION", {
@@ -403,7 +384,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

@@ -11,21 +11,13 @@
 			</div>
 			<LocumTabs :user="user" />
 			<!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->
-			<div
-				class="locum-shield"
-				v-if="$route.name.includes('locumJobPartId')"
-				@click="$router.go(-1)"
-			></div>
+			<div class="locum-shield" v-if="$route.name.includes('locumJobPartId')" @click="$router.go(-1)"></div>
 			<div
 				class="locum-shield"
 				v-if="$route.name.includes('index-locum-compliance-docId')"
 				@click="$router.go(-1)"
 			/>
-			<div
-				class="locum-shield"
-				v-if="$route.name.includes('locumJobId')"
-				@click="$router.go(-1)"
-			></div>
+			<div class="locum-shield" v-if="$route.name.includes('locumJobId')" @click="$router.go(-1)"></div>
 		</div>
 		<nuxt-child />
 	</div>
@@ -93,7 +85,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
