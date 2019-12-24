@@ -3,13 +3,13 @@
     <!-- BODY -->
     <div class="w-full overflow-auto">
       <div class="flex flex-wrap items-center md:m-2">
-        <div class="text-2xl text-white font-semibold mr-4">{{job ? job.title : modalJobPart.title }}</div>
+        <div class="text-2xl text-white font-semibold mr-4">{{job ? job.title : modalJobPart.job.title }}</div>
         <div class="flex">
-          <div class="text-black p-2 bg-yellow-500 rounded">{{job ? job.status : modalJobPart.status}}</div>
+          <div class="text-black p-2 bg-yellow-500 rounded">{{job ? job.status : modalJobPart.job.status}}</div>
           <div 
             class="text-black p-2 text-white rounded ml-4" 
             :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'">
-            {{job ? job.type : modalJobPart.type}}
+            {{job ? job.type : modalJobPart.job.type}}
           </div>
         </div>
       </div>
@@ -17,7 +17,7 @@
       <div class="flex flex-col md:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
         <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`" -->
-        <div class="md:w-3/7 w-full overflow-hidden">
+        <div class="md:w-3/7 xl:w-full overflow-hidden">
           <!-- JOB DETAILS -->
           <div v-if="job" class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4">
             <div class="xl:w-1/2 w-full overflow-hidden">
@@ -155,7 +155,7 @@
             
           </div>
           <!-- JOB PART DETAILS -->
-          <div v-if="job_part" class="flex order-2 md:order-1 flex-wrap h-full xl:w-2/3 sm:w-full overflow-auto text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
+          <div v-if="job_part" class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4">
             <!-- INFOS LEFT -->
             <div class="xl:w-1/2 w-full overflow-hidden">
               <div class="m-4 mt-5 text-gray text-white">
@@ -278,9 +278,12 @@
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
         <div class="md:w-4/7 w-full overflow-hidden">
           <div class="flex flex-col">
-            <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6':'md:w-2/5 md:px-4'}` -->
+            <!--  -->
             <!-- JOB PARTS -->
-            <div v-if="jobParts.length > 0 " class="w-full flex flex-col" >
+            <div v-if="jobParts.length > 0"
+              class="w-full flex flex-col"
+              >
+
               <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">Job Parts</div> 
               <div class="flex flex-col m-2 text-white">
                 <div class="flex flex-row">
@@ -289,13 +292,13 @@
                   <div class="mx-12 font-semibold">Date End</div>
                   <div class="mx-12 font-semibold">Job Part Status</div>
                 </div>
-                <div class="overflow-y-auto" :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`">
+                <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
+                <div class="overflow-y-auto" >
                   <div 
                     v-for="(item, index) in jobParts"
                     @click.prevent="show(item.id)"
                     :key="`item-${index}`"
                     class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-2 md:p-4 md:p-2 border-l-8 border-yellow-500 md:border-0"
-                    :class="`${job.status}`"
                   >
                     <div class="flex flex-col w-full p-2 md:py-0 align-middle">
                       <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
@@ -328,7 +331,8 @@
             </div>
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
             <!-- LOCUM DETAILS -->
-            <div v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" class="w-full overflow-hidden flex">
+            <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
+            <div v-if="locumUser" class="w-full overflow-hidden flex">
               <div class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
                 
                 <div class="flex flex-wrap overflow-hidden">
@@ -480,12 +484,13 @@ export default {
   async created(){
     this.modalJobPart = this.job_part
 
-    if(this.job && this.job.platform_job.appointed_to_locum){
+    if (this.job && this.job.platform_job.appointed_to_locum ||
+      this.job_part && this.job_part.job.platform_job.appointed_to_locum ) {
       await this.getLocum()
-    }
-
+    } 
+    
     let params = {
-      job_id : this.job.id,
+      job_id : this.job && this.job.id ? this.job.id : this.job_part.job.id,
       viewing_practice_id : this.$route.params.id,
     }
     await this.$axios.$get(`/api/v1/admin/job-parts/count`, { params }).then( res => {
@@ -498,17 +503,21 @@ export default {
   computed: {
     google: gmapApi,
     latLangPlatform() {
-      if(this.job){
+      if (this.job) {
         return this.job.platform_job.practice.surgery.address.coordinates
-      }else if(this.job_part){
+      } else if (this.job_part) {
         return this.job_part.job.platform_job.practice.surgery.address.coordinates
+      } else {
+        return ''
       }
     },
     latLangPrivate() {
-      if(this.job){
+      if (this.job) {
         return this.job.private_job.private_practice.surgery.address.coordinates
-      }else if(this.job_part){
+      } else if (this.job_part) {
         return this.job_part.job.private_job.private_practice.surgery.address.coordinates
+      } else {
+        return ''
       }
     },
   },
@@ -523,7 +532,7 @@ export default {
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_part_page) - 1)
       let params = {
         viewing_practice_id : this.$route.params.id,
-        job_id: this.job.id,
+        job_id: this.job && this.job.id ? this.job.id : this.job_part.job.id,
         limit:  this.perPage,
         offset: offset
       }
@@ -535,38 +544,50 @@ export default {
       })
     },
     async getLocum(){
-      await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
-        this.locumUser = res.data.user
-      }).catch(err=>{
-        console.log('get locum in job error!!!',err)
-        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
-      })
+      if (this.job) {
+        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
+          this.locumUser = res.data.user
+        }).catch(err=>{
+          console.log('get locum in job error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
+      } else if (this.job_part) {
+        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job_part.job.platform_job.appointed_to_locum.id}`).then(res=>{
+          this.locumUser = res.data.user
+        }).catch(err=>{
+          console.log('get locum in job error!!!',err)
+          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+        })
+      }
+      
     },
     async getJobPart(itemId){
       await this.$axios.$get(`/api/v1/admin/job-parts/${itemId}`).then(res => {
         this.modalJobPart = res.data.job_part
-        this.$router.push(`/practices/${$route.params.id}/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${this.modalJobPart.id}`)
+        const query = {
+          ...this.$route.query,
+        }
+        this.$router.push(`/practices/${this.$route.params.id}/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${this.modalJobPart.id}`, ...this.route.query)
       })
     },
 
     async show(jobPartId){
       console.log('id', jobPartId)
       this.jobPartId=jobPartId
-      if(this.job 
-        &&this.job.status === 'Live' 
+      if (this.job) {
+        if (this.job.status === 'Live' 
         || this.job.status === 'Applied' 
         || this.job.status === 'Allocated' 
         || this.job.status === 'Unfilled'
         || this.job.status === 'Cancelled'
-        || this.job.status === 'Declined'){
-        return
-      }else{
+        || this.job.status === 'Declined') {
+          return
+        }else{
+          this.getJobPart(jobPartId)
+        }
+        
+      }else if(this.job_part){
         this.getJobPart(jobPartId)
-        // await this.$axios.$get(`/api/v1/admin/job-parts/${jobPartId}`).then(res => {
-        //   this.specificJobPart = res.data.job_part
-        // })
-        // :to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
-        // this.modal=true
       }
     },
     goTo(type) {

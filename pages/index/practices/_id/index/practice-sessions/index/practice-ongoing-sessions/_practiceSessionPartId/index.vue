@@ -6,16 +6,13 @@
         </nuxt-link>
     </div>
     <PracticeSessionModal :job_part="job_part"/>
-    <!-- <JobPartModal :specificJobPart="job_part" :isNuxtChild="true"/> -->
   </div>
 </template>
 <script>
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
-import JobPartModal from '@/components/Base/JobPartModal'
 export default {
   components:{
     PracticeSessionModal,
-    JobPartModal,
   },  
   data(){
     return{
