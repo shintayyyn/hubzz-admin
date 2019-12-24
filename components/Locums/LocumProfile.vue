@@ -114,13 +114,14 @@
 
             <div v-if="userComplianceDocuments">
               <p class="my-2">Compliance Documents</p>
-              <span v-if="userComplianceDocuments.length == 0" class="opacity-75">No Mandatory Training Documents</span>
+              <span v-if="userComplianceDocuments.length < 0" class="opacity-75">No Mandatory Training Documents</span>
               <div
                 v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
                 :key="`${index}-${userComplianceDoc.id}-`"
                 class="ml-2 pb-1"
               >
                 <a
+                  v-if="userComplianceDoc.file"
                   class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
                   @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
                   title="Click to download"
@@ -139,13 +140,14 @@
             </div>
             <div v-if="userMandatoryTrainings">
               <p class="my-2">Mandatory Training Documents</p>
-              <span v-if="userMandatoryTrainings.length == 0" class="opacity-75">No Mandatory Training Documents</span>
+              <span v-if="userMandatoryTrainings.length < 0" class="opacity-75">No Mandatory Training Documents</span>
               <div
                 v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
                 :key="`${index}-${userMandatoryTraining.id}-`"
                 class="mx-4"
               >
-              <a
+                <a
+                  v-if="userMandatoryTraining.file"
                   class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
                   @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
                   title="Click to download"
