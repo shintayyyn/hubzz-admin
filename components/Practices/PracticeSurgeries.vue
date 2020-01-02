@@ -3,11 +3,7 @@
 		<div class="flex overflow-hidden">
 			<div class="flex overflow-x-auto mb-2">
 				<div v-if="practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
-					<AppButton
-						:label="'Add Spoke for this Hub'"
-						@click="show()"
-						:icon="'add-rectangle'"
-					/>
+					<AppButton :label="'Add Spoke for this Hub'" @click="show()" :icon="'add-rectangle'" />
 					<!-- <button
 						@click="show()"
 						class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
@@ -20,24 +16,15 @@
 							color="black black"
 							class="mx-1 -my-1"
 						/>
-					</button> -->
+					</button>-->
 				</div>
-				<div
-					v-if="deleteSurgery == true"
-					class="flex-3 mx-1 whitespace-no-wrap"
-				>
+				<div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
 					<button
 						@click="deleteSurgery = false"
 						class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
 					>
 						Done
-						<svgicon
-							name="circle-check"
-							width="21"
-							height="21"
-							color="white white"
-							class="mx-1 -my-1"
-						/>
+						<svgicon name="circle-check" width="21" height="21" color="white white" class="mx-1 -my-1" />
 					</button>
 				</div>
 			</div>
@@ -56,25 +43,18 @@
 				@limitchanged="limitchanged"
 			>
 				<template v-slot:type_slot="slotProps">
-					<div class="flex">
+					<div class="flex justify-center">
 						<div
 							class="rounded-full text-center py-2 px-4 md:px-8"
 							:class="statusStyle(slotProps.item)"
-						>
-							{{ checkStatus(slotProps.item) }}
-						</div>
+						>{{ checkStatus(slotProps.item) }}</div>
 						<div
 							@click.prevent.stop="viewTerminationModal(slotProps.item.id)"
 							class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
 							v-if="slotProps.item.termination_requested_at"
 						>
 							<div class="p-1 bg-white rounded-lg">
-								<svgicon
-									name="exclamation-circle-solid"
-									width="22"
-									height="22"
-									class="fill-current"
-								/>
+								<svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
 							</div>
 						</div>
 					</div>
@@ -83,10 +63,7 @@
 		</template>
 
 		<div v-else>
-			<div
-				class="mt-10 text-white w-full text-center"
-				style="font-family: Nunito"
-			>
+			<div class="mt-10 text-white w-full text-center" style="font-family: Nunito">
 				<p>This practice has no children.</p>
 			</div>
 		</div>
@@ -104,18 +81,10 @@
 		</transition>
 		<!-- END TABLE -->
 
-		<div
-			class="add-practice-shield"
-			v-if="modal || terminationModal"
-			@click="closeModals()"
-		></div>
+		<div class="add-practice-shield" v-if="modal || terminationModal" @click="closeModals()"></div>
 		<transition name="slide" mode="out-in">
 			<div class="add-practice-modal shadow-lg" v-if="modal">
-				<AddPracticeSurgery
-					@close="modal = false"
-					:practice="practice"
-					:spokesCount="total"
-				/>
+				<AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
 			</div>
 		</transition>
 	</div>
@@ -251,7 +220,8 @@ export default {
 		async getChildren() {
 			let limit = 5;
 			let offset = 0;
-			offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
+			offset =
+				this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
 			let params = { limit, offset };
 
 			await this.$axios
@@ -263,8 +233,8 @@ export default {
 					this.$store.commit(
 						"practices/SET_PRACTICE_SPOKES",
 						res.data.practice_surgeries
-          );
-          console.log('practice children', res.data.practice_surgeries)
+					);
+					console.log("practice children", res.data.practice_surgeries);
 				})
 				.catch(err => {
 					console.log("get children error!!!!", err);
@@ -371,7 +341,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

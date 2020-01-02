@@ -1,6 +1,6 @@
 <template>
-	<section class>
-		<div class>
+	<section>
+		<div>
 			<AppLoading :loading="loading" :message="loadingMessage" spinner />
 			<div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
 				<div

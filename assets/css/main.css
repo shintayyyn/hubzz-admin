@@ -251,7 +251,10 @@ table tbody td {
 	padding: 1em;
 	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
 	transform: scale(0.6) translateY(50%);
-	width: 17.5em;
+	/* width: 17.5em; */
+	font-size: 0.75em;
+	width: 16em;
+	/* margin-left: -13em; */
 }
 
 .tool:hover::after,
@@ -259,11 +262,31 @@ table tbody td {
 	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
 }
 
-@media (max-width: 760px) {
+/* @media (max-width: 760px) {
 	.tool::after {
 		font-size: 0.75em;
 		margin-left: -5em;
-		width: 10em;
+		width: 14em;
+	}
+} */
+@media (min-width: 480px) {
+	.tool::after {
+		/* font-size: 0.75em; */
+		/* width: 12em; */
+		margin-left: -12em;
+	}
+}
+@media (min-width: 1200px) {
+	.tool::after {
+		/* font-size: 0.75em; */
+		width: 14em;
+		margin-left: -10em;
+	}
+}
+@media (min-width: 1400px) {
+	.tool::after {
+		font-size: 1em;
+		width: 17.5em;
 	}
 }
 

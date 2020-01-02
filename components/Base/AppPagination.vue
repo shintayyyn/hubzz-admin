@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="w-full pagination flex flex-col md:flex-row justfify-between items-center"
-	>
+	<div class="w-full pagination flex flex-col md:flex-row justfify-between items-center">
 		<div class="w-full flex flex-wrap justify-between pt-2 md:py-2 text-sm">
 			<div class="text-gray-500 w-full md:w-auto text-center md:text-left">
 				<div>{{ pageInfo(perPage, currentPage, total) }}</div>
@@ -13,52 +11,33 @@
 						v-model="selectedLimit"
 						class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none px-2 mx-2"
 					>
-						<option class="text-black " :value="5" v-if="total > 5">5</option>
-						<option class="text-black " :value="10" v-if="total > 10"
-							>10</option
-						>
-						<option class="text-black " :value="15" v-if="total > 15"
-							>15</option
-						>
-						<option class="text-black " :value="20" v-if="total > 20"
-							>20</option
-						>
-						<option class="text-black " :value="30" v-if="total > 30"
-							>30</option
-						>
-						<option class="text-black " :value="50" v-if="total > 50"
-							>50</option
-						>
-						<option class="text-black " :value="total">All</option>
+						<option class="text-black" :value="5" v-if="total > 5">5</option>
+						<option class="text-black" :value="10" v-if="total > 10">10</option>
+						<option class="text-black" :value="15" v-if="total > 15">15</option>
+						<option class="text-black" :value="20" v-if="total > 20">20</option>
+						<option class="text-black" :value="30" v-if="total > 30">30</option>
+						<option class="text-black" :value="50" v-if="total > 50">50</option>
+						<option class="text-black" :value="total">All</option>
 					</select>
 					items
 				</div>
 			</div>
 		</div>
-		<div
-			class="flex flex-col justify-center items-center py-2"
-			v-if="total > 0 && totalPages > 1"
-		>
-			<div class="flex">
-				<div
-					class="md:hidden pagination-item m-1"
-					v-for="page in pages"
-					:key="page.name"
-				>
+		<div class="flex flex-col justify-center items-center py-2" v-if="total > 0 && totalPages > 1">
+			<div :class="!pages.length > 2 ? 'md:hidden' : 'flex'">
+				<div class="md:hidden pagination-item m-1" v-for="page in pages" :key="page.name">
 					<button
 						type="button"
 						class="page-button rounded-lg py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
 						@click="onClickPage(page.name)"
 						:disabled="loading || (page.isDisabled && isPageActive(page.name))"
 						:class="{ active: isPageActive(page.name) }"
-					>
-						{{ page.name }}
-					</button>
+					>{{ page.name }}</button>
 				</div>
 			</div>
 
 			<div class="flex">
-				<div class="pagination-item m-1">
+				<div class="pagination-item m-1" v-if="pages.length > 2">
 					<button
 						type="button"
 						class="relative page-button rounded-lg py-4 md:py-2 px-4 font-bold text-sm focus:outline-none"
@@ -69,9 +48,7 @@
 						<span class="hidden md:block">First</span>
 						<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
 							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-								<path
-									d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"
-								/>
+								<path d="M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z" />
 							</svg>
 						</span>
 					</button>
@@ -94,20 +71,16 @@
 					</button>
 				</div>
 
-				<div
-					class="hidden md:block pagination-item m-1"
-					v-for="page in pages"
-					:key="page.name"
-				>
-					<button
-						type="button"
-						class="rounded-lg page-button py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
-						@click="onClickPage(page.name)"
-						:disabled="loading || (page.isDisabled && isPageActive(page.name))"
-						:class="{ active: isPageActive(page.name) }"
-					>
-						{{ page.name }}
-					</button>
+				<div :class="pages.length > 2 ? 'hidden md:flex' : 'flex'">
+					<div class="pagination-item m-1" v-for="page in pages" :key="page.name">
+						<button
+							type="button"
+							class="rounded-lg page-button py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
+							@click="onClickPage(page.name)"
+							:disabled="loading || (page.isDisabled && isPageActive(page.name))"
+							:class="{ active: isPageActive(page.name) }"
+						>{{ page.name }}</button>
+					</div>
 				</div>
 
 				<div class="pagination-item next m-1">
@@ -127,7 +100,7 @@
 					</button>
 				</div>
 
-				<div class="pagination-item m-1">
+				<div class="pagination-item m-1" v-if="pages.length > 2">
 					<button
 						type="button"
 						class="relative page-button rounded-lg py-4 md:py-2 px-4 font-bold text-sm focus:outline-none"
@@ -138,9 +111,7 @@
 						<span class="hidden md:block">Last</span>
 						<span class="md:hidden absolute mx-1 my-1 left-0 top-0">
 							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18">
-								<path
-									d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"
-								/>
+								<path d="M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z" />
 							</svg>
 						</span>
 					</button>

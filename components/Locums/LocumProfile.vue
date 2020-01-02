@@ -178,6 +178,7 @@
 				<div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
 					<div class="mx-3 md:my-6 border-b text-center pb-3">
 						<embed
+							v-if="user.avatar"
 							class="object-cover w-48 h-48 rounded-full mx-auto"
 							:src="user.avatar ? user.avatar.file.url:null"
 						/>
@@ -197,7 +198,7 @@
 						</div>
 					</div>
 					<div class="mx-3 mt-4">
-						<span class="text-lg font-semibold font-semibold">Change Locum Status</span>
+						<span class="lg:text-lg font-semibold font-semibold">Change Locum Status</span>
 						<span
 							class="tool inline-block"
 							data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant."
@@ -208,21 +209,21 @@
 								width="21"
 								height="21"
 								color="white transparent black"
-								class="-mb-1 ml-2"
+								class="-mb-1 lg:ml-2"
 							></svgicon>
 						</span>
 						<div class="flex items-center">
 							<AppInput
-								class="w-full mr-2"
+								class="w-full sm:w-1/3 md:w-full mr-2"
 								v-model="selectedStatus"
 								:type="'select'"
 								:name="'status'"
 								:placeholder="'Select...'"
 								:items="[
-                  { label: 'Active', value: 'Active' },
-                  { label: 'Inactive', value: 'Inactive' },
-                  { label: 'Deactivated', value: 'Deactivated' }
-                ]"
+									{ label: 'Active', value: 'Active' },
+									{ label: 'Inactive', value: 'Inactive' },
+									{ label: 'Deactivated', value: 'Deactivated' }
+								]"
 							/>
 							<AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
 						</div>
