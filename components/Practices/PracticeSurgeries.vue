@@ -131,8 +131,6 @@ export default {
 	props: ["practice"],
 	components: {
 		AddPracticeSurgery,
-		AppPagination,
-		AppLoading,
 		TerminateSurgery,
 		AppTable,
 		AppButton
@@ -318,7 +316,12 @@ export default {
 			}
 
 			if (invitation.termination_requested_at) {
-				result = "Termination Requested";
+        if (invitation.invitation_accepted_at) {
+          result = "Termination Requested";
+        } else {
+          result = "Cancellation Requested"
+        }
+				
 			}
 
 			if (invitation.terminated_at) {
