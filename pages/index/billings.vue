@@ -2,20 +2,16 @@
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-auto">
 		<div class="px-2 text-2xl md:text-4xl text-white">Billing</div>
 		<div class="px-2 text-sm mb-4 text-white">Work in progress.</div>
-		<div class="px-2 flex">
-			<AppButton
-				:label="'Add Invoice'"
-				:nuxtLink="'/billings/addinvoice'"
-				class="text-sm"
-			/>
-			<!-- <div class="flex">
+		<!-- <div class="px-2 flex"> -->
+		<!-- <AppButton :label="'Add Invoice'" :nuxtLink="'/billings/addinvoice'" class="text-sm" /> -->
+		<!-- <div class="flex">
 				<nuxt-link
 					to="/billings/addinvoice"
 					class="inline-flex no-underline py-2 px-4 my-1 md:mb-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
 					>Add Invoice</nuxt-link
 				>
-			</div> -->
-		</div>
+		</div>-->
+		<!-- </div> -->
 
 		<AppTable
 			v-if="practiceCount > 0"
@@ -33,7 +29,7 @@
 		>
 			<template v-slot:status_slot="slotProps">
 				<div
-					class="px-4 py-1 rounded-full w-32 text-center"
+					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
 					:class="
 						`${
 							slotProps.item.status === 'Active'
@@ -41,26 +37,20 @@
 								: 'bg-gray-500 text-gray-700'
 						}`
 					"
-				>
-					{{ slotProps.item.status }}
-				</div>
+				>{{ slotProps.item.status }}</div>
 			</template>
 			<template v-slot:type_slot="slotProps">
 				<div
-					class="rounded-full text-center px-4 py-1 w-32"
+					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
 					:class="typeStyle(slotProps.item.type)"
-				>
-					{{ slotProps.item.type }}
-				</div>
+				>{{ slotProps.item.type }}</div>
 			</template>
-      <template v-slot:hub_type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full w-32 text-center"
-						:class="hubTypeStyle(slotProps.item.hub_type)"
-					>
-						{{ slotProps.item.hub_type }}
-					</div>
-				</template>
+			<template v-slot:hub_type_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+					:class="hubTypeStyle(slotProps.item.hub_type)"
+				>{{ slotProps.item.hub_type }}</div>
+			</template>
 		</AppTable>
 
 		<div
@@ -87,7 +77,7 @@ export default {
 		return {
 			practiceCount: 0,
 			practices: [],
-      
+
 			// for app table
 			currentPage: 1,
 
@@ -125,14 +115,14 @@ export default {
 					class: "text-center",
 					slotName: "type_slot",
 					sortable: true
-        },
-        {
-          name: "Hub Type",
-          slot: true,
-          dataIndex: "hub_type",
-          slotName: "hub_type_slot",
-          class: "text-center",
-        }
+				},
+				{
+					name: "Hub Type",
+					slot: true,
+					dataIndex: "hub_type",
+					slotName: "hub_type_slot",
+					class: "text-center"
+				}
 			]
 		};
 	},
@@ -265,21 +255,21 @@ export default {
 				default:
 					return;
 			}
-    },
-    
-    hubTypeStyle(hubType) {
-      switch (hubType) {
-        case "Type 1":
-          return "bg-red-500 text-white px-4 py-1 w-32";
-          break;
-        case "Type 2":
-          return "bg-purple-500 text-white px-4 py-1 w-32"
-        default:
-          return "bg-gray-300 text-white px-4 w-32"
-      }
-    },
+		},
 
-    statusStyle(status) {
+		hubTypeStyle(hubType) {
+			switch (hubType) {
+				case "Type 1":
+					return "bg-red-500 text-white px-4 py-1";
+					break;
+				case "Type 2":
+					return "bg-purple-500 text-white px-4 py-1";
+				default:
+					return;
+			}
+		},
+
+		statusStyle(status) {
 			switch (status) {
 				case "Active":
 					return "bg-green text-white lg:px-10 sm:px-2";
@@ -299,7 +289,7 @@ export default {
 				default:
 					return;
 			}
-    },
+		},
 
 		pagechanged(page) {
 			const query = {

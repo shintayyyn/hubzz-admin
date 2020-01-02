@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="page-overlap flex-1 flex flex-col self-end bg-trout overflow-auto text-white"
-	>
+	<div class="page-overlap flex-1 flex flex-col self-end bg-trout overflow-auto text-white">
 		<div class="flex text-sm py-6 px-6">
 			<nuxt-link
 				:to="{ path: `/practices/${practice.id}/practice-documents`, query }"
@@ -24,29 +22,21 @@
 					"
 					class="inline-flex items-center font-bold text-white rounded-lg"
 				>
-					<svgicon
-						name="cloud-download"
-						width="21"
-						height="21"
-						color="transparent white"
-						hover="transparent black"
-					></svgicon>
+					<svgicon name="cloud-download" width="21" height="21" color="white" hover="black"></svgicon>
 					<span class="ml-2">Download</span>
 				</a>
 			</div>
 		</div>
 		<div class="shadow-lg rounded-lg bg-waterloo mx-6 mb-6 p-4">
-			<div
-				class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm"
-			>
+			<div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
 				<div class="md:w-1/3 mt-4 md:mt-0">
 					<div class="leading-tight pb-4">
 						<p class="font-bold">Title</p>
 						<p>
 							{{
-								practiceDoc.practice_document_type
-									? practiceDoc.practice_document_type.name
-									: null
+							practiceDoc.practice_document_type
+							? practiceDoc.practice_document_type.name
+							: null
 							}}
 						</p>
 					</div>
@@ -54,7 +44,7 @@
 						<p class="font-bold">Practice</p>
 						<p>
 							{{
-								practiceDoc.practice ? practiceDoc.practice.surgery.name : null
+							practiceDoc.practice ? practiceDoc.practice.surgery.name : null
 							}}
 						</p>
 					</div>
@@ -62,11 +52,11 @@
 						<p class="font-bold">File last uploaded</p>
 						<p>
 							{{
-								practiceDoc.file
-									? $moment(practiceDoc.file.created_at).format(
-											"DD/MM/YYYY HH:mm:ss"
-									  )
-									: null
+							practiceDoc.file
+							? $moment(practiceDoc.file.created_at).format(
+							"DD/MM/YYYY HH:mm:ss"
+							)
+							: null
 							}}
 						</p>
 					</div>

@@ -3,90 +3,75 @@
 		<!-- HEADER -->
 		<div class="flex items-center text-sm text-white py-2">
 			<nuxt-link to="/billings" class="text-white hover:text-sunglow p-1">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="fill-current"
-				/>
+				<svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
 			</nuxt-link>
 		</div>
 		<!-- HEADER ENDS HERE -->
-		<div
-			class="p-3 text-gray-300 max-w-2xl w-full rounded-lg text-sm bg-waterloo"
-		>
+		<div class="p-3 text-gray-300 max-w-2xl w-full rounded-lg text-sm bg-waterloo">
 			<p class="flex">Practice Name</p>
-			<p
-				class="flex flex-wrap items-center text-white text-sm p-2 font-semibold"
-			>
-				<span class="mr-2">{{
+			<p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
+				<span class="mr-2">
+					{{
 					practice.surgery ? practice.surgery.name : null
-				}}</span>
+					}}
+				</span>
 				<span
 					class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
 					:class="practiceTypeStyle(practice.type)"
-					>{{ practice.type }}</span
-				>
+				>{{ practice.type }}</span>
 				<span
 					v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
 					class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
 					:class="practiceTypeStyle(practice.hub_type)"
-					>{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span
-				>
+				>{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
 			</p>
 
 			<p class="flex">Practice Code</p>
-			<p class="flex text-white text-sm p-2 font-semibold">
-				{{ practice.surgery ? practice.surgery.code : null }}
-			</p>
+			<p
+				class="flex text-white text-sm p-2 font-semibold"
+			>{{ practice.surgery ? practice.surgery.code : null }}</p>
 			<p class="flex">Address</p>
 			<p class="flex flex-col text-white text-sm p-2 font-semibold">
-				<span
-					v-if="practice.surgery.address && practice.surgery.address.line_1"
-					>{{
-						practice.surgery.address ? practice.surgery.address.line_1 : null
-					}}</span
-				>
-				<span
-					v-if="practice.surgery.address && practice.surgery.address.line_2"
-					>{{
-						practice.surgery.address ? practice.surgery.address.line_2 : null
-					}}</span
-				>
-				<span
-					v-if="practice.surgery.address && practice.surgery.address.line_3"
-					>{{
-						practice.surgery.address ? practice.surgery.address.line_3 : null
-					}}</span
-				>
+				<span v-if="practice.surgery.address && practice.surgery.address.line_1">
+					{{
+					practice.surgery.address ? practice.surgery.address.line_1 : null
+					}}
+				</span>
+				<span v-if="practice.surgery.address && practice.surgery.address.line_2">
+					{{
+					practice.surgery.address ? practice.surgery.address.line_2 : null
+					}}
+				</span>
+				<span v-if="practice.surgery.address && practice.surgery.address.line_3">
+					{{
+					practice.surgery.address ? practice.surgery.address.line_3 : null
+					}}
+				</span>
 			</p>
 		</div>
 		<div class="flex overflow-x-auto my-2">
-      <div class="inline-flex justify-start">
-        <nuxt-link
-          :to="getRoute('hubzz-invoices')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
+			<div class="inline-flex justify-start">
+				<nuxt-link
+					:to="getRoute('hubzz-invoices')"
+					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+					:class="
             $route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
               ? 'bg-waterloo hover:bg-gray-500'
               : 'hover:bg-waterloo'
           "
-          >HUBZZ Invoices
-        </nuxt-link>
-        <nuxt-link
-          :to="getRoute('practice-invoices')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="
+				>HUBZZ Invoices</nuxt-link>
+				<nuxt-link
+					:to="getRoute('practice-invoices')"
+					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+					:class="
             $route.path == `/billings/${$route.params.id}/practice-invoices`
               ? 'bg-waterloo hover:bg-gray-500'
               : 'hover:bg-waterloo'
           "
-          >Practice Invoices
-        
-        </nuxt-link>
-      </div>
+				>Practice Invoices</nuxt-link>
+			</div>
 		</div>
-    <div
+		<div
 			class="billing-shield"
 			v-if="$route.name.includes('issue-hubzz-invoice')"
 			@click="$router.push(`/billings/${$route.params.id}/practice-invoices`)"
@@ -175,7 +160,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: hidden auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

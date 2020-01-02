@@ -1,6 +1,6 @@
 <template>
-	<section class="relative">
-		<div class="relative">
+	<section class>
+		<div class>
 			<AppLoading :loading="loading" :message="loadingMessage" spinner />
 			<div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
 				<div
@@ -53,7 +53,7 @@
 							<div
 								v-for="(column, index) in columns"
 								:key="index"
-								class="flex flex-col md:block flex-1 truncate px-2 leading-tight py-1 md:py-0"
+								class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0"
 								:class="[
 									column.class &&
 										column.class.includes('text-center') &&
@@ -71,9 +71,7 @@
 								</template>
 								<template v-else>
 									<template v-if="column.slotName">
-										<div @click="$emit(column.eventName, item)">
-											<slot :name="column.slotName" v-bind:item="item">dsa</slot>
-										</div>
+										<slot :name="column.slotName" v-bind:item="item" @click="$emit(column.eventName, item)"></slot>
 									</template>
 									<template v-else>
 										<template

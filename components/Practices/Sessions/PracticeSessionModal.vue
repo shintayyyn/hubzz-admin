@@ -278,63 +278,59 @@
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
         <div class="md:w-4/7 w-full overflow-hidden">
           <div class="flex flex-col">
-            <!--  -->
             <!-- JOB PARTS -->
-            <div v-if="jobParts.length > 0"
-              class="w-full flex flex-col"
-              >
-
+            <div v-if="jobParts.length > 0" class="w-full flex flex-col">
               <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">Job Parts</div> 
-              <div class="flex flex-col m-2 text-white">
-                <div class="flex flex-row">
-                  <div class="mx-8 font-semibold">Job Part Number</div>
-                  <div class="mx-8 font-semibold">Date Start</div>
-                  <div class="mx-12 font-semibold">Date End</div>
-                  <div class="mx-12 font-semibold">Job Part Status</div>
-                </div>
-                <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
-                <div class="overflow-y-auto" >
-                  <div 
-                    v-for="(item, index) in jobParts"
-                    @click.prevent="show(item.id)"
-                    :key="`item-${index}`"
-                    class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-2 md:p-4 md:p-2 border-l-8 border-yellow-500 md:border-0"
-                  >
-                    <div class="flex flex-col w-full p-2 md:py-0 align-middle">
-                      <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-                      <span class="">{{item.job_part_number}}</span>
-                    </div>
-                    <div class="flex flex-col w-full p-2 md:py-0 align-middle">
-                      <strong class="block md:hidden text-sm uppercase">Date Start</strong>
-                      <span class="">{{item.date_start}}</span>
-                    </div>
-                    <div class="flex flex-col w-full p-2 md:py-0 align-middle">
-                      <strong class="block md:hidden text-sm uppercase">Date End</strong>
-                      <span class="">{{item.date_end}}</span>
-                    </div>
-                    <div class="flex flex-col w-full p-2 md:py-0 align-middle">
-                      <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
-                      <span class="">{{item.status}}</span>
+                <div class="flex flex-col m-2 text-white">
+                  <div class="flex flex-row">
+                    <div class="mx-8 font-semibold">Job Part Number</div>
+                    <div class="mx-8 font-semibold">Date Start</div>
+                    <div class="mx-12 font-semibold">Date End</div>
+                    <div class="mx-12 font-semibold">Job Part Status</div>
+                  </div>
+                  <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
+                  <div class="overflow-y-auto" >
+                    <div 
+                      v-for="(item, index) in jobParts"
+                      @click.prevent="show(item.id)"
+                      :key="`item-${index}`"
+                      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo  my-2 shadow-lg  p-2 md:p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 "
+                      :class="unclickableJobPart()? '' : 'hover:bg-waterloo-light cursor-pointer'"
+                    >
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
+                        <span class="">{{item.job_part_number}}</span>
+                      </div>
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Date Start</strong>
+                        <span class="">{{item.date_start}}</span>
+                      </div>
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Date End</strong>
+                        <span class="">{{item.date_end}}</span>
+                      </div>
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
+                        <span class="">{{item.status}}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div>
-                  <AppPagination
-                    :total="total"
-                    :totalPages="totalPages"
-                    :currentPage="currentPage"
-                    :perPage="perPage"
-                    @pagechanged="pagechanged"
-                  />
+                  <div>
+                    <AppPagination
+                      :total="total"
+                      :totalPages="totalPages"
+                      :currentPage="currentPage"
+                      :perPage="perPage"
+                      @pagechanged="pagechanged"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
-            <!-- LOCUM DETAILS -->
-            <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-            <div v-if="locumUser" class="w-full overflow-hidden flex">
+              <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
+              <!-- LOCUM DETAILS -->
+              <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
+              <div v-if="locumUser" class="w-full overflow-hidden flex">
               <div class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
-                
                 <div class="flex flex-wrap overflow-hidden">
                   <div class="text-white mx-5">
                     <div class="flex flex-wrap -mx-2 ">
@@ -412,7 +408,7 @@
                             name="cloud-download"
                             width="21"
                             height="21"
-                            color="transparent white"
+                            color="white"
                           ></svgicon>
                           <span class="pb-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
                         </a>
@@ -423,19 +419,14 @@
                         :key="`${index}-${specificMandatoryDoc.id}-`"
                         class="text-white flex flex-col"
                       >
-                        <a class="m-2 " v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
-                          <div>
-                            <svgicon
-                              name="cloud-download"
-                              width="21"
-                              height="21"
-                              color="transparent white"
-                            />
-                          </div>
-                          <div>
-                            <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
-                          </div>
-                          
+                        <a class="m-2 text-white" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
+                          <svgicon
+                            name="cloud-download"
+                            width="21"
+                            height="21"
+                            color="white"
+                          ></svgicon>
+                          <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
                         </a>
                       </div>
                     </div>
@@ -575,19 +566,28 @@ export default {
       console.log('id', jobPartId)
       this.jobPartId=jobPartId
       if (this.job) {
+        const unclickable = this.unclickableJobPart()
+        if (unclickable) {
+          return
+        } else {
+          this.getJobPart(jobPartId)
+        }
+      }else if(this.job_part){
+        this.getJobPart(jobPartId)
+      }
+    },
+    unclickableJobPart(){
+      if (this.job) {
         if (this.job.status === 'Live' 
         || this.job.status === 'Applied' 
         || this.job.status === 'Allocated' 
         || this.job.status === 'Unfilled'
         || this.job.status === 'Cancelled'
         || this.job.status === 'Declined') {
-          return
-        }else{
-          this.getJobPart(jobPartId)
+          return true
+        } else {
+          return false
         }
-        
-      }else if(this.job_part){
-        this.getJobPart(jobPartId)
       }
     },
     goTo(type) {

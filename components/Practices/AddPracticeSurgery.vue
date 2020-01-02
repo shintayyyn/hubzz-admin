@@ -92,29 +92,19 @@
                     <span class="block w-full py-1">{{surgery.address.line_2}}</span>
                     <span class="block w-full py-1">{{surgery.address.line_3}}</span>
                     <div class="flex items-center my-1">
-                      <span
-                        class="block p-2 rounded"
-                        :class="
-                          registeredPractice.includes(surgery.id)
-                            ? 'bg-trout opacity-75'
-                            : 'bg-trout '
-                        "
-                        >CCG</span
-                      >
+                      <span class="block p-2 rounded"
+                        :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '">
+                        CCG
+                      </span>
                       <span class="w-full px-2">{{
                         surgery.clinical_commissioning_group.name
                       }}</span>
                     </div>
                     <div class="flex items-center my-1">
-                      <span
-                        class="block p-2 rounded whitespace-no-wrap"
-                        :class="
-                          registeredPractice.includes(surgery.id)
-                            ? 'bg-trout opacity-75'
-                            : 'bg-trout '
-                        "
-                        >Practice Code</span
-                      >
+                      <span class="block p-2 rounded whitespace-no-wrap" 
+                        :class="registeredPractice.includes(surgery.id)? 'bg-trout opacity-75': 'bg-trout'">
+                        Practice Code
+                      </span>
                       <span class="w-full px-2">{{ surgery.code }}</span>
                     </div>
                   </div>
@@ -128,14 +118,30 @@
               <div
                 v-for="(spoke, index) in practiceSpokes"
                 :key="`spoke-${index}`"
-                @click="newChildSpoke(spoke.id)"
-                class="flex no-underline rounded-lg bg-waterloo shadow hover:bg-waterloo-light my-2 p-4 cursor-pointer"
+                @click="newChildSpoke(spoke.id, spoke.invited)"
+                class="flex no-underline rounded-lg shadow my-2 transition-hover"
+                :class="spoke.invited ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
               >
-                <div class="flex flex-col text-white text-xs">
-                  <span class="font-bold">{{ spoke.surgery.name }}{{ spoke.surgery.id }}</span>
+                <div class="flex flex-col text-white text-xs p-4">
+                  <div class="flex justify-between">
+                    <span class="font-bold">{{ spoke.surgery.name }}</span>
+                    <span
+                      v-if="spoke.invited"
+                      class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
+                      >Invited</span
+                    >
+                  </div>
+                  <!-- <span class="font-bold">{{ spoke.surgery.name }}</span> -->
+                  <span class="block w-full py-1">{{spoke.address_line_1}}</span>
+                  <span class="block w-full py-1">{{spoke.address_line_2}}</span>
+                  <span class="block w-full py-1">{{spoke.address_line_3}}</span>
                   <div class="flex items-center my-1">
                     <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
                     <span>{{ spoke.surgery.code }}</span>
+                  </div>
+                  <div class="flex items-center my-1">
+                    <span class="p-2 bg-trout rounded mr-2">CCG</span>
+                    <span>{{ spoke.clinical_commissioning_group_name }}</span>
                   </div>
                 </div>
               </div>
@@ -214,6 +220,7 @@ export default {
       createPracticeModal: false,
       setSpokePermissionModal:false,
       practiceSpokeId:'',
+      practiceSurgeries: [],
 
       total: 0,
       totalPages: 0,
@@ -223,6 +230,7 @@ export default {
       registeredPractice: [],
 
       toggleRegisteredPractice: false
+      
     };
   },
 
@@ -235,8 +243,7 @@ export default {
     $route(to, from) {
       this.currentPage = parseInt(to.query.add_practice_page);
       this.getAllSurgeries();
-      this.getAllHubzz();
-      this.getAllSpokes();
+      this.getOrphanSpokes();
     },
     search(value) {
       this.searchSubmit();
@@ -292,6 +299,7 @@ export default {
     },
 
     async getData() {
+      this.loading = true;
       const limit = this.perPage;
       let offset = 0;
       offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
@@ -301,15 +309,22 @@ export default {
         params.search = this.search;
       }
       if (this.practice && this.practice.type == "Hub") {
+        await this.$axios
+        .$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`)
+        .then(res => {
+          this.practiceSurgeries = res.data.practice_surgeries
+          console.log(res.data.practice_surgeries)
+        })
         params.status = 'Active',
         params.type = ['Stand Alone', 'Spoke'],
+        params.has_parent = false
         await this.$axios
           .$get(`/api/v1/admin/practices/count`, { params })
           .then(res => {
             this.total = res.data.count;
             this.perPage = 10;
             this.totalPages = Math.ceil(this.total / this.perPage);
-            this.getAllSpokes(params);
+            this.getOrphanSpokes(params);
           });
       } else if (!this.practice) {
         await this.$axios
@@ -324,7 +339,6 @@ export default {
     },
 
     async getAllSurgeries() {
-      this.loading = true;
       const limit = this.perPage;
       let offset = 0;
       offset =
@@ -343,23 +357,47 @@ export default {
       this.loading = false;
     },
 
-    async getAllSpokes(params) {
-      this.loading = true;
+    async getOrphanSpokes(params) {
+      console.log('params', params)
       let offset = 0;
       offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       await this.$axios
         .$get(`/api/v1/admin/practices/`,{ params })
         .then(res => {
-          this.practiceSpokes = res.data.practices;
-          this.practiceSpokes.map(item => this.isRegistered(item.id));
+          let invited = ''
+          res.data.practices.forEach(spoke => {
+            invited = this.practiceSurgeries.find(invitation => 
+              invitation.child_practice_id === spoke.id)
+            console.log('invited', invited)
+            if(invited) {
+              this.practiceSpokes.push({
+                ...spoke,
+                invited:true
+              })
+            }else{
+              this.practiceSpokes.push({
+                ...spoke,
+                invited:false
+              })
+            }
+          });
         });
       console.log('practiceSpokes', this.practiceSpokes)
       this.loading = false
     },
 
-    async newChildSpoke(practiceId) {
-      this.practiceSpokeId = practiceId
-      this.setSpokePermissionModal = true
+    async newChildSpoke(practiceId, invited) {
+      if (invited) {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Spoke is Invited"
+        });
+      } else {
+        this.practiceSpokeId = practiceId
+        this.setSpokePermissionModal = true
+      }
+      
     },
 
     async show(id) {

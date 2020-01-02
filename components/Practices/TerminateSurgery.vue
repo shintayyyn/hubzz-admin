@@ -11,7 +11,7 @@
 			<div class="py-2 font-bold text-lg leading-tight">
 				{{ !childSurgery.invitation_accepted_at || childSurgery.invitataion_rejected_at ? 
         'Cancellation of Invitation Request':
-        'Hub Requested Termination for this Spoke' }}
+        'Termination Request' }}
 			</div>
 		</div>
 
@@ -61,13 +61,13 @@
 				class="flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
 				@click="toDeleteSurgery(childSurgery.id)"
 			>
-				Approve Termination Rquest
+				{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Approve Termination Request" : "Approve Cancellation Request"}}
 			</div>
 			<div
 				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
 				@click="toRejectRequest(childSurgery.id)"
 			>
-				Reject Termination Request
+				{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Reject Termination Request" : "Reject Cancellation Request"}}
 			</div>
 		</div>
 	</div>

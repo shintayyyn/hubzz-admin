@@ -13,8 +13,6 @@ import AppConfirmCancel from '@/components/AppConfirmCancel'
 import UserManagementTabs from '@/components/UserManagement/UserManagementTabs'
   export default {
     components:{
-      CreateUser,
-      AppConfirmCancel,
       UserManagementTabs
     },
   }

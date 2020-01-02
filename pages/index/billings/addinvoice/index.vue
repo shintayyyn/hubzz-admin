@@ -1,17 +1,27 @@
 <template>
-	<div class="billing-modal shadow-lg">
-		<HubzzInvoice/>
+	<div class="billing-modal shadow-lg p-4 md:p-8">
+		<div @click="$router.go(-1)" class="cursor-pointer">
+			<svgicon
+				name="arrow-left-solid"
+				height="32"
+				width="32"
+				class="text-white hover:text-sunglow fill-current"
+			/>
+		</div>
+		<section class="py-4">
+			<HubzzInvoice :forViewing="false" />
+		</section>
 	</div>
 </template>
 
 <script>
-import HubzzInvoice from "@/components/Billings/HubzzInvoice"
+import HubzzInvoice from "@/components/Billings/HubzzInvoice";
 import AppLoading from "@/components/Base/AppLoading";
 import AppButton from "@/components/Base/AppButton";
 import AppInput from "@/components/Base/AppInput";
 export default {
 	components: {
-    HubzzInvoice,
+		HubzzInvoice,
 		AppLoading,
 		AppButton,
 		AppInput
@@ -366,7 +376,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: hidden auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

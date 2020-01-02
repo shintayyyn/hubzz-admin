@@ -1,6 +1,6 @@
 <template>
-  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col">
-    <div class="flex justify-between text-sm text-white py-2 px-6">
+  <div class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8">
+    <div class="flex justify-between text-sm text-white">
       <div @click="$emit('close')" class="cursor-pointer">
         <svgicon
           name="arrow-left-solid"
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="">
-      <div class="text-white pl-4 pt-2">
+      <div class="text-white pt-2">
         <div class="text-lg font-bold">Create User</div>
         <div v-if="surgery" class="text-xs font-hairline">
           Surgery: {{ surgery.name }}
@@ -19,7 +19,7 @@
       </div>
 
       <div
-        class="flex text-white m-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg"
+        class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg"
       >
         <div class="w-full text-gray-300 text-sm p-2">
           <!-- USER PERSONAL DETAILS -->
