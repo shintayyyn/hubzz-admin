@@ -5,8 +5,8 @@
 			class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
 			:class="
 				$route.path == `/user-management`
-					? 'bg-sunglow hover:bg-sunglow-dark text-black'
-					: 'text-white'
+				? 'bg-sunglow hover:bg-sunglow-dark'  :  
+        'hover:bg-waterloo text-white'
 			"
 			>Users
     </nuxt-link>
@@ -16,8 +16,8 @@
 			class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
 			:class="
 				$route.path.includes(`/user-management/roles-and-permissions`)
-					? 'bg-sunglow hover:bg-sunglow-dark text-black'
-					: 'text-white'
+        ? 'bg-sunglow hover:bg-sunglow-dark'  :  
+        'hover:bg-waterloo text-white'
 			"
 			>Roles and Permissions
     </nuxt-link>

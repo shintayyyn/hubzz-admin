@@ -221,12 +221,9 @@
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
         <div class="lg:w-1/2 overflow-hidden">
           <div class="flex flex-col">
-            <!--  -->
             <!-- JOB PARTS -->
-            <div v-if="jobParts.length > 0"
-              class="w-full flex flex-col"
-            >
-              <div class="mt-4 md:mt-2 md:my-0 md:ml-2 text-white font-semibold">Job Parts</div> 
+            <div v-if="jobParts.length > 0" class="w-full flex flex-col">
+              <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">Job Parts</div> 
               <!-- <AppTable
                 class="mx-2"
                 v-if="jobParts.length > 0"
@@ -240,81 +237,74 @@
                 :routerLink="`/practices/${$route.params.id}/practice-sessions/practice-${modalJobPart.status.toLowerCase()}-sessions/`"
                 @pagechanged="pagechanged"
               /> -->
-              
-               <div class="flex flex-col my-2 md:ml-2 text-white">
-                <div class="md:overflow-x-auto">
-                <div class="jobpart">
-                  <div class="w-full hidden md:flex flex-row px-4">
-                    <div class="w-1/4 font-semibold">Job Part Number</div>
-                    <div class="w-1/4 font-semibold text-center">Date Start</div>
-                    <div class="w-1/4 font-semibold text-center">Date End</div>
-                    <div class="w-1/4 font-semibold text-center">Job Part Status</div>
+                <div class="flex flex-col m-2 text-white">
+                  <div class="flex flex-row">
+                    <div class="mx-8 font-semibold">Job Part Number</div>
+                    <div class="mx-8 font-semibold">Date Start</div>
+                    <div class="mx-12 font-semibold">Date End</div>
+                    <div class="mx-12 font-semibold">Job Part Status</div>
                   </div>
                   <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
-                  
                   <div class="overflow-y-auto" >
                     <div 
                       v-for="(item, index) in jobParts"
                       @click.prevent="show(item.id)"
                       :key="`item-${index}`"
-                      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-2 shadow-lg cursor-pointer p-2 md:p-4 md:p-2 border-l-8 border-yellow-500 md:border-0"
+                      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo  my-2 shadow-lg  p-2 md:p-4 md:p-2 border-l-8 border-yellow-500 md:border-0 "
+                      :class="unclickableJobPart()? '' : 'hover:bg-waterloo-light cursor-pointer'"
                     >
-                      <div class="w-1/4">
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
                         <span class="">{{item.job_part_number}}</span>
                       </div>
-                      <div class="w-1/4 md:text-center">
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Date Start</strong>
                         <span class="">{{item.date_start}}</span>
                       </div>
-                      <div class="w-1/4 md:text-center">
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Date End</strong>
                         <span class="">{{item.date_end}}</span>
                       </div>
-                      <div class="w-1/4 md:text-center">
+                      <div class="flex flex-col w-full p-2 md:py-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
                         <span class="">{{item.status}}</span>
                       </div>
                     </div>
                   </div>
-                </div>
-                </div>
-                <div>
-                  <AppPagination
-                    :total="total"
-                    :totalPages="totalPages"
-                    :currentPage="currentPage"
-                    :perPage="perPage"
-                    @pagechanged="pagechanged"
-                  />
-                </div>
-              </div>
-            </div>
-            <!-- JOB PART DETAILS -->
-            <div v-if="job_part" class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4 md:ml-2">
-              <AppLoading :loading="loading" spinner/>
-              <!-- INFOS LEFT -->
-              <div class="xl:w-1/2 w-full overflow-hidden">
-                <div class="m-4 mt-5 text-gray text-white">
-                  <p class="font-semibold">Job Part Number</p>
-                  <p class="text-white">{{modalJobPart.job_part_number}}</p>
-                  <p class="mt-5 font-semibold">Job Part</p>
-                  <p class="text-white">{{modalJobPart.part}} of {{modalJobPart.parts}}</p>
-                  <p class="mt-5 font-semibold">Rate</p>
-                  <p class="text-white no-underline">{{modalJobPart.job ? "£ "+modalJobPart.job.rate+" Per Hour":null +" Per Hour"}}</p>
-                  <p class="mt-5 font-semibold">Total Hours</p>
-                  <p class="text-white">{{modalJobPart.job ? modalJobPart.job.total_hours+" Hours":null + " Hours"}}</p>
-                  <p class="mt-5 font-semibold">Job Description</p>
-                  <p class="text-white">{{modalJobPart.job ? modalJobPart.job.description: 'N/A'}}</p>
+                  <div>
+                    <AppPagination
+                      :total="total"
+                      :totalPages="totalPages"
+                      :currentPage="currentPage"
+                      :perPage="perPage"
+                      @pagechanged="pagechanged"
+                    />
+                  </div>
                 </div>
               </div>
-              <!-- INFOS RIGHT -->
-              <div class="text-white xl:w-1/2 w-full overflow-hidden">
-                <div class="m-2 mt-5">
-                  <p class="font-semibold">Duration</p>
-                  <div class="flex items-center py-2 mx-2 text-sm">
-                    <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-                    <span class="font-semibold">{{modalJobPart.date_start}}</span>
+              <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
+              <!-- LOCUM DETAILS -->
+              <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
+              <div v-if="locumUser" class="w-full overflow-hidden flex flex-col">
+              <div class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
+                <div class="flex flex-col flex-wrap overflow-hidden">
+                  <div class="text-white mx-5">
+                    <div class="flex flex-wrap -mx-2 ">
+                      <div class="my-4 px-2 w-1/2 ">
+                        <embed
+                          v-if="locumUser.avatar"
+                          class="flex w-4/5 rounded-full mr-4"
+                            :src="locumUser && locumUser.avatar ? locumUser.avatar.file.url:null"
+                          >
+                          <img v-else class="w-48 rounded-full mr-4" src="~/assets/images/default-user-image.png" >
+                      </div>
+
+                      <div class="my-6  w-1/2 ">
+                        <p class="text-white my-2 font-semibold text-base">{{locumUser.personal_detail ? locumUser.personal_detail.title:null}} {{locumUser.personal_detail.first_name}} {{locumUser.personal_detail.last_name}}</p>
+                        <p class="text-white my-2 font-lighttext-sm">{{locumUser.locum_detail.profession.profession_category.name}}</p>
+                      </div>
+
+                    </div>
                   </div>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
@@ -370,14 +360,21 @@
                         >
                           <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
                       </div>
-                    </div>
-
-                    <div v-if="modalJobPart.job.platform_job.mandatory_trainings.length > 0">
-                      <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
-                      <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in modalJobPart.job.platform_job.mandatory_trainings"
-                        :key="`${index}-${mandatoryTrainings.name}`"
-                        >
-                          <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
+                      <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+                      <div 
+                        v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
+                        :key="`${index}-${specificMandatoryDoc.id}-`"
+                        class="text-white flex flex-col"
+                      >
+                        <a class="m-2 text-white" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
+                          <svgicon
+                            name="cloud-download"
+                            width="21"
+                            height="21"
+                            color="white"
+                          ></svgicon>
+                          <span class="pb-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -633,19 +630,28 @@ export default {
       this.$route.params.practiceSessionPartId = jobPartId
       this.jobPartId=jobPartId
       if (this.job) {
+        const unclickable = this.unclickableJobPart()
+        if (unclickable) {
+          return
+        } else {
+          this.getJobPart(jobPartId)
+        }
+      }else if(this.job_part){
+        this.getJobPart(jobPartId)
+      }
+    },
+    unclickableJobPart(){
+      if (this.job) {
         if (this.job.status === 'Live' 
         || this.job.status === 'Applied' 
         || this.job.status === 'Allocated' 
         || this.job.status === 'Unfilled'
         || this.job.status === 'Cancelled'
         || this.job.status === 'Declined') {
-          return
-        }else{
-          this.getJobPart(jobPartId)
+          return true
+        } else {
+          return false
         }
-        
-      }else if(this.job_part){
-        this.getJobPart(jobPartId)
       }
     },
     goTo(type) {

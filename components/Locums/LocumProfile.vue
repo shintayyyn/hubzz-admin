@@ -129,7 +129,7 @@
 						<div v-if="userComplianceDocuments">
 							<p class="my-2">Compliance Documents</p>
 							<span
-								v-if="userComplianceDocuments.length == 0"
+								v-if="userComplianceDocuments.length < 0"
 								class="opacity-75"
 							>No Mandatory Training Documents</span>
 							<div
@@ -138,11 +138,12 @@
 								class="ml-2 pb-1"
 							>
 								<a
+									v-if="userComplianceDoc.file"
 									class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
 									@click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
 									title="Click to download"
 								>
-									<svgicon name="cloud-download" width="21" height="21" color="white"></svgicon>
+									<svgicon name="cloud-download" width="21" height="21" color="transparent white"></svgicon>
 									<span
 										class="w-full pl-2 leading-tight"
 									>{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name:null }}</span>
@@ -152,7 +153,7 @@
 						<div v-if="userMandatoryTrainings">
 							<p class="my-2">Mandatory Training Documents</p>
 							<span
-								v-if="userMandatoryTrainings.length == 0"
+								v-if="userMandatoryTrainings.length < 0"
 								class="opacity-75"
 							>No Mandatory Training Documents</span>
 							<div
@@ -161,11 +162,12 @@
 								class="mx-4"
 							>
 								<a
+									v-if="userMandatoryTraining.file"
 									class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
 									@click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
 									title="Click to download"
 								>
-									<svgicon name="cloud-download" width="21" height="21" color="white"></svgicon>
+									<svgicon name="cloud-download" width="21" height="21" color="transparent white"></svgicon>
 									<span
 										class="w-full pl-2 leading-tight"
 									>{{userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name:null}}</span>
@@ -178,7 +180,6 @@
 				<div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
 					<div class="mx-3 md:my-6 border-b text-center pb-3">
 						<embed
-							v-if="user.avatar"
 							class="object-cover w-48 h-48 rounded-full mx-auto"
 							:src="user.avatar ? user.avatar.file.url:null"
 						/>
@@ -198,7 +199,7 @@
 						</div>
 					</div>
 					<div class="mx-3 mt-4">
-						<span class="lg:text-lg font-semibold font-semibold">Change Locum Status</span>
+						<span class="text-lg font-semibold font-semibold">Change Locum Status</span>
 						<span
 							class="tool inline-block"
 							data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant."
@@ -209,21 +210,21 @@
 								width="21"
 								height="21"
 								color="white transparent black"
-								class="-mb-1 lg:ml-2"
+								class="-mb-1 ml-2"
 							></svgicon>
 						</span>
 						<div class="flex items-center">
 							<AppInput
-								class="w-full sm:w-1/3 md:w-full mr-2"
+								class="w-full mr-2"
 								v-model="selectedStatus"
 								:type="'select'"
 								:name="'status'"
 								:placeholder="'Select...'"
 								:items="[
-									{ label: 'Active', value: 'Active' },
-									{ label: 'Inactive', value: 'Inactive' },
-									{ label: 'Deactivated', value: 'Deactivated' }
-								]"
+                  { label: 'Active', value: 'Active' },
+                  { label: 'Inactive', value: 'Inactive' },
+                  { label: 'Deactivated', value: 'Deactivated' }
+                ]"
 							/>
 							<AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
 						</div>

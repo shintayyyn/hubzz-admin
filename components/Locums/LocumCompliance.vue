@@ -278,7 +278,7 @@ import AppDate from '@/components/Base/AppDate'
 export default {
     props:['user'],
     components:{
-        AppDate
+      // AppDate
     },
     data() {
         return {
