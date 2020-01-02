@@ -42,6 +42,7 @@ export default {
   computed: {
     getRoute() {
       return tab => {
+        console.log('tab', tab)
         if (!tab) {
           tab = "";
         }
@@ -51,7 +52,7 @@ export default {
         delete query.page
 
         return {
-          path: tab ? `practices/${tab}` : `/practices`,
+          path: tab ? `/practices/${tab}` : `/practices`,
           query
         }
       }

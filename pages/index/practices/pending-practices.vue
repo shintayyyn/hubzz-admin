@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    pending practices
+  </div>
 </template>
 
 <script>

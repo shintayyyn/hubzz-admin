@@ -53,6 +53,9 @@
 				]"
 			/>
 		</div>
+    <div>
+      <ListPracticeTabs />
+    </div>
 		<transition name="fade">
 			<AppTable
 				v-if="itemCount > 0"
@@ -127,12 +130,14 @@ import AppPagination from "@/components/Base/AppPagination";
 import AppTable from "@/components/Base/AppTable";
 import AppButton from "@/components/Base/AppButton";
 import AppInput from "@/components/Base/AppInput";
+import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
 export default {
 	components: {
 		AddPracticeSurgery,
 		AppTable,
 		AppButton,
-		AppInput
+    AppInput,
+    ListPracticeTabs,
 	},
 	data() {
 		return {
