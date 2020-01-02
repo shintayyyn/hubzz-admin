@@ -130,8 +130,6 @@ import AppInput from "@/components/Base/AppInput";
 export default {
 	components: {
 		AddPracticeSurgery,
-		AppLoading,
-		AppPagination,
 		AppTable,
 		AppButton,
 		AppInput
