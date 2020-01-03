@@ -12,15 +12,13 @@
 			</div>
 		</div>
 		<div class="flex flex-wrap my-4">
-			<div
-				class="text-2xl text-white font-semibold mr-4"
-			>{{specificJobPart.job ? specificJobPart.job.title:null }}</div>
+			<div class="text-2xl text-white font-semibold mr-4">{{job_part.job ? job_part.job.title:null }}</div>
 			<div class="flex">
-				<div class="text-black p-2 bg-yellow-500 rounded">{{specificJobPart.status}}</div>
+				<div class="text-black p-2 bg-yellow-500 rounded">{{job_part.status}}</div>
 				<div
 					class="text-black p-2 text-white rounded ml-4"
-					:class="specificJobPart.job && specificJobPart.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
-				>{{specificJobPart.job ? specificJobPart.job.type : null}}</div>
+					:class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
+				>{{job_part.job ? job_part.job.type : null}}</div>
 			</div>
 		</div>
 		<div class="flex flex-wrap">
@@ -31,19 +29,17 @@
 				<div class="xl:w-1/2 w-full overflow-hidden">
 					<div class="m-4 mt-5 text-gray text-white">
 						<p class="font-semibold">Job Part Number</p>
-						<p class="text-white">{{specificJobPart.job_part_number}}</p>
+						<p class="text-white">{{job_part.job_part_number}}</p>
 						<p class="mt-5 font-semibold">Job Part</p>
-						<p class="text-white">{{specificJobPart.part}} of {{specificJobPart.parts}}</p>
+						<p class="text-white">{{job_part.part}} of {{job_part.parts}}</p>
 						<p class="mt-5 font-semibold">Rate</p>
 						<p
 							class="text-white no-underline"
-						>{{specificJobPart.job ? "£ "+specificJobPart.job.rate+" Per Hour":null +" Per Hour"}}</p>
+						>{{job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour"}}</p>
 						<p class="mt-5 font-semibold">Total Hours</p>
-						<p
-							class="text-white"
-						>{{specificJobPart.job ? specificJobPart.job.total_hours+" Hours":null + " Hours"}}</p>
+						<p class="text-white">{{job_part.job ? job_part.job.total_hours+" Hours":null + " Hours"}}</p>
 						<p class="mt-5 font-semibold">Job Description</p>
-						<p class="text-white">{{specificJobPart.job ? specificJobPart.job.description: 'N/A'}}</p>
+						<p class="text-white">{{job_part.job ? job_part.job.description: 'N/A'}}</p>
 					</div>
 				</div>
 				<!-- INFOS RIGHT -->
@@ -52,41 +48,41 @@
 						<p class="font-semibold">Duration</p>
 						<div class="flex items-center py-2 mr-2 text-sm">
 							<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-							<span class="font-semibold">{{specificJobPart.date_start}}</span>
+							<span class="font-semibold">{{job_part.date_start}}</span>
 						</div>
 						<div class="flex items-center py-2 mr-2 text-sm">
 							<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-							<span class="font-semibold">{{specificJobPart.date_end}}</span>
+							<span class="font-semibold">{{job_part.date_end}}</span>
 						</div>
 						<div class="flex items-center py-2 mr-2 text-sm">
 							<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
-							<span class="font-semibold">{{ specificJobPart.job ? specificJobPart.job.shift.name : null}}</span>
+							<span class="font-semibold">{{ job_part.job ? job_part.job.shift.name : null}}</span>
 						</div>
 						<p class="mt-5 font-semibold">Invoiced?</p>
-						<p class="text-white">{{specificJobPart.invoiced ? 'Yes': 'No'}}</p>
+						<p class="text-white">{{job_part.invoiced ? 'Yes': 'No'}}</p>
 						<p class="mt-5 font-semibold">Issued?</p>
-						<p class="text-white">{{specificJobPart.issued ? 'Yes': 'No'}}</p>
-						<!-- <div v-if="specificJobPart.job ? specificJobPart.job.platform_job : null">
+						<p class="text-white">{{job_part.issued ? 'Yes': 'No'}}</p>
+						<!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
 							<div class="m-2 mt-5">
 								<span>This job is </span>
-								<span class="font-semibold">{{specificJobPart.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+								<span class="font-semibold">{{job_part.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
 								<span> of</span>
 								<span class="font-semibold">IR35</span> 
 							</div>
 
 							<p class="m-2 mt-5 font-semibold">Role</p>
-							<p class="m-2 ">{{specificJobPart.job.platform_job.profession.name}}</p>
+							<p class="m-2 ">{{job_part.job.platform_job.profession.name}}</p>
 
 							<p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
 							<p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-								v-for="specialty in specificJobPart.job.platform_job.qualifications"
+								v-for="specialty in job_part.job.platform_job.qualifications"
 								:key="specialty.id + '-name'">
 								{{specialty ? specialty.name:null}}
 							</p>
 
 							<p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
 							<p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-								v-for="clinicalSystem in specificJobPart.job.platform_job.clinical_systems"
+								v-for="clinicalSystem in job_part.job.platform_job.clinical_systems"
 								:key="clinicalSystem.id + '-name1'">
 								{{clinicalSystem ? clinicalSystem.name:null}}
 							</p>
@@ -96,47 +92,47 @@
 								English
 							</p>
 							<p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-								v-for="spokenLanguage in specificJobPart.job.platform_job.spoken_languages"
+								v-for="spokenLanguage in job_part.job.platform_job.spoken_languages"
 								:key="spokenLanguage.id + '-name2'">
 								{{spokenLanguage ? spokenLanguage.name:null}}
 							</p>
 
-							<div v-if="specificJobPart.job.platform_job.compliance_documents.length > 0">
+							<div v-if="job_part.job.platform_job.compliance_documents.length > 0">
 								<p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
-								<div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in specificJobPart.job.platform_job.compliance_documents"
+								<div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in job_part.job.platform_job.compliance_documents"
 								:key="`${index}-${gpComplianceDocs.name}`"
 								>
 									<span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
 								</div>
 							</div>
 
-							<div v-if="specificJobPart.job.platform_job.mandatory_trainings.length > 0">
+							<div v-if="job_part.job.platform_job.mandatory_trainings.length > 0">
 								<p class="flex ml-2 font-semibold">Mandatory Trainings</p>
-								<div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in specificJobPart.job.platform_job.mandatory_trainings"
+								<div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in job_part.job.platform_job.mandatory_trainings"
 								:key="`${index}-${mandatoryTrainings.name}`"
 								>
 									<span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
 								</div>
 							</div>
 							</div>
-							<div v-else-if="specificJobPart.job ? specificJobPart.job.private_job : null">
+							<div v-else-if="job_part.job ? job_part.job.private_job : null">
 						</div>-->
 					</div>
 				</div>
 				<!-- GOOGLE MAPS -->
 				<div
 					class="w-full m-2 md:m-4 overflow-hidden"
-					v-if="specificJobPart.job ? specificJobPart.job.platform_job : null"
+					v-if="job_part.job ? job_part.job.platform_job : null"
 				>
 					<div class="text-white pb-2">
 						<div class="font-semibold">
 							Practice
-							<p>{{specificJobPart.job ? specificJobPart.job.platform_job.practice.surgery.name : null}}</p>
+							<p>{{job_part.job ? job_part.job.platform_job.practice.surgery.name : null}}</p>
 						</div>
 						<p>
-							{{specificJobPart.job ? specificJobPart.job.platform_job.practice.surgery.address.line_1 : null}}
-							{{specificJobPart.job ? specificJobPart.job.platform_job.practice.surgery.address.line_2 : null}}
-							{{specificJobPart.job ? specificJobPart.job.platform_job.practice.surgery.address.line_3 : null}}
+							{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null}}
+							{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null}}
+							{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null}}
 						</p>
 					</div>
 
@@ -157,7 +153,7 @@
 			<div class="flex order-1 md:order-2 w-full md:w-1/2">
 				<div v-if="jobParts.length > 0" class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
 					<div class="mx-2 text-white font-semibold">Job Parts</div>
-					<AppTable
+					<!-- <AppTable
 						:total="specificJobPart.job.job_parts.length"
 						:items="jobParts"
 						:currentPage="currentPage"
@@ -168,9 +164,52 @@
 						:customWidth="700"
 						@pagechanged="pagechanged"
 						@sorted="sorted"
-					></AppTable>
-					<!-- <div class="flex flex-col text-white">
-						<nuxt-link
+					></AppTable>-->
+					<div class="flex flex-col text-white">
+						<div class="overflow-x-auto">
+							<div class="jobpart">
+								<div class="hidden md:flex flex-row font-semibold mx-2 text-center">
+									<div class="w-1/4">Job Part Number</div>
+									<div class="w-1/4">Date Start</div>
+									<div class="w-1/4">Date End</div>
+									<div class="w-1/4">Job Part Status</div>
+								</div>
+								<!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
+								<div
+									v-for="(item, index) in jobParts"
+									@click.prevent="show(item.id)"
+									:key="`item-${index}`"
+									class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
+									:class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', item.id == job_part.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
+								>
+									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+										<strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
+										<span class>{{item.job_part_number}}</span>
+									</div>
+									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+										<strong class="block md:hidden text-sm uppercase">Date Start</strong>
+										<span class>{{item.date_start}}</span>
+									</div>
+									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+										<strong class="block md:hidden text-sm uppercase">Date End</strong>
+										<span class>{{item.date_end}}</span>
+									</div>
+									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+										<strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
+										<span class>{{item.status}}</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<AppPagination
+							:total="specificJobPart.job.job_parts.length"
+							:totalPages="totalPages"
+							:currentPage="currentPage"
+							:perPage="params.limit"
+							@pagechanged="pagechanged"
+						/>
+						<!-- not working also -->
+						<!-- <nuxt-link
 							v-for="(item, index) in specificJobPart.job.job_parts"
 							:to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
 							:key="`item-${index}`"
@@ -182,8 +221,8 @@
 								<span class>{{item.job_part_number}}</span>
 								<span class>{{item.status}}</span>
 							</div>
-						</nuxt-link>
-					</div>-->
+						</nuxt-link>-->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -192,17 +231,21 @@
 <script>
 import { gmapApi } from "vue2-google-maps";
 import AppTable from "@/components/Base/AppTable";
+import AppPagination from "@/components/Base/AppPagination";
 export default {
 	components: {
-		AppTable
+		AppTable,
+		AppPagination
 	},
 	props: ["jobPartId", "specificJobPart", "isNuxtChild", "jobId"],
 	data() {
 		return {
 			jobParts: [],
 			currentPage: 1,
+			totalPages: 0,
+			job_part: {},
 			params: {
-				limit: 2,
+				limit: 3,
 				offset: 0,
 				order_by: ["created_at:desc"]
 			},
@@ -232,8 +275,11 @@ export default {
 	},
 	created() {
 		console.log("specific job part", this.specificJobPart);
+		this.totalPages = Math.ceil(
+			this.specificJobPart.job.job_parts.length / this.params.limit
+		);
+		this.job_part = this.specificJobPart;
 		this.getJobParts(this.params);
-		console.log("qwewqe", this.$route);
 	},
 	computed: {
 		loadingPractices() {
@@ -250,7 +296,11 @@ export default {
 		}
 	},
 	methods: {
-		async showJobPart() {},
+		async show(id) {
+			this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
+				this.job_part = res.data.job_part;
+			});
+		},
 		getJobParts(params) {
 			this.loading = true;
 			this.$axios
@@ -264,6 +314,22 @@ export default {
 					console.log("wewew", err);
 				});
 			this.loading = false;
+		},
+		unclickableJobPart() {
+			if (this.specificJobPart.job) {
+				if (
+					this.specificJobPart.job.status === "Live" ||
+					this.specificJobPart.job.status === "Applied" ||
+					this.specificJobPart.job.status === "Allocated" ||
+					this.specificJobPart.job.status === "Unfilled" ||
+					this.specificJobPart.job.status === "Cancelled" ||
+					this.specificJobPart.job.status === "Declined"
+				) {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		},
 		pagechanged(page) {
 			const query = {
@@ -288,4 +354,9 @@ export default {
 };
 </script>
 <style>
+@media (min-width: 768px) {
+	.jobpart {
+		min-width: 600px;
+	}
+}
 </style>

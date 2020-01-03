@@ -33,14 +33,6 @@ export default {
 	components: {
 		PracticeTabs
 	},
-	data() {
-		return {};
-	},
-	watch: {
-		$route(to) {
-			console.log("tototot", to);
-		}
-	},
 	computed: {
 		practice() {
 			return this.$store.state.practices.practice;

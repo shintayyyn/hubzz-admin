@@ -19,8 +19,8 @@
 			<div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
 				<div class="inline-flex m-4">
 					<div class="flex flex-col w-full overflow-hidden">
-						<div class="flex flex-col md:flex-row w-full">
-							<div class="w-full md:w-1/3 mb-4 overflow-hidden">
+						<div class="flex flex-col md:flex-row w-full text-white">
+							<div class="w-full md:w-1/3 mb-4 md:px-2">
 								<div class="text-gray text-white">
 									<p class="font-semibold">Job Number</p>
 									<p class="text-white">{{job.job_number}}</p>
@@ -37,7 +37,7 @@
 								</div>
 							</div>
 
-							<div class="text-white w-full md:w-1/3 mb-4 overflow-hidden">
+							<div class="w-full md:w-1/3 mb-4 md:px-2">
 								<p class="mb-2 font-semibold">Duration</p>
 								<div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">From</span>
@@ -60,9 +60,9 @@
 								<p class="mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
 							</div>
 
-							<div class="text-white w-full md:w-1/3 mb-4">
-								<div v-if="job.platform_job">
-									<div class="mt-5 text-white">
+							<div class="w-full md:w-1/3 mb-4 md:px-2">
+								<template v-if="job.platform_job">
+									<div class="md:mt-5 md:mt-0 text-white">
 										<span>
 											This job is
 											<span
@@ -118,8 +118,8 @@
 											<span>{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span>
 										</div>
 									</div>
-								</div>
-								<div v-else-if="job.private_job"></div>
+								</template>
+								<template v-else-if="job.private_job"></template>
 							</div>
 						</div>
 
