@@ -88,7 +88,7 @@
 							</div>
 						</div>
 
-						<div class="w-full" v-if="notesAreVisible">
+						<div class="w-full" v-if="notesAreVisible || compliance_doc.status === 'Rejected'">
 							<p class="mt-5 mr-20">Reason for Rejection</p>
 							<textarea
 								v-model="toPutLocumDetailCompliance.note"
