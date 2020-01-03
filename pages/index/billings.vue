@@ -67,11 +67,9 @@
 
 <script>
 import AppTable from "@/components/Base/AppTable";
-import AppButton from "@/components/Base/AppButton";
 export default {
 	components: {
 		AppTable,
-		AppButton
 	},
 	data() {
 		return {
@@ -84,7 +82,8 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"]
+        order_by: ["created_at:desc"],
+        status: "Active",
 			},
 
 			loading: false,
@@ -153,16 +152,14 @@ export default {
 			page = parseInt(page);
 			const createdRoute = route.query;
 			const limit = 10;
-			const offset = page * limit - limit;
+      const offset = page * limit - limit;
+      const status = "Active"
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
-			const params = { limit, offset, order_by };
-			console.log(params);
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
-				params
-			});
+			const params = { limit, offset, order_by, status };
+			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
 			const practiceCount = response.data.count;
 			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount);
 
@@ -230,7 +227,8 @@ export default {
 				limit: this.params.limit,
 				search: this.search,
 				order_by: params.order_by,
-				offset: params.offset
+        offset: params.offset,
+        status: "Active",
 			});
 		},
 
@@ -299,7 +297,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getBilling(this.params);
-		},
+    },
+    
 		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;

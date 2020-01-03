@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-start overflow-x-auto px-4">
+  <div class="flex justify-start -mx-2 overflow-x-auto">
 		<nuxt-link
 			:to="getRoute()"
 			class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"

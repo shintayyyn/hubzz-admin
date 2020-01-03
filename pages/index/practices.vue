@@ -2,30 +2,11 @@
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
 		<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
 		<div class="px-2 text-xl md:text-4xl text-white">Practices</div>
+
 		<div class="px-2 flex justify-between items-center flex-wrap">
-			<div class="flex items-center py-2">
-				<div class="relative">
-					<input
-						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-						placeholder="Search Practice by Name"
-						v-model="search"
-						@keyup.enter="searchSubmit"
-					/>
-					<button
-						v-if="search"
-						class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-						@click="(search = ''), searchSubmit()"
-					>
-						<svgicon
-							name="times-solid"
-							height="12"
-							width="12"
-							class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-						/>
-					</button>
-				</div>
-				<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button> -->
-			</div>
+      <div>
+        <ListPracticeTabs />
+      </div>
 			<div>
 				<AppButton
 					v-if="
@@ -53,62 +34,32 @@
 				]"
 			/>
 		</div>
-    <div>
-      <ListPracticeTabs />
+
+    <div class="flex items-center px-2 py-2">
+      <div class="relative">
+        <input
+          class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+          placeholder="Search Practice by Name"
+          v-model="search"
+          @keyup.enter="searchSubmit"
+        />
+        <button
+          v-if="search"
+          class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+          @click="(search = ''), searchSubmit()"
+        >
+          <svgicon
+            name="times-solid"
+            height="12"
+            width="12"
+            class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+          />
+        </button>
+      </div>
+      <!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button> -->
     </div>
-		<transition name="fade">
-			<AppTable
-				v-if="itemCount > 0"
-				:total="itemCount"
-				:items="getAllPractices"
-				:currentPage="currentPage"
-				:perPage="params.limit"
-				:columns="columns"
-				:loading="loadingPractices"
-				:routerLink="`/practices`"
-				:orderBy="params.order_by"
-				@pagechanged="pagechanged"
-				@sorted="sorted"
-			>
-				<template v-slot:status_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="
-							`${
-								slotProps.item.status === 'Active'
-									? 'bg-green-500'
-									: 'bg-gray-500 text-gray-700'
-							}`
-						"
-					>{{ slotProps.item.status }}</div>
-				</template>
-				<template v-slot:type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="typeStyle(slotProps.item.type)"
-					>{{ slotProps.item.type }}</div>
-				</template>
-				<template v-slot:hub_type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="hubTypeStyle(slotProps.item.hub_type)"
-					>{{ slotProps.item.hub_type }}</div>
-				</template>
-			</AppTable>
-			<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
-				</span>
-			</div>-->
-			<template v-else>
-				<div class="mt-2 w-full text-center text-white">There are no registered practices.</div>
-			</template>
-		</transition>
-
-		<!-- END TABLE -->
-
-		<div
+    
+    <div
 			class="practice-shield"
 			v-if="$route.name.includes('index-practices-id') || modal == true"
 			@click="modal ? (modal = false) : $router.push('/practices')"
@@ -118,6 +69,9 @@
 				<AddPracticeSurgery @close="modal = false" />
 			</div>
 		</transition>
+
+
+		
 		<nuxt-child />
 	</div>
 </template>
@@ -125,16 +79,12 @@
 <script>
 import debounce from "lodash.debounce";
 import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery";
-import AppLoading from "@/components/Base/AppLoading";
-import AppPagination from "@/components/Base/AppPagination";
-import AppTable from "@/components/Base/AppTable";
 import AppButton from "@/components/Base/AppButton";
 import AppInput from "@/components/Base/AppInput";
 import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
 export default {
 	components: {
 		AddPracticeSurgery,
-		AppTable,
 		AppButton,
     AppInput,
     ListPracticeTabs,
@@ -148,7 +98,8 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"]
+        order_by: ["created_at:desc"],
+        status: 'Active'
 			},
 			sort: "",
 			modal: false,
@@ -400,7 +351,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getPractices(this.params);
-		},
+    },
+    
 		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;

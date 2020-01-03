@@ -36,6 +36,9 @@
           </div>
         </template> -->
       </AppTable>
+      <template v-else>
+        <div class="mt-2 w-full text-center text-white">There are no Practice Invoices.</div>
+      </template>
 		</div>
     <div
 			class="billing-shield"
@@ -45,13 +48,9 @@
 	</div>
 </template>
 <script>
-import AppLoading from "@/components/Base/AppLoading"
-import AppButton from '@/components/Base/AppButton'
 import AppTable from '@/components/Base/AppTable'
 export default {
   components:{
-    AppLoading,
-    AppButton,
     AppTable,
   },
 	data() {

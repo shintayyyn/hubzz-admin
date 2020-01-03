@@ -2,7 +2,7 @@
 	<div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
 		<div class="text-xl md:text-4xl text-white">Inquiries</div>
 		<div class="flex py-2">
-			<div class="relative">
+			<!-- <div class="relative">
 				<input
 					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
 					placeholder="Search Locum by Name"
@@ -21,7 +21,7 @@
 						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
 					/>
 				</button>
-			</div>
+			</div> -->
 			<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
 		</div>
 		<AppTable
@@ -53,6 +53,9 @@
 				</div>
 			</template>
 		</AppTable>
+    <template v-else>
+      <div class="mt-2 w-full text-center text-white">There are no inquiries messages.</div>
+    </template>
 		<div
 			class="support-shield"
 			v-if="$route.name.includes('index-inquiries-id')"
@@ -64,13 +67,9 @@
 
 <script>
 import debounce from "lodash.debounce";
-import AppLoading from "@/components/Base/AppLoading";
-import AppPagination from "@/components/Base/AppPagination";
 import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
-		AppLoading,
-		AppPagination,
 		AppTable
 	},
 	data() {

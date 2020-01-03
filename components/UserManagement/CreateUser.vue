@@ -435,12 +435,12 @@ export default {
       const query = {
         ...this.$route.query
       };
-      const offset = parseInt(query.page) * 8 - 8;
+      const offset = parseInt(query.page) * 10 - 10;
       return offset;
     },
     getPractices() {
       this.$store.dispatch("practices/fetchPractices", {
-        limit: 8,
+        limit: 10,
         order_by: "created_at:desc"
       });
     },

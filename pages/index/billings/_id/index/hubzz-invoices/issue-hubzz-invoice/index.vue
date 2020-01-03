@@ -70,7 +70,6 @@ export default {
 	components: {
 		AppButton,
 		AppDate,
-		AppLoading,
 		HubzzInvoice,
 		ChooseJobParts
 	},
@@ -119,10 +118,10 @@ export default {
 			}
 		}
 	},
-	created() {
-		this.toFilter.approved_at_date_start = this.$moment();
-		this.toFilter.approved_at_date_end = this.$moment();
-	},
+	// created() {
+	// 	this.toFilter.approved_at_date_start = null
+	// 	this.toFilter.approved_at_date_end = null
+	// },
 	async asyncData({ app, route, store }) {
 		try {
 			let response = await app.$axios.$get(

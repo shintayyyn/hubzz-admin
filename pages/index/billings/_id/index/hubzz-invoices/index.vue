@@ -44,17 +44,17 @@
       </template> -->
 
 		</AppTable>
-
+    <template v-else>
+      <div class="mt-2 w-full text-center text-white">There are no Invoices for HUBZZ</div>
+    </template>
 		</div>
 	</div>
 </template>
 <script>
-import AppLoading from "@/components/Base/AppLoading"
 import AppButton from '@/components/Base/AppButton'
 import AppTable from '@/components/Base/AppTable'
 export default {
   components:{
-    AppLoading,
     AppButton,
     AppTable,
   },
@@ -125,8 +125,6 @@ export default {
         offset,
         order_by
       }
-      
-      console.log('params', params)
 
       let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/count`,{ params })
       await store.commit("billings/SET_HUBZZ_INVOICES_COUNT", response.data.count)
