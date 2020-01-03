@@ -1,6 +1,7 @@
 <template>
   <!-- TABLE RESPONSIVE-->
   <div class="flex flex-col mx-2 text-white">
+    <p class="text-sm italic">(Note: Only file types .pdf, .jpeg, .msword, .tiff are acccepted)</p>
     <!-- HEADER -->
     <div class="w-full hidden md:flex text-sm lg:text-base font-bold pb-3 md:px-2">
       <div class="w-1/4">Title</div>
@@ -13,17 +14,19 @@
     <div
       v-for="(document,index) in specificPracticeDocumentTypes"
       :key="`surgery-${index}`"
-      class="w-full flex flex-col md:flex-row md:items-center rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-2 border-l-8 border-sunglow md:border-0"
+      class="relative w-full flex flex-col md:flex-row md:items-center rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-0 border-l-8 border-sunglow md:border-0"
     >
-      <div v-if="document.practiceSpecificDoc" class="p-2 m-2 bg-green-500 rounded-lg">
-        <svgicon
-          name="circle-check"
-          width="23"
-          height="23"
-          color="white"
-          />
-      </div>
-      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center">
+      <div class="absolute bg-white w-full h-full rounded-r-lg md:rounded-lg opacity-50 text-black flex items-center justify-center -m-4 md:m-0" v-if="uploading.includes(document.practiceDocType.id)">Uploading...</div>
+      <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col items-start md:flex-row md:items-center">
+        <div v-if="document.practiceSpecificDoc" class="p-2 mb-4 md:m-2 bg-green-500 rounded-lg flex items-center">
+          <svgicon
+            name="circle-check"
+            width="23"
+            height="23"
+            color="white"
+            />
+          <span class="md:hidden pl-2">Approved</span>
+        </div>
         <strong class="block md:hidden text-sm uppercase">Title</strong>
         <span
           class="whitespace-no-wrap"
@@ -46,7 +49,7 @@
         <div
           class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center"
         >
-          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex items-center md:justify-center px-1" :class="document.practiceSpecificDoc ? '' : 'w-full'">
+          <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="flex items-center md:justify-center px-1 py-1" :class="document.practiceSpecificDoc ? '' : 'w-full'">
             <div class="flex justify-center text-white text-sm">
               <label>
                 <!-- File -->
@@ -58,13 +61,13 @@
                 />
                 <span class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500 '">
                   <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
-                  <span class="pl-2"> {{ document.practiceSpecificDoc ? 'Update' : 'Upload' }}</span>
+                  <span class="pl-2">{{ document.practiceSpecificDoc ? 'Update' : 'Upload' }}</span>
                 </span>
               </label>
             </div>
           </div>
 
-          <div v-if="document.practiceSpecificDoc" class=" flex items-center justify-center text-white text-xs px-1 py-2 xl:py-0">
+          <div v-if="document.practiceSpecificDoc" class=" flex items-center justify-center text-white text-xs px-1 py-1 xl:py-0">
             <nuxt-link
               :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
               class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full text-white no-underline px-6 py-2"
@@ -93,7 +96,8 @@ export default {
       files: [],
       practiceDocTypes: [],
       practiceDocs: [],
-      query: null
+      query: null,
+      uploading: []
     };
   },
   created() {
@@ -175,21 +179,7 @@ export default {
         "prac document: ",
         practiceSpecificDocument
       );
-      // if (!types.includes(practiceSpecificDocument.file.subtype)){
-      //   this.$store.commit("SET_NOTIFICATION", {
-      //     enabled: true,
-      //     status: "danger",
-      //     text: "!!",
-      //     doNotClose: true,
-      //   });
-      //   return
-      // }
-      // this.$store.commit("SET_NOTIFICATION", {
-      //   enabled: true,
-      //   status: "upload",
-      //   text: "Uploading",
-      //   doNotClose: true,
-      // });
+
       const el = this.$refs[refName][0];
       if (el.files && el.files.length === 0) {
         return;
@@ -199,7 +189,27 @@ export default {
       console.log("legit file", file.name, file)
       const fileReader = new FileReader();
 
+      if (!types.includes(file.type.split("/")[1])) {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Invalid file format"
+        });
+        return;
+      }
+      // if (!types.includes(practiceSpecificDocument.file.subtype)){
+      //   this.$store.commit("SET_NOTIFICATION", {
+      //     enabled: true,
+      //     status: "danger",
+      //     text: "!!",
+      //     doNotClose: true,
+      //   });
+      //   return
+      // }
+      this.uploading.push(documentId)
+
       fileReader.readAsDataURL(file);
+      
 
       const index = this.files.findIndex(({ id }) => id === documentId);
 
@@ -276,6 +286,7 @@ export default {
                   specificPracticeDocumentTypes
                 );
                 // console.log('practice docs',specificPracticeDocumentTypes)
+                this.uploading = []
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "success",
@@ -334,10 +345,11 @@ export default {
                   "practices/SET_PRACTICE_DOCUMENTS",
                   specificPracticeDocumentTypes
                 );
+                this.uploading = []
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "success",
-                  text: "Success!"
+                  text: "Upload Success!"
                 });
               })
               .catch(err => {

@@ -1,195 +1,216 @@
 <template>
-    <div>
-        <!-- BODY -->
-        <div class="m-4 md:m-8 overflow-auto">
-          <div class="flex items-center flex-wrap">
-            <p class="text-2xl text-white font-semibold pr-4">{{job ? job.title:null }}</p>
-            <div class="flex">
-              <p class="text-black p-2 bg-yellow-500 rounded">{{job.status}}</p><br>
-              <p class="text-black p-2 text-white rounded ml-4" :class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'">{{job.type}}</p><br>
-            </div>
-            
-          </div>
-          <p class="text-white my-2">{{"Posted On: "+job.date_created}}</p>
+	<div>
+		<!-- BODY -->
+		<div class="m-4 md:m-8 overflow-auto">
+			<div class="flex items-center flex-wrap">
+				<p class="text-2xl text-white font-semibold pr-4">{{job ? job.title:null }}</p>
+				<div class="flex">
+					<p class="text-black p-2 bg-yellow-500 rounded">{{job.status}}</p>
+					<br />
+					<p
+						class="text-black p-2 text-white rounded ml-4"
+						:class="job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
+					>{{job.type}}</p>
+					<br />
+				</div>
+			</div>
+			<p class="text-white my-2">{{"Posted On: "+job.date_created}}</p>
 
-          <div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
-            <div class="inline-flex m-4">
-              <div class="flex flex-col w-full overflow-hidden">
-                <div class="flex flex-col md:flex-row w-full">
-                  <div class="w-full md:w-1/3 mb-4 overflow-hidden">
-                    <div class="text-gray text-white">
-                      <p class="font-semibold">Job Number</p>
-                      <p class="text-white">{{job.job_number}}</p>
-                      <p class="mt-5 font-semibold mb-1">Rate</p>
-                      <p class="text-white no-underline">{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
-                      <p class="mt-5 font-semibold">Total Hours</p>
-                      <p class="text-white">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
-                      <p class="mt-5 font-semibold">Job Description</p>
-                      <p class="text-white">{{job.description}}</p>
-                      <p class="mt-5 font-semibold">Extra Information</p>
-                      <p class="text-white">{{job.extra_information ? job.extra_information:null }}</p>
-                    </div>
-                  </div>
+			<div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
+				<div class="inline-flex m-4">
+					<div class="flex flex-col w-full overflow-hidden">
+						<div class="flex flex-col md:flex-row w-full">
+							<div class="w-full md:w-1/3 mb-4 overflow-hidden">
+								<div class="text-gray text-white">
+									<p class="font-semibold">Job Number</p>
+									<p class="text-white">{{job.job_number}}</p>
+									<p class="mt-5 font-semibold mb-1">Rate</p>
+									<p
+										class="text-white no-underline"
+									>{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
+									<p class="mt-5 font-semibold">Total Hours</p>
+									<p class="text-white">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
+									<p class="mt-5 font-semibold">Job Description</p>
+									<p class="text-white">{{job.description}}</p>
+									<p class="mt-5 font-semibold">Extra Information</p>
+									<p class="text-white">{{job.extra_information ? job.extra_information:null }}</p>
+								</div>
+							</div>
 
-                  <div class="text-white w-full md:w-1/3 mb-4 overflow-hidden">
-                    <p class="mb-2 font-semibold">Duration</p>
-                    <div class="pb-2 flex">
-                      <span class="text-black px-2 py-1 bg-white text-center w-1/4 rounded-lg">From</span>
-                      <span class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center">{{job.date_start}}</span>
-                    </div>
-                    <div class="pb-2 flex">
-                      <span class="text-black px-2 py-1 bg-white text-center w-1/4 rounded-lg">From</span>
-                      <span class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center">{{job.date_start}}</span>
-                    </div>
-                    <div class="pb-2 flex">
-                      <span class="text-black px-2 py-1 bg-white text-center w-1/4 rounded-lg">To</span>
-                      <span class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center">{{job.date_end}}</span>
-                    </div>
-                    <div class="pb-2 flex">
-                      <span class="text-black px-2 py-1 bg-white text-center w-1/4 rounded-lg">Shift</span>
-                      <span class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center">{{job.shift.name}}</span>
-                    </div>
-                    <p class="mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
-                  </div>
+							<div class="text-white w-full md:w-1/3 mb-4 overflow-hidden">
+								<p class="mb-2 font-semibold">Duration</p>
+								<div class="pb-2 flex">
+									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">From</span>
+									<span
+										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+									>{{job.date_start}}</span>
+								</div>
+								<div class="pb-2 flex">
+									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">To</span>
+									<span
+										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+									>{{job.date_end}}</span>
+								</div>
+								<div class="pb-2 flex">
+									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">Shift</span>
+									<span
+										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+									>{{job.shift.name}}</span>
+								</div>
+								<p class="mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
+							</div>
 
-                   <div class="text-white w-full md:w-1/3 mb-4">
-                      <div v-if="job.platform_job">
-                        <div class="mt-5 text-white">
-                          <span>This job is <span class="font-semibold">{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
-                          of <span class="font-semibold">IR35</span></span>
-                        </div>
+							<div class="text-white w-full md:w-1/3 mb-4">
+								<div v-if="job.platform_job">
+									<div class="mt-5 text-white">
+										<span>
+											This job is
+											<span
+												class="font-semibold"
+											>{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+											of
+											<span class="font-semibold">IR35</span>
+										</span>
+									</div>
 
-                        <p class="mt-5 font-semibold mb-1">Role</p>
-                        <p class="text-white">{{job.platform_job.profession.name}}</p>
+									<p class="mt-5 font-semibold mb-1">Role</p>
+									<p class="text-white">{{job.platform_job.profession.name}}</p>
 
-                        <p class="mt-5 font-semibold mb-1">Speciality</p>
-                        <p class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                          v-for="specialty in job.platform_job.qualifications"
-                          :key="specialty.id + '-name'">
-                          {{specialty ? specialty.name:null}}
-                        </p>
+									<p class="mt-5 font-semibold mb-1">Speciality</p>
+									<p
+										class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+										v-for="specialty in job.platform_job.qualifications"
+										:key="specialty.id + '-name'"
+									>{{specialty ? specialty.name:null}}</p>
 
-                        <p class="mt-5 font-semibold mb-1">Clinical Systems</p>
-                        <p class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                          v-for="clinicalSystem in job.platform_job.clinical_systems"
-                          :key="clinicalSystem.id + '-name1'">
-                            {{clinicalSystem ? clinicalSystem.name:null}}
-                        </p>
+									<p class="mt-5 font-semibold mb-1">Clinical Systems</p>
+									<p
+										class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+										v-for="clinicalSystem in job.platform_job.clinical_systems"
+										:key="clinicalSystem.id + '-name1'"
+									>{{clinicalSystem ? clinicalSystem.name:null}}</p>
 
-                        <p class="mt-5 font-semibold mb-1">Spoken Languages</p>
-                        <p class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                          v-for="spokenLanguage in job.platform_job.spoken_languages"
-                          :key="spokenLanguage.id + '-name2'">
-                          {{spokenLanguage ? spokenLanguage.name:null}}
-                        </p>
+									<p class="mt-5 font-semibold mb-1">Spoken Languages</p>
+									<p
+										class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+										v-for="spokenLanguage in job.platform_job.spoken_languages"
+										:key="spokenLanguage.id + '-name2'"
+									>{{spokenLanguage ? spokenLanguage.name:null}}</p>
 
-                        <div v-if="job.platform_job.compliance_documents.length > 0">
-                          <p class="flex">Compliance Requirements for GPs:</p>
-                          <div class="text-white text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
-                            :key="`${index}-${gpComplianceDocs.name}`"
-                            >
-                              <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
-                          </div>
-                        </div>
+									<div v-if="job.platform_job.compliance_documents.length > 0">
+										<p class="flex">Compliance Requirements for GPs:</p>
+										<div
+											class="text-white text-sm m-1 font-semibold"
+											v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
+											:key="`${index}-${gpComplianceDocs.name}`"
+										>
+											<span>{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span>
+										</div>
+									</div>
 
-                        <div v-if="job.platform_job.mandatory_trainings.length > 0">
-                          <p class="flex">Mandatory Trainings</p>
-                          <div class="text-white text-sm m-1 font-semibold" v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
-                            :key="`${index}-${mandatoryTrainings.name}`"
-                            >
-                              <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
-                          </div>
-                        </div>
-                      </div>
-                      <div v-else-if="job.private_job">
-                      </div>
-                    </div>
-                </div>
-                
-                <!-- MAP -->
-                <div class="w-full overflow-hidden" v-if="job.platform_job">
-                  <div class="text-white">
-                    <p class="font-semibold">
-                      <span class="pb-1 block">Practice</span>
-                      {{job.platform_job.practice.surgery.name}}
-                    </p>
-                    <p>
-                      {{job.platform_job.practice.surgery.address.line_1}}
-                      {{job.platform_job.practice.surgery.address.line_2}}
-                      {{job.platform_job.practice.surgery.address.line_3}}
-                    </p>
-                  </div>
-                
-                  <div class="w-full pt-2">
-                    <!-- google map -->
-                    <GmapMap
-                      :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-                      :zoom="15"
-                      map-type-id="terrain"
-                      style="width: 100%; height:250px"
-                    >
-                      <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"/>
-                    </GmapMap>
-                  </div>
-                </div>
-                <div class="w-full overflow-hidden" v-if="job.private_job">
-                  <div class="text-white">
-                    <p class="font-semibold">
-                      Practice<br>
-                      {{job.private_job.private_practice.surgery.name}}
-                    </p>
-                    <p>
-                      {{job.private_job.private_practice.surgery.address.line_1}}
-                      {{job.private_job.private_practice.surgery.address.line_2}}
-                      {{job.private_job.private_practice.surgery.address.line_3}}
-                    </p>
-                  </div>
-                
-                  <div class="w-full pt-2">
-                    <!-- google map -->
-                    <GmapMap
-                      :center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
-                      :zoom="15"
-                      map-type-id="terrain"
-                      style="width: 100%; height:250px"
-                    >
-                      <GmapMarker :position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"/>
-                    </GmapMap>
-                  </div>
-                </div>
-                
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- BODY -->
-        <nuxt-child/>
-      </div>
+									<div v-if="job.platform_job.mandatory_trainings.length > 0">
+										<p class="flex">Mandatory Trainings</p>
+										<div
+											class="text-white text-sm m-1 font-semibold"
+											v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
+											:key="`${index}-${mandatoryTrainings.name}`"
+										>
+											<span>{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span>
+										</div>
+									</div>
+								</div>
+								<div v-else-if="job.private_job"></div>
+							</div>
+						</div>
+
+						<!-- MAP -->
+						<div class="w-full overflow-hidden" v-if="job.platform_job">
+							<div class="text-white">
+								<p class="font-semibold">
+									<span class="pb-1 block">Practice</span>
+									{{job.platform_job.practice.surgery.name}}
+								</p>
+								<p>
+									{{job.platform_job.practice.surgery.address.line_1}}
+									{{job.platform_job.practice.surgery.address.line_2}}
+									{{job.platform_job.practice.surgery.address.line_3}}
+								</p>
+							</div>
+
+							<div class="w-full pt-2">
+								<!-- google map -->
+								<GmapMap
+									:center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+									:zoom="15"
+									map-type-id="terrain"
+									style="width: 100%; height:250px"
+								>
+									<GmapMarker
+										:position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
+									/>
+								</GmapMap>
+							</div>
+						</div>
+						<div class="w-full overflow-hidden" v-if="job.private_job">
+							<div class="text-white">
+								<p class="font-semibold">
+									Practice
+									<br />
+									{{job.private_job.private_practice.surgery.name}}
+								</p>
+								<p>
+									{{job.private_job.private_practice.surgery.address.line_1}}
+									{{job.private_job.private_practice.surgery.address.line_2}}
+									{{job.private_job.private_practice.surgery.address.line_3}}
+								</p>
+							</div>
+
+							<div class="w-full pt-2">
+								<!-- google map -->
+								<GmapMap
+									:center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
+									:zoom="15"
+									map-type-id="terrain"
+									style="width: 100%; height:250px"
+								>
+									<GmapMarker
+										:position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"
+									/>
+								</GmapMap>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- BODY -->
+		<nuxt-child />
+	</div>
 </template>
 <script>
-import { gmapApi } from 'vue2-google-maps'
+import { gmapApi } from "vue2-google-maps";
 export default {
-  props:['job'],
-  created(){
-    console.log('This is the job within the modal',this.job)
-  },
-  computed: {
-    google: gmapApi,
-    latLangPlatform() {
-      return this.job.platform_job.practice.surgery.address.coordinates
-    },
-    latLangPrivate() {
-      return this.job.private_job.private_practice.surgery.address.coordinates
-    },
-  },
-  methods: {
-    goTo(type) {
-      const query = {
-        ...this.$route.query,
-        locum_jobs: type
-      }
-      this.$router.push({ query })
-    }
-  }
-}
+	props: ["job"],
+	created() {
+		console.log("This is the job within the modal", this.job);
+	},
+	computed: {
+		google: gmapApi,
+		latLangPlatform() {
+			return this.job.platform_job.practice.surgery.address.coordinates;
+		},
+		latLangPrivate() {
+			return this.job.private_job.private_practice.surgery.address.coordinates;
+		}
+	},
+	methods: {
+		goTo(type) {
+			const query = {
+				...this.$route.query,
+				locum_jobs: type
+			};
+			this.$router.push({ query });
+		}
+	}
+};
 </script>

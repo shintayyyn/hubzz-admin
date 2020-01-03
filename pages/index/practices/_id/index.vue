@@ -1,28 +1,19 @@
 <template>
 	<div class="practice-modal p-4 md:p-8 shadow-lg">
-		<nuxt-link 
-      :to="{path:'/practices', query:$route.query}">
-      <div class="mb-4">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="cursor-pointer text-white hover:text-sunglow fill-current"
-        />
-      </div>
+		<nuxt-link :to="{path:'/practices', query:$route.query}">
+			<div class="mb-4">
+				<svgicon
+					name="arrow-left-solid"
+					height="32"
+					width="32"
+					class="cursor-pointer text-white hover:text-sunglow fill-current"
+				/>
+			</div>
 		</nuxt-link>
-		<PracticeTabs :practice="practice"/>
+		<PracticeTabs :practice="practice" />
 		<nuxt-child />
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('pracUserId')"
-			@click="$router.go(-1)"
-		></div>
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('pracDocId')"
-			@click="$router.go(-1)"
-		></div>
+		<div class="practice-shield" v-if="$route.name.includes('pracUserId')" @click="$router.go(-1)"></div>
+		<div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="$router.go(-1)"></div>
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('practiceSessionId')"
@@ -33,11 +24,7 @@
 			v-if="$route.name.includes('practiceSurgeryId')"
 			@click="$router.push(`/practices/${$route.params.id}/practice-surgeries`)"
 		></div>
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('practiceSessionPartId')"
-			@click="$router.go(-1)"
-		></div>
+		<div class="practice-shield" v-if="$route.name.includes('practiceSessionPartId')"></div>
 	</div>
 </template>
 <script>
@@ -48,6 +35,11 @@ export default {
 	},
 	data() {
 		return {};
+	},
+	watch: {
+		$route(to) {
+			console.log("tototot", to);
+		}
 	},
 	computed: {
 		practice() {
@@ -106,7 +98,7 @@ export default {
 	width: 100%;
 	height: 100%;
 	overflow: auto;
-	border-left: solid 2px #FFC72C;
+	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;

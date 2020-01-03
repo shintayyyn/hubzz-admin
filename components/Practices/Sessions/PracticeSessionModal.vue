@@ -14,273 +14,229 @@
         </div>
       </div>
       <div class="text-white mt-2 md:mx-4">{{job ? job.date_created : modalJobPart.date_created}}</div>
-      <div class="flex flex-col md:flex-row md:m-2 overflow-hidden mb-4">
+      <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
         <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`" -->
-        <div class="md:w-3/7 xl:w-full overflow-hidden">
+        <div class="lg:w-1/2 overflow-hidden">
           <!-- JOB DETAILS -->
-          <div v-if="job" class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4">
-            <div class="xl:w-1/2 w-full overflow-hidden">
-              <div class="text-gray-200">
-                <p class="font-semibold">Job Number</p>
-                <p class="text-white pb-2">{{job.job_number}}</p>
-                <p class="font-semibold">Rate</p>
-                <p class="text-white pb-2 no-underline">{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
-                <p class="font-semibold">Total Hours</p>
-                <p class="text-white pb-2">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
-                <p class="font-semibold">Job Description</p>
-                <p class="text-white pb-2">{{job.description}}</p>
-                <p class="font-semibold">Extra Information</p>
-                <p class="text-white pb-2">{{job.platform_job ? job.platform_job.extra_information : 'N/A'}}</p>
-              </div>
-            </div>
-
-            <div class="text-white xl:w-1/2 w-full overflow-hidden">
-              <div class="pb-2">
-                <p class="font-semibold">Duration</p>
-                <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">From</span>
-                <span class="text-sm font-semibold">{{job.date_start}}</span> <br><br>
-                <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">To</span>
-                <span class="text-sm font-semibold">{{job.date_end}}</span> <br><br>
-                <span class="inline-flex ml-2 rounded-lg text-sm text-black p-2 bg-white">Shift</span>
-                <span class="text-sm  ont-semibold">{{job.shift.name}}</span> <br><br>
-                <p class=" font-semibold">Auto-assigns this job to the first applicant</p>
-                
-                <template v-if="job.platform_job">
-                  <div class="pb-2">
-                    <span>This job is </span>
-                    <span class="font-semibold">{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
-                    <span> of</span>
-                    <span class="font-semibold">IR35</span> 
+          <div v-if="job" class="flex flex-col text-white overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4">
+            <div class="flex flex-wrap">
+              <div class="md:w-1/2 overflow-hidden">
+                <div class="text-gray-200">
+                  <p class="font-semibold">Job Number</p>
+                  <p class="text-white pb-2">{{job.job_number}}</p>
+                  <p class="font-semibold">Rate</p>
+                  <p class="text-white pb-2 no-underline">{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
+                  <p class="font-semibold">Total Hours</p>
+                  <p class="text-white pb-2">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
+                  <p class="font-semibold">Job Description</p>
+                  <p class="text-white pb-2">{{job.description}}</p>
+                  <p class="font-semibold">Extra Information</p>
+                  <p class="text-white pb-2">{{job.platform_job ? job.platform_job.extra_information : 'N/A'}}</p>
+                  <p class="font-semibold">Duration</p>
+                  <div class="flex items-center py-2 mx-2 text-sm">
+                    <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
+                    <span class="font-semibold">{{job.date_start}}</span>
                   </div>
+                  <div class="flex items-center py-2 mx-2 text-sm">
+                    <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
+                    <span class="font-semibold">{{job.date_end}}</span>
+                  </div>
+                  <div class="flex items-center py-2 mx-2 text-sm">
+                    <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
+                    <span class="font-semibold">{{job.shift.name}}</span>
+                  </div>
+                </div>
+              </div>
 
-                  <p class="font-semibold">Role</p>
-                  <p class="ml-2 mb-2">{{job.platform_job.profession.name}}</p>
-
-                  <p class=" w-1/2 font-semibold">Speciality</p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                    v-for="specialty in job.platform_job.qualifications"
-                    :key="specialty.id + '-name'">
-                    {{specialty ? specialty.name:null}}
-                  </p>
-
-                  <p class=" w-1/2 font-semibold">Clinical Systems</p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                    v-for="clinicalSystem in job.platform_job.clinical_systems"
-                    :key="clinicalSystem.id + '-name1'">
-                      {{clinicalSystem ? clinicalSystem.name:null}}
-                  </p>
-
-                  <p class=" w-1/2 font-semibold">Spoken Languages</p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500">
-                    English
-                  </p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                    v-for="spokenLanguage in job.platform_job.spoken_languages"
-                    :key="spokenLanguage.id + '-name2'">
-                    {{spokenLanguage ? spokenLanguage.name:null}}
-                  </p>
-
-                  <template v-if="job.platform_job.compliance_documents.length > 0">
-                    <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
-                    <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documents"
-                      :key="`${index}-${gpComplianceDocs.name}`"
-                      >
-                        <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
+              <div class="md:w-1/2 overflow-hidden">
+                <div class="pb-2">
+                  <p class=" font-semibold">Auto-assigns this job to the first applicant</p>
+                  <template v-if="job.platform_job">
+                    <div class="pb-2">
+                      <span>This job is </span>
+                      <span class="font-semibold">{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+                      <span> of</span>
+                      <span class="font-semibold">IR35</span> 
                     </div>
+
+                    <p class="font-semibold">Role</p>
+                    <p class="ml-2 mb-2">{{job.platform_job.profession.name}}</p>
+
+                    <p class=" w-1/2 font-semibold">Speciality</p>
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                      v-for="specialty in job.platform_job.qualifications"
+                      :key="specialty.id + '-name'">
+                      {{specialty ? specialty.name:null}}
+                    </p>
+
+                    <p class=" w-1/2 font-semibold">Clinical Systems</p>
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                      v-for="clinicalSystem in job.platform_job.clinical_systems"
+                      :key="clinicalSystem.id + '-name1'">
+                        {{clinicalSystem ? clinicalSystem.name:null}}
+                    </p>
+
+                    <p class=" w-1/2 font-semibold">Spoken Languages</p>
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500">
+                      English
+                    </p>
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                      v-for="spokenLanguage in job.platform_job.spoken_languages"
+                      :key="spokenLanguage.id + '-name2'">
+                      {{spokenLanguage ? spokenLanguage.name:null}}
+                    </p>
+
+                    <template v-if="job.platform_job.compliance_documents.length > 0">
+                      <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
+                      <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documents"
+                        :key="`${index}-${gpComplianceDocs.name}`"
+                        >
+                          <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
+                      </div>
+                    </template>
+
+                    <template v-if="job.platform_job.mandatory_trainings.length > 0">
+                      <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
+                      <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
+                        :key="`${index}-${mandatoryTrainings.name}`"
+                        >
+                          <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
+                      </div>
+                    </template>
                   </template>
-
-                  <template v-if="job.platform_job.mandatory_trainings.length > 0">
-                    <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
-                    <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
-                      :key="`${index}-${mandatoryTrainings.name}`"
-                      >
-                        <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
-                    </div>
-                  </template>
-                </template>
-              </div>
-            </div>
-
-            <div class="w-full overflow-hidden" v-if="job.platform_job">
-              <div class="text-white pb-2">
-                <p class="font-semibold">
-                  Practice<br>
-                  {{job.platform_job.practice.surgery.name}}
-                </p>
-                <p>
-                  {{job.platform_job.practice.surgery.address.line_1}}
-                  {{job.platform_job.practice.surgery.address.line_2}}
-                  {{job.platform_job.practice.surgery.address.line_3}}
-                </p>
-              </div>
-            
-              <div class="w-full">
-                <!-- google map -->
-                <GmapMap
-                  :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-                  :zoom="15"
-                  map-type-id="terrain"
-                  style="width: 100%; height:350px"
-                >
-                  <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"/>
-                </GmapMap>
-              </div>
-            </div>
-            <div class="w-full overflow-hidden" v-if="job.private_job">
-              <div class="text-white pb-2">
-                <p class="font-semibold">
-                  Practice<br>
-                  {{job.private_job.private_practice.surgery.name}}
-                </p>
-                <p>
-                  {{job.private_job.private_practice.surgery.address.line_1}}
-                  {{job.private_job.private_practice.surgery.address.line_2}}
-                  {{job.private_job.private_practice.surgery.address.line_3}}
-                </p>
-              </div>
-            
-              <div class="w-full">
-                <!-- google map -->
-                <GmapMap
-                  :center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
-                  :zoom="15"
-                  map-type-id="terrain"
-                  style="width: 100%; height:250px "
-                >
-                  <GmapMarker :position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"/>
-                </GmapMap>
-              </div>
-            </div>
-            
-          </div>
-          <!-- JOB PART DETAILS -->
-          <div v-if="job_part" class="flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4">
-            <!-- INFOS LEFT -->
-            <div class="xl:w-1/2 w-full overflow-hidden">
-              <div class="m-4 mt-5 text-gray text-white">
-                <p class="font-semibold">Job Part Number</p>
-                <p class="text-white">{{modalJobPart.job_part_number}}</p>
-                <p class="mt-5 font-semibold">Job Part</p>
-                <p class="text-white">{{modalJobPart.part}} of {{modalJobPart.parts}}</p>
-                <p class="mt-5 font-semibold">Rate</p>
-                <p class="text-white no-underline">{{modalJobPart.job ? "£ "+modalJobPart.job.rate+" Per Hour":null +" Per Hour"}}</p>
-                <p class="mt-5 font-semibold">Total Hours</p>
-                <p class="text-white">{{modalJobPart.job ? modalJobPart.job.total_hours+" Hours":null + " Hours"}}</p>
-                <p class="mt-5 font-semibold">Job Description</p>
-                <p class="text-white">{{modalJobPart.job ? modalJobPart.job.description: 'N/A'}}</p>
-              </div>
-            </div>
-            <!-- INFOS RIGHT -->
-            <div class="text-white xl:w-1/2 w-full overflow-hidden">
-              <div class="m-2 mt-5">
-                <p class="font-semibold">Duration</p>
-                <div class="flex items-center py-2 mx-2 text-sm">
-                  <span class="w-16 text-black"><span class="bg-white p-2 rounded-lg"> From </span></span>
-                  <span class="font-semibold">{{modalJobPart.date_start}}</span>
                 </div>
-                <div class="flex items-center py-2 mx-2 text-sm">
-                  <span class="w-16 text-black"><span class="bg-white p-2 rounded-lg"> To </span></span>
-                  <span class="font-semibold">{{modalJobPart.date_end}}</span>
-                </div>
-                <div class="flex items-center py-2 mx-2 text-sm">
-                  <span class="w-16 text-black"><span class="bg-white p-2 rounded-lg"> Shift </span></span>
-                  <span class="font-semibold">{{ modalJobPart.job ? modalJobPart.job.shift.name : null}}</span>
-                </div>
-                <p class="mt-5 font-semibold">Invoiced?</p>
-                <p class="text-white">{{modalJobPart.invoiced ? 'Yes': 'No'}}</p>
-                <p class="mt-5 font-semibold">Issued?</p>
-                <p class="text-white">{{modalJobPart.issued ? 'Yes': 'No'}}</p>
-                <!-- <div v-if="modalJobPart.job ? modalJobPart.job.platform_job : null">
-                  <div class="m-2 mt-5">
-                    <span>This job is </span>
-                    <span class="font-semibold">{{modalJobPart.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
-                    <span> of</span>
-                    <span class="font-semibold">IR35</span> 
-                  </div>
-
-                  <p class="m-2 mt-5 font-semibold">Role</p>
-                  <p class="m-2 ">{{modalJobPart.job.platform_job.profession.name}}</p>
-
-                  <p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                    v-for="specialty in modalJobPart.job.platform_job.qualifications"
-                    :key="specialty.id + '-name'">
-                    {{specialty ? specialty.name:null}}
-                  </p>
-
-                  <p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                    v-for="clinicalSystem in modalJobPart.job.platform_job.clinical_systems"
-                    :key="clinicalSystem.id + '-name1'">
-                      {{clinicalSystem ? clinicalSystem.name:null}}
-                  </p>
-
-                  <p class="m-2 mt-5 w-1/2 font-semibold">Spoken Languages</p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500">
-                    English
-                  </p>
-                  <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                    v-for="spokenLanguage in modalJobPart.job.platform_job.spoken_languages"
-                    :key="spokenLanguage.id + '-name2'">
-                    {{spokenLanguage ? spokenLanguage.name:null}}
-                  </p>
-
-                  <div v-if="modalJobPart.job.platform_job.compliance_documents.length > 0">
-                    <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
-                    <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in modalJobPart.job.platform_job.compliance_documents"
-                      :key="`${index}-${gpComplianceDocs.name}`"
-                      >
-                        <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
-                    </div>
-                  </div>
-
-                  <div v-if="modalJobPart.job.platform_job.mandatory_trainings.length > 0">
-                    <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
-                    <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in modalJobPart.job.platform_job.mandatory_trainings"
-                      :key="`${index}-${mandatoryTrainings.name}`"
-                      >
-                        <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
-                    </div>
-                  </div>
-                </div>
-                <div v-else-if="modalJobPart.job ? modalJobPart.job.private_job : null">
-                </div> -->
-              </div>
-            </div>
-            <!-- GOOGLE MAPS -->
-            <div class="w-full m-2 md:m-4 overflow-hidden" v-if="modalJobPart.job ? modalJobPart.job.platform_job : null">
-              <div class="text-white pb-2">
-                <div class="font-semibold">
-                  Practice
-                  <p>{{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.name : null}}</p>
-                </div>
-                <p>
-                  {{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_1 : null}}
-                  {{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_2 : null}}
-                  {{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_3 : null}}
-                </p>
-              </div>
-            
-              <div class="w-full">
-                <GmapMap
-                  :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-                  :zoom="15"
-                  map-type-id="terrain"
-                  style="width: 100%; height:350px"
-                >
-                  <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"/>
-                </GmapMap>
               </div>
             </div>
           </div>
+            <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
+            <!-- LOCUM DETAILS -->
+            <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
+           <div v-if="locumUser" class="w-full overflow-hidden flex">
+              <div class="flex px-2 my-4 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
+                <div class="flex flex-wrap overflow-hidden">
+                  <div class="w-full text-white mx-2">
+                    <div class="flex flex-wrap w-full border-b">
+                      <div class="flex items-center my-4 w-1/3">
+                        <embed
+                          v-if="locumUser.avatar"
+                          class="flex w-4/5 rounded-full"
+                            :src="locumUser && locumUser.avatar ? locumUser.avatar.file.url:null"
+                          >
+                          <img v-else class="w-48 rounded-full" src="~/assets/images/default-user-image.png" >
+                      </div>
+                      <div class="my-6 w-2/3 px-4">
+                        <p class="my-2 font-semibold text-base">{{locumUser.personal_detail ? locumUser.personal_detail.title:null}} {{locumUser.personal_detail.first_name}} {{locumUser.personal_detail.last_name}}</p>
+                        <p class="my-2 font-lighttext-sm">{{locumUser.locum_detail.profession.profession_category.name}}</p>
+                        <div class="my-2 font-semibold text-base">Headline</div>
+                        <p class="my-2 font-lighttext-sm">{{ locumUser.locum_detail ? locumUser.locum_detail.headline : null }}</p>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap overflow-x-hidden w-full mx-2">
+                    <div>
+                      <p class="m-2 mt-5 mr-20 font-semibold">Biography</p>
+                      <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}</p>
+                      <p class="m-2 mt-5 mr-20 font-semibold">Special Requirements</p>
+                      <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.special_requirements : null }}</p>
+                      <p class="m-2 mt-5 mr-20 font-semibold">Rates</p>
+                      <p class="m-2 text-white"
+                        v-for="locumRates in locumUser.locum_detail.rates"
+                        :key="locumRates.id + '-name1'" >
+                        {{locumRates.rate_type.name}} £ {{locumRates.min}} ~ {{locumRates.max}}</p>
+
+                      <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
+                      <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}</p>
+                      <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}</p>
+                      <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}</p>
+                      <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
+                      <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
+                      <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
+                      <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
+                    </div>
+                    <div>
+                      <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
+                      <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
+                      
+                      <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                        v-for="specialty in locumUser.locum_detail.qualifications"
+                        :key="specialty.id + '-name'">
+                        {{specialty ? specialty.name:null}}
+                      </p> 
+                      
+                      <p class="m-2 mt-5 mr-20 font-semibold">Clinical Systems</p>
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                        v-for="clinicalSystem in locumUser.locum_detail.clinical_systems"
+                        :key="clinicalSystem.id + '-name1'">
+                          {{clinicalSystem ? clinicalSystem.name:null}}
+                      </p>
+                      <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
+                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                        v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
+                        :key="spokenLanguage.id + '-name2'">
+                        {{spokenLanguage ? spokenLanguage.name:null}}
+                      </p>
+                      
+                        <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                        <div 
+                          v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
+                          :key="`${index}-${specificComplianceDoc.id}-`"
+                          class=""
+                        >
+                          <a class="m-2 text-white flex items-center" v-bind:href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null">
+                            <svgicon
+                              name="cloud-download"
+                              width="21"
+                              height="21"
+                              color="white"
+                            ></svgicon>
+                            <span class="pl-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
+                          </a>
+                        </div>
+                        <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+                        <div 
+                          v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
+                          :key="`${index}-${specificMandatoryDoc.id}-`"
+                          class="text-white "
+                        >
+                          <a class="m-2 text-white flex items-center" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
+                              <svgicon
+                                name="cloud-download"
+                                width="21"
+                                height="21"
+                                color="transparent white"
+                              />
+                              <span class="pl-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
+                          </a>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
         </div>
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
-        <div class="md:w-4/7 w-full overflow-hidden">
+        <div class="lg:w-1/2 overflow-hidden">
           <div class="flex flex-col">
             <!-- JOB PARTS -->
             <div v-if="jobParts.length > 0" class="w-full flex flex-col">
               <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">Job Parts</div> 
+              <!-- <AppTable
+                class="mx-2"
+                v-if="jobParts.length > 0"
+                :total="total"
+                :items="jobParts"
+                :currentPage="currentPage"
+                :perPage="params.limit"
+                :columns="columns"
+                :orderBy="params.order_by"
+                :customWidth="700"
+                :routerLink="`/practices/${$route.params.id}/practice-sessions/practice-${modalJobPart.status.toLowerCase()}-sessions/`"
+                @pagechanged="pagechanged"
+              /> -->
                 <div class="flex flex-col m-2 text-white">
                   <div class="flex flex-row">
                     <div class="mx-8 font-semibold">Job Part Number</div>
@@ -329,9 +285,9 @@
               <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
               <!-- LOCUM DETAILS -->
               <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-              <div v-if="locumUser" class="w-full overflow-hidden flex">
+              <div v-if="locumUser" class="w-full overflow-hidden flex flex-col">
               <div class="flex px-2 xl:mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
-                <div class="flex flex-wrap overflow-hidden">
+                <div class="flex flex-col flex-wrap overflow-hidden">
                   <div class="text-white mx-5">
                     <div class="flex flex-wrap -mx-2 ">
                       <div class="my-4 px-2 w-1/2 ">
@@ -350,68 +306,59 @@
 
                     </div>
                   </div>
-                  <div class="overflow-x-hidden w-full mx-4">
-                    <div class="m-2 font-semibold">Headline</div>
-                    <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.headline : null }}</p>
-                    <p class="m-2 mt-5 mr-20 font-semibold">Biography</p>
-                    <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}</p>
-                    <p class="m-2 mt-5 mr-20 font-semibold">Special Requirements</p>
-                    <p class="m-2 text-white">{{ locumUser.locum_detail ? locumUser.locum_detail.special_requirements : null }}</p>
-                    <p class="m-2 mt-5 mr-20 font-semibold">Rates</p>
+                  <div class="flex items-center py-2 mx-2 text-sm">
+                    <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
+                    <span class="font-semibold">{{modalJobPart.date_end}}</span>
+                  </div>
+                  <div class="flex items-center py-2 mx-2 text-sm">
+                    <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
+                    <span class="font-semibold">{{ modalJobPart.job ? modalJobPart.job.shift.name : null}}</span>
+                  </div>
+                  <p class="mt-5 font-semibold">Invoiced?</p>
+                  <p class="text-white">{{modalJobPart.invoiced ? 'Yes': 'No'}}</p>
+                  <p class="mt-5 font-semibold">Issued?</p>
+                  <p class="text-white">{{modalJobPart.issued ? 'Yes': 'No'}}</p>
+                  <!-- <div v-if="modalJobPart.job ? modalJobPart.job.platform_job : null">
+                    <div class="m-2 mt-5">
+                      <span>This job is </span>
+                      <span class="font-semibold">{{modalJobPart.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+                      <span> of</span>
+                      <span class="font-semibold">IR35</span> 
+                    </div>
 
-                    <p class="m-2 text-white"
-                      v-for="locumRates in locumUser.locum_detail.rates"
-                      :key="locumRates.id + '-name1'" >
-                      {{locumRates.rate_type.name}} £ {{locumRates.min}} ~ {{locumRates.max}}</p>
+                    <p class="m-2 mt-5 font-semibold">Role</p>
+                    <p class="m-2 ">{{modalJobPart.job.platform_job.profession.name}}</p>
 
-                    <p class="m-2 mt-5 mr-20 font-semibold">Postal Address</p>
-                    <p class="ml-2 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}</p>
-                    <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}</p>
-                    <p class="ml-2 mt-1 text-white">{{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}</p>
-                    <p class="m-2 mt-5 mr-20 font-semibold">GMC / NMC Number</p>
-                    <p class="m-2 text-white">{{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}</p>
-                    <p class="m-2 mt-5 mr-20 font-semibold">MPL / NPL Number</p>
-                    <p class="m-2 text-white">{{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}</p>
-
-                    <p class="m-2 mt-5 mr-20 font-semibold">Profession</p>
-                    <p class="m-2 text-white">{{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}</p>
-                    
-                    <p class="m-2 mt-5 mr-20 font-semibold">Speciality</p>
+                    <p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
                     <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                      v-for="specialty in locumUser.locum_detail.qualifications"
+                      v-for="specialty in modalJobPart.job.platform_job.qualifications"
                       :key="specialty.id + '-name'">
                       {{specialty ? specialty.name:null}}
-                    </p> 
-                    
-                    <p class="m-2 mt-5 mr-20 font-semibold">Clinical Systems</p>
+                    </p>
+
+                    <p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
                     <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                      v-for="clinicalSystem in locumUser.locum_detail.clinical_systems"
+                      v-for="clinicalSystem in modalJobPart.job.platform_job.clinical_systems"
                       :key="clinicalSystem.id + '-name1'">
                         {{clinicalSystem ? clinicalSystem.name:null}}
                     </p>
-                    <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
+
+                    <p class="m-2 mt-5 w-1/2 font-semibold">Spoken Languages</p>
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500">
+                      English
+                    </p>
                     <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                      v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
+                      v-for="spokenLanguage in modalJobPart.job.platform_job.spoken_languages"
                       :key="spokenLanguage.id + '-name2'">
                       {{spokenLanguage ? spokenLanguage.name:null}}
                     </p>
-                    
-                    <div class="h-32 mb-6 overflow-auto">
-                      <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
-                      <div 
-                        v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
-                        :key="`${index}-${specificComplianceDoc.id}-`"
-                        class="flex flex-col"
-                      >
-                        <a class="m-2 text-white" v-bind:href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null">
-                          <svgicon
-                            name="cloud-download"
-                            width="21"
-                            height="21"
-                            color="white"
-                          ></svgicon>
-                          <span class="pb-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
-                        </a>
+
+                    <div v-if="modalJobPart.job.platform_job.compliance_documents.length > 0">
+                      <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
+                      <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in modalJobPart.job.platform_job.compliance_documents"
+                        :key="`${index}-${gpComplianceDocs.name}`"
+                        >
+                          <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
                       </div>
                       <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
                       <div 
@@ -431,6 +378,85 @@
                       </div>
                     </div>
                   </div>
+                  <div v-else-if="modalJobPart.job ? modalJobPart.job.private_job : null">
+                  </div> -->
+                </div>
+              </div>
+              <!-- GOOGLE MAPS -->
+              <div class="w-full m-2 md:m-4 overflow-hidden" v-if="modalJobPart.job ? modalJobPart.job.platform_job : null">
+                <div class="text-white pb-2">
+                  <div class="font-semibold">
+                    Practice
+                    <p>{{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.name : null}}</p>
+                  </div>
+                  <p>
+                    {{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_1 : null}}
+                    {{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_2 : null}}
+                    {{modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_3 : null}}
+                  </p>
+                </div>
+              
+                <div class="w-full">
+                  <GmapMap
+                    :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:350px"
+                  >
+                    <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"/>
+                  </GmapMap>
+                </div>
+              </div>
+            </div>
+            <div class="p-4 mx-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white" v-if="job && job.platform_job || job && job.private_job">
+              <div class="w-full overflow-hidden" v-if="job && job.platform_job">
+                <div class="text-white pb-2">
+                  <p class="font-semibold">
+                    Practice<br>
+                    {{job.platform_job.practice.surgery.name}}
+                  </p>
+                  <p>
+                    {{job.platform_job.practice.surgery.address.line_1}}
+                    {{job.platform_job.practice.surgery.address.line_2}}
+                    {{job.platform_job.practice.surgery.address.line_3}}
+                  </p>
+                </div>
+              
+                <div class="w-full">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:350px"
+                  >
+                    <GmapMarker :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"/>
+                  </GmapMap>
+                </div>
+              </div>
+              <div class="w-full overflow-hidden" v-if="job && job.private_job">
+                <div class="text-white pb-2">
+                  <p class="font-semibold">
+                    Practice<br>
+                    {{job.private_job.private_practice.surgery.name}}
+                  </p>
+                  <p>
+                    {{job.private_job.private_practice.surgery.address.line_1}}
+                    {{job.private_job.private_practice.surgery.address.line_2}}
+                    {{job.private_job.private_practice.surgery.address.line_3}}
+                  </p>
+                </div>
+              
+                <div class="w-full">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:250px "
+                  >
+                    <GmapMarker :position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"/>
+                  </GmapMap>
                 </div>
               </div>
             </div>
@@ -452,11 +478,15 @@
 import JobPartModal from '@/components/Base/JobPartModal'
 import AppPagination from '@/components/Base/AppPagination'
 import { gmapApi } from 'vue2-google-maps'
+import AppTable from '@/components/Base/AppTable'
+import AppLoading from '@/components/Base/AppLoading'
 export default {
   props:['job', 'job_part'],
   components:{
     JobPartModal,
-    AppPagination
+    AppPagination,
+    AppTable,
+    AppLoading
   },
   data(){
     return{
@@ -465,11 +495,41 @@ export default {
       jobPartId: '',
       modalJobPart: '',
       jobParts:[],
+      loading: false,
+
+      params: {
+        limit: 3,
+        offset: 0,
+				order_by: ["created_at:desc"]
+      },
 
       total: 0,
       totalPages: 0,
       currentPage: 1,
       perPage: 0,
+
+      columns: [
+        {
+					name: "Job Part Number",
+					dataIndex: "job_part_number",
+					class: "text-center",
+        },
+        {
+					name: "Date Start",
+					dataIndex: "date_start",
+					class: "text-center",
+        },
+        {
+					name: "Date End",
+					dataIndex: "date_end",
+					class: "text-center",
+        },
+        {
+					name: "Job Part Status",
+					dataIndex: "status",
+					class: "text-center",
+				},
+      ]
     }
   },
   async created(){
@@ -515,7 +575,8 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.job_part_page)
-      this.getJobParts()
+      this.$route.params.practiceSessionPartId = jobPartId
+
     }
   },
   methods: {
@@ -553,17 +614,20 @@ export default {
       
     },
     async getJobPart(itemId){
+      this.loading = true
+      this.$route.params.practiceSessionPartId = itemId
       await this.$axios.$get(`/api/v1/admin/job-parts/${itemId}`).then(res => {
         this.modalJobPart = res.data.job_part
         const query = {
           ...this.$route.query,
         }
-        this.$router.push(`/practices/${this.$route.params.id}/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${this.modalJobPart.id}`, ...this.route.query)
+        this.loading = false
+        this.$router.push(`/practices/${this.$route.params.id}/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${itemId}`, ...this.route.query)
       })
     },
 
     async show(jobPartId){
-      console.log('id', jobPartId)
+      this.$route.params.practiceSessionPartId = jobPartId
       this.jobPartId=jobPartId
       if (this.job) {
         const unclickable = this.unclickableJobPart()
@@ -597,15 +661,15 @@ export default {
       }
       this.$router.push({ query })
     },
-    async pagechanged(e) {
-      const query = {
-        ...this.$route.query,
-        job_part_page: e || 1
-      }
-      await this.$store.commit('jobs/TOGGLE_LOADING', true)
-      await this.$router.push({ query })
-      await this.$store.commit('jobs/TOGGLE_LOADING', false)
-    }
+    pagechanged(page) {
+			const query = {
+				...this.$route.query,
+				page: page || 1
+			};
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getJobParts(this.params);
+		},
   }
 }
 </script>
@@ -632,6 +696,12 @@ export default {
   transition: all 0.3s ease-in-out;
   background-color:#505561;
   z-index: 512;
+}
+
+@media (min-width: 768px ){
+  .jobpart{
+    min-width: 600px;
+  }
 }
 @media screen and (min-width: 1200px) {
   .job-part-modal {

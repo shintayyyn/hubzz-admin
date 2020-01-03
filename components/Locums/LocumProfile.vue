@@ -126,105 +126,101 @@
 							class="font-bold pl-2"
 						>{{user.locum_detail.rates[1].min && user.locum_detail.rates[1].max ? 'Per Half Day Session: £'+user.locum_detail.rates[1].min+' - £'+user.locum_detail.rates[1].max : '(none)'}}</p>
 
-            <div v-if="userComplianceDocuments">
-              <p class="my-2">Compliance Documents</p>
-              <span v-if="userComplianceDocuments.length < 0" class="opacity-75">No Mandatory Training Documents</span>
-              <div
-                v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
-                :key="`${index}-${userComplianceDoc.id}-`"
-                class="ml-2 pb-1"
-              >
-                <a
-                  v-if="userComplianceDoc.file"
-                  class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
-                  @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
-                  title="Click to download"
-                >
-                  <svgicon
-                    name="cloud-download"
-                    width="21"
-                    height="21"
-                    color="transparent white"
-                  ></svgicon>
-                  <span
-                    class="w-full pl-2 leading-tight"
-                  >{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name:null }}</span>
-                </a>
-              </div>
-            </div>
-            <div v-if="userMandatoryTrainings">
-              <p class="my-2">Mandatory Training Documents</p>
-              <span v-if="userMandatoryTrainings.length < 0" class="opacity-75">No Mandatory Training Documents</span>
-              <div
-                v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
-                :key="`${index}-${userMandatoryTraining.id}-`"
-                class="mx-4"
-              >
-                <a
-                  v-if="userMandatoryTraining.file"
-                  class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
-                  @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
-                  title="Click to download"
-                >
-                  <svgicon
-                    name="cloud-download"
-                    width="21"
-                    height="21"
-                    color="transparent white"
-                  ></svgicon>
-                  <span
-                    class="w-full pl-2 leading-tight"
-                  >{{userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name:null}}</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--COLUMN 3-->
-        <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
-          <div class="mx-3 md:my-6 border-b text-center pb-3">
-            <embed
-              class="object-cover w-48 h-48 rounded-full mx-auto"
-              :src="user.avatar ? user.avatar.file.url:null"
-            />
-            <img
-              v-if="!user.avatar"
-              class="w-48 rounded-full mx-auto"
-              src="~/assets/images/default-user-image.png"
-            />
-            <p class="m-2 text-gray">Sign-up verified by email</p>
-            <p
-              class="mx-4 font-semibold"
-            >{{user.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified"}}</p>
-            <!-- <p class="m-2 text-gray">Active at </p> -->
-            <div class="my-4">
-              <span class="m-2 ">Account is</span>
-              <span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
-            </div>
-          </div>
-          <div class="mx-3 mt-4">
-            <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
-            <span
-              class="tool inline-block"
-              data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant."
-              tabindex="1"
-            >
-              <svgicon
-                name="info"
-                width="21"
-                height="21"
-                color="white transparent black"
-                class="-mb-1 ml-2"
-              ></svgicon>
-            </span>
-            <div class="flex items-center">
-              <AppInput
-                class="w-full mr-2"
-                v-model="selectedStatus"
-                :type="'select'"
-                :name="'status'"
-                :placeholder="'Select...'"
-                :items="[
+						<div v-if="userComplianceDocuments">
+							<p class="my-2">Compliance Documents</p>
+							<span
+								v-if="userComplianceDocuments.length < 0"
+								class="opacity-75"
+							>No Mandatory Training Documents</span>
+							<div
+								v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
+								:key="`${index}-${userComplianceDoc.id}-`"
+								class="ml-2 pb-1"
+							>
+								<a
+									v-if="userComplianceDoc.file"
+									class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+									@click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
+									title="Click to download"
+								>
+									<svgicon name="cloud-download" width="21" height="21" color="transparent white"></svgicon>
+									<span
+										class="w-full pl-2 leading-tight"
+									>{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name:null }}</span>
+								</a>
+							</div>
+						</div>
+						<div v-if="userMandatoryTrainings">
+							<p class="my-2">Mandatory Training Documents</p>
+							<span
+								v-if="userMandatoryTrainings.length < 0"
+								class="opacity-75"
+							>No Mandatory Training Documents</span>
+							<div
+								v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
+								:key="`${index}-${userMandatoryTraining.id}-`"
+								class="mx-4"
+							>
+								<a
+									v-if="userMandatoryTraining.file"
+									class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+									@click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
+									title="Click to download"
+								>
+									<svgicon name="cloud-download" width="21" height="21" color="transparent white"></svgicon>
+									<span
+										class="w-full pl-2 leading-tight"
+									>{{userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name:null}}</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--COLUMN 3-->
+				<div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
+					<div class="mx-3 md:my-6 border-b text-center pb-3">
+						<embed
+							class="object-cover w-48 h-48 rounded-full mx-auto"
+							:src="user.avatar ? user.avatar.file.url:null"
+						/>
+						<img
+							v-if="!user.avatar"
+							class="w-48 rounded-full mx-auto"
+							src="~/assets/images/default-user-image.png"
+						/>
+						<p class="m-2 text-gray">Sign-up verified by email</p>
+						<p
+							class="mx-4 font-semibold"
+						>{{user.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified"}}</p>
+						<!-- <p class="m-2 text-gray">Active at </p> -->
+						<div class="my-4">
+							<span class="m-2">Account is</span>
+							<span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
+						</div>
+					</div>
+					<div class="mx-3 mt-4">
+						<span class="text-lg font-semibold font-semibold">Change Locum Status</span>
+						<span
+							class="tool inline-block"
+							data-tip="Locum is automatically 'Active' once passed the Verification Process. You cannot set the Locum to 'Active' if the Locum is not Compliant."
+							tabindex="1"
+						>
+							<svgicon
+								name="info"
+								width="21"
+								height="21"
+								color="white transparent black"
+								class="-mb-1 ml-2"
+							></svgicon>
+						</span>
+						<div class="flex items-center">
+							<AppInput
+								class="w-full mr-2"
+								v-model="selectedStatus"
+								:type="'select'"
+								:name="'status'"
+								:placeholder="'Select...'"
+								:items="[
                   { label: 'Active', value: 'Active' },
                   { label: 'Inactive', value: 'Inactive' },
                   { label: 'Deactivated', value: 'Deactivated' }
