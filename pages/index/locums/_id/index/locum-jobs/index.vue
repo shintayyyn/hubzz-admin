@@ -65,7 +65,7 @@ export default {
 	},
 	created() {
 		console.log("asdwqe", this.$route.query.status);
-		this.$route.query.status = "Allocated";
+		// this.$route.query.status = "Allocated";
 		if (this.$route.name == "index-locums-id-index-locum-jobs-index") {
 			this.$router.push({
 				path: `/locums/${this.user.id}/locum-jobs/locum-allocated-jobs`,
