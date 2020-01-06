@@ -128,10 +128,7 @@
 
 						<div v-if="userComplianceDocuments">
 							<p class="my-2">Compliance Documents</p>
-							<span
-								v-if="userComplianceDocuments.length < 0"
-								class="opacity-75"
-							>No Mandatory Training Documents</span>
+							<span v-if="!userComplianceDocuments.length" class="opacity-75">No Compliance Documents</span>
 							<div
 								v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
 								:key="`${index}-${userComplianceDoc.id}-`"
@@ -143,7 +140,7 @@
 									@click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
 									title="Click to download"
 								>
-									<svgicon name="cloud-download" width="21" height="21" color="transparent white"></svgicon>
+									<svgicon name="cloud-download" width="21" height="21" color="white"></svgicon>
 									<span
 										class="w-full pl-2 leading-tight"
 									>{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name:null }}</span>
@@ -153,7 +150,7 @@
 						<div v-if="userMandatoryTrainings">
 							<p class="my-2">Mandatory Training Documents</p>
 							<span
-								v-if="userMandatoryTrainings.length < 0"
+								v-if="!userMandatoryTrainings.length"
 								class="opacity-75"
 							>No Mandatory Training Documents</span>
 							<div
@@ -167,7 +164,7 @@
 									@click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
 									title="Click to download"
 								>
-									<svgicon name="cloud-download" width="21" height="21" color="transparent white"></svgicon>
+									<svgicon name="cloud-download" width="21" height="21" color="white"></svgicon>
 									<span
 										class="w-full pl-2 leading-tight"
 									>{{userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name:null}}</span>
@@ -221,10 +218,10 @@
 								:name="'status'"
 								:placeholder="'Select...'"
 								:items="[
-                  { label: 'Active', value: 'Active' },
-                  { label: 'Inactive', value: 'Inactive' },
-                  { label: 'Deactivated', value: 'Deactivated' }
-                ]"
+									{ label: 'Active', value: 'Active' },
+									{ label: 'Inactive', value: 'Inactive' },
+									{ label: 'Deactivated', value: 'Deactivated' }
+								]"
 							/>
 							<AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
 						</div>

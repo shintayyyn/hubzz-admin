@@ -16,7 +16,7 @@
       :key="`surgery-${index}`"
       class="relative w-full flex flex-col md:flex-row md:items-center rounded-lg bg-waterloo my-2 shadow-lg p-4 md:p-0 border-l-8 border-sunglow md:border-0"
     >
-      <div class="absolute bg-white w-full h-full rounded-r-lg md:rounded-lg opacity-50 text-black flex items-center justify-center -m-4 md:m-0" v-if="uploading.includes(document.practiceDocType.id)">Uploading...</div>
+      <AppLoading :loading="uploading.includes(document.practiceDocType.id)" :message="'Uploading'" :spinner="false" class="rounded-lg"/>
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col items-start md:flex-row md:items-center">
         <div v-if="document.practiceSpecificDoc" class="p-2 mb-4 md:m-2 bg-green-500 rounded-lg flex items-center">
           <svgicon
@@ -79,7 +79,6 @@
           </div>
         </div>
       </div>
-
     </div>
     <!-- END BODY -->
   </div>
@@ -87,7 +86,11 @@
 </template>
 
 <script>
+import AppLoading from '@/components/Base/AppLoading'
 export default {
+  components: {
+    AppLoading
+  },
   props: ["practice"],
   data() {
     return {

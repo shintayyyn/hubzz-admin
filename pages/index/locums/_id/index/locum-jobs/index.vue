@@ -1,32 +1,89 @@
 <template>
 	<div class="mt-5">
-		<div>
+		<!-- <div>
 			<AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
-		</div>
+		</div>-->
 		<div class="mx-4 md:mx-8">
 			<LocumJobsTabs :user="user" />
 			<nuxt-child />
+			<!-- <AppTable :columns="columns" :total="jobs.length" :items="jobs" /> -->
 		</div>
 	</div>
 </template>
 <script>
 import AppLoading from "@/components/Base/AppLoading";
+import AppTable from "@/components/Base/AppTable";
 import LocumJobsTabs from "@/components/Locums/LocumJobsTabs";
 export default {
 	components: {
 		AppLoading,
+		AppTable,
 		LocumJobsTabs
 	},
 	data() {
-		return {};
+		return {
+			jobs: {},
+			params: {
+				viewing_locum_user_id: "",
+				locum_status: "",
+				limit: 10,
+				offset: 0,
+				order_by: ["created_at:desc"]
+			},
+			columns: [
+				{
+					name: "Job Number",
+					dataIndex: "job_number"
+				},
+				{
+					name: "Practice / Surgery",
+					dataIndex: "",
+					class: "text-center"
+				},
+				{
+					name: "Title",
+					dataIndex: "title",
+					class: "text-center"
+				},
+				{
+					name: "From",
+					dataIndex: "date_start",
+					class: "text-center"
+				},
+				{
+					name: "To",
+					dataIndex: "date_start",
+					class: "text-center"
+				},
+				{
+					name: "Created",
+					dataIndex: "date_created",
+					class: "text-center"
+				}
+			]
+		};
 	},
 	created() {
+		console.log("asdwqe", this.$route.query.status);
+		// this.$route.query.status = "Allocated";
 		if (this.$route.name == "index-locums-id-index-locum-jobs-index") {
 			this.$router.push({
 				path: `/locums/${this.user.id}/locum-jobs/locum-allocated-jobs`,
 				query: this.$route.query
 			});
+			// const query = {
+			// 	...this.$router.query,
+			// 	status: "Allocated"
+			// };
+			// this.$router.push({
+			// 	path: `/locums/${this.user.id}/locum-jobs?status=Allocated`
+			// });
 		}
+
+		this.params.viewing_locum_user_id = this.user.id;
+		this.params.locum_status = this.$route.query.status;
+
+		this.getJobs(this.params);
 	},
 	computed: {
 		user() {
@@ -55,6 +112,14 @@ export default {
 				text: "Something went wrong!"
 			});
 			console.log("Get locum job error", err);
+		}
+	},
+	methods: {
+		getJobs(params) {
+			this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
+				console.log("locum job", res.data.jobs);
+				this.jobs = res.data.jobs;
+			});
 		}
 	}
 };

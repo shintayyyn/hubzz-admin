@@ -96,7 +96,7 @@
 							<AppButton
 								v-if="authAdminPermissions.includes('Edit Practice Other Information')"
 								:label="toEdit ? 'Cancel Editing' : 'Edit'"
-								@click="toEdit=!toEdit"
+								@click="edit()"
 							/>
 						</div>
 
@@ -165,11 +165,11 @@
 									:label="'Status'"
 									:placeholder="'Select...'"
 									:items="[
-                    { label: 'Active', value: 'Active' },
-                    { label: 'Inactive', value: 'Inactive' },
-                    { label: 'Suspended', value: 'Suspended' },
-                    { label: 'Deactivated', value: 'Deactivated' }
-                  ]"
+										{ label: 'Active', value: 'Active' },
+										{ label: 'Inactive', value: 'Inactive' },
+										{ label: 'Suspended', value: 'Suspended' },
+										{ label: 'Deactivated', value: 'Deactivated' }
+									]"
 								/>
 								<span
 									class="tool"
@@ -200,10 +200,10 @@
 								:label="'Change Practice Type'"
 								:placeholder="'Select...'"
 								:items="[
-                  { label: 'Hub', value: 'Hub' },
-                  { label: 'Spoke', value: 'Spoke' },
-                  { label: 'Stand Alone', value: 'Stand Alone' }
-                ]"
+									{ label: 'Hub', value: 'Hub' },
+									{ label: 'Spoke', value: 'Spoke' },
+									{ label: 'Stand Alone', value: 'Stand Alone' }
+								]"
 							/>
 							<AppInput
 								v-if="toPutPracticeType.type === 'Hub'"
@@ -212,9 +212,9 @@
 								:name="'hub_type'"
 								:placeholder="'Select...'"
 								:items="[
-                  { label: 'Type 1', value: 'Type 1' },
-                  { label: 'Type 2', value: 'Type 2' },
-                ]"
+									{ label: 'Type 1', value: 'Type 1' },
+									{ label: 'Type 2', value: 'Type 2' },
+								]"
 							/>
 							<AppButton :label="'Change'" @click="toChangePracticeType(practice.id,toPutPracticeType)" />
 						</div>
@@ -352,7 +352,6 @@ export default {
 				console.log("change practice type error!", err.message);
 			}
 		},
-
 		practiceTypeStyle(type) {
 			switch (type) {
 				case "Stand Alone":
@@ -368,6 +367,18 @@ export default {
 					return "bg-purple-500 text-white lg:px-8 sm:px-2";
 					break;
 				default:
+			}
+		},
+		edit() {
+			this.toEdit = !this.toEdit;
+			if (this.toEdit) {
+				this.toPutPractice.phone_number = this.practice.phone_number;
+				this.toPutPractice.report_to = this.practice.report_to;
+				this.toPutPractice.extra_information = this.practice.extra_information;
+				this.toPutPractice.status = this.practice.status;
+				this.toPutPractice.actived_until = this.practice.actived_until;
+				this.toPutPracticeType.type = this.practice.type;
+				this.toPutPracticeType.hub_type = this.practice.hub_type;
 			}
 		}
 	}

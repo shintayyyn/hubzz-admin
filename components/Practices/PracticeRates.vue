@@ -75,7 +75,7 @@
 				>Save Changes</button>
 				<button
 					class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-gray-400 hover:bg-gray-500 text-sm rounded-lg text-black shadow float-left"
-					@click="(toEdit = false), (formError = [])"
+					@click.prevent="cancel()"
 				>Cancel</button>
 			</div>
 		</div>
@@ -152,7 +152,6 @@ export default {
 				this.toPutPracticeRateInfo(this.practice.id);
 			}
 		},
-
 		async toPutPracticeRateInfo(specificPracticeID) {
 			try {
 				await this.$axios
@@ -177,6 +176,14 @@ export default {
 				});
 				console.log("index put locum detail compliance documents error", err);
 			}
+		},
+		cancel() {
+			this.toEdit = false;
+			this.formError = [];
+			this.toPutPracticeRate.gp_rate =
+				this.practice.rates.length > 0 ? this.practice.rates[0].rate : "";
+			this.toPutPracticeRate.others_rate =
+				this.practice.rates.length > 0 ? this.practice.rates[1].rate : "";
 		}
 	}
 };

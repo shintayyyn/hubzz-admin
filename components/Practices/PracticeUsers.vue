@@ -96,7 +96,7 @@ export default {
 				{
 					name: "Sign-Up Verified",
 					dataIndex: "email_verified_at",
-					class: "text-center"
+					class: "text-center localDate"
 				},
 				{
 					name: "Status",
