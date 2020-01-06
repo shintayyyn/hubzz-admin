@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="m-2">
 		<AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
 		<div class="w-full overflow-hidden">
 			<div v-if="authAdminPermissions.includes('Add Practice User')">
@@ -48,14 +48,12 @@
 </template>
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser";
-import AppPagination from "@/components/Base/AppPagination";
 import AppLoading from "@/components/Base/AppLoading";
 import AppTable from "@/components/Base/AppTable";
 export default {
 	props: ["practice"],
 	components: {
 		CreateUser,
-		AppPagination,
 		AppLoading,
 		AppTable
 	},
@@ -181,8 +179,7 @@ export default {
 			let practice_id = this.practice.id;
 			let limit = 5;
 			let offset = 0;
-			offset =
-				this.perPage * (parseInt(this.$route.query.practice_users_page) - 1);
+			offset = this.perPage * (parseInt(this.$route.query.practice_users_page) - 1);
 			let params = {
 				practice_id,
 				order_by: "created_at:desc",

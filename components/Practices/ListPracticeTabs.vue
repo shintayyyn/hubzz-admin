@@ -42,7 +42,6 @@ export default {
   computed: {
     getRoute() {
       return tab => {
-        console.log('tab', tab)
         if (!tab) {
           tab = "";
         }

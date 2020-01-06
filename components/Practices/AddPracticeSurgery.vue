@@ -4,7 +4,7 @@
   >
     <!-- HEADER -->
     <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
-      <div @click="$emit('close')" class="cursor-pointer">
+      <div @click="goBack()" class="cursor-pointer">
         <svgicon
           name="arrow-left-solid"
           height="32"
@@ -109,9 +109,11 @@
                     </div>
                   </div>
                 </div>
+
               </div>
             </transition-group>
           </div>
+          
           <div v-if="practice && practice.type == 'Hub'">
             <!--IF PRACTICE IS A HUB-->
             <transition-group name="slide" tag="p">
@@ -122,28 +124,31 @@
                 class="flex no-underline rounded-lg shadow my-2 transition-hover"
                 :class="spoke.invited ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
               >
-                <div class="flex flex-col text-white text-xs p-4">
-                  <div class="flex justify-between">
-                    <span class="font-bold">{{ spoke.surgery.name }}</span>
-                    <span
-                      v-if="spoke.invited"
-                      class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
-                      >Invited</span
-                    >
-                  </div>
-                  <!-- <span class="font-bold">{{ spoke.surgery.name }}</span> -->
-                  <span class="block w-full py-1">{{spoke.address_line_1}}</span>
-                  <span class="block w-full py-1">{{spoke.address_line_2}}</span>
-                  <span class="block w-full py-1">{{spoke.address_line_3}}</span>
-                  <div class="flex items-center my-1">
-                    <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
-                    <span>{{ spoke.surgery.code }}</span>
-                  </div>
-                  <div class="flex items-center my-1">
-                    <span class="p-2 bg-trout rounded mr-2">CCG</span>
-                    <span>{{ spoke.clinical_commissioning_group_name }}</span>
+                <div class="flex w-full">
+                  <div class="w-full text-white text-xs p-4">
+                    <div class="flex justify-between">
+                      <span class="font-bold">{{ spoke.surgery.name }}</span>
+                      <span
+                        v-if="spoke.invited"
+                        class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
+                        >Invited</span
+                      >
+                    </div>
+                    <!-- <span class="font-bold">{{ spoke.surgery.name }}</span> -->
+                    <span class="block w-full py-1">{{spoke.address_line_1}}</span>
+                    <span class="block w-full py-1">{{spoke.address_line_2}}</span>
+                    <span class="block w-full py-1">{{spoke.address_line_3}}</span>
+                    <div class="flex items-center my-1">
+                      <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
+                      <span>{{ spoke.surgery.code }}</span>
+                    </div>
+                    <div class="flex items-center my-1">
+                      <span class="p-2 bg-trout rounded mr-2">CCG</span>
+                      <span>{{ spoke.clinical_commissioning_group_name }}</span>
+                    </div>
                   </div>
                 </div>
+                
               </div>
             </transition-group>
           </div>
@@ -213,7 +218,7 @@ export default {
       surgeries: [],
       surgery: null,
       search: "",
-      hubzz: [],
+      
       practiceSpokes: [],
       hub: null,
       practiceCount: null,
@@ -242,8 +247,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.add_practice_page);
-      this.getAllSurgeries();
-      this.getOrphanSpokes();
+      this.getData()
     },
     search(value) {
       this.searchSubmit();
@@ -259,9 +263,17 @@ export default {
   },
 
   methods: {
+    goBack() {
+      if(this.practice){
+        this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries`)
+      }else{
+        this.$router.push(`/practices`)
+      }
+
+    },
     getPractices() {
       this.$store.dispatch("practices/fetchPractices", {
-        limit: 8,
+        limit: 10,
         order_by: "created_at:desc"
       });
     },
@@ -305,9 +317,11 @@ export default {
       offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
       
       const params = { limit, offset };
+
       if (this.search) {
         params.search = this.search;
       }
+
       if (this.practice && this.practice.type == "Hub") {
         await this.$axios
         .$get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`)
@@ -328,10 +342,10 @@ export default {
           });
       } else if (!this.practice) {
         await this.$axios
-          .$get(`/api/v1/admin/surgeries/count`, { params })
+          .$get(`/api/v1/admin/surgeries/count`, { params }) 
           .then(res => {
             this.total = res.data.count;
-            this.perPage = 8;
+            this.perPage = 10;
             this.totalPages = Math.ceil(this.total / this.perPage);
             this.getAllSurgeries();
           });
@@ -358,9 +372,13 @@ export default {
     },
 
     async getOrphanSpokes(params) {
-      console.log('params', params)
       let offset = 0;
       offset = this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+      if (this.search) {
+        params.search = this.search;
+        params.offset = 0;
+      }
+      this.practiceSpokes = []
       await this.$axios
         .$get(`/api/v1/admin/practices/`,{ params })
         .then(res => {
@@ -368,7 +386,6 @@ export default {
           res.data.practices.forEach(spoke => {
             invited = this.practiceSurgeries.find(invitation => 
               invitation.child_practice_id === spoke.id)
-            console.log('invited', invited)
             if(invited) {
               this.practiceSpokes.push({
                 ...spoke,
@@ -382,7 +399,6 @@ export default {
             }
           });
         });
-      console.log('practiceSpokes', this.practiceSpokes)
       this.loading = false
     },
 
@@ -416,7 +432,6 @@ export default {
           text: "Surgery Already Registered"
         });
       } else {
-        console.log("The surgery opened is", this.surgery);
         this.createPracticeModal = true;
       }
     },

@@ -61,7 +61,7 @@
     
     <div
 			class="practice-shield"
-			v-if="$route.name.includes('index-practices-id') || modal == true"
+			v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
 			@click="modal ? (modal = false) : $router.push('/practices')"
 		></div>
 		<transition name="slide" mode="out-in">
@@ -70,8 +70,6 @@
 			</div>
 		</transition>
 
-
-		
 		<nuxt-child />
 	</div>
 </template>
@@ -176,7 +174,8 @@ export default {
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
-
+      const status = ''
+      console.log('route', route.name)
 			const params = { limit, offset, order_by };
 
 			if (search) {
@@ -256,7 +255,7 @@ export default {
 
 	methods: {
 		show() {
-			this.modal = true;
+			this.$router.push(`/practices/add-practice`)
 		},
 
 		getPractices(params) {

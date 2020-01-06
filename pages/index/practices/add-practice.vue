@@ -1,8 +1,8 @@
 <template>
   <div>
     <transition name="slide" mode="out-in">
-			<div class="practice-modal shadow-lg" v-if="modal">
-				<AddPracticeSurgery @close="modal = false" />
+			<div class="practice-modal shadow-lg">
+				<AddPracticeSurgery />
 			</div>
 		</transition>
   </div>
@@ -30,5 +30,10 @@ export default {
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
+}
+@media screen and (min-width: 1200px) {
+	.practice-modal {
+		width: 80%;
+	}
 }
 </style>

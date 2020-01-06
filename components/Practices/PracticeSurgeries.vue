@@ -81,7 +81,7 @@
 		</transition>
 		<!-- END TABLE -->
 
-		<div class="add-practice-shield" v-if="modal || terminationModal" @click="closeModals()"></div>
+		<div class="add-practice-shield" v-if="terminationModal" @click="closeModals()"></div>
 		<transition name="slide" mode="out-in">
 			<div class="add-practice-modal shadow-lg" v-if="modal">
 				<AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
@@ -198,7 +198,7 @@ export default {
 	},
 	methods: {
 		show() {
-			this.modal = true;
+			this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`)
 		},
 		async viewTerminationModal(childId) {
 			console.log("id", childId);
@@ -299,14 +299,14 @@ export default {
 			}
 			return result;
 		},
-		pagechanged(e) {
-			const query = {
-				...this.$route.query,
-				page: e || 1
-			};
-			this.$router.push({ query });
-			this.getPractices(this.paramSort);
-		},
+		// pagechanged(e) {
+		// 	const query = {
+		// 		...this.$route.query,
+		// 		page: e || 1
+		// 	};
+		// 	this.$router.push({ query });
+		// 	this.getPractices(this.paramSort);
+		// },
 		async limitchanged(limit) {
 			this.currentPage = 1;
 			this.itemsPerPage = limit;

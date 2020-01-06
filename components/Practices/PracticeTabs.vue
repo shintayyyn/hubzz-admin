@@ -20,12 +20,12 @@
 		<nuxt-link
 			:to="getRoute('practice-sessions')"
 			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-			:class="$route.path.includes(`/practices/${practice.id}/practice-sessions`)? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+			:class="$route.path.includes(`/practices/${practice.id}/practice-sessions`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
 		>Sessions</nuxt-link>
 		<nuxt-link
 			:to="getRoute('practice-users')"
 			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-			:class="$route.path == `/practices/${practice.id}/practice-users` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+			:class="$route.path.includes(`/practices/${practice.id}/practice-users`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
 		>Users</nuxt-link>
 		<nuxt-link
 			:to="getRoute('practice-documents')"
