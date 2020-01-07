@@ -1,5 +1,5 @@
 <template>
-	<div class="max-w-2xl w-full overflow-hidden">
+	<div class=" w-full overflow-hidden">
     <div class="mx-2 float-right">
       <AppButton
         :label="'Issue HUBZZ Invoice'"
@@ -25,6 +25,14 @@
 			<template v-slot:total_amount_slot="slotProps">
 				<div>
 					{{'£ '+slotProps.item.total_amount }}
+				</div>
+			</template>
+
+      <template v-slot:period="slotProps">
+				<div>
+					{{ $moment(slotProps.item.date_start).format('MMM DD YYYY') + 
+            ' - ' + 
+            $moment(slotProps.item.date_end).format('MMM DD YYYY')}}
 				</div>
 			</template>
 
@@ -89,6 +97,12 @@ export default {
           dataIndex:"issued_at",
           class:"text-center localDate",
           sortable: 'true'
+        },
+        {
+          name: 'Period',
+          dataIndex: 'period',
+          slotName: 'period',
+          class:"text-center"
         },
         {
           name: '£ Amount',

@@ -124,7 +124,7 @@
 						<!-- SET MAX RATES ;  NOT REQUIRED -->
 						<div
 							class="p-2 mx-2 bg-gray-500 rounded-lg"
-							v-if="surgeryCreateSessions == 'true' || form.allow_surgery_create_sessions == 'true'"
+							v-if="surgeryCreateSessions === 'true' || form.allow_surgery_create_sessions === 'true'"
 						>
 							<div class="w-full p-1">
 								<AppInput
@@ -167,7 +167,7 @@
 									v-model="form.max_excess_hours"
 									:type="'number'"
 									:name="'max_excess_hours'"
-									:label="'Allow Spoke to Create Jobs/Sessions?'"
+									:label="'Set max excess hours rate limit for Spoke'"
 									:inStyle="'text-align:right'"
 								/>
 							</div>
@@ -286,17 +286,17 @@ export default {
 	methods: {
 		edit() {
 			this.editPermissions = !this.editPermissions;
-			if (this.editPermissions) {
-				this.form.allow_surgery_create_sessions = this.practice_surgery.allow_surgery_create_sessions;
-				this.form.max_hourly_rate_limit = this.practice_surgery.max_hourly_rate_limit;
-				this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit;
-				this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit;
-				this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit;
-				this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
-				this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum;
-				this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz;
-				this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries;
-			}
+			// if (this.editPermissions) {
+			// 	this.form.allow_surgery_create_sessions = this.practice_surgery.allow_surgery_create_sessions;
+			// 	this.form.max_hourly_rate_limit = this.practice_surgery.max_hourly_rate_limit;
+			// 	this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit;
+			// 	this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit;
+			// 	this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit;
+			// 	this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
+			// 	this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum;
+			// 	this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz;
+			// 	this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries;
+			// }
 		},
 		save() {
 			this.$axios

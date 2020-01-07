@@ -7,7 +7,7 @@
 			</nuxt-link>
 		</div>
 		<!-- HEADER ENDS HERE -->
-		<div class="p-3 text-gray-300 max-w-2xl w-full rounded-lg text-sm bg-waterloo">
+		<div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
 			<p class="flex">Practice Name</p>
 			<p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
 				<span class="mr-2">
