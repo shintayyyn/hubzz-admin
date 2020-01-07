@@ -12,19 +12,37 @@
 		</nuxt-link>
 		<PracticeTabs :practice="practice" />
 		<nuxt-child />
-		<div class="practice-shield" v-if="$route.name.includes('pracUserId')" @click="$router.go(-1)"></div>
-		<div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="$router.go(-1)"></div>
+		<div 
+      class="practice-shield" 
+      v-if="$route.name.includes('pracUserId')"
+       @click="$router.go(-1)"></div>
+
+		<div 
+      class="practice-shield" 
+      v-if="$route.name.includes('pracDocId')" 
+      @click="$router.go(-1)"></div>
+
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('practiceSessionId')"
 			@click="$router.go(-1)"
 		></div>
+
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('practiceSurgeryId')"
 			@click="$router.push(`/practices/${$route.params.id}/practice-surgeries`)"
 		></div>
-		<div class="practice-shield" v-if="$route.name.includes('practiceSessionPartId')"></div>
+
+		<div 
+      class="practice-shield" 
+      v-if="$route.name.includes('practiceSessionPartId')" 
+      @click="$router.go(-1)"></div>
+
+    <div 
+      class="practice-shield" 
+      v-if="$route.name.includes('add-spoke')" 
+      @click="$router.go(-1)"></div>
 	</div>
 </template>
 <script>

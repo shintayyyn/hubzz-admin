@@ -48,7 +48,7 @@
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class="">{{item.date_created}}</span>
+                <span class="">{{$moment(item.date_created).format("YYYY-MM-DD")}}</span>
               </div>
             </div>
           </div>
@@ -118,7 +118,8 @@ export default {
         locum_status : ['Completed','Terminated']
       }
       Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
+        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then( res => {
+          console.log( 'count completed', res.data.count)
           this.$store.commit('jobs/SET_LOCUM_COMPLETED_JOBS_COUNT', res.data.count)
           // this.total = res.data.count
           this.perPage = 10
@@ -141,12 +142,13 @@ export default {
         let offset = this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
         let params = {
           viewing_locum_user_id : this.user.id,
-          locum_status : 'Applied',
+          locum_status : 'Completed',
           order_by : orderBy ? orderBy : this.$route.query.order_by,
           limit: this.perPage,
           offset: offset
         }
         this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
+          console.log('locum completed jobs', res.data.jobs)
           this.$store.commit('jobs/SET_LOCUM_COMPLETED_JOBS', res.data.jobs)
           this.$store.commit('jobs/TOGGLE_LOADING',false )
         })

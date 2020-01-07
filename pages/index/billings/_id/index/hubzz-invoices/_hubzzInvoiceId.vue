@@ -4,12 +4,15 @@
       <div @click="goBack()" class="text-white hover:text-sunglow p-1">
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
       </div>
-      <!-- <div>
+      <div>
         <HubzzInvoice 
           :forViewing="true"
           :practice="practice" 
-          :practiceInvoice="practiceInvoice"/>
-      </div> -->
+          :invoiceItems="invoiceItems"
+          :dateStart="practiceInvoice.date_start"
+          :dateEnd="practiceInvoice.date_end"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -22,18 +25,36 @@ export default {
   data(){
     return{
       practiceInvoice: '',
-      practice: ''
+      practice: '',
+      invoiceItems: [],
     }
   },
   async asyncData({ app, route, params }){
     try{
-      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`)
+      let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`, {
+        viewing_practice_id: route.params.id
+      })
       const practiceInvoice = response.data.practice_invoice
+      console.log('practiceInvoice', practiceInvoice)
       response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
+
+      const practiceInvoiceItems = practiceInvoice.practice_invoice_items;
+      let invoiceItems = []
+			for (let i = 0; i < practiceInvoiceItems.length; i++) {
+				const newItem = {
+					job_part_id: practiceInvoiceItems[i].id,
+					description: practiceInvoiceItems[i].description,
+					total: practiceInvoiceItems[i].total
+				};
+				newItem.id = invoiceItems.length + 1;
+				invoiceItems.push(newItem);
+      }
+    
       return{
         practiceInvoice,
-        practice
+        practice,
+        invoiceItems
       }
     }catch(err){
       console.log('get invoice error', err)

@@ -3,12 +3,30 @@
 		<!-- HEADER -->
 		<div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
 			<AppButton
+        v-if="forViewing == true"
 				class="mr-2"
-				:label="forViewing ? 'Download' : 'Save'"
-				:icon="forViewing ? 'cloud-download' : 'save-icon'"
+				:label="'Export as PDF'"
+				:icon="'cloud-download'"
 				@click="exportToPdf()"
 			/>
-			<AppButton :label="'Save and Archive as Final'" :icon="'email'" />
+      <AppButton 
+        v-if="forViewing == false" 
+        class="m-2"
+        :label="'Save and Archive as Final'" 
+        :icon="'save-icon'"
+      />
+       <AppButton
+        v-if="forViewing == false"
+        class="m-2" 
+        :label="'Save as Draft'" 
+        :icon="'save-icon'"
+      />
+			<AppButton
+        v-if="forViewing == false"
+        class="m-2" 
+        :label="'Cancel'" 
+        :icon="'save-icon'"
+        @click="createInvoice()" />
 		</div>
 		<!-- HEADER ENDS HERE -->
 
@@ -38,58 +56,23 @@
 								class="border-2 border-gray-300 rounded-lg p-4 text-sm"
 								:class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
 							>
-								<AppInput
-									v-if="!forViewing"
-									class="w-full mr-2"
-									:type="'select'"
-									:name="'addressee'"
-									:label="'To: Accounts Department'"
-									:placeholder="'Select...'"
-									:inClass="'border-gray-400'"
-									:items="[
-										{ label: 'Select the Addressee', value: '1' },
-										{ label: 'Select the Addressee', value: '2' },
-										{ label: 'Select the Addressee', value: '3' }
-									]"
-								/>
-								<div v-else class="font-semibold">
+								<div class="font-semibold">
 									<div>To: Accounts Department</div>
 									<div class="w-full m-2">
 										<p>{{practice.surgery.name}}</p>
 										<p>{{practice.surgery.address.line_1}}</p>
 										<p>{{practice.surgery.address.line_2}}</p>
 										<p>{{practice.surgery.address.line_3}}</p>
+                     <div class="flex flex-col">
+                      <div>For the period</div>
+                      <div>
+                        <span>{{dateStart + " to " + dateEnd}}</span>
+                      </div>
+                    </div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div v-if="forViewing == false" class="py-2">
-						<AppInput
-							v-model="chosenPractice"
-							v-if="!forViewing"
-							class="w-full mr-2"
-							:type="'select'"
-							:name="'addressee'"
-							:label="'Select Practice'"
-							:placeholder="'Select...'"
-							:inClass="'border-gray-400'"
-							:items="[
-								{ label: 'Select the Addressee', value: '1' },
-								{ label: 'Select the Addressee', value: '2' },
-								{ label: 'Select the Addressee', value: '3' }
-							]"
-						/>
-						<!-- <label class="text-sm text-black font-semibold">Select Practice</label>
-						<select
-							v-model="chosenPractice"
-							class="block appearance-none font-bold text-sm w-full bg-white border-b-2 border-gray-500 py-2 leading-tight focus:outline-none"
-						>
-							<option
-								v-for="(practice, index) in practices"
-								:key="`practice-${index}`"
-							>{{ practice.surgery.name }}</option>
-						</select>-->
 					</div>
 				</div>
 
@@ -141,17 +124,18 @@
 							<div v-else class="px-2 py-1">{{item.description}}</div>
 							<div class="w-1/3 text-sm mx-1">
 								<template v-if="forViewing == false">
+                  
 									<input
 										v-if="doNotShow"
-										v-model="item.amount"
+										v-model="item.total"
 										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
 										:class="!doNotShow && 'pr-3'"
 										type="number"
 										min="0"
-										placeholder="Enter Amount"
+										placeholder="Enter Total"
 									/>
 								</template>
-								<p v-else class="px-2 py-1 text-right">{{ item.amount }}</p>
+								<p v-else class="px-2 py-1 text-right">{{ item.total }}</p>
 							</div>
 							<template v-if="forViewing == false">
 								<div class="mr-2 flex items-center" v-if="doNotShow">
@@ -189,13 +173,18 @@
 <script>
 import AppLoading from "@/components/Base/AppLoading";
 import AppButton from "@/components/Base/AppButton";
-import AppInput from "@/components/Base/AppInput";
 export default {
-	props: ["forViewing", "practice", "practiceInvoice"],
+	props: [
+    "forViewing",
+    "practice",
+    "practiceInvoice",
+    "invoiceItems",
+    "dateStart",
+    "dateEnd"
+    ],
 	components: {
 		AppLoading,
 		AppButton,
-		AppInput
 	},
 	data() {
 		return {
@@ -206,7 +195,7 @@ export default {
 				items: [],
 				total_amount: ""
 			},
-			invoiceItems: [],
+			// invoiceItems: [],
 			invoice: {},
 			doNotShow: true,
 			practices: [],
@@ -215,8 +204,11 @@ export default {
 		};
 	},
 	created() {
-		console.log("practiceInvoice", this.practiceInvoice);
-		console.log("practice", this.practice);
+    this.toPostPracticeInvoice.practice_id = this.practice.id ? this.practice.id : null
+    this.toPostPracticeInvoice.date_start = this.dateStart ? this.dateStart : null
+    this.toPostPracticeInvoice.date_end = this.dateEnd ? this.dateEnd : null
+    this.toPostPracticeInvoice.items = this.invoiceItems ? this.invoiceItems : null
+    this.toPostPracticeInvoice.total_amount = this.amountTotal
 
 		if (this.practiceInvoice) {
 			const practiceInvoiceItems = this.practiceInvoice.practice_invoice_items;
@@ -229,17 +221,20 @@ export default {
 				newItem.id = this.invoiceItems.length + 1;
 				this.invoiceItems.push(newItem);
 			}
-		}
+    }
+    
 	},
 	computed: {
 		amountTotal: function() {
+      console.log(this.invoiceItems)
 			if (this.invoiceItems.length > 0) {
 				const reducer = (accumulator, currentValue) =>
 					accumulator + currentValue;
 				let array = this.invoiceItems.map(invoiceItem =>
-					parseFloat(invoiceItem.amount)
+					parseFloat(invoiceItem.total)
 				);
-				let sum = array.reduce(reducer);
+        let sum = array.reduce(reducer);
+        console.log('sum', sum)
 				return sum;
 			} else {
 				return 0;
@@ -268,13 +263,7 @@ export default {
 
 		async createInvoice() {
 			await this.$axios
-				.post(`/api/v1/admin/practice-invoices`, {
-					practice_id: this.chosenPractice.id,
-					date_start: this.toPostPracticeInvoice.date_start,
-					data_end: this.toPostPracticeInvoice.date_end,
-					items: this.invoiceItems,
-					total_amount: this.amountTotal
-				})
+				.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 				.then(res => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
@@ -285,8 +274,8 @@ export default {
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
-						status: "success",
-						text: "Invoice Posted"
+						status: "danger",
+						text: err.response.data.message
 					});
 				});
 		},
@@ -310,7 +299,7 @@ export default {
 			const imgDataPdfHeader = canvasPdfHeader.toDataURL("image/png");
 
 			pageHeight = pageHeight - this.$refs["pdf-header"].offsetHeight;
-
+        
 			doc.addImage(
 				imgDataPdfHeader,
 				"PNG",
