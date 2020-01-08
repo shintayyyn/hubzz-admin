@@ -5,110 +5,28 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
       </div>
     </div>
-    <div id="toPrint" ref="content" class="md:m-4">
-      <div class="invoice flex flex-col bg-white p-4">
-        <div class="flex flex-wrap overflow-hidden">
-          <div class="px-1 w-3/5 overflow-hidden">
-            <!-- Column Content -->
-          </div>
-          <div class="mb-2 px-1 w-full sm:w-2/5 overflow-hidden">
-            <p class="text-sm text-right">
-              Hubzz Limited
-              Mws, 601 London Road
-              Westcliff-On-Sea SS0 9PE
-              billing@hubzz.co.uk
-              Registered Company 10832559
-            </p>
-          </div>
-        </div>
-        <div class="flex flex-wrap overflow-hidden">
-          <div class="my-1 px-1 w-2/3 overflow-hidden">
-            <div class="border-2 border-gray-300 rounded-lg p-4 text-sm">
-              <div class="pb-2">To: Accounts Department</div>
-              <div class="font-semibold">
-                <!-- <p>{{locumInvoice.practice.surgery.name}}</p> -->
-              </div>
-            </div>
-          </div>
-          <div class="my-1 px-1 w-1/3 overflow-hidden">
-            <div class="text-sm float-right text-right content-end">
-              <strong>INVOICE</strong>
-              <br />{{locumInvoice.issued_at ? $moment(locumInvoice.issued_at).format("MMM DD, YYYY | HH:ss:mm") : 'Not yet issued'}}
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-wrap overflow-hidden">
-          <div class="my-1 px-1 w-full overflow-hidden">
-            <div class="flex flex-col border-b border-gray-400 pb-2">
-              <!--HEADER-->
-              <div class="flex items-center justify-center py-2 bg-black">
-                <div class="w-2/3">
-                  <div class="text-white text-sm text-left px-4">
-                    <strong>Description</strong>
-                  </div>
-                </div>
-                <div class="w-1/3">
-                  <div class="text-white text-sm text-center">
-                    <strong>Total</strong>
-                  </div>
-                </div>
-                <div class="mr-2">
-                  <span class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">+</span>
-                </div>
-              </div>
-              <!--HEADER-->
-
-              <div class="flex justify-center py-1">
-                <div class="w-2/3 text-sm mx-1">
-                  <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
-                </div>
-                <div class="w-1/3 text-sm mx-1">
-                  <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
-                </div>
-                <div class="mr-2 flex items-center">
-                  <span class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
-                </div>
-              </div>
-              <div class="flex justify-center py-1">
-                <div class="w-2/3 text-sm mx-1">
-                  <textarea class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1" placeholder="Enter Description"></textarea>
-                </div>
-                <div class="w-1/3 text-sm mx-1">
-                  <input class="border-b-2 border-gray-300 w-full h-full focus:outline-none" type="number" placeholder="Enter Amount"/>
-                </div>
-                <div class="mr-2 flex items-center">
-                  <span class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white">-</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="my-1 px-1 w-full overflow-hidden">
-            <div class="flex flex-wrap">
-              <div class="my-1 px-1 w-2/3 font-bold">Total</div>
-              <div class="my-1 px-1 w-1/3 text-right">£1200</div>
-            </div>
-          </div>
-        </div>
-        <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
-          Payment by BACS:
-          <br />Account name: XXX
-          <br />Bank: XXX
-          <br />Sort code: XXX
-          <br />Account number: XXX
-          <br />
-        </div>
-      </div>
+    <div>
+      <HubzzInvoice 
+        :forViewing="true"
+        :practice="practice" 
+        :invoiceItems="invoiceItems"
+        :dateStart="locumInvoice.date_start"
+        :dateEnd="locumInvoice.date_end"
+      />
     </div>
   </div>
 </template>
 <script>
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
-import 'jspdf-autotable';
+import HubzzInvoice from '@/components/Billings/HubzzInvoice'
 export default {
+  components:{
+    HubzzInvoice
+  },
   data () {
     return{
-      locumInvoice: ''
+      practice: '',
+      locumInvoice: '',
+      invoiceItems:[],
     }
   },
   created(){
@@ -119,29 +37,30 @@ export default {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/locum-invoices/${route.params.practiceInvoiceId}`)
       const locumInvoice = response.data.locum_invoice
       console.log('locumInvoice', locumInvoice)
+      response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`) 
+      const practice = response.data.practice
+      let invoiceItems = []
+      const locumInvoiceItems = locumInvoice.items;
+      console.log('items', locumInvoiceItems)
+			for (let i = 0; i < locumInvoiceItems.length; i++) {
+				const newItem = {
+					job_part_id: locumInvoiceItems[i].id,
+					description: locumInvoiceItems[i].description,
+					total: locumInvoiceItems[i].total
+				};
+				newItem.id = invoiceItems.length + 1;
+				invoiceItems.push(newItem);
+      }
       return{
-        locumInvoice
+        locumInvoice,
+        practice,
+        invoiceItems
       }
     }catch(err){
       console.log('Get locum invoice error!', err)
     }
   },
   methods:{
-    createFile(){
-      return{}
-      const jsPDF = require('jspdf');
-        require('jspdf-autotable');
-        let doc = new jsPDF
-        doc.text('Hello world!', 10, 10)
-    },  
-    file(){
-      const doc = new jsPDF();
-      html2canvas(document.querySelector("#toPrint")).then(canvas => {
-        const image = canvas.toDataURL("image/png")
-        doc.addImage(image,'PNG',20,20);
-        doc.save("sample.pdf")
-      })
-    },
     goBack(){
       const query = {
         ...this.$route.query

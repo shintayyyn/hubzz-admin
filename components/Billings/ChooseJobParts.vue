@@ -197,7 +197,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getJobParts(this.params);
-		},
+    },
+    
 		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;
@@ -207,7 +208,8 @@ export default {
 			};
 			this.params.order_by = order_by;
 			this.getJobParts(this.params);
-		},
+    },
+    
 		statusStyle(status) {
 			switch (status) {
 				case "Disputed":

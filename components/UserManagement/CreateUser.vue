@@ -634,6 +634,7 @@ export default {
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
+          this.$router.push('/practices/pending-practices')
         } else if (this.adminCreate == true) {
           //Create New Admin
           console.log("new admin is being created");

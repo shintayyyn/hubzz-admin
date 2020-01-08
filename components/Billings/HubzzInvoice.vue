@@ -50,7 +50,7 @@
 							<p>10832559</p>
 						</div>
 					</div>
-					<div class="flex">
+          <div class="flex">
 						<div class="w-full md:w-2/3">
 							<div
 								class="border-2 border-gray-300 rounded-lg p-4 text-sm"
@@ -60,10 +60,13 @@
 									<div>To: Accounts Department</div>
 									<div class="w-full m-2">
 										<p>{{practice.surgery.name}}</p>
-										<p>{{practice.surgery.address.line_1}}</p>
-										<p>{{practice.surgery.address.line_2}}</p>
-										<p>{{practice.surgery.address.line_3}}</p>
-                     <div class="flex flex-col">
+                    <div class="mx-2 text-sm font-light">
+                      <p>{{practice.surgery.address.line_1}}</p>
+                      <p>{{practice.surgery.address.line_2}}</p>
+                      <p>{{practice.surgery.address.line_3}}</p>
+                    </div>
+										
+                     <div class="mt-2 flex flex-col">
                       <div>For the period</div>
                       <div>
                         <span>{{dateStart + " to " + dateEnd}}</span>
@@ -74,6 +77,7 @@
 							</div>
 						</div>
 					</div>
+          
 				</div>
 
 				<div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
@@ -111,7 +115,7 @@
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
 						<div class="flex w-full justify-center border-b border-gray-500 py-1">
-							<div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
+							<div v-if="forViewing == false" class=" bg-orange-500 w-2/3 text-sm mx-1">
 								<textarea
 									v-if="doNotShow"
 									v-model="item.description"
@@ -119,12 +123,11 @@
 									class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
 									placeholder="Enter Description"
 								></textarea>
-								<p v-else class="px-2 py-1">{{ item.description ? item.description : "No Description" }}</p>
+								<p v-else class="text-left px-2 py-1">{{ item.description ? item.description : "No Description" }}</p>
 							</div>
-							<div v-else class="px-2 py-1">{{item.description}}</div>
+							<div v-else class="w-full max-w px-2 py-1">{{item.description}}</div>
 							<div class="w-1/3 text-sm mx-1">
 								<template v-if="forViewing == false">
-                  
 									<input
 										v-if="doNotShow"
 										v-model="item.total"
@@ -180,7 +183,8 @@ export default {
     "practiceInvoice",
     "invoiceItems",
     "dateStart",
-    "dateEnd"
+    "dateEnd",
+    "byLocum"
     ],
 	components: {
 		AppLoading,
@@ -204,6 +208,8 @@ export default {
 		};
 	},
 	created() {
+    console.log('practice',this.practice)
+    console.log('invoice items', this.invoiceItems)
     this.toPostPracticeInvoice.practice_id = this.practice.id ? this.practice.id : null
     this.toPostPracticeInvoice.date_start = this.dateStart ? this.dateStart : null
     this.toPostPracticeInvoice.date_end = this.dateEnd ? this.dateEnd : null
