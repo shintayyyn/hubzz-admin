@@ -18,9 +18,7 @@
         </div>
       </div>
 
-      <div
-        class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg"
-      >
+      <div class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
         <div class="w-full text-gray-300 text-sm p-2">
           <!-- USER PERSONAL DETAILS -->
           <AppInput 
@@ -209,6 +207,19 @@
           </div>
           <!-- EMAIL ADDRESS AND PASSWORD - FOR USER CREDENTIALS  -->
 
+          <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
+          <AppInput
+            v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0"
+            v-model="toPostUser.practice_user_role_id"
+            :type="'select'"
+            :label="'Practice Role'"
+            :error="
+              formError.find(item => item.field === 'practice_user_role_id')
+            "
+            :items="practice_user_roles"
+          />
+          <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
+
           <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED -->
           <AppFilterSearch
             v-if="adminCreate"
@@ -226,6 +237,7 @@
           <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)"/>
          </div>
       </div>
+
     </div>
     <nuxt-child />
   </div>
@@ -254,6 +266,7 @@ export default {
       adminRoles: [],
       coordinates: "",
       postCodes: [],
+      practice_user_roles: [],
       toPostUser: {
         // USER PERSONAL DETAILS
         title: "",
@@ -284,7 +297,11 @@ export default {
         password_confirmation: "",
 
         // FOR ADMIN ROLES ; IF ADMIN IS BEING CREATED
-        roles_id: []
+        roles_id: [],
+
+        // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
+        practice_id: `${this.practice ? this.practice.id : ""}`,
+        practice_user_role_id: ''
       },
 
       showPasswordFocus: false,
@@ -292,15 +309,29 @@ export default {
   },
 
   async created() {
-    console.log('surgery', this.surgery)
-    console.log('practice', this.practice)
     if(this.surgery){
       await this.$axios
       .$post(`/api/v1/postcode-to-coordinates`,{ postcode: this.surgery.postcode})
       .then(res => {
-        console.log('res', res)
         this.toPostUser.coordinate_x = res.data.postcode_coordinate.coordinate_x,
         this.toPostUser.coordinate_y = res.data.postcode_coordinate.coordinate_y
+      })
+      .catch(err => {
+        store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
+        });
+      })
+    }
+
+    if(this.practice && this.userCount > 0) {
+      await this.$axios
+      .$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
+      .then(res => {
+        res.data.roles.forEach(role => {
+          this.practice_user_roles.push({ label: role.name, value: role.id})
+        })
       })
       .catch(err => {
         store.commit("SET_NOTIFICATION", {
@@ -420,7 +451,7 @@ export default {
   },
 
   methods: {
-   getPostCodes: debounce(function(input) {
+    getPostCodes: debounce(function(input) {
       const params = {
         postcode: input
       };
@@ -480,7 +511,6 @@ export default {
       return;
     },
     checkForm: function(userInfo, surgID) {
-      console.log('admin create', this.adminCreate)
       this.formError = [];
       let list = ["title", "suffix"];
       !this.adminCreate && list.push("roles_id");
@@ -505,7 +535,6 @@ export default {
         )
       }
         
-      console.log('list', list)
       this.Validate(this.toPostUser, list);
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
@@ -578,6 +607,7 @@ export default {
                   text: "New Practice User Created"
                 });
                 this.$emit("userCreated");
+                this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
                 this.$store.commit("SET_NOTIFICATION", {
@@ -587,10 +617,12 @@ export default {
                 });
               });
             await this.getPractices();
+            
           }else{
             await this.$axios
               .post(`/api/v1/admin/practices`, toPostUser)
               .then(res => {
+                this.$router.push('/practices/pending-practices')
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "success",
@@ -634,7 +666,6 @@ export default {
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
-          this.$router.push('/practices/pending-practices')
         } else if (this.adminCreate == true) {
           //Create New Admin
           console.log("new admin is being created");

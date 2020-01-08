@@ -70,7 +70,7 @@
 									<p class="font-semibold md:w-1/2">Maximum Excess Hours</p>
 									<p
 										class
-									>{{practice_surgery.max_excess_hours ?'£ '+ practice_surgery.max_excess_hours : 'N/A'}}</p>
+									>{{practice_surgery.max_excess_hours ? practice_surgery.max_excess_hours+' Hrs' : 'N/A'}}</p>
 								</div>
 							</div>
 						</div>

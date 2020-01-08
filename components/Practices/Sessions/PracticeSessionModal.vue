@@ -334,61 +334,6 @@
                     <p class="text-white">{{modalJobPart.invoiced ? 'Yes': 'No'}}</p>
                     <p class="mt-5 font-semibold">Issued?</p>
                     <p class="text-white">{{modalJobPart.issued ? 'Yes': 'No'}}</p>
-                    <!-- <div v-if="modalJobPart.job ? modalJobPart.job.platform_job : null">
-                      <div class="m-2 mt-5">
-                        <span>This job is </span>
-                        <span class="font-semibold">{{modalJobPart.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
-                        <span> of</span>
-                        <span class="font-semibold">IR35</span> 
-                      </div>
-
-                      <p class="m-2 mt-5 font-semibold">Role</p>
-                      <p class="m-2 ">{{modalJobPart.job.platform_job.profession.name}}</p>
-
-                      <p class="m-2 mt-5 w-1/2 font-semibold">Speciality</p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                        v-for="specialty in modalJobPart.job.platform_job.qualifications"
-                        :key="specialty.id + '-name'">
-                        {{specialty ? specialty.name:null}}
-                      </p>
-
-                      <p class="m-2 mt-5 w-1/2 font-semibold">Clinical Systems</p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                        v-for="clinicalSystem in modalJobPart.job.platform_job.clinical_systems"
-                        :key="clinicalSystem.id + '-name1'">
-                          {{clinicalSystem ? clinicalSystem.name:null}}
-                      </p>
-
-                      <p class="m-2 mt-5 w-1/2 font-semibold">Spoken Languages</p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500">
-                        English
-                      </p>
-                      <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                        v-for="spokenLanguage in modalJobPart.job.platform_job.spoken_languages"
-                        :key="spokenLanguage.id + '-name2'">
-                        {{spokenLanguage ? spokenLanguage.name:null}}
-                      </p>
-
-                      <div v-if="modalJobPart.job.platform_job.compliance_documents.length > 0">
-                        <p class="flex ml-2 font-semibold">Compliance Requirements for GPs:</p>
-                        <div class="text-sm ml-4 mb-2" v-for="(gpComplianceDocs,index) in modalJobPart.job.platform_job.compliance_documents"
-                          :key="`${index}-${gpComplianceDocs.name}`"
-                          >
-                            <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
-                        </div>
-                      </div>
-
-                      <div v-if="modalJobPart.job.platform_job.mandatory_trainings.length > 0">
-                        <p class="flex ml-2 font-semibold">Mandatory Trainings</p>
-                        <div class="text-sm ml-4 mb-2" v-for="(mandatoryTrainings, index) in modalJobPart.job.platform_job.mandatory_trainings"
-                          :key="`${index}-${mandatoryTrainings.name}`"
-                          >
-                            <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
-                        </div>
-                      </div>
-                    </div>
-                    <div v-else-if="modalJobPart.job ? modalJobPart.job.private_job : null">
-                    </div> -->
                   </div>
                 </div>
               </div>
@@ -463,14 +408,12 @@
 import JobPartModal from '@/components/Base/JobPartModal'
 import AppPagination from '@/components/Base/AppPagination'
 import { gmapApi } from 'vue2-google-maps'
-import AppTable from '@/components/Base/AppTable'
 import AppLoading from '@/components/Base/AppLoading'
 export default {
   props:['job', 'job_part'],
   components:{
     JobPartModal,
     AppPagination,
-    AppTable,
     AppLoading
   },
   data(){
@@ -518,6 +461,13 @@ export default {
     }
   },
   async created(){
+    if(this.job) {
+      console.log('job', this.job)
+    }
+    if(this.job_part) {
+      console.log('job part', this.job_part)
+    }
+    
     this.modalJobPart = this.job_part
 
     if (this.job && this.job.platform_job.appointed_to_locum ||
