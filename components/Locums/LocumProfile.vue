@@ -119,12 +119,7 @@
 							:class="!user.locum_detail.special_requirements && 'opacity-75'"
 						>{{user.locum_detail.special_requirements?user.locum_detail.special_requirements:'N/A'}}</p>
 						<p class="mt-2">Preferred rates</p>
-						<p
-							class="font-bold pl-2"
-						>{{user.locum_detail.rates[0].min && user.locum_detail.rates[0].max ? 'Per Hour: £'+user.locum_detail.rates[0].min+' - £'+user.locum_detail.rates[0].max : '(none)'}}</p>
-						<p
-							class="font-bold pl-2"
-						>{{user.locum_detail.rates[1].min && user.locum_detail.rates[1].max ? 'Per Half Day Session: £'+user.locum_detail.rates[1].min+' - £'+user.locum_detail.rates[1].max : '(none)'}}</p>
+						<p v-for="rate in (user.locum_detail && user.locum_detail.rates ? user.locum_detail.rates : [])" :key="`rates-${rate.id}`" class="font-bold pl-2">{{ `${rate.rate_type.name}: £${rate.min} - £${rate.max}` }}</p>
 
 						<div v-if="userComplianceDocuments">
 							<p class="my-2">Compliance Documents</p>
