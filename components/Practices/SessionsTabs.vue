@@ -1,10 +1,10 @@
 <template>
   <div class="flex justify-start overflow-x-auto">
     <nuxt-link
-      v-if="practice.type == 'Spoke'"
-      :to="getRoute(practice_surgery ? 'surgery-declined-sessions':'practice-declined-sessions')"
+      v-if="practice.type == 'Spoke' || practice_surgery"
+      :to="getRoute(practice_surgery ? 'surgery-pending-sessions':'practice-pending-sessions')"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-      :class="$route.path.includes(`practice-declined-sessions`) || $route.path.includes(`surgery-declined-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      :class="$route.path.includes(`practice-pending-sessions`) || $route.path.includes(`surgery-pending-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
     >Pending</nuxt-link>
 
     <nuxt-link 

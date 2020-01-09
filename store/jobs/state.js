@@ -3,6 +3,8 @@ export default () => ({
     viewing_sessions_practice_id :'',
     viewing_jobs_locum_user_id : '',
     // =========PRACTICE===========
+    practice_pending_sessions: [],
+    practice_pending_sessions_count: 0,
     practice_available_sessions: [],
     practice_available_sessions_count: 0,
     practice_applied_sessions: [],

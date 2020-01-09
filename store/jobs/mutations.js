@@ -10,6 +10,33 @@ export default{
   },
 
   // =================== PRACTICE ================
+
+  // ====================PENDING=====================
+  SET_PRACTICE_PENDING_SESSIONS(state, payload){
+    state.practice_pending_sessions = payload
+  },
+  SET_PRACTICE_PENDING_SESSIONS_COUNT(state, payload){
+      state.practice_pending_sessions_count = payload
+  },
+  // ADD_PRACTICE_AVAILABLE_SESSIONS(state, payload){
+  //     console.log('add practice available is working', payload)
+  //     state.practice_available_sessions.unshift(payload)
+  //     state.practice_available_sessions_count = state.practice_available_sessions_count + 1
+  //     if(state.practice_available_sessions_count > 10){
+  //         state.practice_available_sessions.pop()
+  //     }
+  // },
+  // DEDUCT_PRACTICE_AVAILABLE_SESSIONS(state, payload){
+  //     console.log('deduct practice available jobs is working', payload)
+
+  //     let index = state.practice_available_sessions.findIndex(
+  //         job => job.id === payload.id
+  //     )
+  //     state.practice_available_sessions.splice(index, 1)
+  //     state.practice_available_sessions_count = state.practice_available_sessions_count - 1
+  // },
+
+  // ====================LIVE=====================
   SET_PRACTICE_LIVE_SESSIONS(state, payload){
       state.practice_available_sessions = payload
   },

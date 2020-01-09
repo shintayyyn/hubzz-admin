@@ -70,23 +70,23 @@
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
                 @click="show(surgery.id)"
-                class="flex no-underline rounded-lg shadow my-2 transition-hover"
-                :class="
+                class="flex no-underline rounded-lg shadow my-2 transition-hover bg-waterloo hover:bg-waterloo-light cursor-pointer"
+                
+              >
+              <!-- :class="
                   [registeredPractice.includes(surgery.id)
                     ? 'bg-waterloo opacity-75'
                     : 'bg-waterloo hover:bg-waterloo-light cursor-pointer', 
                     toggleRegisteredPractice && registeredPractice.includes(surgery.id) && 'hidden']
-                "
-              >
+                " -->
                 <div class="flex w-full">
                   <div class="w-full text-white text-xs p-4">
                     <div class="w-full flex justify-between items-center">
                       <span class="font-bold">{{ surgery.name }}</span>
-                      <span
+                      <!-- <span
                         v-if="registeredPractice.includes(surgery.id)"
                         class="py-1 px-2 rounded-lg text-xs md:text-sm bg-green-600 shadow"
-                        >Registered</span
-                      >
+                        >Registered</span> -->
                     </div>
                     <span class="block w-full py-1">{{surgery.address.line_1}}</span>
                     <span class="block w-full py-1">{{surgery.address.line_2}}</span>
@@ -420,20 +420,21 @@ export default {
       await this.$axios.$get(`/api/v1/admin/surgeries/${id}`).then(res => {
         this.surgery = res.data.surgery;
       }),
-        await this.$axios
-          .$get(`/api/v1/admin/practices/count/?search=${this.surgery.name}`)
-          .then(res => {
-            this.practiceCount = res.data.count;
-          });
-      if (this.practiceCount > 0) {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: "Surgery Already Registered"
+      await this.$axios
+        .$get(`/api/v1/admin/practices/count/?search=${this.surgery.name}`)
+        .then(res => {
+          this.practiceCount = res.data.count;
         });
-      } else {
-        this.createPracticeModal = true;
-      }
+      this.createPracticeModal = true;
+      // if (this.practiceCount > 0) {
+      //   this.$store.commit("SET_NOTIFICATION", {
+      //     enabled: true,
+      //     status: "danger",
+      //     text: "Surgery Already Registered"
+      //   });
+      // } else {
+        
+      // }
     },
 
     shieldClickaway(){

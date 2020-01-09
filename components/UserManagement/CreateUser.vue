@@ -208,6 +208,7 @@
           <!-- EMAIL ADDRESS AND PASSWORD - FOR USER CREDENTIALS  -->
 
           <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
+           <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
           <AppInput
             v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0"
             v-model="toPostUser.practice_user_role_id"
@@ -512,8 +513,11 @@ export default {
     },
     checkForm: function(userInfo, surgID) {
       this.formError = [];
-      let list = ["title", "suffix"];
+      let list = ["title", "suffix",];
       !this.adminCreate && list.push("roles_id");
+      if(!this.practice){
+        list.push("practice_user_role_id","practice_id")
+      }
       // this.adminCreate || this.practice && 
       if(this.adminCreate || this.practice){
         list.push(
@@ -536,6 +540,7 @@ export default {
       }
         
       this.Validate(this.toPostUser, list);
+      console.log('form error',this.formError)
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
