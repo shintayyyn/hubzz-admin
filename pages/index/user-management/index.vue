@@ -188,7 +188,6 @@ export default {
 		AppConfirmCancel,
 		AppPagination,
 		AppButton,
-		AppTable
 	},
 	data() {
 		return {

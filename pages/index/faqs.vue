@@ -190,7 +190,6 @@ import AppConfirmCancel from "~/components/AppConfirmCancel";
 export default {
 	components: {
 		AppButton,
-		AppConfirmCancel
 	},
 	data() {
 		return {

@@ -98,7 +98,6 @@ export default {
 		CreateAdminRole,
 		AppPagination,
 		AppButton,
-		AppTable
 	},
 	data() {
 		return {

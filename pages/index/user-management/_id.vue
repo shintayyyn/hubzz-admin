@@ -46,14 +46,8 @@
 	</div>
 </template>
 <script>
-import AppInput from "@/components/Base/AppInput";
-import AppButton from "@/components/Base/AppButton";
-import AppFilterSearch from "@/components/Base/AppFilterSearch";
 export default {
 	components: {
-		AppInput,
-		AppButton,
-		AppFilterSearch
 	},
 	data() {
 		return {
