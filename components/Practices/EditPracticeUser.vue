@@ -245,7 +245,7 @@ export default {
   },
   computed: {
     authAdminPermissions() {
-      return this.$store.getters["auth/permissions"]
+      return this.$store.getters["permissions"]
     },
   },
   watch: {

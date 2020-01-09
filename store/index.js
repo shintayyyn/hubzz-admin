@@ -14,12 +14,13 @@ export const getters = {
     return state.admin_user_logged_in
   },
   permissions(state) {
-    const adminRoles = state.user.admin_detail.roles
+    console.log('state', state)
+    const adminRoles = state.auth.user.admin_detail.roles
     let toSetAdminPermissions = []
 
-    if(state.user && state.user.admin_detail && state.user.admin_detail.roles){
+    if(state.auth.user && state.auth.user.admin_detail && state.auth.user.admin_detail.roles){
       for(let i = 0; i < adminRoles.length; i++ ){
-        state.user.admin_detail.roles[i].permissions.map(item => {
+        state.auth.user.admin_detail.roles[i].permissions.map(item => {
           let existingPermission = toSetAdminPermissions.find(existing => existing.id == item.id)
           if(!existingPermission) {
             toSetAdminPermissions = toSetAdminPermissions.concat(item)

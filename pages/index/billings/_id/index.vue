@@ -2,9 +2,9 @@
 	<div class="billing-modal p-4 md:p-8 shadow-lg">
 		<!-- HEADER -->
 		<div class="flex items-center text-sm text-white py-2">
-			<div @click="$route.go(-1)" class="text-white hover:text-sunglow p-1">
+			<nuxt-link to="/billings" class="text-white hover:text-sunglow p-1">
 				<svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-			</div>
+			</nuxt-link>
 		</div>
 		<!-- HEADER ENDS HERE -->
 		<div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">

@@ -114,7 +114,7 @@ export default {
       return this.$store.state.practices.specificPracticeDocumentTypes;
     },
     authAdminPermissions() {
-      return this.$store.getters["auth/permissions"]
+      return this.$store.getters["permissions"]
     },
   },
 

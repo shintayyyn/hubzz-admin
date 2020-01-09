@@ -89,16 +89,13 @@ export default {
 					});
 				}, 2000);
 			}
-		}
-		// $route(value) {
-		//   this.$store.commit("TOGGLE_SIDEBAR", false);
-		//   document.body.style.overflow = "auto";
-		// }
-	},
-	mounted() {
-		const user = this.$auth.user;
-		console.log("user", user);
-		this.$store.commit("auth/SET_ADMIN_USER_PERMISSIONS", user);
+    },
+    mounted() {
+      const user = this.$auth.user;
+      console.log("user", user);
+      this.$store.commit("SET_ADMIN_USER_PERMISSIONS", user);
+    },
+
 	},
 
 	methods: {

@@ -204,7 +204,7 @@ export default {
 			return Math.ceil(this.itemCount / this.params.limit);
 		},
 		authAdminPermissions() {
-			return this.$store.getters["auth/permissions"];
+			return this.$store.getters["permissions"];
 		},
 		totalPages() {
 			return Math.ceil(this.itemCount / this.params.limit);

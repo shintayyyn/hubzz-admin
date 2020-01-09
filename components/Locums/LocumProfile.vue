@@ -190,7 +190,7 @@
 							<span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
 						</div>
             
-            <div class="bg-gray-800 p-2 text-sm font-semibold rounded-lg w-full">
+            <div class="cursor-pointer bg-gray-800 p-2 text-sm font-semibold rounded-lg w-full">
               Deactivate this Account?
             </div>
 					</div>

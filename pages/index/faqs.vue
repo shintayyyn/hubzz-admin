@@ -212,7 +212,7 @@ export default {
 			return this.$store.state.faqs.practiceFaqs;
 		},
 		authAdminPermissions() {
-			return this.$store.getters["auth/permissions"];
+			return this.$store.getters["permissions"];
 		}
 	},
 	async asyncData({ app, route, store, error }) {

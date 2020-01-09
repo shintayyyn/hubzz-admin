@@ -297,7 +297,7 @@ export default {
 			return this.$store.getters["adminusers/getAdminUsers"];
 		},
 		authAdminPermissions() {
-			return this.$store.getters["auth/permissions"];
+			return this.$store.getters["permissions"];
 		},
 		itemCount() {
 			return this.$store.state.adminusers.itemCount;
