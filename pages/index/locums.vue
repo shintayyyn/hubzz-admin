@@ -292,7 +292,6 @@ export default {
 		},
 		search(value) {
 			this.searchSubmit();
-			this.getLocums(this.params);
 		},
 		sort(value) {
 			// for mobile responsive filter

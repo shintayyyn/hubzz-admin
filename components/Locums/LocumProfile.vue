@@ -194,7 +194,12 @@
 							<span class="m-2">Account is</span>
 							<span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
 						</div>
+            
+            <div class="bg-gray-800 p-2 text-sm font-semibold rounded-lg w-full">
+              Deactivate this Account?
+            </div>
 					</div>
+
 					<div class="mx-3 mt-4">
 						<span class="text-lg font-semibold font-semibold">Change Locum Status</span>
 						<span
@@ -217,11 +222,7 @@
 								:type="'select'"
 								:name="'status'"
 								:placeholder="'Select...'"
-								:items="[
-									{ label: 'Active', value: 'Active' },
-									{ label: 'Inactive', value: 'Inactive' },
-									{ label: 'Deactivated', value: 'Deactivated' }
-								]"
+								:items="locumStatusChoices"
 							/>
 							<AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
 						</div>
@@ -244,10 +245,14 @@ export default {
 	data() {
 		return {
 			disabled: "true",
+
 			locumDetails: "",
+
+      locumStatusChoices: [],
 			selectedStatus: "",
 			profileTab: true,
 			jobTab: false,
+
 			userComplianceDocuments: [],
 			userCurrentJobs: [],
 			qualifications: [],
@@ -260,6 +265,16 @@ export default {
 
 	created() {
 		console.log("locum", this.user);
+    if(this.user.first_actived_at) {
+      this.locumStatusChoices = [
+        {label: 'Active', value: 'Active'},
+        {label: 'Inactive', value: 'Inactive'},
+      ]
+    } else {
+      this.locumStatusChoices = [
+        {label: 'Inactive'}
+      ]
+    }
 		this.locumDetails = this.user.locum_detail;
 		this.userComplianceDocuments = this.user.locum_detail.compliance_documents;
 		this.qualifications = this.user.locum_detail.qualifications;

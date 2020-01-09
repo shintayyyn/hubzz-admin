@@ -56,7 +56,6 @@
           />
         </button>
       </div>
-      <!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit">Go</button> -->
     </div>
     
     <div
