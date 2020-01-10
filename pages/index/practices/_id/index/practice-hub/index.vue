@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mt-5">
-      <transition name="fade" mode="out-in">
+
         <div v-if="practiceParent">
           <form class="flex flex-col bg-waterloo p-2 md:px-4 shadow rounded-lg sm:w-full lg:w-2/3">
             <div class="flex flex-wrap">
@@ -66,6 +66,9 @@
               </div>
             </div>
           </form>
+          <div class="w-full sm:w-1/4 p-2 mt-4 text-white rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
+            Terminate this Spoke
+          </div>
         </div>
         <div v-if="!practiceParent && practiceHub">
           <form class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg sm:w-full lg:w-2/3">
@@ -88,8 +91,9 @@
             </div>
           </form>
         </div>
-      </transition>
+         
     </div>
+    
     <nuxt-child/>
   </div>
 </template>

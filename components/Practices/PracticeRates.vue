@@ -13,11 +13,11 @@
 					class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
 					@click="toEdit = true"
 				>{{ practice.rates.length > 0 ? "Edit" : "Add" }}</button>
-				<div class="flex py-1">GP Rate</div>
+				<div class="flex py-1">GP Rate(Per Session)</div>
 				<div
 					class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
 				>{{ practice.rates.length > 0 ? "£" + practice.rates[0].rate : "N/A" }}</div>
-				<div class="flex py-1">Others Rate</div>
+				<div class="flex py-1">Others Rate(Per Session)</div>
 				<div
 					class="text-white text-lg font-semibold mx-3 leading-tight focus:outline-none"
 				>{{ practice.rates.length > 0 ? "£" + practice.rates[1].rate : "N/A" }}</div>

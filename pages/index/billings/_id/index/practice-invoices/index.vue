@@ -165,7 +165,7 @@ export default {
     }
   },
 	methods: {
-    getpracticeInvoices(params) {
+    getPracticeInvoices(params) {
       this.$store.dispatch("billings/fetchpracticeInvoices", {
         limit: this.params.limit,
         order_by: this.params.order_by,
@@ -195,7 +195,7 @@ export default {
 			};
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
-			this.getPractices(this.params);
+			this.getPracticeInvoices(this.params);
     },
     sorted(order_by) {
 			// go back to page 1

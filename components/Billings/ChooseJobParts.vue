@@ -75,7 +75,7 @@ export default {
 				},
 				{
 					name: "Approved At",
-					dataIndex: "approved_At",
+					dataIndex: "approved_at",
 					class: "text-center localDate",
 					sortable: true
 				},
@@ -125,16 +125,23 @@ export default {
 			limit,
 			offset,
 			order_by
-		};
+    };
+    console.log(this.filter)
 		if (this.includeDisputed) {
 			params = {
-				...params,
-				invoice_status: "Disputed"
+        completed_at_date_start: this.filter.approved_at_date_start,
+        completed_at_date_end: this.filter.approved_at_date_end,
+        invoice_status: "Disputed",
+        status: this.filter.status,
+        viewing_practice_id: this.filter.viewing_practice_id,
+        limit,
+        offset,
+        order_by
 			};
 		}
 		let jobPartCount,
 			jobParts = "";
-
+    console.log('params', params)
 		await this.$axios
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {

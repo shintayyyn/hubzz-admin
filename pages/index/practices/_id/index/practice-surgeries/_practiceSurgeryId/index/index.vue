@@ -4,10 +4,10 @@
 			<div class="flex flex-row items-center mb-4">
 				<div
 					class="leading-loose font-bold text-md sm:text-lg"
-				>{{practice_surgery.child_practice.surgery.name}}</div>
+				>{{practice_surgery.child_practice.surgery.name ? practice_surgery.child_practice.surgery.name : null}}</div>
 				<div
 					class="mx-2 text-sm sm:text-sm p-2 text-white-700 font-bold bg-blue-400 rounded-lg"
-				>{{practice_surgery.child_practice.surgery.code}}</div>
+				>{{practice_surgery.child_practice.surgery.code ? practice_surgery.child_practice.surgery.code : null}}</div>
 			</div>
 
 			<div class="flex flex-col">
@@ -209,6 +209,9 @@
 					</div>
 				</div>
 			</div>
+      <div class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
+        Terminate this Spoke
+      </div>
 		</div>
 	</div>
 </template>

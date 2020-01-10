@@ -14,6 +14,7 @@
         class="m-2"
         :label="'Save and Archive as Final'" 
         :icon="'save-icon'"
+        @click="createInvoice()"
       />
        <AppButton
         v-if="forViewing == false"
@@ -26,7 +27,7 @@
         class="m-2" 
         :label="'Cancel'" 
         :icon="'save-icon'"
-        @click="createInvoice()" />
+       />
 		</div>
 		<!-- HEADER ENDS HERE -->
 
