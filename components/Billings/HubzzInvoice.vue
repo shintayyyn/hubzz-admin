@@ -3,7 +3,7 @@
 		<!-- HEADER -->
 		<div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
 			<AppButton
-        v-if="forViewing == true"
+        
 				class="mr-2"
 				:label="'Export as PDF'"
 				:icon="'cloud-download'"
@@ -78,9 +78,8 @@
 							</div>
 						</div>
 					</div>
-          
 				</div>
-
+        <!-- FOR INVOICES -->
 				<div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
 					<div
 						:class="!doNotShow && 'px-4'"
@@ -116,7 +115,79 @@
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
 						<div class="flex w-full justify-center border-b border-gray-500 py-1">
-							<div v-if="forViewing == false" class=" bg-orange-500 w-2/3 text-sm mx-1">
+							<div v-if="forViewing == false" class=" w-2/3 text-sm mx-1">
+								<textarea
+									v-if="doNotShow"
+									v-model="item.description"
+									rows="2"
+									class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
+									placeholder="Enter Description"
+								></textarea>
+								<p v-else class="text-left px-2 py-1">{{ item.description ? item.description : "No Description" }}</p>
+							</div>
+							<div v-else class="w-full max-w px-2 py-1">{{item.description}}</div>
+							<div class="w-1/3 text-sm mx-1">
+								<template v-if="forViewing == false">
+									<input
+										v-if="doNotShow"
+										v-model="item.total"
+										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
+										:class="!doNotShow && 'pr-3'"
+										type="number"
+										min="0"
+										placeholder="Enter Total"
+									/>
+								</template>
+								<p v-else class="px-2 py-1 text-right text-black">{{ item.total }}</p>
+							</div>
+							<template v-if="forViewing == false">
+								<div class="mr-2 flex items-center" v-if="doNotShow">
+									<span
+										@click="deductInvoiceItem(item.id)"
+										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>-</span>
+								</div>
+							</template>
+						</div>
+					</div>
+				</div>
+        <!-- FOR DEBITS -->
+        <div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+					<div
+						:class="!doNotShow && 'px-4'"
+						:ref="'items-header'"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex items-center justify-center py-2 bg-black">
+							<div class="w-4/6">
+								<div class="text-white text-sm text-left px-4">
+									<strong>Debit Description</strong>
+								</div>
+							</div>
+							<div class="w-2/6">
+								<div class="text-white text-sm text-right px-4">
+									<strong>£ Amount</strong>
+								</div>
+							</div>
+							<div v-if="forViewing == false">
+								<div class="mr-2" v-if="doNotShow">
+									<span
+										@click="addDebitItem()"
+										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>+</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						v-for="(item, index) in debitItems"
+						:key="`item-${index}`"
+						:class="!doNotShow && 'px-4'"
+						:ref="`item-${index}`"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex w-full justify-center border-b border-gray-500 py-1">
+							<div v-if="forViewing == false" class=" w-2/3 text-sm mx-1">
 								<textarea
 									v-if="doNotShow"
 									v-model="item.description"
@@ -144,7 +215,7 @@
 							<template v-if="forViewing == false">
 								<div class="mr-2 flex items-center" v-if="doNotShow">
 									<span
-										@click="deductInvoiceItem(item.id)"
+										@click="deductDebitItem(item.id)"
 										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>-</span>
 								</div>
@@ -153,6 +224,78 @@
 					</div>
 				</div>
 
+        <!-- FOR CREDITS -->
+        <div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+					<div
+						:class="!doNotShow && 'px-4'"
+						:ref="'items-header'"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex items-center justify-center py-2 bg-black">
+							<div class="w-4/6">
+								<div class="text-white text-sm text-left px-4">
+									<strong>Credit Description</strong>
+								</div>
+							</div>
+							<div class="w-2/6">
+								<div class="text-white text-sm text-right px-4">
+									<strong>£Amount</strong>
+								</div>
+							</div>
+							<div v-if="forViewing == false">
+								<div class="mr-2" v-if="doNotShow">
+									<span
+										@click="addCreditItem()"
+										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>+</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						v-for="(item, index) in creditItems"
+						:key="`item-${index}`"
+						:class="!doNotShow && 'px-4'"
+						:ref="`item-${index}`"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex w-full justify-center border-b border-gray-500 py-1">
+							<div v-if="forViewing == false" class=" w-2/3 text-sm mx-1">
+								<textarea
+									v-if="doNotShow"
+									v-model="item.description"
+									rows="2"
+									class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
+									placeholder="Enter Description"
+								></textarea>
+								<p v-else class="text-left px-2 py-1">{{ item.description ? item.description : "No Description" }}</p>
+							</div>
+							<div v-else class="w-full max-w px-2 py-1">{{item.description}}</div>
+							<div class="w-1/3 text-sm mx-1">
+								<template v-if="forViewing == false">
+									<input
+										v-if="doNotShow"
+										v-model="item.total"
+										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
+										:class="!doNotShow && 'pr-3'"
+										type="number"
+										min="0"
+										placeholder="Enter Total"
+									/>
+								</template>
+								<p v-else class="px-2 py-1 text-right">{{ item.total }}</p>
+							</div>
+							<template v-if="forViewing == false">
+								<div class="mr-2 flex items-center" v-if="doNotShow">
+									<span
+										@click="deductCreditItem(item.id)"
+										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>-</span>
+								</div>
+							</template>
+						</div>
+					</div>
+				</div>
 				<div ref="items-total" class="flex justify-betwen px-4 pt-2">
 					<div class="my-1 px-1 w-3/4 font-bold">Total</div>
 					<div class="my-1 px-1 w-1/4 text-right">{{ "£ " + amountTotal }}</div>
@@ -199,7 +342,9 @@ export default {
 				date_end: "",
 				items: [],
 				total_amount: ""
-			},
+      },
+      debitItems:[],
+      creditItems:[],
 			// invoiceItems: [],
 			invoice: {},
 			doNotShow: true,
@@ -233,16 +378,27 @@ export default {
 	},
 	computed: {
 		amountTotal: function() {
-      console.log(this.invoiceItems)
 			if (this.invoiceItems.length > 0) {
-				const reducer = (accumulator, currentValue) =>
-					accumulator + currentValue;
-				let array = this.invoiceItems.map(invoiceItem =>
-					parseFloat(invoiceItem.total)
-				);
-        let sum = array.reduce(reducer);
-        console.log('sum', sum)
-				return sum;
+        let grossSum = 0
+        let debitTotal = 0 
+        let creditTotal = 0
+				const reducer = (accumulator, currentValue) => accumulator + currentValue;
+				let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total));
+        grossSum = invoiceItems.reduce(reducer);
+        console.log('grossSum', grossSum)
+        
+        if (this.debitItems.length > 0) {
+          let debitItems = this.debitItems.map(debitItem => parseFloat(debitItem.total))
+          debitTotal = debitItems.reduce(reducer);
+        }
+       
+        if (this.creditItems.length > 0) {
+          let creditItems = this.creditItems.map(creditItem => parseFloat(creditItem.total))
+          creditTotal = creditItems.reduce(reducer)
+        }
+        const netSum = parseFloat((grossSum - debitTotal) + creditTotal).toFixed(2)
+        console.log('netsum', netSum)
+				return netSum;
 			} else {
 				return 0;
 			}
@@ -259,14 +415,46 @@ export default {
 			};
 			newItem.id = this.invoiceItems.length + 1;
 			await this.invoiceItems.push(newItem);
-		},
+    },
 
-		async deductInvoiceItem(itemId) {
+    async deductInvoiceItem(itemId) {
 			const mapInvoiceItems = this.invoiceItems.map(
 				invoiceItem => invoiceItem.id
 			);
 			await this.invoiceItems.splice(mapInvoiceItems.indexOf(itemId), 1);
-		},
+    },
+    
+    async addDebitItem() {
+      const newItem = {
+        description: "",
+        amount: 0
+      }
+      newItem.id = this.debitItems.length + 1;
+      await this.debitItems.push(newItem)
+    },
+
+    async deductDebitItem(itemId) {
+			const mapDebitItems = this.debitItems.map(
+				debitItem => debitItem.id
+			);
+			await this.debitItems.splice(mapDebitItems.indexOf(itemId), 1);
+    },
+
+    async addCreditItem() {
+      const newItem = {
+        description: "",
+        amount: 0
+      }
+      newItem.id = this.creditItems.length + 1
+      await this.creditItems.push(newItem)
+    },
+
+    async deductCreditItem(itemId) {
+			const mapCreditItems = this.creditItems.map(
+				creditItem => creditItem.id
+			);
+			await this.creditItems.splice(mapCreditItems.indexOf(itemId), 1);
+    },
 
 		async createInvoice() {
 			await this.$axios
@@ -342,9 +530,9 @@ export default {
 			yPosition = yPosition + imgHeightItemsHeader;
 
 			// ITEMS
-			let totalJobParts = this.invoiceItems.length;
+			let totalItemCount = parseInt(this.invoiceItems.length + this.debitItems + this.creditItems)
 
-			for (let i = 0; i < totalJobParts; i++) {
+			for (let i = 0; i < totalItemCount; i++) {
 				// minus the current item invoice height to the pageHeight
 				pageHeight = pageHeight - this.$refs[`item-${i}`][0].offsetHeight;
 				// if all pageHeight is used, add page

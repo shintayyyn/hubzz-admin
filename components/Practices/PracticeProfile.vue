@@ -5,6 +5,8 @@
 				<div class="flex flex-wrap">
 					<!-- VIEW PRIMARY INFORMATION -->
 					<div v-if="practice.status !== 'Deactivated'" class="w-full md:w-1/2 text-gray-300 text-sm">
+            <p class="flex font-bold">Practice ID</p>
+            <p class="mx-2">{{practice ? practice.id : null}}</p>
 						<p class="flex font-bold">Practice Name</p>
 						<p class="flex flex-wrap items-center text-white text-sm mb-2 md:px-2">
 							<span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>

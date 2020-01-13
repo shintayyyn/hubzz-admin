@@ -142,8 +142,15 @@ export default {
 		let jobPartCount,
 			jobParts = "";
     console.log('params', params)
+    // await this.$axios
+		// 	.$get(`/api/v1/admin/job-parts/count`, { params })
+		// 	.then(res => {
+		// 		jobPartCount = res.data.count;
+    // 	});
+    
+    // FOR TESTING ONLY
 		await this.$axios
-			.$get(`/api/v1/admin/job-parts/count`, { params })
+			.$get(`/api/v1/admin/job-parts/count`)
 			.then(res => {
 				jobPartCount = res.data.count;
 			});
@@ -153,7 +160,13 @@ export default {
 			jobPartCount
 		);
 
-		await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+    // await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+		// 	console.log("res", res);
+		// 	jobParts = res.data.job_parts;
+    // });
+
+    // FOR TESTING ONLY
+		await this.$axios.$get(`/api/v1/admin/job-parts`).then(res => {
 			console.log("res", res);
 			jobParts = res.data.job_parts;
 		});

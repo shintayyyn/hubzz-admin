@@ -461,12 +461,12 @@ export default {
     }
   },
   async created(){
-    if(this.job) {
-      console.log('job', this.job)
-    }
-    if(this.job_part) {
-      console.log('job part', this.job_part)
-    }
+    // if(this.job) {
+    //   console.log('job', this.job)
+    // }
+    // if(this.job_part) {
+    //   console.log('job part', this.job_part)
+    // }
     
     this.modalJobPart = this.job_part
 
@@ -532,14 +532,16 @@ export default {
     },
     async getLocum(){
       if (this.job) {
-        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.platform_job.appointed_to_locum.id}`).then(res=>{
+        console.log('job', this.job)
+        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.appointed_to_locum.id}`).then(res=>{
           this.locumUser = res.data.user
         }).catch(err=>{
           console.log('get locum in job error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       } else if (this.job_part) {
-        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job_part.job.platform_job.appointed_to_locum.id}`).then(res=>{
+        console.log('job_part', this.job_part.appointed_to_locum_user_id)
+        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job_part.appointed_to_locum_user_id}`).then(res=>{
           this.locumUser = res.data.user
         }).catch(err=>{
           console.log('get locum in job error!!!',err)

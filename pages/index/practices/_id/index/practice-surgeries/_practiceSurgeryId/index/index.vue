@@ -209,7 +209,9 @@
 					</div>
 				</div>
 			</div>
-      <div class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
+      <div 
+        @click="terminateSpoke()"
+        class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
         Terminate this Spoke
       </div>
 		</div>
@@ -260,7 +262,7 @@ export default {
 				`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`
 			);
 			const practice_surgery = response.data.practice_surgery;
-			console.log("pracsurg", practice_surgery);
+			console.log("pracsurgery", practice_surgery);
 			return {
 				practice,
 				practice_surgery
@@ -287,19 +289,24 @@ export default {
 	},
 
 	methods: {
+    async terminateSpoke(){
+      await this.$axios.$delete(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}`)
+      .then(res=>{
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Successfully Terminated Spoke"
+        });
+      }).catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
+        });
+      })
+    },
 		edit() {
 			this.editPermissions = !this.editPermissions;
-			// if (this.editPermissions) {
-			// 	this.form.allow_surgery_create_sessions = this.practice_surgery.allow_surgery_create_sessions;
-			// 	this.form.max_hourly_rate_limit = this.practice_surgery.max_hourly_rate_limit;
-			// 	this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit;
-			// 	this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit;
-			// 	this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit;
-			// 	this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
-			// 	this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum;
-			// 	this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz;
-			// 	this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries;
-			// }
 		},
 		save() {
 			this.$axios
@@ -337,7 +344,13 @@ export default {
 						text: "Successfully Updated Spoke Permissions"
 					});
 					this.editPermissions = false;
-				});
+				}).catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+        })
 		}
 	}
 };

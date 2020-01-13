@@ -473,6 +473,7 @@ export default {
     getPractices() {
       this.$store.dispatch("practices/fetchPractices", {
         limit: 10,
+        status: 'Inactive',
         order_by: "created_at:desc"
       });
     },
@@ -620,9 +621,8 @@ export default {
                   status: "danger",
                   text: err.response.data.message
                 });
-              });
-            await this.getPractices();
-            
+              });  
+            await this.getPractices();      
           }else{
             await this.$axios
               .post(`/api/v1/admin/practices`, toPostUser)

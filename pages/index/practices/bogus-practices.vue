@@ -45,7 +45,7 @@
 				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
 				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
 				</span>
-			</div>-->
+			</div> -->
 			<template v-else>
 				<div class="mt-2 w-full text-center text-white">There are no registered practices.</div>
 			</template>
@@ -142,7 +142,7 @@ export default {
       const createdRoute = route.query.order_by;
       const limit = 10;
       const offset = page * limit - limit;
-      const status = "Inactive"
+      const status = "Bogus"
       order_by = createdRoute && createdRoute.order_by 
         ? createdRoute.order_by
         : "created_at:desc";

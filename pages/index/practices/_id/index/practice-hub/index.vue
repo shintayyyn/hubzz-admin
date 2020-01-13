@@ -66,8 +66,10 @@
               </div>
             </div>
           </form>
-          <div class="w-full sm:w-1/4 p-2 mt-4 text-white rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
-            Terminate this Spoke
+          <div
+          @click="toTerminateFromHub()"
+          class="w-full sm:w-1/4 p-2 mt-4 text-white rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
+            Terminate this spoke from Hub
           </div>
         </div>
         <div v-if="!practiceParent && practiceHub">
@@ -100,62 +102,84 @@
 <script>
 import PracticeHub from '@/components/Practices/PracticeHub'
 export default {
-    middleware: 'changedPracticeType',
-    components:{
-      PracticeHub
-    },
-    data(){
-      return{
-        // practice:'',
-        // practiceHub:'',
-        // practiceParent:''
-      }
-    },
-    computed:{
-      practice(){
-        return this.$store.state.practices.practice
-      },
-      practiceHub(){
-        return this.$store.state.practices.practiceHub
-      },
-      practiceParent(){
-        return this.$store.state.practices.practiceParent
-      }
-    },
-    async asyncData({ app, store, route, error }){
-      try{
-        //Practice Hub is the Practice's data as the Hub
-        //Practice Parent is the Practice's data as a Specific Practice
-        let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
-        const practice = response.data.practice
-        
-        response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
-        const practiceHub = response.data.practice
-
-        let practiceParent = ''
-        console.log('practice hub', practiceHub)
-        if (practiceHub.parent_practice) {
-            response = await app.$axios.$get(`/api/v1/admin/practices/${practiceHub.parent_practice.id}`)
-            practiceParent = response.data.practice
-            console.log('parent', practiceParent)
-            await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
-        }
-
-        await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
-        await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
-        await store.commit('practices/SET_PRACTICE_HUB',practiceHub)
-      
-        // return{
-        //     practice,
-        //     practiceHub,
-        //     practiceParent,
-        // }
-      }catch(err){
-        error({statusCode: 404})
-        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-        console.log('get parent practice error!!',err)
-      }
+  middleware: 'changedPracticeType',
+  components:{
+    // PracticeHub
+  },
+  data(){
+    return{
+      // practice:'',
+      // practiceHub:'',
+      // practiceParent:''
     }
+  },
+  computed:{
+    practice(){
+      return this.$store.state.practices.practice
+    },
+    practiceHub(){
+      return this.$store.state.practices.practiceHub
+    },
+    practiceParent(){
+      return this.$store.state.practices.practiceParent
+    }
+  },
+  async asyncData({ app, store, route, error }){
+    try{
+      //Practice Hub is the Practice's data as the Hub
+      //Practice Parent is the Practice's data as a Specific Practice
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.practice
+      
+      response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/parent-surgery`)
+      const practiceHub = response.data.practice
+
+      let practiceParent = ''
+      console.log('practice hub', practiceHub)
+      if (practiceHub.parent_practice) {
+          response = await app.$axios.$get(`/api/v1/admin/practices/${practiceHub.parent_practice.id}`)
+          practiceParent = response.data.practice
+          console.log('parent', practiceParent)
+          await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
+      }
+
+      await store.commit('practices/SET_PRACTICE_PARENT',practiceParent) 
+      await store.commit('practices/SET_SPECIFIC_PRACTICE',practice)
+      await store.commit('practices/SET_PRACTICE_HUB',practiceHub)
+    
+      // return{
+      //     practice,
+      //     practiceHub,
+      //     practiceParent,
+      // }
+    }catch(err){
+      error({statusCode: 404})
+      store.commit('SET_NOTIFICATION',
+      { enabled: true, 
+        status:'danger', 
+        text:'Something went wrong!'
+      })
+      console.log('get parent practice error!!',err)
+    }
+  },
+  methods: {
+    async toTerminateFromHub(){
+      await this.$axios.$delete(`/api/v1/admin/practices/${this.$route.params.id}/parent-surgery`)
+      .then(res => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Successfully Terminated Spoke"
+        });
+      }).catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
+        });
+      })
+    }
+  }
     
 }
 </script>

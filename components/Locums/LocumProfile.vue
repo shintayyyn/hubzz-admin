@@ -190,7 +190,9 @@
 							<span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
 						</div>
             
-            <div class="cursor-pointer bg-gray-800 p-2 text-sm font-semibold rounded-lg w-full">
+            <div
+              @click="toDeactivateLocum()"
+              class="cursor-pointer bg-gray-800 p-2 text-sm font-semibold rounded-lg w-full">
               Deactivate this Account?
             </div>
 					</div>
@@ -306,7 +308,24 @@ export default {
 				document.body.appendChild(link);
 				link.click();
 			});
-		},
+    },
+    
+    async toDeactivateLocum(){
+      await this.$axios.$put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`)
+      .then(res => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Locum Successfully Deactivated"
+        });
+      }).catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
+        });
+      })
+    },
 
 		async changeLocumUserStatus(locumID, activeDisabled) {
 			try {

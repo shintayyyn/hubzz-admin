@@ -11,6 +11,7 @@
 			:class="$route.path.includes(`/locums/${user.id}/locum-jobs`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
 		>Jobs</nuxt-link>
 		<nuxt-link
+      v-if="user.status !== 'Deactivated'"
 			:to="getRoute('locum-compliance')"
 			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
 			:class="$route.path === `/locums/${user.id}/locum-compliance` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
