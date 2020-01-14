@@ -142,34 +142,37 @@ export default {
 		let jobPartCount,
 			jobParts = "";
     console.log('params', params)
-    // await this.$axios
-		// 	.$get(`/api/v1/admin/job-parts/count`, { params })
-		// 	.then(res => {
-		// 		jobPartCount = res.data.count;
-    // 	});
-    
-    // FOR TESTING ONLY
-		await this.$axios
-			.$get(`/api/v1/admin/job-parts/count`)
+    await this.$axios
+			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count;
-			});
+    	});
+    
+    // FOR TESTING ONLY
+		// await this.$axios
+		// 	.$get(`/api/v1/admin/job-parts/count`)
+		// 	.then(res => {
+		// 		jobPartCount = res.data.count;
+		// 	});
 
 		await this.$store.commit(
 			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
 			jobPartCount
 		);
 
-    // await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+    await this.$axios
+      .$get(`/api/v1/admin/job-parts`, { params })
+      .then(res => {
+        console.log("res", res);
+        jobParts = res.data.job_parts;
+      });
+
+    // FOR TESTING ONLY
+		// await this.$axios.$get(`/api/v1/admin/job-parts`).then(res => {
 		// 	console.log("res", res);
 		// 	jobParts = res.data.job_parts;
     // });
-
-    // FOR TESTING ONLY
-		await this.$axios.$get(`/api/v1/admin/job-parts`).then(res => {
-			console.log("res", res);
-			jobParts = res.data.job_parts;
-		});
+    
 		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts);
 		await this.$store.commit("jobs/TOGGLE_LOADING", false);
 	},
