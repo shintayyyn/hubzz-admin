@@ -29,7 +29,7 @@
 					<div class="w-full flex justify-between items-center mb-2">
 						<AppButton :label="'Go'" @click="chooseJobPartsModal = true" />
 						<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
-							<input type="checkbox" id="disputed" value="true" v-model="includeDisputed" />
+							<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
 							<label for="disputed">Show Disputed Invoices</label>
 						</div>
 					</div>
@@ -41,6 +41,7 @@
         :forViewing="false" 
         :practice="practice"
         :invoiceItems="invoiceItems"
+        :disputedItems="disputedItems"
         :dateStart="toFilter.approved_at_date_start"
         :dateEnd="toFilter.approved_at_date_end" 
       />
@@ -54,7 +55,7 @@
 			<div class="choose-job-parts-modal shadow-lg" v-if="chooseJobPartsModal">
 				<ChooseJobParts
 					:filter="toFilter"
-					:includeDisputed="includeDisputed"
+					:showDisputed="showDisputed"
 					@close="chooseJobPartsModal = false"
 					@chosenJobParts="toProcessInvoiceItems"
 				/>
@@ -79,19 +80,20 @@ export default {
 		return {
 			loading: false,
 			chooseJobPartsModal: false,
-			includeDisputed: false,
+			showDisputed: false,
 
 			toFilter: {
 				viewing_practice_id: this.$route.params.id,
 				approved_at_date_start: "",
 				approved_at_date_end: "",
 				status: "",
-				invoice_status: this.includeDisputed == true ? "Disputed" : null
+				invoice_status: this.showDisputed == true ? "Disputed" : null
 			},
 
 			practice: "",
 			chosenJobParts: [],
-			invoiceItems: []
+      invoiceItems: [],
+      disputedItems:[],
 		};
 	},
 	async asyncData({ app, route, store }) {
@@ -108,12 +110,12 @@ export default {
 		}
 	},
 	methods: {
-		toProcessInvoiceItems(chosenJobParts) {
-			console.table("asd", chosenJobParts);
+		toProcessInvoiceItems(chosenJobParts, isDisputed) {
 			this.chooseJobPartsModal = false;
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        console.log("chosenJobPart",chosenJobParts[i] )
+        console.log("chosenJobPart",chosenJobParts[i])
 				const newItem = {
+          type: "Job Part - " + chosenJobParts[i].invoice_status,
 					job_part_id: chosenJobParts[i].id,
 					description:
 						"Job Number " +
@@ -124,15 +126,20 @@ export default {
 						chosenJobParts[i].date_start +
 						" to " +
 						chosenJobParts[i].date_end,
-					hours: chosenJobParts[i].final_hours,
 					total: parseFloat(
 						chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate
 					)
-				};
-				newItem.id = this.invoiceItems.length + 1;
-				this.invoiceItems.push(newItem);
-				this.chooseJobPartsModal = false;
-			}
+        };
+        newItem.id = this.invoiceItems.length + 1;
+        if(isDisputed == true) {
+          this.disputedItems.push(newItem)
+        } else {
+          this.invoiceItems.push(newItem);
+        }
+				
+      }
+
+      console.log('invoiceItems', this.invoiceItems)
     },
     
 		goBack() {

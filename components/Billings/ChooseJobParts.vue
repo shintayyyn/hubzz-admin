@@ -19,7 +19,8 @@
 					@pagechanged="pagechanged"
 					@sorted="sorted"
 				>
-					<template v-slot:checker="slotProps">
+					<template
+            v-slot:checker="slotProps">
 						<input type="checkbox" :id="slotProps.item" :value="slotProps.item" v-model="chosenJobParts" />
 						<label :for="slotProps.item"></label>
 					</template>
@@ -40,7 +41,7 @@
 import AppTable from "@/components/Base/AppTable";
 import AppButton from "@/components/Base/AppButton";
 export default {
-	props: ["filter", "includeDisputed"],
+	props: ["filter", "showDisputed"],
 	components: {
 		AppButton,
 		AppTable
@@ -50,7 +51,7 @@ export default {
 			// jobPartCount: 0,
 			// jobParts: [],
 			chosenJobParts: [],
-
+      disputedJobParts: [],
 			// for app table
 			currentPage: 1,
 			params: {
@@ -61,7 +62,8 @@ export default {
 			},
 			loading: false,
 			columns: [
-				{
+        
+        {
 					name: "Check",
 					dataIndex: "checker",
 					class: "text-center",
@@ -127,7 +129,7 @@ export default {
 			order_by
     };
     console.log(this.filter)
-		if (this.includeDisputed) {
+		if (this.showDisputed) {
 			params = {
         completed_at_date_start: this.filter.approved_at_date_start,
         completed_at_date_end: this.filter.approved_at_date_end,
@@ -201,7 +203,14 @@ export default {
 			console.log("toggleCheck", item);
 		},
 		emitChosenJobParts(event) {
-			this.$emit("chosenJobParts", this.chosenJobParts);
+      if(this.showDisputed === false){
+        console.log('false')
+        this.$emit("chosenJobParts", this.chosenJobParts, false);
+      }else if(this.showDisputed === true){
+        console.log('true')
+        this.$emit("chosenJobParts", this.chosenJobParts, true);
+      }
+			
 		},
 		getJobParts(params) {
 			this.$store.dispatch("jobs/fetchJobParts", {

@@ -3,11 +3,25 @@
 		<!-- HEADER -->
 		<div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
 			<AppButton
-        
+        v-if="forViewing == true" 
 				class="mr-2"
 				:label="'Export as PDF'"
 				:icon="'cloud-download'"
 				@click="exportToPdf()"
+			/>
+      <AppButton
+        v-if="forViewing == true" 
+				class="mr-2"
+				:label="'Test Export'"
+				:icon="'cloud-download'"
+				@click="testHubzzInvoice()"
+			/>
+      <AppButton
+        v-if="forViewing == true" 
+				class="mr-2"
+				:label="'Test Multiple Page'"
+				:icon="'cloud-download'"
+				@click="testMultiplePage()"
 			/>
       <AppButton 
         v-if="forViewing == false" 
@@ -16,7 +30,7 @@
         :icon="'save-icon'"
         @click="createInvoice()"
       />
-       <AppButton
+      <AppButton
         v-if="forViewing == false"
         class="m-2" 
         :label="'Save as Draft'" 
@@ -80,7 +94,7 @@
 					</div>
 				</div>
         <!-- FOR INVOICES -->
-				<div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+				<div v-if="invoiceItems && invoiceItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
 					<div
 						:class="!doNotShow && 'px-4'"
 						:ref="'items-header'"
@@ -98,12 +112,12 @@
 								</div>
 							</div>
 							<div v-if="forViewing == false">
-								<div class="mr-2" v-if="doNotShow">
+								<!-- <div class="mr-2" v-if="doNotShow">
 									<span
 										@click="addInvoiceItem()"
 										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>+</span>
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>
@@ -151,6 +165,80 @@
 						</div>
 					</div>
 				</div>
+
+        <!-- FOR DISPUTED -->
+				<div v-if="disputedItems && disputedItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+					<div
+						:class="!doNotShow && 'px-4'"
+						:ref="'items-header'"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex items-center justify-center py-2 bg-black">
+							<div class="w-4/6">
+								<div class="text-white text-sm text-left px-4">
+									<strong>Disputed Job Description</strong>
+								</div>
+							</div>
+							<div class="w-2/6">
+								<div class="text-white text-sm text-right px-4">
+									<strong>£Amount</strong>
+								</div>
+							</div>
+							<!-- <div v-if="forViewing == false">
+								<div class="mr-2" v-if="doNotShow">
+									<span
+										@click="addInvoiceItem()"
+										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>+</span>
+								</div>
+							</div> -->
+						</div>
+					</div>
+					<div
+						v-for="(item, index) in disputedItems"
+						:key="`item-${index}`"
+						:class="!doNotShow && 'px-4'"
+						:ref="`item-${index}`"
+						:style="`min-width: ${doNotShow ? '733px' : ''}`"
+					>
+						<div class="flex w-full justify-center border-b border-gray-500 py-1">
+							<div v-if="forViewing == false" class=" w-2/3 text-sm mx-1">
+								<textarea
+									v-if="doNotShow"
+									v-model="item.description"
+									rows="2"
+									class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
+									placeholder="Enter Description"
+								></textarea>
+								<p v-else class="text-left px-2 py-1">{{ item.description ? item.description : "No Description" }}</p>
+							</div>
+							<div v-else class="w-full max-w px-2 py-1">{{item.description}}</div>
+							<div class="w-1/3 text-sm mx-1">
+								<template v-if="forViewing == false">
+									<input
+										v-if="doNotShow"
+										v-model="item.total"
+										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
+										:class="!doNotShow && 'pr-3'"
+										type="number"
+										min="0"
+										placeholder="Enter Total"
+									/>
+								</template>
+								<p v-else class="px-2 py-1 text-right text-black">{{ item.total }}</p>
+							</div>
+							<template v-if="forViewing == false">
+								<div class="mr-2 flex items-center" v-if="doNotShow">
+									<span
+										@click="deductInvoiceItem(item.id)"
+										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+									>-</span>
+								</div>
+							</template>
+						</div>
+					</div>
+				</div>
+        
         <!-- FOR DEBITS -->
         <div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
 					<div
@@ -296,6 +384,7 @@
 						</div>
 					</div>
 				</div>
+        
 				<div ref="items-total" class="flex justify-betwen px-4 pt-2">
 					<div class="my-1 px-1 w-3/4 font-bold">Total</div>
 					<div class="my-1 px-1 w-1/4 text-right">{{ "£ " + amountTotal }}</div>
@@ -326,6 +415,7 @@ export default {
     "practice",
     "practiceInvoice",
     "invoiceItems",
+    "disputedItems",
     "dateStart",
     "dateEnd",
     "byLocum"
@@ -345,6 +435,7 @@ export default {
       },
       debitItems:[],
       creditItems:[],
+
 			// invoiceItems: [],
 			invoice: {},
 			doNotShow: true,
@@ -354,49 +445,49 @@ export default {
 		};
 	},
 	created() {
-    console.log('practice',this.practice)
-    console.log('invoice items', this.invoiceItems)
+    // console.log('practice',this.practice)
+    // console.log('invoice items', this.invoiceItems)
+    
     this.toPostPracticeInvoice.practice_id = this.practice.id ? this.practice.id : null
     this.toPostPracticeInvoice.date_start = this.dateStart ? this.dateStart : null
     this.toPostPracticeInvoice.date_end = this.dateEnd ? this.dateEnd : null
-    this.toPostPracticeInvoice.items = this.invoiceItems ? this.invoiceItems : null
+    this.toPostPracticeInvoice.items = this.invoiceItems.concat(this.disputedItems,this.debitItems,this.creditItems)
     this.toPostPracticeInvoice.total_amount = this.amountTotal
 
-		if (this.practiceInvoice) {
-			const practiceInvoiceItems = this.practiceInvoice.practice_invoice_items;
-			for (let i = 0; i < practiceInvoiceItems.length; i++) {
-				const newItem = {
-					job_part_id: practiceInvoiceItems[i].job_part.id,
-					description: practiceInvoiceItems[i].description,
-					amount: practiceInvoiceItems[i].total
-				};
-				newItem.id = this.invoiceItems.length + 1;
-				this.invoiceItems.push(newItem);
-			}
-    }
-    
+    // console.log('items', ...this.invoiceItems,...this.disputedItems,...this.debitItems,...this.creditItems)
 	},
 	computed: {
 		amountTotal: function() {
-			if (this.invoiceItems.length > 0) {
+			if (this.invoiceItems.length > 0 || this.disputedItems.length > 0) {
         let grossSum = 0
+        let invoiceItemTotal = 0
+        let disputedItemTotal = 0
         let debitTotal = 0 
         let creditTotal = 0
 				const reducer = (accumulator, currentValue) => accumulator + currentValue;
-				let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total));
-        grossSum = invoiceItems.reduce(reducer);
-        console.log('grossSum', grossSum)
         
-        if (this.debitItems.length > 0) {
+        if(this.invoiceItems && this.invoiceItems.length > 0) {
+          let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total));
+          invoiceItemTotal = invoiceItems.reduce(reducer)
+        }
+
+        if(this.disputedItems && this.disputedItems.length > 0) {
+          let disputedItems = this.disputedItems.map(disputedItem => parseFloat(disputedItem.total))
+          disputedItemTotal = disputedItems.reduce(reducer)
+        }
+
+        grossSum = parseFloat(invoiceItemTotal + disputedItemTotal);
+        
+        if (this.debitItems && this.debitItems.length > 0) {
           let debitItems = this.debitItems.map(debitItem => parseFloat(debitItem.total))
           debitTotal = debitItems.reduce(reducer);
         }
        
-        if (this.creditItems.length > 0) {
+        if (this.creditItems && this.creditItems.length > 0) {
           let creditItems = this.creditItems.map(creditItem => parseFloat(creditItem.total))
           creditTotal = creditItems.reduce(reducer)
         }
-        const netSum = parseFloat((grossSum - debitTotal) + creditTotal).toFixed(2)
+        const netSum = parseFloat((grossSum + debitTotal) - creditTotal).toFixed(2)
         console.log('netsum', netSum)
 				return netSum;
 			} else {
@@ -405,6 +496,16 @@ export default {
 		}
 	},
 	methods: {
+    async testHubzzInvoice() {
+      window.open(
+        `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/pdf`
+      );
+    },
+    async testMultiplePage() {
+      window.open(
+        `${process.env.API_URL}/practice-invoices/test/pdf`
+      )
+    },
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
 			const newItem = {
@@ -426,6 +527,7 @@ export default {
     
     async addDebitItem() {
       const newItem = {
+        type: "Debit",
         description: "",
         amount: 0
       }
@@ -442,6 +544,7 @@ export default {
 
     async addCreditItem() {
       const newItem = {
+        type: "Credit",
         description: "",
         amount: 0
       }
@@ -457,6 +560,7 @@ export default {
     },
 
 		async createInvoice() {
+
 			await this.$axios
 				.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 				.then(res => {

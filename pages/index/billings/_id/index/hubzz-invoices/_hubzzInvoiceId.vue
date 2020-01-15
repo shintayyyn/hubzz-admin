@@ -7,7 +7,8 @@
       <div>
         <HubzzInvoice 
           :forViewing="true"
-          :practice="practice" 
+          :practice="practice"
+          :practiceInvoice="practiceInvoice" 
           :invoiceItems="invoiceItems"
           :dateStart="practiceInvoice.date_start"
           :dateEnd="practiceInvoice.date_end"
