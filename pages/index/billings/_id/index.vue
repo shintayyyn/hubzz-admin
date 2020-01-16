@@ -11,9 +11,7 @@
 			<p class="flex">Practice Name</p>
 			<p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
 				<span class="mr-2">
-					{{
-					practice.surgery ? practice.surgery.name : null
-					}}
+					{{ practice.surgery ? practice.surgery.name : null }}
 				</span>
 				<span
 					class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
@@ -63,9 +61,9 @@
 		</div>
 		<div
 			class="billing-shield"
-			v-if="$route.name.includes('issue-hubzz-invoice') ||
-            $route.name.includes('hubzzInvoiceId') ||
-            $route.name.includes('practiceInvoiceId')"
+      v-if="$route.name.includes('issue-hubzz-invoice') ||
+        $route.name.includes('hubzzInvoiceId') ||
+        $route.name.includes('practiceInvoiceId')"
 			@click="$router.push(`/billings/${$route.params.id}/practice-invoices`)"
 		></div>
 		<nuxt-child />

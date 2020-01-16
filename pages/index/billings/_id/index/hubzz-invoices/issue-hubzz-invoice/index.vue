@@ -35,9 +35,8 @@
 					</div>
 				</div>
 			</div>
-      
+       <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
 			<HubzzInvoice
-        v-if="invoiceItems.length > 0" 
         :forViewing="false" 
         :practice="practice"
         :invoiceItems="invoiceItems"
@@ -86,7 +85,7 @@ export default {
 				viewing_practice_id: this.$route.params.id,
 				approved_at_date_start: "",
 				approved_at_date_end: "",
-				status: "",
+				status: this.showDisputed == false ? "Approved" : "",
 				invoice_status: this.showDisputed == true ? "Disputed" : null
 			},
 
@@ -126,19 +125,18 @@ export default {
 						chosenJobParts[i].date_start +
 						" to " +
 						chosenJobParts[i].date_end,
-					total: parseFloat(
-						chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate
-					)
+					total: parseFloat(chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate).toFixed(2)
         };
-        newItem.id = this.invoiceItems.length + 1;
+        
         if(isDisputed == true) {
+          newItem.id = this.disputedItems.length + 1;
           this.disputedItems.push(newItem)
         } else {
+          newItem.id = this.invoiceItems.length + 1;
           this.invoiceItems.push(newItem);
         }
-				
       }
-
+      console.log('disputedItems', this.disputedItems)
       console.log('invoiceItems', this.invoiceItems)
     },
     

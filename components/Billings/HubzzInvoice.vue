@@ -12,6 +12,13 @@
       <AppButton
         v-if="forViewing == true" 
 				class="mr-2"
+				:label="'Test HTML'"
+				:icon="'cloud-download'"
+				@click="testHtml()"
+			/>
+      <AppButton
+        v-if="forViewing == true" 
+				class="mr-2"
 				:label="'Test Export'"
 				:icon="'cloud-download'"
 				@click="testHubzzInvoice()"
@@ -129,7 +136,7 @@
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
 						<div class="flex w-full justify-center border-b border-gray-500 py-1">
-							<div v-if="forViewing == false" class=" w-2/3 text-sm mx-1">
+							<div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
 								<textarea
 									v-if="doNotShow"
 									v-model="item.description"
@@ -230,7 +237,7 @@
 							<template v-if="forViewing == false">
 								<div class="mr-2 flex items-center" v-if="doNotShow">
 									<span
-										@click="deductInvoiceItem(item.id)"
+										@click="deductDisputedItem(item.id)"
 										class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>-</span>
 								</div>
@@ -268,7 +275,7 @@
 						</div>
 					</div>
 					<div
-						v-for="(item, index) in debitItems"
+						v-for="(item, index) in createdDebitItems"
 						:key="`item-${index}`"
 						:class="!doNotShow && 'px-4'"
 						:ref="`item-${index}`"
@@ -279,6 +286,7 @@
 								<textarea
 									v-if="doNotShow"
 									v-model="item.description"
+                  :maxlength="maxChars"
 									rows="2"
 									class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
 									placeholder="Enter Description"
@@ -298,7 +306,7 @@
 										placeholder="Enter Total"
 									/>
 								</template>
-								<p v-else class="px-2 py-1 text-right">{{ item.total }}</p>
+								<p v-else class="px-2 py-1 text-right text-md font-semibold">{{ item.total }}</p>
 							</div>
 							<template v-if="forViewing == false">
 								<div class="mr-2 flex items-center" v-if="doNotShow">
@@ -341,7 +349,7 @@
 						</div>
 					</div>
 					<div
-						v-for="(item, index) in creditItems"
+						v-for="(item, index) in createdCreditItems"
 						:key="`item-${index}`"
 						:class="!doNotShow && 'px-4'"
 						:ref="`item-${index}`"
@@ -371,7 +379,7 @@
 										placeholder="Enter Total"
 									/>
 								</template>
-								<p v-else class="px-2 py-1 text-right">{{ item.total }}</p>
+								<p v-else class="px-2 py-1 text-right text-md font-semibold">{{ '- '+item.total }}</p>
 							</div>
 							<template v-if="forViewing == false">
 								<div class="mr-2 flex items-center" v-if="doNotShow">
@@ -387,10 +395,10 @@
         
 				<div ref="items-total" class="flex justify-betwen px-4 pt-2">
 					<div class="my-1 px-1 w-3/4 font-bold">Total</div>
-					<div class="my-1 px-1 w-1/4 text-right">{{ "£ " + amountTotal }}</div>
+					<div class="my-1 px-1 w-1/4 text-right text-lg font-semibold">{{ "£ " + amountTotal }}</div>
 				</div>
 			</div>
-			<div class="p-4" ref="pdf-footer">
+			<!-- <div class="p-4" ref="pdf-footer">
 				<div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
 					Payment by BACS:
 					<br />Account name: XXX
@@ -399,7 +407,7 @@
 					<br />Account number: XXX
 					<br />
 				</div>
-			</div>
+			</div> -->
 		</div>
 		<!-- FIRST PAGE ENDS HERE -->
 		<!-- BODY ENDS HERE-->
@@ -416,6 +424,8 @@ export default {
     "practiceInvoice",
     "invoiceItems",
     "disputedItems",
+    "debitItems",
+    "creditItems",
     "dateStart",
     "dateEnd",
     "byLocum"
@@ -433,69 +443,69 @@ export default {
 				items: [],
 				total_amount: ""
       },
-      debitItems:[],
-      creditItems:[],
 
-			// invoiceItems: [],
+      createdDebitItems: [],
+      createdCreditItems: [],
 			invoice: {},
 			doNotShow: true,
 			practices: [],
 			chosenPractice: [],
-			loading: false
+      loading: false,
+      
+      maxChars: 100
 		};
 	},
 	created() {
-    // console.log('practice',this.practice)
-    // console.log('invoice items', this.invoiceItems)
-    
-    this.toPostPracticeInvoice.practice_id = this.practice.id ? this.practice.id : null
-    this.toPostPracticeInvoice.date_start = this.dateStart ? this.dateStart : null
-    this.toPostPracticeInvoice.date_end = this.dateEnd ? this.dateEnd : null
-    this.toPostPracticeInvoice.items = this.invoiceItems.concat(this.disputedItems,this.debitItems,this.creditItems)
-    this.toPostPracticeInvoice.total_amount = this.amountTotal
-
-    // console.log('items', ...this.invoiceItems,...this.disputedItems,...this.debitItems,...this.creditItems)
+    if (this.debitItems) {
+      console.log('debit items available', this.debitItems)
+      this.createdDebitItems = this.debitItems
+    }
+    if(this.creditItems) {
+      console.log('credit items available', this.creditItems)
+      this.createdCreditItems = this.creditItems
+    }
 	},
 	computed: {
 		amountTotal: function() {
-			if (this.invoiceItems.length > 0 || this.disputedItems.length > 0) {
-        let grossSum = 0
-        let invoiceItemTotal = 0
-        let disputedItemTotal = 0
-        let debitTotal = 0 
-        let creditTotal = 0
-				const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        
-        if(this.invoiceItems && this.invoiceItems.length > 0) {
-          let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total));
-          invoiceItemTotal = invoiceItems.reduce(reducer)
-        }
+      let grossSum = 0
+      let invoiceItemTotal = 0
+      let disputedItemTotal = 0
+      let debitTotal = 0 
+      let creditTotal = 0
+      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+      
+      if(this.invoiceItems && this.invoiceItems.length > 0) {
+        let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total));
+        invoiceItemTotal = invoiceItems.reduce(reducer)
+      }
 
-        if(this.disputedItems && this.disputedItems.length > 0) {
-          let disputedItems = this.disputedItems.map(disputedItem => parseFloat(disputedItem.total))
-          disputedItemTotal = disputedItems.reduce(reducer)
-        }
+      if(this.disputedItems && this.disputedItems.length > 0) {
+        let disputedItems = this.disputedItems.map(disputedItem => parseFloat(disputedItem.total))
+        disputedItemTotal = disputedItems.reduce(reducer)
+      }
 
-        grossSum = parseFloat(invoiceItemTotal + disputedItemTotal);
-        
-        if (this.debitItems && this.debitItems.length > 0) {
-          let debitItems = this.debitItems.map(debitItem => parseFloat(debitItem.total))
-          debitTotal = debitItems.reduce(reducer);
-        }
-       
-        if (this.creditItems && this.creditItems.length > 0) {
-          let creditItems = this.creditItems.map(creditItem => parseFloat(creditItem.total))
-          creditTotal = creditItems.reduce(reducer)
-        }
-        const netSum = parseFloat((grossSum + debitTotal) - creditTotal).toFixed(2)
-        console.log('netsum', netSum)
-				return netSum;
-			} else {
-				return 0;
-			}
+      grossSum = parseFloat(invoiceItemTotal + disputedItemTotal);
+      
+      if (this.createdDebitItems && this.createdDebitItems.length > 0) {
+        let createdDebitItems = this.createdDebitItems.map(debitItem => parseFloat(debitItem.total))
+        debitTotal = createdDebitItems.reduce(reducer);
+      }
+      
+      if (this.createdCreditItems && this.createdCreditItems.length > 0) {
+        let createdCreditItems = this.createdCreditItems.map(creditItem => parseFloat(creditItem.total))
+        creditTotal = createdCreditItems.reduce(reducer)
+      }
+      const netSum = parseFloat((grossSum + debitTotal) - creditTotal).toFixed(2)
+      console.log('netsum', netSum)
+      return netSum;
 		}
 	},
 	methods: {
+     async testHtml() {
+      window.open(
+        `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/html`
+      );
+    },
     async testHubzzInvoice() {
       window.open(
         `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/pdf`
@@ -524,6 +534,13 @@ export default {
 			);
 			await this.invoiceItems.splice(mapInvoiceItems.indexOf(itemId), 1);
     },
+
+    async deductDisputedItem(itemId) {
+			const mapDisputedItems = this.disputedItems.map(
+				disputedItem => disputedItem.id
+			);
+			await this.disputedItems.splice(mapDisputedItems.indexOf(itemId), 1);
+    },
     
     async addDebitItem() {
       const newItem = {
@@ -531,15 +548,15 @@ export default {
         description: "",
         amount: 0
       }
-      newItem.id = this.debitItems.length + 1;
-      await this.debitItems.push(newItem)
+      newItem.id = this.createdDebitItems.length + 1;
+      await this.createdDebitItems.push(newItem)
     },
 
     async deductDebitItem(itemId) {
-			const mapDebitItems = this.debitItems.map(
+			const mapDebitItems = this.createdDebitItems.map(
 				debitItem => debitItem.id
 			);
-			await this.debitItems.splice(mapDebitItems.indexOf(itemId), 1);
+			await this.createdDebitItems.splice(mapDebitItems.indexOf(itemId), 1);
     },
 
     async addCreditItem() {
@@ -548,35 +565,49 @@ export default {
         description: "",
         amount: 0
       }
-      newItem.id = this.creditItems.length + 1
-      await this.creditItems.push(newItem)
+      newItem.id = this.createdCreditItems.length + 1
+      await this.createdCreditItems.push(newItem)
     },
 
     async deductCreditItem(itemId) {
-			const mapCreditItems = this.creditItems.map(
+			const mapCreditItems = this.createdCreditItems.map(
 				creditItem => creditItem.id
 			);
-			await this.creditItems.splice(mapCreditItems.indexOf(itemId), 1);
+			await this.createdCreditItems.splice(mapCreditItems.indexOf(itemId), 1);
     },
 
 		async createInvoice() {
+     
+        this.toPostPracticeInvoice.practice_id = await this.practice.id ? this.practice.id : null
+        this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
+        this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+        this.toPostPracticeInvoice.items = await this.invoiceItems.concat(this.disputedItems,this.createdDebitItems,this.createdCreditItems)
+        this.toPostPracticeInvoice.total_amount = await this.amountTotal
 
-			await this.$axios
-				.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
-				.then(res => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Invoice Posted"
-					});
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					});
-				});
+        if(this.toPostPracticeInvoice.items.length > 0){
+        await this.$axios
+          .post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
+          .then(res => {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Invoice Posted"
+            });
+          })
+          .catch(err => {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "danger",
+              text: err.response.data.message
+            });
+          });
+      } else {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: "Items to be invoiced is required"
+          });
+      }
 		},
 
 		async exportToPdf() {
