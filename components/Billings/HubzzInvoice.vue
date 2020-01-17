@@ -7,7 +7,7 @@
 				class="mr-2"
 				:label="'Export As PDF'"
 				:icon="'cloud-download'"
-				@click="testHubzzInvoice()"
+				@click="toPDF()"
 			/>
       <!-- <AppButton
         v-if="forViewing == true" 
@@ -36,13 +36,13 @@
         :label="'Save as Draft'" 
         :icon="'save-icon'"
       /> -->
-			<AppButton
+			<!-- <AppButton
         v-if="forViewing == false"
         class="m-2" 
         :label="'Clear Entries'" 
         :icon="'save-icon'"
         @click="clearEntries()"
-       />
+       /> -->
 		</div>
 		<!-- HEADER ENDS HERE -->
 
@@ -241,7 +241,7 @@
 				</div>
         
         <!-- FOR DEBITS -->
-        <div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+        <div v-if="!locumInvoice" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
 					<div
 						:class="!doNotShow && 'px-4'"
 						:ref="'items-header'"
@@ -315,7 +315,7 @@
 				</div>
 
         <!-- FOR CREDITS -->
-        <div class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
+        <div v-if="!locumInvoice" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
 					<div
 						:class="!doNotShow && 'px-4'"
 						:ref="'items-header'"
@@ -416,6 +416,7 @@ export default {
     "forViewing",
     "practice",
     "practiceInvoice",
+    "locumInvoice",
     "invoiceItems",
     "disputedItems",
     "debitItems",
@@ -505,18 +506,35 @@ export default {
       );
     },
 
-    async testHubzzInvoice() {
-      window.open(
-        `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/pdf`
-      );
-    },
-
     async testMultiplePage() {
       window.open(
         `${process.env.API_URL}/practice-invoices/test/pdf`
       )
     },
 
+    // async testHubzzInvoice() {
+    //   window.open(
+    //     `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/pdf`
+    //   );
+    // },
+
+    // async testLocumInvoice() {
+    //   window.open(
+    //     `${process.env.API_URL}/api/v1/locum-invoices/${this.locumInvoice.id}/pdf`
+    //   )
+    // },
+
+    toPDF(){
+      if(this.locumInvoice){
+        window.open(
+          `${process.env.API_URL}/api/v1/locum-invoices/${this.locumInvoice.id}/pdf`
+        )
+      }else if(this.practiceInvoice){
+        window.open(
+          `${process.env.API_URL}/api/v1/practice-invoices/${this.practiceInvoice.id}/pdf`
+        );
+      }
+    },
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
 			const newItem = {
@@ -581,7 +599,7 @@ export default {
       this.toPostPracticeInvoice.practice_id = await this.practice.id ? this.practice.id : null
       this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
       this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
-      this.toPostPracticeInvoice.items = await this.createdInvoiceItems.concat(this.createdDisputedItems,this.createdDebitItems,this.createdCreditItems)
+      this.toPostPracticeInvoice.items = await this.invoiceItems.concat(this.disputedItems,this.createdDebitItems,this.createdCreditItems)
       this.toPostPracticeInvoice.total_amount = await this.amountTotal
 
       if(this.toPostPracticeInvoice.items.length > 0){

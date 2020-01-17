@@ -9,7 +9,7 @@
         :perPage="params.limit"
         :columns="columns"
         :loading="loadingpracticeInvoices"
-        :routerLink="`/billings/${$route.params.id}/practice-invoices`"
+        :routerLink="`/billings/${$route.params.id}/invoices-by-locums`"
         :orderBy="params.order_by"
         :customWidth="200"
         @pagechanged="pagechanged"
@@ -42,8 +42,8 @@
 		</div>
     <div
 			class="billing-shield"
-			v-if="$route.name.includes('practice-invoices-practiceInvoiceId')"
-			@click="$router.push(`/billings/${$route.params.id}/practice-invoices`)"
+			v-if="$route.name.includes('invoices-by-locums-locumInvoiceId')"
+			@click="$router.push(`/billings/${$route.params.id}/invoices-by-locums`)"
 		></div>
 	</div>
 </template>
@@ -108,7 +108,8 @@ export default {
 		};
   },
   created(){
-    console.log('invoice id', this.$route.params.id)
+    console.log('invoice id', this.$route.params.locumInvoiceId)
+    
   },
 	async asyncData({ app, route, store }) {
 		try {
