@@ -111,8 +111,12 @@ export default {
 	methods: {
 		toProcessInvoiceItems(chosenJobParts, isDisputed) {
       this.chooseJobPartsModal = false;
-      this.invoiceItems = []
-      this.disputedItems = []
+      
+      if(isDisputed == true) {
+        this.disputedItems = []
+      } else {
+        this.invoiceItems = []
+      }
       
 			for (let i = 0; i < chosenJobParts.length; i++) {
         console.log("chosenJobPart",chosenJobParts[i])
