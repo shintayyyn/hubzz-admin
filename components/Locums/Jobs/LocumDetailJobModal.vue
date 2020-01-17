@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- BODY -->
-		<div class="m-4 md:m-8 overflow-auto">
+		<!-- <div class="m-4 md:m-8 overflow-auto">
 			<div class="flex items-center flex-wrap">
 				<p class="text-2xl text-white font-semibold pr-4">{{job ? job.title:null }}</p>
 				<div class="flex">
@@ -122,8 +122,6 @@
 								<template v-else-if="job.private_job"></template>
 							</div>
 						</div>
-
-						<!-- MAP -->
 						<div class="w-full overflow-hidden" v-if="job.platform_job">
 							<div class="text-white">
 								<p class="font-semibold">
@@ -138,7 +136,6 @@
 							</div>
 
 							<div class="w-full pt-2">
-								<!-- google map -->
 								<GmapMap
 									:center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
 									:zoom="15"
@@ -166,7 +163,6 @@
 							</div>
 
 							<div class="w-full pt-2">
-								<!-- google map -->
 								<GmapMap
 									:center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
 									:zoom="15"
@@ -182,7 +178,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<!-- BODY -->
 		<nuxt-child />
 	</div>
