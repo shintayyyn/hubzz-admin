@@ -110,7 +110,10 @@ export default {
 	},
 	methods: {
 		toProcessInvoiceItems(chosenJobParts, isDisputed) {
-			this.chooseJobPartsModal = false;
+      this.chooseJobPartsModal = false;
+      this.invoiceItems = []
+      this.disputedItems = []
+      
 			for (let i = 0; i < chosenJobParts.length; i++) {
         console.log("chosenJobPart",chosenJobParts[i])
 				const newItem = {
@@ -136,8 +139,6 @@ export default {
           this.invoiceItems.push(newItem);
         }
       }
-      console.log('disputedItems', this.disputedItems)
-      console.log('invoiceItems', this.invoiceItems)
     },
     
 		goBack() {

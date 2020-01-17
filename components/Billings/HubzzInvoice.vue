@@ -2,52 +2,46 @@
 	<div class="text-black">
 		<!-- HEADER -->
 		<div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
-			<AppButton
+      <AppButton
         v-if="forViewing == true" 
 				class="mr-2"
-				:label="'Export as PDF'"
+				:label="'Export As PDF'"
 				:icon="'cloud-download'"
-				@click="exportToPdf()"
+				@click="testHubzzInvoice()"
 			/>
-      <AppButton
+      <!-- <AppButton
         v-if="forViewing == true" 
 				class="mr-2"
 				:label="'Test HTML'"
 				:icon="'cloud-download'"
 				@click="testHtml()"
-			/>
-      <AppButton
-        v-if="forViewing == true" 
-				class="mr-2"
-				:label="'Test Export'"
-				:icon="'cloud-download'"
-				@click="testHubzzInvoice()"
-			/>
-      <AppButton
+			/> -->
+      <!-- <AppButton
         v-if="forViewing == true" 
 				class="mr-2"
 				:label="'Test Multiple Page'"
 				:icon="'cloud-download'"
 				@click="testMultiplePage()"
-			/>
+			/> -->
       <AppButton 
         v-if="forViewing == false" 
         class="m-2"
-        :label="'Save and Archive as Final'" 
+        :label="'Save as Final'" 
         :icon="'save-icon'"
         @click="createInvoice()"
       />
-      <AppButton
+      <!-- <AppButton
         v-if="forViewing == false"
         class="m-2" 
         :label="'Save as Draft'" 
         :icon="'save-icon'"
-      />
+      /> -->
 			<AppButton
         v-if="forViewing == false"
         class="m-2" 
-        :label="'Cancel'" 
+        :label="'Clear Entries'" 
         :icon="'save-icon'"
+        @click="clearEntries()"
        />
 		</div>
 		<!-- HEADER ENDS HERE -->
@@ -115,7 +109,7 @@
 							</div>
 							<div class="w-2/6">
 								<div class="text-white text-sm text-right px-4">
-									<strong>£Amount</strong>
+									<strong>£ Amount</strong>
 								</div>
 							</div>
 							<div v-if="forViewing == false">
@@ -188,7 +182,7 @@
 							</div>
 							<div class="w-2/6">
 								<div class="text-white text-sm text-right px-4">
-									<strong>£Amount</strong>
+									<strong>£ Amount</strong>
 								</div>
 							</div>
 							<!-- <div v-if="forViewing == false">
@@ -335,7 +329,7 @@
 							</div>
 							<div class="w-2/6">
 								<div class="text-white text-sm text-right px-4">
-									<strong>£Amount</strong>
+									<strong>£ Amount</strong>
 								</div>
 							</div>
 							<div v-if="forViewing == false">
@@ -443,7 +437,8 @@ export default {
 				items: [],
 				total_amount: ""
       },
-
+      // createdInvoiceItems: [],
+      // createdDisputedItems: [],
       createdDebitItems: [],
       createdCreditItems: [],
 			invoice: {},
@@ -456,12 +451,16 @@ export default {
 		};
 	},
 	created() {
+    // if (this.invoiceItems) {
+    //   this.createdInvoiceItems = this.invoiceItems
+    // }
+    // if (this.disputeditems) {
+    //   this.createdDisputedItems = this.createdDisputedItems
+    // }
     if (this.debitItems) {
-      console.log('debit items available', this.debitItems)
       this.createdDebitItems = this.debitItems
     }
     if(this.creditItems) {
-      console.log('credit items available', this.creditItems)
       this.createdCreditItems = this.creditItems
     }
 	},
@@ -496,26 +495,28 @@ export default {
         creditTotal = createdCreditItems.reduce(reducer)
       }
       const netSum = parseFloat((grossSum + debitTotal) - creditTotal).toFixed(2)
-      console.log('netsum', netSum)
       return netSum;
 		}
 	},
 	methods: {
-     async testHtml() {
+    async testHtml() {
       window.open(
         `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/html`
       );
     },
+
     async testHubzzInvoice() {
       window.open(
         `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/pdf`
       );
     },
+
     async testMultiplePage() {
       window.open(
         `${process.env.API_URL}/practice-invoices/test/pdf`
       )
     },
+
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
 			const newItem = {
@@ -577,253 +578,41 @@ export default {
     },
 
 		async createInvoice() {
-     
-        this.toPostPracticeInvoice.practice_id = await this.practice.id ? this.practice.id : null
-        this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
-        this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
-        this.toPostPracticeInvoice.items = await this.invoiceItems.concat(this.disputedItems,this.createdDebitItems,this.createdCreditItems)
-        this.toPostPracticeInvoice.total_amount = await this.amountTotal
+      this.toPostPracticeInvoice.practice_id = await this.practice.id ? this.practice.id : null
+      this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
+      this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+      this.toPostPracticeInvoice.items = await this.createdInvoiceItems.concat(this.createdDisputedItems,this.createdDebitItems,this.createdCreditItems)
+      this.toPostPracticeInvoice.total_amount = await this.amountTotal
 
-        if(this.toPostPracticeInvoice.items.length > 0){
-        await this.$axios
-          .post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
-          .then(res => {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Invoice Posted"
-            });
-          })
-          .catch(err => {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "danger",
-              text: err.response.data.message
-            });
+      if(this.toPostPracticeInvoice.items.length > 0){
+      await this.$axios
+        .post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Invoice Posted"
           });
-      } else {
+        })
+        .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
-            text: "Items to be invoiced is required"
+            text: err.response.data.message
           });
+        });
+      } else {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Items to be invoiced is required"
+        });
       }
-		},
+    },
+    
+    async clearEntries() {
 
-		async exportToPdf() {
-			this.doNotShow = false;
-			this.loading = true;
-			if (process.client) {
-				document.body.style.cursor = "wait";
-			}
-
-			let doc = this.$jsPDF("p", "mm");
-			let pageHeight = 1020;
-			let yPosition = 0;
-
-			// PDF HEADER
-			const canvasPdfHeader = await this.$html2canvas(this.$refs["pdf-header"]);
-			const imgWidthPdfHeader = 205;
-			const imgHeightPdfHeader =
-				(canvasPdfHeader.height * imgWidthPdfHeader) / canvasPdfHeader.width;
-			const imgDataPdfHeader = canvasPdfHeader.toDataURL("image/png");
-
-			pageHeight = pageHeight - this.$refs["pdf-header"].offsetHeight;
-        
-			doc.addImage(
-				imgDataPdfHeader,
-				"PNG",
-				2.5,
-				yPosition,
-				imgWidthPdfHeader,
-				imgHeightPdfHeader
-			);
-
-			yPosition = yPosition + imgHeightPdfHeader;
-
-			// ITEMS HEADER
-			const canvasItemsHeader = await this.$html2canvas(
-				this.$refs["items-header"]
-			);
-			const imgWidthItemsHeader = 205;
-			const imgHeightItemsHeader =
-				(canvasItemsHeader.height * imgWidthItemsHeader) /
-				canvasItemsHeader.width;
-			const imgDataItemsHeader = canvasItemsHeader.toDataURL("image/png");
-
-			pageHeight = pageHeight - this.$refs["items-header"].offsetHeight;
-
-			doc.addImage(
-				imgDataItemsHeader,
-				"PNG",
-				2.5,
-				yPosition,
-				imgWidthItemsHeader,
-				imgHeightItemsHeader
-			);
-
-			yPosition = yPosition + imgHeightItemsHeader;
-
-			// ITEMS
-			let totalItemCount = parseInt(this.invoiceItems.length + this.debitItems + this.creditItems)
-
-			for (let i = 0; i < totalItemCount; i++) {
-				// minus the current item invoice height to the pageHeight
-				pageHeight = pageHeight - this.$refs[`item-${i}`][0].offsetHeight;
-				// if all pageHeight is used, add page
-				if (pageHeight < 0) {
-					pageHeight = 1020;
-					yPosition = 0;
-					doc.addPage();
-					// add header to every new page, also subtract its height to page height
-					doc.addImage(
-						imgDataItemsHeader,
-						"PNG",
-						2.5,
-						yPosition,
-						imgWidthItemsHeader,
-						imgHeightItemsHeader
-					);
-
-					yPosition = yPosition + imgHeightItemsHeader;
-
-					pageHeight = pageHeight - this.$refs["items-header"].offsetHeight;
-					pageHeight = pageHeight - this.$refs[`item-${i}`][0].offsetHeight;
-				}
-
-				// draw canvas
-				let canvasItem = await this.$html2canvas(this.$refs[`item-${i}`][0]);
-				let imgWidthItem = 205;
-				let imgHeightItem =
-					(canvasItem.height * imgWidthItem) / canvasItem.width;
-				let imgDataItem = canvasItem.toDataURL("image/png");
-
-				// add image
-				doc.addImage(
-					imgDataItem,
-					"PNG",
-					2.5,
-					yPosition,
-					imgWidthItem,
-					imgHeightItem
-				);
-
-				yPosition = yPosition + imgHeightItem;
-			}
-
-			// sum up their offsetHeight
-			// let daysWorkedOffsetHeight = this.$refs["days-worked"].offsetHeight;
-			let itemsTotalOffsetHeight = this.$refs["items-total"].offsetHeight;
-			let pdfFooterOffsetHeight = this.$refs["pdf-footer"].offsetHeight;
-
-			let totalOffsetHeight = itemsTotalOffsetHeight + pdfFooterOffsetHeight;
-
-			pageHeight = pageHeight - totalOffsetHeight;
-
-			// DAYS WORKED
-			// const canvasDaysWorked = await this.$html2canvas(
-			//   this.$refs["days-worked"]
-			// );
-			// const imgWidthDaysWorked = 205;
-			// const imgHeightDaysWorked =
-			//   (canvasDaysWorked.height * imgWidthDaysWorked) / canvasDaysWorked.width;
-			// const imgDataDaysWorked = canvasDaysWorked.toDataURL("image/png");
-
-			// ITEMS TOTAL
-			const canvasItemsTotal = await this.$html2canvas(
-				this.$refs["items-total"]
-			);
-			const imgWidthItemsTotal = 205;
-			const imgHeightItemsTotal =
-				(canvasItemsTotal.height * imgWidthItemsTotal) / canvasItemsTotal.width;
-			const imgDataItemsTotal = canvasItemsTotal.toDataURL("image/png");
-
-			// PDF FOOTER
-			const canvasPdfFooter = await this.$html2canvas(this.$refs["pdf-footer"]);
-			const imgWidthPdfFooter = 205;
-			const imgHeightPdfFooter =
-				(canvasPdfFooter.height * imgWidthPdfFooter) / canvasPdfFooter.width;
-			const imgDataPdfFooter = canvasPdfFooter.toDataURL("image/png");
-
-			if (pageHeight < 0) {
-				pageHeight = 1020;
-				doc.addPage();
-			}
-
-			yPosition = 290 - (imgHeightItemsTotal + imgHeightPdfFooter);
-
-			doc.addImage(
-				imgDataItemsTotal,
-				"PNG",
-				2.5,
-				yPosition,
-				imgWidthItemsTotal,
-				imgHeightItemsTotal
-			);
-
-			yPosition = yPosition + imgHeightItemsTotal;
-
-			doc.addImage(
-				imgDataPdfFooter,
-				"PNG",
-				2.5,
-				yPosition,
-				imgWidthPdfFooter,
-				imgHeightPdfFooter
-			);
-
-			yPosition = yPosition + imgHeightPdfFooter;
-
-			this.doNotShow = true;
-			doc.save("sample.pdf");
-			this.loading = false;
-			if (process.client) {
-				document.body.style.cursor = "auto";
-			}
-			console.log("height used", pageHeight);
-		},
-
-		file() {
-			// this.html2canvas(document.querySelector("#toPrint")).then(canvas => {
-			//   const image = canvas.toDataURL("image/png")
-			//   doc.addImage(image,'PNG',1,1);
-			//   doc.save("sample.pdf")
-			// })
-			this.$html2canvas(document.querySelector("#toPrint")).then(canvas => {
-				// Max 9 for entire first page
-				// Max 12 to fill first page with record
-				// doc.addImage(image,'PNG',1,1);
-				console.log(canvas);
-				const doc = this.$jsPDF("p", "mm", "a4");
-				var imgWidth = 205;
-				var pageHeight = 297;
-				console.log("dimensions", canvas.height, imgWidth, canvas.width);
-				console.log("canvas", canvas.height, canvas, canvas.width);
-				var imgHeight = (canvas.height * imgWidth) / canvas.width;
-				var heightLeft = imgHeight;
-				var position = 0;
-				let imgData = canvas.toDataURL("image/png");
-
-				console.log("ig", imgWidth);
-
-				while (heightLeft >= 0) {
-					if (this.invoiceItems.length <= 10) {
-						position = heightLeft - imgHeight;
-						console.log("ig", position, imgWidth / 2);
-						doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-						heightLeft -= pageHeight;
-						doc.addPage();
-					} else if (this.invoiceItems.length >= 10) {
-						position = heightLeft - imgHeight;
-						doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-						position = heightLeft - imgHeight + 50;
-						heightLeft -= pageHeight;
-						doc.addPage();
-					}
-				}
-				doc.save("sample.pdf");
-			});
-		}
+    }
 	}
 };
 </script>
