@@ -51,20 +51,20 @@
               : 'hover:bg-waterloo'"
 				>HUBZZ Invoices</nuxt-link>
 				<nuxt-link
-					:to="getRoute('practice-invoices')"
+					:to="getRoute('invoices-by-locums')"
 					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-					:class="$route.path == `/billings/${$route.params.id}/practice-invoices`
+					:class="$route.path == `/billings/${$route.params.id}/invoices-by-locums`
               ? 'bg-waterloo hover:bg-gray-500'
               : 'hover:bg-waterloo'"
-				>Practice Invoices</nuxt-link>
+				>Invoices by Locums</nuxt-link>
 			</div>
 		</div>
 		<div
 			class="billing-shield"
       v-if="$route.name.includes('issue-hubzz-invoice') ||
         $route.name.includes('hubzzInvoiceId') ||
-        $route.name.includes('practiceInvoiceId')"
-			@click="$router.push(`/billings/${$route.params.id}/practice-invoices`)"
+        $route.name.includes('locumInvoiceId')"
+			@click="$router.go(-1)"
 		></div>
 		<nuxt-child />
 	</div>

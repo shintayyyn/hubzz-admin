@@ -12,6 +12,7 @@
         :invoiceItems="invoiceItems"
         :dateStart="locumInvoice.date_start"
         :dateEnd="locumInvoice.date_end"
+        :locumInvoice="locumInvoice"
       />
     </div>
   </div>
@@ -34,7 +35,7 @@ export default {
   },
   async asyncData({ app, route, store }){
     try{
-      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/locum-invoices/${route.params.practiceInvoiceId}`)
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/locum-invoices/${route.params.locumInvoiceId}`)
       const locumInvoice = response.data.locum_invoice
       console.log('locumInvoice', locumInvoice)
       response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`) 
@@ -65,7 +66,7 @@ export default {
       const query = {
         ...this.$route.query
       }
-      this.$router.push({path:`/billings/${this.$route.params.id}/practice-invoices`,query})
+      this.$router.push({path:`/billings/${this.$route.params.id}/invoices-by-locums`,query})
     },
   }
 
