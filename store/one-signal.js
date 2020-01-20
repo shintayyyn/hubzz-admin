@@ -15,9 +15,7 @@ export const mutations = {
 export const actions = {
   async setOneSignalUser ({ state, commit }) {
     let oneSignalId = state.oneSignalId
-
-    console.log("this.$OneSignal", this.$OneSignal)
-    console.log("this.$OneSignal.getUserId", this.$OneSignal.getUserId)
+    
     console.log("setOneSignalUser 1", oneSignalId)
 
     if (!state.oneSignalId) {
