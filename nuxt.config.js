@@ -116,15 +116,7 @@ export default {
 		//   key: 'GOOGLE MAPS KEY',
 		// }],
 		"@nuxtjs/onesignal",
-		[
-			"@nuxtjs/pwa",
-			{
-				workbox: false,
-				meta: false,
-				icon: false,
-				manifest: false
-			}
-		]
+		"@nuxtjs/pwa",
 	],
 	/*
 	 ** Axios module configuration
