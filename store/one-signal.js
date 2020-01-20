@@ -17,6 +17,7 @@ export const actions = {
     let oneSignalId = state.oneSignalId
 
     console.log("this.$OneSignal", this.$OneSignal)
+    console.log("this.$OneSignal.getUserId", this.$OneSignal.getUserId)
     console.log("setOneSignalUser 1", oneSignalId)
 
     if (!state.oneSignalId) {
@@ -67,6 +68,7 @@ export const actions = {
 
     this.$OneSignal.push(() => {
       this.$OneSignal.on('subscriptionChange', (isSubscribed) => {
+        console.log('subscriptionChange')
         dispatch('setOneSignalUser')
       })
     })
