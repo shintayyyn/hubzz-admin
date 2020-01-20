@@ -16,6 +16,7 @@ export const actions = {
   async setOneSignalUser ({ state, commit }) {
     let oneSignalId = state.oneSignalId
 
+    console.log("this.$OneSignal", this.$OneSignal)
     console.log("setOneSignalUser 1", oneSignalId)
 
     if (!state.oneSignalId) {
