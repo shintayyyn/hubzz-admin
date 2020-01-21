@@ -1,104 +1,101 @@
-import dotenv from "dotenv"
+import dotenv from 'dotenv'
 
 dotenv.config()
 
-import path from "path"
+import path from 'path'
 
 export default {
-	mode: "universal",
+	mode: 'universal',
 
 	env: {
 		API_URL: process.env.API_URL,
 		ONE_SIGNAL_APP_ID_ADMIN: process.env.ONE_SIGNAL_APP_ID_ADMIN,
 	},
 
-	/*
-	 ** Headers of the page
-	 */
 	head: {
-		title: "HQ | Hubzz",
+		title: 'HQ | Hubzz',
 		meta: [
-			{ charset: "utf-8" },
-			{ name: "viewport", content: "width=device-width, initial-scale=1" },
-			{ hid: "description", name: "description", content: 'Hubzz Web App' },
+			{ charset: 'utf-8' },
+			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
+			{ hid: 'description', name: 'description', content: 'Hubzz Admin Web App' },
 		],
 		link: [
-			{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
 			{
-				rel: "stylesheet",
-				href: "https://fonts.googleapis.com/css?family=Nunito"
+				rel: 'stylesheet',
+				href: 'https://fonts.googleapis.com/css?family=Nunito'
 			},
 		],
 		script: [
 			{
-				src: "https://cdn.onesignal.com/sdks/OneSignalSDK.js",
+				src: 'https://cdn.onesignal.com/sdks/OneSignalSDK.js',
 				defer: true,
 			},
 			{
-				src: "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js",
+				src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js',
 			},
 			{
-				src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCqkvPPMK1lBnOF1NpxUggGFzkfcoaHV24&libraries=places",
+				src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCqkvPPMK1lBnOF1NpxUggGFzkfcoaHV24&libraries=places',
 			},
 		]
 	},
 
-	loading: { color: "#FFC72C" },
+	loading: { color: '#FFC72C' },
 
 	css: [
-		"~/assets/css/tailwind.css",
-		"~/assets/css/main.css",
-		"quill/dist/quill.snow.css",
-		"quill/dist/quill.bubble.css",
-		"quill/dist/quill.core.css",
+		'~/assets/css/tailwind.css',
+		'~/assets/css/main.css',
+		'quill/dist/quill.snow.css',
+		'quill/dist/quill.bubble.css',
+		'quill/dist/quill.core.css',
 	],
 
 	plugins: [
 		{
-			src: "@/plugins/socket-io.js",
-			mode: "client",
+			src: '@/plugins/socket-io.js',
+			mode: 'client',
 		},
 		{
-			src: "@/plugins/one-signal.js",
-			mode: "client",
+			src: '@/plugins/one-signal.js',
+			mode: 'client',
 		},
 		{
-			src: "@/plugins/vue-svgicon.js",
+			src: '@/plugins/vue-svgicon.js',
 			ssr: true,
 		},
 		{
-			src: "@/plugins/moment.js",
+			src: '@/plugins/moment.js',
 			ssr: true,
 		},
 		{
-			src: "~/plugins/google-maps",
+			src: '~/plugins/google-maps',
 			ssr: true,
 		},
 		{
-			src: "~plugins/nuxt-quill-plugin.js",
+			src: '~plugins/nuxt-quill-plugin.js',
 			ssr: false,
 		},
 		{
-			src: "@/plugins/mixin.js",
+			src: '@/plugins/mixin.js',
 			ssr: true,
 		},
 		{
-			src: "@/plugins/filters.js",
+			src: '@/plugins/filters.js',
 			ssr: true,
 		},
 		{
-			src: "@/plugins/jspdf.js",
-			mode: "client",
+			src: '@/plugins/jspdf.js',
+			mode: 'client',
 		},
 		{
-			src: "@/plugins/html2canvas.js",
-			mode: "client",
+			src: '@/plugins/html2canvas.js',
+			mode: 'client',
 		},
 	],
 
 	modules: [
-		"@nuxtjs/axios",
-		"@nuxtjs/auth",
+		'@nuxtjs/axios',
+		'@nuxtjs/auth',
 	],
 
 	axios: {
@@ -107,12 +104,12 @@ export default {
 
 	auth: {
 		localStorage: {
-			prefix: "admin.hubzz.auth."
+			prefix: 'admin.hubzz.auth.'
 		},
 		cookie: {
-			prefix: "admin.hubzz.auth.",
+			prefix: 'admin.hubzz.auth.',
 			options: {
-				path: "/",
+				path: '/',
 				expires: 1825
 			},
 		},
@@ -121,9 +118,9 @@ export default {
 				endpoints: {
 					logout: null,
 					user: {
-						url: "/api/v1/admin/me",
-						method: "get",
-						propertyName: "data.user"
+						url: '/api/v1/admin/me',
+						method: 'get',
+						propertyName: 'data.user'
 					},
 				},
 			},
