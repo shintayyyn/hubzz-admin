@@ -31,9 +31,9 @@
 				<div v-for="item in locumFaqs" :key="item.id" class="inline-flex w-full">
 					<nuxt-link
 						v-if="
-              deleteLocumFaq == false &&
-                authAdminPermissions.includes('Edit FAQ')
-            "
+							deleteLocumFaq == false &&
+								authAdminPermissions.includes('Edit FAQ')
+							"
 						:to="{ path: `/faqs/${item.id}` }"
 						class="flex items-center cursor-pointer mr-2 md:mr-4"
 					>
@@ -46,9 +46,9 @@
 					</nuxt-link>
 					<div
 						v-if="
-              deleteLocumFaq == true &&
-                authAdminPermissions.includes('Delete FAQ')
-            "
+						deleteLocumFaq == true &&
+							authAdminPermissions.includes('Delete FAQ')
+						"
 						@click="toDeleteFaq(item.id)"
 						class="flex items-center cursor-pointer mr-2 md:mr-4"
 					>
@@ -111,12 +111,13 @@
 					</div>
 				</div>
 				<!-- ---------------------------------------------------------------------------- -->
+				<!-- <transition-group name="fade" mode="out-in"> -->
 				<div v-for="item in practiceFaqs" :key="item.id" class="inline-flex w-full">
 					<nuxt-link
 						v-if="
-              deletePracticeFaq == false &&
-                authAdminPermissions.includes('Edit FAQ')
-            "
+							deletePracticeFaq == false &&
+								authAdminPermissions.includes('Edit FAQ')
+							"
 						:to="{ path: `/faqs/${item.id}` }"
 						class="flex items-center cursor-pointer mr-2 md:mr-4"
 					>
@@ -129,9 +130,9 @@
 					</nuxt-link>
 					<div
 						v-if="
-              deletePracticeFaq == true &&
-                authAdminPermissions.includes('Delete FAQ')
-            "
+							deletePracticeFaq == true &&
+								authAdminPermissions.includes('Delete FAQ')
+							"
 						@click="toDeleteFaq(item.id)"
 						class="flex items-center cursor-pointer mr-2 md:mr-4"
 					>
@@ -158,15 +159,16 @@
 								/>
 							</div>
 						</div>
-						<transition name="drop-down" mode="out-in">
-							<div v-if="item.toggled">
-								<no-ssr>
-									<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
-								</no-ssr>
-							</div>
-						</transition>
+						<!-- <transition name="slide-down" mode="out-in"> -->
+						<div :class="item.toggled ? 'item-answer-open' : 'item-answer-close'">
+							<no-ssr>
+								<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
+							</no-ssr>
+						</div>
+						<!-- </transition> -->
 					</div>
 				</div>
+				<!-- </transition-group> -->
 				<div
 					v-if="practiceFaqs.length === 0"
 					class="text-waterloo"
@@ -189,7 +191,7 @@ import AppButton from "@/components/Base/AppButton";
 import AppConfirmCancel from "~/components/AppConfirmCancel";
 export default {
 	components: {
-		AppButton,
+		AppButton
 	},
 	data() {
 		return {
@@ -272,10 +274,15 @@ export default {
 	}
 };
 </script>
-<style scoped>
-.item-answer {
+<style>
+.item-answer-open {
 	height: auto;
-	transition: all 0.5s;
+	transition: height 2s linear;
+}
+.item-answer-close {
+	height: 0;
+	display: none;
+	transition: height 2s linear;
 }
 .toggled {
 	transition: all 0.5s;

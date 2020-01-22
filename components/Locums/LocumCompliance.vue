@@ -100,7 +100,7 @@
         <!-- MANDATORY -->
         <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">Mandatory</p>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full overflow-x-auto p-4 md:p-8" > 
+        <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2"> 
             <!-- HEADER -->
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/6">Title</div> 
@@ -177,7 +177,7 @@
         <!-- END TABLE -->  
         <!-- OPTIONAL -->
         <p class=" text-sm text-white px-4 md:px-8 pt-8 font-semibold">Optional</p>
-        <div class="w-full overflow-x-auto p-4 md:p-8" > 
+        <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2" > 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/4">Title</div> 
                 <div class="align-middle px-2 text-center w-1/4">File size</div>
@@ -237,7 +237,7 @@
             >This locum has not uploaded any Mandatory Training Documents.</div>
         </div>
         <!-- TABLE RESPONSIVE-->
-        <div class="w-full overflow-x-auto p-4 md:p-8" v-if="locumMandatoryTrainings.length > 0"> 
+        <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2" v-if="locumMandatoryTrainings.length > 0"> 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
                 <div class="align-middle px-2 w-1/3">Title</div> 
                 <div class="align-middle px-2 text-center w-1/3">File size</div>

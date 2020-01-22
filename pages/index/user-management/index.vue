@@ -78,7 +78,7 @@
 		</AppTable>-->
 		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6">
 			<!-- HEADER -->
-			<div class="hidden md:flex items-center text-white justify-between font-semibold">
+			<div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
 				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
 				<div class="align-middle px-2 w-1/3">Roles</div>
@@ -114,7 +114,7 @@
 				</div>
 				<nuxt-link
 					:to="{ path: `/user-management/${user.id}`, query: $route.query }"
-					class="w-full flex flex-col md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
+					class="w-full flex flex-col md:flex-row justify-between px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
 				>
 					<div
 						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
@@ -187,7 +187,7 @@ export default {
 		CreateUser,
 		AppConfirmCancel,
 		AppPagination,
-		AppButton,
+		AppButton
 	},
 	data() {
 		return {

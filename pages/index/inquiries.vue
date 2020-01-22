@@ -21,7 +21,7 @@
 						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
 					/>
 				</button>
-			</div> -->
+			</div>-->
 			<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
 		</div>
 		<AppTable
@@ -41,21 +41,19 @@
 				<div
 					:class="
 						!slotProps.item.acknowledged_at &&
-							'px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
+							'mx-auto px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
 					"
 				>
-					<template v-if="slotProps.item.acknowledged_at">
-						{{ slotProps.item.acknowledged_at | localDate }}
-					</template>
-					<template v-else>
-						Pending
-					</template>
+					<template
+						v-if="slotProps.item.acknowledged_at"
+					>{{ slotProps.item.acknowledged_at | localDate }}</template>
+					<template v-else>Pending</template>
 				</div>
 			</template>
 		</AppTable>
-    <template v-else>
-      <div class="mt-2 w-full text-center text-white">There are no inquiries messages.</div>
-    </template>
+		<template v-else>
+			<div class="mt-2 w-full text-center text-white">There are no inquiries messages.</div>
+		</template>
 		<div
 			class="support-shield"
 			v-if="$route.name.includes('index-inquiries-id')"

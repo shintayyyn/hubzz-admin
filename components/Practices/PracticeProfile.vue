@@ -5,18 +5,18 @@
 				<div class="flex flex-wrap">
 					<!-- VIEW PRIMARY INFORMATION -->
 					<div v-if="practice.status !== 'Deactivated'" class="w-full md:w-1/2 text-gray-300 text-sm">
-            <p class="flex font-bold">Practice ID</p>
-            <p class="mx-2">{{practice ? practice.id : null}}</p>
+						<p class="flex font-bold">Practice ID</p>
+						<p class="mx-2">{{practice ? practice.id : null}}</p>
 						<p class="flex font-bold">Practice Name</p>
 						<p class="flex flex-wrap items-center text-white text-sm mb-2 md:px-2">
 							<span class="mr-2">{{practice.surgery ? practice.surgery.name : null}}</span>
 							<span
-								class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
+								class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
 								:class="practiceTypeStyle(practice.type)"
 							>{{practice.type}}</span>
 							<span
 								v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
-								class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
+								class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
 								:class="practiceTypeStyle(practice.hub_type)"
 							>{{practice.hub_type == 'Type 2' ? 'Health Board' : null}}</span>
 						</p>
@@ -25,10 +25,8 @@
 						<p
 							class="flex text-white text-sm md:px-2 mb-2"
 						>{{practice.surgery ? practice.surgery.code : null}}</p>
-            <p class="flex font-bold">Post Code</p>
-						<p
-							class="flex text-white text-sm md:px-2 mb-2"
-						 >{{practice.postcode}}</p>
+						<p class="flex font-bold">Post Code</p>
+						<p class="flex text-white text-sm md:px-2 mb-2">{{practice.postcode}}</p>
 						<p class="flex font-bold">Address</p>
 						<p class="flex flex-col text-white text-sm md:px-2 mb-2">
 							<span
@@ -137,19 +135,16 @@
 							<p
 								class="flex md:mx-2 mb-2"
 							>{{practice && practice.actived_until ? practice.actived_until : 'N/A'}}</p>
-              <div class="flex flex-col item-center">
-                <div 
-                  @click="toDeactivate()"
-                  class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 mx-2 p-2 cursor-pointer">
-                  Deactivate this Practice?
-                </div>
-                <div 
-                  v-if="toBogus === true" 
-                  class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 mx-2 p-2 cursor-pointer">
-                  Mark as Bogus
-                </div>
-              </div>
-              
+							<div class="flex flex-col item-center">
+								<div
+									@click="toDeactivate()"
+									class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 mx-2 p-2 cursor-pointer"
+								>Deactivate this Practice?</div>
+								<div
+									v-if="toBogus === true"
+									class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 mx-2 p-2 cursor-pointer"
+								>Mark as Bogus</div>
+							</div>
 						</div>
 
 						<div
@@ -251,20 +246,20 @@ export default {
 	props: ["practice"],
 	data() {
 		return {
-      practiceParent: "",
-      
-      practiceStatusChoices:[],
+			practiceParent: "",
 
-      practiceDocuments: [],
-      toBogus: false,
+			practiceStatusChoices: [],
+
+			practiceDocuments: [],
+			toBogus: false,
 			toPutPractice: {
 				phone_number: this.practice.phone_number,
 				report_to: this.practice.report_to,
 				extra_information: this.practice.extra_information,
 				status: this.practice.status,
 				actived_until: this.practice.actived_until
-      },
-      
+			},
+
 			toEdit: false,
 			toPutPracticeType: {
 				type: this.practice.type,
@@ -278,27 +273,30 @@ export default {
 		}
 	},
 	async created() {
-    console.log('practice',this.practice);
-    await this.$axios.$get(`/api/v1/admin/practices/${this.practice.id}/practice-documents`)
-      .then(res => {
-        this.practiceDocuments = res.data.practice_documents
-      })
-    if(this.practice.rates.length > 0 &&
-    this.practice.rates[0].rate &&
-    this.practice.rates[1].rate && 
-    this.practiceDocuments.length >= 2){
-      this.practiceStatusChoices = [
-        {label: 'Active', value: 'Active'},
-        {label: 'Inactive', value: 'Inactive'},
-        {label: 'Suspended', value: 'Suspended'}, 
-      ]
-    } else {
-      this.toBogus = true
-      this.practiceStatusChoices = [
-        {label: 'Inactive', value: 'Inactive'},
-        {label: 'Suspended', value: 'Suspended'},
-      ]
-    }
+		console.log("practice", this.practice);
+		await this.$axios
+			.$get(`/api/v1/admin/practices/${this.practice.id}/practice-documents`)
+			.then(res => {
+				this.practiceDocuments = res.data.practice_documents;
+			});
+		if (
+			this.practice.rates.length > 0 &&
+			this.practice.rates[0].rate &&
+			this.practice.rates[1].rate &&
+			this.practiceDocuments.length >= 2
+		) {
+			this.practiceStatusChoices = [
+				{ label: "Active", value: "Active" },
+				{ label: "Inactive", value: "Inactive" },
+				{ label: "Suspended", value: "Suspended" }
+			];
+		} else {
+			this.toBogus = true;
+			this.practiceStatusChoices = [
+				{ label: "Inactive", value: "Inactive" },
+				{ label: "Suspended", value: "Suspended" }
+			];
+		}
 		if (this.practice.type == "Spoke") {
 			Promise.all([
 				this.$axios
@@ -391,26 +389,28 @@ export default {
 				});
 				console.log("change practice type error!", err.message);
 			}
-    },
-    async toDeactivate(){
-      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`)
-      .then(res => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Practice Successfully Deactivated"
-        });
+		},
+		async toDeactivate() {
+			await this.$axios
+				.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`)
+				.then(res => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Practice Successfully Deactivated"
+					});
 
-        this.getPractices();
-				this.getPractice();
-      }).catch(err => {
-        this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
+					this.getPractices();
+					this.getPractice();
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
 				});
-      })
-    },
+		},
 		practiceTypeStyle(type) {
 			switch (type) {
 				case "Stand Alone":
