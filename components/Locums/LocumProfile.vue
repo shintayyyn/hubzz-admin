@@ -311,7 +311,7 @@ export default {
     },
     
     async toDeactivateLocum(){
-      await this.$axios.$put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`)
+      await this.$axios.$put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`, {})
       .then(res => {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
