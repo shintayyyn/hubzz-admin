@@ -115,7 +115,7 @@ table tbody td {
 }
 .slide-down-enter-active,
 .slide-down-leave-active {
-	transition: 150ms ease-out;
+	transition: 0.25s linear;
 	/* transition: all 0.5s; */
 }
 .slide-down-enter,
@@ -146,7 +146,7 @@ table tbody td {
 /* toggle */
 .drop-down-enter-active,
 .drop-down-leave-active {
-	transition: all 0.5s;
+	transition: all 500ms;
 }
 
 .drop-down-enter,

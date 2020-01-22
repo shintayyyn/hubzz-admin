@@ -30,12 +30,9 @@
 				<!-- -------------------------------------------------------------------------- -->
 				<div v-for="item in locumFaqs" :key="item.id" class="inline-flex w-full">
 					<nuxt-link
-						v-if="
-							deleteLocumFaq == false &&
-								authAdminPermissions.includes('Edit FAQ')
-							"
+						v-if="deleteLocumFaq == false && authAdminPermissions.includes('Edit FAQ')"
 						:to="{ path: `/faqs/${item.id}` }"
-						class="flex items-center cursor-pointer mr-2 md:mr-4"
+						class="flex cursor-pointer mr-2 md:mr-4 mt-5"
 					>
 						<svgicon
 							name="edit"
@@ -45,12 +42,9 @@
 						/>
 					</nuxt-link>
 					<div
-						v-if="
-						deleteLocumFaq == true &&
-							authAdminPermissions.includes('Delete FAQ')
-						"
+						v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')"
 						@click="toDeleteFaq(item.id)"
-						class="flex items-center cursor-pointer mr-2 md:mr-4"
+						class="flex cursor-pointer mr-2 md:mr-4 mt-5"
 					>
 						<svgicon
 							name="garbage"
@@ -75,7 +69,7 @@
 								/>
 							</div>
 						</div>
-						<transition name="drop-down" mode="out-in">
+						<transition name="slide-down" mode="out-in">
 							<div v-if="item.toggled">
 								<no-ssr>
 									<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
@@ -97,10 +91,7 @@
 							class="text-sm"
 						/>
 						<AppButton
-							v-if="
-								authAdminPermissions.includes('Delete FAQ') &&
-									practiceFaqs.length > 0
-							"
+							v-if="authAdminPermissions.includes('Delete FAQ') && practiceFaqs.length > 0"
 							:label="deletePracticeFaq ? 'Done' : 'Delete'"
 							:icon="deletePracticeFaq ? 'circle-check' : 'garbage'"
 							:iconSize="'18'"
@@ -111,15 +102,11 @@
 					</div>
 				</div>
 				<!-- ---------------------------------------------------------------------------- -->
-				<!-- <transition-group name="fade" mode="out-in"> -->
 				<div v-for="item in practiceFaqs" :key="item.id" class="inline-flex w-full">
 					<nuxt-link
-						v-if="
-							deletePracticeFaq == false &&
-								authAdminPermissions.includes('Edit FAQ')
-							"
+						v-if="deletePracticeFaq == false && authAdminPermissions.includes('Edit FAQ')"
 						:to="{ path: `/faqs/${item.id}` }"
-						class="flex items-center cursor-pointer mr-2 md:mr-4"
+						class="flex cursor-pointer mr-2 md:mr-4 mt-5"
 					>
 						<svgicon
 							name="edit"
@@ -129,12 +116,9 @@
 						/>
 					</nuxt-link>
 					<div
-						v-if="
-							deletePracticeFaq == true &&
-								authAdminPermissions.includes('Delete FAQ')
-							"
+						v-if="deletePracticeFaq == true && authAdminPermissions.includes('Delete FAQ')"
 						@click="toDeleteFaq(item.id)"
-						class="flex items-center cursor-pointer mr-2 md:mr-4"
+						class="flex cursor-pointer mr-2 md:mr-4 mt-5"
 					>
 						<svgicon
 							name="garbage"
@@ -159,16 +143,15 @@
 								/>
 							</div>
 						</div>
-						<!-- <transition name="slide-down" mode="out-in"> -->
-						<div :class="item.toggled ? 'item-answer-open' : 'item-answer-close'">
-							<no-ssr>
-								<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
-							</no-ssr>
-						</div>
-						<!-- </transition> -->
+						<transition name="slide-down" mode="out-in">
+							<div v-if="item.toggled">
+								<no-ssr>
+									<quill-editor class="border-none" :options="options" :content="item.answer" disabled></quill-editor>
+								</no-ssr>
+							</div>
+						</transition>
 					</div>
 				</div>
-				<!-- </transition-group> -->
 				<div
 					v-if="practiceFaqs.length === 0"
 					class="text-waterloo"
@@ -285,7 +268,7 @@ export default {
 	transition: height 2s linear;
 }
 .toggled {
-	transition: all 0.5s;
+	transition: all 0.5s linear;
 }
 .faq-shield {
 	position: fixed;

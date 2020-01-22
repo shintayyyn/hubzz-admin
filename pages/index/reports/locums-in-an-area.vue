@@ -38,7 +38,7 @@
 
 			<div class="w-full text-xs overflow-x-auto mt-1">
 				<div class="flex bg-waterloo text-white font-bold">
-					<div class="flex-1 flex justify-center items-center p-2">
+					<div class="flex-1 py-2 pl-8 pr-2">
 						<span>Area</span>
 
 						<button @click="setOrderBy('area')">
@@ -112,7 +112,7 @@
 					:key="getLocumsInAnAreaKey(locumsInAnArea)"
 					class="flex bg-white"
 				>
-					<span class="flex-1 p-2 text-center">{{ locumsInAnArea.area }}</span>
+					<span class="flex-1 py-2 pl-8 pr-2">{{ locumsInAnArea.area }}</span>
 					<span class="flex-1 p-2 text-center">{{ locumsInAnArea.profession }}</span>
 					<span class="flex-1 p-2 text-center">{{ locumsInAnArea.number_locums_registered }}</span>
 					<span class="flex-1 p-2 text-center">{{ locumsInAnArea.status }}</span>
