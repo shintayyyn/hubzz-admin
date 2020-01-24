@@ -50,6 +50,11 @@
 						url: '/reports/pension-contributions',
 					},
 					{
+						title: 'REP-04',
+						subtitle: 'Locums on System',
+						url: '/reports/locums',
+					},
+					{
 						title: 'REP-019',
 						subtitle: 'Locums in an Area',
 						url: '/reports/locums-in-an-area',

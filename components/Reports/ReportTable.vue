@@ -3,26 +3,26 @@
 
     <div class="__report_table w-full flex text-xs whitespace-no-wrap overflow-x-auto mt-1">
 
-      <div :style="{ flexGrow: qwe.flexGrow, flexShrink: qwe.flexShrink }" v-for="qwe in qwes" :key="`qwe_${qwe.key}`">
+      <div v-for="columnDetail in columnDetails" :key="`columnDetail_${columnDetail.key}`" :style="columnStyle(columnDetail)">
         <div class="flex bg-waterloo text-white font-bold">
           <div class="flex-1 p-2 flex justify-between items-center">
-            <div class="whitespace-no-wrap">{{ qwe.title }}</div>
-            <button class="px-1 ml-2" @click="setOrderBy(qwe.sort_key)" v-if="qwe.sort_key">
-              <span v-if="getColumnOrderByDirection(qwe.sort_key) === null">
+            <div class="whitespace-no-wrap">{{ columnDetail.title }}</div>
+            <button class="px-1 ml-2" @click="setOrderBy(columnDetail.sort_key)" v-if="columnDetail.sort_key">
+              <span v-if="getColumnOrderByDirection(columnDetail.sort_key) === null">
                 <svgicon name="sort" height="12" width="12" color="white" />
               </span>
-              <span v-if="getColumnOrderByDirection(qwe.sort_key) === 'asc'">
+              <span v-if="getColumnOrderByDirection(columnDetail.sort_key) === 'asc'">
                 <svgicon name="sort-ascend" height="12" width="12" color="white" />
               </span>
-              <span v-if="getColumnOrderByDirection(qwe.sort_key) === 'desc'">
+              <span v-if="getColumnOrderByDirection(columnDetail.sort_key) === 'desc'">
                 <svgicon name="sort-descend" height="12" width="12" color="white" />
               </span>
             </button>
           </div>
         </div>
 
-        <div v-for="(item, index) in items" :key="`locum_invoice_id_${item.locum_invoice_id}_index`" class="flex bg-white" :class="qwe.justify ? `justify-${qwe.justify}` : 'justify-start'">
-          <span class="whitespace-no-wrap p-2">&nbsp;{{ qwe.column(item, index) }}</span>
+        <div v-for="(item, index) in items" :key="`key_${columnDetail.key}_${getItemKey(item, index)}`" class="flex bg-white" :class="columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start'">
+          <span class="whitespace-no-wrap p-2">&nbsp;{{ columnDetail.column(item, index) }}</span>
         </div>
 
         <div v-if="items.length === 0" v-for="limit in limit" :key="`limit_${limit}`" class="flex bg-white">
@@ -59,9 +59,13 @@
         type: Array,
         default: () => [],
       },
-      qwes: {
+      columnDetails: {
         type: Array,
         default: () => [],
+      },
+      getItemKey: {
+        type: Function,
+        default: (item, index) => index,
       },
     },
 
@@ -80,6 +84,15 @@
           }
 
           return null
+        }
+      },
+
+      columnStyle() {
+        return (columnDetail) => {
+          return {
+            flexGrow: columnDetail.flexGrow,
+            flexShrink: columnDetail.flexShrink,
+          }
         }
       },
     },
@@ -105,8 +118,6 @@
         } else {
           orderBy.push(column)
         }
-
-        console.log('qwe orderBy', orderBy)
 
         this.$emit('setOrderBy', orderBy)
       },

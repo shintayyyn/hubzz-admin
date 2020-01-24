@@ -25,8 +25,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="pensionContributions"
-        :getItemKey="(item) => item.locum_invoice_id"
+        :items="locums"
+        :getItemKey="(item) => item.locum_user_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -61,7 +61,7 @@
       return {
         loading: false,
         count: 0,
-        pensionContributions: [],
+        locums: [],
         orderBy: [],
         orderBys: [
           {
@@ -108,55 +108,74 @@
             flexShrink: 0,
           },
           {
-            title: 'Practice',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice_name,
+            title: 'Profession',
+            key: 'profession_name',
+            sort_key: 'profession_name',
+            column: (item) => item.profession_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum',
-            key: 'locum_user_name',
-            sort_key: 'locum_user_name',
-            column: (item) => item.locum_user_name,
+            title: 'Area',
+            key: 'locum_postcode',
+            sort_key: 'locum_postcode',
+            column: (item) => item.locum_postcode,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: '£ Paid',
-            key: 'ni_amount',
-            sort_key: 'ni_amount',
-            column: (item) => item.ni_amount.toFixed(2),
-            justify: 'center',
+            title: 'Min Rate per Hour',
+            key: 'min_rate_per_hour',
+            sort_key: 'min_rate_per_hour',
+            column: (item) => item.min_rate_per_hour.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Invoice Number',
-            key: 'invoice_number',
-            sort_key: 'invoice_number',
-            column: (item) => item.invoice_number,
-            justify: 'start',
+            title: 'Max Rate per Hour',
+            key: 'max_rate_per_hour',
+            sort_key: 'max_rate_per_hour',
+            column: (item) => item.max_rate_per_hour.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Job Number',
-            key: 'job_part_number',
-            sort_key: 'job_part_number',
-            column: (item) => item.job_part_number,
-            justify: 'start',
+            title: 'Min Rate per Half Day Session',
+            key: 'min_rate_per_half_day_session',
+            sort_key: 'min_rate_per_half_day_session',
+            column: (item) => item.min_rate_per_half_day_session.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
-          },          {
-            title: 'Date Paid',
-            key: 'paid_at',
-            sort_key: 'paid_at',
-            column: (item) => this.$moment(item.paid_at, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
+          },
+          {
+            title: 'Max Rate per Half Day Session',
+            key: 'max_rate_per_half_day_session',
+            sort_key: 'max_rate_per_half_day_session',
+            column: (item) => item.max_rate_per_half_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Min Rate per Whole Day Session',
+            key: 'min_rate_per_whole_day_session',
+            sort_key: 'min_rate_per_whole_day_session',
+            column: (item) => item.min_rate_per_whole_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Max Rate per Whole Day Session',
+            key: 'max_rate_per_whole_day_session',
+            sort_key: 'max_rate_per_whole_day_session',
+            column: (item) => item.max_rate_per_whole_day_session.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -170,48 +189,48 @@
 
     watch: {
       orderBy() {
-        this.getPensionContributions()
+        this.getLocums()
       },
 
       limit() {
         this.page = 1
-        this.getPensionContributions()
+        this.getLocums()
       },
 
       activePage() {
-        this.getPensionContributions()
+        this.getLocums()
       },
     },
 
     methods: {
-      getPensionContributions() {
+      getLocums() {
         this.loading = true
-        this.pensionContributions = []
+        this.locums = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/pension-contributions/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locums/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/pension-contributions', {
+          this.$axios.get('/api/v1/admin/reports/locums', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.pension_contributions
+            return responses.data.data.locums
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            pensionContributions,
+            locums,
           ] = results
 
           this.count = count
-          this.pensionContributions = pensionContributions
+          this.locums = locums
         }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err)
+          console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
+          this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
         })
@@ -227,7 +246,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getPensionContributions()
+      this.getLocums()
     },
 
   };

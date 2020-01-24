@@ -26,7 +26,8 @@
       <ReportTable
         :limit="limit"
         :items="deductions"
-        :qwes="qwes"
+        :getItemKey="(item) => item.locum_invoice_id"
+        :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
         @setOrderBy="(value) => orderBy = value"
@@ -95,7 +96,7 @@
         return this.activePage * this.limit - this.limit
       },
 
-      qwes() {
+      columnDetails() {
         return [
           {
             title: '#',
@@ -238,6 +239,7 @@
           this.deductions = deductions
         }).catch((err) => {
           console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
         })

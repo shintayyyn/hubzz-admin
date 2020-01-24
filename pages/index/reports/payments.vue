@@ -26,7 +26,8 @@
       <ReportTable
         :limit="limit"
         :items="payments"
-        :qwes="qwes"
+        :getItemKey="(item) => item.locum_invoice_id"
+        :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
         @setOrderBy="(value) => orderBy = value"
@@ -95,7 +96,7 @@
         return this.activePage * this.limit - this.limit
       },
 
-      qwes() {
+      columnDetails() {
         return [
           {
             title: '#',
@@ -220,6 +221,7 @@
           this.payments = payments
         }).catch((err) => {
           console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
         })
@@ -240,47 +242,3 @@
 
   };
 </script>
-
-<style>
-  .report-modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
-  }
-
-  @media screen and (min-width: 1200px) {
-    .report-modal {
-      width: 80%;
-    }
-  }
-
-  @media (min-width: 450px) {
-    .right-side-header-content {
-      width: calc(100% - 0px);
-    }
-  }
-
-  .page-overlap {
-    min-width: 100%;
-  }
-
-  @media screen and (min-width: 768px) {
-    .page-overlap {
-      min-width: calc(100% - 70px);
-    }
-  }
-
-  @media screen and (min-width: 1200px) {
-    .page-overlap {
-      min-width: calc(100% - 200px);
-    }
-  }
-</style>
