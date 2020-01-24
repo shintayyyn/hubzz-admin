@@ -54,6 +54,11 @@
 						subtitle: 'Locums on System',
 						url: '/reports/locums',
 					},
+          {
+            title: 'REP-05',
+            subtitle: 'Locums Used/Bank',
+            url: '/reports/practice-locums',
+          },
 					{
 						title: 'REP-019',
 						subtitle: 'Locums in an Area',
