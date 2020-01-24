@@ -393,7 +393,7 @@ export default {
 			}
     },
     async toDeactivate(){
-      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`)
+      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`, {})
       .then(res => {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
