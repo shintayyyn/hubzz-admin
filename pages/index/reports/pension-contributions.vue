@@ -25,7 +25,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="deductions"
+        :items="pensionContributions"
         :qwes="qwes"
         :orderBy="orderBy"
         :loading="loading"
@@ -60,7 +60,7 @@
       return {
         loading: false,
         count: 0,
-        deductions: [],
+        pensionContributions: [],
         orderBy: [],
         orderBys: [
           {
@@ -107,15 +107,6 @@
             flexShrink: 0,
           },
           {
-            title: 'Invoice Number',
-            key: 'invoice_number',
-            sort_key: 'invoice_number',
-            column: (item) => item.invoice_number,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
             title: 'Practice',
             key: 'practice_name',
             sort_key: 'practice_name',
@@ -134,52 +125,33 @@
             flexShrink: 0,
           },
           {
-            title: 'UTR or Company Reg number',
-            key: 'tax_number',
-            sort_key: 'tax_number',
-            column: (item) => item.tax_number,
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'NI Amount',
+            title: '£ Paid',
             key: 'ni_amount',
             sort_key: 'ni_amount',
             column: (item) => item.ni_amount.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'PAYE Amount',
-            key: 'paye_amount',
-            sort_key: 'paye_amount',
-            column: (item) => item.paye_amount.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date Start',
-            key: 'date_start',
-            sort_key: 'date_start',
-            column: (item) => this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY'),
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Date End',
-            key: 'date_end',
-            sort_key: 'date_end',
-            column: (item) => this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
+            title: 'Invoice Number',
+            key: 'invoice_number',
+            sort_key: 'invoice_number',
+            column: (item) => item.invoice_number,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Date deductions made',
+            title: 'Job Number',
+            key: 'job_part_number',
+            sort_key: 'job_part_number',
+            column: (item) => item.job_part_number,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },          {
+            title: 'Date Paid',
             key: 'paid_at',
             sort_key: 'paid_at',
             column: (item) => this.$moment(item.paid_at, 'YYYY-MM-DD').format('DD/MM/YYYY'),
@@ -197,47 +169,48 @@
 
     watch: {
       orderBy() {
-        this.getDeductions()
+        this.getPensionContributions()
       },
 
       limit() {
         this.page = 1
-        this.getDeductions()
+        this.getPensionContributions()
       },
 
       activePage() {
-        this.getDeductions()
+        this.getPensionContributions()
       },
     },
 
     methods: {
-      getDeductions() {
+      getPensionContributions() {
         this.loading = true
-        this.deductions = []
+        this.pensionContributions = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/deductions/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/pension-contributions/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/deductions', {
+          this.$axios.get('/api/v1/admin/reports/pension-contributions', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.deductions
+            return responses.data.data.pension_contributions
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            deductions,
+            pensionContributions,
           ] = results
 
           this.count = count
-          this.deductions = deductions
+          this.pensionContributions = pensionContributions
         }).catch((err) => {
           console.log('err', err)
+          this.$nuxt.error(err)
         }).finally(() => {
           this.loading = false
         })
@@ -253,7 +226,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getDeductions()
+      this.getPensionContributions()
     },
 
   };

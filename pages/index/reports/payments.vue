@@ -25,7 +25,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="deductions"
+        :items="payments"
         :qwes="qwes"
         :orderBy="orderBy"
         :loading="loading"
@@ -60,7 +60,7 @@
       return {
         loading: false,
         count: 0,
-        deductions: [],
+        payments: [],
         orderBy: [],
         orderBys: [
           {
@@ -107,15 +107,6 @@
             flexShrink: 0,
           },
           {
-            title: 'Invoice Number',
-            key: 'invoice_number',
-            sort_key: 'invoice_number',
-            column: (item) => item.invoice_number,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
             title: 'Practice',
             key: 'practice_name',
             sort_key: 'practice_name',
@@ -134,52 +125,43 @@
             flexShrink: 0,
           },
           {
-            title: 'UTR or Company Reg number',
-            key: 'tax_number',
-            sort_key: 'tax_number',
-            column: (item) => item.tax_number,
+            title: 'Profession',
+            key: 'profession_name',
+            sort_key: 'profession_name',
+            column: (item) => item.profession_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Invoice Number',
+            key: 'invoice_number',
+            sort_key: 'invoice_number',
+            column: (item) => item.invoice_number,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Number',
+            key: 'job_part_number',
+            sort_key: 'job_part_number',
+            column: (item) => item.job_part_number,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: '£ Paid',
+            key: 'total_amount',
+            sort_key: 'total_amount',
+            column: (item) => item.total_amount.toFixed(2),
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'NI Amount',
-            key: 'ni_amount',
-            sort_key: 'ni_amount',
-            column: (item) => item.ni_amount.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'PAYE Amount',
-            key: 'paye_amount',
-            sort_key: 'paye_amount',
-            column: (item) => item.paye_amount.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date Start',
-            key: 'date_start',
-            sort_key: 'date_start',
-            column: (item) => this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date End',
-            key: 'date_end',
-            sort_key: 'date_end',
-            column: (item) => this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date deductions made',
+            title: 'Date Paid',
             key: 'paid_at',
             sort_key: 'paid_at',
             column: (item) => this.$moment(item.paid_at, 'YYYY-MM-DD').format('DD/MM/YYYY'),
@@ -197,45 +179,45 @@
 
     watch: {
       orderBy() {
-        this.getDeductions()
+        this.getPayments()
       },
 
       limit() {
         this.page = 1
-        this.getDeductions()
+        this.getPayments()
       },
 
       activePage() {
-        this.getDeductions()
+        this.getPayments()
       },
     },
 
     methods: {
-      getDeductions() {
+      getPayments() {
         this.loading = true
-        this.deductions = []
+        this.payments = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/deductions/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/payments/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/deductions', {
+          this.$axios.get('/api/v1/admin/reports/payments', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.deductions
+            return responses.data.data.payments
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            deductions,
+            payments,
           ] = results
 
           this.count = count
-          this.deductions = deductions
+          this.payments = payments
         }).catch((err) => {
           console.log('err', err)
         }).finally(() => {
@@ -253,8 +235,52 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getDeductions()
+      this.getPayments()
     },
 
   };
 </script>
+
+<style>
+  .report-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .report-modal {
+      width: 80%;
+    }
+  }
+
+  @media (min-width: 450px) {
+    .right-side-header-content {
+      width: calc(100% - 0px);
+    }
+  }
+
+  .page-overlap {
+    min-width: 100%;
+  }
+
+  @media screen and (min-width: 768px) {
+    .page-overlap {
+      min-width: calc(100% - 70px);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap {
+      min-width: calc(100% - 200px);
+    }
+  }
+</style>

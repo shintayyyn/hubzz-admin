@@ -5,7 +5,7 @@
 		<div class="flex flex-col">
 			<nuxt-link
 				v-for="report in reports"
-				:index="`reports-${report.title}`"
+				:key="`reports-${report.title}`"
 				:to="report.url"
 				class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
 			>
@@ -40,6 +40,16 @@
 						url: '/reports/deductions',
 					},
 					{
+						title: 'REP-02',
+						subtitle: 'Payments',
+						url: '/reports/payments',
+					},
+					{
+						title: 'REP-03',
+						subtitle: 'Pension Contributions',
+						url: '/reports/pension-contributions',
+					},
+					{
 						title: 'REP-019',
 						subtitle: 'Locums in an Area',
 						url: '/reports/locums-in-an-area',
@@ -55,3 +65,47 @@
 
 	}
 </script>
+
+<style>
+  .report-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .report-modal {
+      width: 80%;
+    }
+  }
+
+  @media (min-width: 450px) {
+    .right-side-header-content {
+      width: calc(100% - 0px);
+    }
+  }
+
+  .page-overlap {
+    min-width: 100%;
+  }
+
+  @media screen and (min-width: 768px) {
+    .page-overlap {
+      min-width: calc(100% - 70px);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap {
+      min-width: calc(100% - 200px);
+    }
+  }
+</style>
