@@ -127,242 +127,242 @@
 </template>
 
 <script>
-import AppButton from "@/components/Base/AppButton";
-import AppInput from "@/components/Base/AppInput";
-export default {
-	components: {
-		AppButton,
-		AppInput
-	},
-	watchQuery: ["order_by"],
+	import AppButton from "@/components/Base/AppButton";
+	import AppInput from "@/components/Base/AppInput";
+	export default {
+		components: {
+			AppButton,
+			AppInput
+		},
+		watchQuery: ["order_by"],
 
-	async asyncData({ app, route }) {
-		try {
-			console.log("asyncData");
+		async asyncData({ app, route }) {
+			try {
+				console.log("asyncData");
 
-			let { order_by: orderBy = [], page = 1 } = route.query;
+				let { order_by: orderBy = [], page = 1 } = route.query;
 
-			orderBy = Array.isArray(orderBy) ? orderBy : [orderBy];
+				orderBy = Array.isArray(orderBy) ? orderBy : [orderBy];
 
-			const limit = 20;
+				const limit = 20;
 
-			const params = {
-				order_by: orderBy,
-				limit
-			};
+				const params = {
+					order_by: orderBy,
+					limit
+				};
 
-			const [professions, count, locumsInAnArea] = await Promise.all([
-				app.$axios
-					.get(`/api/v1/professions`, {
-						limit: 1000000
-					})
-					.then(response => {
-						return response.data.data.professions;
-					}),
+				const [professions, count, locumsInAnArea] = await Promise.all([
+					app.$axios
+						.get(`/api/v1/professions`, {
+							limit: 1000000
+						})
+						.then(response => {
+							return response.data.data.professions;
+						}),
 
-				app.$axios
-					.get(`/api/v1/admin/reports/locums-in-an-area/count`, {
-						params
-					})
-					.then(response => {
-						return response.data.data.count;
-					}),
+					app.$axios
+						.get(`/api/v1/admin/reports/locums-in-an-area/count`, {
+							params
+						})
+						.then(response => {
+							return response.data.data.count;
+						}),
 
-				app.$axios
-					.get(`/api/v1/admin/reports/locums-in-an-area`, {
-						params
-					})
-					.then(response => {
-						return response.data.data.locums_in_an_area;
-					})
-			]);
+					app.$axios
+						.get(`/api/v1/admin/reports/locums-in-an-area`, {
+							params
+						})
+						.then(response => {
+							return response.data.data.locums_in_an_area;
+						})
+				]);
 
+				return {
+					professions,
+					orderBy,
+					limit,
+					loading: false,
+					count,
+					locumsInAnArea,
+					page
+				};
+			} catch (err) {
+				console.log("reports locums-in-an-area err", err);
+				throw err;
+			}
+		},
+
+		data() {
 			return {
-				professions,
-				orderBy,
-				limit,
+				professions: [],
+				statuses: ["Inactive", "Active", "Dormant", "Suspended", "Deactivated"],
+				orderBy: [],
+				limit: 20,
 				loading: false,
-				count,
-				locumsInAnArea,
-				page
-			};
-		} catch (err) {
-			console.log("reports locums-in-an-area err", err);
-			throw err;
-		}
-	},
-
-	data() {
-		return {
-			professions: [],
-			statuses: ["Inactive", "Active", "Dormant", "Suspended", "Deactivated"],
-			orderBy: [],
-			limit: 20,
-			loading: false,
-			count: 0,
-			locumsInAnArea: []
-		};
-	},
-
-	computed: {
-		pageCount() {
-			return Math.ceil(this.count / this.limit);
-		},
-
-		activePage() {
-			return parseInt(this.activePage);
-		},
-
-		showPage() {
-			return page => {
-				if (page === 1) {
-					return true;
-				}
-
-				if (page === this.pageCount) {
-					return true;
-				}
-
-				if (page === this.activePage) {
-					return true;
-				}
-
-				if (page === this.activePage + 1) {
-					return true;
-				}
-
-				if (page === this.activePage - 1) {
-					return true;
-				}
-
-				if (this.activePage === 1 && page < 5) {
-					return true;
-				}
-
-				if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-					return true;
-				}
-
-				if (this.activePage === 2 && page === 4) {
-					return true;
-				}
-
-				if (
-					this.activePage === this.pageCount - 1 &&
-					page === this.pageCount - 3
-				) {
-					return true;
-				}
-
-				return false;
+				count: 0,
+				locumsInAnArea: []
 			};
 		},
 
-		getColumnOrderByDirection() {
-			return column => {
-				const index = this.orderBy.findIndex(
+		computed: {
+			pageCount() {
+				return Math.ceil(this.count / this.limit);
+			},
+
+			activePage() {
+				return parseInt(this.activePage);
+			},
+
+			showPage() {
+				return page => {
+					if (page === 1) {
+						return true;
+					}
+
+					if (page === this.pageCount) {
+						return true;
+					}
+
+					if (page === this.activePage) {
+						return true;
+					}
+
+					if (page === this.activePage + 1) {
+						return true;
+					}
+
+					if (page === this.activePage - 1) {
+						return true;
+					}
+
+					if (this.activePage === 1 && page < 5) {
+						return true;
+					}
+
+					if (this.activePage === this.pageCount && page > this.pageCount - 4) {
+						return true;
+					}
+
+					if (this.activePage === 2 && page === 4) {
+						return true;
+					}
+
+					if (
+						this.activePage === this.pageCount - 1 &&
+						page === this.pageCount - 3
+					) {
+						return true;
+					}
+
+					return false;
+				};
+			},
+
+			getColumnOrderByDirection() {
+				return column => {
+					const index = this.orderBy.findIndex(
+						orderBy => orderBy.split(":")[0].toLowerCase() === column
+					);
+
+					if (index > -1) {
+						let direction = this.orderBy[index].split(":")[1];
+
+						if (!direction || direction.toLowerCase() === "asc") {
+							return "asc";
+						}
+
+						return "desc";
+					} else {
+						return null;
+					}
+				};
+			},
+
+			getLocumsInAnAreaKey() {
+				return v =>
+					`${v.area}-${v.profession}-${v.number_locums_registered}-${v.status}`;
+			},
+
+			downloadCSVLink() {
+				return `${process.env.API_URL}/api/v1/admin/reports/locums-in-an-area/locums_in_an_area.csv`;
+			}
+		},
+
+		methods: {
+			setOrderBy(column) {
+				const orderBy = [...this.orderBy];
+
+				const index = orderBy.findIndex(
 					orderBy => orderBy.split(":")[0].toLowerCase() === column
 				);
 
 				if (index > -1) {
-					let direction = this.orderBy[index].split(":")[1];
+					let direction = this.getColumnOrderByDirection(column);
 
-					if (!direction || direction.toLowerCase() === "asc") {
-						return "asc";
+					orderBy.splice(index, 1);
+
+					if (direction === "asc") {
+						orderBy.push(`${column}:desc`);
 					}
-
-					return "desc";
 				} else {
-					return null;
+					orderBy.push(column);
 				}
-			};
-		},
 
-		getLocumsInAnAreaKey() {
-			return v =>
-				`${v.area}-${v.profession}-${v.number_locums_registered}-${v.status}`;
-		},
+				const query = {
+					...this.$route.query,
+					order_by: orderBy
+				};
 
-		downloadCSVLink() {
-			return `${process.env.API_URL}/api/v1/admin/reports/locums-in-an-area/locums_in_an_area.csv`;
-		}
-	},
-
-	methods: {
-		setOrderBy(column) {
-			const orderBy = [...this.orderBy];
-
-			const index = orderBy.findIndex(
-				orderBy => orderBy.split(":")[0].toLowerCase() === column
-			);
-
-			if (index > -1) {
-				let direction = this.getColumnOrderByDirection(column);
-
-				orderBy.splice(index, 1);
-
-				if (direction === "asc") {
-					orderBy.push(`${column}:desc`);
+				if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+					this.loading = true;
 				}
-			} else {
-				orderBy.push(column);
+
+				this.$router.replace(this.$router.resolve({ query }).href);
 			}
-
-			const query = {
-				...this.$route.query,
-				order_by: orderBy
-			};
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-
-			this.$router.replace(this.$router.resolve({ query }).href);
 		}
-	}
-};
+	};
 </script>
 
 <style>
-.report-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-
-@media screen and (min-width: 1200px) {
 	.report-modal {
-		width: 80%;
+		position: fixed;
+		top: 0;
+		right: 0;
+		margin-right: 0%;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		border-left: solid 2px #ffc72c;
+		transition: all 0.3s ease-in-out;
+		background-color: #505561;
+		z-index: 512;
 	}
-}
 
-@media (min-width: 450px) {
-	.right-side-header-content {
-		width: calc(100% - 0px);
+	@media screen and (min-width: 1200px) {
+		.report-modal {
+			width: 80%;
+		}
 	}
-}
 
-.page-overlap {
-	min-width: 100%;
-}
+	@media (min-width: 450px) {
+		.right-side-header-content {
+			width: calc(100% - 0px);
+		}
+	}
 
-@media screen and (min-width: 768px) {
 	.page-overlap {
-		min-width: calc(100% - 70px);
+		min-width: 100%;
 	}
-}
 
-@media screen and (min-width: 1200px) {
-	.page-overlap {
-		min-width: calc(100% - 200px);
+	@media screen and (min-width: 768px) {
+		.page-overlap {
+			min-width: calc(100% - 70px);
+		}
 	}
-}
+
+	@media screen and (min-width: 1200px) {
+		.page-overlap {
+			min-width: calc(100% - 200px);
+		}
+	}
 </style>
