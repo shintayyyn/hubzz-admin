@@ -141,6 +141,11 @@
             subtitle: 'Practices Worked',
             url: '/reports/locum-practices',
           },
+          {
+            title: 'REP-014',
+            subtitle: 'Expenses',
+            url: '/reports',
+          },
         ],
         hqAnalyticsReports: [
           {

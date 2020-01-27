@@ -26,7 +26,7 @@
       <ReportTable
         :limit="limit"
         :items="locumPractices"
-        :getItemKey="(item) => item.locum_user_id"
+        :getItemKey="(item) => item.job_part_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
