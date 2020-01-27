@@ -172,6 +172,11 @@
             subtitle: 'Onboarding - Documents Uploaded',
             url: '/reports/locum-uploaded-documents',
           },
+          {
+            title: 'REP-016',
+            subtitle: 'Expiry Report',
+            url: '/reports/locum-expiring-compliance-documents',
+          },
         ],
         hqAnalyticsReports: [
           {

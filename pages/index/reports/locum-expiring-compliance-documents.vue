@@ -25,7 +25,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="locumComplianceDocuments"
+        :items="locumExpiringComplianceDocuments"
         :getItemKey="(item) => item.locum_detail_compliance_document_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -61,7 +61,7 @@
       return {
         loading: false,
         count: 0,
-        locumComplianceDocuments: [],
+        locumExpiringComplianceDocuments: [],
         orderBy: [],
         orderBys: [
           {
@@ -144,45 +144,45 @@
 
     watch: {
       orderBy() {
-        this.getLocumComplianceDocuments()
+        this.getLocumExpiringComplianceDocuments()
       },
 
       limit() {
         this.page = 1
-        this.getLocumComplianceDocuments()
+        this.getLocumExpiringComplianceDocuments()
       },
 
       activePage() {
-        this.getLocumComplianceDocuments()
+        this.getLocumExpiringComplianceDocuments()
       },
     },
 
     methods: {
-      getLocumComplianceDocuments() {
+      getLocumExpiringComplianceDocuments() {
         this.loading = true
-        this.locumComplianceDocuments = []
+        this.locumExpiringComplianceDocuments = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locum-expiring-compliance-documents/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents', {
+          this.$axios.get('/api/v1/admin/reports/locum-expiring-compliance-documents', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_compliance_documents
+            return responses.data.data.locum_expiring_compliance_documents
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            locumComplianceDocuments,
+            locumExpiringComplianceDocuments,
           ] = results
 
           this.count = count
-          this.locumComplianceDocuments = locumComplianceDocuments
+          this.locumExpiringComplianceDocuments = locumExpiringComplianceDocuments
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -201,7 +201,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getLocumComplianceDocuments()
+      this.getLocumExpiringComplianceDocuments()
     },
 
   };
