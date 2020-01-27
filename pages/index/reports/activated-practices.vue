@@ -128,8 +128,8 @@
           {
             title: 'Sage Ref',
             key: 'sage_ref',
-            sort_key: null,
-            column: () => null,
+            sort_key: 'sage_ref',
+            column: (item) => item.sage_ref,
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
@@ -137,8 +137,8 @@
           {
             title: 'Nominal Code',
             key: 'nominal_code',
-            sort_key: null,
-            column: () => null,
+            sort_key: 'nominal_code',
+            column: (item) => item.nominal_code,
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
@@ -146,8 +146,8 @@
           {
             title: 'Direct Debit Set Up',
             key: 'direct_debit',
-            sort_key: null,
-            column: () => 'Yes',
+            sort_key: 'direct_debit',
+            column: (item) => item.direct_debit ? 'Yes' : 'No',
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
