@@ -2,49 +2,18 @@
 	<div class="flex-1 flex flex-col py-2 px-4 md:px-6">
 		<div class="text-xl md:text-4xl text-white">Reports</div>
 
-		<div class="text-sm mb-4 text-white">Work in progress.</div>
-
 		<div class="flex flex-col">
 			<nuxt-link
-				v-for="(report, index) in reports"
-				:key="`report-${index}`"
-				:to="`/reports/${report.id}`"
-				class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
-			>
-				<div class="flex flex-no-wrap text-sm text-white w-full">
-					<span class="px-2 whitespace-no-wrap font-semibold">{{
-						report.code
-					}}</span>
-					<span class="px-2 w-full leading-tight">{{
-						report.description
-					}}</span>
-					<div class="flex items-center px-1 md:px-0">
-						<svgicon
-							name="arrow-right"
-							width="21"
-							height="21"
-							color="white"
-						></svgicon>
-					</div>
-				</div>
-			</nuxt-link>
-
-			<nuxt-link
-				to="/reports/locums-in-an-area"
+				v-for="report in reports"
+				:key="`reports-${report.title}`"
+				:to="report.url"
 				class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
 			>
 				<div class="flex flex-no-wrap items-center text-sm text-white w-full">
-					<span class="px-2 whitespace-no-wrap font-semibold">REP-019</span>
-					<span class="px-2 w-full leading-tight flex items-center"
-						>Locums in an Area</span
-					>
+					<span class="px-2 whitespace-no-wrap font-semibold">{{ report.title }}</span>
+					<span class="px-2 w-full leading-tight flex items-center">{{ report.subtitle }}</span>
 					<div class="flex items-center px-1 md:px-0">
-						<svgicon
-							name="arrow-right"
-							width="21"
-							height="21"
-							color="white"
-						></svgicon>
+						<svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
 					</div>
 				</div>
 			</nuxt-link>
@@ -61,38 +30,92 @@
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			reports: [] || [
-				{
-					id: "1",
-					code: "REP-001",
-					description: "Invoices paid / unpaid"
-				},
-				{
-					id: "2",
-					code: "REP-002",
-					description:
-						"Tax report information - Money earnt and Tax and NI paid"
-				},
-				{
-					id: "3",
-					code: "REP-002",
-					description: "Practices worked for"
-				},
-				{
-					id: "4",
-					code: "REP-002",
-					description: "Practices that cancel jobs"
-				},
-				{
-					id: "5",
-					code: "REP-002",
-					description: "How many Locums are signed-up in the area"
-				}
-			]
-		};
+	export default {
+		data() {
+			return {
+				reports: [
+					{
+						title: 'REP-01',
+						subtitle: 'Tax and NI Deductions',
+						url: '/reports/deductions',
+					},
+					{
+						title: 'REP-02',
+						subtitle: 'Payments',
+						url: '/reports/payments',
+					},
+					{
+						title: 'REP-03',
+						subtitle: 'Pension Contributions',
+						url: '/reports/pension-contributions',
+					},
+					{
+						title: 'REP-04',
+						subtitle: 'Locums on System',
+						url: '/reports/locums',
+					},
+          {
+            title: 'REP-05',
+            subtitle: 'Locums Used/Bank',
+            url: '/reports/practice-locums',
+          },
+					{
+						title: 'REP-019',
+						subtitle: 'Locums in an Area',
+						url: '/reports/locums-in-an-area',
+					},
+					{
+						title: 'REP-020',
+						subtitle: 'Locum Referrals',
+						url: '/reports/locum-referrals',
+					},
+				],
+			}
+		},
+
 	}
-};
 </script>
+
+<style>
+  .report-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .report-modal {
+      width: 80%;
+    }
+  }
+
+  @media (min-width: 450px) {
+    .right-side-header-content {
+      width: calc(100% - 0px);
+    }
+  }
+
+  .page-overlap {
+    min-width: 100%;
+  }
+
+  @media screen and (min-width: 768px) {
+    .page-overlap {
+      min-width: calc(100% - 70px);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .page-overlap {
+      min-width: calc(100% - 200px);
+    }
+  }
+</style>
