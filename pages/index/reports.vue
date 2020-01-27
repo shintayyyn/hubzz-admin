@@ -79,6 +79,11 @@
             subtitle: 'Locums that Arrive Late',
             url: '/reports/practice-late-locums',
           },
+          {
+            title: 'REP-010',
+            subtitle: 'Hubzz Invoices',
+            url: '/reports/practice-invoices',
+          },
 					{
 						title: 'REP-019',
 						subtitle: 'Locums in an Area',
