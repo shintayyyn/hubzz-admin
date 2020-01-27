@@ -136,6 +136,11 @@
             subtitle: 'Tax Reporting - Money Earnt and Tax and NI Paid',
             url: '/reports/locum-invoices',
           },
+          {
+            title: 'REP-013',
+            subtitle: 'Practices Worked',
+            url: '/reports/locum-practices',
+          },
         ],
         hqAnalyticsReports: [
           {
