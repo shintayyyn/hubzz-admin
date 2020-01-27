@@ -40,6 +40,25 @@
       </nuxt-link>
     </div>
 
+    <div class="text-sm md:text-xl text-white">Compliance Reports</div>
+
+    <div class="flex flex-col">
+      <nuxt-link
+        v-for="complianceReport in complianceReports"
+        :key="`complianceReports-${complianceReport.title}`"
+        :to="complianceReport.url"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+      >
+        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+          <span class="px-2 whitespace-no-wrap font-semibold">{{ complianceReport.title }}</span>
+          <span class="px-2 w-full leading-tight flex items-center">{{ complianceReport.subtitle }}</span>
+          <div class="flex items-center px-1 md:px-0">
+            <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
+
     <div class="text-sm md:text-xl text-white">HQ Analytics</div>
 
     <div class="flex flex-col">
@@ -145,6 +164,13 @@
             title: 'REP-014',
             subtitle: 'Expenses',
             url: '/reports',
+          },
+        ],
+        complianceReports: [
+          {
+            title: 'REP-015',
+            subtitle: 'Onboarding - Documents Uploaded',
+            url: '/reports/locum-uploaded-documents',
           },
         ],
         hqAnalyticsReports: [
