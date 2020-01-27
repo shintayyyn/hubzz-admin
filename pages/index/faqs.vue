@@ -171,7 +171,6 @@
 </template>
 <script>
 import AppButton from "@/components/Base/AppButton";
-import AppConfirmCancel from "~/components/AppConfirmCancel";
 export default {
 	components: {
 		AppButton
