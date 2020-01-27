@@ -2,22 +2,62 @@
 	<div class="flex-1 flex flex-col py-2 px-4 md:px-6">
 		<div class="text-xl md:text-4xl text-white">Reports</div>
 
+    <div class="text-sm md:text-xl text-white">Practice Reports</div>
+
 		<div class="flex flex-col">
 			<nuxt-link
-				v-for="report in reports"
-				:key="`reports-${report.title}`"
-				:to="report.url"
+				v-for="practiceReport in practiceReports"
+				:key="`practiceReports-${practiceReport.title}`"
+				:to="practiceReport.url"
 				class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
 			>
 				<div class="flex flex-no-wrap items-center text-sm text-white w-full">
-					<span class="px-2 whitespace-no-wrap font-semibold">{{ report.title }}</span>
-					<span class="px-2 w-full leading-tight flex items-center">{{ report.subtitle }}</span>
+					<span class="px-2 whitespace-no-wrap font-semibold">{{ practiceReport.title }}</span>
+					<span class="px-2 w-full leading-tight flex items-center">{{ practiceReport.subtitle }}</span>
 					<div class="flex items-center px-1 md:px-0">
 						<svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
 					</div>
 				</div>
 			</nuxt-link>
 		</div>
+
+    <div class="text-sm md:text-xl text-white">Locum Reports</div>
+
+    <div class="flex flex-col">
+      <nuxt-link
+        v-for="locumReport in locumReports"
+        :key="`locumReports-${locumReport.title}`"
+        :to="locumReport.url"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+      >
+        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+          <span class="px-2 whitespace-no-wrap font-semibold">{{ locumReport.title }}</span>
+          <span class="px-2 w-full leading-tight flex items-center">{{ locumReport.subtitle }}</span>
+          <div class="flex items-center px-1 md:px-0">
+            <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
+
+    <div class="text-sm md:text-xl text-white">HQ Analytics</div>
+
+    <div class="flex flex-col">
+      <nuxt-link
+        v-for="hqAnalyticsReport in hqAnalyticsReports"
+        :key="`hqAnalyticsReports-${hqAnalyticsReport.title}`"
+        :to="hqAnalyticsReport.url"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+      >
+        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+          <span class="px-2 whitespace-no-wrap font-semibold">{{ hqAnalyticsReport.title }}</span>
+          <span class="px-2 w-full leading-tight flex items-center">{{ hqAnalyticsReport.subtitle }}</span>
+          <div class="flex items-center px-1 md:px-0">
+            <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
 
 		<nuxt-link
 			class="bg-shield z-511 fixed inset-0 opacity-50"
@@ -33,7 +73,7 @@
 	export default {
 		data() {
 			return {
-				reports: [
+				practiceReports: [
 					{
 						title: 'REP-001',
 						subtitle: 'Tax and NI Deductions',
@@ -79,17 +119,46 @@
             subtitle: 'Locums that Arrive Late',
             url: '/reports/practice-late-locums',
           },
-					{
-						title: 'REP-019',
-						subtitle: 'Locums in an Area',
-						url: '/reports/locums-in-an-area',
-					},
-					{
-						title: 'REP-020',
-						subtitle: 'Locum Referrals',
-						url: '/reports/locum-referrals',
-					},
+          {
+            title: 'REP-010',
+            subtitle: 'Hubzz Invoices',
+            url: '/reports/practice-invoices',
+          },
 				],
+        locumReports: [
+          {
+            title: 'REP-011',
+            subtitle: 'NHS Pension Contributions',
+            url: '/reports/locum-pension-contributions',
+          },
+          {
+            title: 'REP-012',
+            subtitle: 'Tax Reporting - Money Earnt and Tax and NI Paid',
+            url: '/reports/locum-invoices',
+          },
+          {
+            title: 'REP-013',
+            subtitle: 'Practices Worked',
+            url: '/reports/locum-practices',
+          },
+          {
+            title: 'REP-014',
+            subtitle: 'Expenses',
+            url: '/reports',
+          },
+        ],
+        hqAnalyticsReports: [
+          {
+            title: 'REP-019',
+            subtitle: 'Locums in an Area',
+            url: '/reports/locums-in-an-area',
+          },
+          {
+            title: 'REP-020',
+            subtitle: 'Locum Referrals',
+            url: '/reports/locum-referrals',
+          },
+        ],
 			}
 		},
 
