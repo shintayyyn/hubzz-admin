@@ -177,6 +177,16 @@
             subtitle: 'Expiry Report',
             url: '/reports/locum-expiring-compliance-documents',
           },
+          {
+            title: 'REP-017',
+            subtitle: 'Locum Lead Time for Compliance Completed',
+            url: '/reports/locum-completed-compliances',
+          },
+          {
+            title: 'REP-018',
+            subtitle: 'Practice Lead Time for Activation',
+            url: '/reports/activated-practices',
+          },
         ],
         hqAnalyticsReports: [
           {
