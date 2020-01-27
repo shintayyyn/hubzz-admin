@@ -35,29 +35,44 @@
 			return {
 				reports: [
 					{
-						title: 'REP-01',
+						title: 'REP-001',
 						subtitle: 'Tax and NI Deductions',
 						url: '/reports/deductions',
 					},
 					{
-						title: 'REP-02',
+						title: 'REP-002',
 						subtitle: 'Payments',
 						url: '/reports/payments',
 					},
 					{
-						title: 'REP-03',
+						title: 'REP-003',
 						subtitle: 'Pension Contributions',
 						url: '/reports/pension-contributions',
 					},
 					{
-						title: 'REP-04',
+						title: 'REP-004',
 						subtitle: 'Locums on System',
 						url: '/reports/locums',
 					},
           {
-            title: 'REP-05',
+            title: 'REP-005',
             subtitle: 'Locums Used/Bank',
             url: '/reports/practice-locums',
+          },
+          {
+            title: 'REP-006',
+            subtitle: 'Locums Not Successful',
+            url: '/reports/practice-unsuccessful-locums',
+          },
+          {
+            title: 'REP-007',
+            subtitle: 'Locums that have Declined',
+            url: '/reports/practice-declined-locums',
+          },
+          {
+            title: 'REP-008',
+            subtitle: 'Compliance - Expiring',
+            url: '/reports/locum-compliance-documents',
           },
 					{
 						title: 'REP-019',
