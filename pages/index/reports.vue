@@ -131,6 +131,11 @@
             subtitle: 'NHS Pension Contributions',
             url: '/reports/locum-pension-contributions',
           },
+          {
+            title: 'REP-012',
+            subtitle: 'Tax Reporting - Money Earnt and Tax and NI Paid',
+            url: '/reports/locum-invoices',
+          },
         ],
         hqAnalyticsReports: [
           {
