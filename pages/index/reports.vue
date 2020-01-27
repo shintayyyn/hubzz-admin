@@ -74,6 +74,11 @@
             subtitle: 'Compliance - Expiring',
             url: '/reports/locum-compliance-documents',
           },
+          {
+            title: 'REP-009',
+            subtitle: 'Locums that Arrive Late',
+            url: '/reports/practice-late-locums',
+          },
 					{
 						title: 'REP-019',
 						subtitle: 'Locums in an Area',

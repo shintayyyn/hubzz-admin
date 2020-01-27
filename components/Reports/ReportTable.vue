@@ -25,7 +25,7 @@
           <span class="whitespace-no-wrap p-2">&nbsp;{{ columnDetail.column(item, index) }}</span>
         </div>
 
-        <div v-if="items.length === 0" v-for="limit in limit" :key="`limit_${limit}`" class="flex bg-white">
+        <div v-if="loading && items.length === 0" v-for="limit in limit" :key="`limit_${limit}`" class="flex bg-white">
           <span class="whitespace-no-wrap p-2">&nbsp;</span>
         </div>
       </div>
