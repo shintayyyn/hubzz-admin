@@ -10,13 +10,13 @@
 				/>
 			</div>
 
-			<button
+			<!-- <button
 				class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
 				@click.prevent="publish()"
 			>
 				<svgicon name="save-icon" width="21" height="21" class="fill-current"></svgicon>
 				<span class="px-1 font-semibold">Save</span>
-			</button>
+			</button>-->
 
 			<button
 				@click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
@@ -68,13 +68,22 @@
 								v-model="toPutLocumDetailCompliance.expired_at"
 								:name="'expired_at'"
 								:label="'Change Expiration Date / Status'"
-								:error="formError.find(item => item.field === 'date_start')"
+								:error="formError.find(item => item.field === 'expired_at')"
 							/>
 						</div>
 						<div>
 							<!--CHANGE THIS ASAP-->
 							<p class="font-bold">Status</p>
-							<div class="flex justify-center">
+							<AppInput
+								class="w-full mr-2"
+								v-model="toPutLocumDetailCompliance.status"
+								:type="'select'"
+								:name="'status'"
+								:placeholder="'Select...'"
+								:items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
+								@change="setStatusData($event)"
+							/>
+							<!-- <div class="flex justify-center">
 								<button
 									class="w-1/2 text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-500 px-4 focus:outline-none"
 									:class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green-500 border-green-500 text-white hover:bg-green-light' : ''}`"
@@ -85,10 +94,10 @@
 									:class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-yellow-500 border-yellow-500 text-white hover:bg-yellow-light ' : ''}`"
 									@click.prevent="setStatusData('Rejected')"
 								>Reject</button>
-							</div>
+							</div>-->
 						</div>
 
-						<div class="w-full" v-if="notesAreVisible || compliance_doc.status === 'Rejected'">
+						<div class="w-full" v-if="compliance_doc.status === 'Rejected' || notesAreVisible">
 							<p class="mt-5 mr-20">Reason for Rejection</p>
 							<textarea
 								v-model="toPutLocumDetailCompliance.note"
@@ -96,9 +105,10 @@
 								class="w-full text-white flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-sunglow focus:outline-none"
 								name="complianceNote"
 							>Type Here
-              </textarea>
+              				</textarea>
 						</div>
 					</div>
+					<AppButton :label="'Save'" @click="publish()" />
 				</div>
 				<div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
 					<p class="font-bold pb-2">File</p>
@@ -117,21 +127,38 @@
 </template>
 <script>
 import AppDate from "@/components/Base/AppDate";
+import AppInput from "@/components/Base/AppInput";
+import AppButton from "@/components/Base/AppButton";
 export default {
 	props: ["user", "compliance_doc"],
 	components: {
-		AppDate
+		AppDate,
+		AppInput,
+		AppButton
 	},
 	data() {
 		return {
 			toPutLocumDetailCompliance: {
-				expired_at: this.compliance_doc.expired_at,
-				status: this.compliance_doc.status,
-				note: this.compliance_doc.note
+				expired_at: null,
+				status: "",
+				note: ""
 			},
 			notesAreVisible: false,
 			formError: []
 		};
+	},
+	created() {
+		this.toPutLocumDetailCompliance.expired_at = this.compliance_doc.expired_at;
+		this.toPutLocumDetailCompliance.status = this.compliance_doc.status;
+		this.toPutLocumDetailCompliance.note = this.compliance_doc.note;
+		console.log(this.toPutLocumDetailCompliance);
+		console.log("this.compliance_doc.status", this.compliance_doc);
+		if (this.compliance_doc.status === "Expiring") {
+			this.toPutLocumDetailCompliance.status = "Approved";
+		}
+		if (this.compliance_doc.status === "Pending") {
+			this.toPutLocumDetailCompliance.status = null;
+		}
 	},
 	methods: {
 		publish() {
@@ -150,59 +177,18 @@ export default {
 			}
 
 			this.Validate(this.toPutLocumDetailCompliance, notRequired);
-			this.toPutLocumDetailComplianceDocs();
+			console.log(this.toPutLocumDetailCompliance);
 			console.log("errors", this.formError);
+			if (!this.formError.length) {
+				this.toPutLocumDetailComplianceDocs();
+			}
 		},
 		setStatusData(incomingStatus) {
-			if (
-				(this.toPutLocumDetailCompliance.status === "Approved" &&
-					incomingStatus === "Approved") ||
-				(this.toPutLocumDetailCompliance.status === "Expiring" &&
-					incomingStatus === "Approved")
-			) {
-				this.toPutLocumDetailCompliance.status = "";
-				this.notesAreVisible = false;
-			} else if (
-				(this.toPutLocumDetailCompliance.status === "Approved" &&
-					incomingStatus === "Rejected") ||
-				(this.toPutLocumDetailCompliance.status === "Expiring" &&
-					incomingStatus === "Rejected")
-			) {
-				this.toPutLocumDetailCompliance.status = "Rejected";
+			this.toPutLocumDetailCompliance.status = incomingStatus;
+			if (incomingStatus === "Rejected") {
 				this.notesAreVisible = true;
-				this.toPutLocumDetailCompliance.expired_at = null;
-			} else if (
-				(this.toPutLocumDetailCompliance.status === "Rejected" &&
-					incomingStatus === "Rejected") ||
-				(this.toPutLocumDetailCompliance.status === "Expired" &&
-					incomingStatus === "Rejected")
-			) {
-				this.toPutLocumDetailCompliance.status = "";
-				this.notesAreVisible = true;
-				this.toPutLocumDetailCompliance.expired_at = null;
-			} else if (
-				(this.toPutLocumDetailCompliance.status === "Rejected" &&
-					incomingStatus === "Approved") ||
-				(this.toPutLocumDetailCompliance.status === "Expired" &&
-					incomingStatus === "Approved")
-			) {
-				this.toPutLocumDetailCompliance.status = "Approved";
+			} else {
 				this.notesAreVisible = false;
-			} else if (
-				this.toPutLocumDetailCompliance.status === "Pending" ||
-				(this.toPutLocumDetailCompliance.status === "" &&
-					incomingStatus === "Approved")
-			) {
-				this.toPutLocumDetailCompliance.status = incomingStatus;
-				this.notesAreVisible = false;
-			} else if (
-				this.toPutLocumDetailCompliance.status === "Pending" ||
-				(this.toPutLocumDetailCompliance.status === "" &&
-					incomingStatus === "Rejected")
-			) {
-				this.toPutLocumDetailCompliance.status = incomingStatus;
-				this.notesAreVisible = true;
-				this.toPutLocumDetailCompliance.expired_at = null;
 			}
 		},
 
@@ -240,6 +226,7 @@ export default {
 		},
 
 		async toPutLocumDetailComplianceDocs() {
+			console.log(this.toPutLocumDetailCompliance);
 			try {
 				if (this.toPutLocumDetailCompliance.status == "Rejected") {
 					if (this.toPutLocumDetailCompliance.note) {
@@ -291,6 +278,8 @@ export default {
 						text: "Saved"
 					});
 				}
+
+				this.goBack();
 			} catch (err) {
 				console.log("compliance file verification error", err);
 				this.$store.commit("SET_NOTIFICATION", {

@@ -2,15 +2,15 @@
 	<div class="flex flex-col py-2 mb-2 md:mb-4 leading-normal" v-on-clickaway="toggledOff">
 		<div class="relative flex flex-row flex-no-wrap justify-between">
 			<label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{label}}</label>
-			<div
+			<!-- <div
 				class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
 				v-if="error"
-			>{{error.message}}</div>
+			>{{error.message}}</div>-->
 		</div>
 		<div class="flex flex-row justify-start mt-1">
 			<div class="flex flex-col w-full">
 				<input
-					:value="value ? $moment(value).format('YYYY-MM-DD') : $moment().format('YYYY-MM-DD')"
+					:value="value && $moment(value).format('YYYY-MM-DD')"
 					type="input"
 					:placeholder="format"
 					class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
@@ -25,7 +25,7 @@
 				<transition name="drop-down">
 					<div
 						v-if="error"
-						class="text-red-500 py-1 text-xs text-white"
+						class="bg-red-300 text-red-700 py-1 px-2 text-xs"
 					>{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
 				</transition>
 			</div>
@@ -327,15 +327,6 @@ export default {
 		},
 		getYearLists() {
 			let yearsBefore = [];
-			if (!this.isAfter) {
-				for (let i = 0; i <= 2; i++) {
-					this.yearLists.push(
-						this.$moment(this.selectedYear, "YYYY")
-							.subtract(i, "years")
-							.format("YYYY")
-					);
-				}
-			}
 			for (let i = 0; i <= 10; i++) {
 				this.yearLists.push(
 					this.$moment(this.selectedYear, "YYYY")
@@ -343,7 +334,16 @@ export default {
 						.format("YYYY")
 				);
 			}
-
+			if (!this.isAfter) {
+				for (let i = 0; i <= 2; i++) {
+					let year = this.$moment(this.selectedYear, "YYYY")
+						.subtract(i, "years")
+						.format("YYYY");
+					if (!this.yearLists.includes(year.toString())) {
+						this.yearLists.push(year);
+					}
+				}
+			}
 			this.yearLists.sort(function(a, b) {
 				return a - b;
 			});
