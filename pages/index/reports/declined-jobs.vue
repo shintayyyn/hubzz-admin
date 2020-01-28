@@ -26,7 +26,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="practiceDeclinedLocums"
+        :items="declinedJobs"
         :getItemKey="(item) => item.job_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -62,7 +62,7 @@
       return {
         loading: false,
         count: 0,
-        practiceDeclinedLocums: [],
+        declinedJobs: [],
         orderBy: [],
         orderBys: [
           {
@@ -109,15 +109,6 @@
             flexShrink: 0,
           },
           {
-            title: 'Practice',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice_name,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
             title: 'Locum',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
@@ -127,20 +118,38 @@
             flexShrink: 0,
           },
           {
-            title: 'Rate',
-            key: 'rate',
-            sort_key: 'rate',
-            column: (item) => item.rate.toFixed(2),
-            justify: 'end',
+            title: 'Practice',
+            key: 'practice_name',
+            sort_key: 'practice_name',
+            column: (item) => item.practice_name,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Rate Type',
-            key: 'rate_type_name',
-            sort_key: 'rate_type_name',
-            column: (item) => item.rate_type_name,
+            title: 'Area',
+            key: 'area',
+            sort_key: 'area',
+            column: (item) => item.area,
             justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Profession',
+            key: 'profession',
+            sort_key: 'profession',
+            column: (item) => item.profession,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Date',
+            key: 'date',
+            sort_key: 'date',
+            column: (item) => item.date ? this.$moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -172,45 +181,45 @@
 
     watch: {
       orderBy() {
-        this.getPracticeDeclinedLocums()
+        this.getDeclinedJobs()
       },
 
       limit() {
         this.page = 1
-        this.getPracticeDeclinedLocums()
+        this.getDeclinedJobs()
       },
 
       activePage() {
-        this.getPracticeDeclinedLocums()
+        this.getDeclinedJobs()
       },
     },
 
     methods: {
-      getPracticeDeclinedLocums() {
+      getDeclinedJobs() {
         this.loading = true
-        this.practiceDeclinedLocums = []
+        this.declinedJobs = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/practice-declined-locums/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/declined-jobs/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/practice-declined-locums', {
+          this.$axios.get('/api/v1/admin/reports/declined-jobs', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.practice_declined_locums
+            return responses.data.data.declined_jobs
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            practiceDeclinedLocums,
+            declinedJobs,
           ] = results
 
           this.count = count
-          this.practiceDeclinedLocums = practiceDeclinedLocums
+          this.declinedJobs = declinedJobs
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -229,7 +238,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getPracticeDeclinedLocums()
+      this.getDeclinedJobs()
     },
 
   };

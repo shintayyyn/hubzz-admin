@@ -199,6 +199,11 @@
             subtitle: 'Locum Referrals',
             url: '/reports/locum-referrals',
           },
+          {
+            title: 'REP-023',
+            subtitle: 'Locums Declined',
+            url: '/reports/declined-jobs',
+          },
         ],
 			}
 		},
