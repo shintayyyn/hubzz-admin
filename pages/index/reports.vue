@@ -216,13 +216,18 @@
           },
           {
             title: 'REP-026',
-            subtitle: 'Sign Ups Locums ',
+            subtitle: 'Sign Ups Locums',
             url: '/reports/registered-locums',
           },
           {
             title: 'REP-027',
-            subtitle: 'Sign Ups Practice ',
+            subtitle: 'Sign Ups Practice',
             url: '/reports/registered-practices',
+          },
+          {
+            title: 'REP-028',
+            subtitle: 'Session Notifications',
+            url: '/reports/job-parts',
           },
         ],
 			}
