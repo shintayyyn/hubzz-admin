@@ -78,6 +78,25 @@
       </nuxt-link>
     </div>
 
+    <div class="text-sm md:text-xl text-white">Pricing Reports</div>
+
+    <div class="flex flex-col">
+      <nuxt-link
+        v-for="pricingReport in pricingReports"
+        :key="`pricingReports-${pricingReport.title}`"
+        :to="pricingReport.url"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+      >
+        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+          <span class="px-2 whitespace-no-wrap font-semibold">{{ pricingReport.title }}</span>
+          <span class="px-2 w-full leading-tight flex items-center">{{ pricingReport.subtitle }}</span>
+          <div class="flex items-center px-1 md:px-0">
+            <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
+
 		<nuxt-link
 			class="bg-shield z-511 fixed inset-0 opacity-50"
 			v-if="$route.name !== 'index-reports'"
@@ -228,6 +247,23 @@
             title: 'REP-028',
             subtitle: 'Session Notifications',
             url: '/reports/job-parts',
+          },
+          {
+            title: 'REP-029',
+            subtitle: 'Locum Usage',
+            url: '/reports/locum-usages',
+          },
+        ],
+        pricingReports: [
+          {
+            title: 'REP-030',
+            subtitle: 'Hours Approved',
+            url: '/reports/locum-invoice-job-parts',
+          },
+          {
+            title: 'REP-031',
+            subtitle: 'Invoices',
+            url: '/reports/practice-invoice-items',
           },
         ],
 			}

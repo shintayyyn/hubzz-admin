@@ -26,7 +26,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="jobParts"
+        :items="locumInvoiceJobParts"
         :getItemKey="(item) => item.job_part_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -62,7 +62,7 @@
       return {
         loading: false,
         count: 0,
-        jobParts: [],
+        locumInvoiceJobParts: [],
         orderBy: [],
         orderBys: [
           {
@@ -118,10 +118,10 @@
             flexShrink: 0,
           },
           {
-            title: 'Area',
-            key: 'area',
-            sort_key: 'area',
-            column: (item) => item.area,
+            title: 'Job Number',
+            key: 'job_part_number',
+            sort_key: 'job_part_number',
+            column: (item) => item.job_part_number,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -154,37 +154,10 @@
             flexShrink: 0,
           },
           {
-            title: 'Profession',
-            key: 'profession_name',
-            sort_key: 'profession_name',
-            column: (item) => item.profession_name,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Rate',
-            key: 'rate',
-            sort_key: 'rate',
-            column: (item) => item.rate,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Rate Type',
-            key: 'rate_type_name',
-            sort_key: 'rate_type_name',
-            column: (item) => item.rate_type_name,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Invoice Status',
+            key: 'invoice_status',
+            sort_key: 'invoice_status',
+            column: (item) => item.invoice_status,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -199,45 +172,45 @@
 
     watch: {
       orderBy() {
-        this.getJobParts()
+        this.getLocumInvoiceJobParts()
       },
 
       limit() {
         this.page = 1
-        this.getJobParts()
+        this.getLocumInvoiceJobParts()
       },
 
       activePage() {
-        this.getJobParts()
+        this.getLocumInvoiceJobParts()
       },
     },
 
     methods: {
-      getJobParts() {
+      getLocumInvoiceJobParts() {
         this.loading = true
-        this.jobParts = []
+        this.locumInvoiceJobParts = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/job-parts/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locum-invoice-job-parts/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/job-parts', {
+          this.$axios.get('/api/v1/admin/reports/locum-invoice-job-parts', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.job_parts
+            return responses.data.data.locum_invoice_job_parts
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            jobParts,
+            locumInvoiceJobParts,
           ] = results
 
           this.count = count
-          this.jobParts = jobParts
+          this.locumInvoiceJobParts = locumInvoiceJobParts
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -256,7 +229,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getJobParts()
+      this.getLocumInvoiceJobParts()
     },
 
   };
