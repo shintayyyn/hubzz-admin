@@ -7,6 +7,7 @@
 			:label="'Email'"
 			:error="formError.find(item => item.field === 'email')"
 			@blur="CheckEmptyField(form.email, 'email')"
+			required
 		/>
 		<AppInput v-model="form.title" :type="'text'" :name="'title'" :label="'Title'" />
 		<AppInput
@@ -16,6 +17,7 @@
 			:label="'First Name'"
 			:error="formError.find(item => item.field === 'first_name')"
 			@blur="CheckEmptyField(form.first_name, 'first_name')"
+			required
 		/>
 		<AppInput
 			v-model="form.last_name"
@@ -24,6 +26,7 @@
 			:label="'Last Name'"
 			:error="formError.find(item => item.field === 'last_name')"
 			@blur="CheckEmptyField(form.last_name, 'last_name')"
+			required
 		/>
 		<AppInput v-model="form.suffix" :type="'text'" :name="'suffix'" :label="'Suffix'" />
 
@@ -36,6 +39,7 @@
 			:items="filteredAdminRoles"
 			@add="CheckEmptyField(form.roles_id, 'roles_id')"
 			@remove="CheckEmptyField(form.roles_id, 'roles_id')"
+			required
 		/>
 
 		<AppButton :label="'Save Changes'" @click="updateForm(user.id, form)" />

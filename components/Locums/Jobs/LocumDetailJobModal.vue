@@ -43,13 +43,13 @@
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">From</span>
 									<span
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-									>{{job.date_start}}</span>
+									>{{job.date_start}} | {{job.time_start}}</span>
 								</div>
 								<div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">To</span>
 									<span
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-									>{{job.date_end}}</span>
+									>{{job.date_end}} | {{job.time_end}}</span>
 								</div>
 								<div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">Shift</span>

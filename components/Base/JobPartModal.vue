@@ -188,11 +188,11 @@
 									</div>
 									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
 										<strong class="block md:hidden text-sm uppercase">Date Start</strong>
-										<span class>{{item.date_start}}</span>
+										<span class>{{item.date_start}} | | {{item.time_start}}</span>
 									</div>
 									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
 										<strong class="block md:hidden text-sm uppercase">Date End</strong>
-										<span class>{{item.date_end}}</span>
+										<span class>{{item.date_end}} | {{ item.time_end }}</span>
 									</div>
 									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
 										<strong class="block md:hidden text-sm uppercase">Job Part Status</strong>

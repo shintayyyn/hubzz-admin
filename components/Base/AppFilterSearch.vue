@@ -3,25 +3,22 @@
 		<!-- input select -->
 		<div class="relative flex flex-col py-2 mb-6">
 			<div class="relative flex flex-row flex-no-wrap justify-between">
-				<label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
-				<div class="rounded-lg bg-gray-300 p-1 text-xs sm:text-sm" v-if="info">
-					{{ info }}
-				</div>
+				<label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">
+					{{label}}
+					<span class="text-red-500">*</span>
+				</label>
+				<div class="rounded-lg bg-gray-300 p-1 text-xs sm:text-sm" v-if="info">{{ info }}</div>
 				<div
 					class="absolute right-0 bg-red-300 text-red-700 py-1 px-2 text-xs"
 					v-if="error"
-				>
-					{{ error.message }}
-				</div>
+				>{{ error.message }}</div>
 			</div>
 			<!-- selected -->
 			<div class="relative flex flex-row flex-wrap justify-start">
 				<div
 					class="rounded-lg bg-yellow-500 py-2 px-3 m-1 text-xs sm:text-sm text-black"
 					v-if="defaultItem"
-				>
-					{{ defaultItem }}
-				</div>
+				>{{ defaultItem }}</div>
 				<div
 					class="rounded-lg bg-yellow-500 py-2 px-3 m-1 text-xs sm:text-sm text-black"
 					v-for="(item, index) in value"
@@ -31,8 +28,7 @@
 					<span
 						class="font-bold cursor-pointer text-base ml-3 text-gray-800 hover:text-black"
 						@click="remove(item, index)"
-						>x</span
-					>
+					>x</span>
 				</div>
 				<div>
 					<input
@@ -60,9 +56,7 @@
 						:key="item.value"
 						@mouseover="activeIndex = index"
 						@click="add(item, index)"
-					>
-						{{ item.label }}
-					</div>
+					>{{ item.label }}</div>
 				</div>
 			</div>
 		</div>
@@ -78,7 +72,8 @@ export default {
 		error: Object,
 		items: Array,
 		info: String,
-    defaultItem: String,
+		defaultItem: String,
+		required: Boolean
 	},
 	data() {
 		return {
