@@ -10,7 +10,7 @@
 		<div class="flex flex-row justify-start mt-1">
 			<div class="flex flex-col w-full">
 				<input
-					:value="$moment(value).format('YYYY-MM-DD')"
+					:value="value ? $moment(value).format('YYYY-MM-DD') : $moment().format('YYYY-MM-DD')"
 					type="input"
 					:placeholder="format"
 					class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
@@ -199,11 +199,11 @@
 									@click="select(item.fullDate)"
 									class="rounded-full relative p-1 flex justify-center items-center date-cell"
 									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
+									'border-yellow-500 border-2': isSame(item.fullDate),
+									'text-gray-500': isDisabled(item.fullDate), 
+									'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+									}"
 									v-if="item.day === 6"
 								>
 									<div class="text-xs md:text-sm z-10">{{item.date}}</div>
@@ -219,11 +219,11 @@
 									@click="select(item.fullDate)"
 									class="rounded-full relative p-1 flex justify-center items-center date-cell"
 									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
+									'border-yellow-500 border-2': isSame(item.fullDate),
+									'text-gray-500': isDisabled(item.fullDate), 
+									'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+									}"
 									v-if="item.day === 0"
 								>
 									<div class="text-xs md:text-sm z-10">{{item.date}}</div>

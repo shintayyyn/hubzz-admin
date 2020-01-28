@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- TABLE START -->
+	<div>
+		<!-- TABLE START -->
 		<transition name="fade">
 			<AppTable
 				v-if="itemCount > 0"
@@ -47,11 +47,11 @@
 				</span>
 			</div>-->
 			<template v-else>
-				<div class="mt-2 w-full text-center text-white">There are no registered practices.</div>
+				<div class="mt-2 w-full text-center text-white">There are no verified practices.</div>
 			</template>
 		</transition>
 		<!-- END TABLE -->
-  </div>
+	</div>
 </template>
 
 <script>
@@ -59,7 +59,7 @@ import debounce from "lodash.debounce";
 import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
-		AppTable,
+		AppTable
 	},
 	data() {
 		return {
@@ -70,8 +70,8 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-        order_by: ["created_at:desc"],
-        status: "Active"
+				order_by: ["created_at:desc"],
+				status: "Active"
 			},
 			sort: "",
 			modal: false,
@@ -143,8 +143,8 @@ export default {
 			page = parseInt(page);
 			const createdRoute = route.query.order_by;
 			const limit = 10;
-      const offset = page * limit - limit;
-      const status = "Active"
+			const offset = page * limit - limit;
+			const status = "Active";
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
@@ -237,8 +237,8 @@ export default {
 				limit: this.params.limit,
 				search: this.search,
 				order_by: params.order_by,
-        offset: params.offset,
-        status: "Active"
+				offset: params.offset,
+				status: "Active"
 			});
 		},
 
@@ -325,8 +325,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getPractices(this.params);
-    },
-    
+		},
+
 		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;

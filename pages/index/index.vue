@@ -7,10 +7,7 @@
 			<!------------------------------ Column 1 -------------------------------->
 			<div class="my-1 md:w-1/3 w-full md:px-3">
 				<div class="my-3">Locums</div>
-				<div
-					class="overflow-y-auto overflow-x-hidden px-2"
-					style="max-height: 500px;"
-				>
+				<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 					<nuxt-link
 						v-for="(item, index) in locumDocsAlert"
 						:key="`item-${index}`"
@@ -19,24 +16,19 @@
 						}"
 						class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 					>
-						<div class="font-hairline text-xs uppercase">
-							{{ $moment(item.uploaded_at).format("MMMM DD, YYYY | HH:mm") }}
-						</div>
+						<div
+							class="font-hairline text-xs uppercase"
+						>{{ $moment(item.uploaded_at).format("MMMM DD, YYYY | HH:mm") }}</div>
 						<div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
-							<span class="uppercase text-xs font-bold">Locum </span>
+							<span class="uppercase text-xs font-bold">Locum</span>
 							<span class="pb-2">{{ item.locum_user.name }}</span>
-							<span class="uppercase text-xs font-bold"
-								>Uploaded Compliance Document</span
-							>
-							<span class="">{{ item.compliance_document.name }}</span>
+							<span class="uppercase text-xs font-bold">Uploaded Compliance Document</span>
+							<span class>{{ item.compliance_document.name }}</span>
 						</div>
 					</nuxt-link>
 				</div>
 				<div class="my-3">Activity Log</div>
-				<div
-					class="overflow-y-auto overflow-x-hidden px-2"
-					style="max-height: 500px;"
-				>
+				<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 					<div
 						class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 					>
@@ -48,10 +40,7 @@
 			<div class="my-1 md:w-1/3 w-full md:px-3">
 				<div class="my-3">Practices</div>
 				<div class="border-b border-white">
-					<div
-						class="overflow-y-auto overflow-x-hidden px-2"
-						style="max-height: 500px;"
-					>
+					<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 						<div
 							class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 						>
@@ -60,10 +49,7 @@
 					</div>
 				</div>
 				<div class="my-3">Activity Log</div>
-				<div
-					class="overflow-y-auto overflow-x-hidden px-2"
-					style="max-height: 500px;"
-				>
+				<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 					<div
 						class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 					>
@@ -74,11 +60,8 @@
 			<!------------------------------ Column 3 ----------------------------->
 			<div class="my-1 md:w-1/3 w-full md:px-3">
 				<div class="my-3">Billings</div>
-				<div class="border-b border-white ">
-					<div
-						class="overflow-y-auto overflow-x-hidden px-2"
-						style="max-height: 500px;"
-					>
+				<div class="border-b border-white">
+					<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 						<div
 							class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 						>
@@ -87,10 +70,7 @@
 					</div>
 				</div>
 				<div class="my-3">Activity Log</div>
-				<div
-					class="overflow-y-auto overflow-x-hidden px-2"
-					style="max-height: 500px;"
-				>
+				<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 					<div
 						class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
 					>
@@ -149,7 +129,7 @@ export default {
 			};
 		} catch (err) {
 			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log("Get locums error!", err);
+			console.log("Get locums error! 111", err);
 		}
 	},
 	methods: {

@@ -2,7 +2,7 @@
 	<nuxt-link
 		v-if="nuxtLink"
 		:to="nuxtLink"
-		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none"
+		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
 		:class="[
 			disabled
 				? 'hover:text-gray-700 bg-gray-500'
@@ -21,7 +21,7 @@
 		v-else
 		@click.prevent="$emit('click')"
 		:disabled="disabled"
-		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none"
+		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
 		:class="[
 			disabled && 'hover:text-gray-700 bg-gray-500',
 			background && !disabled ? getBackground(background) : '',
@@ -70,7 +70,15 @@ export default {
 	},
 	methods: {
 		getBackground(value) {
-			let singleBackground = ["sunglow", "waterloo", "charade", "trout"];
+			let singleBackground = [
+				"sunglow",
+				"waterloo",
+				"charade",
+				"trout",
+				"transparent",
+				"white",
+				"black"
+			];
 			console.log(singleBackground.includes(value));
 			if (singleBackground.includes(value)) {
 				return `bg-${value} hover:bg-${value}-dark`;

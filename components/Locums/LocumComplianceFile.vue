@@ -79,12 +79,12 @@
 									class="w-1/2 text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-500 px-4 focus:outline-none"
 									:class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green-500 border-green-500 text-white hover:bg-green-light' : ''}`"
 									@click.prevent="setStatusData('Approved')"
-								>Approved</button>
+								>Approve</button>
 								<button
 									class="w-1/2 text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-yellow-500 px-4 focus:outline-none"
 									:class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-yellow-500 border-yellow-500 text-white hover:bg-yellow-light ' : ''}`"
 									@click.prevent="setStatusData('Rejected')"
-								>Rejected</button>
+								>Reject</button>
 							</div>
 						</div>
 

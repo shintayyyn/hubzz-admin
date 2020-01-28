@@ -2,6 +2,14 @@
 	<div
 		class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow mx-4 md:mx-8"
 	>
+		<transition name="drop" mode="out-in">
+			<AppConfirm
+				v-if="confirm"
+				:message="'Are you sure you want to deactivate this account?'"
+				@cancel="confirm = false"
+				@confirm="toDeactivateLocum()"
+			/>
+		</transition>
 		<div class="inline-flex">
 			<div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
 				<!--COLUMN 1-->
@@ -119,7 +127,11 @@
 							:class="!user.locum_detail.special_requirements && 'opacity-75'"
 						>{{user.locum_detail.special_requirements?user.locum_detail.special_requirements:'N/A'}}</p>
 						<p class="mt-2">Preferred rates</p>
-						<p v-for="rate in (user.locum_detail && user.locum_detail.rates ? user.locum_detail.rates : [])" :key="`rates-${rate.id}`" class="font-bold pl-2">{{ `${rate.rate_type.name}: £${rate.min} - £${rate.max}` }}</p>
+						<p
+							v-for="rate in (user.locum_detail && user.locum_detail.rates ? user.locum_detail.rates : [])"
+							:key="`rates-${rate.id}`"
+							class="font-bold pl-2"
+						>{{ `${rate.rate_type.name}: £${rate.min} - £${rate.max}` }}</p>
 
 						<div v-if="userComplianceDocuments">
 							<p class="my-2">Compliance Documents</p>
@@ -189,12 +201,8 @@
 							<span class="m-2">Account is</span>
 							<span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{user.status}}</span>
 						</div>
-            
-            <div
-              @click="toDeactivateLocum()"
-              class="cursor-pointer bg-gray-800 p-2 text-sm font-semibold rounded-lg w-full">
-              Deactivate this Account?
-            </div>
+
+						<AppButton :label="'Deactivate this Account'" class="mx-auto" :inClass="'bg-gray-800 hover:bg-gray-900 text-white'" :background="''" @click="confirm = true" v-if="user.status !== 'Deactivated'"/>
 					</div>
 
 					<div class="mx-3 mt-4">
@@ -233,19 +241,25 @@
 <script>
 import AppInput from "@/components/Base/AppInput";
 import AppButton from "@/components/Base/AppButton";
+import AppConfirm from "@/components/Base/AppConfirm";
+import { mixin as clickaway } from "vue-clickaway";
 export default {
+	mixins: [clickaway],
 	props: ["user"],
 	components: {
 		AppButton,
-		AppInput
+		AppInput,
+		AppConfirm
 	},
 	data() {
 		return {
 			disabled: "true",
 
+			confirm: false,
+
 			locumDetails: "",
 
-      locumStatusChoices: [],
+			locumStatusChoices: [],
 			selectedStatus: "",
 			profileTab: true,
 			jobTab: false,
@@ -262,16 +276,14 @@ export default {
 
 	created() {
 		console.log("locum", this.user);
-    if(this.user.first_actived_at) {
-      this.locumStatusChoices = [
-        {label: 'Active', value: 'Active'},
-        {label: 'Inactive', value: 'Inactive'},
-      ]
-    } else {
-      this.locumStatusChoices = [
-        {label: 'Inactive'}
-      ]
-    }
+		if (this.user.first_actived_at) {
+			this.locumStatusChoices = [
+				{ label: "Active", value: "Active" },
+				{ label: "Inactive", value: "Inactive" }
+			];
+		} else {
+			this.locumStatusChoices = [{ label: "Inactive" }];
+		}
 		this.locumDetails = this.user.locum_detail;
 		this.userComplianceDocuments = this.user.locum_detail.compliance_documents;
 		this.qualifications = this.user.locum_detail.qualifications;
@@ -308,24 +320,31 @@ export default {
 				document.body.appendChild(link);
 				link.click();
 			});
-    },
-    
-    async toDeactivateLocum(){
-      await this.$axios.$put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`, {})
-      .then(res => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Locum Successfully Deactivated"
-        });
-      }).catch(err => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: err.response.data.message
-        });
-      })
-    },
+		},
+
+		async toDeactivateLocum() {
+			this.confirm = true;
+			await this.$axios
+				.$put(
+					`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`,
+					{}
+				)
+				.then(res => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Locum Successfully Deactivated"
+					});
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
+			this.confirm = false;
+		},
 
 		async changeLocumUserStatus(locumID, activeDisabled) {
 			try {

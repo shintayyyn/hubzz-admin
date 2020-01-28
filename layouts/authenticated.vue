@@ -4,46 +4,13 @@
 		<transition name="drop" mode="out-in">
 			<SignOut v-if="showLogoutModal" @modal="showLogoutModal = $event" />
 		</transition>
-		<div
-			class="signout-shield"
-			v-if="showLogoutModal"
-			@click="showLogoutModal = false"
-		></div>
-		<transition name="drop" mode="out-in">
-			<AppConfirmCancel
-				v-if="showConfirmCancelModal"
-				@confirmCancelModal="showConfirmCancelModal = $event"
-			/>
-		</transition>
-		<div
-			class="sidebar-shield"
-			v-if="$store.state.toggled_sidebar"
-			@click="close"
-		></div>
+		<div class="signout-shield" v-if="showLogoutModal" @click="showLogoutModal = false"></div>
+		<div class="sidebar-shield" v-if="$store.state.toggled_sidebar" @click="close"></div>
 		<AppNotification />
 		<div class="content h-screen flex flex-col justify-between">
 			<AppHeader />
 			<nuxt class="overflow-y-auto" />
 		</div>
-		<!-- LOGOUT MODAL -->
-		<!-- <div
-        class="h-full w-full flex flex-col absolute"
-        :style="`z-index: ${showLogoutModal ? 100 : -100}; opacity: ${showLogoutModal ? 1 : 0};`"
-      >
-        <div class="flex flex-col self-center py-2 px-10 md:px-24 rounded-lg bg-sunglow">
-          <div>
-            <span class="text-sm p-2">Proceed to sign-out?</span>
-          </div>
-          <div class="flex justify-center my-1">
-            <button class="py-2 px-4 text-sm rounded-lg border border-white mx-1 shadow" @click="logout">Yes</button>
-            <button
-              class="px-4 py-2 text-sm rounded-lg border border-white mx-1 shadow"
-              @click="showLogoutModal = false"
-            >Cancel</button>
-          </div>
-        </div>
-      </div> -->
-		<!-- LOGOUT MODAL ENDS HERE-->
 	</div>
 </template>
 
@@ -52,20 +19,17 @@ import AppNotification from "~/components/AppNotification";
 import AppHeader from "~/components/AppHeader";
 import AppSideBar from "~/components/AppSideBar";
 import SignOut from "~/components/Auth/SignOut";
-import AppConfirmCancel from "~/components/AppConfirmCancel";
 export default {
 	components: {
 		AppNotification,
 		AppHeader,
 		AppSideBar,
-		SignOut,
-		AppConfirmCancel
+		SignOut
 	},
 
 	data() {
 		return {
-			showLogoutModal: false,
-			showConfirmCancelModal: false
+			showLogoutModal: false
 		};
 	},
 
@@ -89,13 +53,12 @@ export default {
 					});
 				}, 2000);
 			}
-    },
-    mounted() {
-      const user = this.$auth.user;
-      console.log("user", user);
-      this.$store.commit("SET_ADMIN_USER_PERMISSIONS", user);
-    },
-
+		},
+		mounted() {
+			const user = this.$auth.user;
+			console.log("user", user);
+			this.$store.commit("SET_ADMIN_USER_PERMISSIONS", user);
+		}
 	},
 
 	methods: {

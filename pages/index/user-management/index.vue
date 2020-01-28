@@ -1,9 +1,7 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
-		<transition name="fade" mode="out-in">
-			<div v-if="showConfirmCancelModal == true">
-				<AppConfirmCancel @close="showConfirmCancelModal = false" :adminAccountId="adminAccountId" />
-			</div>
+		<transition name="drop" mode="out-in">
+			<AppConfirm v-if="showConfirmCancelModal === true" :message="'Are you sure you want to delete this user?'" @cancel="showConfirmCancelModal=false" @confirm="performAction()"/>
 		</transition>
 		<div class="flex items-center px-4 md:px-6 py-2 text-sm">
 			<AppButton
@@ -14,7 +12,7 @@
 				class="mr-2"
 				@click="modal = true"
 			/>
-			<template v-if="authAdminPermissions.includes('Delete Admin Account')">
+			<template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
 				<AppButton
 					class="text-white"
 					v-if="authAdminPermissions.includes('Add Role')"
@@ -26,95 +24,31 @@
 				/>
 			</template>
 		</div>
-		<!-- <AppTable
-			:total="total"
-			:items="adminUsers"
-			:currentPage="currentPage"
-			:perPage="itemsPerPage"
-			:columns="columns"
-			:loading="loadingAdminUsers"
-			:loadingMessage="'Loading Surgeries'"
-			:routerLink="`/user-management`"
-			@pagechanged="pagechanged"
-		>
-			<template v-slot:delete="slotProps" v-if="deleteAdminUser == true">
-				<div
-					class="flex justify-center items-center w-10 align-middle text-center"
-				>
-					<svgicon
-						v-if="
-							$auth.user.id != slotProps.item.id &&
-								slotProps.item.admin_detail &&
-								slotProps.item.admin_detail.role &&
-								!slotProps.item.admin_detail.role.name.includes('Super')
-						"
-						@click.prevent="toDeleteAdminUser(user.id)"
-						name="delete-user"
-						width="21"
-						height="21"
-						class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
-					/>
-					<span
-						v-else-if="$auth.user.id === slotProps.item.id"
-						class="text-sm text-gray-500"
-						>You</span
-					>
-					<span
-						v-else-if="
-							slotProps.item.admin_detail &&
-								slotProps.item.admin_detail.roles &&
-								slotProps.item.admin_detail.roles[0].name == 'Super Admin'
-						"
-						class="text-sm text-yellow-500"
-						>God</span
-					>
-				</div>
-			</template>
-			<template v-slot:name="slotProps">
-				<span>{{
-					`${slotProps.item.personal_detail.first_name} ${slotProps.item.personal_detail.last_name}`
-				}}</span>
-			</template>
-		</AppTable>-->
 		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6">
-			<!-- HEADER -->
-			<div class="hidden md:flex items-center text-white justify-between font-semibold">
+			<div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
 				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
 				<div class="align-middle px-2 w-1/3">Roles</div>
 				<div class="align-middle px-2 text-center w-1/3">Name</div>
 			</div>
-			<!-- END HEADER -->
-			<!-- BODY -->
 			<div v-for="(user, index) in adminUsers" :key="`user-${index}`" class="flex">
 				<div
 					class="flex justify-center items-center w-10 align-middle text-center"
 					v-if="deleteAdminUser == true"
 				>
 					<svgicon
-						v-if="
-							$auth.user.id != user.id &&
-							!user.admin_detail.roles[0].name.includes('Super Admin')
-						"
+						v-if="$auth.user.id != user.id"
 						@click.prevent="toDeleteAdminUser(user.id)"
 						name="delete-user"
 						width="21"
 						height="21"
 						class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
 					/>
-					<span v-else-if="$auth.user.id === user.id" class="text-sm text-gray-500">You</span>
-					<span
-						v-else-if="
-							user.admin_detail &&
-								user.admin_detail.roles &&
-								user.admin_detail.roles[0].name == 'Super Admin'
-						"
-						class="text-sm text-yellow-500"
-					>God</span>
+					<span v-else class="text-sm text-gray-500">You</span>
 				</div>
 				<nuxt-link
 					:to="{ path: `/user-management/${user.id}`, query: $route.query }"
-					class="w-full flex flex-col md:flex-row justify-between px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
+					class="w-full flex flex-col md:flex-row justify-between px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
 				>
 					<div
 						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
@@ -147,11 +81,10 @@
 					</div>
 				</nuxt-link>
 			</div>
-			<!-- END BODY -->
 		</div>
 
-		<!-- PAGINATION -->
 		<AppPagination
+			v-if="total > 0"
 			class="px-4 md:px-6"
 			:total="total"
 			:totalPages="totalPages"
@@ -159,7 +92,7 @@
 			:perPage="itemsPerPage"
 			@pagechanged="pagechanged"
 		/>
-		<!-- PAGINATION ENDS HERE -->
+		<p class="px-6 py-2 text-white" v-if="total === 0">No admin users.</p>
 
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
 		<transition name="slide" mode="out-in">
@@ -178,16 +111,16 @@
 </template>
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser";
-import AppConfirmCancel from "@/components/AppConfirmCancel";
+import AppConfirm from "@/components/Base/AppConfirm";
 import AppPagination from "@/components/Base/AppPagination";
 import AppButton from "@/components/Base/AppButton";
 import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
 		CreateUser,
-		AppConfirmCancel,
+		AppConfirm,
 		AppPagination,
-		AppButton,
+		AppButton
 	},
 	data() {
 		return {
@@ -234,7 +167,6 @@ export default {
 		};
 	},
 	created() {
-		console.log("me", this.$auth.user);
 		console.log("admin users", this.adminUsers);
 	},
 	watchQuery: ["page", "search"],
@@ -328,9 +260,7 @@ export default {
 			this.showConfirmCancelModal = true;
 		},
 		async performAction() {
-			console.log("it works");
 			if (this.adminAccountId) {
-				console.log("rere");
 				await this.$axios
 					.$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
 					.then(res => {
@@ -344,7 +274,6 @@ export default {
 						});
 					})
 					.catch(err => {
-						console.log("delete error", err);
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",
@@ -352,6 +281,7 @@ export default {
 						});
 					});
 			}
+			this.showConfirmCancelModal = false
 		},
 		pagechanged(e) {
 			const query = {

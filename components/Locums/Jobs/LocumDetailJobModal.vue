@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- BODY -->
-		<!-- <div class="m-4 md:m-8 overflow-auto">
+		<div class="m-4 md:m-8 overflow-auto">
 			<div class="flex items-center flex-wrap">
 				<p class="text-2xl text-white font-semibold pr-4">{{job ? job.title:null }}</p>
 				<div class="flex">
@@ -60,67 +60,65 @@
 								<p class="mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
 							</div>
 
-							<div class="w-full md:w-1/3 mb-4 md:px-2">
-								<template v-if="job.platform_job">
-									<div class="md:mt-5 md:mt-0 text-white">
-										<span>
-											This job is
-											<span
-												class="font-semibold"
-											>{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
-											of
-											<span class="font-semibold">IR35</span>
-										</span>
+							<div class="w-full md:w-1/3 mb-4 md:px-2" v-if="job.platform_job">
+								<div class="md:mt-5 md:mt-0 text-white">
+									<span>
+										This job is
+										<span
+											class="font-semibold"
+										>{{job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
+										of
+										<span class="font-semibold">IR35</span>
+									</span>
+								</div>
+
+								<p class="mt-5 font-semibold mb-1">Role</p>
+								<p class="text-white">{{job.platform_job.profession.name}}</p>
+
+								<p class="mt-5 font-semibold mb-1">Speciality</p>
+								<p
+									class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+									v-for="specialty in job.platform_job.qualifications"
+									:key="specialty.id + '-name'"
+								>{{specialty ? specialty.name:null}}</p>
+
+								<p class="mt-5 font-semibold mb-1">Clinical Systems</p>
+								<p
+									class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+									v-for="clinicalSystem in job.platform_job.clinical_systems"
+									:key="clinicalSystem.id + '-name1'"
+								>{{clinicalSystem ? clinicalSystem.name:null}}</p>
+
+								<p class="mt-5 font-semibold mb-1">Spoken Languages</p>
+								<p
+									class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+									v-for="spokenLanguage in job.platform_job.spoken_languages"
+									:key="spokenLanguage.id + '-name2'"
+								>{{spokenLanguage ? spokenLanguage.name:null}}</p>
+
+								<div v-if="job.platform_job.compliance_documents.length > 0">
+									<p class="flex">Compliance Requirements for GPs:</p>
+									<div
+										class="text-white text-sm m-1 font-semibold"
+										v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
+										:key="`${index}-${gpComplianceDocs.name}`"
+									>
+										<span>{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span>
 									</div>
+								</div>
 
-									<p class="mt-5 font-semibold mb-1">Role</p>
-									<p class="text-white">{{job.platform_job.profession.name}}</p>
-
-									<p class="mt-5 font-semibold mb-1">Speciality</p>
-									<p
-										class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-										v-for="specialty in job.platform_job.qualifications"
-										:key="specialty.id + '-name'"
-									>{{specialty ? specialty.name:null}}</p>
-
-									<p class="mt-5 font-semibold mb-1">Clinical Systems</p>
-									<p
-										class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-										v-for="clinicalSystem in job.platform_job.clinical_systems"
-										:key="clinicalSystem.id + '-name1'"
-									>{{clinicalSystem ? clinicalSystem.name:null}}</p>
-
-									<p class="mt-5 font-semibold mb-1">Spoken Languages</p>
-									<p
-										class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-										v-for="spokenLanguage in job.platform_job.spoken_languages"
-										:key="spokenLanguage.id + '-name2'"
-									>{{spokenLanguage ? spokenLanguage.name:null}}</p>
-
-									<div v-if="job.platform_job.compliance_documents.length > 0">
-										<p class="flex">Compliance Requirements for GPs:</p>
-										<div
-											class="text-white text-sm m-1 font-semibold"
-											v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
-											:key="`${index}-${gpComplianceDocs.name}`"
-										>
-											<span>{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span>
-										</div>
+								<div v-if="job.platform_job.mandatory_trainings.length > 0">
+									<p class="flex">Mandatory Trainings</p>
+									<div
+										class="text-white text-sm m-1 font-semibold"
+										v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
+										:key="`${index}-${mandatoryTrainings.name}`"
+									>
+										<span>{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span>
 									</div>
-
-									<div v-if="job.platform_job.mandatory_trainings.length > 0">
-										<p class="flex">Mandatory Trainings</p>
-										<div
-											class="text-white text-sm m-1 font-semibold"
-											v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
-											:key="`${index}-${mandatoryTrainings.name}`"
-										>
-											<span>{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span>
-										</div>
-									</div>
-								</template>
-								<template v-else-if="job.private_job"></template>
+								</div>
 							</div>
+							<!-- <template v-else-if="job.private_job"></template>-->
 						</div>
 						<div class="w-full overflow-hidden" v-if="job.platform_job">
 							<div class="text-white">
@@ -178,7 +176,7 @@
 					</div>
 				</div>
 			</div>
-		</div> -->
+		</div>
 		<!-- BODY -->
 		<nuxt-child />
 	</div>
@@ -188,7 +186,7 @@ import { gmapApi } from "vue2-google-maps";
 export default {
 	props: ["job"],
 	created() {
-		console.log("This is the job within the modal", this.job);
+		// console.log("This is the job within the modal", this.job);
 	},
 	computed: {
 		google: gmapApi,

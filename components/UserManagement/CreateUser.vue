@@ -663,11 +663,12 @@ export default {
               this.$emit("close");
             })
             .catch(err => {
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "danger",
-                text: err.response.data.message
-              });
+              this.formError = err.response.data.error_messages
+              // this.$store.commit("SET_NOTIFICATION", {
+              //   enabled: true,
+              //   status: "danger",
+              //   text: [err.response.data.message]
+              // });
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
@@ -691,11 +692,12 @@ export default {
               this.$emit("close");
             })
             .catch(err => {
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "danger",
-                text: err.response.data.message
-              });
+              this.formError = err.response.data.error_messages
+              // this.$store.commit("SET_NOTIFICATION", {
+              //   enabled: true,
+              //   status: "danger",
+              //   text: err.response.data.message
+              // });
             });
         }
       } catch (err) {
