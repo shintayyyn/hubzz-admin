@@ -1,6 +1,7 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
 		<div class="flex px-4 md:px-8 py-2 text-sm">
+			<AppConfirm v-if="confirm" :message="'Are you sure you want to delete this role?'" @confirm="deleteRole(role_id)" @cancel="confirm=false"/>
 			<AppButton
 				v-if="authAdminPermissions.includes('Add Role')"
 				:label="'Add New Role'"
@@ -93,11 +94,13 @@ import CreateAdminRole from "@/components/UserManagement/CreateAdminRole";
 import AppPagination from "@/components/Base/AppPagination";
 import AppTable from "@/components/Base/AppTable";
 import AppButton from "@/components/Base/AppButton";
+import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
 		CreateAdminRole,
 		AppPagination,
 		AppButton,
+		AppConfirm
 	},
 	data() {
 		return {
@@ -106,7 +109,9 @@ export default {
 			deletingAdminRole: false,
 			currentPage: 1,
 			perPage: 10,
-			totalPages: 0
+			totalPages: 0,
+			confirm: false,
+			role_id: 0
 		};
 	},
 	beforeDestroy() {
@@ -170,7 +175,13 @@ export default {
 				});
 		},
 
-		async toDeleteAdminRole(roleId) {
+		toDeleteAdminRole(roleId) {
+			console.log(roleId)
+			this.role_id = roleId
+			this.confirm = true
+		},
+
+		async deleteRole(roleId) {
 			await this.$axios
 				.delete(`/api/v1/admin/admin-roles/${roleId}`)
 				.then(res => {
@@ -182,6 +193,7 @@ export default {
 					this.$store.dispatch("adminusers/fetchAdminRoles", {
 						limit: 10
 					});
+					this.confirm = false
 				})
 				.catch(err => {
 					console.log("delete admin role error!!", err);

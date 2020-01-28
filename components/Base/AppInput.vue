@@ -19,7 +19,7 @@
         <div
           class="relative flex flex-wrap justify-between leading-none"
         >
-          <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }}</label>
+          <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }} <span v-if="required" class="text-red-500">*</span></label>
           
           <div class="flex items-center" v-if="info || error">
             <div
@@ -340,6 +340,10 @@ export default {
     info: String,
     inStyle: String,
     inClass: String,
+    required: {
+			type: Boolean,
+			default: false
+		},
     // for select
     items: Array,
     multiple: Boolean,

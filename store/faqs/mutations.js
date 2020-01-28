@@ -1,9 +1,9 @@
-export default{
-  TOGGLE_LOADING(state, payload){
+export default {
+  TOGGLE_LOADING(state, payload) {
     state.loading_faqs = payload
   },
 
-  SET_LOCUM_FAQS(state, payload){
+  SET_LOCUM_FAQS(state, payload) {
     let locum_faqs = payload.map((faq) => {
       return {
         ...faq,
@@ -12,7 +12,7 @@ export default{
     })
     state.locumFaqs = locum_faqs
   },
-  SET_PRACTICE_FAQS(state, payload){
+  SET_PRACTICE_FAQS(state, payload) {
     let practice_faqs = payload.map((faq) => {
       return {
         ...faq,
@@ -22,22 +22,22 @@ export default{
     state.practiceFaqs = practice_faqs
   },
 
-  ADD_FAQ(state, payload){
+  ADD_FAQ(state, payload) {
     console.log('payload', payload)
-    if(payload[0].domain === 'Locum'){
+    if (payload[0].domain === 'Locum') {
       console.table('locumfaqs', state.locumFaqs)
       state.locumFaqs.push(payload[0])
     }
-    if(payload[0].domain === 'Practice'){
+    if (payload[0].domain === 'Practice') {
       console.table('practicefaqs', state.practiceFaqs)
       state.practiceFaqs.push(payload[0])
     }
   },
 
-  UPDATE_FAQ(state, payload){
-    if(payload.domain === 'Locum'){
+  UPDATE_FAQ(state, payload) {
+    if (payload.domain === 'Locum') {
       let index = state.locumFaqs.findIndex(locumFaq => locumFaq.id === payload.id)
-      if(index >= 0){
+      if (index >= 0) {
         state.locumFaqs.splice(index, 1, payload)
         state.locumFaqs = state.locumFaqs.map((faq) => {
           return {
@@ -47,9 +47,9 @@ export default{
         })
       }
     }
-    if(payload.domain === 'Practice'){
+    if (payload.domain === 'Practice') {
       let index = state.practiceFaqs.findIndex(practiceFaq => practiceFaq.id === payload.id)
-      if(index >= 0){
+      if (index >= 0) {
         state.practiceFaqs.splice(index, 1, payload)
         state.practiceFaqs = state.practiceFaqs.map((faq) => {
           return {
@@ -61,31 +61,31 @@ export default{
     }
   },
 
-  DELETE_FAQ(state, payload){
-    if(payload.domain === 'Locum'){
-      let index = state.locumFaqs.findIndex( locumFaq => locumFaq.id === payload.id)
+  DELETE_FAQ(state, payload) {
+    if (payload.domain === 'Locum') {
+      let index = state.locumFaqs.findIndex(locumFaq => locumFaq.id === payload.id)
       state.locumFaqs.splice(index, 1)
     }
-    if(payload.domain === 'Practice'){
-      let index = state.locumFaqs.findIndex( practiceFaq => practiceFaq.id === payload.id)
+    if (payload.domain === 'Practice') {
+      let index = state.locumFaqs.findIndex(practiceFaq => practiceFaq.id === payload.id)
       state.practiceFaqs.splice(index, 1)
     }
   },
-  
-  TOGGLE_LOCUM_FAQ(state, payload){
-    const index = state.locumFaqs.findIndex((locumFaq)=>{
+
+  TOGGLE_LOCUM_FAQ(state, payload) {
+    const index = state.locumFaqs.findIndex((locumFaq) => {
       return locumFaq.id === payload.id
     })
-    if(index>-1){
+    if (index > -1) {
       state.locumFaqs[index].toggled = !state.locumFaqs[index].toggled
     }
   },
 
-  TOGGLE_PRACTICE_FAQ(state, payload){
-    const index = state.practiceFaqs.findIndex((practiceFaq)=>{
+  TOGGLE_PRACTICE_FAQ(state, payload) {
+    const index = state.practiceFaqs.findIndex((practiceFaq) => {
       return practiceFaq.id === payload.id
     })
-    if(index>-1){
+    if (index > -1) {
       state.practiceFaqs[index].toggled = !state.practiceFaqs[index].toggled
     }
   },

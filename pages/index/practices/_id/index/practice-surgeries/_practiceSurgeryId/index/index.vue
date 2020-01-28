@@ -119,6 +119,7 @@
 								:label="'Allow Spoke to Create Jobs/Sessions?'"
 								:placeholder="'Select...'"
 								:items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+								required
 							/>
 						</div>
 						<!-- SET MAX RATES ;  NOT REQUIRED -->
@@ -133,6 +134,7 @@
 									:name="'max_hourly_rate_limit'"
 									:label="'Set max hourly rate limit for Spoke'"
 									:inStyle="'text-align:right'"
+									required
 								/>
 							</div>
 							<div class="w-full p-1">
@@ -142,6 +144,7 @@
 									:name="'max_halfday_rate_limit'"
 									:label="'Set max half day rate limit for Spoke'"
 									:inStyle="'text-align:right'"
+									required
 								/>
 							</div>
 							<div class="w-full p-1">
@@ -151,6 +154,7 @@
 									:name="'max_wholeday_rate_limit'"
 									:label="'Set max whole day rate limit for Spoke'"
 									:inStyle="'text-align:right'"
+									required
 								/>
 							</div>
 							<div class="w-full p-1">
@@ -160,6 +164,7 @@
 									:name="'max_ooh_rate_limit'"
 									:label="'Set max out-of-hours rate limit for Spoke'"
 									:inStyle="'text-align:right'"
+									required
 								/>
 							</div>
 							<div class="w-full p-1">
@@ -169,6 +174,7 @@
 									:name="'max_excess_hours'"
 									:label="'Set max excess hours rate limit for Spoke'"
 									:inStyle="'text-align:right'"
+									required
 								/>
 							</div>
 						</div>
@@ -181,6 +187,7 @@
 								:label="'Allow Spoke to handle its own billing for Locum?'"
 								:placeholder="'Select...'"
 								:items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+								required
 							/>
 						</div>
 						<div class="w-full p-1">
@@ -191,6 +198,7 @@
 								:label="'Allow Spoke to handle its own billing for HUBZZ?'"
 								:placeholder="'Select...'"
 								:items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+								required
 							/>
 						</div>
 						<div class="w-full p-1">
@@ -201,6 +209,7 @@
 								:label="'Share Banks to Other Surgeries'"
 								:placeholder="'Select...'"
 								:items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+								required
 							/>
 						</div>
 					</div>
@@ -209,11 +218,10 @@
 					</div>
 				</div>
 			</div>
-      <div 
-        @click="terminateSpoke()"
-        class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer">
-        Terminate this Spoke
-      </div>
+			<div
+				@click="terminateSpoke()"
+				class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
+			>Terminate this Spoke</div>
 		</div>
 	</div>
 </template>
@@ -289,22 +297,26 @@ export default {
 	},
 
 	methods: {
-    async terminateSpoke(){
-      await this.$axios.$delete(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}`)
-      .then(res=>{
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Successfully Terminated Spoke"
-        });
-      }).catch(err => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: err.response.data.message
-        });
-      })
-    },
+		async terminateSpoke() {
+			await this.$axios
+				.$delete(
+					`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}`
+				)
+				.then(res => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Successfully Terminated Spoke"
+					});
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
+		},
 		edit() {
 			this.editPermissions = !this.editPermissions;
 		},
@@ -344,13 +356,14 @@ export default {
 						text: "Successfully Updated Spoke Permissions"
 					});
 					this.editPermissions = false;
-				}).catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
 					});
-        })
+				});
 		}
 	}
 };

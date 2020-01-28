@@ -15,6 +15,7 @@
 					:name="'name'"
 					:label="'Role Name'"
 					:error="formError.find(item => item.field === 'name')"
+					required
 				/>
 				<AppInput
 					v-model="form.description"
@@ -24,8 +25,10 @@
 					:error="formError.find(item => item.field === 'description')"
 					:resize="false"
 					:rows="3"
+					required
 				/>
 
+				<p class="text-xs sm:text-sm py-1 pr-2 font-bold">Permissions</p>
 				<div class="flex flex-wrap justify-start">
 					<div
 						class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
@@ -33,16 +36,14 @@
 						:key="index"
 					>
 						<div class="flex flex-col">
-							<div class=" w-full flex flex-row items-center">
+							<div class="w-full flex flex-row items-center">
 								<input
 									type="checkbox"
 									:id="role.category"
 									:checked="isChecked(role.permissions)"
 									@change="checkAll(index, $event.target.checked)"
 								/>
-								<label class="font-bold text-xl pl-1" :for="role.category"
-									>{{ role.category }} Management</label
-								>
+								<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
 							</div>
 							<div
 								class="w-full flex flex-row justify-start items-center mb-1"
@@ -58,8 +59,7 @@
 								<label
 									:for="permission.id"
 									class="text-xs sm:text-sm flex items-center"
-									>{{ permission.name }}</label
-								>
+								>{{ permission.name }}</label>
 							</div>
 						</div>
 					</div>

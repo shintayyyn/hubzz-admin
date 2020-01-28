@@ -5,7 +5,7 @@
 			<div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
 				<div
 					:style="`min-width: ${customWidth}px`"
-					class="row hidden md:flex justify-start font-bold leading-none text-sm text-white"
+					class="row hidden md:flex justify-start leading-none text-sm text-white"
 				>
 					<div
 						class="flex-1 flex items-center px-2"
@@ -70,23 +70,19 @@
 									>{{ item }}</div>
 								</template>
 								<template v-else>
-
 									<template v-if="column.slotName">
-                    <div @click="$emit(column.eventName, item)">
-										  <slot :name="column.slotName" v-bind:item="item"></slot>
-                    </div>
-                  </template>
+										<div @click="$emit(column.eventName, item)">
+											<slot :name="column.slotName" v-bind:item="item"></slot>
+										</div>
+									</template>
 									<template v-else>
-                    
 										<template
 											v-if="
 												column.class &&
 													column.class.includes('localDate') &&
 													dataCell(item, column) !== 'Unavailable'
 											"
-										>
-											{{ dataCell(item, column) | localDate }}
-										</template>
+										>{{ dataCell(item, column) | localDate }}</template>
 										<template v-else>{{ dataCell(item, column) }}</template>
 									</template>
 								</template>
@@ -192,11 +188,11 @@ export default {
 				}
 			}
 			this.$emit("sorted", this.params);
-    },
-    checkClicked(item){
-      console.log('dsda')
-      this.$emit("toggleCheck", item)
-    },
+		},
+		checkClicked(item) {
+			console.log("dsda");
+			this.$emit("toggleCheck", item);
+		},
 		pagechanged(e) {
 			this.$emit("pagechanged", e, this.params);
 		},

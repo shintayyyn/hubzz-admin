@@ -21,7 +21,7 @@ export default{
     },
     DELETE_ADMIN_USER(state, payload){
       let index = state.adminUsers.findIndex(
-        id => id === payload.id
+        item => item.id === payload.id
       )
       state.adminUsers.splice(index, 1)
       state.itemCount = state.itemCount - 1

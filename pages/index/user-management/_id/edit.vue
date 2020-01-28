@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="text-white bg-waterloo my-2 p-4 shadow rounded-lg text-sm max-w-lg"
-	>
+	<div class="text-white bg-waterloo my-2 p-4 shadow rounded-lg text-sm max-w-lg">
 		<AppInput
 			v-model="form.email"
 			:type="'email'"
@@ -9,13 +7,9 @@
 			:label="'Email'"
 			:error="formError.find(item => item.field === 'email')"
 			@blur="CheckEmptyField(form.email, 'email')"
+			required
 		/>
-		<AppInput
-			v-model="form.title"
-			:type="'text'"
-			:name="'title'"
-			:label="'Title'"
-		/>
+		<AppInput v-model="form.title" :type="'text'" :name="'title'" :label="'Title'" />
 		<AppInput
 			v-model="form.first_name"
 			:type="'text'"
@@ -23,6 +17,7 @@
 			:label="'First Name'"
 			:error="formError.find(item => item.field === 'first_name')"
 			@blur="CheckEmptyField(form.first_name, 'first_name')"
+			required
 		/>
 		<AppInput
 			v-model="form.last_name"
@@ -31,13 +26,9 @@
 			:label="'Last Name'"
 			:error="formError.find(item => item.field === 'last_name')"
 			@blur="CheckEmptyField(form.last_name, 'last_name')"
+			required
 		/>
-		<AppInput
-			v-model="form.suffix"
-			:type="'text'"
-			:name="'suffix'"
-			:label="'Suffix'"
-		/>
+		<AppInput v-model="form.suffix" :type="'text'" :name="'suffix'" :label="'Suffix'" />
 
 		<AppFilterSearch
 			v-model="form.roles_id"
@@ -48,6 +39,7 @@
 			:items="filteredAdminRoles"
 			@add="CheckEmptyField(form.roles_id, 'roles_id')"
 			@remove="CheckEmptyField(form.roles_id, 'roles_id')"
+			required
 		/>
 
 		<AppButton :label="'Save Changes'" @click="updateForm(user.id, form)" />
@@ -67,14 +59,14 @@ export default {
 	data() {
 		return {
 			form: {
-				email:'',
-				title:'',
-				first_name:'',
-				last_name:'',
-				suffix:'',
+				email: "",
+				title: "",
+				first_name: "",
+				last_name: "",
+				suffix: "",
 				roles_id: []
-      },
-      filteredAdminRoles: [],
+			},
+			filteredAdminRoles: [],
 			formError: []
 		};
 	},
@@ -83,27 +75,29 @@ export default {
 		this.form.title = this.user.personal_detail.title;
 		this.form.first_name = this.user.personal_detail.first_name;
 		this.form.last_name = this.user.personal_detail.last_name;
-    this.form.suffix = this.user.personal_detail.suffix;
-    
+		this.form.suffix = this.user.personal_detail.suffix;
+
 		this.user.admin_detail.roles.forEach(item => {
 			this.form.roles_id.push({
 				value: item.id,
 				label: item.name
-      });
-    });
+			});
+		});
 
-    this.adminRoles.forEach(item => {
-      const found = this.user.admin_detail.roles.find(userRole => userRole.id === item.value)
-      console.log('item')
-      if(!found){
-        this.filteredAdminRoles.push({
-          value:item.value,
-          label: item.label,
-        })
-      }
-    })
-    console.log('user roles', this.user.admin_detail.roles)
-    console.log('filtered',this.filteredAdminRoles)
+		this.adminRoles.forEach(item => {
+			const found = this.user.admin_detail.roles.find(
+				userRole => userRole.id === item.value
+			);
+			console.log("item");
+			if (!found) {
+				this.filteredAdminRoles.push({
+					value: item.value,
+					label: item.label
+				});
+			}
+		});
+		console.log("user roles", this.user.admin_detail.roles);
+		console.log("filtered", this.filteredAdminRoles);
 	},
 	methods: {
 		getAdminUsers() {
@@ -122,7 +116,7 @@ export default {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
-							text: "Edit Admin User Success!"
+							text: "Admin Account Updated Successfully!"
 						});
 					})
 					.catch(err => {
