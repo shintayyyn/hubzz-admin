@@ -25,8 +25,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="locumComplianceDocuments"
-        :getItemKey="(item) => item.locum_detail_compliance_document_id"
+        :items="activatedPractices"
+        :getItemKey="(item) => item.practice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -61,7 +61,7 @@
       return {
         loading: false,
         count: 0,
-        locumComplianceDocuments: [],
+        activatedPractices: [],
         orderBy: [],
         orderBys: [
           {
@@ -108,28 +108,64 @@
             flexShrink: 0,
           },
           {
-            title: 'Locum',
-            key: 'locum_user_name',
-            sort_key: 'locum_user_name',
-            column: (item) => item.locum_user_name,
+            title: 'Practice Name',
+            key: 'practice_name',
+            sort_key: 'practice_name',
+            column: (item) => item.practice_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Compliance',
-            key: 'compliance_document_name',
-            sort_key: 'compliance_document_name',
-            column: (item) => item.compliance_document_name,
-            justify: 'start',
+            title: 'Date Registered',
+            key: 'date_registered',
+            sort_key: 'date_registered',
+            column: (item) => this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
+            justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Expiry Date',
-            key: 'expired_at',
-            sort_key: 'expired_at',
-            column: (item) => item.expired_at ? this.$moment(item.expired_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            title: 'Sage Ref',
+            key: 'sage_ref',
+            sort_key: 'sage_ref',
+            column: (item) => item.sage_ref,
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Nominal Code',
+            key: 'nominal_code',
+            sort_key: 'nominal_code',
+            column: (item) => item.nominal_code,
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Direct Debit Set Up',
+            key: 'direct_debit',
+            sort_key: 'direct_debit',
+            column: (item) => item.direct_debit ? 'Yes' : 'No',
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Date of Approved',
+            key: 'first_actived_at',
+            sort_key: 'first_actived_at',
+            column: (item) => item.first_actived_at ? this.$moment(item.first_actived_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Status',
+            key: 'status',
+            sort_key: 'status',
+            column: (item) => item.status,
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
@@ -144,48 +180,48 @@
 
     watch: {
       orderBy() {
-        this.getLocumComplianceDocuments()
+        this.getActivatedPractices()
       },
 
       limit() {
         this.page = 1
-        this.getLocumComplianceDocuments()
+        this.getActivatedPractices()
       },
 
       activePage() {
-        this.getLocumComplianceDocuments()
+        this.getActivatedPractices()
       },
     },
 
     methods: {
-      getLocumComplianceDocuments() {
+      getActivatedPractices() {
         this.loading = true
-        this.locumComplianceDocuments = []
+        this.activatedPractices = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/activated-practices/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents', {
+          this.$axios.get('/api/v1/admin/reports/activated-practices', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_compliance_documents
+            return responses.data.data.activated_practices
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            locumComplianceDocuments,
+            activatedPractices,
           ] = results
 
           this.count = count
-          this.locumComplianceDocuments = locumComplianceDocuments
+          this.activatedPractices = activatedPractices
         }).catch((err) => {
-          console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
-          this.$nuxt.error(err.response ? err.response.data : err)
+          console.log('err', err)
+          this.$nuxt.error(err)
         }).finally(() => {
           this.loading = false
         })
@@ -201,7 +237,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getLocumComplianceDocuments()
+      this.getActivatedPractices()
     },
 
   };

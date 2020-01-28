@@ -1,3 +1,4 @@
+
 <template>
   <div class="report-modal p-4 md:p-8 shadow-lg">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
@@ -25,8 +26,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="locumComplianceDocuments"
-        :getItemKey="(item) => item.locum_detail_compliance_document_id"
+        :items="declinedJobs"
+        :getItemKey="(item) => item.job_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -61,7 +62,7 @@
       return {
         loading: false,
         count: 0,
-        locumComplianceDocuments: [],
+        declinedJobs: [],
         orderBy: [],
         orderBys: [
           {
@@ -117,20 +118,56 @@
             flexShrink: 0,
           },
           {
-            title: 'Compliance',
-            key: 'compliance_document_name',
-            sort_key: 'compliance_document_name',
-            column: (item) => item.compliance_document_name,
+            title: 'Practice',
+            key: 'practice_name',
+            sort_key: 'practice_name',
+            column: (item) => item.practice_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Expiry Date',
-            key: 'expired_at',
-            sort_key: 'expired_at',
-            column: (item) => item.expired_at ? this.$moment(item.expired_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            title: 'Area',
+            key: 'area',
+            sort_key: 'area',
+            column: (item) => item.area,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Profession',
+            key: 'profession',
+            sort_key: 'profession',
+            column: (item) => item.profession,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Date',
+            key: 'date',
+            sort_key: 'date',
+            column: (item) => item.date ? this.$moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
             justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Number',
+            key: 'job_number',
+            sort_key: 'job_number',
+            column: (item) => item.job_number,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Reason',
+            key: 'reason',
+            sort_key: 'reason',
+            column: (item) => item.reason,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -144,45 +181,45 @@
 
     watch: {
       orderBy() {
-        this.getLocumComplianceDocuments()
+        this.getDeclinedJobs()
       },
 
       limit() {
         this.page = 1
-        this.getLocumComplianceDocuments()
+        this.getDeclinedJobs()
       },
 
       activePage() {
-        this.getLocumComplianceDocuments()
+        this.getDeclinedJobs()
       },
     },
 
     methods: {
-      getLocumComplianceDocuments() {
+      getDeclinedJobs() {
         this.loading = true
-        this.locumComplianceDocuments = []
+        this.declinedJobs = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/declined-jobs/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents', {
+          this.$axios.get('/api/v1/admin/reports/declined-jobs', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_compliance_documents
+            return responses.data.data.declined_jobs
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            locumComplianceDocuments,
+            declinedJobs,
           ] = results
 
           this.count = count
-          this.locumComplianceDocuments = locumComplianceDocuments
+          this.declinedJobs = declinedJobs
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -201,7 +238,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getLocumComplianceDocuments()
+      this.getDeclinedJobs()
     },
 
   };

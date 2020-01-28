@@ -25,8 +25,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="locumComplianceDocuments"
-        :getItemKey="(item) => item.locum_detail_compliance_document_id"
+        :items="registeredLocums"
+        :getItemKey="(item) => item.locum_user_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -61,7 +61,7 @@
       return {
         loading: false,
         count: 0,
-        locumComplianceDocuments: [],
+        registeredLocums: [],
         orderBy: [],
         orderBys: [
           {
@@ -108,7 +108,7 @@
             flexShrink: 0,
           },
           {
-            title: 'Locum',
+            title: 'Locum Name',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
             column: (item) => item.locum_user_name,
@@ -117,20 +117,29 @@
             flexShrink: 0,
           },
           {
-            title: 'Compliance',
-            key: 'compliance_document_name',
-            sort_key: 'compliance_document_name',
-            column: (item) => item.compliance_document_name,
+            title: 'Date Registered',
+            key: 'date_registered',
+            sort_key: 'date_registered',
+            column: (item) => item.date_registered ? this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Area',
+            key: 'area',
+            sort_key: 'area',
+            column: (item) => item.area,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Expiry Date',
-            key: 'expired_at',
-            sort_key: 'expired_at',
-            column: (item) => item.expired_at ? this.$moment(item.expired_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            title: 'Status',
+            key: 'status',
+            sort_key: 'status',
+            column: (item) => item.status,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -144,45 +153,45 @@
 
     watch: {
       orderBy() {
-        this.getLocumComplianceDocuments()
+        this.getLocums()
       },
 
       limit() {
         this.page = 1
-        this.getLocumComplianceDocuments()
+        this.getLocums()
       },
 
       activePage() {
-        this.getLocumComplianceDocuments()
+        this.getLocums()
       },
     },
 
     methods: {
-      getLocumComplianceDocuments() {
+      getLocums() {
         this.loading = true
-        this.locumComplianceDocuments = []
+        this.registeredLocums = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/registered-locums/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents', {
+          this.$axios.get('/api/v1/admin/reports/registered-locums', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_compliance_documents
+            return responses.data.data.registered_locums
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            locumComplianceDocuments,
+            registeredLocums,
           ] = results
 
           this.count = count
-          this.locumComplianceDocuments = locumComplianceDocuments
+          this.registeredLocums = registeredLocums
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -201,7 +210,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getLocumComplianceDocuments()
+      this.getLocums()
     },
 
   };

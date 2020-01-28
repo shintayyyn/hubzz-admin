@@ -27,7 +27,7 @@
       <ReportTable
         :limit="limit"
         :items="practiceDeclinedLocums"
-        :getItemKey="(item) => item.locum_user_id"
+        :getItemKey="(item) => item.job_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"

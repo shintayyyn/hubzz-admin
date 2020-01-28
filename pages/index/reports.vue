@@ -40,6 +40,25 @@
       </nuxt-link>
     </div>
 
+    <div class="text-sm md:text-xl text-white">Compliance Reports</div>
+
+    <div class="flex flex-col">
+      <nuxt-link
+        v-for="complianceReport in complianceReports"
+        :key="`complianceReports-${complianceReport.title}`"
+        :to="complianceReport.url"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+      >
+        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+          <span class="px-2 whitespace-no-wrap font-semibold">{{ complianceReport.title }}</span>
+          <span class="px-2 w-full leading-tight flex items-center">{{ complianceReport.subtitle }}</span>
+          <div class="flex items-center px-1 md:px-0">
+            <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
+
     <div class="text-sm md:text-xl text-white">HQ Analytics</div>
 
     <div class="flex flex-col">
@@ -52,6 +71,25 @@
         <div class="flex flex-no-wrap items-center text-sm text-white w-full">
           <span class="px-2 whitespace-no-wrap font-semibold">{{ hqAnalyticsReport.title }}</span>
           <span class="px-2 w-full leading-tight flex items-center">{{ hqAnalyticsReport.subtitle }}</span>
+          <div class="flex items-center px-1 md:px-0">
+            <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
+          </div>
+        </div>
+      </nuxt-link>
+    </div>
+
+    <div class="text-sm md:text-xl text-white">Pricing Reports</div>
+
+    <div class="flex flex-col">
+      <nuxt-link
+        v-for="pricingReport in pricingReports"
+        :key="`pricingReports-${pricingReport.title}`"
+        :to="pricingReport.url"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+      >
+        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+          <span class="px-2 whitespace-no-wrap font-semibold">{{ pricingReport.title }}</span>
+          <span class="px-2 w-full leading-tight flex items-center">{{ pricingReport.subtitle }}</span>
           <div class="flex items-center px-1 md:px-0">
             <svgicon name="arrow-right" width="21" height="21" color="white"></svgicon>
           </div>
@@ -147,6 +185,28 @@
             url: '/reports',
           },
         ],
+        complianceReports: [
+          {
+            title: 'REP-015',
+            subtitle: 'Onboarding - Documents Uploaded',
+            url: '/reports/locum-uploaded-documents',
+          },
+          {
+            title: 'REP-016',
+            subtitle: 'Expiry Report',
+            url: '/reports/locum-expiring-compliance-documents',
+          },
+          {
+            title: 'REP-017',
+            subtitle: 'Locum Lead Time for Compliance Completed',
+            url: '/reports/locum-completed-compliances',
+          },
+          {
+            title: 'REP-018',
+            subtitle: 'Practice Lead Time for Activation',
+            url: '/reports/activated-practices',
+          },
+        ],
         hqAnalyticsReports: [
           {
             title: 'REP-019',
@@ -157,6 +217,53 @@
             title: 'REP-020',
             subtitle: 'Locum Referrals',
             url: '/reports/locum-referrals',
+          },
+          {
+            title: 'REP-023',
+            subtitle: 'Locums Declined',
+            url: '/reports/declined-jobs',
+          },
+          {
+            title: 'REP-024',
+            subtitle: 'Practice Cancellations',
+            url: '/reports/cancelled-jobs',
+          },
+          {
+            title: 'REP-025',
+            subtitle: 'Jobs not Filled',
+            url: '/reports/unfilled-jobs',
+          },
+          {
+            title: 'REP-026',
+            subtitle: 'Sign Ups Locums',
+            url: '/reports/registered-locums',
+          },
+          {
+            title: 'REP-027',
+            subtitle: 'Sign Ups Practice',
+            url: '/reports/registered-practices',
+          },
+          {
+            title: 'REP-028',
+            subtitle: 'Session Notifications',
+            url: '/reports/job-parts',
+          },
+          {
+            title: 'REP-029',
+            subtitle: 'Locum Usage',
+            url: '/reports/locum-usages',
+          },
+        ],
+        pricingReports: [
+          {
+            title: 'REP-030',
+            subtitle: 'Hours Approved',
+            url: '/reports/locum-invoice-job-parts',
+          },
+          {
+            title: 'REP-031',
+            subtitle: 'Invoices',
+            url: '/reports/practice-invoice-items',
           },
         ],
 			}
