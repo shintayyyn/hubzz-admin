@@ -204,6 +204,26 @@
             subtitle: 'Locums Declined',
             url: '/reports/declined-jobs',
           },
+          {
+            title: 'REP-024',
+            subtitle: 'Practice Cancellations',
+            url: '/reports/cancelled-jobs',
+          },
+          {
+            title: 'REP-025',
+            subtitle: 'Jobs not Filled',
+            url: '/reports/unfilled-jobs',
+          },
+          {
+            title: 'REP-026',
+            subtitle: 'Sign Ups Locums ',
+            url: '/reports/registered-locums',
+          },
+          {
+            title: 'REP-027',
+            subtitle: 'Sign Ups Practice ',
+            url: '/reports/registered-practices',
+          },
         ],
 			}
 		},
