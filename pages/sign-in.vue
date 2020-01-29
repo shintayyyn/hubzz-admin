@@ -158,7 +158,7 @@ methods: {
     },
 
     login: debounce(function () {
-      if (this.loggingIn) {
+      if (this.loggingIn || this.$auth.loggedIn) {
         return
       }
 
