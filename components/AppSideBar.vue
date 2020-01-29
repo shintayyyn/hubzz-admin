@@ -79,6 +79,7 @@ export default {
         { name: "Billing", route: "/billings" },
         { name: "FAQs", route: "/faqs" },
         { name: "Terms and Conditions", route: "/tncs" },
+        { name: "Standard Terms", route: "/standard-terms" },
         { name: "Inquiries", route: "/inquiries" },
         { name: "User Management", route: "/user-management" }
       ];
