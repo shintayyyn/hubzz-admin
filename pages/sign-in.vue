@@ -209,7 +209,7 @@ methods: {
         .finally(() => {
           this.loggingIn = false;
         });
-    }, 500),
+    }, 10),
   }
 };
 </script>
