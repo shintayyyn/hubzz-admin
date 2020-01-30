@@ -177,6 +177,7 @@
            <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
            <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
           <AppInput
+            v-if="!adminCreate"
             v-model="toPostUser.practice_user_role_id"
             :type="'select'"
             :label="'Practice Role'"
@@ -293,19 +294,19 @@ export default {
         suffix: "",
 
         //  PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED
-        practice_role: `${this.surgery ? "Partner" : ""}`,
-        type: `${this.surgery ? "Hub" : ""}`,
-        hub_type: `${this.surgery ? "Type 1" : ""}`,
-        code: `${this.surgery ? this.surgery.code : ""}`,
-        name: `${this.surgery ? this.surgery.name : ""}`,
-        phone_number: `${this.surgery ? this.surgery.phone_number : ""}`,
-        address_line_1: `${this.surgery ? this.surgery.address_line_1 : ""}`,
-        address_line_2: `${this.surgery ? this.surgery.address_line_2 : ""}`,
-        address_line_3: `${this.surgery ? this.surgery.address_line_3 : ""}`,
-        postcode: `${this.surgery ? this.surgery.postcode : ""}`,
+        practice_role: '',
+        type: "",
+        hub_type: "",
+        code: "",
+        name: "",
+        phone_number: "",
+        address_line_1: "",
+        address_line_2: "",
+        address_line_3: "",
+        postcode: "",
         coordinate_x: "",
         coordinate_y: "",
-        clinical_commissioning_group_name: `${this.surgery ? this.surgery.clinical_commissioning_group_name : ""}`,
+        clinical_commissioning_group_name: "",
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
 
@@ -318,7 +319,7 @@ export default {
         roles_id: [],
 
         // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
-        practice_id: `${this.practice ? this.practice.id : this.surgery.id}`,
+        practice_id: "",
         practice_user_role_id: ''
       },
 
@@ -327,6 +328,19 @@ export default {
   },
 
   async created() {
+    this.toPostUser.practice_role = this.surgery ? "Partner" : ''
+    this.toPostUser.type = this.surgery ? "Type 1" : ''
+    this.toPostUser.code = this.surgery ? this.surgery.code : ''
+    this.toPostUser.name = this.surgery ? this.surgery.name : ''
+    this.toPostUser.phone_number = this.surgery ? this.surgery.phone_number : ''
+    this.toPostUser.address_line_1 = this.surgery ? this.surgery.address_line_1 : ''
+    this.toPostUser.address_line_2 = this.surgery ? this.surgery.address_line_2 : ''
+    this.toPostUser.address_line_3 = this.surgery ? this.surgery.address_line_3 : ''
+    this.toPostUser.postcode = this.surgery ? this.surgery.postcode : ''
+    this.toPostUser.clinical_commissioning_group_name = this.surgery ? this.surgery.clinical_commissioning_group_name : ''
+    this.toPostUser.surgery_id = this.surgery ? this.surgery.id : ''
+    this.toPostUser.practice_id = this.practice ? this.practice.id : ''
+
     if(this.surgery){
       await this.$axios
       .$post(`/api/v1/postcode-to-coordinates`,{ postcode: this.surgery.postcode})
@@ -342,21 +356,22 @@ export default {
         });
       })
     }
-    await this.$axios
-    .$get(`/api/v1/admin/practices/${this.practice ? this.practice.id : this.surgery.id}/practice-roles`)
-    .then(res => {
-      res.data.roles.forEach(role => {
-        this.practice_user_roles.push({ label: role.name, value: role.id})
+    if (!this.adminCreate) {
+      await this.$axios
+      .$get(`/api/v1/admin/practices/${this.practice ? this.practice.id : this.surgery.id}/practice-roles`)
+      .then(res => {
+        res.data.roles.forEach(role => {
+          this.practice_user_roles.push({ label: role.name, value: role.id})
+        })
       })
-    })
-    .catch(err => {
-      store.commit("SET_NOTIFICATION", {
-        enabled: true,
-        status: "danger",
-        text: err.response.data.message
-      });
-    })
-  
+      .catch(err => {
+        store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
+        });
+      })
+    }
     await this.$axios
       .$get(`/api/v1/admin/practice-types`)
       .then(res => {
