@@ -36,7 +36,7 @@
             <!-- TABLE BODY -->
             <div class="row py-2">
               <div class="relative">
-                <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg"/>
+                <AppLoading :loading="!!uploading" message="Uploading" :spinner="false" class="rounded-lg"/>
 
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none transition-hover">
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
@@ -151,9 +151,72 @@
       handleInputFileChange() {
         this.uploading = true
 
-        setTimeout(() => {
-          this.uploading = false
-        }, 500)
+        if (
+          !this.$refs.inputFile
+          || !this.$refs.inputFile.files
+          || this.$refs.inputFile.files.length === 0
+        ) {
+          return
+        }
+
+        const file = this.$refs.inputFile.files[0]
+
+        let types = [
+          'pdf',
+          'jpeg',
+          'msword',
+          'tiff',
+          'vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'vnd.openxmlformats-officedocument.wordprocessingml.template',
+          'vnd.ms-word.document.macroEnabled.12',
+          'vnd.ms-word.template.macroEnabled.12',
+        ]
+
+        const [type, subtype] = file.type.split('/')
+
+        if (!types.includes(subtype)) {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: 'Invalid file format',
+          })
+
+          return
+        }
+        
+        const formData = new FormData()
+
+        formData.append('file', file)
+
+        this.uploading = 1
+        this.$axios.put('/api/v1/admin/standard-terms', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress(progressEvent) {
+            console.log('progressEvent', progressEvent)
+          },
+        }).then((response) => {
+          console.log('response', response)
+
+          this.standardTerms = response.data.data.standard_terms
+
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Upload Success',
+          })
+        }).catch(err => {
+          console.log('err.response || err', err.response || err)
+
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: (err.response || err).message || 'Something went wrong!',
+          })
+        }).finally(() => {
+          this.uploading = 0
+        })
       }
     },
 

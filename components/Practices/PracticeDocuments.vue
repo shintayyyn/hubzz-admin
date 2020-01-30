@@ -169,7 +169,7 @@ export default {
       }
     },
     async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
-       console.log(
+      console.log(
         "Infos uploaded: \n",
         "refname: ",
         refName,
@@ -388,7 +388,7 @@ export default {
         });
         console.log("index practices index _id index asyncData err", err);
       }
-    }
+    },
   }
 };
 </script>
