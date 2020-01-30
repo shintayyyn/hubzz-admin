@@ -78,7 +78,7 @@
       </section>
     </div>
 
-    <nuxt-child />
+    <nuxt-child :standardTerms="standardTerms"/>
 
   </div>
 </template>

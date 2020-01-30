@@ -188,7 +188,16 @@ export default {
         return;
       }
       const file = el.files[0];
-      let types = ["pdf", "jpeg", "msword", "tiff"];
+      let types = [
+        "pdf",
+        "jpeg",
+        "msword",
+        "tiff",
+        'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'vnd.openxmlformats-officedocument.wordprocessingml.template',
+        'vnd.ms-word.document.macroEnabled.12',
+        'vnd.ms-word.template.macroEnabled.12',
+      ];
       console.log("legit file", file.name, file)
       const fileReader = new FileReader();
 
