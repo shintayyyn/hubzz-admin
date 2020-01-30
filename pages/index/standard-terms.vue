@@ -3,6 +3,10 @@
 
     <div class="px-2 text-xl md:text-4xl text-white">Standard Terms</div>
 
+    <div class="text-white">
+      <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
+    </div>
+
     <div class="fixed inset-0 bg-shield opacity-50 z-511" v-if="$route.name !== 'index-standard-terms'" @click="$router.push('/standard-terms')"></div>
 
     <div>
@@ -31,7 +35,9 @@
 
             <!-- TABLE BODY -->
             <div class="row py-2">
-              <div>
+              <div class="relative">
+                <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg"/>
+
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none transition-hover">
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Filename</span>
@@ -55,7 +61,7 @@
                       <div class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
                         <div class="flex justify-center text-white text-sm">
                           <label>
-                            <input class="hidden" type="file" ref="inputFile" @change=""/>
+                            <input class="hidden" type="file" ref="inputFile" @change="handleInputFileChange"/>
                             <button @click="$refs.inputFile.click()" class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500'">
                               <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
                               <span class="pl-2">{{ standardTerms ? 'Update' : 'Upload' }}</span>
@@ -94,6 +100,7 @@
     data() {
       return {
         loading: false,
+        uploading: false,
         standardTerms: null,
         routerLink: '/standard-terms',
       }
@@ -141,6 +148,13 @@
     },
 
     methods: {
+      handleInputFileChange() {
+        this.uploading = true
+
+        setTimeout(() => {
+          this.uploading = false
+        }, 500)
+      }
     },
 
     mounted() {
