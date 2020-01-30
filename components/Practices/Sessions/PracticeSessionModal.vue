@@ -13,7 +13,7 @@
           </div>
         </div>
       </div>
-      <div class="text-white mt-2 md:mx-4">{{job ? job.date_created : modalJobPart.date_created}}</div>
+      <div class="text-white mt-2 md:mx-4">{{job ? $moment(job.date_created).format('YYYY-DD-MM') : $moment(modalJobPart.date_created).format('YYYY-DD-MM')}}</div>
       <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
         <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`" -->
@@ -36,11 +36,11 @@
                   <p class="font-semibold">Duration</p>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-                    <span class="font-semibold">{{job.date_start}}</span>
+                    <span class="font-semibold">{{job.date_start}} | {{ job.time_start }}</span>
                   </div>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-                    <span class="font-semibold">{{job.date_end}}</span>
+                    <span class="font-semibold">{{job.date_end}} | {{ job.time_end }}</span>
                   </div>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
@@ -320,11 +320,11 @@
                     <p class="font-semibold">Duration</p>
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-                      <span class="font-semibold">{{modalJobPart.date_start}}</span>
+                      <span class="font-semibold">{{modalJobPart.date_start}} | {{modalJobPart.time_start}}</span>
                     </div>
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-                      <span class="font-semibold">{{modalJobPart.date_end}}</span>
+                      <span class="font-semibold">{{modalJobPart.date_end}} | {{modalJobPart.time_end}}</span>
                     </div>
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
@@ -525,21 +525,21 @@ export default {
       }
       await this.$axios.$get(`/api/v1/admin/job-parts`,{ params }).then(res => {
         this.jobParts = res.data.job_parts
+         console.log("this.job", this.job)
       }).catch(err => {
         console.log('get job parts error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
     async getLocum(){
-      if (this.job) {
-        console.log('job', this.job)
-        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.appointed_to_locum.id}`).then(res=>{
+      if (this.job && this.job.appointed_to_locum_user_id) {
+        await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.appointed_to_locum_user_id}`).then(res=>{
           this.locumUser = res.data.user
         }).catch(err=>{
           console.log('get locum in job error!!!',err)
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
-      } else if (this.job_part) {
+      } else if (this.job_part && this.job_part.appointed_to_locum_user_id) {
         console.log('job_part', this.job_part.appointed_to_locum_user_id)
         await this.$axios.$get(`/api/v1/admin/locum-users/${this.job_part.appointed_to_locum_user_id}`).then(res=>{
           this.locumUser = res.data.user

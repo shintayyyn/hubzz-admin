@@ -6,6 +6,7 @@
 			:name="'password'"
 			:label="'New Password'"
 			:error="formError.find(item => item.field === 'password')"
+			required
 		/>
 		<AppInput
 			v-model="form.password_confirmation"
@@ -13,6 +14,7 @@
 			:name="'password_confirmation'"
 			:label="'Confirm Password'"
 			:error="formError.find(item => item.field === 'password_confirmation')"
+			required
 		/>
 		<AppButton :label="'Save Changes'" @click="changePassword()" />
 	</div>

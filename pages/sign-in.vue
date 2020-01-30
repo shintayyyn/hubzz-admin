@@ -96,6 +96,7 @@
 <script>
 import backgroundUrl from "~/assets/images/hubzz-bg.png";
 import isEmail from "validator/lib/isEmail";
+import debounce from 'lodash.debounce'
 
 export default {
   async asyncData({ store, redirect }) {
@@ -156,7 +157,11 @@ methods: {
       }
     },
 
-    login() {
+    login: debounce(function () {
+      if (this.loggingIn || this.$auth.loggedIn) {
+        return
+      }
+
       this.checkEmail();
 
       this.checkPassword();
@@ -204,7 +209,7 @@ methods: {
         .finally(() => {
           this.loggingIn = false;
         });
-    }
+    }, 10),
   }
 };
 </script>

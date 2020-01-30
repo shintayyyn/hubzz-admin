@@ -9,6 +9,7 @@
 				:label="'Current Password'"
 				:error="formError.find(item => item.field === 'old_password')"
 				@blur="CheckEmptyField(form.old_password, 'old_password')"
+				required
 			/>
 			<AppInput
 				v-model="form.new_password"
@@ -16,6 +17,7 @@
 				:label="'New Password'"
 				:error="formError.find(item => item.field === 'new_password')"
 				@blur="CheckEmptyField(form.new_password, 'new_password')"
+				required
 			/>
 			<AppInput
 				v-model="form.new_password_confirmation"
@@ -30,6 +32,7 @@
 						'new_password_confirmation'
 					)
 				"
+				required
 			/>
 			<AppButton :label="'Save Changes'" @click="updatePassword(form)" />
 		</div>

@@ -1,4 +1,3 @@
-
 <template>
   <div class="report-modal p-4 md:p-8 shadow-lg">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
@@ -26,8 +25,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="jobParts"
-        :getItemKey="(item) => item.job_part_id"
+        :items="locumUsages"
+        :getItemKey="(item) => `${item.locum_user_id}-${item.practice_id}`"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -62,7 +61,7 @@
       return {
         loading: false,
         count: 0,
-        jobParts: [],
+        locumUsages: [],
         orderBy: [],
         orderBys: [
           {
@@ -109,6 +108,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Locum',
+            key: 'locum_user_name',
+            sort_key: 'locum_user_name',
+            column: (item) => item.locum_user_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Practice',
             key: 'practice_name',
             sort_key: 'practice_name',
@@ -118,73 +126,82 @@
             flexShrink: 0,
           },
           {
-            title: 'Area',
-            key: 'area',
-            sort_key: 'area',
-            column: (item) => item.area,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date Start',
-            key: 'date_start',
-            sort_key: 'date_start',
-            column: (item) => item.date_start ? this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date End',
-            key: 'date_end',
-            sort_key: 'date_end',
-            column: (item) => item.date_end ? this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Total Hours',
-            key: 'final_hours',
-            sort_key: 'final_hours',
-            column: (item) => item.final_hours.toFixed(2),
+            title: 'Total Hours Assigned/Completed or Approved',
+            key: 'completed_terminated_job_part_total_hours',
+            sort_key: 'completed_terminated_job_part_total_hours',
+            column: (item) => item.completed_terminated_job_part_total_hours.toFixed(2),
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Profession',
-            key: 'profession_name',
-            sort_key: 'profession_name',
-            column: (item) => item.profession_name,
-            justify: 'start',
+            title: 'Min Rate per Hour',
+            key: 'min_rate_per_hour',
+            sort_key: 'min_rate_per_hour',
+            column: (item) => item.min_rate_per_hour.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Rate',
-            key: 'rate',
-            sort_key: 'rate',
-            column: (item) => item.rate,
-            justify: 'start',
+            title: 'Max Rate per Hour',
+            key: 'max_rate_per_hour',
+            sort_key: 'max_rate_per_hour',
+            column: (item) => item.max_rate_per_hour.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Rate Type',
-            key: 'rate_type_name',
-            sort_key: 'rate_type_name',
-            column: (item) => item.rate_type_name,
-            justify: 'start',
+            title: 'Min Rate per Half Day Session',
+            key: 'min_rate_per_half_day_session',
+            sort_key: 'min_rate_per_half_day_session',
+            column: (item) => item.min_rate_per_half_day_session.toFixed(2),
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Max Rate per Half Day Session',
+            key: 'max_rate_per_half_day_session',
+            sort_key: 'max_rate_per_half_day_session',
+            column: (item) => item.max_rate_per_half_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Min Rate per Whole Day Session',
+            key: 'min_rate_per_whole_day_session',
+            sort_key: 'min_rate_per_whole_day_session',
+            column: (item) => item.min_rate_per_whole_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Max Rate per Whole Day Session',
+            key: 'max_rate_per_whole_day_session',
+            sort_key: 'max_rate_per_whole_day_session',
+            column: (item) => item.max_rate_per_whole_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Marked as Favourite',
+            key: 'locum_is_favorite_of_practice',
+            sort_key: 'locum_is_favorite_of_practice',
+            column: (item) => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Area',
+            key: 'locum_postcode',
+            sort_key: 'locum_postcode',
+            column: (item) => item.locum_postcode,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -199,45 +216,45 @@
 
     watch: {
       orderBy() {
-        this.getJobParts()
+        this.getPracticeLocums()
       },
 
       limit() {
         this.page = 1
-        this.getJobParts()
+        this.getPracticeLocums()
       },
 
       activePage() {
-        this.getJobParts()
+        this.getPracticeLocums()
       },
     },
 
     methods: {
-      getJobParts() {
+      getPracticeLocums() {
         this.loading = true
-        this.jobParts = []
+        this.locumUsages = []
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/job-parts/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locum-usages/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/job-parts', {
+          this.$axios.get('/api/v1/admin/reports/locum-usages', {
             params: {
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.job_parts
+            return responses.data.data.locum_usages
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            jobParts,
+            locumUsages,
           ] = results
 
           this.count = count
-          this.jobParts = jobParts
+          this.locumUsages = locumUsages
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -256,7 +273,7 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getJobParts()
+      this.getPracticeLocums()
     },
 
   };
