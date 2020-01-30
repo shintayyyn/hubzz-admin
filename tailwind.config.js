@@ -141,7 +141,7 @@ module.exports = {
 			"trout-dark": "3b3f47",
 			charade: "#2C2F38",
 			"charade-dark": "#1b1d22",
-			shield: "#333"
+			shield: "#333",
 		},
 
 		screens: {
@@ -415,7 +415,8 @@ module.exports = {
 			"30": 30,
 			"40": 40,
 			"50": 50,
-			"511": 511
+			"511": 511,
+			"512": 512,
 		},
 
 		opacity: {
