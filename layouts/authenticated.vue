@@ -45,13 +45,6 @@ export default {
 	watch: {
 		notify(value) {
 			if (value && !this.doNotClose) {
-				setTimeout(() => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: false,
-						status: "",
-						text: ""
-					});
-				}, 2000);
 			}
 		},
 		mounted() {
