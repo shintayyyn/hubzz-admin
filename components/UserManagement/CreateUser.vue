@@ -162,20 +162,21 @@
                 :lists="practiceTypes"
                 required
               />
-            <AppInput 
-              v-model="toPostUser.practice_role"
-              :type="'select'"
-              :label="'Role'"
-              :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
-              :error="formError.find(item => item.field === 'practice_role')"
-              @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
-              required
-            />
           </template>
           <!-- PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED -->
 
            <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
            <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
+          <AppInput 
+            v-model="toPostUser.practice_role"
+            :type="'select'"
+            :label="'Role'"
+            :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
+            :error="formError.find(item => item.field === 'practice_role')"
+            @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
+            required
+          />
+
           <AppInput
             v-model="toPostUser.practice_user_role_id"
             :type="'select'"
