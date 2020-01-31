@@ -81,6 +81,18 @@
 					</div>
 				</div>
 				<!-- SET MAX RATES END HERE -->
+        <div class="w-full p-1">
+					<AppInput
+						v-model="form.allow_surgery_create_permanent_jobs"
+						:type="'select'"
+						:name="'allow_surgery_create_permanent_jobs'"
+						:label="'Allow Spoke to create permanent jobs?'"
+						:error="formError.find(item => item.field === 'allow_surgery_create_permanent_jobs')"
+						:placeholder="'Select...'"
+						:items="[{ label: 'Yes', value: true },{ label: 'No', value: false }]"
+						required
+					/>
+				</div>
 				<div class="w-full p-1">
 					<AppInput
 						v-model="form.allow_surgery_bill_locum"
@@ -137,6 +149,7 @@ export default {
 			form: {
 				child_practice_id: this.practiceSpokeId,
 				allow_surgery_create_sessions: "",
+        allow_surgery_create_permanent_jobs: "",
 				max_hourly_rate_limit: "",
 				max_halfday_rate_limit: "",
 				max_wholeday_rate_limit: "",

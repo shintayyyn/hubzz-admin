@@ -74,6 +74,18 @@
 								</div>
 							</div>
 						</div>
+
+            <div class="flex items-center pb-2">
+							<span class="mr-2">
+								<svgicon
+									:name="practice_surgery.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
+									class="fill-current w-5 h-5 rounded-full"
+									:class="practice_surgery.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+								/>
+							</span>
+							<p class="font-semibold">Does Hub allow the creation of Permanent Jobs?</p>
+						</div>
+
 						<div class="flex items-center pb-2">
 							<span class="mr-2">
 								<svgicon
