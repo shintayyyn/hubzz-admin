@@ -328,6 +328,7 @@ export default {
   },
 
   async created() {
+    console.log("practice", this.practice, this.adminCreate)
     this.toPostUser.practice_role = this.surgery ? "Partner" : ''
     this.toPostUser.type = this.surgery ? "Type 1" : ''
     this.toPostUser.code = this.surgery ? this.surgery.code : ''
