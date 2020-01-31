@@ -106,7 +106,16 @@
 						<embed
 							class="object-contain object-left-top w-full"
 							:class="compliance_doc.file.type == 'image' ? 'image' : 'document h-full'"
-							:src="compliance_doc.file.subtype === 'tiff' || compliance_doc.file.subtype === 'msword' ? convertDoc(compliance_doc.file.url) : compliance_doc.file.url"
+							:src="
+								compliance_doc.file.subtype === 'tiff' ||
+								compliance_doc.file.subtype === 'msword' ||
+								compliance_doc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+								compliance_doc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template' ||
+								compliance_doc.file.subtype === 'vnd.ms-word.document.macroEnabled.12' ||
+								compliance_doc.file.subtype === 'vnd.ms-word.template.macroEnabled.12'
+									? convertDoc(compliance_doc.file.url)
+									: compliance_doc.file.url
+							"
 						/>
 					</div>
 				</div>
