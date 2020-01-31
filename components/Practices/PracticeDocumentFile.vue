@@ -73,7 +73,11 @@
 							"
 							:src="
 								practiceDoc.file.subtype === 'tiff' ||
-								practiceDoc.file.subtype === 'msword'
+								practiceDoc.file.subtype === 'msword' ||
+								practiceDoc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+								practiceDoc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template' ||
+								practiceDoc.file.subtype === 'vnd.ms-word.document.macroEnabled.12' ||
+								practiceDoc.file.subtype === 'vnd.ms-word.template.macroEnabled.12'
 									? convertDoc(practiceDoc.file.url)
 									: practiceDoc.file.url
 							"

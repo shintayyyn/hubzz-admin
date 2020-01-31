@@ -3,7 +3,11 @@
 
     <div class="px-2 text-xl md:text-4xl text-white">Standard Terms</div>
 
-    <div class="practice-shield" v-if="$route.name !== 'index-standard-terms'" @click="$router.push('/standard-terms')"></div>
+    <div class="text-white">
+      <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
+    </div>
+
+    <div class="fixed inset-0 bg-shield opacity-50 z-511" v-if="$route.name !== 'index-standard-terms'" @click="$router.push('/standard-terms')"></div>
 
     <div>
       <section>
@@ -16,10 +20,6 @@
 
             <!-- TABLE HEADER -->
             <div class="row hidden md:flex justify-start leading-none text-sm text-white">
-
-              <div class="flex-1 flex items-center px-2 justify-center">
-                <span class="pr-1">ID</span>
-              </div>
               <div class="flex-1 flex items-center px-2 justify-center">
                 <span class="pr-1">Filename</span>
               </div>
@@ -35,14 +35,10 @@
 
             <!-- TABLE BODY -->
             <div class="row py-2">
-              <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none transition-hover hover:bg-waterloo-dark">
+              <div class="relative">
+                <AppLoading :loading="!!uploading" message="Uploading" :spinner="false" class="rounded-lg"/>
 
-                  <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
-                    <span class="md:hidden pr-1 font-bold">ID</span>
-                    <span>{{ standardTerms ? standardTerms.file_id : null }}</span>
-                  </div>
-
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none transition-hover">
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Filename</span>
                     <span>{{ standardTerms && standardTerms.file ? standardTerms.file.filename : null }}</span>
@@ -50,18 +46,34 @@
 
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Uploaded At</span>
-                    <span>{{ standardTerms && standardTerms.file && standardTerms.file.created_at ? $moment(standardTerms.file.created_at, 'YYYY-MM-DD').format('DD/MM/YYYY | HH:mm A') : null }}</span>
+                    <span>{{ standardTerms && standardTerms.file && standardTerms.file.created_at ? $moment(standardTerms.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm A') : null }}</span>
                   </div>
 
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Action</span>
-                    <span>
-                      <button>Upload</button>
-                    </span>
+                    <div class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center">
+                      <div v-if="standardTerms" class=" flex items-center justify-center text-white text-xs px-1 py-1 xl:py-0">
+                        <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full text-white no-underline px-6 py-2">
+                          <svgicon name="folder" width="16" height="16" color="white white"></svgicon>
+                          <span class="pl-2">View</span>
+                        </nuxt-link>
+                      </div>
+                      <div class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
+                        <div class="flex justify-center text-white text-sm">
+                          <label>
+                            <input class="hidden" type="file" ref="inputFile" @change="handleInputFileChange"/>
+                            <button @click="$refs.inputFile.click()" class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500'">
+                              <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
+                              <span class="pl-2">{{ standardTerms ? 'Update' : 'Upload' }}</span>
+                            </button>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                 </div>
-              </nuxt-link>
+              </div>
             </div>
             <!-- TABLE BODY -->
 
@@ -72,7 +84,7 @@
       </section>
     </div>
 
-    <nuxt-child />
+    <nuxt-child :standardTerms="standardTerms"/>
 
   </div>
 </template>
@@ -88,6 +100,7 @@
     data() {
       return {
         loading: false,
+        uploading: false,
         standardTerms: null,
         routerLink: '/standard-terms',
       }
@@ -135,84 +148,75 @@
     },
 
     methods: {
-      dataCell(item, column) {
-        var dataIndexArr = column.dataIndex.split(".");
-        let str = null;
+      handleInputFileChange() {
+        this.uploading = true
 
-        if (Array.isArray(item[dataIndexArr[0]])) {
-          str = [];
-          item[dataIndexArr[0]].forEach(item => {
-            str.push(item[dataIndexArr[1]][dataIndexArr[2]]);
-          });
-        } else {
-          str = "";
-          let itemArray = null;
-          let itemStr = null;
-          let dataIndex = null;
-          if (dataIndexArr.length === 1) {
-            str = item[dataIndexArr[0]];
-          }
-          if (dataIndexArr.length === 2 && item[dataIndexArr[0]]) {
-            str = item[dataIndexArr[0]][dataIndexArr[1]];
-          }
-          if (
-            dataIndexArr.length === 3 &&
-            item[dataIndexArr[0]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]]
-          ) {
-            str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]];
-          }
-          if (
-            dataIndexArr.length === 4 &&
-            item[dataIndexArr[0]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]]
-          ) {
-            str =
-              item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-                dataIndexArr[3]
-              ];
-          }
-          if (
-            dataIndexArr.length === 5 &&
-            item[dataIndexArr[0]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-              dataIndexArr[3]
-            ]
-          ) {
-            str =
-              item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-                dataIndexArr[3]
-              ][dataIndexArr[4]];
-          }
-          if (
-            dataIndexArr.length === 6 &&
-            item[dataIndexArr[0]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]] &&
-            item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-              dataIndexArr[3]
-            ] &&
-            item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-              dataIndexArr[3]
-            ][dataIndexArr[4]]
-          ) {
-            str =
-              item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
-                dataIndexArr[3]
-              ][dataIndexArr[4]][dataIndexArr[5]];
-          }
+        if (
+          !this.$refs.inputFile
+          || !this.$refs.inputFile.files
+          || this.$refs.inputFile.files.length === 0
+        ) {
+          return
         }
-        if (str === false) {
-          str = "No";
+
+        const file = this.$refs.inputFile.files[0]
+
+        let types = [
+          'pdf',
+          'jpeg',
+          'msword',
+          'tiff',
+          'vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'vnd.openxmlformats-officedocument.wordprocessingml.template',
+          'vnd.ms-word.document.macroEnabled.12',
+          'vnd.ms-word.template.macroEnabled.12',
+        ]
+
+        const [type, subtype] = file.type.split('/')
+
+        if (!types.includes(subtype)) {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: 'Invalid file format',
+          })
+
+          return
         }
-        if (str === true) {
-          str = "Yes";
-        }
-        if (str === null) {
-          str = "Unavailable";
-        }
-        return str;
+        
+        const formData = new FormData()
+
+        formData.append('file', file)
+
+        this.uploading = 1
+        this.$axios.put('/api/v1/admin/standard-terms', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress(progressEvent) {
+            console.log('progressEvent', progressEvent)
+          },
+        }).then((response) => {
+          console.log('response', response)
+
+          this.standardTerms = response.data.data.standard_terms
+
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: 'Upload Success',
+          })
+        }).catch(err => {
+          console.log('err.response || err', err.response || err)
+
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: (err.response || err).message || 'Something went wrong!',
+          })
+        }).finally(() => {
+          this.uploading = 0
+        })
       }
     },
 

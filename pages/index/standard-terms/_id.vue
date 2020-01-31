@@ -1,57 +1,76 @@
 <template>
-  <div class="practice-modal p-4 md:p-8 shadow-lg">
+  <div style="transition: all 0.3s ease-in-out;" class="fixed top-0 right-0 mr-0 w-full h-full overflow-auto border-l-2 border-sunglow z-512 bg-trout xl:w-4/5 p-4 md:p-8 shadow-lg">
+
     <nuxt-link :to="{ path:'/standard-terms', query: $route.query }">
       <div class="mb-4">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="cursor-pointer text-white hover:text-sunglow fill-current"
-        />
+        <svgicon name="arrow-left-solid" height="32" width="32" class="cursor-pointer text-white hover:text-sunglow fill-current"/>
       </div>
     </nuxt-link>
+
+    <div class="shadow-lg rounded-lg bg-waterloo mx-6 mb-6 p-4">
+      <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
+        <div class="flex flex-col">
+          <p class="font-bold pb-2 text-white">File</p>
+          <div class="w-full">
+            <embed class="object-contain w-full" :class="isImage ? 'image object-left-top' : 'object-top document h-full'" :src="src"/>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script>
   export default {
+    props: {
+      standardTerms: {
+        type: Object,
+        required: true,
+      },
+    },
 
+    computed: {
+      isImage() {
+        return this.standardTerms && this.standardTerms.file && this.standardTerms.file.type === 'image'
+      },
+      src() {
+        if (!this.standardTerms || !this.standardTerms.file) {
+          return
+        }
+
+        return this.standardTerms.file.subtype === 'tiff'
+          || this.standardTerms.file.subtype === 'msword'
+          || this.standardTerms.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document'
+          || this.standardTerms.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template'
+          || this.standardTerms.file.subtype === 'vnd.ms-word.document.macroEnabled.12'
+          || this.standardTerms.file.subtype === 'vnd.ms-word.template.macroEnabled.12'
+            ? `https://docs.google.com/gview?url=${this.standardTerms.file.url}&embedded=true`
+            : this.standardTerms.file.url
+      },
+    },
   }
 </script>
 
-<!-- <style>
-.card {
-  min-width: 100px;
-  height: 250px;
-  box-sizing: content-box;
-}
-.practice-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
-.practice-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #ffc72c;
-  transition: all 0.3s ease-in-out;
-  background-color: #505561;
-  z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-  .practice-modal {
-    width: 80%;
+<style>
+  .document {
+    width: 100%;
+    min-height: 50vh;
   }
-}
-</style> -->
+
+  .image {
+    min-height: 100%;
+    max-height: 100%;
+  }
+
+  @media screen and (min-width: 768px) {
+    .document {
+      min-height: 70vh;
+    }
+
+    .image {
+      min-height: 60vh;
+      max-height: 60vh;
+    }
+  }
+</style>
