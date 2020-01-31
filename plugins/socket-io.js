@@ -13,6 +13,13 @@ export default (ctx, inject) => {
     console.log('Socket Connected')
     console.log('Socket ID:', socket.id)
     ctx.store.commit('SET_SOCKET',socket.id)
+
+    ctx.store.commit("SET_NOTIFICATION", {
+      enabled: false,
+      status: '',
+      text: "",
+    });
+
   })
 
   socket.on('connect_error', reason => {
