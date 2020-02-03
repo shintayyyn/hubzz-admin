@@ -103,7 +103,7 @@
         <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2"> 
             <!-- HEADER -->
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-                <div class="align-middle px-2 w-1/6">Title</div> 
+                <div class="align-middle pl-6 pr-2 w-1/6">Title</div> 
                 <div class="align-middle px-2 text-center w-1/6">File size</div>
                 <div class="align-middle px-2 text-center w-1/6">File uploaded</div>
                 <div class="align-middle px-2 text-center w-1/6">Expiry Date</div>
@@ -115,7 +115,7 @@
             <nuxt-link
                 v-for="(item, index) in mandatoryComplianceDocuments" :key="`item-${index}`"
                 :event="item.locumMandatoryComplianceDocument==null ? disabled :'click'" 
-                :class="item.locumMandatoryComplianceDocument==null ? 'cursor-auto':' hover:bg-waterloo-light ' "
+                :class="item.locumMandatoryComplianceDocument==null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
                 :to="{path:`/locums/${user.id}/locum-compliance/${item.locumMandatoryComplianceDocument ? item.locumMandatoryComplianceDocument.id : null }`, query: $route.query}"
                 class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
                 draggable="false"
@@ -179,7 +179,7 @@
         <p class=" text-sm text-white px-4 md:px-8 pt-8 font-semibold">Optional</p>
         <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2" > 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-                <div class="align-middle px-2 w-1/4">Title</div> 
+                <div class="align-middle pl-6 pr-2 w-1/4">Title</div> 
                 <div class="align-middle px-2 text-center w-1/4">File size</div>
                 <div class="align-middle px-2 text-center w-1/4">File uploaded</div>
                 <div class="w-1/4"></div>
@@ -187,7 +187,7 @@
             <nuxt-link
                 v-for="(item, index) in optionalComplianceDocuments" :key="`optionalComplianceDocument-${index}`"
                 :event="item.locumOptionalComplianceDocument==null ? disabled :'click'"
-                :class="item.locumOptionalComplianceDocument==null ? 'cursor-auto':'hover:bg-waterloo-light '"
+                :class="item.locumOptionalComplianceDocument==null ? 'cursor-auto':'hover:bg-waterloo-light transition-hover '"
                 :to="{path:`/locums/${user.id}/locum-compliance/${item.locumOptionalComplianceDocument ? item.locumOptionalComplianceDocument.id : null }`, query}"
                 class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
                 draggable="false"
@@ -239,34 +239,43 @@
         <!-- TABLE RESPONSIVE-->
         <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2" v-if="locumMandatoryTrainings.length > 0"> 
             <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-                <div class="align-middle px-2 w-1/3">Title</div> 
-                <div class="align-middle px-2 text-center w-1/3">File size</div>
-                <div class="align-middle px-2 text-center w-1/3">File uploaded</div>
+                <div class="align-middle pl-6 pr-2 text-left w-1/4">Title</div> 
+                <div class="align-middle px-2 text-center w-1/4">File size</div>
+                <div class="align-middle px-2 text-center w-1/4">File uploaded</div>
+                <div class="w-1/4"></div>
             </div>
             <!-- BODY -->
-            <div
+            <nuxt-link
             v-for="(item, index) in locumMandatoryTrainings" :key="`item-${index}`"
-            class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+            :to="{path:`/locums/${user.id}/locum-compliance/${item.file ? item.file.id : null }`, query: $route.query}"
+            class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
+            :class="item.file==null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
             draggable="false">
-
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Title</strong>
-                    <span :class="item.file ? 'truncate' : 'break-word leading-none'">{{ item.mandatory_training.name }}</span>
+                    <span :class="item.mandatory_training ? 'truncate' : 'break-word leading-none'">{{ item.mandatory_training.name }}</span>
                 </div>
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 py-2 align-middle md:text-center">
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
                     <strong class="block md:hidden text-sm uppercase">File size</strong>
                     <span>
                     {{( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes'}}
                     </span>
                 </div>
 
-                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/3 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
-                    <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-                    <span class="break-all">{{ item.expired_at ? $moment(item.expired_at).diff($moment(), 'days')  : null }}</span>
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
+                    <span class="break-all">{{ item.file ? $moment(item.file.created_at).format('DD/MM/YYY HH:MM:SS')  : null }}</span>
                 </div>
 
-            </div>
+                <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+                    <strong class="block md:hidden">Status</strong>
+                    <div
+                        class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full">
+                        {{ item.file ? 'Present' : 'Empty'}}
+                    </div>
+                </div>
+            </nuxt-link>
             <!-- END BODY -->
         </div>
         <!-- END TABLE -->
@@ -345,6 +354,8 @@ export default {
 
                 this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
 
+                console.log('locumMandatoryTrainings', this.locumMandatoryTrainings)
+
                 const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
                     this.professionCategory = res.data.profession_category
                 })
@@ -397,7 +408,7 @@ export default {
                             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                             await this.getLocums()
                         }else if(this.notes == ''){
-                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is required!' })
                         }
                     }
                 }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
@@ -410,7 +421,7 @@ export default {
                         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                         await this.getLocums()
                     }else if(this.notes == ''){
-                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is required!' })
                     }
 
                 }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
@@ -467,7 +478,7 @@ export default {
                             this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                             await this.getLocums()
                         }else if(this.notes == ''){
-                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                            this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is required!' })
                         }
                     }
                 }else if(currentStatus === 'Verified' && verifyReject ==='Rejected'){
@@ -480,7 +491,7 @@ export default {
                         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'success', text: verifyReject })
                         await this.getLocums()
                     }else if(this.notes == ''){
-                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is Required!' })
+                        this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Notes for Rejection is required!' })
                     }
                 }else if(currentStatus === 'Rejected' && verifyReject ==='Verified'){
                     const response = await this.$axios.put('/api/v1/admin/locum-users/'+locumID+'/mpl-or-npl-number/status',{

@@ -166,13 +166,13 @@ export default {
 			if (!this.form.name) {
 				this.formError.push({
 					field: "name",
-					message: "Role Name is Required"
+					message: "Role Name is required"
 				});
 			}
 			if (!this.form.description) {
 				this.formError.push({
 					field: "description",
-					message: "Role Description is Required"
+					message: "Role Description is required"
 				});
 			}
 		},

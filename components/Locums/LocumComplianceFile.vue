@@ -50,12 +50,12 @@
 						<p class="text-white">{{user.contact_detail ? user.contact_detail.mobile_number : null}}</p>
 					</div>
 
-					<div v-if="compliance_doc.compliance_document.id < 5" class="w-full">
+					<div v-if="compliance_doc.type === 'Mandatory'" class="w-full">
 						<div class="leading-tight pb-4">
 							<p class="font-bold">Expired At</p>
 							<p
-								class="text-white"
-							>{{$moment(compliance_doc && compliance_doc.expired_at ? compliance_doc.expired_at : null).format('DD/MM/YYYY HH:mm:ss')}}</p>
+								:class="compliance_doc && compliance_doc.expired_at ? 'text-white' : 'text-gray-400'"
+							>{{compliance_doc && compliance_doc.expired_at ? $moment(compliance_doc.expired_at).format('DD/MM/YYYY HH:mm:ss') : 'No expiration date set.'}}</p>
 						</div>
 						<div class="pb-2 mb-2" v-if="compliance_doc.status == 'Rejected'">
 							<p class="font-bold">Note</p>
@@ -63,14 +63,7 @@
 								class="text-white break-words"
 							>{{compliance_doc && compliance_doc.note ? compliance_doc.note : 'N/A'}}</p>
 						</div>
-						<div class="pb-4">
-							<AppDate
-								v-model="toPutLocumDetailCompliance.expired_at"
-								:name="'expired_at'"
-								:label="'Change Expiration Date / Status'"
-								:error="formError.find(item => item.field === 'expired_at')"
-							/>
-						</div>
+
 						<div>
 							<!--CHANGE THIS ASAP-->
 							<p class="font-bold">Status</p>
@@ -83,18 +76,6 @@
 								:items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
 								@change="setStatusData($event)"
 							/>
-							<!-- <div class="flex justify-center">
-								<button
-									class="w-1/2 text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-green-500 px-4 focus:outline-none"
-									:class="`${toPutLocumDetailCompliance.status === 'Approved' || toPutLocumDetailCompliance.status === 'Expiring'  ? 'bg-green-500 border-green-500 text-white hover:bg-green-light' : ''}`"
-									@click.prevent="setStatusData('Approved')"
-								>Approve</button>
-								<button
-									class="w-1/2 text-white text-sm m-2 p-2 border border-white rounded-full hover:bg-yellow-500 px-4 focus:outline-none"
-									:class="`${toPutLocumDetailCompliance.status === 'Rejected' || toPutLocumDetailCompliance.status === 'Expired'  ? 'bg-yellow-500 border-yellow-500 text-white hover:bg-yellow-light ' : ''}`"
-									@click.prevent="setStatusData('Rejected')"
-								>Reject</button>
-							</div>-->
 						</div>
 
 						<div class="w-full" v-if="compliance_doc.status === 'Rejected' || notesAreVisible">
@@ -107,8 +88,17 @@
 							>Type Here
               				</textarea>
 						</div>
+
+						<div class="pb-4" v-else>
+							<AppDate
+								v-model="toPutLocumDetailCompliance.expired_at"
+								:name="'expired_at'"
+								:label="'Change Expiration Date'"
+								:error="formError.find(item => item.field === 'expired_at')"
+							/>
+						</div>
 					</div>
-					<AppButton :label="'Save'" @click="publish()" />
+					<AppButton :label="'Save'" @click="publish()" v-if="compliance_doc.type === 'Mandatory'" />
 				</div>
 				<div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
 					<p class="font-bold pb-2">File</p>
