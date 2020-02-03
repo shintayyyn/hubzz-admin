@@ -9,7 +9,7 @@
 
     <div class="shadow-lg rounded-lg bg-waterloo mx-6 mb-6 p-4">
       <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-        <div class="flex flex-col">
+        <div class="flex flex-col md:w-2/3">
           <p class="font-bold pb-2 text-white">File</p>
           <div class="w-full">
             <embed class="object-contain w-full" :class="isImage ? 'image object-left-top' : 'object-top document h-full'" :src="src"/>
