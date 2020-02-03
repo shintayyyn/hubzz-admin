@@ -1,7 +1,7 @@
 <template>
   <!-- TABLE RESPONSIVE-->
   <div class="flex flex-col mx-2 text-white">
-    <p class="text-sm italic">(Note: Only file types .pdf, .jpeg, .msword, .tiff are acccepted)</p>
+    <p class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</p>
     <!-- HEADER -->
     <div class="w-full hidden md:flex text-sm lg:text-base font-bold pb-3 md:px-2">
       <div class="w-1/4">Title</div>

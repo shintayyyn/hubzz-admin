@@ -12,9 +12,7 @@
 			<div
 				class="text-red-500 py-1 text-sm"
 				v-if="formError && formError.filter(item => item.field === 'question')"
-			>
-				{{ errorMessage("question", "Question is Required") }}
-			</div>
+			>{{ errorMessage("question", "Question is required") }}</div>
 		</div>
 		<!-- quill-editor -->
 		<div class="text-xl my-2">Answer</div>
@@ -27,15 +25,12 @@
 				@blur="CheckEmptyField(form.answer, 'answer')"
 				@focus="onEditorFocus($event)"
 				@ready="onEditorReady($event)"
-			>
-			</quill-editor>
+			></quill-editor>
 		</no-ssr>
 		<div
 			class="text-red-500 py-1 text-sm"
 			v-if="formError && formError.filter(item => item.field === 'answer')"
-		>
-			{{ errorMessage("answer", "Answer is Required") }}
-		</div>
+		>{{ errorMessage("answer", "Answer is required") }}</div>
 		<AppButton :label="'Save'" @click="save()" />
 	</div>
 </template>

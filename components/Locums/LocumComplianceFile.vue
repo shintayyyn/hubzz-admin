@@ -50,7 +50,7 @@
 						<p class="text-white">{{user.contact_detail ? user.contact_detail.mobile_number : null}}</p>
 					</div>
 
-					<div v-if="compliance_doc.compliance_document.id < 5" class="w-full">
+					<div v-if="compliance_doc.type === 'Mandatory'" class="w-full">
 						<div class="leading-tight pb-4">
 							<p class="font-bold">Expired At</p>
 							<p
@@ -98,7 +98,7 @@
 							/>
 						</div>
 					</div>
-					<AppButton :label="'Save'" @click="publish()" />
+					<AppButton :label="'Save'" @click="publish()" v-if="compliance_doc.type === 'Mandatory'" />
 				</div>
 				<div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
 					<p class="font-bold pb-2">File</p>

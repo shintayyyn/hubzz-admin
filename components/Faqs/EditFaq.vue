@@ -1,5 +1,5 @@
 <template>
-	<div class="">
+	<div class>
 		<div class="mb-6 md:mb-0">
 			<div class="text-xl my-2 text-white">Question</div>
 			<input
@@ -12,9 +12,7 @@
 			<div
 				class="text-red-500 py-1 text-sm"
 				v-if="formError && formError.filter(item => item.field === 'question')"
-			>
-				{{ errorMessage("question", "Question is Required") }}
-			</div>
+			>{{ errorMessage("question", "Question is required") }}</div>
 		</div>
 		<!-- quill-editor -->
 		<div class="text-xl my-2 text-white">Answer</div>
@@ -32,16 +30,12 @@
 		<div
 			class="text-red-500 py-1 text-sm"
 			v-if="formError && formError.filter(item => item.field === 'answer')"
-		>
-			{{ errorMessage("answer", "Answer is Required") }}
-		</div>
+		>{{ errorMessage("answer", "Answer is required") }}</div>
 		<div class="flex justify-start">
 			<button
 				@click="save()"
 				class="my-2 font-semibold py-2 px-4 rounded-lg bg-sunglow hover:bg-sunglow-dark"
-			>
-				Save
-			</button>
+			>Save</button>
 		</div>
 	</div>
 </template>
