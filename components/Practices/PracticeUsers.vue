@@ -41,7 +41,13 @@
 		></div>
 		<transition name="slide" mode="out-in">
 			<div class="practice-user-modal shadow-lg" v-if="modal">
-				<CreateUser @close="modal = false" :practice="practice" :surgery="surgery" :userCount="total" />
+				<CreateUser
+					@close="modal = false"
+					:practice="practice"
+					:surgery="surgery"
+					:userCount="total"
+					:type="'practiceUser'"
+				/>
 			</div>
 		</transition>
 	</div>
@@ -179,7 +185,8 @@ export default {
 			let practice_id = this.practice.id;
 			let limit = 5;
 			let offset = 0;
-			offset = this.perPage * (parseInt(this.$route.query.practice_users_page) - 1);
+			offset =
+				this.perPage * (parseInt(this.$route.query.practice_users_page) - 1);
 			let params = {
 				practice_id,
 				order_by: "created_at:desc",

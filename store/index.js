@@ -6,11 +6,11 @@ export const state = () => ({
     text: ''
   },
   toggled_sidebar: false,
-  totalPages:0,
+  totalPages: 0,
 })
 
 export const getters = {
-  getAdminUserMe(state){
+  getAdminUserMe(state) {
     return state.admin_user_logged_in
   },
   permissions(state) {
@@ -18,11 +18,11 @@ export const getters = {
     const adminRoles = state.auth.user.admin_detail.roles
     let toSetAdminPermissions = []
 
-    if(state.auth.user && state.auth.user.admin_detail && state.auth.user.admin_detail.roles){
-      for(let i = 0; i < adminRoles.length; i++ ){
+    if (state.auth.user && state.auth.user.admin_detail && state.auth.user.admin_detail.roles) {
+      for (let i = 0; i < adminRoles.length; i++) {
         state.auth.user.admin_detail.roles[i].permissions.map(item => {
           let existingPermission = toSetAdminPermissions.find(existing => existing.id == item.id)
-          if(!existingPermission) {
+          if (!existingPermission) {
             toSetAdminPermissions = toSetAdminPermissions.concat(item)
           }
         })
@@ -33,13 +33,15 @@ export const getters = {
 }
 
 export const mutations = {
-  SET_SOCKET(state, payload){
+  SET_SOCKET(state, payload) {
     state.socket_id = payload
   },
   SET_NOTIFICATION(state, payload) {
-    state.notification.enabled = payload.enabled
-    state.notification.status = payload.status
-    state.notification.text = payload.text
+    state.notification.enabled = payload.enabled;
+    state.notification.status = payload.status;
+    state.notification.text = payload.text;
+    state.notification.closable = payload.closable;
+    state.notification.duration = payload.duration;
   },
   TOGGLE_SIDEBAR(state, payload) {
     state.toggled_sidebar = payload
@@ -50,7 +52,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async login({getters, commit, dispatch}, {email, password}) {
+  async login({ getters, commit, dispatch }, { email, password }) {
     const socketId = this.$socket.id
 
     let response = await this.$axios.post('/api/v1/admin/login', {
@@ -58,7 +60,7 @@ export const actions = {
       password,
       socket_id: socketId
     })
-  
+
     const token = response.data.data.token.token
 
     this.$axios.setToken(token, 'Bearer')
@@ -74,11 +76,11 @@ export const actions = {
     }
 
     // await this.$store.commit('SET_ADMIN_USER_LOGGED_IN', response.data.data.user)
-    
+
     dispatch('one-signal/setOneSignalUser')
   },
 
-  async logout({getters, commit, dispatch}) {
+  async logout({ getters, commit, dispatch }) {
     await this.$axios.post('/api/v1/admin/logout').catch((err) => {
       console.log('err', err)
     })
@@ -92,18 +94,18 @@ export const actions = {
     dispatch('one-signal/setOneSignalUser')
   },
 
-  async joinRoom({dispatch}, payload){
-    try{
-      await this.$axios.$post('/api/v1/socket/join-room',{
+  async joinRoom({ dispatch }, payload) {
+    try {
+      await this.$axios.$post('/api/v1/socket/join-room', {
         socket_id: payload.socket_id,
         room_name: payload.room_name
       })
-    }catch(err){
-      console.log('join room error!',err)
+    } catch (err) {
+      console.log('join room error!', err)
     }
   },
 
-  async leaveRoom({},payload){
+  async leaveRoom({ }, payload) {
     await this.$axios.$post('api/v1/socket/leave-room', {
       socket_id: payload.socket_id,
       room_name: payload.room_name

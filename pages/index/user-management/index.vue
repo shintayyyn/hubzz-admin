@@ -1,7 +1,12 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
 		<transition name="drop" mode="out-in">
-			<AppConfirm v-if="showConfirmCancelModal === true" :message="'Are you sure you want to delete this user?'" @cancel="showConfirmCancelModal=false" @confirm="performAction()"/>
+			<AppConfirm
+				v-if="showConfirmCancelModal === true"
+				:message="'Are you sure you want to delete this user?'"
+				@cancel="showConfirmCancelModal=false"
+				@confirm="performAction()"
+			/>
 		</transition>
 		<div class="flex items-center px-4 md:px-6 py-2 text-sm">
 			<AppButton
@@ -97,7 +102,7 @@
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
 		<transition name="slide" mode="out-in">
 			<div class="new-user-modal" v-if="modal">
-				<CreateUser @close="modal = false" :adminCreate="adminCreate" />
+				<CreateUser @close="modal = false" :type="'admin'" />
 			</div>
 		</transition>
 
@@ -281,7 +286,7 @@ export default {
 						});
 					});
 			}
-			this.showConfirmCancelModal = false
+			this.showConfirmCancelModal = false;
 		},
 		pagechanged(e) {
 			const query = {

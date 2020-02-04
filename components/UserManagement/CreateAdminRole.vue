@@ -179,7 +179,7 @@ export default {
 		async create() {
 			this.formError = [];
 			// this.validate();
-			console.log("form", this.form);
+			// console.log("form", this.form);
 			this.Validate(this.form, ["permission_id"]);
 			console.log(this.formError, this.form);
 			if (!this.formError.length) {

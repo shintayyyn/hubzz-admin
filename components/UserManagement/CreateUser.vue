@@ -54,7 +54,11 @@
           <!-- USER PERSONAL DETAILS ENDS HERE -->
 
           <!-- PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED -->
-          <template v-if="surgery && !practice">
+          <!-- <div class="bg-red-500">
+          {{surgery && !practice}}
+          {{ surgery.practice_count}}
+          </div> -->
+           <template v-if="surgery && !practice">
             <template v-if="surgery && surgery.practice_count < 1">
               <AppInput 
                 v-model="toPostUser.type"
@@ -178,7 +182,7 @@
           />
 
           <AppInput
-            v-if="!adminCreate"
+            v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0"
             v-model="toPostUser.practice_user_role_id"
             :type="'select'"
             :label="'Practice Role'"
@@ -220,7 +224,7 @@
                 :label="'Password'"
                 :placeholder="'Password'"
                 :error="formError.find(item => item.field === 'password')"
-                @blur="CheckEmptyField(toPostUser.password, 'password')"
+                @blur="validatePassword(toPostUser.password, 'password')"
                 required
               />  
             </div>
@@ -231,7 +235,7 @@
                 :label="'Confirm Password'"
                 :placeholder="'Confirm Password'"
                 :error="formError.find(item => item.field === 'password_confirmation')"
-                @blur="CheckEmptyField(toPostUser.password_confirmation, 'password_confirmation')"
+                @blur="validatePassword(toPostUser.password_confirmation, 'password_confirmation')"
                 required
               />
             </div>
@@ -242,7 +246,7 @@
 
           <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED -->
           <AppFilterSearch
-            v-if="adminCreate"
+            v-if="type === 'admin'"
             v-model="toPostUser.roles_id"
             :name="'roles_id'"
             :label="'Admin Role/s'"
@@ -275,7 +279,7 @@ export default {
     AppButton,
     AppPostCode,
   },
-  props: ["practice", "surgery", "user", "adminCreate", "userCount"],
+  props: ["practice", "surgery", "user", "type", "userCount"],
   data() {
     return {
       formError: [],
@@ -295,19 +299,19 @@ export default {
         suffix: "",
 
         //  PRACTICE DETAILS ; IF PRACTICE IS BEING CREATED
-        practice_role: '',
-        type: "",
-        hub_type: "",
-        code: "",
-        name: "",
-        phone_number: "",
-        address_line_1: "",
-        address_line_2: "",
-        address_line_3: "",
-        postcode: "",
+        practice_role: `${this.surgery ? "Partner" : ""}`,
+        type: `${this.surgery ? "Hub" : ""}`,
+        hub_type: `${this.surgery ? "Type 1" : ""}`,
+        code: `${this.surgery ? this.surgery.code : ""}`,
+        name: `${this.surgery ? this.surgery.name : ""}`,
+        phone_number: `${this.surgery ? this.surgery.phone_number : ""}`,
+        address_line_1: `${this.surgery ? this.surgery.address_line_1 : ""}`,
+        address_line_2: `${this.surgery ? this.surgery.address_line_2 : ""}`,
+        address_line_3: `${this.surgery ? this.surgery.address_line_3 : ""}`,
+        postcode: `${this.surgery ? this.surgery.postcode : ""}`,
         coordinate_x: "",
         coordinate_y: "",
-        clinical_commissioning_group_name: "",
+        clinical_commissioning_group_name: `${this.surgery ? this.surgery.clinical_commissioning_group_name : ""}`,
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
 
@@ -320,7 +324,7 @@ export default {
         roles_id: [],
 
         // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
-        practice_id: "",
+        practice_id: `${this.practice ? this.practice.id : ""}`,
         practice_user_role_id: ''
       },
 
@@ -329,20 +333,7 @@ export default {
   },
 
   async created() {
-    console.log("practice", this.practice, this.adminCreate)
-    this.toPostUser.practice_role = this.surgery ? "Partner" : ''
-    this.toPostUser.type = this.surgery ? "Type 1" : ''
-    this.toPostUser.code = this.surgery ? this.surgery.code : ''
-    this.toPostUser.name = this.surgery ? this.surgery.name : ''
-    this.toPostUser.phone_number = this.surgery ? this.surgery.phone_number : ''
-    this.toPostUser.address_line_1 = this.surgery ? this.surgery.address_line_1 : ''
-    this.toPostUser.address_line_2 = this.surgery ? this.surgery.address_line_2 : ''
-    this.toPostUser.address_line_3 = this.surgery ? this.surgery.address_line_3 : ''
-    this.toPostUser.postcode = this.surgery ? this.surgery.postcode : ''
-    this.toPostUser.clinical_commissioning_group_name = this.surgery ? this.surgery.clinical_commissioning_group_name : ''
-    this.toPostUser.surgery_id = this.surgery ? this.surgery.id : ''
-    this.toPostUser.practice_id = this.practice ? this.practice.id : ''
-
+    console.log('type', this.type)
     if(this.surgery){
       await this.$axios
       .$post(`/api/v1/postcode-to-coordinates`,{ postcode: this.surgery.postcode})
@@ -358,16 +349,16 @@ export default {
         });
       })
     }
-    if (!this.adminCreate) {
+    if(this.practice && this.userCount > 0) {
       await this.$axios
-      .$get(`/api/v1/admin/practices/${this.practice ? this.practice.id : this.surgery.id}/practice-roles`)
+      .$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
       .then(res => {
         res.data.roles.forEach(role => {
           this.practice_user_roles.push({ label: role.name, value: role.id})
         })
       })
       .catch(err => {
-        store.commit("SET_NOTIFICATION", {
+        this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: err.response.data.message
@@ -381,10 +372,9 @@ export default {
         res.data.practice_types.forEach(item => {
           this.practiceTypes.push({ value: item.id, label: item.name });
         });
-        console.log(this.practiceTypes)
       })
       .catch(err => {
-        store.commit("SET_NOTIFICATION", {
+        this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: err.response.data.message
@@ -436,24 +426,25 @@ export default {
         let error = this.formError.filter(
           item => item.field === "password"
         );
-        // console.log("pass", index, value.length, index >= 0 || value.length >= 6)
-        if (index >= 0 || value.length >= 6) {
           this.formError.splice(index, error.length);
-        }
       }
       if(this.toPostUser.password_confirmation){
         const error = this.ValidateSamePassword(value, this.toPostUser.password_confirmation);
         if (error) {
           this.formError.push(error);
         } else {
-          let index = this.formError.findIndex(
+          let confirm_index = this.formError.findIndex(
             item => item.field === "password_confirmation"
+          );
+          let password_index = this.formError.findIndex(
+            item => item.field === "password"
           );
           let errors = this.formError.filter(
-            item => item.field === "password_confirmation"
+            item => ["password", "password_confirmation"].includes(item.field) 
           );
-          if (index >= 0) {
-            this.formError.splice(index, errors.length);
+          if (confirm_index >= 0) {
+            this.formError.splice(confirm_index, errors.length);
+            this.formError.splice(password_index, errors.length);
           }
         }
       }
@@ -463,15 +454,19 @@ export default {
       if (error) {
         this.formError.push(error);
       } else {
-        let index = this.formError.findIndex(
-          item => item.field === "password_confirmation"
-        );
-        let errors = this.formError.filter(
-          item => item.field === "password_confirmation"
-        );
-        if (index >= 0) {
-          this.formError.splice(index, errors.length);
-        }
+        let confirm_index = this.formError.findIndex(
+            item => item.field === "password_confirmation"
+          );
+          let password_index = this.formError.findIndex(
+            item => item.field === "password"
+          );
+          let errors = this.formError.filter(
+            item => ["password", "password_confirmation"].includes(item.field) 
+          );
+          if (confirm_index >= 0) {
+            this.formError.splice(confirm_index, errors.length);
+            this.formError.splice(password_index, errors.length);
+          }
       }
     },
     "toPostUser.postcode"(value) {
@@ -484,6 +479,10 @@ export default {
   },
 
   methods: {
+    validatePassword(field, fieldName) {
+      this.CheckEmptyField(field, fieldName)
+      this.ValidateSamePassword(this.toPostUser.password, this.toPostUser.password_confirmation)
+    },
     getPostCodes: debounce(function(input) {
       const params = {
         postcode: input
@@ -546,14 +545,17 @@ export default {
     },
     checkForm: function(userInfo, surgID) {
       this.formError = [];
-      let list = ["title", "suffix",];
-      !this.adminCreate && list.push("roles_id");
-      if(!this.practice){
-        list.push("practice_user_role_id","practice_id")
+      let notRequired = ["title", "suffix",];
+      this.type !== 'admin' && notRequired.push("roles_id");
+      if(this.type !== 'practiceUser'){
+        notRequired.push("practice_user_role_id", "practice_id")
       }
-      // this.adminCreate || this.practice && 
-      if(this.adminCreate || this.practice){
-        list.push(
+      if (this.surgery && this.surgery.practice_count >= 1) {
+        notRequired.push("hub_type")
+      }
+      // this.type === 'admin' || this.practice && 
+      if(this.type === 'admin' || this.practice){
+        notRequired.push(
           "practice_type_id",
           "surgery_id", 
           "practice_role",
@@ -571,9 +573,7 @@ export default {
           "clinical_commissioning_group_name",
         )
       }
-        
-      this.Validate(this.toPostUser, list);
-      console.log('form error',this.formError)
+      this.Validate(this.toPostUser, notRequired);
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -620,14 +620,9 @@ export default {
     },
 
     async toPostUserInfo(toPostUser, toPostSurgeryID) {
-      console.log(toPostUser)
       try {
-        if (
-          (this.surgery && this.surgery.practice_count < 1) ||
-          (this.practice && this.practice.user_count < 1)
-        ) {
+        if (this.type === 'newPractice') {
           //Create new practice
-          console.log("this surgery is new");
           this.toPostUser.practice_type_id = await this.toPostUser.practice_type_id.map(
             item => item.value
           );
@@ -683,13 +678,8 @@ export default {
               });
             await this.getPractices();
           }
-        } else if (
-          (this.surgery && this.surgery.practice_count > 0) ||
-          (this.practice && this.practice.user_count > 0)
-        ) {
+        } else if (this.type === 'practiceUser') {
           //Add user to the practice
-          console.log("this surgery is registered. user is being added", this.surgery);
-          console.log('user', toPostUser)
           await this.$axios
             .post(`/api/v1/admin/practice-users`, toPostUser)
             .then(res => {
@@ -703,21 +693,15 @@ export default {
             })
             .catch(err => {
               this.formError = err.response.data.error_messages
-              // this.$store.commit("SET_NOTIFICATION", {
-              //   enabled: true,
-              //   status: "danger",
-              //   text: [err.response.data.message]
-              // });
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
-        } else if (this.adminCreate == true) {
+        } else if (this.type === 'admin') {
           //Create New Admin
           console.log("new admin is being created");
           this.toPostUser.roles_id = this.toPostUser.roles_id.map(
             item => item.value
           );
-          console.log('to post user', toPostUser)
           await this.$axios
             .post(`/api/v1/admin/admin-users`, toPostUser)
             .then(res => {
@@ -732,15 +716,10 @@ export default {
             })
             .catch(err => {
               this.formError = err.response.data.error_messages
-              // this.$store.commit("SET_NOTIFICATION", {
-              //   enabled: true,
-              //   status: "danger",
-              //   text: err.response.data.message
-              // });
             });
         }
       } catch (err) {
-        store.commit("SET_NOTIFICATION", {
+        this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: err.response.data.message

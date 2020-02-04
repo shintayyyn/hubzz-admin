@@ -181,6 +181,7 @@
           @userCreated="(createPracticeModal = false), $emit('close')"
           :practice="practice"
           :surgery="surgery"
+          :type="'newPractice'"
         />
       </div>
       <!-- ===================SET PERMISSIONS OF PRACTICE SPOKE=================== -->

@@ -23,8 +23,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex flex-col justify-center items-center py-2" v-if="total > 0 && totalPages > 1">
-			<div :class="pages.length > 2 ? 'md:hidden' : 'hidden'">
+		<div
+			class="flex flex-col justify-center items-center py-2 w-full"
+			v-if="total > 0 && totalPages > 1"
+		>
+			<div :class="pages.length > 2 ? 'flex md:hidden' : 'hidden'">
 				<div class="md:hidden pagination-item m-1" v-for="page in pages" :key="page.name">
 					<button
 						type="button"
