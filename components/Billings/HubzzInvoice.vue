@@ -58,12 +58,12 @@
 				<div class="flex flex-col p-4" ref="pdf-header">
 					<div>
 						<div class="text-sm text-right">
-							<p>Hubzz Limited Mws,</p>
-							<p>601 London Road</p>
-							<p>Westcliff-On-Sea SS0 9PE</p>
-							<p>billing@hubzz.co.uk</p>
-							<p>Registered Company</p>
-							<p>10832559</p>
+							<p>{{locumInvoice ? locumInvoice.locum_user.name : 'Hubzz Limited Mws,'}}</p>
+							<p>{{locumInvoice ? locumInvoice.practice.address_line_3 : '601 London Road'}}</p>
+							<p>{{locumInvoice ? locumInvoice.practice.postcode : 'Westcliff-On-Sea SS0 9PE'}}</p>
+							<p>{{locumInvoice ? 'Tel 123123':'billing@hubzz.co.uk'}}</p>
+							<p v-if="!locumInvoice">Registered Company</p>
+							<p>{{locumInvoice ? locumInvoice.locum_user.email : '10832559'}}</p>
 						</div>
 					</div>
           <div class="flex">
@@ -76,13 +76,13 @@
 									<div>To: Accounts Department</div>
 									<div class="w-full m-2">
 										<p>{{practice.surgery.name}}</p>
-                    <div class="mx-2 text-sm font-light">
+                    <div class="text-sm font-light">
                       <p>{{practice.surgery.address.line_1}}</p>
                       <p>{{practice.surgery.address.line_2}}</p>
                       <p>{{practice.surgery.address.line_3}}</p>
                     </div>
 										
-                     <div class="mt-2 flex flex-col">
+                     <div v-if="!locumInvoice" class="mt-2 flex flex-col">
                       <div>For the period</div>
                       <div>
                         <span>{{dateStart + " to " + dateEnd}}</span>
@@ -101,7 +101,7 @@
 						:ref="'items-header'"
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
-						<div class="flex items-center justify-center py-2 bg-black">
+						<div class="flex items-center justify-center py-2 bg-gray-900">
 							<div class="w-4/6">
 								<div class="text-white text-sm text-left px-4">
 									<strong>Description</strong>
@@ -116,7 +116,7 @@
 								<!-- <div class="mr-2" v-if="doNotShow">
 									<span
 										@click="addInvoiceItem()"
-										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>+</span>
 								</div> -->
 							</div>
@@ -174,7 +174,7 @@
 						:ref="'items-header'"
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
-						<div class="flex items-center justify-center py-2 bg-black">
+						<div class="flex items-center justify-center py-2 bg-gray-900">
 							<div class="w-4/6">
 								<div class="text-white text-sm text-left px-4">
 									<strong>Disputed Job Description</strong>
@@ -189,7 +189,7 @@
 								<div class="mr-2" v-if="doNotShow">
 									<span
 										@click="addInvoiceItem()"
-										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>+</span>
 								</div>
 							</div> -->
@@ -247,7 +247,7 @@
 						:ref="'items-header'"
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
-						<div class="flex items-center justify-center py-2 bg-black">
+						<div class="flex items-center justify-center py-2 bg-gray-900">
 							<div class="w-4/6">
 								<div class="text-white text-sm text-left px-4">
 									<strong>Debit Description</strong>
@@ -262,7 +262,7 @@
 								<div class="mr-2" v-if="doNotShow">
 									<span
 										@click="addDebitItem()"
-										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>+</span>
 								</div>
 							</div>
@@ -321,7 +321,7 @@
 						:ref="'items-header'"
 						:style="`min-width: ${doNotShow ? '733px' : ''}`"
 					>
-						<div class="flex items-center justify-center py-2 bg-black">
+						<div class="flex items-center justify-center py-2 bg-gray-900">
 							<div class="w-4/6">
 								<div class="text-white text-sm text-left px-4">
 									<strong>Credit Description</strong>
@@ -336,7 +336,7 @@
 								<div class="mr-2" v-if="doNotShow">
 									<span
 										@click="addCreditItem()"
-										class="bg-gray-900 hover:bg-gray-800 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>+</span>
 								</div>
 							</div>
@@ -392,7 +392,28 @@
 					<div class="my-1 px-1 w-1/4 text-right text-lg font-semibold">{{ "£ " + amountTotal }}</div>
 				</div>
 			</div>
-			<!-- <div class="p-4" ref="pdf-footer">
+			<div v-if="locumInvoice" class="p-4" ref="pdf-footer">
+         <!-- items days worked -->
+        <div :ref="'days-worked'" class="flex flex-row flex-wrap justify-between px-2">
+          <div class="w-full flex flex-row flex-wrap justify-between md:px-2">
+            <div class="w-full md:w-1/2 md:pr-1">
+              <AppDate
+                v-model="dateStart"
+                disabled
+                :name="'date_start'"
+                :label="'Days worked from'"
+              />
+            </div>
+            <div class="w-full md:w-1/2 md:pl-1">
+              <AppDate
+                v-model="dateEnd"
+                disabled
+                :name="'date_end'"
+                :label="'To'"
+              />
+            </div>
+          </div>
+        </div>
 				<div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
 					Payment by BACS:
 					<br />Account name: XXX
@@ -401,7 +422,7 @@
 					<br />Account number: XXX
 					<br />
 				</div>
-			</div> -->
+			</div>
 		</div>
 		<!-- FIRST PAGE ENDS HERE -->
 		<!-- BODY ENDS HERE-->
@@ -411,6 +432,7 @@
 <script>
 import AppLoading from "@/components/Base/AppLoading";
 import AppButton from "@/components/Base/AppButton";
+import AppDate from "@/components/Base/AppDate"
 export default {
 	props: [
     "forViewing",
@@ -427,7 +449,8 @@ export default {
     ],
 	components: {
 		AppLoading,
-		AppButton,
+    AppButton,
+    AppDate,
 	},
 	data() {
 		return {
@@ -458,6 +481,10 @@ export default {
     // if (this.disputeditems) {
     //   this.createdDisputedItems = this.createdDisputedItems
     // }
+    if(this.locumInvoice) {
+      console.log('locum invoice', this.locumInvoice)
+    }
+    
     if (this.debitItems) {
       this.createdDebitItems = this.debitItems
     }
