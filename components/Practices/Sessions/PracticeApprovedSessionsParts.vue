@@ -113,7 +113,7 @@ export default {
       }
       this.currentPage = parseInt(query.job_parts_page)
       let params = {
-        viewing_practice_id : this.practice.id,
+        viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
         job_surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         status : 'Approved'
       }
@@ -143,7 +143,7 @@ export default {
       async getApprovedSessions(orderBy){
         let offset = this.perPage * (parseInt(this.$route.query.job_parts_page) - 1)
         let params = {
-          viewing_practice_id : this.practice.id,
+          viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
           status : 'Approved',
           order_by : orderBy ? orderBy : this.$route.query.order_by,
           job_surgery_id: this.practice_surgery ? this.practice_surgery.id : '',

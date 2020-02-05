@@ -37,11 +37,12 @@
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
 			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-unsuccessful-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
 		>Unsuccessful</nuxt-link>
+    <!-- DECLINED IS NOW WITHDRAWN. STATUS STAYS THE SAME(DECLINED) -->
 		<nuxt-link
-			:to="getRoute('locum-declined-jobs')"
+			:to="getRoute('locum-withdrawn-jobs')"
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-declined-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-		>Declined</nuxt-link>
+			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-withdrawn-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+		>Withdrawn</nuxt-link>
 		<nuxt-link
 			:to="getRoute('locum-completed-jobs')"
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
@@ -52,11 +53,11 @@
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
 			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-approved-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
 		>Approved</nuxt-link>
-		<nuxt-link
+		<!-- <nuxt-link
 			:to="getRoute('locum-withrawn-jobs')"
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
 			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-withrawn-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-		>Withrawn</nuxt-link>
+		>Withrawn</nuxt-link> -->
 	</div>
 </template>
 <script>

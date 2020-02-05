@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
-      <div v-if="locumWithrawnJobParts.length == 0">
+      <div v-if="locumWithdrawnJobParts.length == 0">
         <div
           class="mt-10 w-full text-white text-center"
           style="font-family: Nunito"
-        >This locum has no withrawn jobs.</div>
+        >This locum has no withdrawn jobs.</div>
       </div>
       <div v-else>
         <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Ongoing'" :currentPage="currentPage" :isJobParts="true" />
@@ -21,8 +21,8 @@
             </div> -->
             <!-- BODY -->
             <div 
-              v-for="(item, index) in locumWithrawnJobParts" 
-              @click="$router.push(`/locums/${user.id}/locum-jobs/locum-withrawn-jobs/${item.id}`)"
+              v-for="(item, index) in locumWithdrawnJobParts" 
+              @click="$router.push(`/locums/${user.id}/locum-jobs/locum-withdrawn-jobs/${item.id}`)"
               :key="`item-${index}`" 
               class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
             >
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-      <div v-if="!locumWithrawnJobParts.length == 0" class="">
+      <div v-if="!locumWithdrawnJobParts.length == 0" class="">
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -86,7 +86,7 @@ export default {
   },
   data() {
     return {
-      // locumWithrawnJobParts: [],
+      // locumWithdrawnJobParts: [],
       // total:0,
       totalPages: 0,
       currentPage: 1,
@@ -103,7 +103,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.job_parts_page)
-      this.getWithrawnJobs()
+      this.getWithdrawnJobs()
     },
   },
   async created() {
@@ -115,44 +115,44 @@ export default {
     this.currentPage = parseInt(query.job_parts_page)
     let params = {
       viewing_locum_user_id : this.user.id,
-      locum_status : 'Withrawn'
+      locum_status : 'Declined'
     }
     Promise.all([
       console.log(this.user),
       this.$axios.$get(`/api/v1/admin/job-parts/count`,{ params }).then(res => {
-        this.$store.commit('jobs/SET_LOCUM_WITHRAWN_JOBS_COUNT', res.data.count)
+        this.$store.commit('jobs/SET_LOCUM_WITHDRAWN_JOBS_COUNT', res.data.count)
         console.log('res',res)
         // this.total = res.data.count
         this.perPage = 10
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
-      this.getWithrawnJobs('date_created:desc'),
-      console.log('withrawn job parts',this.locumWithrawnJobParts)
+      this.getWithdrawnJobs('date_created:desc'),
+      console.log('withdrawn job parts',this.locumWithdrawnJobParts)
     })
   },
   computed:{
     total(){
-      return this.$store.state.jobs.locum_withrawn_jobs_count
+      return this.$store.state.jobs.locum_withdrawn_jobs_count
     },
-    locumWithrawnJobParts(){
-      return this.$store.state.jobs.locum_withrawn_jobs
+    locumWithdrawnJobParts(){
+      return this.$store.state.jobs.locum_withdrawn_jobs
     }
   },
   methods: {
-    getWithrawnJobs(orderBy) {
+    getWithdrawnJobs(orderBy) {
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
-        locum_status : 'Withrawn',
+        locum_status : 'Declined',
         order_by : orderBy ? orderBy : this.$route.query.order_by,
         limit: this.perPage,
         offset: offset
       }
       
       this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
-        // this.locumWithrawnJobParts =  res.data.job_parts
-        this.$store.commit('jobs/SET_LOCUM_WITHRAWN_JOBS', res.data.job_parts)
+        // this.locumWithdrawnJobParts =  res.data.job_parts
+        this.$store.commit('jobs/SET_LOCUM_WITHDRAWN_JOBS', res.data.job_parts)
         this.$store.commit('jobs/TOGGLE_LOADING', false)
       })
     },
