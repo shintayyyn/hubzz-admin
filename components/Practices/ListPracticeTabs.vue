@@ -32,6 +32,17 @@
 			"
 			>Bogus
     </nuxt-link>
+
+    <nuxt-link
+			:to="getRoute('deactivated-practices')"
+			class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+			:class="
+				$route.path.includes(`/practices/deactivated-practices`)
+        ? 'bg-sunglow hover:bg-sunglow-dark'  :  
+        'hover:bg-waterloo text-white'
+			"
+			>Deactivated
+    </nuxt-link>
 	</div>
 </template>
 

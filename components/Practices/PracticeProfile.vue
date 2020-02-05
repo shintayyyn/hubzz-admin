@@ -6,7 +6,7 @@
 		<form class="flex flex-col bg-waterloo p-4 shadow rounded-lg sm:w-full lg:max-w-2xl">
 			<div class="flex flex-wrap">
 				<!-- VIEW PRIMARY INFORMATION -->
-				<div v-if="practice.status !== 'Deactivated'" class="w-full md:w-1/2 text-gray-300 text-sm">
+				<div  class="w-full md:w-1/2 text-gray-300 text-sm">
 					<p class="flex font-bold">Practice ID</p>
 					<p class="mx-2">{{practice ? practice.id : null}}</p>
 					<p class="flex font-bold">Practice Name</p>
@@ -152,6 +152,7 @@
 							>Deactivate this Practice</div>
 							<div
 								v-if="toBogus === true"
+                @click="toMarkBogus()"
 								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 mx-2 p-2 cursor-pointer"
 							>Mark as Bogus</div>
 						</div>
@@ -432,7 +433,14 @@ export default {
 				});
 				console.log("change practice type error!", err.message);
 			}
-		},
+    },
+    async toMarkBogus () {
+      this.$store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "warning",
+        text: "Work in progress"
+      });
+    },  
 		async toDeactivate() {
 			await this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`, {})
