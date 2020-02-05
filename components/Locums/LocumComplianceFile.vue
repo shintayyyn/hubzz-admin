@@ -65,7 +65,6 @@
 						</div>
 
 						<div>
-							<!--CHANGE THIS ASAP-->
 							<p class="font-bold">Status</p>
 							<AppInput
 								class="w-full mr-2"
@@ -148,6 +147,7 @@ export default {
 		};
 	},
 	created() {
+		console.log("compliance_doc", this.compliance_doc);
 		this.toPutLocumDetailCompliance.expired_at = this.compliance_doc.expired_at;
 		this.toPutLocumDetailCompliance.status = this.compliance_doc.status;
 		this.toPutLocumDetailCompliance.note = this.compliance_doc.note;
