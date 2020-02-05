@@ -247,7 +247,7 @@
             <!-- BODY -->
             <nuxt-link
             v-for="(item, index) in locumMandatoryTrainings" :key="`item-${index}`"
-            :to="{path:`/locums/${user.id}/locum-compliance/${item.file ? item.file.id : null }`, query: $route.query}"
+            :to="{path:`/locums/${user.id}/locum-compliance/mandatory-training/${item.mandatory_training ? item.mandatory_training.id : null }`, query: $route.query}"
             class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
             :class="item.file==null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
             draggable="false">

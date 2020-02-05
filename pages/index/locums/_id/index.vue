@@ -1,12 +1,13 @@
 <template>
 	<div class="locum-modal shadow-lg">
 		<div class="px-4 md:px-8">
-			<div @click="$router.push('/locums')" class="cursor-pointer py-4">
+			<div class="py-4">
 				<svgicon
+					@click="$router.push('/locums')"
 					name="arrow-left-solid"
 					height="32"
 					widht="32"
-					class="text-white hover:text-sunglow fill-current"
+					class="text-white hover:text-sunglow fill-current cursor-pointer"
 				/>
 			</div>
 			<LocumTabs :user="user" />
