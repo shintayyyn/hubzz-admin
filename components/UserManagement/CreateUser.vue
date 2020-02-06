@@ -11,7 +11,7 @@
         />
       </div>
     </div>
-    <div class="">
+    <div class="py-4">
       <div class="text-white">
         <div class="text-lg font-bold">{{registeeType == 'customSurgery' ? 'Create Custom Practice' : 'Create User'}}</div>
         <div v-if="surgery" class="text-xs font-hairline">
@@ -656,9 +656,6 @@ export default {
       try {
         if (this.registeeType === 'newPractice' || this.registeeType === 'customSurgery') {
           //Create new practice
-          this.toPostUser.practice_type_id = await this.toPostUser.practice_type_id.map(
-            item => item.value
-          );
           if(!toPostUser.coordinate_x || !toPostUser.coordinate_y){
             await this.$axios.$post(`/api/v1/postcode-to-coordinates`,{postcode:toPostUser.postcode})
             .then(res => {
@@ -683,6 +680,8 @@ export default {
                 this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
+              console.log("Practice err", err)
+              this.formError = err.response.data.error_messages
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "danger",
@@ -703,15 +702,13 @@ export default {
                 this.$emit("userCreated");
               })
               .catch(err => {
-                this.$store.commit("SET_NOTIFICATION", {
-                  enabled: true,
-                  status: "danger",
-                  text: err.response.data.message
-                });
+              console.log("catch practice", {err})
+              this.formError = err.response.data.error_messages
               });
             await this.getPractices();
           }
         } else if (this.registeeType === 'practiceUser') {
+          console.log('CREATING PRACTICE USER')
           //Add user to the practice
           await this.$axios
             .post(`/api/v1/admin/practice-users`, toPostUser)
@@ -725,11 +722,13 @@ export default {
               this.$emit("close");
             })
             .catch(err => {
-              this.formError = err.response.data.error_messages
+              console.log("practice user err", {err})
+              // this.formError = err.response.data.error_messages
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
         } else if (this.registeeType === 'admin') {
+          console.log('CREATING NEW ADMIN')
           //Create New Admin
           console.log("new admin is being created");
           this.toPostUser.roles_id = this.toPostUser.roles_id.map(
@@ -749,14 +748,12 @@ export default {
             })
             .catch(err => {
               this.formError = err.response.data.error_messages
+              console.log("admin err", {err})
+              // this.formError = err.response.data.error_messages
             });
         }
       } catch (err) {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: err.response.data.message
-        });
+        console.log("try catch", err)
         console.log("index put locum detail compliance documents error.", err);
       }
     }
