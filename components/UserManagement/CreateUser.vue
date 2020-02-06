@@ -131,18 +131,12 @@
               :type="'text'"
               :label="'Surgery Address - Line 4'"
               :placeholder="'Surgery Address - Line 4'"
-              :error="formError.find(item => item.field === 'address_line_4')"
-              @blur="CheckEmptyField(toPostUser.address_line_4, 'address_line_4')"
-              required
             />
             <AppInput 
               v-model="toPostUser.address_line_5"
               :type="'text'"
               :label="'Surgery Address - Line 5'"
               :placeholder="'Surgery Address - Line 5'"
-              :error="formError.find(item => item.field === 'address_line_5')"
-              @blur="CheckEmptyField(toPostUser.address_line_5, 'address_line_5')"
-              required
             />
             <AppInput 
               v-model="toPostUser.practice_role"
@@ -594,6 +588,8 @@ export default {
           "address_line_1",
           "address_line_2",
           "address_line_3",
+          "address_line_4",
+          "address_line_5",
           "postcode",
           "coordinate_x",
           "coordinate_y",

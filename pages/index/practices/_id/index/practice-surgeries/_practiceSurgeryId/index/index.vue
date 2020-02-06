@@ -191,6 +191,17 @@
 							</div>
 						</div>
 						<!-- SET MAX RATES END HERE -->
+            <div class="w-full p-1">
+							<AppInput
+								v-model="form.allow_surgery_create_permanent_jobs"
+								:type="'select'"
+								:name="'allow_surgery_create_permanent_jobs'"
+								:label="'Allow Spoke to create permanent jobs?'"
+								:placeholder="'Select...'"
+								:items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+								required
+							/>
+						</div>
 						<div class="w-full p-1">
 							<AppInput
 								v-model="form.allow_surgery_bill_locum"
@@ -255,7 +266,8 @@ export default {
 			practice_surgery: "",
 			editPermissions: false,
 			form: {
-				allow_surgery_create_sessions: "",
+        allow_surgery_create_sessions: "",
+        allow_surgery_create_permanent_jobs: "",
 				max_hourly_rate_limit: "",
 				max_halfday_rate_limit: "",
 				max_wholeday_rate_limit: "",
@@ -302,7 +314,8 @@ export default {
 		this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit;
 		this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit;
 		this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit;
-		this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
+    this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
+    this.form.allow_surgery_create_permanent_jobs = this.practice_surgery.allow_surgery_create_permanent_jobs;
 		this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum;
 		this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz;
 		this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries;
