@@ -1,37 +1,39 @@
 <template>
   <div class="job-modal shadow-lg">
     <div class="mt-6 mx-4 md:mx-8 my-2">
-      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-declined-sessions`}" class="cursor-pointer">
+      <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-cancelled-jobs` }" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
     </div>
-    <PracticeSessionModal :job="job"/>
+    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
   </div>
 </template>
 <script>
-import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import JobPartModal from '@/components/Base/JobPartModal'
 export default {
-  components:{
-    PracticeSessionModal
-  },  
   data(){
     return{
       job:'',
-      practiceId:''
+      locumUserId: ''
     }
+  },
+  components:{
+    JobPartModal,
+  },
+  computed:{
+
   },
   async asyncData({ app, store, route, error }){
     try{
-      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.practiceSessionId}`)
-      const job = response.data.job
-      console.log('job', job)
-      const practiceId = route.params.id
+      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.locumJobPartId}`)
+      const specificJobPart = response.data.job_part
+      const locumUserId = route.params.id
       return{
-        job,
-        practiceId
+        specificJobPart,
+        locumUserId
       }
     }catch(err){
-      error({ statusCode: 404 })
+      error({statusCode: 404})
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('get job error!',err)
     }
