@@ -57,12 +57,17 @@
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
       :class="$route.path.includes(`practice-cancelled-sessions`) || $route.path.includes(`surgery-cancelled-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
     >Cancelled</nuxt-link>
-    
-    <nuxt-link
+    <!-- DECLINED IS NOW CALLED 'WITHDRAWN' but still called 'DECLINED in API -->
+    <!-- <nuxt-link
       :to="getRoute(practice_surgery ? 'surgery-declined-sessions':'practice-declined-sessions')"
       class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
       :class="$route.path.includes(`practice-declined-sessions`) || $route.path.includes(`surgery-declined-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-    >Declined</nuxt-link>
+    >Declined</nuxt-link> -->
+    <nuxt-link
+      :to="getRoute(practice_surgery ? 'surgery-withdrawn-sessions':'practice-withdrawn-sessions')"
+      class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+      :class="$route.path.includes(`practice-withdrawn-sessions`) || $route.path.includes(`surgery-withdrawn-sessions`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+    >Withdrawn</nuxt-link>
   </div>
 </template>
 <script>

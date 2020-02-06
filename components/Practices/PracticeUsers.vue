@@ -46,7 +46,7 @@
 					:practice="practice"
 					:surgery="surgery"
 					:userCount="total"
-					:type="'practiceUser'"
+					:registeeType="'practiceUser'"
 				/>
 			</div>
 		</transition>

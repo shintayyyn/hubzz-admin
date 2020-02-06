@@ -19,27 +19,27 @@
             >
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
                 <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-                <span class="">{{item.job_number}}</span>
+                <span class="break-words">{{item.job_part_number}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-                <span class="">{{item.platform_job.practice.surgery.name}}</span>
+                <span class="break-words">{{item.job.platform_job.practice.surgery.name}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="">{{item.title}}</span>
+                <span class="break-words">{{item.job.title}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">From</strong>
-                <span class="">{{item.date_start}}</span>
+                <span class="break-words">{{item.date_start}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">To</strong>
-                <span class="">{{item.date_end}}</span>
+                <span class="break-words">{{item.date_end}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                  <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class="">{{item.date_created}}</span>
+                <strong class="block md:hidden text-sm uppercase">Created</strong>
+                <span class="break-words">{{item.job.date_created}}</span>
               </div>
             </nuxt-link>
           </div>
@@ -105,12 +105,12 @@ export default {
       }
       this.currentPage = parseInt(query.job_page)
       let params = {
-        viewing_practice_id : this.practice.id,
+        viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
         surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
         status : 'Cancelled'
       }
       Promise.all([
-        this.$axios.$get(`/api/v1/admin/jobs/count`,{ params }).then(res=>{
+        this.$axios.$get(`/api/v1/admin/job-parts/count`,{ params }).then(res=>{
           // this.total = res.data.count
           this.$store.commit('jobs/SET_PRACTICE_CANCELLED_SESSIONS_COUNT', res.data.count)
           this.perPage = 10
@@ -132,16 +132,16 @@ export default {
       async getCancelledJobs(orderBy){
         let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {
-          practice_id : this.practice.id,
+          viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
           status : 'Cancelled',
           order_by : orderBy ? orderBy : this.$route.query.order_by,
           surgery_id: this.practice_surgery ? this.practice_surgery.id : '',
           limit: this.perPage,
           offset: offset
         }
-        await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
+        await this.$axios.$get(`/api/v1/admin/job-parts`,{ params }).then(res=>{
           // this.cancelledJobs = res.data.jobs
-          this.$store.commit('jobs/SET_PRACTICE_CANCELLED_SESSIONS', res.data.jobs)
+          this.$store.commit('jobs/SET_PRACTICE_CANCELLED_SESSIONS', res.data.job_parts)
           this.$store.commit('jobs/TOGGLE_LOADING', false)
         }).catch(err=>{
           console.log('get cancelled jobs error!!!',err)

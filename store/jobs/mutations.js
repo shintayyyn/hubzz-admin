@@ -167,19 +167,19 @@ export default{
           state.practice_cancelled_sessions.pop()
       }
   },
-  //=================DECLINED======================
-  SET_PRACTICE_DECLINED_SESSIONS(state, payload){
-      state.practice_declined_sessions = payload
+  //=================WITHDRAWN======================
+  SET_PRACTICE_WITHDRAWN_SESSIONS(state, payload){
+      state.practice_withdrawn_sessions = payload
   },
-  SET_PRACTICE_DECLINED_SESSIONS_COUNT(state, payload){
-      state.practice_declined_sessions_count = payload
+  SET_PRACTICE_WITHDRAWN_SESSIONS_COUNT(state, payload){
+      state.practice_withdrawn_sessions_count = payload
   },
-  ADD_PRACTICE_DECLINED_SESSIONS(state, payload){
-      console.log('add practice declined is working', payload)
-      state.practice_declined_sessions.unshift(payload)
-      state.practice_declined_sessions_count = state.practice_declined_sessions_count + 1
-      if(state.practice_declined_sessions_count > 10){
-          state.practice_declined_sessions.pop()
+  ADD_PRACTICE_WITHDRAWN_SESSIONS(state, payload){
+      console.log('add practice withdrawn is working', payload)
+      state.practice_withdrawn_sessions.unshift(payload)
+      state.practice_withdrawn_sessions_count = state.practice_withdrawn_sessions_count + 1
+      if(state.practice_withdrawn_sessions_count > 10){
+          state.practice_withdrawn_sessions.pop()
       }
   },
   // =================== LOCUM ======================
@@ -291,6 +291,7 @@ export default{
   },
   //==================CANCELLED=====================
   SET_LOCUM_CANCELLED_JOBS(state, payload){
+    console.log('payload', payload)
       state.locum_cancelled_jobs = payload
   },
   SET_LOCUM_CANCELLED_JOBS_COUNT(state, payload){
@@ -319,19 +320,19 @@ export default{
           state.locum_unsuccessful_jobs.pop()
       }
   },
-  //===================DECLINED====================
-  SET_LOCUM_DECLINED_JOBS(state, payload){
-      state.locum_declined_jobs = payload
+  //===================WITHDRAWN====================
+  SET_LOCUM_WITHDRAWN_JOBS(state, payload){
+      state.locum_withdrawn_jobs = payload
   },
-  SET_LOCUM_DECLINED_JOBS_COUNT(state, payload){
-      state.locum_declined_jobs_count = payload
+  SET_LOCUM_WITHDRAWN_JOBS_COUNT(state, payload){
+      state.locum_withdrawn_jobs_count = payload
   },
-  ADD_LOCUM_DECLINED_JOBS(state, payload){
-      console.log('add locum declined jobs is working', payload)
-      state.locum_declined_jobs.unshift(payload)
-      state.locum_declined_jobs_count = state.locum_declined_jobs_count + 1
-      if(state.locum_declined_jobs_count > 10){
-          state.locum_declined_jobs.pop()
+  ADD_LOCUM_WITHDRAWN_JOBS(state, payload){
+      console.log('add locum withdrawn jobs is working', payload)
+      state.locum_withdrawn_jobs.unshift(payload)
+      state.locum_withdrawn_jobs_count = state.locum_withdrawn_jobs_count + 1
+      if(state.locum_withdrawn_jobs_count > 10){
+          state.locum_withdrawn_jobs.pop()
       }
   },
   //====================COMPLETED===================
@@ -356,14 +357,6 @@ export default{
   SET_LOCUM_APPROVED_JOBS_COUNT(state, payload){
     state.locum_approved_jobs_count = payload
   },
-  // ===================WITHRAWN====================
-  SET_LOCUM_WITHRAWN_JOBS(state, payload){
-    state.locum_withrawn_jobs = payload
-  },
-  SET_LOCUM_WITHRAWN_JOBS_COUNT(state, payload){
-    state.locum_withrawn_jobs_count = payload
-  },
-
   // ==================FOR BILLING==================
   SET_HUBZZ_BILLING_SESSIONS(state, payload){
     state.practice_billing_sessions = payload

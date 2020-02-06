@@ -34,7 +34,7 @@ export default{
             const locumJob = response.data.job
             commit('ADD_LOCUM_UNSUCCESSFUL_JOBS', locumJob)
         })
-        this.$socket.on("locumDeclinedJob", async jobId => {
+        this.$socket.on("locumWithdrawnJob", async jobId => {
             let locumJobParams = {
                 viewing_locum_user_id : state.viewing_jobs_locum_user_id,
                 jobId,
@@ -49,9 +49,9 @@ export default{
             response = await jobsApi.fetchSpecificJob(this.$axios, practiceSessionParams)
             const practiceSession = response.data.job
 
-            commit('ADD_LOCUM_DECLINED_JOBS', locumJob)
+            commit('ADD_LOCUM__JOBS', locumJob)
             commit('DEDUCT_LOCUM_CURRENT_JOBS', locumJob)
-            commit('ADD_PRACTICE_DECLINED_SESSIONS',practiceSession)
+            commit('ADD_PRACTICE_WITHDRAWN_SESSIONS',practiceSession)
         })
         
         //===========MANUAL TRIGGERS BY PRACTICE================

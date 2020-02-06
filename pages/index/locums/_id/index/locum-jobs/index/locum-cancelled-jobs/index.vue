@@ -1,13 +1,13 @@
 <template>
     <div>
-        <LocumCancelledJobs :user='user'/>
+        <LocumCancelledJobParts :user='user'/>
     </div>
 </template>
 <script>
-import LocumCancelledJobs from '@/components/Locums/Jobs/LocumCancelledJobs'
+import LocumCancelledJobParts from '@/components/Locums/Jobs/LocumCancelledJobParts'
 export default {
     components:{
-        LocumCancelledJobs
+        LocumCancelledJobParts
     },
     computed:{
         user(){

@@ -1,9 +1,7 @@
 <template>
-  <div
-    class="absolute top-0 bottom-0 right-0 left-0 flex flex-col overflow-auto"
-  >
+  <div>
     <!-- HEADER -->
-    <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
+    <div v-if="practice" class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
       <div @click="goBack()" class="cursor-pointer">
         <svgicon
           name="arrow-left-solid"
@@ -181,7 +179,7 @@
           @userCreated="(createPracticeModal = false), $emit('close')"
           :practice="practice"
           :surgery="surgery"
-          :type="'newPractice'"
+          :registeeType="'newPractice'"
         />
       </div>
       <!-- ===================SET PERMISSIONS OF PRACTICE SPOKE=================== -->
