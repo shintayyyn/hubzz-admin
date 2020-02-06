@@ -17,7 +17,7 @@
     >
       <div class="flex flex-col py-2">
         <div
-          class="relative flex flex-wrap justify-between leading-none"
+          class="relative flex justify-between flex-wrap leading-none"
         >
           <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }} <span v-if="required" class="text-red-500">*</span></label>
           
@@ -29,7 +29,7 @@
               {{ info }}
             </div>
             <div
-              class="bg-red-700 text-white p-2 rounded-lg text-xs"
+              class="bg-red-300 text-red-700 py-1 px-2 text-xs"
               v-if="error && (type.includes('checkbox'))"
             >
               {{

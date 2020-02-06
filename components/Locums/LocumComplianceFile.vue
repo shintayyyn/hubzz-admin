@@ -115,7 +115,7 @@
 						<embed
 							class="object-contain object-left-top w-full"
 							:class="compliance_doc.file.type == 'image' ? 'image' : 'document h-full'"
-							:src="compliance_doc.file.type !== 'image' ? convertDoc(compliance_doc.file.url) : compliance_doc.file.url"
+							:src="compliance_doc.file.type !== 'image' || compliance_doc.file.subtype === 'tiff' ? convertDoc(compliance_doc.file.url) : compliance_doc.file.url"
 						/>
 						<!-- :src="
 								compliance_doc.file.subtype === 'tiff' ||
@@ -158,6 +158,7 @@ export default {
 	},
 	created() {
 		console.log("compliance_doc", this.compliance_doc);
+		console.log(this.$route);
 		this.toPutLocumDetailCompliance.expired_at = this.compliance_doc.expired_at;
 		this.toPutLocumDetailCompliance.status = this.compliance_doc.status;
 		this.toPutLocumDetailCompliance.note = this.compliance_doc.note;
