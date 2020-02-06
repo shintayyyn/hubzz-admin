@@ -77,15 +77,25 @@
 							/>
 						</div>
 
-						<div class="w-full" v-if="compliance_doc.status === 'Rejected' || notesAreVisible">
-							<p class="mt-5 mr-20">Reason for Rejection</p>
+						<div class="w-full" v-if="notesAreVisible">
+							<AppInput
+								v-model="toPutLocumDetailCompliance.note"
+								:name="complianceNote"
+								:placeholder="'Type Here'"
+								:type="'textarea'"
+								:label="'Reason for Rejection'"
+								:rows="2"
+								:class="'font-normal'"
+								:error="formError.find(item => item.field === 'note')"
+							/>
+							<!-- <p class="mt-5 mr-20">Reason for Rejection</p>
 							<textarea
 								v-model="toPutLocumDetailCompliance.note"
 								placeholder="Type Here"
 								class="w-full text-white flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-sunglow focus:outline-none"
 								name="complianceNote"
 							>Type Here
-              				</textarea>
+							</textarea>-->
 						</div>
 
 						<div class="pb-4" v-else>
@@ -159,20 +169,29 @@ export default {
 		if (this.compliance_doc.status === "Pending") {
 			this.toPutLocumDetailCompliance.status = null;
 		}
+
+		this.setStatusData(this.toPutLocumDetailCompliance.status);
 	},
 	methods: {
 		publish() {
 			this.formError = [];
 
+			console.log(
+				"toPutLocumDetailCompliance",
+				this.toPutLocumDetailCompliance
+			);
+
 			let notRequired = [];
 
 			if (this.toPutLocumDetailCompliance.status === "Approved") {
-				notRequired.push("status");
+				// notRequired.push("status");
+				this.toPutLocumDetailCompliance.note = "";
 				notRequired.push("note");
 			}
 
 			if (this.toPutLocumDetailCompliance.status === "Rejected") {
-				notRequired.push("note");
+				// notRequired.push("note");
+				this.toPutLocumDetailCompliance.expired_at = null;
 				notRequired.push("expired_at");
 			}
 
