@@ -11,7 +11,7 @@
         />
       </div>
     </div>
-    <div class="">
+    <div class="py-4">
       <div class="text-white">
         <div class="text-lg font-bold">{{registeeType == 'customSurgery' ? 'Create Custom Practice' : 'Create User'}}</div>
         <div v-if="surgery" class="text-xs font-hairline">
@@ -138,15 +138,7 @@
               :label="'Surgery Address - Line 5'"
               :placeholder="'Surgery Address - Line 5'"
             />
-            <AppInput 
-              v-model="toPostUser.practice_role"
-              :type="'select'"
-              :label="'Role'"
-              :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
-              :error="formError.find(item => item.field === 'practice_role')"
-              @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
-              required
-            />
+            
             <!-- <AppInput 
               v-model="toPostUser.postcode"
               :type="'select'"
@@ -189,12 +181,23 @@
           <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
           <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
           
+            <AppInput 
+            v-model="toPostUser.practice_role"
+            :type="'select'"
+            :label="'Role'"
+            :placeholder="'Select...'"
+            :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
+            :error="formError.find(item => item.field === 'practice_role')"
+            @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
+            required
+          />
 
           <AppInput
             v-if="practice && practice.user_count > 0"
             v-model="toPostUser.practice_user_role_id"
             :type="'select'"
             :label="'Practice User Role'"
+            :placeholder="'Select...'"
             :error="
               formError.find(item => item.field === 'practice_user_role_id')
             "
@@ -339,7 +342,7 @@ export default {
 
         // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
         practice_id: `${this.practice ? this.practice.id : ""}`,
-        practice_user_role_id: ''
+        practice_user_role_id: '',
       },
 
       showPasswordFocus: false,
@@ -575,7 +578,7 @@ export default {
         notRequired.push("surgery_id", "hub_type")
       }
 
-      if(this.registeeType === 'admin' || this.practice){
+      if(this.registeeType === 'admin' || this.registeeType === 'practiceUser'){
         notRequired.push(
           "practice_type_id",
           "surgery_id", 
@@ -647,9 +650,6 @@ export default {
       try {
         if (this.registeeType === 'newPractice' || this.registeeType === 'customSurgery') {
           //Create new practice
-          this.toPostUser.practice_type_id = await this.toPostUser.practice_type_id.map(
-            item => item.value
-          );
           if(!toPostUser.coordinate_x || !toPostUser.coordinate_y){
             await this.$axios.$post(`/api/v1/postcode-to-coordinates`,{postcode:toPostUser.postcode})
             .then(res => {
@@ -674,6 +674,8 @@ export default {
                 this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
+              console.log("Practice err", err)
+              this.formError = err.response.data.error_messages
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "danger",
@@ -694,15 +696,13 @@ export default {
                 this.$emit("userCreated");
               })
               .catch(err => {
-                this.$store.commit("SET_NOTIFICATION", {
-                  enabled: true,
-                  status: "danger",
-                  text: err.response.data.message
-                });
+              console.log("catch practice", {err})
+              this.formError = err.response.data.error_messages
               });
             await this.getPractices();
           }
         } else if (this.registeeType === 'practiceUser') {
+          console.log('CREATING PRACTICE USER')
           //Add user to the practice
           await this.$axios
             .post(`/api/v1/admin/practice-users`, toPostUser)
@@ -716,11 +716,13 @@ export default {
               this.$emit("close");
             })
             .catch(err => {
-              this.formError = err.response.data.error_messages
+              console.log("practice user err", {err})
+              // this.formError = err.response.data.error_messages
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
         } else if (this.registeeType === 'admin') {
+          console.log('CREATING NEW ADMIN')
           //Create New Admin
           console.log("new admin is being created");
           this.toPostUser.roles_id = this.toPostUser.roles_id.map(
@@ -740,14 +742,12 @@ export default {
             })
             .catch(err => {
               this.formError = err.response.data.error_messages
+              console.log("admin err", {err})
+              // this.formError = err.response.data.error_messages
             });
         }
       } catch (err) {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: err.response.data.message
-        });
+        console.log("try catch", err)
         console.log("index put locum detail compliance documents error.", err);
       }
     }
