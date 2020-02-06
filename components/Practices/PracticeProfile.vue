@@ -1,12 +1,17 @@
 <template>
 	<div class="flex flex-col rounded-lg">
 		<transition name="drop" mode="in-out">
-			<AppConfirm v-if="confirm" :message="'Are you sure you want to deactivate this practice?'" @cancel="confirm=false" @confirm="toDeactivate()" />
+			<AppConfirm
+				v-if="confirm"
+				:message="'Are you sure you want to deactivate this practice?'"
+				@cancel="confirm=false"
+				@confirm="toDeactivate()"
+			/>
 		</transition>
 		<form class="flex flex-col bg-waterloo p-4 shadow rounded-lg sm:w-full lg:max-w-2xl">
 			<div class="flex flex-wrap">
 				<!-- VIEW PRIMARY INFORMATION -->
-				<div  class="w-full md:w-1/2 text-gray-300 text-sm">
+				<div class="w-full md:w-1/2 text-gray-300 text-sm">
 					<p class="flex font-bold">Practice ID</p>
 					<p class="mx-2">{{practice ? practice.id : null}}</p>
 					<p class="flex font-bold">Practice Name</p>
@@ -152,15 +157,13 @@
 							>Deactivate this Practice</div>
 							<div
 								v-if="toBogus === true"
-                @click="toMarkBogus()"
+								@click="toMarkBogus()"
 								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 mx-2 p-2 cursor-pointer"
 							>Mark as Bogus</div>
 						</div>
 					</div>
 
-					<div
-						v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')"
-					>
+					<div v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')">
 						<AppInput
 							class="w-2/3 md:w-1/2 mr-2"
 							v-model="toPutPractice.direct_debit"
@@ -264,7 +267,7 @@
 			</div>
 		</form>
 		<transition name="fade" mode="in-out">
-		<div class="shield" v-if="confirm" @click="confirm=false"></div>
+			<div class="shield" v-if="confirm" @click="confirm=false"></div>
 		</transition>
 	</div>
 </template>
@@ -272,7 +275,7 @@
 import AppDate from "@/components/Base/AppDate";
 import AppInput from "@/components/Base/AppInput";
 import AppButton from "@/components/Base/AppButton";
-import AppConfirm from "@/components/Base/AppConfirm"
+import AppConfirm from "@/components/Base/AppConfirm";
 export default {
 	components: {
 		AppDate,
@@ -352,7 +355,7 @@ export default {
 		}
 	},
 	mounted() {
-		console.log(this.practice)
+		console.log(this.practice);
 	},
 	methods: {
 		getQuery() {
@@ -433,14 +436,14 @@ export default {
 				});
 				console.log("change practice type error!", err.message);
 			}
-    },
-    async toMarkBogus () {
-      this.$store.commit("SET_NOTIFICATION", {
-        enabled: true,
-        status: "warning",
-        text: "Work in progress"
-      });
-    },  
+		},
+		async toMarkBogus() {
+			this.$store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "warning",
+				text: "Work in progress"
+			});
+		},
 		async toDeactivate() {
 			await this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`, {})
@@ -453,7 +456,7 @@ export default {
 
 					this.getPractices();
 					this.getPractice();
-					this.confirm = false
+					this.confirm = false;
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {

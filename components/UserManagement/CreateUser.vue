@@ -144,15 +144,7 @@
               @blur="CheckEmptyField(toPostUser.address_line_5, 'address_line_5')"
               required
             />
-            <AppInput 
-              v-model="toPostUser.practice_role"
-              :type="'select'"
-              :label="'Role'"
-              :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
-              :error="formError.find(item => item.field === 'practice_role')"
-              @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
-              required
-            />
+            
             <!-- <AppInput 
               v-model="toPostUser.postcode"
               :type="'select'"
@@ -195,12 +187,23 @@
           <!-- PRACTICE USER ROLES ; IF PRACTICE USER FOR A SPECIFIC PRACTICE IS BEING CREATED -->
           <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
           
+            <AppInput 
+            v-model="toPostUser.practice_role"
+            :type="'select'"
+            :label="'Role'"
+            :placeholder="'Select...'"
+            :items="[{label: 'Partner', value: 'Partner'}, {label: 'Practice Manager', value: 'Practice Manager'}, {label: 'Practice Staff', value: 'Practice Staff'}]"
+            :error="formError.find(item => item.field === 'practice_role')"
+            @blur="CheckEmptyField(toPostUser.practice_role, 'practice_role')"
+            required
+          />
 
           <AppInput
             v-if="practice && practice.user_count > 0"
             v-model="toPostUser.practice_user_role_id"
             :type="'select'"
             :label="'Practice User Role'"
+            :placeholder="'Select...'"
             :error="
               formError.find(item => item.field === 'practice_user_role_id')
             "
@@ -345,7 +348,7 @@ export default {
 
         // IF PRACTICE USER IS BEING CREATED FOR PRACTICE
         practice_id: `${this.practice ? this.practice.id : ""}`,
-        practice_user_role_id: ''
+        practice_user_role_id: '',
       },
 
       showPasswordFocus: false,
@@ -581,7 +584,7 @@ export default {
         notRequired.push("surgery_id", "hub_type")
       }
 
-      if(this.registeeType === 'admin' || this.practice){
+      if(this.registeeType === 'admin' || this.registeeType === 'practiceUser'){
         notRequired.push(
           "practice_type_id",
           "surgery_id", 
@@ -594,6 +597,8 @@ export default {
           "address_line_1",
           "address_line_2",
           "address_line_3",
+          "address_line_4",
+          "address_line_5",
           "postcode",
           "coordinate_x",
           "coordinate_y",
