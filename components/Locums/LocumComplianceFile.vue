@@ -80,7 +80,7 @@
 						<div class="w-full" v-if="notesAreVisible">
 							<AppInput
 								v-model="toPutLocumDetailCompliance.note"
-								:name="complianceNote"
+								:name="'complianceNote'"
 								:placeholder="'Type Here'"
 								:type="'textarea'"
 								:label="'Reason for Rejection'"
