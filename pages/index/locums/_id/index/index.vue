@@ -6,7 +6,11 @@
 			</transition>
 		</div>
 		<nuxt-child />
-		<div class="locum-shield" v-if="$route.name.includes('docId')" @click="$router.go(-1)"></div>
+		<div
+			class="locum-shield"
+			v-if="$route.name.includes('docId') || $route.name === 'index-locums-id-index-locum-compliance-mandatory-training-docId'"
+			@click="$router.go(-1)"
+		></div>
 		<!--PUT SHIELDS HERE FOR CHILDREN-->
 	</div>
 </template>
