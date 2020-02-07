@@ -526,23 +526,25 @@ export default {
         let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total));
         invoiceItemTotal = invoiceItems.reduce(reducer)
       }
-
+      console.log('invoice items', this.invoiceItems)
       if(this.disputedItems && this.disputedItems.length > 0) {
         let disputedItems = this.disputedItems.map(disputedItem => parseFloat(disputedItem.total))
         disputedItemTotal = disputedItems.reduce(reducer)
       }
-
+      console.log('disputed items', this.disputedItems)
       grossSum = parseFloat(invoiceItemTotal + disputedItemTotal);
       
       if (this.createdDebitItems && this.createdDebitItems.length > 0) {
         let createdDebitItems = this.createdDebitItems.map(debitItem => parseFloat(debitItem.total))
         debitTotal = createdDebitItems.reduce(reducer);
       }
-      
+      console.log('debit items', this.createdDebitItems
+      )
       if (this.createdCreditItems && this.createdCreditItems.length > 0) {
         let createdCreditItems = this.createdCreditItems.map(creditItem => parseFloat(creditItem.total))
         creditTotal = createdCreditItems.reduce(reducer)
       }
+      console.log('credit items', this.createdCreditItems)
       const netSum = parseFloat((grossSum + debitTotal) - creditTotal).toFixed(2)
       return netSum;
 		}
@@ -586,10 +588,8 @@ export default {
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
 			const newItem = {
-				job_part: "",
-				description: "",
 				hours: "",
-				amount: 0
+				total: 0
 			};
 			newItem.id = this.invoiceItems.length + 1;
 			await this.invoiceItems.push(newItem);
@@ -611,9 +611,8 @@ export default {
     
     async addDebitItem() {
       const newItem = {
-        type: "Debit",
         description: "",
-        amount: 0
+        total: 0
       }
       newItem.id = this.createdDebitItems.length + 1;
       await this.createdDebitItems.push(newItem)
@@ -628,9 +627,8 @@ export default {
 
     async addCreditItem() {
       const newItem = {
-        type: "Credit",
         description: "",
-        amount: 0
+        total: 0
       }
       newItem.id = this.createdCreditItems.length + 1
       await this.createdCreditItems.push(newItem)

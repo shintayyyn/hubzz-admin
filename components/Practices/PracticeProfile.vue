@@ -438,11 +438,25 @@ export default {
 			}
 		},
 		async toMarkBogus() {
-			this.$store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "warning",
-				text: "Work in progress"
-			});
+      await this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/bogus`, {})
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Practice Successfully Marked as Bogus"
+          });
+					this.getPractices();
+					this.getPractice();
+					this.confirm = false;
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+        })
 		},
 		async toDeactivate() {
 			await this.$axios
