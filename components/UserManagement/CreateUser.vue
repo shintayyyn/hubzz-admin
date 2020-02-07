@@ -182,6 +182,7 @@
           <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
           
             <AppInput 
+            v-if="registeeType !== 'admin'"
             v-model="toPostUser.practice_role"
             :type="'select'"
             :label="'Role'"
