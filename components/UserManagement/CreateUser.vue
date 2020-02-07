@@ -256,7 +256,19 @@
           <!-- EMAIL ADDRESS AND PASSWORD - FOR USER CREDENTIALS  -->
 
           <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED -->
-          <AppFilterSearch
+          <AppInput
+            v-if="registeeType === 'admin'"
+            v-model="toPostUser.roles_id"
+            :type="'multi-checkbox'"
+            :error="formError.find(item => item.field === 'roles_id')"
+            @checked="toPostUser.roles_id.push($event)"
+            @unchecked="uncheckRole($event)"
+            :name="'roles_id'"
+            :label="'Admin Role/s'"
+            :lists="adminRoles"
+            required
+          />
+          <!-- <AppFilterSearch
             v-if="registeeType === 'admin'"
             v-model="toPostUser.roles_id"
             :name="'roles_id'"
@@ -266,7 +278,7 @@
             :items="adminRoles"
             @add="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
             @remove="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
-          />
+          /> -->
           <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED ENDS HERE -->
 
           <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)"/>
@@ -600,8 +612,11 @@ export default {
           "clinical_commissioning_group_name",
         )
       }
+
+      console.log(this.toPostUser)
       this.Validate(this.toPostUser, notRequired);
       console.log('errors',this.formError)
+      console.log(this.toPostUser)
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -609,6 +624,12 @@ export default {
 
     uncheckPractice(value) {
       this.toPostUser.practice_type_id = this.toPostUser.practice_type_id.filter(
+        id => id != value
+      );
+    },
+
+    uncheckRole(value) {
+      this.toPostUser.roles_id = this.toPostUser.roles_id.filter(
         id => id != value
       );
     },
