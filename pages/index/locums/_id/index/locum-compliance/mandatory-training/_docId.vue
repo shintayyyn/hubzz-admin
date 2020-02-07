@@ -18,7 +18,10 @@ export default {
 			compliance_doc: null
 			// user:null
 		};
-	},
+  },
+  created(){
+    console.log('route', this.$route.name)
+  },
 	computed: {
 		user() {
 			return this.$store.state.locums.locumUser;

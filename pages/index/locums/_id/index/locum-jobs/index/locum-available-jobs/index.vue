@@ -121,6 +121,10 @@ export default {
         limit: 10,
         offset: 0,
       };
+      this.params.viewing_locum_user_id = params.viewing_locum_user_id,
+      this.params.locum_status = params.locum_status,
+      this.limit = params.limit,
+      this.offset = params.offset,
       setTimeout(async () => {
         this.loading = true;
         await this.getAvailableJobs(params);
@@ -143,8 +147,6 @@ export default {
     try{
       let response = await app.$axios.$get(`/api/v1/admin/locum-users/${route.params.id}`)
       const user = response.data.user
-
-      await store.commit('locums/SET_LOCUM_USER', user)
         
     }catch(err){
       store.commit('SET_NOTIFICATION',{ 
@@ -183,39 +185,26 @@ export default {
         })
       })
     },
-    async sorted(order_by) {
-      let orderBy = order_by.map(item => {
-        let order = item.split(":")[1];
-        let sorting = item.split(":")[0];
-        switch (sorting) {
-          case "date_time_start":
-            sorting = "date_start";
-            break;
-          case "date_time_end":
-            sorting = "date_end";
-            break;
-          case "rate_name":
-            sorting = "rate";
-            break;
-          default:
-            sorting;
-        }
-        return `${sorting}:${order}`;
-      });
-      this.current_page = 1;
-      this.offset = 0;
-      this.order_by = orderBy;
-      this.loading = true;
-      await this.getAvailableJobs();
-      this.loading = false;
-    },
     async pagechanged(page) {
-      this.current_page = page;
-      this.offset = this.limit * (page - 1);
-      this.loading = true;
-      await this.getAvailableJobs();
-      this.loading = false;
+      const query = {
+        ...this.$route.query,
+        page: page || 1
+      }
+      this.params.offset = this.params.limit * (page - 1)
+      this.currentPage = page;
+      this.getAvailableJobs(this.params)
     },
+    async sorted(order_by) {
+      this.currentPage = 1
+      let query = {
+        ...this.$router.query,
+        order_by
+      };
+      this.params.order_by = order_by
+      this.getAvailableJobs(this.params)
+
+    },
+    
   }
 }
 </script>
