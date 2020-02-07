@@ -18,7 +18,11 @@
 				v-if="$route.name.includes('index-locum-compliance-docId')"
 				@click="$router.go(-1)"
 			/>
-			<div class="locum-shield" v-if="$route.name.includes('locumJobId')" @click="$router.go(-1)"></div>
+			<div
+				class="locum-shield"
+				v-if="$route.name.includes('locumJobId') || $route.name === 'index-locums-id-index-locum-compliance-mandatory-training-docId'"
+				@click="$router.go(-1)"
+			></div>
 		</div>
 		<nuxt-child />
 	</div>
@@ -77,6 +81,7 @@ export default {
 	background-color: #333;
 	opacity: 0.5;
 	z-index: 511;
+	cursor: pointer;
 }
 .locum-modal {
 	position: fixed;

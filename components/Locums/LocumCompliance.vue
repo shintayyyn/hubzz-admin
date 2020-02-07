@@ -533,7 +533,7 @@ export default {
 					return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
 					break;
 				case 'Rejected':
-					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+					return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
             break;
         case 'Pending':
 					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'

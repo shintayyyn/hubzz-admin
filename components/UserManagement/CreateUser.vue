@@ -564,7 +564,7 @@ export default {
       this.formError = [];
       let notRequired = ["title", "suffix",];
 
-      this.registeeType !== 'admin' && notRequired.push("roles_id");
+      this.registeeType !== 'admin' && notRequired.push("roles_id", "address_line_4", "address_line_5",);
 
       if(this.registeeType !== 'practiceUser'){
         notRequired.push("practice_user_role_id", "practice_id")
