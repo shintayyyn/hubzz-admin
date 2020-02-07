@@ -96,7 +96,7 @@
 						<div class="text-lg font-semibold">User Management</div>
 						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
 							{{
-							permission.category === "User Management"
+							permission.category === "User"
 							? permission.name
 							: null
 							}}
@@ -236,7 +236,8 @@ export default {
 				);
 				foundCategory.permissions.push(permission);
 			});
-			allPermissions = categories;
+      allPermissions = categories;
+      console.log('all permissions', allPermissions)
 			return {
 				specificRole,
 				rolePermissions,

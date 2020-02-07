@@ -156,10 +156,15 @@
 								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 mx-2 p-2 cursor-pointer"
 							>Deactivate this Practice</div>
 							<div
-								v-if="toBogus === true"
+								v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
 								@click="toMarkBogus()"
 								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 mx-2 p-2 cursor-pointer"
 							>Mark as Bogus</div>
+              <div
+								v-if="practice.status === 'Bogus'"
+								@click="toUnmarkBogus()"
+								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-yellow-600 mx-2 p-2 cursor-pointer"
+							>Remove Bogus Status</div>
 						</div>
 					</div>
 
@@ -445,6 +450,27 @@ export default {
 						enabled: true,
 						status: "success",
 						text: "Practice Successfully Marked as Bogus"
+          });
+					this.getPractices();
+					this.getPractice();
+					this.confirm = false;
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+        })
+    },
+    async toUnmarkBogus() {
+      await this.$axios
+        .put(`/api/v1/admin/practices/${this.practice.id}/unbogus`, {})
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Practice Successfully Unmarked Bogus"
           });
 					this.getPractices();
 					this.getPractice();

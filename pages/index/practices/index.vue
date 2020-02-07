@@ -71,7 +71,7 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"],
-				status: "Active"
+				status: ['Active','Dormant']
 			},
 			sort: "",
 			modal: false,
@@ -144,7 +144,7 @@ export default {
 			const createdRoute = route.query.order_by;
 			const limit = 10;
 			const offset = page * limit - limit;
-			const status = "Active";
+			const status = ['Active','Dormant'];
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
@@ -238,7 +238,7 @@ export default {
 				search: this.search,
 				order_by: params.order_by,
 				offset: params.offset,
-				status: "Active"
+				status: ['Active','Dormant']
 			});
 		},
 
