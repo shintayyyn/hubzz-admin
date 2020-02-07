@@ -130,37 +130,39 @@
 						aria-label="description"
 					/>
 				</div>
-				<div class="flex flex-wrap overflow-hidden">
-					<div
-						class="w-full md:w-1/3 overflow-hidden pb-3"
-						v-for="(role, index) in allPermissions"
-						:key="index"
-					>
-						<div class="customized-select">
-							<input
-								type="checkbox"
-								:id="role.permissions"
-								:checked="isChecked(role.permissions)"
-								@change="checkAll(index, $event.target.checked)"
-							/>
-							<label
-								class="font-bold text-xl pl-1"
-								:for="role.permissions"
-							>{{ role.category === "User Management" ? "User" : role.category }} Management</label>
-						</div>
-						<div class="px-1">
-							<div class="customized-select" v-for="permission in role.permissions" :key="permission.id">
-								<input
-									v-model="permission.done"
-									:id="permission.id"
-									type="checkbox"
-									:checked="permission.done"
-								/>
-								<label class="text-sm pl-1" :for="permission.id">
-									{{
-									permission.name
-									}}
-								</label>
+				<div class="flex-wrap overflow-hidden">
+					<div class="flex flex-wrap justify-start">
+						<div
+							class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
+							v-for="(role, index) in allPermissions"
+							:key="index"
+						>
+							<div class="flex flex-col">
+								<div class="w-full flex flex-row items-center">
+									<input
+										type="checkbox"
+										:id="role.category"
+										:checked="isChecked(role.permissions)"
+										@change="checkAll(index, $event.target.checked)"
+									/>
+									<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
+								</div>
+								<div
+									class="w-full flex flex-row justify-start items-center mb-1"
+									v-for="permission in role.permissions"
+									:key="permission.id"
+								>
+									<input
+										v-model="permission.done"
+										type="checkbox"
+										:id="permission.id"
+										:checked="permission.done"
+									/>
+									<label
+										:for="permission.id"
+										class="text-xs sm:text-sm flex items-center"
+									>{{ permission.name }}</label>
+								</div>
 							</div>
 						</div>
 					</div>
