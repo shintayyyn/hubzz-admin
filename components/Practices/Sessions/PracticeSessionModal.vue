@@ -114,7 +114,7 @@
           <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
           <div v-if="locumUser" class="w-full overflow-hidden flex">
             <div class="flex px-2 my-4 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
-              <div class="flex flex-wrap overflow-hidden">
+              <div class="flex flex-wrap overflow-hidden pb-4">
                 <div class="w-full text-white mx-2">
                   <div class="flex flex-wrap w-full border-b">
                     <div class="flex items-center my-4 w-1/3">
@@ -173,6 +173,9 @@
                         {{clinicalSystem ? clinicalSystem.name:null}}
                     </p>
                     <p class="m-2 mt-5 mr-20 font-semibold">Spoken Languages</p>
+                    <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500">
+                      English
+                    </p>
                     <p class="inline-flex ml-2 mb-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
                       v-for="spokenLanguage in locumUser.locum_detail.spoken_languages"
                       :key="spokenLanguage.id + '-name2'">
@@ -196,10 +199,11 @@
                         </a>
                       </div>
                       <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
-                      <div 
+                      <template v-if="locumUser.locum_detail.mandatory_trainings.length">
+                        <div 
                         v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
                         :key="`${index}-${specificMandatoryDoc.id}-`"
-                        class="text-white "
+                        class="text-white"
                       >
                         <a class="m-2 text-white flex items-center" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
                             <svgicon
@@ -210,6 +214,10 @@
                             />
                             <span class="pl-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
                         </a>
+                      </div>
+                      </template>
+                      <div class="mx-2" v-else>
+                        (none)
                       </div>
                   </div>
                 </div>
