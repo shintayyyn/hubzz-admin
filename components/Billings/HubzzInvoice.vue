@@ -25,7 +25,6 @@
 			/> -->
       <AppButton 
         v-if="forViewing == false" 
-        class="m-2"
         :label="'Save as Final'" 
         :icon="'save-icon'"
         @click="createInvoice()"
@@ -45,7 +44,27 @@
        /> -->
 		</div>
 		<!-- HEADER ENDS HERE -->
-
+    <div v-if="forViewing == false">
+      <div class="text-white font-bold text-xl mx-4">
+        For the Period
+      </div>
+      <div
+        class="w-full flex flex-col items-start md:flex-row md:items-center mx-2 text-white">
+        <AppDate
+            class="w-full md:w-1/2 md:mx-2"
+            v-model="toPostPracticeInvoice.date_start"
+            :name="'date_start'"
+            :label="'From'"
+          />
+        <AppDate
+          class="w-full md:w-1/2 md:mx-2"
+          v-model="toPostPracticeInvoice.date_end"
+          :name="'date_end'"
+          :label="'To'"
+        />
+      </div>
+    </div>
+   
 		<!-- BODY -->
 		<!-- FIRST PAGE -->
 		<AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
@@ -54,6 +73,7 @@
 			class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
 			:class="!doNotShow && 'display'"
 		>
+       <!--HQ INVOICE  -->
 			<div>
 				<div class="flex flex-col p-4" ref="pdf-header">
 					<div>
@@ -85,7 +105,7 @@
                      <div v-if="!locumInvoice" class="mt-2 flex flex-col">
                       <div>For the period</div>
                       <div>
-                        <span>{{dateStart + " to " + dateEnd}}</span>
+                        <span>{{dateStart ? dateStart : toPostPracticeInvoice.date_start}} to {{dateEnd ? dateEnd : toPostPracticeInvoice.date_end}}</span>
                       </div>
                     </div>
 									</div>
@@ -392,6 +412,7 @@
 					<div class="my-1 px-1 w-1/4 text-right text-lg font-semibold">{{ "£ " + amountTotal }}</div>
 				</div>
 			</div>
+      <!-- LOCUM INVOICE  -->
 			<div v-if="locumInvoice" class="p-4" ref="pdf-footer">
          <!-- items days worked -->
         <div :ref="'days-worked'" class="flex flex-row flex-wrap justify-between px-2">
@@ -624,8 +645,8 @@ export default {
 
 		async createInvoice() {
       this.toPostPracticeInvoice.practice_id = await this.practice.id ? this.practice.id : null
-      this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
-      this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+      // this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
+      // this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
       this.toPostPracticeInvoice.items = await this.invoiceItems.concat(this.disputedItems,this.createdDebitItems,this.createdCreditItems)
       this.toPostPracticeInvoice.total_amount = await this.amountTotal
 
