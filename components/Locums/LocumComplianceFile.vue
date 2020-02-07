@@ -65,7 +65,6 @@
 						</div>
 
 						<div>
-							<p class="font-bold">Status</p>
 							<AppInput
 								class="w-full mr-2"
 								v-model="toPutLocumDetailCompliance.status"
@@ -73,7 +72,10 @@
 								:name="'status'"
 								:placeholder="'Select...'"
 								:items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
+								:error="formError.find(item => item.field === 'status')"
 								@change="setStatusData($event)"
+								:label="'Status'"
+								required
 							/>
 						</div>
 
@@ -87,6 +89,7 @@
 								:rows="2"
 								:class="'font-normal'"
 								:error="formError.find(item => item.field === 'note')"
+								required
 							/>
 							<!-- <p class="mt-5 mr-20">Reason for Rejection</p>
 							<textarea
@@ -104,6 +107,7 @@
 								:name="'expired_at'"
 								:label="'Change Expiration Date'"
 								:error="formError.find(item => item.field === 'expired_at')"
+								required
 							/>
 						</div>
 					</div>

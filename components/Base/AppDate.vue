@@ -1,7 +1,10 @@
 <template>
 	<div class="flex flex-col py-2 mb-2 md:mb-4 leading-normal" v-on-clickaway="toggledOff">
 		<div class="relative flex flex-row flex-no-wrap justify-between">
-			<label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{label}}</label>
+			<label :for="name" class="text-xs sm:text-sm py-1 font-bold">
+				{{label}}
+				<span v-if="required" class="text-red-500">*</span>
+			</label>
 			<!-- <div
 				class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
 				v-if="error"
@@ -268,7 +271,8 @@ export default {
 			type: String,
 			default: "YYYY-MM-DD"
 		},
-		disabled: Boolean
+		disabled: Boolean,
+		required: Boolean
 	},
 	data() {
 		return {
