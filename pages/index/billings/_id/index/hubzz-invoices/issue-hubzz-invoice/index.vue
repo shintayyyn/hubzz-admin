@@ -27,7 +27,12 @@
 						:label="'To'"
 					/>
 					<div class="w-full flex justify-between items-center mb-2">
-						<AppButton :label="'Go'" @click="chooseJobPartsModal = true" />
+						<AppButton 
+              :label="'Search for Invoices'"
+              :icon="'search'" 
+              @click="chooseJobPartsModal = true" 
+            />
+
 						<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
 							<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
 							<label for="disputed">Show Disputed Invoices</label>
@@ -41,9 +46,13 @@
         :practice="practice"
         :invoiceItems="invoiceItems"
         :disputedItems="disputedItems"
-        :dateStart="toFilter.approved_at_date_start"
-        :dateEnd="toFilter.approved_at_date_end" 
+ 
       />
+        <!-- :dateStart="date_start"
+        :dateEnd="date_end" -->
+
+        <!-- :filterDateStart="toFilter.approved_at_date_start"
+        :filterDateEnd="toFilter.approved_at_date_end" -->
 			<div
 				class="issue-hubzz-invoice-shield"
 				v-if="chooseJobPartsModal == true"
@@ -80,7 +89,8 @@ export default {
 			loading: false,
 			chooseJobPartsModal: false,
 			showDisputed: false,
-
+      date_start: "",
+      date_end: "",
 			toFilter: {
 				viewing_practice_id: this.$route.params.id,
 				approved_at_date_start: "",
