@@ -75,7 +75,7 @@
 							</div>
 						</div>
 
-            <div class="flex items-center pb-2">
+						<div class="flex items-center pb-2">
 							<span class="mr-2">
 								<svgicon
 									:name="practice_surgery.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
@@ -191,7 +191,7 @@
 							</div>
 						</div>
 						<!-- SET MAX RATES END HERE -->
-            <div class="w-full p-1">
+						<div class="w-full p-1">
 							<AppInput
 								v-model="form.allow_surgery_create_permanent_jobs"
 								:type="'select'"
@@ -242,15 +242,26 @@
 				</div>
 			</div>
 			<div
-				@click="terminateSpoke()"
+				@click="terminate = true"
 				class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
 			>Terminate this Spoke</div>
+
+			<transition name="drop-down" mode="out-in">
+				<AppConfirm
+					v-if="terminate"
+					:message="'Are you sure you want to deactivate this account?'"
+					@cancel="terminate = false"
+					@confirm="terminateSpoke()"
+				/>
+			</transition>
+			<div class="shield cursor-pointer" v-if="terminate" @click="terminate = false"></div>
 		</div>
 	</div>
 </template>
 <script>
 import AppButton from "@/components/Base/AppButton";
 import AppInput from "@/components/Base/AppInput";
+import AppConfirm from "@/components/Base/AppConfirm";
 export default {
 	transition: {
 		name: "fade",
@@ -258,16 +269,18 @@ export default {
 	},
 	components: {
 		AppButton,
-		AppInput
+		AppInput,
+		AppConfirm
 	},
 	data() {
 		return {
+			terminate: false,
 			practice: "",
 			practice_surgery: "",
 			editPermissions: false,
 			form: {
-        allow_surgery_create_sessions: "",
-        allow_surgery_create_permanent_jobs: "",
+				allow_surgery_create_sessions: "",
+				allow_surgery_create_permanent_jobs: "",
 				max_hourly_rate_limit: "",
 				max_halfday_rate_limit: "",
 				max_wholeday_rate_limit: "",
@@ -314,8 +327,8 @@ export default {
 		this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit;
 		this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit;
 		this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit;
-    this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
-    this.form.allow_surgery_create_permanent_jobs = this.practice_surgery.allow_surgery_create_permanent_jobs;
+		this.form.max_excess_hours = this.practice_surgery.max_excess_hours;
+		this.form.allow_surgery_create_permanent_jobs = this.practice_surgery.allow_surgery_create_permanent_jobs;
 		this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum;
 		this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz;
 		this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries;
@@ -328,6 +341,11 @@ export default {
 					`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}`
 				)
 				.then(res => {
+					this.terminate = false;
+					console.log(this.$route);
+					this.$router.push(
+						`/practices/${this.$route.params.id}/practice-surgeries`
+					);
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",

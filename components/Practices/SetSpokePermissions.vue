@@ -81,7 +81,7 @@
 					</div>
 				</div>
 				<!-- SET MAX RATES END HERE -->
-        <div class="w-full p-1">
+				<div class="w-full p-1">
 					<AppInput
 						v-model="form.allow_surgery_create_permanent_jobs"
 						:type="'select'"
@@ -149,7 +149,7 @@ export default {
 			form: {
 				child_practice_id: this.practiceSpokeId,
 				allow_surgery_create_sessions: "",
-        allow_surgery_create_permanent_jobs: "",
+				allow_surgery_create_permanent_jobs: "",
 				max_hourly_rate_limit: "",
 				max_halfday_rate_limit: "",
 				max_wholeday_rate_limit: "",
@@ -206,7 +206,10 @@ export default {
 								text: "Practice Child Added"
 							});
 							this.getPracticeSpokes(this.practice.id);
-							this.$emit("practiceSpokePosted");
+							this.$router.push(
+								`/practices/${this.$route.params.id}/practice-surgeries`
+							);
+							// this.$emit("practiceSpokePosted");
 						})
 						.catch(err => {
 							this.$store.commit("SET_NOTIFICATION", {

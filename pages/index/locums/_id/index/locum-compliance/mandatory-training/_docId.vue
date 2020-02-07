@@ -1,7 +1,6 @@
 <template>
 	<div class="compliance-modal shadow-lg">
 		<LocumComplianceFile :user="user" :compliance_doc="compliance_doc" />
-		<!-- :compliance_type="" -->
 	</div>
 </template>
 <script>

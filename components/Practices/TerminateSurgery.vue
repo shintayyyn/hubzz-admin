@@ -1,7 +1,33 @@
 <template>
 	<div
-		class="flex flex-col justify-between w-full h-full text-white pt-4 pb-8 md:py-8 sm:py-4 px-4"
+		class="flex flex-col justify-between w-full h-full text-white pt-4 pb-8 md:py-8 px-4"
+		:style="approveTemination || rejectTermination ? 'overflow: hidden' : 'overflow: auto'"
 	>
+		<transition name="drop" mode="out-in">
+			<AppConfirm
+				v-if="approveTemination"
+				:style="'top:35%'"
+				:inClass="'rounded-lg'"
+				:message="'Are you sure you want to approve this termination request?'"
+				@cancel="approveTemination = false"
+				@confirm="toDeleteSurgery(childSurgery.id)"
+			/>
+		</transition>
+		<transition name="drop" mode="out-in">
+			<AppConfirm
+				v-if="rejectTermination"
+				:style="'top:35%'"
+				:inClass="'rounded-lg'"
+				:message="'Are you sure you want to reject this termination request'"
+				@cancel="rejectTermination = false"
+				@confirm="toRejectRequest(childSurgery.id)"
+			/>
+		</transition>
+		<div
+			class="shield cursor-pointer overflow-hidden"
+			v-if="approveTemination || rejectTermination"
+			@click="approveTemination ? approveTemination = false : rejectTermination = false"
+		></div>
 		<div class="w-full flex flex-wrap justify-between mb-2">
 			<svgicon
 				name="arrow-left-solid"
@@ -9,18 +35,16 @@
 				@click="$emit('close')"
 			/>
 			<div class="py-2 font-bold text-lg leading-tight">
-				{{ !childSurgery.invitation_accepted_at || childSurgery.invitataion_rejected_at ? 
-        'Cancellation of Invitation Request':
-        'Termination Request' }}
+				{{ !childSurgery.invitation_accepted_at || childSurgery.invitataion_rejected_at ?
+				'Cancellation of Invitation Request':
+				'Termination Request' }}
 			</div>
 		</div>
 
 		<div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Date Requested:</span>
-				<div>
-					{{$moment(childSurgery.termination_requested_at).format("MMM D, YYYY | HH:MM:ss")}}
-				</div>
+				<div>{{$moment(childSurgery.termination_requested_at).format("MMM D, YYYY | HH:MM:ss")}}</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Practice Name:</span>
@@ -32,9 +56,7 @@
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Practice ID:</span>
-				<div>
-					{{ childSurgery.child_practice.id }}
-				</div>
+				<div>{{ childSurgery.child_practice.id }}</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Phone Number:</span>
@@ -50,42 +72,41 @@
 			</div>
 			<div class="my-2">
 				<span class="font-bold">Note from Practice Hub:</span>
-				<div class="md:m-2 p-2 bg-charade rounded-lg overflow-y-auto">
-					{{ childSurgery.note }}
-				</div>
+				<div class="md:m-2 p-2 bg-charade rounded-lg overflow-y-auto">{{ childSurgery.note }}</div>
 			</div>
 		</div>
 
 		<div class="flex flex-col md:flex-row justify-center cursor-pointer mb-4 md:mb-0">
 			<div
-				class="flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
-				@click="toDeleteSurgery(childSurgery.id)"
-			>
-				{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Approve Termination Request" : "Approve Cancellation Request"}}
-			</div>
+				class="transition-hover flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
+				@click="approveTemination = true"
+			>{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Approve Termination Request" : "Approve Cancellation Request"}}</div>
 			<div
-				class="flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
-				@click="toRejectRequest(childSurgery.id)"
-			>
-				{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Reject Termination Request" : "Reject Cancellation Request"}}
-			</div>
+				class="transition-hover flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
+				@click="rejectTermination = true"
+			>{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Reject Termination Request" : "Reject Cancellation Request"}}</div>
 		</div>
 	</div>
 </template>
 
 <script>
+import AppConfirm from "@/components/Base/AppConfirm";
 export default {
+	components: {
+		AppConfirm
+	},
 	props: ["practice", "childSurgery"],
 
 	data() {
 		return {
-			// childSurgery: null
+			approveTemination: false,
+			rejectTermination: false
 		};
 	},
 
-  created() {
-    console.log('childSurgery', this.childSurgery)
-  },
+	created() {
+		console.log("childSurgery", this.childSurgery);
+	},
 
 	methods: {
 		async toDeleteSurgery() {
@@ -166,4 +187,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
