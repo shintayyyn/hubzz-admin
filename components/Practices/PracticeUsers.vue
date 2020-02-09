@@ -5,7 +5,7 @@
 			<div v-if="authAdminPermissions.includes('Add Practice User')">
 				<button
 					class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
-					@click="show(surgery.id)"
+					@click="show()"
 				>Add User</button>
 			</div>
 		</div>
@@ -209,7 +209,7 @@ export default {
 			this.loadingPracticeUsers = false;
 		},
 
-		show(id) {
+		show() {
 			this.modal = true;
 		},
 		pagechanged(e) {

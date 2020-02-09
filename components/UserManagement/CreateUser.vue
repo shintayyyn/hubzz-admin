@@ -182,6 +182,7 @@
           <!-- v-if="surgery && surgery.practice_count > 0 && practice && practice.user_count > 0" -->
           
             <AppInput 
+            v-if="registeeType !== 'admin'"
             v-model="toPostUser.practice_role"
             :type="'select'"
             :label="'Role'"
@@ -255,7 +256,19 @@
           <!-- EMAIL ADDRESS AND PASSWORD - FOR USER CREDENTIALS  -->
 
           <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED -->
-          <AppFilterSearch
+          <AppInput
+            v-if="registeeType === 'admin'"
+            v-model="toPostUser.roles_id"
+            :type="'multi-checkbox'"
+            :error="formError.find(item => item.field === 'roles_id')"
+            @checked="addRole($event)"
+            @unchecked="uncheckRole($event)"
+            :name="'roles_id'"
+            :label="'Admin Role/s'"
+            :lists="adminRoles"
+            required
+          />
+          <!-- <AppFilterSearch
             v-if="registeeType === 'admin'"
             v-model="toPostUser.roles_id"
             :name="'roles_id'"
@@ -265,7 +278,7 @@
             :items="adminRoles"
             @add="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
             @remove="CheckEmptyField(toPostUser.roles_id, 'roles_id')"
-          />
+          /> -->
           <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED ENDS HERE -->
 
           <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)"/>
@@ -399,7 +412,7 @@ export default {
       });
     await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
       res.data.roles.forEach(item => {
-        this.adminRoles.push({value: item.id, label: item.name})
+        this.adminRoles.push({label: item.name, value: item.id})
       })
       let default_role = res.data.roles.find((item, index) => index === 0)
     });
@@ -492,10 +505,17 @@ export default {
         this.toPostUser.coordinate_x  = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_x : null
         this.toPostUser.coordinate_y = res.data.postcode_coordinates[0] ? res.data.postcode_coordinates[0].coordinate_y : null
       })
-    }
+    },
   },
 
   methods: {
+    addRole(e){
+      this.adminRoles.find(item => {
+        if (item.value === parseInt(e)) {
+          this.toPostUser.roles_id.push(item)
+        }
+      })
+    },
     validatePassword(field, fieldName) {
       this.CheckEmptyField(field, fieldName)
       this.ValidateSamePassword(this.toPostUser.password, this.toPostUser.password_confirmation)
@@ -599,8 +619,11 @@ export default {
           "clinical_commissioning_group_name",
         )
       }
+
+      console.log(this.toPostUser)
       this.Validate(this.toPostUser, notRequired);
       console.log('errors',this.formError)
+      console.log(this.toPostUser)
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -608,6 +631,12 @@ export default {
 
     uncheckPractice(value) {
       this.toPostUser.practice_type_id = this.toPostUser.practice_type_id.filter(
+        id => id != value
+      );
+    },
+
+    uncheckRole(value) {
+      this.toPostUser.roles_id = this.toPostUser.roles_id.filter(
         id => id != value
       );
     },

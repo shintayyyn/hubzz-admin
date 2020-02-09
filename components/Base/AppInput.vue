@@ -168,7 +168,7 @@
                   </span>
                 </div>
                 <div
-                  class="px-2 pt-1 text-xs"
+                  class="bg-red-300 text-red-700 py-1 px-2 text-xs w-full"
                   v-if="error && (type === 'select' || type.includes('checkbox'))"
                 >
                   {{
