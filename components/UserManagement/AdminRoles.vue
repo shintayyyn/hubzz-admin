@@ -1,7 +1,12 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
 		<div class="flex px-4 md:px-8 py-2 text-sm">
-			<AppConfirm v-if="confirm" :message="'Are you sure you want to delete this role?'" @confirm="deleteRole(role_id)" @cancel="confirm=false"/>
+			<AppConfirm
+				v-if="confirm"
+				:message="'Are you sure you want to delete this role?'"
+				@confirm="deleteRole(role_id)"
+				@cancel="confirm=false"
+			/>
 			<AppButton
 				v-if="authAdminPermissions.includes('Add Role')"
 				:label="'Add New Role'"
@@ -94,7 +99,7 @@ import CreateAdminRole from "@/components/UserManagement/CreateAdminRole";
 import AppPagination from "@/components/Base/AppPagination";
 import AppTable from "@/components/Base/AppTable";
 import AppButton from "@/components/Base/AppButton";
-import AppConfirm from "@/components/Base/AppConfirm"
+import AppConfirm from "@/components/Base/AppConfirm";
 export default {
 	components: {
 		CreateAdminRole,
@@ -176,9 +181,9 @@ export default {
 		},
 
 		toDeleteAdminRole(roleId) {
-			console.log(roleId)
-			this.role_id = roleId
-			this.confirm = true
+			console.log(roleId);
+			this.role_id = roleId;
+			this.confirm = true;
 		},
 
 		async deleteRole(roleId) {
@@ -193,7 +198,7 @@ export default {
 					this.$store.dispatch("adminusers/fetchAdminRoles", {
 						limit: 10
 					});
-					this.confirm = false
+					this.confirm = false;
 				})
 				.catch(err => {
 					console.log("delete admin role error!!", err);
