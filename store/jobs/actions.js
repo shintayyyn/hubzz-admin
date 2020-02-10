@@ -196,18 +196,101 @@ export default{
             }
 
         })
-
     },
-    async fetchLocumJobs({ commit }, payload){
+
+    async fetchLocumJobs({ commit }, payload) {
+      commit('TOGGLE_LOADING', true)
       const response = await jobsApi.fetchLocumJobs(this.$axios, payload)
+      commit('TOGGLE_LOADING', false)
+
+      // Allocated
+      // Applied
+      // Available
+      // Completed
+      // Matched
+      // Unsuccessful
+
+      // ====PARTS=====
+      // Approved
+      // Cancelled
+      // Ongoing
+      // Withdrawn
+    },
+
+    async fetchPracticeSessions({ commit }, payload) {
+      commit('TOGGLE_LOADING', true)
+      const response = await jobsApi.fetchPracticeSessions(this.$axios, payload)
+      commit('TOGGLE_LOADING', false)
+      // Allocated
+      // Applied
+      // Live
+      // Pending
+      // Unfilled
+      if (payload.countOnly) {
+        payload.status.forEach(jobStatus => {
+          if (jobStatus.toLowerCase() === 'allocated') {
+            commit('SET_PRACTICE_ALLOCATED_SESSIONS_COUNT', response.data.count)
+          }
+          if (jobStatus.toLowerCase() === 'applied') {
+            commit('SET_PRACTICE_APPLIED_SESSIONS_COUNT', response.data.count)
+          }
+          if (jobStatus.toLowerCase() === 'live') {
+            commit('SET_PRACTICE_AVAILABLE_SESSIONS_COUNT', response.data.count)
+          }
+          if (jobStatus.toLowerCase() === 'unsuccessful') {
+            commit('SET_PRACTICE_UNSUCCESSFUL_SESSIONS_COUNT', response.data.count)
+          }
+          if (jobStatus.toLowerCase() === 'cancelled') {
+            commit('SET_PRACTICE_CANCELLED_SESSIONS_COUNT', response.data.count)
+          }
+          if (jobStatus.toLowerCase() === 'withdrawn') {
+            commit('SET_PRACTICE_WITHDRAWN_SESSIONS_COUNT', response.data.count)
+          }
+          if (jobStatus.toLowerCase() === 'pending') {
+            commit('SET_PRACTICE_PENDING_SESSIONS_COUNT', response.data.count)
+          }
+          // FETCH PENDING PRACTICE
+        })
+      }
+      if (!payload.countOnly) {
+        payload.status.forEach(jobStatus => {
+          if (jobStatus.toLowerCase() === 'allocated') {
+            commit('SET_PRACTICE_ALLOCATED_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'allocated') : [])
+          }
+          if (jobStatus.toLowerCase() === 'applied') {
+            commit('SET_PRACTICE_APPLIED_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'applied') : [])
+          }
+          if (jobStatus.toLowerCase() === 'live') {
+            commit('SET_PRACTICE_AVAILABLE_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'live') : [])
+          }
+          if (jobStatus.toLowerCase() === 'unfilled') {
+            commit('SET_PRACTICE_UNFILLED_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'unfilled') : [])
+          }
+          if (jobStatus.toLowerCase() === 'cancelled') {
+            commit('SET_PRACTICE_CANCELLED_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'cancelled') : [])
+          }
+          if (jobStatus.toLowerCase() === 'withdrawn') {
+            commit('SET_PRACTICE_WITHDRAWN_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'withdrawn') : [])
+          }
+          if (jobStatus.toLowerCase() === 'pending') {
+            commit('SET_PRACTICE_PENDING_SESSIONS', response.data.jobs && response.data.jobs.length > 0 ?
+            response.data.jobs.filter(jobPart => jobPart.status.toLowerCase() === 'pending') : [])
+          }
+          // FETCH PENDING PRACTICE
+        })
+      }
     },
 
     async fetchJobParts({ commit }, payload) {
       commit('TOGGLE_LOADING', true)
       const response = await jobsApi.fetchJobParts(this.$axios, payload)
       commit('TOGGLE_LOADING', false)
-
-      console.log('payload', payload)
       // ongoing
       // completed
       // approved
@@ -220,7 +303,6 @@ export default{
         if(!payload.countOnly) {
           commit('SET_HUBZZ_BILLING_SESSIONS', response.data.job_parts)
         }
-        
       }
 
       if (payload.countOnly) {
@@ -262,8 +344,6 @@ export default{
           }
         })
       }
-
-      
     },
 
     async fetchSpecificJob({ commit }, payload){

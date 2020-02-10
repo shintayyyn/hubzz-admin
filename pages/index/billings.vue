@@ -1,7 +1,6 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-auto">
 		<div class="px-2 text-2xl md:text-4xl text-white">Billing</div>
-		<div class="px-2 text-sm mb-4 text-white">There are no Verified Practices Billable.</div>
 		<!-- <div class="px-2 flex"> -->
 		<!-- <AppButton :label="'Add Invoice'" :nuxtLink="'/billings/addinvoice'" class="text-sm" /> -->
 		<!-- <div class="flex">
@@ -52,7 +51,7 @@
 				>{{ slotProps.item.hub_type }}</div>
 			</template>
 		</AppTable>
-
+    <div v-else class="px-2 text-sm mb-4 text-white">There are no Verified Practices Billable.</div>
 		<div
 			class="billing-shield"
 			v-if="
