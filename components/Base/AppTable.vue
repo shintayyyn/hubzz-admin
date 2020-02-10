@@ -165,7 +165,6 @@ export default {
 	},
 	created() {},
 	mounted() {
-		console.log("orderBy", this.orderBy);
 		this.params = this.orderBy;
 	},
 	methods: {
@@ -173,8 +172,6 @@ export default {
 			if (!this.params.some(item => item.includes(`${dataIndex}`))) {
 				this.params = [];
 				this.params.push(`${dataIndex}:desc`);
-				console.log("dataIndex", dataIndex);
-				console.log("params", this.params);
 				// this.$router.push({query: this.params})
 			} else {
 				let index = this.params.findIndex(item => item === `${dataIndex}:desc`);
@@ -190,7 +187,6 @@ export default {
 			this.$emit("sorted", this.params);
 		},
 		checkClicked(item) {
-			console.log("dsda");
 			this.$emit("toggleCheck", item);
 		},
 		pagechanged(e) {
