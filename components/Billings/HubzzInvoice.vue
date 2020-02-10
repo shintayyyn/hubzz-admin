@@ -87,7 +87,7 @@
 						</div>
 					</div>
           <div class="flex">
-						<div class="w-full md:w-2/3">
+						<div class="w-full">
 							<div
 								class="border-2 border-gray-300 rounded-lg p-4 text-sm"
 								:class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
@@ -112,6 +112,16 @@
 								</div>
 							</div>
 						</div>
+            <div v-if="practiceInvoice || locumInvoice" class="w-full flex flex-col-reverse">
+              <div class="flex justify-end">
+                <div>
+                  Invoice Number:  
+                </div>
+                <div class="font-semibold">
+                  {{practiceInvoice && !locumInvoice ? practiceInvoice.invoice_number : locumInvoice.invoice_number}}
+                </div>
+              </div>
+            </div>
 					</div>
 				</div>
         <!-- FOR INVOICES -->
@@ -505,7 +515,9 @@ export default {
     if(this.locumInvoice) {
       console.log('locum invoice', this.locumInvoice)
     }
-    
+    if(this.practiceInvoice) {
+      console.log('practice invoice', this.practiceInvoice)
+    }
     if (this.debitItems) {
       this.createdDebitItems = this.debitItems
     }
@@ -538,8 +550,7 @@ export default {
         let createdDebitItems = this.createdDebitItems.map(debitItem => parseFloat(debitItem.total))
         debitTotal = createdDebitItems.reduce(reducer);
       }
-      console.log('debit items', this.createdDebitItems
-      )
+      console.log('debit items', this.createdDebitItems)
       if (this.createdCreditItems && this.createdCreditItems.length > 0) {
         let createdCreditItems = this.createdCreditItems.map(creditItem => parseFloat(creditItem.total))
         creditTotal = createdCreditItems.reduce(reducer)
@@ -581,7 +592,7 @@ export default {
         )
       }else if(this.practiceInvoice){
         window.open(
-          `${process.env.API_URL}/api/v1/practice-invoices/${this.practiceInvoice.id}/pdf`
+          `${process.env.API_URL}/api/v1/practice-invoices/${this.practiceInvoice.id}/pdf?filename=${'hubzz_invoice_'+this.practiceInvoice.invoice_number}`
         );
       }
     },
@@ -611,6 +622,7 @@ export default {
     
     async addDebitItem() {
       const newItem = {
+        type: "Debit",
         description: "",
         total: 0
       }
@@ -627,6 +639,7 @@ export default {
 
     async addCreditItem() {
       const newItem = {
+        type: "Credit",
         description: "",
         total: 0
       }

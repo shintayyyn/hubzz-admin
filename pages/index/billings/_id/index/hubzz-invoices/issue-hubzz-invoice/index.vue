@@ -96,7 +96,8 @@ export default {
 				approved_at_date_start: "",
 				approved_at_date_end: "",
 				status: this.showDisputed == false ? "Approved" : "",
-				invoice_status: this.showDisputed == true ? "Disputed" : null
+        invoice_status: this.showDisputed == true ? "Disputed" : null,
+        practice_invoiced: false,
 			},
 
 			practice: "",

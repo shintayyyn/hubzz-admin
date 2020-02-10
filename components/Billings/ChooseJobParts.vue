@@ -148,15 +148,8 @@ export default {
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count;
-    	});
-    
-    // FOR TESTING ONLY
-		// await this.$axios
-		// 	.$get(`/api/v1/admin/job-parts/count`)
-		// 	.then(res => {
-		// 		jobPartCount = res.data.count;
-		// 	});
-
+      });
+      
 		await this.$store.commit(
 			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
 			jobPartCount
@@ -168,14 +161,12 @@ export default {
         console.log("res", res);
         jobParts = res.data.job_parts;
       });
-
-    // FOR TESTING ONLY
-		// await this.$axios.$get(`/api/v1/admin/job-parts`).then(res => {
-		// 	console.log("res", res);
-		// 	jobParts = res.data.job_parts;
-    // });
     
-		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts);
+		await this.$store.commit(
+      "jobs/SET_HUBZZ_BILLING_SESSIONS", 
+      jobParts
+    );
+
 		await this.$store.commit("jobs/TOGGLE_LOADING", false);
 	},
 	computed: {
@@ -196,7 +187,7 @@ export default {
 			});
 
 			if (index > -1) {
-				this.chosenJobParts.splice(index, 1);
+				this.chosenJobParts.splice(index, 1); 
 			} else {
 				this.chosenJobParts.push(item);
 			}
@@ -214,6 +205,7 @@ export default {
 		},
 		getJobParts(params) {
 			this.$store.dispatch("jobs/fetchJobParts", {
+        ...this.params,
 				limit: this.params.limit,
 				search: this.search,
 				order_by: params.order_by,
