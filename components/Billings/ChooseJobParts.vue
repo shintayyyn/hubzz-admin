@@ -1,38 +1,47 @@
 <template>
 	<div>
 		<div class="choose-job-parts-modal shadow-lg">
-			<div class="m-4">
-				<div @click="$emit('close')" class="text-white hover:text-sunglow p-1">
-					<svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
+			<div class="p-4 md:p-8">
+				<div class="p-1">
+					<svgicon
+						@click="$emit('close')"
+						name="arrow-left-solid"
+						height="32"
+						width="32"
+						class="fill-current cursor-pointer text-white hover:text-sunglow"
+					/>
 				</div>
-				<AppTable
-					v-if="jobPartCount > 0"
-					:total="jobPartCount"
-					:items="jobParts"
-					:currentPage="currentPage"
-					:perPage="params.limit"
-					:columns="columns"
-					:loading="loadingSessions"
-					:orderBy="params.order_by"
-					:customWidth="200"
-					@checkClicked="toggleCheck"
-					@pagechanged="pagechanged"
-					@sorted="sorted"
-				>
-					<template
-            v-slot:checker="slotProps">
-						<input type="checkbox" :id="slotProps.item" :value="slotProps.item" v-model="chosenJobParts" />
-						<label :for="slotProps.item"></label>
-					</template>
+				<template v-if="jobPartCount > 0">
+					<AppTable
+						:total="jobPartCount"
+						:items="jobParts"
+						:currentPage="currentPage"
+						:perPage="params.limit"
+						:columns="columns"
+						:loading="loadingSessions"
+						:orderBy="params.order_by"
+						:customWidth="200"
+						@checkClicked="toggleCheck"
+						@pagechanged="pagechanged"
+						@sorted="sorted"
+					>
+						<template v-slot:checker="slotProps">
+							<input type="checkbox" :id="slotProps.item" :value="slotProps.item" v-model="chosenJobParts" />
+							<label :for="slotProps.item"></label>
+						</template>
 
-					<template v-slot:status_slot="slotProps">
-						<div
-							class="rounded-full text-center px-4 py-1 w-32"
-							:class="statusStyle(slotProps.item.invoice_status)"
-						>{{ slotProps.item.invoice_status }}</div>
-					</template>
-				</AppTable>
-				<AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
+						<template v-slot:status_slot="slotProps">
+							<div
+								class="rounded-full text-center px-4 py-1 w-32"
+								:class="statusStyle(slotProps.item.invoice_status)"
+							>{{ slotProps.item.invoice_status }}</div>
+						</template>
+					</AppTable>
+					<AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
+				</template>
+				<template v-if="jobPartCount === 0">
+					<p class="text-gray-500 py-2 text-center">No jobs to invoice found.</p>
+				</template>
 			</div>
 		</div>
 	</div>
@@ -51,7 +60,7 @@ export default {
 			// jobPartCount: 0,
 			// jobParts: [],
 			chosenJobParts: [],
-      disputedJobParts: [],
+			disputedJobParts: [],
 			// for app table
 			currentPage: 1,
 			params: {
@@ -62,8 +71,7 @@ export default {
 			},
 			loading: false,
 			columns: [
-        
-        {
+				{
 					name: "Check",
 					dataIndex: "checker",
 					class: "text-center",
@@ -127,30 +135,30 @@ export default {
 			limit,
 			offset,
 			order_by
-    };
-    console.log(this.filter)
+		};
+		console.log(this.filter);
 		if (this.showDisputed) {
 			params = {
-        completed_at_date_start: this.filter.approved_at_date_start,
-        completed_at_date_end: this.filter.approved_at_date_end,
-        invoice_status: "Disputed",
-        status: this.filter.status,
-        viewing_practice_id: this.filter.viewing_practice_id,
-        limit,
-        offset,
-        order_by
+				completed_at_date_start: this.filter.approved_at_date_start,
+				completed_at_date_end: this.filter.approved_at_date_end,
+				invoice_status: "Disputed",
+				status: this.filter.status,
+				viewing_practice_id: this.filter.viewing_practice_id,
+				limit,
+				offset,
+				order_by
 			};
 		}
 		let jobPartCount,
 			jobParts = "";
-    console.log('params', params)
-    await this.$axios
+		console.log("params", params);
+		await this.$axios
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count;
-    	});
-    
-    // FOR TESTING ONLY
+			});
+
+		// FOR TESTING ONLY
 		// await this.$axios
 		// 	.$get(`/api/v1/admin/job-parts/count`)
 		// 	.then(res => {
@@ -162,19 +170,17 @@ export default {
 			jobPartCount
 		);
 
-    await this.$axios
-      .$get(`/api/v1/admin/job-parts`, { params })
-      .then(res => {
-        console.log("res", res);
-        jobParts = res.data.job_parts;
-      });
+		await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+			console.log("res", res);
+			jobParts = res.data.job_parts;
+		});
 
-    // FOR TESTING ONLY
+		// FOR TESTING ONLY
 		// await this.$axios.$get(`/api/v1/admin/job-parts`).then(res => {
 		// 	console.log("res", res);
 		// 	jobParts = res.data.job_parts;
-    // });
-    
+		// });
+
 		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts);
 		await this.$store.commit("jobs/TOGGLE_LOADING", false);
 	},
@@ -203,14 +209,13 @@ export default {
 			console.log("toggleCheck", item);
 		},
 		emitChosenJobParts(event) {
-      if(this.showDisputed === false){
-        console.log('false')
-        this.$emit("chosenJobParts", this.chosenJobParts, false);
-      }else if(this.showDisputed === true){
-        console.log('true')
-        this.$emit("chosenJobParts", this.chosenJobParts, true);
-      }
-			
+			if (this.showDisputed === false) {
+				console.log("false");
+				this.$emit("chosenJobParts", this.chosenJobParts, false);
+			} else if (this.showDisputed === true) {
+				console.log("true");
+				this.$emit("chosenJobParts", this.chosenJobParts, true);
+			}
 		},
 		getJobParts(params) {
 			this.$store.dispatch("jobs/fetchJobParts", {
@@ -229,8 +234,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getJobParts(this.params);
-    },
-    
+		},
+
 		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;
@@ -240,8 +245,8 @@ export default {
 			};
 			this.params.order_by = order_by;
 			this.getJobParts(this.params);
-    },
-    
+		},
+
 		statusStyle(status) {
 			switch (status) {
 				case "Disputed":

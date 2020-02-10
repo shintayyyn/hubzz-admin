@@ -10,7 +10,7 @@
 		<div class="flex flex-row justify-start mt-1">
 			<div class="flex flex-col w-full">
 				<input
-					:value="$moment(value).format('YYYY-MM-DD')"
+					:value="value ? $moment(value).format('YYYY-MM-DD') : $moment().format('YYYY-MM-DD')"
 					type="input"
 					:placeholder="format"
 					class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
@@ -30,7 +30,7 @@
 			</div>
 		</div>
 		<transition name="fade">
-			<div class="md:static z-10 flex justify-start">
+			<div class="md:static z-10 flex justify-center">
 				<div class="rounded-b-lg calendar bg-waterloo shadow-md">
 					<div
 						class="p-2 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
@@ -271,7 +271,7 @@ export default {
 	},
 	data() {
 		return {
-			// modal: false,
+			modal: false,
 			months,
 			monthLists: [],
 			yearLists: [],
@@ -281,6 +281,7 @@ export default {
 		};
 	},
 	created() {
+		console.log("modal", this.modal);
 		console.log("month", this.selectedMonth);
 		// get current month and year
 		if (this.value) {

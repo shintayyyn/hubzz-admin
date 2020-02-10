@@ -16,7 +16,7 @@
 		<transition name="drop" mode="out-in">
 			<AppConfirm
 				v-if="rejectTermination"
-				:style="'top:35%'"
+				:inStyle="'top:35%'"
 				:inClass="'rounded-lg'"
 				:message="'Are you sure you want to reject this termination request'"
 				@cancel="rejectTermination = false"

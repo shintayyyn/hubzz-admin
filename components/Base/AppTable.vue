@@ -2,13 +2,13 @@
 	<section>
 		<div>
 			<AppLoading :loading="loading" :message="loadingMessage" spinner />
-			<div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
+			<div class="flex flex-col w-full px-2py-2 md:mt-4 overflow-x-auto">
 				<div
 					:style="`min-width: ${customWidth}px`"
 					class="row hidden md:flex justify-start leading-none text-sm text-white"
 				>
 					<div
-						class="flex-1 flex items-center px-2"
+						class="flex-1 flex items-center px-2 md:px-4"
 						v-for="(column, index) in columns"
 						:key="`${column}-${index}`"
 						:class="[
@@ -53,7 +53,7 @@
 							<div
 								v-for="(column, index) in columns"
 								:key="index"
-								class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0"
+								class="flex flex-col md:block flex-1 px-2 md:px-4 leading-tight py-1 md:py-0"
 								:class="[
 									column.class &&
 										column.class.includes('text-center') &&

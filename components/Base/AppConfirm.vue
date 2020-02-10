@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="wrapper absolute top-0 mx-auto rounded-b-lg py-4 px-6 bg-waterloo-dark text-white shadow-lg"
-		:style="style"
+		:style="inStyle"
 		:class="inClass"
 	>
 		<p>{{ message }}</p>
@@ -28,7 +28,7 @@ export default {
 			type: String,
 			required: true
 		},
-		style: String,
+		inStyle: String,
 		inClass: String
 	}
 };

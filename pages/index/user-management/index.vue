@@ -15,7 +15,7 @@
 				:icon="'add-user'"
 				:iconSize="'16'"
 				class="mr-2"
-				@click="modal = true"
+				@click="modal = true, deleteAdminUser = false"
 			/>
 			<template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
 				<AppButton
