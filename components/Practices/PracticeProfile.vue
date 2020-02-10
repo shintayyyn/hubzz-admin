@@ -37,14 +37,20 @@
 					<p class="flex font-bold">Address</p>
 					<p class="flex flex-col text-white text-sm md:px-2 mb-2">
 						<span
-							v-if="practice.surgery.address && practice.surgery.address.line_1"
-						>{{practice.surgery.address ? practice.surgery.address.line_1 : null}}</span>
+							v-if="practice.address_line_1 && practice.address_line_1"
+						>{{practice.address_line_1 ? practice.address_line_1 : null}}</span>
 						<span
-							v-if="practice.surgery.address && practice.surgery.address.line_2"
-						>{{practice.surgery.address ? practice.surgery.address.line_2 : null}}</span>
+							v-if="practice.address_line_2 && practice.address_line_2"
+						>{{practice.address_line_2 ? practice.address_line_2 : null}}</span>
 						<span
-							v-if="practice.surgery.address && practice.surgery.address.line_3"
-						>{{practice.surgery.address ? practice.surgery.address.line_3 : null}}</span>
+							v-if="practice.address_line_3 && practice.address_line_3"
+						>{{practice.address_line_3 ? practice.address_line_3 : null}}</span>
+						<span
+							v-if="practice.address_line_4 && practice.address_line_4"
+						>{{practice.address_line_4 ? practice.address_line_4 : null}}</span>
+						<span
+							v-if="practice.address_line_5 && practice.address_line_5"
+						>{{practice.address_line_5 ? practice.address_line_5 : null}}</span>
 					</p>
 					<p class="flex font-bold">CCG</p>
 					<p
@@ -153,17 +159,17 @@
 						<div class="flex flex-col item-center">
 							<div
 								@click="confirm=true"
-								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 mx-2 p-2 cursor-pointer"
+								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 hover:bg-gray-800 mx-2 p-2 cursor-pointer transition-hover"
 							>Deactivate this Practice</div>
 							<div
 								v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
 								@click="toMarkBogus()"
-								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 mx-2 p-2 cursor-pointer"
+								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 hover:bg-red-700 mx-2 p-2 cursor-pointer transition-hover"
 							>Mark as Bogus</div>
-              <div
+							<div
 								v-if="practice.status === 'Bogus'"
 								@click="toUnmarkBogus()"
-								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-yellow-600 mx-2 p-2 cursor-pointer"
+								class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-yellow-600 hover:bg-yellow-700 mx-2 p-2 cursor-pointer transition-hover"
 							>Remove Bogus Status</div>
 						</div>
 					</div>
@@ -443,46 +449,46 @@ export default {
 			}
 		},
 		async toMarkBogus() {
-      await this.$axios
-        .put(`/api/v1/admin/practices/${this.practice.id}/bogus`, {})
-        .then(res => {
-          this.$store.commit("SET_NOTIFICATION", {
+			await this.$axios
+				.put(`/api/v1/admin/practices/${this.practice.id}/bogus`, {})
+				.then(res => {
+					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
 						text: "Practice Successfully Marked as Bogus"
-          });
+					});
 					this.getPractices();
 					this.getPractice();
 					this.confirm = false;
-        })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
 					});
-        })
-    },
-    async toUnmarkBogus() {
-      await this.$axios
-        .put(`/api/v1/admin/practices/${this.practice.id}/unbogus`, {})
-        .then(res => {
-          this.$store.commit("SET_NOTIFICATION", {
+				});
+		},
+		async toUnmarkBogus() {
+			await this.$axios
+				.put(`/api/v1/admin/practices/${this.practice.id}/unbogus`, {})
+				.then(res => {
+					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
 						text: "Practice Successfully Unmarked Bogus"
-          });
+					});
 					this.getPractices();
 					this.getPractice();
 					this.confirm = false;
-        })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
 					});
-        })
+				});
 		},
 		async toDeactivate() {
 			await this.$axios
