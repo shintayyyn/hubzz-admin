@@ -161,59 +161,59 @@ export default {
 
 	watchQuery: ["page", "search"],
 
-	async asyncData({ app, store, route }) {
-		try {
-			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = [] } = route.query;
-			page = parseInt(page);
-			const createdRoute = route.query.order_by;
-			const limit = 10;
-			const offset = page * limit - limit;
-			const status = ["Active", "Dormant"];
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc";
+	// async asyncData({ app, store, route }) {
+	// 	try {
+	// 		await store.commit("practices/TOGGLE_LOADING", true);
+	// 		let { page = 1, search = "", order_by = [] } = route.query;
+	// 		page = parseInt(page);
+	// 		const createdRoute = route.query.order_by;
+	// 		const limit = 10;
+	// 		const offset = page * limit - limit;
+	// 		const status = ["Active", "Dormant"];
+	// 		order_by =
+	// 			createdRoute && createdRoute.order_by
+	// 				? createdRoute.order_by
+	// 				: "created_at:desc";
 
-			const params = { limit, offset, order_by, status };
+	// 		const params = { limit, offset, order_by, status };
 
-			if (search) {
-				params.search = search;
-			}
+	// 		if (search) {
+	// 			params.search = search;
+	// 		}
 
-			const getPracticesCountPromise = app.$axios.$get(
-				`/api/v1/admin/practices/count`,
-				{ params }
-			);
-			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
-				params
-			});
+	// 		const getPracticesCountPromise = app.$axios.$get(
+	// 			`/api/v1/admin/practices/count`,
+	// 			{ params }
+	// 		);
+	// 		const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
+	// 			params
+	// 		});
 
-			let response = await getPracticesCountPromise;
-			const itemCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
+	// 		let response = await getPracticesCountPromise;
+	// 		const itemCount = response.data.count;
+	// 		await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
 
-			response = await getPracticesPromise;
-			const practices = response.data.practices;
-			await store.commit("practices/SET_PRACTICES", practices);
+	// 		response = await getPracticesPromise;
+	// 		const practices = response.data.practices;
+	// 		await store.commit("practices/SET_PRACTICES", practices);
 
-			await store.commit("practices/TOGGLE_LOADING", false);
-			return {
-				loading: false,
-				perPage: limit,
-				currentPage: page,
-				search,
-				order_by
-			};
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			});
-			console.log("Get practices error!", err);
-		}
-	},
+	// 		await store.commit("practices/TOGGLE_LOADING", false);
+	// 		return {
+	// 			loading: false,
+	// 			perPage: limit,
+	// 			currentPage: page,
+	// 			search,
+	// 			order_by
+	// 		};
+	// 	} catch (err) {
+	// 		store.commit("SET_NOTIFICATION", {
+	// 			enabled: true,
+	// 			status: "danger",
+	// 			text: "Something went wrong!"
+	// 		});
+	// 		console.log("Get practices error!", err);
+	// 	}
+	// },
 
 	computed: {
 		loadingPractices() {

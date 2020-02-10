@@ -60,7 +60,10 @@
 			<!-- SHOW ROLE PERMISSIONS -->
 			<div class="my-2 md:my-4" v-if="editingPermissions == false">
 				<div class="flex flex-wrap overflow-hidden">
-					<div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Locum')"
+					>
 						<div class="text-lg font-semibold">Locum Management</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
@@ -68,7 +71,10 @@
 							class="px-2"
 						>{{ permission.category === "Locum" ? permission.name : null }}</div>
 					</div>
-					<div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Practice')"
+					>
 						<div class="text-lg font-semibold">Practice Management</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
@@ -76,7 +82,10 @@
 							class="px-2"
 						>{{ permission.category === "Practice" ? permission.name : null }}</div>
 					</div>
-					<div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Billing')"
+					>
 						<div class="text-lg font-semibold">Billing and Reports Management</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
@@ -84,7 +93,10 @@
 							class="px-2"
 						>{{ permission.category === "Billing" ? permission.name : null }}</div>
 					</div>
-					<div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Misc')"
+					>
 						<div class="text-lg font-semibold">Miscellaneous</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
@@ -92,7 +104,10 @@
 							class="px-2"
 						>{{ permission.category === "Misc" ? permission.name : null }}</div>
 					</div>
-					<div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'User')"
+					>
 						<div class="text-lg font-semibold">User Management</div>
 						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
 							{{
@@ -236,8 +251,7 @@ export default {
 				);
 				foundCategory.permissions.push(permission);
 			});
-      allPermissions = categories;
-      console.log('all permissions', allPermissions)
+			allPermissions = categories;
 			return {
 				specificRole,
 				rolePermissions,
@@ -259,6 +273,14 @@ export default {
 		this.form.description = this.specificRole.description;
 	},
 	methods: {
+		getRoles(roles) {
+			this.$axios
+				.$get(`/api/v1/admin/admin-roles/${this.$route.params.roleId}`)
+				.then(res => {
+					this.specificRole = res.data.role;
+					this.rolePermissions = res.data.role.permissions;
+				});
+		},
 		isChecked(permissions) {
 			return !permissions.map(item => item.done).includes(false);
 		},
@@ -300,9 +322,10 @@ export default {
 						status: "success",
 						text: "Role Updated Successfully"
 					});
-					this.$emit("updateRole", res.data.role);
-					this.specificRole.name = res.data.role.name;
-					this.specificRole.description = res.data.role.description;
+					this.getRoles(res.data.role);
+					// this.$emit("updateRole", res.data.role);
+					// this.specificRole.name = res.data.role.name;
+					// this.specificRole.description = res.data.role.description;
 					this.editingPermissions = false;
 				});
 		}
