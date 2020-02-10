@@ -11,7 +11,7 @@
 				<AppButton
 					v-if="
 						authAdminPermissions.includes('Add Practice') &&
-							authAdminPermissions.includes('Add Practice User')
+						authAdminPermissions.includes('Add Practice User')
 					"
 					class="text-sm"
 					:label="'Add Practice'"
@@ -96,7 +96,7 @@ export default {
 				limit: 10,
 				offset: 0,
         order_by: ["created_at:desc"],
-        status: 'Active'
+        status: ['Active','Dormant']
 			},
 			sort: "",
 			modal: false,
@@ -173,7 +173,7 @@ export default {
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
-      const status = ''
+      const status = ['Active','Dormant']
       console.log('route', route.name)
 			const params = { limit, offset, order_by };
 
@@ -262,7 +262,8 @@ export default {
 				limit: this.params.limit,
 				search: this.search,
 				order_by: params.order_by,
-				offset: params.offset
+        offset: params.offset,
+        // status: 'Active'
 			});
 		},
 

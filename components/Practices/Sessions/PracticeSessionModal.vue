@@ -5,7 +5,16 @@
       <div class="flex flex-wrap items-center md:m-2">
         <div class="text-2xl text-white font-semibold mr-4">{{job ? job.title : modalJobPart.job.title }}</div>
         <div class="flex">
-          <div class="text-black p-2 bg-yellow-500 rounded">{{job ? job.status : modalJobPart.job.status}}</div>
+          <div 
+            v-if="modalJobPart" 
+            class="text-black p-2 bg-yellow-500 rounded">
+            {{modalJobPart.job.status !== 'Declined' ?  modalJobPart.job.status : 'Withdrawn'}}
+          </div>
+          <div 
+            v-else 
+            class="text-black p-2 bg-yellow-500 rounded">
+            {{job ? job.status : null}}
+          </div>
           <div 
             class="text-black p-2 text-white rounded ml-4" 
             :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'">

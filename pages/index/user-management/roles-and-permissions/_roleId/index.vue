@@ -236,7 +236,8 @@ export default {
 				);
 				foundCategory.permissions.push(permission);
 			});
-			allPermissions = categories;
+      allPermissions = categories;
+      console.log('all permissions', allPermissions)
 			return {
 				specificRole,
 				rolePermissions,

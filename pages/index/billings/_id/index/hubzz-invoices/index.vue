@@ -63,8 +63,13 @@
       </template>
     </div>
     <transition name="fade" mode="out-in">
-      <div class="mark-paid-modal" v-if="showPaidModal == true">
-        <div class="flex flex-col w-full text-white pt-4 pb-8 md:py-8 sm:py-4 px-4">
+      <div class="mark-paid-modal overflow-hidden" v-if="showPaidModal == true">
+        <div class="flex items-center text-sm text-white m-4">
+          <div @click="showPaidModal = false" class="text-white hover:text-sunglow p-1">
+            <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
+          </div>
+        </div>
+        <div class="flex flex-col w-full text-white pb-8 md:py-8 sm:py-4 px-4">
           <div class="justify-center">
             <AppDateToggled
               class="w-full md:w-1/2 md:mx-2"
