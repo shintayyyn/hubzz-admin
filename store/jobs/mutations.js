@@ -132,10 +132,10 @@ export default {
     },
     //=================APPROVED======================
     SET_PRACTICE_APPROVED_SESSIONS(state, payload) {
-        state.practice_completed_sessions = payload
+        state.practice_approved_sessions = payload
     },
     SET_PRACTICE_APPROVED_SESSIONS_COUNT(state, payload) {
-        state.practice_completed_sessions_count = payload
+        state.practice_approved_sessions_count = payload
     },
     //=================UNFILLED======================
     SET_PRACTICE_UNFILLED_SESSIONS(state, payload) {

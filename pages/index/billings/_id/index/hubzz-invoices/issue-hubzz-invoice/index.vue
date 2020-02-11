@@ -98,8 +98,8 @@ export default {
 				approved_at_date_end: "",
 				status: this.showDisputed == false ? "Approved" : "",
         invoice_status: this.showDisputed == true ? "Disputed" : null,
-        locum_invoiceable: this.showDisputed == true ? null : true
-        // practice_invoiced: false,
+        locum_invoiceable: this.showDisputed == true ? null : true,
+        practice_invoiced: false,
 			},
 
 			practice: "",
