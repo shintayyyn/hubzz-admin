@@ -96,7 +96,7 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"],
-				status: ["Active", "Dormant"]
+				status: this.status(),
 			},
 			sort: "",
 			modal: false,
@@ -161,60 +161,6 @@ export default {
 
 	watchQuery: ["page", "search"],
 
-	// async asyncData({ app, store, route }) {
-	// 	try {
-	// 		await store.commit("practices/TOGGLE_LOADING", true);
-	// 		let { page = 1, search = "", order_by = [] } = route.query;
-	// 		page = parseInt(page);
-	// 		const createdRoute = route.query.order_by;
-	// 		const limit = 10;
-	// 		const offset = page * limit - limit;
-	// 		const status = ["Active", "Dormant"];
-	// 		order_by =
-	// 			createdRoute && createdRoute.order_by
-	// 				? createdRoute.order_by
-	// 				: "created_at:desc";
-
-	// 		const params = { limit, offset, order_by, status };
-
-	// 		if (search) {
-	// 			params.search = search;
-	// 		}
-
-	// 		const getPracticesCountPromise = app.$axios.$get(
-	// 			`/api/v1/admin/practices/count`,
-	// 			{ params }
-	// 		);
-	// 		const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
-	// 			params
-	// 		});
-
-	// 		let response = await getPracticesCountPromise;
-	// 		const itemCount = response.data.count;
-	// 		await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
-
-	// 		response = await getPracticesPromise;
-	// 		const practices = response.data.practices;
-	// 		await store.commit("practices/SET_PRACTICES", practices);
-
-	// 		await store.commit("practices/TOGGLE_LOADING", false);
-	// 		return {
-	// 			loading: false,
-	// 			perPage: limit,
-	// 			currentPage: page,
-	// 			search,
-	// 			order_by
-	// 		};
-	// 	} catch (err) {
-	// 		store.commit("SET_NOTIFICATION", {
-	// 			enabled: true,
-	// 			status: "danger",
-	// 			text: "Something went wrong!"
-	// 		});
-	// 		console.log("Get practices error!", err);
-	// 	}
-	// },
-
 	computed: {
 		loadingPractices() {
 			return this.$store.state.practices.loading_practices;
@@ -240,16 +186,22 @@ export default {
 	},
 
 	watch: {
-		$route(to, from) {
-			// this.getPractices(this.params);
-		},
-		search(value) {
+    search(value) {
+      console.log('watch search')
 			this.searchSubmit();
-		},
+    },
+    
 		sort(value) {
+      console.log('watch sort')
 			this.params.order_by = value;
 			this.sortBy(value, this.currentPage, this.search);
-		}
+    },
+    
+		$route(to, from) {
+      console.log('watch route')
+			// this.getPractices();
+		},
+	
 	},
 
 	methods: {
@@ -257,23 +209,25 @@ export default {
 			this.$router.push(`/practices/add-practice`);
 		},
 
-		getPractices(params) {
+		getPractices() {
+      console.log('params',this.params, this.search)
 			this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
 				search: this.search,
-				order_by: params.order_by,
-				offset: params.offset
-				// status: 'Active'
-			});
+				order_by: this.params.order_by,
+				offset: this.params.offset,
+				status: this.params.status
+      });
 		},
 
 		async sortBy(sortedBy, page, search) {
 			this.params.order_by = [sortedBy];
-			this.getPractices(this.params);
+			this.getPractices();
 		},
 
 		searchSubmit: debounce(function(page, order_by) {
-			let search = this.search;
+      let search = this.search;
+      
 			let query = {
 				...this.$router.query,
 				search
@@ -310,8 +264,12 @@ export default {
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 				this.loading = true;
-			}
-			this.$router.push({ query });
+      }
+
+      this.getPractices()
+      
+      this.$router.push({ query });
+      
 		}, 500),
 
 		typeStyle(type) {
@@ -340,7 +298,21 @@ export default {
 				default:
 					return "";
 			}
-		},
+    },
+
+    status(){
+      if (this.$route.name.includes("pending-practices")) {
+        return ["Inactive"]
+      }
+      else if (this.$route.name.includes("bogus-practices")) {
+        return ["Bogus"]
+      }
+      else if(this.$route.name.includes("deactivated-practices")) {
+        return ["Deactivated"]
+      } else {
+        return ['Active', 'Dormant']
+      }
+    },
 
 		pagechanged(page) {
 			const query = {
@@ -349,7 +321,7 @@ export default {
 			};
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
-			this.getPractices(this.params);
+			this.getPractices();
 		},
 
 		sorted(order_by) {
@@ -360,7 +332,7 @@ export default {
 				order_by
 			};
 			this.params.order_by = order_by;
-			this.getPractices(this.params);
+			this.getPractices();
 		}
 	}
 };

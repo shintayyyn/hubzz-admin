@@ -141,9 +141,9 @@ export default {
 			params = {
 				completed_at_date_start: this.filter.approved_at_date_start,
 				completed_at_date_end: this.filter.approved_at_date_end,
-				invoice_status: "Disputed",
+				invoice_status: ["Disputed", "Issued"],
 				status: this.filter.status,
-				viewing_practice_id: this.filter.viewing_practice_id,
+        job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,
 				order_by

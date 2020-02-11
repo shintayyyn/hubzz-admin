@@ -134,61 +134,34 @@ export default {
 		};
 	},
 
-	watchQuery: ["page", "search"],
+  watchQuery: ["page", "search"],
 
-	async asyncData({ app, store, route }) {
-		try {
-			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = [] } = route.query;
-			page = parseInt(page);
-			const createdRoute = route.query.order_by;
-			const limit = 10;
-			const offset = page * limit - limit;
-			const status = ["Active", "Dormant"];
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc";
+  async created(){ 
+    try{
+      await this.$store.commit("practices/TOGGLE_LOADING", true);
 
-			const params = { limit, offset, order_by, status };
+      await this.$axios.$get(`/api/v1/admin/practices/count`,{
+        params: this.params
+      }).then(res => {
+        this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
+      })
 
-			if (search) {
-				params.search = search;
-			}
-
-			const getPracticesCountPromise = app.$axios.$get(
-				`/api/v1/admin/practices/count`,
-				{ params }
-			);
-			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
-				params
-			});
-
-			let response = await getPracticesCountPromise;
-			const itemCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
-
-			response = await getPracticesPromise;
-			const practices = response.data.practices;
-			await store.commit("practices/SET_PRACTICES", practices);
-
-			await store.commit("practices/TOGGLE_LOADING", false);
-			return {
-				loading: false,
-				perPage: limit,
-				currentPage: page,
-				search,
-				order_by
-			};
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
+      await this.$axios.$get(`/api/v1/admin/practices`, {
+        params: this.params
+      }).then(res => {
+        this.$store.commit("practices/SET_PRACTICES", res.data.practices)
+      })
+      
+      await this.$store.commit("practices/TOGGLE_LOADING", false);
+    }catch (err) {
+			this.store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
-				text: "Something went wrong!"
+				text: "Something went Wrong!"
 			});
-			console.log("Get practices error!", err);
-		}
-	},
+      console.log("Get practices error!", err);
+    }
+  },
 
 	computed: {
 		loadingPractices() {
@@ -215,12 +188,12 @@ export default {
 	},
 
 	watch: {
-		$route(to, from) {
-			// this.getPractices(this.params);
-		},
-		search(value) {
-			this.searchSubmit();
-		},
+		// $route(to, from) {
+		// 	// this.getPractices(this.params);
+		// },
+		// search(value) {
+		// 	this.searchSubmit();
+		// },
 		sort(value) {
 			this.params.order_by = value;
 			this.sortBy(value, this.currentPage, this.search);
