@@ -93,11 +93,12 @@ export default {
 			date_start: "",
 			date_end: "",
 			toFilter: {
-				viewing_practice_id: this.$route.params.id,
+				job_practice_id: this.$route.params.id,
 				approved_at_date_start: "",
 				approved_at_date_end: "",
 				status: this.showDisputed == false ? "Approved" : "",
         invoice_status: this.showDisputed == true ? "Disputed" : null,
+        locum_invoiceable: this.showDisputed == true ? null : true
         // practice_invoiced: false,
 			},
 

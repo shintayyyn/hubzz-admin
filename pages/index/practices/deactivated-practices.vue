@@ -70,7 +70,7 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"],
-				status: "Inactive"
+				status: "Deactivated"
 			},
 			sort: "",
 			modal: false,
@@ -132,61 +132,34 @@ export default {
 		};
 	},
 
-	watchQuery: ["page", "search"],
+  watchQuery: ["page"],
+  
+  async created(){ 
+    try{
+      await this.$store.commit("practices/TOGGLE_LOADING", true);
 
-	async asyncData({ app, store, route }) {
-		try {
-			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = [] } = route.query;
-			page = parseInt(page);
-			const createdRoute = route.query.order_by;
-			const limit = 10;
-			const offset = page * limit - limit;
-			const status = "Deactivated";
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc";
-			const params = { limit, offset, order_by, status };
+      await this.$axios.$get(`/api/v1/admin/practices/count`,{
+        params: this.params
+      }).then(res => {
+        this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
+      })
 
-			if (search) {
-				params.search = search;
-			}
+      await this.$axios.$get(`/api/v1/admin/practices`, {
+        params: this.params
+      }).then(res => {
+        this.$store.commit("practices/SET_PRACTICES", res.data.practices)
+      })
 
-			const getPracticesCountPromise = app.$axios.$get(
-				`/api/v1/admin/practices/count`,
-				{ params }
-			);
-			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
-				params
-			});
-
-			let response = await getPracticesCountPromise;
-			const itemCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
-
-			response = await getPracticesPromise;
-			const practices = response.data.practices;
-			await store.commit("practices/SET_PRACTICES", practices);
-
-			await store.commit("practices/TOGGLE_LOADING", false);
-
-			return {
-				loading: false,
-				perPage: limit,
-				currentPage: page,
-				search,
-				order_by
-			};
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
+      await this.$store.commit("practices/TOGGLE_LOADING", false);
+    }catch (err) {
+			this.store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went Wrong!"
 			});
-			console.log("Get practices error!", err);
-		}
-	},
+      console.log("Get practices error!", err);
+    }
+  },
 
 	computed: {
 		loadingPractices() {
@@ -213,10 +186,6 @@ export default {
 	},
 
 	watch: {
-		$route(to, from) {},
-		search(value) {
-			this.searchSubmit();
-		},
 		sort(value) {
 			this.params.order_by = value;
 			this.sortBy(value, this.currentPage, this.search);
@@ -242,48 +211,6 @@ export default {
 			this.params.order_by = [sortedBy];
 			this.getPractices(this.params);
 		},
-
-		searchSubmit: debounce(function(page, order_by) {
-			let search = this.search;
-			let query = {
-				...this.$router.query,
-				search
-			};
-			if (page === 1) {
-				delete query.page;
-			}
-			if (page && page > 1) {
-				query = {
-					...this.$router.query,
-					page,
-					search
-				};
-			}
-			if (order_by) {
-				query = {
-					...this.$router.query,
-					search,
-					order_by
-				};
-			}
-			if (page && order_by) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by
-				};
-			}
-
-			if (this.search === "") {
-				delete query.search;
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-			this.$router.push({ query });
-		}, 500),
 
 		typeStyle(type) {
 			switch (type) {
