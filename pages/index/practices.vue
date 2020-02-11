@@ -41,7 +41,6 @@
 					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
 					placeholder="Search Practice by Name"
 					v-model="search"
-					@keyup.enter="searchSubmit"
 				/>
 				<button
 					v-if="search"
@@ -96,7 +95,6 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"],
-				status: this.status(),
 			},
 			sort: "",
 			modal: false,
@@ -159,9 +157,22 @@ export default {
 		};
 	},
 
-	watchQuery: ["page", "search"],
+	watchQuery: ["page",],
 
 	computed: {
+    status() {
+      if (this.$route.name.includes("pending-practices")) {
+        return ["Inactive"]
+      }
+      else if (this.$route.name.includes("bogus-practices")) {
+        return ["Bogus"]
+      }
+      else if(this.$route.name.includes("deactivated-practices")) {
+        return ["Deactivated"]
+      } else {
+        return ['Active', 'Dormant']
+      }
+    },
 		loadingPractices() {
 			return this.$store.state.practices.loading_practices;
 		},
@@ -187,21 +198,17 @@ export default {
 
 	watch: {
     search(value) {
-      console.log('watch search')
 			this.searchSubmit();
     },
     
 		sort(value) {
-      console.log('watch sort')
 			this.params.order_by = value;
 			this.sortBy(value, this.currentPage, this.search);
     },
     
 		$route(to, from) {
-      console.log('watch route')
-			// this.getPractices();
+			this.getPractices();
 		},
-	
 	},
 
 	methods: {
@@ -210,14 +217,23 @@ export default {
 		},
 
 		getPractices() {
-      console.log('params',this.params, this.search)
-			this.$store.dispatch("practices/fetchPractices", {
+      this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,
 				offset: this.params.offset,
-				status: this.params.status
-      });
+        status: this.status,
+        countOnly: true
+      }).then(() => {
+        this.$store.dispatch("practices/fetchPractices", {
+          limit: this.params.limit,
+          search: this.search,
+          order_by: this.params.order_by,
+          offset: this.params.offset,
+          status: this.status,
+        });
+      })
+			
 		},
 
 		async sortBy(sortedBy, page, search) {
@@ -298,20 +314,6 @@ export default {
 				default:
 					return "";
 			}
-    },
-
-    status(){
-      if (this.$route.name.includes("pending-practices")) {
-        return ["Inactive"]
-      }
-      else if (this.$route.name.includes("bogus-practices")) {
-        return ["Bogus"]
-      }
-      else if(this.$route.name.includes("deactivated-practices")) {
-        return ["Deactivated"]
-      } else {
-        return ['Active', 'Dormant']
-      }
     },
 
 		pagechanged(page) {

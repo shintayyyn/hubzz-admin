@@ -134,7 +134,7 @@ export default {
 		};
 	},
 
-  watchQuery: ["page", "search"],
+  watchQuery: ["page"],
 
   async created(){ 
     try{
@@ -188,12 +188,6 @@ export default {
 	},
 
 	watch: {
-		// $route(to, from) {
-		// 	// this.getPractices(this.params);
-		// },
-		// search(value) {
-		// 	this.searchSubmit();
-		// },
 		sort(value) {
 			this.params.order_by = value;
 			this.sortBy(value, this.currentPage, this.search);
@@ -219,48 +213,6 @@ export default {
 			this.params.order_by = [sortedBy];
 			this.getPractices(this.params);
 		},
-
-		searchSubmit: debounce(function(page, order_by) {
-			let search = this.search;
-			let query = {
-				...this.$router.query,
-				search
-			};
-			if (page === 1) {
-				delete query.page;
-			}
-			if (page && page > 1) {
-				query = {
-					...this.$router.query,
-					page,
-					search
-				};
-			}
-			if (order_by) {
-				query = {
-					...this.$router.query,
-					search,
-					order_by
-				};
-			}
-			if (page && order_by) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					order_by
-				};
-			}
-
-			if (this.search === "") {
-				delete query.search;
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
-			}
-			this.$router.push({ query });
-		}, 500),
 
 		typeStyle(type) {
 			switch (type) {
