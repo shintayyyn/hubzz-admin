@@ -108,7 +108,7 @@
                   @focus="showPasswordFocus = true"
                   :style="inStyle"
                 />
-                <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full" :class="error && '-mt-2'">
+                <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full" :class="error && '-mt-2'" tabindex="-1">
                   <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
                   <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
                 </button>

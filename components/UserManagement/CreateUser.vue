@@ -261,7 +261,7 @@
             v-model="toPostUser.roles_id"
             :type="'multi-checkbox'"
             :error="formError.find(item => item.field === 'roles_id')"
-            @checked="addRole($event)"
+            @checked="toPostUser.roles_id.push($event)"
             @unchecked="uncheckRole($event)"
             :name="'roles_id'"
             :label="'Admin Role/s'"
@@ -509,13 +509,6 @@ export default {
   },
 
   methods: {
-    addRole(e){
-      this.adminRoles.find(item => {
-        if (item.value === parseInt(e)) {
-          this.toPostUser.roles_id.push(item)
-        }
-      })
-    },
     validatePassword(field, fieldName) {
       this.CheckEmptyField(field, fieldName)
       this.ValidateSamePassword(this.toPostUser.password, this.toPostUser.password_confirmation)
@@ -620,10 +613,7 @@ export default {
         )
       }
 
-      console.log(this.toPostUser)
       this.Validate(this.toPostUser, notRequired);
-      console.log('errors',this.formError)
-      console.log(this.toPostUser)
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
       }
@@ -754,9 +744,9 @@ export default {
           console.log('CREATING NEW ADMIN')
           //Create New Admin
           console.log("new admin is being created");
-          this.toPostUser.roles_id = this.toPostUser.roles_id.map(
-            item => item.value
-          );
+          // this.toPostUser.roles_id = this.toPostUser.roles_id.map(
+          //   item => item.value
+          // );
           await this.$axios
             .post(`/api/v1/admin/admin-users`, toPostUser)
             .then(res => {

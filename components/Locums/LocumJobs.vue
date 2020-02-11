@@ -17,7 +17,6 @@ import LocumCurrentJobs from "@/components/Locums/Jobs/LocumCurrentJobs";
 import LocumCompletedJobs from "@/components/Locums/Jobs/LocumCompletedJobs";
 import LocumUnsuccessfulJobs from "@/components/Locums/Jobs/LocumUnsuccessfulJobs";
 import LocumCancelledJobs from "@/components/Locums/Jobs/LocumCancelledJobs";
-import LocumDeclinedJobs from "@/components/Locums/Jobs/LocumDeclinedJobs";
 export default {
 	props: ["user"],
 	components: {
@@ -29,7 +28,6 @@ export default {
 		locum_completed: LocumCompletedJobs,
 		locum_unsuccessful: LocumUnsuccessfulJobs,
 		locum_cancelled: LocumCancelledJobs,
-		locum_declined: LocumDeclinedJobs
 	},
 
 	computed: {

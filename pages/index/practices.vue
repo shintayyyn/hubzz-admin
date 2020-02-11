@@ -4,9 +4,9 @@
 		<div class="px-2 text-xl md:text-4xl text-white">Practices</div>
 
 		<div class="px-2 flex justify-between items-center flex-wrap">
-      <div>
-        <ListPracticeTabs />
-      </div>
+			<div>
+				<ListPracticeTabs />
+			</div>
 			<div>
 				<AppButton
 					v-if="
@@ -35,30 +35,30 @@
 			/>
 		</div>
 
-    <div class="flex items-center px-2 py-2">
-      <div class="relative">
-        <input
-          class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-          placeholder="Search Practice by Name"
-          v-model="search"
-          @keyup.enter="searchSubmit"
-        />
-        <button
-          v-if="search"
-          class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-          @click="(search = ''), searchSubmit()"
-        >
-          <svgicon
-            name="times-solid"
-            height="12"
-            width="12"
-            class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-          />
-        </button>
-      </div>
-    </div>
-    
-    <div
+		<div class="flex items-center px-2 py-2">
+			<div class="relative">
+				<input
+					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+					placeholder="Search Practice by Name"
+					v-model="search"
+					@keyup.enter="searchSubmit"
+				/>
+				<button
+					v-if="search"
+					class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+					@click="(search = ''), searchSubmit()"
+				>
+					<svgicon
+						name="times-solid"
+						height="12"
+						width="12"
+						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+					/>
+				</button>
+			</div>
+		</div>
+
+		<div
 			class="practice-shield"
 			v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
 			@click="modal ? (modal = false) : $router.push('/practices')"
@@ -78,13 +78,13 @@ import debounce from "lodash.debounce";
 import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery";
 import AppButton from "@/components/Base/AppButton";
 import AppInput from "@/components/Base/AppInput";
-import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
+import ListPracticeTabs from "@/components/Practices/ListPracticeTabs";
 export default {
 	components: {
 		AddPracticeSurgery,
 		AppButton,
-    AppInput,
-    ListPracticeTabs,
+		AppInput,
+		ListPracticeTabs
 	},
 	data() {
 		return {
@@ -95,8 +95,8 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-        order_by: ["created_at:desc"],
-        status: ['Active','Dormant']
+				order_by: ["created_at:desc"],
+				status: ["Active", "Dormant"]
 			},
 			sort: "",
 			modal: false,
@@ -161,59 +161,59 @@ export default {
 
 	watchQuery: ["page", "search"],
 
-	async asyncData({ app, store, route }) {
-		try {
-			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = [] } = route.query;
-			page = parseInt(page);
-			const createdRoute = route.query.order_by;
-			const limit = 10;
-			const offset = page * limit - limit;
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc";
-      const status = ['Active','Dormant']
-      console.log('route', route.name)
-			const params = { limit, offset, order_by };
+	// async asyncData({ app, store, route }) {
+	// 	try {
+	// 		await store.commit("practices/TOGGLE_LOADING", true);
+	// 		let { page = 1, search = "", order_by = [] } = route.query;
+	// 		page = parseInt(page);
+	// 		const createdRoute = route.query.order_by;
+	// 		const limit = 10;
+	// 		const offset = page * limit - limit;
+	// 		const status = ["Active", "Dormant"];
+	// 		order_by =
+	// 			createdRoute && createdRoute.order_by
+	// 				? createdRoute.order_by
+	// 				: "created_at:desc";
 
-			if (search) {
-				params.search = search;
-			}
+	// 		const params = { limit, offset, order_by, status };
 
-			const getPracticesCountPromise = app.$axios.$get(
-				`/api/v1/admin/practices/count`,
-				{ params }
-			);
-			const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
-				params
-			});
+	// 		if (search) {
+	// 			params.search = search;
+	// 		}
 
-			let response = await getPracticesCountPromise;
-			const itemCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
+	// 		const getPracticesCountPromise = app.$axios.$get(
+	// 			`/api/v1/admin/practices/count`,
+	// 			{ params }
+	// 		);
+	// 		const getPracticesPromise = app.$axios.$get(`/api/v1/admin/practices`, {
+	// 			params
+	// 		});
 
-			response = await getPracticesPromise;
-			const practices = response.data.practices;
-			await store.commit("practices/SET_PRACTICES", practices);
+	// 		let response = await getPracticesCountPromise;
+	// 		const itemCount = response.data.count;
+	// 		await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
 
-			await store.commit("practices/TOGGLE_LOADING", false);
-			return {
-				loading: false,
-				perPage: limit,
-				currentPage: page,
-				search,
-				order_by
-			};
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			});
-			console.log("Get practices error!", err);
-		}
-	},
+	// 		response = await getPracticesPromise;
+	// 		const practices = response.data.practices;
+	// 		await store.commit("practices/SET_PRACTICES", practices);
+
+	// 		await store.commit("practices/TOGGLE_LOADING", false);
+	// 		return {
+	// 			loading: false,
+	// 			perPage: limit,
+	// 			currentPage: page,
+	// 			search,
+	// 			order_by
+	// 		};
+	// 	} catch (err) {
+	// 		store.commit("SET_NOTIFICATION", {
+	// 			enabled: true,
+	// 			status: "danger",
+	// 			text: "Something went wrong!"
+	// 		});
+	// 		console.log("Get practices error!", err);
+	// 	}
+	// },
 
 	computed: {
 		loadingPractices() {
@@ -254,7 +254,7 @@ export default {
 
 	methods: {
 		show() {
-			this.$router.push(`/practices/add-practice`)
+			this.$router.push(`/practices/add-practice`);
 		},
 
 		getPractices(params) {
@@ -262,8 +262,8 @@ export default {
 				limit: this.params.limit,
 				search: this.search,
 				order_by: params.order_by,
-        offset: params.offset,
-        // status: 'Active'
+				offset: params.offset
+				// status: 'Active'
 			});
 		},
 
@@ -350,8 +350,8 @@ export default {
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
 			this.getPractices(this.params);
-    },
-    
+		},
+
 		sorted(order_by) {
 			// go back to page 1
 			this.currentPage = 1;

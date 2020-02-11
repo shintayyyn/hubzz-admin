@@ -26,12 +26,14 @@
 						:name="'approved_at_date_end'"
 						:label="'To'"
 					/>
-					<div class="w-full flex justify-between items-center mb-2">
-						<AppButton 
-              :label="'Search for Invoices'"
-              :icon="'search'" 
-              @click="chooseJobPartsModal = true" 
-            />
+					<div class="w-full flex flex-col justify-center items-start">
+						<AppButton
+							class="whitespace-no-wrap"
+              :disabled="toFilter.approved_at_date_start && toFilter.approved_at_date_end ? false : true"
+							:label="'Search for Invoices'"
+							:icon="'search'"
+							@click="chooseJobPartsModal = true"
+						/>
 
 						<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
 							<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
@@ -40,19 +42,18 @@
 					</div>
 				</div>
 			</div>
-       <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
+			<!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
 			<HubzzInvoice
-        :forViewing="false" 
-        :practice="practice"
-        :invoiceItems="invoiceItems"
-        :disputedItems="disputedItems"
- 
-      />
-        <!-- :dateStart="date_start"
-        :dateEnd="date_end" -->
+				:forViewing="false"
+				:practice="practice"
+				:invoiceItems="invoiceItems"
+				:disputedItems="disputedItems"
+			/>
+			<!-- :dateStart="date_start"
+			:dateEnd="date_end"-->
 
-        <!-- :filterDateStart="toFilter.approved_at_date_start"
-        :filterDateEnd="toFilter.approved_at_date_end" -->
+			<!-- :filterDateStart="toFilter.approved_at_date_start"
+			:filterDateEnd="toFilter.approved_at_date_end"-->
 			<div
 				class="issue-hubzz-invoice-shield"
 				v-if="chooseJobPartsModal == true"
@@ -89,20 +90,21 @@ export default {
 			loading: false,
 			chooseJobPartsModal: false,
 			showDisputed: false,
-      date_start: "",
-      date_end: "",
+			date_start: "",
+			date_end: "",
 			toFilter: {
 				viewing_practice_id: this.$route.params.id,
 				approved_at_date_start: "",
 				approved_at_date_end: "",
 				status: this.showDisputed == false ? "Approved" : "",
-				invoice_status: this.showDisputed == true ? "Disputed" : null
+        invoice_status: this.showDisputed == true ? "Disputed" : null,
+        // practice_invoiced: false,
 			},
 
 			practice: "",
 			chosenJobParts: [],
-      invoiceItems: [],
-      disputedItems:[],
+			invoiceItems: [],
+			disputedItems: []
 		};
 	},
 	async asyncData({ app, route, store }) {
@@ -120,18 +122,18 @@ export default {
 	},
 	methods: {
 		toProcessInvoiceItems(chosenJobParts, isDisputed) {
-      this.chooseJobPartsModal = false;
-      
-      if(isDisputed == true) {
-        this.disputedItems = []
-      } else {
-        this.invoiceItems = []
-      }
-      
+			this.chooseJobPartsModal = false;
+
+			if (isDisputed == true) {
+				this.disputedItems = [];
+			} else {
+				this.invoiceItems = [];
+			}
+
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        console.log("chosenJobPart",chosenJobParts[i])
+				console.log("chosenJobPart", chosenJobParts[i]);
 				const newItem = {
-          type: "Job Part - " + chosenJobParts[i].invoice_status,
+					type: "Job Part - " + chosenJobParts[i].invoice_status,
 					job_part_id: chosenJobParts[i].id,
 					description:
 						"Job Number " +
@@ -142,19 +144,21 @@ export default {
 						chosenJobParts[i].date_start +
 						" to " +
 						chosenJobParts[i].date_end,
-					total: parseFloat(chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate).toFixed(2)
-        };
-        
-        if(isDisputed == true) {
-          newItem.id = this.disputedItems.length + 1;
-          this.disputedItems.push(newItem)
-        } else {
-          newItem.id = this.invoiceItems.length + 1;
-          this.invoiceItems.push(newItem);
-        }
-      }
-    },
-    
+					total: parseFloat(
+						chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate
+					).toFixed(2)
+				};
+
+				if (isDisputed == true) {
+					newItem.id = this.disputedItems.length + 1;
+					this.disputedItems.push(newItem);
+				} else {
+					newItem.id = this.invoiceItems.length + 1;
+					this.invoiceItems.push(newItem);
+				}
+			}
+		},
+
 		goBack() {
 			const query = {
 				...this.$route.query

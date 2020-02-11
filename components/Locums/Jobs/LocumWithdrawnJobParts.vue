@@ -115,7 +115,7 @@ export default {
     this.currentPage = parseInt(query.job_parts_page)
     let params = {
       viewing_locum_user_id : this.user.id,
-      locum_status : 'Declined'
+      locum_status : 'Withdrawn'
     }
     Promise.all([
       console.log(this.user),
@@ -144,7 +144,7 @@ export default {
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
-        locum_status : 'Declined',
+        locum_status : 'Withdrawn',
         order_by : orderBy ? orderBy : this.$route.query.order_by,
         limit: this.perPage,
         offset: offset
