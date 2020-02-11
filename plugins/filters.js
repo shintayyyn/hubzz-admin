@@ -6,10 +6,9 @@ Vue.filter('localDate', function (date, dateOnly) {
     return `${moment(date).format('L')}`
   }
   if (date) {
-    return `${moment(date).format('DD/MM/YYYY')} | ${moment(date).format('HH:mm')}`
+    return `${moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY')} | ${moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('HH:mm')}`
   }
 })
-
 Vue.filter('currency', function (number) {
   if (number) {
     return number.toFixed(2);

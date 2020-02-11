@@ -31,15 +31,15 @@
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">From</strong>
-                <span class="">{{item.date_start}}</span>
+                <span class="">{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">To</strong>
-                <span class="">{{item.date_end}}</span>
+                <span class="">{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                  <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class="">{{item.job.date_created}}</span>
+                <strong class="block md:hidden text-sm uppercase">Created</strong>
+                <span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
               </div>
             </nuxt-link>
           </div>
