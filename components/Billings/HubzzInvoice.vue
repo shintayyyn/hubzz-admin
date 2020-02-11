@@ -679,15 +679,15 @@ export default {
 			if (this.toPostPracticeInvoice.items.length > 0) {
 				await this.$axios
 					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
-					.then(res => {
-						this.$route.go(-1);
+					.then(() => {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
 							text: "Invoice Posted"
-						});
+            })
+            // this.$route.go(-1)
 					})
-					.catch(err => {
+					.catch((err) => {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",

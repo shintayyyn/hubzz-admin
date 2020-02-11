@@ -11,8 +11,6 @@ export default () => ({
     practice_applied_sessions_count:0,
     practice_allocated_sessions: [],
     practice_allocated_sessions_count:0,
-
-
     practice_unfilled_sessions: [],
     practice_unfilled_sessions_count:0,
 

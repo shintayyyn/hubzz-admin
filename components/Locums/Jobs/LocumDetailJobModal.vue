@@ -14,7 +14,7 @@
 					<br />
 				</div>
 			</div>
-			<p class="text-white my-2">{{"Posted On: "+job.date_created}}</p>
+			<p class="text-white my-2">{{"Posted On: "+$moment(job.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</p>
 
 			<div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
 				<div class="inline-flex m-4">
@@ -43,13 +43,13 @@
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">From</span>
 									<span
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-									>{{job.date_start}} | {{job.time_start}}</span>
+									>{{ $moment(job.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} | {{ $moment(job.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 								</div>
 								<div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">To</span>
 									<span
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-									>{{job.date_end}} | {{job.time_end}}</span>
+									>{{ $moment(job.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} | {{ $moment(job.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 								</div>
 								<div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">Shift</span>
