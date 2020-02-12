@@ -97,7 +97,10 @@
 										<div v-if="!locumInvoice" class="mt-2 flex flex-col">
 											<div>For the period</div>
 											<div>
-												<span>{{dateStart ? dateStart : toPostPracticeInvoice.date_start}} to {{dateEnd ? dateEnd : toPostPracticeInvoice.date_end}}</span>
+												<span>
+                          {{dateStart ? $moment(dateStart).format('DD/MM/YYYY') : $moment(toPostPracticeInvoice.date_start).format('DD/MM/YYYY')}} to 
+                          {{dateEnd ? $moment(dateEnd).format('DD/MM/YYYY') : $moment(toPostPracticeInvoice.date_end).format('DD/MM/YYYY')}}
+                        </span>
 											</div>
 										</div>
 									</div>
