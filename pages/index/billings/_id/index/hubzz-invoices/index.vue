@@ -107,7 +107,7 @@ export default {
 		AppButton,
 		AppTable,
 		AppDateToggled,
-		AppDate,
+		// AppDate,
 		AppConfirm
 	},
 	data() {
@@ -293,7 +293,7 @@ export default {
 			};
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
-			this.getPractices(this.params);
+			this.getHubzzInvoices(this.params);
 		},
 		sorted(order_by) {
 			// go back to page 1
@@ -303,7 +303,7 @@ export default {
 				order_by
 			};
 			this.params.order_by = order_by;
-			this.getPractices(this.params);
+			this.getHubzzInvoices(this.params);
 		}
 	}
 };

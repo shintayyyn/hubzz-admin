@@ -62,8 +62,6 @@ export default {
 				`/api/v1/admin/admin-users/${route.params.id}`
 			);
 			const user = response.data.user;
-			// response = await app.$axios.$get(`/api/v1/admin/admin-roles`)
-			// const adminRoles = response.data.roles
 			return {
 				user
 			};
@@ -73,7 +71,6 @@ export default {
 				status: "danger",
 				text: "Something went wrong!"
 			});
-			console.log("get admin user error!!!", err);
 		}
 	},
 	async created() {
@@ -91,7 +88,6 @@ export default {
 	},
 	methods: {
 		getAdminUsers() {
-			// this.$store.dispatch("adminusers/fetchAdminUsers", {});
 			this.$store.dispatch("adminusers/fetchAdminUsers", {
 				limit: 8
 			});
@@ -154,9 +150,6 @@ export default {
 			let form = { old_password, new_password, password_confirmation };
 			this.formError = [];
 			this.Validate(form);
-
-			console.log(this.user);
-
 			return;
 			if (!this.formError) {
 				this.$axios
@@ -167,7 +160,6 @@ export default {
 		},
 
 		async toPutAdminUserInfo(user_id, toPutUserInfo) {
-			console.log("to admin user", toPutUserInfo);
 			toPutUserInfo.roles_id = toPutUserInfo.roles_id.map(item => item.value);
 			await this.$axios
 				.$put(`/api/v1/admin/admin-users/${user_id}`, toPutUserInfo)
