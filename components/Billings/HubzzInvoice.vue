@@ -570,7 +570,7 @@ export default {
       const reducer = (accumulator, currentValue) => accumulator + currentValue;
       
       if(this.invoiceItems && this.invoiceItems.length > 0) {
-        let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total ? invoiteItem.total : 0));
+        let invoiceItems = this.invoiceItems.map(invoiceItem => parseFloat(invoiceItem.total ? invoiceItem.total : 0));
         invoiceItemTotal = invoiceItems.reduce(reducer)
       }
       console.log('invoice items', this.invoiceItems)
