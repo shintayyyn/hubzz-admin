@@ -13,7 +13,7 @@
 		>Surgery Management</nuxt-link>
 		<nuxt-link
 			:to="getRoute('practice-hub')"
-			v-if="(practice.type == 'Spoke' || practice.type == 'Stand Alone') && (practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated')"
+			v-if="practice.type == 'Spoke' && (practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated')"
 			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
 			:class="$route.path == `/practices/${practice.id}/practice-hub`? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
 		>Hub</nuxt-link>
