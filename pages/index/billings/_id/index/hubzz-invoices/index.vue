@@ -26,11 +26,15 @@
 
 			<template v-slot:period="slotProps">
 				<div>
-					{{ $moment(slotProps.item.date_start).format('MMM DD, YYYY') +
+					{{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
 					' - ' +
-					$moment(slotProps.item.date_end).format('MMM DD, YYYY')}}
+					$moment(slotProps.item.date_end).format('DD/MM/YYYY')}}
 				</div>
 			</template>
+
+      <template v-slot:issued_at="slotProps">
+        <div>{{$moment(slotProps.item.issued_at).format('DD/MM/YYYY')}}</div>
+      </template>
 
 			<template v-slot:paid_at="slotProps">
 				<div v-if="!slotProps.item.paid_at">
@@ -42,18 +46,10 @@
 				<div
 					class="px-2"
 					v-else
-				>{{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('MMM DD, YYYY | HH:MM:ss') : "Not yet paid" }}</div>
+				>{{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY | HH:MM:ss') : "Not yet paid" }}</div>
 			</template>
-
-			<!-- <template v-slot:hub_type_slot="slotProps">
-          <div
-            class="px-4 py-1 rounded-full w-32 text-center"
-            :class="hubTypeStyle(slotProps.item.hub_type)"
-          >
-            {{ slotProps.item.hub_type }}
-          </div>
-			</template>-->
 		</AppTable>
+
 		<template v-else>
 			<div class="m-2 w-full text-center text-white">There are no Invoices for HUBZZ</div>
 		</template>
@@ -137,16 +133,17 @@ export default {
 					sortable: "true"
 				},
 				{
-					name: "Issued At",
-					dataIndex: "issued_at",
-					class: "text-center localDate",
-					sortable: "true"
-				},
-				{
 					name: "Period",
 					dataIndex: "period",
 					slotName: "period",
 					class: "text-center"
+				},
+        {
+					name: "Issued At",
+          dataIndex: "issued_at",
+          slotName: "issued_at",
+					class: "text-center",
+					sortable: "true"
 				},
 				{
 					name: "£ Amount",
@@ -155,6 +152,7 @@ export default {
 					class: "text-center",
 					sortable: "false"
 				},
+        
 				{
 					name: "Paid",
 					dataIndex: "paid_at",
