@@ -4,6 +4,7 @@
 		<div class="w-full overflow-hidden">
 			<div v-if="authAdminPermissions.includes('Add Practice User')">
 				<button
+          v-if="practice.status !== 'Deactivated'"
 					class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
 					@click="show()"
 				>Add User</button>

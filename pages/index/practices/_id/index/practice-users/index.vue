@@ -14,6 +14,7 @@
       </nuxt-link>
       
       <nuxt-link
+        v-if="practice.status !== 'Deactivated'"
         :to="getRoute('user-roles')"
         class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="

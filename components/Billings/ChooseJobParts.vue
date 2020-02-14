@@ -135,8 +135,9 @@ export default {
 			limit,
 			offset,
 			order_by
-		};
-		console.log(this.filter);
+    };
+    console.log('filter', this.filter)
+		console.log('params', params);
 		if (this.showDisputed) {
 			params = {
 				completed_at_date_start: this.filter.approved_at_date_start,
@@ -147,11 +148,11 @@ export default {
 				limit,
 				offset,
 				order_by
-			};
+      };
+      console.log('disputed params', params);
 		}
 		let jobPartCount,
 			jobParts = "";
-		console.log("params", params);
 		await this.$axios
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
@@ -238,7 +239,8 @@ export default {
 				...this.$router.query,
 				order_by
 			};
-			this.params.order_by = order_by;
+      this.params.order_by = order_by;
+      console.log('sort params', this.params)
 			this.getJobParts(this.params);
 		},
 

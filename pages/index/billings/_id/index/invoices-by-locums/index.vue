@@ -58,6 +58,7 @@ export default {
       loading:false,
       currentPage: 1,
       params: {
+        practice_id: '',
         limit: 10,
         offset: 0,
         order_by:["created_at:desc"]
@@ -143,7 +144,8 @@ export default {
         loading: false,
         perPage: limit,
         currentPage: page,
-        order_by
+        order_by,
+        params,
 			}
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
@@ -167,7 +169,8 @@ export default {
   },
 	methods: {
     getPracticeInvoices(params) {
-      this.$store.dispatch("billings/fetchpracticeInvoices", {
+      this.$store.dispatch("billings/fetchPracticeInvoices", {
+        practice_id: this.params.practice_id,
         limit: this.params.limit,
         order_by: this.params.order_by,
         offset: params.offset
@@ -206,7 +209,7 @@ export default {
 				order_by
 			};
 			this.params.order_by = order_by;
-			this.getPractices(this.params);
+			this.getPracticeInvoices(this.params);
 		}
 	}
 };
