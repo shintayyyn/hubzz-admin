@@ -1,71 +1,80 @@
 <template>
-	<div class="modal-container max-w-2xl text-white">
-		<div class="p-4 md:p-8">
-			<svgicon
-				name="arrow-left-solid"
-				height="32"
-				width="32"
-				class="cursor-pointer text-white hover:text-sunglow fill-current"
-				@click="$emit('close')"
-			/>
-			<div class="flex flex-col mt-4">
-				<AppInput
-					v-model="form.name"
-					:type="'text'"
-					:name="'name'"
-					:label="'Role Name'"
-					:error="formError.find(item => item.field === 'name')"
-					required
+	<div class="role-modal shadow-lg" ref="modalContainer">
+		<div class="modal-container max-w-2xl text-white">
+			<div class="p-4 md:p-8">
+				<svgicon
+					name="arrow-left-solid"
+					height="32"
+					width="32"
+					class="cursor-pointer text-white hover:text-sunglow fill-current"
+					@click="$emit('close')"
 				/>
-				<AppInput
-					v-model="form.description"
-					:type="'textarea'"
-					:name="'description'"
-					:label="'Description'"
-					:error="formError.find(item => item.field === 'description')"
-					:resize="false"
-					:rows="3"
-					required
-				/>
+				<div class="flex flex-col mt-4">
+					<AppInput
+						v-model="form.name"
+						:type="'text'"
+						:name="'name'"
+						:label="'Role Name'"
+						:error="formError.find(item => item.field === 'name')"
+						required
+					/>
+					<AppInput
+						v-model="form.description"
+						:type="'textarea'"
+						:name="'description'"
+						:label="'Description'"
+						:error="formError.find(item => item.field === 'description')"
+						:resize="false"
+						:rows="3"
+						required
+					/>
 
-				<p class="text-xs sm:text-sm py-1 pr-2 font-bold">Permissions</p>
-				<div class="flex flex-wrap justify-start">
-					<div
-						class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
-						v-for="(role, index) in permissions"
-						:key="index"
-					>
-						<div class="flex flex-col">
-							<div class="w-full flex flex-row items-center">
-								<input
-									type="checkbox"
-									:id="role.category"
-									:checked="isChecked(role.permissions)"
-									@change="checkAll(index, $event.target.checked)"
-								/>
-								<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
-							</div>
-							<div
-								class="w-full flex flex-row justify-start items-center mb-1"
-								v-for="permission in role.permissions"
-								:key="permission.id"
-							>
-								<input
-									v-model="permission.done"
-									type="checkbox"
-									:id="permission.id"
-									:checked="permission.done"
-								/>
-								<label
-									:for="permission.id"
-									class="text-xs sm:text-sm flex items-center"
-								>{{ permission.name }}</label>
+					<p class="text-xs sm:text-sm py-1 pr-2 font-bold">
+						Permissions
+						<span class="text-red-500">*</span>
+						<span
+							class="mx-2 bg-red-300 text-red-700 py-1 px-2 text-xs"
+							v-if="formError.find(item => item.field === 'permission_id')"
+						>{{formError.find(item => item.field === 'permission_id').message}}</span>
+					</p>
+					<div class="flex flex-wrap justify-start">
+						<div
+							class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
+							v-for="(role, index) in permissions"
+							:key="index"
+						>
+							<div class="flex flex-col">
+								<div class="w-full flex flex-row items-center">
+									<input
+										type="checkbox"
+										:id="role.category"
+										:checked="isChecked(role.permissions)"
+										@change="checkAll(index, $event.target.checked)"
+									/>
+									<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
+								</div>
+								<div
+									class="w-full flex flex-row justify-start items-center mb-1"
+									v-for="permission in role.permissions"
+									:key="permission.id"
+								>
+									<input
+										v-model="permission.done"
+										type="checkbox"
+										:id="permission.id"
+										:checked="permission.done"
+									/>
+									<label
+										:for="permission.id"
+										class="text-xs sm:text-sm flex items-center"
+									>{{ permission.name }}</label>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="my-4 text-black">
-					<AppButton :label="'Create'" @click="create" />
+					<div class="my-4 text-black">
+						<AppButton :label="'Create'" @click="create" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -162,26 +171,9 @@ export default {
 				item.done = checked;
 			});
 		},
-		validate() {
-			if (!this.form.name) {
-				this.formError.push({
-					field: "name",
-					message: "Role Name is required"
-				});
-			}
-			if (!this.form.description) {
-				this.formError.push({
-					field: "description",
-					message: "Role Description is required"
-				});
-			}
-		},
 		async create() {
 			this.formError = [];
-			// this.validate();
-			// console.log("form", this.form);
-			this.Validate(this.form, ["permission_id"]);
-			console.log(this.formError, this.form);
+			this.Validate(this.form);
 			if (!this.formError.length) {
 				let ids = [];
 				this.permissions.forEach(item => {
@@ -193,17 +185,29 @@ export default {
 				});
 				console.log("ids", ids);
 				this.form.permission_id = ids;
-				this.$axios.$post(`/api/v1/admin/admin-roles`, this.form).then(res => {
-					this.$emit("addRole", res.data.role),
-						this.$router.push(`/user-management/roles-and-permissions`),
-						this.$store.commit("SET_NOTIFICATION", {
-							enabled: true,
-							status: "success",
-							text: "Role Created Successfully"
-						}),
-						this.getAdminRoles();
-				});
+				this.$axios
+					.$post(`/api/v1/admin/admin-roles`, this.form)
+					.then(res => {
+						this.$emit("addRole", res.data.role),
+							this.$router.push(`/user-management/roles-and-permissions`),
+							this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "success",
+								text: "Role Created Successfully"
+							}),
+							this.getAdminRoles();
+					})
+					.catch(err => {
+						console.log(err.response.data.message);
+						this.$nextTick(() => {
+							this.$refs.modalContainer.scrollTop = 0;
+						});
+					});
 				this.$emit("close");
+			} else {
+				this.$nextTick(() => {
+					this.$refs.modalContainer.scrollTop = 0;
+				});
 			}
 		}
 	}
@@ -212,6 +216,26 @@ export default {
 <style scoped>
 .modal-container {
 	z-index: 510;
+}
+
+.role-modal {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	border-left: solid 2px #ffc72c;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
+	.role-modal {
+		width: 80%;
+	}
 }
 /* @media screen and (min-width: 1200px) {
   .modal-container {

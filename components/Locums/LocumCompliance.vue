@@ -42,8 +42,8 @@
                 
             </div>
             <div v-if="rejectGmcNmc == true" class="flex w-full justify-end mt-2 sm:m-0">
-                 <div class="flex items-center my-2">
-                    <div class="border rounded-lg mx-2 p-2">
+                 <div class="flex flex-col md:flex-row w-full md:w-auto items-center my-2">
+                    <div class="border rounded-lg mx-2 p-2 h-full w-full md:w-auto">
                         <textarea
                             v-model="notes" 
                             placeholder="Reason for Rejection" 
@@ -52,9 +52,14 @@
                             >
                         </textarea>
                     </div>
-                     <button @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')" class="p-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
+                     <div class="flex md:flex-col mt-2">
+                       <button @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
                         <span>{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
-                    </button>
+                      </button>
+                      <button @click.prevent="rejectGmcNmc = false" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
+                          <span>Cancel</span>
+                      </button>
+                     </div>
                 </div>
             </div>
         </div>
@@ -77,10 +82,11 @@
                 v-if="user.locum_detail.mpl_or_npl_number"
                 @click.prevent="toRejectMplNpl()"
                 >{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
+                
             </div>
             <div v-if="rejectMplNpl == true" class="flex w-full justify-end mt-2 sm:m-0">
-                <div class="flex items-center my-2">
-                    <div class="border rounded-lg mx-2 p-2">
+                <div class="flex flex-col md:flex-row w-full md:w-auto items-center my-2">
+                    <div class="border rounded-lg mx-2 p-2 h-full w-full md:w-auto">
                         <textarea
                             v-model="notes" 
                             placeholder="Reason for Rejection" 
@@ -90,9 +96,14 @@
                         </textarea>
                     </div>
                     
-                     <button @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')" class="p-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
-                        <span>{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
-                    </button>
+                     <div class="flex md:flex-col mt-2">
+                      <button @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
+                          <span>{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
+                      </button>
+                      <button @click.prevent="rejectMplNpl = false" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
+                          <span>Cancel</span>
+                      </button>
+                     </div>
                 </div>
             </div>
         </div>

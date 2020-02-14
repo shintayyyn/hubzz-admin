@@ -87,6 +87,12 @@ Vue.mixin({
 					}
 				}
 			}
+
+			console.log("formError", this.formError)
+
+			if (this.formError && this.formError.length) {
+				this.scrollToTop()
+			}
 		},
 		ValidateSamePassword(password, password_confirmation) {
 			if (
