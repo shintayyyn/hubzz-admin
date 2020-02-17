@@ -1,5 +1,5 @@
 <template>
-	<div class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg">
+	<div class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg" ref="modalContainer">
 		<div class="flex items-center text-sm text-white py-2">
 			<div>
 				<svgicon
@@ -29,7 +29,7 @@
 					<div class="w-full flex flex-col justify-center items-start">
 						<AppButton
 							class="whitespace-no-wrap"
-              :disabled="toFilter.approved_at_date_start && toFilter.approved_at_date_end ? false : true"
+							:disabled="toFilter.approved_at_date_start && toFilter.approved_at_date_end ? false : true"
 							:label="'Search for Invoices'"
 							:icon="'search'"
 							@click="chooseJobPartsModal = true"
@@ -48,6 +48,7 @@
 				:practice="practice"
 				:invoiceItems="invoiceItems"
 				:disputedItems="disputedItems"
+				@formError="scrollToTop"
 			/>
 			<!-- :dateStart="date_start"
 			:dateEnd="date_end"-->
@@ -97,9 +98,9 @@ export default {
 				approved_at_date_start: null,
 				approved_at_date_end: null,
 				status: null,
-        invoice_status: null,
-        locum_invoiceable: null ,
-        practice_invoiced: false,
+				invoice_status: null,
+				locum_invoiceable: null,
+				practice_invoiced: false
 			},
 
 			practice: "",
@@ -107,19 +108,19 @@ export default {
 			invoiceItems: [],
 			disputedItems: []
 		};
-  },
+	},
 
-  created(){
-    if (this.showDisputed) {
-      this.toFilter.status = ""
-      this.toFilter.invoice_status = "Disputed" 
-      this.toFilter.locum_invoiceable = null
-    } else {
-      this.toFilter.status = "Approved"
-      this.toFilter.invoice_status = null
-      this.toFilter.locum_invoiceable = true
-    }
-  },
+	created() {
+		if (this.showDisputed) {
+			this.toFilter.status = "";
+			this.toFilter.invoice_status = "Disputed";
+			this.toFilter.locum_invoiceable = null;
+		} else {
+			this.toFilter.status = "Approved";
+			this.toFilter.invoice_status = null;
+			this.toFilter.locum_invoiceable = true;
+		}
+	},
 
 	async asyncData({ app, route, store }) {
 		try {
@@ -135,6 +136,11 @@ export default {
 		}
 	},
 	methods: {
+		scrollToTop() {
+			this.$nextTick(() => {
+				this.$refs.modalContainer.scrollTop = 0;
+			});
+		},
 		toProcessInvoiceItems(chosenJobParts, isDisputed) {
 			this.chooseJobPartsModal = false;
 

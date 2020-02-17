@@ -95,6 +95,7 @@ export default {
 			return;
 		},
 		async save() {
+			this.formError = [];
 			this.Validate(this.form);
 			if (!this.formError.length) {
 				try {
@@ -109,7 +110,10 @@ export default {
 					});
 				} catch (err) {
 					console.log("something went wrong!", err);
+					this.$emit("formError");
 				}
+			} else {
+				this.$emit("formError");
 			}
 		}
 	},

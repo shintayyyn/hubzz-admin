@@ -4,7 +4,7 @@
 		<div class="w-full overflow-hidden">
 			<div v-if="authAdminPermissions.includes('Add Practice User')">
 				<button
-          v-if="practice.status !== 'Deactivated'"
+					v-if="practice.status !== 'Deactivated'"
 					class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
 					@click="show()"
 				>Add User</button>
@@ -41,15 +41,16 @@
 			@click="modal ? modal=false : $router.go(-1)"
 		></div>
 		<transition name="slide" mode="out-in">
-			<div class="practice-user-modal shadow-lg" v-if="modal">
-				<CreateUser
-					@close="modal = false"
-					:practice="practice"
-					:surgery="surgery"
-					:userCount="total"
-					:registeeType="'practiceUser'"
-				/>
-			</div>
+			<!-- <div class="practice-user-modal shadow-lg" v-if="modal"> -->
+			<CreateUser
+				v-if="modal"
+				@close="modal = false"
+				:practice="practice"
+				:surgery="surgery"
+				:userCount="total"
+				:registeeType="'practiceUser'"
+			/>
+			<!-- </div> -->
 		</transition>
 	</div>
 </template>

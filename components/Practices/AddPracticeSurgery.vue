@@ -172,19 +172,20 @@
 			@click="shieldClickaway()"
 		></div>
 		<transition name="slide" mode="out-in">
-			<div
+			<!-- <div
 				class="shadow-lg"
 				:class="practice ? 'practice-user-modal-small' : 'practice-user-modal'"
 				v-if="createPracticeModal"
-			>
-				<CreateUser
-					@close="createPracticeModal = false"
-					@userCreated="(createPracticeModal = false), $emit('close')"
-					:practice="practice"
-					:surgery="surgery"
-					:registeeType="'newPractice'"
-				/>
-			</div>
+			>-->
+			<CreateUser
+				v-if="createPracticeModal"
+				@close="createPracticeModal = false"
+				@userCreated="(createPracticeModal = false), $emit('close')"
+				:practice="practice"
+				:surgery="surgery"
+				:registeeType="'newPractice'"
+			/>
+			<!-- </div> -->
 			<!-- ===================SET PERMISSIONS OF PRACTICE SPOKE=================== -->
 			<div class="practice-user-modal-small shadow-lg" v-if="setSpokePermissionModal">
 				<SetSpokePermissions
@@ -491,7 +492,7 @@ export default {
 	opacity: 0.5;
 	z-index: 511;
 }
-.practice-user-modal,
+/* .practice-user-modal,
 .practice-user-modal-small {
 	position: fixed;
 	top: 0;
@@ -513,5 +514,5 @@ export default {
 	.practice-user-modal-small {
 		width: 60%;
 	}
-}
+} */
 </style>

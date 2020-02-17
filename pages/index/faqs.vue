@@ -1,5 +1,14 @@
 <template>
 	<section class="flex-1 flex flex-col overflow-hidden py-2">
+		<transition name="drop" mode="out-in">
+			<AppConfirm
+				v-if="confirm"
+				:message="'Are you sure you want to delete this FAQ?'"
+				@cancel="confirm = false"
+				@confirm="toDeleteFaq(toDeleteFaqId)"
+			/>
+		</transition>
+		<div class="shield" v-if="confirm" @click="confirm = false"></div>
 		<div class="px-4 md:px-6">
 			<div class="text-xl md:text-4xl text-white pb-4">Frequently Asked Questions</div>
 			<div class="rounded-lg text-white bg-charade shadow-lg p-3 md:p-5">
@@ -10,7 +19,7 @@
 							v-if="authAdminPermissions.includes('Create New FAQ')"
 							:label="'Add'"
 							:icon="'add-rectangle'"
-							:nuxtLink="{ path: `/faqs/addFaq/locum` }"
+							:nuxtLink="{ path: `/faqs/addFaq`, query: {domain: 'Locum'}}"
 							class="text-sm"
 						/>
 						<AppButton
@@ -43,7 +52,7 @@
 					</nuxt-link>
 					<div
 						v-if="deleteLocumFaq == true && authAdminPermissions.includes('Delete FAQ')"
-						@click="toDeleteFaq(item.id)"
+						@click="deleteFaq(item.id)"
 						class="flex cursor-pointer mr-2 md:mr-4 mt-5"
 					>
 						<svgicon
@@ -87,7 +96,7 @@
 							v-if="authAdminPermissions.includes('Create New FAQ')"
 							:label="'Add'"
 							:icon="'add-rectangle'"
-							:nuxtLink="{ path: `/faqs/addFaq/practice` }"
+							:nuxtLink="{ path: `/faqs/addFaq`, query: {domain: 'Practice'}}"
 							class="text-sm"
 						/>
 						<AppButton
@@ -117,7 +126,7 @@
 					</nuxt-link>
 					<div
 						v-if="deletePracticeFaq == true && authAdminPermissions.includes('Delete FAQ')"
-						@click="toDeleteFaq(item.id)"
+						@click="deleteFaq(item.id)"
 						class="flex cursor-pointer mr-2 md:mr-4 mt-5"
 					>
 						<svgicon
@@ -171,9 +180,11 @@
 </template>
 <script>
 import AppButton from "@/components/Base/AppButton";
+import AppConfirm from "@/components/Base/AppConfirm";
 export default {
 	components: {
-		AppButton
+		AppButton,
+		AppConfirm
 	},
 	data() {
 		return {
@@ -184,7 +195,9 @@ export default {
 					toolbar: null
 				}
 			},
-			showConfirmCancelModal: false
+			showConfirmCancelModal: false,
+			confirm: false,
+			toDeleteFaqId: null
 		};
 	},
 	computed: {
@@ -243,6 +256,7 @@ export default {
 						status: "success",
 						text: "Delete Faq Successful"
 					});
+					this.confirm = false;
 				})
 				.catch(err => {
 					console.log("delete faq error!", err);
@@ -252,6 +266,10 @@ export default {
 						text: err.response.data.message
 					});
 				});
+		},
+		deleteFaq(id) {
+			this.toDeleteFaqId = id;
+			this.confirm = true;
 		}
 	}
 };

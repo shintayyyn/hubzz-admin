@@ -101,6 +101,7 @@ export default {
 			return;
 		},
 		async save() {
+			this.formError = [];
 			this.Validate(this.form);
 			if (!this.formError.length) {
 				try {
@@ -112,6 +113,7 @@ export default {
 						status: "success",
 						text: "FAQ successfully created"
 					});
+					this.$emit("close");
 				} catch (err) {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
@@ -119,7 +121,10 @@ export default {
 						text: "Something went wrong!"
 					});
 					console.log("something went wrong!", err);
+					this.$emit("formError", this.formError);
 				}
+			} else {
+				this.$emit("formError", this.formError);
 			}
 		}
 	},

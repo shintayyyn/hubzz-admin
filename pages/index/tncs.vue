@@ -1,12 +1,12 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-hidden py-2">
+	<div class="flex-1 flex flex-col overflow-hidden py-2" ref="wrapper">
 		<div class="px-4 md:px-6">
 			<TermsAndConditionsTabs />
 		</div>
 
 		<div class="px-4 md:px-6 mt-5">
 			<transition name="slide" mode="out-in">
-				<component :is="activeComponent" :terms="terms" />
+				<component :is="activeComponent" :terms="terms" @formError="errorHandler()" />
 			</transition>
 		</div>
 	</div>
@@ -20,7 +20,7 @@ export default {
 		TermsAndConditions,
 		PrivacyPolicy,
 		TermsAndConditionsTabs
-  },
+	},
 	computed: {
 		activeComponent() {
 			return this.$route.query.active_tab;
@@ -42,7 +42,9 @@ export default {
 	},
 	async asyncData({ app, store, route }) {
 		try {
-			let response = await app.$axios.$get(`/api/v1/admin/terms-and-conditions`);
+			let response = await app.$axios.$get(
+				`/api/v1/admin/terms-and-conditions`
+			);
 			const terms = response.data.terms;
 			const tnc = response.data.terms.terms_and_conditions;
 			const privacypolicy = response.data.terms.privacy_policy;
@@ -58,6 +60,13 @@ export default {
 				text: "Something went wrong!"
 			});
 			console.log("get TNCS error!!!!", err);
+		}
+	},
+	methods: {
+		errorHandler() {
+			this.$nextTick(() => {
+				this.$refs.wrapper.scrollTop = 0;
+			});
 		}
 	}
 };
