@@ -267,6 +267,7 @@ export default {
 		// format: String,
 		// disabled all dates past the current date
 		isAfter: Boolean,
+		isBefore: Boolean,
 		format: {
 			type: String,
 			default: "YYYY-MM-DD"
@@ -315,10 +316,25 @@ export default {
 		filteredMonths() {
 			// if selected year === current year, get only the current month up to last month,
 			// if not, get all the months
+			// if (this.selectedYear === this.$moment().format("YYYY")) {
+			// 	return this.months.filter(
+			// 		month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
+			// 	);
+			// }
+			// return this.months;
 			if (this.selectedYear === this.$moment().format("YYYY")) {
-				return this.months.filter(
-					month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
-				);
+				if (this.isAfter) {
+					return this.months.filter(
+						month =>
+							parseInt(month.value) >= parseInt(this.$moment().format("M"))
+					);
+				}
+				if (this.isBefore) {
+					return this.months.filter(
+						month =>
+							parseInt(month.value) <= parseInt(this.$moment().format("M"))
+					);
+				}
 			}
 			return this.months;
 		}
@@ -361,7 +377,24 @@ export default {
 			return this.$moment(date, "MM-DD-YYYY").isSame(newDate);
 		},
 		isDisabled(date) {
-			return false;
+			let newDate = this.$moment.utc().format("MM-DD-YYYY");
+			if (this.isBefore) {
+				if (this.startDate) {
+					return this.$moment(date).isAfter(this.startDate);
+				}
+				return this.$moment(date, "MM-DD-YYYY").isAfter(
+					this.$moment(newDate, "MM-DD-YYYY")
+				);
+			}
+			if (this.isAfter) {
+				if (this.startDate) {
+					return this.$moment(date).isBefore(this.startDate);
+				}
+				return this.$moment(date, "MM-DD-YYYY").isBefore(
+					this.$moment(newDate, "MM-DD-YYYY")
+				);
+			}
+			// return false;
 			// let newDate = this.$moment.utc().format("MM-DD-YYYY");
 			// if (this.isAfter) {
 			//   return this.$moment(date, "MM-DD-YYYY").isAfter(

@@ -32,9 +32,9 @@
 				</div>
 			</template>
 
-      <template v-slot:issued_at="slotProps">
-        <div>{{$moment(slotProps.item.issued_at).format('DD/MM/YYYY')}}</div>
-      </template>
+			<template v-slot:issued_at="slotProps">
+				<div>{{$moment(slotProps.item.issued_at).format('DD/MM/YYYY')}}</div>
+			</template>
 
 			<template v-slot:paid_at="slotProps">
 				<div v-if="!slotProps.item.paid_at">
@@ -73,7 +73,7 @@
 				</div>
 				<div class="flex flex-col w-full text-white px-8 justify-between">
 					<div class="justify-center">
-						<AppDateToggled class="z-50" v-model="paidAt" :name="'paidAt'" :label="'Paid At'" />
+						<AppDateToggled class="z-50" v-model="paidAt" :name="'paidAt'" :label="'Paid At'" isBefore />
 					</div>
 					<div class="flex flex-row mb-4">
 						<div
@@ -138,10 +138,10 @@ export default {
 					slotName: "period",
 					class: "text-center"
 				},
-        {
+				{
 					name: "Issued At",
-          dataIndex: "issued_at",
-          slotName: "issued_at",
+					dataIndex: "issued_at",
+					slotName: "issued_at",
 					class: "text-center",
 					sortable: "true"
 				},
@@ -152,7 +152,7 @@ export default {
 					class: "text-center",
 					sortable: "false"
 				},
-        
+
 				{
 					name: "Paid",
 					dataIndex: "paid_at",
