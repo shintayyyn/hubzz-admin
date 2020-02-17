@@ -44,6 +44,15 @@ Vue.mixin({
 					});
 				}
 			}
+			if (fieldName === 'email') {
+				let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				if (!re.test(String(inputField).toLowerCase())) {
+					this.formError.push({
+						field: fieldName,
+						message: "This is not a valid email"
+					});
+				}
+			}
 		},
 		Validate(form, lists) {
 			let items = Object.entries(form);

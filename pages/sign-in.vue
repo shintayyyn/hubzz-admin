@@ -12,6 +12,7 @@
 				:type="'email'"
 				:class="'w-full'"
 				:error="formError.find(item => item.field === 'email')"
+				@blur="CheckEmptyField(form.email, 'email')"
 			/>
 			<AppInput
 				v-model="form.password"
@@ -19,6 +20,7 @@
 				:type="'password'"
 				:class="'w-full'"
 				:error="formError.find(item => item.field === 'password')"
+				@blur="CheckEmptyField(form.password, 'password')"
 				@submit="login"
 			/>
 			<nuxt-link
