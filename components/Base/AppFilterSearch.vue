@@ -82,9 +82,6 @@ export default {
 			activeIndex: 0
 		};
 	},
-	created() {
-		console.log("i have", this.items);
-	},
 	methods: {
 		add(item, index) {
 			this.value.push(item);

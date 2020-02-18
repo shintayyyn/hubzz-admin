@@ -1,5 +1,5 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
 		<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
 		<div class="px-2 text-xl md:text-4xl text-white">Practices</div>
 
@@ -69,7 +69,9 @@
 			</div>
 		</transition>
 
-		<nuxt-child />
+		<transition name="slide" mode="out-in">
+			<nuxt-child />
+		</transition>
 	</div>
 </template>
 
@@ -95,7 +97,7 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"],
+				order_by: ["created_at:desc"]
 			},
 			sort: "",
 			modal: false,
@@ -161,28 +163,28 @@ export default {
 	watchQuery: ["page"],
 
 	computed: {
-    status() {
-      if (this.$route.name.includes("pending-practices")) {
-        return ["Inactive"]
-      }
-      else if (this.$route.name.includes("bogus-practices")) {
-        return ["Bogus"]
-      }
-      else if(this.$route.name.includes("deactivated-practices")) {
-        return ["Deactivated"]
-      } else {
-        return ['Active', 'Dormant']
-      }
-    },
-    verified() {
-      if (!this.$route.name.includes("pending-practices")||
-      !this.$route.name.includes("bogus-practices") ||
-      !this.$route.name.includes("deactivated-practices")) {
-        return true
-      } else {
-        return false
-      }
-    },
+		status() {
+			if (this.$route.name.includes("pending-practices")) {
+				return ["Inactive"];
+			} else if (this.$route.name.includes("bogus-practices")) {
+				return ["Bogus"];
+			} else if (this.$route.name.includes("deactivated-practices")) {
+				return ["Deactivated"];
+			} else {
+				return ["Active", "Dormant"];
+			}
+		},
+		verified() {
+			if (
+				!this.$route.name.includes("pending-practices") ||
+				!this.$route.name.includes("bogus-practices") ||
+				!this.$route.name.includes("deactivated-practices")
+			) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		loadingPractices() {
 			return this.$store.state.practices.loading_practices;
 		},
@@ -207,18 +209,18 @@ export default {
 	},
 
 	watch: {
-    search(value) {
+		search(value) {
 			this.searchSubmit();
-    },
-    
+		},
+
 		sort(value) {
 			this.params.order_by = value;
 			this.sortBy(value, this.currentPage, this.search);
-    },
-    
+		},
+
 		$route(to, from) {
 			this.getPractices();
-		},
+		}
 	},
 
 	methods: {
@@ -227,25 +229,26 @@ export default {
 		},
 
 		getPractices() {
-      this.$store.dispatch("practices/fetchPractices", {
-				limit: this.params.limit,
-				search: this.search,
-				order_by: this.params.order_by,
-				offset: this.params.offset,
-        status: this.status,
-        verified: this.verified,
-        countOnly: true
-      }).then(() => {
-        this.$store.dispatch("practices/fetchPractices", {
-          limit: this.params.limit,
-          search: this.search,
-          order_by: this.params.order_by,
-          offset: this.params.offset,
-          status: this.status,
-          verified: this.verified,
-        });
-      })
-			
+			this.$store
+				.dispatch("practices/fetchPractices", {
+					limit: this.params.limit,
+					search: this.search,
+					order_by: this.params.order_by,
+					offset: this.params.offset,
+					status: this.status,
+					verified: this.verified,
+					countOnly: true
+				})
+				.then(() => {
+					this.$store.dispatch("practices/fetchPractices", {
+						limit: this.params.limit,
+						search: this.search,
+						order_by: this.params.order_by,
+						offset: this.params.offset,
+						status: this.status,
+						verified: this.verified
+					});
+				});
 		},
 
 		async sortBy(sortedBy, page, search) {
@@ -254,8 +257,8 @@ export default {
 		},
 
 		searchSubmit: debounce(function(page, order_by) {
-      let search = this.search;
-      
+			let search = this.search;
+
 			let query = {
 				...this.$router.query,
 				search
@@ -292,12 +295,11 @@ export default {
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 				this.loading = true;
-      }
+			}
 
-      this.getPractices()
-      
-      this.$router.push({ query });
-      
+			this.getPractices();
+
+			this.$router.push({ query });
 		}, 500),
 
 		typeStyle(type) {
@@ -326,7 +328,7 @@ export default {
 				default:
 					return "";
 			}
-    },
+		},
 
 		pagechanged(page) {
 			const query = {

@@ -286,8 +286,6 @@ export default {
 
 			this.params.compliance_status = this.filterCompliances;
 
-			console.log("qwe", this.params.compliance_status);
-
 			this.getLocums(this.params);
 		},
 		search(value) {

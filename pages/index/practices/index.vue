@@ -1,55 +1,53 @@
 <template>
 	<div>
 		<!-- TABLE START -->
-		<transition name="fade">
-			<AppTable
-				v-if="itemCount > 0"
-				:total="itemCount"
-				:items="getAllPractices"
-				:currentPage="currentPage"
-				:perPage="params.limit"
-				:columns="columns"
-				:loading="loadingPractices"
-				:routerLink="`/practices`"
-				:orderBy="params.order_by"
-				@pagechanged="pagechanged"
-				@sorted="sorted"
-			>
-				<template v-slot:status_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="
+		<AppTable
+			v-if="itemCount > 0"
+			:total="itemCount"
+			:items="getAllPractices"
+			:currentPage="currentPage"
+			:perPage="params.limit"
+			:columns="columns"
+			:loading="loadingPractices"
+			:routerLink="`/practices`"
+			:orderBy="params.order_by"
+			@pagechanged="pagechanged"
+			@sorted="sorted"
+		>
+			<template v-slot:status_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+					:class="
 							`${
 								slotProps.item.status === 'Active'
 									? 'bg-green-500'
 									: 'bg-gray-500 text-gray-700'
 							}`
 						"
-					>{{ slotProps.item.status }}</div>
-				</template>
-				<template v-slot:type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="typeStyle(slotProps.item.type)"
-					>{{ slotProps.item.type }}</div>
-				</template>
-				<template v-slot:hub_type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="hubTypeStyle(slotProps.item.hub_type)"
-					>{{ slotProps.item.hub_type }}</div>
-				</template>
-			</AppTable>
-			<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
+				>{{ slotProps.item.status }}</div>
+			</template>
+			<template v-slot:type_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+					:class="typeStyle(slotProps.item.type)"
+				>{{ slotProps.item.type }}</div>
+			</template>
+			<template v-slot:hub_type_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+					:class="hubTypeStyle(slotProps.item.hub_type)"
+				>{{ slotProps.item.hub_type }}</div>
+			</template>
+		</AppTable>
+		<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
 				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
 				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
 				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
 				</span>
-			</div>-->
-			<template v-else>
-				<div class="mt-2 w-full text-center text-white">There are no verified practices.</div>
-			</template>
-		</transition>
+		</div>-->
+		<template v-else>
+			<div class="mt-2 w-full text-center text-white">There are no verified practices.</div>
+		</template>
 		<!-- END TABLE -->
 	</div>
 </template>
@@ -134,35 +132,36 @@ export default {
 		};
 	},
 
-  watchQuery: ["page"],
-  
-  async asyncData({ app, route, store }) {
+	watchQuery: ["page"],
+
+	async asyncData({ app, route, store }) {
 		try {
+			console.log("asyncdata");
 
-      console.log('asyncdata')
+			await store.commit("practices/TOGGLE_LOADING", true);
 
-      await store.commit("practices/TOGGLE_LOADING", true);
-      
 			let { page = 1, search = "", order_by = [] } = route.query;
 			page = parseInt(page);
 			const createdRoute = route.query;
 			const limit = 10;
-      const offset = page * limit - limit;
-      const status = ["Active", "Dormant"]
+			const offset = page * limit - limit;
+			const status = ["Active", "Dormant"];
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
 			const params = { limit, offset, order_by, status };
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
+			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
+				params
+			});
 			const practiceCount = response.data.count;
 			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount);
 
 			response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
 			const practices = response.data.practices;
 			await store.commit("practices/SET_PRACTICES", practices);
-      await store.commit("practices/TOGGLE_LOADING", false);
-      
+			await store.commit("practices/TOGGLE_LOADING", false);
+
 			return {
 				// practiceCount,
 				// practices
@@ -172,32 +171,32 @@ export default {
 			console.log("Get practices error!", err);
 		}
 	},
-  // async created(){ 
-  //   try{
-  //     await this.$store.commit("practices/TOGGLE_LOADING", true);
+	// async created(){
+	//   try{
+	//     await this.$store.commit("practices/TOGGLE_LOADING", true);
 
-  //     await this.$axios.$get(`/api/v1/admin/practices/count`,{
-  //       params: this.params
-  //     }).then(res => {
-  //       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
-  //     })
+	//     await this.$axios.$get(`/api/v1/admin/practices/count`,{
+	//       params: this.params
+	//     }).then(res => {
+	//       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
+	//     })
 
-  //     await this.$axios.$get(`/api/v1/admin/practices`, {
-  //       params: this.params
-  //     }).then(res => {
-  //       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
-  //     })
-      
-  //     await this.$store.commit("practices/TOGGLE_LOADING", false);
-  //   }catch (err) {
+	//     await this.$axios.$get(`/api/v1/admin/practices`, {
+	//       params: this.params
+	//     }).then(res => {
+	//       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
+	//     })
+
+	//     await this.$store.commit("practices/TOGGLE_LOADING", false);
+	//   }catch (err) {
 	// 		this.store.commit("SET_NOTIFICATION", {
 	// 			enabled: true,
 	// 			status: "danger",
 	// 			text: "Something went Wrong!"
 	// 		});
-  //     console.log("Get practices error!", err);
-  //   }
-  // },
+	//     console.log("Get practices error!", err);
+	//   }
+	// },
 
 	computed: {
 		loadingPractices() {

@@ -282,7 +282,6 @@ export default {
 		};
 	},
 	created() {
-		console.log("modal", this.modal);
 		console.log("month", this.selectedMonth);
 		// get current month and year
 		if (this.value) {

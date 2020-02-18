@@ -135,21 +135,21 @@ export default {
 			limit,
 			offset,
 			order_by
-    };
-    console.log('filter', this.filter)
-		console.log('params', params);
+		};
+		console.log("filter", this.filter);
+		console.log("params", params);
 		if (this.showDisputed) {
 			params = {
 				completed_at_date_start: this.filter.approved_at_date_start,
 				completed_at_date_end: this.filter.approved_at_date_end,
 				invoice_status: ["Disputed", "Issued"],
 				status: this.filter.status,
-        job_practice_id: this.filter.job_practice_id,
+				job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,
 				order_by
-      };
-      console.log('disputed params', params);
+			};
+			console.log("disputed params", params);
 		}
 		let jobPartCount,
 			jobParts = "";
@@ -157,24 +157,19 @@ export default {
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count;
-      });
-      
+			});
+
 		await this.$store.commit(
 			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
 			jobPartCount
 		);
 
-    await this.$axios
-      .$get(`/api/v1/admin/job-parts`, { params })
-      .then(res => {
-        console.log("res", res);
-        jobParts = res.data.job_parts;
-      });
-    
-		await this.$store.commit(
-      "jobs/SET_HUBZZ_BILLING_SESSIONS", 
-      jobParts
-    );
+		await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+			console.log("res", res);
+			jobParts = res.data.job_parts;
+		});
+
+		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts);
 
 		await this.$store.commit("jobs/TOGGLE_LOADING", false);
 	},
@@ -196,29 +191,26 @@ export default {
 			});
 
 			if (index > -1) {
-				this.chosenJobParts.splice(index, 1); 
+				this.chosenJobParts.splice(index, 1);
 			} else {
 				this.chosenJobParts.push(item);
 			}
-			console.log("toggleCheck", item);
 		},
 		emitChosenJobParts(event) {
 			if (this.showDisputed === false) {
-				console.log("false");
 				this.$emit("chosenJobParts", this.chosenJobParts, false);
 			} else if (this.showDisputed === true) {
-				console.log("true");
 				this.$emit("chosenJobParts", this.chosenJobParts, true);
 			}
 		},
 		getJobParts(params) {
 			this.$store.dispatch("jobs/fetchJobParts", {
-        ...this.params,
+				...this.params,
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,
-        offset: params.offset,
-        forBilling: true
+				offset: params.offset,
+				forBilling: true
 			});
 		},
 
@@ -239,8 +231,8 @@ export default {
 				...this.$router.query,
 				order_by
 			};
-      this.params.order_by = order_by;
-      console.log('sort params', this.params)
+			this.params.order_by = order_by;
+			console.log("sort params", this.params);
 			this.getJobParts(this.params);
 		},
 
