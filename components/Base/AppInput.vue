@@ -97,7 +97,7 @@
             <template v-if=" type === 'password' ">
               <div class="relative w-full mb-4">
                 <input
-                  class="w-full bg-transparent text-white py-2 outline-none border-b pr-6"
+                  class="w-full bg-transparent text-white py-2 outline-none border-b-2 pr-6"
                   :value="value"
                   :type="togglePassword()"
                   :placeholder="placeholder"
