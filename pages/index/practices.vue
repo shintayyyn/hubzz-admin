@@ -60,8 +60,9 @@
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
-			@click="modal ? (modal = false) : $router.push('/practices')"
+			@click="modal ? (modal = false) : $router.push(`/practices`)"
 		></div>
+
 		<transition name="slide" mode="out-in">
 			<div class="practice-modal shadow-lg" v-if="modal">
 				<AddPracticeSurgery @close="modal = false" />
@@ -157,7 +158,7 @@ export default {
 		};
 	},
 
-	watchQuery: ["page",],
+	watchQuery: ["page"],
 
 	computed: {
     status() {
@@ -171,6 +172,15 @@ export default {
         return ["Deactivated"]
       } else {
         return ['Active', 'Dormant']
+      }
+    },
+    verified() {
+      if (!this.$route.name.includes("pending-practices")||
+      !this.$route.name.includes("bogus-practices") ||
+      !this.$route.name.includes("deactivated-practices")) {
+        return true
+      } else {
+        return false
       }
     },
 		loadingPractices() {
@@ -223,6 +233,7 @@ export default {
 				order_by: this.params.order_by,
 				offset: this.params.offset,
         status: this.status,
+        verified: this.verified,
         countOnly: true
       }).then(() => {
         this.$store.dispatch("practices/fetchPractices", {
@@ -231,6 +242,7 @@ export default {
           order_by: this.params.order_by,
           offset: this.params.offset,
           status: this.status,
+          verified: this.verified,
         });
       })
 			

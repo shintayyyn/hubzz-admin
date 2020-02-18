@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-col p-4 md:p-8" >
+  <div :class="getStyle(registeeType)" ref="modalContainer">
+    <div class="flex flex-col p-4 md:p-8" >
     <!-- class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8" -->
     <div v-if="registeeType !== 'customSurgery'" class="flex justify-between text-sm text-white">
       <div @click="$emit('close')" class="cursor-pointer">
@@ -288,6 +289,7 @@
     </div>
     <nuxt-child />
   </div>
+  </div>
 </template>
 <script>
 import debounce from "lodash.debounce";
@@ -302,7 +304,7 @@ export default {
     AppButton,
     AppPostCode,
   },
-  props: ["practice", "surgery", "user", "registeeType", "userCount", "customSurgery"],
+  props: ["practice", "surgery", "user", "registeeType", "userCount", "customSurgery", "refWrapper"],
   data() {
     return {
       formError: [],
@@ -616,6 +618,14 @@ export default {
       this.Validate(this.toPostUser, notRequired);
       if (!this.formError.length) {
         this.toPostUserInfo(userInfo, surgID);
+      }else {
+        if (this.registeeType !== 'customSurgery') {
+          this.$nextTick(() => {
+            this.$refs.modalContainer.scrollTop = 0;
+          });
+        }else {
+          this.$emit('formError', this.formError)
+        }
       }
     },
 
@@ -694,6 +704,13 @@ export default {
               })
               .catch(err => {
               console.log("Practice err", err)
+              if (this.registeeType === 'customSurgery') {
+                this.$emit('formError', this.formError)
+              }else {
+                this.$nextTick(() => {
+                  this.$refs.modalContainer.scrollTop = 0;
+                });
+              }
               this.formError = err.response.data.error_messages
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
@@ -716,6 +733,9 @@ export default {
               })
               .catch(err => {
               console.log("catch practice", {err})
+              this.$nextTick(() => {
+                this.$refs.modalContainer.scrollTop = 0;
+              });
               this.formError = err.response.data.error_messages
               });
             await this.getPractices();
@@ -736,7 +756,10 @@ export default {
             })
             .catch(err => {
               console.log("practice user err", {err})
-              // this.formError = err.response.data.error_messages
+              this.$nextTick(() => {
+                this.$refs.modalContainer.scrollTop = 0;
+              });
+              this.formError = err.response.data.error_messages
             });
           await this.getPracticeUsers();
           await this.updatePracticeUsersPageCount();
@@ -760,6 +783,9 @@ export default {
               this.$emit("close");
             })
             .catch(err => {
+              this.$nextTick(() => {
+                this.$refs.modalContainer.scrollTop = 0;
+              });
               this.formError = err.response.data.error_messages
               console.log("admin err", {err})
               // this.formError = err.response.data.error_messages
@@ -769,9 +795,67 @@ export default {
         console.log("try catch", err)
         console.log("index put locum detail compliance documents error.", err);
       }
+    },
+
+    getStyle(type) {
+      	switch(type){
+				case 'admin':
+					return 'new-user-modal'
+					break;
+				case 'newPractice':
+					return this.practice ? 'practice-user-modal-small shadow-lg' : 'practice-user-modal shadow-lg'
+					break;
+				case 'practiceUser':
+					return 'practice-user-modal'
+					break;
+        default: 
+          return
+			}
     }
   }
 };
 </script>
 
-<style></style>
+<style>
+.new-user-modal {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	border-left: solid 2px #ffc72c;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
+}
+
+
+.practice-user-modal,
+.practice-user-modal-small {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	border-left: solid 2px #ffc72c;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
+}
+
+@media screen and (min-width: 1200px) {
+	.new-user-modal {
+		width: 70%;
+	}
+  .practice-user-modal {
+		width: 70%;
+	}
+	.practice-user-modal-small {
+		width: 60%;
+	}
+}
+</style>

@@ -5,6 +5,7 @@
 			<no-ssr placeholder="Loading...">
 				<quill-editor
 					class="bg-white text-black"
+					:class="!form.privacy_policy ? 'border-b-2 border-red-600' : ''"
 					ref="myTextEditor"
 					v-model="form.privacy_policy"
 					:options="editorOption"
@@ -18,6 +19,7 @@
 					@ready="onEditorReady($event)"
 				></quill-editor>
 			</no-ssr>
+			<p class="text-red-600 text-sm py-1" v-if="!form.privacy_policy">Privacy Policy cannot be empty.</p>
 		</div>
 		<div
 			v-if="
@@ -27,7 +29,7 @@
 			"
 			class="flex justify-end pt-2"
 		>
-			<AppButton :label="'Save'" @click="save()" />
+			<AppButton :label="'Save'" @click="save()" :disabled="!form.privacy_policy" />
 		</div>
 	</div>
 </template>
@@ -104,6 +106,7 @@ export default {
 					console.log("update privacy policy error!", err);
 				}
 			} else {
+				this.$emit("formError");
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "danger",

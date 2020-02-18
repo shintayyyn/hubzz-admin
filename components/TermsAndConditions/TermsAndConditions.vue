@@ -5,6 +5,7 @@
 			<no-ssr placeholder="Loading...">
 				<quill-editor
 					class="bg-white text-black"
+					:class="!form.terms_and_conditions ? 'border-b-2 border-red-600' : ''"
 					ref="myTextEditor"
 					v-model="form.terms_and_conditions"
 					:options="editorOption"
@@ -18,6 +19,10 @@
 					@ready="onEditorReady($event)"
 				></quill-editor>
 			</no-ssr>
+			<p
+				class="text-red-600 text-sm py-1"
+				v-if="!form.terms_and_conditions"
+			>Terms &amp; Condition cannot be empty.</p>
 		</div>
 		<div
 			v-if="
@@ -27,7 +32,7 @@
 			"
 			class="flex justify-end pt-2"
 		>
-			<AppButton :label="'Save'" @click="save()" />
+			<AppButton :label="'Save'" @click="save()" :disabled="!form.terms_and_conditions" />
 		</div>
 	</div>
 </template>
@@ -112,11 +117,12 @@ export default {
 					console.log("update tncs error!", err);
 				}
 			} else {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: "Terms and Condition can't be empty."
-				});
+				this.$emit("formError");
+				// this.$store.commit("SET_NOTIFICATION", {
+				// 	enabled: true,
+				// 	status: "danger",
+				// 	text: "Terms and Condition can't be empty."
+				// });
 			}
 		}
 	}

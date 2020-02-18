@@ -13,9 +13,9 @@
 		<div class="flex flex-row justify-start mt-1">
 			<div class="flex flex-col w-full">
 				<input
-					:value="value && $moment(value).format('YYYY-MM-DD')"
+					:value="value && $moment(value).format('DD/MM/YYYY')"
 					type="input"
-					:placeholder="format"
+					:placeholder="'DD/MM/YYYY'"
 					class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
 					:class="{ inClass, 'border-red-500': error}"
 					@click="modal = true"
@@ -264,9 +264,10 @@ export default {
 		error: Object,
 		inStyle: String,
 		inClass: String,
-		format: String,
+		// format: String,
 		// disabled all dates past the current date
 		isAfter: Boolean,
+		isBefore: Boolean,
 		format: {
 			type: String,
 			default: "YYYY-MM-DD"
@@ -315,10 +316,25 @@ export default {
 		filteredMonths() {
 			// if selected year === current year, get only the current month up to last month,
 			// if not, get all the months
+			// if (this.selectedYear === this.$moment().format("YYYY")) {
+			// 	return this.months.filter(
+			// 		month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
+			// 	);
+			// }
+			// return this.months;
 			if (this.selectedYear === this.$moment().format("YYYY")) {
-				return this.months.filter(
-					month => parseInt(month.value) >= parseInt(this.$moment().format("M"))
-				);
+				if (this.isAfter) {
+					return this.months.filter(
+						month =>
+							parseInt(month.value) >= parseInt(this.$moment().format("M"))
+					);
+				}
+				if (this.isBefore) {
+					return this.months.filter(
+						month =>
+							parseInt(month.value) <= parseInt(this.$moment().format("M"))
+					);
+				}
 			}
 			return this.months;
 		}
@@ -361,7 +377,24 @@ export default {
 			return this.$moment(date, "MM-DD-YYYY").isSame(newDate);
 		},
 		isDisabled(date) {
-			return false;
+			let newDate = this.$moment.utc().format("MM-DD-YYYY");
+			if (this.isBefore) {
+				if (this.startDate) {
+					return this.$moment(date).isAfter(this.startDate);
+				}
+				return this.$moment(date, "MM-DD-YYYY").isAfter(
+					this.$moment(newDate, "MM-DD-YYYY")
+				);
+			}
+			if (this.isAfter) {
+				if (this.startDate) {
+					return this.$moment(date).isBefore(this.startDate);
+				}
+				return this.$moment(date, "MM-DD-YYYY").isBefore(
+					this.$moment(newDate, "MM-DD-YYYY")
+				);
+			}
+			// return false;
 			// let newDate = this.$moment.utc().format("MM-DD-YYYY");
 			// if (this.isAfter) {
 			//   return this.$moment(date, "MM-DD-YYYY").isAfter(

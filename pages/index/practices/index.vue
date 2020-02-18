@@ -135,33 +135,69 @@ export default {
 	},
 
   watchQuery: ["page"],
+  
+  async asyncData({ app, route, store }) {
+		try {
 
-  async created(){ 
-    try{
-      await this.$store.commit("practices/TOGGLE_LOADING", true);
+      console.log('asyncdata')
 
-      await this.$axios.$get(`/api/v1/admin/practices/count`,{
-        params: this.params
-      }).then(res => {
-        this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
-      })
-
-      await this.$axios.$get(`/api/v1/admin/practices`, {
-        params: this.params
-      }).then(res => {
-        this.$store.commit("practices/SET_PRACTICES", res.data.practices)
-      })
+      await store.commit("practices/TOGGLE_LOADING", true);
       
-      await this.$store.commit("practices/TOGGLE_LOADING", false);
-    }catch (err) {
-			this.store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went Wrong!"
-			});
-      console.log("Get practices error!", err);
-    }
-  },
+			let { page = 1, search = "", order_by = [] } = route.query;
+			page = parseInt(page);
+			const createdRoute = route.query;
+			const limit = 10;
+      const offset = page * limit - limit;
+      const status = ["Active", "Dormant"]
+			order_by =
+				createdRoute && createdRoute.order_by
+					? createdRoute.order_by
+					: "created_at:desc";
+			const params = { limit, offset, order_by, status };
+			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
+			const practiceCount = response.data.count;
+			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount);
+
+			response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
+			const practices = response.data.practices;
+			await store.commit("practices/SET_PRACTICES", practices);
+      await store.commit("practices/TOGGLE_LOADING", false);
+      
+			return {
+				// practiceCount,
+				// practices
+			};
+		} catch (err) {
+			// error({ statusCode: 404 });
+			console.log("Get practices error!", err);
+		}
+	},
+  // async created(){ 
+  //   try{
+  //     await this.$store.commit("practices/TOGGLE_LOADING", true);
+
+  //     await this.$axios.$get(`/api/v1/admin/practices/count`,{
+  //       params: this.params
+  //     }).then(res => {
+  //       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
+  //     })
+
+  //     await this.$axios.$get(`/api/v1/admin/practices`, {
+  //       params: this.params
+  //     }).then(res => {
+  //       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
+  //     })
+      
+  //     await this.$store.commit("practices/TOGGLE_LOADING", false);
+  //   }catch (err) {
+	// 		this.store.commit("SET_NOTIFICATION", {
+	// 			enabled: true,
+	// 			status: "danger",
+	// 			text: "Something went Wrong!"
+	// 		});
+  //     console.log("Get practices error!", err);
+  //   }
+  // },
 
 	computed: {
 		loadingPractices() {

@@ -101,9 +101,9 @@
 
 		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
 		<transition name="slide" mode="out-in">
-			<div class="new-user-modal" v-if="modal">
-				<CreateUser @close="modal = false" :registeeType="'admin'" />
-			</div>
+			<!-- <div class="new-user-modal" > -->
+			<CreateUser v-if="modal" @close="modal = false" :registeeType="'admin'" />
+			<!-- </div> -->
 		</transition>
 
 		<div
@@ -310,7 +310,7 @@ export default {
 	opacity: 0.5;
 	z-index: 511;
 }
-.new-user-modal {
+/* .new-user-modal {
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -328,5 +328,5 @@ export default {
 	.new-user-modal {
 		width: 70%;
 	}
-}
+} */
 </style>

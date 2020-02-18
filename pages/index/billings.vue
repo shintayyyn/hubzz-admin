@@ -1,20 +1,31 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-auto">
 		<div class="px-2 text-2xl md:text-4xl text-white">Billing</div>
-		<!-- <div class="px-2 flex"> -->
-		<!-- <AppButton :label="'Add Invoice'" :nuxtLink="'/billings/addinvoice'" class="text-sm" /> -->
-		<!-- <div class="flex">
-				<nuxt-link
-					to="/billings/addinvoice"
-					class="inline-flex no-underline py-2 px-4 my-1 md:mb-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow"
-					>Add Invoice</nuxt-link
-				>
-		</div>-->
-		<!-- </div> -->
 
+    <div class="flex items-center px-2 py-2">
+			<div class="relative">
+				<input
+					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+					placeholder="Search Practice by Name"
+					v-model="search"
+				/>
+				<button
+					v-if="search"
+					class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+					@click="(search = ''), searchSubmit()"
+				>
+					<svgicon
+						name="times-solid"
+						height="12"
+						width="12"
+						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+					/>
+				</button>
+			</div>
+		</div>
 		<AppTable
-			v-if="practiceCount > 0"
-			:total="practiceCount"
+			v-if="itemCount > 0"
+			:total="itemCount"
 			:items="getAllPractices"
 			:currentPage="currentPage"
 			:perPage="params.limit"
@@ -51,7 +62,9 @@
 				>{{ slotProps.item.hub_type }}</div>
 			</template>
 		</AppTable>
-    <div v-else class="px-2 text-sm mb-4 text-white">There are no Verified Practices Billable.</div>
+    <template v-else>
+				<div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
+			</template>
 		<div
 			class="billing-shield"
 			v-if="
@@ -65,6 +78,7 @@
 </template>
 
 <script>
+import debounce from "lodash.debounce";
 import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
@@ -72,17 +86,15 @@ export default {
 	},
 	data() {
 		return {
-			practiceCount: 0,
-			practices: [],
-
 			// for app table
 			currentPage: 1,
-
+      search: "",
 			params: {
 				limit: 10,
 				offset: 0,
         order_by: ["created_at:desc"],
-        status: "Active",
+        status: ["Active","Dormant","Suspended"],
+        verified: true,
 			},
 
 			loading: false,
@@ -152,29 +164,40 @@ export default {
 			const createdRoute = route.query;
 			const limit = 10;
       const offset = page * limit - limit;
-      const status = "Active"
+      const status = ["Active","Dormant","Suspended"]
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
 			const params = { limit, offset, order_by, status };
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
-			const practiceCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount);
+			const itemCount = response.data.count;
+			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
 
 			response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
 			const practices = response.data.practices;
 			await store.commit("practices/SET_PRACTICES", practices);
 			await store.commit("practices/TOGGLE_LOADING", false);
 			return {
-				practiceCount,
-				practices
+				// itemCount,
+				// practices
 			};
 		} catch (err) {
 			// error({ statusCode: 404 });
 			console.log("Get practices error!", err);
 		}
-	},
+  },
+  
+  watch: {
+    search(value) {
+			this.searchSubmit();
+    },
+
+    $route(to, from) {
+			this.getPractices();
+		},
+  },
+
 	methods: {
 		goToPage(page) {
 			if (page < 1) {
@@ -201,14 +224,38 @@ export default {
 			this.$router.push({ query });
 		},
 
-		searchSubmit() {
-			const query = {
-				...this.$router.query
+		searchSubmit: debounce(function(page, order_by) {
+      let search = this.search;
+      
+			let query = {
+				...this.$router.query,
+				search
 			};
-
-			delete query.page;
-
-			query.search = this.search;
+			if (page === 1) {
+				delete query.page;
+			}
+			if (page && page > 1) {
+				query = {
+					...this.$router.query,
+					page,
+					search
+				};
+			}
+			if (order_by) {
+				query = {
+					...this.$router.query,
+					search,
+					order_by
+				};
+			}
+			if (page && order_by) {
+				query = {
+					...this.$router.query,
+					page,
+					search,
+					order_by
+				};
+			}
 
 			if (this.search === "") {
 				delete query.search;
@@ -216,19 +263,34 @@ export default {
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 				this.loading = true;
-			}
+      }
 
-			this.$router.push({ query });
-		},
+      this.getPractices();
+      
+      this.$router.push({ query });
+      
+		}, 500),
 
-		getBilling(params) {
-			this.$store.dispatch("practices/fetchPractices", {
+		getPractices() {
+      console.log('params', this.params)
+      this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
 				search: this.search,
-				order_by: params.order_by,
-        offset: params.offset,
-        status: "Active",
-			});
+				order_by: this.params.order_by,
+				offset: this.params.offset,
+        status: this.params.status,
+        verified: this.verified,
+        countOnly: true
+      }).then(() => {
+        this.$store.dispatch("practices/fetchPractices", {
+          limit: this.params.limit,
+          search: this.search,
+          order_by: this.params.order_by,
+          offset: this.params.offset,
+          status: this.params.status,
+          verified: this.verified,
+        });
+      })
 		},
 
 		sortData: function(toSortBy) {
@@ -295,7 +357,7 @@ export default {
 			};
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
-			this.getBilling(this.params);
+			this.getPractices();
     },
     
 		sorted(order_by) {
@@ -306,7 +368,7 @@ export default {
 				order_by
 			};
 			this.params.order_by = order_by;
-			this.getBilling(this.params);
+			this.getPractices();
 		}
 	}
 };

@@ -23,7 +23,7 @@
 		:disabled="disabled"
 		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
 		:class="[
-			disabled && 'hover:text-gray-700 bg-gray-500',
+			disabled && 'text-gray-700 bg-gray-500 cursor-not-allowed',
 			background && !disabled ? getBackground(background) : '',
 			inClass
 		]"

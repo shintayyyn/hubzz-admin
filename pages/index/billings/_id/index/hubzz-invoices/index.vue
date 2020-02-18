@@ -26,10 +26,14 @@
 
 			<template v-slot:period="slotProps">
 				<div>
-					{{ $moment(slotProps.item.date_start).format('MMM DD, YYYY') +
+					{{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
 					' - ' +
-					$moment(slotProps.item.date_end).format('MMM DD, YYYY')}}
+					$moment(slotProps.item.date_end).format('DD/MM/YYYY')}}
 				</div>
+			</template>
+
+			<template v-slot:issued_at="slotProps">
+				<div>{{$moment(slotProps.item.issued_at).format('DD/MM/YYYY')}}</div>
 			</template>
 
 			<template v-slot:paid_at="slotProps">
@@ -42,18 +46,10 @@
 				<div
 					class="px-2"
 					v-else
-				>{{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('MMM DD, YYYY | HH:MM:ss') : "Not yet paid" }}</div>
+				>{{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY | HH:MM:ss') : "Not yet paid" }}</div>
 			</template>
-
-			<!-- <template v-slot:hub_type_slot="slotProps">
-          <div
-            class="px-4 py-1 rounded-full w-32 text-center"
-            :class="hubTypeStyle(slotProps.item.hub_type)"
-          >
-            {{ slotProps.item.hub_type }}
-          </div>
-			</template>-->
 		</AppTable>
+
 		<template v-else>
 			<div class="m-2 w-full text-center text-white">There are no Invoices for HUBZZ</div>
 		</template>
@@ -77,7 +73,7 @@
 				</div>
 				<div class="flex flex-col w-full text-white px-8 justify-between">
 					<div class="justify-center">
-						<AppDateToggled class="z-50" v-model="paidAt" :name="'paidAt'" :label="'Paid At'" />
+						<AppDateToggled class="z-50" v-model="paidAt" :name="'paidAt'" :label="'Paid At'" isBefore />
 					</div>
 					<div class="flex flex-row mb-4">
 						<div
@@ -107,7 +103,7 @@ export default {
 		AppButton,
 		AppTable,
 		AppDateToggled,
-		AppDate,
+		// AppDate,
 		AppConfirm
 	},
 	data() {
@@ -137,16 +133,17 @@ export default {
 					sortable: "true"
 				},
 				{
-					name: "Issued At",
-					dataIndex: "issued_at",
-					class: "text-center localDate",
-					sortable: "true"
-				},
-				{
 					name: "Period",
 					dataIndex: "period",
 					slotName: "period",
 					class: "text-center"
+				},
+				{
+					name: "Issued At",
+					dataIndex: "issued_at",
+					slotName: "issued_at",
+					class: "text-center",
+					sortable: "true"
 				},
 				{
 					name: "£ Amount",
@@ -155,6 +152,7 @@ export default {
 					class: "text-center",
 					sortable: "false"
 				},
+
 				{
 					name: "Paid",
 					dataIndex: "paid_at",
@@ -293,7 +291,7 @@ export default {
 			};
 			this.params.offset = this.params.limit * (page - 1);
 			this.currentPage = page;
-			this.getPractices(this.params);
+			this.getHubzzInvoices(this.params);
 		},
 		sorted(order_by) {
 			// go back to page 1
@@ -303,7 +301,7 @@ export default {
 				order_by
 			};
 			this.params.order_by = order_by;
-			this.getPractices(this.params);
+			this.getHubzzInvoices(this.params);
 		}
 	}
 };
