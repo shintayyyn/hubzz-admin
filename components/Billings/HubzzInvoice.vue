@@ -9,13 +9,13 @@
 				:icon="'cloud-download'"
 				@click="toPDF()"
 			/>
-			<!-- <AppButton
+			<AppButton
         v-if="forViewing == true" 
 				class="mr-2"
-				:label="'Test HTML'"
+				:label="'Export as Sage.csv'"
 				:icon="'cloud-download'"
-				@click="testHtml()"
-			/>-->
+        @click="toSageCSV()"
+			/>
 			<!-- <AppButton
         v-if="forViewing == true" 
 				class="mr-2"
@@ -543,19 +543,20 @@ export default {
 		// if (this.disputeditems) {
 		//   this.createdDisputedItems = this.createdDisputedItems
 		// }ff
-		if (this.locumInvoice) {
-			console.log("locum invoice", this.locumInvoice);
-		}
-		if (this.practiceInvoice) {
-			console.log("practice invoice", this.practiceInvoice);
-		}
+		// if (this.locumInvoice) {
+		// 	console.log("locum invoice", this.locumInvoice);
+		// }
+		// if (this.practiceInvoice) {
+		// 	console.log("practice invoice", this.practiceInvoice);
+		// }
 		if (this.debitItems) {
 			this.createdDebitItems = this.debitItems;
 		}
 		if (this.creditItems) {
 			this.createdCreditItems = this.creditItems;
 		}
-	},
+  },
+  
 	computed: {
 		amountTotal: function() {
 			let grossSum = 0;
@@ -598,7 +599,8 @@ export default {
 			const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2);
 			return netSum;
 		}
-	},
+  },
+  
 	methods: {
 		async testHtml() {
 			window.open(
@@ -631,11 +633,22 @@ export default {
 				window.open(
 					`${process.env.API_URL}/api/v1/practice-invoices/${
 						this.practiceInvoice.id
-					}/pdf?filename=${"hubzz_invoice_" +
-						this.practiceInvoice.invoice_number}`
+					}/pdf?filename=${"hubzz_"+this.$moment(this.practiceInvoice.issued_at).format('DD/MM/YYYY')+"_"+this.practiceInvoice.invoice_number+"_"+this.practiceInvoice.practice.code}`
 				);
 			}
-		},
+    },
+
+    toSageCSV() {
+      if(this.practiceInvoice) {
+
+        window.open(
+          `${process.env.API_URL}/api/v1/admin/practice-invoices/${
+            this.practiceInvoice.id
+          }/sage?filename=${"sage_"+this.$moment(this.practiceInvoice.issued_at).format('DD/MM/YYYY')+"_"+this.practiceInvoice.invoice_number+"_"+this.practiceInvoice.practice.code}.csv`
+        )
+      }
+    },
+    
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
 			const newItem = {
