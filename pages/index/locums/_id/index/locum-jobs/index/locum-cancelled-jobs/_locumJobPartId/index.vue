@@ -25,7 +25,7 @@ export default {
   },
   async asyncData({ app, store, route, error }){
     try{
-      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.locumJobPartId}`)
+      let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.locumJobPartId}`)
       const specificJobPart = response.data.job_part
       const locumUserId = route.params.id
       return{
