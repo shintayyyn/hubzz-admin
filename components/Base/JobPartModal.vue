@@ -274,7 +274,6 @@ export default {
 		};
 	},
 	created() {
-		console.log("specific job part", this.specificJobPart);
 		this.totalPages = Math.ceil(
 			this.specificJobPart.job.job_parts.length / this.params.limit
 		);
@@ -311,7 +310,7 @@ export default {
 					this.jobParts = res.data.job_parts;
 				})
 				.catch(err => {
-					console.log("wewew", err);
+					console.log("get job parts error", err);
 				});
 			this.loading = false;
 		},

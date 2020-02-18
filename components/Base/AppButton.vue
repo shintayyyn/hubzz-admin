@@ -79,7 +79,6 @@ export default {
 				"white",
 				"black"
 			];
-			console.log(singleBackground.includes(value));
 			if (singleBackground.includes(value)) {
 				return `bg-${value} hover:bg-${value}-dark`;
 			} else {

@@ -575,6 +575,7 @@ export default {
 					this.getPractices();
 					this.getPractice();
 					this.confirm = false;
+					this.$router.push("/practices/deactivated-practices");
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {

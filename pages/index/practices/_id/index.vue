@@ -1,26 +1,21 @@
 <template>
 	<div class="practice-modal p-4 md:p-8 shadow-lg">
-		<nuxt-link :to="{path:'/practices', query:$route.query}">
-			<div class="mb-4">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="cursor-pointer text-white hover:text-sunglow fill-current"
-				/>
-			</div>
-		</nuxt-link>
+		<!-- <nuxt-link :to="{path:'/practices', query:$route.query}"> -->
+		<div class="mb-4">
+			<svgicon
+				@click="goBack()"
+				name="arrow-left-solid"
+				height="32"
+				width="32"
+				class="cursor-pointer text-white hover:text-sunglow fill-current"
+			/>
+		</div>
+		<!-- </nuxt-link> -->
 		<PracticeTabs :practice="practice" />
 		<nuxt-child />
-		<div 
-      class="practice-shield" 
-      v-if="$route.name.includes('pracUserId')"
-       @click="$router.go(-1)"></div>
+		<div class="practice-shield" v-if="$route.name.includes('pracUserId')" @click="$router.go(-1)"></div>
 
-		<div 
-      class="practice-shield" 
-      v-if="$route.name.includes('pracDocId')" 
-      @click="$router.go(-1)"></div>
+		<div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="$router.go(-1)"></div>
 
 		<div
 			class="practice-shield"
@@ -34,15 +29,13 @@
 			@click="$router.push(`/practices/${$route.params.id}/practice-surgeries`)"
 		></div>
 
-		<div 
-      class="practice-shield" 
-      v-if="$route.name.includes('practiceSessionPartId')" 
-      @click="$router.go(-1)"></div>
+		<div
+			class="practice-shield"
+			v-if="$route.name.includes('practiceSessionPartId')"
+			@click="$router.go(-1)"
+		></div>
 
-    <div 
-      class="practice-shield" 
-      v-if="$route.name.includes('add-spoke')" 
-      @click="$router.go(-1)"></div>
+		<div class="practice-shield" v-if="$route.name.includes('add-spoke')" @click="$router.go(-1)"></div>
 	</div>
 </template>
 <script>
@@ -74,12 +67,24 @@ export default {
 			console.log("get practice error!!!!", err);
 		}
 	},
+	created() {},
 	methods: {
 		goBack() {
+			console.log(this.practice.status);
+			let url = "/practices";
+			if (this.practice.status === "Inactive") {
+				url = "/practices/pending-practices";
+			}
+			if (this.practice.status === "Bogus") {
+				url = "/practices/bogus-practices";
+			}
+			if (this.practice.status === "Deactivated") {
+				url = "/practices/deactivated-practices";
+			}
 			const query = {
 				...this.$route.query
 			};
-			this.$router.push({ path: "/practices", query });
+			this.$router.push({ path: url, query });
 		}
 	}
 };

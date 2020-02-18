@@ -59,7 +59,9 @@
 							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
 						>
 							<strong class="block md:hidden text-sm uppercase">Created</strong>
-							<span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+							<span
+								class
+							>{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
 						</div>
 					</div>
 				</div>
@@ -162,7 +164,6 @@ export default {
 				offset: offset
 			};
 			this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
-				// console.log('locum allocated', res.data.jobs)
 				this.$store.commit("jobs/SET_LOCUM_ALLOCATED_JOBS", res.data.jobs);
 				this.$store.commit("jobs/TOGGLE_LOADING", false);
 			});
