@@ -63,115 +63,85 @@
 				class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
 			>
 				<div v-if="editProfile" class="w-full overflow-hidden text-gray-300 text-sm p-2">
-					<div class="flex py-1">E-Mail Address</div>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-						:class="errorMessage('email') ? 'border-red-800' :'focus:border-yellow'"
-						type="text"
-						placeholder="example@example.com"
+					<AppInput
 						v-model="toPutPracticeUser.email"
+						:type="'email'"
+						:name="'email'"
+						:label="'E-Mail Address'"
+						:error="formError.find(item => item.field === 'email')"
 						@blur="CheckEmptyField(toPutPracticeUser.email, 'email')"
-						aria-label="Email"
+						required
 					/>
-					<div
-						v-if="formError.filter(item => item.field === 'email')"
-						class="text-red-800 text-xs capitalize pt-1"
-					>{{ errorMessage("email") }}</div>
-
-					<p class="flex py-1">Title</p>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
-						type="text"
+					<AppInput
 						v-model="toPutPracticeUser.title"
-						placeholder="Mr. / Mrs. / Dr. / etc....."
-						aria-label="Title"
+						:type="'text'"
+						:name="'title'"
+						:label="'Title'"
+						:placeholder="'Mr. / Mrs. / Dr. / etc.....'"
 					/>
-
-					<div class="flex py-1">First Name</div>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-						:class="errorMessage('first_name') ? 'border-red-800' :'focus:border-yellow'"
-						type="text"
+					<AppInput
 						v-model="toPutPracticeUser.first_name"
-						placeholder="Jane"
-						aria-label="First Name"
+						:type="'text'"
+						:name="'first_name'"
+						:label="'First Name'"
+						:error="formError.find(item => item.field === 'first_name')"
 						@blur="CheckEmptyField(toPutPracticeUser.first_name, 'first_name')"
+						required
 					/>
-					<div
-						v-if="formError.filter(item => item.field === 'first_name')"
-						class="text-red-800 text-xs capitalize pt-1"
-					>{{ errorMessage("first_name") }}</div>
-
-					<div class="flex py-1">Last Name</div>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-						:class="errorMessage('last_name') ? 'border-red-800' :'focus:border-yellow'"
-						type="text"
+					<AppInput
 						v-model="toPutPracticeUser.last_name"
-						placeholder="Doe"
-						aria-label="Last name"
+						:type="'text'"
+						:name="'last_name'"
+						:label="'Last Name'"
+						:error="formError.find(item => item.field === 'last_name')"
 						@blur="CheckEmptyField(toPutPracticeUser.last_name, 'last_name')"
+						required
 					/>
-					<div
-						v-if="formError.filter(item => item.field === 'last_name')"
-						class="text-red-800 text-xs capitalize pt-1"
-					>{{ errorMessage("last_name") }}</div>
-
-					<p class="flex py-1">Suffix</p>
-					<input
-						class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none focus:border-yellow"
-						type="text"
+					<AppInput
 						v-model="toPutPracticeUser.suffix"
-						placeholder="Ph.D"
-						aria-label="Suffix"
+						:type="'text'"
+						:name="'suffix'"
+						:label="'Suffix'"
+						:placeholder="'Ph.D'"
 					/>
-
-					<div class="flex py-1">Role</div>
-					<select
-						class="block appearance-none text-black w-full bg-white border border-gray-300 hover:border-gray px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-						:class="errorMessage('practice_role') ? 'border-red-800' :'focus:border-yellow'"
+					<AppInput
 						v-model="toPutPracticeUser.practice_role"
+						:type="'select'"
+						:name="'practice_role'"
+						:label="'Role'"
+						:items="[{ label: 'Partner', value: 'Partner'}, { label: 'Practice Manager', value: 'Practice Manager'}, { label: 'Practice Staff', value: 'Practice Staff'}]"
+						:error="formError.find(item => item.field === 'practice_role')"
 						@blur="CheckEmptyField(toPutPracticeUser.practice_role, 'practice_role')"
-					>
-						<option>Partner</option>
-						<option>Practice Manager</option>
-						<option>Practice Staff</option>
-					</select>
-					<div
-						v-if="formError.filter(item => item.field === 'practice_role')"
-						class="text-red-800 text-xs capitalize pt-1"
-					>{{ errorMessage("practice_role") }}</div>
+						required
+					/>
 
 					<AppInput
 						v-model="toPutPracticeUser.practice_user_role_id"
 						:type="'select'"
 						:label="'Practice User Role'"
+						:items="practice_user_roles"
 						:error="
               formError.find(item => item.field === 'practice_user_role_id')
             "
-						:items="practice_user_roles"
+						@blur="CheckEmptyField(toPutPracticeUser.practice_user_role_id, 'practice_user_role_id')"
+						required
 					/>
 
-					<p class="flex py-1">Sign-Up verified by e-mail</p>
+					<p class="flex py-1 font-bold">Sign-Up verified by e-mail</p>
 					<p
 						class="p-2"
 						:class="user.email && 'bg-waterloo-light rounded'"
-					>{{user.email ? $moment(user.email_verified_at).format('ddd, YYYY MMM DD, HH:MM A'): 'Not yet verified'}}</p>
-					<p class="flex py-1">Status</p>
-					<select
-						class="text-black block appearance-none w-full bg-white border border-gray-300 hover:border-gray-300 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none"
-						:class="errorMessage('status') ? 'border-red-800' :'focus:border-yellow'"
+					>{{user.email_verified_at ? $moment(user.email_verified_at).format('ddd, YYYY MMM DD, HH:MM A'): 'Not yet verified'}}</p>
+					<AppInput
 						v-model="toPutPracticeUser.status"
+						:type="'select'"
+						:label="'Status'"
+						:error="formError.find(item => item.field === 'status')"
 						@blur="CheckEmptyField(toPutPracticeUser.status, 'status')"
-					>
-						<option>Active</option>
-						<option>Disabled</option>
-					</select>
-					<div
-						v-if="formError.filter(item => item.field === 'status')"
-						class="text-red-800 text-xs capitalize pt-1"
-					>{{ errorMessage("status") }}</div>
-
+						:items="[{ label: 'Active', value: 'Active'}, {label: 'Disabled', value: 'Disabled'}]"
+						:disabled="!user.email_verified_at"
+						required
+					/>
 					<button
 						class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
 						@click.prevent="checkForm(user.id,toPutPracticeUser)"
@@ -218,32 +188,24 @@
 			<div v-if="tab2" class="flex text-white w-full">
 				<div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg w-full">
 					<div class="overflow-hidden text-gray-300 text-sm p-2 w-full">
-						<div class="flex items-center py-1">New Password</div>
-						<input
-							class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-							:class="errorMessage('password') ? 'border-red-800' :'focus:border-yellow'"
-							type="password"
-							aria-label="password"
+						<AppInput
 							v-model="toChangePassword.password"
+							:type="'password'"
+							:name="'password'"
+							:label="'New Password'"
+							:error="formError.find(item => item.field === 'password')"
 							@blur="CheckEmptyField(toChangePassword.password, 'password')"
+							required
 						/>
-						<div
-							v-if="formError.filter(item => item.field === 'password')"
-							class="text-red-800 text-xs capitalize pt-1"
-						>{{ errorMessage("password") }}</div>
-						<div class="flex items-center py-1">Confirm New Password</div>
-						<input
-							class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-							:class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-yellow'"
-							type="password"
-							aria-label="password_confirmation"
+						<AppInput
 							v-model="toChangePassword.password_confirmation"
+							:type="'password'"
+							:name="'password_confirmation'"
+							:label="'Confirm New Password'"
+							:error="formError.find(item => item.field === 'password_confirmation')"
 							@blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
+							required
 						/>
-						<div
-							v-if="formError.filter(item => item.field === 'password_confirmation')"
-							class="text-red-800 text-xs capitalize pt-1"
-						>{{ errorMessage("password_confirmation") }}</div>
 						<button
 							class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
 							@click.prevent="checkPasswordInfo(user.id,toChangePassword)"

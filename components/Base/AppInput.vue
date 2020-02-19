@@ -136,7 +136,7 @@
                     class="appearance-none border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
                     :class="[
                       error && !disabled && 'border-red-500',
-                      disabled ? 'border-gray-400' : 'cursor-pointer',
+                      disabled ? 'border-gray-500 text-gray-500 cursor-not-allowed' : 'cursor-pointer',
                       multiple ? 'bg-white mt-4' : 'bg-transparent absolute',
                       inClass
                     ]"
