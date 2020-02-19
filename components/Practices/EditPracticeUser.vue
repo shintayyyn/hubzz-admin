@@ -218,32 +218,22 @@
 			<div v-if="tab2" class="flex text-white w-full">
 				<div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg w-full">
 					<div class="overflow-hidden text-gray-300 text-sm p-2 w-full">
-						<div class="flex items-center py-1">New Password</div>
-						<input
-							class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-							:class="errorMessage('password') ? 'border-red-800' :'focus:border-yellow'"
-							type="password"
-							aria-label="password"
+						<AppInput
 							v-model="toChangePassword.password"
-							@blur="CheckEmptyField(toChangePassword.password, 'password')"
+							:type="'password'"
+							:name="'password'"
+							:label="'New Password'"
+							:error="formError.find(item => item.field === 'password')"
+							required
 						/>
-						<div
-							v-if="formError.filter(item => item.field === 'password')"
-							class="text-red-800 text-xs capitalize pt-1"
-						>{{ errorMessage("password") }}</div>
-						<div class="flex items-center py-1">Confirm New Password</div>
-						<input
-							class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-							:class="errorMessage('password_confirmation') ? 'border-red-800' :'focus:border-yellow'"
-							type="password"
-							aria-label="password_confirmation"
+						<AppInput
 							v-model="toChangePassword.password_confirmation"
-							@blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
+							:type="'password'"
+							:name="'password_confirmation'"
+							:label="'Confirm New Password'"
+							:error="formError.find(item => item.field === 'password_confirmation')"
+							required
 						/>
-						<div
-							v-if="formError.filter(item => item.field === 'password_confirmation')"
-							class="text-red-800 text-xs capitalize pt-1"
-						>{{ errorMessage("password_confirmation") }}</div>
 						<button
 							class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
 							@click.prevent="checkPasswordInfo(user.id,toChangePassword)"
