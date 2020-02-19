@@ -164,7 +164,14 @@ export default {
 			this.$router.push(
 				`/practices/${this.practice.id}/practice-sessions/practice-ongoing-sessions/${item.id}`
 			);
-		},
+    },
+    checkRoute(itemId){
+        if (this.$route.name.includes('practice-surgeries')) {
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-ongoing-sessions/${itemId}` }
+        } else if(this.$route.name.includes('practice-sessions')) {
+          return { path: `/practices/${this.practice.id}/practice-sessions/practice-ongoing-sessions/${itemId}` }
+        }
+      },
 		async getOngoingSessions(orderBy) {
 			let offset =
 				this.perPage * (parseInt(this.$route.query.job_parts_page) - 1);

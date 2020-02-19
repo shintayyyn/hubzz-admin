@@ -12,7 +12,7 @@
             <!-- BODY -->
             <nuxt-link 
               v-for="(item, index) in availableJobs" 
-               :to="{ path: `/practices/${practice.id}/practice-sessions/practice-live-sessions/${item.id}`}"
+               :to="checkRoute(item.id)"
               :key="`item-${index}`" 
               class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
               draggable="false"
@@ -94,7 +94,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.job_page)
-      this.getAvailableJobs()
+      this.getLiveJobs()
     },
   },
   async created() {
@@ -116,7 +116,7 @@ export default {
         this.totalPages = Math.ceil(this.total / this.perPage)
       })
     ]).then(() => {
-      this.getAvailableJobs('date_created:desc'),
+      this.getLiveJobs('date_created:desc'),
       console.log(this.availableJobs)
     })
   },
@@ -129,7 +129,14 @@ export default {
     }
   },
   methods: {
-    async getAvailableJobs(orderBy) {
+    checkRoute(itemId){
+      if (this.$route.name.includes('practice-surgeries')) {
+        return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-live-sessions/${itemId}` }
+      } else if(this.$route.name.includes('practice-sessions')) {
+        return { path: `/practices/${this.practice.id}/practice-sessions/practice-live-sessions/${itemId}` }
+      }
+    },
+    async getLiveJobs(orderBy) {
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
       let params = {
         // viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
