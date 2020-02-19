@@ -204,6 +204,15 @@ export default {
 			}
 		},
 		getJobParts(params) {
+      console.log('get job parts params', params)
+      console.log('params being used', {
+				...this.params,
+				limit: this.params.limit,
+				search: this.search,
+				order_by: this.params.order_by,
+				offset: params.offset,
+				forBilling: true
+			})
 			this.$store.dispatch("jobs/fetchJobParts", {
 				...this.params,
 				limit: this.params.limit,
