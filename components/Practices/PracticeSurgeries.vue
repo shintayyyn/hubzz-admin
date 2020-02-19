@@ -201,15 +201,18 @@ export default {
 			this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`)
 		},
 		async viewTerminationModal(childId) {
-			console.log("id", childId);
+      console.log("id", childId);
+      
 			await this.$axios
-				.get(
+				.$get(
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`
 				)
 				.then(res => {
-					this.specificChildSurgery = res.data.data.practice_surgery;
-				});
-			this.terminationModal = true;
+					this.specificChildSurgery = res.data.practice_surgery;
+        });
+      
+      this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`)
+			// this.terminationModal = true;
 		},
 		closeModals() {
 			this.modal = false;
