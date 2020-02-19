@@ -60,7 +60,7 @@
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
-			@click="modal ? (modal = false) : $router.push(`/practices`)"
+			@click="modal ? (modal = false) : goBack()"
 		></div>
 
 		<transition name="slide" mode="out-in">
@@ -101,6 +101,9 @@ export default {
 			},
 			sort: "",
 			modal: false,
+
+			backUrl: "",
+			fromUrl: null,
 
 			//app table columns
 			columns: [
@@ -220,6 +223,7 @@ export default {
 
 		$route(to, from) {
 			this.getPractices();
+			this.fromUrl = from;
 		}
 	},
 
@@ -349,6 +353,21 @@ export default {
 			};
 			this.params.order_by = order_by;
 			this.getPractices();
+		},
+		goBack() {
+			let url = `/practices`;
+			if (this.fromUrl.name === "index-practices-pending-practices") {
+				url = `/practices/pending-practices`;
+			} else if (this.fromUrl.name === "index-practices-bogus-practices") {
+				url = "/practices/bogus-practices";
+			} else if (
+				this.fromUrl.name === "index-practices-deactivated-practices"
+			) {
+				url = "/practices/deactivated-practices";
+			} else {
+				url = `/practices`;
+			}
+			this.$router.push(url);
 		}
 	}
 };
