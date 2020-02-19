@@ -1,56 +1,68 @@
 <template>
-    <div class="practice-modal">
-      <div @click="goBack()" class="cursor-pointer m-6">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
-      </div>
-      <PracticeSessionModal :job="job"/>
-    </div>
+	<div class="practice-modal">
+		<div @click="goBack()" class="cursor-pointer m-6">
+			<svgicon
+				name="arrow-left-solid"
+				height="32"
+				width="32"
+				class="text-white hover:text-sunglow fill-current"
+			/>
+		</div>
+		<PracticeSessionModal :job="job" />
+	</div>
 </template>
 <script>
-import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal";
 export default {
-  components:{
-    PracticeSessionModal
-  },
-  data(){
-    return{
-      job: ''
-    }
-  },
-  async asyncData({ app, store, route, error }){
-    try{
-      console.log('job id',route.params.specificJobId)
-      console.log('route name',route.name)
-      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.specificJobId}`)
-      const job = response.data.job
+	components: {
+		PracticeSessionModal
+	},
+	data() {
+		return {
+			job: ""
+		};
+	},
+	async asyncData({ app, store, route, error }) {
+		try {
+			console.log("job id", route.params.specificJobId);
+			console.log("route name", route.name);
+			let response = await app.$axios.$get(
+				`/api/v1/admin/jobs/${route.params.specificJobId}`
+			);
+			const job = response.data.job;
 
-      store.commit('jobs/TOGGLE_LOADING', false)
-      return{
-        job
-      }
-    }catch(err){
-      error({statusCode: 404})
-      console.log('get job error!',err)
-    }
-  },
-  methods:{
-    goBack(){
-      const query = {
-          ...this.$route.query
-      }
-      if(this.$route.name.includes('locum-jobs')){
-        this.$router.push({path:`/locums/${this.$route.params.id}/locum-jobs`,query})
-      }
-      if(this.$route.name.includes('practice-sessions')){
-        this.$router.push({path:`/practices/${this.$route.params.id}/practice-sessions`,query})
-      }
-      
-    },
-  }
-}
+			store.commit("jobs/TOGGLE_LOADING", false);
+			return {
+				job
+			};
+		} catch (err) {
+			error({ statusCode: 404 });
+			console.log("get job error!", err);
+		}
+	},
+	methods: {
+		goBack() {
+			const query = {
+				...this.$route.query
+			};
+			if (this.$route.name.includes("locum-jobs")) {
+				this.$router.push({
+					path: `/locums/${this.$route.params.id}/locum-jobs`,
+					query
+				});
+			}
+			if (this.$route.name.includes("practice-sessions")) {
+				this.$router.push({
+					path: `/practices/${this.$route.params.id}/practice-sessions`,
+					query
+				});
+			}
+		}
+	}
+};
 </script>
 <style>
-.practice-modal {
+/* .practice-modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -67,5 +79,5 @@ export default {
   .practice-modal {
     width: 80%;
   }
-}
+} */
 </style>
