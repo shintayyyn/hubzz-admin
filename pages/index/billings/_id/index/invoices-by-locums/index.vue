@@ -170,9 +170,9 @@ export default {
 	methods: {
     getPracticeInvoices(params) {
       this.$store.dispatch("billings/fetchPracticeInvoices", {
-        practice_id: this.params.practice_id,
-        limit: this.params.limit,
-        order_by: this.params.order_by,
+        practice_id: params.practice_id,
+        limit: params.limit,
+        order_by: params.order_by,
         offset: params.offset
       })
     },

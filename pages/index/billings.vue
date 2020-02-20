@@ -63,8 +63,8 @@
 			</template>
 		</AppTable>
     <template v-else>
-				<div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
-			</template>
+      <div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
+    </template>
 		<div
 			class="billing-shield"
 			v-if="
@@ -272,7 +272,6 @@ export default {
 		}, 500),
 
 		getPractices() {
-      console.log('params', this.params)
       this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
 				search: this.search,

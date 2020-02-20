@@ -13,9 +13,9 @@
 				/>
 				<div class="w-full overflow-x-auto">
 					<!-- BODY -->
-					<div
+					<nuxt-link
 						v-for="(item, index) in ongoingJobParts"
-						@click="goTo(item)"
+						:to="checkRoute(item.id)"
 						:key="`item-${index}`"
 						class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
 					>
@@ -53,7 +53,7 @@
 							<strong class="block md:hidden text-sm uppercase">Created</strong>
 							<span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
 						</div>
-					</div>
+					</nuxt-link>
 				</div>
 			</div>
 			<div v-if="ongoingJobParts.length > 0" class>
@@ -158,13 +158,13 @@ export default {
 		}
 	},
 	methods: {
-		goTo(item) {
-			this.job = item.job;
-			console.log("item", item.job);
-			this.$router.push(
-				`/practices/${this.practice.id}/practice-sessions/practice-ongoing-sessions/${item.id}`
-			);
-		},
+    checkRoute(itemId){
+      if (this.$route.name.includes('practice-surgeries')) {
+        return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-ongoing-sessions/${itemId}` }
+      } else if(this.$route.name.includes('practice-sessions')) {
+        return { path: `/practices/${this.practice.id}/practice-sessions/practice-ongoing-sessions/${itemId}` }
+      }
+    },
 		async getOngoingSessions(orderBy) {
 			let offset =
 				this.perPage * (parseInt(this.$route.query.job_parts_page) - 1);

@@ -75,8 +75,8 @@ export default {
 };
 </script>
 <style>
-.practice-modal {
-	position: fixed;
+/*.practice-modal {
+ position: fixed;
 	top: 0;
 	right: 0;
 	margin-right: 0%;
@@ -92,5 +92,5 @@ export default {
 	.practice-modal {
 		width: 80%;
 	}
-}
+} */
 </style>

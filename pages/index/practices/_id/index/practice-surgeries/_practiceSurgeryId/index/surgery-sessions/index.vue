@@ -4,6 +4,17 @@
         <!-- <AppLoading :loading="loadingJobs" :message="'Loading Sessions'"/> -->
     </div>
     <SessionsTabs :practice="practice" :practice_surgery="practice_surgery"/>
+    <div
+			class="practice-shield"
+			v-if="$route.name.includes('spokeSessionId')"
+			@click="$router.go(-1)"
+		/>
+
+		<div
+			class="practice-shield"
+			v-if="$route.name.includes('spokeSessionPartId')"
+			@click="$router.go(-1)"
+		/>
     <nuxt-child/>
   </div>
 </template>
