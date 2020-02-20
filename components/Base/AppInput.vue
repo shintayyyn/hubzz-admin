@@ -83,6 +83,7 @@
                   :style="inStyle"
                   :checked="value"
                   :min="type === 'number' && 0"
+                  step="any"
                 />
                 <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
