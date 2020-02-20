@@ -15,6 +15,7 @@
 				:label="'Export as Sage.csv'"
 				:icon="'cloud-download'"
         @click="toSageCSV()"
+        :disabled="practice && practice.sage_ref && practice.direct_debit === true ? false : true"
 			/>
 			<!-- <AppButton
         v-if="forViewing == true" 
@@ -38,6 +39,11 @@
         @click="clearEntries()"
 			/>-->
 		</div>
+    <div
+      class="text-white mx-4"
+      v-if="practice && practiceInvoice && practice.direct_debit === false" >
+      *Assign a SAGE Reference Number to this Practice to proceed with the file export.
+    </div>
 		<!-- HEADER ENDS HERE -->
 		<div v-if="forViewing == false">
 			<div class="text-white font-bold text-xl mx-4">For the Period</div>
@@ -71,11 +77,14 @@
 					<div>
 						<div class="text-sm text-right">
 							<p>{{locumInvoice ? locumInvoice.locum_user.name : 'Hubzz Limited Mws,'}}</p>
-							<p>{{locumInvoice ? locumInvoice.practice.address_line_3 : '601 London Road'}}</p>
-							<p>{{locumInvoice ? locumInvoice.practice.postcode : 'Westcliff-On-Sea SS0 9PE'}}</p>
-							<p>{{locumInvoice ? 'Tel 123123':'billing@hubzz.co.uk'}}</p>
+              <p>{{locumInvoice ? locumInvoice.address_line_1 : null}}</p>
+              <p>{{locumInvoice ? locumInvoice.address_line_2 : null}}</p>
+							<p>{{locumInvoice ? locumInvoice.address_line_3 : '601 London Road'}}</p>
+							<p>{{locumInvoice ? 'Tel '+locumInvoice.mobile_number : 'Westcliff-On-Sea SS0 9PE'}}</p>
+							<p>{{locumInvoice ? null :'billing@hubzz.co.uk'}}</p>
 							<p v-if="!locumInvoice">Registered Company</p>
 							<p>{{locumInvoice ? locumInvoice.locum_user.email : '10832559'}}</p>
+              <p>{{locumInvoice ? 'UTR '+locumInvoice.utr_number : '10832559'}}</p>
 						</div>
 					</div>
 					<div class="flex">
@@ -548,7 +557,8 @@ export default {
 		// }
 		// if (this.practiceInvoice) {
 		// 	console.log("practice invoice", this.practiceInvoice);
-		// }
+    // }
+    console.log('practice', this.practice)
 		if (this.debitItems) {
 			this.createdDebitItems = this.debitItems;
 		}
@@ -572,14 +582,14 @@ export default {
 				);
 				invoiceItemTotal = invoiceItems.reduce(reducer);
 			}
-			console.log("invoice items", this.invoiceItems);
+			// console.log("invoice items", this.invoiceItems);
 			if (this.disputedItems && this.disputedItems.length > 0) {
 				let disputedItems = this.disputedItems.map(disputedItem =>
 					parseFloat(disputedItem.total ? disputedItem.total : 0)
 				);
 				disputedItemTotal = disputedItems.reduce(reducer);
 			}
-			console.log("disputed items", this.disputedItems);
+			// console.log("disputed items", this.disputedItems);
 			grossSum = parseFloat(invoiceItemTotal + disputedItemTotal);
 
 			if (this.createdDebitItems && this.createdDebitItems.length > 0) {
@@ -588,14 +598,14 @@ export default {
 				);
 				debitTotal = createdDebitItems.reduce(reducer);
 			}
-			console.log("debit items", this.createdDebitItems);
+			// console.log("debit items", this.createdDebitItems);
 			if (this.createdCreditItems && this.createdCreditItems.length > 0) {
 				let createdCreditItems = this.createdCreditItems.map(creditItem =>
 					parseFloat(creditItem.total ? creditItem.total : 0)
 				);
 				creditTotal = createdCreditItems.reduce(reducer);
 			}
-			console.log("credit items", this.createdCreditItems);
+			// console.log("credit items", this.createdCreditItems);
 			const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2);
 			return netSum;
 		}

@@ -78,9 +78,9 @@
 						<strong class="block md:hidden text-xs uppercase">Name</strong>
 						<span class="break-all">
 							{{
-							user && user.personal_detail
-							? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
-							: null
+                user && user.personal_detail
+                ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
+                : null
 							}}
 						</span>
 					</div>

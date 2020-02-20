@@ -127,8 +127,8 @@
 							<template v-if="practice.direct_debit">
 								<p class="flex font-bold">Sage reference</p>
 								<p class="flex text-white text-sm md:px-2 mb-2">{{practice.sage_ref}}</p>
-								<p class="flex font-bold">Nominal code</p>
-								<p class="flex ftext-white text-sm md:px-2 mb-2">{{practice.nominal_code}}</p>
+								<!-- <p class="flex font-bold">Nominal code</p>
+								<p class="flex ftext-white text-sm md:px-2 mb-2">{{practice.nominal_code}}</p> -->
 							</template>
 							<p class="flex text-gray-300 font-bold">Phone Number</p>
 							<p
@@ -196,12 +196,12 @@
 									:name="'sage_ref'"
 									:label="'Sage reference'"
 								/>
-								<AppInput
+								<!-- <AppInput
 									v-model="toPutPractice.nominal_code"
 									:type="'text'"
 									:name="'nominal_code'"
 									:label="'Nominal code'"
-								/>
+								/> -->
 							</template>
 							<AppInput
 								v-model="toPutPractice.phone_number"
@@ -374,7 +374,7 @@ export default {
 			toPutPractice: {
 				direct_debit: this.practice.direct_debit,
 				sage_ref: this.practice.sage_ref,
-				nominal_code: this.practice.nominal_code,
+				// nominal_code: this.practice.nominal_code,
 				phone_number: this.practice.phone_number,
 				report_to: this.practice.report_to,
 				extra_information: this.practice.extra_information,

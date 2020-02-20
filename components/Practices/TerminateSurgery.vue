@@ -3,6 +3,7 @@
 		class="flex flex-col justify-between w-full h-full text-white pt-4 pb-8 md:py-8 px-4"
 		:style="approveTemination || rejectTermination ? 'overflow: hidden' : 'overflow: auto'"
 	>
+    <!-- CONFIRM OR CANCEL MODAL -->
 		<transition name="drop" mode="out-in">
 			<AppConfirm
 				v-if="approveTemination"
@@ -13,6 +14,7 @@
 				@confirm="toDeleteSurgery(childSurgery.id)"
 			/>
 		</transition>
+
 		<transition name="drop" mode="out-in">
 			<AppConfirm
 				v-if="rejectTermination"
@@ -23,6 +25,7 @@
 				@confirm="toRejectRequest(childSurgery.id)"
 			/>
 		</transition>
+     <!-- CONFIRM OR CANCEL MODAL ENDS HERE -->
 		<div
 			class="shield cursor-pointer overflow-hidden"
 			v-if="approveTemination || rejectTermination"
@@ -115,13 +118,14 @@ export default {
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${this.childSurgery.id}`
 				)
 				.then(res => {
+          this.approveTemination = false
+					this.getPracticeSpokes(this.practice.id);
+					this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries`)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
 						text: "Spoke is Terminated Successfully"
-					});
-					this.getPracticeSpokes(this.practice.id);
-					this.$emit("close");
+          });
 				})
 				.catch(err => {
 					console.log("delete children error!!!!", err);
@@ -131,43 +135,22 @@ export default {
 						text: err.response.data.message
 					});
 				});
-		},
-		async toDeleteParent(childPracId) {
-			await this.$axios
-				.delete(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`, {
-					practice_id: childPracId
-				})
-				.then(res => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Spoke is Successfully Terminated"
-					});
-					this.getPracticeSpokes(this.practice.id);
-					this.$emit("close");
-				})
-				.catch(err => {
-					console.log("remove parent error!!!!", err);
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					});
-				});
-		},
-		async toRejectRequest(childId) {
+    },
+
+    async toRejectRequest(childId) {
 			await this.$axios
 				.put(
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}/reject-termination-request`
 				)
 				.then(res => {
+          this.rejectTermination = false
+					this.getPracticeSpokes(this.practice.id);
+          this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries`)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
 						text: "Request is Successfully Rejected"
 					});
-					this.getPracticeSpokes(this.practice.id);
-					this.$emit("close");
 				})
 				.catch(err => {
 					console.log("reject request error!", err);
@@ -177,7 +160,7 @@ export default {
 						text: err.response.data.message
 					});
 				});
-		},
+    },
 		getPracticeSpokes(practiceId) {
 			this.$store.dispatch("practices/fetchSpokes", {
 				practice_id: practiceId
