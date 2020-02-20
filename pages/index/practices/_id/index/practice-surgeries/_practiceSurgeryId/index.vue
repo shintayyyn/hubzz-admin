@@ -34,8 +34,6 @@ export default {
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('get practice or practice surgery error', err)
     }
-    
-
   },
   methods:{
     goBack(){

@@ -32,7 +32,7 @@
 			<svgicon
 				name="arrow-left-solid"
 				class="text-white hover:text-sunglow fill-current w-6 md:w-8 h-6 md:h-8 cursor-pointer"
-				@click="$emit('close')"
+				@click="$router.go(-1)"
 			/>
 			<div class="py-2 font-bold text-lg leading-tight">
 				{{ !childSurgery.invitation_accepted_at || childSurgery.invitataion_rejected_at ?

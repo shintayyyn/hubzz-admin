@@ -12,7 +12,7 @@
             <!-- BODY -->
             <nuxt-link 
               v-for="(item, index) in pendingJobs" 
-              :to="{ path: `/practices/${practice.id}/practice-sessions/practice-pending-sessions/${item.id}`}"
+              :to="checkRoute(item.id)"
               :key="`item-${index}`" 
               class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-4 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
               draggable="false"
@@ -136,6 +136,13 @@ export default {
       }
     },
     methods:{
+      checkRoute(itemId){
+        if (this.$route.name.includes('practice-surgeries')) {
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-pending-sessions/${itemId}` }
+        } else if(this.$route.name.includes('practice-sessions')) {
+          return { path: `/practices/${this.practice.id}/practice-sessions/practice-pending-sessions/${itemId}` }
+        }
+      },
       async getPendingJobs(orderBy){ 
         let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {

@@ -92,7 +92,8 @@ export default {
 			chooseJobPartsModal: false,
 			showDisputed: false,
 			date_start: "",
-			date_end: "",
+      date_end: "",
+      
 			toFilter: {
 				job_practice_id: this.$route.params.id,
 				approved_at_date_start: null,
