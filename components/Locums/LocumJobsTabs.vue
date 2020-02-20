@@ -17,11 +17,11 @@
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
 			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-available-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
 		>Available</nuxt-link>
-		<nuxt-link
+		<!-- <nuxt-link
 			:to="getRoute('locum-matched-jobs')"
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
 			:class="$route.path === `/locums/${user.id}/locum-jobs/locum-matched-jobs`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-		>Matched</nuxt-link>
+		>Matched</nuxt-link> -->
 		<nuxt-link
 			:to="getRoute('locum-applied-jobs')"
 			class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
