@@ -249,7 +249,7 @@
 			<transition name="drop-down" mode="out-in">
 				<AppConfirm
 					v-if="terminate"
-					:message="'Are you sure you want to deactivate this account?'"
+					:message="'Are you sure you want to terminate this spoke?'"
 					@cancel="terminate = false"
 					@confirm="terminateSpoke()"
 				/>
