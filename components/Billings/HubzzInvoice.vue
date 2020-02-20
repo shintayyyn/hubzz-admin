@@ -10,7 +10,7 @@
 				@click="toPDF()"
 			/>
 			<AppButton
-        v-if="forViewing == true" 
+        v-if="forViewing == true && practiceInvoice" 
 				class="mr-2"
 				:label="'Export as Sage.csv'"
 				:icon="'cloud-download'"
