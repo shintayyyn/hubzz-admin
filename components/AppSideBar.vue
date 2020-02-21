@@ -35,7 +35,7 @@
                 'text-white hover:text-gray-500'"
               >
               <span>{{ item.name }}</span>
-              <span v-if="item.name === 'Inquiries'" class="rounded-lg p-1 px-2 bg-red-700"> 
+              <span v-if="item.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{unacknowledgedCount}}
               </span>
             </div>
