@@ -4,15 +4,18 @@
     :class="{ 'toggled-left': $store.state.toggled_sidebar }"
   >
     <div class="sidebar-nav">
-      <!-- CLOSE BUTTON -->
+      
+      <!-- LINKS WRAPPER -->
       <div class="xl:mt-24">
-        <!-- LINKS WRAPPER -->
+        <!-- CLOSE BUTTON -->
         <div
           class="close-button cursor-pointer text-2xl font-bold text-sunglow px-4 mt-4"
           @click="close"
         >
           X
         </div>
+        <!-- CLOSE BUTTON ENDS HERE -->
+
         <!-- LINKS -->
         <div
           v-for="(item, index) in lists"
@@ -24,18 +27,23 @@
             v-if="`/${$route.path.split('/')[1]}` == item.route"
           ></span>
           <nuxt-link :to="item.route">
-            <span
+            <div
               @click="close"
               class="block font-sans no-underline p-4"
-              :class="
-                `/${$route.path.split('/')[1]}` == item.route
-                  ? 'text-yellow-500'
-                  : 'text-white hover:text-gray-500'
-              "
-              >{{ item.name }}</span
-            >
+              :class="`/${$route.path.split('/')[1]}` == item.route ? 
+                'text-yellow-500': 
+                'text-white hover:text-gray-500'"
+              >
+              <span>{{ item.name }}</span>
+              <span v-if="item.name === 'Inquiries'" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{unacknowledgedCount}}
+              </span>
+            </div>
+            
           </nuxt-link>
         </div>
+        <!-- LINKS END HERE -->
+
         <!-- SIGN OUT -->
         <div class="text-sm relative">
           <span
@@ -54,7 +62,9 @@
             <span class="font-sans">Sign Out</span>
           </button>
         </div>
+        <!-- SIGN OUT ENDS HERE -->
       </div>
+      <!-- LINKS WRAPPER ENDS HERE -->
     </div>
   </div>
 </template>
@@ -63,12 +73,29 @@ export default {
   data() {
     return {
       lists: [],
-      menu: []
+      menu: [],
+      // GET SUPPORTS BADGE
+      params: {
+        acknowledged: false
+      },
+      supportsBadge: 0
     };
   },
-  created() {
+  computed: {
+    unacknowledgedCount() {
+      return this.$store.state.supports.unacknowledgedCount
+    }
+  },
+  async created() {
     // $auth.user.domain
     if (this.$auth.loggedIn) {
+      const acknowledged = false
+      const params = { acknowledged }
+
+      this.$axios.$get(`/api/v1/admin/supports/count`,{ params }).then(res => {
+        this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
+      })
+
       let domain = this.$auth.user.domain;
       let addedLists = [];
       let defaultLists = [

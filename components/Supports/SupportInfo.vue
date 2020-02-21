@@ -47,7 +47,7 @@
 								/>
 							</div>
 							<div class="flex">
-								Acknowledged By: {{ admin ? admin.personal_detail.name : null }}
+								Acknowledged By: {{ admin ? admin.email : null }}
 							</div>
 						</div>
 					</div>
@@ -86,23 +86,23 @@ export default {
 	props: ["email"],
 	data() {
 		return {
-			admin: "",
+			admin: this.email ? this.email.acknowledged_by_user : "",
 			inquiryEmail: this.email
 		};
 	},
 	async created() {
-		if (
-			this.inquiryEmail.acknowledged_by_user_id &&
-			this.inquiryEmail.acknowledged_at
-		) {
-			await this.$axios
-				.$get(
-					`/api/v1/admin/admin-users/${this.inquiryEmail.acknowledged_by_user_id}`
-				)
-				.then(res => {
-					this.admin = res.data.user;
-				});
-		}
+		// if (
+		// 	this.inquiryEmail.acknowledged_by_user_id &&
+		// 	this.inquiryEmail.acknowledged_at
+		// ) {
+		// 	await this.$axios
+		// 		.$get(
+		// 			`/api/v1/admin/admin-users/${this.inquiryEmail.acknowledged_by_user_id}`
+		// 		)
+		// 		.then(res => {
+		// 			this.admin = res.data.user;
+		// 		});
+		// }
 	},
 	methods: {
 		getQuery() {
@@ -113,24 +113,25 @@ export default {
 			return offset;
 		},
 		getSupportEmails() {
+      this.$store.dispatch("supports/fetchUnacknowledgedSupports", {
+        acknowledged: false,
+        countOnly: true
+      });
+
 			this.$store.dispatch("supports/fetchSupports", {
 				limit: 10,
 				offset: this.getQuery()
-			});
+      });
+
 		},
 		async acknowledgeInquiry() {
 			await this.$axios
 				.$put(`/api/v1/admin/supports/${this.email.id}`)
 				.then(res => {
-					this.inquiryEmail = res.data.email;
-				});
-			await this.$axios
-				.$get(
-					`/api/v1/admin/admin-users/${this.inquiryEmail.acknowledged_by_user_id}`
-				)
-				.then(res => {
-					this.admin = res.data.user;
-				});
+          this.inquiryEmail = res.data.email;
+          this.admin = res.data.acknowledged_by_user
+        });
+        
 			await this.getSupportEmails();
 		},
 		goBack() {
