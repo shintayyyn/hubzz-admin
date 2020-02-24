@@ -5,6 +5,9 @@ export default{
   SET_EMAILS_COUNT(state, payload){
     state.itemCount = payload
   },
+  SET_UNACKNOWLEDGED_EMAILS_COUNT(state, payload){
+    state.unacknowledgedCount = payload
+  },
   SET_EMAILS(state, payload){
     state.emails = payload
   },

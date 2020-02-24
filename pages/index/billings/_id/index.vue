@@ -90,7 +90,6 @@ export default {
 		}
 	},
 	created() {
-    console.log(this.$route.name)
 		this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`);
 	},
 	computed: {

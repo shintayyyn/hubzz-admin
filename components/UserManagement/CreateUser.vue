@@ -161,10 +161,45 @@
               v-model="toPostUser.clinical_commissioning_group_name"
               :type="'text'"
               :label="'Clinical Commissioning Group'"
-              :placeholder="'Clinical Comissioning Group'"
+              :placeholder="'Clinical Commissioning Group'"
               :error="formError.find(item => item.field === 'clinical_commissioning_group_name')"
               @blur="CheckEmptyField(toPostUser.clinical_commissioning_group_name, 'clinical_commissioning_group_name')"
             />
+            <!-- BANKING DETAILS -->
+            
+            <AppInput 
+              v-model="toPostUser.account_name"
+              :type="'text'"
+              :label="'Account Name'"
+              :placeholder="'Account Name'"
+              :error="formError.find(item => item.field === 'account_name')"
+              @blur="CheckEmptyField(toPostUser.account_name, 'account_name')"
+            />
+            <AppInput 
+              v-model="toPostUser.bank_name"
+              :type="'text'"
+              :label="'Bank Name'"
+              :placeholder="'Bank Name'"
+              :error="formError.find(item => item.field === 'bank_name')"
+              @blur="CheckEmptyField(toPostUser.bank_name, 'bank_name')"
+            />
+            <AppInput 
+              v-model="toPostUser.sort_code"
+              :type="'text'"
+              :label="'Sort Code'"
+              :placeholder="'Sort Code'"
+              :error="formError.find(item => item.field === 'sort_code')"
+              @blur="CheckEmptyField(toPostUser.sort_code, 'sort_code')"
+            />
+            <AppInput 
+              v-model="toPostUser.account_number"
+              :type="'text'"
+              :label="'Account Number'"
+              :placeholder="'Account Number'"
+              :error="formError.find(item => item.field === 'account_number')"
+              @blur="CheckEmptyField(toPostUser.account_number, 'account_number')"
+            />
+
             <AppInput
                 v-model="toPostUser.practice_type_id"
                 :type="'multi-checkbox'"
@@ -299,7 +334,7 @@ import AppFilterSearch from "@/components/Base/AppFilterSearch";
 import AppPostCode from "@/components/Base/AppPostCode"
 export default {
   components: {
-    AppFilterSearch,
+    // AppFilterSearch,
     AppInput,
     AppButton,
     AppPostCode,
@@ -344,6 +379,10 @@ export default {
         coordinate_x: "",
         coordinate_y: "",
         clinical_commissioning_group_name: `${this.surgery ? this.surgery.clinical_commissioning_group_name : ""}`,
+        account_name: "",
+        bank_name: "",
+        sort_code: "",
+        account_number: "",
         practice_type_id: [],
         surgery_id: `${this.surgery ? this.surgery.id : ""}`,
 
@@ -612,6 +651,10 @@ export default {
           "coordinate_x",
           "coordinate_y",
           "clinical_commissioning_group_name",
+          "account_name",
+          "bank_name",
+          "sort_code",
+          "account_number"
         )
       }
 

@@ -39,6 +39,7 @@
 			<template v-slot:paid_at="slotProps">
 				<div v-if="!slotProps.item.paid_at">
 					<div
+            v-if="practice && practice.sage_ref && practice.direct_debit === true"
 						@click.stop.prevent="toShowPaidModal(slotProps.item.id)"
 						class="p-2 bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer"
 					>Mark as Paid</div>
@@ -65,12 +66,14 @@
 						@confirm="toMarkAsPaid()"
 					/>
 				</transition>
+        <!-- TO PAID CONFIRM CANCEL -->
 				<div class="shield" v-if="confirm == true" @click="confirm = false"></div>
 				<div class="flex items-center text-sm text-white m-4">
 					<div @click="showPaidModal = false" class="text-white hover:text-sunglow p-1 ml-auto">
 						<svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
 					</div>
 				</div>
+        
 				<div class="flex flex-col w-full text-white px-8 justify-between">
 					<div class="justify-center">
 						<AppDateToggled class="z-50" v-model="paidAt" :name="'paidAt'" :label="'Paid At'" isBefore />
@@ -86,6 +89,7 @@
 						>Cancel</div>
 					</div>
 				</div>
+        <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
 			</div>
 		</transition>
 
@@ -111,6 +115,7 @@ export default {
 			loading: false,
 			currentPage: 1,
 			params: {
+        practice_id:"",
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"]
@@ -173,12 +178,10 @@ export default {
 			let { page = 1, order_by = [] } = route.query;
 
 			const practice_id = route.params.id;
-			const viewing_practice_id = route.params.id;
 			const limit = 10;
 			const offset = page * limit - limit;
 			let params = {
 				practice_id,
-				viewing_practice_id,
 				limit,
 				offset,
 				order_by
@@ -199,10 +202,16 @@ export default {
 			await store.commit(
 				"billings/SET_HUBZZ_INVOICES",
 				response.data.practice_invoices
-			);
+      );
+      
+      response = await app.$axios.$get(`/api/v1/admin/practices/${practice_id}`)
+      const practice = response.data.practice
 
-			await store.commit("billings/TOGGLE_LOADING", false);
+      await store.commit("billings/TOGGLE_LOADING", false);
+      
 			return {
+        practice,
+        params,
 				loading: false,
 				perPage: limit,
 				currentPage: page,
@@ -237,9 +246,11 @@ export default {
 	},
 	methods: {
 		getHubzzInvoices(params) {
+      console.log('params', params)
 			this.$store.dispatch("billings/fetchHubzzInvoices", {
-				limit: this.params.limit,
-				order_by: this.params.order_by,
+        practice_id: params.practice_id,
+				limit: params.limit,
+				order_by: params.order_by,
 				offset: params.offset
 			});
 		},

@@ -47,7 +47,7 @@ import AppTable from '@/components/Base/AppTable'
 import LocumAvailableJobs from '@/components/Locums/Jobs/LocumAvailableJobs'
 export default {
   components:{
-    LocumAvailableJobs,
+  // LocumAvailableJobs,
     AppTable,
   },
   middleware({ query, redirect, error }) {
@@ -121,7 +121,7 @@ export default {
       } else if (newStatus == 'Public') {
         locumStatus = 'Available'
       } else if (newStatus == 'Bank') {
-        locumStatus = null
+        locumStatus = 'Matched'
       }
 			let params = {};
       params = {
