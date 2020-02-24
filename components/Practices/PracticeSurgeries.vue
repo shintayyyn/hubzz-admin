@@ -198,20 +198,24 @@ export default {
 	},
 	methods: {
 		show() {
-			this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`)
+			this.$router.push(
+				`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`
+			);
 		},
 		async viewTerminationModal(childId) {
-      console.log("id", childId);
-      
+			console.log("id", childId);
+
 			await this.$axios
 				.$get(
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`
 				)
 				.then(res => {
 					this.specificChildSurgery = res.data.practice_surgery;
-        });
-      
-      this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`)
+				});
+
+			this.$router.push(
+				`/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`
+			);
 			// this.terminationModal = true;
 		},
 		closeModals() {
@@ -235,7 +239,6 @@ export default {
 						"practices/SET_PRACTICE_SPOKES",
 						res.data.practice_surgeries
 					);
-					console.log("practice children", res.data.practice_surgeries);
 				})
 				.catch(err => {
 					console.log("get children error!!!!", err);
@@ -289,12 +292,11 @@ export default {
 			}
 
 			if (invitation.termination_requested_at) {
-        if (invitation.invitation_accepted_at) {
-          result = "Termination Requested";
-        } else {
-          result = "Cancellation Requested"
-        }
-				
+				if (invitation.invitation_accepted_at) {
+					result = "Termination Requested";
+				} else {
+					result = "Cancellation Requested";
+				}
 			}
 
 			if (invitation.terminated_at) {

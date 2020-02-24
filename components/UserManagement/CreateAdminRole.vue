@@ -112,6 +112,11 @@ export default {
 	mounted() {
 		this.getPermissions();
 	},
+	watch: {
+		"form.permission_id"(value) {
+			console.log("value", value);
+		}
+	},
 	methods: {
 		async getAdminRoles() {
 			this.$store.dispatch("adminusers/fetchAdminRoles", {
@@ -173,18 +178,18 @@ export default {
 		},
 		async create() {
 			this.formError = [];
+			let ids = [];
+			this.permissions.forEach(item => {
+				item.permissions.forEach(permission => {
+					if (permission.done) {
+						ids.push(permission.id);
+					}
+				});
+			});
+			console.log("ids", ids);
+			this.form.permission_id = ids;
 			this.Validate(this.form);
 			if (!this.formError.length) {
-				let ids = [];
-				this.permissions.forEach(item => {
-					item.permissions.forEach(permission => {
-						if (permission.done) {
-							ids.push(permission.id);
-						}
-					});
-				});
-				console.log("ids", ids);
-				this.form.permission_id = ids;
 				this.$axios
 					.$post(`/api/v1/admin/admin-roles`, this.form)
 					.then(res => {
@@ -195,7 +200,8 @@ export default {
 								status: "success",
 								text: "Role Created Successfully"
 							}),
-							this.getAdminRoles();
+							// this.getAdminRoles();
+							this.$router.push("/user-management/roles-and-permissions");
 					})
 					.catch(err => {
 						console.log(err.response.data.message);

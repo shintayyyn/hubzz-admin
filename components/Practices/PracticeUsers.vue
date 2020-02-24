@@ -180,7 +180,6 @@ export default {
 			`/api/v1/admin/surgeries?code_includes=${this.practice.surgery.code}`
 		);
 		this.surgery = response.data.surgeries[0];
-		console.log("surgery", this.surgery);
 	},
 	methods: {
 		async getAllPracticeUsers() {

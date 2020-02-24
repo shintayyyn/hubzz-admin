@@ -436,7 +436,6 @@ export default {
 				console.log("get parent done");
 			});
 		}
-		console.log("practice profile", this.practice);
 	},
 	mounted() {
 		console.log(this.practice);

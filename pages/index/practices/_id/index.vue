@@ -13,16 +13,12 @@
 		<!-- </nuxt-link> -->
 		<PracticeTabs :practice="practice" />
 		<nuxt-child />
-		<div class="practice-shield" v-if="$route.name.includes('pracUserId')" @click="$router.go(-1)"></div>
+		<div class="practice-shield" v-if="$route.name.includes('pracUserId')" @click="goBack()"></div>
 
-		<div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="$router.go(-1)"></div>
+		<div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="goBack()"></div>
 
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('practiceSessionId')"
-			@click="$router.go(-1)"
-		></div>
-
+		<div class="practice-shield" v-if="$route.name.includes('practiceSessionId')" @click="goBack()"></div>
+		<!-- @click="$router.go(-1)" -->
 		<div
 			class="practice-shield"
 			v-if="$route.name.includes('practiceSurgeryId')"

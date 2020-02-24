@@ -12,7 +12,7 @@
 				:label="'Add New Role'"
 				:icon="'add-rectangle'"
 				class="mr-2"
-				@click="modal = true"
+				@click="$router.push('/user-management/roles-and-permissions/create')"
 			/>
 			<template v-if="authAdminPermissions.includes('Delete Role')">
 				<AppButton
@@ -87,11 +87,11 @@
 					: $router.push('/user-management/roles-and-permissions')
 			"
 		></div>
-		<transition name="slide" mode="out-in">
+		<!-- <transition name="slide" mode="out-in">
 			<div class="role-modal shadow-lg" v-if="modal">
 				<CreateAdminRole @close="modal = false" />
 			</div>
-		</transition>
+		</transition>-->
 	</div>
 </template>
 <script>
@@ -114,7 +114,7 @@ export default {
 			deletingAdminRole: false,
 			currentPage: 1,
 			perPage: 10,
-			totalPages: 0,
+			// totalPages: 0,
 			confirm: false,
 			role_id: 0
 		};
@@ -133,6 +133,9 @@ export default {
 	computed: {
 		total() {
 			return this.$store.state.adminusers.adminRolesCount;
+		},
+		totalPages() {
+			return Math.ceil(this.total / this.perPage);
 		},
 		adminRoles() {
 			return this.$store.state.adminusers.adminRoles;
@@ -197,6 +200,9 @@ export default {
 					});
 					this.$store.dispatch("adminusers/fetchAdminRoles", {
 						limit: 10
+					});
+					this.$store.dispatch("adminusers/fetchAdminRolesCount", {
+						countOnly: true
 					});
 					this.confirm = false;
 				})

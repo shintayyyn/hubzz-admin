@@ -170,13 +170,11 @@ export default {
 			const practiceHub = response.data.practice;
 
 			let practiceParent = "";
-			console.log("practice hub", practiceHub);
 			if (practiceHub.parent_practice) {
 				response = await app.$axios.$get(
 					`/api/v1/admin/practices/${practiceHub.parent_practice.id}`
 				);
 				practiceParent = response.data.practice;
-				console.log("parent", practiceParent);
 				await store.commit("practices/SET_PRACTICE_PARENT", practiceParent);
 			}
 

@@ -38,7 +38,6 @@ export default {
 				(route.query.status.toLowerCase() === "ongoing" ||
 					route.query.status.toLowerCase() === "completed" ||
 					route.query.status.toLowerCase() === "approved");
-			console.log(route.params.specificSessionId);
 			let response = await app.$axios.$get(
 				`/api/v1/admin/${isJobParts === true ? "job-parts" : "jobs"}/${
 					route.params.specificSessionId
@@ -51,8 +50,6 @@ export default {
 			} else {
 				job = response.data.job;
 			}
-
-			console.log("job", job);
 			store.commit("jobs/TOGGLE_LOADING", false);
 			return {
 				job,
@@ -74,23 +71,3 @@ export default {
 	}
 };
 </script>
-<style>
-/*.practice-modal {
- position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-	.practice-modal {
-		width: 80%;
-	}
-} */
-</style>

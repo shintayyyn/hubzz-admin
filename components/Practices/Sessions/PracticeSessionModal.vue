@@ -527,6 +527,7 @@ export default {
   watch: {
     $route(to, from) {
       this.currentPage = parseInt(to.query.job_part_page)
+      console.log(to.name)
       // this.$route.params.practiceSessionPartId = jobPartId
       this.getJobParts()
     }
@@ -542,7 +543,7 @@ export default {
       }
       await this.$axios.$get(`/api/v1/admin/job-parts`,{ params }).then(res => {
         this.jobParts = res.data.job_parts
-         console.log("this.job", this.job)
+        //  console.log("this.job", this.job)
       }).catch(err => {
         console.log('get job parts error!!!',err)
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
