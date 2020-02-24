@@ -47,7 +47,7 @@
 		<div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Date Requested:</span>
-				<div>{{$moment(childSurgery.termination_requested_at).format("MMM D, YYYY | HH:MM:ss")}}</div>
+				<div>{{$moment(childSurgery.termination_requested_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</div>
 			</div>
 			<div class="flex flex-col md:flex-row pb-2 leading-tight">
 				<span class="w-full md:w-1/4 font-bold">Practice Name:</span>
