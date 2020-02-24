@@ -20,21 +20,27 @@ export default{
         }
     },
     UPDATE_PRACTICE(state, payload, redirect){
-        let index = state.allPractices.findIndex(practice => practice.id === payload.id)
-        if(index >= 0){
-            state.allPractices.splice(index, 1, payload)
-            const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)            
-            if(state.practice.id === updatedPractice.id){
-                state.practice = updatedPractice
-            }
+      let index = state.allPractices.findIndex(practice => practice.id === payload.id)
+      if(index >= 0){
+        state.allPractices.splice(index, 1, payload)
+        const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)            
+        if(state.practice.id === updatedPractice.id){
+          state.practice = updatedPractice
         }
+      }
     },
     //--------------PRACTICE HUBZZ-----------------------
     SET_PRACTICE_HUB(state, payload){
-        state.practiceHub = payload
+      state.practiceHub = payload
     },
     SET_PRACTICE_PARENT(state, payload){
-        state.practiceParent = payload
+      state.practiceParent = payload
+    },
+    SET_HUBZZ_INVITATIONS_COUNT(state, payload){
+      state.hubzzInvitationCount = payload
+    },
+    SET_HUBZZ_INVITATIONS(state, payload){
+      state.hubzzInvitations = payload
     },
     //------------------PRACTICE SPOKES---------------------
     SET_PRACTICE_SPOKES_COUNT(state, payload){

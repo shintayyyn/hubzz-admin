@@ -97,11 +97,7 @@
 								<svgicon name="alert" width="48" height="48" color="white" />
 							</div>
 							<div class="flex">
-								<p
-									v-if="practiceHub.parent_surgery"
-									class="mt-4"
-								>This surgery is not yet a registered practice in HUBZZ.</p>
-								<p v-else>This practice has no Hub yet.</p>
+								<p>This practice has no Hub yet.</p>
 							</div>
 						</div>
 					</div>
@@ -112,6 +108,41 @@
 						<p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.code : ''}}</p>
 					</div>
 				</form>
+
+        <!-- <AppTable
+            :total="hubInvitationsCount"
+            :items="hubInvitations"
+            :currentPage="currentPage"
+            :perPage="perPage"
+            :columns="columns"
+            :loading="loadingSurgeries"
+            :loadingMessage="'Loading Surgeries'"
+            @pagechanged="pagechanged"
+            @limitchanged="limitchanged"
+          >
+            <template v-slot:type_slot="slotProps">
+              <div class="flex justify-center">
+                <div
+                  class="rounded-full text-center py-2 px-4 md:px-8"
+                  :class="statusStyle(slotProps.item)"
+                >{{ checkStatus(slotProps.item) }}</div>
+                <div
+                  @click.prevent.stop="viewTerminationModal(slotProps.item.id)"
+                  class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
+                  v-if="slotProps.item.termination_requested_at"
+                >
+                  <div class="p-1 bg-white rounded-lg">
+                    <svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
+                  </div>
+                </div>
+              </div>
+            </template>
+
+          </AppTable> -->
+
+        <template v-if="hubInvitationsCount > 0">
+          
+        </template>
 			</div>
 		</div>
 		<transition name="drop" mode="out-in">
@@ -130,18 +161,43 @@
 <script>
 import PracticeHub from "@/components/Practices/PracticeHub";
 import AppConfirm from "@/components/Base/AppConfirm";
+import AppTable from "@/components/Base/AppTable"
 export default {
 	middleware: "changedPracticeType",
 	components: {
 		// PracticeHub,
-		AppConfirm
+    AppConfirm,
+    AppTable,
 	},
 	data() {
 		return {
 			// practice:'',
 			// practiceHub:'',
 			// practiceParent:'',
-			confirm: false
+      confirm: false,
+      columns: [
+				{
+					name: "Practice Name",
+					dataIndex: "child_practice.surgery.name"
+				},
+				{
+					name: "Practice Code",
+					dataIndex: "child_practice.surgery.code",
+					class: "text-center"
+				},
+				{
+					name: "Invited at",
+					dataIndex: "created_at",
+					class: "localDate text-center"
+				},
+				{
+					name: "Status",
+					slot: true,
+					slotName: "type_slot",
+					dataIndex: "",
+					class: "text-center"
+				}
+			]
 		};
 	},
 	computed: {
@@ -153,7 +209,13 @@ export default {
 		},
 		practiceParent() {
 			return this.$store.state.practices.practiceParent;
-		}
+    },
+    hubInvitationsCount() {
+      return this.$store.state.practices.practice.hubInvitationsCount
+    },
+    hubInvitations() {
+      return this.$store.state.practices.hubInvitations;
+    }
 	},
 	async asyncData({ app, store, route, error }) {
 		try {
@@ -176,11 +238,18 @@ export default {
 				);
 				practiceParent = response.data.practice;
 				await store.commit("practices/SET_PRACTICE_PARENT", practiceParent);
-			}
+      }
+      
+      response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/parent-surgery/invitations-count`)
+      const practiceInvitationsCount = response.data.count
+      response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/parent-surgery/invitations`)
+      const practiceInvitations = response.data.practice_surgeries
 
 			await store.commit("practices/SET_PRACTICE_PARENT", practiceParent);
 			await store.commit("practices/SET_SPECIFIC_PRACTICE", practice);
-			await store.commit("practices/SET_PRACTICE_HUB", practiceHub);
+      await store.commit("practices/SET_PRACTICE_HUB", practiceHub);
+      await store.commit("practices/SET_HUBZZ_INVITATIONS_COUNT",practiceInvitationsCount)
+      await store.commit("practices/SET_HUBZZ_INVITATIONS", practiceInvitations)
 
 			// return{
 			//     practice,
@@ -198,6 +267,14 @@ export default {
 		}
 	},
 	methods: {
+    pagechanged(e) {
+			const query = {
+				...this.$route.query,
+				practice_children_page: e || 1
+			};
+			this.$router.push({ query });
+			this.getChildren();
+		},
 		async toTerminateFromHub() {
 			await this.$axios
 				.$delete(

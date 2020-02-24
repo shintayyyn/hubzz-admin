@@ -110,7 +110,7 @@
 							>Compliance Documents is not yet set up by the Practice yet.</p>
 						</div>
 					</div>
-					<!-- VIEW / EDIT OTHER INFORMATION -->
+					<!-- VIEW / EDIT OTHER INFORMATION / PRACTICE TYPE -->
 					<div v-if="practice.status !== 'Deactivated'" class="w-full text-sm text-white md:w-1/2">
 						<div class="flex flex-wrap justify-between items-center">
 							<span class="text-lg mr-2 font-bold">Other Information</span>
@@ -120,8 +120,8 @@
 								@click="edit()"
 							/>
 						</div>
-
-						<div v-if="toEdit == false">
+            <!-- VIEW OTHER INFORMATION -->
+						<div v-if="toEdit === false">
 							<p class="flex text-gray-300 font-bold">Direct Debit</p>
 							<p class="flex text-white text-sm md:px-2 mb-2">{{practice.direct_debit ? 'Yes' : 'No'}}</p>
 							<template v-if="practice.direct_debit">
@@ -177,10 +177,8 @@
 								>Remove Bogus Status</div>
 							</div>
 						</div>
-
-						<div
-							v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Other Information')"
-						>
+            <!-- EDIT OTHER INFORMATION -->
+						<div v-if="toEdit === true && authAdminPermissions.includes('Edit Practice Other Information')">
 							<AppInput
 								class="w-2/3 md:w-1/2 mr-2"
 								v-model="toPutPractice.direct_debit"
@@ -251,10 +249,32 @@
 
 							<AppButton :label="'Save'" @click="toPutPracticeInfo(practice.id,toPutPractice)" />
 						</div>
-
-						<div
-							v-if="toEdit == true && authAdminPermissions.includes('Change Practice Type') && !practiceParent"
-						>
+            <!-- VIEW PRACTICE TYPE -->
+            <div class="flex flex-wrap justify-between items-center">
+              <span class="text-lg mr-2 font-bold">Practice Type</span>
+							<AppButton
+								v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+								:label="toEditPracticeType ? 'Cancel Editing' : 'Edit'"
+								@click="editPracticeType()"
+							/>
+            </div>
+            <div v-if="toEditPracticeType === false" class="">
+              <span>
+                Practice Type: 
+              </span>
+              <span
+								class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
+								:class="practiceTypeStyle(practice.type)"
+							>{{practice.type}}</span>
+              <span
+								v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+								class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
+								:class="practiceTypeStyle(practice.hub_type)"
+							>{{practice.hub_type === 'Type 2' ? 'Health Board' : null}}</span>
+            </div>
+            
+            <!-- EDIT PRACTICE TYPE -->
+						<div v-if="toEditPracticeType === true && authAdminPermissions.includes('Change Practice Type') && !practiceParent">
 							<AppInput
 								v-model="toPutPracticeType.type"
 								:type="'select'"
@@ -280,6 +300,7 @@
 							/>
 							<AppButton :label="'Change'" @click="toChangePracticeType(practice.id,toPutPracticeType)" />
 						</div>
+
 					</div>
 				</div>
 			</form>
@@ -382,7 +403,8 @@ export default {
 				actived_until: this.practice.actived_until
 			},
 
-			toEdit: false,
+      toEdit: false,
+      toEditPracticeType: false,
 			toPutPracticeType: {
 				type: this.practice.type,
 				hub_type: this.practice.hub_type
@@ -462,31 +484,48 @@ export default {
 		},
 		async toPutPracticeInfo(practiceID) {
 			try {
-				await this.$axios.put(
-					`/api/v1/admin/practices/${practiceID}`,
-					this.toPutPractice
-				);
-				await this.getPractices();
-				await this.getPractice();
+
+        if (this.practice.rates.length > 0 &&
+        this.practice.rates[0].rate &&
+        this.practice.rates[1].rate &&
+        this.practiceDocuments.length >= 2) {
+
+        }
+        
+
+				
+				
 
 				let response = await this.$axios.$get(
 					`/api/v1/admin/practice-documents?practice_id=${practiceID}`
 				);
-				const practiceDocs = response.data.practice_documents.length;
+        const practiceDocs = response.data.practice_documents.length;
+        
 				if (!this.practice.rates.length < 2 && practiceDocs < 2) {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
-						status: "alert",
+						status: "danger",
 						text: "Upload practice documents and set the practice rates first."
 					});
-				} else {
-					this.$store.commit("SET_NOTIFICATION", {
+				} else if ( this.toPutPractice.status === 'Active' && !this.toPutPractice.actived_until) {
+          this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
-						status: "success",
-						text: "Saved"
+						status: "danger",
+						text: "Actived Until is Required"
 					});
+        } else {
+          await this.$axios.put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice).then(res => {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Saved"
+            });
+            this.getPractices();
+            this.getPractice();
+            this.toEdit = false;
+          })
 				}
-				this.toEdit = false;
+				
 			} catch (err) {
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
@@ -601,7 +640,8 @@ export default {
 					break;
 				default:
 			}
-		},
+    },
+    
 		edit() {
 			this.toEdit = !this.toEdit;
 			if (this.toEdit) {
@@ -610,10 +650,15 @@ export default {
 				this.toPutPractice.extra_information = this.practice.extra_information;
 				this.toPutPractice.status = this.practice.status;
 				this.toPutPractice.actived_until = this.practice.actived_until;
-				this.toPutPracticeType.type = this.practice.type;
-				this.toPutPracticeType.hub_type = this.practice.hub_type;
 			}
-		}
+    },
+    editPracticeType() {
+      this.toEditPracticeType = !this.toEditPracticeType
+      if (this.toEditPracticeType) {
+        this.toPutPracticeType.type = this.practice.type;
+				this.toPutPracticeType.hub_type = this.practice.hub_type;
+      }
+    }
 	}
 };
 </script>

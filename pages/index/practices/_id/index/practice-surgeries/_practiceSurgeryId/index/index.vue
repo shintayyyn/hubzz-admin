@@ -11,15 +11,16 @@
 			</div>
 
 			<div class="flex flex-col">
-				<!--------------PAY FOR SURGERY-------------->
+				<!--------------Spoke Permissions-------------->
 				<div class="flex flex-row items-center">
-					<div class="text-lg text-white font-semibold">Pay for Surgery / Job Creation</div>
+					<div class="text-lg text-white font-semibold">Spoke Permissions</div>
 					<div
 						@click="edit()"
 						class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
 						:class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
 					>{{editPermissions == false ? 'Edit' : 'Cancel Editing'}}</div>
 				</div>
+
 				<div v-if="editPermissions === false" class="mt-2 mb-4 mx-2">
 					<div class>
 						<div class="flex items-center pb-2">
@@ -397,7 +398,9 @@ export default {
 					this.practice_surgery.max_ooh_rate_limit =
 						res.data.practice_surgery.max_ooh_rate_limit;
 					this.practice_surgery.max_excess_hours =
-						res.data.practice_surgery.max_excess_hours;
+            res.data.practice_surgery.max_excess_hours;
+          this.practice_surgery.allow_surgery_create_permanent_jobs =
+						res.data.practice_surgery.allow_surgery_create_permanent_jobs;
 					this.practice_surgery.allow_surgery_bill_locum =
 						res.data.practice_surgery.allow_surgery_bill_locum;
 					this.practice_surgery.allow_surgery_bill_hubzz =
