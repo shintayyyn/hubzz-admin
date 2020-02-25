@@ -1,10 +1,10 @@
 <template>
-    <div class="mt-5">
-        <transition name="fade" mode="out-in">    
-            <PracticeDocuments :practice="practice"/>
-        </transition>
-        <nuxt-child/>
-    </div>
+  <div class="mt-5">
+    <transition name="fade" mode="out-in">    
+        <PracticeDocuments :practice="practice"/>
+    </transition>
+    <nuxt-child/>
+  </div>
 </template>
 <script>
 import PracticeDocuments from '@/components/Practices/PracticeDocuments'

@@ -156,20 +156,21 @@
             :currentPage="currentPage"
             :perPage="params.limit"
             :columns="columns"
+            :routerLink="`/practices/${practice.id}/practice-hub`"
             :loading="loadingSurgeries"
             :loadingMessage="'Loading Surgeries'"
             @pagechanged="pagechanged"
             
           >
             <template v-slot:actions="slotProps">
-              work in progress
-              {{slotProps.item.id}}
-              <!-- <div class="flex justify-center">
-                <AppButton
+              <!-- work in progress
+              {{slotProps.item.id}} -->
+              <div class="flex justify-center">
+                <!-- <AppButton
                 	class="ml-2"
                   :label="'View'"
-                  @click="toViewInvitation(slotProps.item.id)"
-                />
+                  @click.prevent="toViewInvitation(slotProps.item.id)"
+                /> -->
                 <AppButton
                   class="text-white ml-2"
                   :background="'green'"
@@ -182,7 +183,7 @@
                   :label="'Reject'"
                   @click="toRejectInvitation(slotProps.item.id)"
                 />
-              </div> -->
+              </div>
             </template>
 
           </AppTable>
@@ -238,6 +239,8 @@ export default {
 			// practiceHub:'',
 			// practiceHub:'',
       confirm: false,
+      confirmAccept: false,
+      confirmReject: false,
       currentPage : 1,
       params: {
         limit: 10,
@@ -385,17 +388,47 @@ export default {
 					});
 				});
     },
-    
-    toViewInvitation(id) {
-      alert('work in progress', id)
+
+    async toAcceptInvitation(id) {
+      await this.$axios
+        .$put(
+          `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/accept-invitation`
+        )
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Successfully Accepted Invitation"
+          });
+        })
+        .catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
     },
 
-    toAcceptInvitation(id) {
-      alert('work in progress', id)
-    },
-
-    toRejectInvitation(id) {
-      alert('work in progress', id)
+    async toRejectInvitation(id) {
+      await this.$axios
+        .$put(
+          `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/reject-invitation`
+        )
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Successfully Rejected Invitation"
+          });
+        })
+        .catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
     }
 
 	}

@@ -17,6 +17,8 @@
 
 		<div class="practice-shield" v-if="$route.name.includes('pracDocId')" @click="goBack()"></div>
 
+    <div class="practice-shield" v-if="$route.name.includes('invitationId')" @click="goBack()"></div>
+
 		<div class="practice-shield" v-if="$route.name.includes('practiceSessionId')" @click="goBack()"></div>
 		<!-- @click="$router.go(-1)" -->
 		<div
