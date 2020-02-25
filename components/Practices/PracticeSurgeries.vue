@@ -225,8 +225,7 @@ export default {
 		async getChildren() {
 			let limit = 5;
 			let offset = 0;
-			offset =
-				this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
+			offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
 			let params = { limit, offset };
 
 			await this.$axios
@@ -304,23 +303,15 @@ export default {
 			}
 			return result;
 		},
-		// pagechanged(e) {
-		// 	const query = {
-		// 		...this.$route.query,
-		// 		page: e || 1
-		// 	};
-		// 	this.$router.push({ query });
-		// 	this.getPractices(this.paramSort);
-		// },
 		async limitchanged(limit) {
 			this.currentPage = 1;
 			this.itemsPerPage = limit;
-			await this.getPractices(this.paramSort);
+			await this.getChildren(this.paramSort);
 		},
 		sorted(order_by) {
 			this.currentPage = 1;
 			this.paramSort.order_by = order_by;
-			this.getPractices(this.paramSort);
+			this.getChildren(this.paramSort);
 		}
 	}
 };

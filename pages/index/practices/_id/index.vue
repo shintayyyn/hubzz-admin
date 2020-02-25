@@ -66,7 +66,6 @@ export default {
 	created() {},
 	methods: {
 		goBack() {
-			console.log(this.practice.status);
 			let url = "/practices";
 			if (this.practice.status === "Inactive") {
 				url = "/practices/pending-practices";

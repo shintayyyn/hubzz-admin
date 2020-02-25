@@ -104,11 +104,21 @@ export default{
     return commit('SET_PRACTICE_PARENT',response.data.practice)
   },
 
+  async fetchHubInvitations ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
+    const response = await practiceApi.fetchHubInvitations(this.$axios, payload)
+    commit('TOGGLE_LOADING', false)
+    if(payload.countOnly){
+      return commit('SET_HUBZZ_INVITATIONS_COUNT', response.data.count)
+    }
+    return commit('SET_HUBZZ_INVITATIONS', response.data.practice_surgeries)
+    
+  },
+  
   async fetchSpokes({ commit }, payload){
     commit('TOGGLE_LOADING',true)
     const response = await practiceApi.fetchSpokes(this.$axios, payload)
     commit('TOGGLE_LOADING',false)
-    console.log(payload.countOnly ? payload.countOnly : 'not found')
     if(payload.countOnly){
       return commit('SET_PRACTICE_SPOKES_COUNT', response.data.count)
     }

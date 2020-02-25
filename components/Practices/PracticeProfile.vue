@@ -460,7 +460,6 @@ export default {
 		}
 	},
 	mounted() {
-		console.log(this.practice);
 	},
 	methods: {
 		getQuery() {
@@ -491,11 +490,6 @@ export default {
         this.practiceDocuments.length >= 2) {
 
         }
-        
-
-				
-				
-
 				let response = await this.$axios.$get(
 					`/api/v1/admin/practice-documents?practice_id=${practiceID}`
 				);

@@ -102,9 +102,6 @@ export default {
     }
   },
   created(){
-    console.log('pracc',this.practice)
-    console.log('parent',this.practiceParent)
-    console.log('hub',this.practiceHub)
   },
   methods:{
     show(){

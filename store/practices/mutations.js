@@ -37,10 +37,10 @@ export default{
       state.practiceParent = payload
     },
     SET_HUBZZ_INVITATIONS_COUNT(state, payload){
-      state.hubzzInvitationCount = payload
+      state.hubInvitationsCount = payload
     },
     SET_HUBZZ_INVITATIONS(state, payload){
-      state.hubzzInvitations = payload
+      state.hubInvitations = payload
     },
     //------------------PRACTICE SPOKES---------------------
     SET_PRACTICE_SPOKES_COUNT(state, payload){
@@ -65,7 +65,6 @@ export default{
         state.practiceUsers = payload
     },
     ADD_PRACTICE_USER(state, payload){
-      console.log('practiceUser',state.practiceUsers)
       let index = state.practiceUsers.findIndex(practiceUser => 
         practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
       if(index >= 0){
