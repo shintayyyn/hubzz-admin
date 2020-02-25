@@ -23,46 +23,64 @@
 		</div>
 		<div class="flex flex-wrap">
 			<div
-				class="flex order-2 md:order-1 flex-wrap h-full md:w-1/2 sm:w-full overflow-auto text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow"
+				class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
+				:class="jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
 			>
-				<!-- INFOS LEFT -->
-				<div class="xl:w-1/2 w-full overflow-hidden">
-					<div class="m-4 mt-5 text-gray text-white">
-						<p class="font-semibold">Job Part Number</p>
-						<p class="text-white">{{job_part.job_part_number}}</p>
-						<p class="mt-5 font-semibold">Job Part</p>
-						<p class="text-white">{{job_part.part}} of {{job_part.parts}}</p>
-						<p class="mt-5 font-semibold">Rate</p>
+				<div
+					v-if="job_part.status === 'Withdrawn'"
+					class="shadow-lg rounded-lg bg-waterloo shadow p-4 mb-2"
+				>
+					<div class="leading-tight pb-4">
+						<p class="font-bold text-sm sm:text-md">Reason for Withdrawal</p>
 						<p
-							class="text-white no-underline"
-						>{{job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour"}}</p>
-						<p class="mt-5 font-semibold">Total Hours</p>
-						<p class="text-white">{{job_part.job ? job_part.job.total_hours+" Hours":null + " Hours"}}</p>
-						<p class="mt-5 font-semibold">Job Description</p>
-						<p class="text-white">{{job_part.job ? job_part.job.description: 'N/A'}}</p>
+							class="text-xs sm:text-sm"
+						>{{ job_part.job.platform_job.declined_reason ? job_part.job.platform_job.declined_reason : '(none)'}}</p>
+					</div>
+					<div class="leading-tight">
+						<p class="font-bold text-sm sm:text-md">Date of Withdrawal</p>
+						<p class="text-xs sm:text-sm">{{ job_part.job.platform_job.declined_at | localDate}}</p>
 					</div>
 				</div>
-				<!-- INFOS RIGHT -->
-				<div class="text-white xl:w-1/2 w-full overflow-hidden">
-					<div class="m-4 mt-5">
-						<p class="font-semibold">Duration</p>
-						<div class="flex items-center py-2 mr-2 text-sm">
-							<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-							<span class="font-semibold">{{job_part.date_start}}</span>
+				<div class="shadow-lg rounded-lg bg-waterloo shadow">
+					<div class="flex flex-wrap">
+						<!-- INFOS LEFT -->
+						<div class="xl:w-1/2 w-full overflow-hidden">
+							<div class="m-4 mt-5 text-gray text-white">
+								<p class="font-semibold">Job Part Number</p>
+								<p class="text-white">{{job_part.job_part_number}}</p>
+								<p class="mt-5 font-semibold">Job Part</p>
+								<p class="text-white">{{job_part.part}} of {{job_part.parts}}</p>
+								<p class="mt-5 font-semibold">Rate</p>
+								<p
+									class="text-white no-underline"
+								>{{job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour"}}</p>
+								<p class="mt-5 font-semibold">Total Hours</p>
+								<p class="text-white">{{job_part.job ? job_part.job.total_hours+" Hours":null + " Hours"}}</p>
+								<p class="mt-5 font-semibold">Job Description</p>
+								<p class="text-white">{{job_part.job ? job_part.job.description: 'N/A'}}</p>
+							</div>
 						</div>
-						<div class="flex items-center py-2 mr-2 text-sm">
-							<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-							<span class="font-semibold">{{job_part.date_end}}</span>
-						</div>
-						<div class="flex items-center py-2 mr-2 text-sm">
-							<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
-							<span class="font-semibold">{{ job_part.job ? job_part.job.shift.name : null}}</span>
-						</div>
-						<p class="mt-5 font-semibold">Invoiced?</p>
-						<p class="text-white">{{job_part.invoiced ? 'Yes': 'No'}}</p>
-						<p class="mt-5 font-semibold">Issued?</p>
-						<p class="text-white">{{job_part.issued ? 'Yes': 'No'}}</p>
-						<!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
+						<!-- INFOS RIGHT -->
+						<div class="text-white xl:w-1/2 w-full overflow-hidden">
+							<div class="m-4 mt-5">
+								<p class="font-semibold">Duration</p>
+								<div class="flex items-center py-2 mr-2 text-sm">
+									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
+									<span class="font-semibold">{{job_part.date_start}}</span>
+								</div>
+								<div class="flex items-center py-2 mr-2 text-sm">
+									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
+									<span class="font-semibold">{{job_part.date_end}}</span>
+								</div>
+								<div class="flex items-center py-2 mr-2 text-sm">
+									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
+									<span class="font-semibold">{{ job_part.job ? job_part.job.shift.name : null}}</span>
+								</div>
+								<p class="mt-5 font-semibold">Invoiced?</p>
+								<p class="text-white">{{job_part.invoiced ? 'Yes': 'No'}}</p>
+								<p class="mt-5 font-semibold">Issued?</p>
+								<p class="text-white">{{job_part.issued ? 'Yes': 'No'}}</p>
+								<!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
 							<div class="m-2 mt-5">
 								<span>This job is </span>
 								<span class="font-semibold">{{job_part.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
@@ -116,42 +134,44 @@
 							</div>
 							</div>
 							<div v-else-if="job_part.job ? job_part.job.private_job : null">
-						</div>-->
-					</div>
-				</div>
-				<!-- GOOGLE MAPS -->
-				<div
-					class="w-full m-2 md:m-4 overflow-hidden"
-					v-if="job_part.job ? job_part.job.platform_job : null"
-				>
-					<div class="text-white pb-2">
-						<div class="font-semibold">
-							Practice
-							<p>{{job_part.job ? job_part.job.platform_job.practice.surgery.name : null}}</p>
+								</div>-->
+							</div>
 						</div>
-						<p>
-							{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null}}
-							{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null}}
-							{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null}}
-						</p>
 					</div>
+					<!-- GOOGLE MAPS -->
+					<div
+						class="w-full p-2 md:p-4 overflow-hidden"
+						v-if="job_part.job ? job_part.job.platform_job : null"
+					>
+						<div class="text-white pb-2">
+							<div class="font-semibold">
+								Practice
+								<p>{{job_part.job ? job_part.job.platform_job.practice.surgery.name : null}}</p>
+							</div>
+							<p>
+								{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null}}
+								{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null}}
+								{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null}}
+							</p>
+						</div>
 
-					<div class="w-full">
-						<GmapMap
-							:center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-							:zoom="15"
-							map-type-id="terrain"
-							style="width: 100%; height:350px"
-						>
-							<GmapMarker
-								:position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
-							/>
-						</GmapMap>
+						<div class="w-full">
+							<GmapMap
+								:center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+								:zoom="15"
+								map-type-id="terrain"
+								style="width: 100%; height:350px"
+							>
+								<GmapMarker
+									:position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
+								/>
+							</GmapMap>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="flex order-1 md:order-2 w-full md:w-1/2">
-				<div v-if="jobParts.length > 0" class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
+			<div v-if="jobParts.length > 0" class="flex order-1 md:order-2 w-full md:w-1/2">
+				<div class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
 					<div class="mx-2 text-white font-semibold">Job Parts</div>
 					<!-- <AppTable
 						:total="specificJobPart.job.job_parts.length"
@@ -279,6 +299,8 @@ export default {
 		);
 		this.job_part = this.specificJobPart;
 		this.getJobParts(this.params);
+
+		console.log("jobpart", this.job_part);
 	},
 	computed: {
 		loadingPractices() {

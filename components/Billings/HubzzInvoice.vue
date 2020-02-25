@@ -10,12 +10,12 @@
 				@click="toPDF()"
 			/>
 			<AppButton
-        v-if="forViewing == true && practiceInvoice" 
+				v-if="forViewing == true && practiceInvoice"
 				class="mr-2"
 				:label="'Export as Sage.csv'"
 				:icon="'cloud-download'"
-        @click="toSageCSV()"
-        :disabled="practice && practice.sage_ref && practice.direct_debit === true ? false : true"
+				@click="toSageCSV()"
+				:disabled="practice && practice.sage_ref && practice.direct_debit === true ? false : true"
 			/>
 			<!-- <AppButton
         v-if="forViewing == true" 
@@ -39,11 +39,10 @@
         @click="clearEntries()"
 			/>-->
 		</div>
-    <div
-      class="text-white mx-4"
-      v-if="practice && practiceInvoice && practice.direct_debit === false" >
-      *Assign a SAGE Reference Number to this Practice to proceed with the file export.
-    </div>
+		<div
+			class="text-white mx-4"
+			v-if="practice && practiceInvoice && practice.direct_debit === false"
+		>*Assign a SAGE Reference Number to this Practice to proceed with the file export.</div>
 		<!-- HEADER ENDS HERE -->
 		<div v-if="forViewing == false">
 			<div class="text-white font-bold text-xl mx-4">For the Period</div>
@@ -77,14 +76,14 @@
 					<div>
 						<div class="text-sm text-right">
 							<p>{{locumInvoice ? locumInvoice.locum_user.name : 'Hubzz Limited Mws,'}}</p>
-              <p>{{locumInvoice ? locumInvoice.address_line_1 : null}}</p>
-              <p>{{locumInvoice ? locumInvoice.address_line_2 : null}}</p>
+							<p>{{locumInvoice ? locumInvoice.address_line_1 : null}}</p>
+							<p>{{locumInvoice ? locumInvoice.address_line_2 : null}}</p>
 							<p>{{locumInvoice ? locumInvoice.address_line_3 : '601 London Road'}}</p>
 							<p>{{locumInvoice ? 'Tel '+locumInvoice.mobile_number : 'Westcliff-On-Sea SS0 9PE'}}</p>
 							<p>{{locumInvoice ? null :'billing@hubzz.co.uk'}}</p>
 							<p v-if="!locumInvoice">Registered Company</p>
 							<p>{{locumInvoice ? locumInvoice.locum_user.email : '10832559'}}</p>
-              <p>{{locumInvoice ? 'UTR '+locumInvoice.utr_number : '10832559'}}</p>
+							<p>{{locumInvoice ? 'UTR '+locumInvoice.utr_number : '10832559'}}</p>
 						</div>
 					</div>
 					<div class="flex">
@@ -188,6 +187,7 @@
 										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
 										:class="!doNotShow && 'pr-3'"
 										type="number"
+										step="any"
 										min="0"
 										placeholder="Enter Total"
 									/>
@@ -268,6 +268,7 @@
 										class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
 										:class="!doNotShow && 'pr-3'"
 										type="number"
+										step="any"
 										min="0"
 										placeholder="Enter Total"
 									/>
@@ -346,6 +347,7 @@
 											class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
 											:class="!doNotShow && 'pr-3'"
 											type="number"
+											step="any"
 											min="0"
 											placeholder="Enter Total"
 										/>
@@ -432,6 +434,7 @@
 											class="border-b-2 border-gray-300 w-full h-full focus:outline-none text-right"
 											:class="!doNotShow && 'pr-3'"
 											type="number"
+											step="any"
 											min="0"
 											placeholder="Enter Total"
 										/>
@@ -557,16 +560,16 @@ export default {
 		// }
 		// if (this.practiceInvoice) {
 		// 	console.log("practice invoice", this.practiceInvoice);
-    // }
-    console.log('practice', this.practice)
+		// }
+		console.log("practice", this.practice);
 		if (this.debitItems) {
 			this.createdDebitItems = this.debitItems;
 		}
 		if (this.creditItems) {
 			this.createdCreditItems = this.creditItems;
 		}
-  },
-  
+	},
+
 	computed: {
 		amountTotal: function() {
 			let grossSum = 0;
@@ -609,8 +612,8 @@ export default {
 			const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2);
 			return netSum;
 		}
-  },
-  
+	},
+
 	methods: {
 		async testHtml() {
 			window.open(
@@ -643,22 +646,31 @@ export default {
 				window.open(
 					`${process.env.API_URL}/api/v1/practice-invoices/${
 						this.practiceInvoice.id
-					}/pdf?filename=${"hubzz_"+this.$moment(this.practiceInvoice.issued_at).format('DD/MM/YYYY')+"_"+this.practiceInvoice.invoice_number+"_"+this.practiceInvoice.practice.code}`
+					}/pdf?filename=${"hubzz_" +
+						this.$moment(this.practiceInvoice.issued_at).format("DD/MM/YYYY") +
+						"_" +
+						this.practiceInvoice.invoice_number +
+						"_" +
+						this.practiceInvoice.practice.code}`
 				);
 			}
-    },
+		},
 
-    toSageCSV() {
-      if(this.practiceInvoice) {
+		toSageCSV() {
+			if (this.practiceInvoice) {
+				window.open(
+					`${process.env.API_URL}/api/v1/admin/practice-invoices/${
+						this.practiceInvoice.id
+					}/sage?filename=${"sage_" +
+						this.$moment(this.practiceInvoice.issued_at).format("DD/MM/YYYY") +
+						"_" +
+						this.practiceInvoice.invoice_number +
+						"_" +
+						this.practiceInvoice.practice.code}.csv`
+				);
+			}
+		},
 
-        window.open(
-          `${process.env.API_URL}/api/v1/admin/practice-invoices/${
-            this.practiceInvoice.id
-          }/sage?filename=${"sage_"+this.$moment(this.practiceInvoice.issued_at).format('DD/MM/YYYY')+"_"+this.practiceInvoice.invoice_number+"_"+this.practiceInvoice.practice.code}.csv`
-        )
-      }
-    },
-    
 		async addInvoiceItem() {
 			// deduct 1 when dealing with ID for array
 			const newItem = {
