@@ -28,6 +28,7 @@
               :name="sortIcon(column.dataIndex)"
               height="12"
               width="12"
+              color="#fff"
             />
           </div>
         </div>
@@ -69,14 +70,14 @@
                       @click="$emit(column.eventName, item)"
                     ></slot>
                   </template>
-                  <template v-if="column.dataIndex === 'actions'">
+                  <template v-else-if="column.dataIndex === 'actions'">
                     <slot name="actions" v-bind:item="item" @click="$emit('click', item)"></slot>
                   </template>
-                  <template v-if="column.dataIndex === 'actions-button'">
+                  <template v-else-if="column.dataIndex === 'actions-button'">
                     <slot name="actions-button" v-bind:item="item"></slot>
                   </template>
                   <template
-                    v-if="
+                    v-else-if="
 											column.class &&
 											column.class.includes('localDate') &&
 											dataCell(item, column) !== '(none)'
