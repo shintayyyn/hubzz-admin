@@ -4,7 +4,7 @@
 			<AppButton
 				:label="'Issue HUBZZ Invoice'"
 				:nuxtLink="`/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`"
-				class="t my-2 text-sm"
+				class="my-2 text-sm"
 			/>
 		</div>
 		<AppTable
@@ -245,6 +245,9 @@ export default {
 		}
 	},
 	methods: {
+    goToIssue(){
+
+    },
 		getHubzzInvoices(params) {
       console.log('params', params)
 			this.$store.dispatch("billings/fetchHubzzInvoices", {
