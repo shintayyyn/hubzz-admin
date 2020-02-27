@@ -39,7 +39,7 @@
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                <span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
               </div>
             </nuxt-link>
           </div>
@@ -152,7 +152,7 @@ export default {
           this.$store.commit('jobs/TOGGLE_LOADING', false)
         }).catch(err=>{
           console.log('get cancelled jobs error!!!',err)
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
+          this.$store.commit('SET_NOTIFICATION', { ecreated_atnabled: true, status: 'danger', text: 'Something went wrong!' })
         })
        
       },

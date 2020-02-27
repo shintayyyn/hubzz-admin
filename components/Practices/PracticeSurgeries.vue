@@ -198,20 +198,24 @@ export default {
 	},
 	methods: {
 		show() {
-			this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`)
+			this.$router.push(
+				`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`
+			);
 		},
 		async viewTerminationModal(childId) {
-      console.log("id", childId);
-      
+			console.log("id", childId);
+
 			await this.$axios
 				.$get(
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`
 				)
 				.then(res => {
 					this.specificChildSurgery = res.data.practice_surgery;
-        });
-      
-      this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`)
+				});
+
+			this.$router.push(
+				`/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`
+			);
 			// this.terminationModal = true;
 		},
 		closeModals() {
@@ -221,8 +225,7 @@ export default {
 		async getChildren() {
 			let limit = 5;
 			let offset = 0;
-			offset =
-				this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
+			offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
 			let params = { limit, offset };
 
 			await this.$axios
@@ -235,7 +238,6 @@ export default {
 						"practices/SET_PRACTICE_SPOKES",
 						res.data.practice_surgeries
 					);
-					console.log("practice children", res.data.practice_surgeries);
 				})
 				.catch(err => {
 					console.log("get children error!!!!", err);
@@ -289,12 +291,11 @@ export default {
 			}
 
 			if (invitation.termination_requested_at) {
-        if (invitation.invitation_accepted_at) {
-          result = "Termination Requested";
-        } else {
-          result = "Cancellation Requested"
-        }
-				
+				if (invitation.invitation_accepted_at) {
+					result = "Termination Requested";
+				} else {
+					result = "Cancellation Requested";
+				}
 			}
 
 			if (invitation.terminated_at) {
@@ -302,23 +303,15 @@ export default {
 			}
 			return result;
 		},
-		// pagechanged(e) {
-		// 	const query = {
-		// 		...this.$route.query,
-		// 		page: e || 1
-		// 	};
-		// 	this.$router.push({ query });
-		// 	this.getPractices(this.paramSort);
-		// },
 		async limitchanged(limit) {
 			this.currentPage = 1;
 			this.itemsPerPage = limit;
-			await this.getPractices(this.paramSort);
+			await this.getChildren(this.paramSort);
 		},
 		sorted(order_by) {
 			this.currentPage = 1;
 			this.paramSort.order_by = order_by;
-			this.getPractices(this.paramSort);
+			this.getChildren(this.paramSort);
 		}
 	}
 };

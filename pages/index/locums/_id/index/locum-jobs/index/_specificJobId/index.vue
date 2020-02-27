@@ -24,8 +24,6 @@ export default {
 	},
 	async asyncData({ app, store, route, error }) {
 		try {
-			console.log("job id", route.params.specificJobId);
-			console.log("route name", route.name);
 			let response = await app.$axios.$get(
 				`/api/v1/admin/jobs/${route.params.specificJobId}`
 			);

@@ -45,6 +45,7 @@
 					class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
 					:class="errorMessage('gp_rate') && 'border-red-800'"
 					type="number"
+					step="any"
 					v-model.number="toPutPracticeRate.gp_rate"
 					aria-label
 					@blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')"
@@ -61,6 +62,7 @@
 					class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
 					:class="errorMessage('others_rate') && 'border-red-800'"
 					type="number"
+					step="any"
 					v-model.number="toPutPracticeRate.others_rate"
 					@blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')"
 					aria-label="newtext"

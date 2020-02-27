@@ -20,21 +20,27 @@ export default{
         }
     },
     UPDATE_PRACTICE(state, payload, redirect){
-        let index = state.allPractices.findIndex(practice => practice.id === payload.id)
-        if(index >= 0){
-            state.allPractices.splice(index, 1, payload)
-            const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)            
-            if(state.practice.id === updatedPractice.id){
-                state.practice = updatedPractice
-            }
+      let index = state.allPractices.findIndex(practice => practice.id === payload.id)
+      if(index >= 0){
+        state.allPractices.splice(index, 1, payload)
+        const updatedPractice = state.allPractices.find(practice => practice.id === payload.id)            
+        if(state.practice.id === updatedPractice.id){
+          state.practice = updatedPractice
         }
+      }
     },
     //--------------PRACTICE HUBZZ-----------------------
     SET_PRACTICE_HUB(state, payload){
-        state.practiceHub = payload
+      state.practiceHub = payload
     },
     SET_PRACTICE_PARENT(state, payload){
-        state.practiceParent = payload
+      state.practiceParent = payload
+    },
+    SET_HUBZZ_INVITATIONS_COUNT(state, payload){
+      state.hubInvitationsCount = payload
+    },
+    SET_HUBZZ_INVITATIONS(state, payload){
+      state.hubInvitations = payload
     },
     //------------------PRACTICE SPOKES---------------------
     SET_PRACTICE_SPOKES_COUNT(state, payload){
@@ -59,7 +65,6 @@ export default{
         state.practiceUsers = payload
     },
     ADD_PRACTICE_USER(state, payload){
-      console.log('practiceUser',state.practiceUsers)
       let index = state.practiceUsers.findIndex(practiceUser => 
         practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
       if(index >= 0){

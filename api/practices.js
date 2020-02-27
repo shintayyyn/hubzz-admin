@@ -1,41 +1,43 @@
 export function fetchPractices(axios, payload){
-    let params = {}
-    payload.search ? params.search = payload.search : null
-    payload.type ? params.type = payload.type : null
-    payload.status ? params.status = payload.status : null
-    payload.order_by ? params.order_by = payload.order_by : null
-    payload.limit ? params.limit = payload.limit : null
-    payload.offset ? params.offset = payload.offset : null
-    return axios.$get(`/api/v1/admin/practices${payload.countOnly ? '/count':''}`,{params:params})
+  let params = {}
+  payload.search ? params.search = payload.search : null
+  payload.type ? params.type = payload.type : null
+  payload.status ? params.status = payload.status : null
+  payload.order_by ? params.order_by = payload.order_by : null
+  payload.limit ? params.limit = payload.limit : null
+  payload.offset ? params.offset = payload.offset : null
+  return axios.$get(`/api/v1/admin/practices${payload.countOnly ? '/count':''}`,{params:params})
 }
 export function fetchSpecificPractice(axios, payload){
-    return axios.$get(`/api/v1/admin/practices/${payload.id}`)
+  return axios.$get(`/api/v1/admin/practices/${payload.id}`)
 }
 export function fetchHub(axios,payload){
-    return axios.$get(`/api/v1/admin/practices/${payload.practice_id}/parent-surgery`)
+  return axios.$get(`/api/v1/admin/practices/${payload.practice_id}/parent-surgery`)
 }
 export function fetchPracticeParent(axios,payload){
-    return axios.$get(`/api/v1/admin/practices/${payload.practice_parent_id}`)
+  return axios.$get(`/api/v1/admin/practices/${payload.practice_parent_id}`)
 }
-
+export function fetchHubInvitations(axios, payload) {
+  let params = {}
+  payload.order_by ? params.order_by = payload.order_by : null
+  payload.limit ? params.limit = payload.limit : null
+  payload.offset ? params.offset = payload.offset : null
+  return axios.$get(`/api/v1/admin/practices/${payload.practice_id}/parent-surgery/invitations${payload.countOnly ? '-count' : ''}`, {params:params})
+}
 export function fetchSpokes(axios,payload){
-    console.log('Practice API for getting spokes is perfomed', payload)
-    let params = {}
-    payload.order_by ? params.order_by = payload.order_by : null
-    payload.limit ? params.limit = payload.limit : null
-    payload.offset ? params.offset = payload.offset : null
-    return axios.$get(`/api/v1/admin/practices/${payload.practice_id}/practice-surgeries${payload.countOnly ? '/count':''}`,{params})
+  let params = {}
+  payload.order_by ? params.order_by = payload.order_by : null
+  payload.limit ? params.limit = payload.limit : null
+  payload.offset ? params.offset = payload.offset : null
+  return axios.$get(`/api/v1/admin/practices/${payload.practice_id}/practice-surgeries${payload.countOnly ? '/count':''}`,{params})
 }
-// export function fetchSessions(axios,payload){
-
-// }
 export function fetchPracticeUsers(axios,payload){
-    let params = {}
-    payload.practice_id ? params.practice_id = payload.practice_id : null
-    payload.practice_role ? params.practice_role = payload.practice_role : null
-    payload.status ? params.status = payload.status : null
-    payload.order_by ? params.order_by = payload.order_by : null 
-    payload.limit ? params.limit = payload.limit : null
-    payload.offset ? params.offset  = payload.offset : null
-    return axios.$get(`/api/v1/admin/practice-users${payload.countOnly ? '/count':''}`,{params:params})
+  let params = {}
+  payload.practice_id ? params.practice_id = payload.practice_id : null
+  payload.practice_role ? params.practice_role = payload.practice_role : null
+  payload.status ? params.status = payload.status : null
+  payload.order_by ? params.order_by = payload.order_by : null 
+  payload.limit ? params.limit = payload.limit : null
+  payload.offset ? params.offset  = payload.offset : null
+  return axios.$get(`/api/v1/admin/practice-users${payload.countOnly ? '/count':''}`,{params:params})
 }

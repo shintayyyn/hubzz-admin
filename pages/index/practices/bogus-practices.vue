@@ -166,35 +166,8 @@ export default {
 			// error({ statusCode: 404 });
 			console.log("Get practices error!", err);
 		}
-	},
-
-	// async created(){
-	//   try{
-	//     await this.$store.commit("practices/TOGGLE_LOADING", true);
-
-	//     await this.$axios.$get(`/api/v1/admin/practices/count`,{
-	//       params: this.params
-	//     }).then(res => {
-	//       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
-	//     })
-
-	//     await this.$axios.$get(`/api/v1/admin/practices`, {
-	//       params: this.params
-	//     }).then(res => {
-	//       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
-	//     })
-
-	//     await this.$store.commit("practices/TOGGLE_LOADING", false);
-	//   }catch (err) {
-	// 		this.store.commit("SET_NOTIFICATION", {
-	// 			enabled: true,
-	// 			status: "danger",
-	// 			text: "Something went Wrong!"
-	// 		});
-	//     console.log("Get practices error!", err);
-	//   }
-	// },
-
+  },
+  
 	computed: {
 		loadingPractices() {
 			return this.$store.state.practices.loading_practices;

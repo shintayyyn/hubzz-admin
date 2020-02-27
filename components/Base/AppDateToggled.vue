@@ -282,7 +282,6 @@ export default {
 		};
 	},
 	created() {
-		console.log("month", this.selectedMonth);
 		// get current month and year
 		if (this.value) {
 			// this.value = this.$moment(this.value).format('YYYY-MM-DD')

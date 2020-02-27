@@ -3,4 +3,5 @@ export default () => ({
   emails: [],
   email: '',
   itemCount: 0,
+  unacknowledgedCount: 0,
 })

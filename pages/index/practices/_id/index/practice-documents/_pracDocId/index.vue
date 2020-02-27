@@ -1,8 +1,7 @@
 <template>
-    <div class="practice-document-modal"> 
-        <PracticeDocumentFile :practiceDoc="practiceDoc"/>   
-    </div>
-
+  <div class="practice-document-modal"> 
+    <PracticeDocumentFile :practiceDoc="practiceDoc"/>   
+  </div>
 </template>
 <script>
 import PracticeDocumentFile from '@/components/Practices/PracticeDocumentFile'
