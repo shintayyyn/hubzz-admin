@@ -1,6 +1,6 @@
 <template>
-  <section class="relative">
-    <div class="relative">
+  <section>
+    <div>
       <AppLoading :loading="loading" spinner />
       <div
         class="relative flex flex-col overflow-x-auto w-full px-2 mt-4"
@@ -11,15 +11,15 @@
           class="row flex text-white justify-start font-bold leading-none text-sm"
         >
           <div
-            class="flex-1 flex items-center p-2"
             v-for="(column, index) in columns"
             :key="`${column}-${index}`"
+            class="flex-1 flex items-center p-2"
             :class="[
-							column.class &&
-							column.class.includes('text-center') &&
-							'justify-center',
-							column.sortable && 'cursor-pointer'
-						]"
+              column.class &&
+                column.class.includes('text-center') &&
+                'justify-center',
+              column.sortable && 'cursor-pointer'
+            ]"
             @click="column.sortable && sort(column.dataIndex)"
           >
             <span class="pr-1">{{ column.name }}</span>
@@ -51,53 +51,71 @@
                 :key="index"
                 class="flex-1 px-2"
                 :class="
-									column.class &&
-									column.class.includes('text-center') &&
-									'text-center'
-								"
+                  column.class &&
+                    column.class.includes('text-center') &&
+                    'text-center'
+                "
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
                   <div
-                    v-for="(item, index) in dataCell(item, column)"
-                    :key="`${item}-${index}`"
-                  >{{ item }}</div>
+                    v-for="(itemName, basis) in dataCell(item, column)"
+                    :key="`${itemName}-${basis}`"
+                  >
+                    {{ itemName }}
+                  </div>
                 </template>
+
                 <template v-else>
                   <template v-if="column.slotName">
-                    <slot
-                      :name="column.slotName"
-                      v-bind:item="item"
+                    <div
+                      v-if="column.slotName == 'checker'" 
                       @click="$emit(column.eventName, item)"
-                    ></slot>
+                    >
+                      <slot :name="column.slotName" :item="item" />
+                    </div>
+                    <slot
+                      v-else
+                      :name="column.slotName"
+                      :item="item"
+                      @click="$emit(column.eventName, item)"
+                    />
                   </template>
                   <template v-else-if="column.dataIndex === 'actions'">
-                    <slot name="actions" v-bind:item="item" @click="$emit('click', item)"></slot>
+                    <slot name="actions" :item="item" @click="$emit('click', item)" />
                   </template>
                   <template v-else-if="column.dataIndex === 'actions-button'">
-                    <slot name="actions-button" v-bind:item="item"></slot>
+                    <slot name="actions-button" :item="item" />
                   </template>
                   <template
                     v-else-if="
-											column.class &&
-											column.class.includes('localDate') &&
-											dataCell(item, column) !== '(none)'
-										"
-                  >{{ dataCell(item, column) | localDate }}</template>
+                      column.class &&
+                        column.class.includes('localDate') &&
+                        dataCell(item, column) !== '(none)'
+                    "
+                  >
+                    {{ dataCell(item, column) | localDate }}
+                  </template>
                   <template
                     v-else-if="
-											column.class &&
-											column.class.includes('currency') &&
-											dataCell(item, column) !== '(none)'
-										"
-                  >{{ dataCell(item, column) | currency }}</template>
+                      column.class &&
+                        column.class.includes('currency') &&
+                        dataCell(item, column) !== '(none)'
+                    "
+                  >
+                    {{ dataCell(item, column) | currency }}
+                  </template>
                   <template
                     v-else-if="
-											column.class &&
-											column.class.includes('fileSize') &&
-											dataCell(item, column) !== '(none)'
-										"
-                  >{{ dataCell(item, column) | fileSize }}</template>
-                  <template v-else>{{ dataCell(item, column) }}</template>
+                      column.class &&
+                        column.class.includes('fileSize') &&
+                        dataCell(item, column) !== '(none)'
+                    "
+                  >
+                    {{ dataCell(item, column) | fileSize }}
+                  </template>
+                  <template v-else>
+                    {{ dataCell(item, column) }}
+                  </template>
                 </template>
               </div>
             </div>
@@ -105,23 +123,27 @@
         </div>
       </div>
     </div>
-    <div class="bottom-0 w-full" v-if="total > 5">
+    <div v-if="total > 5" class="bottom-0 w-full">
       <AppPagination
         :total="total"
-        :totalPages="totalPages"
-        :currentPage="currentPage"
+        :total-pages="totalPages"
+        :current-page="currentPage"
+        :loading="loading"
+        :per-page="perPage"
         @pagechanged="pagechanged"
         @limitchanged="limitchanged"
-        :loading="loading"
-        :perPage="perPage"
       />
     </div>
   </section>
 </template>
 <script>
-import AppPagination from "@/components/Base/AppPagination";
-import AppLoading from "@/components/Base/AppLoading";
+import AppPagination from "@/components/Base/AppPagination"
+import AppLoading from "@/components/Base/AppLoading"
 export default {
+  components: {
+    AppLoading,
+    AppPagination
+  },
   props: {
     total: {
       type: Number,
@@ -149,105 +171,109 @@ export default {
     },
     orderBy: {
       type: Array,
-      required: false
+      required: false,
+      default: null,
     },
     routerLink: {
-      type: String
+      type: String,
+      default: null,
     },
     routerId: {
-      type: String
+      type: String,
+      default: null,
     },
     customWidth: {
-      type: Number
+      type: Number,
+      default: null,
     },
     minHeight: {
-      type: String
+      type: String,
+      default: null,
     }
   },
-  components: {
-    AppLoading,
-    AppPagination
-  },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.total / this.perPage);
-    }
-  },
-  data() {
+  data () {
     return {
       params: []
       // totalPages: 0
-    };
+    }
   },
-  mounted() {
-    this.params = this.orderBy;
+  computed: {
+    totalPages () {
+      return Math.ceil(this.total / this.perPage)
+    }
+  },
+  mounted () {
+    this.params = this.orderBy
     // this.totalPages = Math.ceil(this.total / this.perPage);
   },
   methods: {
-    sort(dataIndex) {
+    sort (dataIndex) {
       if (!this.params.some(item => item.includes(`${dataIndex}`))) {
-        this.params = [];
-        this.params.push(`${dataIndex}:desc`);
+        this.params = []
+        this.params.push(`${dataIndex}:desc`)
       } else {
-        let index = this.params.findIndex(item => item === `${dataIndex}:desc`);
+        let index = this.params.findIndex(item => item === `${dataIndex}:desc`)
         if (index >= 0) {
-          this.params.splice(index, 1, `${dataIndex}:asc`);
+          this.params.splice(index, 1, `${dataIndex}:asc`)
         } else {
           this.params.splice(
             this.params.findIndex(item => item === `${dataIndex}:asc`),
             1
-          );
+          )
         }
       }
-      this.$emit("sorted", this.params);
+      this.$emit("sorted", this.params)
     },
-    pagechanged(e) {
-      this.$emit("pagechanged", e);
+    pagechanged (e) {
+      this.$emit("pagechanged", e)
     },
-    limitchanged(limit) {
-      this.$emit("limitchanged", limit);
+    checkClicked (item) {
+			this.$emit("toggleCheck", item)
+		},
+    limitchanged (limit) {
+      this.$emit("limitchanged", limit)
     },
-    sortIcon(dataIndex) {
+    sortIcon (dataIndex) {
       if (!this.params.some(item => item.includes(dataIndex))) {
-        return "sort";
+        return "sort"
       } else {
-        let index = this.params.findIndex(item => item === `${dataIndex}:desc`);
+        let index = this.params.findIndex(item => item === `${dataIndex}:desc`)
         if (index >= 0) {
-          return "sort-descend";
+          return "sort-descend"
         } else {
-          return "sort-ascend";
+          return "sort-ascend"
         }
       }
     },
-    dataCell(item, column) {
-      var dataIndexArr = column.dataIndex.split(".");
-      let str = null;
+    dataCell (item, column) {
+      var dataIndexArr = column.dataIndex.split(".")
+      let str = null
       if (Array.isArray(item[dataIndexArr[0]])) {
-        str = [];
+        str = []
         item[dataIndexArr[0]].forEach(item => {
           if (item[dataIndexArr[2]]) {
-            str.push(item[dataIndexArr[1]][dataIndexArr[2]]);
+            str.push(item[dataIndexArr[1]][dataIndexArr[2]])
           } else {
-            str.push(item[dataIndexArr[1]]);
+            str.push(item[dataIndexArr[1]])
           }
-        });
+        })
       } else {
-        str = "";
-        let itemArray = null;
-        let itemStr = null;
-        let dataIndex = null;
+        str = ""
+        // let itemArray = null
+        // let itemStr = null
+        // let dataIndex = null
         if (dataIndexArr.length === 1) {
-          str = item[dataIndexArr[0]];
+          str = item[dataIndexArr[0]]
         }
         if (dataIndexArr.length === 2 && item[dataIndexArr[0]]) {
-          str = item[dataIndexArr[0]][dataIndexArr[1]];
+          str = item[dataIndexArr[0]][dataIndexArr[1]]
         }
         if (
           dataIndexArr.length === 3 &&
           item[dataIndexArr[0]] &&
           item[dataIndexArr[0]][dataIndexArr[1]]
         ) {
-          str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]];
+          str = item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]]
         }
         if (
           dataIndexArr.length === 4 &&
@@ -258,7 +284,7 @@ export default {
           str =
             item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
               dataIndexArr[3]
-            ];
+            ]
         }
         if (
           dataIndexArr.length === 5 &&
@@ -271,7 +297,7 @@ export default {
           str =
             item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
               dataIndexArr[3]
-            ][dataIndexArr[4]];
+            ][dataIndexArr[4]]
         }
         if (
           dataIndexArr.length === 6 &&
@@ -287,22 +313,22 @@ export default {
           str =
             item[dataIndexArr[0]][dataIndexArr[1]][dataIndexArr[2]][
               dataIndexArr[3]
-            ][dataIndexArr[4]][dataIndexArr[5]];
+            ][dataIndexArr[4]][dataIndexArr[5]]
         }
       }
       if (str === false) {
-        str = "No";
+        str = "No"
       }
       if (str === true) {
-        str = "Yes";
+        str = "Yes"
       }
       if (str === null) {
-        str = "(none)";
+        str = "(none)"
       }
-      return str;
+      return str
     }
   }
-};
+}
 </script>
 <style scoped>
 .row {

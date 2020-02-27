@@ -108,7 +108,8 @@ export default {
         { name: "Terms and Conditions", route: "/tncs" },
         { name: "Standard Terms", route: "/standard-terms" },
         { name: "Inquiries", route: "/inquiries" },
-        { name: "User Management", route: "/user-management" }
+        { name: "User Management", route: "/user-management" },
+        { name: 'Referral Lottery', route: "/referral-lottery"}
       ];
 
       // if (domain === "Super Admin") {

@@ -1,107 +1,117 @@
 <template>
-	<div class="w-full overflow-hidden">
-		<div class="mx-2 float-right">
-			<AppButton
-				:label="'Issue HUBZZ Invoice'"
-				:nuxtLink="`/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`"
-				class="t my-2 text-sm"
-			/>
-		</div>
-		<AppTable
-			v-if="hubzzInvoicesCount> 0"
-			:total="hubzzInvoicesCount"
-			:items="hubzzInvoices"
-			:currentPage="currentPage"
-			:perPage="params.limit"
-			:columns="columns"
-			:loading="loadingHubzzInvoices"
-			:routerLink="`/billings/${$route.params.id}/hubzz-invoices`"
-			:orderBy="params.order_by"
-			@pagechanged="pagechanged"
-			@sorted="sorted"
-		>
-			<template v-slot:total_amount_slot="slotProps">
-				<div>{{'£ '+slotProps.item.total_amount }}</div>
-			</template>
+  <div class="w-full overflow-hidden">
+    <div class="mx-2 float-right">
+      <AppButton
+        :label="'Issue HUBZZ Invoice'"
+        :nuxt-link="`/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`"
+        class="my-2 text-sm"
+      />
+    </div>
+    <AppTable
+      v-if="hubzzInvoicesCount> 0"
+      :total="hubzzInvoicesCount"
+      :items="hubzzInvoices"
+      :current-page="currentPage"
+      :per-page="params.limit"
+      :columns="columns"
+      :loading="loadingHubzzInvoices"
+      :router-link="`/billings/${$route.params.id}/hubzz-invoices`"
+      :order-by="params.order_by"
+      @pagechanged="pagechanged"
+      @sorted="sorted"
+    >
+      <template v-slot:total_amount_slot="slotProps">
+        <div>{{ '£ '+slotProps.item.total_amount }}</div>
+      </template>
 
-			<template v-slot:period="slotProps">
-				<div>
-					{{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
-					' - ' +
-					$moment(slotProps.item.date_end).format('DD/MM/YYYY')}}
-				</div>
-			</template>
+      <template v-slot:period="slotProps">
+        <div>
+          {{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
+            ' - ' +
+            $moment(slotProps.item.date_end).format('DD/MM/YYYY') }}
+        </div>
+      </template>
 
-			<template v-slot:issued_at="slotProps">
-				<div>{{$moment(slotProps.item.issued_at).format('DD/MM/YYYY')}}</div>
-			</template>
+      <template v-slot:issued_at="slotProps">
+        <div>{{ $moment(slotProps.item.issued_at).format('DD/MM/YYYY') }}</div>
+      </template>
 
-			<template v-slot:paid_at="slotProps">
-				<div v-if="!slotProps.item.paid_at">
-					<div
+      <template v-slot:paid_at="slotProps">
+        <div v-if="!slotProps.item.paid_at">
+          <div
             v-if="practice && practice.sage_ref && practice.direct_debit === true"
-						@click.stop.prevent="toShowPaidModal(slotProps.item.id)"
-						class="p-2 bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer"
-					>Mark as Paid</div>
-				</div>
-				<div
-					class="px-2"
-					v-else
-				>{{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY | HH:MM:ss') : "Not yet paid" }}</div>
-			</template>
-		</AppTable>
+            class="p-2 bg-green-500 hover:bg-green-600 rounded-lg cursor-pointer"
+            @click.stop.prevent="toShowPaidModal(slotProps.item.id)"
+          >
+            Mark as Paid
+          </div>
+        </div>
+        <div
+          v-else
+          class="px-2"
+        >
+          {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY | HH:MM:ss') : "Not yet paid" }}
+        </div>
+      </template>
+    </AppTable>
 
-		<template v-else>
-			<div class="m-2 w-full text-center text-white">There are no Invoices for HUBZZ</div>
-		</template>
-		<transition name="fade" mode="out-in">
-			<div class="mark-paid-modal overflow-hidden" v-if="showPaidModal == true">
-				<transition name="drop" mode="out-in">
-					<AppConfirm
-						v-if="confirm"
-						:inStyle="'top:35%'"
-						:inClass="'rounded-lg'"
-						:message="'Are you sure you want to mark this bill as paid?'"
-						@cancel="confirm = false"
-						@confirm="toMarkAsPaid()"
-					/>
-				</transition>
+    <template v-else>
+      <div class="m-2 w-full text-center text-white">
+        There are no Invoices for HUBZZ
+      </div>
+    </template>
+    <transition name="fade" mode="out-in">
+      <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
+        <transition name="drop" mode="out-in">
+          <AppConfirm
+            v-if="confirm"
+            :in-style="'top:35%'"
+            :in-class="'rounded-lg'"
+            :message="'Are you sure you want to mark this bill as paid?'"
+            @cancel="confirm = false"
+            @confirm="toMarkAsPaid()"
+          />
+        </transition>
         <!-- TO PAID CONFIRM CANCEL -->
-				<div class="shield" v-if="confirm == true" @click="confirm = false"></div>
-				<div class="flex items-center text-sm text-white m-4">
-					<div @click="showPaidModal = false" class="text-white hover:text-sunglow p-1 ml-auto">
-						<svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
-					</div>
-				</div>
+        <div v-if="confirm == true" class="shield" @click="confirm = false" />
+        <div class="flex items-center text-sm text-white m-4">
+          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showPaidModal = false">
+            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
+          </div>
+        </div>
         
-				<div class="flex flex-col w-full text-white px-8 justify-between">
-					<div class="justify-center">
-						<AppDateToggled class="z-50" v-model="paidAt" :name="'paidAt'" :label="'Paid At'" isBefore />
-					</div>
-					<div class="flex flex-row mb-4">
-						<div
-							@click="confirm = true"
-							class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-						>Confirm</div>
-						<div
-							@click="showPaidModal = false"
-							class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-						>Cancel</div>
-					</div>
-				</div>
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div class="justify-center">
+            <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
+          </div>
+          <div class="flex flex-row mb-4">
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+              @click="confirm = true"
+            >
+              Confirm
+            </div>
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
+              @click="showPaidModal = false"
+            >
+              Cancel
+            </div>
+          </div>
+        </div>
         <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
-			</div>
-		</transition>
+      </div>
+    </transition>
 
-		<div class="billing-shield" v-if="showPaidModal == true" @click="showPaidModal = false"></div>
-	</div>
+    <div v-if="showPaidModal == true" class="billing-shield" @click="showPaidModal = false" />
+  </div>
 </template>
 <script>
-import AppButton from "@/components/Base/AppButton";
-import AppTable from "@/components/Base/AppTable";
-import AppDateToggled from "@/components/Base/AppDateToggled";
-import AppDate from "@/components/Base/AppDate";
-import AppConfirm from "@/components/Base/AppConfirm";
+import AppButton from "@/components/Base/AppButton"
+import AppTable from "@/components/Base/AppTable"
+import AppDateToggled from "@/components/Base/AppDateToggled"
+// import AppDate from "@/components/Base/AppDate"
+import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
 		AppButton,
@@ -110,7 +120,7 @@ export default {
 		// AppDate,
 		AppConfirm
 	},
-	data() {
+	data () {
 		return {
 			loading: false,
 			currentPage: 1,
@@ -170,44 +180,62 @@ export default {
 			paidAt: "",
 			invoiceId: "",
 			confirm: false
-		};
+		}
 	},
-	async asyncData({ app, route, store }) {
+	computed: {
+		loadingHubzzInvoices () {
+			return this.$store.state.billings.loading_invoices
+		},
+		hubzzInvoicesCount () {
+			return this.$store.state.billings.hubzz_invoices_count
+		},
+		hubzzInvoices () {
+			return this.$store.state.billings.hubzz_invoices
+		}
+	},
+	watch: {
+		confirm (value) {
+			if (value === false) {
+				this.getHubzzInvoices(this.params)
+			}
+		}
+	},
+	async asyncData ({ app, route, store }) {
 		try {
-			await store.commit("billings/TOGGLE_LOADING", true);
-			let { page = 1, order_by = [] } = route.query;
+			await store.commit("billings/TOGGLE_LOADING", true)
+			let { page = 1, order_by = [] } = route.query
 
-			const practice_id = route.params.id;
-			const limit = 10;
-			const offset = page * limit - limit;
+			const practice_id = route.params.id
+			const limit = 10
+			const offset = page * limit - limit
 			let params = {
 				practice_id,
 				limit,
 				offset,
 				order_by
-			};
+			}
 
 			let response = await app.$axios.$get(
 				`/api/v1/admin/practice-invoices/count`,
 				{ params }
-			);
+			)
 			await store.commit(
 				"billings/SET_HUBZZ_INVOICES_COUNT",
 				response.data.count
-			);
+			)
 
 			response = await app.$axios.$get(`/api/v1/admin/practice-invoices`, {
 				params
-			});
+			})
 			await store.commit(
 				"billings/SET_HUBZZ_INVOICES",
 				response.data.practice_invoices
-      );
+      )
       
       response = await app.$axios.$get(`/api/v1/admin/practices/${practice_id}`)
       const practice = response.data.practice
 
-      await store.commit("billings/TOGGLE_LOADING", false);
+      await store.commit("billings/TOGGLE_LOADING", false)
       
 			return {
         practice,
@@ -216,106 +244,92 @@ export default {
 				perPage: limit,
 				currentPage: page,
 				order_by
-			};
+			}
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
-			console.log("Get hubzz invoices error!", err);
-		}
-	},
-	computed: {
-		loadingHubzzInvoices() {
-			return this.$store.state.billings.loading_invoices;
-		},
-		hubzzInvoicesCount() {
-			return this.$store.state.billings.hubzz_invoices_count;
-		},
-		hubzzInvoices() {
-			return this.$store.state.billings.hubzz_invoices;
-		}
-	},
-	watch: {
-		confirm(value) {
-			if (value === false) {
-				this.getHubzzInvoices(this.params);
-			}
+			})
+			console.log("Get hubzz invoices error!", err)
 		}
 	},
 	methods: {
-		getHubzzInvoices(params) {
+    goToIssue (){
+
+    },
+		getHubzzInvoices (params) {
       console.log('params', params)
 			this.$store.dispatch("billings/fetchHubzzInvoices", {
         practice_id: params.practice_id,
 				limit: params.limit,
 				order_by: params.order_by,
 				offset: params.offset
-			});
+			})
 		},
-		toShowPaidModal(itemId) {
-			this.showPaidModal = true;
-			this.invoiceId = itemId;
+		toShowPaidModal (itemId) {
+			this.showPaidModal = true
+			this.invoiceId = itemId
 		},
-		async toMarkAsPaid() {
+		async toMarkAsPaid () {
 			await this.$axios
 				.$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/paid`, {
 					paid_at: this.paidAt
 				})
 				.then(() => {
-					this.confirm = false;
-					this.showPaidModal = false;
+					this.confirm = false
+					this.showPaidModal = false
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
 						text: "Successfully Marked Invoice as Paid"
-					});
+					})
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
-					});
-				});
+					})
+				})
 		},
-		practiceTypeStyle(type) {
+		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
-					return "bg-indigo-500 text-white lg:px-4 sm:px-2";
-					break;
+					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
+					// break
 				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2";
-					break;
+					return "bg-red-500 text-white lg:px-8 sm:px-2"
+					// break
 				case "Spoke":
-					return "bg-blue-500 text-white lg:px-8 sm:px-2";
-					break;
+					return "bg-blue-500 text-white lg:px-8 sm:px-2"
+					// break
 				default:
-					return;
+					return
 			}
 		},
-		pagechanged(page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			};
-			this.params.offset = this.params.limit * (page - 1);
-			this.currentPage = page;
-			this.getHubzzInvoices(this.params);
-		},
-		sorted(order_by) {
+		pagechanged (page) {
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
+			this.params.offset = this.params.limit * (page - 1)
+			this.currentPage = page
+			this.getHubzzInvoices(this.params)
+    },
+    
+		sorted (order_by) {
 			// go back to page 1
-			this.currentPage = 1;
-			let query = {
-				...this.$router.query,
-				order_by
-			};
-			this.params.order_by = order_by;
-			this.getHubzzInvoices(this.params);
+			this.currentPage = 1
+			// let query = {
+			// 	...this.$router.query,
+			// 	order_by
+			// }
+			this.params.order_by = order_by
+			this.getHubzzInvoices(this.params)
 		}
 	}
-};
+}
 </script>
 
 <style>
