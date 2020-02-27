@@ -20,7 +20,6 @@
 					:class="{ inClass, 'border-red-500': error}"
 					@click="modal = true"
 					@keypress="validateInput($event)"
-					@input="$emit('input', $event.target.value)"
 					:style="inStyle"
 					:format="format"
 					:disabled="disabled"
