@@ -58,10 +58,13 @@
     },
     "extends": [
       "eslint:recommended",
-      "plugin:vue/recommended"
+      "plugin:vue/recommended",
+      "plugin:vue/essential",
+      "plugin:nuxt/recommended"
     ],
     "plugins": [
-      "vue"
+      "vue",
+      "nuxt"
     ],
     "rules": {
       "vue/max-attributes-per-line": "off",
