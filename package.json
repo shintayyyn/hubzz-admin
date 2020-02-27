@@ -40,10 +40,12 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^5.14.1",
     "eslint-plugin-nuxt": "^0.4.3",
+    "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-vue": "^5.2.3",
     "husky": "^2.7.0",
     "lint-staged": "^8.2.1",
     "nodemon": "^1.19.4",
+    "prettier": "^1.19.1",
     "tailwindcss": "^1.1.4",
     "vue-svgicon": "^3.2.5"
   },
@@ -60,7 +62,8 @@
       "eslint:recommended",
       "plugin:vue/recommended",
       "plugin:vue/essential",
-      "plugin:nuxt/recommended"
+      "plugin:nuxt/recommended",
+      "plugin:prettier/recommended"
     ],
     "plugins": [
       "vue",
@@ -69,6 +72,12 @@
     "rules": {
       "vue/max-attributes-per-line": "off",
       "vue/no-use-v-if-with-v-for": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          "semi": false
+        }
+      ],
       "object-curly-newline": "off",
       "no-restricted-syntax": "off",
       "no-underscore-dangle": "off",

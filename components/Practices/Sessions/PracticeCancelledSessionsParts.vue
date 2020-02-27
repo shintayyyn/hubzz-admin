@@ -119,7 +119,7 @@
         })
       ]).then(() => {
         this.getCancelledJobs('date_created:desc')
-      })
+      });
     },
     computed:{
       total(){
