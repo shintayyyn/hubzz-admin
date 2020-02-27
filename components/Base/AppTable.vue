@@ -1,6 +1,6 @@
 <template>
-  <section class="relative">
-    <div class="relative">
+  <section>
+    <div>
       <AppLoading :loading="loading" spinner />
       <div
         class="relative flex flex-col overflow-x-auto w-full px-2 mt-4"
