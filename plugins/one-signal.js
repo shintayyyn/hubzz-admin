@@ -13,7 +13,7 @@ export default (ctx) => {
       }
     })
 
-    OneSignal.showNativePrompt()
+    // OneSignal.showNativePrompt()
   })
 
   OneSignal.push(() => {
