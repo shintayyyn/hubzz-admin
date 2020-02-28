@@ -155,7 +155,7 @@ export default {
 				},
 				{
 					name: "Issued At",
-					dataIndex: "issued_at",
+					dataIndex: "date_created",
 					class: "text-center localDate",
 					sortable: "true"
 				},
