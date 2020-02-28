@@ -250,7 +250,7 @@ export default {
                 this.initialLoading = false
             }
         },
-        winner_modal() {
+        winner_modal () {
             this.description = ''
         }
     },
