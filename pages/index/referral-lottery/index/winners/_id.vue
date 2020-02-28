@@ -22,8 +22,8 @@
                     <div class="text-lg">{{$moment(raffle.date_created).format('DD/MM/YYYY')}}</div>
                 </div>
                 <div class="flex justify-start items-center font-bold my-2">
-                    <div class="text-xl mr-1">Prize:</div>
-                    <div class="text-lg"></div>
+                    <div class="text-xl mr-1">Description:</div>
+                    <div class="text-lg">{{raffle.description}}</div>
                 </div>
             </div>
             <div v-if="modal" class="wrapper absolute mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg">
