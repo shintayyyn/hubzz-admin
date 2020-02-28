@@ -7,337 +7,222 @@
         </nuxt-link>
       </div>
 
-      <div class="w-full text-xs overflow-x-auto mt-1">
-        <div class="flex bg-waterloo text-white font-bold">
-          <div class="flex-1 p-2">
-            <span>Area</span>
-
-            <button @click="setOrderBy('area')">
-              <span v-if="getColumnOrderByDirection('area') === null">
-                <svgicon name="sort" height="12" width="12" color="white" />
-              </span>
-              <span v-if="getColumnOrderByDirection('area') === 'asc'">
-                <svgicon name="sort-ascend" height="12" width="12" color="white" />
-              </span>
-
-              <span v-if="getColumnOrderByDirection('area') === 'desc'">
-                <svgicon name="sort-descend" height="12" width="12" color="white" />
-              </span>
-            </button>
-          </div>
-
-          <div class="flex-1 flex justify-center items-center p-2">
-            <span>Profession</span>
-
-            <button class="px-1" @click="setOrderBy('profession')">
-              <span v-if="getColumnOrderByDirection('profession') === null">
-                <svgicon name="sort" height="12" width="12" color="white" />
-              </span>
-              <span v-if="getColumnOrderByDirection('profession') === 'asc'">
-                <svgicon name="sort-ascend" height="12" width="12" color="white" />
-              </span>
-
-              <span v-if="getColumnOrderByDirection('profession') === 'desc'">
-                <svgicon name="sort-descend" height="12" width="12" color="white" />
-              </span>
-            </button>
-          </div>
-
-          <div class="flex-1 flex justify-center items-center p-2">
-            <span>Number Locums Registered</span>
-
-            <button class="px-1" @click="setOrderBy('number_locums_registered')">
-              <span v-if="getColumnOrderByDirection('number_locums_registered') === null">
-                <svgicon name="sort" height="12" width="12" color="white" />
-              </span>
-              <span v-if="getColumnOrderByDirection('number_locums_registered') === 'asc'">
-                <svgicon name="sort-ascend" height="12" width="12" color="white" />
-              </span>
-
-              <span v-if="getColumnOrderByDirection('number_locums_registered') === 'desc'">
-                <svgicon name="sort-descend" height="12" width="12" color="white" />
-              </span>
-            </button>
-          </div>
-
-          <div class="flex-1 flex justify-center items-center p-2">
-            <span>Status</span>
-
-            <button class="px-1" @click="setOrderBy('status')">
-              <span v-if="getColumnOrderByDirection('status') === null">
-                <svgicon name="sort" height="12" width="12" color="white" />
-              </span>
-              <span v-if="getColumnOrderByDirection('status') === 'asc'">
-                <svgicon name="sort-ascend" height="12" width="12" color="white" />
-              </span>
-
-              <span v-if="getColumnOrderByDirection('status') === 'desc'">
-                <svgicon name="sort-descend" height="12" width="12" color="white" />
-              </span>
-            </button>
-          </div>
+      <div v-if="true">
+        <div>
+          <label class="text-white">Limit: </label>
+          <select v-model="limit">
+            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
+              {{ limit }}
+            </option>
+          </select>
         </div>
-
-        <div
-          v-for="locumsInAnArea in locumsInAnArea"
-          :key="getLocumsInAnAreaKey(locumsInAnArea)"
-          class="flex bg-white"
-        >
-          <span class="flex-1 p-2">{{ locumsInAnArea.area }}</span>
-          <span class="flex-1 p-2 text-center">{{ locumsInAnArea.profession }}</span>
-          <span class="flex-1 p-2 text-center">{{ locumsInAnArea.number_locums_registered }}</span>
-          <span class="flex-1 p-2 text-center">{{ locumsInAnArea.status }}</span>
+        <div>
+          <label class="text-white">Page: </label>
+          <select v-model="activePage">
+            <option v-for="page in pages" :key="`page_${page}`" :value="page">
+              {{ page }}
+            </option>
+          </select>
         </div>
       </div>
 
-      <div v-if="loading">
-        <span>Loading...</span>
+      <ReportTable
+        :limit="limit"
+        :items="locumReferrals"
+        :get-item-key="(item) => item.locum_invoice_id"
+        :column-details="columnDetails"
+        :order-by="orderBy"
+        :loading="loading"
+        @setOrderBy="(value) => orderBy = value"
+      />
+
+      <ReportPagination :pages="pages" :active-page="activePage" @setPage="(value) => activePage = value" />
+
+      <div v-if="true" class="text-white"> 
+        <span>Count: {{ count }}</span>
+        <br>
+        <span>Order By: {{ orderBy.join(',') }}</span>
+        <br>
+        <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import ReportTable from '@/components/Reports/ReportTable'
+  import ReportPagination from '@/components/Reports/ReportPagination'
+
   export default {
-    // async asyncData({ app, route }) {
-    //   try {
-    //     console.log("asyncData");
+    components: {
+      ReportTable,
+      ReportPagination,
+    },
 
-    //     let { order_by: orderBy = [], page = 1 } = route.query;
-
-    //     orderBy = Array.isArray(orderBy) ? orderBy : [orderBy];
-
-    //     const limit = 20;
-
-    //     const params = {
-    //       order_by: orderBy,
-    //       limit
-    //     };
-
-    //     const [professions, count, locumsInAnArea] = await Promise.all([
-    //       app.$axios
-    //         .get(`/api/v1/professions`, {
-    //           limit: 1000000
-    //         })
-    //         .then(response => {
-    //           return response.data.data.professions;
-    //         }),
-
-    //       app.$axios
-    //         .get(`/api/v1/admin/reports/locums-in-an-area/count`, {
-    //           params
-    //         })
-    //         .then(response => {
-    //           return response.data.data.count;
-    //         }),
-
-    //       app.$axios
-    //         .get(`/api/v1/admin/reports/locums-in-an-area`, {
-    //           params
-    //         })
-    //         .then(response => {
-    //           return response.data.data.locums_in_an_area;
-    //         })
-    //     ]);
-
-    //     return {
-    //       professions,
-    //       orderBy,
-    //       limit,
-    //       loading: false,
-    //       count,
-    //       locumsInAnArea,
-    //       page
-    //     };
-    //   } catch (err) {
-    //     console.log("reports locums-in-an-area err", err);
-    //     throw err;
-    //   }
-    // },
-
-    data() {
+    data () {
       return {
-        professions: [],
-        statuses: ["Inactive", "Active", "Dormant", "Suspended", "Deactivated"],
-        orderBy: [],
-        limit: 20,
         loading: false,
         count: 0,
-        locumsInAnArea: []
-      };
+        locumReferrals: [],
+        orderBy: [],
+        orderBys: [
+          {
+            title: 'Practice Name (Ascending)',
+            column: 'practice_name',
+            direction: 'asc',
+          },
+          {
+            title: 'Practice Name (Descending)',
+            column: 'practice_name',
+            direction: 'desc',
+          },
+        ],
+        limit: 10,
+        limits: [
+          1,
+          2,
+          3,
+          4,
+          5,
+          10,
+          15,
+          20,
+          25,
+        ],
+        activePage: 1,
+      }
     },
 
     computed: {
-      pageCount() {
-        return Math.ceil(this.count / this.limit);
+      offset () {
+        return this.activePage * this.limit - this.limit
       },
 
-      activePage() {
-        return parseInt(this.activePage);
+      columnDetails () {
+        return [
+          {
+            title: '#',
+            key: 'index',
+            sort_key: null,
+            column: (item, index) => this.offset + index + 1,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum Name',
+            key: 'locum_name',
+            sort_key: 'locum_name',
+            column: (item) => item.locum_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Referal Name',
+            key: 'referral_name',
+            sort_key: 'referral_name',
+            column: (item) => item.referral_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Profession',
+            key: 'profession',
+            sort_key: 'profession',
+            column: (item) => item.profession,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Area',
+            key: 'area',
+            sort_key: 'area',
+            column: (item) => item.area,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Date Referal Registered',
+            key: 'date_referral_registered',
+            sort_key: 'date_referral_registered',
+            column: (item) => this.$moment(item.date_referral_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
+            justify: 'center',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+        ]
       },
 
-      showPage() {
-        return page => {
-          if (page === 1) {
-            return true;
-          }
+      pages () {
+        return Math.max(Math.ceil(this.count / this.limit), 1)
+      },
+    },
 
-          if (page === this.pageCount) {
-            return true;
-          }
-
-          if (page === this.activePage) {
-            return true;
-          }
-
-          if (page === this.activePage + 1) {
-            return true;
-          }
-
-          if (page === this.activePage - 1) {
-            return true;
-          }
-
-          if (this.activePage === 1 && page < 5) {
-            return true;
-          }
-
-          if (this.activePage === this.pageCount && page > this.pageCount - 4) {
-            return true;
-          }
-
-          if (this.activePage === 2 && page === 4) {
-            return true;
-          }
-
-          if (
-            this.activePage === this.pageCount - 1 &&
-            page === this.pageCount - 3
-          ) {
-            return true;
-          }
-
-          return false;
-        };
+    watch: {
+      orderBy () {
+        this.getLocumReferrals()
       },
 
-      getColumnOrderByDirection() {
-        return column => {
-          const index = this.orderBy.findIndex(
-            orderBy => orderBy.split(":")[0].toLowerCase() === column
-          );
-
-          if (index > -1) {
-            let direction = this.orderBy[index].split(":")[1];
-
-            if (!direction || direction.toLowerCase() === "asc") {
-              return "asc";
-            }
-
-            return "desc";
-          } else {
-            return null;
-          }
-        };
+      limit () {
+        this.page = 1
+        this.getLocumReferrals()
       },
 
-      getLocumsInAnAreaKey() {
-        return v =>
-          `${v.area}-${v.profession}-${v.number_locums_registered}-${v.status}`;
+      activePage () {
+        this.getLocumReferrals()
       },
+    },
 
-      downloadCSVLink() {
-        return `${process.env.API_URL}/api/v1/admin/reports/locums-in-an-area/locums_in_an_area.csv`;
-      }
+    mounted () {      
+      // const {
+      //   order_by: orderBy = [],
+      //   page,
+      // } = this.$route.query
+
+      // this.orderBy = orderBy
+      // this.activePage = page ? Number.parseInt(page) : 1
+
+      this.getLocumReferrals()
     },
 
     methods: {
-      setOrderBy(column) {
-        const orderBy = [...this.orderBy];
+      getLocumReferrals () {
+        this.loading = true
+        this.locumReferrals = []
+        Promise.all([
+          this.$axios.get('/api/v1/admin/reports/locum-referrals/count').then((responses) => {
+            return responses.data.data.count
+          }),
+          this.$axios.get('/api/v1/admin/reports/locum-referrals', {
+            params: {
+              order_by: this.orderBy,
+              limit: this.limit,
+              offset: this.offset,
+            },
+          }).then((responses) => {
+            return responses.data.data.locum_referrals
+          }),
+          new Promise((resolve) => setTimeout(resolve, 500))
+        ]).then((results) => {
+          const [
+            count,
+            locumReferrals,
+          ] = results
 
-        const index = orderBy.findIndex(
-          orderBy => orderBy.split(":")[0].toLowerCase() === column
-        );
-
-        if (index > -1) {
-          let direction = this.getColumnOrderByDirection(column);
-
-          orderBy.splice(index, 1);
-
-          if (direction === "asc") {
-            orderBy.push(`${column}:desc`);
-          }
-        } else {
-          orderBy.push(column);
-        }
-
-        const query = {
-          ...this.$route.query,
-          order_by: orderBy
-        };
-
-        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-          this.loading = true;
-        }
-
-        this.$router.replace(this.$router.resolve({ query }).href);
-      }
+          this.count = count
+          this.locumReferrals = locumReferrals
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.loading = false
+        })
+      },
     },
 
-    mounted() {
-      this.loading = true
-      this.$axios.get('/api/v1/admin/reports/locum-referrals').then((response) => {
-        console.log('response', response)
-      }).catch((err) => {
-        console.log('err', err)
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-
-  };
+  }
 </script>
-
-<style>
-  .report-modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
-  }
-
-  @media screen and (min-width: 1200px) {
-    .report-modal {
-      width: 80%;
-    }
-  }
-
-  @media (min-width: 450px) {
-    .right-side-header-content {
-      width: calc(100% - 0px);
-    }
-  }
-
-  .page-overlap {
-    min-width: 100%;
-  }
-
-  @media screen and (min-width: 768px) {
-    .page-overlap {
-      min-width: calc(100% - 70px);
-    }
-  }
-
-  @media screen and (min-width: 1200px) {
-    .page-overlap {
-      min-width: calc(100% - 200px);
-    }
-  }
-</style>
