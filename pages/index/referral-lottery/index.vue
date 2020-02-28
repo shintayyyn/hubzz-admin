@@ -56,7 +56,7 @@
       <div class="flex justify-start">
         <AppButton v-if="!winner.winner_notified" :label="'Notify'" class="mt-4 mx-1" :disabled="loadingNotify" @click="notifyWinner(winner.id)" />
         <div class="mx-1" />
-        <AppButton :label="'Confirm'" class="mt-4 mx-1" @click="winner_modal = false" />
+        <AppButton :label="'Close'" :background="'red'" class="text-white mt-4 mx-1" @click="winner_modal = false" />
       </div>
     </div>
     <transition name="fade" mode="out-in">
