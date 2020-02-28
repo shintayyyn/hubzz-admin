@@ -49,9 +49,8 @@ export const actions = {
 
     if (isOptedOut) {
       OneSignal.setSubscription(true)
-      return
     }
 
-    OneSignal.registerForPushNotifications()
+    // OneSignal.registerForPushNotifications()
   },
 }
