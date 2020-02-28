@@ -1,8 +1,7 @@
 <template>
-    <div class="practice-document-modal"> 
-        <PracticeDocumentFile :practiceDoc="practiceDoc"/>   
-    </div>
-
+  <div class="practice-document-modal"> 
+    <PracticeDocumentFile :practice-doc="practiceDoc" />   
+  </div>
 </template>
 <script>
 import PracticeDocumentFile from '@/components/Practices/PracticeDocumentFile'
@@ -14,17 +13,17 @@ export default {
     components:{
         PracticeDocumentFile
     },
-    data(){
+    data (){
         return{
             practiceDoc:null,
         }
     },
     computed:{
-      practice(){
+      practice (){
         return this.$store.state.practices.practice
       }
     },
-    async asyncData({ app, store, route, error }){
+    async asyncData ({ app, store, route, error }){
       try{
         let response = await app.$axios.$get(`/api/v1/admin/practice-documents/${route.params.pracDocId}`)
         const practiceDoc = response.data.practice_document
