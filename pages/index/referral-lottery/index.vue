@@ -204,14 +204,9 @@ export default {
                         class: "text-center"
                     },
                     {
-                        name: "Notified",
-                        dataIndex: "winner_notified",
-                        class: "text-center"
-                    },
-                    {
-                        name: "Notified",
-                        dataIndex: "winner_notified",
-                        class: "text-center"
+                        name: "Winning Date",
+                        dataIndex: "date_created",
+                        class: "text-center localDate"
                     },
                     {
                         name: "Actions",
