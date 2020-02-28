@@ -36,9 +36,11 @@
         </div>
         <div class="flex justify-start items-center font-bold my-2">
           <div class="text-xl mr-1">
-            Prize:
+            Description:
           </div>
-          <div class="text-lg" />
+          <div class="text-lg">
+            {{ raffle.description }}
+          </div>
         </div>
       </div>
       <div

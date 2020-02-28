@@ -249,6 +249,9 @@ export default {
                 await this.getUsersPromiseAll()
                 this.initialLoading = false
             }
+        },
+        winner_modal () {
+            this.description = ''
         }
     },
     async asyncData ({ app, query, error }) {
