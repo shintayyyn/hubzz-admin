@@ -1,138 +1,145 @@
 <template>
-    <div class="relative">
-        <template v-if="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')">
-            <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2 text-white">
-                <AppDate
-                    class="w-full md:w-1/2 md:mx-2"
-                    v-model="date_start"
-                    :name="'date_start'"
-                    :label="'Date Start'"
-                />
-                <AppDate
-                    class="w-full md:w-1/2 md:mx-2"
-                    v-model="date_end"
-                    :name="'date_end'"
-                    :label="'Date End'"
-                />
-            </div>
-            <div class="flex justify-start mb-4">
-                <AppButton 
-                    :label="'Clear Filter'"
-                    @click="clearFilters"
-                />
-                <div class="mx-1"></div>
-                <AppButton 
-                    :label="'Filter Entries'"
-                    @click="display"
-                />
-                <div class="mx-1"></div>
-                <AppButton :label="'Initiate Draw'" class="mx-1" @click="draw_modal = true" :disabled="!canInitiateDraw" />
-            </div>
-        </template>
-        <AppConfirm
-            v-if="draw_modal"
-            :message="'Are you sure you want to initiate lottery?'"
-            @confirm="initiateDraw"
-            @cancel="draw_modal = false"
+  <div class="relative">
+    <template v-if="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')">
+      <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2 text-white">
+        <AppDate
+          v-model="date_start"
+          class="w-full md:w-1/2 md:mx-2"
+          :name="'date_start'"
+          :label="'Date Start'"
         />
-        <div v-if="winner_modal" class="wrapper absolute top-0 mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg">
-            <div class="flex flex-col justify-center">
-                <div class="font-bold text-lg">Winner</div>
-                <div class="text-center">{{winner.winner_user.name}}</div>
-            </div>
-            <AppInput
-                v-model="description"
-                :type="'textarea'"
-                :name="'description'"
-                :label="'Description'"
-                :resize="false"
-                :rows="3"
-                required
-            />
-            <div class="flex justify-start">
-                <AppButton :label="'Notify'" class="mt-4 mx-1" v-if="!winner.winner_notified" @click="notifyWinner(winner.id)" :disabled="loadingNotify" />
-                <div class="mx-1"></div>
-                <AppButton :label="'Confirm'" class="mt-4 mx-1" @click="winner_modal = false" />
-            </div>
+        <AppDate
+          v-model="date_end"
+          class="w-full md:w-1/2 md:mx-2"
+          :name="'date_end'"
+          :label="'Date End'"
+        />
+      </div>
+      <div class="flex justify-start mb-4">
+        <AppButton 
+          :label="'Clear Filter'"
+          @click="clearFilters"
+        />
+        <div class="mx-1" />
+        <AppButton 
+          :label="'Filter Entries'"
+          @click="display"
+        />
+        <div class="mx-1" />
+        <AppButton :label="'Initiate Draw'" class="mx-1" :disabled="!canInitiateDraw" @click="draw_modal = true" />
+      </div>
+    </template>
+    <AppConfirm
+      v-if="draw_modal"
+      :message="'Are you sure you want to initiate lottery?'"
+      @confirm="initiateDraw"
+      @cancel="draw_modal = false"
+    />
+    <div v-if="winner_modal" class="wrapper absolute top-0 mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg">
+      <div class="flex flex-col justify-center">
+        <div class="font-bold text-lg">
+          Winner
         </div>
-        <transition name="fade" mode="out-in">
-            <div class="relative flex w-full" v-if="initialLoading" style="min-height:80px">
-                <AppLoading :loading="initialLoading" spinner />
-            </div>
-            <div v-if="!initialLoading">
-                <AppTable
-                    v-if="users && users.length > 0"
-                    :total="total"
-                    :items="users"
-                    :currentPage="current_page"
-                    :perPage="limit"
-                    :columns="columns"
-                    :loading="loading"
-                    @pagechanged="pagechanged"
-                    :customWidth="500"
-                >
-                   <template v-slot:actions="slotProps">
-                        <div class="flex justify-center">
-                            <div v-if="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')"
-                                @click="$router.push({ path: `/referral-lottery/entries/${slotProps.item.id}`, query: {...$route.query }})"
-                                class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer">
-                                View
-                            </div>
-                        </div>
-                    </template>
-                </AppTable>
-                <AppTable
-                    v-if="raffles && raffles.length > 0"
-                    :total="total"
-                    :items="raffles"
-                    :currentPage="current_page"
-                    :perPage="limit"
-                    :columns="columns"
-                    :loading="loading"
-                    @pagechanged="pagechanged"
-                    :customWidth="500"
-                >
-                   <template v-slot:actions="slotProps">
-                        <div class="flex justify-center">
-                            <div v-if="($route.query.status && $route.query.status.toLowerCase() === 'winners')"
-                                @click="$router.push({ path: `/referral-lottery/winners/${slotProps.item.id}`, query: {...$route.query }})"
-                                class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer">
-                                View
-                            </div>
-                            <div class="mx-1"></div>
-                            <div v-if="($route.query.status && $route.query.status.toLowerCase() === 'winners') && !slotProps.item.winner_notified"
-                                @click="selectUserNotify(slotProps.item.id)"
-                                class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer">
-                                Notify
-                            </div>
-                        </div>
-                    </template>
-                </AppTable>
-                <div v-if="!loading" class="flex text-white justify-center py-4">
-                    {{noDataFound}}
-                </div>
-                <div
-                    class="shield"
-                    v-if="['index-referral-lottery-index-entries-create', 'index-referral-lottery-index-entries-id', 'index-referral-lottery-index-winners-id'].includes($route.name)"
-                    @click="$router.push({ path: `/referral-lottery`, query: {...$route.query}})"
-                ></div>
-                <div
-                    class="shield"
-                    v-if="winner_modal || draw_modal"
-                    @click="winner_modal = false, draw_modal = false"
-                ></div>
-             <nuxt-child @notify="notify" />
-            </div>
-        </transition>
+        <div class="text-center">
+          {{ winner.winner_user.name }}
+        </div>
+      </div>
+      <AppInput
+        v-model="description"
+        :type="'textarea'"
+        :name="'description'"
+        :label="'Description'"
+        :resize="false"
+        :rows="3"
+        required
+      />
+      <div class="flex justify-start">
+        <AppButton v-if="!winner.winner_notified" :label="'Notify'" class="mt-4 mx-1" :disabled="loadingNotify" @click="notifyWinner(winner.id)" />
+        <div class="mx-1" />
+        <AppButton :label="'Confirm'" class="mt-4 mx-1" @click="winner_modal = false" />
+      </div>
     </div>
+    <transition name="fade" mode="out-in">
+      <div v-if="initialLoading" class="relative flex w-full" style="min-height:80px">
+        <AppLoading :loading="initialLoading" spinner />
+      </div>
+      <div v-if="!initialLoading">
+        <AppTable
+          v-if="users && users.length > 0"
+          :total="total"
+          :items="users"
+          :current-page="current_page"
+          :per-page="limit"
+          :columns="columns"
+          :loading="loading"
+          :custom-width="500"
+          @pagechanged="pagechanged"
+        >
+          <template v-slot:actions="slotProps">
+            <div class="flex justify-center">
+              <div v-if="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')"
+                   class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer"
+                   @click="$router.push({ path: `/referral-lottery/entries/${slotProps.item.id}`, query: {...$route.query }})"
+              >
+                View
+              </div>
+            </div>
+          </template>
+        </AppTable>
+        <AppTable
+          v-if="raffles && raffles.length > 0"
+          :total="total"
+          :items="raffles"
+          :current-page="current_page"
+          :per-page="limit"
+          :columns="columns"
+          :loading="loading"
+          :custom-width="500"
+          @pagechanged="pagechanged"
+        >
+          <template v-slot:actions="slotProps">
+            <div class="flex justify-center">
+              <div v-if="($route.query.status && $route.query.status.toLowerCase() === 'winners')"
+                   class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer"
+                   @click="$router.push({ path: `/referral-lottery/winners/${slotProps.item.id}`, query: {...$route.query }})"
+              >
+                View
+              </div>
+              <div class="mx-1" />
+              <div v-if="($route.query.status && $route.query.status.toLowerCase() === 'winners') && !slotProps.item.winner_notified"
+                   class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer"
+                   @click="selectUserNotify(slotProps.item.id)"
+              >
+                Notify
+              </div>
+            </div>
+          </template>
+        </AppTable>
+        <div v-if="!loading" class="flex text-white justify-center py-4">
+          {{ noDataFound }}
+        </div>
+        <div
+          v-if="['index-referral-lottery-index-entries-create', 'index-referral-lottery-index-entries-id', 'index-referral-lottery-index-winners-id'].includes($route.name)"
+          class="shield"
+          @click="$router.push({ path: `/referral-lottery`, query: {...$route.query}})"
+        />
+        <div
+          v-if="winner_modal || draw_modal"
+          class="shield"
+          @click="winner_modal = false, draw_modal = false"
+        />
+        <nuxt-child @notify="notify" />
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
-import AppTable from "@/components/Base/AppTable";
-import AppInput from "@/components/Base/AppInput";
-import AppConfirm from "@/components/Base/AppConfirm";
-import AppDate from "@/components/Base/AppDate";
-import AppLoading from "@/components/Base/AppLoading";
-import AppButton from "@/components/Base/AppButton";
+import AppTable from "@/components/Base/AppTable"
+import AppInput from "@/components/Base/AppInput"
+import AppConfirm from "@/components/Base/AppConfirm"
+import AppDate from "@/components/Base/AppDate"
+import AppLoading from "@/components/Base/AppLoading"
+import AppButton from "@/components/Base/AppButton"
 export default {
     components: {
         AppTable,
@@ -142,7 +149,7 @@ export default {
         AppLoading,
         AppButton
     },
-    data() {
+    data () {
         return {
             canInitiateDraw: false,
             draw_modal: false,
@@ -166,7 +173,7 @@ export default {
         }
     },
     computed: {
-        columns() {
+        columns () {
             let columns = []
             let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries'
             if (routeQuery === 'entries') {
@@ -214,40 +221,42 @@ export default {
             }
             return columns
         },
-        noDataFound() {
+        noDataFound () {
             let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries'
             if (routeQuery === 'entries' && this.users.length === 0) {
                 return `No Raffle ${routeQuery} Found`
             } else if (routeQuery === 'winners' && this.raffles.length === 0) {
                 return `No Raffle ${routeQuery} Found`
             }
+            return ''
         },
-        routeLink() {
+        routeLink () {
             let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries'
             if (routeQuery === 'entries') {
                 return ``
             }
+            return ''
         }
     },
     watch: {
-        async "$route.query"(newValue, oldValue) {
-            let newStatus = newValue.status;
-            let oldStatus = oldValue.status;
+        async "$route.query" (newValue, oldValue) {
+            let newStatus = newValue.status
+            let oldStatus = oldValue.status
             if (newStatus && newStatus !== null && newStatus !== oldStatus) {
-                this.current_page = 1;
-                this.total = 0;
-                this.users = [];
-                this.raffles = [];
-                this.date_start = null;
-                this.date_end = null;
-                this.canInitiateDraw = false;
-                this.initialLoading = true;
-                await this.getUsersPromiseAll();
-                this.initialLoading = false;
+                this.current_page = 1
+                this.total = 0
+                this.users = []
+                this.raffles = []
+                this.date_start = null
+                this.date_end = null
+                this.canInitiateDraw = false
+                this.initialLoading = true
+                await this.getUsersPromiseAll()
+                this.initialLoading = false
             }
         }
     },
-    async asyncData({ app, query, error }) {
+    async asyncData ({ app, query, error }) {
         try {
             let routeQuery = query.status ? query.status.toLowerCase() : 'entries'
             let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
@@ -280,7 +289,7 @@ export default {
         }
     },
     methods: {
-        async getUsersPromiseAll() {
+        async getUsersPromiseAll () {
             try {
                 let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries' 
                 let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
@@ -300,10 +309,10 @@ export default {
                     })
                 ])
             } catch (err) {
-                return error({ status: 400, message: err.response.message })
+                return this.$nuxt.error({ status: 400, message: err.response.message })
             }
         },
-        async getUsers() {
+        async getUsers () {
             try {
                 let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries' 
                 let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
@@ -320,17 +329,17 @@ export default {
                     })
                 ])
             } catch (err) {
-                return error({ status: 400, message: err.response.message })
+                return this.$nuxt.error({ status: 400, message: err.response.message })
             }
         },
-        async display() {
+        async display () {
             try {
                 if (this.date_start === null || this.date_end === null) {
                     this.$store.commit("SET_NOTIFICATION", {
                         enabled: true,
                         status: "danger",
                         text: "Date input is required",
-                    });
+                    })
                     return
                 }
                 this.loading = true
@@ -356,16 +365,16 @@ export default {
                 this.loading = false
             } catch (err) {
                 this.loading = false
-                return error({ status: 400, message: err.response.message})
+                return this.$nuxt.error({ status: 400, message: err.response.message})
             }
         },
-        initiateDraw() {
+        initiateDraw () {
             if (!this.date_start || !this.date_end) {
                 this.$store.commit("SET_NOTIFICATION", {
                     enabled: true,
                     status: "danger",
                     text: "Date inputs are required",
-                });
+                })
                 return
             }
             this.$axios.$post(`/api/v1/admin/raffles`, {
@@ -376,7 +385,7 @@ export default {
                     enabled: true,
                     status: "success",
                     text: 'Successfully pick a winner',
-                });
+                })
                 this.winner_modal = true
                 this.winner = res.data.raffle
             }).catch(err => {
@@ -385,17 +394,17 @@ export default {
                 this.draw_modal = false
             })
         },
-        selectUserNotify(raffleId) {
+        selectUserNotify (raffleId) {
             this.winner = this.raffles.find(item => item.id === raffleId)
             this.winner_modal = true
         },
-        notifyWinner(id) {
+        notifyWinner (id) {
             if (!this.description) {
                 this.$store.commit("SET_NOTIFICATION", {
                     enabled: true,
                     status: "danger",
                     text: "Description is required",
-                });
+                })
                 return
             }
             this.loadingNotify = true
@@ -405,7 +414,7 @@ export default {
                         enabled: true,
                         status: "success",
                         text: res.message,
-                    });
+                    })
                     this.winner.winner_notified = true
                     // this.getUsers()
                     let winner = this.raffles.find(item => item.id === id)
@@ -421,18 +430,21 @@ export default {
                 })
             this.loadingNotify = false
         },
-        notify(id) {
+        notify (id) {
             let winner = this.raffles.find(item => item.id === id)
             if (winner) {
                 winner.winner_notified = true
             }
         },
-        clearFilters() {
+        async clearFilters () {
             this.date_start = null
             this.date_end = null
             this.canInitiateDraw = false
+            this.loading = true
+            await this.getUsersPromiseAll()
+            this.loading = false
         },
-        async pagechanged(e) {
+        async pagechanged (e) {
             this.current_page = e
             this.loading = true
             await this.getUsers()
