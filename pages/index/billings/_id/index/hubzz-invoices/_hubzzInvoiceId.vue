@@ -1,20 +1,20 @@
 <template>
   <div class="hubzz-invoice-modal">
     <div class="items-center text-sm text-white py-2 m-6">
-      <div @click="goBack()" class="text-white hover:text-sunglow p-1">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current"/>
+      <div class="text-white hover:text-sunglow p-1" @click="goBack()">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
       </div>
       <div>
         <HubzzInvoice 
-          :forViewing="true"
+          :for-viewing="true"
           :practice="practice"
-          :practiceInvoice="practiceInvoice" 
-          :invoiceItems="invoiceItems"
-          :disputedItems="disputedItems"
-          :debitItems="debitItems"
-          :creditItems="creditItems"
-          :dateStart="practiceInvoice.date_start"
-          :dateEnd="practiceInvoice.date_end"
+          :practice-invoice="practiceInvoice" 
+          :invoice-items="invoiceItems"
+          :disputed-items="disputedItems"
+          :debit-items="debitItems"
+          :credit-items="creditItems"
+          :date-start="practiceInvoice.date_start"
+          :date-end="practiceInvoice.date_end"
         />
       </div>
     </div>
@@ -26,7 +26,7 @@ export default {
   components:{
     HubzzInvoice
   },
-  data(){
+  data (){
     return{
       practiceInvoice: '',
       practice: '',
@@ -36,7 +36,7 @@ export default {
       creditItems:[],
     }
   },
-  async asyncData({ app, route, params }){
+  async asyncDatab ({ app, route }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`, {
         viewing_practice_id: route.params.id
@@ -46,7 +46,7 @@ export default {
 
       response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
-      const practiceInvoiceItems = practiceInvoice.practice_invoice_items;
+      const practiceInvoiceItems = practiceInvoice.practice_invoice_items
 
       let invoiceItems = []
       let disputedItems = []
@@ -58,25 +58,25 @@ export default {
 					job_part_id: practiceInvoiceItems[i].id,
 					description: practiceInvoiceItems[i].description,
 					total: practiceInvoiceItems[i].total.toFixed(2)
-        };
+        }
         if(practiceInvoiceItems[i].type.includes('Job Part - Approved') 
           || practiceInvoiceItems[i].type.includes('Job Part - Issued')
           || practiceInvoiceItems[i].type.includes('Job Part - Invoiced')) {
           console.log('normal invoice item has been pushed')
-          newItem.id = invoiceItems.length + 1;
-          invoiceItems.push(newItem);
+          newItem.id = invoiceItems.length + 1
+          invoiceItems.push(newItem)
         }else if(practiceInvoiceItems[i].type.includes('Job Part - Disputed')){
           console.log('disputed invoice item has been pushed')
-          newItem.id = disputedItems.length + 1;
-          disputedItems.push(newItem);
+          newItem.id = disputedItems.length + 1
+          disputedItems.push(newItem)
         }else if(practiceInvoiceItems[i].type.includes('Debit')) {
           console.log('debit invoice item has been pushed')
-          newItem.id = debitItems.length + 1;
-          debitItems.push(newItem);
+          newItem.id = debitItems.length + 1
+          debitItems.push(newItem)
         }else if(practiceInvoiceItems[i].type.includes('Credit')) {
           console.log('credit invoice item has been pushed')
-          newItem.id = creditItems.length + 1;
-          creditItems.push(newItem);
+          newItem.id = creditItems.length + 1
+          creditItems.push(newItem)
         }else{
           console.log('it didnt work lol')
         }
@@ -94,7 +94,7 @@ export default {
     }
   },
   methods:{
-    goBack(){
+    goBack () {
       const query = {
         ...this.$route.query
       }

@@ -156,8 +156,7 @@ export default {
 				{
 					name: "Issued At",
 					dataIndex: "issued_at",
-					slotName: "issued_at",
-					class: "text-center",
+					class: "text-center localDate",
 					sortable: "true"
 				},
 				{
