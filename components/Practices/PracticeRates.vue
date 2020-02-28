@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col rounded-lg">
 		<div
-			class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg"
+			class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg relative"
 			style="max-width: 600px"
 		>
 			<div
@@ -45,6 +45,7 @@
 					class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
 					:class="errorMessage('gp_rate') && 'border-red-800'"
 					type="number"
+					min="1"
 					step="any"
 					v-model.number="toPutPracticeRate.gp_rate"
 					aria-label
@@ -62,6 +63,7 @@
 					class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
 					:class="errorMessage('others_rate') && 'border-red-800'"
 					type="number"
+					min="1"
 					step="any"
 					v-model.number="toPutPracticeRate.others_rate"
 					@blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')"
@@ -102,6 +104,9 @@ export default {
 	computed: {
 		authAdminPermissions() {
 			return this.$store.getters["permissions"];
+		},
+		loading() {
+			return this.$store.state.practices.loading_practices;
 		}
 	},
 	watch: {
@@ -137,6 +142,7 @@ export default {
 				order_by: "created_at:desc",
 				offset: this.getQuery()
 			});
+			console.log(this.practice);
 		},
 		errorMessage(field, message) {
 			if (this.formError.find(error => error.field === field.toString())) {
@@ -168,6 +174,7 @@ export default {
 							text: "Saved"
 						});
 						this.getPractices();
+						this.$emit("update");
 						this.toEdit = false;
 					});
 			} catch (err) {

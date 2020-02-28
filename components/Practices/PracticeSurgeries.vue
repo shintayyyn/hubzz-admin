@@ -1,10 +1,10 @@
 <template>
-	<div class="flex flex-col rounded-lg">
-		<div class="flex overflow-hidden">
-			<div class="flex overflow-x-auto mb-2">
-				<div v-if="practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
-					<AppButton :label="'Add Spoke for this Hub'" @click="show()" :icon="'add-rectangle'" />
-					<!-- <button
+  <div class="flex flex-col rounded-lg">
+    <div class="flex overflow-hidden">
+      <div class="flex overflow-x-auto mb-2">
+        <div v-if="practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
+          <AppButton :label="'Add Spoke for this Hub'" :icon="'add-rectangle'" @click="show()" />
+          <!-- <button
 						@click="show()"
 						class="inline-flex items-center no-underline py-2 px-4 bg-sunglow hover:bg-sunglow-dark text-sm font-semibold text-black rounded-lg shadow float-right"
 					>
@@ -17,94 +17,96 @@
 							class="mx-1 -my-1"
 						/>
 					</button>-->
-				</div>
-				<div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
-					<button
-						@click="deleteSurgery = false"
-						class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
-					>
-						Done
-						<svgicon name="circle-check" width="21" height="21" color="white white" class="mx-1 -my-1" />
-					</button>
-				</div>
-			</div>
-		</div>
-		<template v-if="practiceChildren.length > 0">
-			<AppTable
-				:total="total"
-				:items="practiceChildren"
-				:currentPage="currentPage"
-				:perPage="perPage"
-				:columns="columns"
-				:loading="loadingSurgeries"
-				:loadingMessage="'Loading Surgeries'"
-				:routerLink="`/practices/${practice.id}/practice-surgeries`"
-				@pagechanged="pagechanged"
-				@limitchanged="limitchanged"
-			>
-				<template v-slot:type_slot="slotProps">
-					<div class="flex justify-center">
-						<div
-							class="rounded-full text-center py-2 px-4 md:px-8"
-							:class="statusStyle(slotProps.item)"
-						>{{ checkStatus(slotProps.item) }}</div>
-						<div
-							@click.prevent.stop="viewTerminationModal(slotProps.item.id)"
-							class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
-							v-if="slotProps.item.termination_requested_at"
-						>
-							<div class="p-1 bg-white rounded-lg">
-								<svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
-							</div>
-						</div>
-					</div>
-				</template>
-			</AppTable>
-		</template>
+        </div>
+        <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
+          <button
+            class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
+            @click="deleteSurgery = false"
+          >
+            Done
+            <svgicon name="circle-check" width="21" height="21" color="white white" class="mx-1 -my-1" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <template v-if="practiceChildren.length > 0">
+      <AppTable
+        :total="total"
+        :items="practiceChildren"
+        :current-page="currentPage"
+        :per-page="perPage"
+        :columns="columns"
+        :loading="loadingSurgeries"
+        :loading-message="'Loading Surgeries'"
+        :router-link="`/practices/${practice.id}/practice-surgeries`"
+        @pagechanged="pagechanged"
+        @limitchanged="limitchanged"
+      >
+        <template v-slot:type_slot="slotProps">
+          <div class="flex justify-center">
+            <div
+              class="rounded-full text-center py-2 px-4 md:px-8"
+              :class="statusStyle(slotProps.item)"
+            >
+              {{ checkStatus(slotProps.item) }}
+            </div>
+            <div
+              v-if="slotProps.item.termination_requested_at"
+              class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
+              @click.prevent.stop="viewTerminationModal(slotProps.item.id)"
+            >
+              <div class="p-1 bg-white rounded-lg">
+                <svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
+              </div>
+            </div>
+          </div>
+        </template>
+      </AppTable>
+    </template>
 
-		<div v-else>
-			<div class="mt-10 text-white w-full text-center" style="font-family: Nunito">
-				<p>This practice has no children.</p>
-			</div>
-		</div>
-		<transition name="fade" mode="out-in">
-			<div
-				class="termination-modal h-full flex border-l-4 border-r-4 border-sunglow shadow-lg"
-				v-if="terminationModal"
-			>
-				<TerminateSurgery
-					@close="terminationModal = false"
-					:practice="practice"
-					:childSurgery="specificChildSurgery"
-				/>
-			</div>
-		</transition>
-		<!-- END TABLE -->
+    <div v-else>
+      <div class="mt-10 text-white w-full text-center" style="font-family: Nunito">
+        <p>This practice has no children.</p>
+      </div>
+    </div>
+    <transition name="fade" mode="out-in">
+      <div
+        v-if="terminationModal"
+        class="termination-modal h-full flex border-l-4 border-r-4 border-sunglow shadow-lg"
+      >
+        <TerminateSurgery
+          :practice="practice"
+          :child-surgery="specificChildSurgery"
+          @close="terminationModal = false"
+        />
+      </div>
+    </transition>
+    <!-- END TABLE -->
 
-		<div class="add-practice-shield" v-if="terminationModal" @click="closeModals()"></div>
-		<transition name="slide" mode="out-in">
-			<div class="add-practice-modal shadow-lg" v-if="modal">
-				<AddPracticeSurgery @close="modal = false" :practice="practice" :spokesCount="total" />
-			</div>
-		</transition>
-	</div>
+    <div v-if="terminationModal" class="add-practice-shield" @click="closeModals()" />
+    <transition name="slide" mode="out-in">
+      <div v-if="modal" class="add-practice-modal shadow-lg">
+        <AddPracticeSurgery :practice="practice" :spokes-count="total" @close="modal = false" />
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
-import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery";
-import AppPagination from "@/components/Base/AppPagination";
-import AppLoading from "@/components/Base/AppLoading";
-import TerminateSurgery from "@/components/Practices/TerminateSurgery";
-import AppTable from "@/components/Base/AppTable";
-import AppButton from "@/components/Base/AppButton";
+import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
+import AppPagination from "@/components/Base/AppPagination"
+import AppLoading from "@/components/Base/AppLoading"
+import TerminateSurgery from "@/components/Practices/TerminateSurgery"
+import AppTable from "@/components/Base/AppTable"
+import AppButton from "@/components/Base/AppButton"
 export default {
-	props: ["practice"],
 	components: {
 		AddPracticeSurgery,
 		TerminateSurgery,
 		AppTable,
 		AppButton
 	},
-	data() {
+	props: ["practice"],
+	data () {
 		return {
 			// practiceChildren:{},
 			// total:0,
@@ -139,37 +141,37 @@ export default {
 					class: "text-center"
 				}
 			]
-		};
-	},
-	beforeDestroy() {
-		let query = Object.assign({}, this.$route.query);
-		delete query.practice_children_page;
-		this.$router.push({ query });
-	},
-	watch: {
-		$route(to, from) {
-			this.currentPage = parseInt(to.query.practice_children_page);
-			this.getChildren();
 		}
 	},
 	computed: {
-		total() {
-			return this.$store.state.practices.practiceSpokesCount;
+		total () {
+			return this.$store.state.practices.practiceSpokesCount
 		},
-		practiceChildren() {
-			return this.$store.state.practices.practiceSpokes;
+		practiceChildren () {
+			return this.$store.state.practices.practiceSpokes
 		},
-		totalPages() {
-			return this.$store.state.practices.practiceSpokesPageCount;
+		totalPages () {
+			return this.$store.state.practices.practiceSpokesPageCount
 		}
 	},
-	async created() {
+	watch: {
+		$route (to, from) {
+			this.currentPage = parseInt(to.query.practice_children_page)
+			this.getChildren()
+		}
+	},
+	beforeDestroy () {
+		let query = Object.assign({}, this.$route.query)
+		delete query.practice_children_page
+		this.$router.push({ query })
+	},
+	async created () {
 		const query = {
 			...this.$route.query,
 			practice_children_page: this.$route.query.practice_children_page || 1
-		};
+		}
 		try {
-			this.loadingSurgeries = true;
+			this.loadingSurgeries = true
 			await this.$axios
 				.$get(
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/count`
@@ -178,55 +180,55 @@ export default {
 					this.$store.commit(
 						"practices/SET_PRACTICE_SPOKES_COUNT",
 						res.data.count
-					); //quantity of spokes
-					this.perPage = 5;
-					let pageCount = Math.ceil(this.total / this.perPage);
+					) //quantity of spokes
+					this.perPage = 5
+					let pageCount = Math.ceil(this.total / this.perPage)
 					this.$store.commit(
 						"practices/SET_PRACTICE_SPOKES_PAGE_COUNT",
 						pageCount
-					); //number of pages
-					this.getChildren();
-				});
+					) //number of pages
+					this.getChildren()
+				})
 		} catch (err) {
 			this.$store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: err.response.data.message
-			});
-			console.log("get practice surgeries error!!!!", err);
+			})
+			console.log("get practice surgeries error!!!!", err)
 		}
 	},
 	methods: {
-		show() {
+		show () {
 			this.$router.push(
 				`/practices/${this.$route.params.id}/practice-surgeries/add-spoke`
-			);
+			)
 		},
-		async viewTerminationModal(childId) {
-			console.log("id", childId);
+		async viewTerminationModal (childId) {
+			console.log("id", childId)
 
 			await this.$axios
 				.$get(
 					`/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${childId}`
 				)
 				.then(res => {
-					this.specificChildSurgery = res.data.practice_surgery;
-				});
+					this.specificChildSurgery = res.data.practice_surgery
+				})
 
 			this.$router.push(
 				`/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`
-			);
+			)
 			// this.terminationModal = true;
 		},
-		closeModals() {
-			this.modal = false;
-			this.terminationModal = false;
+		closeModals () {
+			this.modal = false
+			this.terminationModal = false
 		},
-		async getChildren() {
-			let limit = 5;
-			let offset = 0;
-			offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1);
-			let params = { limit, offset };
+		async getChildren () {
+			let limit = 5
+			let offset = 0
+			offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
+			let params = { limit, offset }
 
 			await this.$axios
 				.$get(
@@ -237,84 +239,84 @@ export default {
 					this.$store.commit(
 						"practices/SET_PRACTICE_SPOKES",
 						res.data.practice_surgeries
-					);
+					)
 				})
 				.catch(err => {
-					console.log("get children error!!!!", err);
+					console.log("get children error!!!!", err)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
-					});
-				});
-			this.loadingSurgeries = false;
+					})
+				})
+			this.loadingSurgeries = false
 		},
 
-		goToChild(link) {
-			this.$router.push();
+		goToChild (link) {
+			this.$router.push()
 		},
-		pagechanged(e) {
+		pagechanged (e) {
 			const query = {
 				...this.$route.query,
 				practice_children_page: e || 1
-			};
-			this.$router.push({ query });
-			this.getChildren();
+			}
+			this.$router.push({ query })
+			this.getChildren()
 		},
-		statusStyle(status) {
-			this.checkStatus(status);
+		statusStyle (status) {
+			this.checkStatus(status)
 			switch (this.checkStatus(status)) {
 				case "Active":
-					return "bg-green-500 text-white";
-					break;
+					return "bg-green-500 text-white"
+					break
 				case "Rejected":
-					return "bg-gray-500 text-gray-700";
-					break;
+					return "bg-gray-500 text-gray-700"
+					break
 				case "Termination Requested":
-					return "bg-orange-500 text-white";
-					break;
+					return "bg-orange-500 text-white"
+					break
 				case "Terminated":
-					return "bg-red-800 text-red-400";
-					break;
+					return "bg-red-800 text-red-400"
+					break
 				default:
-					return "bg-yellow-400 text-black";
+					return "bg-yellow-400 text-black"
 			}
 		},
-		checkStatus(invitation) {
-			let result = "Invited";
+		checkStatus (invitation) {
+			let result = "Invited"
 			if (invitation.invitation_accepted_at) {
-				result = "Active";
+				result = "Active"
 			}
 
 			if (invitation.invitation_rejected_at) {
-				result = "Rejected";
+				result = "Rejected"
 			}
 
 			if (invitation.termination_requested_at) {
 				if (invitation.invitation_accepted_at) {
-					result = "Termination Requested";
+					result = "Termination Requested"
 				} else {
-					result = "Cancellation Requested";
+					result = "Cancellation Requested"
 				}
 			}
 
 			if (invitation.terminated_at) {
-				result = "Terminated";
+				result = "Terminated"
 			}
-			return result;
+			return result
 		},
-		async limitchanged(limit) {
-			this.currentPage = 1;
-			this.itemsPerPage = limit;
-			await this.getChildren(this.paramSort);
+		async limitchanged (limit) {
+			this.currentPage = 1
+			this.itemsPerPage = limit
+			await this.getChildren(this.paramSort)
 		},
-		sorted(order_by) {
-			this.currentPage = 1;
-			this.paramSort.order_by = order_by;
-			this.getChildren(this.paramSort);
+		sorted (order_by) {
+			this.currentPage = 1
+			this.paramSort.order_by = order_by
+			this.getChildren(this.paramSort)
 		}
 	}
-};
+}
 </script>
 <style>
 .card {
