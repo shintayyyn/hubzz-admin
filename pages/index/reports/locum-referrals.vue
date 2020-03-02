@@ -29,7 +29,7 @@
       <ReportTable
         :limit="limit"
         :items="locumReferrals"
-        :get-item-key="(item) => item.locum_invoice_id"
+        :get-item-key="(item) => item.id"
         :column-details="columnDetails"
         :order-by="orderBy"
         :loading="loading"
