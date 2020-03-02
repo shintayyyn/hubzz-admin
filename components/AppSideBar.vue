@@ -4,7 +4,6 @@
     :class="{ 'toggled-left': $store.state.toggled_sidebar }"
   >
     <div class="sidebar-nav">
-      
       <!-- LINKS WRAPPER -->
       <div class="xl:mt-24">
         <!-- CLOSE BUTTON -->
@@ -23,23 +22,22 @@
           class="text-sm relative"
         >
           <span
-            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
             v-if="`/${$route.path.split('/')[1]}` == item.route"
-          ></span>
+            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
+          />
           <nuxt-link :to="item.route">
             <div
-              @click="close"
               class="block font-sans no-underline p-4"
               :class="`/${$route.path.split('/')[1]}` == item.route ? 
                 'text-yellow-500': 
                 'text-white hover:text-gray-500'"
-              >
+              @click="close"
+            >
               <span>{{ item.name }}</span>
               <span v-if="item.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{unacknowledgedCount}}
+                {{ unacknowledgedCount }}
               </span>
             </div>
-            
           </nuxt-link>
         </div>
         <!-- LINKS END HERE -->
@@ -47,17 +45,17 @@
         <!-- SIGN OUT -->
         <div class="text-sm relative">
           <span
-            class="absolute left-0 border-solid bg-yellow-500 w-1 h-full"
             v-if="`/${$route.path.split('/')[1]}` == '/sign-out'"
-          ></span>
+            class="absolute left-0 border-solid bg-yellow-500 w-1 h-full"
+          />
           <button
-            @click.prevent="signout"
             class="block no-underline p-4 focus:outline-none"
             :class="
               `/${$route.path.split('/')[1]}` == '/sign-out'
                 ? 'text-yellow-500'
                 : 'text-white hover:text-gray-400'
             "
+            @click.prevent="signout"
           >
             <span class="font-sans">Sign Out</span>
           </button>
@@ -70,7 +68,7 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       lists: [],
       menu: [],
@@ -79,14 +77,14 @@ export default {
         acknowledged: false
       },
       supportsBadge: 0
-    };
+    }
   },
   computed: {
-    unacknowledgedCount() {
+    unacknowledgedCount () {
       return this.$store.state.supports.unacknowledgedCount
     }
   },
-  async created() {
+  async created () {
     // $auth.user.domain
     if (this.$auth.loggedIn) {
       const acknowledged = false
@@ -96,8 +94,8 @@ export default {
         this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
       })
 
-      let domain = this.$auth.user.domain;
-      let addedLists = [];
+      let domain = this.$auth.user.domain
+      let addedLists = []
       let defaultLists = [
         { name: "Dashboard", route: "/" },
         { name: "Locums", route: "/locums" },
@@ -110,7 +108,7 @@ export default {
         { name: "Inquiries", route: "/inquiries" },
         { name: "User Management", route: "/user-management" },
         { name: 'Referral Lottery', route: "/referral-lottery"}
-      ];
+      ]
 
       // if (domain === "Super Admin") {
       //   addedLists = [
@@ -126,7 +124,7 @@ export default {
       //   ];
       // }
 
-      this.lists = [...defaultLists, ...addedLists];
+      this.lists = [...defaultLists, ...addedLists]
 
       let defaultMenu = [
         { name: "Dashboard", route: "/" },
@@ -144,22 +142,22 @@ export default {
         { name: "FAQs", route: "/faqs" },
         { name: "Terms and Conditions", route: "/tncs" },
         { name: "Inquiries", route: "/inquiries" }
-      ];
+      ]
 
-      this.menu = [...defaultMenu];
+      this.menu = [...defaultMenu]
     }
   },
   methods: {
-    signout() {
-      this.$emit("modal", true);
+    signout () {
+      this.$emit("modal", true)
       // this.$store.commit('TOGGLE_SIGNOUT', true)
     },
-    close() {
-      this.$store.commit("TOGGLE_SIDEBAR", false);
-      document.body.style.overflow = "auto";
+    close () {
+      this.$store.commit("TOGGLE_SIDEBAR", false)
+      document.body.style.overflow = "auto"
     }
   }
-};
+}
 </script>
 
 <style scoped>

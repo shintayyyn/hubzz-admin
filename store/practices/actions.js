@@ -1,139 +1,139 @@
 import * as practiceApi from '@/api/practices'
-export default{
-  async initializePracticeTransactionListener({state, commit}, route){
-      //-------------------PRACTICES-------------------
-      this.$socket.on("createdPractice",  (payload) => {
-          commit('ADD_PRACTICE', payload.payload.practice)
-          // commit('ADD_PRACTICE_USER', payload.payload.user)
-      }),
+export default {
+  async initializePracticeTransactionListener ({ state, commit }, route) {
+    //-------------------PRACTICES-------------------
+    this.$socket.on("createdPractice", (payload) => {
+      commit('ADD_PRACTICE', payload.payload.practice)
+      // commit('ADD_PRACTICE_USER', payload.payload.user)
+    }),
       this.$socket.on("deletePractice", practice => {
-          commit('DELETE_PRACTICE', practice)
+        commit('DELETE_PRACTICE', practice)
       }),
       //------------------PRACTICE INFOS-------------------
       this.$socket.on("updatedPractice", async (practice) => {
-          const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-          const updatedPractice = response.data.practice
-          commit('UPDATE_PRACTICE', updatedPractice)
+        const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+        const updatedPractice = response.data.practice
+        commit('UPDATE_PRACTICE', updatedPractice)
       }),
 
       //-------------------PRACTICE RATES----------------------
       this.$socket.on("updatedPracticeRates", async (practice) => {
-          const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-          const updatedPractice = response.data.practice
-          commit('UPDATE_PRACTICE', updatedPractice)
+        const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+        const updatedPractice = response.data.practice
+        commit('UPDATE_PRACTICE', updatedPractice)
       }),
 
       //----------------------PRACTICE TYPES------------------------
       this.$socket.on("updatedPracticeType", async (practice) => {
-          const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-          const updatedPractice = response.data.practice
-          commit('UPDATE_PRACTICE', updatedPractice)
-          const routeName = this.$router.currentRoute.name
-          
-          if(updatedPractice.type === 'Hub'){
-              if(routeName.includes('practice-hub')){
-                  const query = {
-                      ...this.$router.currentRoute.query
-                  }
-                  this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-surgeries`, query})
-              }  
+        const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+        const updatedPractice = response.data.practice
+        commit('UPDATE_PRACTICE', updatedPractice)
+        const routeName = this.$router.currentRoute.name
+
+        if (updatedPractice.type === 'Hub') {
+          if (routeName.includes('practice-hub')) {
+            const query = {
+              ...this.$router.currentRoute.query
+            }
+            this.$router.push({ path: `/practices/` + updatedPractice.id + `/practice-surgeries`, query })
           }
-          if(updatedPractice.type === 'Spoke'){
-              if(routeName.includes('practice-surgeries')){
-                  const query = {
-                      ...this.$router.currentRoute.query
-                  }
-                  this.$router.push({path:`/practices/`+updatedPractice.id+`/practice-hub`, query })
-              }  
-          }  
+        }
+        if (updatedPractice.type === 'Spoke') {
+          if (routeName.includes('practice-surgeries')) {
+            const query = {
+              ...this.$router.currentRoute.query
+            }
+            this.$router.push({ path: `/practices/` + updatedPractice.id + `/practice-hub`, query })
+          }
+        }
       }),
-      
-      
+
+
       //--------------------PRACTICE DOCUMENTS----------------------
       this.$socket.on("createdPracticeDocument", (practiceDocument) => {
-          commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
+        commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
       }),
       this.$socket.on("updatedPracticeDocument", (practiceDocument) => {
-          commit('UPDATE_PRACTICE_DOCUMENT', practiceDocument)
+        commit('UPDATE_PRACTICE_DOCUMENT', practiceDocument)
       }),
       this.$socket.on("deletedPracticeDocument", (practiceDocument) => {
-          commit('DELETE_PRACTICE_DOCUMENT', practiceDocument)
+        commit('DELETE_PRACTICE_DOCUMENT', practiceDocument)
       })
 
-      //----------------------PRACTICE USERS-----------------------
-      this.$socket.on("createdPracticeUser", (user) => {
-          commit('ADD_PRACTICE_USER', user)
-      })
-      this.$socket.on("updatedPracticeUser", (user) => {
-          commit('UPDATE_PRACTICE_USER', user)
-      })
-      this.$socket.on("deletedPracticeUser", (user) => {
-          commit('DELETE_PRACTICE_USER', user)
-      })
+    //----------------------PRACTICE USERS-----------------------
+    this.$socket.on("createdPracticeUser", (user) => {
+      commit('ADD_PRACTICE_USER', user)
+    })
+    this.$socket.on("updatedPracticeUser", (user) => {
+      commit('UPDATE_PRACTICE_USER', user)
+    })
+    this.$socket.on("deletedPracticeUser", (user) => {
+      commit('DELETE_PRACTICE_USER', user)
+    })
 
   },
 
-  async fetchPractices({ commit }, payload){
-    commit('TOGGLE_LOADING',true)
+  async fetchPractices ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchPractices(this.$axios, payload)
-    commit('TOGGLE_LOADING',false)  
-    if(payload.countOnly){
-      return commit('SET_PRACTICE_COUNT',response.data.count)
+    commit('TOGGLE_LOADING', false)
+    if (payload.countOnly) {
+      return commit('SET_PRACTICE_COUNT', response.data.count)
     }
-    return commit('SET_PRACTICES',response.data.practices)
+    return commit('SET_PRACTICES', response.data.practices)
   },
 
-  async fetchSpecificPractice({ commit }, payload){
-    commit('TOGGLE_LOADING',true)
+  async fetchSpecificPractice ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchSpecificPractice(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
     return commit('SET_SPECIFIC_PRACTICE', response.data.practice)
   },
-  
-  async fetchHub({ commit }, payload){
-    commit('TOGGLE_LOADING',true)
+
+  async fetchHub ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchHub(this.$axios, payload)
-    commit('TOGGLE_LOADING',false)
+    commit('TOGGLE_LOADING', false)
     return commit('SET_PRACTICE_HUB', response.data.practice)
   },
 
-  async fetchPracticeParent({ commit }, payload){
-    commit('TOGGLE_LOADING',true)
+  async fetchPracticeParent ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchPracticeParent(this.$axios, payload)
-    commit('TOGGLE_LOADING',false)
-    return commit('SET_PRACTICE_PARENT',response.data.practice)
+    commit('TOGGLE_LOADING', false)
+    return commit('SET_PRACTICE_PARENT', response.data.practice)
   },
 
   async fetchHubInvitations ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchHubInvitations(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
-    if(payload.countOnly){
+    if (payload.countOnly) {
       return commit('SET_HUBZZ_INVITATIONS_COUNT', response.data.count)
     }
     return commit('SET_HUBZZ_INVITATIONS', response.data.practice_surgeries)
-    
+
   },
-  
-  async fetchSpokes({ commit }, payload){
-    commit('TOGGLE_LOADING',true)
+
+  async fetchSpokes ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchSpokes(this.$axios, payload)
-    commit('TOGGLE_LOADING',false)
-    if(payload.countOnly){
+    commit('TOGGLE_LOADING', false)
+    if (payload.countOnly) {
       return commit('SET_PRACTICE_SPOKES_COUNT', response.data.count)
     }
-    return commit ('SET_PRACTICE_SPOKES',response.data.practice_surgeries)
+    return commit('SET_PRACTICE_SPOKES', response.data.practice_surgeries)
   },
 
-  async updateSpokesPageCount({ commit }, payload){
-    return commit('UPDATE_PRACTICE_SPOKES_PAGE_COUNT',payload) 
+  async updateSpokesPageCount ({ commit }, payload) {
+    return commit('UPDATE_PRACTICE_SPOKES_PAGE_COUNT', payload)
   },
 
-  async fetchPracticeUsers({ commit }, payload){
-    commit('TOGGLE_LOADING',true)
+  async fetchPracticeUsers ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchPracticeUsers(this.$axios, payload)
-    commit('TOGGLE_LOADING',false)
-    if(payload.countOnly){
+    commit('TOGGLE_LOADING', false)
+    if (payload.countOnly) {
       return commit('SET_PRACTICE_USERS_COUNT', response.data.count)
     }
     return commit('SET_PRACTICE_USERS', response.data.users)

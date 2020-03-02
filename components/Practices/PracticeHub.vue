@@ -5,60 +5,85 @@
         <div class="flex flex-wrap">
           <div class="w-full">
             <div class="text-gray-300 text-sm p-2">
-              <p class="flex">Practice Name</p>
+              <p class="flex">
+                Practice Name
+              </p>
               <p class="flex items-center text-white text-sm p-2 font-semibold">
-              {{practiceParent.surgery ? practiceParent.surgery.name : null}} 
+                {{ practiceParent.surgery ? practiceParent.surgery.name : null }} 
               </p>
-              <p class="flex">Practice Code</p>
-              <p class="flex text-white text-sm p-2 font-semibold">{{practiceParent.surgery ? practiceParent.surgery.code : null}}</p>
-              <p class="flex">Address</p>
+              <p class="flex">
+                Practice Code
+              </p>
               <p class="flex text-white text-sm p-2 font-semibold">
-              {{practiceParent.surgery.address ? practiceParent.surgery.address.line_1 : null}} <br>
-              {{practiceParent.surgery.address ? practiceParent.surgery.address.line_2 : null}} <br>
-              {{practiceParent.surgery.address ? practiceParent.surgery.address.line_3 : null}} <br>
+                {{ practiceParent.surgery ? practiceParent.surgery.code : null }}
               </p>
-              <p class="flex">CCG</p>
-              <p class="flex text-white text-sm p-2 font-semibold">{{practiceParent.surgery.clinical_commissioning_group ? practiceParent.surgery.clinical_commissioning_group.name:null}}</p>
+              <p class="flex">
+                Address
+              </p>
+              <p class="flex text-white text-sm p-2 font-semibold">
+                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_1 : null }} <br>
+                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_2 : null }} <br>
+                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_3 : null }} <br>
+              </p>
+              <p class="flex">
+                CCG
+              </p>
+              <p class="flex text-white text-sm p-2 font-semibold">
+                {{ practiceParent.surgery.clinical_commissioning_group ? practiceParent.surgery.clinical_commissioning_group.name:null }}
+              </p>
               
-              <p class="flex">Practice Types</p>
-              <div v-if="practiceParent.practice_types.length > 0">
-              <p class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                  v-for="practiceType in practiceParent.practice_types"
-                  :key="practiceType.id + '-name'">
-                  {{practiceType ? practiceType.name:null}}
+              <p class="flex">
+                Practice Types
               </p>
+              <div v-if="practiceParent.practice_types.length > 0">
+                <p v-for="practiceType in practiceParent.practice_types"
+                   :key="practiceType.id + '-name'"
+                   class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                >
+                  {{ practiceType ? practiceType.name:null }}
+                </p>
               </div>
               <div v-else>
-              <p class="flex text-white text-sm p-2 font-semibold">Not set</p>
+                <p class="flex text-white text-sm p-2 font-semibold">
+                  Not set
+                </p>
               </div>
           
               <div v-if="practiceParent.gp_compliance_documents.length > 0">
-              <p class="flex">Compliance Requirements for GPs:</p>
-              <div class="text-white text-sm m-1 font-semibold" v-for="(gpComplianceDocs,index) in practiceParent.gp_compliance_documents"
-                  :key="`${index}-${gpComplianceDocs.name}`"
-                  >
-                  <span >{{gpComplianceDocs ? gpComplianceDocs.name:"(none)"}}</span> 
-              </div>
+                <p class="flex">
+                  Compliance Requirements for GPs:
+                </p>
+                <div v-for="(gpComplianceDocs,index) in practiceParent.gp_compliance_documents" :key="`${index}-${gpComplianceDocs.name}`"
+                     class="text-white text-sm m-1 font-semibold"
+                >
+                  <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span> 
+                </div>
               </div>
               <div v-if="practiceParent.others_compliance_documents.length > 0">
-              <p class>For Nurses, et al:</p>
-              <div class="text-white text-sm m-1 font-semibold" v-for="(othersComplianceDocs, index) in practiceParent.others_compliance_documents"
-                  :key="`${index}-${othersComplianceDocs.name}`"
-                  >
-                  <span >{{othersComplianceDocs ? othersComplianceDocs.name:"(none)"}}</span> 
-              </div>
+                <p class>
+                  For Nurses, et al:
+                </p>
+                <div v-for="(othersComplianceDocs, index) in practiceParent.others_compliance_documents" :key="`${index}-${othersComplianceDocs.name}`"
+                     class="text-white text-sm m-1 font-semibold"
+                >
+                  <span>{{ othersComplianceDocs ? othersComplianceDocs.name:"(none)" }}</span> 
+                </div>
               </div>
               <div v-if="practiceParent.mandatory_trainings.length > 0">
-              <p class="flex">Mandatory Trainings</p>
-              <div class="text-white text-sm m-1 font-semibold" v-for="(mandatoryTrainings, index) in practiceParent.mandatory_trainings"
-                  :key="`${index}-${mandatoryTrainings.name}`"
-                  >
-                  <span >{{mandatoryTrainings ? mandatoryTrainings.name:"(none)"}}</span> 
-              </div>
+                <p class="flex">
+                  Mandatory Trainings
+                </p>
+                <div v-for="(mandatoryTrainings, index) in practiceParent.mandatory_trainings" :key="`${index}-${mandatoryTrainings.name}`"
+                     class="text-white text-sm m-1 font-semibold"
+                >
+                  <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span> 
+                </div>
               </div>
               
-              <div v-if="!practiceParent.gp_compliance_documents.length > 0 || !practiceParent.others_compliance_documents.length > 0  || !practiceParent.mandatory_trainings.length > 0">
-              <p class="flex text-white text-base py-2 font-semibold">Compliance Documents is not yet set up by the Practice Hub yet.</p>
+              <div v-if="!practiceParent.gp_compliance_documents.length > 0 || !practiceParent.others_compliance_documents.length > 0 || !practiceParent.mandatory_trainings.length > 0">
+                <p class="flex text-white text-base py-2 font-semibold">
+                  Compliance Documents is not yet set up by the Practice Hub yet.
+                </p>
               </div>
             </div>
           </div>
@@ -70,18 +95,26 @@
         <div class="m-4">
           <div class="inline-flex items-center text-lg">
             <span class="flex">
-              <svgicon name="alert" width="32" height="32" color="white"/>
+              <svgicon name="alert" width="32" height="32" color="white" />
             </span>
             <p class="px-2">
-              {{ practiceHub.parent_surgery ? 'This surgery is not yet a registered practice in HUBZZ.' : 'This practice has no Hub yet.'}}
+              {{ practiceHub.parent_surgery ? 'This surgery is not yet a registered practice in HUBZZ.' : 'This practice has no Hub yet.' }}
             </p>
           </div>
         </div>
         <div v-if="practiceHub.parent_surgery" class="text-gray-300 text-sm m-4">
-          <p class="font-semibold">Surgery Name</p>
-          <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.name : ''}}</p>
-          <p class="font-semibold">Surgery Code</p>
-          <p class="m-2">{{practiceHub.parent_surgery ? practiceHub.parent_surgery.code : ''}}</p>
+          <p class="font-semibold">
+            Surgery Name
+          </p>
+          <p class="m-2">
+            {{ practiceHub.parent_surgery ? practiceHub.parent_surgery.name : '' }}
+          </p>
+          <p class="font-semibold">
+            Surgery Code
+          </p>
+          <p class="m-2">
+            {{ practiceHub.parent_surgery ? practiceHub.parent_surgery.code : '' }}
+          </p>
         </div>
       </form>
     </div>
@@ -97,32 +130,32 @@ export default {
   },
   props:['practice','practiceParent','practiceHub'],
 
-  data(){
+  data (){
     return{
     }
   },
-  created(){
+  created (){
   },
   methods:{
-    show(){
+    show (){
       this.modal=true
     },
-    practiceTypeStyle(type){
+    practiceTypeStyle (type){
       switch(type){
         case 'Stand Alone':
         return 'bg-green-400 text-white lg:px-4 sm:px-2'
-        break;
+        break
         case 'Hub':
         return 'bg-red-400 text-white lg:px-8 sm:px-2'
-        break;
+        break
         case 'Spoke':
         return 'bg-blue-400 text-white lg:px-8 sm:px-2'
-        break;
+        break
         default:
         return
       }
     },
-    async updatePracticeSurgery(){
+    async updatePracticeSurgery (){
       this.Validate(this.toPutPracticeParent)
       if (!this.formError.length){
         try{

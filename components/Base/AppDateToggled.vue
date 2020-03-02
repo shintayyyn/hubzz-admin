@@ -1,242 +1,292 @@
 <template>
-	<div class="flex flex-col py-2 mb-2 md:mb-4">
-		<div class="relative flex flex-row flex-no-wrap justify-between">
-			<label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{label}}</label>
-			<div
-				class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
-				v-if="error"
-			>{{error.message}}</div>
-		</div>
-		<div class="flex flex-row justify-start mt-1">
-			<div class="flex flex-col w-full">
-				<input
-					:value="value ? $moment(value).format('YYYY-MM-DD') : $moment().format('YYYY-MM-DD')"
-					type="input"
-					:placeholder="format"
-					class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
-					:class="{ inClass, 'border-red-500': error}"
-					@keypress="validateInput($event)"
-					@input="$emit('input', $event.target.value)"
-					:style="inStyle"
-					:format="format"
-					:disabled="disabled"
-				/>
-				<transition name="drop-down">
-					<div
-						v-if="error"
-						class="text-red-500 py-1 text-xs text-white"
-					>{{error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ")}}</div>
-				</transition>
-			</div>
-		</div>
-		<transition name="fade">
-			<div class="md:static z-10 flex justify-center">
-				<div class="rounded-b-lg calendar bg-waterloo shadow-md">
-					<div
-						class="p-2 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
-					>
-						<div class="m-1 w-1/2 flex flex-no-wrap">
-							<select
-								v-model="selectedMonth"
-								class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
-							>
-								<option
-									:value="month.value"
-									v-for="(month, index) in filteredMonths"
-									:key="index"
-									class="text-black"
-								>{{month.label}}</option>
-							</select>
-							<select
-								v-model="selectedYear"
-								class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
-							>
-								<option
-									:value="year"
-									v-for="(year, index) in yearLists"
-									:key="index"
-									class="text-black"
-								>{{year}}</option>
-							</select>
-						</div>
-						<div class="m-1 w-1/2 flex flex-no-wrap justify-end">
-							<span
-								class="mr-1"
-								@click="adjustMonth('previous')"
-								:class="(selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M')) && isAfter ? 'cursor-not-allowed' : 'cursor-pointer'"
-							>
-								<svgicon
-									name="arrow-left"
-									height="12"
-									width="12"
-									:color="(selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M')) && isAfter ? '#ccc' : '#fff'"
-								/>
-							</span>
-							<span class="cursor-pointer ml-1" @click="adjustMonth('next')">
-								<svgicon name="arrow-right" height="12" width="12" color="#fff" />
-							</span>
-						</div>
-					</div>
+  <div class="flex flex-col py-2 mb-2 md:mb-4">
+    <div class="relative flex flex-row flex-no-wrap justify-between">
+      <label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{ label }}</label>
+      <div
+        v-if="error"
+        class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
+      >
+        {{ error.message }}
+      </div>
+    </div>
+    <div class="flex flex-row justify-start mt-1">
+      <div class="flex flex-col w-full">
+        <input
+          :value="value ? $moment(value).format('YYYY-MM-DD') : $moment().format('YYYY-MM-DD')"
+          type="input"
+          :placeholder="format"
+          class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
+          :class="{ inClass, 'border-red-500': error}"
+          :style="inStyle"
+          :format="format"
+          :disabled="disabled"
+          @keypress="validateInput($event)"
+          @input="$emit('input', $event.target.value)"
+        >
+        <transition name="drop-down">
+          <div
+            v-if="error"
+            class="text-red-500 py-1 text-xs text-white"
+          >
+            {{ error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ") }}
+          </div>
+        </transition>
+      </div>
+    </div>
+    <transition name="fade">
+      <div class="md:static z-10 flex justify-center">
+        <div class="rounded-b-lg calendar bg-waterloo shadow-md">
+          <div
+            class="p-2 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
+          >
+            <div class="m-1 w-1/2 flex flex-no-wrap">
+              <select
+                v-model="selectedMonth"
+                class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+              >
+                <option
+                  v-for="(month, index) in filteredMonths"
+                  :key="index"
+                  :value="month.value"
+                  class="text-black"
+                >
+                  {{ month.label }}
+                </option>
+              </select>
+              <select
+                v-model="selectedYear"
+                class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+              >
+                <option
+                  v-for="(year, index) in yearLists"
+                  :key="index"
+                  :value="year"
+                  class="text-black"
+                >
+                  {{ year }}
+                </option>
+              </select>
+            </div>
+            <div class="m-1 w-1/2 flex flex-no-wrap justify-end">
+              <span
+                class="mr-1"
+                :class="(selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M')) && isAfter ? 'cursor-not-allowed' : 'cursor-pointer'"
+                @click="adjustMonth('previous')"
+              >
+                <svgicon
+                  name="arrow-left"
+                  height="12"
+                  width="12"
+                  :color="(selectedYear.toString() === $moment().format('YYYY') && selectedMonth.toString() === $moment().format('M')) && isAfter ? '#ccc' : '#fff'"
+                />
+              </span>
+              <span class="cursor-pointer ml-1" @click="adjustMonth('next')">
+                <svgicon name="arrow-right" height="12" width="12" color="#fff" />
+              </span>
+            </div>
+          </div>
 
-					<div class="flex flex-no-wrap justify-between text-xs sm:text-sm mx-1 mt-4">
-						<div class="w-full text-center font-bold">Mo</div>
-						<div class="w-full text-center font-bold">Tu</div>
-						<div class="w-full text-center font-bold">We</div>
-						<div class="w-full text-center font-bold">Th</div>
-						<div class="w-full text-center font-bold">Fr</div>
-						<div class="w-full text-center font-bold">Sa</div>
-						<div class="w-full text-center font-bold">Su</div>
-					</div>
+          <div class="flex flex-no-wrap justify-between text-xs sm:text-sm mx-1 mt-4">
+            <div class="w-full text-center font-bold">
+              Mo
+            </div>
+            <div class="w-full text-center font-bold">
+              Tu
+            </div>
+            <div class="w-full text-center font-bold">
+              We
+            </div>
+            <div class="w-full text-center font-bold">
+              Th
+            </div>
+            <div class="w-full text-center font-bold">
+              Fr
+            </div>
+            <div class="w-full text-center font-bold">
+              Sa
+            </div>
+            <div class="w-full text-center font-bold">
+              Su
+            </div>
+          </div>
 
-					<div class="flex flex-no-wrap justify-between m-1">
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 6">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
-                }"
-									v-if="item.day === 1"
-								>
-									<div class="text-xs md:text-sm z-10">{{(item.date)}}</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 5">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
-                }"
-									v-if="item.day === 2"
-								>
-									<div class="text-xs md:text-sm z-10">{{item.date}}</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 4">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
-									v-if="item.day === 3"
-								>
-									<div class="text-xs md:text-sm z-10">{{(item.date)}}</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 3">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
-									v-if="item.day === 4"
-								>
-									<div class="text-xs md:text-sm z-10">{{item.date}}</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 2">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
-									v-if="item.day === 5"
-								>
-									<div class="text-xs md:text-sm z-10">{{(item.date)}}</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 1">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
-									v-if="item.day === 6"
-								>
-									<div class="text-xs md:text-sm z-10">{{item.date}}</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex flex-col w-full">
-							<div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 0">
-								<div class="date-cell">&nbsp;</div>
-							</div>
-							<div v-for="(item, index) in daysInMonth" :key="index">
-								<div
-									@click="select(item.fullDate)"
-									class="rounded-full relative p-1 flex justify-center items-center date-cell"
-									:class="{
-                  'border-yellow-500 border-2': isSame(item.fullDate),
-                  'text-gray-500': isDisabled(item.fullDate), 
-                  'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
-                  'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
-                }"
-									v-if="item.day === 0"
-								>
-									<div class="text-xs md:text-sm z-10">{{item.date}}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</transition>
-	</div>
+          <div class="flex flex-no-wrap justify-between m-1">
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 6">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 1"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ (item.date) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 5">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 2"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ item.date }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 4">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 3"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ (item.date) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 3">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 4"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ item.date }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 2">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 5"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ (item.date) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 1">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 6"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ item.date }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col w-full">
+              <div v-if="daysInMonth.findIndex(({ day }) => day === 0) < 0">
+                <div class="date-cell">
+&nbsp;
+                </div>
+              </div>
+              <div v-for="(item, index) in daysInMonth" :key="index">
+                <div
+                  v-if="item.day === 0"
+                  class="rounded-full relative p-1 flex justify-center items-center date-cell"
+                  :class="{
+                    'border-yellow-500 border-2': isSame(item.fullDate),
+                    'text-gray-500': isDisabled(item.fullDate), 
+                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
+                  }"
+                  @click="select(item.fullDate)"
+                >
+                  <div class="text-xs md:text-sm z-10">
+                    {{ item.date }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
-import { mixin as clickaway } from "vue-clickaway";
+import { mixin as clickaway } from "vue-clickaway"
 let months = [
 	{ label: "Jan", value: "1" },
 	{ label: "Feb", value: "2" },
@@ -250,7 +300,7 @@ let months = [
 	{ label: "Oct", value: "10" },
 	{ label: "Nov", value: "11" },
 	{ label: "Dec", value: "12" }
-];
+]
 export default {
 	mixins: [clickaway],
 	props: {
@@ -270,7 +320,7 @@ export default {
 		},
 		disabled: Boolean
 	},
-	data() {
+	data () {
 		return {
 			modal: false,
 			months,
@@ -279,35 +329,10 @@ export default {
 			selectedMonth: this.$moment.utc().format("M"),
 			selectedYear: this.$moment.utc().format("YYYY"),
 			daysInMonth: []
-		};
-	},
-	created() {
-		// get current month and year
-		if (this.value) {
-			// this.value = this.$moment(this.value).format('YYYY-MM-DD')
-			this.selectedMonth = this.$moment(this.value, this.format).format("M");
-			this.selectedYear = this.$moment(this.value, this.format).format("YYYY");
-		}
-		// get month list
-		this.getMonthLists();
-		// get year list
-		this.getYearLists();
-		this.getDaysInMonth(this.selectedMonth, this.selectedYear);
-	},
-	watch: {
-		selectedMonth(value) {
-			this.getDaysInMonth(value.toString(), this.selectedYear);
-		},
-		selectedYear(value) {
-			// set selected month to this current month if selected year === current year
-			if (value === this.$moment().format("YYYY")) {
-				this.selectedMonth = this.filteredMonths[0].value;
-			}
-			this.getDaysInMonth(this.selectedMonth.toString(), value);
 		}
 	},
 	computed: {
-		filteredMonths() {
+		filteredMonths () {
 			// if selected year === current year, get only the current month up to last month,
 			// if not, get all the months
 			// if (this.selectedYear === this.$moment().format("YYYY")) {
@@ -321,33 +346,58 @@ export default {
 					return this.months.filter(
 						month =>
 							parseInt(month.value) >= parseInt(this.$moment().format("M"))
-					);
+					)
 				}
 				if (this.isBefore) {
 					return this.months.filter(
 						month =>
 							parseInt(month.value) <= parseInt(this.$moment().format("M"))
-					);
+					)
 				}
 			}
-			return this.months;
+			return this.months
 		}
 	},
+	watch: {
+		selectedMonth (value) {
+			this.getDaysInMonth(value.toString(), this.selectedYear)
+		},
+		selectedYear (value) {
+			// set selected month to this current month if selected year === current year
+			if (value === this.$moment().format("YYYY")) {
+				this.selectedMonth = this.filteredMonths[0].value
+			}
+			this.getDaysInMonth(this.selectedMonth.toString(), value)
+		}
+	},
+	created () {
+		// get current month and year
+		if (this.value) {
+			// this.value = this.$moment(this.value).format('YYYY-MM-DD')
+			this.selectedMonth = this.$moment(this.value, this.format).format("M")
+			this.selectedYear = this.$moment(this.value, this.format).format("YYYY")
+		}
+		// get month list
+		this.getMonthLists()
+		// get year list
+		this.getYearLists()
+		this.getDaysInMonth(this.selectedMonth, this.selectedYear)
+	},
 	methods: {
-		getMonthLists() {
+		getMonthLists () {
 			for (let i = this.selectedMonth; i <= this.months.length; i++) {
-				this.monthLists.push(`${i}`);
+				this.monthLists.push(`${i}`)
 			}
 		},
-		getYearLists() {
-			let yearsBefore = [];
+		getYearLists () {
+			let yearsBefore = []
 			if (!this.isAfter) {
 				for (let i = 0; i <= 2; i++) {
 					this.yearLists.push(
 						this.$moment(this.selectedYear, "YYYY")
 							.subtract(i, "years")
 							.format("YYYY")
-					);
+					)
 				}
 			}
 			for (let i = 0; i <= 10; i++) {
@@ -355,38 +405,38 @@ export default {
 					this.$moment(this.selectedYear, "YYYY")
 						.add(i, "years")
 						.format("YYYY")
-				);
+				)
 			}
 
-			this.yearLists.sort(function(a, b) {
-				return a - b;
-			});
+			this.yearLists.sort(function (a, b) {
+				return a - b
+			})
 		},
-		isSelectedDate(date) {
-			let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`;
-			return this.$moment(selectedDate, "YYYY-MM-D").isSame(this.value);
+		isSelectedDate (date) {
+			let selectedDate = `${this.selectedYear}-${this.selectedMonth}-${date}`
+			return this.$moment(selectedDate, "YYYY-MM-D").isSame(this.value)
 		},
-		isSame(date) {
-			let newDate = this.$moment().format("MM-DD-YYYY");
-			return this.$moment(date, "MM-DD-YYYY").isSame(newDate);
+		isSame (date) {
+			let newDate = this.$moment().format("MM-DD-YYYY")
+			return this.$moment(date, "MM-DD-YYYY").isSame(newDate)
 		},
-		isDisabled(date) {
-			let newDate = this.$moment.utc().format("MM-DD-YYYY");
+		isDisabled (date) {
+			let newDate = this.$moment.utc().format("MM-DD-YYYY")
 			if (this.isBefore) {
 				if (this.startDate) {
-					return this.$moment(date).isAfter(this.startDate);
+					return this.$moment(date).isAfter(this.startDate)
 				}
 				return this.$moment(date, "MM-DD-YYYY").isAfter(
 					this.$moment(newDate, "MM-DD-YYYY")
-				);
+				)
 			}
 			if (this.isAfter) {
 				if (this.startDate) {
-					return this.$moment(date).isBefore(this.startDate);
+					return this.$moment(date).isBefore(this.startDate)
 				}
 				return this.$moment(date, "MM-DD-YYYY").isBefore(
 					this.$moment(newDate, "MM-DD-YYYY")
-				);
+				)
 			}
 			// return false;
 			// let newDate = this.$moment.utc().format("MM-DD-YYYY");
@@ -409,49 +459,49 @@ export default {
 		// 	}
 		// 	this.modal = false;
 		// },
-		adjustMonth(type) {
+		adjustMonth (type) {
 			if (type === "previous") {
 				let index = this.filteredMonths.findIndex(
 					month => month.value === this.selectedMonth
-				);
+				)
 				// return if selected month and year === current month and year
 				if (
 					this.selectedMonth.toString() === this.$moment().format("M") &&
 					this.selectedYear.toString() === this.$moment().format("YYYY") &&
 					this.isAfter
 				) {
-					return;
+					return
 				}
-				this.selectedYear = parseInt(this.selectedYear);
+				this.selectedYear = parseInt(this.selectedYear)
 				if (index === 0 || this.selectedMonth != 1) {
-					this.selectedMonth--;
+					this.selectedMonth--
 				} else {
-					this.selectedMonth = 12;
-					this.selectedYear--;
+					this.selectedMonth = 12
+					this.selectedYear--
 				}
 			}
 			if (type === "next") {
 				if (this.selectedMonth === 12 || this.selectedMonth === "12") {
-					this.selectedYear++;
-					this.selectedMonth = 1;
+					this.selectedYear++
+					this.selectedMonth = 1
 				} else {
-					this.selectedMonth = parseInt(this.selectedMonth);
-					this.selectedMonth++;
+					this.selectedMonth = parseInt(this.selectedMonth)
+					this.selectedMonth++
 				}
 			}
 		},
-		getDaysInMonth(month, selectedYear) {
-			let date = this.$moment(`${selectedYear}-${month}-01`, "YYYY-MM-DD");
-			let days = [];
+		getDaysInMonth (month, selectedYear) {
+			let date = this.$moment(`${selectedYear}-${month}-01`, "YYYY-MM-DD")
+			let days = []
 			while (date.format("M") === month) {
 				days.push({
 					day: parseInt(date.format("d")),
 					date: parseInt(date.format("D")),
 					fullDate: date.format("MM-DD-YYYY")
-				});
-				date = date.add(1, "days");
+				})
+				date = date.add(1, "days")
 			}
-			this.daysInMonth = days;
+			this.daysInMonth = days
 			// days.forEach(day => {
 			//   this.daysInMonth.push({
 			//     day: day.getDay(),
@@ -460,24 +510,24 @@ export default {
 			//   });
 			// });
 		},
-		validateInput(e) {
+		validateInput (e) {
 			if ((e.key >= 0 && e.key <= 9) || e.key === "/") {
-				return;
+				return
 			} else {
-				e.preventDefault();
+				e.preventDefault()
 			}
 		},
-		select(date) {
+		select (date) {
 			if (!this.isDisabled(date)) {
 				// this.modal = false;
 				this.$emit(
 					"input",
 					this.$moment(date, "MM-DD-YYYY").format(this.format)
-				);
+				)
 			}
 		}
 	}
-};
+}
 </script>
 <style scoped>
 .calendar {

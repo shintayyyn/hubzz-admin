@@ -1,16 +1,16 @@
 <template>
   <div class="hub-invitation-modal">
     <nuxt-link
-				:to="{ path: `/practices/${$route.params.id}/practice-hub`, query }"
-				class="text-white hover:text-yellow-500 p-1 mr-4"
-			>
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="hover:text-yellow-500 fill-current"
-				/>
-			</nuxt-link>
+      :to="{ path: `/practices/${$route.params.id}/practice-hub`, query }"
+      class="text-white hover:text-yellow-500 p-1 mr-4"
+    >
+      <svgicon
+        name="arrow-left-solid"
+        height="32"
+        width="32"
+        class="hover:text-yellow-500 fill-current"
+      />
+    </nuxt-link>
     Hub invitation
   </div>
 </template>

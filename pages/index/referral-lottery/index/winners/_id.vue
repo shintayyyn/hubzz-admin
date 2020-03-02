@@ -31,11 +31,9 @@
         </div>
         <div class="flex justify-start items-center font-bold my-2">
           <div class="text-xl mr-1">
-            Description:
+            Prize:
           </div>
-          <div class="text-lg">
-            {{ raffle.description }}
-          </div>
+          <div class="text-lg" />
         </div>
       </div>
       <div v-if="modal" class="wrapper absolute mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg">
@@ -63,12 +61,10 @@
 <script>
 import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
-import AppConfirm from "@/components/Base/AppConfirm"
 export default {
     components: {
         AppInput,
         AppButton,
-        AppConfirm
     },
     data () {
         return {
@@ -78,7 +74,7 @@ export default {
             modal: false
         }
     },
-    async asyncData ({ app, params, query, error }) {
+    async asyncData ({ app, params }) {
         try {
             const response = await app.$axios.$get(`/api/v1/admin/raffles/${params.id}`)
             const raffle = response.data && response.data.raffle ? response.data.raffle : null
@@ -92,6 +88,7 @@ export default {
     },
     methods: {
         notifyWinner () {
+            this.description = this.description.trim()
             if (!this.description) {
                 this.$store.commit("SET_NOTIFICATION", {
                     enabled: true,
