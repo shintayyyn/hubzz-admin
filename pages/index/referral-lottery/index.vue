@@ -397,6 +397,7 @@ export default {
             this.winner_modal = true
         },
         notifyWinner (id) {
+            this.description = this.description.trim()
             if (!this.description) {
                 this.$store.commit("SET_NOTIFICATION", {
                     enabled: true,
