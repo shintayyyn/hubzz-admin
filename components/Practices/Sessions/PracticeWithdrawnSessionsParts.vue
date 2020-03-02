@@ -79,6 +79,7 @@ export default {
       PracticeSessionModal,
       AppJobHeaderSort
     },
+    // eslint-disable-next-line vue/require-prop-types
     props:['practice', 'practiceSurgery'],
     data (){
       return{
