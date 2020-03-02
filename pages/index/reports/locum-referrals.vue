@@ -29,9 +29,9 @@
       <ReportTable
         :limit="limit"
         :items="locumReferrals"
-        :get-item-key="(item) => item.id"
-        :column-details="columnDetails"
-        :order-by="orderBy"
+        :getItemKey="(item) => item.id"
+        :columnDetails="columnDetails"
+        :orderBy="orderBy"
         :loading="loading"
         @setOrderBy="(value) => orderBy = value"
       />
