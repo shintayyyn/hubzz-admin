@@ -1,13 +1,13 @@
 <template>
   <div class="relative">
-
     <div class="__report_table w-full flex text-xs whitespace-no-wrap overflow-x-auto mt-1">
-
       <div v-for="columnDetail in columnDetails" :key="`columnDetail_${columnDetail.key}`" :style="columnStyle(columnDetail)">
         <div class="flex bg-waterloo text-white font-bold">
           <div class="flex-1 p-2 flex justify-between items-center">
-            <div class="whitespace-no-wrap">{{ columnDetail.title }}</div>
-            <button class="px-1 ml-2" @click="setOrderBy(columnDetail.sort_key)" v-if="columnDetail.sort_key">
+            <div class="whitespace-no-wrap">
+              {{ columnDetail.title }}
+            </div>
+            <button v-if="columnDetail.sort_key" class="px-1 ml-2" @click="setOrderBy(columnDetail.sort_key)">
               <span v-if="getColumnOrderByDirection(columnDetail.sort_key) === null">
                 <svgicon name="sort" height="12" width="12" color="white" />
               </span>
@@ -21,22 +21,25 @@
           </div>
         </div>
 
-        <div v-for="(item, index) in items" :key="`key_${columnDetail.key}_${getItemKey(item, index)}`" class="flex bg-white" :class="columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start'">
+        <div
+          v-for="(item, index) in items"
+          :key="`key_${columnDetail.key}_${getItemKey(item, index)}`"
+          class="flex bg-white"
+          :class="columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start'"
+        >
           <span class="whitespace-no-wrap p-2">&nbsp;{{ columnDetail.column(item, index) }}</span>
         </div>
 
-        <div v-if="loading && items.length === 0" v-for="limit in limit" :key="`limit_${limit}`" class="flex bg-white">
+        <div v-for="(item, index) in limit" v-if="loading && items.length === 0" :key="`limit_${index}`" class="flex bg-white">
           <span class="whitespace-no-wrap p-2">&nbsp;</span>
         </div>
       </div>
-
     </div>
 
     <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center shadow-md bg-gray-800">
-      <svgicon name="loader" color="white" width="60" height="60"/>
+      <svgicon name="loader" color="white" width="60" height="60" />
       <span class="text-white text-2xl">Loading...</span>
     </div>
-    
   </div>
 </template>
 
@@ -70,7 +73,7 @@
     },
 
     computed: {
-      getColumnOrderByDirection() {
+      getColumnOrderByDirection () {
         return column => {
           const index = this.orderBy.findIndex((orderBy) => {
             const [_col] = orderBy.split(":")
@@ -79,7 +82,8 @@
           })
 
           if (index > -1) {
-            const [_col, _dir] = this.orderBy[index].split(":")
+            const _dir = this.orderBy[index].split(":")[1]
+
             return _dir && _dir.toLowerCase() === 'desc' ? 'desc' : 'asc'
           }
 
@@ -87,7 +91,7 @@
         }
       },
 
-      columnStyle() {
+      columnStyle () {
         return (columnDetail) => {
           return {
             flexGrow: columnDetail.flexGrow,
@@ -98,7 +102,7 @@
     },
 
     methods: {
-      setOrderBy(column) {
+      setOrderBy (column) {
         const orderBy = [...this.orderBy]
 
         const index = orderBy.findIndex((orderBy) => {

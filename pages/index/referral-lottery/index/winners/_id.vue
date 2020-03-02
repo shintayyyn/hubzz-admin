@@ -11,12 +11,7 @@
           />
         </nuxt-link>
       </div>
-      <AppButton
-        v-if="!raffle.winner_notified"
-        label="Notify"
-        class="flex justify-start mt-4"
-        @click="modal = true"
-      />
+      <AppButton v-if="!raffle.winner_notified" label="Notify" class="flex justify-start mt-4" @click="modal = true" />
       <div class="flex flex-col bg-gray-400 rounded-lg p-4 mt-4">
         <div class="flex justify-start items-center font-bold my-2">
           <div class="text-xl mr-1">
@@ -36,17 +31,12 @@
         </div>
         <div class="flex justify-start items-center font-bold my-2">
           <div class="text-xl mr-1">
-            Description:
+            Prize:
           </div>
-          <div class="text-lg">
-            {{ raffle.description }}
-          </div>
+          <div class="text-lg" />
         </div>
       </div>
-      <div
-        v-if="modal"
-        class="wrapper absolute mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg"
-      >
+      <div v-if="modal" class="wrapper absolute mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg">
         <AppInput
           v-model="description"
           :type="'textarea'"
@@ -58,85 +48,73 @@
         />
         <div class="flex justify-start">
           <AppButton :label="'Notify'" class="mt-4 mx-1" :disabled="loading" @click="notifyWinner" />
-          <AppButton
-            :label="'Close'"
-            :background="'red'"
-            class="text-white mt-4 mx-1"
-            :disabled="loading"
-            @click="modal = false"
-          />
         </div>
       </div>
     </div>
-    <div v-if="modal" class="shield" @click="modal = false" />
+    <div
+      v-if="modal"
+      class="shield"
+      @click="modal = false"
+    />
   </div>
 </template>
 <script>
 import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
-import AppConfirm from "@/components/Base/AppConfirm"
 export default {
-	components: {
-		AppInput,
-		AppButton,
-		AppConfirm
-	},
-	data () {
-		return {
-			loading: false,
-			raffle: null,
-			description: "",
-			modal: false
-		}
-	},
-	async asyncData ({ app, params, query, error }) {
-		try {
-			const response = await app.$axios.$get(
-				`/api/v1/admin/raffles/${params.id}`
-			)
-			const raffle =
-				response.data && response.data.raffle ? response.data.raffle : null
-			return {
-				raffle
-			}
-		} catch (error) {
-			console.log("error", error || error.response)
-			return error({ status: 400, message: error.response.message })
-		}
-	},
-	methods: {
-		notifyWinner () {
-			if (!this.description) {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: "Description is required"
-				})
-				return
-			}
-			this.loading = true
-			this.$axios
-				.$post(`/api/v1/admin/raffles/${this.raffle.id}/notify-winner`, {
-					description: this.description
-				})
-				.then(res => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: res.message
-					})
-					this.raffle.winner_notified = true
-					this.$emit("notify", this.raffle.id)
-				})
-				.catch(err => {
-					console.log("err", err || err.response)
-				})
-				.finally(() => {
-					this.modal = false
-				})
-			this.loading = false
-		}
-	}
+    components: {
+        AppInput,
+        AppButton,
+    },
+    data () {
+        return {
+            loading: false,
+            raffle: null,
+            description: '',
+            modal: false
+        }
+    },
+    async asyncData ({ app, params }) {
+        try {
+            const response = await app.$axios.$get(`/api/v1/admin/raffles/${params.id}`)
+            const raffle = response.data && response.data.raffle ? response.data.raffle : null
+            return {
+                raffle,
+            }
+        } catch (error) {
+            console.log('error', error || error.response)
+            return error({ status: 400, message: error.response.message })
+        }
+    },
+    methods: {
+        notifyWinner () {
+            this.description = this.description.trim()
+            if (!this.description) {
+                this.$store.commit("SET_NOTIFICATION", {
+                    enabled: true,
+                    status: "danger",
+                    text: "Description is required",
+                })
+                return
+            }
+            this.loading = true
+            this.$axios.$post(`/api/v1/admin/raffles/${this.raffle.id}/notify-winner`, { description: this.description })
+                .then(res => {
+                    this.$store.commit("SET_NOTIFICATION", {
+                        enabled: true,
+                        status: "success",
+                        text: res.message,
+                    })
+                    this.raffle.winner_notified = true
+                    this.$emit('notify', this.raffle.id)
+                }).catch(err => {
+                    console.log('err', err || err.response)
+                }).finally(() => {
+                    this.modal = false
+                })
+            this.loading = false
+        },
+    }
 }
 </script>
 <style scoped>
