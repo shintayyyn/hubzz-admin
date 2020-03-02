@@ -429,10 +429,11 @@ export default {
                 })
             this.loadingNotify = false
         },
-        notify (id) {
-            let winner = this.raffles.find(item => item.id === id)
+        notify (raffle) {
+            let winner = this.raffles.find(item => item.id === raffle.id)
             if (winner) {
                 winner.winner_notified = true
+                winner.description = raffle.description
             }
         },
         async clearFilters () {
