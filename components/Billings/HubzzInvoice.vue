@@ -637,6 +637,7 @@ export default {
 		}
 	},
 	created () {
+    console.log('locumInvoice', this.locumInvoice)
 		// if (this.invoiceItems) {
 		//   this.createdInvoiceItems = this.invoiceItems
 		// }

@@ -9,8 +9,7 @@
           :for-viewing="true"
           :practice="practice"
           :practice-invoice="practiceInvoice" 
-          :locum-invoice="invoiceItems"
-          :disputed-itemss="disputedItems"
+          :disputed-items="disputedItems"
           :debit-items="debitItems"
           :credit-items="creditItems"
           :date-start="practiceInvoice.date_start"
@@ -36,7 +35,7 @@ export default {
       creditItems:[],
     }
   },
-  async asyncDatab ({ app, route }){
+  async asyncData ({ app, route }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`, {
         viewing_practice_id: route.params.id
