@@ -24,7 +24,6 @@
           Status
         </div>
       </div>
-      
     </div>
   </div>
 </template>

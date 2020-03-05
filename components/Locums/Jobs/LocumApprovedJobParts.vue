@@ -90,9 +90,9 @@
 	</div>
 </template>
 <script>
-import AppPagination from "@/components/Base/AppPagination";
-import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal";
-import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort";
+import AppPagination from "@/components/Base/AppPagination"
+import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
+import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
 export default {
 	props: ["user"],
 	components: {
@@ -100,7 +100,7 @@ export default {
 		LocumDetailJobModal,
 		AppJobHeaderSort
 	},
-	data() {
+	data () {
 		return {
 			// locumApprovedJobParts: [],
 			// total:0,
@@ -109,85 +109,83 @@ export default {
 			perPage: 0,
 			ascendDescend: 0,
 			modal: false
-		};
-	},
-	beforeDestroy() {
-		let query = Object.assign({}, this.$route.query);
-		delete query.job_parts_page;
-		this.$router.push({ query });
-	},
-	watch: {
-		$route(to, from) {
-			this.currentPage = parseInt(to.query.job_parts_page);
-			this.getApprovedJobs();
 		}
 	},
-	async created() {
-		await this.$store.commit("jobs/TOGGLE_LOADING", true);
+	beforeDestroy () {
+		let query = Object.assign({}, this.$route.query)
+		delete query.job_parts_page
+		this.$router.push({ query })
+	},
+	watch: {
+		$route (to) {
+			this.currentPage = parseInt(to.query.job_parts_page)
+			this.getApprovedJobs()
+		}
+	},
+	async created () {
+		await this.$store.commit("jobs/TOGGLE_LOADING", true)
 		const query = {
 			...this.$route.query,
 			job_parts_page: this.$route.query.job_parts_page || 1
-		};
-		this.currentPage = parseInt(query.job_parts_page);
+		}
+		this.currentPage = parseInt(query.job_parts_page)
 		let params = {
 			viewing_locum_user_id: this.user.id,
 			locum_status: "Approved"
-		};
+		}
 		Promise.all([
-			console.log(this.user),
 			this.$axios
 				.$get(`/api/v1/admin/job-parts/count`, { params })
 				.then(res => {
 					this.$store.commit(
 						"jobs/SET_LOCUM_APPROVED_JOBS_COUNT",
 						res.data.count
-					);
-					console.log("res", res);
+					)
 					// this.total = res.data.count
-					this.perPage = 10;
-					this.totalPages = Math.ceil(this.total / this.perPage);
+					this.perPage = 10
+					this.totalPages = Math.ceil(this.total / this.perPage)
 				})
 		]).then(() => {
 			this.getApprovedJobs("date_created:desc"),
-				console.log("approved job parts", this.locumApprovedJobParts);
-		});
+			console.log("approved job parts", this.locumApprovedJobParts)
+		})
 	},
 	computed: {
-		total() {
-			return this.$store.state.jobs.locum_approved_jobs_count;
+		total () {
+			return this.$store.state.jobs.locum_approved_jobs_count
 		},
-		locumApprovedJobParts() {
-			return this.$store.state.jobs.locum_approved_jobs;
+		locumApprovedJobParts () {
+			return this.$store.state.jobs.locum_approved_jobs
 		}
 	},
 	methods: {
-		getApprovedJobs(orderBy) {
+		getApprovedJobs (orderBy) {
 			let offset =
 				parseInt(this.perPage) *
-				(parseInt(this.$route.query.job_parts_page) - 1);
+				(parseInt(this.$route.query.job_parts_page) - 1)
 			let params = {
 				viewing_locum_user_id: this.user.id,
 				locum_status: "Approved",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				limit: this.perPage,
 				offset: offset
-			};
+			}
 
 			this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
 				// this.locumApprovedJobParts =  res.data.job_parts
-				this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS", res.data.job_parts);
-				this.$store.commit("jobs/TOGGLE_LOADING", false);
-			});
+				this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS", res.data.job_parts)
+				this.$store.commit("jobs/TOGGLE_LOADING", false)
+			})
 		},
-		async pagechanged(e) {
+		async pagechanged (e) {
 			const query = {
 				...this.$route.query,
 				job_parts_page: e || 1
-			};
-			await this.$store.commit("jobs/TOGGLE_LOADING", true);
-			await this.$router.push({ query });
-			await this.$store.commit("jobs/TOGGLE_LOADING", false);
+			}
+			await this.$store.commit("jobs/TOGGLE_LOADING", true)
+			await this.$router.push({ query })
+			await this.$store.commit("jobs/TOGGLE_LOADING", false)
 		}
 	}
-};
+}
 </script>

@@ -191,43 +191,43 @@
                       {{spokenLanguage ? spokenLanguage.name:null}}
                     </p>
                     
-                      <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Compliance Documents</p>
+                    <div 
+                      v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
+                      :key="`${index}-${specificComplianceDoc.id}-`"
+                      class=""
+                    >
+                      <a class="m-2 text-white flex items-center" v-bind:href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null">
+                        <svgicon
+                          name="cloud-download"
+                          width="21"
+                          height="21"
+                          color="white"
+                        ></svgicon>
+                        <span class="pl-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
+                      </a>
+                    </div>
+                    <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
+                    <template v-if="locumUser.locum_detail.mandatory_trainings.length">
                       <div 
-                        v-for="(specificComplianceDoc, index) in locumUser.locum_detail.compliance_documents"
-                        :key="`${index}-${specificComplianceDoc.id}-`"
-                        class=""
-                      >
-                        <a class="m-2 text-white flex items-center" v-bind:href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null">
+                      v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
+                      :key="`${index}-${specificMandatoryDoc.id}-`"
+                      class="text-white"
+                    >
+                      <a class="m-2 text-white flex items-center" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
                           <svgicon
                             name="cloud-download"
                             width="21"
                             height="21"
-                            color="white"
-                          ></svgicon>
-                          <span class="pl-2">{{specificComplianceDoc.compliance_document ? specificComplianceDoc.compliance_document.name:null}}</span>
-                        </a>
-                      </div>
-                      <p class="m-2 mt-5 mr-20 font-semibold">Mandatory Training Documents</p>
-                      <template v-if="locumUser.locum_detail.mandatory_trainings.length">
-                        <div 
-                        v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
-                        :key="`${index}-${specificMandatoryDoc.id}-`"
-                        class="text-white"
-                      >
-                        <a class="m-2 text-white flex items-center" v-bind:href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null">
-                            <svgicon
-                              name="cloud-download"
-                              width="21"
-                              height="21"
-                              color="transparent white"
-                            />
-                            <span class="pl-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
-                        </a>
-                      </div>
-                      </template>
-                      <div class="mx-2" v-else>
-                        (none)
-                      </div>
+                            color="transparent white"
+                          />
+                          <span class="pl-2">{{specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null}}</span>
+                      </a>
+                    </div>
+                    </template>
+                    <div class="mx-2" v-else>
+                      (none)
+                    </div>
                   </div>
                 </div>
               </div>
@@ -265,51 +265,51 @@
             <!-- JOB PARTS -->
             <div v-if="jobParts.length > 0" class="w-full flex flex-col">
               <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">Job Parts</div> 
-                <div class="flex flex-col md:m-2 text-white">
-                  <div class="overflow-x-auto">
-                    <div class="jobpart">
-                      <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
-                        <div class="w-1/4">Job Part Number</div>
-                        <div class="w-1/4">Date Start</div>
-                        <div class="w-1/4">Date End</div>
-                        <div class="w-1/4">Job Part Status</div>
+              <div class="flex flex-col md:m-2 text-white">
+                <div class="overflow-x-auto">
+                  <div class="jobpart">
+                    <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
+                      <div class="w-1/4">Job Part Number</div>
+                      <div class="w-1/4">Date Start</div>
+                      <div class="w-1/4">Date End</div>
+                      <div class="w-1/4">Job Part Status</div>
+                    </div>
+                    <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
+                    <div 
+                      v-for="(item, index) in jobParts"
+                      @click.prevent="show(item.id)"
+                      :key="`item-${index}`"
+                      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
+                      :class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', modalJobPart && item.id == modalJobPart.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
+                    >
+                      <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
+                        <span class="">{{item.job_part_number}}</span>
                       </div>
-                      <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
-                      <div 
-                        v-for="(item, index) in jobParts"
-                        @click.prevent="show(item.id)"
-                        :key="`item-${index}`"
-                        class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
-                        :class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', modalJobPart && item.id == modalJobPart.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
-                      >
-                        <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-                          <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-                          <span class="">{{item.job_part_number}}</span>
-                        </div>
-                        <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-                          <strong class="block md:hidden text-sm uppercase">Date Start</strong>
-                          <span class="">{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD-MM-YYYY')}}</span>
-                        </div>
-                        <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-                          <strong class="block md:hidden text-sm uppercase">Date End</strong>
-                          <span class="">{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD-MM-YYYY')}}</span>
-                        </div>
-                        <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-                          <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
-                          <span class="">{{item.status}}</span>
-                        </div>
+                      <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Date Start</strong>
+                        <span class="">{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD-MM-YYYY')}}</span>
+                      </div>
+                      <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Date End</strong>
+                        <span class="">{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD-MM-YYYY')}}</span>
+                      </div>
+                      <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                        <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
+                        <span class="">{{item.status}}</span>
                       </div>
                     </div>
                   </div>
-                  <AppPagination
-                    :total="total"
-                    :totalPages="totalPages"
-                    :currentPage="currentPage"
-                    :perPage="perPage"
-                    @pagechanged="pagechanged"
-                  />
                 </div>
+                <AppPagination
+                  :total="total"
+                  :totalPages="totalPages"
+                  :currentPage="currentPage"
+                  :perPage="perPage"
+                  @pagechanged="pagechanged"
+                />
               </div>
+            </div>
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
             <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
@@ -449,7 +449,7 @@ export default {
     AppPagination,
     AppLoading
   },
-  data(){
+  data (){
     return{
       locumUser:null,
       modal: false,
@@ -493,7 +493,7 @@ export default {
       ]
     }
   },
-  async created(){
+  async created (){
     // if(this.job) {
     //   console.log('job', this.job)
     // }
@@ -523,7 +523,7 @@ export default {
   },
   computed: {
     google: gmapApi,
-    latLangPlatform() {
+    latLangPlatform () {
       if (this.job) {
         return this.job.platform_job.practice.surgery.address.coordinates
       } else if (this.job_part) {
@@ -532,7 +532,7 @@ export default {
         return ''
       }
     },
-    latLangPrivate() {
+    latLangPrivate () {
       if (this.job) {
         return this.job.private_job.private_practice.surgery.address.coordinates
       } else if (this.job_part) {
@@ -543,7 +543,7 @@ export default {
     },
   },
   watch: {
-    $route(to, from) {
+    $route (to) {
       this.currentPage = parseInt(to.query.job_part_page)
       console.log(to.name)
       // this.$route.params.practiceSessionPartId = jobPartId
@@ -551,7 +551,7 @@ export default {
     }
   },
   methods: {
-    async getJobParts(){
+    async getJobParts (){
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_part_page) - 1)
       let params = {
         viewing_practice_id : this.$route.params.id,
@@ -567,7 +567,7 @@ export default {
         this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
       })
     },
-    async getLocum(){
+    async getLocum (){
       if (this.job && this.job.appointed_to_locum_user_id) {
         await this.$axios.$get(`/api/v1/admin/locum-users/${this.job.appointed_to_locum_user_id}`).then(res=>{
           this.locumUser = res.data.user
@@ -585,20 +585,20 @@ export default {
         })
       }
     },
-    async getJobPart(itemId){
+    async getJobPart (itemId){
       this.loading = true
       this.$route.params.practiceSessionPartId = itemId
       await this.$axios.$get(`/api/v1/admin/job-parts/${itemId}`).then(res => {
         this.modalJobPart = res.data.job_part
-        const query = {
-          ...this.$route.query,
-        }
+        // const query = {
+        //   ...this.$route.query,
+        // }
         this.loading = false
         this.$router.push(`/practices/${this.$route.params.id}/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${itemId}`, ...this.route.query)
       })
     },
 
-    async show(jobPartId){
+    async show (jobPartId){
       this.$route.params.practiceSessionPartId = jobPartId
       this.jobPartId=jobPartId
       if (this.job) {
@@ -612,7 +612,7 @@ export default {
         this.getJobPart(jobPartId)
       }
     },
-    unclickableJobPart(){
+    unclickableJobPart (){
       if (this.job) {
         if (this.job.status === 'Live' 
         || this.job.status === 'Applied' 
@@ -626,14 +626,14 @@ export default {
         }
       }
     },
-    goTo(type) {
+    goTo (type) {
       const query = {
         ...this.$route.query,
         locum_jobs: type
       }
       this.$router.push({ query })
     },
-    pagechanged(e) {
+    pagechanged (e) {
 			// const query = {
 			// 	...this.$route.query,
 			// 	page: page || 1

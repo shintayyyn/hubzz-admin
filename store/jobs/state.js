@@ -40,9 +40,7 @@ export default () => ({
     locum_applied_jobs_count: 0,
     locum_unsuccessful_jobs: [],
     locum_unsuccessful_jobs_count: 0,
-    locum_withdrawn_jobs: [],
-    locum_withdrawn_jobs_count:0,
-   
+
     // job parts
     locum_completed_jobs: [],
     locum_completed_jobs_count:0,
@@ -53,5 +51,5 @@ export default () => ({
     locum_approved_jobs: [],
     locum_approved_jobs_count: 0,
     locum_withdrawn_jobs: [],
-    locum_withdrawn_jobs_count: 0
+    locum_withdrawn_jobs_count: 0,
 })
