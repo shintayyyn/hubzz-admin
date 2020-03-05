@@ -2,7 +2,9 @@
   <div>
     <div class="overflow-x-auto overflow-y-hidden">
       <div v-if="completedJobParts.length === 0">
-        <div class="mt-10 w-full text-center text-white">This practice has no completed session/s.</div>
+        <div class="mt-10 w-full text-center text-white">
+          This practice has no completed session/s.
+        </div>
       </div>
       <div v-else>
         <AppJobHeaderSort
@@ -23,31 +25,31 @@
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span class>{{item.job.job_number}}</span>
+              <span class>{{ item.job.job_number }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span class>{{item.job.platform_job.practice.surgery.name}}</span>
+              <span class>{{ item.job.platform_job.practice.surgery.name }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Title</strong>
-              <span class>{{item.job.title}}</span>
+              <span class>{{ item.job.title }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span class>{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+              <span class>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span class>{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+              <span class>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -62,7 +64,9 @@
               <div
                 class="py-2 px-4 rounded-lg whitespace-no-wrap text-center mx-2"
                 :class="invoiceStatusStyle(item.invoice_status)"
-              >{{item.invoice_status}}</div>
+              >
+                {{ item.invoice_status }}
+              </div>
             </div>
           </nuxt-link>
         </div>
@@ -77,10 +81,10 @@
         />
       </div>
 
-      <div class="job-shield" v-if="modal"/>
+      <div v-if="modal" class="job-shield" />
       <transition name="slide" mode="out-in">
-        <div class="job-modal shadow-lg" v-if="modal">
-          <PracticeSessionModal @close="modal = false" :job="job" />
+        <div v-if="modal" class="job-modal shadow-lg">
+          <PracticeSessionModal :job="job" @close="modal = false" />
         </div>
       </transition>
     </div>
@@ -91,12 +95,12 @@ import AppPagination from "@/components/Base/AppPagination"
 import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal"
 import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
 export default {
-	props: ["practice", "practice_surgery"],
 	components: {
 		AppPagination,
 		PracticeSessionModal,
 		AppJobHeaderSort
 	},
+	props: ["practice", "practiceSurgery"],
 	data () {
 		return {
 			// completedJobParts:[],
@@ -108,16 +112,24 @@ export default {
 			modal: false
 		}
 	},
-	beforeDestroy () {
-		let query = Object.assign({}, this.$route.query)
-		delete query.completed_job_page
-		this.$router.push({ query })
+	computed: {
+		total () {
+			return this.$store.state.jobs.practice_completed_sessions_count
+		},
+		completedJobParts () {
+			return this.$store.state.jobs.practice_completed_sessions
+		}
 	},
 	watch: {
 		$route (to) {
 			this.currentPage = parseInt(to.query.completed_job_page)
 			this.getCompletedJobs()
 		}
+	},
+	beforeDestroy () {
+		let query = Object.assign({}, this.$route.query)
+		delete query.completed_job_page
+		this.$router.push({ query })
 	},
 	async created () {
 		await this.$store.commit("jobs/TOGGLE_LOADING", true)
@@ -146,14 +158,6 @@ export default {
 			this.getCompletedJobs("date_created:desc"),
 				console.log(this.completedJobParts)
 		})
-	},
-	computed: {
-		total () {
-			return this.$store.state.jobs.practice_completed_sessions_count
-		},
-		completedJobParts () {
-			return this.$store.state.jobs.practice_completed_sessions
-		}
 	},
 	methods: {
     checkRoute (itemId){
