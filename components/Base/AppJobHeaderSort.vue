@@ -55,6 +55,12 @@
           <svgicon v-if="sortType==true && sortedBy=='date_created'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white" />
           <svgicon v-if="sortType==false && sortedBy=='date_created'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white" />
         </div>
+        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('cancelled_at',currentPage,search)" v-if="tabStatus === 'Cancelled'">
+          Cancelled At
+          <svgicon v-if="sortedBy!='cancelled_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
+          <svgicon v-if="sortType==true && sortedBy=='cancelled_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white" />
+          <svgicon v-if="sortType==false && sortedBy=='cancelled_at'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white" />
+        </div>
         <div v-if="tabStatus == 'Completed'" class="align-middle px-2 text-center w-64" @click="sortBy('date_created',currentPage,search)">
           Invoice Status
         </div>

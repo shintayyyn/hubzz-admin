@@ -18,7 +18,6 @@
 				:currentPage="currentPage"
 				:perPage="params.limit"
 				:columns="columns"
-				:routerLink="`/practices/${practice.id}/practice-users`"
 				:orderBy="params.order_by"
 				@pagechanged="pagechanged"
 				@sorted="sorted"
@@ -28,6 +27,11 @@
 						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
 						:class="slotProps.item.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2'"
 					>{{ slotProps.item.status }}</div>
+				</template>
+				<template v-slot:actions="slotProps">
+					<div @click="slotProps.item.status !== 'Deactivated' ? $router.push({ path: `/practices/${practice.id}/practice-users/${slotProps.item.id}`}) : null"
+					class="px-4 py-1 rounded-full text-center w-32 mx-auto lg:px-6 sm:px-2" :class="slotProps.item.status !== 'Deactivated' ? 'bg-yellow-500 text-black' : 'bg-gray-500 text-white cursor-not-allowed' "
+					>View</div>
 				</template>
 			</AppTable>
 			<template v-else>
@@ -111,6 +115,11 @@ export default {
 					slotName: "status_slot",
 					class: "text-center",
 					sortable: true
+				},
+				{
+					name: "Actions",
+					dataIndex: "actions",
+					class: "text-center"
 				}
 			]
 		};
