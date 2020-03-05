@@ -5,7 +5,7 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
     </div>
-    <PracticeSessionModal :job_part="job_part"/>
+    <PracticeSessionModal :job_part="job_part" />
   </div>
 </template>
 <script>

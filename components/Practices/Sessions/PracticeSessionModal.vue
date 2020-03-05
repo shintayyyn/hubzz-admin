@@ -334,7 +334,7 @@
             </div>
           </div>
           <!-- GOOGLE MAPS -->
-          <div v-if="modalJobPart && modalJobPart.job ? modalJobPart.job.platform_job : null" class="p-4 my-4 md:mt-0 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
+          <div v-if="job_part && modalJobPart && modalJobPart.job ? modalJobPart.job.platform_job : null" class="p-4 my-4 md:mt-0 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white">
             <div class="text-white pb-2">
               <div class="font-semibold">
                 Practice
@@ -596,7 +596,7 @@ export default {
     AppPagination,
     AppLoading
   },
-  props:['job', 'jobPart'],
+  props:['job', 'job_part'],
   data (){
     return{
       locumUser:null,
@@ -671,14 +671,14 @@ export default {
     }
   },
   async created (){
-    // if(this.job) {
-    //   console.log('job', this.job)
-    // }
-    // if(this.job_part) {
-    //   console.log('job part', this.job_part)
-    // }
-    
-    this.modalJobPart = this.job_part
+    if(this.job) {
+      console.log('job', this.job)
+    }
+    if(this.job_part) {
+      // console.log('job part', this.job_part)
+      this.modalJobPart = this.job_part
+      await this.getLocum()
+    }
 
     if (this.job && this.job.platform_job.appointed_to_locum ||
       this.job_part && this.job_part.job.platform_job.appointed_to_locum ) {
@@ -686,7 +686,7 @@ export default {
     } 
     
     let params = {
-      job_id : this.job && this.job.id ? this.job.id : this.job_part.job.id,
+      job_id : this.job ? this.job.id : this.job_part.job_id,
       viewing_practice_id : this.$route.params.id,
     }
     await this.$axios.$get(`/api/v1/admin/job-parts/count`, { params }).then( res => {
@@ -695,15 +695,13 @@ export default {
       this.totalPages = Math.ceil(this.total / this.perPage)
       this.getJobParts()
     })
-
-    console.log(this.job_part)
   },
   methods: {
     async getJobParts (){
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_part_page) - 1)
       let params = {
         viewing_practice_id : this.$route.params.id,
-        job_id: this.job && this.job.id ? this.job.id : this.job_part.job.id,
+        job_id: this.job && this.job.id ? this.job.id : this.job_part.job_id,
         limit:  this.perPage,
         offset: offset
       }
@@ -724,7 +722,7 @@ export default {
           this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: 'Something went wrong!' })
         })
       } else if (this.job_part && this.job_part.appointed_to_locum_user_id) {
-        console.log('job_part', this.job_part.appointed_to_locum_user_id)
+        console.log('job_part get locum', this.job_part.appointed_to_locum_user_id)
         await this.$axios.$get(`/api/v1/admin/locum-users/${this.job_part.appointed_to_locum_user_id}`).then(res=>{
           this.locumUser = res.data.user
         }).catch(err=>{

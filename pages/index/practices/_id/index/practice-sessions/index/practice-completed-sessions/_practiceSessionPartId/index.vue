@@ -10,41 +10,41 @@
   </div>
 </template>
 <script>
-import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal";
-import JobPartModal from "@/components/Base/JobPartModal";
+import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal"
+import JobPartModal from "@/components/Base/JobPartModal"
 export default {
 	components: {
 		PracticeSessionModal,
 	},
-	data() {
+	data () {
 		return {
 			job_part: "",
 			practiceId: ""
-		};
+		}
 	},
-	async asyncData({ app, store, route, error }) {
+	async asyncData ({ app, store, route, error }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`
-			);
-			const job_part = response.data.job_part;
-			console.log("job part", job_part);
-			const practiceId = route.params.id;
+			)
+			const job_part = response.data.job_part
+			console.log("job part", job_part)
+			const practiceId = route.params.id
 			return {
 				job_part,
 				practiceId
-			};
+			}
 		} catch (err) {
-			error({ statusCode: 404 });
+			error({ statusCode: 404 })
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
-			console.log("get job error!", err);
+			})
+			console.log("get job error!", err)
 		}
 	}
-};
+}
 </script>
 <style>
 .job-modal {
