@@ -100,7 +100,7 @@ export default {
 		PracticeSessionModal,
 		AppJobHeaderSort
 	},
-	props: ["practice", "practiceSurgery"],
+	props: ["practice", "practice_surgery"],
 	data () {
 		return {
 			// completedJobParts:[],

@@ -80,7 +80,7 @@ export default {
       AppJobHeaderSort
     },
     // eslint-disable-next-line vue/require-prop-types
-    props:['practice', 'practiceSurgery'],
+    props:['practice', 'practice_surgery'],
     data (){
       return{
         // withdrawnJobs:[],
@@ -113,6 +113,7 @@ export default {
       this.$router.push({ query })
     },
     async created (){
+      console.log('practice_surgery', this.practice_surgery)
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
