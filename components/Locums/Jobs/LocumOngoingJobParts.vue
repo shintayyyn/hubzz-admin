@@ -19,40 +19,40 @@
               <div class="w-1/6">To</div>
               <div class="w-1/6">Created</div>
             </div> -->
-            <!-- BODY -->
-            <div 
-              v-for="(item, index) in locumOngoingJobParts" 
-              @click="$router.push(`/locums/${user.id}/locum-jobs/locum-ongoing-jobs/${item.id}`)"
-              :key="`item-${index}`" 
-              class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
-            >
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
-                <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-                <span class="">{{item.job_part_number}}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-                <span class="">{{item.job.platform_job.practice.surgery.name}}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">Title</strong>
-                <span class="">{{item.job.title}}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">From</strong>
-                <span class="">{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                <strong class="block md:hidden text-sm uppercase">To</strong>
-                <span class="">{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
-              </div>
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-                  <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class=""><span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span></span>
-              </div>
+          <!-- BODY -->
+          <div 
+            v-for="(item, index) in locumOngoingJobParts" 
+            :key="`item-${index}`"
+            class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light" 
+            @click="$router.push(`/locums/${user.id}/locum-jobs/locum-ongoing-jobs/${item.id}`)" 
+          >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
+              <strong class="block md:hidden text-sm uppercase">Job Number</strong>
+              <span class="">{{item.job_part_number}}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
+              <span class="">{{item.job.platform_job.practice.surgery.name}}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Title</strong>
+              <span class="">{{item.job.title}}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">From</strong>
+              <span class="">{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">To</strong>
+              <span class="">{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Created</strong>
+              <span class=""><span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span></span>
             </div>
           </div>
         </div>
+      </div>
       <div v-if="!locumOngoingJobParts.length == 0" class="">
         <AppPagination
           :total="total"

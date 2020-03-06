@@ -33,6 +33,10 @@
               <span class="">{{ item.title }}</span>
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Assigned to Locum</strong>
+              <span class="">{{ item.platform_job.appointed_to_locum.user.personal_detail.name }}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">From</strong>
               <span class="">{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
             </div>
@@ -155,6 +159,7 @@ export default {
           offset: offset
         }
         await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
+          console.log('allocated sessions', res.data.jobs)
           this.$store.commit('jobs/SET_PRACTICE_ALLOCATED_SESSIONS', res.data.jobs)
           this.$store.commit('jobs/TOGGLE_LOADING', false)
           // this.allocatedJobs = res.data.jobs

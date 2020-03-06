@@ -650,7 +650,8 @@ export default {
 		// if (this.practiceInvoice) {
 		// 	console.log("practice invoice", this.practiceInvoice);
 		// }
-		console.log("practice", this.practice)
+    console.log("practice", this.practice)
+    console.log("invoice items", this.invoiceItems)
 		if (this.debitItems) {
 			this.createdDebitItems = this.debitItems
 		}
