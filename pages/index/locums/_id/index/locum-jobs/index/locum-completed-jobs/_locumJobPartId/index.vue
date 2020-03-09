@@ -1,34 +1,36 @@
 <template>
   <div class="job-modal shadow-lg">
     <div class="mt-6 mx-4 md:mx-8 my-2">
-      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-ongoing-sessions`}" class="cursor-pointer">
+      <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-completed-jobs` }" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
     </div>
-    <PracticeSessionModal :job_part="job_part"/>
+    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
   </div>
 </template>
 <script>
-import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import JobPartModal from '@/components/Base/JobPartModal'
 export default {
-  components:{
-    PracticeSessionModal,
-  },  
   data (){
     return{
-        job_part:'',
-        practiceId:''
+      job:'',
+      locumUserId: ''
     }
+  },
+  components:{
+    JobPartModal
+  },
+  computed:{
+
   },
   async asyncData ({ app, store, route, error }){
     try{
-      let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
-      const job_part = response.data.job_part
-      console.log('job part',job_part)
-      const practiceId = route.params.id
+      let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.locumJobPartId}`)
+      const specificJobPart = response.data.job_part
+      const locumUserId = route.params.id
       return{
-        job_part,
-        practiceId
+          specificJobPart,
+          locumUserId
       }
     }catch(err){
       error({statusCode: 404})

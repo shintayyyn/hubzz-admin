@@ -91,7 +91,7 @@ export default {
         type: Object,
         default: null,
       },
-      practiceSurgery: {
+      practice_surgery: {
         type: Object,
         default: null,
       },

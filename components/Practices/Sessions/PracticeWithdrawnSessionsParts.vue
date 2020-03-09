@@ -44,8 +44,8 @@
               <span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Created</strong>
-              <span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <strong class="block md:hidden text-sm uppercase">Withdrawn At</strong>
+              <span class="">{{ $moment(item.job.platform_job.declined_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
           </nuxt-link>
         </div>
@@ -79,7 +79,8 @@ export default {
       PracticeSessionModal,
       AppJobHeaderSort
     },
-    props:['practice', 'practiceSurgery'],
+    // eslint-disable-next-line vue/require-prop-types
+    props:['practice', 'practice_surgery'],
     data (){
       return{
         // withdrawnJobs:[],
@@ -112,6 +113,7 @@ export default {
       this.$router.push({ query })
     },
     async created (){
+      console.log('practice_surgery', this.practice_surgery)
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
@@ -155,7 +157,7 @@ export default {
         
         await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res=>{
           //this.withdrawnJobs = res.data.jobs
-          console.log('withdrawn', res.data.jobs)
+          console.log('withdrawn', res.data.job_parts)
           this.$store.commit('jobs/SET_PRACTICE_WITHDRAWN_SESSIONS', res.data.job_parts)
           this.$store.commit('jobs/TOGGLE_LOADING', false)
         }).catch(err=>{

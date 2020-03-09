@@ -143,7 +143,6 @@ export default {
 				completed_at_date_start: this.filter.approved_at_date_start,
 				completed_at_date_end: this.filter.approved_at_date_end,
 				invoice_status: ["Disputed", "Issued"],
-				status: this.filter.status,
 				job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,

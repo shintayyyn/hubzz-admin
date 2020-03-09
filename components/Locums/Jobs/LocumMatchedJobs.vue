@@ -48,7 +48,7 @@
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class=""><span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span></span>
+                <span class=""><span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span></span>
               </div>
             </div>
           </div>
@@ -82,7 +82,7 @@ export default {
     AppPagination,
     LocumDetailJobModal,
   },
-  data() {
+  data () {
     return {
       totalPages: 0,
       currentPage: 1,
@@ -91,18 +91,18 @@ export default {
       modal:false
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     let query = Object.assign({}, this.$route.query)
     delete query.matched_job_page
     this.$router.push({ query })
   },
   watch: {
-    $route(to, from) {
+    $route (to) {
       this.currentPage = parseInt(to.query.matched_job_page)
       this.getMatchedJobs()
     },
   },
-  async created() {
+  async created () {
     await this.$store.commit('jobs/TOGGLE_LOADING', true)
     const query = {
       ...this.$route.query,
@@ -126,15 +126,15 @@ export default {
     })
   },
   computed:{
-    total(){
+    total (){
       return this.$store.state.jobs.locum_matched_jobs_count
     },
-    matchedJobs(){
+    matchedJobs (){
       return this.$store.state.jobs.locum_matched_jobs
-    }
+    },
   },
   methods: {
-    getMatchedJobs(orderBy) {
+    getMatchedJobs (orderBy) {
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.matched_job_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
@@ -148,7 +148,7 @@ export default {
         this.$store.commit('jobs/TOGGLE_LOADING', false)
       })
     },
-    async pagechanged(e) {
+    async pagechanged (e) {
       const query = {
         ...this.$route.query,
         matched_job_page: e || 1

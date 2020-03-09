@@ -73,10 +73,6 @@
 <script>
 export default {
   props:['practice','practice_surgery'],
-  created(){
-    console.log('practice', this.practice)
-    console.log('practice surgery', this.practice_surgery)
-  },
   computed:{
     getRoute(tab){
       return(tab) => {
