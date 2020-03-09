@@ -536,7 +536,9 @@ export default {
 			]).then(() => {
 				console.log("get parent done")
 			})
-		}
+    }
+    
+    console.log("practice", this.practice)
 	},
 	mounted () {
 	},
