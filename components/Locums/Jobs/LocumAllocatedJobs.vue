@@ -1,91 +1,93 @@
 <template>
-	<div>
-		<div class="overflow-x-auto xl:overflow-hidden">
-			<div v-if="allocatedJobs.length === 0">
-				<div
-					class="mt-10 text-white w-full text-center"
-					style="font-family: Nunito"
-				>This locum is not yet hired to any job.</div>
-			</div>
-			<div v-else>
-				<AppJobHeaderSort :locumUser="user" :locumTabStatus="'Allocated'" :currentPage="currentPage" />
-				<div class="w-full overflow-x-auto">
-					<!-- HEADER -->
-					<!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
+  <div>
+    <div class="overflow-x-auto xl:overflow-hidden">
+      <div v-if="allocatedJobs.length === 0">
+        <div
+          class="mt-10 text-white w-full text-center"
+          style="font-family: Nunito"
+        >
+          This locum is not yet hired to any job.
+        </div>
+      </div>
+      <div v-else>
+        <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Allocated'" :currentPage="currentPage" />
+        <div class="w-full overflow-x-auto">
+          <!-- HEADER -->
+          <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
                 <div class="w-1/6">Job Number</div> 
                 <div class="w-1/6">Practice / Surgery</div>
                 <div class="w-1/6">Title</div>
                 <div class="w-1/6">From</div>
                 <div class="w-1/6">To</div>
                 <div class="w-1/6">Created</div>
-					</div>-->
-					<!-- BODY -->
-					<div
-						v-for="(item, index) in allocatedJobs"
-						@click="$router.push(`/locums/${user.id}/locum-jobs/locum-allocated-jobs/${item.id}`)"
-						:key="`item-${index}`"
-						class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
-					>
-						<div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
-							<strong class="block md:hidden text-sm uppercase">Job Number</strong>
-							<span class>{{item.job_number}}</span>
-						</div>
-						<div
-							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-						>
-							<strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-							<span v-if="item.platform_job" class>{{item.platform_job.practice.surgery.name}}</span>
-							<span v-else-if="item.private_job" class>{{item.private_job.private_practice.surgery.name}}</span>
-						</div>
-						<div
-							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-						>
-							<strong class="block md:hidden text-sm uppercase">Title</strong>
-							<span class>{{item.title}}</span>
-						</div>
-						<div
-							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-						>
-							<strong class="block md:hidden text-sm uppercase">From</strong>
-							<span class>{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
-						</div>
-						<div
-							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-						>
-							<strong class="block md:hidden text-sm uppercase">To</strong>
-							<span class>{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
-						</div>
-						<div
-							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-						>
-							<strong class="block md:hidden text-sm uppercase">Created</strong>
-							<span
-								class
-							>{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--PAGINATION-->
-			<div v-if="!allocatedJobs.length == 0" class>
-				<AppPagination
-					:total="total"
-					:totalPages="totalPages"
-					:currentPage="currentPage"
-					:perPage="perPage"
-					@pagechanged="pagechanged"
-				/>
-			</div>
-			<!--PAGINATION ENDS HERE-->
+          </div>-->
+          <!-- BODY -->
+          <div
+            v-for="(item, index) in allocatedJobs"
+            :key="`item-${index}`"
+            class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
+            @click="$router.push(`/locums/${user.id}/locum-jobs/locum-allocated-jobs/${item.id}`)"
+          >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
+              <strong class="block md:hidden text-sm uppercase">Job Number</strong>
+              <span class>{{item.job_number}}</span>
+            </div>
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
+              <span v-if="item.platform_job" class>{{item.platform_job.practice.surgery.name}}</span>
+              <span v-else-if="item.private_job" class>{{item.private_job.private_practice.surgery.name}}</span>
+            </div>
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase">Title</strong>
+              <span class>{{item.title}}</span>
+            </div>
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase">From</strong>
+              <span class>{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+            </div>
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase">To</strong>
+              <span class>{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+            </div>
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase">Created</strong>
+              <span
+                class
+              >{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--PAGINATION-->
+      <div v-if="!allocatedJobs.length == 0" class>
+        <AppPagination
+          :total="total"
+          :totalPages="totalPages"
+          :currentPage="currentPage"
+          :perPage="perPage"
+          @pagechanged="pagechanged"
+        />
+      </div>
+      <!--PAGINATION ENDS HERE-->
 
-			<div class="job-shield" v-if="modal"></div>
-			<transition name="slide" mode="out-in">
-				<div class="job-modal shadow-lg" v-if="modal">
-					<LocumDetailJobModal @close="modal = false" :job="job" />
-				</div>
-			</transition>
-		</div>
-	</div>
+      <div class="job-shield" v-if="modal"/>
+      <transition name="slide" mode="out-in">
+        <div class="job-modal shadow-lg" v-if="modal">
+          <LocumDetailJobModal @close="modal = false" :job="job" />
+        </div>
+      </transition>
+    </div>
+  </div>
 </template>
 <script>
 import AppPagination from "@/components/Base/AppPagination"
