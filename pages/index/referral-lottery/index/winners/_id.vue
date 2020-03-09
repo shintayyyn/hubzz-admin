@@ -31,9 +31,11 @@
         </div>
         <div class="flex justify-start items-center font-bold my-2">
           <div class="text-xl mr-1">
-            Prize:
+            Description:
           </div>
-          <div class="text-lg" />
+          <div class="text-lg">
+            {{ raffle.description }}
+          </div>
         </div>
       </div>
       <div v-if="modal" class="wrapper absolute mx-auto rounded-b-lg p-4 bg-waterloo-dark text-white shadow-lg">
@@ -106,7 +108,8 @@ export default {
                         text: res.message,
                     })
                     this.raffle.winner_notified = true
-                    this.$emit('notify', this.raffle.id)
+                    this.raffle.description = this.description
+                    this.$emit('notify', this.raffle)
                 }).catch(err => {
                     console.log('err', err || err.response)
                 }).finally(() => {

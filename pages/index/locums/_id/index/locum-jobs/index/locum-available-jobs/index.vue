@@ -127,7 +127,7 @@ export default {
       params = {
         viewing_locum_user_id: this.user.id,
         locum_status: locumStatus,
-        practice_is_favorite_of_locum: newStatus && newStatus == 'Bank' ? true : false,
+        practice_is_favorite_of_locum: newStatus && newStatus == 'Bank' ? true : null,
         limit: 10,
         offset: 0,
       };
@@ -168,6 +168,32 @@ export default {
       })
       console.log('get locum user error!', err)
     }
+  },
+  created() {
+    let newStatus = this.$route.query.available_job_type ? this.$route.query.available_job_type : null
+    let locumStatus = ''
+      if ( !newStatus || newStatus == 'Available') {
+        locumStatus = 'Matched'
+      } else if (newStatus == 'Public') {
+        locumStatus = 'Available'
+      } else if (newStatus == 'Bank') {
+        locumStatus = 'Matched'
+      }
+    let params = {};
+      params = {
+        viewing_locum_user_id: this.user.id,
+        locum_status: locumStatus,
+        practice_is_favorite_of_locum: newStatus && newStatus == 'Bank' ? true : null,
+        limit: 10,
+        offset: 0,
+      };
+      this.params.viewing_locum_user_id = params.viewing_locum_user_id,
+      this.params.locum_status = params.locum_status,
+      this.params.practice_is_favorite_of_locum = params.practice_is_favorite_of_locum,
+      this.params.limit = params.limit,
+      this.params.offset = params.offset,
+
+    this.getAvailableJobs(this.params)
   },
   methods: {
     async getAvailableJobs(params){

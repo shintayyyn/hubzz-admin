@@ -48,7 +48,7 @@
               </div>
               <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
                   <strong class="block md:hidden text-sm uppercase">Created</strong>
-                <span class=""><span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span></span>
+                <span class=""><span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span></span>
               </div>
             </div>
           </div>

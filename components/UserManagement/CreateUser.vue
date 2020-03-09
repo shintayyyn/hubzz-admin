@@ -362,6 +362,7 @@ export default {
     AppButton,
     AppPostCode,
   },
+  // eslint-disable-next-line vue/require-prop-types
   props: ["practice", "surgery", "user", "registeeType", "userCount", "customSurgery", "refWrapper"],
   data () {
     return {

@@ -6,15 +6,15 @@
       </div>
       <div>
         <HubzzInvoice 
-          :for-viewing="true"
+          :forViewing="true"
           :practice="practice"
-          :practice-invoice="practiceInvoice" 
-          :locum-invoice="invoiceItems"
-          :disputed-itemss="disputedItems"
-          :debit-items="debitItems"
-          :credit-items="creditItems"
-          :date-start="practiceInvoice.date_start"
-          :date-end="practiceInvoice.date_end"
+          :practiceInvoice="practiceInvoice" 
+          :invoiceItems="invoiceItems"
+          :disputedItems="disputedItems"
+          :debitItems="debitItems"
+          :creditItems="creditItems"
+          :dateStart="practiceInvoice.date_start"
+          :dateEnd="practiceInvoice.date_end"
         />
       </div>
     </div>
@@ -36,7 +36,7 @@ export default {
       creditItems:[],
     }
   },
-  async asyncDatab ({ app, route }){
+  async asyncData ({ app, route }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`, {
         viewing_practice_id: route.params.id

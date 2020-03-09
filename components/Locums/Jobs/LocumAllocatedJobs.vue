@@ -61,7 +61,7 @@
 							<strong class="block md:hidden text-sm uppercase">Created</strong>
 							<span
 								class
-							>{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+							>{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
 						</div>
 					</div>
 				</div>

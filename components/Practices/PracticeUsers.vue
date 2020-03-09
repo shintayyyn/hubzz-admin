@@ -1,58 +1,64 @@
 <template>
-	<div class="m-2">
-		<AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
-		<div class="w-full overflow-hidden">
-			<div v-if="authAdminPermissions.includes('Add Practice User')">
-				<button
-					v-if="practice.status !== 'Deactivated'"
-					class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
-					@click="show()"
-				>Add User</button>
-			</div>
-		</div>
-		<transition name="fade">
-			<AppTable
-				v-if="total > 0"
-				:total="total"
-				:items="users"
-				:currentPage="currentPage"
-				:perPage="params.limit"
-				:columns="columns"
-				:routerLink="`/practices/${practice.id}/practice-users`"
-				:orderBy="params.order_by"
-				@pagechanged="pagechanged"
-				@sorted="sorted"
-			>
-				<template v-slot:status_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-						:class="slotProps.item.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2'"
-					>{{ slotProps.item.status }}</div>
-				</template>
-			</AppTable>
-			<template v-else>
-				<div class="mt-2 w-full text-center text-white">This practice has no users.</div>
-			</template>
-		</transition>
+  <div class="m-2">
+    <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
+    <div class="w-full overflow-hidden">
+      <div v-if="authAdminPermissions.includes('Add Practice User')">
+        <button
+          v-if="practice.status !== 'Deactivated'"
+          class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
+          @click="show()"
+        >Add User</button>
+      </div>
+    </div>
+    <transition name="fade">
+      <AppTable
+        v-if="total > 0"
+        :total="total"
+        :items="users"
+        :currentPage="currentPage"
+        :perPage="params.limit"
+        :columns="columns"
+        :orderBy="params.order_by"
+        @pagechanged="pagechanged"
+        @sorted="sorted"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+            :class="slotProps.item.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2'"
+          >{{ slotProps.item.status }}</div>
+        </template>
+        <template v-slot:actions="slotProps">
+          <div 
+            class="px-4 py-1 rounded-full text-center w-32 mx-auto lg:px-6 sm:px-2 cursor-pointer"
+            @click="slotProps.item.status !== 'Deactivated' ? $router.push({ path: `/practices/${practice.id}/practice-users/${slotProps.item.id}`}) : null" :class="slotProps.item.status !== 'Deactivated' ? 'bg-yellow-500 text-black' : 'bg-gray-500 text-white cursor-not-allowed' "
+          >View
+          </div>
+        </template>
+      </AppTable>
+      <template v-else>
+        <div class="mt-2 w-full text-center text-white">This practice has no users.</div>
+      </template>
+    </transition>
 
-		<div
-			class="edit-practice-user-shield"
-			v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal"
-			@click="modal ? modal=false : $router.go(-1)"
-		></div>
-		<transition name="slide" mode="out-in">
-			<!-- <div class="practice-user-modal shadow-lg" v-if="modal"> -->
-			<CreateUser
-				v-if="modal"
-				@close="modal = false"
-				:practice="practice"
-				:surgery="surgery"
-				:userCount="total"
-				:registeeType="'practiceUser'"
-			/>
-			<!-- </div> -->
-		</transition>
-	</div>
+    <div
+      v-if="$route.name.includes('index-practices-id-index-practice-users-pracUserId') || modal"
+      class="edit-practice-user-shield"
+      @click="modal ? modal=false : $router.go(-1)"
+    />
+    <transition name="slide" mode="out-in">
+      <!-- <div class="practice-user-modal shadow-lg" v-if="modal"> -->
+      <CreateUser
+        v-if="modal"
+        @close="modal = false"
+        :practice="practice"
+        :surgery="surgery"
+        :userCount="total"
+        :registeeType="'practiceUser'"
+      />
+      <!-- </div> -->
+    </transition>
+  </div>
 </template>
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser";
@@ -111,6 +117,11 @@ export default {
 					slotName: "status_slot",
 					class: "text-center",
 					sortable: true
+				},
+				{
+					name: "Actions",
+					dataIndex: "actions",
+					class: "text-center"
 				}
 			]
 		};
