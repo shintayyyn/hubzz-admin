@@ -8,37 +8,47 @@
               <p class="flex">
                 Practice Name
               </p>
-              <p class="flex items-center text-white text-sm p-2 font-semibold">
-                {{ practiceParent.surgery ? practiceParent.surgery.name : null }} 
+              <p
+                class="flex items-center text-white text-sm p-2 font-semibold"
+              >
+                {{ practiceParent.surgery ? practiceParent.surgery.name : null }}
               </p>
               <p class="flex">
                 Practice Code
               </p>
-              <p class="flex text-white text-sm p-2 font-semibold">
+              <p
+                class="flex text-white text-sm p-2 font-semibold"
+              >
                 {{ practiceParent.surgery ? practiceParent.surgery.code : null }}
               </p>
               <p class="flex">
                 Address
               </p>
               <p class="flex text-white text-sm p-2 font-semibold">
-                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_1 : null }} <br>
-                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_2 : null }} <br>
-                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_3 : null }} <br>
+                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_1 : null }}
+                <br>
+                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_2 : null }}
+                <br>
+                {{ practiceParent.surgery.address ? practiceParent.surgery.address.line_3 : null }}
+                <br>
               </p>
               <p class="flex">
                 CCG
               </p>
-              <p class="flex text-white text-sm p-2 font-semibold">
+              <p
+                class="flex text-white text-sm p-2 font-semibold"
+              >
                 {{ practiceParent.surgery.clinical_commissioning_group ? practiceParent.surgery.clinical_commissioning_group.name:null }}
               </p>
-              
+
               <p class="flex">
                 Practice Types
               </p>
               <div v-if="practiceParent.practice_types.length > 0">
-                <p v-for="practiceType in practiceParent.practice_types"
-                   :key="practiceType.id + '-name'"
-                   class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                <p
+                  v-for="practiceType in practiceParent.practice_types"
+                  :key="practiceType.id + '-name'"
+                  class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
                 >
                   {{ practiceType ? practiceType.name:null }}
                 </p>
@@ -48,41 +58,51 @@
                   Not set
                 </p>
               </div>
-          
+
               <div v-if="practiceParent.gp_compliance_documents.length > 0">
                 <p class="flex">
                   Compliance Requirements for GPs:
                 </p>
-                <div v-for="(gpComplianceDocs,index) in practiceParent.gp_compliance_documents" :key="`${index}-${gpComplianceDocs.name}`"
-                     class="text-white text-sm m-1 font-semibold"
+                <div
+                  v-for="(gpComplianceDocs,index) in practiceParent.gp_compliance_documents"
+                  :key="`${index}-${gpComplianceDocs.name}`"
+                  class="text-white text-sm m-1 font-semibold"
                 >
-                  <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span> 
+                  <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span>
                 </div>
               </div>
               <div v-if="practiceParent.others_compliance_documents.length > 0">
                 <p class>
                   For Nurses, et al:
                 </p>
-                <div v-for="(othersComplianceDocs, index) in practiceParent.others_compliance_documents" :key="`${index}-${othersComplianceDocs.name}`"
-                     class="text-white text-sm m-1 font-semibold"
+                <div
+                  v-for="(othersComplianceDocs, index) in practiceParent.others_compliance_documents"
+                  :key="`${index}-${othersComplianceDocs.name}`"
+                  class="text-white text-sm m-1 font-semibold"
                 >
-                  <span>{{ othersComplianceDocs ? othersComplianceDocs.name:"(none)" }}</span> 
+                  <span>{{ othersComplianceDocs ? othersComplianceDocs.name:"(none)" }}</span>
                 </div>
               </div>
               <div v-if="practiceParent.mandatory_trainings.length > 0">
                 <p class="flex">
                   Mandatory Trainings
                 </p>
-                <div v-for="(mandatoryTrainings, index) in practiceParent.mandatory_trainings" :key="`${index}-${mandatoryTrainings.name}`"
-                     class="text-white text-sm m-1 font-semibold"
+                <div
+                  v-for="(mandatoryTrainings, index) in practiceParent.mandatory_trainings"
+                  :key="`${index}-${mandatoryTrainings.name}`"
+                  class="text-white text-sm m-1 font-semibold"
                 >
-                  <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span> 
+                  <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span>
                 </div>
               </div>
-              
-              <div v-if="!practiceParent.gp_compliance_documents.length > 0 || !practiceParent.others_compliance_documents.length > 0 || !practiceParent.mandatory_trainings.length > 0">
-                <p class="flex text-white text-base py-2 font-semibold">
-                  Compliance Documents is not yet set up by the Practice Hub yet.
+
+              <div
+                v-if="!practiceParent.gp_compliance_documents.length > 0 || !practiceParent.others_compliance_documents.length > 0 || !practiceParent.mandatory_trainings.length > 0"
+              >
+                <p
+                  class="flex text-white text-base py-2 font-semibold"
+                >
+                  Compliance Documents is not yet set up by the Practice Hub.
                 </p>
               </div>
             </div>
@@ -97,7 +117,9 @@
             <span class="flex">
               <svgicon name="alert" width="32" height="32" color="white" />
             </span>
-            <p class="px-2">
+            <p
+              class="px-2"
+            >
               {{ practiceHub.parent_surgery ? 'This surgery is not yet a registered practice in HUBZZ.' : 'This practice has no Hub yet.' }}
             </p>
           </div>
@@ -121,76 +143,81 @@
   </div>
 </template>
 <script>
-import AppInput from '@/components/Base/AppInput'
-import AddPracticeSurgery from '@/components/Practices/AddPracticeSurgery'
+import AppInput from "@/components/Base/AppInput"
+import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
 export default {
-  components:{
-    AppInput,
-    AddPracticeSurgery
-  },
-  props:['practice','practiceParent','practiceHub'],
+	components: {
+		AppInput,
+		AddPracticeSurgery
+	},
+	props: ["practice", "practiceParent", "practiceHub"],
 
-  data (){
-    return{
-    }
-  },
-  created (){
-  },
-  methods:{
-    show (){
-      this.modal=true
-    },
-    practiceTypeStyle (type){
-      switch(type){
-        case 'Stand Alone':
-        return 'bg-green-400 text-white lg:px-4 sm:px-2'
-        break
-        case 'Hub':
-        return 'bg-red-400 text-white lg:px-8 sm:px-2'
-        break
-        case 'Spoke':
-        return 'bg-blue-400 text-white lg:px-8 sm:px-2'
-        break
-        default:
-        return
-      }
-    },
-    async updatePracticeSurgery (){
-      this.Validate(this.toPutPracticeParent)
-      if (!this.formError.length){
-        try{
-          await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,
-            this.toPutPracticeParent
-          )
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'alert', text: 'Practice Parent Updated' })
-        }catch(err){
-          this.$store.commit('SET_NOTIFICATION', { enabled: true, status: 'danger', text: err.response.data.message })
-          console.log("put practice error",err)
-        }
-      }
-      
-    }   
-  }
-    
+	data () {
+		return {}
+	},
+	created () {},
+	methods: {
+		show () {
+			this.modal = true
+		},
+		practiceTypeStyle (type) {
+			switch (type) {
+				case "Stand Alone":
+					return "bg-green-400 text-white lg:px-4 sm:px-2"
+					break
+				case "Hub":
+					return "bg-red-400 text-white lg:px-8 sm:px-2"
+					break
+				case "Spoke":
+					return "bg-blue-400 text-white lg:px-8 sm:px-2"
+					break
+				default:
+					return
+			}
+		},
+		async updatePracticeSurgery () {
+			this.Validate(this.toPutPracticeParent)
+			if (!this.formError.length) {
+				try {
+					await this.$axios.put(
+						`/api/v1/admin/practices/${this.practice.id}/parent-surgery`,
+						this.toPutPracticeParent
+					)
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "alert",
+						text: "Practice Parent Updated"
+					})
+				} catch (err) {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					})
+					console.log("put practice error", err)
+				}
+			}
+		}
+	}
 }
 </script>
 <style>
 .change-parent-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #FFC72C;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	border-left: solid 2px #ffc72c;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
 }
 @media screen and (min-width: 1200px) {
-  .change-parent-modal {
-    width: 70%;
-  }
+	.change-parent-modal {
+		width: 70%;
+	}
 }
 </style>

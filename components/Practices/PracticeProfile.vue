@@ -140,7 +140,7 @@
               <p
                 class="flex text-white md:text-base py-2 font-bold leading-tight"
               >
-                Compliance Documents is not yet set up by the Practice yet.
+                Compliance Documents is not yet set up by the Practice.
               </p>
             </div>
           </div>
