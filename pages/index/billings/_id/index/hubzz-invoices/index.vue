@@ -40,7 +40,7 @@
 				<div v-if="!slotProps.item.paid_at" class="flex items-center justify-center">
 					<span
 						v-if="practice && !practice.sage_ref && practice.direct_debit === false"
-						class="tool text-sm mx-2"
+						class="tool mr-2"
 						data-tip="Sage Reference is not yet added on Practice Profile."
 						tabindex="1"
 					>
@@ -49,7 +49,7 @@
 					<AppButton
 						:label="'Mark as Paid'"
 						:background="'green'"
-						class="text-white"
+						class="text-white mr-2"
 						:disabled="practice && !practice.sage_ref && practice.direct_debit === false"
 					/>
 				</div>
