@@ -1,248 +1,252 @@
 <template>
-  <div class="page-overlap flex-1 flex flex-col self-end bg-trout mt-4">
-    <transition name="drop" mode="in-out">
-      <AppConfirm
-        v-if="confirm"
-        :message="'Are you sure you want to deactivate this practice?'"
-        @cancel="confirm=false"
-        @confirm="toDeactivate()"
-      />
-    </transition>
-    <div class="flex justify-between text-sm text-white py-2 px-6">
-      <nuxt-link
-        :to="{path:`/practices/${practice.id}/practice-users`,query:$route.query}"
-        class="text-white p-1"
-      >
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="text-white hover:text-sunglow fill-current"
-        />
-      </nuxt-link>
-    </div>
-    <!-- TABS -->
-    <div class="flex flex-col rounded-lg px-6 max-w-lg">
-      <div class="w-full overflow-hidden">
-        <div class="flex flex-wrap justify-between -mx-1 overflow-hidden">
-          <div class="flex">
-            <div class="my-1 px-1 overflow-hidden">
-              <button
-                class="rounded-lg py-3 px-4 text-sm"
-                :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
-                @click="tab1=true,tab2=false"
-              >
-                <strong>General</strong>
-              </button>
-            </div>
-            <div
-              v-if="authAdminPermissions.includes('Edit Practice User')"
-              class="my-1 px-1 overflow-hidden"
-            >
-              <button
-                class="rounded-lg py-3 px-4 text-sm"
-                :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
-                @click="tab2=true,tab1=false"
-              >
-                <strong>Change Password</strong>
-              </button>
-            </div>
-          </div>
+	<div class="page-overlap flex-1 flex flex-col self-end bg-trout mt-4">
+		<transition name="drop" mode="in-out">
+			<AppConfirm
+				v-if="confirm"
+				:message="'Are you sure you want to deactivate this practice?'"
+				@cancel="confirm=false"
+				@confirm="toDeactivate()"
+			/>
+		</transition>
+		<div class="flex justify-between text-sm text-white py-2 px-6">
+			<nuxt-link
+				:to="{path:`/practices/${practice.id}/practice-users`,query:$route.query}"
+				class="text-white p-1"
+			>
+				<svgicon
+					name="arrow-left-solid"
+					height="32"
+					width="32"
+					class="text-white hover:text-sunglow fill-current"
+				/>
+			</nuxt-link>
+		</div>
+		<!-- TABS -->
+		<div class="flex flex-col rounded-lg px-6 max-w-lg">
+			<div class="w-full overflow-hidden">
+				<div class="flex flex-wrap justify-between -mx-1 overflow-hidden">
+					<div class="flex">
+						<div class="my-1 px-1 overflow-hidden">
+							<button
+								class="rounded-lg py-3 px-4 text-sm"
+								:class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
+								@click="tab1=true,tab2=false"
+							>
+								<strong>General</strong>
+							</button>
+						</div>
+						<div
+							v-if="authAdminPermissions.includes('Edit Practice User')"
+							class="my-1 px-1 overflow-hidden"
+						>
+							<button
+								class="rounded-lg py-3 px-4 text-sm"
+								:class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
+								@click="tab2=true,tab1=false"
+							>
+								<strong>Change Password</strong>
+							</button>
+						</div>
+					</div>
 
-          <div
-            v-if="authAdminPermissions.includes('Edit Practice User') && tab1"
-            class="my-1 px-1 overflow-hidden"
-          >
-            <button
-              class="rounded-lg py-3 px-4 text-sm bg-sunglow hover:bg-yellow-500 text-black"
-              @click="editProfile = !editProfile"
-            >
-              <strong>{{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}</strong>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- TABS END HERE -->
-    <div class="flex sm:p-2 max-w-lg">
-      <!-- TAB 1 -->
-      <div
-        v-if="tab1"
-        class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
-      >
-        <div v-if="editProfile" class="w-full overflow-hidden text-gray-300 text-sm p-2">
-          <AppInput
-            v-model="toPutPracticeUser.email"
-            :type="'email'"
-            :name="'email'"
-            :label="'E-Mail Address'"
-            :error="formError.find(item => item.field === 'email')"
-            @blur="CheckEmptyField(toPutPracticeUser.email, 'email')"
-            required
-          />
-          <AppInput
-            v-model="toPutPracticeUser.title"
-            :type="'text'"
-            :name="'title'"
-            :label="'Title'"
-            :placeholder="'Mr. / Mrs. / Dr. / etc.....'"
-          />
-          <AppInput
-            v-model="toPutPracticeUser.first_name"
-            :type="'text'"
-            :name="'first_name'"
-            :label="'First Name'"
-            :error="formError.find(item => item.field === 'first_name')"
-            @blur="CheckEmptyField(toPutPracticeUser.first_name, 'first_name')"
-            required
-          />
-          <AppInput
-            v-model="toPutPracticeUser.last_name"
-            :type="'text'"
-            :name="'last_name'"
-            :label="'Last Name'"
-            :error="formError.find(item => item.field === 'last_name')"
-            @blur="CheckEmptyField(toPutPracticeUser.last_name, 'last_name')"
-            required
-          />
-          <AppInput
-            v-model="toPutPracticeUser.suffix"
-            :type="'text'"
-            :name="'suffix'"
-            :label="'Suffix'"
-            :placeholder="'Ph.D'"
-          />
-          <AppInput
-            v-model="toPutPracticeUser.practice_role"
-            :type="'select'"
-            :name="'practice_role'"
-            :label="'Role'"
-            :items="[{ label: 'Partner', value: 'Partner'}, { label: 'Practice Manager', value: 'Practice Manager'}, { label: 'Practice Staff', value: 'Practice Staff'}]"
-            :error="formError.find(item => item.field === 'practice_role')"
-            @blur="CheckEmptyField(toPutPracticeUser.practice_role, 'practice_role')"
-            required
-          />
+					<div
+						v-if="authAdminPermissions.includes('Edit Practice User') && tab1"
+						class="my-1 px-1 overflow-hidden"
+					>
+						<button
+							class="rounded-lg py-3 px-4 text-sm bg-sunglow hover:bg-yellow-500 text-black"
+							@click="editProfile = !editProfile"
+						>
+							<strong>{{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}</strong>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- TABS END HERE -->
+		<div class="flex sm:p-2 max-w-lg">
+			<!-- TAB 1 -->
+			<div
+				v-if="tab1"
+				class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
+			>
+				<div v-if="editProfile" class="w-full overflow-hidden text-gray-300 text-sm p-2">
+					<AppInput
+						v-model="toPutPracticeUser.email"
+						:type="'email'"
+						:name="'email'"
+						:label="'E-Mail Address'"
+						:error="formError.find(item => item.field === 'email')"
+						@blur="CheckEmptyField(toPutPracticeUser.email, 'email')"
+						required
+					/>
+					<AppInput
+						v-model="toPutPracticeUser.title"
+						:type="'text'"
+						:name="'title'"
+						:label="'Title'"
+						:placeholder="'Mr. / Mrs. / Dr. / etc.....'"
+					/>
+					<AppInput
+						v-model="toPutPracticeUser.first_name"
+						:type="'text'"
+						:name="'first_name'"
+						:label="'First Name'"
+						:error="formError.find(item => item.field === 'first_name')"
+						@blur="CheckEmptyField(toPutPracticeUser.first_name, 'first_name')"
+						required
+					/>
+					<AppInput
+						v-model="toPutPracticeUser.last_name"
+						:type="'text'"
+						:name="'last_name'"
+						:label="'Last Name'"
+						:error="formError.find(item => item.field === 'last_name')"
+						@blur="CheckEmptyField(toPutPracticeUser.last_name, 'last_name')"
+						required
+					/>
+					<AppInput
+						v-model="toPutPracticeUser.suffix"
+						:type="'text'"
+						:name="'suffix'"
+						:label="'Suffix'"
+						:placeholder="'Ph.D'"
+					/>
+					<AppInput
+						v-model="toPutPracticeUser.practice_role"
+						:type="'select'"
+						:name="'practice_role'"
+						:label="'Role'"
+						:items="[{ label: 'Partner', value: 'Partner'}, { label: 'Practice Manager', value: 'Practice Manager'}, { label: 'Practice Staff', value: 'Practice Staff'}]"
+						:error="formError.find(item => item.field === 'practice_role')"
+						@blur="CheckEmptyField(toPutPracticeUser.practice_role, 'practice_role')"
+						required
+					/>
 
-          <AppInput
-            v-model="toPutPracticeUser.practice_user_role_id"
-            :type="'select'"
-            :label="'Practice User Role'"
-            :items="practice_user_roles"
-            :error="
+					<AppInput
+						v-model="toPutPracticeUser.practice_user_role_id"
+						:type="'select'"
+						:label="'Practice User Role'"
+						:items="practice_user_roles"
+						:error="
               formError.find(item => item.field === 'practice_user_role_id')
             "
-            @blur="CheckEmptyField(toPutPracticeUser.practice_user_role_id, 'practice_user_role_id')"
-            required
-          />
+						@blur="CheckEmptyField(toPutPracticeUser.practice_user_role_id, 'practice_user_role_id')"
+						required
+					/>
 
-          <p class="flex py-1 font-bold">Sign-Up verified by e-mail</p>
-          <p
-            class="p-2"
-            :class="user.email && 'bg-waterloo-light rounded'"
-          >{{user.email_verified_at ? $moment(user.email_verified_at).format('ddd, YYYY MMM DD, HH:MM A'): 'Not yet verified'}}</p>
-          <AppInput
-            v-model="toPutPracticeUser.status"
-            :type="'select'"
-            :label="'Status'"
-            :error="formError.find(item => item.field === 'status')"
-            @blur="CheckEmptyField(toPutPracticeUser.status, 'status')"
-            :items="[{ label: 'Active', value: 'Active'}, {label: 'Disabled', value: 'Disabled'}]"
-            :disabled="!user.email_verified_at"
-            required
-          />
-          <button
-            class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
-            @click.prevent="checkForm(user.id,toPutPracticeUser)"
-          >Save Changes</button>
-        </div>
-        <div
-          v-if="!authAdminPermissions.includes('Edit Practice User') || authAdminPermissions.includes('Edit Practice User') && !editProfile"
-          class="w-full overflow-hidden text-gray-400 text-sm p-2"
-        >
-          <div class="flex py-2">E-Mail Address</div>
-          <div class="flex px-2 text-white">{{user.email}}</div>
-          <div class="flex py-2">Title</div>
-          <div
-            class="flex px-2 text-white"
-          >{{user.personal_detail.title ? user.personal_detail.title : 'N/A' }}</div>
-          <div class="flex py-2">First Name</div>
-          <div
-            class="flex px-2 text-white"
-          >{{user.personal_detail.first_name ? user.personal_detail.first_name : 'N/A' }}</div>
-          <div class="flex py-2">Last Name</div>
-          <div
-            class="flex px-2 text-white"
-          >{{user.personal_detail.last_name ? user.personal_detail.last_name : 'N/A' }}</div>
-          <div class="flex py-2">Suffix</div>
-          <div
-            class="flex px-2 text-white"
-          >{{user.personal_detail.suffix ? user.personal_detail.suffix : 'N/A' }}</div>
-          <div class="flex py-2">Role</div>
-          <div
-            class="flex px-2 text-white"
-          >{{user.practice_detail.practice_role ? user.practice_detail.practice_role : 'N/A' }}</div>
+					<p class="flex py-1 font-bold">Sign-Up verified by e-mail</p>
+					<p
+						class="p-2"
+						:class="user.email && 'bg-waterloo-light rounded'"
+					>{{user.email_verified_at ? $moment(user.email_verified_at).format('ddd, YYYY MMM DD, HH:MM A'): 'Not yet verified'}}</p>
+					<AppInput
+						v-model="toPutPracticeUser.status"
+						:type="'select'"
+						:label="'Status'"
+						:error="formError.find(item => item.field === 'status')"
+						@blur="CheckEmptyField(toPutPracticeUser.status, 'status')"
+						:items="[{ label: 'Active', value: 'Active'}, {label: 'Disabled', value: 'Disabled'}]"
+						:disabled="!user.email_verified_at"
+						required
+					/>
+					<button
+						class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
+						@click.prevent="checkForm(user.id,toPutPracticeUser)"
+					>Save Changes</button>
+				</div>
+				<div
+					v-if="!authAdminPermissions.includes('Edit Practice User') || authAdminPermissions.includes('Edit Practice User') && !editProfile"
+					class="w-full overflow-hidden text-gray-400 text-sm p-2"
+				>
+					<div class="flex py-2">E-Mail Address</div>
+					<div class="flex px-2 text-white">{{user.email}}</div>
+					<div class="flex py-2">Title</div>
+					<div
+						class="flex px-2 text-white"
+					>{{user.personal_detail.title ? user.personal_detail.title : 'N/A' }}</div>
+					<div class="flex py-2">First Name</div>
+					<div
+						class="flex px-2 text-white"
+					>{{user.personal_detail.first_name ? user.personal_detail.first_name : 'N/A' }}</div>
+					<div class="flex py-2">Last Name</div>
+					<div
+						class="flex px-2 text-white"
+					>{{user.personal_detail.last_name ? user.personal_detail.last_name : 'N/A' }}</div>
+					<div class="flex py-2">Suffix</div>
+					<div
+						class="flex px-2 text-white"
+					>{{user.personal_detail.suffix ? user.personal_detail.suffix : 'N/A' }}</div>
+					<div class="flex py-2">Role</div>
+					<div
+						class="flex px-2 text-white"
+					>{{user.practice_detail.practice_role ? user.practice_detail.practice_role : 'N/A' }}</div>
 
-          <div class="flex py-2">Practice User Role</div>
-          <div
-            class="flex px-2 text-white"
-          >{{this.user.practice_detail.role ? this.user.practice_detail.role.name : 'N/A' }}</div>
+					<div class="flex py-2">Practice User Role</div>
+					<div
+						class="flex px-2 text-white"
+					>{{this.user.practice_detail.role ? this.user.practice_detail.role.name : 'N/A' }}</div>
 
-          <div class="flex py-2">Status</div>
-          <div class="flex px-2 text-white">{{user.status ? user.status : 'N/A' }}</div>
+					<div class="flex py-2">Status</div>
+					<div class="flex px-2 text-white">{{user.status ? user.status : 'N/A' }}</div>
 
-          <div class="flex my-2">
-            <AppButton
-              :label="'Deactivate this Practice User'"
-              @click="confirm = true"
-            />
-          </div>
-        </div>
-      </div>
+					<div class="flex my-2">
+						<AppButton
+							:label="'Deactivate this Practice User'"
+							:background="'red'"
+							:class="'text-white'"
+							@click="confirm = true"
+						/>
+					</div>
+				</div>
+			</div>
 
-      <!-- TAB 2 -->
-      <div v-if="tab2" class="flex text-white w-full">
-        <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg w-full">
-          <div class="overflow-hidden text-gray-300 text-sm p-2 w-full">
-            <AppInput
-              v-model="toChangePassword.password"
-              :type="'password'"
-              :name="'password'"
-              :label="'New Password'"
-              :error="formError.find(item => item.field === 'password')"
-              @blur="CheckEmptyField(toChangePassword.password, 'password')"
-              required
-            />
-            <AppInput
-              v-model="toChangePassword.password_confirmation"
-              :type="'password'"
-              :name="'password_confirmation'"
-              :label="'Confirm New Password'"
-              :error="formError.find(item => item.field === 'password_confirmation')"
-              @blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
-              required
-            />
-            <button
-              class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
-              @click.prevent="checkPasswordInfo(user.id,toChangePassword)"
-            >Save Changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+			<!-- TAB 2 -->
+			<div v-if="tab2" class="flex text-white w-full">
+				<div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg w-full">
+					<div class="overflow-hidden text-gray-300 text-sm p-2 w-full">
+						<AppInput
+							v-model="toChangePassword.password"
+							:type="'password'"
+							:name="'password'"
+							:label="'New Password'"
+							:error="formError.find(item => item.field === 'password')"
+							@blur="CheckEmptyField(toChangePassword.password, 'password')"
+							required
+						/>
+						<AppInput
+							v-model="toChangePassword.password_confirmation"
+							:type="'password'"
+							:name="'password_confirmation'"
+							:label="'Confirm New Password'"
+							:error="formError.find(item => item.field === 'password_confirmation')"
+							@blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
+							required
+						/>
+						<!-- <button
+							class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+							@click.prevent="checkPasswordInfo(user.id,toChangePassword)"
+						>Save Changes</button>-->
+						<AppButton :label="'Save Changes'" @click="checkPasswordInfo(user.id,toChangePassword)" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="shield" v-if="confirm" @click="confirm = false"></div>
+	</div>
 </template>
 <script>
-import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
-import AppConfirm from "@/components/Base/AppConfirm"
+import AppButton from "@/components/Base/AppButton";
+import AppInput from "@/components/Base/AppInput";
+import AppConfirm from "@/components/Base/AppConfirm";
 export default {
 	components: {
 		AppButton,
-    AppInput,
-    AppConfirm,
+		AppInput,
+		AppConfirm
 	},
 	props: ["user"],
-	data () {
+	data() {
 		return {
 			practice: null,
 			formError: [],
@@ -257,11 +261,11 @@ export default {
 				password: "",
 				password_confirmation: ""
 			},
-      practice_user_roles: [],
-      confirm: false,
-		}
+			practice_user_roles: [],
+			confirm: false
+		};
 	},
-	created () {
+	created() {
 		(this.practice = this.user.practice_detail.practice),
 			console.log("specificUserPractice", this.practice),
 			(this.toPutPracticeUser = {
@@ -279,34 +283,34 @@ export default {
 				.$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
 				.then(res => {
 					res.data.roles.forEach(role => {
-						this.practice_user_roles.push({ label: role.name, value: role.id })
-					})
+						this.practice_user_roles.push({ label: role.name, value: role.id });
+					});
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
-					})
-				})
+					});
+				});
 
-		console.log("practice_user_roles", this.practice_user_roles)
+		console.log("practice_user_roles", this.practice_user_roles);
 	},
 	computed: {
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
+		authAdminPermissions() {
+			return this.$store.getters["permissions"];
 		}
 	},
 	watch: {
 		"toPutPracticeUser.email"(value) {
-			const error = this.ValidateEmail(value)
+			const error = this.ValidateEmail(value);
 			if (error) {
-				this.formError.push(error)
+				this.formError.push(error);
 			} else {
-				let index = this.formError.findIndex(item => item.field === "email")
-				let errors = this.formError.filter(item => item.field === "email")
+				let index = this.formError.findIndex(item => item.field === "email");
+				let errors = this.formError.filter(item => item.field === "email");
 				if (index >= 0) {
-					this.formError.splice(index, errors.length)
+					this.formError.splice(index, errors.length);
 				}
 			}
 		},
@@ -315,16 +319,16 @@ export default {
 				this.formError.push({
 					field: "password",
 					message: "Password Must Be Atleast 6 Characters"
-				})
+				});
 			} else {
 				let index = this.formError.findIndex(
 					item => item.message === "Password Must Be Atleast 6 Characters"
-				)
+				);
 				let error = this.formError.filter(
 					item => item.message === "Password Must Be Atleast 6 Characters"
-				)
+				);
 				if (index >= 0) {
-					this.formError.splice(index, error.length)
+					this.formError.splice(index, error.length);
 				}
 			}
 		},
@@ -332,61 +336,61 @@ export default {
 			const error = this.ValidateSamePassword(
 				this.toChangePassword.password,
 				value
-			)
+			);
 			if (error) {
-				this.formError.push(error)
+				this.formError.push(error);
 			} else {
 				let index = this.formError.findIndex(
 					item => item.field === "password_confirmation"
-				)
+				);
 				let errors = this.formError.filter(
 					item => item.field === "password_confirmation"
-				)
+				);
 				if (index >= 0) {
-					this.formError.splice(index, errors.length)
+					this.formError.splice(index, errors.length);
 				}
 			}
 		},
-		editProfile (value) {
+		editProfile(value) {
 			if (value == true) {
-				this.toPutPracticeUser.email = this.user.email
-				this.toPutPracticeUser.title = this.user.personal_detail.title
-				this.toPutPracticeUser.first_name = this.user.personal_detail.first_name
-				this.toPutPracticeUser.last_name = this.user.personal_detail.last_name
-				this.toPutPracticeUser.suffix = this.user.personal_detail.suffix
-				this.toPutPracticeUser.practice_role = this.user.practice_detail.practice_role
-				this.toPutPracticeUser.practice_user_roles = this.user.practice_detail.role.id
-				this.toPutPracticeUser.status = this.user.status
+				this.toPutPracticeUser.email = this.user.email;
+				this.toPutPracticeUser.title = this.user.personal_detail.title;
+				this.toPutPracticeUser.first_name = this.user.personal_detail.first_name;
+				this.toPutPracticeUser.last_name = this.user.personal_detail.last_name;
+				this.toPutPracticeUser.suffix = this.user.personal_detail.suffix;
+				this.toPutPracticeUser.practice_role = this.user.practice_detail.practice_role;
+				this.toPutPracticeUser.practice_user_roles = this.user.practice_detail.role.id;
+				this.toPutPracticeUser.status = this.user.status;
 			}
 		}
 	},
 	methods: {
-		errorMessage (field, message) {
+		errorMessage(field, message) {
 			if (this.formError.find(error => error.field === field.toString())) {
 				let error = this.formError.find(
 					error => error.field === field.toString()
-				)
-				return message ? message : error.message
+				);
+				return message ? message : error.message;
 			}
-			return
-    },
-    
-		checkForm: function (uID, userInfo) {
-			this.formError = []
-			this.Validate(this.toPutPracticeUser, ["title", "suffix"])
+			return;
+		},
+
+		checkForm: function(uID, userInfo) {
+			this.formError = [];
+			this.Validate(this.toPutPracticeUser, ["title", "suffix"]);
 			if (!this.formError.length) {
-				this.toPutPracticeUserInfo(uID, userInfo)
-			}
-    },
-    
-		checkPasswordInfo: function (uID, changePass) {
-			this.Validate(this.toChangePassword)
-			if (!this.formError.length) {
-				this.toChangeUserPassword(uID, changePass)
+				this.toPutPracticeUserInfo(uID, userInfo);
 			}
 		},
 
-		async toPutPracticeUserInfo (userID, toPutPracticeUser) {
+		checkPasswordInfo: function(uID, changePass) {
+			this.Validate(this.toChangePassword);
+			if (!this.formError.length) {
+				this.toChangeUserPassword(uID, changePass);
+			}
+		},
+
+		async toPutPracticeUserInfo(userID, toPutPracticeUser) {
 			try {
 				const response = await this.$axios.put(
 					`/api/v1/admin/practice-users/${userID}`,
@@ -400,66 +404,73 @@ export default {
 						practice_user_role_id: toPutPracticeUser.practice_user_role_id,
 						status: toPutPracticeUser.status
 					}
-				)
+				);
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "success",
 					text: "Saved Changes"
-				})
-				this.editProfile = false
-				vm.$forceUpdate()
+				});
+				this.editProfile = false;
+				vm.$forceUpdate();
 			} catch (err) {
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "danger",
 					text: err.response.data.message
-				})
-				console.log("index put locum detail compliance documents error", err)
+				});
+				console.log("index put locum detail compliance documents error", err);
 			}
 		},
 
-		async toChangeUserPassword (userID, toChangePassword) {
+		async toChangeUserPassword(userID, toChangePassword) {
 			try {
-				console.log(toChangePassword.password)
-				console.log(toChangePassword.password_confirmation)
+				console.log(toChangePassword.password);
+				console.log(toChangePassword.password_confirmation);
 				await this.$axios.put(`/api/v1/admin/users/${userID}/change-password`, {
 					password: toChangePassword.password,
 					password_confirmation: toChangePassword.password_confirmation
-				})
+				});
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "success",
 					text: "Saved Changes"
-				})
+				});
 			} catch (err) {
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "danger",
 					text: err.response.data.message
-				})
-				console.log("index put locum detail compliance documents error", err)
+				});
+				console.log("index put locum detail compliance documents error", err);
 			}
-    },
-    
-    async toDeactivate () {
-      await this.$axios.$put(`/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`)
-      .then( res => {
-        this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "success",
-					text: "Successfully Deactivated User"
+		},
+
+		async toDeactivate() {
+			await this.$axios
+				.$put(
+					`/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`
+				)
+				.then(res => {
+					this.confirm = false;
+					this.$router.push(
+						`/practices/${this.$route.params.id}/practice-users`
+					);
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Successfully Deactivated User"
+					});
 				})
-      })
-      .catch(err => {
-        this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})
-      })
-    }
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
+		}
 	}
-}
+};
 </script>
 <style>
 </style>
