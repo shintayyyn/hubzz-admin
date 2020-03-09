@@ -32,7 +32,7 @@
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span class="">{{item.job.platform_job.practice.surgery.name}}</span>
+              <span class="">{{ item.job.practice_name }}</span>
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
@@ -82,9 +82,9 @@ export default {
   components: {
     AppPagination,
     LocumDetailJobModal,
-    AppJobHeaderSort
+    AppJobHeaderSort,
   },
-  data() {
+  data () {
     return {
       // locumOngoingJobParts: [],
       // total:0,
@@ -95,18 +95,18 @@ export default {
       modal:false
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     let query = Object.assign({}, this.$route.query)
     delete query.job_parts_page
     this.$router.push({ query })
   },
   watch: {
-    $route(to, from) {
+    $route (to) {
       this.currentPage = parseInt(to.query.job_parts_page)
       this.getOngoingJobs('date_created:desc')
     },
   },
-  async created() {
+  async created () {
     await this.$store.commit('jobs/TOGGLE_LOADING', true)
     const query = {
       ...this.$route.query,
@@ -132,15 +132,15 @@ export default {
     })
   },
   computed:{
-    total(){
+    total (){
       return this.$store.state.jobs.locum_ongoing_jobs_count
     },
-    locumOngoingJobParts(){
+    locumOngoingJobParts (){
       return this.$store.state.jobs.locum_ongoing_jobs
-    }
+    },
   },
   methods: {
-    getOngoingJobs(orderBy) {
+    getOngoingJobs (orderBy) {
       let offset = parseInt(this.perPage) * (parseInt(this.$route.query.job_parts_page) - 1)
       let params = {
         viewing_locum_user_id : this.user.id,
@@ -156,7 +156,7 @@ export default {
         this.$store.commit('jobs/TOGGLE_LOADING', false)
       })
     },
-    async pagechanged(e) {
+    async pagechanged (e) {
       const query = {
         ...this.$route.query,
         job_parts_page: e || 1

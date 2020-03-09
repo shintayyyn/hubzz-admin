@@ -36,7 +36,7 @@
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span class>{{ item.job.platform_job.practice.surgery.name }}</span>
+              <span class="">{{ item.job.practice_name }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -94,7 +94,7 @@ export default {
     components:{
       AppPagination,
       LocumDetailJobModal,
-      AppJobHeaderSort
+      AppJobHeaderSort,
     },
     props:['user'],
     data (){

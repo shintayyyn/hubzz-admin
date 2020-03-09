@@ -1,9 +1,7 @@
 <template>
 	<div class="mt-5">
-		<!-- <div>
-			<AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
-		</div>-->
 		<div class="mx-4 md:mx-8">
+      <AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
 			<LocumJobsTabs :user="user" />
 			<nuxt-child />
 			<!-- <AppTable :columns="columns" :total="jobs.length" :items="jobs" /> -->
@@ -64,7 +62,6 @@ export default {
 		};
 	},
 	created() {
-		console.log("asdwqe", this.$route.query.status);
 		// this.$route.query.status = "Allocated";
 		if (this.$route.name == "index-locums-id-index-locum-jobs-index") {
 			this.$router.push({

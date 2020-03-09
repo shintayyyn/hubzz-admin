@@ -131,7 +131,7 @@ export default {
     },
     matchedJobs(){
       return this.$store.state.jobs.locum_matched_jobs
-    }
+    },
   },
   methods: {
     getMatchedJobs(orderBy) {

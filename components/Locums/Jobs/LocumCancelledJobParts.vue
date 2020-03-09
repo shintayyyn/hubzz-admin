@@ -87,17 +87,17 @@
 	</div>
 </template>
 <script>
-import AppPagination from "@/components/Base/AppPagination";
-import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal";
-import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort";
+import AppPagination from "@/components/Base/AppPagination"
+import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
+import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
 export default {
 	props: ["user"],
 	components: {
 		AppPagination,
 		LocumDetailJobModal,
-		AppJobHeaderSort
+    AppJobHeaderSort,
 	},
-	data() {
+	data () {
 		return {
 			// cancelledJobs:[],
 			// total:0,
@@ -106,80 +106,80 @@ export default {
 			perPage: 0,
 			ascendDescend: 0,
 			modal: false
-		};
-	},
-	beforeDestroy() {
-		let query = Object.assign({}, this.$route.query);
-		delete query.cancelled_job_page;
-		this.$router.push({ query });
-	},
-	watch: {
-		$route(to, from) {
-			this.currentPage = parseInt(to.query.cancelled_job_page);
-			this.getCancelledJobs();
 		}
 	},
-	created() {
-		this.$store.commit("jobs/TOGGLE_LOADING", true);
+	beforeDestroy () {
+		let query = Object.assign({}, this.$route.query)
+		delete query.cancelled_job_page
+		this.$router.push({ query })
+	},
+	watch: {
+		$route (to) {
+			this.currentPage = parseInt(to.query.cancelled_job_page)
+			this.getCancelledJobs()
+		}
+	},
+	created () {
+		this.$store.commit("jobs/TOGGLE_LOADING", true)
 		const query = {
 			...this.$route.query,
 			cancelled_job_page: this.$route.query.cancelled_job_page || 1
-		};
-		this.currentPage = parseInt(query.cancelled_job_page);
+		}
+		this.currentPage = parseInt(query.cancelled_job_page)
 		let params = {
 			viewing_locum_user_id: this.user.id,
 			locum_status: "Cancelled"
-		};
+		}
 		Promise.all([
 			this.$axios
 				.$get(`/api/v1/admin/job-parts/count`, { params })
 				.then(res => {
-					console.log("res", res.data.count);
+					console.log("res", res.data.count)
 					// this.total = res.data.count
 					this.$store.commit(
 						"jobs/SET_LOCUM_CANCELLED_JOBS_COUNT",
 						res.data.count
-					);
-					this.perPage = 10;
-					this.totalPages = Math.ceil(this.total / this.perPage);
+					)
+					this.perPage = 10
+					this.totalPages = Math.ceil(this.total / this.perPage)
 				})
 		]).then(() => {
-			this.getCancelledJobs("date_created:desc");
-		});
+			this.getCancelledJobs("date_created:desc")
+		})
 	},
 	computed: {
-		total() {
-			return this.$store.state.jobs.locum_cancelled_jobs_count;
+		total () {
+			return this.$store.state.jobs.locum_cancelled_jobs_count
 		},
-		cancelledJobs() {
-			return this.$store.state.jobs.locum_cancelled_jobs;
-		}
+		cancelledJobs () {
+			return this.$store.state.jobs.locum_cancelled_jobs
+    },
 	},
 	methods: {
-		getCancelledJobs(orderBy) {
+		getCancelledJobs (orderBy) {
 			let offset =
-				this.perPage * (parseInt(this.$route.query.cancelled_job_page) - 1);
+				this.perPage * (parseInt(this.$route.query.cancelled_job_page) - 1)
 			let params = {
 				viewing_locum_user_id: this.user.id,
 				locum_status: "Cancelled",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				limit: this.perPage,
 				offset: offset
-			};
+			}
 			this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
-				this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", res.data.job_parts);
-				this.$store.commit("jobs/TOGGLE_LOADING", false);
-			});
+				this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", res.data.job_parts)
+				this.$store.commit("jobs/TOGGLE_LOADING", false)
+			})
 		},
-		async pagechanged(e) {
+		async pagechanged (e) {
 			const query = {
 				...this.$route.query,
 				cancelled_job_page: e || 1
-			};
-			await this.$store.commit("jobs/TOGGLE_LOADING", true);
-			await this.$router.push({ query });
-			await this.$store.commit("jobs/TOGGLE_LOADING", false);
+			}
+			await this.$store.commit("jobs/TOGGLE_LOADING", true)
+			await this.$router.push({ query })
+			await this.$store.commit("jobs/TOGGLE_LOADING", false)
 		}
 	}
-};
+}
 </script>
