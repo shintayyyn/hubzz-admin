@@ -32,7 +32,7 @@ export default {
 		},
 		inClass: String
 	}
-};
+}
 </script>
 
 <style scoped>

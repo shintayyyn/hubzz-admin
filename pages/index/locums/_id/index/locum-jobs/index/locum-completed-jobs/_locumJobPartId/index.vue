@@ -1,7 +1,7 @@
 <template>
   <div class="job-modal shadow-lg">
     <div class="mt-6 mx-4 md:mx-8 my-2">
-      <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-cancelled-jobs` }" class="cursor-pointer">
+      <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-completed-jobs` }" class="cursor-pointer">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
     </div>
@@ -11,14 +11,14 @@
 <script>
 import JobPartModal from '@/components/Base/JobPartModal'
 export default {
-  components:{
-    JobPartModal,
-  },
   data (){
     return{
-      specificJobPart:'',
+      job:'',
       locumUserId: ''
     }
+  },
+  components:{
+    JobPartModal
   },
   computed:{
 
@@ -29,8 +29,8 @@ export default {
       const specificJobPart = response.data.job_part
       const locumUserId = route.params.id
       return{
-        specificJobPart,
-        locumUserId
+          specificJobPart,
+          locumUserId
       }
     }catch(err){
       error({statusCode: 404})

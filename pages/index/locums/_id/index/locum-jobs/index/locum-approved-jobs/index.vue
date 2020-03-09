@@ -1,31 +1,31 @@
 <template>
-    <div>
-        <LocumApprovedJobParts :user='user'/>
-    </div>
+  <div>
+    <LocumApprovedJobParts :user="user"/>
+  </div>
 </template>
 <script>
 import LocumApprovedJobParts from '@/components/Locums/Jobs/LocumApprovedJobParts'
 export default {
-    components:{
-        LocumApprovedJobParts
-    },
-    computed:{
-        user(){
-            return this.$store.state.locums.locumUser
-        }
-    },
-    async asyncData({app, store, route}){
-        try{
-             let response = await app.$axios.$get(`/api/v1/admin/locum-users/${route.params.id}`)
-            const user = response.data.user
-
-            await store.commit('locums/SET_LOCUM_USER', user)
-            
-        }catch(err){
-            store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-            console.log('get locum user error!')
-        }
+  components:{
+    LocumApprovedJobParts
+  },
+  computed:{
+    user (){
+      return this.$store.state.locums.locumUser
     }
+  },
+  async asyncData ({ app, store, route }){
+    try{
+      let response = await app.$axios.$get(`/api/v1/admin/locum-users/${route.params.id}`)
+      const user = response.data.user
+
+      await store.commit('locums/SET_LOCUM_USER', user)
+        
+    }catch(err){
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('get locum user error!')
+    }
+  }
 }
 </script>
 <style>
