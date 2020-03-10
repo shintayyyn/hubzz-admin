@@ -1,15 +1,15 @@
 <template>
 	<div class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg" ref="modalContainer">
 		<div class="flex items-center text-sm text-white py-2">
-			<div>
+			<nuxt-link 
+        :to="{path: `/billings/${$route.params.id}/hubzz-invoices`, query: $route.query}">
 				<svgicon
 					name="arrow-left-solid"
 					height="40"
 					width="40"
 					class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
-					@click="goBack()"
 				/>
-			</div>
+			</nuxt-link>
 		</div>
 		<section class="max-w-lg">
 			<div class="flex flex-col md:flex-row justify-between md:items-center text-white">
@@ -180,14 +180,15 @@ export default {
 			}
 		},
 
-		goBack() {
+		async goBack() {
 			const query = {
 				...this.$route.query
-			};
-			this.$router.push({
+      }
+      console.log('go back params id',this.$route.params.id)
+			await this.$router.push({
 				path: `/billings/${this.$route.params.id}/hubzz-invoices`,
 				query
-			});
+			})
 		}
 	}
 };
