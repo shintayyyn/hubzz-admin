@@ -218,10 +218,10 @@
               {{slotProps.item.id}} -->
             <div class="flex justify-center">
               <!-- <AppButton
-                	class="ml-2"
-                  :label="'View'"
-                  @click.prevent="toViewInvitation(slotProps.item.id)"
-                /> -->
+                class="ml-2"
+                :label="'View'"
+                @click.prevent="toViewInvitation(slotProps.item.id)"
+              /> -->
               <AppButton
                 class="text-white ml-2"
                 :background="'green'"
