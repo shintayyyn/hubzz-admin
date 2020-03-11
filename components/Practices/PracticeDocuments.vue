@@ -10,6 +10,7 @@
       <div v-if="authAdminPermissions.includes('Upload Practice Documents')" class="w-1/4 text-center">Upload New File</div>
     </div>
     <!-- END HEADER -->
+    
     <!-- BODY -->
     <div
       v-for="(document,index) in specificPracticeDocumentTypes"
@@ -24,7 +25,7 @@
             width="23"
             height="23"
             color="white"
-            />
+          />
           <span class="md:hidden pl-2">Approved</span>
         </div>
         <strong class="block md:hidden text-sm uppercase">Title</strong>
@@ -40,9 +41,14 @@
       </div>
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Last Upload Date</strong>
+        <!-- <span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span> -->
         <span
           class="break-all"
-        >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.created_at ? $moment(document.practiceSpecificDoc.updated_at ? document.practiceSpecificDoc.updated_at : document.practiceSpecificDoc.created_at).format('MMM D, YYYY | hh:mm A'):null }}</span>
+        >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.created_at ? 
+          $moment(document.practiceSpecificDoc.updated_at 
+            ? document.practiceSpecificDoc.updated_at
+            : document.practiceSpecificDoc.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a'):null }}
+        </span>
       </div>
       <div class="w-full md:w-1/4 py-2  flex flex-col md:flex-row md:items-center md:justify-center">
         <strong class="block md:hidden text-sm uppercase">Upload New File</strong>
@@ -54,11 +60,11 @@
               <label>
                 <!-- File -->
                 <input
-                  type="file"
                   id="file"
                   :ref="`file-${document.practiceDocType.id}`"
-                  v-on:change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"
-                />
+                  type="file"
+                  @change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"
+                >
                 <span class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500 '">
                   <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
                   <span class="pl-2">{{ document.practiceSpecificDoc ? 'Update' : 'Upload' }}</span>
@@ -72,10 +78,9 @@
               :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
               class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full text-white no-underline px-6 py-2"
             >
-              <svgicon name="folder" width="16" height="16" color="white white"></svgicon>
+              <svgicon name="folder" width="16" height="16" color="white white"/>
               <span class="pl-2">View</span>
             </nuxt-link>
-            
           </div>
         </div>
       </div>

@@ -43,8 +43,10 @@
                 </p>
               </div>
             </div>
+            <!-- SPOKE PERMISSIONS - PERMISSIONS OF THE SPOKE BEING VIEWED. -->
             <div class="w-1/2 text-white my-2 ">
               <div class="flex flex-row items-center">
+                
                 <div class="text-lg text-white font-semibold">
                   Spoke Permissions
                 </div>
@@ -54,24 +56,25 @@
                   :class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
                 >{{editPermissions == false ? 'Edit' : 'Cancel Editing'}}</div> -->
               </div>
-
+              
               <div class="mt-2 mb-4 mx-2">
                 <div class>
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
+                      
                       <svgicon
-                        :name="practiceHub.allow_surgery_create_sessions === true ? 'circle-check' : 'times-solid'"
+                        :name="practice.allow_surgery_create_sessions === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practiceHub.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
                       Does Hub allow creation of Jobs/Sessions?
                     </p>
-                    <!-- <p class="text-sm mx-6">{{practiceHub.allow_surgery_create_sessions === true ? 'Yes':'No'}}</p> -->
+                    <!-- <p class="text-sm mx-6">{{practice.allow_surgery_create_sessions === true ? 'Yes':'No'}}</p> -->
                   </div>
                   <div
-                    v-if="practiceHub.allow_surgery_create_sessions === true"
+                    v-if="practice.allow_surgery_create_sessions === true"
                     class="bg-waterloo-dark p-2 rounded-lg mb-2"
                   >
                     <p class="font-semibold pt-2">
@@ -85,7 +88,7 @@
                         <p
                           class
                         >
-                          {{ practiceHub.max_hourly_rate_limit ?'£ '+ practiceHub.max_hourly_rate_limit : 'N/A' }}
+                          {{ practice.max_hourly_rate_limit ?'£ '+ practice.max_hourly_rate_limit : 'N/A' }}
                         </p>
                       </div>
                       <div class="flex flex-col md:flex-row">
@@ -95,7 +98,7 @@
                         <p
                           class
                         >
-                          {{ practiceHub.max_halfday_rate_limit ?'£ '+ practiceHub.max_halfday_rate_limit : 'N/A' }}
+                          {{ practice.max_halfday_rate_limit ?'£ '+ practice.max_halfday_rate_limit : 'N/A' }}
                         </p>
                       </div>
 
@@ -106,7 +109,7 @@
                         <p
                           class
                         >
-                          {{ practiceHub.max_wholeday_rate_limit ?'£ '+ practiceHub.max_wholeday_rate_limit : 'N/A' }}
+                          {{ practice.max_wholeday_rate_limit ?'£ '+ practice.max_wholeday_rate_limit : 'N/A' }}
                         </p>
                       </div>
 
@@ -117,7 +120,7 @@
                         <p
                           class
                         >
-                          {{ practiceHub.max_ooh_rate_limit ?'£ '+ practiceHub.max_ooh_rate_limit : 'N/A' }}
+                          {{ practice.max_ooh_rate_limit ?'£ '+ practice.max_ooh_rate_limit : 'N/A' }}
                         </p>
                       </div>
 
@@ -128,7 +131,7 @@
                         <p
                           class
                         >
-                          {{ practiceHub.max_excess_hours ? practiceHub.max_excess_hours+' Hrs' : 'N/A' }}
+                          {{ practice.max_excess_hours ? practice.max_excess_hours+' Hrs' : 'N/A' }}
                         </p>
                       </div>
                     </div>
@@ -137,9 +140,9 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
-                        :name="practiceHub.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
+                        :name="practice.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practiceHub.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -150,9 +153,9 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
-                        :name="practiceHub.allow_surgery_bill_locum === true ? 'circle-check' : 'times-solid'"
+                        :name="practice.allow_surgery_bill_locum === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practiceHub.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -163,9 +166,9 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
-                        :name="practiceHub.allow_surgery_bill_hubzz === true ? 'circle-check' : 'times-solid'"
+                        :name="practice.allow_surgery_bill_hubzz === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practiceHub.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -176,9 +179,9 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
-                        :name="practiceHub.share_banks_to_other_surgeries === true ? 'circle-check' : 'times-solid'"
+                        :name="practice.share_banks_to_other_surgeries === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practiceHub.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -215,10 +218,10 @@
               {{slotProps.item.id}} -->
             <div class="flex justify-center">
               <!-- <AppButton
-                	class="ml-2"
-                  :label="'View'"
-                  @click.prevent="toViewInvitation(slotProps.item.id)"
-                /> -->
+                class="ml-2"
+                :label="'View'"
+                @click.prevent="toViewInvitation(slotProps.item.id)"
+              /> -->
               <AppButton
                 class="text-white ml-2"
                 :background="'green'"
