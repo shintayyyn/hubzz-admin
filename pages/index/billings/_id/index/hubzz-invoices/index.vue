@@ -17,6 +17,7 @@
 			:loading="loadingHubzzInvoices"
 			:router-link="`/billings/${$route.params.id}/hubzz-invoices`"
 			:order-by="params.order_by"
+			:customWidth="1200"
 			@pagechanged="pagechanged"
 			@sorted="sorted"
 		>
@@ -38,20 +39,21 @@
 
 			<template v-slot:paid_at="slotProps">
 				<div v-if="!slotProps.item.paid_at" class="flex items-center justify-center">
-					<span
-						v-if="practice && !practice.sage_ref && practice.direct_debit === false"
-						class="tool mr-2"
-						data-tip="Sage Reference is not yet added on Practice Profile."
-						tabindex="1"
-					>
-						<svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
-					</span>
 					<AppButton
 						:label="'Mark as Paid'"
 						:background="'green'"
 						class="text-white mr-2"
 						:disabled="practice && !practice.sage_ref && practice.direct_debit === false"
+						@click="showPaidModal = true"
 					/>
+					<span
+						v-if="practice && !practice.sage_ref && practice.direct_debit === false"
+						class="tool-left text-sm mr-2"
+						data-tip="Sage Reference is not yet added on Practice Profile."
+						tabindex="1"
+					>
+						<svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
+					</span>
 				</div>
 				<div
 					v-else

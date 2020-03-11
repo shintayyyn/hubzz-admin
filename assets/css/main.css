@@ -280,29 +280,149 @@ table tbody td {
 		width: 14em;
 	}
 } */
+/*===========ON LEFT TOOLTIP=========*/
+.tool-left {
+	cursor: help;
+	position: relative;
+}
+.tool-left::before,
+.tool-left::after {
+	left: 50%;
+	opacity: 0;
+	position: absolute;
+	z-index: -100;
+}
+
+.tool-left:focus {
+	outline: none;
+}
+
+.tool-left:hover::before,
+.tool-left:focus::before,
+.tool-left:hover::after,
+.tool-left:focus::after {
+	opacity: 1;
+	transform: scale(1) translateY(0);
+	z-index: 100;
+}
+
+/* .tool-left::before {
+	border-style: solid;
+	border-width: 1em 0.75em 0 0.75em;
+	border-color: #505561 transparent transparent transparent;
+	bottom: 100%;
+	content: "";
+	margin-left: -0.5em;
+	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26),
+		opacity 0.65s 0.5s;
+	transform: scale(0.6) translateY(-90%);
+} */
+
+.tool-left::before {
+	border-style: solid;
+	border-width: 1em 0.75em 0 0.75em;
+	border-color: #505561 transparent transparent transparent;
+	bottom: 100%;
+	content: "";
+	margin-left: -0.5em;
+	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26),
+		opacity 0.65s 0.5s;
+	transform: scale(0.6) translateY(-90%);
+}
+
+.tool-left:hover::before,
+.tool-left:focus::before {
+	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
+}
+
+/*== speech bubble ==*/
+/* .tool-left::after {
+	background: #505561;
+	border-radius: 0.5em;
+	bottom: -70%;
+	left: -392%;
+	color: #edeff0;
+	content: attr(data-tip);
+	margin-left: -8.75em;
+	padding: 1em;
+	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
+	transform: scale(0.6) translateY(50%);
+	font-size: 0.75em;
+	width: 16em;
+	margin-left: -6.1em;
+} */
+
+.tool-left::after {
+	background: #505561;
+	border-radius: 0.5em;
+	bottom: 175%;
+	color: #edeff0;
+	content: attr(data-tip);
+	margin-left: -8.75em;
+	padding: 1em;
+	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26) 0.2s;
+	transform: scale(0.6) translateY(50%);
+	/* width: 17.5em; */
+	font-size: 0.75em;
+	width: 16em;
+	/* margin-left: -13em; */
+}
+
+.tool-left:hover::after,
+.tool-left:focus::after {
+	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
+}
+
+/* @media (max-width: 760px) {
+	.tool-left::after {
+		font-size: 0.75em;
+		margin-left: -5em;
+		width: 14em;
+	}
+} */
 @supports (backdrop-filter: none) {
-  .tool::after {
+  .tool::after, .tool-left::after {
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
 	background: rgba(0, 0, 0, 0.3);
   }
 }
 @media (min-width: 480px) {
-	.tool::after {
-		/* font-size: 0.75em; */
-		/* width: 12em; */
+	.tool::after{
 		margin-left: -12em;
+	}
+	
+	.tool-left::after {
+		margin-left: -6.1em;
+	}
+}
+@media (min-width: 768px) {
+	.tool-left::before {
+		bottom: 0;
+		border-width: 0.75em 1em;
+		border-color: transparent transparent transparent #505561;
+		margin-left: -1.7em;
+		transform: scale(0.6) translateY(-30%);
+}
+
+	.tool-left::after {
+		bottom: -70%;
+		left: -392%;
+		margin-left: -6.1em;
 	}
 }
 @media (min-width: 1200px) {
 	.tool::after {
-		/* font-size: 0.75em; */
 		width: 14em;
 		margin-left: -10em;
 	}
+	.tool-left::after {
+		width: 14em;
+		margin-left: -4.2em;
+	}
 }
 @media (min-width: 1400px) {
-	.tool::after {
+	.tool::after  {
 		font-size: 1em;
 		width: 17.5em;
 	}
