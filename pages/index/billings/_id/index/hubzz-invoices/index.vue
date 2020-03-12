@@ -177,7 +177,7 @@ export default {
 			],
 			// FOR MARKING INVOICE AS PAID
 			showPaidModal: false,
-			paidAt: "",
+			paidAt: this.$moment().format("YYYY-MM-DD"),
 			invoiceId: "",
 			confirm: false
 		};
