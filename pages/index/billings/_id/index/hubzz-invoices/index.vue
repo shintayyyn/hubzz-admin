@@ -44,7 +44,7 @@
 						:background="'green'"
 						class="text-white mr-2"
 						:disabled="practice && !practice.sage_ref"
-						@click="showPaidModal = true"
+						@click="toShowPaidModal(slotProps.item.id)"
 					/>
 					<span
 						v-if="practice && !practice.sage_ref"
