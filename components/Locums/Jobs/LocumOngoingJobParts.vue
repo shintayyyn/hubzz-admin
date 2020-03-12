@@ -133,7 +133,8 @@ export default {
 		this.currentPage = parseInt(query.job_parts_page);
 		let params = {
 			viewing_locum_user_id: this.user.id,
-			locum_status: "Ongoing"
+			locum_status: "Ongoing",
+			job_type: "Platform"
 		};
 		Promise.all([
 			console.log(this.user),
@@ -172,7 +173,8 @@ export default {
 				locum_status: "Ongoing",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				limit: this.perPage,
-				offset: offset
+				offset: offset,
+				job_type: "Platform"
 			};
 
 			this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {

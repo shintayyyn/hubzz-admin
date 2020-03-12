@@ -134,7 +134,8 @@ export default {
 		this.currentPage = parseInt(query.completed_job_page);
 		let params = {
 			viewing_locum_user_id: this.user.id,
-			locum_status: ["Completed", "Terminated"]
+			locum_status: ["Completed", "Terminated"],
+			job_type: "Platform"
 		};
 		Promise.all([
 			this.$axios
@@ -161,7 +162,8 @@ export default {
 				locum_status: ["Completed", "Terminated"],
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				limit: this.perPage,
-				offset: offset
+				offset: offset,
+				job_type: "Platform"
 			};
 			await this.$axios
 				.$get(`/api/v1/admin/job-parts`, { params })

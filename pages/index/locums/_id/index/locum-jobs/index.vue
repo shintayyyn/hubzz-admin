@@ -1,22 +1,22 @@
 <template>
-  <div class="mt-5">
-    <div class="mx-4 md:mx-8">
-      <AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
-      <LocumJobsTabs :user="user" />
-      <nuxt-child />
-      <!-- <AppTable :columns="columns" :total="jobs.length" :items="jobs" /> -->
-    </div>
-  </div>
+	<div class="mt-5">
+		<div class="mx-4 md:mx-8">
+			<AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
+			<LocumJobsTabs :user="user" />
+			<nuxt-child />
+			<!-- <AppTable :columns="columns" :total="jobs.length" :items="jobs" /> -->
+		</div>
+	</div>
 </template>
 <script>
-import AppLoading from "@/components/Base/AppLoading"
-import LocumJobsTabs from "@/components/Locums/LocumJobsTabs"
+import AppLoading from "@/components/Base/AppLoading";
+import LocumJobsTabs from "@/components/Locums/LocumJobsTabs";
 export default {
 	components: {
 		AppLoading,
 		LocumJobsTabs
 	},
-	data () {
+	data() {
 		return {
 			jobs: {},
 			params: {
@@ -24,7 +24,8 @@ export default {
 				locum_status: "",
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"]
+				order_by: ["created_at:desc"],
+				type: "Platform"
 			},
 			columns: [
 				{
@@ -57,15 +58,15 @@ export default {
 					class: "text-center"
 				}
 			]
-		}
+		};
 	},
-	created () {
+	created() {
 		// this.$route.query.status = "Allocated";
 		if (this.$route.name == "index-locums-id-index-locum-jobs-index") {
 			this.$router.push({
 				path: `/locums/${this.user.id}/locum-jobs/locum-allocated-jobs`,
 				query: this.$route.query
-			})
+			});
 			// const query = {
 			// 	...this.$router.query,
 			// 	status: "Allocated"
@@ -75,48 +76,48 @@ export default {
 			// })
 		}
 
-		this.params.viewing_locum_user_id = this.user.id
-		this.params.locum_status = this.$route.query.status
+		this.params.viewing_locum_user_id = this.user.id;
+		this.params.locum_status = this.$route.query.status;
 
-		this.getJobs(this.params)
+		this.getJobs(this.params);
 	},
 	computed: {
-		user () {
-			return this.$store.state.locums.locumUser
+		user() {
+			return this.$store.state.locums.locumUser;
 		},
-		loadingJobs () {
-			return this.$store.state.jobs.loading_jobs
+		loadingJobs() {
+			return this.$store.state.jobs.loading_jobs;
 		}
 	},
-	async asyncData ({ app, store, route }) {
+	async asyncData({ app, store, route }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${route.params.id}`
-			)
-			const user = response.data.user
+			);
+			const user = response.data.user;
 
-			await store.commit("locums/SET_LOCUM_USER", user)
-			await store.commit("jobs/SET_JOBS_LOCUM_USER_ID_VIEWER", user.id)
+			await store.commit("locums/SET_LOCUM_USER", user);
+			await store.commit("jobs/SET_JOBS_LOCUM_USER_ID_VIEWER", user.id);
 			return {
 				// user
-			}
+			};
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			})
-			console.log("Get locum job error", err)
+			});
+			console.log("Get locum job error", err);
 		}
 	},
 	methods: {
-		getJobs (params) {
+		getJobs(params) {
 			this.$axios.$get(`/api/v1/admin/jobs`, { params }).then(res => {
-				console.log("locum job", res.data.jobs)
-				this.jobs = res.data.jobs
-			})
+				console.log("locum job", res.data.jobs);
+				this.jobs = res.data.jobs;
+			});
 		}
 	}
-}
+};
 </script>
 <style></style>
