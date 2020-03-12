@@ -43,11 +43,11 @@
 						:label="'Mark as Paid'"
 						:background="'green'"
 						class="text-white mr-2"
-						:disabled="practice && !practice.sage_ref && practice.direct_debit === false"
+						:disabled="practice && !practice.sage_ref"
 						@click="showPaidModal = true"
 					/>
 					<span
-						v-if="practice && !practice.sage_ref && practice.direct_debit === false"
+						v-if="practice && !practice.sage_ref"
 						class="tool-left text-sm mr-2"
 						data-tip="Sage Reference is not yet added on Practice Profile."
 						tabindex="1"
