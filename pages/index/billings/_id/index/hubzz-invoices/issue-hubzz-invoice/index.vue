@@ -165,8 +165,9 @@ export default {
 						chosenJobParts[i].date_start +
 						" to " +
 						chosenJobParts[i].date_end,
+						// divided by 60 to convert field "final_hours", from minutes to hours
 					total: parseFloat(
-						chosenJobParts[i].final_hours * chosenJobParts[i].practice_rate
+						(chosenJobParts[i].final_hours/60) * chosenJobParts[i].practice_rate
 					).toFixed(2)
 				};
 
