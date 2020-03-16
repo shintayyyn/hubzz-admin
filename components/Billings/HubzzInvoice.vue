@@ -96,13 +96,13 @@
             <div class="w-full">
               <div
                 class="border-2 border-gray-300 rounded-lg p-4 text-sm"
-                :class="doNotShow ? 'md:w-2/3' : 'w-2/3'"
+                :class="doNotShow ? 'md:w-full' : 'w-full'"
               >
-                <div class="font-semibold">
-                  <div>To: Accounts Department</div>
-                  <div class="w-full m-2">
-                    <p>{{ practice.surgery.name }}</p>
-                    <div class="text-sm font-light">
+                <div class="">
+                  <div class="text-base py-1">To: Accounts Department</div>
+                  <div class="w-full">
+                    <p class="font-bold text-lg mb-2">{{ practice.surgery.name }}</p>
+                    <div class="text-xs sm:text-sm">
                       <p>{{ practice.surgery.address.line_1 }}</p>
                       <p>{{ practice.surgery.address.line_2 }}</p>
                       <p>{{ practice.surgery.address.line_3 }}</p>
@@ -122,10 +122,10 @@
               </div>
             </div>
             <div v-if="practiceInvoice || locumInvoice" class="w-full flex flex-col-reverse">
-              <div class="flex justify-end">
-                <div>Invoice Number:</div>
+              <div class="flex justify-end items-center">
+                <div>Invoice Number: </div>
                 <div
-                  class="font-semibold"
+                  class="pl-1 font-semibold"
                 >
                   {{ practiceInvoice && !locumInvoice ? practiceInvoice.invoice_number : locumInvoice.invoice_number }}
                 </div>
@@ -145,23 +145,24 @@
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
           >
             <div class="flex items-center justify-center py-2 bg-gray-900">
-              <div class="w-4/6">
+              <div :class="!byLocum ? 'w-4/6' : 'w-full'">
                 <div class="text-white text-sm text-left px-4">
                   <strong>Description</strong>
                 </div>
               </div>
-              <div class="w-2/6">
+              <!-- this -->
+              <div class="w-2/6" v-if="!byLocum"> 
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
                 </div>
               </div>
               <div v-if="forViewing == false">
-                <!-- <div class="mr-2" v-if="doNotShow">
+              <div class="mr-2" v-if="doNotShow">
 									<span
 										@click="addInvoiceItem()"
 										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
 									>+</span>
-								</div>-->
+								</div>
               </div>
             </div>
           </div>
@@ -173,7 +174,7 @@
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
           >
             <div class="flex w-full justify-center border-b border-gray-500 py-1">
-              <div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
+              <div v-if="forViewing == false" class="w-2/3 text-sm mx-1" >
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -188,10 +189,11 @@
                   {{ item.description ? item.description : "No Description" }}
                 </p>
               </div>
-              <div v-else class="w-full max-w px-2 py-1">
+              <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-2/3' : 'w-full'">
                 {{ item.description }}
               </div>
-              <div class="w-1/3 text-sm mx-1">
+              <!-- this -->
+              <div class="w-1/3 text-sm mx-1" v-if="!byLocum">
                 <template v-if="forViewing == false">
                   <input
                     v-if="doNotShow"
@@ -292,7 +294,7 @@
                   >
                 </template>
                 <p v-else class="px-2 py-1 text-right text-black">
-                  {{ item.total }}
+                  {{ item.total }}  
                 </p>
               </div>
               <template v-if="forViewing == false">

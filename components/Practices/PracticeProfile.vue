@@ -619,6 +619,7 @@ export default {
 				await this.getPractices()
 				await this.getPractice()
 				this.toEdit = false
+				this.toEditPracticeType = false
 
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
