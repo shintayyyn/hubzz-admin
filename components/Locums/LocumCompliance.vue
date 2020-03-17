@@ -186,7 +186,7 @@
               </span>
 
             </div>
-          </div>
+          </div>v-if="item.child_locum_compliance_documents.length <= 0
         </nuxt-link>
         <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
           <nuxt-link
