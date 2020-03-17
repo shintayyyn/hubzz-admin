@@ -21,6 +21,7 @@
 					:creditItems="creditItems"
 					:dateStart="practiceInvoice.date_start"
 					:dateEnd="practiceInvoice.date_end"
+					:byLocum="false"
 				/>
 			</div>
 		</div>
