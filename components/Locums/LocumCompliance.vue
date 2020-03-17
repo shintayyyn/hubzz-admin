@@ -21,88 +21,54 @@
       </div>
     </div>
     <!--GMC / NMC NUMBER-->
-    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
-      <div class="flex flex-col md:flex-row w-full sm:w-1/2 justify-between">
-        <p class="text-gray-400">GMC / NMC / HCPC Number</p>
-        <p class="mx-3 sm:mx-0">{{ user.locum_detail.gmc_or_nmc_number ? user.locum_detail.gmc_or_nmc_number.number : null }}</p>
+    <div 
+      v-for="(item, index) in referenceCompDocs" :key="`item-${index}`"
+      class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3"
+    >
+      <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <span :class="item && item.compliance_document_name ? 'truncate' : 'break-word'">{{ item ? item.compliance_document_name : null }}</span>
       </div>
-      <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
-        <button
-          v-if="user.locum_detail.gmc_or_nmc_number"
-          class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
-          :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600 text-center ' : 'bg-transparent px-2 hover:bg-green-500'}`"
-          @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Verified')"
-        >{{user.locum_detail.gmc_or_nmc_number.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
-        <button
-          v-if="user.locum_detail.gmc_or_nmc_number"
-          class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-yellow-500 rounded-full hover:bg-yellow-500 focus:outline-none"
-          :class="`${user.locum_detail.gmc_or_nmc_number.status === 'Rejected' ? 'bg-yellow-500 border-yellow-500 text-white px-4 hover:bg-yellow-600 ' : 'bg-transparent px-2 hover:bg-yellow-500'}`"
-          @click.prevent="toRejectGmcNmc()"
-        >{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
+      <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <span :class="item && item.reference ? 'truncate' : 'break-word'">{{ item ? item.reference : null }}</span>
       </div>
-      <div v-if="rejectGmcNmc == true" class="flex w-full justify-end mt-2 sm:m-0">
-        <div class="flex flex-col md:flex-row w-full md:w-auto items-center my-2">
-          <div class="border rounded-lg mx-2 p-2 h-full w-full md:w-auto">
-            <textarea
-              v-model="notes" 
-              placeholder="Reason for Rejection" 
-              class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
-              name="complianceNote"
-            />
-          </div>
-          <div class="flex md:flex-col mt-2">
-            <button @click.prevent="toPutGmcNmc(user.locum_detail.gmc_or_nmc_number.status,user.id,'Rejected')" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
-              <span>{{user.locum_detail.gmc_or_nmc_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
-            </button>
-            <button @click.prevent="rejectGmcNmc = false" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
-              <span>Cancel</span>
-            </button>
+      <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
+          <button
+            class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
+            :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600 text-center ' : 'bg-transparent px-2 hover:bg-green-500'}`"
+            @click.prevent="toUpdateReferenceNums(item.id,'Approved')"
+          >{{item.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
+          <button
+            class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-yellow-500 rounded-full hover:bg-yellow-500 focus:outline-none"
+            :class="`${item.status === 'Rejected' ? 'bg-yellow-500 border-yellow-500 text-white px-4 hover:bg-yellow-600 ' : 'bg-transparent px-2 hover:bg-yellow-500'}`"
+            @click.prevent="rejectGmcNmc = true"
+          >{{item.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
+        </div>
+      </div>
+      <div v-if="rejectGmcNmc === true" class="flex w-full justify-end mt-2 sm:m-0">
+        <div class="note-modal">
+          <div class="flex flex-col md:flex-row w-full md:w-auto items-center my-2">
+            <div class="border rounded-lg mx-2 p-2 h-full w-full md:w-auto">
+              <textarea
+                v-model="notes" 
+                placeholder="Reason for Rejection" 
+                class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
+                name="complianceNote"
+              />
+            </div>
+            <div class="flex md:flex-col mt-2">
+              <button @click.prevent="toUpdateReferenceNums(item.id, 'Rejected', notes)" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
+                <span>Confirm</span>
+              </button>
+              <button @click.prevent="rejectGmcNmc = false" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
+                <span>Cancel</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3">
-      <div class="flex flex-col md:flex-row w-full sm:w-1/2 justify-between">
-        <p class="text-gray-400">MPL / NPL Number</p>
-        <p class="mx-3 sm:mx-0">{{ user.locum_detail.mpl_or_npl_number ? user.locum_detail.mpl_or_npl_number.number : null }}</p>
-      </div>
-      <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
-        <button
-          class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white rounded-full hover:bg-green-500 focus:outline-none"
-          :class="`${user.locum_detail.mpl_or_npl_number.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600' : 'bg-transparent px-2 hover:bg-green-300'}`"
-          v-if="user.locum_detail.mpl_or_npl_number"
-          @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Verified')"
-          >{{user.locum_detail.mpl_or_npl_number.status == 'Verified' ? 'Verified' : 'Verify' }}
-        </button>
-        <button
-          class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white rounded-full hover:bg-yellow-500 focus:outline-none"
-          :class="`${user.locum_detail.mpl_or_npl_number.status === 'Rejected' ? 'bg-yellow-500 border-yellow-500 text-white px-4 hover:bg-yellow-300' : 'bg-transparent px-2 hover:bg-yellow-300'}`"
-          v-if="user.locum_detail.mpl_or_npl_number"
-          @click.prevent="toRejectMplNpl()"
-          >{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Rejected' : 'Reject' }}
-        </button>
-      </div>
-      <div v-if="rejectMplNpl == true" class="flex w-full justify-end mt-2 sm:m-0">
-        <div class="flex flex-col md:flex-row w-full md:w-auto items-center my-2">
-          <div class="border rounded-lg mx-2 p-2 h-full w-full md:w-auto">
-            <textarea
-              v-model="notes" 
-              placeholder="Reason for Rejection" 
-              class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
-              name="complianceNote"
-            />
-          </div>
-          
-          <div class="flex md:flex-col mt-2">
-            <button @click.prevent="toPutMplNpl(user.locum_detail.mpl_or_npl_number.status,user.id,'Rejected')" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
-              <span>{{user.locum_detail.mpl_or_npl_number.status == 'Rejected' ? 'Revert' : 'Confirm'}}</span>
-            </button>
-            <button @click.prevent="rejectMplNpl = false" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
-              <span>Cancel</span>
-            </button>
-          </div>
-        </div>
+      <div class="">
+        <span :class="item && item.note ? 'truncate' : 'break-word'">{{ item ? item.note : null }}</span>
       </div>
     </div>
     <!--GMC / NMC NUMBER ENDS HERE-->
@@ -340,6 +306,7 @@
       </nuxt-link>
     </div>
 
+    <div v-if="rejectGmcNmc" class="shield" @click="rejectGmcNmc=false" />
     <nuxt-child/>
   </div>
 </template>
@@ -476,13 +443,31 @@ export default {
           })
         }
       },
-      async toUpdateReferenceNums () {
+      async toUpdateReferenceNums(id, status, note) {
         try {
-          await this.$axios.$put(`/api/v1/`)
+          await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
+            status: status,
+            note: note,
+          }).then(res => {
+            this.rejectGmcNmc = false
+            this.getLocums()
+            this.getCompliances()
+            this.$store.commit('SET_NOTIFICATION',{ 
+              enabled: true, 
+              status: 'success', 
+              text: res.message 
+            })
+          })
         } catch (err) {
-
+             this.$store.commit('SET_NOTIFICATION',{ 
+              enabled: true, 
+              status: 'success', 
+              text: err.message
+            })
         }
       },
+
+
 
       async toPutGmcNmc(currentStatus, locumID, verifyReject){
         try{
@@ -649,5 +634,19 @@ export default {
 }
 </script>
 <style>
+.note-modal {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	width: 800px;
+	max-width: 95%;
+	max-height: 80%;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
+}
 
 </style>
