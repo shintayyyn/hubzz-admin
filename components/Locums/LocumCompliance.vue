@@ -184,9 +184,8 @@
               <span>
                 {{item && item.status ? item.status:null}}
               </span>
-
             </div>
-          </div>v-if="item.child_locum_compliance_documents.length <= 0
+          </div>
         </nuxt-link>
         <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
           <nuxt-link
@@ -554,6 +553,7 @@ export default {
           console.log("index practices index put GMC/NMC err", err);
         }
       },
+
       async toPutMplNpl(currentStatus, locumID, verifyReject){
         try{
           if(currentStatus === 'Pending'){
@@ -619,6 +619,7 @@ export default {
           console.log("index practices index put MPL/NPL err", err);
         }
       },
+
       statusStyle(status){
 			switch(status){
 				case 'Approved':
