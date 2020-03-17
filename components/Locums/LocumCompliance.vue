@@ -23,53 +23,55 @@
     <!--GMC / NMC NUMBER-->
     <div 
       v-for="(item, index) in referenceCompDocs" :key="`item-${index}`"
-      class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-6 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3"
+      class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-0 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3"
     >
-      <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+      <div class="flex flex-col sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <span :class="item && item.compliance_document_name ? 'truncate' : 'break-word'">{{ item ? item.compliance_document_name : null }}</span>
       </div>
-      <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+      <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <span :class="item && item.reference ? 'truncate' : 'break-word'">{{ item ? item.reference : null }}</span>
       </div>
-      <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-        <div class="flex w-full sm:w-1/2 justify-end mt-2 sm:m-0">
+      <div class="sm:w-1/2 md:w-1/4 text-center h-16 min-h-full overflow-y-auto">
+        <span class="break-word">{{ item && item.note ? item.note : null }}</span>
+      </div>
+      <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <div class="flex justify-end mt-2 sm:m-0">
           <button
             class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
-            :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 hover:bg-green-600 text-center ' : 'bg-transparent px-2 hover:bg-green-500'}`"
-            @click.prevent="toUpdateReferenceNums(item.id,'Approved')"
+            :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
+            @click.prevent="item.status === 'Verified' ? null : toUpdateReferenceNums(item.id,'Approved')"
           >{{item.status == 'Verified' ? 'Verified' : 'Verify' }}</button>
           <button
-            class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-yellow-500 rounded-full hover:bg-yellow-500 focus:outline-none"
-            :class="`${item.status === 'Rejected' ? 'bg-yellow-500 border-yellow-500 text-white px-4 hover:bg-yellow-600 ' : 'bg-transparent px-2 hover:bg-yellow-500'}`"
-            @click.prevent="rejectGmcNmc = true"
+            class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
+            :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'}`"
+            @click.prevent="item.status === 'Rejected' ? null : rejectGmcNmc = true"
           >{{item.status == 'Rejected' ? 'Rejected' : 'Reject' }}</button>
         </div>
       </div>
-      <div v-if="rejectGmcNmc === true" class="flex w-full justify-end mt-2 sm:m-0">
-        <div class="note-modal">
-          <div class="flex flex-col md:flex-row w-full md:w-auto items-center my-2">
-            <div class="border rounded-lg mx-2 p-2 h-full w-full md:w-auto">
-              <textarea
-                v-model="notes" 
-                placeholder="Reason for Rejection" 
-                class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none" 
-                name="complianceNote"
-              />
-            </div>
-            <div class="flex md:flex-col mt-2">
-              <button @click.prevent="toUpdateReferenceNums(item.id, 'Rejected', notes)" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
-                <span>Confirm</span>
-              </button>
-              <button @click.prevent="rejectGmcNmc = false" class="my-1 mx-1 md:mx-0 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
-                <span>Cancel</span>
-              </button>
-            </div>
+      <div  v-if="rejectGmcNmc === true" class="note-modal">
+        <div class="flex flex-col w-full p-4">
+          <p class="mb-2">Reason for Rejection</p>
+          <div class="border rounded-lg p-2 h-full w-full">
+            <textarea
+              v-model="notes" 
+              class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none w-full"
+              rows="4" 
+              name="complianceNote"
+              maxlength="255"
+            />
+          </div>
+          <p class="text-sm text-right">{{notes.length}}/255</p>
+          <div class="flex justify-end mt-2">
+            <button @click.prevent="toUpdateReferenceNums(item.id, 'Rejected', notes)" class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none">
+              <span>Confirm</span>
+            </button>
+            <button @click.prevent="rejectGmcNmc = false" class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none">
+              <span>Cancel</span>
+            </button>
           </div>
         </div>
       </div>
-      <div class="">
-        <span :class="item && item.note ? 'truncate' : 'break-word'">{{ item ? item.note : null }}</span>
-      </div>
+      
     </div>
     <!--GMC / NMC NUMBER ENDS HERE-->
 
@@ -296,9 +298,9 @@
           <strong class="block md:hidden">Status</strong>
           <div
             class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
-            :class="statusStyle('Present')">
+            :class="statusStyle(item && item.file ? 'Present' : 'Empty')">
             <span>
-              Present
+              {{ item && item.file ? 'Present' : 'Empty' }}
             </span>
           </div>
         </div>
@@ -467,8 +469,6 @@ export default {
         }
       },
 
-
-
       async toPutGmcNmc(currentStatus, locumID, verifyReject){
         try{
           if(currentStatus === 'Pending'){
@@ -606,30 +606,32 @@ export default {
       },
 
       statusStyle(status){
-			switch(status){
-				case 'Approved':
-					return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
-					break;
-				case 'Expiring':
-					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-					break;
-				case 'Expired':
-					return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
-					break;
-				case 'Rejected':
-					return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
+        switch(status){
+          case 'Approved':
+            return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
             break;
-        case 'Pending':
-					return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-          break;
-        case 'Present':
-          return 'bg-yellow-500 border-green-300 text-black lg:px-8 sm:px-4'
-          break;
-				default:
-					return
-			}
-		},
-
+          case 'Expiring':
+            return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+            break;
+          case 'Expired':
+            return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
+            break;
+          case 'Rejected':
+            return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
+              break;
+          case 'Pending':
+            return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+            break;
+          case 'Present':
+            return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+            break;
+          case 'Empty':
+            return 'border-white text-white lg:px-8 sm:px-4'
+            break;
+          default:
+            return
+        }
+      },
   }
 }
 </script>
@@ -639,9 +641,8 @@ export default {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 25px;
-	width: 800px;
-	max-width: 95%;
+	border-radius: 10px;
+  min-width: 600px;
 	max-height: 80%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
