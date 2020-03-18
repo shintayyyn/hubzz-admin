@@ -177,7 +177,7 @@ export default {
 		AppInput,
 		AppButton
 	},
-	props: ["user", "complianceDoc"],
+	props: ["user", "compliance_doc"],
 	data () {
 		return {
 			toPutLocumDetailCompliance: {
