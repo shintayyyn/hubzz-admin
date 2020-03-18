@@ -10,9 +10,7 @@
 		<div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
 			<p class="flex">Practice Name</p>
 			<p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-				<span class="mr-2">
-					{{ practice.surgery ? practice.surgery.name : null }}
-				</span>
+				<span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
 				<span
 					class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
 					:class="practiceTypeStyle(practice.type)"
@@ -30,15 +28,15 @@
 			>{{ practice.surgery ? practice.surgery.code : null }}</p>
 			<p class="flex">Address</p>
 			<p class="flex flex-col text-white text-sm p-2 font-semibold">
-				<span v-if="practice.surgery.address && practice.surgery.address.line_1">
-					{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}
-				</span>
-				<span v-if="practice.surgery.address && practice.surgery.address.line_2">
-					{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}
-				</span>
-				<span v-if="practice.surgery.address && practice.surgery.address.line_3">
-					{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}
-				</span>
+				<span
+					v-if="practice.surgery.address && practice.surgery.address.line_1"
+				>{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
+				<span
+					v-if="practice.surgery.address && practice.surgery.address.line_2"
+				>{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
+				<span
+					v-if="practice.surgery.address && practice.surgery.address.line_3"
+				>{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
 			</p>
 		</div>
 		<div class="flex overflow-x-auto my-2">
@@ -61,7 +59,7 @@
 		</div>
 		<div
 			class="billing-shield"
-      v-if="$route.name.includes('issue-hubzz-invoice') ||
+			v-if="$route.name.includes('issue-hubzz-invoice') ||
         $route.name.includes('hubzzInvoiceId') ||
         $route.name.includes('locumInvoiceId')"
 			@click="$router.go(-1)"
@@ -123,6 +121,9 @@ export default {
 					break;
 				case "Spoke":
 					return "bg-blue-500 text-white lg:px-8 sm:px-2";
+					break;
+				case "Type 2":
+					return "bg-purple-500 text-white lg:px-8 sm:px-2";
 					break;
 				default:
 					return;

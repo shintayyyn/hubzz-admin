@@ -140,7 +140,7 @@
               <p
                 class="flex text-white md:text-base py-2 font-bold leading-tight"
               >
-                Compliance Documents is not yet set up by the Practice yet.
+                Compliance Documents is not yet set up by the Practice.
               </p>
             </div>
           </div>
@@ -156,18 +156,18 @@
             </div>
             <!-- VIEW OTHER INFORMATION -->
             <div v-if="toEdit === false">
-              <p class="flex text-gray-300 font-bold">
+              <!-- <p class="flex text-gray-300 font-bold">
                 Direct Debit
               </p>
               <p class="flex text-white text-sm md:px-2 mb-2">
                 {{ practice.direct_debit ? 'Yes' : 'No' }}
-              </p>
+              </p> -->
               <template v-if="practice.direct_debit">
                 <p class="flex font-bold">
                   Sage reference
                 </p>
                 <p class="flex text-white text-sm md:px-2 mb-2">
-                  {{ practice.sage_ref }}
+                  {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
                 </p>
                 <!-- <p class="flex font-bold">Nominal code</p>
 								<p class="flex ftext-white text-sm md:px-2 mb-2">{{practice.nominal_code}}</p> -->
@@ -243,14 +243,14 @@
             </div>
             <!-- EDIT OTHER INFORMATION -->
             <div v-if="toEdit === true && authAdminPermissions.includes('Edit Practice Other Information')">
-              <AppInput
+              <!-- <AppInput
                 v-model="toPutPractice.direct_debit"
                 class="w-2/3 md:w-1/2 mr-2"
                 :type="'select'"
                 :name="'status'"
                 :label="'Direct Debit'"
                 :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
-              />
+              /> -->
               <template v-if="['true', true].includes(toPutPractice.direct_debit)">
                 <AppInput
                   v-model="toPutPractice.sage_ref"
@@ -536,7 +536,9 @@ export default {
 			]).then(() => {
 				console.log("get parent done")
 			})
-		}
+    }
+    
+    console.log("practice", this.practice)
 	},
 	mounted () {
 	},
@@ -617,6 +619,7 @@ export default {
 				await this.getPractices()
 				await this.getPractice()
 				this.toEdit = false
+				this.toEditPracticeType = false
 
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
