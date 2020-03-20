@@ -1,7 +1,7 @@
 <template>
 	<div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout w-full max-w-2xl">
 		<div class="flex items-center text-sm text-white py-6 px-4 md:px-8">
-			<div @click="goBack()" class="cursor-pointer">
+			<div class="cursor-pointer" @click="goBack()">
 				<svgicon
 					name="arrow-left-solid"
 					height="32"
@@ -19,10 +19,10 @@
 			</button>-->
 
 			<button
-				@click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
 				class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
+				@click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
 			>
-				<svgicon name="cloud-download" width="21" height="21" class="fill-current"></svgicon>
+				<svgicon name="cloud-download" width="21" height="21" class="fill-current" />
 				<span class="px-1 font-semibold">Download</span>
 			</button>
 		</div>
@@ -33,56 +33,56 @@
 						<p class="font-bold text-base">Title</p>
 						<p
 							class="text-white"
-						>{{compliance_doc.compliance_document ? compliance_doc.compliance_document.name: null}}</p>
+						>{{ compliance_doc.compliance_document ? compliance_doc.compliance_document.name: null }}</p>
 					</div>
 					<div class="leading-tight pb-4">
 						<p class="font-bold text-base">Locum</p>
-						<p class="text-white">{{user.personal_detail ? user.personal_detail.name: null}}</p>
+						<p class="text-white">{{ user.personal_detail ? user.personal_detail.name: null }}</p>
 					</div>
 					<div class="leading-tight pb-4">
 						<p class="font-bold text-base">File last uploaded</p>
 						<p
 							class="text-white"
-						>{{compliance_doc.file ? $moment(compliance_doc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null}}</p>
+						>{{ compliance_doc.file ? $moment(compliance_doc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</p>
 					</div>
 					<div class="leading-tight pb-4">
 						<p class="font-bold text-base">Mobile phone number</p>
-						<p class="text-white">{{user.contact_detail ? user.contact_detail.mobile_number : null}}</p>
+						<p class="text-white">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</p>
 					</div>
 
 					<div
-						v-if="compliance_doc.type === 'Mandatory' || compliance_doc.type !== 'Optional'"
+						v-if="(compliance_doc.type === 'Mandatory' || compliance_doc.type !== 'Optional') && !compliance_doc.mandatory_training"
 						class="w-full"
 					>
 						<div class="leading-tight pb-4">
 							<p class="font-bold">Expired At</p>
 							<p
 								:class="compliance_doc && compliance_doc.expired_at ? 'text-white' : 'text-gray-400'"
-							>{{compliance_doc && compliance_doc.expired_at ? $moment(compliance_doc.expired_at).format('DD/MM/YYYY HH:mm:ss') : 'No expiration date set.'}}</p>
+							>{{ compliance_doc && compliance_doc.expired_at ? $moment(compliance_doc.expired_at).format('DD/MM/YYYY HH:mm:ss') : 'No expiration date set.' }}</p>
 						</div>
-						<div class="pb-2 mb-2" v-if="compliance_doc.status == 'Rejected'">
+						<div v-if="compliance_doc.status == 'Rejected'" class="pb-2 mb-2">
 							<p class="font-bold">Note</p>
 							<p
 								class="text-white break-words"
-							>{{compliance_doc && compliance_doc.note ? compliance_doc.note : 'N/A'}}</p>
+							>{{ compliance_doc && compliance_doc.note ? compliance_doc.note : 'N/A' }}</p>
 						</div>
 
 						<div>
 							<AppInput
-								class="w-full mr-2"
 								v-model="toPutLocumDetailCompliance.status"
+								class="w-full mr-2"
 								:type="'select'"
 								:name="'status'"
 								:placeholder="'Select...'"
 								:items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
 								:error="formError.find(item => item.field === 'status')"
-								@change="setStatusData($event)"
 								:label="'Status'"
 								required
+								@change="setStatusData($event)"
 							/>
 						</div>
 
-						<div class="w-full" v-if="notesAreVisible">
+						<div v-if="notesAreVisible" class="w-full">
 							<AppInput
 								v-model="toPutLocumDetailCompliance.note"
 								:name="'complianceNote'"
@@ -104,7 +104,7 @@
 							</textarea>-->
 						</div>
 
-						<div class="pb-4" v-else>
+						<div v-else class="pb-4">
 							<AppDate
 								v-model="toPutLocumDetailCompliance.expired_at"
 								:name="'expired_at'"
@@ -113,13 +113,13 @@
 								required
 							/>
 						</div>
-						<div class="flex items-center">
+						<div class="flex">
 							<AppButton class="mr-2" :label="'Save'" @click="publish()" />
 							<AppButton
 								v-if="compliance_doc.status === 'Expiring'"
 								class="mr-2"
 								:label="'Notify Locum'"
-								@click="emailModal = true"
+								@click="emailModal=true"
 							/>
 						</div>
 					</div>
@@ -181,12 +181,12 @@ import AppDate from "@/components/Base/AppDate";
 import AppInput from "@/components/Base/AppInput";
 import AppButton from "@/components/Base/AppButton";
 export default {
-	props: ["user", "compliance_doc"],
 	components: {
 		AppDate,
 		AppInput,
 		AppButton
 	},
+	props: ["user", "compliance_doc"],
 	data() {
 		return {
 			toPutLocumDetailCompliance: {
