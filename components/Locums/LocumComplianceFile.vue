@@ -50,7 +50,10 @@
 						<p class="text-white">{{user.contact_detail ? user.contact_detail.mobile_number : null}}</p>
 					</div>
 
-					<div v-if="compliance_doc.type === 'Mandatory' || compliance_doc.type !== 'Optional'" class="w-full">
+					<div
+						v-if="compliance_doc.type === 'Mandatory' || compliance_doc.type !== 'Optional'"
+						class="w-full"
+					>
 						<div class="leading-tight pb-4">
 							<p class="font-bold">Expired At</p>
 							<p
@@ -110,12 +113,16 @@
 								required
 							/>
 						</div>
-						<AppButton 
-							:label="'Save'" 
-							@click="publish()" 
-						/>
+						<div class="flex items-center">
+							<AppButton class="mr-2" :label="'Save'" @click="publish()" />
+							<AppButton
+								v-if="compliance_doc.status === 'Expiring'"
+								class="mr-2"
+								:label="'Notify Locum'"
+								@click="emailModal = true"
+							/>
+						</div>
 					</div>
-					
 				</div>
 				<div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
 					<p class="font-bold pb-2">File</p>
@@ -139,6 +146,33 @@
 				</div>
 			</div>
 		</div>
+		<transition name="slide" mode="out-in">
+			<div class="confirm-termination-modal p-4 md:p-6" v-if="emailModal">
+				<no-ssr placeholder="Loading...">
+					<quill-editor
+						class="bg-white text-black"
+						ref="myTextEditor"
+						v-model="emailContent"
+						:options="editorOption"
+						@blur="onEditorBlur($event)"
+						@focus="onEditorFocus($event)"
+						@ready="onEditorReady($event)"
+					></quill-editor>
+				</no-ssr>
+				<div class="flex">
+					<AppButton
+						:label="'Send to Locum'"
+						class="my-2 mr-2"
+						@click="sendEmail()"
+						:disabled="!emailContent"
+					/>
+					<AppButton :label="'Cancel'" @click="emailModal = false, emailContent=''" class="my-2 mr-2" />
+				</div>
+			</div>
+		</transition>
+		<transition name="fade" mode="out-in">
+			<div v-if="emailModal" class="shield" @click="emailModal = false, emailContent=''"></div>
+		</transition>
 		<nuxt-child />
 	</div>
 </template>
@@ -160,8 +194,31 @@ export default {
 				status: "",
 				note: ""
 			},
+			emailContent: "",
 			notesAreVisible: false,
-			formError: []
+			formError: [],
+			emailModal: false,
+			editorOption: {
+				placeholder: "Type your message here",
+				modules: {
+					toolbar: [
+						["bold", "italic", "underline", "strike"],
+						["blockquote", "code-block"],
+						[{ header: 1 }, { header: 2 }],
+						[{ list: "ordered" }, { list: "bullet" }],
+						[{ script: "sub" }, { script: "super" }],
+						[{ indent: "-1" }, { indent: "+1" }],
+						[{ direction: "rtl" }],
+						[{ size: ["small", false, "large", "huge"] }],
+						[{ header: [1, 2, 3, 4, 5, 6, false] }],
+						[{ font: [] }],
+						[{ color: [] }, { background: [] }],
+						[{ align: [] }],
+						["clean"],
+						["link"]
+					]
+				}
+			}
 		};
 	},
 	created() {
@@ -182,6 +239,15 @@ export default {
 		this.setStatusData(this.toPutLocumDetailCompliance.status);
 	},
 	methods: {
+		onEditorBlur(editor) {
+			console.log("editor blur!", editor);
+		},
+		onEditorFocus(editor) {
+			console.log("editor focus!", editor);
+		},
+		onEditorReady(editor) {
+			console.log("editor ready!", editor);
+		},
 		publish() {
 			this.formError = [];
 
@@ -252,7 +318,10 @@ export default {
 				offset: this.getQuery()
 			});
 		},
-
+		sendEmail() {
+			console.log("send email method");
+			this.emailModal = false;
+		},
 		async toPutLocumDetailComplianceDocs() {
 			console.log(this.toPutLocumDetailCompliance);
 			try {
