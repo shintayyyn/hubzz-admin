@@ -181,8 +181,7 @@ export default {
         }
       })
 		})
-    console.log('job parts',
-    jobParts)
+    console.log('job parts',jobParts)
 		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
 
 		await this.$store.commit("jobs/TOGGLE_LOADING", false)

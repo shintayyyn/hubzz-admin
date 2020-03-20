@@ -4,23 +4,50 @@
 
     <div class="flex items-center px-2 py-2">
 			<div class="relative">
-				<input
-					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-					placeholder="Search Practice by Name"
-					v-model="search"
-				/>
-				<button
-					v-if="search"
-					class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-					@click="(search = ''), searchSubmit()"
-				>
-					<svgicon
-						name="times-solid"
-						height="12"
-						width="12"
-						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+				<div>
+					<input
+						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+						placeholder="Search Practice by Name"
+						v-model="search"
 					/>
-				</button>
+					<button
+						v-if="search"
+						class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+						@click="(search = ''), searchSubmit()"
+					>
+						<svgicon
+							name="times-solid"
+							height="12"
+							width="12"
+							class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+						/>
+					</button>
+				</div>
+				<div>
+					<AppDate
+						class="w-full md:w-1/2 md:mx-2"
+						v-model="jobPartsParams.approved_at_date_start"
+						:name="'approved_at_date_start'"
+						:label="'From'"
+					/>
+					<AppDate
+						class="w-full md:w-1/2 md:mx-2"
+						v-model="jobPartsParams.approved_at_date_end"
+						:name="'approved_at_date_end'"
+						:label="'To'"
+					/>
+					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+						<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
+						<label for="disputed">Show Disputed Invoices</label>
+					</div>
+					<AppButton
+						class="whitespace-no-wrap"
+						:disabled="jobPartsParams.approved_at_date_start && jobPartsParams.approved_at_date_end ? false : true"
+						:label="'Search for Invoices'"
+						:icon="'search'"
+						@click="getJobParts()"
+					/>
+				</div>
 			</div>
 		</div>
 		<AppTable
@@ -76,26 +103,42 @@
 		<nuxt-child />
 	</div>
 </template>
-
 <script>
-import debounce from "lodash.debounce";
-import AppTable from "@/components/Base/AppTable";
+import debounce from "lodash.debounce"
+import AppTable from "@/components/Base/AppTable"
+import AppDate from "@/components/Base/AppDate"
+import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
 		AppTable,
+		AppDate,
+		AppButton,
 	},
 	data() {
 		return {
 			// for app table
 			currentPage: 1,
-      search: "",
+			search: "",
+			showDisputed: false,
+			jobPartsParams: {
+				approved_at_date_start: null,
+				approved_at_date_end: null,
+				status: null,
+				invoice_status: null,
+				locum_invoiceable: null,
+				practice_invoiced: false
+			},
+			
 			params: {
+				id: [],
 				limit: 10,
 				offset: 0,
         order_by: ["created_at:desc"],
         status: ["Active","Dormant","Suspended"],
         verified: true,
 			},
+
+			practiceIds: [],
 
 			loading: false,
 			columns: [
@@ -137,6 +180,15 @@ export default {
 		};
 	},
 	computed: {
+		loadingSessions () {
+			return this.$store.state.jobs.loading_jobs
+		},
+		jobParts () {
+			return this.$store.state.jobs.practice_billing_sessions
+		},
+		jobPartCount () {
+			return this.$store.state.jobs.practice_billing_sessions_count
+		},
 		loadingPractices() {
 			return this.$store.state.practices.loading_practices;
 		},
@@ -158,26 +210,26 @@ export default {
 	},
 	async asyncData({ app, route, store }) {
 		try {
-			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = [] } = route.query;
-			page = parseInt(page);
-			const createdRoute = route.query;
-			const limit = 10;
-      const offset = page * limit - limit;
-      const status = ["Active","Dormant","Suspended"]
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc";
-			const params = { limit, offset, order_by, status };
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
-			const itemCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
+			// await store.commit("practices/TOGGLE_LOADING", true);
+			// let { page = 1, search = "", order_by = [] } = route.query;
+			// page = parseInt(page);
+			// const createdRoute = route.query;
+			// const limit = 10;
+      // const offset = page * limit - limit;
+      // const status = ["Active","Dormant","Suspended"]
+			// order_by =
+			// 	createdRoute && createdRoute.order_by
+			// 		? createdRoute.order_by
+			// 		: "created_at:desc";
+			// const params = { limit, offset, order_by, status };
+			// let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
+			// const itemCount = response.data.count;
+			// await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
 
-			response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
-			const practices = response.data.practices;
-			await store.commit("practices/SET_PRACTICES", practices);
-			await store.commit("practices/TOGGLE_LOADING", false);
+			// response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
+			// const practices = response.data.practices;
+			// await store.commit("practices/SET_PRACTICES", practices);
+			// await store.commit("practices/TOGGLE_LOADING", false);
 			return {
 				// itemCount,
 				// practices
@@ -199,6 +251,122 @@ export default {
   },
 
 	methods: {
+
+		async getJobParts () {
+			await this.$store.commit("jobs/TOGGLE_LOADING", true)
+			if (this.showDisputed) {
+				this.jobPartsParams.status = "";
+				this.jobPartsParams.invoice_status = "Disputed";
+				this.jobPartsParams.locum_invoiceable = null;
+			} else {
+				this.jobPartsParams.status = "Approved";
+				this.jobPartsParams.invoice_status = null;
+				this.jobPartsParams.locum_invoiceable = true;
+			}
+			let { 
+				page = 1, 
+				order_by = [] 
+			} = this.$route.query
+
+			page = parseInt(page)
+
+			const createdRoute = this.$route.query
+			const limit = 10
+			const offset = page * limit - limit
+			order_by =
+				createdRoute && createdRoute.order_by
+					? createdRoute.order_by
+					: "date_end:asc"
+			let params = {
+				...this.filter,
+				limit,
+				offset,
+				order_by
+			}
+
+			if (this.showDisputed) {
+				params = {
+					completed_at_date_start: this.jobPartsParams.approved_at_date_start,
+					completed_at_date_end: this.jobPartsParams.approved_at_date_end,
+					invoice_status: ["Disputed", "Issued"],
+					limit,
+					offset,
+					order_by
+				}
+				console.log("disputed params", params)
+			}
+			
+			let jobPartCount,jobParts = ""
+
+			await this.$axios
+				.$get(`/api/v1/admin/job-parts/count`, { params })
+				.then(res => {
+					jobPartCount = res.data.count
+				})
+
+			await this.$store.commit(
+				"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
+				jobPartCount
+			)
+
+			await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+				console.log("res", res)
+				jobParts = res.data.job_parts.map(item => {
+					return {
+						...item,
+						isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
+						tag_status: item.terminated ? "Terminated" : item.status,
+						date_time_start: `${this.$moment(item.date_start)
+							.format("DD-MM-YYYY")} | ${item.time_start}`,
+						date_time_end: `${this.$moment(item.date_end)
+							.format("DD-MM-YYYY")} | ${item.time_end}`
+					}
+				})
+			})
+
+			console.log('job parts', jobParts)
+
+			// practiceIds = await jobParts.map(jobPart => {
+			// 	return jobPart.practice_id
+			// })
+			
+			this.practiceIds = await jobParts.reduce((accumulator, item) => {
+				return accumulator.includes(item.practice_id) ? accumulator : [...accumulator, item.practice_id]
+			}, [])
+
+			console.log('this.practiceIds', this.practiceIds)
+
+			await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
+
+			await this.$store.commit("jobs/TOGGLE_LOADING", false)
+
+			await this.getBillablePractices(this.practiceIds)
+		},
+
+		async getBillablePractices () {
+			await this.$store.commit("practices/TOGGLE_LOADING", true);
+			let { page = 1, search = "", order_by = [] } = this.$route.query;
+			page = parseInt(page);
+			const createdRoute = this.$route.query;
+			const limit = 10;
+      const offset = page * limit - limit;
+			const status = ["Active","Dormant","Suspended"]
+			const id = this.practiceIds
+			order_by =
+				createdRoute && createdRoute.order_by
+					? createdRoute.order_by
+					: "created_at:desc";
+			const params = { id, limit, offset, order_by, status };
+			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, { params });
+			const itemCount = response.data.count;
+			await this.$store.commit("practices/SET_PRACTICE_COUNT", itemCount);
+
+			response = await this.$axios.$get(`/api/v1/admin/practices`, { params });
+			const practices = response.data.practices;
+			await this.$store.commit("practices/SET_PRACTICES", practices);
+			await this.$store.commit("practices/TOGGLE_LOADING", false);
+		},
+
 		goToPage(page) {
 			if (page < 1) {
 				return;

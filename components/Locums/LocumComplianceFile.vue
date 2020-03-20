@@ -227,8 +227,7 @@ export default {
 		this.toPutLocumDetailCompliance.expired_at = this.compliance_doc.expired_at;
 		this.toPutLocumDetailCompliance.status = this.compliance_doc.status;
 		this.toPutLocumDetailCompliance.note = this.compliance_doc.note;
-		console.log(this.toPutLocumDetailCompliance);
-		console.log("this.compliance_doc.status", this.compliance_doc);
+		console.log("to put locum compliance", this.toPutLocumDetailCompliance);
 		if (this.compliance_doc.status === "Expiring") {
 			this.toPutLocumDetailCompliance.status = "Approved";
 		}
