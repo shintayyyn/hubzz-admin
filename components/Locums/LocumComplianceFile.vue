@@ -94,14 +94,6 @@
 								:error="formError.find(item => item.field === 'note')"
 								required
 							/>
-							<!-- <p class="mt-5 mr-20">Reason for Rejection</p>
-							<textarea
-								v-model="toPutLocumDetailCompliance.note"
-								placeholder="Type Here"
-								class="w-full text-white flex-1 py-2 px-4 bg-transparent overflow-auto resize-vertical border-b focus:border-sunglow focus:outline-none"
-								name="complianceNote"
-							>Type Here
-							</textarea>-->
 						</div>
 
 						<div v-else class="pb-4">
@@ -116,7 +108,7 @@
 						<div class="flex">
 							<AppButton class="mr-2" :label="'Save'" @click="publish()" />
 							<AppButton
-								v-if="compliance_doc.status === 'Expiring'"
+								v-if="['Expiring', 'Expired'].includes(compliance_doc.status)"
 								class="mr-2"
 								:label="'Notify Locum'"
 								@click="emailModal=true"
@@ -222,14 +214,15 @@ export default {
 		};
 	},
 	created() {
-		console.log("compliance_doc", this.compliance_doc);
-		console.log(this.$route);
 		this.toPutLocumDetailCompliance.expired_at = this.compliance_doc.expired_at;
 		this.toPutLocumDetailCompliance.status = this.compliance_doc.status;
 		this.toPutLocumDetailCompliance.note = this.compliance_doc.note;
 		console.log("to put locum compliance", this.toPutLocumDetailCompliance);
 		if (this.compliance_doc.status === "Expiring") {
 			this.toPutLocumDetailCompliance.status = "Approved";
+		}
+		if (this.compliance_doc.status === "Expired") {
+			this.toPutLocumDetailCompliance.status = "Rejected";
 		}
 		if (this.compliance_doc.status === "Pending") {
 			this.toPutLocumDetailCompliance.status = null;
