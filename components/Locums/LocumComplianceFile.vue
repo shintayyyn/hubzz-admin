@@ -163,7 +163,7 @@
 					<AppButton
 						:label="'Send to Locum'"
 						class="my-2 mr-2"
-						@click="sendEmail()"
+						@click="sendEmail(compliance_doc.id, emailContent)"
 						:disabled="!emailContent"
 					/>
 					<AppButton :label="'Cancel'" @click="emailModal = false, emailContent=''" class="my-2 mr-2" />
@@ -318,9 +318,21 @@ export default {
 				offset: this.getQuery()
 			});
 		},
-		sendEmail() {
-			console.log("send email method");
-			this.emailModal = false;
+		sendEmail(id, body) {
+			this.$axios
+				.post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
+					body: body
+				})
+				.then(res => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: res.data.message
+					});
+					setTimeout(() => {
+						this.emailModal = false;
+					}, 200);
+				});
 		},
 		async toPutLocumDetailComplianceDocs() {
 			console.log(this.toPutLocumDetailCompliance);
