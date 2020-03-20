@@ -160,7 +160,7 @@
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
             <span class="break-all">
-              {{ item && item.expired_at 
+              {{ (item && item.expired_at) && item.status !== "Expired" 
                 ? $moment(item.expired_at).diff($moment(), 'days')  
                 : null }}
             </span>
