@@ -133,7 +133,7 @@
             </div>
           </div>
         </div>
-        <!-- FOR INVOICES -->
+        <!-- FOR INVOICES - INVOICE ITEMS -->
         <div
           v-if="invoiceItems && invoiceItems.length > 0"
           class="flex flex-col overflow-x-auto"
@@ -222,7 +222,7 @@
           </div>
         </div>
 
-        <!-- FOR DISPUTED -->
+        <!-- FOR DISPUTED ITEMS -->
         <div
           v-if="disputedItems && disputedItems.length > 0"
           class="flex flex-col overflow-x-auto"
@@ -504,6 +504,7 @@
           </div>
         </div>
 
+        <!-- TOTALS -->
         <div ref="items-total" class="flex justify-betwen px-4 pt-2">
           <div class="my-1 px-1 w-3/4 font-bold">
             Total
@@ -513,6 +514,7 @@
           </div>
         </div>
       </div>
+
       <!-- LOCUM INVOICE  -->
       <div v-if="locumInvoice" ref="pdf-footer" class="p-4">
         <!-- items days worked -->

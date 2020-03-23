@@ -150,7 +150,6 @@ export default {
 			} else {
 				this.invoiceItems = [];
 			}
-
 			for (let i = 0; i < chosenJobParts.length; i++) {
 				console.log("chosenJobPart", chosenJobParts[i]);
 				const newItem = {
@@ -162,9 +161,9 @@ export default {
 						" for £" +
 						chosenJobParts[i].practice_rate +
 						" from " +
-						chosenJobParts[i].date_start +
+						this.$moment(chosenJobParts[i].date_start).format('DD/MM/YYYY') +
 						" to " +
-						chosenJobParts[i].date_end,
+						this.$moment(chosenJobParts[i].date_end).format('DD/MM/YYYY'),
 						// divided by 60 to convert field "final_hours", from minutes to hours
 					total: parseFloat(
 						(chosenJobParts[i].final_hours/60) * chosenJobParts[i].practice_rate
