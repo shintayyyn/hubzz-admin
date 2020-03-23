@@ -6,9 +6,9 @@
 			<div class="relative w-full">
 				<div>
 					<input
+						v-model="search"
 						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
 						placeholder="Search Practice by Name"
-						v-model="search"
 					/>
 					<button
 						v-if="search"
@@ -25,31 +25,31 @@
 				</div>
 				<div class="flex items-center w-full">
 					<AppDate
-						class="md:mx-2 text-white"
 						v-model="jobPartsParams.approved_at_date_start"
+						class="md:mx-2 text-white"
 						:name="'approved_at_date_start'"
 						:label="'From'"
 					/>
 					<AppDate
-						class="md:mx-2 text-white"
 						v-model="jobPartsParams.approved_at_date_end"
+						class="md:mx-2 text-white"
 						:name="'approved_at_date_end'"
 						:label="'To'"
 					/>
-					<!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
 						<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
 						<label for="disputed">Show Disputed Invoices</label>
-					</div>-->
-					<AppInput
-						v-model="showDisputed"
-						:label="'Show Disputed Invoices'"
-						:type="'single-checkbox'"
-						class="text-white mx-2"
-					/>
+					</div>
+					<!-- <AppInput
+            v-model="showDisputed"
+            :label="'Show Disputed Invoices'"
+            :type="'single-checkbox'"
+            class="text-white mx-2"
+					/>-->
 					<AppButton
 						class="whitespace-no-wrap"
 						:disabled="jobPartsParams.approved_at_date_start && jobPartsParams.approved_at_date_end ? false : true"
-						:label="'Search for Invoices'"
+						:label="'Search for Practices'"
 						:icon="'search'"
 						@click="getJobParts()"
 					/>
@@ -74,12 +74,12 @@
 				<div
 					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
 					:class="
-						`${
-							slotProps.item.status === 'Active'
-								? 'bg-green-500'
-								: 'bg-gray-500 text-gray-700'
-						}`
-					"
+            `${
+              slotProps.item.status === 'Active'
+                ? 'bg-green-500'
+                : 'bg-gray-500 text-gray-700'
+            }`
+          "
 				>{{ slotProps.item.status }}</div>
 			</template>
 			<template v-slot:type_slot="slotProps">
@@ -96,16 +96,20 @@
 			</template>
 		</AppTable>
 		<template v-else>
-			<div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
+			<div
+				v-if="!jobPartsParams.approved_at_date_start || !jobPartsParams.approved_at_date_end"
+				class="mt-2 w-full text-center text-white"
+			>Input Job Part Approval / Disputed Dates to see Billable Practices</div>
+			<div v-else class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
 		</template>
 		<div
-			class="billing-shield"
 			v-if="
-				$route.name.includes('index-billings-id') ||
-					$route.name.includes('index-billings-addinvoice')
-			"
+        $route.name.includes('index-billings-id') ||
+          $route.name.includes('index-billings-addinvoice')
+      "
+			class="billing-shield"
 			@click="$router.push(`/billings`)"
-		></div>
+		/>
 		<nuxt-child />
 	</div>
 </template>
@@ -145,9 +149,6 @@ export default {
 				status: ["Active", "Dormant", "Suspended"],
 				verified: true
 			},
-
-			practiceIds: [],
-
 			loading: false,
 			columns: [
 				{
@@ -216,37 +217,6 @@ export default {
 			return this.getAllPractices.length;
 		}
 	},
-	async asyncData({ app, route, store }) {
-		try {
-			// await store.commit("practices/TOGGLE_LOADING", true);
-			// let { page = 1, search = "", order_by = [] } = route.query;
-			// page = parseInt(page);
-			// const createdRoute = route.query;
-			// const limit = 10;
-			// const offset = page * limit - limit;
-			// const status = ["Active","Dormant","Suspended"]
-			// order_by =
-			// 	createdRoute && createdRoute.order_by
-			// 		? createdRoute.order_by
-			// 		: "created_at:desc";
-			// const params = { limit, offset, order_by, status };
-			// let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
-			// const itemCount = response.data.count;
-			// await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
-
-			// response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
-			// const practices = response.data.practices;
-			// await store.commit("practices/SET_PRACTICES", practices);
-			// await store.commit("practices/TOGGLE_LOADING", false);
-			return {
-				// itemCount,
-				// practices
-			};
-		} catch (err) {
-			// error({ statusCode: 404 });
-			console.log("Get practices error!", err);
-		}
-	},
 
 	watch: {
 		search(value) {
@@ -254,7 +224,20 @@ export default {
 		},
 
 		$route(to, from) {
-			this.getPractices();
+			// this.getPractices();
+		}
+	},
+	async asyncData({ app, route, store }) {
+		try {
+			await store.commit("practices/SET_PRACTICE_COUNT", 0);
+			await store.commit("practices/SET_PRACTICES", []);
+			return {
+				// itemCount,
+				// practices
+			};
+		} catch (err) {
+			// error({ statusCode: 404 });
+			console.log("Get practices error!", err);
 		}
 	},
 
@@ -339,19 +322,17 @@ export default {
 			// 	return jobPart.practice_id
 			// })
 
-			this.practiceIds = await jobParts.reduce((accumulator, item) => {
+			this.params.id = await jobParts.reduce((accumulator, item) => {
 				return accumulator.includes(item.practice_id)
 					? accumulator
 					: [...accumulator, item.practice_id];
 			}, []);
 
-			console.log("this.practiceIds", this.practiceIds);
-
 			await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts);
 
 			await this.$store.commit("jobs/TOGGLE_LOADING", false);
 
-			await this.getBillablePractices(this.practiceIds);
+			await this.getBillablePractices();
 		},
 
 		async getBillablePractices() {
@@ -362,7 +343,7 @@ export default {
 			const limit = 10;
 			const offset = page * limit - limit;
 			const status = ["Active", "Dormant", "Suspended"];
-			const id = this.practiceIds;
+			const id = this.params.id;
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
@@ -454,6 +435,7 @@ export default {
 		getPractices() {
 			this.$store
 				.dispatch("practices/fetchPractices", {
+					id: this.params.id,
 					limit: this.params.limit,
 					search: this.search,
 					order_by: this.params.order_by,
@@ -464,6 +446,7 @@ export default {
 				})
 				.then(() => {
 					this.$store.dispatch("practices/fetchPractices", {
+						id: this.params.id,
 						limit: this.params.limit,
 						search: this.search,
 						order_by: this.params.order_by,
