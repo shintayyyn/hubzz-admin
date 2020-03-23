@@ -43,7 +43,7 @@
 						<p class="font-bold text-base">File last uploaded</p>
 						<p
 							class="text-white"
-						>{{ compliance_doc.file ? $moment(compliance_doc.file.created_at).format('DD/MM/YYYY HH:mm:ss') : null }}</p>
+						>{{ compliance_doc.file ? $moment(compliance_doc.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY HH:mm:ss') : null }}</p>
 					</div>
 					<div class="leading-tight pb-4">
 						<p class="font-bold text-base">Mobile phone number</p>
@@ -58,7 +58,7 @@
 							<p class="font-bold">Expired At</p>
 							<p
 								:class="compliance_doc && compliance_doc.expired_at ? 'text-white' : 'text-gray-400'"
-							>{{ compliance_doc && compliance_doc.expired_at ? $moment(compliance_doc.expired_at).format('DD/MM/YYYY HH:mm:ss') : 'No expiration date set.' }}</p>
+							>{{ compliance_doc && compliance_doc.expired_at ? $moment(compliance_doc.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY HH:mm:ss') : 'No expiration date set.' }}</p>
 						</div>
 						<div v-if="compliance_doc.status == 'Rejected'" class="pb-2 mb-2">
 							<p class="font-bold">Note</p>

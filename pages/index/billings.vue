@@ -349,7 +349,6 @@ export default {
 					? createdRoute.order_by
 					: "created_at:desc";
 			const params = { id, limit, offset, order_by, status };
-			console.log("bullshit");
 			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, {
 				params
 			});
@@ -434,7 +433,6 @@ export default {
 		}, 500),
 
 		getPractices() {
-			console.log("tang ina mo");
 			this.$store
 				.dispatch("practices/fetchPractices", {
 					id: this.params.id,
