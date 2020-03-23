@@ -36,16 +36,18 @@
 						:name="'approved_at_date_end'"
 						:label="'To'"
 					/>
-					<!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+					<div
+						class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none mr-2"
+					>
 						<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
 						<label for="disputed">Show Disputed Invoices</label>
-					</div>-->
-					<AppInput
+					</div>
+					<!-- <AppInput
 						v-model="showDisputed"
 						:label="'Show Disputed Invoices'"
 						:type="'single-checkbox'"
 						class="text-white mx-2"
-					/>
+					/>-->
 					<AppButton
 						class="whitespace-no-wrap"
 						:disabled="jobPartsParams.approved_at_date_start && jobPartsParams.approved_at_date_end ? false : true"
