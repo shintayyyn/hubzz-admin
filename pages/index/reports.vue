@@ -310,12 +310,6 @@
     }
   }
 
-  @media (min-width: 450px) {
-    .right-side-header-content {
-      width: calc(100% - 0px);
-    }
-  }
-
   .page-overlap {
     min-width: 100%;
   }
