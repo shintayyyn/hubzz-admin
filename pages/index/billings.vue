@@ -90,7 +90,17 @@
 			</template>
 		</AppTable>
     <template v-else>
-      <div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
+      <div
+				v-if="!jobPartsParams.approved_at_date_start || !jobPartsParams.approved_at_date_end" 
+				class="mt-2 w-full text-center text-white">
+					Input Job Part Approval / Disputed Dates to see Billable Practices
+			</div>
+			<div
+				v-else
+				class="mt-2 w-full text-center text-white"
+			>
+				There are no verified Practices billable.
+			</div>
     </template>
 		<div
 			class="billing-shield"
@@ -137,9 +147,6 @@ export default {
         status: ["Active","Dormant","Suspended"],
         verified: true,
 			},
-
-			practiceIds: [],
-
 			loading: false,
 			columns: [
 				{
@@ -210,26 +217,8 @@ export default {
 	},
 	async asyncData({ app, route, store }) {
 		try {
-			// await store.commit("practices/TOGGLE_LOADING", true);
-			// let { page = 1, search = "", order_by = [] } = route.query;
-			// page = parseInt(page);
-			// const createdRoute = route.query;
-			// const limit = 10;
-      // const offset = page * limit - limit;
-      // const status = ["Active","Dormant","Suspended"]
-			// order_by =
-			// 	createdRoute && createdRoute.order_by
-			// 		? createdRoute.order_by
-			// 		: "created_at:desc";
-			// const params = { limit, offset, order_by, status };
-			// let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
-			// const itemCount = response.data.count;
-			// await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
-
-			// response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
-			// const practices = response.data.practices;
-			// await store.commit("practices/SET_PRACTICES", practices);
-			// await store.commit("practices/TOGGLE_LOADING", false);
+			await store.commit("practices/SET_PRACTICE_COUNT", 0);
+			await store.commit("practices/SET_PRACTICES", []);
 			return {
 				// itemCount,
 				// practices
@@ -246,12 +235,11 @@ export default {
     },
 
     $route(to, from) {
-			this.getPractices();
+			// this.getPractices();
 		},
   },
 
 	methods: {
-
 		async getJobParts () {
 			await this.$store.commit("jobs/TOGGLE_LOADING", true)
 			if (this.showDisputed) {
@@ -325,22 +313,18 @@ export default {
 			})
 
 			console.log('job parts', jobParts)
-
-			// practiceIds = await jobParts.map(jobPart => {
-			// 	return jobPart.practice_id
-			// })
 			
-			this.practiceIds = await jobParts.reduce((accumulator, item) => {
+			this.params.id = await jobParts.reduce((accumulator, item) => {
 				return accumulator.includes(item.practice_id) ? accumulator : [...accumulator, item.practice_id]
 			}, [])
 
-			console.log('this.practiceIds', this.practiceIds)
+			console.log('this.params.id', this.params.id)
 
 			await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
 
 			await this.$store.commit("jobs/TOGGLE_LOADING", false)
 
-			await this.getBillablePractices(this.practiceIds)
+			await this.getBillablePractices()
 		},
 
 		async getBillablePractices () {
@@ -351,12 +335,13 @@ export default {
 			const limit = 10;
       const offset = page * limit - limit;
 			const status = ["Active","Dormant","Suspended"]
-			const id = this.practiceIds
+			const id = this.params.id
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc";
 			const params = { id, limit, offset, order_by, status };
+			console.log('bullshit')
 			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, { params });
 			const itemCount = response.data.count;
 			await this.$store.commit("practices/SET_PRACTICE_COUNT", itemCount);
@@ -440,7 +425,9 @@ export default {
 		}, 500),
 
 		getPractices() {
+			console.log('tang ina mo')
       this.$store.dispatch("practices/fetchPractices", {
+				id: this.params.id,
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,
@@ -450,6 +437,7 @@ export default {
         countOnly: true
       }).then(() => {
         this.$store.dispatch("practices/fetchPractices", {
+					id: this.params.id,
           limit: this.params.limit,
           search: this.search,
           order_by: this.params.order_by,
