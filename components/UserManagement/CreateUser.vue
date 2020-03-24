@@ -773,6 +773,7 @@ export default {
                   text: "New Practice User Created"
                 })
                 this.$emit("userCreated")
+                this.$emit("updatePractices")
                 this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
