@@ -776,20 +776,20 @@ export default {
                 this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
-              console.log("Practice err", err)
-              if (this.registeeType === 'customSurgery') {
-                this.$emit('formError', this.formError)
-              }else {
-                this.$nextTick(() => {
-                  this.$refs.modalContainer.scrollTop = 0
-                })
-              }
-              this.formError = err.response.data.error_messages
-                this.$store.commit("SET_NOTIFICATION", {
-                  enabled: true,
-                  status: "danger",
-                  text: err.response.data.message
-                })
+                console.log("Practice err", err)
+                if (this.registeeType === 'customSurgery') {
+                  this.$emit('formError', this.formError)
+                }else {
+                  this.$nextTick(() => {
+                    this.$refs.modalContainer.scrollTop = 0
+                  })
+                }
+                this.formError = err.response.data.error_messages
+                  this.$store.commit("SET_NOTIFICATION", {
+                    enabled: true,
+                    status: "danger",
+                    text: err.response.data.message
+                  })
               })  
             await this.getPractices()      
           }else{
@@ -805,11 +805,11 @@ export default {
                 this.$emit("userCreated")
               })
               .catch(err => {
-              console.log("catch practice", {err})
-              this.$nextTick(() => {
-                this.$refs.modalContainer.scrollTop = 0
-              })
-              this.formError = err.response.data.error_messages
+                console.log("catch practice", {err})
+                this.$nextTick(() => {
+                  this.$refs.modalContainer.scrollTop = 0
+                })
+                this.formError = err.response.data.error_messages
               })
             await this.getPractices()
           }

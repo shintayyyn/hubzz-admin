@@ -1,6 +1,9 @@
 <template>
 	<div class="mt-5">
-		<LocumCompliance :user="user" />
+		<LocumCompliance 
+			:user="user"
+			@complianceUpdated="emitUpdateToIndex"
+		/>
 		<nuxt-child />
 	</div>
 </template>
@@ -39,6 +42,11 @@ export default {
 				text: "Something went wrong!"
 			});
 			console.log("get locum compliance error!", err);
+		}
+	},
+	methods:{
+		async emitUpdateToIndex(){
+			await this.$emit('updateLocums')
 		}
 	}
 };

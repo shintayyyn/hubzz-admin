@@ -165,7 +165,6 @@
 		<transition name="fade" mode="out-in">
 			<div v-if="emailModal" class="shield" @click="emailModal = false, emailContent=''"></div>
 		</transition>
-		<nuxt-child />
 	</div>
 </template>
 <script>
@@ -303,13 +302,13 @@ export default {
 			const offset = parseInt(query.page) * 10 - 10;
 			return offset;
 		},
-		getLocums() {
-			this.$store.dispatch("locums/fetchLocums", {
-				limit: 10,
-				order_by: "created_at:desc",
-				offset: this.getQuery()
-			});
-		},
+		// getLocums() {
+		// 	this.$store.dispatch("locums/fetchLocums", {
+		// 		limit: 10,
+		// 		order_by: "created_at:desc",
+		// 		offset: this.getQuery()
+		// 	});
+		// },
 		sendEmail(id, body) {
 			this.$axios
 				.post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
@@ -343,7 +342,8 @@ export default {
 								note: this.toPutLocumDetailCompliance.note
 							}
 						);
-						await this.getLocums();
+						// await this.getLocums();
+						this.$emit('complianceUpdated')
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
@@ -372,7 +372,8 @@ export default {
 							expired_at: this.toPutLocumDetailCompliance.expired_at
 						}
 					);
-					await this.getLocums();
+					this.$emit('complianceUpdated')
+					// await this.getLocums();
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
