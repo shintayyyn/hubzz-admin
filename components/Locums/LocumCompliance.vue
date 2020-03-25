@@ -43,7 +43,6 @@
             :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
             @click.prevent="item.status === 'Verified' ? null : toUpdateReferenceNums(item.id,'Approved')"
           >
-          
             {{ item.status == 'Verified' ? 'Verified' : 'Verify' }}
           </button>
           <button
@@ -183,45 +182,45 @@
         </nuxt-link>
         <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
           <nuxt-link
-            v-for="(item, index) in item.child_locum_compliance_documents" :key="`item-${index}`"
-            :event="item.file == null ? disabled :'click'" 
-            :class="item.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
-            :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
+            v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
+            :event="childItem.file == null ? disabled :'click'" 
+            :class="childItem.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+            :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
             class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
             draggable="false"
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
               <span 
-                :class="item && item.file ? 'truncate' : 'break-word'"
+                :class="childItem && childItem.file ? 'truncate' : 'break-word'"
               >
-                {{ item && item.compliance_document_name ? item.compliance_document_name : null }}
+                {{ childItem && childItem.compliance_document_name ? childItem.compliance_document_name : null }}
               </span>
               <span
-                v-if="item && item.compliance_document_name === 'Passport'" 
-                :class="item && item.file ? 'truncate' : 'break-word'"
+                v-if="childItem && childItem.compliance_document_name === 'Passport'" 
+                :class="childItem && childItem.file ? 'truncate' : 'break-word'"
               >
-                {{ item && item.country_name ? item.country_name + "("+item.country_code+")" : null }}
+                {{ childItem && childItem.country_name ? childItem.country_name + "("+childItem.country_code+")" : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File size</strong>
-              <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
+              <span>{{ childItem.file ? (childItem.file.size / 1048576).toFixed(2) + 'Mb' : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-              <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
+              <span>{{ childItem && childItem.file ? childItem.uploaded_at_formatted : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
               <span class="break-all">
-                {{ item && item.expired_at 
-                  ? $moment(item.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
+                {{ childItem && childItem.expired_at 
+                  ? $moment(childItem.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
                   : null }}
               </span>
             </div>
@@ -229,15 +228,15 @@
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
               <span class="break-all">
-                {{ item && item.expired_at 
-                  ? $moment(item.expired_at).diff($moment(), 'days')  
+                {{ childItem && childItem.expired_at 
+                  ? $moment(childItem.expired_at).diff($moment(), 'days')  
                   : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
               <strong class="block md:hidden">Status</strong>
-              <div v-if="item.file == null"
+              <div v-if="childItem.file == null"
                    class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full"
               >
                 <span>Empty</span>
@@ -245,10 +244,10 @@
               <div
                 v-else
                 class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
-                :class="statusStyle(item && item.status ? item.status:null)"
+                :class="statusStyle(childItem && childItem.status ? childItem.status:null)"
               >
                 <span>
-                  {{ item && item.status ? item.status:null }}
+                  {{ childItem && childItem.status ? childItem.status:null }}
                 </span>
               </div>
             </div>
@@ -423,12 +422,13 @@
   </div>
 </template>
 <script>
-import AppDate from '@/components/Base/AppDate'
 export default {
-    components:{
-      // AppDate
+    props: {
+      user: {
+        type: Object,
+        default: () => null,
+      }
     },
-    props:['user'],
     data () {
       return {
       locumUser: {
@@ -461,8 +461,8 @@ export default {
       },
     },
     async created () {
-      let route = this.$route.params.id
-      await this.getData()
+      // let route = this.$route.params.id
+      // await this.getData()
       this.query = {
         ...this.$route.query
       }
@@ -485,37 +485,37 @@ export default {
       },
       async getData (){
         try{
-          this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
+          // this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
 
-          this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
+          // this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
 
-          const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
-            this.professionCategory = res.data.profession_category
-          })
+          // const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
+          //   this.professionCategory = res.data.profession_category
+          // })
 
-          const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
-            const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-              return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
-            })
-            return{
-              mandatoryComplianceDocument,
-              locumMandatoryComplianceDocument
-            }
-          })
-          this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
-            const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-              return complianceDocument.compliance_document.id === optionalComplianceDocument.id
-            })
-            return{
-              optionalComplianceDocument,
-              locumOptionalComplianceDocument
-            }
-          })
+          // const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
+          //   const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
+          //     return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
+          //   })
+          //   return{ 
+          //     mandatoryComplianceDocument,
+          //     locumMandatoryComplianceDocument
+          //   }
+          // })
+          // this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
+          //   const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
+          //     return complianceDocument.compliance_document.id === optionalComplianceDocument.id
+          //   })
+          //   return{
+          //     optionalComplianceDocument,
+          //     locumOptionalComplianceDocument
+          //   }
+          // })
 
-          const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
+          // const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
 
-          await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
-          await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
+          // await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+          // await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
         }catch(err){
 
           // this.$store.commit('SET_NOTIFICATION',{ 
@@ -576,27 +576,20 @@ export default {
         switch(status){
           case 'Approved':
             return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
-            break
           case 'Expiring':
             return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-            break
           case 'Expired':
             return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
-            break
           case 'Rejected':
             return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
-              break
           case 'Pending':
             return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-            break
           case 'Present':
             return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-            break
           case 'Empty':
             return 'border-white text-white lg:px-8 sm:px-4'
-            break
           default:
-            return
+            return ''
         }
       },
   }
