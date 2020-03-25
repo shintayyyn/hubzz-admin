@@ -28,16 +28,13 @@
 		</div>
 
 		<!--  -->
-		<div v-if="adminRoles.length" class="w-full px-4 md:px-8">
-			<!-- HEADER -->
+		<!-- <div v-if="adminRoles.length" class="w-full px-4 md:px-8">
 			<div class="hidden md:flex items-center text-white justify-around font-semibold">
 				<div class="pr-3 md:px-4" v-if="deletingAdminRole == true"></div>
 				<div class="align-middle px-2 w-1/3">Role Name</div>
 				<div class="align-middle px-2 w-1/3">Date Created</div>
 				<div class="align-middle px-2 w-1/3">Description</div>
 			</div>
-			<!-- END HEADER -->
-			<!-- BODY -->
 			<div v-for="(role, index) in adminRoles" :key="`role-${index}`" class="flex">
 				<div
 					@click="toDeleteAdminRole(role.id)"
@@ -67,8 +64,9 @@
 				</nuxt-link>
 			</div>
 		</div>
-		<div v-else class="text-center text-gray-400 py-4">No admin roles</div>
-		<div v-if="!adminRoles.length == 0">
+		<div v-else class="text-center text-gray-400 py-4">No admin roles</div> -->
+		
+		<!-- <div v-if="!adminRoles.length == 0">
 			<AppPagination
 				class="px-4 md:px-8"
 				:total="total"
@@ -77,7 +75,21 @@
 				:perPage="perPage"
 				@pagechanged="pagechanged"
 			/>
-		</div>
+		</div> -->
+
+		<AppTable
+			v-if="total > 0"
+			:total="total"
+			:items="adminRoles"
+			:currentPage="currentPage"
+			:perPage="perPage"
+			:columns="columns"
+			:loading="loading"
+			:routerLink="`/user-management/roles-and-permissions`"
+			@pagechanged="pagechanged"
+		>
+
+		</AppTable>
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -105,7 +117,8 @@ export default {
 		CreateAdminRole,
 		AppPagination,
 		AppButton,
-		AppConfirm
+		AppConfirm,
+		AppTable
 	},
 	data() {
 		return {
@@ -116,7 +129,25 @@ export default {
 			perPage: 10,
 			// totalPages: 0,
 			confirm: false,
-			role_id: 0
+			role_id: 0,
+			columns: [
+				{
+					name: "Role ID",
+					dataIndex: "id",
+					class: "text-center",
+					sortable: false,
+				},
+				{
+					name: "Role Name",
+					dataIndex: "name",
+					class: "text-center",
+				},
+				{
+					name: "Role Description",
+					dataIndex: "description",
+					class:"text-center",
+				}
+			]
 		};
 	},
 	beforeDestroy() {
@@ -131,6 +162,9 @@ export default {
 		}
 	},
 	computed: {
+		loading(){
+			return this.$store.state.adminusers.loading_admin_users
+		},
 		total() {
 			return this.$store.state.adminusers.adminRolesCount;
 		},
@@ -148,26 +182,31 @@ export default {
 		const query = {
 			...this.$route.query,
 			admin_role_page: this.$route.query.admin_role_page || 1
-		};
-		try {
-			await this.$axios.$get(`/api/v1/admin/admin-roles/count`).then(res => {
-				this.$store.commit("adminusers/SET_ADMIN_ROLES_COUNT", res.data.count);
-				this.perPage = 10;
-				this.totalPages = Math.ceil(this.total / this.perPage);
-				this.getAdminRoles();
-			});
-		} catch (err) {
-			console.log("get roles count error", err);
 		}
+		await this.getAdminRoles()
 	},
-
 	methods: {
 		async getAdminRoles() {
+			await this.$store.commit("adminusers/TOGGLE_LOADING", true)
 			let limit = 10;
 			let offset = 0;
 			offset = this.perPage * (parseInt(this.$route.query.admin_role_page) - 1);
 			let params = { limit, offset };
-
+			await this.$axios.$get(`/api/v1/admin/admin-roles/count`)
+			.then(res => {
+				this.$store.commit("adminusers/SET_ADMIN_ROLES_COUNT", res.data.count);
+				this.perPage = 10;
+				this.totalPages = Math.ceil(this.total / this.perPage);
+			})
+			.catch(err => {
+					console.log("get roles error!", err);
+					this.$store.commit("adminusers/TOGGLE_LOADING", false)
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					});
+				});
 			await this.$axios
 				.$get(`/api/v1/admin/admin-roles/`, { params })
 				.then(res => {
@@ -175,12 +214,14 @@ export default {
 				})
 				.catch(err => {
 					console.log("get roles error!", err);
+					this.$store.commit("adminusers/TOGGLE_LOADING", false)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
 					});
 				});
+			await this.$store.commit("adminusers/TOGGLE_LOADING", false)
 		},
 
 		toDeleteAdminRole(roleId) {
