@@ -35,6 +35,7 @@
       <div class="sm:w-1/2 md:w-1/4 text-center h-16 min-h-full overflow-y-auto">
         <span class="break-word">{{ item && item.note ? item.note : null }}</span>
       </div>
+
       <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <div class="flex justify-end mt-2 sm:m-0">
           <button
@@ -42,17 +43,19 @@
             :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
             @click.prevent="item.status === 'Verified' ? null : toUpdateReferenceNums(item.id,'Approved')"
           >
+          
             {{ item.status == 'Verified' ? 'Verified' : 'Verify' }}
           </button>
           <button
             class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
             :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'}`"
-            @click.prevent="item.status === 'Rejected' ? null : rejectGmcNmc = true"
+            @click.prevent="item.status === 'Rejected' ? null : toRejectReferenceNums(item.id)"
           >
             {{ item.status == 'Rejected' ? 'Rejected' : 'Reject' }}
           </button>
         </div>
       </div>
+
       <div v-if="rejectGmcNmc === true" class="note-modal">
         <div class="flex flex-col w-full p-4">
           <p class="mb-2">
@@ -71,7 +74,7 @@
             {{ notes.length }}/255
           </p>
           <div class="flex justify-end mt-2">
-            <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none" @click.prevent="toUpdateReferenceNums(item.id, 'Rejected', notes)">
+            <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none" @click.prevent="toUpdateReferenceNums(referenceCompDocId, 'Rejected', notes)">
               <span>Confirm</span>
             </button>
             <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none" @click.prevent="rejectGmcNmc = false">
@@ -435,6 +438,10 @@ export default {
         }
       },
       referenceCompDocs: null,
+      referenceCompDocId: null,
+      rejectGmcNmc: false,
+      rejectMplNpl: false,
+
       professionCategoryId: null,
       mandatoryCompDocs: null,
       optionalCompDocs: null,
@@ -444,8 +451,7 @@ export default {
       professionCategory: null,
       disabled: 'true',
       query: null,
-      rejectGmcNmc: false,
-      rejectMplNpl: false,
+      
       notes:''
       }
     },
@@ -465,7 +471,7 @@ export default {
     methods:{
       getLocums (){
         this.$store.dispatch("locums/fetchLocums",{
-          limit:8,
+          limit:10,
           order_by:'created_at:desc',
           offset: this.getQuery()
         })
@@ -474,14 +480,8 @@ export default {
         const query = {
           ...this.$route.query
         }
-        const offset = parseInt(query.page)*8 - 8 
+        const offset = parseInt(query.page)*10 - 10 
         return offset
-      },
-      toRejectGmcNmc (){
-        this.rejectGmcNmc = !this.rejectGmcNmc
-      },
-      toRejectMplNpl (){
-        this.rejectMplNpl = !this.rejectMplNpl
       },
       async getData (){
         try{
@@ -543,14 +543,19 @@ export default {
           })
         }
       },
+      toRejectReferenceNums (id) {
+        this.referenceCompDocId = id
+        this.rejectGmcNmc = true
+      },
       async toUpdateReferenceNums (id, status, note) {
         try {
           await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
             status: status,
             note: note,
           }).then(res => {
+            this.$emit('complianceUpdated')
             this.rejectGmcNmc = false
-            this.getLocums()
+            // this.getLocums()
             this.getCompliances()
             this.$store.commit('SET_NOTIFICATION',{ 
               enabled: true, 

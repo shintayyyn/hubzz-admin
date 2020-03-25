@@ -24,6 +24,7 @@
 
         <div class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
           <div class="w-full text-gray-300 text-sm p-2">
+            <AppFormError v-if="formError.length > 0" class="w-full mb-4" :formError="formError" />
             <!-- USER PERSONAL DETAILS -->
             <AppInput 
               v-model="toPostUser.title"
@@ -354,6 +355,7 @@ import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import AppPostCode from "@/components/Base/AppPostCode"
 import AppDate from "@/components/Base/AppDate"
+import AppFormError from "@/components/Base/AppFormError"
 export default {
   components: {
     // AppFilterSearch,
@@ -361,6 +363,7 @@ export default {
     AppInput,
     AppButton,
     AppPostCode,
+    AppFormError,
   },
   // eslint-disable-next-line vue/require-prop-types
   props: ["practice", "surgery", "user", "registeeType", "userCount", "customSurgery", "refWrapper"],
@@ -770,23 +773,24 @@ export default {
                   text: "New Practice User Created"
                 })
                 this.$emit("userCreated")
+                this.$emit("updatePractices")
                 this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
-              console.log("Practice err", err)
-              if (this.registeeType === 'customSurgery') {
-                this.$emit('formError', this.formError)
-              }else {
-                this.$nextTick(() => {
-                  this.$refs.modalContainer.scrollTop = 0
-                })
-              }
-              this.formError = err.response.data.error_messages
-                this.$store.commit("SET_NOTIFICATION", {
-                  enabled: true,
-                  status: "danger",
-                  text: err.response.data.message
-                })
+                console.log("Practice err", err)
+                if (this.registeeType === 'customSurgery') {
+                  this.$emit('formError', this.formError)
+                }else {
+                  this.$nextTick(() => {
+                    this.$refs.modalContainer.scrollTop = 0
+                  })
+                }
+                this.formError = err.response.data.error_messages
+                  this.$store.commit("SET_NOTIFICATION", {
+                    enabled: true,
+                    status: "danger",
+                    text: err.response.data.message
+                  })
               })  
             await this.getPractices()      
           }else{
@@ -802,11 +806,11 @@ export default {
                 this.$emit("userCreated")
               })
               .catch(err => {
-              console.log("catch practice", {err})
-              this.$nextTick(() => {
-                this.$refs.modalContainer.scrollTop = 0
-              })
-              this.formError = err.response.data.error_messages
+                console.log("catch practice", {err})
+                this.$nextTick(() => {
+                  this.$refs.modalContainer.scrollTop = 0
+                })
+                this.formError = err.response.data.error_messages
               })
             await this.getPractices()
           }

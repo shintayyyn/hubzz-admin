@@ -1,6 +1,9 @@
 <template>
 	<div class="compliance-modal shadow-lg">
-		<LocumComplianceFile :user="user" :compliance_doc="compliance_doc" />
+		<LocumComplianceFile 
+			:user="user" 
+			:compliance_doc="compliance_doc"
+			@complianceUpdated="emitUpdateToIndex" />
 	</div>
 </template>
 <script>
@@ -50,6 +53,11 @@ export default {
 				text: "Something went wrong!"
 			});
 			console.log("index practices index create asyncData err", err);
+		}
+	},
+	methods: {
+		async emitUpdateToIndex(){
+			await this.$emit('updateLocums')
 		}
 	}
 };

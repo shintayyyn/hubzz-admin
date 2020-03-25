@@ -25,7 +25,11 @@
 		<transition name="slide" mode="out-in">
 			<AddPracticeSurgery v-if="customSurgery === false" />
 			<div v-if="customSurgery === true">
-				<CreateUser :registeeType="'customSurgery'" @formError="handleData" />
+				<CreateUser 
+					:registeeType="'customSurgery'" 
+					@formError="handleData"
+					@updatePractices="updatePractices"
+					/>
 			</div>
 		</transition>
 	</div>
@@ -51,6 +55,9 @@ export default {
 				this.$refs.modalContainer.scrollTop = 0;
 			});
 			// console.log(e);
+		},
+		updatePractices(){
+			this.$emit('getPractices')
 		}
 	}
 };

@@ -94,7 +94,10 @@
 			v-if="$route.name.includes('index-locums-id')"
 			@click="$router.push({ path: `/locums`, query: $route.query })"
 		></div>
-		<nuxt-child />
+
+		<nuxt-child
+			@getLocums="getLocums" 
+		/>
 	</div>
 </template>
 
@@ -336,13 +339,13 @@ export default {
 			const offset = parseInt(query.page) * 10 - 10;
 			return offset;
 		},
-		getLocums(params) {
+		getLocums() {
 			this.$store.dispatch("locums/fetchLocums", {
 				limit: this.params.limit,
-				search: params.search,
-				compliance_status: params.compliance_status,
-				order_by: params.order_by,
-				offset: params.offset
+				search: this.params.search,
+				compliance_status: this.params.compliance_status,
+				order_by: this.params.order_by,
+				offset: this.params.offset
 			});
 		},
 		async sortBy(sortedBy, page, search, compliance_status) {

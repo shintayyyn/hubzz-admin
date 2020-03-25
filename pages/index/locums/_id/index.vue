@@ -24,7 +24,9 @@
 				@click="$router.go(-1)"
 			></div>
 		</div>
-		<nuxt-child />
+		<nuxt-child
+			@updateLocums="getLocums"
+		/>
 	</div>
 </template>
 <script>
@@ -59,6 +61,9 @@ export default {
 		}
 	},
 	methods: {
+		getLocums(){
+			this.$emit('getLocums')
+		},
 		goBack() {
 			const query = {
 				...this.$route.query
