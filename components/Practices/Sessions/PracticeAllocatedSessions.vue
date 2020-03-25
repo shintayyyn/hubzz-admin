@@ -1,5 +1,35 @@
 <template>
   <div>
+    <div class="flex items-center px-2 py-2">
+			<!-- <div class="flex py-2">
+				<div class="relative">
+					<input
+						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+						placeholder="Search Jobs by ID"
+						v-model="search.id"
+						@keyup.enter="searchSubmit"
+					/>
+          <input
+						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+						placeholder="Search Jobs by Title"
+						v-model="search.title"
+						@keyup.enter="searchSubmit"
+					/>
+					<button
+						v-if="search"
+						class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+						@click="(search = ''), searchSubmit()"
+					>
+						<svgicon
+							name="times-solid"
+							height="12"
+							width="12"
+							class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+						/>
+					</button>
+				</div>
+			</div> -->
+		</div>
     <div class="overflow-x-auto xl:overflow-hidden">
       <div v-if="allocatedJobs.length === 0">
         <div
@@ -73,20 +103,28 @@
   </div>
 </template>
 <script>
+import debounce from "lodash.debounce";
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
+import AppInput from '@/components/Base/AppInput'
 export default {
     components:{
       AppPagination,
       PracticeSessionModal,
-      AppJobHeaderSort
+      AppJobHeaderSort,
+      AppInput,
     },
     props:['practice', 'practice_surgery'],
+    watchQuery: ["search"],
     data (){
       return{ 
         // allocatedJobs:[], 
         // total:0,
+        search: {
+          id: '',
+          title: '',
+        },
         job:null,
         totalPages:0,
         currentPage:1,
@@ -108,6 +146,12 @@ export default {
         this.currentPage = parseInt(to.query.job_page)
         this.getAllocatedJobs()
       },
+      "search.id"(value){
+        this.searchSubmit()
+      },
+      "search.title"(value){
+        this.searchSubmit()
+      }
     },
     beforeDestroy () {
       let query = Object.assign({}, this.$route.query)
@@ -158,6 +202,17 @@ export default {
           limit: this.perPage,
           offset: offset
         }
+        if (this.search.id) {
+          params.id = this.search.id
+        }
+
+        if (this.search.title) {
+          params.title_includes = this.search.title
+        }
+
+        if (this.search.job_number) {
+          params.job_number_includes = this.search.job_number
+        }
         await this.$axios.$get(`/api/v1/admin/jobs`,{ params }).then(res=>{
           console.log('allocated sessions', res.data.jobs)
           this.$store.commit('jobs/SET_PRACTICE_ALLOCATED_SESSIONS', res.data.jobs)
@@ -178,8 +233,22 @@ export default {
         await this.$store.commit('jobs/TOGGLE_LOADING', true)
         await this.$router.push({ query })
         await this.$store.commit('jobs/TOGGLE_LOADING', false)
-      }
-        
+      },
+      
+      searchSubmit: debounce(function(page, orderBy) {
+        let search = this.search
+
+        let query = { ...this.$router.query, search}
+
+        // if (page === 1) {
+        //   delete query.page;
+        // }
+
+        // if (page) {
+        //   query = { ...this.$router.query, page, search };
+        // }
+        this.$router.push({query})
+      }, 500)
     }
 }
 </script>
