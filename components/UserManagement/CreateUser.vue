@@ -24,7 +24,7 @@
 
         <div class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
           <div class="w-full text-gray-300 text-sm p-2">
-            <AppFormError v-if="formError.length > 0" class="w-full mb-4" :formError="formError" />
+            <AppFormError v-if="formError.length > 0 && showFormError == true" class="w-full mb-4" :formError="formError" />
             <!-- USER PERSONAL DETAILS -->
             <AppInput 
               v-model="toPostUser.title"
@@ -155,7 +155,6 @@
                 :name="'postcode'"
                 :label="'Post code'"
                 :error="formError.find(item => item.field === 'postcode')"
-              
                 required
                 @blur="CheckEmptyField(toPostUser.postcode, 'postcode')"
               />
@@ -369,6 +368,7 @@ export default {
   props: ["practice", "surgery", "user", "registeeType", "userCount", "customSurgery", "refWrapper"],
   data () {
     return {
+      showFormError: false,
       formError: [],
       specificSurgery: [],
       specificPractice: [],
@@ -431,8 +431,12 @@ export default {
   watch: {
     "toPostUser.email" (value) {
       const error = this.ValidateEmail(value)
+      
       if (error) {
-        this.formError.push(error)
+        let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
+        if (errorExists < 0) {
+          this.formError.push(error)
+        }
       } else {
         let index = this.formError.findIndex(item => item.field === "email")
         let errors = this.formError.filter(item => item.field === "email")
@@ -443,10 +447,13 @@ export default {
     },
     "toPostUser.password" (value) {
       if (value && value.length < 6) {
-        this.formError.push({
-          field: "password",
-          message: "Password Must Be Atleast 6 Characters"
-        })
+        let errorExists = this.formError.findIndex(formErr => formErr.field === "password")
+        if(errorExists < 0) {
+          this.formError.push({
+            field: "password",
+            message: "Password Must Be Atleast 6 Characters"
+          })
+        }
       } else {
         let index = this.formError.findIndex(
           item => item.field === "password"
@@ -459,7 +466,10 @@ export default {
       if(this.toPostUser.password_confirmation){
         const error = this.ValidateSamePassword(value, this.toPostUser.password_confirmation)
         if (error) {
-          this.formError.push(error)
+          let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
+          if (errorExists < 0) {
+            this.formError.push(error)
+          }
         } else {
           let confirm_index = this.formError.findIndex(
             item => item.field === "password_confirmation"
@@ -480,7 +490,10 @@ export default {
     "toPostUser.password_confirmation" (value) {
       const error = this.ValidateSamePassword(this.toPostUser.password, value)
       if (error) {
-        this.formError.push(error)
+        let errorExists = this.formError.findIndex(formErr => formErr.field === error.field)
+        if (errorExists < 0) {
+          this.formError.push(error)
+        }
       } else {
         let confirm_index = this.formError.findIndex(
             item => item.field === "password_confirmation"
@@ -688,14 +701,17 @@ export default {
 
       this.Validate(this.toPostUser, notRequired)
       if (!this.formError.length) {
+        this.showFormError = false
         this.toPostUserInfo(userInfo, surgID)
       }else {
         if (this.registeeType !== 'customSurgery') {
+          this.showFormError = true
           console.log('formError', this.formError)
           this.$nextTick(() => {
             this.$refs.modalContainer.scrollTop = 0
           })
         }else {
+          this.showFormError = true
           console.log('formError', this.formError)
           this.$emit('formError', this.formError)
         }
@@ -767,6 +783,7 @@ export default {
             await this.$axios
               .post(`/api/v1/admin/practices`, toPostUser)
               .then(() => {
+
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "success",
@@ -777,6 +794,7 @@ export default {
                 this.$router.push('/practices/pending-practices')
               })
               .catch(err => {
+                this.showFormError = true
                 console.log("Practice err", err)
                 if (this.registeeType === 'customSurgery') {
                   this.$emit('formError', this.formError)
@@ -806,6 +824,7 @@ export default {
                 this.$emit("userCreated")
               })
               .catch(err => {
+                this.showFormError = true
                 console.log("catch practice", {err})
                 this.$nextTick(() => {
                   this.$refs.modalContainer.scrollTop = 0
@@ -829,6 +848,7 @@ export default {
               this.$emit("close")
             })
             .catch(err => {
+              this.showFormError = true
               console.log("practice user err", {err})
               this.$nextTick(() => {
                 this.$refs.modalContainer.scrollTop = 0
@@ -838,9 +858,7 @@ export default {
           await this.getPracticeUsers()
           await this.updatePracticeUsersPageCount()
         } else if (this.registeeType === 'admin') {
-          console.log('CREATING NEW ADMIN')
           //Create New Admin
-          console.log("new admin is being created")
           // this.toPostUser.roles_id = this.toPostUser.roles_id.map(
           //   item => item.value
           // );
@@ -857,6 +875,7 @@ export default {
               this.$emit("close")
             })
             .catch(err => {
+              this.showFormError = true
               this.$nextTick(() => {
                 this.$refs.modalContainer.scrollTop = 0
               })

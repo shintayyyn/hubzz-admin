@@ -164,6 +164,9 @@ export default {
 	watchQuery: ["page"],
 
 	computed: {
+		authAdminPermissions() {
+			return this.$store.getters["permissions"];
+		},
 		status() {
 			if (this.$route.name.includes("pending-practices")) {
 				return ["Inactive"];
@@ -198,9 +201,7 @@ export default {
 		pageCount() {
 			return Math.ceil(this.itemCount / this.params.limit);
 		},
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
-		},
+		
 		totalPages() {
 			return Math.ceil(this.itemCount / this.params.limit);
 		},
