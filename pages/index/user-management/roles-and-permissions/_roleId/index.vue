@@ -12,7 +12,7 @@
 			</div>
 			<div class="flex flex-row items-start justify-between flex-wrap">
 				<div class="flex items-center justify-between w-full leading-tight">
-					<div class="text-2xl md:text-4xl font-bold md:font-normal">{{ specificRole.name }}</div>
+					<div class="text-2xl md:text-4xl font-bold md:font-normal">{{ role.name }}</div>
 					<div class="flex py-1 text-sm md:text-base">
 						<div
 							v-if="
@@ -55,7 +55,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="text-sm italic">{{ specificRole.description }}</div>
+				<div class="text-sm italic">{{ role.description }}</div>
 			</div>
 			<!-- SHOW ROLE PERMISSIONS -->
 			<div class="my-2 md:my-4" v-if="editingPermissions == false">
@@ -120,65 +120,111 @@
 				</div>
 			</div>
 			<!-- EDIT ROLE PERMISSIONS -->
-			<div
-				class="m-4"
-				v-if="
-          editingPermissions == true &&
-            authAdminPermissions.includes('Edit Role')
-        "
-			>
-				<div>
-					<p class="flex">Role Name</p>
-					<input
-						class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
-						type="text"
-						placeholder="Super Admin"
-						v-model="form.name"
-						aria-label="name"
-					/>
-					<p class="flex">Role Description</p>
-					<input
-						class="appearance-none mb-4 bg-transparent border-b w-full text-white mr-3 py-1 px-2 leading-tight focus:outline-none focus:border-yellow"
-						type="text"
-						placeholder="Super Admin"
-						v-model="form.description"
-						aria-label="description"
-					/>
-				</div>
-				<div class="flex-wrap overflow-hidden">
-					<div class="flex flex-wrap justify-start">
-						<div
-							class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
-							v-for="(role, index) in allPermissions"
-							:key="index"
-						>
-							<div class="flex flex-col">
-								<div class="w-full flex flex-row items-center">
-									<input
-										type="checkbox"
-										:id="role.category"
-										:checked="isChecked(role.permissions)"
-										@change="checkAll(index, $event.target.checked)"
-									/>
-									<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
-								</div>
-								<div
-									class="w-full flex flex-row justify-start items-center mb-1"
-									v-for="permission in role.permissions"
-									:key="permission.id"
-								>
-									<input
-										v-model="permission.done"
-										type="checkbox"
-										:id="permission.id"
-										:checked="permission.done"
-									/>
-									<label
-										:for="permission.id"
-										class="text-xs sm:text-sm flex items-center"
-									>{{ permission.name }}</label>
-								</div>
+			<div class="flex flex-col mt-4" v-if="editingPermissions == true">
+				<AppInput
+					v-model="form.name"
+					:type="'text'"
+					:name="'name'"
+					:label="'Role Name'"
+					:error="formError.find(item => item.field === 'name')"
+					required
+				/>
+				<AppInput
+					v-model="form.description"
+					:type="'textarea'"
+					:name="'description'"
+					:label="'Description'"
+					:error="formError.find(item => item.field === 'description')"
+					:resize="false"
+					:rows="3"
+					required
+				/>
+
+				<p class="text-xs sm:text-sm py-1 pr-2 font-bold">
+					Permissions
+					<span class="text-red-500">*</span>
+					<span
+						class="mx-2 bg-red-300 text-red-700 py-1 px-2 text-xs"
+						v-if="formError.find(item => item.field === 'permission_id')"
+					>{{formError.find(item => item.field === 'permission_id').message}}</span>
+				</p>
+				<!-- <div class="flex flex-wrap justify-start">
+					<div
+						class="w-full md:w-1/2 lg:w-1/3 pb-3 px-1"
+						v-for="(role, index) in permissions"
+						:key="index"
+					>
+						<div class="flex flex-col">
+							<div class="w-full flex flex-row items-center">
+								<input
+									type="checkbox"
+									:id="role.category"
+									:checked="isChecked(role.permissions)"
+									@change="checkAll(index, $event.target.checked)"
+								/>
+								<label class="font-bold text-xl pl-1" :for="role.category">{{ role.category }} Management</label>
 							</div>
+							<div
+								class="w-full flex flex-row justify-start items-center mb-1"
+								v-for="permission in role.permissions"
+								:key="permission.id"
+							>
+								<input
+									v-model="permission.done"
+									type="checkbox"
+									:id="permission.id"
+									:checked="permission.done"
+								/>
+								<label
+									:for="permission.id"
+									class="text-xs sm:text-sm flex items-center"
+								>{{ permission.name }}</label>
+							</div>
+						</div>
+					</div>
+				</div> -->
+
+				<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
+					<div class="flex flex-col">
+						<div class="w-full flex flex-row items-center pb-1">
+							<input
+								type="checkbox"
+								:id="role.permissions"
+								:checked="isChecked(role.permissions)"
+								@change="checkAll(index, $event.target.checked)"
+							/>
+							<label
+								class="font-bold md:text-xl pl-1 leading-none flex items-center"
+								:for="role.permissions"
+							>{{role.category}} Management</label>
+						</div>
+						<div v-for="(item, index) in hierarchyPermissions" :key="index">
+							<template v-if="role.category === item.category">
+								<div class="w-full p-2">
+									<div class="flex flex-col w-full">
+										<div class="pl-4 w-full">
+											<div
+												class="flex flex-col px-1 w-full"
+												v-for="(permission, index) in item.permissions"
+												:key="permission.id"
+											>
+												<input
+													v-model="permission.done"
+													type="checkbox"
+													:id="permission.id"
+													:checked="permission.done"
+													@change="onChangeCategory(index, item.permissions, $event.target.checked)"
+												/>
+												<label
+													:for="permission.id"
+													class="text-sm pl-1"
+													:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
+												>{{permission.name}}</label>
+											</div>
+										</div>
+									</div>
+								</div>
+							</template>
 						</div>
 					</div>
 				</div>
@@ -187,13 +233,24 @@
 	</div>
 </template>
 <script>
+import AppInput from "@/components/Base/AppInput";
+import AppButton from "@/components/Base/AppButton";
 export default {
+	components: {
+		AppButton,
+		AppInput
+	},
 	data() {
 		return {
-			specificRole: "",
+			role: "",
 			rolePermissions: [],
 			allPermissions: [],
 			editingPermissions: false,
+
+			permissions: [],
+			hierarchyPermissions: [],
+			
+			formError: [],
 			form: {
 				name: "",
 				description: "",
@@ -211,7 +268,7 @@ export default {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/admin-roles/${route.params.roleId}`
 			);
-			const specificRole = response.data.role;
+			const role = response.data.role;
 			let rolePermissions = response.data.role.permissions;
 			let allPermissions = [];
 			await app.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
@@ -253,7 +310,7 @@ export default {
 			});
 			allPermissions = categories;
 			return {
-				specificRole,
+				role,
 				rolePermissions,
 				allPermissions
 			};
@@ -268,16 +325,17 @@ export default {
 	},
 	created() {
 		console.log("allpermissions", this.allPermissions);
-		console.log("asdsad", this.specificRole);
-		this.form.name = this.specificRole.name;
-		this.form.description = this.specificRole.description;
+		console.log("asdsad", this.role);
+		this.form.name = this.role.name;
+		this.form.description = this.role.description;
+		this.getPermissions()
 	},
 	methods: {
 		getRoles(roles) {
 			this.$axios
 				.$get(`/api/v1/admin/admin-roles/${this.$route.params.roleId}`)
 				.then(res => {
-					this.specificRole = res.data.role;
+					this.role = res.data.role;
 					this.rolePermissions = res.data.role.permissions;
 				});
 		},
@@ -301,9 +359,119 @@ export default {
 				query
 			});
 		},
+		getPermissions() {
+			this.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
+				res.data.permissions.forEach(permission => {
+					let hasPermission = this.role.permissions.find(
+						item => item.id === permission.id
+					);
+					if (hasPermission) {
+						this.permissions.push({ ...permission, done: true });
+					} else {
+						this.permissions.push({ ...permission, done: false });
+					}
+				});
+				this.setCategory();
+			});
+		},
+		setCategory() {
+			let categories = [];
+			this.permissions.forEach(permission => {
+				if (categories.length === 0) {
+					categories.push({
+						category: permission.category,
+						permissions: []
+					});
+				} else {
+					let hasSameCategory = categories.find(
+						item => item.category === permission.category
+					);
+					if (!hasSameCategory) {
+						categories.push({
+							category: permission.category,
+							permissions: []
+						});
+					}
+				}
+			});
+			this.setPermissions(categories);
+		},
+		setPermissions(categories) {
+			this.permissions.forEach(permission => {
+				let foundCategory = categories.find(
+					item => item.category === permission.category
+				);
+				foundCategory.permissions.push(permission);
+			});
+			this.permissions = categories;
+			this.setSubcategories(categories);
+		},
+		setSubcategories(permission) {
+			let subCategories = [];
+			permission.forEach(item => {
+				item.permissions.forEach(item => {
+					if (subCategories.length === 0) {
+						subCategories.push({
+							category: item.category,
+							subcategory: item.subcategory,
+							permissions: []
+						});
+					} else {
+						let foundCategory = subCategories.find(
+							categ => categ.subcategory === item.subcategory
+						);
+						if (!foundCategory) {
+							subCategories.push({
+								category: item.category,
+								subcategory: item.subcategory,
+								permissions: []
+							});
+						}
+					}
+				});
+			});
+			this.setHierarchy(subCategories);
+		},
+		setHierarchy(subCategories) {
+			this.permissions.forEach(item => {
+				item.permissions.forEach(permission => {
+					let findSub = subCategories.find(
+						sub =>
+							sub.category === permission.category &&
+							sub.subcategory === permission.subcategory
+					);
+					findSub.permissions.push(permission);
+				});
+			});
+			this.hierarchyPermissions = subCategories;
+		},
+		onChangeCategory(index, permissions, e) {
+			if (index === 0) {
+				permissions.forEach(item => {
+					item.done = e;
+				});
+			} else {
+				let findParent = permissions.find((item, index) => index === 0);
+				let hasCheck = [];
+				permissions.forEach((item, index) => {
+					if (index > 0) hasCheck.push(item.done);
+				});
+				if (findParent && hasCheck.includes(true)) findParent.done = true;
+				else findParent.done = false;
+			}
+		},
+		isChecked(permissions) {
+			return !permissions.map(item => item.done).includes(false);
+		},
+		checkAll(index, checked) {
+			this.permissions[index].permissions.forEach(item => {
+				item.done = checked;
+			});
+		},
+
 		save() {
 			let ids = [];
-			this.allPermissions.forEach(item => {
+			this.permissions.forEach(item => {
 				item.permissions.forEach(permission => {
 					if (permission.done) {
 						ids.push(permission.id);
@@ -311,6 +479,7 @@ export default {
 				});
 			});
 			this.form.permission_id = ids;
+			console.log('ids', ids)
 			this.$axios
 				.$put(
 					`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,
@@ -324,8 +493,8 @@ export default {
 					});
 					this.getRoles(res.data.role);
 					// this.$emit("updateRole", res.data.role);
-					// this.specificRole.name = res.data.role.name;
-					// this.specificRole.description = res.data.role.description;
+					// this.role.name = res.data.role.name;
+					// this.role.description = res.data.role.description;
 					this.editingPermissions = false;
 				});
 		}
