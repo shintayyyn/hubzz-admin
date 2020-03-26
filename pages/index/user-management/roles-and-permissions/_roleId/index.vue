@@ -182,55 +182,53 @@
 							</div>
 						</div>
 					</div>
-				</div> -->
+				</div>-->
+				<div class="flex flex-wrap justify-start">
+					<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
+						<div class="flex flex-col">
+							<div class="w-full flex flex-row items-center pb-1">
+								<input
+									type="checkbox"
+									:id="role.category"
+									:checked="isChecked(role.permissions)"
+									@change="checkAll(index, $event.target.checked)"
+								/>
 
-				<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
-					<div class="flex flex-col">
-						
-						<div class="w-full flex flex-row items-center pb-1">
-							<div class="p-4 bg-orange-500">{{'index' + index}}</div>
-							<input
-								type="checkbox"
-								:id="role.permissions"
-								:checked="isChecked(role.permissions)"
-								@change="checkAll(index, $event.target.checked)"
-							/>
-							
-							<label
-								class="font-bold md:text-xl pl-1 leading-none flex items-center"
-								:for="role.permissions"
-							>{{role.category}} Management</label>
-						</div>
+								<label
+									class="font-bold md:text-xl pl-1 leading-none flex items-center"
+									:for="role.category"
+								>{{role.category}} Management</label>
+							</div>
 
-						<div v-for="(item, index) in hierarchyPermissions" :key="index">
-							<template v-if="role.category === item.category">
-								<div class="w-full p-2">
-									<div class="flex flex-col w-full">
-										<div class="pl-4 w-full">
-											<div
-												class="flex flex-col px-1 w-full"
-												v-for="(permission, index) in item.permissions"
-												:key="permission.id"
-											>
-												<input
-													v-model="permission.done"
-													type="checkbox"
-													:id="permission.id"
-													:checked="permission.done"
-													@change="onChangeCategory(index, item.permissions, $event.target.checked)"
-												/>
-												<label
-													:for="permission.id"
-													class="text-sm pl-1"
-													:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
-												>{{permission.name}}</label>
+							<div v-for="(item, index) in hierarchyPermissions" :key="index">
+								<template v-if="role.category === item.category">
+									<div class="w-full p-2">
+										<div class="flex flex-col w-full">
+											<div class="pl-4 w-full">
+												<div
+													class="flex flex-col px-1 w-full"
+													v-for="(permission, index) in item.permissions"
+													:key="permission.id"
+												>
+													<input
+														v-model="permission.done"
+														type="checkbox"
+														:id="permission.id"
+														:checked="permission.done"
+														@change="onChangeCategory(index, item.permissions, $event.target.checked)"
+													/>
+													<label
+														:for="permission.id"
+														class="text-sm pl-1"
+														:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
+													>{{permission.name}}</label>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							</template>
+								</template>
+							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -254,7 +252,7 @@ export default {
 
 			permissions: [],
 			hierarchyPermissions: [],
-			
+
 			formError: [],
 			form: {
 				name: "",
@@ -263,13 +261,13 @@ export default {
 			}
 		};
 	},
-	
+
 	created() {
 		console.log("allpermissions", this.allPermissions);
 		console.log("asdsad", this.role);
 		this.form.name = this.role.name;
 		this.form.description = this.role.description;
-		this.getPermissions()
+		this.getPermissions();
 	},
 
 	computed: {
@@ -277,7 +275,7 @@ export default {
 			return this.$store.getters["permissions"];
 		}
 	},
-	
+
 	async asyncData({ app, store, route }) {
 		try {
 			let response = await app.$axios.$get(
@@ -286,7 +284,7 @@ export default {
 			const role = response.data.role;
 			let rolePermissions = response.data.role.permissions;
 			let allPermissions = [];
-			
+
 			await app.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
 				res.data.permissions.forEach(permission => {
 					let hasPermission = rolePermissions.find(
@@ -339,7 +337,7 @@ export default {
 			console.log("get users error", err);
 		}
 	},
-	
+
 	methods: {
 		getRoles(roles) {
 			this.$axios
@@ -448,7 +446,7 @@ export default {
 			this.hierarchyPermissions = subCategories;
 		},
 		onChangeCategory(index, permissions, e) {
-			console.log('on change category')
+			console.log("on change category");
 			if (index === 0) {
 				permissions.forEach(item => {
 					item.done = e;
@@ -466,12 +464,12 @@ export default {
 			return !permissions.map(item => item.done).includes(false);
 		},
 		checkAll(index, checked) {
-			console.log('permissions', this.permissions)
-			console.log('hierarchy', this.hierarchyPermissions)
-			console.log('checked', checked)
-			console.log('index', index)
+			console.log("permissions", this.permissions);
+			console.log("hierarchy", this.hierarchyPermissions);
+			console.log("checked", checked);
+			console.log("index", index);
 			this.permissions[index].permissions.forEach(item => {
-				console.log('checkAlll', item.id)
+				console.log("checkAlll", item.id);
 				item.done = checked;
 			});
 		},
@@ -486,7 +484,7 @@ export default {
 				});
 			});
 			this.form.permission_id = ids;
-			console.log('ids', ids)
+			console.log("ids", ids);
 			this.$axios
 				.$put(
 					`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,
