@@ -10,7 +10,7 @@
 			<div v-else>
 				<AppJobHeaderSort
 					:locumUser="user"
-					:locumTabStatus="'Withdrawn'"
+					:tabStatus="'Withdrawn'"
 					:currentPage="currentPage"
 					:isJobParts="true"
 				/>

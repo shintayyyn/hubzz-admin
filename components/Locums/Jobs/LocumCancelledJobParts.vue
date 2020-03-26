@@ -8,7 +8,10 @@
 				>This locum had no case of cancelled job yet.</div>
 			</div>
 			<div v-else>
-				<AppJobHeaderSort :locumUser="user" :locumTabStatus="'Cancelled'" :currentPage="currentPage" />
+				<AppJobHeaderSort 
+					:locumUser="user" 
+					:tabStatus="'Cancelled'" 
+					:currentPage="currentPage" />
 				<div class="w-full overflow-x-auto">
 					<!-- HEADER -->
 					<!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
