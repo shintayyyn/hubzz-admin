@@ -10,6 +10,9 @@
         @confirm="toDeactivateLocum()"
       />
     </transition>
+    <transition name="fade" mode="out-in">
+      <div class="shield" v-if="confirm"></div>
+    </transition>
     <div class="inline-flex">
       <div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
         <!--COLUMN 1-->

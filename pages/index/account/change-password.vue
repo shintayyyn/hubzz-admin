@@ -1,7 +1,8 @@
 <template>
 	<div
-		class="w-full flex text-sm max-w-lg bg-waterloo my-2 py-2 px-3 shadow rounded-lg transition-hover"
+		class="relative w-full flex text-sm max-w-lg bg-waterloo my-2 py-2 px-3 shadow rounded-lg transition-hover"
 	>
+		<AppLoading :loading="loading" class="rounded-lg" />
 		<div class="w-full overflow-hidden text-gray-300 text-sm p-2">
 			<AppInput
 				v-model="form.old_password"
@@ -41,10 +42,12 @@
 <script>
 import AppInput from "@/components/Base/AppInput";
 import AppButton from "@/components/Base/AppButton";
+import AppLoading from "@/components/Base/AppLoading";
 export default {
 	components: {
 		AppInput,
-		AppButton
+		AppButton,
+		AppLoading
 	},
 	data() {
 		return {
@@ -53,7 +56,8 @@ export default {
 				new_password: "",
 				new_password_confirmation: ""
 			},
-			formError: []
+			formError: [],
+			loading: false
 		};
 	},
 	methods: {
@@ -69,11 +73,18 @@ export default {
 					this.$axios
 						.put(`/api/v1/me/change-password`, form)
 						.then(res => {
-							this.$store.commit("SET_NOTIFICATION", {
-								enabled: true,
-								status: "success",
-								text: "Password Succesfully Changed"
-							});
+							this.loading = true;
+							this.form.old_password = "";
+							this.form.new_password = "";
+							this.form.new_password_confirmation = "";
+							setTimeout(() => {
+								this.loading = false;
+								this.$store.commit("SET_NOTIFICATION", {
+									enabled: true,
+									status: "success",
+									text: "Password Succesfully Changed"
+								});
+							}, 500);
 						})
 						.catch(err => {
 							this.formError = err.response.data.error_messages;
