@@ -204,7 +204,7 @@ export default {
 		},
 		invoiceStatusStyle (status) {
 			switch (status) {
-				case "To Be Invoiced":
+				case "To Be Invoice":
 					return "bg-yellow-500 text-black"
 				case "Disputed":
 					return "bg-red-500 text-white"
