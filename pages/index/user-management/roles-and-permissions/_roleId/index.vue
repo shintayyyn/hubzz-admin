@@ -457,7 +457,7 @@ export default {
 				permissions.forEach((item, index) => {
 					if (index > 0) hasCheck.push(item.done);
 				});
-				if (findParent && hasCheck.includes(true)) findParent.done = true;
+				if (findParent && findParent.done === false) findParent.done = true;
 			}
 		},
 		isChecked(permissions) {
