@@ -104,6 +104,7 @@ export default {
 		};
 	},
 	async created() {
+		console.log('meee', this.me)
 		if (!this.me.password_updated_at) {
 			this.promptModal = true;
 		}

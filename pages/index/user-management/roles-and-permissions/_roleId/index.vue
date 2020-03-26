@@ -188,7 +188,6 @@
 					<div class="flex flex-col">
 						
 						<div class="w-full flex flex-row items-center pb-1">
-							<div class="p-4 bg-orange-500">{{'index' + index}}</div>
 							<input
 								type="checkbox"
 								:id="role.permissions"
@@ -460,6 +459,7 @@ export default {
 					if (index > 0) hasCheck.push(item.done);
 				});
 				if (findParent && hasCheck.includes(true)) findParent.done = true;
+				// else findParent.done = false;
 			}
 		},
 		isChecked(permissions) {
