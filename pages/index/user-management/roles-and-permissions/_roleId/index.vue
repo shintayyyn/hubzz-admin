@@ -186,18 +186,22 @@
 
 				<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
 					<div class="flex flex-col">
+						
 						<div class="w-full flex flex-row items-center pb-1">
+							<div class="p-4 bg-orange-500">{{'index' + index}}</div>
 							<input
 								type="checkbox"
 								:id="role.permissions"
 								:checked="isChecked(role.permissions)"
 								@change="checkAll(index, $event.target.checked)"
 							/>
+							
 							<label
 								class="font-bold md:text-xl pl-1 leading-none flex items-center"
 								:for="role.permissions"
 							>{{role.category}} Management</label>
 						</div>
+
 						<div v-for="(item, index) in hierarchyPermissions" :key="index">
 							<template v-if="role.category === item.category">
 								<div class="w-full p-2">
@@ -226,6 +230,7 @@
 								</div>
 							</template>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -258,11 +263,21 @@ export default {
 			}
 		};
 	},
+	
+	created() {
+		console.log("allpermissions", this.allPermissions);
+		console.log("asdsad", this.role);
+		this.form.name = this.role.name;
+		this.form.description = this.role.description;
+		this.getPermissions()
+	},
+
 	computed: {
 		authAdminPermissions() {
 			return this.$store.getters["permissions"];
 		}
 	},
+	
 	async asyncData({ app, store, route }) {
 		try {
 			let response = await app.$axios.$get(
@@ -271,6 +286,7 @@ export default {
 			const role = response.data.role;
 			let rolePermissions = response.data.role.permissions;
 			let allPermissions = [];
+			
 			await app.$axios.$get(`/api/v1/admin/admin-permissions`).then(res => {
 				res.data.permissions.forEach(permission => {
 					let hasPermission = rolePermissions.find(
@@ -323,13 +339,7 @@ export default {
 			console.log("get users error", err);
 		}
 	},
-	created() {
-		console.log("allpermissions", this.allPermissions);
-		console.log("asdsad", this.role);
-		this.form.name = this.role.name;
-		this.form.description = this.role.description;
-		this.getPermissions()
-	},
+	
 	methods: {
 		getRoles(roles) {
 			this.$axios
@@ -338,14 +348,6 @@ export default {
 					this.role = res.data.role;
 					this.rolePermissions = res.data.role.permissions;
 				});
-		},
-		isChecked(permissions) {
-			return !permissions.map(item => item.done).includes(false);
-		},
-		checkAll(index, checked) {
-			this.allPermissions[index].permissions.forEach(item => {
-				item.done = checked;
-			});
 		},
 		goBack() {
 			const query = {
@@ -446,6 +448,7 @@ export default {
 			this.hierarchyPermissions = subCategories;
 		},
 		onChangeCategory(index, permissions, e) {
+			console.log('on change category')
 			if (index === 0) {
 				permissions.forEach(item => {
 					item.done = e;
@@ -457,14 +460,18 @@ export default {
 					if (index > 0) hasCheck.push(item.done);
 				});
 				if (findParent && hasCheck.includes(true)) findParent.done = true;
-				else findParent.done = false;
 			}
 		},
 		isChecked(permissions) {
 			return !permissions.map(item => item.done).includes(false);
 		},
 		checkAll(index, checked) {
+			console.log('permissions', this.permissions)
+			console.log('hierarchy', this.hierarchyPermissions)
+			console.log('checked', checked)
+			console.log('index', index)
 			this.permissions[index].permissions.forEach(item => {
+				console.log('checkAlll', item.id)
 				item.done = checked;
 			});
 		},
