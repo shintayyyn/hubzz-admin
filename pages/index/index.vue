@@ -5,7 +5,7 @@
 		<div class="text-sm font-hairline text-white">Work in progress</div>
 		<div class="flex flex-wrap items-start text-white">
 			<!------------------------------ Column 1 -------------------------------->
-			<div class="my-1 md:w-1/3 w-full md:px-3">
+			<div v-if="authAdminPermissions.includes('View Locum Compliance Detail')" class="my-1 md:w-1/3 w-full md:px-3">
 				<div class="my-3">Locums</div>
 				<div class="overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
 					<nuxt-link
@@ -112,18 +112,28 @@ export default {
 	computed: {
 		locumDocsAlert() {
 			return this.$store.state.locums.locumDocAlert;
+		},
+		authAdminPermissions() {
+			return this.$store.getters["permissions"];
+		},
+	},
+	async created(){
+		let locumDocAlert = ''
+		if(this.authAdminPermissions.includes("View Locum Compliance Detail")) {
+			await this.$axios.$get(
+				`/api/v1/admin/locum-detail-compliance-documents`
+			).then(res => {
+				locumDocAlert = res.data.locum_detail_compliance_documents;
+			})
+		
+			await this.$store.commit("locums/SET_LOCUM_DOC_ALERT", locumDocAlert);
 		}
+	
 	},
 	async asyncData({ app, store, route }) {
 		try {
-			let response = await app.$axios.$get(
-				`/api/v1/admin/locum-detail-compliance-documents`
-			);
-			const locumDocAlert = response.data.locum_detail_compliance_documents;
-
-			await store.commit("locums/SET_LOCUM_DOC_ALERT", locumDocAlert);
-
-			response = await app.$axios.$get(`/api/v1/admin/me`);
+			
+			let response = await app.$axios.$get(`/api/v1/admin/me`);
 			const me = response.data.user;
 			return {
 				me

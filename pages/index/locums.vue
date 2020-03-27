@@ -144,6 +144,13 @@ export default {
 				{
 					name: "Name",
 					dataIndex: "personal_detail_name",
+					class: "text-center",
+					sortable: true
+				},
+				{
+					name: "E-Mail Address",
+					dataIndex: "email",
+					class: "text-center",
 					sortable: true
 				},
 				{
@@ -242,6 +249,9 @@ export default {
 	},
 
 	computed: {
+		authAdminPermissions() {
+			return this.$store.getters["permissions"];
+		},
 		loadingLocums() {
 			return this.$store.state.locums.loading_locums;
 		},
