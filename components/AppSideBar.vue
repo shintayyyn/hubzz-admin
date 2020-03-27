@@ -80,6 +80,9 @@ export default {
     }
   },
   computed: {
+    authAdminPermissions() {
+			return this.$store.getters["permissions"];
+		},
     unacknowledgedCount () {
       return this.$store.state.supports.unacknowledgedCount
     }
@@ -94,22 +97,49 @@ export default {
         this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
       })
 
-      let domain = this.$auth.user.domain
-      let addedLists = []
-      let defaultLists = [
-        { name: "Dashboard", route: "/" },
-        { name: "Locums", route: "/locums" },
-        { name: "Practices", route: "/practices" },
-        { name: "Reports", route: "/reports" },
-        { name: "Billing", route: "/billings" },
-        { name: "FAQs", route: "/faqs" },
-        { name: "Terms and Conditions", route: "/tncs" },
-        { name: "Standard Terms", route: "/standard-terms" },
-        { name: "Inquiries", route: "/inquiries" },
-        { name: "User Management", route: "/user-management" },
-        { name: 'Referral Lottery', route: "/referral-lottery"}
-      ]
+      console.log('permissions', this.authAdminPermissions)
 
+      let domain = this.$auth.user.domain
+      
+      let defaultLists = [
+        { name: "Dashboard", route: "/", order: 1},     
+      ]
+      let addedLists = []
+      if(this.authAdminPermissions.includes('View Locums')){
+        addedLists.push({ name: "Locums", route: "/locums", order: 2})
+      }
+      if(this.authAdminPermissions.includes('View Practices')){
+        addedLists.push({ name: "Practices", route: "/practices", order: 3})
+      }
+      if(this.authAdminPermissions.includes('View Hubzz Invoices')){
+        addedLists.push({ name: "Billing", route: "/billings", order: 4})
+      }
+      if(this.authAdminPermissions.includes('View Reports')){
+        addedLists.push({ name: "Reports", route: "/reports", order: 5})
+      }
+      if(this.authAdminPermissions.includes('View Standard Terms')){
+        addedLists.push({ name: "Standard Terms", route: "/standard-terms", order: 6})
+      }
+      if(this.authAdminPermissions.includes('View Referral Lottery')){
+        addedLists.push({ name: "Referral Lottery", route: "/referral-lottery", order: 7})
+      }
+      if(this.authAdminPermissions.includes('View FAQ')){
+        addedLists.push({ name: "FAQs", route: "/faqs", order: 8})
+      }
+      if(this.authAdminPermissions.includes('View Terms and Conditions & Privacy Policy')){
+        addedLists.push({ name: "Terms and Conditions", route: "/tncs", order: 9})
+      }
+      if(this.authAdminPermissions.includes('View Inquiries Messages')){
+        addedLists.push({ name: "Inquiries", route: "/inquiries", order: 10})
+      }
+    
+      if(this.authAdminPermissions.includes('View Admin Accounts')){
+        addedLists.push({ name: "User Management", route: "/user-management", order: 11})
+      }
+
+      // =================INCLUDE BILLINGS PERMISSIONS, FAQS================
+      // if(this.authAdminPermissions.includes(''))
+      
       // if (domain === "Super Admin") {
       //   addedLists = [
       //     { name: "Compliance", route: "/compliance" },
@@ -125,26 +155,26 @@ export default {
       // }
 
       this.lists = [...defaultLists, ...addedLists]
+      this.list = this.lists.sort((a, b) => a.order - b.order)
+      // let defaultMenu = [
+      //   { name: "Dashboard", route: "/" },
+      //   {
+      //     name: "Users",
+      //     toggle: false,
+      //     subMenu: [
+      //       { name: "Locums", route: "/locums" },
+      //       { name: "Practices", route: "/practices" },
+      //       { name: "User Management", route: "/user-management" }
+      //     ]
+      //   },
+      //   { name: "Reports", route: "/reports" },
+      //   { name: "Billing", route: "/billings" },
+      //   { name: "FAQs", route: "/faqs" },
+      //   { name: "Terms and Conditions", route: "/tncs" },
+      //   { name: "Inquiries", route: "/inquiries" }
+      // ]
 
-      let defaultMenu = [
-        { name: "Dashboard", route: "/" },
-        {
-          name: "Users",
-          toggle: false,
-          subMenu: [
-            { name: "Locums", route: "/locums" },
-            { name: "Practices", route: "/practices" },
-            { name: "User Management", route: "/user-management" }
-          ]
-        },
-        { name: "Reports", route: "/reports" },
-        { name: "Billing", route: "/billings" },
-        { name: "FAQs", route: "/faqs" },
-        { name: "Terms and Conditions", route: "/tncs" },
-        { name: "Inquiries", route: "/inquiries" }
-      ]
-
-      this.menu = [...defaultMenu]
+      // this.menu = [...defaultMenu]
     }
   },
   methods: {

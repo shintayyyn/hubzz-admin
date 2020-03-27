@@ -5,7 +5,7 @@
 		</div>
 		<div
 			class="admin-shield"
-			v-if="$route.name.includes('index-user-management-id') || $route.name.includes('roleId')"
+			v-if="$route.name.includes('index-user-management-id') || $route.name.includes('roleId') || $route.name.includes('create')"
 			@click="$router.go(-1)"
 		/>
 		<nuxt-child />

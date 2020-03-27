@@ -8,7 +8,11 @@
 				>This locum has not completed a job yet.</div>
 			</div>
 			<div v-else>
-				<AppJobHeaderSort :locumUser="user" :locumTabStatus="'Completed'" :currentPage="currentPage" />
+				<AppJobHeaderSort 
+					:locumUser="user" 
+					:tabStatus="'Completed'" 
+					:currentPage="currentPage" 
+				/>
 				<div class="w-full overflow-x-auto">
 					<!-- HEADER -->
 					<!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
@@ -62,7 +66,7 @@
 								class
 							>{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
 						</div>
-							<div
+						<div
 							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
 						>
 							<strong class="block md:hidden text-sm uppercase">Completed</strong>
@@ -70,6 +74,17 @@
 								class
 							>{{ $moment(item.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
 						</div>
+						<div
+              class="flex items-center md:flex-col md:justify-center w-1/2 md:w-64 px-1 xl:px-2 py-2 leading-tight align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase whitespace-no-wrap">Invoice Status</strong>
+              <div
+                class="py-2 px-4 rounded-lg whitespace-no-wrap text-center mx-2"
+                :class="invoiceStatusStyle(item.invoice_status)"
+              >
+                {{ item.invoice_status }}
+              </div>
+            </div>
 					</div>
 				</div>
 			</div>
@@ -183,6 +198,16 @@ export default {
 					);
 					this.$store.commit("jobs/TOGGLE_LOADING", false);
 				});
+		},
+		invoiceStatusStyle (status) {
+			switch (status) {
+				case "To Be Invoiced":
+					return "bg-yellow-500 text-black"
+				case "Disputed":
+					return "bg-red-500 text-white"
+				case "Invoiced":
+					return "bg-green-500 text-white opacity-75"
+			}
 		},
 		async pagechanged(e) {
 			const query = {

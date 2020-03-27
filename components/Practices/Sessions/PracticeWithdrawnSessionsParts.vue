@@ -9,7 +9,7 @@
         </div>
       </div>
       <div v-else>
-        <AppJobHeaderSort :practice="practice" :tab-status="'Withdrawn'" :current-page="currentPage" :is-job-parts="false" />
+        <AppJobHeaderSort :practice="practice" :tabStatus="'Withdrawn'" :currentPage="currentPage" :is-job-parts="false" />
         <div class="w-full overflow-x-auto"> 
           <!-- BODY -->
           <nuxt-link 

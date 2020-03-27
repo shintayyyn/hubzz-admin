@@ -71,49 +71,50 @@
 								</div>
 							</div>
 						</div>
-					</div> -->
-
-					<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
-						<div class="flex flex-col">
-							<div class="w-full flex flex-row items-center pb-1">
-								<input
-									type="checkbox"
-									:id="role.permissions"
-									:checked="isChecked(role.permissions)"
-									@change="checkAll(index, $event.target.checked)"
-								/>
-								<label
-									class="font-bold md:text-xl pl-1 leading-none flex items-center"
-									:for="role.permissions"
-								>{{role.category}} Management</label>
-							</div>
-							<div v-for="(item, index) in hierarchyPermissions" :key="index">
-								<template v-if="role.category === item.category">
-									<div class="w-full p-2">
-										<div class="flex flex-col w-full">
-											<div class="pl-4 w-full">
-												<div
-													class="flex flex-col px-1 w-full"
-													v-for="(permission, index) in item.permissions"
-													:key="permission.id"
-												>
-													<input
-														v-model="permission.done"
-														type="checkbox"
-														:id="permission.id"
-														:checked="permission.done"
-														@change="onChangeCategory(index, item.permissions, $event.target.checked)"
-													/>
-													<label
-														:for="permission.id"
-														class="text-sm pl-1"
-														:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
-													>{{permission.name}}</label>
+					</div>-->
+					<div class="flex flex-wrap justify-start">
+						<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
+							<div class="flex flex-col">
+								<div class="w-full flex flex-row items-center pb-1">
+									<input
+										type="checkbox"
+										:id="role.category"
+										:checked="isChecked(role.permissions)"
+										@change="checkAll(index, $event.target.checked, role)"
+									/>
+									<label
+										class="font-bold md:text-xl pl-1 leading-none flex items-center"
+										:for="role.category"
+									>{{role.category}} Management</label>
+								</div>
+								<div v-for="(item, index) in hierarchyPermissions" :key="index">
+									<template v-if="role.category === item.category">
+										<div class="w-full p-2">
+											<div class="flex flex-col w-full">
+												<div class="pl-4 w-full">
+													<div
+														class="flex flex-col px-1 w-full"
+														v-for="(permission, index) in item.permissions"
+														:key="permission.id"
+													>
+														<input
+															v-model="permission.done"
+															type="checkbox"
+															:id="permission.id"
+															:checked="permission.done"
+															@change="onChangeCategory(index, item.permissions, $event.target.checked)"
+														/>
+														<label
+															:for="permission.id"
+															class="text-sm pl-1"
+															:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
+														>{{permission.name}}</label>
+													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-								</template>
+									</template>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -232,8 +233,8 @@ export default {
 				permissions.forEach((item, index) => {
 					if (index > 0) hasCheck.push(item.done);
 				});
-				if (findParent && hasCheck.includes(true)) findParent.done = true;
-				else findParent.done = false;
+				if (findParent && findParent.done === false) findParent.done = true;
+				// else findParent.done = false;
 			}
 		},
 		setCategory() {
@@ -241,6 +242,7 @@ export default {
 			this.permissions.forEach(permission => {
 				if (categories.length === 0) {
 					categories.push({
+						id: categories.length,
 						category: permission.category,
 						permissions: []
 					});
@@ -250,6 +252,7 @@ export default {
 					);
 					if (!hasSameCategory) {
 						categories.push({
+							id: categories.length,
 							category: permission.category,
 							permissions: []
 						});
@@ -271,7 +274,8 @@ export default {
 		isChecked(permissions) {
 			return !permissions.map(item => item.done).includes(false);
 		},
-		checkAll(index, checked) {
+		checkAll(index, checked, role) {
+			console.log(role);
 			this.permissions[index].permissions.forEach(item => {
 				item.done = checked;
 			});

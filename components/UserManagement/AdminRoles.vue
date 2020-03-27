@@ -8,13 +8,13 @@
 				@cancel="confirm=false"
 			/>
 			<AppButton
-				v-if="authAdminPermissions.includes('Add Role')"
+				v-if="authAdminPermissions.includes('Create New Role')"
 				:label="'Add New Role'"
 				:icon="'add-rectangle'"
 				class="mr-2"
 				@click="$router.push('/user-management/roles-and-permissions/create')"
 			/>
-			<template v-if="authAdminPermissions.includes('Delete Role')">
+			<!-- <template v-if="authAdminPermissions.includes('Delete Role')">
 				<AppButton
 					class="text-white"
 					v-if="authAdminPermissions.includes('Add Role')"
@@ -24,7 +24,7 @@
 					:background="deletingAdminRole ? 'green' : 'red'"
 					@click="deletingAdminRole = !deletingAdminRole"
 				/>
-			</template>
+			</template> -->
 		</div>
 
 		<!--  -->
@@ -76,20 +76,34 @@
 				@pagechanged="pagechanged"
 			/>
 		</div> -->
-
-		<AppTable
-			v-if="total > 0"
-			:total="total"
-			:items="adminRoles"
-			:currentPage="currentPage"
-			:perPage="perPage"
-			:columns="columns"
-			:loading="loading"
-			:routerLink="`/user-management/roles-and-permissions`"
-			@pagechanged="pagechanged"
-		>
-
-		</AppTable>
+		<div class="m-4">
+			<AppTable
+				v-if="total > 0"
+				:total="total"
+				:items="adminRoles"
+				:currentPage="currentPage"
+				:perPage="perPage"
+				:columns="columns"
+				:loading="loading"
+				:routerLink="`/user-management/roles-and-permissions`"
+				@pagechanged="pagechanged"
+			>
+				<template
+					v-if="authAdminPermissions.includes('Add Role')"
+					v-slot:actions="slotProps"
+				>
+					<div class="flex justify-center">
+						<AppButton
+							class="text-white ml-2"
+							:background="'red'"
+							:label="'Delete'"
+							@click.prevent="toDeleteAdminRole(slotProps.item.id)"
+						/>
+					</div>
+				</template>
+			</AppTable>
+		</div>
+		
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -99,11 +113,6 @@
 					: $router.push('/user-management/roles-and-permissions')
 			"
 		></div>
-		<!-- <transition name="slide" mode="out-in">
-			<div class="role-modal shadow-lg" v-if="modal">
-				<CreateAdminRole @close="modal = false" />
-			</div>
-		</transition>-->
 	</div>
 </template>
 <script>
@@ -145,6 +154,13 @@ export default {
 				{
 					name: "Role Description",
 					dataIndex: "description",
+					class:"text-center",
+				},
+				{
+					name: "Actions",
+					slot: true,
+					slotName: "actions",
+					dataIndex: "",
 					class:"text-center",
 				}
 			]
