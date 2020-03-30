@@ -190,7 +190,7 @@
 								<input
 									type="checkbox"
 									:id="role.category"
-									:checked="isChecked(role.permissions)"
+									:checked="isChecked(role.permissions, role.category)"
 									@change="checkAll(index, $event.target.checked)"
 								/>
 
@@ -457,8 +457,15 @@ export default {
 				if (findParent && findParent.done === false) findParent.done = true;
 			}
 		},
-		isChecked(permissions) {
-			return !permissions.map(item => item.done).includes(false);
+		isChecked(permissions, category) {
+			let parents = [];
+			let filter = this.hierarchyPermissions.filter(
+				item => item.category === category
+			);
+			filter.forEach(item => {
+				parents.push(item.permissions.find((item, index) => index === 0));
+			});
+			return !parents.map(item => item.done).includes(false);
 		},
 		checkAll(index, checked) {
 			this.permissions[index].permissions.forEach(item => {

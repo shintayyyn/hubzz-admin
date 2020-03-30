@@ -242,9 +242,15 @@ export default {
 				order_by
 			};
 		} catch (err) {
-			error({ statusCode: 404 });
-			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log("Get locums error!", err);
+			if (err.response && err.response.status === 401) {
+        console.log('something went wrong')
+				error(err.response.data)
+				return
+			}
+			throw err
+			// error({ statusCode: 404 });
+			// // store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			// console.log("Get locums error!", err);
 		}
 	},
 
