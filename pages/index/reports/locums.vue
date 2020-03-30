@@ -7,7 +7,7 @@
         </nuxt-link>
       </div>
 
-      <div v-if="true">
+      <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
@@ -36,7 +36,7 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :pages="pages" :activePage="activePage" @setPage="(value) => activePage = value" />
+      <ReportPagination :pages="pages" :page="activePage" @setPage="(value) => activePage = value" />
 
       <div v-if="true" class="text-white"> 
         <span>Count: {{ count }}</span>
