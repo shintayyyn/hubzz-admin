@@ -3,7 +3,6 @@
 		<div>
 			<!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Privacy Policy</div> -->
 			<no-ssr
-				v-if="form.privacy_policy" 
 				placeholder="Loading...">
 				<quill-editor
 					class="bg-white text-black"

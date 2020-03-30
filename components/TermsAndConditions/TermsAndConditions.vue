@@ -3,7 +3,6 @@
 		<div>
 			<!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Terms and Conditions</div> -->
 			<no-ssr
-				v-if="form.terms_and_conditions"  
 				placeholder="Loading...">
 				<quill-editor
 					class="bg-white text-black"
