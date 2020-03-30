@@ -87,13 +87,15 @@
 					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
 						<strong class="block md:hidden text-xs uppercase">Created At</strong>
 						<span>
-							{{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}
+							{{$moment(user.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
+							<!-- {{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
 						</span>
 					</div>
 					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
 						<strong class="block md:hidden text-xs uppercase">Updated At</strong>
 						<span>
-							{{$moment(user.updated_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}
+							{{$moment(user.updated_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
+							<!-- {{$moment(user.updated_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
 						</span>
 					</div>
 				</nuxt-link>
