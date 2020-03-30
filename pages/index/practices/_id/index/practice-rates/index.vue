@@ -6,60 +6,51 @@
         style="max-width: 600px"
       >
         <div
-          v-if="toEdit == false"
+          v-if="!editing"
           class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2"
         >
           <button
             v-if="authAdminPermissions.includes('Create New or Edit Practice Rates')"
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
-            @click="toEdit = true"
+            @click="editRate"
           >
             {{ practice.rates.length > 0 ? "Edit" : "Add" }}
           </button>
 
           <div class="flex py-1">
-            GP Rate(Per Session)
+            GP Rate (Per Hour)
           </div>
           <div
             class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
           >
-            {{ practice.rates.length > 0 ? "£" + practice.rates[0].rate : "N/A" }}
+            {{ gpRate }}
           </div>
           <div class="flex py-1">
-            Others Rate(Per Session)
+            Others Rate (Per Hour)
           </div>
           <div
             class="text-white text-lg font-semibold mx-3 leading-tight focus:outline-none"
           >
-            {{ practice.rates.length > 0 ? "£" + practice.rates[1].rate : "N/A" }}
+            {{ othersRate }}
           </div>
         </div>
 
         <div
-          v-if="toEdit == true && authAdminPermissions.includes('Create New or Edit Practice Rates')"
+          v-if="editing && authAdminPermissions.includes('Create New or Edit Practice Rates')"
           class="w-full overflow-hidden text-gray-300 text-sm p-2"
         >
-          <!-- <div v-if="formError.length > 0" class="mb-2">
-            <p
-              class="rounded bg-red-500 mb-1 px-2 py-1"
-              v-for="(error, index) in formError"
-              :key="index"
-            >
-              {{ error.message }}
-            </p>
-					</div>-->
           <div class="flex items-center justify-between py-1">
             GP Rate (Per Hour)
-            <!-- <span v-if="gpError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{gpError}}</span> -->
           </div>
+
           <input
             v-model.number="toPutPracticeRate.gp_rate"
             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('gp_rate') && 'border-red-800'"
-            type="number"
             step="any"
             aria-label
             @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')"
+            @keypress="gpRateKeyPressHandler"
           >
           <div
             v-if="formError.filter(item => item.field === 'gp_rate')"
@@ -67,18 +58,18 @@
           >
             {{ errorMessage("gp_rate") }}
           </div>
+
           <div class="flex items-center justify-between py-1">
             Others Rate (Per Hour)
-            <!-- <span v-if="othersError" class="bg-red-600 px-2 py-1 ml-2 rounded">{{othersError}}</span> -->
           </div>
           <input
             v-model.number="toPutPracticeRate.others_rate"
             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('others_rate') && 'border-red-800'"
-            type="number"
             step="any"
             aria-label="newtext"
             @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')"
+            @keypress="othersRateKeyPressHandler"
           >
           <div
             v-if="formError.filter(item => item.field === 'others_rate')"
@@ -86,12 +77,14 @@
           >
             {{ errorMessage("others_rate") }}
           </div>
+
           <button
             class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
             @click.prevent="checkForm()"
           >
             Save Changes
           </button>
+
           <button
             class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-gray-400 hover:bg-gray-500 text-sm rounded-lg text-black shadow float-left"
             @click.prevent="cancel()"
@@ -104,18 +97,16 @@
   </div>
 </template>
 <script>
-import PracticeRates from "@/components/Practices/PracticeRates"
 export default {
 	transition: {
 		name: "fade",
 		mode: "out-in"
 	},
-	components: {
-		// PracticeRates
-	},
+
 	data () {
 		return {
-			toEdit: false,
+      practice: null,
+			editing: false,
 			specificPractice: null,
 			toPutPracticeRate: {
 				gp_rate: "",
@@ -124,131 +115,250 @@ export default {
 			formError: []
 		}
 	},
-	created () {
-		this.toPutPracticeRate.gp_rate =
-			this.practice.rates.length > 0 ? this.practice.rates[0].rate : ""
-		this.toPutPracticeRate.others_rate =
-			this.practice.rates.length > 0 ? this.practice.rates[1].rate : ""
-	},
 	computed: {
-		practice () {
-			return this.$store.state.practices.practice
-		},
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
 		},
+
+    gpRate () {
+      const gpRate = this.practice && this.practice.rates
+        ? this.practice.rates.find(rate => rate.type === 'GP').rate
+        : 0
+      console.log('gprate', gpRate)
+      if(gpRate) {
+        return gpRate ? '£ ' + gpRate.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A'
+      }
+      
+    },
+
+    othersRate () {
+      const othersRate = this.practice && this.practice.rates
+        ? this.practice.rates.find(rate => rate.type === 'Others').rate
+        : 0
+      if(othersRate) {
+        return othersRate ? '£ ' + othersRate.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A'
+      }
+      
+    },
 	},
+
 	watch: {
-		"toPutPracticeRate.gp_rate" (value) {
-			if (isNaN(value) === true) {
+		'toPutPracticeRate.gp_rate' (value) {
+      const index = this.formError
+        .findIndex(error =>
+          error.field === 'gp_rate'
+          && error.message === 'Please input a numerical info for GP'
+        )
+
+      if (index > -1) {
+        this.formError.splice(index, 1)
+      }
+
+			if (isNaN(value)) {
 				this.formError.push({
-					field: "gp_rate",
-					message: "Please input a numerical info for GP"
+					field: 'gp_rate',
+					message: 'Please input a numerical info for GP'
 				})
 			}
-			if(value) {
-				return value.toFixed()
-			}
-			
 		},
-		"toPutPracticeRate.others_rate" (value) {
-			if (isNaN(value) === true) {
+
+		'toPutPracticeRate.others_rate' (value) {
+      const index = this.formError
+        .findIndex(error =>
+          error.field === 'others_rate'
+          && error.message === 'Please input a numerical info for Others'
+        )
+
+      if (index > -1) {
+        this.formError.splice(index, 1)
+      }
+
+			if (isNaN(value)) {
 				this.formError.push({
-					field: "others_rate",
-					message: "Please input a numerical info for Others"
+					field: 'others_rate',
+					message: 'Please input a numerical info for Others'
 				})
-			}
-			if(value) {
-				return value.toFixed()
-			}
-			
+			}	
 		}
 	},
+
 	async asyncData ({ app, store, route }) {
 		try {
-			let response = await app.$axios.$get(
-				`/api/v1/admin/practices/${route.params.id}`
-			)
-			const practice = response.data.practice
-			store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-			return {
-				// practice
-			}
+			let response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}`)
+
+			const practice = response.data.data.practice
+
+      store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+      
+      return {
+        practice,
+      }
 		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
+			console.log('err', err.response || err)
+
+      let message = 'Something went wrong!'
+
+      if (err.response && err.response.data && err.response.data.message) {
+        message = err.response.data.message
+      }
+
+			store.commit('SET_NOTIFICATION', {
 				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
+				status: 'danger',
+				text: message,
 			})
-			console.log("get practice error!!!!", err)
 		}
 	},
-	
+
+	created () {
+    this.setRate()
+	},
+
 	methods: {
+    gpRateKeyPressHandler (e) {
+      if (e.key < 10 || e.key === 'Backspace') {
+        if (e.key < 10 && this.toPutPracticeRate.gp_rate.toString().includes('.')) {
+          const decimal = this.toPutPracticeRate.gp_rate.toString().split('.')[1]
+
+          if (
+            decimal.length === 2
+            && e.target.selectionStart === e.target.selectionEnd
+            && e.target.selectionStart > this.toPutPracticeRate.gp_rate.toString().length - 3
+          ) {
+            e.preventDefault()
+          }
+        }
+        return
+      } else if (e.key === '.') {
+        if (this.toPutPracticeRate.gp_rate.toString().includes('.')) {
+          e.preventDefault()
+        }
+      } else {
+        e.preventDefault()
+      }
+    },
+    
+    othersRateKeyPressHandler (e) {
+      if (e.key < 10 || e.key === 'Backspace') {
+        if (e.key < 10 && this.toPutPracticeRate.others_rate.toString().includes('.')) {
+          const decimal = this.toPutPracticeRate.others_rate.toString().split('.')[1]
+
+          if (
+            decimal.length === 2
+            && e.target.selectionStart === e.target.selectionEnd
+            && e.target.selectionStart > this.toPutPracticeRate.others_rate.toString().length - 3
+          ) {
+            e.preventDefault()
+          }
+        }
+        return
+      } else if (e.key === '.') {
+        if (this.toPutPracticeRate.others_rate.toString().includes('.')) {
+          e.preventDefault()
+        }
+      } else {
+        e.preventDefault()
+      }
+    },
+
 		getQuery () {
 			const query = {
 				...this.$route.query
 			}
+
 			const offset = parseInt(query.page) * 8 - 8
+
 			return offset
 		},
 
 		getPractices () {
-			this.$store.dispatch("practices/fetchSpecificPractice", {
+			this.$store.dispatch('practices/fetchSpecificPractice', {
 				id: this.$route.params.id
 			})
 		},
+
 		errorMessage (field, message) {
-			if (this.formError.find(error => error.field === field.toString())) {
-				let error = this.formError.find(
-					error => error.field === field.toString()
-				)
+      const error = this.formError.find(error => error.field === field.toString())
+
+			if (error) {
 				return message ? message : error.message
 			}
+
 			return
 		},
+
 		checkForm: function () {
 			this.formError = []
+
 			this.Validate(this.toPutPracticeRate)
-			if (!this.formError.length) {
+      
+			if (this.formError.length === 0) {
 				this.toPutPracticeRateInfo(this.practice.id)
 			}
 		},
-		async toPutPracticeRateInfo (specificPracticeID) {
-			try {
-				await this.$axios
-					.$put(`/api/v1/admin/practices/${specificPracticeID}/rates`, {
-						gp_rate: this.toPutPracticeRate.gp_rate,
-						others_rate: this.toPutPracticeRate.others_rate
-					})
-					.then(() => {
-						this.$store.commit("SET_NOTIFICATION", {
-							enabled: true,
-							status: "success",
-							text: "Saved"
-						})
-						this.getPractices()
-						this.toEdit = false
-					})
-			} catch (err) {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})
-				console.log("index put locum detail compliance documents error", err)
-			}
+
+		toPutPracticeRateInfo (practiceId) {
+      this.$axios.put(`/api/v1/admin/practices/${practiceId}/rates`, {
+        gp_rate: this.toPutPracticeRate.gp_rate,
+        others_rate: this.toPutPracticeRate.others_rate
+      }).then(() => {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'success',
+          text: 'Saved'
+        })
+
+        return this.$axios.get(`/api/v1/admin/practices/${practiceId}`)
+      }).then((response) => {
+        const practice = response.data.data.practice
+
+        this.$store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+
+        this.practice = practice
+
+        this.editing = false
+      }).catch((err) => {
+        console.log('err', err.response || err)
+
+        let message = 'Something went wrong!'
+
+        if (err.response && err.response.data && err.response.data.message) {
+          message = err.response.data.message
+        }
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: message,
+        })
+      })
 		},
+
+    setRate () {
+      const gpRate = this.practice && this.practice.rates
+        ? this.practice.rates.find(rate => rate.type === 'GP').rate
+        : 0
+
+      const othersRate = this.practice && this.practice.rates
+        ? this.practice.rates.find(rate => rate.type === 'Others').rate
+        : 0
+
+      this.toPutPracticeRate.gp_rate = gpRate ? gpRate.toFixed(2) : ''
+
+      this.toPutPracticeRate.others_rate = othersRate ? othersRate.toFixed(2) : ''
+    },
+
+    editRate () {
+      this.setRate()
+      this.editing = true
+    },
+
 		cancel () {
-			this.toEdit = false
+			this.editing = false
 			this.formError = []
-			this.toPutPracticeRate.gp_rate =
-				this.practice.rates.length > 0 ? this.practice.rates[0].rate : ""
-			this.toPutPracticeRate.others_rate =
-				this.practice.rates.length > 0 ? this.practice.rates[1].rate : ""
-		}
-	}
+      this.setRate()
+		},
+
+	},
 }
 </script>
-<style>
-</style>
