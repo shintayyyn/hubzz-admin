@@ -10,7 +10,7 @@
           class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2"
         >
           <button
-            v-if="authAdminPermissions.includes('Edit Practice Rates')"
+            v-if="authAdminPermissions.includes('Create New or Edit Practice Rates')"
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
             @click="toEdit = true"
           >
@@ -36,7 +36,7 @@
         </div>
 
         <div
-          v-if="toEdit == true && authAdminPermissions.includes('Edit Practice Rates')"
+          v-if="toEdit == true && authAdminPermissions.includes('Create New or Edit Practice Rates')"
           class="w-full overflow-hidden text-gray-300 text-sm p-2"
         >
           <!-- <div v-if="formError.length > 0" class="mb-2">
@@ -124,13 +124,19 @@ export default {
 			formError: []
 		}
 	},
+	created () {
+		this.toPutPracticeRate.gp_rate =
+			this.practice.rates.length > 0 ? this.practice.rates[0].rate : ""
+		this.toPutPracticeRate.others_rate =
+			this.practice.rates.length > 0 ? this.practice.rates[1].rate : ""
+	},
 	computed: {
 		practice () {
 			return this.$store.state.practices.practice
 		},
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
-		}
+		},
 	},
 	watch: {
 		"toPutPracticeRate.gp_rate" (value) {
@@ -140,6 +146,10 @@ export default {
 					message: "Please input a numerical info for GP"
 				})
 			}
+			if(value) {
+				return value.toFixed()
+			}
+			
 		},
 		"toPutPracticeRate.others_rate" (value) {
 			if (isNaN(value) === true) {
@@ -148,6 +158,10 @@ export default {
 					message: "Please input a numerical info for Others"
 				})
 			}
+			if(value) {
+				return value.toFixed()
+			}
+			
 		}
 	},
 	async asyncData ({ app, store, route }) {
@@ -169,12 +183,7 @@ export default {
 			console.log("get practice error!!!!", err)
 		}
 	},
-	created () {
-		this.toPutPracticeRate.gp_rate =
-			this.practice.rates.length > 0 ? this.practice.rates[0].rate : ""
-		this.toPutPracticeRate.others_rate =
-			this.practice.rates.length > 0 ? this.practice.rates[1].rate : ""
-	},
+	
 	methods: {
 		getQuery () {
 			const query = {
@@ -225,7 +234,7 @@ export default {
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "danger",
-					text: "Something went wrong!"
+					text: err.response.data.message
 				})
 				console.log("index put locum detail compliance documents error", err)
 			}

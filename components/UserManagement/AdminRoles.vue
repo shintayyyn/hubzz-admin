@@ -17,7 +17,7 @@
 			<!-- <template v-if="authAdminPermissions.includes('Delete Role')">
 				<AppButton
 					class="text-white"
-					v-if="authAdminPermissions.includes('Add Role')"
+					v-if="authAdminPermissions.includes('Create New Role')"
 					:label="deletingAdminRole ? 'Done' : 'Delete Role'"
 					:icon="deletingAdminRole ? 'circle-check' : 'garbage'"
 					:iconSize="deletingAdminRole ? '21' : '16'"
@@ -89,7 +89,7 @@
 				@pagechanged="pagechanged"
 			>
 				<template
-					v-if="authAdminPermissions.includes('Add Role')"
+					v-if="authAdminPermissions.includes('Delete Role')"
 					v-slot:actions="slotProps"
 				>
 					<div class="flex justify-center">
@@ -141,12 +141,6 @@ export default {
 			role_id: 0,
 			columns: [
 				{
-					name: "Role ID",
-					dataIndex: "id",
-					class: "text-center",
-					sortable: false,
-				},
-				{
 					name: "Role Name",
 					dataIndex: "name",
 					class: "text-center",
@@ -155,6 +149,16 @@ export default {
 					name: "Role Description",
 					dataIndex: "description",
 					class:"text-center",
+				},
+				{
+					name: "Created At",
+					dataIndex: "created_at",
+					class:"localDate text-center",
+				},
+				{
+					name: "Updated At",
+					dataIndex: "updated_at",
+					class:"localDate text-center",
 				},
 				{
 					name: "Actions",

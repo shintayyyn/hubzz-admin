@@ -487,7 +487,7 @@ export default {
 					return "bg-orange-600 text-white";
 					break;
 				case "Pending":
-					return "bg-gray-500 text-gray-800";
+					return "bg-yellow-500 text-yellow-800";
 					break;
 				case "Expiring":
 					return "bg-red-400 text-white";
