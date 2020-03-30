@@ -14,7 +14,7 @@
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
             @click="editRate"
           >
-            {{ practice.rates.length > 0 ? "Edit" : "Add" }}
+            {{ practice && practice.rates && practice.rates.length > 0 ? "Edit" : "Add" }}
           </button>
 
           <div class="flex py-1">
@@ -79,6 +79,7 @@
           </div>
 
           <button
+            :disabled="loading"
             class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
             @click.prevent="checkForm()"
           >
@@ -106,7 +107,8 @@ export default {
 	data () {
 		return {
       practice: null,
-			editing: false,
+      editing: false,
+      loading: false,
 			specificPractice: null,
 			toPutPracticeRate: {
 				gp_rate: "",
@@ -123,18 +125,18 @@ export default {
 
     gpRate () {
       const gpRate = this.practice && this.practice.rates
-        ? this.practice.rates.find(rate => rate.type === 'GP').rate
-        : 0
+        ? this.practice.rates.find(rate => rate.type === 'GP')
+        : null
 
-      return gpRate ? '£ ' + gpRate.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A'
+      return gpRate ? '£ ' + gpRate.rate.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A'
     },
 
     othersRate () {
       const othersRate = this.practice && this.practice.rates
-        ? this.practice.rates.find(rate => rate.type === 'Others').rate
-        : 0
+        ? this.practice.rates.find(rate => rate.type === 'Others')
+        : null
 
-      return othersRate ? '£ ' + othersRate.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A'
+      return othersRate ? '£ ' + othersRate.rate.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A'
     },
 	},
 
@@ -294,6 +296,7 @@ export default {
 		},
 
 		toPutPracticeRateInfo (practiceId) {
+      this.loading = true
       this.$axios.put(`/api/v1/admin/practices/${practiceId}/rates`, {
         gp_rate: this.toPutPracticeRate.gp_rate,
         others_rate: this.toPutPracticeRate.others_rate
@@ -327,21 +330,23 @@ export default {
           status: 'danger',
           text: message,
         })
+      }).finally(() => {
+        this.loading = false
       })
 		},
 
     setRate () {
       const gpRate = this.practice && this.practice.rates
-        ? this.practice.rates.find(rate => rate.type === 'GP').rate
-        : 0
+        ? this.practice.rates.find(rate => rate.type === 'GP')
+        : null
 
       const othersRate = this.practice && this.practice.rates
-        ? this.practice.rates.find(rate => rate.type === 'Others').rate
-        : 0
+        ? this.practice.rates.find(rate => rate.type === 'Others')
+        : null
 
-      this.toPutPracticeRate.gp_rate = gpRate ? gpRate.toFixed(2) : ''
+      this.toPutPracticeRate.gp_rate = gpRate ? gpRate.rate.toFixed(2) : ''
 
-      this.toPutPracticeRate.others_rate = othersRate ? othersRate.toFixed(2) : ''
+      this.toPutPracticeRate.others_rate = othersRate ? othersRate.rate.toFixed(2) : ''
     },
 
     editRate () {
