@@ -1,7 +1,6 @@
 <template>
   <div class="report-modal p-4 md:p-8 shadow-lg">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-
       <div class="flex justify-between text-sm text-white">
         <nuxt-link to="/reports" class="text-white hover:text-sunglow p-1">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
@@ -12,13 +11,17 @@
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">{{ limit }}</option>
+            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
+              {{ limit }}
+            </option>
           </select>
         </div>
         <div>
           <label class="text-white">Page: </label>
           <select v-model="activePage">
-            <option v-for="page in pages" :key="`page_${page}`" :value="page">{{ page }}</option>
+            <option v-for="page in pages" :key="`page_${page}`" :value="page">
+              {{ page }}
+            </option>
           </select>
         </div>
       </div>
@@ -33,16 +36,15 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :pages="pages" :activePage="activePage" @setPage="(value) => activePage = value"/>
+      <ReportPagination :pages="pages" :activePage="activePage" @setPage="(value) => activePage = value" />
 
-      <div class="text-white" v-if="true"> 
+      <div v-if="true" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
         <span>Order By: {{ orderBy.join(',') }}</span>
         <br>
         <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
-
     </div>
   </div>
 </template>
@@ -57,7 +59,7 @@
       ReportPagination,
     },
 
-    data() {
+    data () {
       return {
         loading: false,
         count: 0,
@@ -88,15 +90,15 @@
           25,
         ],
         activePage: 1,
-      };
+      }
     },
 
     computed: {
-      offset() {
+      offset () {
         return this.activePage * this.limit - this.limit
       },
 
-      columnDetails() {
+      columnDetails () {
         return [
           {
             title: '#',
@@ -135,28 +137,10 @@
             flexShrink: 0,
           },
           {
-            title: 'Max Rate per Hour',
-            key: 'max_rate_per_hour',
-            sort_key: 'max_rate_per_hour',
-            column: (item) => item.max_rate_per_hour.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
             title: 'Min Rate per Half Day Session',
             key: 'min_rate_per_half_day_session',
             sort_key: 'min_rate_per_half_day_session',
             column: (item) => item.min_rate_per_half_day_session.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Max Rate per Half Day Session',
-            key: 'max_rate_per_half_day_session',
-            sort_key: 'max_rate_per_half_day_session',
-            column: (item) => item.max_rate_per_half_day_session.toFixed(2),
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -170,40 +154,43 @@
             flexGrow: 1,
             flexShrink: 0,
           },
-          {
-            title: 'Max Rate per Whole Day Session',
-            key: 'max_rate_per_whole_day_session',
-            sort_key: 'max_rate_per_whole_day_session',
-            column: (item) => item.max_rate_per_whole_day_session.toFixed(2),
-            justify: 'end',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
         ]
       },
 
-      pages() {
+      pages () {
         return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 
     watch: {
-      orderBy() {
+      orderBy () {
         this.getLocums()
       },
 
-      limit() {
+      limit () {
         this.page = 1
         this.getLocums()
       },
 
-      activePage() {
+      activePage () {
         this.getLocums()
       },
     },
 
+    mounted () {      
+      // const {
+      //   order_by: orderBy = [],
+      //   page,
+      // } = this.$route.query
+
+      // this.orderBy = orderBy
+      // this.activePage = page ? Number.parseInt(page) : 1
+
+      this.getLocums()
+    },
+
     methods: {
-      getLocums() {
+      getLocums () {
         this.loading = true
         this.locums = []
         Promise.all([
@@ -237,17 +224,5 @@
       },
     },
 
-    mounted() {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
-
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
-
-      this.getLocums()
-    },
-
-  };
+  }
 </script>
