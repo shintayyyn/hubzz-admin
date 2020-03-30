@@ -19,13 +19,8 @@
 					<div class>
 						<span class="w-24 pr-3">Date Sent:</span>
 						<span class="font-bold">
-							{{
-							inquiryEmail.sender
-							? $moment(inquiryEmail.sender.created_at).format(
-							"MMM DD, YYYY | HH:MM:ss"
-							)
-							: null
-							}}
+							
+							{{ inquiryEmail.sender? $moment(inquiryEmail.sender.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY | HH:MM:ss'): null}}
 						</span>
 					</div>
 					<AppButton

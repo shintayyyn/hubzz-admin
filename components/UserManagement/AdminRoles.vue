@@ -8,7 +8,7 @@
 				@cancel="confirm=false"
 			/>
 			<AppButton
-				v-if="authAdminPermissions.includes('Add Role')"
+				v-if="authAdminPermissions.includes('Create New Role')"
 				:label="'Add New Role'"
 				:icon="'add-rectangle'"
 				class="mr-2"
@@ -17,7 +17,7 @@
 			<template v-if="authAdminPermissions.includes('Delete Role')">
 				<AppButton
 					class="text-white"
-					v-if="authAdminPermissions.includes('Add Role')"
+					v-if="authAdminPermissions.includes('Create New Role')"
 					:label="deletingAdminRole ? 'Done' : 'Delete Role'"
 					:icon="deletingAdminRole ? 'circle-check' : 'garbage'"
 					:iconSize="deletingAdminRole ? '21' : '16'"
@@ -76,20 +76,34 @@
 				@pagechanged="pagechanged"
 			/>
 		</div> -->
-
-		<AppTable
-			v-if="total > 0"
-			:total="total"
-			:items="adminRoles"
-			:currentPage="currentPage"
-			:perPage="perPage"
-			:columns="columns"
-			:loading="loading"
-			:routerLink="`/user-management/roles-and-permissions`"
-			@pagechanged="pagechanged"
-		>
-
-		</AppTable>
+		<div class="m-4">
+			<AppTable
+				v-if="total > 0"
+				:total="total"
+				:items="adminRoles"
+				:currentPage="currentPage"
+				:perPage="perPage"
+				:columns="columns"
+				:loading="loading"
+				:routerLink="`/user-management/roles-and-permissions`"
+				@pagechanged="pagechanged"
+			>
+				<template
+					v-if="authAdminPermissions.includes('Delete Role')"
+					v-slot:actions="slotProps"
+				>
+					<div class="flex justify-center">
+						<div
+							class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
+							@click.prevent.stop="toDeleteAdminRole(slotProps.item.id)"
+						>
+							Delete
+					</div>
+					</div>
+				</template>
+			</AppTable>
+		</div>
+		
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -99,11 +113,6 @@
 					: $router.push('/user-management/roles-and-permissions')
 			"
 		></div>
-		<!-- <transition name="slide" mode="out-in">
-			<div class="role-modal shadow-lg" v-if="modal">
-				<CreateAdminRole @close="modal = false" />
-			</div>
-		</transition>-->
 	</div>
 </template>
 <script>
@@ -130,13 +139,7 @@ export default {
 			// totalPages: 0,
 			confirm: false,
 			role_id: 0,
-			columns: [
-				{
-					name: "Role ID",
-					dataIndex: "id",
-					class: "text-center",
-					sortable: false,
-				},
+			defaultColumns: [
 				{
 					name: "Role Name",
 					dataIndex: "name",
@@ -146,8 +149,19 @@ export default {
 					name: "Role Description",
 					dataIndex: "description",
 					class:"text-center",
-				}
-			]
+				},
+				{
+					name: "Created At",
+					dataIndex: "created_at",
+					class:"localDate text-center",
+				},
+				{
+					name: "Updated At",
+					dataIndex: "updated_at",
+					class:"localDate text-center",
+				},
+			],
+			columns: [],
 		};
 	},
 	beforeDestroy() {
@@ -159,7 +173,35 @@ export default {
 		$route(to, from) {
 			this.currentPage = parseInt(to.query.admin_role_page);
 			this.getAdminRoles();
+		},
+		deletingAdminRole(newValue, oldValue){
+			if(newValue === true) {
+				this.columns = [
+					...this.defaultColumns,
+					{
+						name: "Actions",
+						slot: true,
+						slotName: "actions",
+						dataIndex: "",
+						class:"text-center",
+					}
+				]
+			} else {
+				this.columns = [
+					...this.defaultColumns,
+				]
+			}	
 		}
+	},
+	async created() {
+		const query = {
+			...this.$route.query,
+			admin_role_page: this.$route.query.admin_role_page || 1
+		}
+		this.columns = [
+			...this.defaultColumns,
+		]
+		await this.getAdminRoles()
 	},
 	computed: {
 		loading(){
@@ -178,13 +220,7 @@ export default {
 			return this.$store.getters["permissions"];
 		}
 	},
-	async created() {
-		const query = {
-			...this.$route.query,
-			admin_role_page: this.$route.query.admin_role_page || 1
-		}
-		await this.getAdminRoles()
-	},
+	
 	methods: {
 		async getAdminRoles() {
 			await this.$store.commit("adminusers/TOGGLE_LOADING", true)

@@ -112,7 +112,7 @@ export default {
 	},
 	watchQuery: ["page", "search"],
 
-	async asyncData({ app, store, route }) {
+	async asyncData({ app, store, route, error }) {
 		try {
 			//put loading here if needed
 			await store.commit("supports/TOGGLE_LOADING", true);
@@ -150,11 +150,12 @@ export default {
 				// emails
 			};
 		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			});
+			if (err.response && err.response.status === 401) {
+        console.log('something went wrong')
+				error(err.response.data)
+				return
+			}
+			throw err
 			console.log("index emails index asyncData err", err);
 		}
 	},

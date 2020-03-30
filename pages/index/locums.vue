@@ -144,6 +144,13 @@ export default {
 				{
 					name: "Name",
 					dataIndex: "personal_detail_name",
+					class: "text-center",
+					sortable: true
+				},
+				{
+					name: "E-Mail Address",
+					dataIndex: "email",
+					class: "text-center",
 					sortable: true
 				},
 				{
@@ -235,13 +242,22 @@ export default {
 				order_by
 			};
 		} catch (err) {
-			error({ statusCode: 404 });
-			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log("Get locums error!", err);
+			if (err.response && err.response.status === 401) {
+        console.log('something went wrong')
+				error(err.response.data)
+				return
+			}
+			throw err
+			// error({ statusCode: 404 });
+			// // store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			// console.log("Get locums error!", err);
 		}
 	},
 
 	computed: {
+		authAdminPermissions() {
+			return this.$store.getters["permissions"];
+		},
 		loadingLocums() {
 			return this.$store.state.locums.loading_locums;
 		},
@@ -477,7 +493,7 @@ export default {
 					return "bg-orange-600 text-white";
 					break;
 				case "Pending":
-					return "bg-gray-500 text-gray-800";
+					return "bg-yellow-500 text-yellow-800";
 					break;
 				case "Expiring":
 					return "bg-red-400 text-white";

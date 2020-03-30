@@ -263,8 +263,6 @@ export default {
 	},
 
 	created() {
-		console.log("allpermissions", this.allPermissions);
-		console.log("asdsad", this.role);
 		this.form.name = this.role.name;
 		this.form.description = this.role.description;
 		this.getPermissions();
@@ -446,7 +444,6 @@ export default {
 			this.hierarchyPermissions = subCategories;
 		},
 		onChangeCategory(index, permissions, e) {
-			console.log("on change category");
 			if (index === 0) {
 				permissions.forEach(item => {
 					item.done = e;
@@ -471,12 +468,7 @@ export default {
 			return !parents.map(item => item.done).includes(false);
 		},
 		checkAll(index, checked) {
-			console.log("permissions", this.permissions);
-			console.log("hierarchy", this.hierarchyPermissions);
-			console.log("checked", checked);
-			console.log("index", index);
 			this.permissions[index].permissions.forEach(item => {
-				console.log("checkAlll", item.id);
 				item.done = checked;
 			});
 		},
@@ -491,7 +483,6 @@ export default {
 				});
 			});
 			this.form.permission_id = ids;
-			console.log("ids", ids);
 			this.$axios
 				.$put(
 					`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,

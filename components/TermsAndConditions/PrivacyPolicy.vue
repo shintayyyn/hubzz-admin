@@ -2,7 +2,8 @@
 	<div class="bg-charade rounded-lg shadow-lg p-4 md:p-8 text-white">
 		<div>
 			<!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Privacy Policy</div> -->
-			<no-ssr placeholder="Loading...">
+			<no-ssr
+				placeholder="Loading...">
 				<quill-editor
 					class="bg-white text-black"
 					:class="!form.privacy_policy ? 'border-b-2 border-red-600' : ''"
@@ -36,15 +37,14 @@
 <script>
 import AppButton from "@/components/Base/AppButton";
 export default {
+	props: ["terms"],
 	components: {
 		AppButton
 	},
-	props: ["terms"],
 	data() {
 		return {
 			form: {
-				terms_and_conditions: this.terms[0].terms_and_conditions,
-				privacy_policy: this.terms[0].privacy_policy
+				privacy_policy: null,
 			},
 			setFocus: false,
 			editorOption: {
@@ -70,14 +70,33 @@ export default {
 			}
 		};
 	},
-	computed: {
-		editor() {
-			return this.$refs.myTextEditor.quill;
-		}
+	async created() {
+		Promise.all([
+			(this.form.terms_and_conditions = this.terms[0].terms_and_conditions),
+			(this.form.privacy_policy = this.terms[0].privacy_policy)
+		]).then(() => {
+			console.log(this.form);
+		});
+		// await this.$axios.$get(`/api/v1/admin/terms-and-conditions`)
+		// 	.then(res => {
+		// 		console.log('it works')
+		// 		this.form.privacy_policy = res.data.terms.privacy_policy
+		// 	})
+		// 	.catch(err => {
+		// 		this.$store.commit("SET_NOTIFICATION", {
+		// 			enabled: true,
+		// 			status: "danger",
+		// 			text: "Something went wrong!"
+		// 		});
+		// 	})
+		
 	},
 	computed: {
 		authAdminPermissions() {
 			return this.$store.getters["permissions"];
+		},
+		editor() {
+			return this.$refs.myTextEditor.quill;
 		}
 	},
 	methods: {
@@ -107,11 +126,11 @@ export default {
 				}
 			} else {
 				this.$emit("formError");
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: "Privacy Policy can't be empty."
-				});
+				// this.$store.commit("SET_NOTIFICATION", {
+				// 	enabled: true,
+				// 	status: "danger",
+				// 	text: "Privacy Policy can't be empty."
+				// });
 			}
 		}
 	}

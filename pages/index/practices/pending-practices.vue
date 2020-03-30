@@ -124,7 +124,7 @@ export default {
 
 	watchQuery: ["page"],
 
-	async asyncData({ app, route, store }) {
+	async asyncData({ app, route, store, error }) {
 		try {
 			console.log("asyncdata");
 
@@ -157,7 +157,12 @@ export default {
 				// practices
 			};
 		} catch (err) {
-			// error({ statusCode: 404 });
+			if (err.response && err.response.status === 401) {
+        console.log('something went wrong')
+				error(err.response.data)
+				return
+			}
+			throw err
 			console.log("Get practices error!", err);
 		}
 	},
