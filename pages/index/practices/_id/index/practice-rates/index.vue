@@ -105,6 +105,7 @@ export default {
 
 	data () {
 		return {
+      practice: null,
 			editing: false,
 			specificPractice: null,
 			toPutPracticeRate: {
@@ -116,9 +117,6 @@ export default {
 	},
 
 	computed: {
-		practice () {
-			return this.$store.state.practices.practice
-		},
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
 		},
@@ -186,7 +184,11 @@ export default {
 
 			const practice = response.data.data.practice
 
-			store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+      store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+      
+      return {
+        practice,
+      }
 		} catch (err) {
 			console.log('err', err.response || err)
 
@@ -302,8 +304,14 @@ export default {
           text: 'Saved'
         })
 
-        return this.getPractices()
-      }).then(() => {
+        return this.$axios.get(`/api/v1/admin/practices/${practiceId}`)
+      }).then((response) => {
+        const practice = response.data.data.practice
+
+        this.$store.commit('practices/SET_SPECIFIC_PRACTICE', practice)
+
+        this.practice = practice
+
         this.editing = false
       }).catch((err) => {
         console.log('err', err.response || err)
