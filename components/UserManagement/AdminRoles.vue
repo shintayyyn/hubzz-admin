@@ -14,7 +14,7 @@
 				class="mr-2"
 				@click="$router.push('/user-management/roles-and-permissions/create')"
 			/>
-			<!-- <template v-if="authAdminPermissions.includes('Delete Role')">
+			<template v-if="authAdminPermissions.includes('Delete Role')">
 				<AppButton
 					class="text-white"
 					v-if="authAdminPermissions.includes('Create New Role')"
@@ -24,7 +24,7 @@
 					:background="deletingAdminRole ? 'green' : 'red'"
 					@click="deletingAdminRole = !deletingAdminRole"
 				/>
-			</template> -->
+			</template>
 		</div>
 
 		<!--  -->
@@ -93,12 +93,12 @@
 					v-slot:actions="slotProps"
 				>
 					<div class="flex justify-center">
-						<AppButton
-							class="text-white ml-2"
-							:background="'red'"
-							:label="'Delete'"
-							@click.prevent="toDeleteAdminRole(slotProps.item.id)"
-						/>
+						<div
+							class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
+							@click.prevent.stop="toDeleteAdminRole(slotProps.item.id)"
+						>
+							Delete
+					</div>
 					</div>
 				</template>
 			</AppTable>
@@ -139,7 +139,7 @@ export default {
 			// totalPages: 0,
 			confirm: false,
 			role_id: 0,
-			columns: [
+			defaultColumns: [
 				{
 					name: "Role Name",
 					dataIndex: "name",
@@ -160,14 +160,8 @@ export default {
 					dataIndex: "updated_at",
 					class:"localDate text-center",
 				},
-				{
-					name: "Actions",
-					slot: true,
-					slotName: "actions",
-					dataIndex: "",
-					class:"text-center",
-				}
-			]
+			],
+			columns: [],
 		};
 	},
 	beforeDestroy() {
@@ -179,7 +173,35 @@ export default {
 		$route(to, from) {
 			this.currentPage = parseInt(to.query.admin_role_page);
 			this.getAdminRoles();
+		},
+		deletingAdminRole(newValue, oldValue){
+			if(newValue === true) {
+				this.columns = [
+					...this.defaultColumns,
+					{
+						name: "Actions",
+						slot: true,
+						slotName: "actions",
+						dataIndex: "",
+						class:"text-center",
+					}
+				]
+			} else {
+				this.columns = [
+					...this.defaultColumns,
+				]
+			}	
 		}
+	},
+	async created() {
+		const query = {
+			...this.$route.query,
+			admin_role_page: this.$route.query.admin_role_page || 1
+		}
+		this.columns = [
+			...this.defaultColumns,
+		]
+		await this.getAdminRoles()
 	},
 	computed: {
 		loading(){
@@ -198,13 +220,7 @@ export default {
 			return this.$store.getters["permissions"];
 		}
 	},
-	async created() {
-		const query = {
-			...this.$route.query,
-			admin_role_page: this.$route.query.admin_role_page || 1
-		}
-		await this.getAdminRoles()
-	},
+	
 	methods: {
 		async getAdminRoles() {
 			await this.$store.commit("adminusers/TOGGLE_LOADING", true)

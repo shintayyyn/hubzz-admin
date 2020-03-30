@@ -20,7 +20,7 @@
 			<template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
 				<AppButton
 					class="text-white"
-					v-if="authAdminPermissions.includes('Add Role')"
+					v-if="authAdminPermissions.includes('Delete Admin Account')"
 					:label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
 					:icon="deleteAdminUser ? 'circle-check' : 'garbage'"
 					:iconSize="deleteAdminUser ? '21' : '16'"

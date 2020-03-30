@@ -2,7 +2,9 @@
 	<div class="bg-charade rounded-lg shadow-lg p-4 md:p-8 text-white">
 		<div>
 			<!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Terms and Conditions</div> -->
-			<no-ssr placeholder="Loading...">
+			<no-ssr
+				v-if="form.terms_and_conditions"  
+				placeholder="Loading...">
 				<quill-editor
 					class="bg-white text-black"
 					:class="!form.terms_and_conditions ? 'border-b-2 border-red-600' : ''"
@@ -39,15 +41,14 @@
 <script>
 import AppButton from "@/components/Base/AppButton";
 export default {
+	props: ["terms"],
 	components: {
 		AppButton
 	},
-	props: ["terms"],
 	data() {
 		return {
 			form: {
 				terms_and_conditions: "",
-				privacy_policy: ""
 			},
 			setFocus: false,
 			editorOption: {
@@ -78,7 +79,7 @@ export default {
 			return this.$refs.myTextEditor.quill;
 		}
 	},
-	created() {
+	async created() {
 		Promise.all([
 			(this.form.terms_and_conditions = this.terms[0].terms_and_conditions),
 			(this.form.privacy_policy = this.terms[0].privacy_policy)
