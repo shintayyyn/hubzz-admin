@@ -148,7 +148,7 @@
             <embed
               class="object-contain object-left-top w-full"
               :class="complianceDoc.file.type == 'image' ? 'image' : 'document h-full'"
-              :src="complianceDoc.file.type !== 'image' || complianceDoc.file.subtype === 'tiff' ? convertDoc(complianceDoc.file.url) : complianceDoc.file.url"
+              :src="getFileUrl(complianceDoc.file)"
             >
             <!-- :src="
 								complianceDoc.file.subtype === 'tiff' ||
@@ -193,6 +193,7 @@
     </transition>
   </div>
 </template>
+
 <script>
 import AppDate from "@/components/Base/AppDate"
 import AppInput from "@/components/Base/AppInput"
@@ -206,11 +207,11 @@ export default {
 	props: {
     user: {
       type: Object,
-      default: () => null,
+      required: true,
     },
     complianceDoc: {
       type: Object,
-      default: () => null,
+      required: true,
     },
   },
 	data () {
@@ -247,6 +248,7 @@ export default {
 			}
 		}
 	},
+
 	created () {
 		this.toPutLocumDetailCompliance.expired_at = this.complianceDoc.expired_at
 		this.toPutLocumDetailCompliance.status = this.complianceDoc.status
@@ -264,16 +266,20 @@ export default {
 
 		this.setStatusData(this.toPutLocumDetailCompliance.status)
 	},
+  
 	methods: {
 		onEditorBlur (editor) {
 			console.log("editor blur!", editor)
 		},
+
 		onEditorFocus (editor) {
 			console.log("editor focus!", editor)
 		},
+
 		onEditorReady (editor) {
 			console.log("editor ready!", editor)
 		},
+
 		publish () {
 			this.formError = []
 
@@ -303,6 +309,7 @@ export default {
 				this.toPutLocumDetailComplianceDocs()
 			}
 		},
+
 		setStatusData (incomingStatus) {
 			this.toPutLocumDetailCompliance.status = incomingStatus
 			if (incomingStatus === "Rejected") {
@@ -327,9 +334,42 @@ export default {
 				link.click()
 			})
 		},
+
+    getFileUrl (file) {
+      console.log('getFileUrl', file)
+
+      const {
+        type,
+        subtype,
+        url,
+      } = file
+
+      if (
+        type === 'application'
+        && subtype === 'pdf'
+      ) {
+        return url
+      }
+
+      if (
+        type === 'image'
+      ) {
+        if (subtype === 'tiff') {
+          return this.convertDoc(url)
+          // return `${process.env.API_URL}/image-to-jpeg?url=${url}` 
+        }
+
+        return url
+      }
+
+      return this.convertDoc(url)
+      // return url
+    },
+
 		convertDoc (document) {
 			return `https://docs.google.com/gview?url=${document}&embedded=true`
 		},
+
 		getQuery () {
 			const query = {
 				...this.$route.query
@@ -337,13 +377,7 @@ export default {
 			const offset = parseInt(query.page) * 10 - 10
 			return offset
 		},
-		// getLocums() {
-		// 	this.$store.dispatch("locums/fetchLocums", {
-		// 		limit: 10,
-		// 		order_by: "created_at:desc",
-		// 		offset: this.getQuery()
-		// 	});
-		// },
+
 		sendEmail (id, body) {
 			this.$axios
 				.post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
@@ -360,6 +394,7 @@ export default {
 					}, 200)
 				})
 		},
+
 		async toPutLocumDetailComplianceDocs () {
 			console.log(this.toPutLocumDetailCompliance)
 			try {
@@ -426,6 +461,7 @@ export default {
 				})
 			}
 		},
+
 		goBack () {
 			const query = {
 				...this.$route.query
@@ -437,10 +473,12 @@ export default {
 				path: `/locums/${this.user.id}/locum-compliance`,
 				query
 			})
-		}
-	}
+		},
+
+	},
 }
 </script>
+
 <style>
 .document {
 	width: 100%;
