@@ -122,7 +122,8 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"]
+				order_by: ["created_at:desc"],
+				compliance_status: "",
 			},
 			perPage: 0,
 			sort: "",
@@ -291,7 +292,7 @@ export default {
 				this.loading = true;
 			}
 
-			this.$router.push({ query });
+			// this.$router.push({ query });
 
 			const params = {};
 
@@ -357,11 +358,19 @@ export default {
 		},
 		getLocums() {
 			this.$store.dispatch("locums/fetchLocums", {
+				countOnly: true,
 				limit: this.params.limit,
 				search: this.params.search,
 				compliance_status: this.params.compliance_status,
 				order_by: this.params.order_by,
-				offset: this.params.offset
+				offset: this.params.offset,
+			});
+			this.$store.dispatch("locums/fetchLocums", {
+				limit: this.params.limit,
+				search: this.params.search,
+				compliance_status: this.params.compliance_status,
+				order_by: this.params.order_by,
+				offset: this.params.offset,
 			});
 		},
 		async sortBy(sortedBy, page, search, compliance_status) {
