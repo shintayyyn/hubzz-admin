@@ -534,6 +534,7 @@ export default {
             this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
             this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
           })
+          this.locumMandatoryTrainings = await this.user.locum_detail.mandatory_trainings
         } catch (err) {
           console.log('err', err)
           this.$store.commit('SET_NOTIFICATION',{ 

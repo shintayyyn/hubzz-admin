@@ -7,6 +7,13 @@
 
 		<div class="font-semibold">E-Mail Address</div>
 		<div class="text-sm mx-2 pb-2">{{ user.email }}</div>
+		<div class="font-semibold">Roles</div>
+		<div 
+			v-for="role in user.admin_detail.roles" 
+			:key="`role-${role.id}`"
+			class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500">
+			{{ role.name }}
+		</div>
 	</div>
 </template>
 <script>

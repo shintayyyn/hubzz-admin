@@ -7,7 +7,7 @@
         </nuxt-link>
       </div>
 
-      <div v-if="true">
+      <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">

@@ -1,24 +1,154 @@
 <template>
   <div class="report-modal p-4 md:p-8 shadow-lg">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-
       <div class="flex justify-between text-sm text-white">
         <nuxt-link to="/reports" class="text-white hover:text-sunglow p-1">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
 
-      <div v-if="true">
+      <div
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full">
+          <label class="text-xl text-bold">Filters</label>
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="invoiceNumberIncludes"
+            placeholder="Search invoice number"
+            type="text"
+            label="Invoice Number"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncudes"
+            placeholder="Search locum"
+            type="text"
+            label="Locum"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="practiceNameIncludes"
+            placeholder="Search practice"
+            type="text"
+            label="Practice"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="taxNumberIncludes"
+            placeholder="Search utr or company reg number"
+            type="text"
+            label="UTR or Company Reg number"
+          />
+        </div>
+        
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="minNiAmount"
+            placeholder="0.00"
+            type="number"
+            label="Min NI Amount"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="maxNiAmount"
+            placeholder="0.00"
+            type="number"
+            label="Max NI Amount"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="minPayeAmount"
+            placeholder="0.00"
+            type="number"
+            label="Min PAYE Amount"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="maxPayeAmount"
+            placeholder="0.00"
+            type="number"
+            label="Max PAYE Amount"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="calendarDateStart"
+            label="Date Start"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="calendarDateEnd"
+            label="Date End"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="deductionDateStart"
+            label="Deduction Date Start"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="deductionDateEnd"
+            label="Deduction Date End"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+
+      <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">{{ limit }}</option>
+            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
+              {{ limit }}
+            </option>
           </select>
         </div>
         <div>
           <label class="text-white">Page: </label>
           <select v-model="activePage">
-            <option v-for="page in pages" :key="`page_${page}`" :value="page">{{ page }}</option>
+            <option v-for="page in pages" :key="`page_${page}`" :value="page">
+              {{ page }}
+            </option>
           </select>
         </div>
       </div>
@@ -30,24 +160,55 @@
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
-        @setOrderBy="(value) => orderBy = value"
+        @setOrderBy="setOrderBy"
       />
 
-      <ReportPagination :pages="pages" :activePage="activePage" @setPage="(value) => activePage = value"/>
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-gray-500 w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+          </div>
+        </div>
+  
+        <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />
+      </div>
 
-      <div class="text-white" v-if="true"> 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
+      <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
         <span>Order By: {{ orderBy.join(',') }}</span>
         <br>
         <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
+  import AppButton from '@/components/Base/AppButton'
+  import AppInput from '@/components/Base/AppInput'
+  import AppDate from '@/components/Base/AppDate'
+
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
 
@@ -55,11 +216,15 @@
     components: {
       ReportTable,
       ReportPagination,
+      AppButton,
+      AppInput,
+      AppDate,
     },
 
-    data() {
+    data () {
       return {
         loading: false,
+        downloading: false,
         count: 0,
         deductions: [],
         orderBy: [],
@@ -88,15 +253,35 @@
           25,
         ],
         activePage: 1,
-      };
+
+        invoiceNumberIncludes: '',
+        locumNameIncudes: '',
+        practiceNameIncludes: '',
+        taxNumberIncludes: '',
+        minNiAmount: '',
+        maxNiAmount: '',
+        minPayeAmount: '',
+        maxPayeAmount: '',
+        calendarDateStart: '',
+        calendarDateEnd: '',
+        deductionDateStart: '',
+        deductionDateEnd: '',
+      }
     },
 
     computed: {
-      offset() {
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.deductions.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
+
+      offset () {
         return this.activePage * this.limit - this.limit
       },
 
-      columnDetails() {
+      columnDetails () {
         return [
           {
             title: '#',
@@ -147,7 +332,7 @@
             title: 'NI Amount',
             key: 'ni_amount',
             sort_key: 'ni_amount',
-            column: (item) => item.ni_amount.toFixed(2),
+            column: (item) => item.ni ? '£ ' + item.ni_amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A',
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -156,7 +341,7 @@
             title: 'PAYE Amount',
             key: 'paye_amount',
             sort_key: 'paye_amount',
-            column: (item) => item.paye_amount.toFixed(2),
+            column: (item) => item.paye ? '£ ' + item.paye_amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 'N/A',
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -191,36 +376,167 @@
         ]
       },
 
-      pages() {
+      pages () {
         return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 
     watch: {
-      orderBy() {
-        this.getDeductions()
-      },
-
-      limit() {
+      limit () {
         this.page = 1
-        this.getDeductions()
-      },
-
-      activePage() {
         this.getDeductions()
       },
     },
 
+    mounted () {      
+      const {
+        invoice_number_includes: invoiceNumberIncludes,
+        locum_name_incudes: locumNameIncudes,
+        practice_name_includes: practiceNameIncludes,
+        tax_number_includes: taxNumberIncludes,
+        min_ni_amount: minNiAmount,
+        max_ni_amount: maxNiAmount,
+        min_paye_amount: minPayeAmount,
+        max_paye_amount: maxPayeAmount,
+        calendar_date_start: calendarDateStart,
+        calendar_date_end: calendarDateEnd,
+        deduction_date_start: deductionDateStart,
+        deduction_date_end: deductionDateEnd,
+        order_by: orderBy = [],
+        page,
+      } = this.$route.query
+
+      this.invoiceNumberIncludes = invoiceNumberIncludes ? invoiceNumberIncludes : ''
+      this.locumNameIncudes = locumNameIncudes ? locumNameIncudes : ''
+      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
+      this.taxNumberIncludes = taxNumberIncludes ? taxNumberIncludes : ''
+      this.minNiAmount = minNiAmount ? minNiAmount : ''
+      this.maxNiAmount = maxNiAmount ? maxNiAmount : ''
+      this.minPayeAmount = minPayeAmount ? minPayeAmount : ''
+      this.maxPayeAmount = maxPayeAmount ? maxPayeAmount : ''
+      this.calendarDateStart = calendarDateStart ? calendarDateStart : ''
+      this.calendarDateEnd = calendarDateEnd ? calendarDateEnd : ''
+      this.deductionDateStart = deductionDateStart ? deductionDateStart : ''
+      this.deductionDateEnd = deductionDateEnd ? deductionDateEnd : ''
+
+      this.orderBy = Array.isArray(orderBy) ? orderBy : [orderBy]
+
+      this.activePage = page ? Number.parseInt(page) : 1
+
+      this.getDeductions()
+    },
+
     methods: {
-      getDeductions() {
+      filterReset () {
+        this.invoiceNumberIncludes = ''
+        this.locumNameIncudes = ''
+        this.practiceNameIncludes = ''
+        this.taxNumberIncludes = ''
+        this.minNiAmount = ''
+        this.maxNiAmount = ''
+        this.minPayeAmount = ''
+        this.maxPayeAmount = ''
+        this.calendarDateStart = ''
+        this.calendarDateEnd = ''
+        this.deductionDateStart = ''
+        this.deductionDateEnd = ''
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+            locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+            practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+            tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
+            min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
+            max_ni_amount: this.maxNiAmount ? this.maxNiAmount : undefined,
+            min_paye_amount: this.minPayeAmount ? this.minPayeAmount : undefined,
+            max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
+            calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+            calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+            deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
+            deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+            order_by: this.orderBy ? this.orderBy : undefined,
+            page: undefined,
+          }
+        })
+
+        this.getDeductions()
+      },
+
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getDeductions()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getDeductions()
+      },
+
+      getDeductions () {
         this.loading = true
         this.deductions = []
+
+        const params = {
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
+          min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
+          max_ni_amount: this.maxNiAmount ? this.maxNiAmount : undefined,
+          min_paye_amount: this.minPayeAmount ? this.minPayeAmount : undefined,
+          max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
+          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+        }
+
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/deductions/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/deductions/count', {
+            params: {
+              ...params,
+            },
+          }).then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/deductions', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
@@ -228,7 +544,7 @@
           }).then((responses) => {
             return responses.data.data.deductions
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+          new Promise((resolve) => setTimeout(resolve, 200))
         ]).then((results) => {
           const [
             count,
@@ -244,19 +560,45 @@
           this.loading = false
         })
       },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
+          min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
+          max_ni_amount: this.maxNiAmount ? this.maxNiAmount : undefined,
+          min_paye_amount: this.minPayeAmount ? this.minPayeAmount : undefined,
+          max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
+          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/deductions/generate-key', {
+          filename: `deductions.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/deductions/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
+        })
+      },
     },
 
-    mounted() {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
-
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
-
-      this.getDeductions()
-    },
-
-  };
+  }
 </script>

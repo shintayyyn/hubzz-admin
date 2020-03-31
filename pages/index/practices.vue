@@ -10,11 +10,11 @@
 			<div>
 				<AppButton
 					v-if="
-						authAdminPermissions.includes('Add Practice') &&
-						authAdminPermissions.includes('Add Practice User')
+						authAdminPermissions.includes('Create New Practice') &&
+						authAdminPermissions.includes('Create New Practice User')
 					"
 					class="text-sm"
-					:label="'Add Practice'"
+					:label="'Create New Practice'"
 					@click="show()"
 				/>
 			</div>

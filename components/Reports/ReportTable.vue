@@ -25,7 +25,10 @@
           v-for="(item, index) in items"
           :key="`key_${columnDetail.key}_${getItemKey(item, index)}`"
           class="flex bg-white"
-          :class="columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start'"
+          :class="[
+            columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start',
+            index !== item.length - 1 ? 'border-dotted border-b border-gray-800' : '',
+          ]"
         >
           <span class="whitespace-no-wrap p-2">&nbsp;{{ columnDetail.column(item, index) }}</span>
         </div>

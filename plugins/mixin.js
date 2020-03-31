@@ -123,6 +123,38 @@ Vue.mixin({
 					message: "This is not a valid email"
 				};
 			}
-		}
+		},
+		isNumber(e) {
+			// for input type number to avoid entering 'e'
+			e = e ? e : window.event
+			let charCode = (e.which) ? e.which : e.keyCode
+			console.log("charCode", charCode)
+			if (charCode === 101 || charCode === 43 || charCode === 45) {
+				e.preventDefault()
+			} else {
+				return true
+			}
+		},
+		inputNumberOnly(e) {
+			// numbers only [0-9]
+			e = (e) ? e : window.event
+			var charCode = (e.which) ? e.which : e.keyCode
+			if ((charCode > 31 && (charCode < 48 || charCode > 57) && (charCode < 96 || charCode > 105) && (charCode < 37 || charCode > 40))) {
+				e.preventDefault()
+			} else {
+				return true
+			}
+		},
+		alphaNumeric(e) {
+			// numbers only [0-9]
+			e = (e) ? e : window.event
+			var charCode = (e.which) ? e.which : e.keyCode
+			let specialKeys = [8, 9, 46, 36, 35, 37, 39]
+			if ((charCode >= 48 && charCode <= 57) || (charCode >= 65 && charCode <= 90) || charCode == 32 || ((charCode >= 97 && charCode <= 122) && ![109, 106, 111, 107].includes(charCode)) || (specialKeys.indexOf(e.keyCode) != -1 && e.charCode != e.keyCode)) {
+				return true
+			} else {
+				e.preventDefault()
+			}
+		},
 	}
 });

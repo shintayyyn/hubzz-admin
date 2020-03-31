@@ -20,7 +20,7 @@
 			<template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
 				<AppButton
 					class="text-white"
-					v-if="authAdminPermissions.includes('Add Role')"
+					v-if="authAdminPermissions.includes('Delete Admin Account')"
 					:label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
 					:icon="deleteAdminUser ? 'circle-check' : 'garbage'"
 					:iconSize="deleteAdminUser ? '21' : '16'"
@@ -34,7 +34,9 @@
 				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
 				<div class="align-middle px-2 w-1/3">Roles</div>
-				<div class="align-middle px-2 text-center w-1/3">Name</div>
+				<div class="align-middle px-2 w-1/3">Name</div>
+				<div class="align-middle px-2 w-1/3">Created At</div>
+				<div class="align-middle px-2 w-1/3">Updated At</div>
 			</div>
 			<div v-for="(user, index) in adminUsers" :key="`user-${index}`" class="flex">
 				<div
@@ -62,7 +64,7 @@
 						<span class="break-word">{{ user && user.email ? user.email : null }}</span>
 					</div>
 
-					<div class="flex-1 flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none">
+					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
 						<strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
 						<div v-if="user && user.admin_detail && user.admin_detail.roles">
 							<div
@@ -72,9 +74,7 @@
 							>{{ role.name }}</div>
 						</div>
 					</div>
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none md:text-center md:w-1/3"
-					>
+					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
 						<strong class="block md:hidden text-xs uppercase">Name</strong>
 						<span class="break-all">
 							{{
@@ -82,6 +82,20 @@
                 ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
                 : null
 							}}
+						</span>
+					</div>
+					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+						<strong class="block md:hidden text-xs uppercase">Created At</strong>
+						<span>
+							{{$moment(user.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
+							<!-- {{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
+						</span>
+					</div>
+					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+						<strong class="block md:hidden text-xs uppercase">Updated At</strong>
+						<span>
+							{{$moment(user.updated_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
+							<!-- {{$moment(user.updated_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
 						</span>
 					</div>
 				</nuxt-link>

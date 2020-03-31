@@ -122,7 +122,8 @@ export default {
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"]
+				order_by: ["created_at:desc"],
+				compliance_status: "",
 			},
 			perPage: 0,
 			sort: "",
@@ -242,9 +243,15 @@ export default {
 				order_by
 			};
 		} catch (err) {
-			error({ statusCode: 404 });
-			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log("Get locums error!", err);
+			if (err.response && err.response.status === 401) {
+        console.log('something went wrong')
+				error(err.response.data)
+				return
+			}
+			throw err
+			// error({ statusCode: 404 });
+			// // store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+			// console.log("Get locums error!", err);
 		}
 	},
 
@@ -285,7 +292,7 @@ export default {
 				this.loading = true;
 			}
 
-			this.$router.push({ query });
+			// this.$router.push({ query });
 
 			const params = {};
 
@@ -351,11 +358,19 @@ export default {
 		},
 		getLocums() {
 			this.$store.dispatch("locums/fetchLocums", {
+				countOnly: true,
 				limit: this.params.limit,
 				search: this.params.search,
 				compliance_status: this.params.compliance_status,
 				order_by: this.params.order_by,
-				offset: this.params.offset
+				offset: this.params.offset,
+			});
+			this.$store.dispatch("locums/fetchLocums", {
+				limit: this.params.limit,
+				search: this.params.search,
+				compliance_status: this.params.compliance_status,
+				order_by: this.params.order_by,
+				offset: this.params.offset,
 			});
 		},
 		async sortBy(sortedBy, page, search, compliance_status) {
@@ -487,7 +502,7 @@ export default {
 					return "bg-orange-600 text-white";
 					break;
 				case "Pending":
-					return "bg-gray-500 text-gray-800";
+					return "bg-yellow-500 text-yellow-800";
 					break;
 				case "Expiring":
 					return "bg-red-400 text-white";
