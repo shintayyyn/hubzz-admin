@@ -211,7 +211,7 @@ export default {
     complianceDoc: {
       type: Object,
       default: () => null,
-    }
+    },
   },
 	data () {
 		return {
