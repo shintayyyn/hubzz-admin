@@ -170,7 +170,7 @@
               {{ itemCountInfo }}
             </div>
             <div class="whitespace-no-wrap">
-              Page: {{ Math.min(activePage, pages) }} / {{ pages }}
+              Page: {{ activePage }} / {{ pages }}
             </div>
           </div>
         </div>
@@ -183,7 +183,9 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
+            :disabled="downloading"
             class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
             <span>Download CSV</span>
@@ -222,6 +224,7 @@
     data () {
       return {
         loading: false,
+        downloading: false,
         count: 0,
         deductions: [],
         orderBy: [],
@@ -444,7 +447,7 @@
       filterSearch () {
         this.activePage = 1
 
-        this.$router.push({
+        this.$router.replace({
           query: {
             ...this.$route.query,
             invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
@@ -471,14 +474,14 @@
         this.activePage = page
 
         if (this.activePage === 1) {
-          this.$router.push({
+          this.$router.replace({
             query: {
               ...this.$route.query,
               page: undefined,
             }
           })
         } else {
-          this.$router.push({
+          this.$router.replace({
             query: {
               ...this.$route.query,
               page: this.activePage,
@@ -493,7 +496,7 @@
         this.orderBy = orderBy
         this.activePage = 1
 
-        this.$router.push({
+        this.$router.replace({
           query: {
             ...this.$route.query,
             order_by: this.orderBy,
@@ -541,7 +544,7 @@
           }).then((responses) => {
             return responses.data.data.deductions
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+          new Promise((resolve) => setTimeout(resolve, 200))
         ]).then((results) => {
           const [
             count,
@@ -555,6 +558,44 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
+          min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
+          max_ni_amount: this.maxNiAmount ? this.maxNiAmount : undefined,
+          min_paye_amount: this.minPayeAmount ? this.minPayeAmount : undefined,
+          max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
+          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/deductions/generate-key', {
+          filename: `deductions.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/deductions/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },
