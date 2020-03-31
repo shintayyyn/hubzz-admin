@@ -7,11 +7,19 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Tax and NI Deductions
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-001
+      </div>
+
       <div
         class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
         <div class="md:px-1 w-full">
-          <label class="text-xl text-bold">Filters</label>
+          <label class="text-md md:text-lg text-bold">Filters</label>
         </div>
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -25,19 +33,19 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="locumNameIncudes"
-            placeholder="Search locum"
+            v-model="practiceNameIncludes"
+            placeholder="Search practice"
             type="text"
-            label="Locum"
+            label="Practice"
           />
         </div>
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="practiceNameIncludes"
-            placeholder="Search practice"
+            v-model="locumNameIncudes"
+            placeholder="Search locum"
             type="text"
-            label="Practice"
+            label="Locum"
           />
         </div>
 
@@ -447,26 +455,28 @@
       filterSearch () {
         this.activePage = 1
 
-        this.$router.replace({
-          query: {
-            ...this.$route.query,
-            invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-            locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
-            practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-            tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
-            min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
-            max_ni_amount: this.maxNiAmount ? this.maxNiAmount : undefined,
-            min_paye_amount: this.minPayeAmount ? this.minPayeAmount : undefined,
-            max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
-            calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
-            calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-            deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-            deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
-            order_by: this.orderBy ? this.orderBy : undefined,
-            page: undefined,
-          }
-        })
+        const query = {
+          ...this.$route.query,
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
+          min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
+          max_ni_amount: this.maxNiAmount ? this.maxNiAmount : undefined,
+          min_paye_amount: this.minPayeAmount ? this.minPayeAmount : undefined,
+          max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
+          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          order_by: this.orderBy ? this.orderBy : undefined,
+          page: undefined,
+        }
 
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
         this.getDeductions()
       },
 
