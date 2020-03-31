@@ -20,7 +20,7 @@
 
       <button
         class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
-        @click.prevent="downloadItem(compliance_doc.file.url,compliance_doc.file.filename)"
+        @click.prevent="downloadItem(complianceDoc.file.url,complianceDoc.file.filename)"
       >
         <svgicon name="cloud-download" width="21" height="21" class="fill-current" />
         <span class="px-1 font-semibold">Download</span>
@@ -36,7 +36,7 @@
             <p
               class="text-white"
             >
-              {{ compliance_doc.compliance_document ? compliance_doc.compliance_document.name: null }}
+              {{ complianceDoc.compliance_document ? complianceDoc.compliance_document.name: null }}
             </p>
           </div>
           <div class="leading-tight pb-4">
@@ -54,7 +54,7 @@
             <p
               class="text-white"
             >
-              {{ compliance_doc.file ? $moment(compliance_doc.file.created_at).utc().format('DD/MM/YYYY | HH:mm') : null }}
+              {{ complianceDoc.file ? $moment(complianceDoc.file.created_at).utc().format('DD/MM/YYYY | HH:mm') : null }}
             </p>
           </div>
           <div class="leading-tight pb-4">
@@ -67,7 +67,7 @@
           </div>
 
           <div
-            v-if="(compliance_doc.type === 'Mandatory' || compliance_doc.type !== 'Optional') && !compliance_doc.mandatory_training"
+            v-if="(complianceDoc.type === 'Mandatory' || complianceDoc.type !== 'Optional') && !complianceDoc.mandatory_training"
             class="w-full"
           >
             <div class="leading-tight pb-4">
@@ -75,19 +75,19 @@
                 Expired At
               </p>
               <p
-                :class="compliance_doc && compliance_doc.expired_at ? 'text-white' : 'text-gray-400'"
+                :class="complianceDoc && complianceDoc.expired_at ? 'text-white' : 'text-gray-400'"
               >
-                {{ compliance_doc && compliance_doc.expired_at ? $moment(compliance_doc.expired_at).utc().format('DD/MM/YYYY | HH:mm') : 'No expiration date set.' }}
+                {{ complianceDoc && complianceDoc.expired_at ? $moment(complianceDoc.expired_at).utc().format('DD/MM/YYYY | HH:mm') : 'No expiration date set.' }}
               </p>
             </div>
-            <div v-if="compliance_doc.status == 'Rejected'" class="pb-2 mb-2">
+            <div v-if="complianceDoc.status == 'Rejected'" class="pb-2 mb-2">
               <p class="font-bold">
                 Note
               </p>
               <p
                 class="text-white break-words"
               >
-                {{ compliance_doc && compliance_doc.note ? compliance_doc.note : 'N/A' }}
+                {{ complianceDoc && complianceDoc.note ? complianceDoc.note : 'N/A' }}
               </p>
             </div>
 
@@ -132,7 +132,7 @@
             <div class="flex">
               <AppButton class="mr-2" :label="'Save'" @click="publish()" />
               <AppButton
-                v-if="['Expiring', 'Expired'].includes(compliance_doc.status)"
+                v-if="['Expiring', 'Expired'].includes(complianceDoc.status)"
                 class="mr-2"
                 :label="'Notify Locum'"
                 @click="emailModal=true"
@@ -147,18 +147,18 @@
           <div class="w-full">
             <embed
               class="object-contain object-left-top w-full"
-              :class="compliance_doc.file.type == 'image' ? 'image' : 'document h-full'"
-              :src="compliance_doc.file.type !== 'image' || compliance_doc.file.subtype === 'tiff' ? convertDoc(compliance_doc.file.url) : compliance_doc.file.url"
+              :class="complianceDoc.file.type == 'image' ? 'image' : 'document h-full'"
+              :src="complianceDoc.file.type !== 'image' || complianceDoc.file.subtype === 'tiff' ? convertDoc(complianceDoc.file.url) : complianceDoc.file.url"
             >
             <!-- :src="
-								compliance_doc.file.subtype === 'tiff' ||
-								compliance_doc.file.subtype === 'msword' ||
-								compliance_doc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-								compliance_doc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template' ||
-								compliance_doc.file.subtype === 'vnd.ms-word.document.macroEnabled.12' ||
-								compliance_doc.file.subtype === 'vnd.ms-word.template.macroEnabled.12'
-									? convertDoc(compliance_doc.file.url)
-									: compliance_doc.file.url
+								complianceDoc.file.subtype === 'tiff' ||
+								complianceDoc.file.subtype === 'msword' ||
+								complianceDoc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+								complianceDoc.file.subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template' ||
+								complianceDoc.file.subtype === 'vnd.ms-word.document.macroEnabled.12' ||
+								complianceDoc.file.subtype === 'vnd.ms-word.template.macroEnabled.12'
+									? convertDoc(complianceDoc.file.url)
+									: complianceDoc.file.url
 						"-->
           </div>
         </div>
@@ -182,7 +182,7 @@
             :label="'Send to Locum'"
             class="my-2 mr-2"
             :disabled="!emailContent"
-            @click="sendEmail(compliance_doc.id, emailContent)"
+            @click="sendEmail(complianceDoc.id, emailContent)"
           />
           <AppButton :label="'Cancel'" class="my-2 mr-2" @click="emailModal = false, emailContent=''" />
         </div>
@@ -248,17 +248,17 @@ export default {
 		}
 	},
 	created () {
-		this.toPutLocumDetailCompliance.expired_at = this.compliance_doc.expired_at
-		this.toPutLocumDetailCompliance.status = this.compliance_doc.status
-		this.toPutLocumDetailCompliance.note = this.compliance_doc.note
+		this.toPutLocumDetailCompliance.expired_at = this.complianceDoc.expired_at
+		this.toPutLocumDetailCompliance.status = this.complianceDoc.status
+		this.toPutLocumDetailCompliance.note = this.complianceDoc.note
 		console.log("to put locum compliance", this.toPutLocumDetailCompliance)
-		if (this.compliance_doc.status === "Expiring") {
+		if (this.complianceDoc.status === "Expiring") {
 			this.toPutLocumDetailCompliance.status = "Approved"
 		}
-		if (this.compliance_doc.status === "Expired") {
+		if (this.complianceDoc.status === "Expired") {
 			this.toPutLocumDetailCompliance.status = "Rejected"
 		}
-		if (this.compliance_doc.status === "Pending") {
+		if (this.complianceDoc.status === "Pending") {
 			this.toPutLocumDetailCompliance.status = null
 		}
 
@@ -367,7 +367,7 @@ export default {
 					if (this.toPutLocumDetailCompliance.note) {
 						await this.$axios.put(
 							"/api/v1/admin/locum-detail-compliance-documents/" +
-								this.compliance_doc.id,
+								this.complianceDoc.id,
 							{
 								status:
 									this.toPutLocumDetailCompliance.status == "Expiring"
@@ -398,7 +398,7 @@ export default {
 				) {
 					await this.$axios.put(
 						"/api/v1/admin/locum-detail-compliance-documents/" +
-							this.compliance_doc.id,
+							this.complianceDoc.id,
 						{
 							status:
 								this.toPutLocumDetailCompliance.status == "Expiring"

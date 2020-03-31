@@ -216,7 +216,7 @@
               <p
                 class="flex md:mx-2 mb-2"
               >
-                {{ practice && practice.actived_until ? practice.actived_until : 'N/A' }}
+                {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
               </p>
               <div class="flex flex-col item-center">
                 <div
@@ -460,7 +460,12 @@ export default {
 		AppButton,
 		AppConfirm
 	},
-	props: ["practice"],
+	props: {
+    practice: {
+      type: Object,
+      default: () => null,
+    }
+  },
 	data () {
 		return {
 			practiceParent: "",
@@ -565,12 +570,12 @@ export default {
 		async toPutPracticeInfo (practiceID) {
 			try {
 
-        if (this.practice.rates.length > 0 &&
-        this.practice.rates[0].rate &&
-        this.practice.rates[1].rate &&
-        this.practiceDocuments.length >= 2) {
+        // if (this.practice.rates.length > 0 &&
+        // this.practice.rates[0].rate &&
+        // this.practice.rates[1].rate &&
+        // this.practiceDocuments.length >= 2) {
 
-        }
+        // }
 				let response = await this.$axios.$get(
 					`/api/v1/admin/practice-documents?practice_id=${practiceID}`
 				)
@@ -589,7 +594,7 @@ export default {
 						text: "Actived Until is Required"
 					})
         } else {
-          await this.$axios.put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice).then(res => {
+          await this.$axios.put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice).then(() => {
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "success",
@@ -638,7 +643,7 @@ export default {
 		async toMarkBogus () {
 			await this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/bogus`, {})
-				.then(res => {
+				.then(() => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -659,7 +664,7 @@ export default {
 		async toUnmarkBogus () {
 			await this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/unbogus`, {})
-				.then(res => {
+				.then(() => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -680,7 +685,7 @@ export default {
 		async toDeactivate () {
 			await this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`, {})
-				.then(res => {
+				.then(() => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -704,16 +709,12 @@ export default {
 			switch (type) {
 				case "Stand Alone":
 					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
-					break
 				case "Hub":
 					return "bg-red-500 text-white lg:px-8 sm:px-2"
-					break
 				case "Spoke":
 					return "bg-blue-500 text-white lg:px-8 sm:px-2"
-					break
 				case "Type 2":
 					return "bg-purple-500 text-white lg:px-8 sm:px-2"
-					break
 				default:
 			}
     },

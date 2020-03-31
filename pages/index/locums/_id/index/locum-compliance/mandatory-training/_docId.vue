@@ -1,10 +1,10 @@
 <template>
-	<div class="compliance-modal shadow-lg">
-		<LocumComplianceFile :user="user" :compliance_doc="compliance_doc" />
-	</div>
+  <div class="compliance-modal shadow-lg">
+    <LocumComplianceFile :user="user" :complianceDoc="compliance_doc" />
+  </div>
 </template>
 <script>
-import LocumComplianceFile from "@/components/Locums/LocumComplianceFile";
+import LocumComplianceFile from "@/components/Locums/LocumComplianceFile"
 export default {
 	transition: {
 		name: "slide",
@@ -13,49 +13,49 @@ export default {
 	components: {
 		LocumComplianceFile
 	},
-	data() {
+	data () {
 		return {
 			compliance_doc: null
 			// user:null
-		};
-  },
-  created(){
-    console.log('route', this.$route.name)
+		}
   },
 	computed: {
-		user() {
-			return this.$store.state.locums.locumUser;
+		user () {
+			return this.$store.state.locums.locumUser
 		}
 	},
-	async asyncData({ app, store, route, error }) {
+	async asyncData ({ app, store, route, error }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${route.params.id}`
-			);
-			const user = response.data.user;
+			)
+			const user = response.data.user
 
 			response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${user.id}/locum-detail-mandatory-trainings/${route.params.docId}`
-			);
-			const compliance_doc = response.data.locum_detail_mandatory_training;
+			)
+			const compliance_doc = response.data.locum_detail_mandatory_training
 
-			await store.commit("locums/SET_LOCUM_USER", user);
+			await store.commit("locums/SET_LOCUM_USER", user)
 
 			return {
 				compliance_doc
 				// user
-			};
+			}
 		} catch (err) {
-			error({ statusCode: 404 });
+			error({ statusCode: 404 })
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
-			console.log("index practices index create asyncData err", err);
+			})
+			console.log("index practices index create asyncData err", err)
 		}
-	}
-};
+	},
+  created (){
+    console.log('route', this.$route.name)
+  }
+}
 </script>
 
 <style>
