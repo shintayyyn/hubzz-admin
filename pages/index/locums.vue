@@ -276,6 +276,7 @@ export default {
 			return this.locumUsers.length;
 		}
 	},
+	
 	watch: {
 		async filterCompliances() {
 			const query = {

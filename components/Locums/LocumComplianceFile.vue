@@ -90,54 +90,63 @@
                 {{ complianceDoc && complianceDoc.note ? complianceDoc.note : 'N/A' }}
               </p>
             </div>
+						<!-- UPDATE COMPLIANCE FILE STATUS -->
+						<div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
+							<!-- CHANGE STATUS  -->
+							<div>
+								<AppInput
+									v-model="toPutLocumDetailCompliance.status"
+									class="w-full mr-2"
+									:type="'select'"
+									:name="'status'"
+									:placeholder="'Select...'"
+									:items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
+									:error="formError.find(item => item.field === 'status')"
+									:label="'Status'"
+									required
+									@change="setStatusData($event)"
+								/>
+							</div>
+							
+							<!-- PUT NOTES IF REJECTING -->
+							<div v-if="notesAreVisible" class="w-full">
+								<AppInput
+									v-model="toPutLocumDetailCompliance.note"
+									:name="'complianceNote'"
+									:placeholder="'Type Here'"
+									:type="'textarea'"
+									:label="'Reason for Rejection'"
+									:rows="2"
+									:class="'font-normal'"
+									:error="formError.find(item => item.field === 'note')"
+									required
+								/>
+							</div>
 
-            <div>
-              <AppInput
-                v-model="toPutLocumDetailCompliance.status"
-                class="w-full mr-2"
-                :type="'select'"
-                :name="'status'"
-                :placeholder="'Select...'"
-                :items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
-                :error="formError.find(item => item.field === 'status')"
-                :label="'Status'"
-                required
-                @change="setStatusData($event)"
-              />
-            </div>
+							<!-- PICK EXPIRATION DATE -->
+							<div v-else class="pb-4">
+								<AppDate
+									v-model="toPutLocumDetailCompliance.expired_at"
+									:name="'expired_at'"
+									:label="'Change Expiration Date'"
+									:error="formError.find(item => item.field === 'expired_at')"
+									required
+								/>
+							</div>
 
-            <div v-if="notesAreVisible" class="w-full">
-              <AppInput
-                v-model="toPutLocumDetailCompliance.note"
-                :name="'complianceNote'"
-                :placeholder="'Type Here'"
-                :type="'textarea'"
-                :label="'Reason for Rejection'"
-                :rows="2"
-                :class="'font-normal'"
-                :error="formError.find(item => item.field === 'note')"
-                required
-              />
-            </div>
-
-            <div v-else class="pb-4">
-              <AppDate
-                v-model="toPutLocumDetailCompliance.expired_at"
-                :name="'expired_at'"
-                :label="'Change Expiration Date'"
-                :error="formError.find(item => item.field === 'expired_at')"
-                required
-              />
-            </div>
-            <div class="flex">
-              <AppButton class="mr-2" :label="'Save'" @click="publish()" />
-              <AppButton
-                v-if="['Expiring', 'Expired'].includes(complianceDoc.status)"
-                class="mr-2"
-                :label="'Notify Locum'"
-                @click="emailModal=true"
-              />
-            </div>
+							<!-- CONFIRM BUTTON -->
+							<div class="flex">
+								<AppButton class="mr-2" :label="'Save'" @click="publish()" />
+								<AppButton
+									v-if="['Expiring', 'Expired'].includes(complianceDoc.status)"
+									class="mr-2"
+									:label="'Notify Locum'"
+									@click="emailModal=true"
+								/>
+							</div>
+						
+						</div>
+						
           </div>
         </div>
         <div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
@@ -247,6 +256,7 @@ export default {
 			}
 		}
 	},
+
 	created () {
 		this.toPutLocumDetailCompliance.expired_at = this.complianceDoc.expired_at
 		this.toPutLocumDetailCompliance.status = this.complianceDoc.status
@@ -264,6 +274,13 @@ export default {
 
 		this.setStatusData(this.toPutLocumDetailCompliance.status)
 	},
+
+	computed: {
+		authAdminPermissions() {
+			return this.$store.getters["permissions"];
+		},
+	},
+
 	methods: {
 		onEditorBlur (editor) {
 			console.log("editor blur!", editor)
