@@ -29,15 +29,32 @@ export default {
 		AppButton,
 		AppFilterSearch
 	},
-	props: ["user"],
 	data() {
 		return {
+			user: '',
 			form: {
 				password: "",
 				password_confirmation: ""
 			},
 			formError: []
 		};
+	},
+  async asyncData({ app, store, route }) {
+		try {
+			let response = await app.$axios.$get(
+				`/api/v1/admin/admin-users/${route.params.id}`
+			);
+			const user = response.data.user;
+			return {
+				user
+			};
+		} catch (err) {
+			store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			});
+		}
 	},
 	created() {
 		if (this.$auth.user.id === this.user.id) {

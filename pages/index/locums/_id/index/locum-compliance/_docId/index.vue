@@ -1,13 +1,14 @@
 <template>
-	<div class="compliance-modal shadow-lg">
-		<LocumComplianceFile 
-			:user="user" 
-			:compliance_doc="compliance_doc"
-			@complianceUpdated="emitUpdateToIndex" />
-	</div>
+  <div class="compliance-modal shadow-lg">
+    <LocumComplianceFile 
+      :user="user" 
+      :locumComplianceDocument="compliance_doc"
+      @complianceUpdated="emitUpdateToIndex"
+    />
+  </div>
 </template>
 <script>
-import LocumComplianceFile from "@/components/Locums/LocumComplianceFile";
+import LocumComplianceFile from "@/components/Locums/LocumComplianceFile"
 export default {
 	transition: {
 		name: "slide",
@@ -16,51 +17,51 @@ export default {
 	components: {
 		LocumComplianceFile
 	},
-	data() {
+	data () {
 		return {
 			compliance_doc: null
 			// user:null
-		};
-	},
-	computed: {
-		user() {
-			return this.$store.state.locums.locumUser;
 		}
 	},
-	async asyncData({ app, store, route, error }) {
+	computed: {
+		user () {
+			return this.$store.state.locums.locumUser
+		}
+	},
+	async asyncData ({ app, store, route, error }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`
-			);
-			const compliance_doc = response.data.locum_detail_compliance_document;
+			)
+			const compliance_doc = response.data.locum_detail_compliance_document
 
 			response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${route.params.id}`
-			);
-			const user = response.data.user;
+			)
+			const user = response.data.user
 
-			await store.commit("locums/SET_LOCUM_USER", user);
+			await store.commit("locums/SET_LOCUM_USER", user)
 
 			return {
 				compliance_doc
 				// user
-			};
+			}
 		} catch (err) {
-			error({ statusCode: 404 });
+			error({ statusCode: 404 })
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
-			console.log("index practices index create asyncData err", err);
+			})
+			console.log("index practices index create asyncData err", err)
 		}
 	},
 	methods: {
-		async emitUpdateToIndex(){
+		async emitUpdateToIndex (){
 			await this.$emit('updateLocums')
 		}
 	}
-};
+}
 </script>
 
 <style>
