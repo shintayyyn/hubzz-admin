@@ -90,63 +90,61 @@
                 {{ complianceDoc && complianceDoc.note ? complianceDoc.note : 'N/A' }}
               </p>
             </div>
-						<!-- UPDATE COMPLIANCE FILE STATUS -->
-						<div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
-							<!-- CHANGE STATUS  -->
-							<div>
-								<AppInput
-									v-model="toPutLocumDetailCompliance.status"
-									class="w-full mr-2"
-									:type="'select'"
-									:name="'status'"
-									:placeholder="'Select...'"
-									:items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
-									:error="formError.find(item => item.field === 'status')"
-									:label="'Status'"
-									required
-									@change="setStatusData($event)"
-								/>
-							</div>
+            <!-- UPDATE COMPLIANCE FILE STATUS -->
+            <div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
+              <!-- CHANGE STATUS  -->
+              <div>
+                <AppInput
+                  v-model="toPutLocumDetailCompliance.status"
+                  class="w-full mr-2"
+                  :type="'select'"
+                  :name="'status'"
+                  :placeholder="'Select...'"
+                  :items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
+                  :error="formError.find(item => item.field === 'status')"
+                  :label="'Status'"
+                  required
+                  @change="setStatusData($event)"
+                />
+              </div>
 							
-							<!-- PUT NOTES IF REJECTING -->
-							<div v-if="notesAreVisible" class="w-full">
-								<AppInput
-									v-model="toPutLocumDetailCompliance.note"
-									:name="'complianceNote'"
-									:placeholder="'Type Here'"
-									:type="'textarea'"
-									:label="'Reason for Rejection'"
-									:rows="2"
-									:class="'font-normal'"
-									:error="formError.find(item => item.field === 'note')"
-									required
-								/>
-							</div>
+              <!-- PUT NOTES IF REJECTING -->
+              <div v-if="notesAreVisible" class="w-full">
+                <AppInput
+                  v-model="toPutLocumDetailCompliance.note"
+                  :name="'complianceNote'"
+                  :placeholder="'Type Here'"
+                  :type="'textarea'"
+                  :label="'Reason for Rejection'"
+                  :rows="2"
+                  :class="'font-normal'"
+                  :error="formError.find(item => item.field === 'note')"
+                  required
+                />
+              </div>
 
-							<!-- PICK EXPIRATION DATE -->
-							<div v-else class="pb-4">
-								<AppDate
-									v-model="toPutLocumDetailCompliance.expired_at"
-									:name="'expired_at'"
-									:label="'Change Expiration Date'"
-									:error="formError.find(item => item.field === 'expired_at')"
-									required
-								/>
-							</div>
+              <!-- PICK EXPIRATION DATE -->
+              <div v-else class="pb-4">
+                <AppDate
+                  v-model="toPutLocumDetailCompliance.expired_at"
+                  :name="'expired_at'"
+                  :label="'Change Expiration Date'"
+                  :error="formError.find(item => item.field === 'expired_at')"
+                  required
+                />
+              </div>
 
-							<!-- CONFIRM BUTTON -->
-							<div class="flex">
-								<AppButton class="mr-2" :label="'Save'" @click="publish()" />
-								<AppButton
-									v-if="['Expiring', 'Expired'].includes(complianceDoc.status)"
-									class="mr-2"
-									:label="'Notify Locum'"
-									@click="emailModal=true"
-								/>
-							</div>
-						
-						</div>
-						
+              <!-- CONFIRM BUTTON -->
+              <div class="flex">
+                <AppButton class="mr-2" :label="'Save'" @click="publish()" />
+                <AppButton
+                  v-if="['Expiring', 'Expired'].includes(complianceDoc.status)"
+                  class="mr-2"
+                  :label="'Notify Locum'"
+                  @click="emailModal=true"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
@@ -157,7 +155,7 @@
             <embed
               class="object-contain object-left-top w-full"
               :class="complianceDoc.file.type == 'image' ? 'image' : 'document h-full'"
-              :src="complianceDoc.file.type !== 'image' || complianceDoc.file.subtype === 'tiff' ? convertDoc(complianceDoc.file.url) : complianceDoc.file.url"
+              :src="getFileUrl(complianceDoc.file)"
             >
             <!-- :src="
 								complianceDoc.file.subtype === 'tiff' ||
@@ -202,6 +200,7 @@
     </transition>
   </div>
 </template>
+
 <script>
 import AppDate from "@/components/Base/AppDate"
 import AppInput from "@/components/Base/AppInput"
@@ -215,11 +214,11 @@ export default {
 	props: {
     user: {
       type: Object,
-      default: () => null,
+      required: true,
     },
     complianceDoc: {
       type: Object,
-      default: () => null,
+      required: true,
     },
   },
 	data () {
@@ -257,6 +256,12 @@ export default {
 		}
 	},
 
+	computed: {
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		},
+	},
+
 	created () {
 		this.toPutLocumDetailCompliance.expired_at = this.complianceDoc.expired_at
 		this.toPutLocumDetailCompliance.status = this.complianceDoc.status
@@ -275,22 +280,19 @@ export default {
 		this.setStatusData(this.toPutLocumDetailCompliance.status)
 	},
 
-	computed: {
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
-		},
-	},
-
 	methods: {
 		onEditorBlur (editor) {
 			console.log("editor blur!", editor)
 		},
+
 		onEditorFocus (editor) {
 			console.log("editor focus!", editor)
 		},
+
 		onEditorReady (editor) {
 			console.log("editor ready!", editor)
 		},
+
 		publish () {
 			this.formError = []
 
@@ -320,6 +322,7 @@ export default {
 				this.toPutLocumDetailComplianceDocs()
 			}
 		},
+
 		setStatusData (incomingStatus) {
 			this.toPutLocumDetailCompliance.status = incomingStatus
 			if (incomingStatus === "Rejected") {
@@ -344,9 +347,51 @@ export default {
 				link.click()
 			})
 		},
+
+    getFileUrl (file) {
+      console.log('getFileUrl', file)
+
+      const {
+        type,
+        subtype,
+        url,
+      } = file
+
+      if (
+        type === 'application'
+      ) {
+        if (
+          subtype === 'msword'
+          || subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document'
+          || subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template'
+          || subtype === 'vnd.ms-word.document.macroEnabled.12'
+          || subtype === 'vnd.ms-word.template.macroEnabled.12'
+        ) {
+        //   return this.convertDoc(url)
+          return `${process.env.API_URL}/docs-to-pdf?url=${url}` 
+        }
+
+        return url
+      }
+
+      if (
+        type === 'image'
+      ) {
+        if (subtype === 'tiff') {
+        //   return this.convertDoc(url)
+          return `${process.env.API_URL}/image-to-jpeg?url=${url}` 
+        }
+
+        return url
+      }
+
+      return url
+    },
+
 		convertDoc (document) {
 			return `https://docs.google.com/gview?url=${document}&embedded=true`
 		},
+
 		getQuery () {
 			const query = {
 				...this.$route.query
@@ -354,13 +399,7 @@ export default {
 			const offset = parseInt(query.page) * 10 - 10
 			return offset
 		},
-		// getLocums() {
-		// 	this.$store.dispatch("locums/fetchLocums", {
-		// 		limit: 10,
-		// 		order_by: "created_at:desc",
-		// 		offset: this.getQuery()
-		// 	});
-		// },
+
 		sendEmail (id, body) {
 			this.$axios
 				.post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
@@ -377,6 +416,7 @@ export default {
 					}, 200)
 				})
 		},
+
 		async toPutLocumDetailComplianceDocs () {
 			console.log(this.toPutLocumDetailCompliance)
 			try {
@@ -443,6 +483,7 @@ export default {
 				})
 			}
 		},
+
 		goBack () {
 			const query = {
 				...this.$route.query
@@ -454,10 +495,12 @@ export default {
 				path: `/locums/${this.user.id}/locum-compliance`,
 				query
 			})
-		}
-	}
+		},
+
+	},
 }
 </script>
+
 <style>
 .document {
 	width: 100%;
