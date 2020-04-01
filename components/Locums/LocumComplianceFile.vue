@@ -149,12 +149,16 @@
             <div v-if="loadingFile">
               <span class="text-2xl">Loading...</span>
             </div>
-            <embed
-              v-if="!loadingFile && fileUrl"
-              class="object-contain object-left-top w-full"
-              :class="locumComplianceDocument.file.type == 'image' ? 'image' : 'document h-full'"
-              :src="fileUrl"
-            >
+            <template v-if="locumComplianceDocument.file.type == 'image'">
+              <img :src="fileUrl"  class="object-contain object-left-top"/>
+            </template>
+            <template v-else>
+              <embed
+                v-if="!loadingFile && fileUrl"
+                class="object-contain object-left-top w-full document h-full"
+                :src="fileUrl"
+              > 
+            </template>
           </div>
         </div>
       </div>
