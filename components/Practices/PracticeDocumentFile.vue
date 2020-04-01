@@ -138,12 +138,12 @@
           link.click()
           document.body.removeChild(link)
         }).catch(err => {
+          console.log('download file error', err)
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
             status: 'danger',
             text: err.response.data.message
           })
-          console.log('download file error', err)
         })
       },
 
