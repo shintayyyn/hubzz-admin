@@ -55,9 +55,10 @@ export default {
 		AppButton,
 		AppFilterSearch
 	},
-	props: ["user", "adminRoles"],
+	props: ["adminRoles"],
 	data() {
 		return {
+			user: '',
 			form: {
 				email: "",
 				title: "",
@@ -69,6 +70,23 @@ export default {
 			filteredAdminRoles: [],
 			formError: []
 		};
+	},
+  async asyncData({ app, store, route }) {
+		try {
+			let response = await app.$axios.$get(
+				`/api/v1/admin/admin-users/${route.params.id}`
+			);
+			const user = response.data.user;
+			return {
+				user
+			};
+		} catch (err) {
+			store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			});
+		}
 	},
 	created() {
 		this.form.email = this.user.email;
@@ -88,7 +106,7 @@ export default {
 			const found = this.user.admin_detail.roles.find(
 				userRole => userRole.id === item.value
 			);
-			console.log("item");
+			console.log("items");
 			if (!found) {
 				this.filteredAdminRoles.push({
 					value: item.value,
@@ -102,17 +120,25 @@ export default {
 	methods: {
 		getAdminUsers() {
 			this.$store.dispatch("adminusers/fetchAdminUsers", {
-				limit: 8
+				limit: 10,
 			});
 		},
-		updateForm(user_id, form) {
+		updateForm(user_id) {
 			this.formError = [];
+			console.log('form', this.form)
 			this.Validate(this.form, ["title", "suffix"]);
 			if (!this.formError.length) {
-				form.roles_id = form.roles_id.map(item => item.value);
+				this.form.roles_id = this.form.roles_id.map(item => item.value);
 				this.$axios
-					.$put(`/api/v1/admin/admin-users/${user_id}`, form)
-					.then(() => {
+					.$put(`/api/v1/admin/admin-users/${user_id}`, this.form)
+					.then(res => {
+						this.form.roles_id = []
+						res.data.user.admin_detail.roles.forEach(item => {
+							this.form.roles_id.push({
+								value: item.id,
+								label: item.name
+							});
+						})
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",

@@ -20,10 +20,26 @@
 </template>
 <script>
 export default {
-  props: ["user"],
-  // created(){
-    
-  // }
+	data: {
+		user: '',
+	},
+  async asyncData({ app, store, route }) {
+		try {
+			let response = await app.$axios.$get(
+				`/api/v1/admin/admin-users/${route.params.id}`
+			);
+			const user = response.data.user;
+			return {
+				user
+			};
+		} catch (err) {
+			store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			});
+		}
+	},
 };
 </script>
 <style>

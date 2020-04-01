@@ -42,7 +42,7 @@
 				>Change Password</nuxt-link
 			>
 		</div>
-		<nuxt-child :user="user" :adminRoles="adminRoles" />
+		<nuxt-child :adminRoles="adminRoles" />
 	</div>
 </template>
 <script>
@@ -56,23 +56,6 @@ export default {
 		};
 	},
 
-	async asyncData({ app, store, route }) {
-		try {
-			let response = await app.$axios.$get(
-				`/api/v1/admin/admin-users/${route.params.id}`
-			);
-			const user = response.data.user;
-			return {
-				user
-			};
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			});
-		}
-	},
 	async created() {
 		await this.$axios.$get(`/api/v1/admin/admin-roles`).then(res => {
 			res.data.roles.forEach(item => {
@@ -87,100 +70,13 @@ export default {
 		}
 	},
 	methods: {
-		getAdminUsers() {
-			this.$store.dispatch("adminusers/fetchAdminUsers", {
-				limit: 8
-			});
-		},
 		goBack() {
 			const query = {
 				...this.$route.query
 			};
 			this.$router.push({ path: "/user-management", query });
 		},
-		processForm(userInfo) {
-			if (!userInfo.first_name) {
-				this.formError.fnameError = "Please Input your First Name";
-			}
-			if (!userInfo.last_name) {
-				this.formError.lnameError = "Please input your Last Name";
-			}
-		},
-		processEmail(inputEmail) {
-			this.formError = {
-				emailError: ""
-			};
-			if (!inputEmail) {
-				this.formError.emailError = "Required";
-			} else if (!this.validEmail(inputEmail)) {
-				this.formError.emailError = "Please input a Valid E-Mail Address";
-			}
-		},
 
-		errorMessage(field, message) {
-			if (this.formError.find(error => error.field === field.toString())) {
-				let error = this.formError.find(
-					error => error.field === field.toString()
-				);
-				return message ? message : error.message;
-			}
-			return;
-		},
-
-		checkForm(uID, userInfo) {
-			this.formError = [];
-			this.Validate(this.toPutAdminUser, [
-				"title",
-				"suffix",
-				"password",
-				"password_confirmation"
-			]);
-
-			if (!this.formError.length) {
-				this.toPutAdminUserInfo(uID, userInfo);
-			}
-		},
-
-		validEmail(email) {
-			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-			return re.test(email);
-		},
-
-		changePassword(old_password, new_password, password_confirmation) {
-			let form = { old_password, new_password, password_confirmation };
-			this.formError = [];
-			this.Validate(form);
-			return;
-			if (!this.formError) {
-				this.$axios
-					.$put(`/api/v1/admin/admin-users/${user_id}`, form)
-					.then(res => {});
-			}
-			// /api/v1/admin/users/{user_id}/change-password
-		},
-
-		async toPutAdminUserInfo(user_id, toPutUserInfo) {
-			toPutUserInfo.roles_id = toPutUserInfo.roles_id.map(item => item.value);
-			await this.$axios
-				.$put(`/api/v1/admin/admin-users/${user_id}`, toPutUserInfo)
-				.then(() => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Edit Admin User Success!"
-					});
-				})
-				.catch(err => {
-					console.log("edit admin user error!", err);
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					});
-				});
-			await this.getAdminUsers();
-			this.$router.push("/user-management");
-		}
 	}
 };
 </script>

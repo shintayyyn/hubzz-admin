@@ -32,12 +32,16 @@
       <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <span :class="item && item.reference ? 'truncate' : 'break-word'">{{ item ? item.reference : null }}</span>
       </div>
-      <div class="sm:w-1/2 md:w-1/4 text-center h-16 min-h-full overflow-y-auto">
-        <span class="break-word">{{ item && item.note ? item.note : null }}</span>
+      <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <span v-if="item.status === 'Rejected'" class="break-word">
+          Reason for Rejection: {{ item && item.note ? item.note : null }}
+        </span>
       </div>
 
       <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-        <div class="flex justify-end mt-2 sm:m-0">
+        <div
+          v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" 
+          class="flex justify-end mt-2 sm:m-0">
           <button
             class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
             :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
@@ -52,6 +56,14 @@
           >
             {{ item.status == 'Rejected' ? 'Rejected' : 'Reject' }}
           </button>
+        </div>
+        <div v-else>
+          <div
+            class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
+            :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
+          >
+            {{item.status}}
+          </div>
         </div>
       </div>
 
@@ -458,6 +470,9 @@ export default {
     computed:{
       mandatoryComplianceDocuments (){
         return this.$store.state.locums.mandatoryComplianceDocuments
+      },
+      authAdminPermissions() {
+        return this.$store.getters["permissions"];
       },
     },
     async created () {
