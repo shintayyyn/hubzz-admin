@@ -359,8 +359,18 @@ export default {
 
       if (
         type === 'application'
-        && subtype === 'pdf'
       ) {
+        if (
+          subtype === 'msword'
+          || subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document'
+          || subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template'
+          || subtype === 'vnd.ms-word.document.macroEnabled.12'
+          || subtype === 'vnd.ms-word.template.macroEnabled.12'
+        ) {
+        //   return this.convertDoc(url)
+          return `${process.env.API_URL}/docs-to-pdf?url=${url}` 
+        }
+
         return url
       }
 
@@ -368,15 +378,14 @@ export default {
         type === 'image'
       ) {
         if (subtype === 'tiff') {
-          return this.convertDoc(url)
-          // return `${process.env.API_URL}/image-to-jpeg?url=${url}` 
+        //   return this.convertDoc(url)
+          return `${process.env.API_URL}/image-to-jpeg?url=${url}` 
         }
 
         return url
       }
 
-      return this.convertDoc(url)
-      // return url
+      return url
     },
 
 		convertDoc (document) {
