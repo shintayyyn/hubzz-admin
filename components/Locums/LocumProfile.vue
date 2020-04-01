@@ -288,7 +288,7 @@
             </div>
 
             <AppButton
-              v-if="user.status !== 'Deactivated'"
+              v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Deactivate Locum')"
               :label="'Deactivate this Account'"
               class="mx-auto"
               :inClass="'bg-gray-800 hover:bg-gray-900 text-white'"
@@ -297,7 +297,7 @@
             />
           </div>
 
-          <div class="mx-3 mt-4">
+          <div v-if="authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
             <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
             <span
               class="tool inline-block"
@@ -381,7 +381,13 @@ export default {
 		this.qualifications = this.user.locum_detail.qualifications
 		this.clinicalSystems = this.user.locum_detail.clinical_systems
 		this.spokenLanguages = this.user.locum_detail.spoken_languages
-	},
+  },
+  
+  computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		},
+  },
 
 	methods: {
 		getLocums () {
