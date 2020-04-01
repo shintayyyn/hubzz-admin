@@ -11,11 +11,12 @@
       </div>
 
       <button
+        :disabled="downloading"
         class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
       >
         <svgicon name="cloud-download" width="21" height="21" class="fill-current" />
-        <span class="px-1 font-semibold">Download</span>
+        <span class="px-1 font-semibold">{{ downloading ? 'Downloading...' : 'Download' }}</span>
       </button>
     </header>
 
@@ -149,14 +150,16 @@
             <div v-if="loadingFile">
               <span class="text-2xl">Loading...</span>
             </div>
-            <template v-if="locumComplianceDocument.file.type == 'image'">
-              <img :src="fileUrl"  class="object-contain object-left-top"/>
-            </template>
-            <template v-else>
+            <template v-if="!loadingFile && fileUrl">
+              <img
+                v-if="locumComplianceDocument.file.type === 'image'"
+                :src="fileUrl" 
+                class="object-contain object-left-top"
+              >
               <embed
-                v-if="!loadingFile && fileUrl"
-                class="object-contain object-left-top w-full document h-full"
+                v-if="locumComplianceDocument.file.type !== 'image'"
                 :src="fileUrl"
+                class="object-contain object-left-top w-full document h-full"
               > 
             </template>
           </div>
@@ -222,6 +225,8 @@
       return {
         loadingFile: false,
         fileUrl: null,
+
+        downloading: false,
 
         toPutLocumDetailCompliance: {
           expired_at: null,
@@ -378,7 +383,7 @@
 
       downloadItem (fileUrl, fileFilename) {
         const axios = require('axios')
-
+        this.downloading = true
         axios.get(fileUrl, {
           responseType: 'blob',
         }).then(response => {
@@ -396,6 +401,8 @@
             status: 'danger',
             text: err.response.data.message
           })
+        }).finally(() => {
+          this.downloading = false
         })
       },
 
