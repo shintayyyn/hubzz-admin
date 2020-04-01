@@ -2,7 +2,7 @@
   <div class="compliance-modal shadow-lg">
     <LocumComplianceFile 
       :user="user" 
-      :complianceDoc="compliance_doc"
+      :locumComplianceDocument="compliance_doc"
       @complianceUpdated="emitUpdateToIndex"
     />
   </div>
