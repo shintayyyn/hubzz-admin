@@ -11,11 +11,12 @@
       </div>
 
       <button
+        :disabled="downloading"
         class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
       >
         <svgicon name="cloud-download" width="21" height="21" class="fill-current" />
-        <span class="px-1 font-semibold">Download</span>
+        <span class="px-1 font-semibold">{{ downloading ? 'Downloading...' : 'Download' }}</span>
       </button>
     </header>
 
@@ -219,6 +220,8 @@
         loadingFile: false,
         fileUrl: null,
 
+        downloading: false,
+
         toPutLocumDetailCompliance: {
           expired_at: null,
           status: "",
@@ -374,7 +377,7 @@
 
       downloadItem (fileUrl, fileFilename) {
         const axios = require('axios')
-
+        this.downloading = true
         axios.get(fileUrl, {
           responseType: 'blob',
         }).then(response => {
@@ -392,6 +395,8 @@
             status: 'danger',
             text: err.response.data.message
           })
+        }).finally(() => {
+          this.downloading = false
         })
       },
 
