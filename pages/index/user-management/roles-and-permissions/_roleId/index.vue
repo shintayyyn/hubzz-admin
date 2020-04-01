@@ -458,14 +458,15 @@ export default {
 			}
 		},
 		isChecked(permissions, category) {
-			let parents = [];
-			let filter = this.hierarchyPermissions.filter(
-				item => item.category === category
-			);
-			filter.forEach(item => {
-				parents.push(item.permissions.find((item, index) => index === 0));
-			});
-			return !parents.map(item => item.done).includes(false);
+			return !permissions.map(item => item.done).includes(false);
+			// let parents = [];
+			// let filter = this.hierarchyPermissions.filter(
+			// 	item => item.category === category
+			// );
+			// filter.forEach(item => {
+			// 	parents.push(item.permissions.find((item, index) => index === 0));
+			// });
+			// return !parents.map(item => item.done).includes(false);
 		},
 		checkAll(index, checked) {
 			this.permissions[index].permissions.forEach(item => {
