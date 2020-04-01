@@ -1,6 +1,6 @@
 <template>
-  <div class="absolute page-overlap flex-1 flex flex-col self-end bg-trout w-full max-w-2xl">
-    <div class="flex items-center text-sm text-white py-6 px-4 md:px-8">
+  <section class="absolute page-overlap flex-1 flex flex-col self-end bg-trout w-full max-w-2xl">
+    <header class="flex items-center text-sm text-white py-6 px-4 md:px-8">
       <div class="cursor-pointer" @click="goBack()">
         <svgicon
           name="arrow-left-solid"
@@ -10,14 +10,6 @@
         />
       </div>
 
-      <!-- <button
-				class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
-				@click.prevent="publish()"
-			>
-				<svgicon name="save-icon" width="21" height="21" class="fill-current"></svgicon>
-				<span class="px-1 font-semibold">Save</span>
-			</button>-->
-
       <button
         class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
@@ -25,9 +17,9 @@
         <svgicon name="cloud-download" width="21" height="21" class="fill-current" />
         <span class="px-1 font-semibold">Download</span>
       </button>
-    </div>
+    </header>
 
-    <div class="shadow-lg rounded-lg bg-waterloo mx-4 md:mx-12 mb-6 p-4">
+    <main class="shadow-lg rounded-lg bg-waterloo mx-4 md:mx-12 mb-6 p-4">
       <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
         <div class="text-gray-300 m-2 md:w-1/3 lg:w-1/3">
           <div class="leading-tight pb-4">
@@ -148,20 +140,26 @@
             </div>
           </div>
         </div>
+
         <div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
           <p class="font-bold pb-2">
             File
           </p>
           <div class="w-full">
+            <div v-if="loadingFile">
+              <span class="text-2xl">Loading...</span>
+            </div>
             <embed
+              v-if="!loadingFile && fileUrl"
               class="object-contain object-left-top w-full"
               :class="locumComplianceDocument.file.type == 'image' ? 'image' : 'document h-full'"
-              :src="getFileUrl(locumComplianceDocument.file)"
+              :src="fileUrl"
             >
           </div>
         </div>
       </div>
-    </div>
+    </main>
+
     <transition name="slide" mode="out-in">
       <div v-if="emailModal" class="confirm-termination-modal p-4 md:p-6">
         <no-ssr placeholder="Loading...">
@@ -186,10 +184,11 @@
         </div>
       </div>
     </transition>
+
     <transition name="fade" mode="out-in">
       <div v-if="emailModal" class="shield" @click="emailModal = false, emailContent=''" />
     </transition>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -217,6 +216,9 @@
 
     data () {
       return {
+        loadingFile: false,
+        fileUrl: null,
+
         toPutLocumDetailCompliance: {
           expired_at: null,
           status: "",
@@ -272,6 +274,50 @@
       }
 
       this.setStatusData(this.toPutLocumDetailCompliance.status)
+    },
+
+    mounted () {
+      if (this.locumComplianceDocument && this.locumComplianceDocument.file) {
+        this.loadingFile = true
+        const {
+          url: fileUrl,
+          type,
+          subtype,
+        } = this.getFileUrl(this.locumComplianceDocument.file)
+
+        console.log('qweqwe', this.locumComplianceDocument.file, {
+          url: fileUrl,
+          type,
+          subtype,
+        })
+
+        this.$axios.get(fileUrl, {
+          responseType: 'blob',
+        }).then((response) => {
+          this.fileUrl = window.URL.createObjectURL(new Blob([response.data], {
+            type: `${type}/${subtype}`,
+          }))
+
+          // const fileReader = new window.FileReader()
+          // fileReader.onload = function () {
+          //   this.fileUrl = fileReader.result
+          // }
+          // fileReader.readAsDataURL(response.data)
+        }).catch((err) => {
+          console.log('err', err.response || err)
+          let message = 'Something went wrong!'
+          if (err.response && err.response.data && err.response.data.message) {
+            message = err.response.data.message
+          }
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: message,
+          })
+        }).finally(() => {
+          this.loadingFile = false
+        })
+      }
     },
 
     methods: {
@@ -353,9 +399,9 @@
         console.log('getFileUrl', file)
 
         const {
+          url,
           type,
           subtype,
-          url,
         } = file
 
         if (
@@ -369,10 +415,18 @@
             || subtype === 'vnd.ms-word.template.macroEnabled.12'
           ) {
           //   return this.convertDoc(url)
-            return `${process.env.API_URL}/docs-to-pdf?url=${url}` 
+            return {
+              url: `${process.env.API_URL}/docs-to-pdf?url=${url}`,
+              type: 'application',
+              subtype: 'pdf',
+            } 
           }
 
-          return url
+          return {
+            url,
+            type,
+            subtype,
+          }
         }
 
         if (
@@ -380,13 +434,25 @@
         ) {
           if (subtype === 'tiff') {
           //   return this.convertDoc(url)
-            return `${process.env.API_URL}/image-to-jpeg?url=${url}` 
+            return {
+              url: `${process.env.API_URL}/image-to-jpeg?url=${url}`,
+              type: 'image',
+              subtype: 'jpeg',
+            } 
           }
 
-          return url
+          return {
+            url,
+            type,
+            subtype,
+          }
         }
 
-        return url
+        return {
+          url,
+          type,
+          subtype,
+        }
       },
 
       convertDoc (document) {
