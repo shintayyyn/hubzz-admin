@@ -24,19 +24,19 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="invoiceNumberIncludes"
-            placeholder="Search invoice number"
+            v-model="practiceNameIncludes"
+            placeholder="Search practice"
             type="text"
-            label="Invoice Number"
+            label="Practice"
           />
         </div>
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="practiceNameIncludes"
-            placeholder="Search practice"
+            v-model="invoiceNumberIncludes"
+            placeholder="Search invoice number"
             type="text"
-            label="Practice"
+            label="Invoice Number"
           />
         </div>
 
@@ -301,19 +301,19 @@
             flexShrink: 0,
           },
           {
-            title: 'Invoice Number',
-            key: 'invoice_number',
-            sort_key: 'invoice_number',
-            column: (item) => item.invoice_number,
+            title: 'Practice',
+            key: 'practice_name',
+            sort_key: 'practice_name',
+            column: (item) => item.practice_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Practice',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice_name,
+            title: 'Invoice Number',
+            key: 'invoice_number',
+            sort_key: 'invoice_number',
+            column: (item) => item.invoice_number,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
