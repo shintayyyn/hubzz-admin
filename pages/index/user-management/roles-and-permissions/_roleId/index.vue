@@ -458,11 +458,8 @@ export default {
 			}
 		},
 		isChecked(permissions, category) {
-			console.log('permissions', permissions)
-			console.log('category', category)
 			let checkedPermissions = []
 			checkedPermissions = permissions.filter( item => item.done === true)
-			console.log('checkedPermissions',checkedPermissions)
 			if(checkedPermissions.length > 0) {
 				return true
 			} else {
