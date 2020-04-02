@@ -458,7 +458,18 @@ export default {
 			}
 		},
 		isChecked(permissions, category) {
-			return !permissions.map(item => item.done).includes(false);
+			console.log('permissions', permissions)
+			console.log('category', category)
+			let checkedPermissions = []
+			checkedPermissions = permissions.filter( item => item.done === true)
+			console.log('checkedPermissions',checkedPermissions)
+			if(checkedPermissions.length > 0) {
+				return true
+			} else {
+				return false
+			}
+			// console.log('hierarchy permissions', this.hierarchyPermissions)
+			// // return !permissions.map(item => item.done).includes(false);
 			// let parents = [];
 			// let filter = this.hierarchyPermissions.filter(
 			// 	item => item.category === category
