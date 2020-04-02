@@ -8,18 +8,18 @@
 				@confirm="performAction()"
 			/>
 		</transition>
-		<div class="flex items-center px-4 md:px-6 py-2 text-sm">
+		<div class="flex flex-wrap items-center px-4 md:px-6 py-2 text-sm">
 			<AppButton
 				v-if="authAdminPermissions.includes('Create Admin Account')"
 				:label="'Create Admin Account'"
 				:icon="'add-user'"
 				:iconSize="'16'"
-				class="mr-2"
+				class="my-1 mr-2"
 				@click="modal = true, deleteAdminUser = false"
 			/>
 			<template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
 				<AppButton
-					class="text-white"
+					class="my-1 text-white"
 					v-if="authAdminPermissions.includes('Delete Admin Account')"
 					:label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
 					:icon="deleteAdminUser ? 'circle-check' : 'garbage'"
@@ -29,7 +29,7 @@
 				/>
 			</template>
 		</div>
-		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6">
+		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6 py-2">
 			<div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
 				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
 				<div class="align-middle px-2 w-1/3">E-Mail</div>
@@ -64,7 +64,9 @@
 						<span class="break-word">{{ user && user.email ? user.email : null }}</span>
 					</div>
 
-					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+					<div
+						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+					>
 						<strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
 						<div v-if="user && user.admin_detail && user.admin_detail.roles">
 							<div
@@ -74,24 +76,30 @@
 							>{{ role.name }}</div>
 						</div>
 					</div>
-					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+					<div
+						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+					>
 						<strong class="block md:hidden text-xs uppercase">Name</strong>
 						<span class="break-all">
 							{{
-                user && user.personal_detail
-                ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
-                : null
+							user && user.personal_detail
+							? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
+							: null
 							}}
 						</span>
 					</div>
-					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+					<div
+						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+					>
 						<strong class="block md:hidden text-xs uppercase">Created At</strong>
 						<span>
 							{{$moment(user.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
 							<!-- {{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
 						</span>
 					</div>
-					<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3">
+					<div
+						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+					>
 						<strong class="block md:hidden text-xs uppercase">Updated At</strong>
 						<span>
 							{{$moment(user.updated_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}

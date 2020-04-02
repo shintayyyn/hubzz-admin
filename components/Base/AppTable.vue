@@ -42,11 +42,7 @@
 								v-for="(column, index) in columns"
 								:key="index"
 								class="flex-1 px-2"
-								:class="
-                  column.class &&
-                    column.class.includes('text-center') &&
-                    'text-center'
-                "
+								:class="column.class"
 							>
 								<template v-if="Array.isArray(dataCell(item, column))">
 									<div
