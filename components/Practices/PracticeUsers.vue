@@ -2,7 +2,7 @@
   <div class="m-2">
     <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
     <div class="w-full overflow-hidden">
-      <div v-if="authAdminPermissions.includes('Add Practice User')">
+      <div v-if="authAdminPermissions.includes('Create New Practice User')">
         <button
           v-if="practice.status !== 'Deactivated'"
           class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
