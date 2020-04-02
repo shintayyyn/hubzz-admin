@@ -1,6 +1,6 @@
 <template>
 	<div class="flex-1 flex flex-col overflow-auto">
-		<div class="flex px-4 md:px-8 py-2 text-sm">
+		<div class="flex px-4 md:px-8 py-2 text-sm flex-wrap">
 			<AppConfirm
 				v-if="confirm"
 				:message="'Are you sure you want to delete this role?'"
@@ -11,12 +11,12 @@
 				v-if="authAdminPermissions.includes('Create New Role')"
 				:label="'Add New Role'"
 				:icon="'add-rectangle'"
-				class="mr-2"
+				class="my-1 mr-2"
 				@click="$router.push('/user-management/roles-and-permissions/create')"
 			/>
 			<template v-if="authAdminPermissions.includes('Delete Role')">
 				<AppButton
-					class="text-white"
+					class="my-1 text-white"
 					v-if="authAdminPermissions.includes('Create New Role')"
 					:label="deletingAdminRole ? 'Done' : 'Delete Role'"
 					:icon="deletingAdminRole ? 'circle-check' : 'garbage'"
@@ -64,8 +64,8 @@
 				</nuxt-link>
 			</div>
 		</div>
-		<div v-else class="text-center text-gray-400 py-4">No admin roles</div> -->
-		
+		<div v-else class="text-center text-gray-400 py-4">No admin roles</div>-->
+
 		<!-- <div v-if="!adminRoles.length == 0">
 			<AppPagination
 				class="px-4 md:px-8"
@@ -75,8 +75,8 @@
 				:perPage="perPage"
 				@pagechanged="pagechanged"
 			/>
-		</div> -->
-		<div class="m-4">
+		</div>-->
+		<div class="m-2">
 			<AppTable
 				v-if="total > 0"
 				:total="total"
@@ -88,22 +88,17 @@
 				:routerLink="`/user-management/roles-and-permissions`"
 				@pagechanged="pagechanged"
 			>
-				<template
-					v-if="authAdminPermissions.includes('Delete Role')"
-					v-slot:actions="slotProps"
-				>
+				<template v-if="authAdminPermissions.includes('Delete Role')" v-slot:actions="slotProps">
 					<div class="flex justify-center">
 						<div
 							class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
 							@click.prevent.stop="toDeleteAdminRole(slotProps.item.id)"
-						>
-							Delete
-					</div>
+						>Delete</div>
 					</div>
 				</template>
 			</AppTable>
 		</div>
-		
+
 		<div
 			class="role-shield"
 			v-if="modal == true"
@@ -143,25 +138,25 @@ export default {
 				{
 					name: "Role Name",
 					dataIndex: "name",
-					class: "text-center",
+					class: "text-center font-bold md:font-normal"
 				},
 				{
 					name: "Role Description",
 					dataIndex: "description",
-					class:"text-center",
+					class: "md:text-center"
 				},
 				{
 					name: "Created At",
 					dataIndex: "created_at",
-					class:"localDate text-center",
+					class: "localDate text-center"
 				},
 				{
 					name: "Updated At",
 					dataIndex: "updated_at",
-					class:"localDate text-center",
-				},
+					class: "localDate text-center"
+				}
 			],
-			columns: [],
+			columns: []
 		};
 	},
 	beforeDestroy() {
@@ -174,8 +169,8 @@ export default {
 			this.currentPage = parseInt(to.query.admin_role_page);
 			this.getAdminRoles();
 		},
-		deletingAdminRole(newValue, oldValue){
-			if(newValue === true) {
+		deletingAdminRole(newValue, oldValue) {
+			if (newValue === true) {
 				this.columns = [
 					...this.defaultColumns,
 					{
@@ -183,29 +178,25 @@ export default {
 						slot: true,
 						slotName: "actions",
 						dataIndex: "",
-						class:"text-center",
+						class: "text-center"
 					}
-				]
+				];
 			} else {
-				this.columns = [
-					...this.defaultColumns,
-				]
-			}	
+				this.columns = [...this.defaultColumns];
+			}
 		}
 	},
 	async created() {
 		const query = {
 			...this.$route.query,
 			admin_role_page: this.$route.query.admin_role_page || 1
-		}
-		this.columns = [
-			...this.defaultColumns,
-		]
-		await this.getAdminRoles()
+		};
+		this.columns = [...this.defaultColumns];
+		await this.getAdminRoles();
 	},
 	computed: {
-		loading(){
-			return this.$store.state.adminusers.loading_admin_users
+		loading() {
+			return this.$store.state.adminusers.loading_admin_users;
 		},
 		total() {
 			return this.$store.state.adminusers.adminRolesCount;
@@ -220,23 +211,27 @@ export default {
 			return this.$store.getters["permissions"];
 		}
 	},
-	
+
 	methods: {
 		async getAdminRoles() {
-			await this.$store.commit("adminusers/TOGGLE_LOADING", true)
+			await this.$store.commit("adminusers/TOGGLE_LOADING", true);
 			let limit = 10;
 			let offset = 0;
 			offset = this.perPage * (parseInt(this.$route.query.admin_role_page) - 1);
 			let params = { limit, offset };
-			await this.$axios.$get(`/api/v1/admin/admin-roles/count`)
-			.then(res => {
-				this.$store.commit("adminusers/SET_ADMIN_ROLES_COUNT", res.data.count);
-				this.perPage = 10;
-				this.totalPages = Math.ceil(this.total / this.perPage);
-			})
-			.catch(err => {
+			await this.$axios
+				.$get(`/api/v1/admin/admin-roles/count`)
+				.then(res => {
+					this.$store.commit(
+						"adminusers/SET_ADMIN_ROLES_COUNT",
+						res.data.count
+					);
+					this.perPage = 10;
+					this.totalPages = Math.ceil(this.total / this.perPage);
+				})
+				.catch(err => {
 					console.log("get roles error!", err);
-					this.$store.commit("adminusers/TOGGLE_LOADING", false)
+					this.$store.commit("adminusers/TOGGLE_LOADING", false);
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
@@ -250,14 +245,14 @@ export default {
 				})
 				.catch(err => {
 					console.log("get roles error!", err);
-					this.$store.commit("adminusers/TOGGLE_LOADING", false)
+					this.$store.commit("adminusers/TOGGLE_LOADING", false);
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
 					});
 				});
-			await this.$store.commit("adminusers/TOGGLE_LOADING", false)
+			await this.$store.commit("adminusers/TOGGLE_LOADING", false);
 		},
 
 		toDeleteAdminRole(roleId) {

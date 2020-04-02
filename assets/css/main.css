@@ -85,6 +85,12 @@ table tbody td {
 	animation: dots 1s steps(5, end) infinite;
 }
 
+.break-word {
+	-ms-word-break: break-all;
+	word-break: break-all;
+	word-break: break-word;
+}
+
 @keyframes dots {
 	0%,
 	20% {

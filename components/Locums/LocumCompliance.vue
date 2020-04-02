@@ -24,7 +24,7 @@
     <!--GMC / NMC NUMBER-->
     <div 
       v-for="(item, index) in referenceCompDocs" :key="`item-${index}`"
-      class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-0 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3"
+      class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-4 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3"
     >
       <div class="flex flex-col sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <span :class="item && item.compliance_document_name ? 'truncate' : 'break-word'">{{ item ? item.compliance_document_name : null }}</span>
@@ -135,7 +135,7 @@
           class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
           draggable="false"
         >
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
             <strong class="block md:hidden text-sm uppercase">Title</strong>
             <span 
               :class="item && item.file ? 'truncate' : 'break-word'"
@@ -150,19 +150,19 @@
             </span>
           </div>
 
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File size</strong>
             <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
             </span>
           </div>
 
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
             <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
             </span>
           </div>
 
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
             <span class="break-all">
               {{ item && item.expired_at 
@@ -171,7 +171,7 @@
             </span>
           </div>
 
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
             <span class="break-all">
               {{ (item && item.expired_at) && item.status !== "Expired" 
@@ -180,10 +180,10 @@
             </span>
           </div>
 
-          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden">Status</strong>
             <div
-              class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
+              class="text-center text-black text-sm py-2 border border-white rounded-full"
               :class="statusStyle(item && item.status ? item.status:null)"
             >
               <span>
@@ -304,7 +304,7 @@
         class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
         draggable="false"
       >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
           <strong class="block md:hidden text-sm uppercase">Title</strong>
           <span 
             :class="item && item.file ? 'truncate' : 'break-word'"
@@ -319,19 +319,19 @@
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File size</strong>
           <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
           <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
           <span class="break-all">
             {{ item && item.expired_at 
@@ -340,7 +340,7 @@
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
           <span class="break-all">
             {{ item && item.expired_at 
@@ -349,7 +349,7 @@
           </span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Status</strong>
           <div
             class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
@@ -367,7 +367,7 @@
     <p class=" text-sm text-white px-4 md:px-8 md:pt-8 font-semibold">
       Mandatory Trainings
     </p>
-    <div v-if="locumMandatoryTrainings.length === 0">
+    <div v-if="locumMandatoryTrainings.length === 0" class="mb-8">
       <div class="w-full text-white font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8">
         This locum has not uploaded any Mandatory Training Documents.
       </div>
@@ -395,12 +395,12 @@
         :class="item.file==null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
         draggable="false"
       >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pl-6 py-2 align-middle">
           <strong class="block md:hidden text-sm uppercase">Title</strong>
           <span :class="item.mandatory_training ? 'truncate' : 'break-word leading-none'">{{ item.mandatory_training.name }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File size</strong>
           <span>
             {{ ( item.file ? item.file.size : 0 / 1048576).toFixed(2) + 'Bytes' }}
@@ -409,12 +409,12 @@
         <!-- $moment(document.practiceSpecificDoc.updated_at 
           ? document.practiceSpecificDoc.updated_at
           : document.practiceSpecificDoc.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYYY, h:mm:ss a'):null }} -->
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
           <span class="break-all">{{ item.file ? $moment(item.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a'): null }}</span>
         </div>
 
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Status</strong>
           <div
             class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
@@ -618,12 +618,17 @@ export default {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 10px;
-  min-width: 600px;
 	max-height: 80%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
+}
+
+@media screen and (min-width: 768px) {
+  .note-modal {
+    min-width: 600px;
+  }
 }
 
 </style>
