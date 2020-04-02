@@ -1,88 +1,29 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-auto">
 		<div class="px-2 text-2xl md:text-4xl text-white">Billing</div>
-
-    <div class="flex items-center px-2 py-2">
-			<div class="relative">
-				<input
-					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-					placeholder="Search Practice by Name"
-					v-model="search"
-				/>
-				<button
-					v-if="search"
-					class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-					@click="(search = ''), searchSubmit()"
-				>
-					<svgicon
-						name="times-solid"
-						height="12"
-						width="12"
-						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-					/>
-				</button>
+		<div class="px-2 flex justify-between items-center flex-wrap">
+			<div>
+				
 			</div>
+			<AppButton
+        class="mr-2"
+        :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
+        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
+				@click="goToTab()"
+      />
 		</div>
-		<AppTable
-			v-if="itemCount > 0"
-			:total="itemCount"
-			:items="getAllPractices"
-			:currentPage="currentPage"
-			:perPage="params.limit"
-			:columns="columns"
-			:loading="loadingPractices"
-			:routerLink="`/billings`"
-			:orderBy="params.order_by"
-			:customWidth="200"
-			@pagechanged="pagechanged"
-			@sorted="sorted"
-		>
-			<template v-slot:status_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-					:class="
-						`${
-							slotProps.item.status === 'Active'
-								? 'bg-green-500'
-								: 'bg-gray-500 text-gray-700'
-						}`
-					"
-				>{{ slotProps.item.status }}</div>
-			</template>
-			<template v-slot:type_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-					:class="typeStyle(slotProps.item.type)"
-				>{{ slotProps.item.type }}</div>
-			</template>
-			<template v-slot:hub_type_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-					:class="hubTypeStyle(slotProps.item.hub_type)"
-				>{{ slotProps.item.hub_type }}</div>
-			</template>
-		</AppTable>
-    <template v-else>
-      <div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
-    </template>
-		<div
-			class="billing-shield"
-			v-if="
-				$route.name.includes('index-billings-id') ||
-					$route.name.includes('index-billings-addinvoice')
-			"
-			@click="$router.push(`/billings`)"
-		></div>
 		<nuxt-child />
 	</div>
 </template>
 
 <script>
-import debounce from "lodash.debounce";
-import AppTable from "@/components/Base/AppTable";
+import debounce from "lodash.debounce"
+import AppTable from "@/components/Base/AppTable"
+import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
 		AppTable,
+		AppButton,
 	},
 	data() {
 		return {
@@ -368,6 +309,15 @@ export default {
 			};
 			this.params.order_by = order_by;
 			this.getPractices();
+		},
+		
+		goToTab() {
+			console.log('route', this.$route.name)
+			if (this.$route.name.includes('bulk-billings')) {
+				this.$router.push(`/billings`)
+			} else {
+				this.$router.push(`/billings/bulk-billings`)
+			}
 		}
 	}
 };

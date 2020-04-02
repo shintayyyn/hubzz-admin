@@ -1,6 +1,5 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-auto">
-		<div class="px-2 text-2xl md:text-4xl text-white">Billing</div>
+	<div >
 
 		<div class="flex items-center px-2 py-2">
 			<div class="relative w-full">
@@ -53,6 +52,12 @@
 						:icon="'search'"
 						@click="getJobParts()"
 					/>
+					<AppButton
+						class="mx-2"
+						:disabled="jobPartsParams.approved_at_date_start && jobPartsParams.approved_at_date_end ? false : true"
+						:label="'Generate HUBZZ Invoices'"
+						:icon="'add-rectangle'"
+					/>
 				</div>
 			</div>
 		</div>
@@ -70,6 +75,10 @@
 			@pagechanged="pagechanged"
 			@sorted="sorted"
 		>
+			<template v-slot:checker="slotProps">
+				<input type="checkbox" :id="slotProps.item" :value="slotProps.item" v-model="chosenJobParts" >
+				<label :for="slotProps.item"/>
+			</template>
 			<template v-slot:status_slot="slotProps">
 				<div
 					class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
@@ -152,6 +161,13 @@ export default {
 			loading: false,
 			columns: [
 				{
+					name: "Check",
+					dataIndex: "checker",
+					class: "text-center",
+					slotName: "checker",
+					eventName: "checkClicked"
+				},
+				{
 					name: "Practice/Surgery",
 					dataIndex: "practice_name",
 					sortable: true
@@ -227,10 +243,13 @@ export default {
 			// this.getPractices();
 		}
 	},
+	async created(){
+			await this.$store.commit("practices/SET_PRACTICE_COUNT", 0);
+			await this.$store.commit("practices/SET_PRACTICES", []);
+	},
 	async asyncData({ app, route, store }) {
 		try {
-			await store.commit("practices/SET_PRACTICE_COUNT", 0);
-			await store.commit("practices/SET_PRACTICES", []);
+		
 			return {
 				// itemCount,
 				// practices
