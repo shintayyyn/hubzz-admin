@@ -656,12 +656,14 @@
         this.CheckEmptyField(field, fieldName)
         this.ValidateSamePassword(this.toPostUser.password, this.toPostUser.password_confirmation)
       },
+      
       getPostCodes: debounce(function (input) {
         const params = {
           postcode: input
         }
         this.$axios.$post(`/api/v1/postcode-to-coordinates`, { params })
       }, 250),
+
       getQuery () {
         const query = {
           ...this.$route.query
@@ -669,6 +671,7 @@
         const offset = parseInt(query.page) * 10 - 10
         return offset
       },
+
       getPractices () {
         this.$store.dispatch("practices/fetchPractices", {
           limit: 10,
@@ -676,6 +679,7 @@
           order_by: "created_at:desc"
         })
       },
+
       getPracticeUsers () {
         this.$store.dispatch("practices/fetchPractices", {
           countOnly: true,
@@ -688,6 +692,7 @@
           order_by: "created_at:desc"
         })
       },
+
       getAdminUsers () {
         this.$store.dispatch("adminusers/fetchAdminUsersCount", {})
         this.$store.dispatch("adminusers/fetchAdminUsers", {
@@ -695,6 +700,7 @@
         })
         this.$store.commit("adminusers/ADD_ADMIN_USER", this.toPostUser)
       },
+
       updatePracticeUsersPageCount () {
         let payload = {
           userCount: this.userCount,
@@ -702,6 +708,7 @@
         }
         this.$store.commit("practices/UPDATE_PRACTICE_USERS_PAGE_COUNT", payload)
       },
+
       errorMessage (field) {
         if (this.formError.find(error => error.field === field.toString())) {
           let error = this.formError.find(
@@ -711,6 +718,7 @@
         }
         return
       },
+
       checkForm: function (userInfo, surgID) {
         this.formError = []
 
@@ -812,7 +820,7 @@
       togglePassword (){
         if (this.passwordToggle) {
           return 'text'
-        }else{
+        } else {
           return 'password'
         }
       },
