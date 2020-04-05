@@ -8,6 +8,7 @@
         @confirm="toDeactivate()"
       />
     </transition>
+
     <div class="flex justify-between text-sm text-white py-2 px-6">
       <nuxt-link
         :to="{path:`/practices/${practice.id}/practice-users`,query:$route.query}"
@@ -21,6 +22,7 @@
         />
       </nuxt-link>
     </div>
+
     <!-- TABS -->
     <div class="flex flex-col rounded-lg px-6 max-w-lg">
       <div class="w-full overflow-hidden">
@@ -64,6 +66,7 @@
       </div>
     </div>
     <!-- TABS END HERE -->
+
     <div class="flex sm:p-2 max-w-lg">
       <!-- TAB 1 -->
       <div
@@ -71,6 +74,16 @@
         class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
       >
         <div v-if="editProfile" class="w-full overflow-hidden text-gray-300 text-sm p-2">
+          <AppInput
+            v-model="toPutPracticeUser.username"
+            :type="'text'"
+            :name="'username'"
+            :label="'Username'"
+            :error="formError.find(item => item.field === 'username')"
+            required
+            @blur="CheckEmptyField(toPutPracticeUser.username, 'username')"
+          />
+
           <AppInput
             v-model="toPutPracticeUser.email"
             :type="'email'"
@@ -80,6 +93,7 @@
             required
             @blur="CheckEmptyField(toPutPracticeUser.email, 'email')"
           />
+
           <AppInput
             v-model="toPutPracticeUser.title"
             :type="'text'"
@@ -87,6 +101,7 @@
             :label="'Title'"
             :placeholder="'Mr. / Mrs. / Dr. / etc.....'"
           />
+
           <AppInput
             v-model="toPutPracticeUser.first_name"
             :type="'text'"
@@ -96,6 +111,7 @@
             required
             @blur="CheckEmptyField(toPutPracticeUser.first_name, 'first_name')"
           />
+
           <AppInput
             v-model="toPutPracticeUser.last_name"
             :type="'text'"
@@ -105,6 +121,7 @@
             required
             @blur="CheckEmptyField(toPutPracticeUser.last_name, 'last_name')"
           />
+
           <AppInput
             v-model="toPutPracticeUser.suffix"
             :type="'text'"
@@ -112,6 +129,7 @@
             :label="'Suffix'"
             :placeholder="'Ph.D'"
           />
+
           <AppInput
             v-model="toPutPracticeUser.practice_role"
             :type="'select'"
@@ -138,62 +156,76 @@
           <p class="flex py-1 font-bold">
             Sign-Up verified by e-mail
           </p>
+
           <p
             class="p-2"
-            :class="user.email && 'bg-waterloo-light rounded'"
+            :class="practiceUser.email && 'bg-waterloo-light rounded'"
           >
-            {{ user.email_verified_at ? $moment(user.email_verified_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm'): 'Not yet verified' }}
+            {{ practiceUser.email_verified_at ? $moment(practiceUser.email_verified_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm'): 'Not yet verified' }}
           </p>
+
           <AppInput
             v-model="toPutPracticeUser.status"
             :type="'select'"
             :label="'Status'"
             :error="formError.find(item => item.field === 'status')"
             :items="[{ label: 'Active', value: 'Active'}, {label: 'Disabled', value: 'Disabled'}]"
-            :disabled="!user.email_verified_at"
+            :disabled="!practiceUser.email_verified_at"
             required
             @blur="CheckEmptyField(toPutPracticeUser.status, 'status')"
           />
+
           <button
             class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
-            @click.prevent="checkForm(user.id,toPutPracticeUser)"
+            @click.prevent="checkForm(practiceUser.id,toPutPracticeUser)"
           >
             Save Changes
           </button>
         </div>
+
         <div
           v-if="!authAdminPermissions.includes('Edit Practice User') || authAdminPermissions.includes('Edit Practice User') && !editProfile"
           class="w-full overflow-hidden text-gray-400 text-sm p-2"
         >
           <div class="flex py-2">
+            Username
+          </div>
+          <div class="flex px-2 text-white">
+            {{ practiceUser.username ? practiceUser.username : 'N/A' }}
+          </div>
+
+          <div class="flex py-2">
             E-Mail Address
           </div>
           <div class="flex px-2 text-white">
-            {{ user.email }}
+            {{ practiceUser.email }}
           </div>
+
           <div class="flex py-2">
             Title
           </div>
           <div
             class="flex px-2 text-white"
           >
-            {{ user.personal_detail.title ? user.personal_detail.title : 'N/A' }}
+            {{ practiceUser.title ? practiceUser.title : 'N/A' }}
           </div>
+
           <div class="flex py-2">
             First Name
           </div>
           <div
             class="flex px-2 text-white"
           >
-            {{ user.personal_detail.first_name ? user.personal_detail.first_name : 'N/A' }}
+            {{ practiceUser.first_name ? practiceUser.first_name : 'N/A' }}
           </div>
+
           <div class="flex py-2">
             Last Name
           </div>
           <div
             class="flex px-2 text-white"
           >
-            {{ user.personal_detail.last_name ? user.personal_detail.last_name : 'N/A' }}
+            {{ practiceUser.last_name ? practiceUser.last_name : 'N/A' }}
           </div>
           <div class="flex py-2">
             Suffix
@@ -201,7 +233,7 @@
           <div
             class="flex px-2 text-white"
           >
-            {{ user.personal_detail.suffix ? user.personal_detail.suffix : 'N/A' }}
+            {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
           </div>
           <div class="flex py-2">
             Role
@@ -209,7 +241,7 @@
           <div
             class="flex px-2 text-white"
           >
-            {{ user.practice_detail.practice_role ? user.practice_detail.practice_role : 'N/A' }}
+            {{ practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
           </div>
 
           <div class="flex py-2">
@@ -218,14 +250,14 @@
           <div
             class="flex px-2 text-white"
           >
-            {{ user.practice_detail.role ? user.practice_detail.role.name : 'N/A' }}
+            {{ practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
           </div>
 
           <div class="flex py-2">
             Status
           </div>
           <div class="flex px-2 text-white">
-            {{ user.status ? user.status : 'N/A' }}
+            {{ practiceUser.status ? practiceUser.status : 'N/A' }}
           </div>
 
           <div class="flex my-2">
@@ -263,257 +295,322 @@
             />
             <!-- <button
 							class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
-							@click.prevent="checkPasswordInfo(user.id,toChangePassword)"
+							@click.prevent="checkPasswordInfo(practiceUser.id,toChangePassword)"
 						>Save Changes</button>-->
-            <AppButton :label="'Save Changes'" @click="checkPasswordInfo(user.id,toChangePassword)" />
+            <AppButton :label="'Save Changes'" @click="checkPasswordInfo(practiceUser.id,toChangePassword)" />
           </div>
         </div>
       </div>
     </div>
+
     <div v-if="confirm" class="shield" @click="confirm = false" />
   </div>
 </template>
+
 <script>
-import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
-import AppConfirm from "@/components/Base/AppConfirm"
-export default {
-	components: {
-		AppButton,
-		AppInput,
-		AppConfirm
-	},
-	props: {
-		user: {
-			type: Object,
-			default: () => null,
-		}
-	},
-	data () {
-		return {
-			practice: null,
-			formError: [],
-			errors: [],
-			errorPass: [],
-			userTabs: 0,
-			editProfile: false,
-			tab1: true,
-			tab2: false,
-			toPutPracticeUser: {},
-			toChangePassword: {
-				password: "",
-				password_confirmation: ""
-			},
-			practice_user_roles: [],
-			confirm: false
-		}
-	},
-	computed: {
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
-		}
-	},
-	watch: {
-		"toPutPracticeUser.email" (value) {
-			const error = this.ValidateEmail(value)
-			if (error) {
-				this.formError.push(error)
-			} else {
-				let index = this.formError.findIndex(item => item.field === "email")
-				let errors = this.formError.filter(item => item.field === "email")
-				if (index >= 0) {
-					this.formError.splice(index, errors.length)
-				}
-			}
-		},
-		"toChangePassword.password" (value) {
-			if (value && value.length < 6) {
-				this.formError.push({
-					field: "password",
-					message: "Password Must Be Atleast 6 Characters"
-				})
-			} else {
-				let index = this.formError.findIndex(
-					item => item.message === "Password Must Be Atleast 6 Characters"
-				)
-				let error = this.formError.filter(
-					item => item.message === "Password Must Be Atleast 6 Characters"
-				)
-				if (index >= 0) {
-					this.formError.splice(index, error.length)
-				}
-			}
-		},
-		"toChangePassword.password_confirmation" (value) {
-			const error = this.ValidateSamePassword(
-				this.toChangePassword.password,
-				value
-			)
-			if (error) {
-				this.formError.push(error)
-			} else {
-				let index = this.formError.findIndex(
-					item => item.field === "password_confirmation"
-				)
-				let errors = this.formError.filter(
-					item => item.field === "password_confirmation"
-				)
-				if (index >= 0) {
-					this.formError.splice(index, errors.length)
-				}
-			}
-		},
-		editProfile (value) {
-			if (value == true) {
-				this.toPutPracticeUser.email = this.user.email
-				this.toPutPracticeUser.title = this.user.personal_detail.title
-				this.toPutPracticeUser.first_name = this.user.personal_detail.first_name
-				this.toPutPracticeUser.last_name = this.user.personal_detail.last_name
-				this.toPutPracticeUser.suffix = this.user.personal_detail.suffix
-				this.toPutPracticeUser.practice_role = this.user.practice_detail.practice_role
-				this.toPutPracticeUser.practice_user_roles = this.user.practice_detail.role.id
-				this.toPutPracticeUser.status = this.user.status
-			}
-		}
-	},
-	created () {
-		(this.practice = this.user.practice_detail.practice),
-			console.log("specificUserPractice", this.practice),
-			(this.toPutPracticeUser = {
-				email: this.user.email,
-				title: this.user.personal_detail.title,
-				first_name: this.user.personal_detail.first_name,
-				last_name: this.user.personal_detail.last_name,
-				suffix: this.user.personal_detail.suffix,
-				practice_role: this.user.practice_detail.practice_role,
-				practice_user_role_id: this.user.practice_detail.role.id,
-				status: this.user.status
-			}),
-			// this.practice_user_roles = {label: this.user.practice_detail.role.name, value:this.user.practice_detail.role.id}
-			this.$axios
-				.$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
-				.then(res => {
-					res.data.roles.forEach(role => {
-						this.practice_user_roles.push({ label: role.name, value: role.id })
-					})
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
+  import AppButton from "@/components/Base/AppButton"
+  import AppInput from "@/components/Base/AppInput"
+  import AppConfirm from "@/components/Base/AppConfirm"
 
-		console.log("practice_user_roles", this.practice_user_roles)
-	},
-	methods: {
-		errorMessage (field, message) {
-			if (this.formError.find(error => error.field === field.toString())) {
-				let error = this.formError.find(
-					error => error.field === field.toString()
-				)
-				return message ? message : error.message
-			}
-			return
-		},
+  export default {
+    components: {
+      AppButton,
+      AppInput,
+      AppConfirm
+    },
 
-		checkForm: function (uID, userInfo) {
-			this.formError = []
-			this.Validate(this.toPutPracticeUser, ["title", "suffix"])
-			if (!this.formError.length) {
-				this.toPutPracticeUserInfo(uID, userInfo)
-			}
-		},
+    props: {
+      practiceUser: {
+        type: Object,
+        default: () => null,
+      }
+    },
 
-		checkPasswordInfo: function (uID, changePass) {
-			this.Validate(this.toChangePassword)
-			if (!this.formError.length) {
-				this.toChangeUserPassword(uID, changePass)
-			}
-		},
+    data () {
+      return {
+        practice: null,
+        formError: [],
+        errors: [],
+        errorPass: [],
+        userTabs: 0,
+        editProfile: false,
+        tab1: true,
+        tab2: false,
 
-		async toPutPracticeUserInfo (userID, toPutPracticeUser) {
-			try {
-				await this.$axios.put(
-					`/api/v1/admin/practice-users/${userID}`,
-					{
-						email: toPutPracticeUser.email,
-						title: toPutPracticeUser.title,
-						first_name: toPutPracticeUser.first_name,
-						last_name: toPutPracticeUser.last_name,
-						suffix: toPutPracticeUser.suffix,
-						practice_role: toPutPracticeUser.practice_role,
-						practice_user_role_id: toPutPracticeUser.practice_user_role_id,
-						status: toPutPracticeUser.status
-					}
-				)
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "success",
-					text: "Saved Changes"
-				})
-				this.editProfile = false
-				// vm.$forceUpdate()
-			} catch (err) {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})
-				console.log("index put locum detail compliance documents error", err)
-			}
-		},
+        toPutPracticeUser: {
+          username: '',
+          email: '',
+          title: '',
+          first_name: '',
+          last_name: '',
+          suffix: '',
+          practice_role: '',
+          practice_user_role_id: '',
+          status: '',
+        },
 
-		async toChangeUserPassword (userID, toChangePassword) {
-			try {
-				console.log(toChangePassword.password)
-				console.log(toChangePassword.password_confirmation)
-				await this.$axios.put(`/api/v1/admin/users/${userID}/change-password`, {
-					password: toChangePassword.password,
-					password_confirmation: toChangePassword.password_confirmation
-				})
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "success",
-					text: "Saved Changes"
-				})
-			} catch (err) {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})
-				console.log("index put locum detail compliance documents error", err)
-			}
-		},
+        toChangePassword: {
+          password: "",
+          password_confirmation: ""
+        },
 
-		async toDeactivate () {
-			await this.$axios
-				.$put(
-					`/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`
-				)
-				.then(() => {
-					this.confirm = false
-					this.$router.push(
-						`/practices/${this.$route.params.id}/practice-users`
-					)
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Successfully Deactivated User"
-					})
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
-		}
-	}
-}
+        practice_user_roles: [],
+
+        confirm: false,
+      }
+    },
+
+    computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      }
+    },
+
+    watch: {
+      'toPutPracticeUser.username' () {
+        const index = this.formError.findIndex(formError => formError.field === 'username')
+
+        if (this.toPutPracticeUser.username) {
+          if (index > -1) {
+            this.formError.splice(index, 1)
+          }
+        } else {
+          if (index === -1) {
+            this.formError.push({
+              field: 'username',
+              message: 'Username is required.',
+              validation: 'required',
+            })
+          }
+        }
+      },
+
+      "toPutPracticeUser.email" (value) {
+        const error = this.ValidateEmail(value)
+        if (error) {
+          this.formError.push(error)
+        } else {
+          let index = this.formError.findIndex(item => item.field === "email")
+          let errors = this.formError.filter(item => item.field === "email")
+          if (index >= 0) {
+            this.formError.splice(index, errors.length)
+          }
+        }
+      },
+
+      "toChangePassword.password" (value) {
+        if (value && value.length < 6) {
+          this.formError.push({
+            field: "password",
+            message: "Password Must Be Atleast 6 Characters"
+          })
+        } else {
+          let index = this.formError.findIndex(
+            item => item.message === "Password Must Be Atleast 6 Characters"
+          )
+          let error = this.formError.filter(
+            item => item.message === "Password Must Be Atleast 6 Characters"
+          )
+          if (index >= 0) {
+            this.formError.splice(index, error.length)
+          }
+        }
+      },
+
+      "toChangePassword.password_confirmation" (value) {
+        const error = this.ValidateSamePassword(
+          this.toChangePassword.password,
+          value
+        )
+        if (error) {
+          this.formError.push(error)
+        } else {
+          let index = this.formError.findIndex(
+            item => item.field === "password_confirmation"
+          )
+          let errors = this.formError.filter(
+            item => item.field === "password_confirmation"
+          )
+          if (index >= 0) {
+            this.formError.splice(index, errors.length)
+          }
+        }
+      },
+
+      editProfile () {
+        if (this.editProfile) {
+          this.toPutPracticeUser.username = this.practiceUser.username
+          this.toPutPracticeUser.email = this.practiceUser.email
+          this.toPutPracticeUser.title = this.practiceUser.title
+          this.toPutPracticeUser.first_name = this.practiceUser.first_name
+          this.toPutPracticeUser.last_name = this.practiceUser.last_name
+          this.toPutPracticeUser.suffix = this.practiceUser.suffix
+          this.toPutPracticeUser.practice_role = this.practiceUser.practice_detail.practice_role
+          this.toPutPracticeUser.practice_user_roles = this.practiceUser.practice_detail.role.id
+          this.toPutPracticeUser.status = this.practiceUser.status
+        }
+      },
+
+    },
+
+    created () {
+      this.practice = this.practiceUser.practice_detail.practice
+
+      console.log("specificUserPractice", this.practice)
+
+      this.toPutPracticeUser = {
+        username: this.practiceUser.username,
+        email: this.practiceUser.email,
+        title: this.practiceUser.title,
+        first_name: this.practiceUser.first_name,
+        last_name: this.practiceUser.last_name,
+        suffix: this.practiceUser.suffix,
+        practice_role: this.practiceUser.practice_detail.practice_role,
+        practice_user_role_id: this.practiceUser.practice_detail.role.id,
+        status: this.practiceUser.status,
+      }
+
+      // this.practice_user_roles = {label: this.practiceUser.practice_detail.role.name, value:this.practiceUser.practice_detail.role.id}
+
+      this.$axios
+        .$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
+        .then(res => {
+          res.data.roles.forEach(role => {
+            this.practice_user_roles.push({ label: role.name, value: role.id })
+          })
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        })
+
+      console.log("practice_user_roles", this.practice_user_roles)
+    },
+
+    methods: {
+
+      errorMessage (field, message) {
+        if (this.formError.find(error => error.field === field.toString())) {
+          let error = this.formError.find(
+            error => error.field === field.toString()
+          )
+          return message ? message : error.message
+        }
+        return
+      },
+
+      checkForm: function (practiceUserId, userInfo) {
+        this.formError = []
+        this.Validate(this.toPutPracticeUser, ["title", "suffix"])
+        if (!this.formError.length) {
+          this.updatePracticeUser(practiceUserId, userInfo)
+        }
+      },
+
+      checkPasswordInfo: function (uID, changePass) {
+        this.Validate(this.toChangePassword)
+        if (!this.formError.length) {
+          this.toChangeUserPassword(uID, changePass)
+        }
+      },
+
+      async updatePracticeUser (practiceUserId, toPutPracticeUser) {
+        try {
+          await this.$axios.put(`/api/v1/admin/practice-users/${practiceUserId}`, toPutPracticeUser)
+
+          const response = await this.$axios.get(`/api/v1/admin/practice-users/${practiceUserId}`)
+
+          const practiceUser = response.data.data.user
+
+          this.$emit('setPracticeUser', practiceUser)
+
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Saved Changes"
+          })
+
+          this.editProfile = false
+          // vm.$forceUpdate()
+        } catch (err) {
+          console.log('err', err.response || err)
+
+          let message = null
+
+          if (err.response) {
+            if (err.response.status === 400 || err.response.data.error_messages) {
+              this.formError = err.response.data.error_messages
+            } else {
+              message = err.response.data.message
+            }
+          } else if (err.request) {
+            message = 'Something went wrong!'
+          } else {
+            message = err.message
+          }
+
+          if (message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: message,
+            })
+          }
+        }
+      },
+
+      async toChangeUserPassword (userID, toChangePassword) {
+        try {
+          console.log(toChangePassword.password)
+          console.log(toChangePassword.password_confirmation)
+          await this.$axios.put(`/api/v1/admin/users/${userID}/change-password`, {
+            password: toChangePassword.password,
+            password_confirmation: toChangePassword.password_confirmation
+          })
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Saved Changes"
+          })
+        } catch (err) {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+          console.log("index put locum detail compliance documents error", err)
+        }
+      },
+
+      async toDeactivate () {
+        await this.$axios
+          .$put(
+            `/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`
+          )
+          .then(() => {
+            this.confirm = false
+            this.$router.push(
+              `/practices/${this.$route.params.id}/practice-users`
+            )
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Successfully Deactivated User"
+            })
+          })
+          .catch(err => {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "danger",
+              text: err.response.data.message
+            })
+          })
+      },
+
+    },
+
+  }
 </script>
-<style>
-</style>
