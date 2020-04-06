@@ -128,6 +128,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Invoice Number',
+            key: 'invoice_number',
+            sort_key: 'invoice_number',
+            column: (item) => item.invoice_number,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Gross',
             key: 'gross_amount',
             sort_key: 'gross_amount',
