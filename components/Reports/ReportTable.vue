@@ -106,7 +106,7 @@
 
     methods: {
       setOrderBy (column) {
-        const orderBy = [...this.orderBy]
+        let orderBy = [...this.orderBy]
 
         const index = orderBy.findIndex((orderBy) => {
           const [_col] = orderBy.split(":")
@@ -120,10 +120,12 @@
           orderBy.splice(index, 1)
 
           if (direction === "asc") {
-            orderBy.push(`${column}:desc`)
+            // orderBy.push(`${column}:desc`)
+            orderBy = [`${column}:desc`]
           }
         } else {
-          orderBy.push(column)
+          // orderBy.push(column)
+          orderBy = [`${column}:desc`]
         }
 
         this.$emit('setOrderBy', orderBy)
