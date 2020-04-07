@@ -70,7 +70,6 @@ export default {
 		state.locumDocAlert = payload
 	},
 	ADD_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state, payload) {
-		console.log('notifications', payload)
 		let index = state.locumComplianceNotifications.findIndex(locumCompDocNotif =>  locumCompDocNotif.id === payload.locumDetailComplianceDocument.id)
 		if (index < 0) {
 			state.locumComplianceNotifications.unshift(payload)

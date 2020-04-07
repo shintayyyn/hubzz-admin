@@ -1,9 +1,9 @@
 <template>
   <transition name="slide">
     <div
+      v-if="locumComplianceNotifications.length > 0"
       class="job-notification"
     >
-      <!-- v-if="jobNotifications.length > 0 || billingNotifications.length > 0 || locumComplianceNotifications.length > 0" -->
       <div
         class="my-2 mt-1 flex items-center"
         :class="toggleNotification ? 'justify-between' : 'justify-end'"
@@ -98,25 +98,25 @@ export default {
   },
   computed: {
     locumComplianceNotifications () {
-      return this.$store.getters("locums/getLocumComplianceNotifications")
+      return this.$store.getters["locums/getLocumComplianceNotifications"]
     },
-    jobNotifications () {
-      if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
-        return this.$store.getters["jobs/getPracticeJobNotifications"]
-      }
-      return this.$store.getters["jobs/getLocumJobNotifications"]
-    },
-    billingNotifications () {
-      if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
-        return this.$store.getters["billing/getPracticeBillingNotifications"]
-      }
-      return this.$store.getters["billing/getLocumBillingNotifications"]
-    },
+    // jobNotifications () {
+    //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
+    //     return this.$store.getters["jobs/getPracticeJobNotifications"]
+    //   }
+    //   return this.$store.getters["jobs/getLocumJobNotifications"]
+    // },
+    // billingNotifications () {
+    //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
+    //     return this.$store.getters["billing/getPracticeBillingNotifications"]
+    //   }
+    //   return this.$store.getters["billing/getLocumBillingNotifications"]
+    // },
     url () {
       return this.$auth.user.domain === "Practice" ? "/sessions" : "/jobs"
     },
     notifications () {
-      return [...this.jobNotifications, ...this.billingNotifications, ...this.locumComplianceNotifications,].sort(
+      return [...this.locumComplianceNotifications,].sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
       )
     }
@@ -231,6 +231,8 @@ export default {
               notification.notification_billing_type === "Private"
             ? `/locum-billing/private-invoices`
             : null
+      } else if (type === "Admin Locum Compliance") {
+        url = `/`
       }
 
       // for dashboard viewing, moves the date according to the job
@@ -435,7 +437,7 @@ export default {
       }
     },
     status (status) {
-      return status === "Matched" ? "AVAILABLE" : status.toUpperCase()
+      // return status === "Matched" ? "AVAILABLE" : status.toUpperCase()
     },
     bgStatus (status) {
       let str = ""
@@ -470,10 +472,12 @@ export default {
       return str
     },
     clearNotifications () {
-      this.$store.commit("billing/CLEAR_PRACTICE_BILLING_NOTIFICATION")
-      this.$store.commit("billing/CLEAR_LOCUM_BILLING_NOTIFICATION")
-      this.$store.commit("jobs/CLEAR_PRACTICE_JOB_NOTIFICATION")
-      this.$store.commit("jobs/CLEAR_LOCUM_JOB_NOTIFICATION")
+      // this.$store.commit("billing/CLEAR_PRACTICE_BILLING_NOTIFICATION")
+      // this.$store.commit("billing/CLEAR_LOCUM_BILLING_NOTIFICATION")
+      // this.$store.commit("jobs/CLEAR_PRACTICE_JOB_NOTIFICATION")
+      // this.$store.commit("jobs/CLEAR_LOCUM_JOB_NOTIFICATION")
+
+      this.$store.commit("locums/CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION")
     }
   }
 }

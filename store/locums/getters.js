@@ -22,7 +22,7 @@ export default {
 
 			switch (notif.notificationType) {
 				case 'Admin Notification Locum Compliance':
-					message = 'A Locum have updated their Compliance Document'
+					message = 'A Locum has updated their Compliance Document'
 					break
 				default: 
 					message = ''
@@ -31,8 +31,13 @@ export default {
 			notifObj = {
 				...notif,
 				id: notif.id,
-				status: notif.status
+				status: notif.status,
+				notification_type: notif.notificationType,
+				type: 'Admin Locum Compliance',
+				message
 			}
+			notifications.push(notifObj)
 		})
+		return notifications
 	}
 }
