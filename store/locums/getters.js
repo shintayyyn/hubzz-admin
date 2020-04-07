@@ -12,5 +12,27 @@ export default {
 			})
 		})
 		return users
+	},
+	getLocumComplianceNotifications (state) {
+		let notifications = []
+		state.locumComplianceNotifications.forEach(notif => {
+			console.log('notif',notif)
+			let message = ''
+			let notifObj = null
+
+			switch (notif.notificationType) {
+				case 'Admin Notification Locum Compliance':
+					message = 'A Locum have updated their Compliance Document'
+					break
+				default: 
+					message = ''
+			}
+
+			notifObj = {
+				...notif,
+				id: notif.id,
+				status: notif.status
+			}
+		})
 	}
 }

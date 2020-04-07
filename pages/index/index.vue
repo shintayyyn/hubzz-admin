@@ -92,63 +92,60 @@
 	</div>
 </template>
 <script>
-import ChangePasswordPrompt from "@/components/UserManagement/ChangePasswordPrompt";
+import ChangePasswordPrompt from "@/components/UserManagement/ChangePasswordPrompt"
 export default {
 	components: {
 		ChangePasswordPrompt
 	},
-	data() {
+	data () {
 		return {
 			me: "",
 			promptModal: false
-		};
-	},
-	async created() {
-		console.log('meee', this.me)
-		if (!this.me.password_updated_at) {
-			this.promptModal = true;
 		}
 	},
 	computed: {
-		locumDocsAlert() {
-			return this.$store.state.locums.locumDocAlert;
+		locumDocsAlert () {
+			return this.$store.state.locums.locumDocAlert
 		},
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
 		},
 	},
-	async created(){
+	async created (){
+		if (!this.me.password_updated_at) {
+			this.promptModal = true
+		}
 		let locumDocAlert = ''
 		if(this.authAdminPermissions.includes("View Locum Compliance Detail")) {
 			await this.$axios.$get(
 				`/api/v1/admin/locum-detail-compliance-documents`
 			).then(res => {
-				locumDocAlert = res.data.locum_detail_compliance_documents;
+				locumDocAlert = res.data.locum_detail_compliance_documents
 			})
 		
-			await this.$store.commit("locums/SET_LOCUM_DOC_ALERT", locumDocAlert);
+			await this.$store.commit("locums/SET_LOCUM_DOC_ALERT", locumDocAlert)
 		}
 	
 	},
-	async asyncData({ app, store, route }) {
+	async asyncData ({ app, store, route }) {
 		try {
 			
-			let response = await app.$axios.$get(`/api/v1/admin/me`);
-			const me = response.data.user;
+			let response = await app.$axios.$get(`/api/v1/admin/me`)
+			const me = response.data.user
 			return {
 				me
-			};
+			}
 		} catch (err) {
 			// store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			console.log("Get locums error! 111", err);
+			console.log("Get locums error! 111", err)
 		}
 	},
 	methods: {
-		closeModals() {
-			this.promptModal = false;
+		closeModals () {
+			this.promptModal = false
 		}
 	}
-};
+}
 </script>
 <style>
 .shield {

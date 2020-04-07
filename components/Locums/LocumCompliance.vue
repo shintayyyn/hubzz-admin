@@ -468,11 +468,11 @@ export default {
       }
     },
     computed:{
-      mandatoryComplianceDocuments (){
+      mandatoryComplianceDocuments () {
         return this.$store.state.locums.mandatoryComplianceDocuments
       },
-      authAdminPermissions() {
-        return this.$store.getters["permissions"];
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
       },
     },
     async created () {
