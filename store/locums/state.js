@@ -9,5 +9,7 @@ export default () => ({
     mandatoryComplianceDocuments:[],
     //----------------Dashboard-------------
     locumDocAlert:[],
-    locumDocArchive:[]
+    locumDocArchive:[],
+    //---------------Notifications-----------
+    locumComplianceNotifications: [],
 })
