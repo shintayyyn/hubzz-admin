@@ -35,6 +35,17 @@
       AppTable,
     },
 
+    props: {
+      dateStart: {
+        type: String,
+        default: null,
+      },
+      dateEnd: {
+        type: String,
+        default: null,
+      },
+    },
+
     data () {
       return {
         loading: false,
@@ -50,7 +61,7 @@
       columns () {
         return [
           {
-              name: "Domain",
+              name: "Account Type",
               dataIndex: "domain",
               class: "text-left"
           },
@@ -68,46 +79,20 @@
       }
     },
 
-    async asyncData ({ app, params, error }) {
-      try {
-        const [
-          total,
-          entries,
-        ] = await Promise.all([
-          app.$axios.$get(`/api/v1/admin/raffle-users/${params.id}/raffle-entries/count`).then(res => {
-            let total = res.data && res.data.count ? res.data.count : 0
-            return total
-          }),
-          app.$axios.$get(`/api/v1/admin/raffle-users/${params.id}/raffle-entries`, { params: {
-            offset: 0,
-            limit: 5
-          }}).then(res => {
-            let entries = res.data && res.data.raffle_entries && res.data.raffle_entries.length > 0
-              ? res.data.raffle_entries
-              : []
-
-            return entries
-          }),
-        ])
-
-        return {
-          total,
-          entries
-        }
-      } catch (err) {
-        console.log('err', err || err.response)
-
-        return error({
-          status: 400,
-          message: err.response.message,
-        })
-      }
+    mounted () {
+      this.current_page = 1
+      this.loading = true
+      this.getEntries().finally(() => {
+        this.loading = false
+      })
     },
 
     methods: {
       async getEntries () {
         try {
           this.$axios.$get(`/api/v1/admin/raffle-users/${this.$route.params.id}/raffle-entries`, { params: {
+            date_start: this.dateStart,
+            date_end: this.dateEnd,
             offset: (this.current_page - 1) * this.limit,
             limit: this.limit
           }}).then(res => {
