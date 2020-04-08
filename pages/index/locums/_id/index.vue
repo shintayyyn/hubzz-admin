@@ -3,26 +3,29 @@
 		<div class="px-4 md:px-8">
 			<div class="py-4">
 				<svgicon
-					@click="$router.push('/locums')"
 					name="arrow-left-solid"
 					height="32"
 					widht="32"
 					class="text-white hover:text-sunglow fill-current cursor-pointer"
+					@click="$router.push('/locums')"
 				/>
 			</div>
 			<LocumTabs :user="user" />
 			<!-- <div class="locum-shield" v-if="$route.name.includes('index-locum-compliance-docId')" /> -->
-			<div class="locum-shield" v-if="$route.name.includes('locumJobPartId')" @click="$router.go(-1)"></div>
+			<div 
+				v-if="$route.name.includes('locumJobPartId')" 
+				class="locum-shield" @click="$router.go(-1)"
+			/>
 			<div
-				class="locum-shield"
 				v-if="$route.name.includes('index-locum-compliance-docId')"
+				class="locum-shield"
 				@click="$router.go(-1)"
 			/>
 			<div
-				class="locum-shield"
 				v-if="$route.name.includes('locumJobId') || $route.name === 'index-locums-id-index-locum-compliance-mandatory-training-docId'"
+				class="locum-shield"
 				@click="$router.go(-1)"
-			></div>
+			/>
 		</div>
 		<nuxt-child
 			@updateLocums="getLocums"
@@ -30,51 +33,51 @@
 	</div>
 </template>
 <script>
-import LocumTabs from "@/components/Locums/LocumTabs";
+import LocumTabs from "@/components/Locums/LocumTabs"
 export default {
 	components: {
 		LocumTabs
 	},
 	computed: {
-		user() {
-			return this.$store.state.locums.locumUser;
+		user () {
+			return this.$store.state.locums.locumUser
 		}
 	},
-	async asyncData({ app, store, route, error }) {
+	async asyncData ({ app, store, route, error }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${route.params.id}`
-			);
-			const user = response.data.user;
+			)
+			const user = response.data.user
 
-			await store.commit("locums/SET_LOCUM_USER", user);
+			await store.commit("locums/SET_LOCUM_USER", user)
 
-			return {};
+			return {}
 		} catch (err) {
-			error({ statusCode: 404 });
+			error({ statusCode: 404 })
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
-			console.log("Get specific locum error!", err);
+			})
+			console.log("Get specific locum error!", err)
 		}
 	},
 	methods: {
-		getLocums(){
+		getLocums (){
 			this.$emit('getLocums')
 		},
-		goBack() {
+		goBack () {
 			const query = {
 				...this.$route.query
-			};
-			if (query.job_status) {
-				delete query.job_status;
 			}
-			this.$router.push({ path: "/locums", query });
+			if (query.job_status) {
+				delete query.job_status
+			}
+			this.$router.push({ path: "/locums", query })
 		}
 	}
-};
+}
 </script>
 <style>
 .locum-shield {
