@@ -77,7 +77,9 @@
           :columns="columns"
           :loading="loading"
           :custom-width="500"
+          :orderBy="orderBy"
           @pagechanged="pagechanged"
+          @sorted="(sort) => orderBy = sort"
         >
           <template v-slot:actions="slotProps">
             <div class="flex justify-center">
@@ -100,7 +102,9 @@
           :columns="columns"
           :loading="loading"
           :custom-width="500"
+          :orderBy="orderBy"
           @pagechanged="pagechanged"
+          @sorted="(sort) => orderBy = sort"
         >
           <template v-slot:actions="slotProps">
             <div class="flex justify-center">
@@ -137,7 +141,7 @@
           @click="winner_modal = false, draw_modal = false"
         />
 
-        <nuxt-child @notify="notify" />
+        <nuxt-child :dateStart="date_start" :dateEnd="date_end" @notify="notify" />
       </div>
     </transition>
   </div>
@@ -176,6 +180,8 @@
         users: [],
         raffles: [],
 
+        orderBy: [],
+
         current_page: 1,
         offset: 0,
         limit: 5,
@@ -194,13 +200,21 @@
           columns.push(...[
             {
               name: "Name",
-              dataIndex: "first_name",
-              class: "text-left"
+              dataIndex: "name",
+              class: "text-left",
+              sortable: true,
+            },
+            {
+              name: "Account Type",
+              dataIndex: "domain",
+              class: "text-left",
+              sortable: true,
             },
             {
               name: "Total Invited Count",
               dataIndex: "total_invited_count",
-              class: "text-center"
+              class: "text-center",
+              sortable: true,
             },
             {
               name: "Actions",
@@ -212,17 +226,21 @@
           columns.push(...[{
               name: "Name",
               dataIndex: "winner_user.name",
-              class: "text-left"
+              class: "text-left",
+              sortable: true,
+              sortIndex: 'winner_user_name',
             },
             {
               name: "Notified",
               dataIndex: "winner_notified",
-              class: "text-center"
+              class: "text-center",
+              sortable: true,
             },
             {
               name: "Winning Date",
               dataIndex: "date_created",
-              class: "text-center localDate"
+              class: "text-center localDate",
+              sortable: true,
             },
             {
               name: "Actions",
@@ -260,7 +278,15 @@
     },
 
     watch: {
-      async "$route.query" (newValue, oldValue) {
+      orderBy () {
+        this.current_page = 1
+        this.loading = true
+        this.getUsersPromiseAll().finally(() => {
+          this.loading = false
+        })
+      },
+
+      "$route.query" (newValue, oldValue) {
         let newStatus = newValue.status
         let oldStatus = oldValue.status
         if (newStatus && newStatus !== null && newStatus !== oldStatus) {
@@ -270,10 +296,12 @@
           this.raffles = []
           this.date_start = null
           this.date_end = null
+          this.orderBy = []
           this.canInitiateDraw = false
           this.initialLoading = true
-          await this.getUsersPromiseAll()
-          this.initialLoading = false
+          this.getUsersPromiseAll().finally(() => {
+            this.initialLoading = false
+          })
         }
       },
 
@@ -338,16 +366,30 @@
 
           let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
 
+          const params = {
+            date_start: this.date_start,
+            date_end: this.date_end,
+            order_by: this.orderBy,
+          }
+
           return Promise.all([
-            this.$axios.$get(`${url}/count`).then(res => {
+            this.$axios.$get(`${url}/count`, {
+              params: {
+                ...params,
+              },
+            }).then(res => {
               this.total = res.data && res.data.count ? res.data.count : 0
             }),
-            this.$axios.$get(`${url}`, { params: {
-              offset: (this.current_page - 1) * this.limit,
-              limit: this.limit
-            }}).then(res => {
+            this.$axios.$get(`${url}`, {
+              params: {
+                ...params,
+                offset: (this.current_page - 1) * this.limit,
+                limit: this.limit
+              },
+            }).then(res => {
               if (res.data && res.data.users) {
                 this.users = res.data.users 
+                this.canInitiateDraw = this.users.length > 0 ? true : false
               } else if (res.data && res.data.raffles) {
                 this.raffles = res.data.raffles
               }
@@ -361,33 +403,7 @@
         }
       },
 
-      async getUsers () {
-        try {
-          let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries' 
-
-          let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
-
-          return Promise.all([
-            this.$axios.$get(`${url}`, { params: {
-              offset: (this.current_page - 1) * this.limit,
-              limit: this.limit
-            }}).then(res => {
-              if (res.data && res.data.users) {
-                this.users = res.data.users 
-              } else if (res.data && res.data.raffles) {
-                this.raffles = res.data.raffles
-              }
-            })
-          ])
-        } catch (err) {
-          return this.$nuxt.error({
-            status: 400,
-            message: err.response.message,
-          })
-        }
-      },
-
-      async display () {
+      display () {
         try {
           if (this.date_start === null || this.date_end === null) {
             this.$store.commit("SET_NOTIFICATION", {
@@ -399,31 +415,17 @@
             return
           }
           this.loading = true
-
-          await Promise.all([
-            this.$axios.$get(`/api/v1/admin/raffle-users/count`, {
-              params: {
-                date_start: this.date_start,
-                date_end: this.date_end
-              }
-            }).then(res => {
-              this.total = res.data && res.data.total ? res.data.total : 0
-            }),
-            this.$axios.$get(`/api/v1/admin/raffle-users`, {
-              params: {
-                  date_start: this.date_start,
-                  date_end: this.date_end
-              }
-            }).then(res => {
-              this.users = res.data && res.data.users && res.data.users.length > 0 ? res.data.users : []
-              this.canInitiateDraw = this.users.length > 0 ? true : false
-            })
-          ])
-
-          this.loading = false
+          this.getUsersPromiseAll().finally(() => {
+            this.loading = false
+          })
         } catch (err) {
+          console.log('err', err.response || err)
+
           this.loading = false
-          return this.$nuxt.error({ status: 400, message: err.response.message})
+          return this.$nuxt.error({
+            status: 400,
+            message: err.response.message,
+          })
         }
       },
 
@@ -481,7 +483,7 @@
             })
 
             this.winner.winner_notified = true
-            // this.getUsers()
+            // this.getUsersPromiseAll()
 
             let winner = this.raffles.find(item => item.id === id)
 
@@ -508,20 +510,24 @@
         }
       },
 
-      async clearFilters () {
+      clearFilters () {
         this.date_start = null
         this.date_end = null
+        this.orderBy = []
         this.canInitiateDraw = false
+        this.current_page = 1
         this.loading = true
-        await this.getUsersPromiseAll()
-        this.loading = false
+        this.getUsersPromiseAll().then(() => {
+          this.loading = false
+        })
       },
 
-      async pagechanged (e) {
-        this.current_page = e
+      pagechanged (currentPage) {
+        this.current_page = currentPage
         this.loading = true
-        await this.getUsers()
-        this.loading = false
+        this.getUsersPromiseAll().then(() => {
+          this.loading = false
+        })
       },
 
     },

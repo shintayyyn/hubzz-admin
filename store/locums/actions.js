@@ -12,8 +12,6 @@ export default {
 		})
 
 		this.$socket.on('Admin Notification Locum Compliance', async (locumDetailComplianceDocument) => {
-			console.log('show me something')
-			console.log('compliance doc', locumDetailComplianceDocument)
 			commit ('ADD_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION', {locumDetailComplianceDocument, notificationType: 'Admin Notification Locum Compliance'})
 		})
 	},
