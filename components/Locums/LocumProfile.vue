@@ -39,7 +39,7 @@
             </p>
 
             <p class="mt-2">
-              Mobile phone number
+              Mobile Number
             </p>
             <p
               class="font-bold pl-2"
@@ -49,7 +49,7 @@
             </p>
 
             <p class="mt-2">
-              Home / landline number
+              Home Number
             </p>
             <p
               class="font-bold pl-2"
@@ -68,6 +68,15 @@
               {{ user.contact_detail && user.contact_detail.work_number ? user.contact_detail.work_number : 'N/A' }}
             </p>
 
+            <p class="mt-2">
+              Postal Code
+            </p>
+            <p
+              class="font-bold pl-2"
+              :class="!user.address_detail && 'opacity-75'"
+            >
+              {{ user.address_detail && user.address_detail.address.post_code ? user.address_detail.address.post_code : 'N/A' }}
+            </p>
             <p class="mt-2">
               Postal Address
             </p>
@@ -365,6 +374,12 @@ export default {
 			userMandatoryTrainings: []
 		}
 	},
+  
+  computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		},
+  },
 
 	created () {
 		console.log("locum", this.user)
@@ -382,12 +397,6 @@ export default {
 		this.clinicalSystems = this.user.locum_detail.clinical_systems
 		this.spokenLanguages = this.user.locum_detail.spoken_languages
   },
-  
-  computed: {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
-		},
-  },
 
 	methods: {
 		getLocums () {
@@ -401,7 +410,7 @@ export default {
 			const query = {
 				...this.$route.query
 			}
-			const offset = parseInt(query.page) * 8 - 8
+			const offset = parseInt(query.page) * 10 - 10
 			return offset
 		},
 		downloadItem (imgUrl, imgFilename) {
@@ -428,6 +437,7 @@ export default {
 					{}
 				)
 				.then(res => {
+          console.log(res)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -480,19 +490,14 @@ export default {
 			switch (status) {
 				case "Active":
 					return "bg-green-500"
-					break
 				case "Inactive":
 					return "bg-yellow-500 text-black"
-					break
 				case "Deactivated":
 					return "bg-gray-500 text-black"
-					break
 				case "Suspended":
 					return "bg-red-500"
-					break
 				case "Dormant":
 					return "bg-green-600"
-					break
 				default:
 					return
 			}
