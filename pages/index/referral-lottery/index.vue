@@ -326,6 +326,10 @@
       }
     },
 
+    mounted () {
+
+    },
+
     methods: {
 
       async getUsersPromiseAll () {
@@ -336,17 +340,17 @@
 
           return Promise.all([
             this.$axios.$get(`${url}/count`).then(res => {
-                this.total = res.data && res.data.count ? res.data.count : 0
+              this.total = res.data && res.data.count ? res.data.count : 0
             }),
             this.$axios.$get(`${url}`, { params: {
-                offset: (this.current_page - 1) * this.limit,
-                limit: this.limit
+              offset: (this.current_page - 1) * this.limit,
+              limit: this.limit
             }}).then(res => {
-                if (res.data && res.data.users) {
-                    this.users = res.data.users 
-                } else if (res.data && res.data.raffles) {
-                    this.raffles = res.data.raffles
-                }
+              if (res.data && res.data.users) {
+                this.users = res.data.users 
+              } else if (res.data && res.data.raffles) {
+                this.raffles = res.data.raffles
+              }
             })
           ])
         } catch (err) {
