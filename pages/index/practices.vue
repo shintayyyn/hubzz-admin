@@ -1,7 +1,9 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
-		<!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
-		<div class="px-2 text-xl md:text-4xl text-white">Practices</div>
+    <!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
+		<div class="px-2 text-xl md:text-4xl text-white">
+			Practices
+		</div>
 
 		<div class="px-2 flex justify-between items-center flex-wrap">
 			<div>
@@ -74,11 +76,11 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce";
-import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery";
-import AppButton from "@/components/Base/AppButton";
-import AppInput from "@/components/Base/AppInput";
-import ListPracticeTabs from "@/components/Practices/ListPracticeTabs";
+import debounce from "lodash.debounce"
+import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
+import AppButton from "@/components/Base/AppButton"
+import AppInput from "@/components/Base/AppInput"
+import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
 export default {
 	components: {
 		AddPracticeSurgery,
@@ -86,7 +88,7 @@ export default {
 		AppInput,
 		ListPracticeTabs
 	},
-	data() {
+	data () {
 		return {
 			loading: false,
 			currentPage: 1,
@@ -158,80 +160,80 @@ export default {
 					class: "text-center"
 				}
 			]
-		};
+		}
 	},
 
 	watchQuery: ["page"],
 
 	computed: {
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
 		},
-		status() {
+		status () {
 			if (this.$route.name.includes("pending-practices")) {
-				return ["Inactive"];
+				return ["Inactive"]
 			} else if (this.$route.name.includes("bogus-practices")) {
-				return ["Bogus"];
+				return ["Bogus"]
 			} else if (this.$route.name.includes("deactivated-practices")) {
-				return ["Deactivated"];
+				return ["Deactivated"]
 			} else {
-				return ["Active", "Dormant"];
+				return ["Active", "Dormant"]
 			}
 		},
-		verified() {
+		verified () {
 			if (
 				!this.$route.name.includes("pending-practices") ||
 				!this.$route.name.includes("bogus-practices") ||
 				!this.$route.name.includes("deactivated-practices")
 			) {
-				return true;
+				return true
 			} else {
-				return false;
+				return false
 			}
 		},
-		loadingPractices() {
-			return this.$store.state.practices.loading_practices;
+		loadingPractices () {
+			return this.$store.state.practices.loading_practices
 		},
-		getAllPractices() {
-			return this.$store.getters["practices/getAllPractices"];
+		getAllPractices () {
+			return this.$store.getters["practices/getAllPractices"]
 		},
-		itemCount() {
-			return this.$store.state.practices.itemCount;
+		itemCount () {
+			return this.$store.state.practices.itemCount
 		},
-		pageCount() {
-			return Math.ceil(this.itemCount / this.params.limit);
+		pageCount () {
+			return Math.ceil(this.itemCount / this.params.limit)
 		},
 		
-		totalPages() {
-			return Math.ceil(this.itemCount / this.params.limit);
+		totalPages () {
+			return Math.ceil(this.itemCount / this.params.limit)
 		},
-		total() {
-			return this.getAllPractices.length;
+		total () {
+			return this.getAllPractices.length
 		}
 	},
 
 	watch: {
-		search(value) {
-			this.searchSubmit();
+		search () {
+			this.searchSubmit()
 		},
 
-		sort(value) {
-			this.params.order_by = value;
-			this.sortBy(value, this.currentPage, this.search);
+		sort (value) {
+			this.params.order_by = value
+			this.sortBy(value, this.currentPage, this.search)
 		},
 
-		$route(to, from) {
-			this.getPractices();
-			this.fromUrl = from;
+		$route (to, from) {
+			this.getPractices()
+			this.fromUrl = from
 		}
 	},
 
 	methods: {
-		show() {
-			this.$router.push(`/practices/add-practice`);
+		show () {
+			this.$router.push(`/practices/add-practice`)
 		},
 
-		getPractices() {
+		getPractices () {
 			this.$store
 				.dispatch("practices/fetchPractices", {
 					limit: this.params.limit,
@@ -250,38 +252,38 @@ export default {
 						offset: this.params.offset,
 						status: this.status,
 						verified: this.verified
-					});
-				});
+					})
+				})
 		},
 
-		async sortBy(sortedBy, page, search) {
-			this.params.order_by = [sortedBy];
-			this.getPractices();
+		async sortBy (sortedBy) {
+			this.params.order_by = [sortedBy]
+			this.getPractices()
 		},
 
-		searchSubmit: debounce(function(page, order_by) {
-			let search = this.search;
+		searchSubmit: debounce(function (page, order_by) {
+			let search = this.search
 
 			let query = {
 				...this.$router.query,
 				search
-			};
+			}
 			if (page === 1) {
-				delete query.page;
+				delete query.page
 			}
 			if (page && page > 1) {
 				query = {
 					...this.$router.query,
 					page,
 					search
-				};
+				}
 			}
 			if (order_by) {
 				query = {
 					...this.$router.query,
 					search,
 					order_by
-				};
+				}
 			}
 			if (page && order_by) {
 				query = {
@@ -289,87 +291,83 @@ export default {
 					page,
 					search,
 					order_by
-				};
+				}
 			}
 
 			if (this.search === "") {
-				delete query.search;
+				delete query.search
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
+				this.loading = true
 			}
 
-			this.getPractices();
+			this.getPractices()
 
-			this.$router.push({ query });
+			this.$router.push({ query })
 		}, 500),
 
-		typeStyle(type) {
+		typeStyle (type) {
 			switch (type) {
 				case "Hub":
-					return "bg-red-500 text-white px-4 py-1";
-					break;
+					return "bg-red-500 text-white px-4 py-1"
 				case "Spoke":
-					return "bg-blue-500 text-white px-4 py-1";
-					break;
+					return "bg-blue-500 text-white px-4 py-1"
 				case "Stand Alone":
-					return "bg-indigo-600 text-white px-6 md:px-5 py-1";
-					break;
+					return "bg-indigo-600 text-white px-6 md:px-5 py-1"
 				default:
-					return;
+					return
 			}
 		},
 
-		hubTypeStyle(hubType) {
+		hubTypeStyle (hubType) {
 			switch (hubType) {
 				case "Type 1":
-					return "bg-red-500 text-white px-4 py-1";
-					break;
+					return "bg-red-500 text-white px-4 py-1"
 				case "Type 2":
-					return "bg-purple-500 text-white px-4 py-1";
+					return "bg-purple-500 text-white px-4 py-1"
 				default:
-					return "";
+					return ""
 			}
 		},
 
-		pagechanged(page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			};
-			this.params.offset = this.params.limit * (page - 1);
-			this.currentPage = page;
-			this.getPractices();
+		pagechanged (page) {
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
+			this.params.offset = this.params.limit * (page - 1)
+			this.currentPage = page
+			this.getPractices()
 		},
 
-		sorted(order_by) {
+		sorted (order_by) {
 			// go back to page 1
-			this.currentPage = 1;
-			let query = {
-				...this.$router.query,
-				order_by
-			};
-			this.params.order_by = order_by;
-			this.getPractices();
+			this.currentPage = 1
+			// let query = {
+			// 	...this.$router.query,
+			// 	order_by
+			// }
+			this.params.order_by = order_by
+			this.getPractices()
 		},
-		goBack() {
-			let url = `/practices`;
+		goBack () {
+			let url = `/practices`
 			if (this.fromUrl.name === "index-practices-pending-practices") {
-				url = `/practices/pending-practices`;
+				url = `/practices/pending-practices`
 			} else if (this.fromUrl.name === "index-practices-bogus-practices") {
-				url = "/practices/bogus-practices";
+				url = "/practices/bogus-practices"
 			} else if (
 				this.fromUrl.name === "index-practices-deactivated-practices"
 			) {
-				url = "/practices/deactivated-practices";
+				url = "/practices/deactivated-practices"
 			} else {
-				url = `/practices`;
+				url = `/practices`
 			}
-			this.$router.push(url);
+			this.$router.push(url)
 		}
 	}
-};
+}
 </script>
 <style>
 .page-button {
