@@ -1,9 +1,12 @@
 import * as practiceApi from '@/api/practices'
 export default {
-  async initializePracticeTransactionListener ({ state, commit }, route) {
+  async initializePracticeTransactionListener ({ commit }) {
     //-------------------PRACTICES-------------------
-    this.$socket.on("createdPractice", (payload) => {
-      commit('ADD_PRACTICE', payload.payload.practice)
+    this.$socket.on("Admin Notification Practice Created", async (hello) => {
+      // console.log('hello', hello)
+      // console.log('hello2', hello.practice_user_id)
+      // commit('ADD_PRACTICE', hello)
+      // commit('ADD_PRACTICE_NOTIFICATIONS', hello)
       // commit('ADD_PRACTICE_USER', payload.payload.user)
     }),
       this.$socket.on("deletePractice", practice => {

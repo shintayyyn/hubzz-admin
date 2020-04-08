@@ -78,7 +78,7 @@ export default {
 		}
 	},
 	REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state, payload) {
-		state.locumComplianceNotifications = state.locumComplianceNotifications.filter(locumCompDocNotif => locumCompDocNotif.id !==payload)
+		state.locumComplianceNotifications = state.locumComplianceNotifications.filter(locumCompDocNotif => locumCompDocNotif.locumDetailComplianceDocument.id !==payload)
 	},
 	CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state) {
 		state.locumComplianceNotifications = []

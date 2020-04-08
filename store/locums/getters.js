@@ -30,8 +30,8 @@ export default {
 
 			notifObj = {
 				...notif,
-				id: notif.id,
-				status: notif.status,
+				id: notif.locumDetailComplianceDocument.id,
+				status: notif.locumDetailComplianceDocument.status,
 				notification_type: notif.notificationType,
 				type: 'Admin Locum Compliance',
 				message
