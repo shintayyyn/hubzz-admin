@@ -7,6 +7,107 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Pension Contributions
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-003
+      </div>
+
+      <div
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full">
+          <label class="text-md md:text-lg text-bold">Filters</label>
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="practiceNameIncludes"
+            placeholder="Search practice"
+            type="text"
+            label="Practice"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncudes"
+            placeholder="Search locum"
+            type="text"
+            label="Locum"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="minPensionAmount"
+            placeholder="0.00"
+            type="number"
+            label="Min £ Paid"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="maxPensionAmount"
+            placeholder="0.00"
+            type="number"
+            label="Max £ Paid"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="invoiceNumberIncludes"
+            placeholder="Search invoice number"
+            type="text"
+            label="Invoice Number"
+          />
+        </div>
+        
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="jobPartNumberIncludes"
+            placeholder="Search job part number"
+            type="text"
+            label="Job Part Number"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="paidDateStart"
+            label="Date Paid Start"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="paidDateEnd"
+            label="Date Paid End"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
@@ -33,10 +134,38 @@
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
-        @setOrderBy="(value) => orderBy = value"
+        @setOrderBy="setOrderBy"
       />
 
-      <ReportPagination :count="count" :pages="pages" :page="activePage" @page="(value) => activePage = value" />
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-gray-500 w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+          </div>
+        </div>
+  
+        <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />
+      </div>
+
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
 
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
@@ -50,6 +179,10 @@
 </template>
 
 <script>
+  import AppButton from '@/components/Base/AppButton'
+  import AppInput from '@/components/Base/AppInput'
+  import AppDate from '@/components/Base/AppDate'
+
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
 
@@ -57,11 +190,15 @@
     components: {
       ReportTable,
       ReportPagination,
+      AppButton,
+      AppInput,
+      AppDate,
     },
 
     data () {
       return {
         loading: false,
+        downloading: false,
         count: 0,
         pensionContributions: [],
         orderBy: [],
@@ -90,10 +227,30 @@
           25,
         ],
         activePage: 1,
+
+        invoiceNumberIncludes: '',
+        locumNameIncudes: '',
+        practiceNameIncludes: '',
+        professionNameIncludes: '',
+        jobPartNumberIncludes: '',
+        maxNiAmount: '',
+        minPensionAmount: '',
+        maxPensionAmount: '',
+        calendarDateStart: '',
+        calendarDateEnd: '',
+        paidDateStart: '',
+        paidDateEnd: '',
       }
     },
 
     computed: {
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.pensionContributions.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
+
       offset () {
         return this.activePage * this.limit - this.limit
       },
@@ -129,10 +286,10 @@
           },
           {
             title: '£ Paid',
-            key: 'ni_amount',
-            sort_key: 'ni_amount',
-            column: (item) => item.ni_amount.toFixed(2),
-            justify: 'center',
+            key: 'pension_amount',
+            sort_key: 'pension_amount',
+            column: (item) => item.pension_amount ? '£ ' + item.pension_amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : '£ 0.00',
+            justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -157,7 +314,7 @@
             title: 'Date Paid',
             key: 'paid_at',
             sort_key: 'paid_at',
-            column: (item) => this.$moment(item.paid_at, 'YYYY-MM-DD').format('DD/MM/YYYY'),
+            column: (item) => item.paid_at ? this.$moment(item.paid_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A',
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
@@ -171,42 +328,158 @@
     },
 
     watch: {
-      orderBy () {
-        this.getPensionContributions()
-      },
-
       limit () {
         this.page = 1
-        this.getPensionContributions()
-      },
-
-      activePage () {
         this.getPensionContributions()
       },
     },
 
     mounted () {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
+      const {
+        invoice_number_includes: invoiceNumberIncludes,
+        locum_name_incudes: locumNameIncudes,
+        practice_name_includes: practiceNameIncludes,
+        profession_name_includes: professionNameIncludes,
+        job_part_number_includes: jobPartNumberIncludes,
+        min_pension_amount: minPensionAmount,
+        max_pension_amount: maxPensionAmount,
+        calendar_date_start: calendarDateStart,
+        calendar_date_end: calendarDateEnd,
+        paid_date_start: paidDateStart,
+        paid_date_end: paidDateEnd,
+        order_by: orderBy = [],
+        page,
+      } = this.$route.query
 
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
+      this.invoiceNumberIncludes = invoiceNumberIncludes ? invoiceNumberIncludes : ''
+      this.locumNameIncudes = locumNameIncudes ? locumNameIncudes : ''
+      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
+      this.professionNameIncludes = professionNameIncludes ? professionNameIncludes : ''
+      this.jobPartNumberIncludes = jobPartNumberIncludes ? jobPartNumberIncludes : ''
+      this.minPensionAmount = minPensionAmount ? minPensionAmount : ''
+      this.maxPensionAmount = maxPensionAmount ? maxPensionAmount : ''
+      this.calendarDateStart = calendarDateStart ? calendarDateStart : ''
+      this.calendarDateEnd = calendarDateEnd ? calendarDateEnd : ''
+      this.paidDateStart = paidDateStart ? paidDateStart : ''
+      this.paidDateEnd = paidDateEnd ? paidDateEnd : ''
+
+      this.orderBy = Array.isArray(orderBy) ? orderBy : [orderBy]
+
+      this.activePage = page ? Number.parseInt(page) : 1
 
       this.getPensionContributions()
     },
 
     methods: {
+      filterReset () {
+        this.invoiceNumberIncludes = ''
+        this.locumNameIncudes = ''
+        this.practiceNameIncludes = ''
+        this.professionNameIncludes = ''
+        this.jobPartNumberIncludes = ''
+        this.minPensionAmount = ''
+        this.maxPensionAmount = ''
+        this.calendarDateStart = ''
+        this.calendarDateEnd = ''
+        this.paidDateStart = ''
+        this.paidDateEnd = ''
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          job_part_number_includes: this.jobPartNumberIncludes ? this.jobPartNumberIncludes : undefined,
+          min_pension_amount: this.minPensionAmount ? this.minPensionAmount : undefined,
+          max_pension_amount: this.maxPensionAmount ? this.maxPensionAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
+          order_by: this.orderBy ? this.orderBy : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getPensionContributions()
+      },
+
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getPensionContributions()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getPensionContributions()
+      },
+
       getPensionContributions () {
         this.loading = true
         this.pensionContributions = []
+
+        const params = {
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          job_part_number_includes: this.jobPartNumberIncludes ? this.jobPartNumberIncludes : undefined,
+          min_pension_amount: this.minPensionAmount ? this.minPensionAmount : undefined,
+          max_pension_amount: this.maxPensionAmount ? this.maxPensionAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
+        }
+
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/pension-contributions/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/pension-contributions/count', {
+            params: {
+              ...params,
+            },
+          }).then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/pension-contributions', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
@@ -214,7 +487,7 @@
           }).then((responses) => {
             return responses.data.data.pension_contributions
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+          new Promise((resolve) => setTimeout(resolve, 200))
         ]).then((results) => {
           const [
             count,
@@ -225,9 +498,46 @@
           this.pensionContributions = pensionContributions
         }).catch((err) => {
           console.log('err', err)
-          this.$nuxt.error(err)
+          this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          job_part_number_includes: this.jobPartNumberIncludes ? this.jobPartNumberIncludes : undefined,
+          min_pension_amount: this.minPensionAmount ? this.minPensionAmount : undefined,
+          max_pension_amount: this.maxPensionAmount ? this.maxPensionAmount : undefined,
+          calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
+          calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/pension-contributions/generate-key', {
+          filename: `pension-contributions.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/pension-contributions/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },

@@ -112,7 +112,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppDate
-            v-model="deductionDateStart"
+            v-model="paidDateStart"
             label="Deduction Date Start"
             format="YYYY-MM-DD"
           />
@@ -120,7 +120,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppDate
-            v-model="deductionDateEnd"
+            v-model="paidDateEnd"
             label="Deduction Date End"
             format="YYYY-MM-DD"
           />
@@ -272,8 +272,8 @@
         maxPayeAmount: '',
         calendarDateStart: '',
         calendarDateEnd: '',
-        deductionDateStart: '',
-        deductionDateEnd: '',
+        paidDateStart: '',
+        paidDateEnd: '',
       }
     },
 
@@ -408,8 +408,8 @@
         max_paye_amount: maxPayeAmount,
         calendar_date_start: calendarDateStart,
         calendar_date_end: calendarDateEnd,
-        deduction_date_start: deductionDateStart,
-        deduction_date_end: deductionDateEnd,
+        paid_date_start: paidDateStart,
+        paid_date_end: paidDateEnd,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -424,8 +424,8 @@
       this.maxPayeAmount = maxPayeAmount ? maxPayeAmount : ''
       this.calendarDateStart = calendarDateStart ? calendarDateStart : ''
       this.calendarDateEnd = calendarDateEnd ? calendarDateEnd : ''
-      this.deductionDateStart = deductionDateStart ? deductionDateStart : ''
-      this.deductionDateEnd = deductionDateEnd ? deductionDateEnd : ''
+      this.paidDateStart = paidDateStart ? paidDateStart : ''
+      this.paidDateEnd = paidDateEnd ? paidDateEnd : ''
 
       this.orderBy = Array.isArray(orderBy) ? orderBy : [orderBy]
 
@@ -446,8 +446,8 @@
         this.maxPayeAmount = ''
         this.calendarDateStart = ''
         this.calendarDateEnd = ''
-        this.deductionDateStart = ''
-        this.deductionDateEnd = ''
+        this.paidDateStart = ''
+        this.paidDateEnd = ''
 
         this.filterSearch()
       },
@@ -467,8 +467,8 @@
           max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
           calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
           calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -532,8 +532,8 @@
           max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
           calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
           calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
         }
 
         Promise.all([
@@ -584,8 +584,8 @@
           max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
           calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
           calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
