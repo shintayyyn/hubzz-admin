@@ -163,7 +163,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="deductions"
+        :items="locumInvoiceReports"
         :getItemKey="(item) => item.locum_invoice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -234,7 +234,7 @@
         loading: false,
         downloading: false,
         count: 0,
-        deductions: [],
+        locumInvoiceReports: [],
         orderBy: [],
         orderBys: [
           {
@@ -280,7 +280,7 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.deductions.length), this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumInvoiceReports.length), this.count)
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
@@ -392,7 +392,7 @@
     watch: {
       limit () {
         this.page = 1
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
     },
 
@@ -431,7 +431,7 @@
 
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getDeductions()
+      this.getLocumInvoiceReportDeductions()
     },
 
     methods: {
@@ -477,7 +477,7 @@
           this.$router.replace({ query })
         }
         
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
 
       setPage (page) {
@@ -499,7 +499,7 @@
           })
         }
 
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
 
       setOrderBy (orderBy) {
@@ -514,12 +514,12 @@
           }
         })
 
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
 
-      getDeductions () {
+      getLocumInvoiceReportDeductions () {
         this.loading = true
-        this.deductions = []
+        this.locumInvoiceReports = []
 
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
@@ -558,11 +558,11 @@
         ]).then((results) => {
           const [
             count,
-            deductions,
+            locumInvoiceReports,
           ] = results
 
           this.count = count
-          this.deductions = deductions
+          this.locumInvoiceReports = locumInvoiceReports
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)

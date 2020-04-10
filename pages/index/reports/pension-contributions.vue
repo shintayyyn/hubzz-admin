@@ -129,7 +129,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="pensionContributions"
+        :items="locumInvoiceReports"
         :getItemKey="(item) => item.locum_invoice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -200,7 +200,7 @@
         loading: false,
         downloading: false,
         count: 0,
-        pensionContributions: [],
+        locumInvoiceReports: [],
         orderBy: [],
         orderBys: [
           {
@@ -246,7 +246,7 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.pensionContributions.length), this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumInvoiceReports.length), this.count)
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
@@ -330,7 +330,7 @@
     watch: {
       limit () {
         this.page = 1
-        this.getPensionContributions()
+        this.getLocumInvoiceReportPensionContributions()
       },
     },
 
@@ -367,7 +367,7 @@
 
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getPensionContributions()
+      this.getLocumInvoiceReportPensionContributions()
     },
 
     methods: {
@@ -411,7 +411,7 @@
           this.$router.replace({ query })
         }
         
-        this.getPensionContributions()
+        this.getLocumInvoiceReportPensionContributions()
       },
 
       setPage (page) {
@@ -433,7 +433,7 @@
           })
         }
 
-        this.getPensionContributions()
+        this.getLocumInvoiceReportPensionContributions()
       },
 
       setOrderBy (orderBy) {
@@ -448,12 +448,12 @@
           }
         })
 
-        this.getPensionContributions()
+        this.getLocumInvoiceReportPensionContributions()
       },
 
-      getPensionContributions () {
+      getLocumInvoiceReportPensionContributions () {
         this.loading = true
-        this.pensionContributions = []
+        this.locumInvoiceReports = []
 
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
@@ -491,11 +491,11 @@
         ]).then((results) => {
           const [
             count,
-            pensionContributions,
+            locumInvoiceReports,
           ] = results
 
           this.count = count
-          this.pensionContributions = pensionContributions
+          this.locumInvoiceReports = locumInvoiceReports
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)

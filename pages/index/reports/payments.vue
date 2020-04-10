@@ -138,7 +138,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="payments"
+        :items="locumInvoiceReports"
         :getItemKey="(item) => item.locum_invoice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -209,7 +209,7 @@
         loading: false,
         downloading: false,
         count: 0,
-        payments: [],
+        locumInvoiceReports: [],
         orderBy: [],
         orderBys: [
           {
@@ -255,7 +255,7 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.payments.length), this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumInvoiceReports.length), this.count)
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
@@ -349,7 +349,7 @@
     watch: {
       limit () {
         this.page = 1
-        this.getPayments()
+        this.getLocumInvoiceReportPayments()
       },
     },
 
@@ -386,7 +386,7 @@
 
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getPayments()
+      this.getLocumInvoiceReportPayments()
     },
 
     methods: {
@@ -430,7 +430,7 @@
           this.$router.replace({ query })
         }
         
-        this.getPayments()
+        this.getLocumInvoiceReportPayments()
       },
 
       setPage (page) {
@@ -452,7 +452,7 @@
           })
         }
 
-        this.getPayments()
+        this.getLocumInvoiceReportPayments()
       },
 
       setOrderBy (orderBy) {
@@ -467,12 +467,12 @@
           }
         })
 
-        this.getPayments()
+        this.getLocumInvoiceReportPayments()
       },
 
-      getPayments () {
+      getLocumInvoiceReportPayments () {
         this.loading = true
-        this.payments = []
+        this.locumInvoiceReports = []
 
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
@@ -510,11 +510,11 @@
         ]).then((results) => {
           const [
             count,
-            payments,
+            locumInvoiceReports,
           ] = results
 
           this.count = count
-          this.payments = payments
+          this.locumInvoiceReports = locumInvoiceReports
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
