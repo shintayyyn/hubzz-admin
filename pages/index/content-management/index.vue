@@ -48,6 +48,18 @@
             title: 'Practice Users',
             url: '/content-management/practice-users',
           },
+          {
+            title: 'Jobs',
+            url: '/content-management/jobs',
+          },
+          {
+            title: 'Platform Jobs',
+            url: '/content-management/platform-jobs',
+          },
+          {
+            title: 'Private Jobs',
+            url: '/content-management/private-jobs',
+          },
         ],
       }
     },
