@@ -22,22 +22,40 @@
         </div>
 
         <div @mouseout="hoveredIndex = -1">
-          <nuxt-link
+          <template
             v-for="(item, index) in items"
-            :key="`key_${columnDetail.key}_${getItemKey(item, index)}`"
-            :to="getItemLink(item, index)"
-            class="flex bg-waterloo text-white mb-2 p-2 hover:bg-waterloo-dark transitions-colors duration-150 ease-liner"
-            :class="[
-              columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start',
-              columnDetailIndex === 0 ? 'rounded-l-lg' : '',
-              columnDetailIndex === columnDetails.length - 1 ? 'rounded-r-lg' : '',
-              hoveredIndex === index ? 'bg-waterloo-dark' : '',
-            ]"
-            @mouseover.native="hoveredIndex = index"
-            @dragstart.native.prevent
           >
-            <span class="whitespace-no-wrap p-1 cursor-default cursor-text select-text" @click.prevent>&nbsp;{{ columnDetail.column(item, index) }}</span>
-          </nuxt-link>
+            <nuxt-link
+              v-if="getItemLink(item, index)"
+              :key="`key_${columnDetail.key}_${getItemKey(item, index)}`"
+              :to="getItemLink(item, index)"
+              class="flex bg-waterloo text-white mb-2 p-2 transitions-colors duration-150 ease-liner"
+              :class="[
+                columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start',
+                columnDetailIndex === 0 ? 'rounded-l-lg' : '',
+                columnDetailIndex === columnDetails.length - 1 ? 'rounded-r-lg' : '',
+                hoveredIndex === index ? 'bg-waterloo-dark' : '',
+              ]"
+              @mouseover.native="hoveredIndex = index"
+              @dragstart.native.prevent
+            >
+              <span class="whitespace-no-wrap p-1 cursor-default cursor-text select-text" @click.prevent>&nbsp;{{ columnDetail.column(item, index) }}</span>
+            </nuxt-link>
+            <span
+              v-if="!getItemLink(item, index)"
+              :key="`key_${columnDetail.key}_${getItemKey(item, index)}`"
+              class="flex bg-waterloo text-white mb-2 p-2 transitions-colors duration-150 ease-liner"
+              :class="[
+                columnDetail.justify ? `justify-${columnDetail.justify}` : 'justify-start',
+                columnDetailIndex === 0 ? 'rounded-l-lg' : '',
+                columnDetailIndex === columnDetails.length - 1 ? 'rounded-r-lg' : '',
+              ]"
+              @mouseover.native="hoveredIndex = index"
+              @dragstart.native.prevent
+            >
+              <span class="whitespace-no-wrap p-1 cursor-default cursor-text select-text" @click.prevent>&nbsp;{{ columnDetail.column(item, index) }}</span>
+            </span>
+          </template>
         </div>
         
         <div v-for="(item, index) in limit" v-if="loading && items.length === 0" :key="`limit_${index}`" class="flex bg-waterloo text-white mb-2 p-2">
@@ -123,7 +141,7 @@
 
     methods: {
       setOrderBy (column) {
-        const orderBy = [...this.orderBy]
+        let orderBy = [...this.orderBy]
 
         const index = orderBy.findIndex((orderBy) => {
           const [_col] = orderBy.split(":")
@@ -137,10 +155,12 @@
           orderBy.splice(index, 1)
 
           if (direction === "asc") {
-            orderBy.push(`${column}:desc`)
+            // orderBy.push(`${column}:desc`)
+            orderBy = [`${column}:desc`]
           }
         } else {
-          orderBy.push(column)
+          // orderBy.push(column)
+          orderBy = [column]
         }
 
         this.$emit('setOrderBy', orderBy)

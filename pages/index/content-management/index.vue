@@ -44,6 +44,10 @@
             title: 'Professions',
             url: '/content-management/professions',
           },
+          {
+            title: 'Practice Users',
+            url: '/content-management/practice-users',
+          },
         ],
       }
     },
