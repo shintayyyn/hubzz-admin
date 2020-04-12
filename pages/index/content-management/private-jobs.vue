@@ -23,7 +23,7 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search username, email, name"
+            placeholder="Search job number, title"
             style="width: 250px;"
             @keyup="searchSubmit"
           >
