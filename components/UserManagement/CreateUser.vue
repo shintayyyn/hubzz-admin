@@ -195,6 +195,7 @@
                 :label="'Account Name'"
                 :placeholder="'Account Name'"
                 :error="formError.find(item => item.field === 'account_name')"
+                required
                 @blur="CheckEmptyField(toPostUser.account_name, 'account_name')"
               />
               <AppInput 
@@ -203,6 +204,7 @@
                 :label="'Bank Name'"
                 :placeholder="'Bank Name'"
                 :error="formError.find(item => item.field === 'bank_name')"
+                required
                 @blur="CheckEmptyField(toPostUser.bank_name, 'bank_name')"
               />
               <AppInput 
@@ -211,6 +213,7 @@
                 :label="'Sort Code'"
                 :placeholder="'Sort Code'"
                 :error="formError.find(item => item.field === 'sort_code')"
+                required
                 @blur="CheckEmptyField(toPostUser.sort_code, 'sort_code')"
               />
               <AppInput 
@@ -219,6 +222,7 @@
                 :label="'Account Number'"
                 :placeholder="'Account Number'"
                 :error="formError.find(item => item.field === 'account_number')"
+                required
                 @blur="CheckEmptyField(toPostUser.account_number, 'account_number')"
               />
 
