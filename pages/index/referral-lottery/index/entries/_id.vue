@@ -14,14 +14,16 @@
 
       <AppTable
         v-if="entries.length > 0"
-        :total="total"
+        :total="count"
         :items="entries"
         :current-page="current_page"
-        :per-page="limit"
+        :perPage="limit"
         :columns="columns"
         :loading="loading"
         :custom-width="200"
+        :orderBy="orderBy"
         @pagechanged="pagechanged"
+        @sorted="(sort) => orderBy = sort"
       />
     </div>
   </div>
@@ -49,8 +51,9 @@
     data () {
       return {
         loading: false,
-        total: 0,
+        count: 0,
         entries: [],
+        orderBy: [],
         current_page: 1,
         offset: 0,
         limit: 5,
@@ -63,20 +66,36 @@
           {
               name: "Account Type",
               dataIndex: "domain",
-              class: "text-left"
+              class: "text-left",
+              sortable: true,
+              sortIndex: 'domain',
           },
           {
               name: "Name",
               dataIndex: "invited_name",
-              class: "text-center"
+              class: "text-center",
+              sortable: true,
+              sortIndex: 'invited_name',
           },
           {
               name: 'Active At',
               dataIndex: "first_actived_at",
-              class: "text-center localDate"
+              class: "text-center localDate",
+              sortable: true,
+              sortIndex: 'first_actived_at',
           },
         ]
       }
+    },
+
+    watch: {
+      orderBy () {
+        this.current_page = 1
+        this.loading = true
+        this.getEntries().finally(() => {
+          this.loading = false
+        })
+      },
     },
 
     mounted () {
@@ -88,24 +107,45 @@
     },
 
     methods: {
-      async getEntries () {
-        try {
-          this.$axios.$get(`/api/v1/admin/raffle-users/${this.$route.params.id}/raffle-entries`, { params: {
-            date_start: this.dateStart,
-            date_end: this.dateEnd,
-            offset: (this.current_page - 1) * this.limit,
-            limit: this.limit
-          }}).then(res => {
-            this.entries = res.data && res.data.raffle_entries && res.data.raffle_entries.length > 0 ? res.data.raffle_entries : []
+      getEntries () {
+        const params = {
+          date_start: this.dateStart,
+          date_end: this.dateEnd,
+        }
+        return Promise.all([
+          this.$axios.get(`/api/v1/admin/raffle-users/${this.$route.params.id}/raffle-entries/count`, {
+            params: {
+              ...params,
+            }
+          }).then(response => {
+            return response.data.data.count
+          }),
+          this.$axios.get(`/api/v1/admin/raffle-users/${this.$route.params.id}/raffle-entries`, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+              limit: this.limit,
+              offset: (this.current_page - 1) * this.limit,
+            }
+          }).then(response => {
+            return response.data.data.raffle_entries
           })
-        } catch (err) {
+        ]).then((results) => {
+          const [
+            count,
+            entries,
+          ] = results
+
+          this.count = count
+          this.entries = entries
+        }).catch((err) => {
           console.log(err.response || err)
 
-          return this.$nuxt.error({
+          this.$nuxt.error({
             status: 400,
             message: err.response.message,
           })
-        }
+        })
       },
 
       async pagechanged (e) {

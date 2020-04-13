@@ -112,7 +112,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppDate
-            v-model="deductionDateStart"
+            v-model="paidDateStart"
             label="Deduction Date Start"
             format="YYYY-MM-DD"
           />
@@ -120,7 +120,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppDate
-            v-model="deductionDateEnd"
+            v-model="paidDateEnd"
             label="Deduction Date End"
             format="YYYY-MM-DD"
           />
@@ -163,7 +163,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="deductions"
+        :items="locumInvoiceReports"
         :getItemKey="(item) => item.locum_invoice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -234,7 +234,7 @@
         loading: false,
         downloading: false,
         count: 0,
-        deductions: [],
+        locumInvoiceReports: [],
         orderBy: [],
         orderBys: [
           {
@@ -272,15 +272,15 @@
         maxPayeAmount: '',
         calendarDateStart: '',
         calendarDateEnd: '',
-        deductionDateStart: '',
-        deductionDateEnd: '',
+        paidDateStart: '',
+        paidDateEnd: '',
       }
     },
 
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.deductions.length), this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumInvoiceReports.length), this.count)
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
@@ -392,7 +392,7 @@
     watch: {
       limit () {
         this.page = 1
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
     },
 
@@ -408,8 +408,8 @@
         max_paye_amount: maxPayeAmount,
         calendar_date_start: calendarDateStart,
         calendar_date_end: calendarDateEnd,
-        deduction_date_start: deductionDateStart,
-        deduction_date_end: deductionDateEnd,
+        paid_date_start: paidDateStart,
+        paid_date_end: paidDateEnd,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -424,14 +424,14 @@
       this.maxPayeAmount = maxPayeAmount ? maxPayeAmount : ''
       this.calendarDateStart = calendarDateStart ? calendarDateStart : ''
       this.calendarDateEnd = calendarDateEnd ? calendarDateEnd : ''
-      this.deductionDateStart = deductionDateStart ? deductionDateStart : ''
-      this.deductionDateEnd = deductionDateEnd ? deductionDateEnd : ''
+      this.paidDateStart = paidDateStart ? paidDateStart : ''
+      this.paidDateEnd = paidDateEnd ? paidDateEnd : ''
 
       this.orderBy = Array.isArray(orderBy) ? orderBy : [orderBy]
 
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getDeductions()
+      this.getLocumInvoiceReportDeductions()
     },
 
     methods: {
@@ -446,8 +446,8 @@
         this.maxPayeAmount = ''
         this.calendarDateStart = ''
         this.calendarDateEnd = ''
-        this.deductionDateStart = ''
-        this.deductionDateEnd = ''
+        this.paidDateStart = ''
+        this.paidDateEnd = ''
 
         this.filterSearch()
       },
@@ -467,8 +467,8 @@
           max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
           calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
           calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -477,7 +477,7 @@
           this.$router.replace({ query })
         }
         
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
 
       setPage (page) {
@@ -499,7 +499,7 @@
           })
         }
 
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
 
       setOrderBy (orderBy) {
@@ -514,12 +514,12 @@
           }
         })
 
-        this.getDeductions()
+        this.getLocumInvoiceReportDeductions()
       },
 
-      getDeductions () {
+      getLocumInvoiceReportDeductions () {
         this.loading = true
-        this.deductions = []
+        this.locumInvoiceReports = []
 
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
@@ -532,8 +532,8 @@
           max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
           calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
           calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
         }
 
         Promise.all([
@@ -558,11 +558,11 @@
         ]).then((results) => {
           const [
             count,
-            deductions,
+            locumInvoiceReports,
           ] = results
 
           this.count = count
-          this.deductions = deductions
+          this.locumInvoiceReports = locumInvoiceReports
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -584,8 +584,8 @@
           max_paye_amount: this.maxPayeAmount ? this.maxPayeAmount : undefined,
           calendar_date_start: this.calendarDateStart ? this.calendarDateStart : undefined,
           calendar_date_end: this.calendarDateEnd ? this.calendarDateEnd : undefined,
-          deduction_date_start: this.deductionDateStart ? this.deductionDateStart : undefined,
-          deduction_date_end: this.deductionDateEnd ? this.deductionDateEnd : undefined,
+          paid_date_start: this.paidDateStart ? this.paidDateStart : undefined,
+          paid_date_end: this.paidDateEnd ? this.paidDateEnd : undefined,
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

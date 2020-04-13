@@ -30,9 +30,12 @@ export default {
 
 			notifObj = {
 				...notif,
-				id: notif.practice.id,
+				id: notif.payload.id,
+				user_id: notif.payload.practice_user_id,
+				status: notif.payload.practice.status,
+				notification_type: notif.notificationType,
+				type: 'Admin Practice Creation',
 				message
-				// status
 			}
 			notifications.push(notifObj)
 		})

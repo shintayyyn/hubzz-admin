@@ -44,6 +44,46 @@
             title: 'Professions',
             url: '/content-management/professions',
           },
+          {
+            title: 'Users',
+            url: '/content-management/users',
+          },
+          {
+            title: 'Practice Users',
+            url: '/content-management/practice-users',
+          },
+          {
+            title: 'Locum Users',
+            url: '/content-management/locum-users',
+          },
+          {
+            title: 'Jobs',
+            url: '/content-management/jobs',
+          },
+          {
+            title: 'Platform Jobs',
+            url: '/content-management/platform-jobs',
+          },
+          {
+            title: 'Private Jobs',
+            url: '/content-management/private-jobs',
+          },
+          {
+            title: 'Notification Types',
+            url: '/content-management/notification-types',
+          },
+          {
+            title: 'Notifications',
+            url: '/content-management/notifications',
+          },
+          {
+            title: 'Email Types',
+            url: '/content-management/email-types',
+          },
+          {
+            title: 'Emails',
+            url: '/content-management/emails',
+          },
         ],
       }
     },

@@ -73,7 +73,7 @@
           :total="total"
           :items="users"
           :current-page="current_page"
-          :per-page="limit"
+          :perPage="limit"
           :columns="columns"
           :loading="loading"
           :custom-width="500"
@@ -98,7 +98,7 @@
           :total="total"
           :items="raffles"
           :current-page="current_page"
-          :per-page="limit"
+          :perPage="limit"
           :columns="columns"
           :loading="loading"
           :custom-width="500"
@@ -369,7 +369,6 @@
           const params = {
             date_start: this.date_start,
             date_end: this.date_end,
-            order_by: this.orderBy,
           }
 
           return Promise.all([
@@ -383,8 +382,9 @@
             this.$axios.$get(`${url}`, {
               params: {
                 ...params,
+                order_by: this.orderBy,
+                limit: this.limit,
                 offset: (this.current_page - 1) * this.limit,
-                limit: this.limit
               },
             }).then(res => {
               if (res.data && res.data.users) {

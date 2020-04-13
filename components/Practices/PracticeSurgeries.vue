@@ -34,7 +34,7 @@
         :total="total"
         :items="practiceChildren"
         :current-page="currentPage"
-        :per-page="perPage"
+        :perPage="perPage"
         :columns="columns"
         :loading="loadingSurgeries"
         :loading-message="'Loading Surgeries'"

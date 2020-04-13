@@ -103,13 +103,13 @@
         </div>
       </div>
     </div>
-    <div v-if="total > 5" class="bottom-0 w-full">
+    <div v-if="total > 0" class="bottom-0 w-full">
       <AppPagination
         :total="total"
         :total-pages="totalPages"
         :current-page="currentPage"
         :loading="loading"
-        :per-page="perPage"
+        :perPage="perPage"
         @pagechanged="pagechanged"
         @limitchanged="limitchanged"
       />

@@ -125,7 +125,7 @@
           }
         } else {
           // orderBy.push(column)
-          orderBy = [`${column}:desc`]
+          orderBy = [column]
         }
 
         this.$emit('setOrderBy', orderBy)

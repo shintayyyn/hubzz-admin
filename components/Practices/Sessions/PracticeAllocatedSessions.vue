@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex items-center px-2 py-2">
-			<!-- <div class="flex py-2">
+      <!-- <div class="flex py-2">
 				<div class="relative">
 					<input
 						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
@@ -29,7 +29,7 @@
 					</button>
 				</div>
 			</div> -->
-		</div>
+    </div>
     <div class="overflow-x-auto xl:overflow-hidden">
       <div v-if="allocatedJobs.length === 0">
         <div
@@ -82,7 +82,7 @@
         </div>
       </div>
       <!--PAGINATION-->
-      <div v-if="!allocatedJobs.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -103,19 +103,31 @@
   </div>
 </template>
 <script>
-import debounce from "lodash.debounce";
+import debounce from "lodash.debounce"
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
-import AppInput from '@/components/Base/AppInput'
 export default {
     components:{
       AppPagination,
       PracticeSessionModal,
       AppJobHeaderSort,
-      AppInput,
     },
-    props:['practice', 'practice_surgery'],
+
+    props: {
+
+      practice: {
+        type: Object,
+        default: () => null,
+      },
+
+      practiceSurgery: {
+        type: Object,
+        default: () => null,
+      },
+
+    },
+
     watchQuery: ["search"],
     data (){
       return{ 
@@ -142,14 +154,14 @@ export default {
       }
     },
     watch: {
-      $route (to, from) {
+      $route (to) {
         this.currentPage = parseInt(to.query.job_page)
         this.getAllocatedJobs()
       },
-      "search.id"(value){
+      "search.id" (){
         this.searchSubmit()
       },
-      "search.title"(value){
+      "search.title" (){
         this.searchSubmit()
       }
     },
@@ -235,18 +247,11 @@ export default {
         await this.$store.commit('jobs/TOGGLE_LOADING', false)
       },
       
-      searchSubmit: debounce(function(page, orderBy) {
+      searchSubmit: debounce(function () {
         let search = this.search
 
         let query = { ...this.$router.query, search}
 
-        // if (page === 1) {
-        //   delete query.page;
-        // }
-
-        // if (page) {
-        //   query = { ...this.$router.query, page, search };
-        // }
         this.$router.push({query})
       }, 500)
     }

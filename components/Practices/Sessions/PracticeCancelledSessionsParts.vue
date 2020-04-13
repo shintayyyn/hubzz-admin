@@ -82,12 +82,12 @@
         </div>
       </div>
 
-      <div v-if="!cancelledJobs.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :total-pages="totalPages"
           :current-page="currentPage"
-          :per-page="perPage"
+          :perPage="perPage"
           @pagechanged="pagechanged"
         />
       </div>
@@ -113,15 +113,18 @@
       PracticeSessionModal
     },
 
-    props:{
+    props: {
+
       practice: {
         type: Object,
-        default: null,
+        default: () => null,
       },
-      practice_surgery: {
+
+      practiceSurgery: {
         type: Object,
-        default: null,
+        default: () => null,
       },
+      
     },
     
     data () {
