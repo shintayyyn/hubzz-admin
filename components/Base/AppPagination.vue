@@ -25,7 +25,7 @@
 		</div>
 		<div
 			class="flex flex-col justify-center items-center py-2 w-full"
-			v-if="total > 0 && totalPages > 1"
+			v-if="total > 0 && totalPages > 0"
 		>
 			<div :class="pages.length > 2 ? 'flex md:hidden' : 'hidden'">
 				<div class="md:hidden pagination-item m-1" v-for="page in pages" :key="page.name">
@@ -117,7 +117,7 @@
 	</div>
 </template>
 <script>
-import AppInput from "@/components/Base/AppInput";
+import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppInput
@@ -146,98 +146,96 @@ export default {
 		},
 		perPage: {
 			type: Number,
-			required: false
+			required: false,
+			default: 10,
+		}
+	},
+	data () {
+		return {
+			selectedLimit: null
 		}
 	},
 	computed: {
-		isInFirstPage() {
-			return this.currentPage === 1;
+		isInFirstPage () {
+			return this.currentPage === 1
 		},
-		isInLastPage() {
-			return this.currentPage === this.totalPages;
+		isInLastPage () {
+			return this.currentPage === this.totalPages
 		},
-		startPage() {
+		startPage () {
 			if (
 				this.currentPage === 1 ||
 				this.currentPage === 2 ||
 				this.totalPages <= this.maxVisibleButtons
 			) {
-				return 1;
+				return 1
 			}
 
 			if (this.currentPage === this.totalPages - 1) {
-				return this.totalPages - this.maxVisibleButtons + 1;
+				return this.totalPages - this.maxVisibleButtons + 1
 			}
 
 			if (
 				this.currentPage === this.totalPages &&
 				this.totalPages > this.maxVisibleButtons
 			) {
-				return this.totalPages - this.maxVisibleButtons + 1;
+				return this.totalPages - this.maxVisibleButtons + 1
 			}
 
-			return this.currentPage - 2;
+			return this.currentPage - 2
 		},
-		pages() {
-			const range = [];
-			for (
-				let i = this.startPage;
-				i <=
-				Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages);
-				i += 1
-			) {
+		pages () {
+			const range = []
+			for (let i = this.startPage; i <=Math.min(this.startPage + this.maxVisibleButtons - 1, this.totalPages); i += 1) {
 				range.push({
 					name: i,
 					isDisabled: i === this.currentPage
-				});
+				})
 			}
-			return range;
+			return range
 		}
-	},
-	mounted() {
-		this.selectedLimit = this.perPage;
 	},
 	watch: {
-		selectedLimit(newValue, oldValue) {
+		selectedLimit (newValue, oldValue) {
 			if ((newValue, oldValue)) {
-				this.$emit("limitchanged", newValue);
+				this.$emit("limitchanged", newValue)
 			}
 		}
 	},
-	data() {
-		return {
-			selectedLimit: null
-		};
+	mounted () {
+		console.log('total', this.total)
+		console.log('totalPages', this.totalPages)
+		this.selectedLimit = this.perPage
 	},
 	methods: {
-		pageInfo(perPage, currentPage, total) {
+		pageInfo (perPage, currentPage, total) {
 			return ` Showing ${perPage * currentPage + 1 - perPage} to
       		${
 						Math.ceil(total / perPage) === currentPage
 							? total
 							: currentPage * perPage
-					} of ${total} items`;
+					} of ${total} items`
 		},
-		onClickFirstPage() {
-			this.$emit("pagechanged", 1);
+		onClickFirstPage () {
+			this.$emit("pagechanged", 1)
 		},
-		onClickPreviousPage() {
-			this.$emit("pagechanged", this.currentPage - 1);
+		onClickPreviousPage () {
+			this.$emit("pagechanged", this.currentPage - 1)
 		},
-		onClickPage(page) {
-			this.$emit("pagechanged", page);
+		onClickPage (page) {
+			this.$emit("pagechanged", page)
 		},
-		onClickNextPage() {
-			this.$emit("pagechanged", this.currentPage + 1);
+		onClickNextPage () {
+			this.$emit("pagechanged", this.currentPage + 1)
 		},
-		onClickLastPage() {
-			this.$emit("pagechanged", this.totalPages);
+		onClickLastPage () {
+			this.$emit("pagechanged", this.totalPages)
 		},
-		isPageActive(page) {
-			return this.currentPage === page;
+		isPageActive (page) {
+			return this.currentPage === page
 		}
 	}
-};
+}
 </script>
 <style scoped>
 .page-button {

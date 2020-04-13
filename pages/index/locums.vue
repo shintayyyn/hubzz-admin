@@ -9,7 +9,7 @@
 						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
 						placeholder="Search Locum by Name"
 						@keyup.enter="searchSubmit"
-					/>
+					>
 					<button
 						v-if="search"
 						class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
@@ -62,7 +62,7 @@
 		</div>
 
 		<AppTable
-			v-if="itemCount > 0"
+			v-if="itemCount !== 0"
 			:total="itemCount"
 			:items="locumUsers"
 			:currentPage="currentPage"
@@ -100,14 +100,14 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce";
-import AppTable from "@/components/Base/AppTable";
+import debounce from "lodash.debounce"
+import AppTable from "@/components/Base/AppTable"
 
 export default {
 	components: {
 		AppTable
 	},
-	data() {
+	data () {
 		return {
 			currentPage: 1,
 
@@ -181,68 +181,68 @@ export default {
 					slotName: "compliance_slot"
 				}
 			]
-		};
+		}
 	},
 	watchQuery: ["page", "search", "compliance_status"],
 
 	computed: {
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
 		},
-		loadingLocums() {
-			return this.$store.state.locums.loading_locums;
+		loadingLocums () {
+			return this.$store.state.locums.loading_locums
 		},
-		locumUsers() {
-			// return this.$store.state.locums.locumUsers;
-			return this.$store.getters["locums/getLocumUsers"];
+		locumUsers () {
+			// return this.$store.state.locums.locumUsers
+			return this.$store.getters["locums/getLocumUsers"]
 		},
-		itemCount() {
-			return this.$store.state.locums.itemCount;
+		itemCount () {
+			return this.$store.state.locums.itemCount
 		},
-		totalPages() {
-			return Math.ceil(this.itemCount / this.params.limit);
+		totalPages () {
+			return Math.ceil(this.itemCount / this.params.limit)
 		},
-		total() {
-			return this.locumUsers.length;
+		total () {
+			return this.locumUsers.length
 		}
 	},
 
 	watch: {
-		async filterCompliances() {
+		async filterCompliances () {
 			const query = {
 				...this.$router.query
-			};
+			}
 
-			query.compliance_status = this.filterCompliances;
+			query.compliance_status = this.filterCompliances
 
 			if (this.filterCompliances === "") {
-				delete query.compliance_status;
+				delete query.compliance_status
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
+				this.loading = true
 			}
 
-			// this.$router.push({ query });
+			// this.$router.push({ query })
 
-			const params = {};
+			const params = {}
 
 			if (this.search) {
-				params.search = this.search;
+				params.search = this.search
 			}
 
 			if (this.filterCompliances) {
-				params.compliance_status = this.filterCompliances;
+				params.compliance_status = this.filterCompliances
 			}
 
-			this.params.compliance_status = this.filterCompliances;
+			this.params.compliance_status = this.filterCompliances
 
-			this.getLocums(this.params);
+			this.getLocums(this.params)
 		},
-		search() {
-			this.searchSubmit();
+		search () {
+			this.searchSubmit()
 		},
-		sort(value) {
+		sort (value) {
 			// for mobile responsive filter
 			if (value === "Name") {
 				this.sortBy(
@@ -250,7 +250,7 @@ export default {
 					this.currentPage,
 					this.search,
 					this.filterCompliances
-				);
+				)
 			}
 			if (value === "Profession") {
 				this.sortBy(
@@ -258,7 +258,7 @@ export default {
 					this.currentPage,
 					this.search,
 					this.filterCompliances
-				);
+				)
 			}
 			if (value === "Date signed-up") {
 				this.sortBy(
@@ -266,7 +266,7 @@ export default {
 					this.currentPage,
 					this.search,
 					this.filterCompliances
-				);
+				)
 			}
 			if (value === "Sign-up verified") {
 				this.sortBy(
@@ -274,84 +274,84 @@ export default {
 					this.currentPage,
 					this.search,
 					this.filterCompliances
-				);
+				)
 			}
 		}
 	},
-	async asyncData({ app, store, route, error }) {
+	async asyncData ({ app, store, route, error }) {
 		try {
-			await store.commit("locums/TOGGLE_LOADING", true);
+			await store.commit("locums/TOGGLE_LOADING", true)
 			let {
 				page = 1,
 				search = "",
 				order_by = [],
 				compliance_status = null
-			} = route.query;
+			} = route.query
 
 			// if (!compliance_status) {
 			// }
-			page = parseInt(page);
-			const createdRoute = route.query;
-			const limit = 10;
-			const offset = page * limit - limit;
+			page = parseInt(page)
+			const createdRoute = route.query
+			const limit = 10
+			const offset = page * limit - limit
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
-					: "created_at:desc";
-			const params = { limit, offset, order_by };
+					: "created_at:desc"
+			const params = { limit, offset, order_by }
 
 			if (search) {
-				params.search = search;
+				params.search = search
 			}
-			params.compliance_status = compliance_status;
+			params.compliance_status = compliance_status
 			const getLocumUsersCountPromise = app.$axios.$get(
 				`/api/v1/admin/locum-users/count`,
 				{ params }
-			);
+			)
 			const getLocumUsersPromise = app.$axios.$get(
 				`/api/v1/admin/locum-users`,
 				{ params }
-			);
+			)
 
-			let response = await getLocumUsersCountPromise;
-			const itemCount = response.data.count;
-			await store.commit("locums/SET_LOCUM_COUNT", itemCount); // put the obtained data from the database to the state
+			let response = await getLocumUsersCountPromise
+			const itemCount = response.data.count
+			await store.commit("locums/SET_LOCUM_COUNT", itemCount) // put the obtained data from the database to the state
 
-			response = await getLocumUsersPromise;
-			const locumUsers = response.data.users;
+			response = await getLocumUsersPromise
+			const locumUsers = response.data.users
 
-			await store.commit("locums/SET_LOCUM_USERS", locumUsers); // 'SET_DATA_PROPERTY denotes a mutation
+			await store.commit("locums/SET_LOCUM_USERS", locumUsers) // 'SET_DATA_PROPERTY denotes a mutation
 
-			await store.commit("locums/TOGGLE_LOADING", false);
+			await store.commit("locums/TOGGLE_LOADING", false)
 			return {
 				filterCompliances: compliance_status,
 				perPage: limit,
 				currentPage: page,
 				search,
 				order_by
-			};
+			}
 		} catch (err) {
 			if (err.response && err.response.status === 401) {
-				console.log("something went wrong");
-				error(err.response.data);
-				return;
+				console.log("something went wrong")
+				error(err.response.data)
+				return
 			}
-			throw err;
-			// error({ statusCode: 404 });
+			throw err
+			// error({ statusCode: 404 })
 			// // store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			// console.log("Get locums error!", err);
+			// console.log("Get locums error!", err)
 		}
 	},
 
 	methods: {
-		getQuery() {
+		getQuery () {
 			const query = {
 				...this.$route.query
-			};
-			const offset = parseInt(query.page) * 10 - 10;
-			return offset;
+			}
+			const offset = parseInt(query.page) * 10 - 10
+			return offset
 		},
-		getLocums() {
+		getLocums () {
 			this.$store.dispatch("locums/fetchLocums", {
 				countOnly: true,
 				limit: this.params.limit,
@@ -359,92 +359,92 @@ export default {
 				compliance_status: this.params.compliance_status,
 				order_by: this.params.order_by,
 				offset: this.params.offset
-			});
+			})
 			this.$store.dispatch("locums/fetchLocums", {
 				limit: this.params.limit,
 				search: this.params.search,
 				compliance_status: this.params.compliance_status,
 				order_by: this.params.order_by,
 				offset: this.params.offset
-			});
+			})
 		},
-		async sortBy(sortedBy, page, search, compliance_status) {
+		async sortBy (sortedBy, page, search, compliance_status) {
 			if (this.sortedBy == sortedBy && this.sortType == true) {
-				this.params.order_by = "created_at:desc";
-				this.sortedBy = "";
+				this.params.order_by = "created_at:desc"
+				this.sortedBy = ""
 			} else {
-				this.sortedBy = sortedBy;
-				this.sortType = !this.sortType;
+				this.sortedBy = sortedBy
+				this.sortType = !this.sortType
 				this.params.order_by = await `${sortedBy}:${
 					this.sortType ? "asc" : "desc"
-				}`;
+				}`
 			}
-			let order_by = await this.params.order_by;
-			// console.log(order_by);
+			let order_by = await this.params.order_by
+			// console.log(order_by)
 			let query = {
 				...this.$router.query,
 				order_by
-			};
+			}
 			if (page === 1) {
-				delete query.page;
+				delete query.page
 			}
 			if (page) {
-				query = { ...this.$router.query, page, order_by };
+				query = { ...this.$router.query, page, order_by }
 			}
 			if (search) {
-				query = { ...this.$router.query, search, order_by };
+				query = { ...this.$router.query, search, order_by }
 			}
 			if (compliance_status) {
-				query = { ...this.$route.query, compliance_status, order_by };
+				query = { ...this.$route.query, compliance_status, order_by }
 			}
 			if (page && search) {
-				query = { ...this.$router.query, page, search, order_by };
+				query = { ...this.$router.query, page, search, order_by }
 			}
 			if (page && compliance_status) {
-				query = { ...this.$router.query, page, compliance_status, order_by };
+				query = { ...this.$router.query, page, compliance_status, order_by }
 			}
 			if (search && compliance_status) {
-				query = { ...this.$router.query, search, compliance_status, order_by };
+				query = { ...this.$router.query, search, compliance_status, order_by }
 			}
 			if (page && search && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status };
+				query = { ...this.$router.query, page, search, compliance_status }
 			}
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
+				this.loading = true
 			}
-			this.$router.push({ query });
+			this.$router.push({ query })
 
-			this.params.search = search;
-			this.params.compliance_status = compliance_status;
-			this.getLocums(this.params);
+			this.params.search = search
+			this.params.compliance_status = compliance_status
+			this.getLocums(this.params)
 		},
 
-		searchSubmit: debounce(function(page, order_by, compliance_status) {
-			let search = this.search;
+		searchSubmit: debounce(function (page, order_by, compliance_status) {
+			let search = this.search
 
-			let query = { ...this.$router.query, search };
+			let query = { ...this.$router.query, search }
 
 			if (page === 1) {
-				delete query.page;
+				delete query.page
 			}
 
 			if (page) {
-				query = { ...this.$router.query, page, search };
+				query = { ...this.$router.query, page, search }
 			}
 			if (order_by) {
-				query = { ...this.$router.query, search, order_by };
+				query = { ...this.$router.query, search, order_by }
 			}
 			if (compliance_status) {
-				query = { ...this.$router.query, search, compliance_status };
+				query = { ...this.$router.query, search, compliance_status }
 			}
 			if (page && order_by) {
-				query = { ...this.$router.query, page, search, order_by };
+				query = { ...this.$router.query, page, search, order_by }
 			}
 			if (page && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status };
+				query = { ...this.$router.query, page, search, compliance_status }
 			}
 			if (compliance_status && order_by) {
-				query = { ...this.$router.query, search, compliance_status, order_by };
+				query = { ...this.$router.query, search, compliance_status, order_by }
 			}
 			if (page && compliance_status && order_by) {
 				query = {
@@ -453,80 +453,80 @@ export default {
 					search,
 					compliance_status,
 					order_by
-				};
+				}
 			}
 			if (this.search === "") {
-				delete query.search;
+				delete query.search
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
+				this.loading = true
 			}
 
-			this.$router.push({ query });
+			this.$router.push({ query })
 		}, 500),
 
-		statusStyle(status) {
+		statusStyle (status) {
 			switch (status) {
 				case "Active":
-					return "bg-green-500 text-white";
+					return "bg-green-500 text-white"
 				case "Inactive":
-					return "bg-gray-500 text-gray-700";
+					return "bg-gray-500 text-gray-700"
 				case "Deactivated":
-					return "bg-red-800 text-red-400";
+					return "bg-red-800 text-red-400"
 				case "Suspended":
-					return "bg-red-600 text-white";
+					return "bg-red-600 text-white"
 				case "Dormant":
-					return "bg-orange-500 text-white";
+					return "bg-orange-500 text-white"
 				default:
-					return;
+					return
 			}
 		},
 
-		complianceStatusStyle(status) {
+		complianceStatusStyle (status) {
 			switch (status) {
 				case "Empty":
-					return "border border-white text-white";
+					return "border border-white text-white"
 				case "Incomplete":
-					return "bg-orange-600 text-white";
+					return "bg-orange-600 text-white"
 				case "Pending":
-					return "bg-yellow-500 text-yellow-800";
+					return "bg-yellow-500 text-yellow-800"
 				case "Expiring":
-					return "bg-red-400 text-white";
+					return "bg-red-400 text-white"
 				case "Expired":
-					return "bg-red-800 text-red-400";
+					return "bg-red-800 text-red-400"
 				case "Rejected":
-					return "bg-red-600 text-white";
+					return "bg-red-600 text-white"
 				case "Compliant":
-					return "bg-green-500 text-white";
+					return "bg-green-500 text-white"
 				default:
-					return;
+					return
 			}
 		},
-		usersDeletedHandler(userId) {
-			console.log("usersDeletedHandler", userId);
+		usersDeletedHandler (userId) {
+			console.log("usersDeletedHandler", userId)
 		},
-		pagechanged(page) {
+		pagechanged (page) {
 			// const query = {
 			// 	...this.$route.query,
 			// 	page: page || 1
 			// }
-			this.params.offset = this.params.limit * (page - 1);
-			this.currentPage = page;
-			this.getLocums(this.params);
+			this.params.offset = this.params.limit * (page - 1)
+			this.currentPage = page
+			this.getLocums(this.params)
 		},
-		async limitchanged(limit) {
-			this.current_page = 1;
-			this.params.limit = limit;
-			await this.getLocums(this.params);
+		async limitchanged (limit) {
+			this.current_page = 1
+			this.params.limit = limit
+			await this.getLocums(this.params)
 		},
-		async sorted(order_by) {
-			this.current_page = 1;
-			this.params.order_by = order_by;
-			this.getLocums(this.params);
+		async sorted (order_by) {
+			this.current_page = 1
+			this.params.order_by = order_by
+			this.getLocums(this.params)
 		}
 	}
-};
+}
 </script>
 <style>
 .page-button {
