@@ -57,7 +57,7 @@
               <strong class="block md:hidden text-sm uppercase">Created At</strong>
               <span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
-						<div
+            <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Completed At</strong>
@@ -77,7 +77,7 @@
           </nuxt-link>
         </div>
       </div>
-      <div v-if="!completedJobParts.length == 0" class>
+      <div class>
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -106,7 +106,21 @@ export default {
 		PracticeSessionModal,
 		AppJobHeaderSort
 	},
-	props: ["practice", "practice_surgery"],
+
+	props: {
+
+		practice: {
+			type: Object,
+			default: () => null,
+		},
+
+		practiceSurgery: {
+			type: Object,
+			default: () => null,
+		},
+	
+	},
+
 	data () {
 		return {
 			// completedJobParts:[],

@@ -56,7 +56,7 @@
         </div>
       </div>
 
-      <div v-if="!approvedJobParts.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :total-pages="totalPages"
@@ -86,16 +86,21 @@ export default {
       PracticeSessionModal,
       AppJobHeaderSort
     },
-    props:{
+
+    props: {
+
       practice: {
         type: Object,
-        default: null,
+        default: () => null,
       },
+
       practiceSurgery: {
         type: Object,
-        default: null,
+        default: () => null,
       },
+      
     },
+
     data (){
       return{
         // approvedJobParts:[],

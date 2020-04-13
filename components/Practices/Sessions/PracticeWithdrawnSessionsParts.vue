@@ -50,7 +50,7 @@
           </nuxt-link>
         </div>
       </div>
-      <div v-if="!withdrawnJobs.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :total-pages="totalPages"

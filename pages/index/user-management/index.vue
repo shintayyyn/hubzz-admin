@@ -1,147 +1,160 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-auto">
-		<transition name="drop" mode="out-in">
-			<AppConfirm
-				v-if="showConfirmCancelModal === true"
-				:message="'Are you sure you want to delete this user?'"
-				@cancel="showConfirmCancelModal=false"
-				@confirm="performAction()"
-			/>
-		</transition>
-		<div class="flex flex-wrap items-center px-4 md:px-6 py-2 text-sm">
-			<AppButton
-				v-if="authAdminPermissions.includes('Create Admin Account')"
-				:label="'Create Admin Account'"
-				:icon="'add-user'"
-				:iconSize="'16'"
-				class="my-1 mr-2"
-				@click="modal = true, deleteAdminUser = false"
-			/>
-			<template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
-				<AppButton
-					class="my-1 text-white"
-					v-if="authAdminPermissions.includes('Delete Admin Account')"
-					:label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
-					:icon="deleteAdminUser ? 'circle-check' : 'garbage'"
-					:iconSize="deleteAdminUser ? '21' : '16'"
-					:background="deleteAdminUser ? 'green' : 'red'"
-					@click="deleteAdminUser = !deleteAdminUser"
-				/>
-			</template>
-		</div>
-		<div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6 py-2">
-			<div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
-				<div class="align-middle w-10" v-if="deleteAdminUser == true"></div>
-				<div class="align-middle px-2 w-1/3">E-Mail</div>
-				<div class="align-middle px-2 w-1/3">Roles</div>
-				<div class="align-middle px-2 w-1/3">Name</div>
-				<div class="align-middle px-2 w-1/3">Created At</div>
-				<div class="align-middle px-2 w-1/3">Updated At</div>
-			</div>
-			<div v-for="(user, index) in adminUsers" :key="`user-${index}`" class="flex">
-				<div
-					class="flex justify-center items-center w-10 align-middle text-center"
-					v-if="deleteAdminUser == true"
-				>
-					<svgicon
-						v-if="$auth.user.id != user.id"
-						@click.prevent="toDeleteAdminUser(user.id)"
-						name="delete-user"
-						width="21"
-						height="21"
-						class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
-					/>
-					<span v-else class="text-sm text-gray-500">You</span>
-				</div>
-				<nuxt-link
-					:to="{ path: `/user-management/${user.id}`, query: $route.query }"
-					class="w-full flex flex-col md:flex-row justify-between px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-				>
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-					>
-						<strong class="block md:hidden text-xs uppercase">E-Mail</strong>
-						<span class="break-word">{{ user && user.email ? user.email : null }}</span>
-					</div>
+  <div class="flex-1 flex flex-col overflow-auto">
+    <transition name="drop" mode="out-in">
+      <AppConfirm
+        v-if="showConfirmCancelModal === true"
+        :message="'Are you sure you want to delete this user?'"
+        @cancel="showConfirmCancelModal=false"
+        @confirm="performAction()"
+      />
+    </transition>
+    <div class="flex flex-wrap items-center px-4 md:px-6 py-2 text-sm">
+      <AppButton
+        v-if="authAdminPermissions.includes('Create Admin Account')"
+        :label="'Create Admin Account'"
+        :icon="'add-user'"
+        :iconSize="'16'"
+        class="my-1 mr-2"
+        @click="modal = true, deleteAdminUser = false"
+      />
+      <template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
+        <AppButton
+          v-if="authAdminPermissions.includes('Delete Admin Account')"
+          class="my-1 text-white"
+          :label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
+          :icon="deleteAdminUser ? 'circle-check' : 'garbage'"
+          :iconSize="deleteAdminUser ? '21' : '16'"
+          :background="deleteAdminUser ? 'green' : 'red'"
+          @click="deleteAdminUser = !deleteAdminUser"
+        />
+      </template>
+    </div>
+    <div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6 py-2">
+      <div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
+        <div v-if="deleteAdminUser == true" class="align-middle w-10" />
+        <div class="align-middle px-2 w-1/3">
+          E-Mail
+        </div>
+        <div class="align-middle px-2 w-1/3">
+          Roles
+        </div>
+        <div class="align-middle px-2 w-1/3">
+          Name
+        </div>
+        <div class="align-middle px-2 w-1/3">
+          Created At
+        </div>
+        <div class="align-middle px-2 w-1/3">
+          Updated At
+        </div>
+      </div>
+      <div v-for="(user, index) in adminUsers" :key="`user-${index}`" class="flex">
+        <div
+          v-if="deleteAdminUser == true"
+          class="flex justify-center items-center w-10 align-middle text-center"
+        >
+          <svgicon
+            v-if="$auth.user.id != user.id"
+            name="delete-user"
+            width="21"
+            height="21"
+            class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
+            @click.prevent="toDeleteAdminUser(user.id)"
+          />
+          <span v-else class="text-sm text-gray-500">You</span>
+        </div>
+        <nuxt-link
+          :to="{ path: `/user-management/${user.id}`, query: $route.query }"
+          class="w-full flex flex-col md:flex-row justify-between px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
+        >
+          <div
+            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+          >
+            <strong class="block md:hidden text-xs uppercase">E-Mail</strong>
+            <span class="break-word">{{ user && user.email ? user.email : null }}</span>
+          </div>
 
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-					>
-						<strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-						<div v-if="user && user.admin_detail && user.admin_detail.roles">
-							<div
-								v-for="(role, index) in user.admin_detail.roles"
-								:key="`role-${index}`"
-								class
-							>{{ role.name }}</div>
-						</div>
-					</div>
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-					>
-						<strong class="block md:hidden text-xs uppercase">Name</strong>
-						<span class="break-all">
-							{{
-							user && user.personal_detail
-							? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
-							: null
-							}}
-						</span>
-					</div>
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-					>
-						<strong class="block md:hidden text-xs uppercase">Created At</strong>
-						<span>
-							{{$moment(user.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
-							<!-- {{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
-						</span>
-					</div>
-					<div
-						class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-					>
-						<strong class="block md:hidden text-xs uppercase">Updated At</strong>
-						<span>
-							{{$moment(user.updated_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')}}
-							<!-- {{$moment(user.updated_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
-						</span>
-					</div>
-				</nuxt-link>
-			</div>
-		</div>
+          <div
+            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+          >
+            <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
+            <div v-if="user && user.admin_detail && user.admin_detail.roles">
+              <div
+                v-for="(role, roleIndex) in user.admin_detail.roles"
+                :key="`role-${roleIndex}`"
+                class
+              >
+                {{ role.name }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+          >
+            <strong class="block md:hidden text-xs uppercase">Name</strong>
+            <span class="break-all">
+              {{
+                user && user.personal_detail
+                  ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
+                  : null
+              }}
+            </span>
+          </div>
+          <div
+            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+          >
+            <strong class="block md:hidden text-xs uppercase">Created At</strong>
+            <span>
+              {{ $moment(user.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') }}
+              <!-- {{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
+            </span>
+          </div>
+          <div
+            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
+          >
+            <strong class="block md:hidden text-xs uppercase">Updated At</strong>
+            <span>
+              {{ $moment(user.updated_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') }}
+              <!-- {{$moment(user.updated_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
+            </span>
+          </div>
+        </nuxt-link>
+      </div>
+    </div>
 
-		<AppPagination
-			v-if="total > 0"
-			class="px-4 md:px-6"
-			:total="total"
-			:totalPages="totalPages"
-			:currentPage="currentPage"
-			:perPage="itemsPerPage"
-			@pagechanged="pagechanged"
-		/>
-		<p class="px-6 py-2 text-white" v-if="total === 0">No admin users.</p>
+    <AppPagination
+      class="px-4 md:px-6"
+      :total="total"
+      :totalPages="totalPages"
+      :currentPage="currentPage"
+      :perPage="itemsPerPage"
+      @pagechanged="pagechanged"
+    />
+    <p v-if="total === 0" class="px-6 py-2 text-white">
+      No admin users.
+    </p>
 
-		<div class="new-user-shield" v-if="modal" @click="modal = false"></div>
-		<transition name="slide" mode="out-in">
-			<!-- <div class="new-user-modal" > -->
-			<CreateUser v-if="modal" @close="modal = false" :registeeType="'admin'" />
-			<!-- </div> -->
-		</transition>
+    <div v-if="modal" class="new-user-shield" @click="modal = false" />
+    <transition name="slide" mode="out-in">
+      <!-- <div class="new-user-modal" > -->
+      <CreateUser v-if="modal" :registeeType="'admin'" @close="modal = false" />
+      <!-- </div> -->
+    </transition>
 
-		<div
-			class="new-user-shield"
-			v-if="showConfirmCancelModal"
-			@click="showConfirmCancelModal? (showConfirmCancelModal = false): $router.go(-1)"
-			@close="showConfirmCancelModal = false"
-		/>
-	</div>
+    <div
+      v-if="showConfirmCancelModal"
+      class="new-user-shield"
+      @click="showConfirmCancelModal? (showConfirmCancelModal = false): $router.go(-1)"
+      @close="showConfirmCancelModal = false"
+    />
+  </div>
 </template>
+
 <script>
-import CreateUser from "@/components/UserManagement/CreateUser";
-import AppConfirm from "@/components/Base/AppConfirm";
-import AppPagination from "@/components/Base/AppPagination";
-import AppButton from "@/components/Base/AppButton";
-import AppTable from "@/components/Base/AppTable";
+import CreateUser from "@/components/UserManagement/CreateUser"
+import AppConfirm from "@/components/Base/AppConfirm"
+import AppPagination from "@/components/Base/AppPagination"
+import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
 		CreateUser,
@@ -149,7 +162,7 @@ export default {
 		AppPagination,
 		AppButton
 	},
-	data() {
+	data () {
 		return {
 			itemsPerPage: 10,
 			currentPage: 1,
@@ -191,135 +204,135 @@ export default {
 					class: "text-center"
 				}
 			]
-		};
+		}
 	},
-	created() {
-		console.log("admin users", this.adminUsers);
+	computed: {
+		socketId () {
+			return this.$store.state.socket_id
+		},
+		loadingAdminUsers () {
+			return this.$store.state.adminusers.loading_admin_users
+		},
+		adminUsers () {
+			return this.$store.getters["adminusers/getAdminUsers"]
+		},
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		},
+		itemCount () {
+			return this.$store.state.adminusers.itemCount
+		},
+		totalPages () {
+			return Math.ceil(this.itemCount / this.itemsPerPage)
+		},
+		total () {
+			return this.adminUsers.length
+		}
 	},
-	watchQuery: ["page", "search"],
-	async asyncData({ app, store, route }) {
+	async asyncData ({ app, store, route }) {
 		try {
-			await store.commit("adminusers/TOGGLE_LOADING", true);
-			let { page = 1, search = "" } = route.query;
+			await store.commit("adminusers/TOGGLE_LOADING", true)
+			let { page = 1, search = "" } = route.query
 
-			page = parseInt(page);
-			const limit = 10;
-			const offset = page * limit - limit;
-			const params = { limit, offset };
+			page = parseInt(page)
+			const limit = 10
+			const offset = page * limit - limit
+			const params = { limit, offset }
 
 			if (search) {
-				params.search = search;
+				params.search = search
 			}
 			const getAdminUsersCount = await app.$axios.$get(
 				`/api/v1/admin/admin-users/count`,
 				{ params }
-			);
+			)
 			const getAdminUsers = await app.$axios.$get(`/api/v1/admin/admin-users`, {
 				params
-			});
+			})
 
-			let response = await getAdminUsersCount;
-			const itemCount = response.data.count;
+			let response = await getAdminUsersCount
+			const itemCount = response.data.count
 
-			response = await getAdminUsers;
-			const adminUsers = response.data.users;
+			response = await getAdminUsers
+			const adminUsers = response.data.users
 
 			//store users and count here
-			await store.commit("adminusers/SET_ADMIN_COUNT", itemCount);
-			await store.commit("adminusers/SET_ADMIN_USERS", adminUsers);
-			await store.commit("adminusers/TOGGLE_LOADING", false);
+			await store.commit("adminusers/SET_ADMIN_COUNT", itemCount)
+			await store.commit("adminusers/SET_ADMIN_USERS", adminUsers)
+			await store.commit("adminusers/TOGGLE_LOADING", false)
 			return {
 				itemsPerPage: limit,
 				currentPage: page,
 				search
 				//itemCount, //store
 				//adminUsers //store
-			};
+			}
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
-			console.log("get users error", err);
+			})
+			console.log("get users error", err)
 		}
 	},
-	computed: {
-		socketId() {
-			return this.$store.state.socket_id;
-		},
-		loadingAdminUsers() {
-			return this.$store.state.adminusers.loading_admin_users;
-		},
-		adminUsers() {
-			return this.$store.getters["adminusers/getAdminUsers"];
-		},
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
-		},
-		itemCount() {
-			return this.$store.state.adminusers.itemCount;
-		},
-		totalPages() {
-			return Math.ceil(this.itemCount / this.itemsPerPage);
-		},
-		total() {
-			return this.adminUsers.length;
-		}
+	created () {
+		console.log("admin users", this.adminUsers)
 	},
+	watchQuery: ["page", "search"],
 	methods: {
-		getQuery() {
+		getQuery () {
 			const query = {
 				...this.$route.query
-			};
-			const offset = parseInt(query.page) * 10 - 10;
-			return offset;
+			}
+			const offset = parseInt(query.page) * 10 - 10
+			return offset
 		},
-		getAdmins(params) {
+		getAdmins (params) {
 			this.$store.dispatch("adminusers/fetchAdminUsers", {
 				limit: 10,
 				search: params.search,
 				offset: this.getQuery()
-			});
+			})
 		},
-		toDeleteAdminUser(userId) {
-			this.adminAccountId = userId;
-			this.showConfirmCancelModal = true;
+		toDeleteAdminUser (userId) {
+			this.adminAccountId = userId
+			this.showConfirmCancelModal = true
 		},
-		async performAction() {
+		async performAction () {
 			if (this.adminAccountId) {
 				await this.$axios
 					.$delete(`/api/v1/admin/admin-users/${this.adminAccountId}`)
 					.then(res => {
-						console.log(res);
-						this.$store.getters["adminusers/getAdminUsers"];
-						this.$emit("close");
+						console.log(res)
+						this.$store.getters["adminusers/getAdminUsers"]
+						this.$emit("close")
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
 							text: "Admin Account Successfully Deleted"
-						});
+						})
 					})
 					.catch(err => {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",
 							text: err.response.data.message
-						});
-					});
+						})
+					})
 			}
-			this.showConfirmCancelModal = false;
+			this.showConfirmCancelModal = false
 		},
-		pagechanged(e) {
+		pagechanged (e) {
 			const query = {
 				...this.$route.query,
 				page: e || 1
-			};
-			this.$router.push({ query });
-			this.getAdmins(this.params);
+			}
+			this.$router.push({ query })
+			this.getAdmins(this.params)
 		}
 	}
-};
+}
 </script>
 <style>
 .new-user-shield {
