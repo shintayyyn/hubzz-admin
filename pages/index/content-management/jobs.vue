@@ -188,11 +188,12 @@
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getJobs()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getJobs()
       },
 

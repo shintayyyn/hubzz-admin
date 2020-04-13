@@ -76,6 +76,14 @@
             title: 'Notifications',
             url: '/content-management/notifications',
           },
+          {
+            title: 'Email Types',
+            url: '/content-management/email-types',
+          },
+          {
+            title: 'Emails',
+            url: '/content-management/emails',
+          },
         ],
       }
     },

@@ -2,14 +2,14 @@
   <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
     <div class="flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/content-management/notifications" class="text-white hover:text-sunglow p-1">
+        <nuxt-link to="/content-management/emails" class="text-white hover:text-sunglow p-1">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
 
       <div class="flex-1 flex flex-col py-2">
         <div class="text-xl md:text-2xl text-white">
-          <span>View Notification</span>
+          <span>View Email</span>
         </div>
     
         <div class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
@@ -24,7 +24,7 @@
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
                   <span class="pl-4 py-2 font-bold text-xs sm:text-sm">
-                    <span>{{ notification && notification.user ? notification.user.name : null }}</span>
+                    <span>{{ email && email.user ? email.user.name : null }}</span>
                   </span>
                 </div>
               </div>
@@ -33,14 +33,14 @@
             <div class="flex flex-col py-2">
               <div class="relative flex justify-between flex-wrap leading-none">
                 <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
-                  <span>Notification Type</span>
+                  <span>Email Type</span>
                 </label>
               </div>
       
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
                   <span class="pl-4 py-2 font-bold text-xs sm:text-sm">
-                    <span>{{ notification && notification.notification_type ? notification.notification_type.name : null }}</span>
+                    <span>{{ email && email.email_type ? email.email_type.name : null }}</span>
                   </span>
                 </div>
               </div>
@@ -49,7 +49,7 @@
             <div class="flex flex-col py-2">
               <div class="relative flex justify-between flex-wrap leading-none">
                 <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
-                  <span>Seen At</span>
+                  <span>Sent At</span>
                 </label>
               </div>
       
@@ -57,8 +57,8 @@
                 <div class="flex flex-col w-full">
                   <span class="pl-4 py-2 font-bold text-xs sm:text-sm">
                     <span>{{
-                      notification && notification.seen_at
-                        ? $moment(notification.seen_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm')
+                      email && email.sent_at
+                        ? $moment(email.sent_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm')
                         : null
                     }}</span>
                   </span>
@@ -77,8 +77,8 @@
                 <div class="flex flex-col w-full">
                   <span class="pl-4 py-2 font-bold text-xs sm:text-sm">
                     <span>{{
-                      notification && notification.created_at
-                        ? $moment(notification.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm')
+                      email && email.created_at
+                        ? $moment(email.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm')
                         : null
                     }}</span>
                   </span>
@@ -96,7 +96,23 @@
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
                   <span class="pl-4 py-2 font-bold text-xs sm:text-sm overflow-auto bg-trout" style="height: 300px;">
-                    <span class="whitespace-pre-wrap">{{ notification && notification.payload ? JSON.stringify(notification.payload, null, 4) : null }}</span>
+                    <span class="whitespace-pre-wrap">{{ email && email.payload ? JSON.stringify(email.payload, null, 4) : null }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col py-2">
+              <div class="relative flex justify-between flex-wrap leading-none">
+                <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
+                  <span>Reponse</span>
+                </label>
+              </div>
+      
+              <div class="flex flex-row justify-start">
+                <div class="flex flex-col w-full">
+                  <span class="pl-4 py-2 font-bold text-xs sm:text-sm overflow-auto bg-trout" style="height: 300px;">
+                    <span class="whitespace-pre-wrap">{{ email && email.response ? JSON.stringify(email.response, null, 4) : null }}</span>
                   </span>
                 </div>
               </div>
@@ -104,7 +120,7 @@
 
             <div class="mt-4">
               <nuxt-link
-                :to="`/content-management/notifications/${$route.params.id}/edit`"
+                :to="`/content-management/emails/${$route.params.id}/edit`"
                 class="
                   inline-flex items-center text-black text-sm rounded-lg py-2 px-4
                   font-bold focus:outline-none transitions-colors duration-150 ease-liner
@@ -120,7 +136,7 @@
                   font-bold focus:outline-none transitions-colors duration-150 ease-liner
                   bg-red-500 hover:bg-red-600 text-white
                 "
-                @click="deleteNotification"
+                @click="deleteEmail"
               >
                 <span>Delete</span>
               </button>
@@ -137,14 +153,14 @@
     data () {
       return {
         loading: false,
-        notification: null,
+        email: null,
       }
     },
 
     mounted () {
       this.loading = true
-      this.$axios.get(`/api/v1/admin/notifications/${this.$route.params.id}`).then((response) => {
-        this.notification = response.data.data.notification
+      this.$axios.get(`/api/v1/admin/emails/${this.$route.params.id}`).then((response) => {
+        this.email = response.data.data.email
       }).catch((err) => {
         console.log('err', err)
         this.$nuxt.error(err)
@@ -154,19 +170,19 @@
     },
 
     methods: {
-      deleteNotification () {
+      deleteEmail () {
         const result = window
-          ? window.confirm('Are you sure you want to delete this notification?')
+          ? window.confirm('Are you sure you want to delete this email?')
           : true
 
         if (result) {
-          const notificationId = this.notification.id
+          const emailId = this.email.id
           this.loading = true
-          this.$axios.delete(`/api/v1/admin/notifications/${notificationId}`).then(() => {
-            this.$emit('notificationDeleted', {
-              id: notificationId,
+          this.$axios.delete(`/api/v1/admin/emails/${emailId}`).then(() => {
+            this.$emit('emailDeleted', {
+              id: emailId,
             })
-            this.$router.push('/content-management/notifications')
+            this.$router.push('/content-management/emails')
           }).catch((err) => {
             console.log('err', err)
             this.$nuxt.error(err)

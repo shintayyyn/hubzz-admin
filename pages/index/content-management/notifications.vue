@@ -170,11 +170,12 @@
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getNotifications()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getNotifications()
       },
 

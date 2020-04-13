@@ -165,11 +165,12 @@
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getNotificationTypes()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getNotificationTypes()
       },
 
