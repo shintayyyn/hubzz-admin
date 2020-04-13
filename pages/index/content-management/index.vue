@@ -53,6 +53,10 @@
             url: '/content-management/practice-users',
           },
           {
+            title: 'Locum Users',
+            url: '/content-management/locum-users',
+          },
+          {
             title: 'Jobs',
             url: '/content-management/jobs',
           },
