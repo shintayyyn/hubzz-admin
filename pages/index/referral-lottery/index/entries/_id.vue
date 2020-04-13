@@ -56,7 +56,7 @@
         orderBy: [],
         current_page: 1,
         offset: 0,
-        limit: 2,
+        limit: 5,
       }
     },
 
