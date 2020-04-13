@@ -41,8 +41,8 @@
                         <div
                           v-if="!notification.billingStatus"
                           class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
-                          :class="bgStatus(notification.status ? notification.status : notification.locum_status)"
-                        >{{ status(notification.status ? notification.status : notification.locum_status) }}</div>
+                          :class="bgStatus(notification.status ? notification.status : '')"
+                        >{{ notification.status ? notification.status : '' }}</div>
                         <div
                           class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
                         >{{ notification.status_tag }}</div>
@@ -257,100 +257,14 @@ export default {
           path: `${url}`,
         })
       }
-
-      // // query
-      // if (type === "Jobs") {
-      //   let routeStatus = ""
-
-      //   switch (status) {
-      //     case "Declined":
-      //       routeStatus = "Withdrawn"
-      //       break
-      //     case "Matched":
-      //       routeStatus = "Available"
-      //       break
-      //     case "Available":
-      //       routeStatus = "Public"
-      //       break
-      //     case "Terminated":
-      //       routeStatus = "Completed"
-      //       break
-      //     case "Updated":
-      //       routeStatus = null
-      //       break
-      //     default:
-      //       routeStatus = status
-      //   }
-
-      //   // console.log(url, status, routeStatus, notification)
-      //   // return
-
-      //   if (url === null) {
-      //     console.log('dsadas')
-      //     this.close(id, type, notification.notification_type)
-      //   } else if (url) {
-      //     console.log('cvdsdb')
-          
-      //   }
-      //   setTimeout(() => {
-      //     if (url === null) {
-      //       this.close(id, type, notification.notification_type)
-      //     } else if (url) {
-      //       this.$router.push({
-      //         path: `${url}/${id}`,
-      //         query: {
-      //           ...this.$route.query,
-      //           jobStatus: url.includes("surgery-management")
-      //             ? routeStatus
-      //             : null,
-      //           status: !url.includes("surgery-management") ? routeStatus : null
-      //         }
-      //       })
-      //     }
-      //   }, 500)
-      // } else if (type === "Billings") {
-      //   let routeStatus = ""
-
-      //   switch (status) {
-      //     case "Draft":
-      //       routeStatus = "to-be-invoiced"
-      //       break
-      //     case "Issued":
-      //       routeStatus = "issued"
-      //       break
-      //     case "Paid":
-      //       routeStatus = "approved"
-      //       break
-      //     default:
-      //       routeStatus = status
-      //   }
-
-      //   // console.log(url, status, routeStatus, notification)
-      //   // return
-
-      //   if (id !== this.$route.params.id) {
-      //     this.$router.push({
-      //       path: `${url}`,
-      //       query: { ...this.$route.query, status: routeStatus }
-      //     })
-      //   }
-      //   setTimeout(() => {
-      //     this.$router.push({
-      //       path: `${url}/${id}/edit`,
-      //       query: { ...this.$route.query, status: routeStatus }
-      //     })
-      //   }, 500)
-      // }
       this.close(id, type, notification.notification_type)
     },
     close (id, type, notificationType) {
-      console.log('type', type, notificationType)
       if (type === "Billings") {
         this.$store.commit("billing/REMOVE_PRACTICE_BILLING_NOTIFICATION", id)
         this.$store.commit("billing/REMOVE_LOCUM_BILLING_NOTIFICATION", id)
       }
       if (type === "Admin Locum Compliance") {
-        console.log('id', id)
         this.$store.commit("locums/REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION", id)
         // this.$store.commit("")
       }
@@ -391,11 +305,6 @@ export default {
       return str
     },
     clearNotifications () {
-      // this.$store.commit("billing/CLEAR_PRACTICE_BILLING_NOTIFICATION")
-      // this.$store.commit("billing/CLEAR_LOCUM_BILLING_NOTIFICATION")
-      // this.$store.commit("jobs/CLEAR_PRACTICE_JOB_NOTIFICATION")
-      // this.$store.commit("jobs/CLEAR_LOCUM_JOB_NOTIFICATION")
-
       this.$store.commit("locums/CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION")
     }
   }

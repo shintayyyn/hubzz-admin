@@ -34,6 +34,9 @@
               @click="close"
             >
               <span>{{ item.name }}</span>
+              <span v-if="item.name === 'Locums' && locumComplianceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{ locumComplianceNotifications.length }}
+              </span>
               <span v-if="item.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ unacknowledgedCount }}
               </span>
@@ -80,9 +83,12 @@ export default {
     }
   },
   computed: {
-    authAdminPermissions() {
-			return this.$store.getters["permissions"];
-		},
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+    locumComplianceNotifications () {
+      return this.$store.getters["locums/getLocumComplianceNotifications"]
+    },
     unacknowledgedCount () {
       return this.$store.state.supports.unacknowledgedCount
     }

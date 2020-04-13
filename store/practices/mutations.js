@@ -2,7 +2,7 @@ export default{
     TOGGLE_LOADING (state, payload){
         state.loading_practices = payload
     },
-    ADD_PRACTICE_NOTIFICATIONS (state, payload) {
+    ADD_PRACTICE_NOTIFICATION (state, payload) {
         console.log('practice notification payload', payload)
         let index = state.practiceNotifications.findIndex(practiceNotif => practiceNotif.practice.id === payload.practice.id)
         if (index < 0) {
