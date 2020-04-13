@@ -162,7 +162,8 @@ export default {
 		},
 		perPage: {
 			type: Number,
-			required: false
+			required: false,
+			default: 10,
 		}
 	},
 	data () {

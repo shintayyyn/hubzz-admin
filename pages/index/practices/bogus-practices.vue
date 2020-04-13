@@ -203,12 +203,13 @@ export default {
 			}
 		} catch (err) {
 			if (err.response && err.response.status === 401) {
-        console.log('something went wrong')
+        console.log("Get practices error!", err)
 				error(err.response.data)
 				return
 			}
-			throw err
 			console.log("Get practices error!", err)
+			throw err
+			
 		}
   },
 
@@ -236,13 +237,10 @@ export default {
 			switch (type) {
 				case "Hub":
 					return "bg-red-500 text-white px-4 py-1"
-					break
 				case "Spoke":
 					return "bg-blue-500 text-white px-4 py-1"
-					break
 				case "Stand Alone":
 					return "bg-indigo-600 text-white px-6 md:px-5 py-1"
-					break
 				default:
 					return
 			}
@@ -252,7 +250,6 @@ export default {
 			switch (hubType) {
 				case "Type 1":
 					return "bg-red-500 text-white px-4 py-1"
-					break
 				case "Type 2":
 					return "bg-purple-500 text-white px-4 py-1"
 				default:
