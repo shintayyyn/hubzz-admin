@@ -1,34 +1,34 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-auto">
-		<div class="flex px-4 md:px-8 py-2 text-sm flex-wrap">
-			<AppConfirm
-				v-if="confirm"
-				:message="'Are you sure you want to delete this role?'"
-				@confirm="deleteRole(role_id)"
-				@cancel="confirm=false"
-			/>
-			<AppButton
-				v-if="authAdminPermissions.includes('Create New Role')"
-				:label="'Add New Role'"
-				:icon="'add-rectangle'"
-				class="my-1 mr-2"
-				@click="$router.push('/user-management/roles-and-permissions/create')"
-			/>
-			<template v-if="authAdminPermissions.includes('Delete Role')">
-				<AppButton
-					class="my-1 text-white"
-					v-if="authAdminPermissions.includes('Create New Role')"
-					:label="deletingAdminRole ? 'Done' : 'Delete Role'"
-					:icon="deletingAdminRole ? 'circle-check' : 'garbage'"
-					:iconSize="deletingAdminRole ? '21' : '16'"
-					:background="deletingAdminRole ? 'green' : 'red'"
-					@click="deletingAdminRole = !deletingAdminRole"
-				/>
-			</template>
-		</div>
+  <div class="flex-1 flex flex-col overflow-auto">
+    <div class="flex px-4 md:px-8 py-2 text-sm flex-wrap">
+      <AppConfirm
+        v-if="confirm"
+        :message="'Are you sure you want to delete this role?'"
+        @confirm="deleteRole(role_id)"
+        @cancel="confirm=false"
+      />
+      <AppButton
+        v-if="authAdminPermissions.includes('Create New Role')"
+        :label="'Add New Role'"
+        :icon="'add-rectangle'"
+        class="my-1 mr-2"
+        @click="$router.push('/user-management/roles-and-permissions/create')"
+      />
+      <template v-if="authAdminPermissions.includes('Delete Role')">
+        <AppButton
+          v-if="authAdminPermissions.includes('Create New Role')"
+          class="my-1 text-white"
+          :label="deletingAdminRole ? 'Done' : 'Delete Role'"
+          :icon="deletingAdminRole ? 'circle-check' : 'garbage'"
+          :iconSize="deletingAdminRole ? '21' : '16'"
+          :background="deletingAdminRole ? 'green' : 'red'"
+          @click="deletingAdminRole = !deletingAdminRole"
+        />
+      </template>
+    </div>
 
-		<!--  -->
-		<!-- <div v-if="adminRoles.length" class="w-full px-4 md:px-8">
+    <!--  -->
+    <!-- <div v-if="adminRoles.length" class="w-full px-4 md:px-8">
 			<div class="hidden md:flex items-center text-white justify-around font-semibold">
 				<div class="pr-3 md:px-4" v-if="deletingAdminRole == true"></div>
 				<div class="align-middle px-2 w-1/3">Role Name</div>
@@ -66,7 +66,7 @@
 		</div>
 		<div v-else class="text-center text-gray-400 py-4">No admin roles</div>-->
 
-		<!-- <div v-if="!adminRoles.length == 0">
+    <!-- <div>
 			<AppPagination
 				class="px-4 md:px-8"
 				:total="total"
@@ -76,55 +76,53 @@
 				@pagechanged="pagechanged"
 			/>
 		</div>-->
-		<div class="m-2">
-			<AppTable
-				v-if="total > 0"
-				:total="total"
-				:items="adminRoles"
-				:currentPage="currentPage"
-				:perPage="perPage"
-				:columns="columns"
-				:loading="loading"
-				:routerLink="`/user-management/roles-and-permissions`"
-				@pagechanged="pagechanged"
-			>
-				<template v-if="authAdminPermissions.includes('Delete Role')" v-slot:actions="slotProps">
-					<div class="flex justify-center">
-						<div
-							class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
-							@click.prevent.stop="toDeleteAdminRole(slotProps.item.id)"
-						>Delete</div>
-					</div>
-				</template>
-			</AppTable>
-		</div>
+    <div class="m-2">
+      <AppTable
+        v-if="total > 0"
+        :total="total"
+        :items="adminRoles"
+        :currentPage="currentPage"
+        :perPage="perPage"
+        :columns="columns"
+        :loading="loading"
+        :routerLink="`/user-management/roles-and-permissions`"
+        @pagechanged="pagechanged"
+      >
+        <template v-if="authAdminPermissions.includes('Delete Role')" v-slot:actions="slotProps">
+          <div class="flex justify-center">
+            <div
+              class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
+              @click.prevent.stop="toDeleteAdminRole(slotProps.item.id)"
+            >
+              Delete
+            </div>
+          </div>
+        </template>
+      </AppTable>
+    </div>
 
-		<div
-			class="role-shield"
-			v-if="modal == true"
-			@click="
-				modal
-					? (modal = false)
-					: $router.push('/user-management/roles-and-permissions')
-			"
-		></div>
-	</div>
+    <div
+      v-if="modal == true"
+      class="role-shield"
+      @click="
+        modal
+          ? (modal = false)
+          : $router.push('/user-management/roles-and-permissions')
+      "
+    />
+  </div>
 </template>
 <script>
-import CreateAdminRole from "@/components/UserManagement/CreateAdminRole";
-import AppPagination from "@/components/Base/AppPagination";
-import AppTable from "@/components/Base/AppTable";
-import AppButton from "@/components/Base/AppButton";
-import AppConfirm from "@/components/Base/AppConfirm";
+import AppTable from "@/components/Base/AppTable"
+import AppButton from "@/components/Base/AppButton"
+import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
-		CreateAdminRole,
-		AppPagination,
 		AppButton,
 		AppConfirm,
 		AppTable
 	},
-	data() {
+	data () {
 		return {
 			// adminRoles:[],
 			modal: false,
@@ -157,19 +155,31 @@ export default {
 				}
 			],
 			columns: []
-		};
+		}
 	},
-	beforeDestroy() {
-		let query = Object.assign({}, this.$route.query);
-		delete query.admin_role_page;
-		this.$router.push({ query });
+	computed: {
+		loading () {
+			return this.$store.state.adminusers.loading_admin_users
+		},
+		total () {
+			return this.$store.state.adminusers.adminRolesCount
+		},
+		totalPages () {
+			return Math.ceil(this.total / this.perPage)
+		},
+		adminRoles () {
+			return this.$store.state.adminusers.adminRoles
+		},
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		}
 	},
 	watch: {
-		$route(to, from) {
-			this.currentPage = parseInt(to.query.admin_role_page);
-			this.getAdminRoles();
+		$route (to) {
+			this.currentPage = parseInt(to.query.admin_role_page)
+			this.getAdminRoles()
 		},
-		deletingAdminRole(newValue, oldValue) {
+		deletingAdminRole (newValue) {
 			if (newValue === true) {
 				this.columns = [
 					...this.defaultColumns,
@@ -180,124 +190,108 @@ export default {
 						dataIndex: "",
 						class: "text-center"
 					}
-				];
+				]
 			} else {
-				this.columns = [...this.defaultColumns];
+				this.columns = [...this.defaultColumns]
 			}
 		}
 	},
-	async created() {
-		const query = {
-			...this.$route.query,
-			admin_role_page: this.$route.query.admin_role_page || 1
-		};
-		this.columns = [...this.defaultColumns];
-		await this.getAdminRoles();
+	beforeDestroy () {
+		let query = Object.assign({}, this.$route.query)
+		delete query.admin_role_page
+		this.$router.push({ query })
 	},
-	computed: {
-		loading() {
-			return this.$store.state.adminusers.loading_admin_users;
-		},
-		total() {
-			return this.$store.state.adminusers.adminRolesCount;
-		},
-		totalPages() {
-			return Math.ceil(this.total / this.perPage);
-		},
-		adminRoles() {
-			return this.$store.state.adminusers.adminRoles;
-		},
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
-		}
+	async created () {
+		this.columns = [...this.defaultColumns]
+		await this.getAdminRoles()
 	},
 
 	methods: {
-		async getAdminRoles() {
-			await this.$store.commit("adminusers/TOGGLE_LOADING", true);
-			let limit = 10;
-			let offset = 0;
-			offset = this.perPage * (parseInt(this.$route.query.admin_role_page) - 1);
-			let params = { limit, offset };
+		async getAdminRoles () {
+			await this.$store.commit("adminusers/TOGGLE_LOADING", true)
+			let limit = 10
+			let offset = 0
+			offset = this.perPage * (parseInt(this.$route.query.admin_role_page) - 1)
+			let params = { limit, offset }
 			await this.$axios
 				.$get(`/api/v1/admin/admin-roles/count`)
 				.then(res => {
 					this.$store.commit(
 						"adminusers/SET_ADMIN_ROLES_COUNT",
 						res.data.count
-					);
-					this.perPage = 10;
-					this.totalPages = Math.ceil(this.total / this.perPage);
+					)
+					this.perPage = 10
+					this.totalPages = Math.ceil(this.total / this.perPage)
 				})
 				.catch(err => {
-					console.log("get roles error!", err);
-					this.$store.commit("adminusers/TOGGLE_LOADING", false);
+					console.log("get roles error!", err)
+					this.$store.commit("adminusers/TOGGLE_LOADING", false)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
-					});
-				});
+					})
+				})
 			await this.$axios
 				.$get(`/api/v1/admin/admin-roles/`, { params })
 				.then(res => {
-					this.$store.commit("adminusers/SET_ADMIN_ROLES", res.data.roles);
+					this.$store.commit("adminusers/SET_ADMIN_ROLES", res.data.roles)
 				})
 				.catch(err => {
-					console.log("get roles error!", err);
-					this.$store.commit("adminusers/TOGGLE_LOADING", false);
+					console.log("get roles error!", err)
+					this.$store.commit("adminusers/TOGGLE_LOADING", false)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
-					});
-				});
-			await this.$store.commit("adminusers/TOGGLE_LOADING", false);
+					})
+				})
+			await this.$store.commit("adminusers/TOGGLE_LOADING", false)
 		},
 
-		toDeleteAdminRole(roleId) {
-			console.log(roleId);
-			this.role_id = roleId;
-			this.confirm = true;
+		toDeleteAdminRole (roleId) {
+			console.log(roleId)
+			this.role_id = roleId
+			this.confirm = true
 		},
 
-		async deleteRole(roleId) {
+		async deleteRole (roleId) {
 			await this.$axios
 				.delete(`/api/v1/admin/admin-roles/${roleId}`)
-				.then(res => {
+				.then(() => {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
 						text: "Admin Role Successfully Deleted"
-					});
+					})
 					this.$store.dispatch("adminusers/fetchAdminRoles", {
 						limit: 10
-					});
+					})
 					this.$store.dispatch("adminusers/fetchAdminRolesCount", {
 						countOnly: true
-					});
-					this.confirm = false;
+					})
+					this.confirm = false
 				})
 				.catch(err => {
-					console.log("delete admin role error!!", err);
+					console.log("delete admin role error!!", err)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: err.response.data.message
-					});
-				});
+					})
+				})
 		},
-		updateList() {},
-		pagechanged(e) {
+		updateList () {},
+		pagechanged (e) {
 			const query = {
 				...this.$route.query,
 				admin_role_page: e || 1
-			};
-			this.$router.push({ query });
-			this.getAdminRoles();
+			}
+			this.$router.push({ query })
+			this.getAdminRoles()
 		}
 	}
-};
+}
 </script>
 <style>
 .role-shield {

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="count > 0 && pages > 1" class="flex flex-col justify-center items-center py-2 w-full">
+  <div v-if="count > 0" class="flex flex-col justify-center items-center py-2 w-full">
     <div :class="pages > 2 ? 'flex md:hidden' : 'hidden'">
       <div
         v-for="pageItem in pages"

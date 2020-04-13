@@ -163,7 +163,6 @@
     
     <!-- PAGINATION -->
     <AppPagination
-      v-if="practiceSpokes.length || surgeries.length"
       class="px-4 md:px-6"
       :total="total"
       :totalPages="totalPages"
