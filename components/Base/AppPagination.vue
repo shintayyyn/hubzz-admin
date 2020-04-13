@@ -2,7 +2,7 @@
   <div class="w-full pagination flex flex-wrap justfify-between items-center">
     <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
       <div class="text-gray-500 w-full md:w-auto text-center md:text-left">
-        <div class="whitespace-no-wrap">
+        <div v-if="total > 0" class="whitespace-no-wrap">
           {{ pageInfo(perPage, currentPage, total) }}
         </div>
       </div>
