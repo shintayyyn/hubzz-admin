@@ -4,7 +4,7 @@ export default{
     },
     ADD_PRACTICE_NOTIFICATION (state, payload) {
         console.log('practice notification payload', payload)
-        let index = state.practiceNotifications.findIndex(practiceNotif => practiceNotif.practice.id === payload.practice.id)
+        let index = state.practiceNotifications.findIndex(practiceNotif => practiceNotif.payload.id === payload.id)
         if (index < 0) {
             state.practiceNotifications.unshift(payload)
         } else if (index >= 0) {
@@ -12,7 +12,7 @@ export default{
         }
     },
     REMOVE_PRACTICE_NOTIFICATION (state, payload) {
-        state.practiceNotifications = state.practiceNotifications.filter(practiceNotif => practiceNotif.id !==payload)
+        state.practiceNotifications = state.practiceNotifications.filter(practiceNotif => practiceNotif.payload.id !==payload)
     },
     CLEAR_PRACTICE_NOTIFICATIONS (state) {
         state.practiceNotifications = []

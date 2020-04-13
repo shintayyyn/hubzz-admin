@@ -10,11 +10,10 @@ export const state = () => ({
 })
 
 export const getters = {
-  getAdminUserMe(state) {
+  getAdminUserMe (state) {
     return state.admin_user_logged_in
   },
-  permissions(state) {
-    console.log('state', state)
+  permissions (state) {
     const adminRoles = state.auth.user.admin_detail.roles
     let toSetAdminPermissions = []
 
@@ -33,26 +32,26 @@ export const getters = {
 }
 
 export const mutations = {
-  SET_SOCKET(state, payload) {
+  SET_SOCKET (state, payload) {
     state.socket_id = payload
   },
-  SET_NOTIFICATION(state, payload) {
+  SET_NOTIFICATION (state, payload) {
     state.notification.enabled = payload.enabled;
     state.notification.status = payload.status;
     state.notification.text = payload.text;
     state.notification.closable = payload.closable;
     state.notification.duration = payload.duration;
   },
-  TOGGLE_SIDEBAR(state, payload) {
+  TOGGLE_SIDEBAR (state, payload) {
     state.toggled_sidebar = payload
   },
-  SET_ADMIN_USER_PERMISSIONS(state, payload) {
+  SET_ADMIN_USER_PERMISSIONS (state, payload) {
     state.user.admin_detail.roles
   }
 }
 
 export const actions = {
-  async login({ getters, commit, dispatch }, { email, password }) {
+  async login ({ getters, commit, dispatch }, { email, password }) {
     const socketId = this.$socket.id
 
     let response = await this.$axios.post('/api/v1/admin/login', {

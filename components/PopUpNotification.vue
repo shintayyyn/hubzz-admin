@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div
-      v-if="locumComplianceNotifications.length > 0"
+      v-if="locumComplianceNotifications.length > 0 || practiceNotifications.length > 0"
       class="job-notification"
     >
       <div
@@ -119,7 +119,6 @@ export default {
       return this.$auth.user.domain === "Practice" ? "/sessions" : "/jobs"
     },
     notifications () {
-      console.log('notifs', ...this.locumComplianceNotifications,...this.practiceNotifications)
       return [...this.locumComplianceNotifications,...this.practiceNotifications].sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
       )
@@ -159,7 +158,6 @@ export default {
       )
     },
     notifications (value) {
-      console.log('value', value)
       value.forEach(item => {
         item.notif_date = this.$moment()
           .utc()
@@ -183,7 +181,6 @@ export default {
     }
   },
   created () {
-    console.log('notifications notify', this.locumComplianceNotifications)
   },
   methods: {
     show (id) {
@@ -197,7 +194,6 @@ export default {
       })
     },
     async goTo (notification) {
-      console.log('go to notification', notification)
       let type = notification.type
       let id = notification.id
       let status = notification.status
@@ -226,12 +222,10 @@ export default {
             ? `/locum-billing/private-invoices`
             : null
       } else if (type === "Admin Locum Compliance") {
-        console.log('wer')
         url = `/locums/${notification.locumDetailComplianceDocument.locum_user_id}/locum-compliance/${notification.id}`
-      } 
-      // else if(type === "Practice Created") {
-
-      // }
+      } else if (type === 'Admin Practice Creation'){
+        url = `/practices/${notification.id}`
+      }
 
       // for dashboard viewing, moves the date according to the job
       if (url && url.includes("/dashboard")) {
@@ -260,13 +254,16 @@ export default {
       this.close(id, type, notification.notification_type)
     },
     close (id, type, notificationType) {
+      console.log('id', id)
       if (type === "Billings") {
         this.$store.commit("billing/REMOVE_PRACTICE_BILLING_NOTIFICATION", id)
         this.$store.commit("billing/REMOVE_LOCUM_BILLING_NOTIFICATION", id)
       }
       if (type === "Admin Locum Compliance") {
         this.$store.commit("locums/REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION", id)
-        // this.$store.commit("")
+      }
+      if (type === "Admin Practice Creation") {
+        this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id)
       }
     },
     status (status) {

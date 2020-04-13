@@ -2,9 +2,13 @@ import * as practiceApi from '@/api/practices'
 export default {
   async initializePracticeListener ({ commit }) {
     //-------------------PRACTICES-------------------
-    this.$socket.on('Admin Notification Practice Created', async (practice) => {
+    this.$socket.on('Admin Notification Practice Created', async (payload) => {
       console.log('hello')
-      console.log('practice', practice.id)
+      console.log('practice', payload.id)
+      commit ('ADD_PRACTICE_NOTIFICATION', {
+        payload,
+        notificationType: 'Admin Notification Practice Created'
+      })
     })
 
     // this.$socket.on('Admin Notification Practice Created', async (practice) => {
