@@ -12,7 +12,7 @@
       :total="hubzzInvoicesCount"
       :items="hubzzInvoices"
       :current-page="currentPage"
-      :per-page="params.limit"
+      :perPage="params.limit"
       :columns="columns"
       :loading="loadingHubzzInvoices"
       :router-link="`/billings/${$route.params.id}/hubzz-invoices`"

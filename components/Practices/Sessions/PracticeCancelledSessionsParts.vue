@@ -87,7 +87,7 @@
           :total="total"
           :total-pages="totalPages"
           :current-page="currentPage"
-          :per-page="perPage"
+          :perPage="perPage"
           @pagechanged="pagechanged"
         />
       </div>
@@ -118,7 +118,7 @@
         type: Object,
         default: null,
       },
-      practice_surgery: {
+      practiceSurgery: {
         type: Object,
         default: null,
       },

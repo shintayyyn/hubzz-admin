@@ -55,7 +55,7 @@
           :total="total"
           :total-pages="totalPages"
           :current-page="currentPage"
-          :per-page="perPage"
+          :perPage="perPage"
           @pagechanged="pagechanged"
         />
       </div>
@@ -80,7 +80,7 @@ export default {
       AppJobHeaderSort
     },
     // eslint-disable-next-line vue/require-prop-types
-    props:['practice', 'practice_surgery'],
+    props:['practice', 'practiceSurgery'],
     data (){
       return{
         // withdrawnJobs:[],
