@@ -27,6 +27,7 @@
           >
             <nuxt-link
               v-if="getItemLink(item, index)"
+              :ref="`key_${columnDetail.key}_${getItemKey(item, index)}`"
               :key="`key_${columnDetail.key}_${getItemKey(item, index)}`"
               :to="getItemLink(item, index)"
               class="flex bg-waterloo text-white mb-2 p-2 transitions-colors duration-150 ease-liner"
@@ -39,7 +40,14 @@
               @mouseover.native="hoveredIndex = index"
               @dragstart.native.prevent
             >
-              <span class="whitespace-no-wrap p-1 cursor-default cursor-text select-text" @click.prevent>&nbsp;{{ columnDetail.column(item, index) }}</span>
+              <span
+                class="whitespace-no-wrap p-1 cursor-default cursor-text select-text"
+                @click.prevent
+                @dblclick="$refs[`key_${columnDetail.key}_${getItemKey(item, index)}`][0].$el.click()"
+              >
+                <span>&nbsp;</span>
+                <span>{{ columnDetail.column(item, index) }}</span>
+              </span>
             </nuxt-link>
             <span
               v-if="!getItemLink(item, index)"

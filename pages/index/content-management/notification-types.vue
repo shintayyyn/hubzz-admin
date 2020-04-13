@@ -1,19 +1,19 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Private Jobs
+      Notification Types
     </div>
 
     <div v-if="false" class="flex justify-end">
       <nuxt-link
-        to="/content-management/private-jobs/create"
+        to="/content-management/notification-types/create"
         class="
           flex items-center text-black text-sm rounded-lg py-2 px-4
           font-bold focus:outline-none transitions-colors duration-150 ease-liner
           bg-sunglow hover:bg-sunglow-dark
         "
       >
-        <span>Add Private Job</span>
+        <span>Add Notification Type</span>
       </nuxt-link>
     </div>
 
@@ -23,7 +23,7 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search job number, title"
+            placeholder="Search name"
             style="width: 250px;"
             @keyup="searchSubmit"
           >
@@ -45,9 +45,9 @@
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobs"
+      :items="notificationTypes"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/private-jobs/${item.id}`"
+      :getItemLink="(item) => true ? null : `/content-management/notification-types/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -76,15 +76,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-private-jobs'"
+      v-if="$route.name !== 'index-content-management-notification-types'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/private-jobs"
+      to="/content-management/notification-types"
     />
   
     <nuxt-child
-      @jobCreated="jobCreatedHandler"
-      @jobUpdated="jobUpdatedHandler"
-      @jobDeleted="jobDeletedHandler"
+      @notificationTypeCreated="notificationTypeCreatedHandler"
+      @notificationTypeUpdated="notificationTypeUpdatedHandler"
+      @notificationTypeDeleted="notificationTypeDeletedHandler"
     />
   </div>
 </template>
@@ -105,7 +105,7 @@
       return {
         loading: false,
         count: 0,
-        jobs: [],
+        notificationTypes: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -116,14 +116,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.notificationTypes.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.notificationTypes.length, 0)
       },
 
       columnDetails () {
@@ -138,41 +138,19 @@
             flexShrink: 0,
           },
           {
-            title: 'Job Number',
-            key: 'job_number',
-            sort_key: 'job_number',
-            column: (item) => item.job_number,
+            title: 'Name',
+            key: 'name',
+            sort_key: 'name',
+            column: (item) => item.name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Private Practice Name',
-            key: 'private_practice_name',
-            sort_key: 'private_practice_name',
-            column: (item) => item.private_practice
-              ? item.private_practice.name
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Private Practice Code',
-            key: 'private_practice_code',
-            sort_key: 'private_practice_code',
-            column: (item) => item.private_practice
-              ? item.private_practice.code
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Domain',
+            key: 'domain',
+            sort_key: 'domain',
+            column: (item) => item.domain,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -187,34 +165,34 @@
 
     watch: {
       orderBy () {
-        this.getJobs()
+        this.getNotificationTypes()
       },
 
       limit () {
         this.page = 1
-        this.getJobs()
+        this.getNotificationTypes()
       },
 
       activePage () {
-        this.getJobs()
+        this.getNotificationTypes()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getJobs()
+      this.getNotificationTypes()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getJobs()
+        this.getNotificationTypes()
       }, 500),
 
-      getJobs () {
+      getNotificationTypes () {
         this.loading = true
         this.count = 0
-        this.jobs = []
+        this.notificationTypes = []
 
         const params = {}
 
@@ -225,35 +203,33 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/notification-types/count', {
             params: {
               ...params,
-              type: 'Private',
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/notification-types', {
             params: {
               ...params,
-              type: 'Private',
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.jobs
+            return responses.data.data.notification_types
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobs,
+              notificationTypes,
             ] = results
 
             this.count = count
-            this.jobs = jobs
+            this.notificationTypes = notificationTypes
           }
         }).catch((err) => {
           console.log('err', err)
@@ -263,7 +239,7 @@
         })
       },
 
-      loadMoredJobs (limit) {
+      loadMoredNotificationTypes (limit) {
         const params = {}
 
         const search = this.search
@@ -272,50 +248,49 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/notification-types', {
           params: {
             ...params,
-            type: 'Private',
             order_by: this.orderBy,
             limit,
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.jobs.forEach((job) => {
-            this.jobs.push(job)
+          responses.data.data.notificationTypes.forEach((notificationType) => {
+            this.notificationTypes.push(notificationType)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobCreatedHandler (data) {
+      notificationTypeCreatedHandler (data) {
         const {
-          job
+          notificationType
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobs.length < this.limit) {
-            this.jobs.push(job)
+          if (this.activePage === this.pages && this.notificationTypes.length < this.limit) {
+            this.notificationTypes.push(notificationType)
           }
         }
       },
 
-      jobUpdatedHandler (data) {
+      notificationTypeUpdatedHandler (data) {
         const {
-          job
+          notificationType
         } = data
 
-        const index = this.jobs.findIndex(({ id }) => id === job.id)
+        const index = this.notificationTypes.findIndex(({ id }) => id === notificationType.id)
 
         if (index > -1) {
-          this.jobs.splice(index, 1, job)
+          this.notificationTypes.splice(index, 1, notificationType)
         }
       },
 
-      jobDeletedHandler (data) {
+      notificationTypeDeletedHandler (data) {
         const {
           id,
         } = data
@@ -325,13 +300,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobs.findIndex((job) => job.id === id)
+          const index = this.notificationTypes.findIndex((notificationType) => notificationType.id === id)
 
           if (index > -1) {
-            this.jobs.splice(index, 1)
+            this.notificationTypes.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredJobs(1)
+              this.loadMoredNotificationTypes(1)
             }
           }
         }

@@ -64,6 +64,14 @@
             title: 'Private Jobs',
             url: '/content-management/private-jobs',
           },
+          {
+            title: 'Notification Types',
+            url: '/content-management/notification-types',
+          },
+          {
+            title: 'Notifications',
+            url: '/content-management/notifications',
+          },
         ],
       }
     },

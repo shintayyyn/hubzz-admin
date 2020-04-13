@@ -201,31 +201,31 @@
 
     watch: {
       orderBy () {
-        this.getdJobs()
+        this.getJobs()
       },
 
       limit () {
         this.page = 1
-        this.getdJobs()
+        this.getJobs()
       },
 
       activePage () {
-        this.getdJobs()
+        this.getJobs()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getdJobs()
+      this.getJobs()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getdJobs()
+        this.getJobs()
       }, 500),
 
-      getdJobs () {
+      getJobs () {
         this.loading = true
         this.count = 0
         this.jobs = []

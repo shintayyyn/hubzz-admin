@@ -1,20 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Private Jobs
-    </div>
-
-    <div v-if="false" class="flex justify-end">
-      <nuxt-link
-        to="/content-management/private-jobs/create"
-        class="
-          flex items-center text-black text-sm rounded-lg py-2 px-4
-          font-bold focus:outline-none transitions-colors duration-150 ease-liner
-          bg-sunglow hover:bg-sunglow-dark
-        "
-      >
-        <span>Add Private Job</span>
-      </nuxt-link>
+      Notifications
     </div>
 
     <div class="flex flex-col md:flex-row justify-between md:items-center">
@@ -23,7 +10,7 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search job number, title"
+            placeholder="Search name"
             style="width: 250px;"
             @keyup="searchSubmit"
           >
@@ -45,9 +32,9 @@
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobs"
+      :items="notifications"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/private-jobs/${item.id}`"
+      :getItemLink="(item) => `/content-management/notifications/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -76,15 +63,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-private-jobs'"
+      v-if="$route.name !== 'index-content-management-notifications'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/private-jobs"
+      to="/content-management/notifications"
     />
   
     <nuxt-child
-      @jobCreated="jobCreatedHandler"
-      @jobUpdated="jobUpdatedHandler"
-      @jobDeleted="jobDeletedHandler"
+      @notificationCreated="notificationCreatedHandler"
+      @notificationUpdated="notificationUpdatedHandler"
+      @notificationDeleted="notificationDeletedHandler"
     />
   </div>
 </template>
@@ -105,7 +92,7 @@
       return {
         loading: false,
         count: 0,
-        jobs: [],
+        notifications: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -116,14 +103,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.notifications.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.notifications.length, 0)
       },
 
       columnDetails () {
@@ -138,41 +125,37 @@
             flexShrink: 0,
           },
           {
-            title: 'Job Number',
-            key: 'job_number',
-            sort_key: 'job_number',
-            column: (item) => item.job_number,
+            title: 'User',
+            key: 'user_name',
+            sort_key: 'user_name',
+            column: (item) => item.user ? item.user.name : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Private Practice Name',
-            key: 'private_practice_name',
-            sort_key: 'private_practice_name',
-            column: (item) => item.private_practice
-              ? item.private_practice.name
-              : '',
+            title: 'Notification Type',
+            key: 'notification_type_name',
+            sort_key: 'notification_type_name',
+            column: (item) => item.notification_type ? item.notification_type.name : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Private Practice Code',
-            key: 'private_practice_code',
-            sort_key: 'private_practice_code',
-            column: (item) => item.private_practice
-              ? item.private_practice.code
-              : '',
+            title: 'Seen At',
+            key: 'seen_at',
+            sort_key: 'seen_at',
+            column: (item) => item.seen_at ? this.$moment(item.seen_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Created At',
+            key: 'created_at',
+            sort_key: 'created_at',
+            column: (item) => item.created_at ? this.$moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -187,34 +170,34 @@
 
     watch: {
       orderBy () {
-        this.getJobs()
+        this.getNotifications()
       },
 
       limit () {
         this.page = 1
-        this.getJobs()
+        this.getNotifications()
       },
 
       activePage () {
-        this.getJobs()
+        this.getNotifications()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getJobs()
+      this.getNotifications()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getJobs()
+        this.getNotifications()
       }, 500),
 
-      getJobs () {
+      getNotifications () {
         this.loading = true
         this.count = 0
-        this.jobs = []
+        this.notifications = []
 
         const params = {}
 
@@ -225,35 +208,33 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/notifications/count', {
             params: {
               ...params,
-              type: 'Private',
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/notifications', {
             params: {
               ...params,
-              type: 'Private',
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.jobs
+            return responses.data.data.notifications
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobs,
+              notifications,
             ] = results
 
             this.count = count
-            this.jobs = jobs
+            this.notifications = notifications
           }
         }).catch((err) => {
           console.log('err', err)
@@ -263,7 +244,7 @@
         })
       },
 
-      loadMoredJobs (limit) {
+      loadMoredNotifications (limit) {
         const params = {}
 
         const search = this.search
@@ -272,50 +253,49 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/notifications', {
           params: {
             ...params,
-            type: 'Private',
             order_by: this.orderBy,
             limit,
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.jobs.forEach((job) => {
-            this.jobs.push(job)
+          responses.data.data.notifications.forEach((notification) => {
+            this.notifications.push(notification)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobCreatedHandler (data) {
+      notificationCreatedHandler (data) {
         const {
-          job
+          notification
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobs.length < this.limit) {
-            this.jobs.push(job)
+          if (this.activePage === this.pages && this.notifications.length < this.limit) {
+            this.notifications.push(notification)
           }
         }
       },
 
-      jobUpdatedHandler (data) {
+      notificationUpdatedHandler (data) {
         const {
-          job
+          notification
         } = data
 
-        const index = this.jobs.findIndex(({ id }) => id === job.id)
+        const index = this.notifications.findIndex(({ id }) => id === notification.id)
 
         if (index > -1) {
-          this.jobs.splice(index, 1, job)
+          this.notifications.splice(index, 1, notification)
         }
       },
 
-      jobDeletedHandler (data) {
+      notificationDeletedHandler (data) {
         const {
           id,
         } = data
@@ -325,13 +305,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobs.findIndex((job) => job.id === id)
+          const index = this.notifications.findIndex((notification) => notification.id === id)
 
           if (index > -1) {
-            this.jobs.splice(index, 1)
+            this.notifications.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredJobs(1)
+              this.loadMoredNotifications(1)
             }
           }
         }
