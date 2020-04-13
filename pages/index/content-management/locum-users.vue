@@ -1,20 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Platform Jobs
-    </div>
-
-    <div v-if="false" class="flex justify-end">
-      <nuxt-link
-        to="/content-management/platform-jobs/create"
-        class="
-          flex items-center text-black text-sm rounded-lg py-2 px-4
-          font-bold focus:outline-none transitions-colors duration-150 ease-liner
-          bg-sunglow hover:bg-sunglow-dark
-        "
-      >
-        <span>Add Platform Job</span>
-      </nuxt-link>
+      Users
     </div>
 
     <div class="flex flex-col md:flex-row justify-between md:items-center">
@@ -23,7 +10,7 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search job number, title"
+            placeholder="Search user number, title"
             style="width: 250px;"
             @keyup="searchSubmit"
           >
@@ -45,9 +32,9 @@
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobs"
+      :items="users"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/platform-jobs/${item.id}`"
+      :getItemLink="(item) => true ? null : `/content-management/locum-users/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -76,15 +63,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-platform-jobs'"
+      v-if="$route.name !== 'index-content-management-locum-users'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/platform-jobs"
+      to="/content-management/locum-users"
     />
   
     <nuxt-child
-      @jobCreated="jobCreatedHandler"
-      @jobUpdated="jobUpdatedHandler"
-      @jobDeleted="jobDeletedHandler"
+      @userCreated="userCreatedHandler"
+      @userUpdated="userUpdatedHandler"
+      @userDeleted="userDeletedHandler"
     />
   </div>
 </template>
@@ -105,7 +92,7 @@
       return {
         loading: false,
         count: 0,
-        jobs: [],
+        users: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -116,14 +103,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.users.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.users.length, 0)
       },
 
       columnDetails () {
@@ -138,41 +125,19 @@
             flexShrink: 0,
           },
           {
-            title: 'Job Number',
-            key: 'job_number',
-            sort_key: 'job_number',
-            column: (item) => item.job_number,
+            title: 'Name',
+            key: 'name',
+            sort_key: 'name',
+            column: (item) => item.name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Title',
-            key: 'title',
-            sort_key: 'title',
-            column: (item) => item.title,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Practice Name',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice
-              ? item.practice.name
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Practice Code',
-            key: 'practice_code',
-            sort_key: 'practice_code',
-            column: (item) => item.practice
-              ? item.practice.code
-              : '',
+            title: 'Email',
+            key: 'email',
+            sort_key: 'email',
+            column: (item) => item.email,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -182,6 +147,15 @@
             key: 'status',
             sort_key: 'status',
             column: (item) => item.status,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Created At',
+            key: 'created_at',
+            sort_key: 'created_at',
+            column: (item) => item.created_at ? this.$moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -197,34 +171,34 @@
     watch: {
       orderBy () {
         this.activePage = 1
-        this.getJobs()
+        this.getUsers()
       },
 
       limit () {
         this.activePage = 1
-        this.getJobs()
+        this.getUsers()
       },
 
       activePage () {
-        this.getJobs()
+        this.getUsers()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getJobs()
+      this.getUsers()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getJobs()
+        this.getUsers()
       }, 500),
 
-      getJobs () {
+      getUsers () {
         this.loading = true
         this.count = 0
-        this.jobs = []
+        this.users = []
 
         const params = {}
 
@@ -235,35 +209,33 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/locum-users-to-notify-payload/count', {
             params: {
               ...params,
-              type: 'Platform',
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/locum-users-to-notify-payload', {
             params: {
               ...params,
-              type: 'Platform',
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.jobs
+            return responses.data.data.users
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobs,
+              users,
             ] = results
 
             this.count = count
-            this.jobs = jobs
+            this.users = users
           }
         }).catch((err) => {
           console.log('err', err)
@@ -273,7 +245,7 @@
         })
       },
 
-      loadMoredJobs (limit) {
+      loadMoredUsers (limit) {
         const params = {}
 
         const search = this.search
@@ -282,50 +254,49 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/locum-users-to-notify-payload', {
           params: {
             ...params,
-            type: 'Platform',
             order_by: this.orderBy,
             limit,
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.jobs.forEach((job) => {
-            this.jobs.push(job)
+          responses.data.data.users.forEach((user) => {
+            this.users.push(user)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobCreatedHandler (data) {
+      userCreatedHandler (data) {
         const {
-          job
+          user
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobs.length < this.limit) {
-            this.jobs.push(job)
+          if (this.activePage === this.pages && this.users.length < this.limit) {
+            this.users.push(user)
           }
         }
       },
 
-      jobUpdatedHandler (data) {
+      userUpdatedHandler (data) {
         const {
-          job
+          user
         } = data
 
-        const index = this.jobs.findIndex(({ id }) => id === job.id)
+        const index = this.users.findIndex(({ id }) => id === user.id)
 
         if (index > -1) {
-          this.jobs.splice(index, 1, job)
+          this.users.splice(index, 1, user)
         }
       },
 
-      jobDeletedHandler (data) {
+      userDeletedHandler (data) {
         const {
           id,
         } = data
@@ -335,13 +306,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobs.findIndex((job) => job.id === id)
+          const index = this.users.findIndex((user) => user.id === id)
 
           if (index > -1) {
-            this.jobs.splice(index, 1)
+            this.users.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredJobs(1)
+              this.loadMoredUsers(1)
             }
           }
         }

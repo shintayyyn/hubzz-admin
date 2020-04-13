@@ -53,6 +53,10 @@
             url: '/content-management/practice-users',
           },
           {
+            title: 'Locum Users',
+            url: '/content-management/locum-users',
+          },
+          {
             title: 'Jobs',
             url: '/content-management/jobs',
           },
@@ -71,6 +75,14 @@
           {
             title: 'Notifications',
             url: '/content-management/notifications',
+          },
+          {
+            title: 'Email Types',
+            url: '/content-management/email-types',
+          },
+          {
+            title: 'Emails',
+            url: '/content-management/emails',
           },
         ],
       }

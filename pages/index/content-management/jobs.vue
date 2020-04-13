@@ -4,19 +4,6 @@
       Jobs
     </div>
 
-    <div v-if="false" class="flex justify-end">
-      <nuxt-link
-        to="/content-management/jobs/create"
-        class="
-          flex items-center text-black text-sm rounded-lg py-2 px-4
-          font-bold focus:outline-none transitions-colors duration-150 ease-liner
-          bg-sunglow hover:bg-sunglow-dark
-        "
-      >
-        <span>Add Job</span>
-      </nuxt-link>
-    </div>
-
     <div class="flex flex-col md:flex-row justify-between md:items-center">
       <div class="flex py-2">
         <div class="relative">
@@ -201,11 +188,12 @@
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getJobs()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getJobs()
       },
 

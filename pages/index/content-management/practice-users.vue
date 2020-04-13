@@ -205,11 +205,12 @@
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getPracticeUsers()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getPracticeUsers()
       },
 

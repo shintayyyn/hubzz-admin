@@ -1,19 +1,19 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Platform Jobs
+      Notification Types
     </div>
 
     <div v-if="false" class="flex justify-end">
       <nuxt-link
-        to="/content-management/platform-jobs/create"
+        to="/content-management/email-types/create"
         class="
           flex items-center text-black text-sm rounded-lg py-2 px-4
           font-bold focus:outline-none transitions-colors duration-150 ease-liner
           bg-sunglow hover:bg-sunglow-dark
         "
       >
-        <span>Add Platform Job</span>
+        <span>Add Notification Type</span>
       </nuxt-link>
     </div>
 
@@ -23,7 +23,7 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search job number, title"
+            placeholder="Search name"
             style="width: 250px;"
             @keyup="searchSubmit"
           >
@@ -45,9 +45,9 @@
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobs"
+      :items="emailTypes"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/platform-jobs/${item.id}`"
+      :getItemLink="(item) => true ? null : `/content-management/email-types/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -76,15 +76,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-platform-jobs'"
+      v-if="$route.name !== 'index-content-management-email-types'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/platform-jobs"
+      to="/content-management/email-types"
     />
   
     <nuxt-child
-      @jobCreated="jobCreatedHandler"
-      @jobUpdated="jobUpdatedHandler"
-      @jobDeleted="jobDeletedHandler"
+      @emailTypeCreated="emailTypeCreatedHandler"
+      @emailTypeUpdated="emailTypeUpdatedHandler"
+      @emailTypeDeleted="emailTypeDeletedHandler"
     />
   </div>
 </template>
@@ -105,7 +105,7 @@
       return {
         loading: false,
         count: 0,
-        jobs: [],
+        emailTypes: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -116,14 +116,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.emailTypes.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.emailTypes.length, 0)
       },
 
       columnDetails () {
@@ -138,50 +138,19 @@
             flexShrink: 0,
           },
           {
-            title: 'Job Number',
-            key: 'job_number',
-            sort_key: 'job_number',
-            column: (item) => item.job_number,
+            title: 'Name',
+            key: 'name',
+            sort_key: 'name',
+            column: (item) => item.name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Title',
-            key: 'title',
-            sort_key: 'title',
-            column: (item) => item.title,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Practice Name',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice
-              ? item.practice.name
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Practice Code',
-            key: 'practice_code',
-            sort_key: 'practice_code',
-            column: (item) => item.practice
-              ? item.practice.code
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Domain',
+            key: 'domain',
+            sort_key: 'domain',
+            column: (item) => item.domain,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -197,34 +166,34 @@
     watch: {
       orderBy () {
         this.activePage = 1
-        this.getJobs()
+        this.getNotificationTypes()
       },
 
       limit () {
         this.activePage = 1
-        this.getJobs()
+        this.getNotificationTypes()
       },
 
       activePage () {
-        this.getJobs()
+        this.getNotificationTypes()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getJobs()
+      this.getNotificationTypes()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getJobs()
+        this.getNotificationTypes()
       }, 500),
 
-      getJobs () {
+      getNotificationTypes () {
         this.loading = true
         this.count = 0
-        this.jobs = []
+        this.emailTypes = []
 
         const params = {}
 
@@ -235,35 +204,33 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/email-types/count', {
             params: {
               ...params,
-              type: 'Platform',
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/email-types', {
             params: {
               ...params,
-              type: 'Platform',
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.jobs
+            return responses.data.data.email_types
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobs,
+              emailTypes,
             ] = results
 
             this.count = count
-            this.jobs = jobs
+            this.emailTypes = emailTypes
           }
         }).catch((err) => {
           console.log('err', err)
@@ -273,7 +240,7 @@
         })
       },
 
-      loadMoredJobs (limit) {
+      loadMoredNotificationTypes (limit) {
         const params = {}
 
         const search = this.search
@@ -282,50 +249,49 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/email-types', {
           params: {
             ...params,
-            type: 'Platform',
             order_by: this.orderBy,
             limit,
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.jobs.forEach((job) => {
-            this.jobs.push(job)
+          responses.data.data.emailTypes.forEach((emailType) => {
+            this.emailTypes.push(emailType)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobCreatedHandler (data) {
+      emailTypeCreatedHandler (data) {
         const {
-          job
+          emailType
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobs.length < this.limit) {
-            this.jobs.push(job)
+          if (this.activePage === this.pages && this.emailTypes.length < this.limit) {
+            this.emailTypes.push(emailType)
           }
         }
       },
 
-      jobUpdatedHandler (data) {
+      emailTypeUpdatedHandler (data) {
         const {
-          job
+          emailType
         } = data
 
-        const index = this.jobs.findIndex(({ id }) => id === job.id)
+        const index = this.emailTypes.findIndex(({ id }) => id === emailType.id)
 
         if (index > -1) {
-          this.jobs.splice(index, 1, job)
+          this.emailTypes.splice(index, 1, emailType)
         }
       },
 
-      jobDeletedHandler (data) {
+      emailTypeDeletedHandler (data) {
         const {
           id,
         } = data
@@ -335,13 +301,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobs.findIndex((job) => job.id === id)
+          const index = this.emailTypes.findIndex((emailType) => emailType.id === id)
 
           if (index > -1) {
-            this.jobs.splice(index, 1)
+            this.emailTypes.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredJobs(1)
+              this.loadMoredNotificationTypes(1)
             }
           }
         }
