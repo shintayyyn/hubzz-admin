@@ -1,14 +1,14 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Locum Form Bs
+      Practices
     </div>
 
     <ContentManagementTable
       :limit="limit"
-      :items="locumFormBs"
+      :items="practices"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/locum-form-bs/${item.id}`"
+      :getItemLink="(item) => true ? null : `/content-management/practices/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -37,15 +37,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-locum-form-bs'"
+      v-if="$route.name !== 'index-content-management-practices'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/locum-form-bs"
+      to="/content-management/practices"
     />
   
     <nuxt-child
-      @locumFormBCreated="locumFormBCreatedHandler"
-      @locumFormBUpdated="locumFormBUpdatedHandler"
-      @locumFormBDeleted="locumFormBDeletedHandler"
+      @practiceCreated="practiceCreatedHandler"
+      @practiceUpdated="practiceUpdatedHandler"
+      @practiceDeleted="practiceDeletedHandler"
     />
   </div>
 </template>
@@ -66,7 +66,7 @@
       return {
         loading: false,
         count: 0,
-        locumFormBs: [],
+        practices: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -77,14 +77,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.locumFormBs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.practices.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.locumFormBs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.practices.length, 0)
       },
 
       columnDetails () {
@@ -108,28 +108,28 @@
             flexShrink: 0,
           },
           {
-            title: 'Locum Email',
-            key: 'locum_user_email',
-            sort_key: 'locum_user_email',
-            column: (item) => item.locum_user ? item.locum_user.email : '',
+            title: 'Name',
+            key: 'name',
+            sort_key: 'name',
+            column: (item) => item.name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum Name',
-            key: 'locum_user_name',
-            sort_key: 'locum_user_name',
-            column: (item) => item.locum_user ? item.locum_user.name : '',
+            title: 'Status',
+            key: 'status',
+            sort_key: 'status',
+            column: (item) => item.status,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Date Created',
-            key: 'date_created',
-            sort_key: 'date_created',
-            column: (item) => item.date_created ? this.$moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
+            title: 'Created At',
+            key: 'created_at',
+            sort_key: 'created_at',
+            column: (item) => item.created_at ? this.$moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -145,34 +145,34 @@
     watch: {
       orderBy () {
         this.activePage = 1
-        this.getLocumFormBs()
+        this.getPractices()
       },
 
       limit () {
         this.activePage = 1
-        this.getLocumFormBs()
+        this.getPractices()
       },
 
       activePage () {
-        this.getLocumFormBs()
+        this.getPractices()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getLocumFormBs()
+      this.getPractices()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getLocumFormBs()
+        this.getPractices()
       }, 500),
 
-      getLocumFormBs () {
+      getPractices () {
         this.loading = true
         this.count = 0
-        this.locumFormBs = []
+        this.practices = []
 
         const params = {}
 
@@ -183,14 +183,14 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/locum-form-bs/count', {
+          this.$axios.get('/api/v1/admin/practices/count', {
             params: {
               ...params,
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/locum-form-bs', {
+          this.$axios.get('/api/v1/admin/practices', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -198,18 +198,18 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_form_bs
+            return responses.data.data.practices
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              locumFormBs,
+              practices,
             ] = results
 
             this.count = count
-            this.locumFormBs = locumFormBs
+            this.practices = practices
           }
         }).catch((err) => {
           console.log('err', err)
@@ -219,7 +219,7 @@
         })
       },
 
-      loadMoredLocumFormBs (limit) {
+      loadMoredPractices (limit) {
         const params = {}
 
         const search = this.search
@@ -228,7 +228,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/locum-form-bs', {
+        this.$axios.get('/api/v1/admin/practices', {
           params: {
             ...params,
             order_by: this.orderBy,
@@ -236,41 +236,41 @@
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.locumFormBs.forEach((locumFormB) => {
-            this.locumFormBs.push(locumFormB)
+          responses.data.data.practices.forEach((practice) => {
+            this.practices.push(practice)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      locumFormBCreatedHandler (data) {
+      practiceCreatedHandler (data) {
         const {
-          locumFormB
+          practice
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.locumFormBs.length < this.limit) {
-            this.locumFormBs.push(locumFormB)
+          if (this.activePage === this.pages && this.practices.length < this.limit) {
+            this.practices.push(practice)
           }
         }
       },
 
-      locumFormBUpdatedHandler (data) {
+      practiceUpdatedHandler (data) {
         const {
-          locumFormB
+          practice
         } = data
 
-        const index = this.locumFormBs.findIndex(({ id }) => id === locumFormB.id)
+        const index = this.practices.findIndex(({ id }) => id === practice.id)
 
         if (index > -1) {
-          this.locumFormBs.splice(index, 1, locumFormB)
+          this.practices.splice(index, 1, practice)
         }
       },
 
-      locumFormBDeletedHandler (data) {
+      practiceDeletedHandler (data) {
         const {
           id,
         } = data
@@ -280,13 +280,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.locumFormBs.findIndex((locumFormB) => locumFormB.id === id)
+          const index = this.practices.findIndex((practice) => practice.id === id)
 
           if (index > -1) {
-            this.locumFormBs.splice(index, 1)
+            this.practices.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredLocumFormBs(1)
+              this.loadMoredPractices(1)
             }
           }
         }

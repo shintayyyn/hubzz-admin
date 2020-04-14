@@ -61,6 +61,10 @@
             url: '/content-management/locum-compliance-documents',
           },
           {
+            title: 'Practices',
+            url: '/content-management/practices',
+          },
+          {
             title: 'Jobs',
             url: '/content-management/jobs',
           },
