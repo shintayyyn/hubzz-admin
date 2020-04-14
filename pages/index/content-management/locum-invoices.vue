@@ -240,7 +240,10 @@
 
     mounted () {
       this.search = ''
-      this.getLocumInvoices()
+      this.orderBy = [
+        'date_created:desc',
+      ]
+      // this.getLocumInvoices()
     },
     
     methods: {
