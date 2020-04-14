@@ -84,6 +84,10 @@
             title: 'Emails',
             url: '/content-management/emails',
           },
+          {
+            title: 'Locum Form Bs',
+            url: '/content-management/locum-form-bs',
+          },
         ],
       }
     },
