@@ -58,10 +58,15 @@
                 columnDetailIndex === 0 ? 'rounded-l-lg' : '',
                 columnDetailIndex === columnDetails.length - 1 ? 'rounded-r-lg' : '',
               ]"
-              @mouseover.native="hoveredIndex = index"
-              @dragstart.native.prevent
+              @mouseover="hoveredIndex = index"
             >
-              <span class="whitespace-no-wrap p-1 cursor-default cursor-text select-text" @click.prevent>&nbsp;{{ columnDetail.column(item, index) }}</span>
+              <span
+                class="whitespace-no-wrap p-1 cursor-default cursor-text select-text"
+                @click.prevent
+              >
+                <span>&nbsp;</span>
+                <span>{{ columnDetail.column(item, index) }}</span>
+              </span>
             </span>
           </template>
         </div>
