@@ -52,13 +52,13 @@
           <svgicon v-if="sortType==true && sortedBy=='date_end'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white" />
           <svgicon v-if="sortType==false && sortedBy=='date_end'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white" />
         </div>
-        <div class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_created',currentPage,search)">
+        <div v-if="tabStatus !== 'Approved'" class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('date_created',currentPage,search)">
           Created
           <svgicon v-if="sortedBy!='date_created'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='date_created'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white" />
           <svgicon v-if="sortType==false && sortedBy=='date_created'" class="inline align-baseline" name="sort-descend" height="12" width="12" color="white" />
         </div>
-        <div v-if="tabStatus === 'Completed'" class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('completed_at',currentPage,search)">
+        <div v-if="tabStatus === 'Completed' || tabStatus === 'Approved'" class="align-middle px-2 text-center w-1/6 cursor-pointer" @click="sortBy('completed_at',currentPage,search)">
           Completed At
           <svgicon v-if="sortedBy!='completed_at'" class="inline align-baseline" name="sort" height="12" width="12" color="white black" />
           <svgicon v-if="sortType==true && sortedBy=='completed_at'" class="inline align-baseline" name="sort-ascend" height="12" width="12" color="white" />

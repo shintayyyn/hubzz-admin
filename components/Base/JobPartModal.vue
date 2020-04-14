@@ -63,14 +63,30 @@
 						<!-- INFOS RIGHT -->
 						<div class="text-white xl:w-1/2 w-full overflow-hidden">
 							<div class="m-4 mt-5">
+                <div v-if="job_part.status === 'Completed'">
+                  <p class="mb-2 font-semibold">Completed At</p>
+                  <div class="pb-2 flex">
+                    <span
+                      class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+                    >{{ $moment(job_part.completed_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+                  </div>
+                </div>
+                <div v-if="job_part.status === 'Approved'">
+                  <p class="mb-2 font-semibold">Approved At</p>
+                  <div class="pb-2 flex">
+                    <span
+                      class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+                    >{{ $moment(job_part.completed_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+                  </div>
+                </div>
 								<p class="font-semibold">Duration</p>
 								<div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-									<span class="font-semibold">{{job_part.date_start}}</span>
+									<span class="font-semibold">{{$moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
 								</div>
 								<div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-									<span class="font-semibold">{{job_part.date_end}}</span>
+									<span class="font-semibold">{{$moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
 								</div>
 								<div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
