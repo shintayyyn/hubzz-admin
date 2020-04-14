@@ -10,65 +10,34 @@
       </nuxt-link>
       <div class="flex justify-right">
         <div class="m-4 cursor-pointer">
-          <div @click="notificationToggle = !notificationToggle">
+          <div @click="checkNotifications()">
             <svgicon name="notification" width="30" height="30" color="white" class="ml-2" />
           </div>
           <div v-if="notificationToggle === true">
-            <ul class="dropdown-menu">
-              <li class="head text-light bg-dark">
-                <div class="row">
-                  <div class="col-lg-12 col-sm-12 col-12">
-                    <span>Notifications (3)</span>
-                    <a href="" class="float-right text-light">Mark all as read</a>
+            <div class="notification-modal overflow-hidden"> 
+              <p class="m-4 text-lg">
+                Notifications
+              </p>
+              <div class="m-4 overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
+                <div v-if="sampleCount > 0">
+                  <div
+                    v-for="(item, index) in sampleNotifs"
+                    :key="`item-${index}`"
+                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
+                  >
+                    <div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
+                      <span class="uppercase text-xs font-bold">Locum</span>
+                      <span class="pb-2">{{ item.name }}</span>
+                      <span class="uppercase text-xs font-bold">Sample Notification</span>
+                      <span class>{{ item.description }}</span>
+                    </div>
                   </div>
                 </div>
-              </li>
-              <li class="notification-box">
-                <div class="row">
-                  <div class="col-lg-3 col-sm-3 col-3 text-center">
-                    <img src="/demo/man-profile.jpg" class="w-50 rounded-circle">
-                  </div>    
-                  <div class="col-lg-8 col-sm-8 col-8">
-                    <strong class="text-info">David John</strong>
-                    <div>
-                      Lorem ipsum dolor sit amet, consectetur
-                    </div>
-                    <small class="text-warning">27.11.2015, 15:00</small>
-                  </div>    
+                <div v-else>
+                  No New Notifications
                 </div>
-              </li>
-              <li class="notification-box bg-gray">
-                <div class="row">
-                  <div class="col-lg-3 col-sm-3 col-3 text-center">
-                    <img src="/demo/man-profile.jpg" class="w-50 rounded-circle">
-                  </div>    
-                  <div class="col-lg-8 col-sm-8 col-8">
-                    <strong class="text-info">David John</strong>
-                    <div>
-                      Lorem ipsum dolor sit amet, consectetur
-                    </div>
-                    <small class="text-warning">27.11.2015, 15:00</small>
-                  </div>    
-                </div>
-              </li>
-              <li class="notification-box">
-                <div class="row">
-                  <div class="col-lg-3 col-sm-3 col-3 text-center">
-                    <img src="/demo/man-profile.jpg" class="w-50 rounded-circle">
-                  </div>    
-                  <div class="col-lg-8 col-sm-8 col-8">
-                    <strong class="text-info">David John</strong>
-                    <div>
-                      Lorem ipsum dolor sit amet, consectetur
-                    </div>
-                    <small class="text-warning">27.11.2015, 15:00</small>
-                  </div>    
-                </div>
-              </li>
-              <li class="footer bg-dark text-center">
-                <a href="" class="text-light">View All</a>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -92,10 +61,68 @@
 export default {
   data (){
     return{
-      notificationToggle: false
+      notificationToggle: false,
+      notificationsCount: 0,
+      notifications: [],
+      sampleCount: 5,
+      sampleNotifs: [
+        {
+          id: '1',
+          name: 'work in progress',
+          type: 'in',
+          description: 'Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards.'
+        },
+        {
+          id: '2',
+          name: 'work in progress',
+          type: 'in',
+          description: 'Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards.'
+        },
+        {
+          id: '3',
+          name: 'work in progress',
+          type: 'in',
+          description: 'Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards.'
+        },
+        {
+          id: '4',
+          name: 'work in progress',
+          type: 'in',
+          description: 'Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards.'
+        },
+        {
+          id: '5',
+          name: 'work in progress',
+          type: 'in',
+          description: 'Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards.'
+        },
+        {
+          id: '6',
+          name: 'work in progress',
+          type: 'in',
+          description: 'Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards.'
+        },
+      ]
     }
   },
+  async created () {
+    await this.$axios.$get(`/api/v1/admin/notifications/count`).then(res => {
+      this.notificationsCount = res.data.count
+    })
+    await this.$axios.$get(`/api/v1/admin/notifications`).then(res => {
+      this.notifications = res.data.notifications
+    })
+  },
   methods: {
+     async checkNotifications () {
+      this.notificationToggle = !this.notificationToggle
+      await this.$axios.$get(`/api/v1/admin/notifications/count`).then(res => {
+        this.notificationsCount = res.data.count
+      })
+      await this.$axios.$get(`/api/v1/admin/notifications`).then(res => {
+        this.notifications = res.data.notifications
+      })
+    },
     toggleSideBar () {
       this.$store.commit("TOGGLE_SIDEBAR", true)
       document.body.style.overflow = "hidden"
@@ -105,31 +132,30 @@ export default {
 </script>
 
 <style>
+.notification-modal {
+	position: fixed;
+	left:86%;
+	top: 15%;
+	transform: translate(-86%, -15%);
+	border-radius: 15px;
+	width: 400px;
+	max-width: 95%;
+	max-height: 80%;
+	overflow: hidden;
+	transition: all 0.3s ease-in-out;
+	background-color: #393c42;
+	z-index: 512;
+}
+@media screen and (min-width: 768px) {
+	.notification-modal {
+		max-height: 60%;
+	}
+}
 .header{
   display: inline;
 }
 .toggle{
   margin-left: 0;
-}
-.dropdown-menu{
-  top: 60px;
-  right: 0px;
-  left: unset;
-  width: 460px;
-  box-shadow: 0px 5px 7px -1px #c1c1c1;
-  padding-bottom: 0px;
-  padding: 0px;
-}
-.dropdown-menu:before{
-  content: "";
-  position: absolute;
-  top: -20px;
-  right: 12px;
-  border:10px solid #343A40;
-  border-color: transparent transparent #343A40 transparent;
-}
-.notification-box{
-  padding: 10px 0px; 
 }
 @media screen and (min-width: 1200px){
   .dropdown-menu{
