@@ -85,6 +85,10 @@
             url: '/content-management/emails',
           },
           {
+            title: 'Locum Invoices',
+            url: '/content-management/locum-invoices',
+          },
+          {
             title: 'Locum Form As',
             url: '/content-management/locum-form-as',
           },

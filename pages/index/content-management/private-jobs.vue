@@ -226,7 +226,7 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/job-payloads/count', {
             params: {
               ...params,
               type: 'Private',
@@ -234,7 +234,7 @@
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/job-payloads', {
             params: {
               ...params,
               type: 'Private',
@@ -273,7 +273,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/job-payloads', {
           params: {
             ...params,
             type: 'Private',
