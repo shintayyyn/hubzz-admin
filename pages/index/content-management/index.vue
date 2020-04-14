@@ -85,6 +85,10 @@
             url: '/content-management/emails',
           },
           {
+            title: 'Locum Form As',
+            url: '/content-management/locum-form-as',
+          },
+          {
             title: 'Locum Form Bs',
             url: '/content-management/locum-form-bs',
           },
