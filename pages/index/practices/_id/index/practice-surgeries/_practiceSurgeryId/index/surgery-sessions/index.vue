@@ -1,22 +1,19 @@
 <template>
-	<div class="mt-5">
-		<div>
-			<!-- <AppLoading :loading="loadingJobs" :message="'Loading Sessions'"/> -->
-		</div>
-		<SessionsTabs :practice="practice" :practice_surgery="practice_surgery" />
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('spokeSessionId')"
-			@click="$router.go(-1)"
-		/>
+  <div class="mt-5">
+    <SessionsTabs :practice="practice" :practice_surgery="practice_surgery" />
+    <div
+      class="practice-shield"
+      v-if="$route.name.includes('spokeSessionId')"
+      @click="$router.go(-1)"
+    />
 
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('spokeSessionPartId')"
-			@click="$router.go(-1)"
-		/>
-		<nuxt-child />
-	</div>
+    <div
+      class="practice-shield"
+      v-if="$route.name.includes('spokeSessionPartId')"
+      @click="$router.go(-1)"
+    />
+    <nuxt-child />
+  </div>
 </template>
 <script>
 import SessionsTabs from "@/components/Practices/SessionsTabs";

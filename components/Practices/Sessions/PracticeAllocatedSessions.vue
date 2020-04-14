@@ -178,7 +178,7 @@ export default {
       }
       this.currentPage = parseInt(query.job_page)
       let params = {
-        practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
         status: "Allocated"
       }
       Promise.all([
@@ -199,7 +199,7 @@ export default {
     methods:{
       checkRoute (itemId){
         if (this.$route.name.includes('practice-surgeries')) {
-          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-allocated-sessions/${itemId}` }
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-allocated-sessions/${itemId}` }
         } else if(this.$route.name.includes('practice-sessions')) {
           return { path: `/practices/${this.practice.id}/practice-sessions/practice-allocated-sessions/${itemId}` }
         }
@@ -210,7 +210,7 @@ export default {
         let params = {
           status : 'Allocated',
           order_by :  orderBy ? orderBy : this.$route.query.order_by,
-          practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+          practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
           limit: this.perPage,
           offset: offset
         }

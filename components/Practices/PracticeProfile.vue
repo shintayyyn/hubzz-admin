@@ -367,6 +367,7 @@
           </div>
         </div>
       </form>
+      <!-- TOOLTIPS FOR VERIFICATION -->
       <div
         v-if="practice.status === 'Inactive'"
         class="order-1 lg:order-2 bg-waterloo rounded-lg px-2 py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6 text-white text-sm"

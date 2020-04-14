@@ -121,7 +121,7 @@ export default {
       this.$router.push({ query })
     },
     async created (){
-      console.log('practice_surgery', this.practice_surgery)
+      console.log('practice_surgery', this.practiceSurgery)
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
@@ -129,7 +129,7 @@ export default {
       }
       this.currentPage = parseInt(query.job_page)
       let params = {
-        practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
         status : 'Applied'
       }
       Promise.all([
@@ -151,7 +151,7 @@ export default {
     methods:{
       checkRoute (itemId){
         if (this.$route.name.includes('practice-surgeries')) {
-          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-applied-sessions/${itemId}` }
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-applied-sessions/${itemId}` }
         } else if(this.$route.name.includes('practice-sessions')) {
           return { path: `/practices/${this.practice.id}/practice-sessions/practice-applied-sessions/${itemId}` }
         }
@@ -160,10 +160,10 @@ export default {
       async getAppliedJobs (orderBy){
         let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {
-          // viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+          // viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
           status : 'Applied',
           order_by :  orderBy ? orderBy : this.$route.query.order_by,
-          practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+          practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
           limit: this.perPage,
           offset: offset
         }
