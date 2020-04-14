@@ -159,7 +159,7 @@ export default {
 		}
 		this.currentPage = parseInt(query.completed_job_page)
 		let params = {
-			job_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+			job_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
 			status: "Completed"
 		}
 		Promise.all([
@@ -182,7 +182,7 @@ export default {
 	methods: {
     checkRoute (itemId){
       if (this.$route.name.includes('practice-surgeries')) {
-        return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-completed-sessions/${itemId}` }
+        return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-completed-sessions/${itemId}` }
       } else if(this.$route.name.includes('practice-sessions')) {
         return { path: `/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/${itemId}` }
       }
@@ -193,7 +193,7 @@ export default {
 			let params = {
 				status: "Completed",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-        job_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        job_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
 				limit: this.perPage,
 				offset: offset
 			}

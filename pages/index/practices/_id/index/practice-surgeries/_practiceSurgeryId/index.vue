@@ -3,23 +3,56 @@
     <div @click="goBack()" class="cursor-pointer mb-4">
       <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
     </div>
-    <PracticeSurgeriesTabs :practice="practice" :practiceSurgery="practiceSurgery"/>
-    <nuxt-child/>
+    <div class="flex justify-start overflow-x-auto">
+      <nuxt-link
+        :to="getRoute()" 
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path == `/practices/${practice.id}/practice-surgeries/${practiceSurgery.id}` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >Spoke Profile</nuxt-link>
+      <nuxt-link
+        :to="getRoute('surgery-sessions')"
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path.includes(`surgery-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >Spoke Sessions</nuxt-link>
+      <nuxt-link
+        :to="getRoute('surgery-billing')"
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path.includes(`surgery-billing`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >Spoke Billings</nuxt-link>
+    </div>
+    <nuxt-child />
   </div>
 </template>
 <script>
-import PracticeSurgeriesTabs from '@/components/Practices/PracticeSurgeriesTabs'
 export default {
   components:{
-    PracticeSurgeriesTabs
   },
-  data(){
+  data (){
     return{
       practice: '',
+      practiceSurgery: '',
       practiceSurgeries: '',
     }
   },
-  async asyncData({ app, store, route }){
+  computed:{
+    getRoute (tab){
+      console.log(tab)
+      return(tab) => {
+        if(!tab){
+          tab = ''
+        }
+        const query = {
+          ...this.$route.query,
+        }
+        delete query.order_by
+        return{
+          path: tab ? `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/${tab}` : `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}` ,
+          query
+        }
+      }
+    }
+  },
+  async asyncData ({ app, store, route }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
@@ -36,9 +69,9 @@ export default {
     }
   },
   methods:{
-    goBack(){
+    goBack (){
       const query = {
-          ...this.$route.query
+        ...this.$route.query
       }
       console.log('route', this.$route)
       this.$router.push({path:`/practices/${this.$route.params.id}/practice-surgeries`,query})
