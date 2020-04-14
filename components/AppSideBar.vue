@@ -104,8 +104,6 @@ export default {
       })
 
       console.log('permissions', this.authAdminPermissions)
-
-      let domain = this.$auth.user.domain
       
       let defaultLists = [
         { name: "Dashboard", route: "/", order: 1},     
