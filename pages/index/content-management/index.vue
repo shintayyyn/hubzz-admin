@@ -57,6 +57,10 @@
             url: '/content-management/locum-users',
           },
           {
+            title: 'Locum Compliance Documents',
+            url: '/content-management/locum-compliance-documents',
+          },
+          {
             title: 'Jobs',
             url: '/content-management/jobs',
           },
