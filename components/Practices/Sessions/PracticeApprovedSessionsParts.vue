@@ -49,19 +49,23 @@
               <span class="break-words">{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Created</strong>
-              <span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <strong class="block md:hidden text-sm uppercase">Completed At</strong>
+              <span class="">{{ $moment(item.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+            </div>
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Approved At</strong>
+              <span class="">{{ $moment(item.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
           </nuxt-link>
         </div>
       </div>
 
-      <div v-if="!approvedJobParts.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :total-pages="totalPages"
           :current-page="currentPage"
-          :per-page="perPage"
+          :perPage="perPage"
           @pagechanged="pagechanged"
         />
       </div>
@@ -86,16 +90,21 @@ export default {
       PracticeSessionModal,
       AppJobHeaderSort
     },
-    props:{
+
+    props: {
+
       practice: {
         type: Object,
-        default: null,
+        default: () => null,
       },
-      practice_surgery: {
+
+      practiceSurgery: {
         type: Object,
-        default: null,
+        default: () => null,
       },
+      
     },
+
     data (){
       return{
         // approvedJobParts:[],
@@ -134,8 +143,8 @@ export default {
       }
       this.currentPage = parseInt(query.job_parts_page)
       let params = {
-        // viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
-        job_practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        // viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+        job_practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
         status : 'Approved'
       }
       Promise.all([
@@ -155,7 +164,7 @@ export default {
     methods:{
       checkRoute (itemId){
         if (this.$route.name.includes('practice-surgeries')) {
-          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-approved-sessions/${itemId}` }
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-approved-sessions/${itemId}` }
         } else if(this.$route.name.includes('practice-sessions')) {
           return { path: `/practices/${this.practice.id}/practice-sessions/practice-approved-sessions/${itemId}` }
         }
@@ -165,7 +174,7 @@ export default {
         let params = {
           status : 'Approved',
           order_by : orderBy ? orderBy : this.$route.query.order_by,
-          job_practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+          job_practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
           limit: this.perPage,
           offset: offset
         }

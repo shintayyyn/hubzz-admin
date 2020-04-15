@@ -1,78 +1,78 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
+  <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
     <!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
-		<div class="px-2 text-xl md:text-4xl text-white">
-			Practices
-		</div>
+    <div class="px-2 text-xl md:text-4xl text-white">
+      Practices
+    </div>
 
-		<div class="px-2 flex justify-between items-center flex-wrap">
-			<div>
-				<ListPracticeTabs />
-			</div>
-			<div>
-				<AppButton
-					v-if="
-						authAdminPermissions.includes('Create New Practice') &&
-						authAdminPermissions.includes('Create New Practice User')
-					"
-					class="text-sm"
-					:label="'Create New Practice'"
-					@click="show()"
-				/>
-			</div>
-			<AppInput
-				class="w-full sm:w-1/2 md:mr-2 text-white md:hidden"
-				v-model="sort"
-				:type="'select'"
-				:name="'status'"
-				:items="[
-					{ label: 'All', value: null },
-					{ label: 'Practice Name', value: 'practice_name' },
-					{ label: 'Practice Code', value: 'practice_code' },
-					{ label: 'Created', value: 'created_at' },
-					{ label: 'Expires', value: 'actived_until' },
-					{ label: 'Status', value: 'status' },
-					{ label: 'Type', value: 'type' }
-				]"
-			/>
-		</div>
+    <div class="px-2 flex justify-between items-center flex-wrap">
+      <div>
+        <ListPracticeTabs />
+      </div>
+      <div>
+        <AppButton
+          v-if="
+            authAdminPermissions.includes('Create New Practice') &&
+              authAdminPermissions.includes('Create New Practice User')
+          "
+          class="text-sm"
+          :label="'Create New Practice'"
+          @click="show()"
+        />
+      </div>
+      <AppInput
+        v-model="sort"
+        class="w-full sm:w-1/2 md:mr-2 text-white md:hidden"
+        :type="'select'"
+        :name="'status'"
+        :items="[
+          { label: 'All', value: null },
+          { label: 'Practice Name', value: 'practice_name' },
+          { label: 'Practice Code', value: 'practice_code' },
+          { label: 'Created', value: 'created_at' },
+          { label: 'Expires', value: 'actived_until' },
+          { label: 'Status', value: 'status' },
+          { label: 'Type', value: 'type' }
+        ]"
+      />
+    </div>
 
-		<div class="flex items-center px-2 py-2">
-			<div class="relative">
-				<input
-					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-					placeholder="Search Practice by Name"
-					v-model="search"
-				/>
-				<button
-					v-if="search"
-					class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-					@click="(search = ''), searchSubmit()"
-				>
-					<svgicon
-						name="times-solid"
-						height="12"
-						width="12"
-						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-					/>
-				</button>
-			</div>
-		</div>
+    <div class="flex items-center px-2 py-2">
+      <div class="relative">
+        <input
+          v-model="search"
+          class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+          placeholder="Search Practice by Name"
+        >
+        <button
+          v-if="search"
+          class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+          @click="(search = ''), searchSubmit()"
+        >
+          <svgicon
+            name="times-solid"
+            height="12"
+            width="12"
+            class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+          />
+        </button>
+      </div>
+    </div>
 
-		<div
-			class="practice-shield"
-			v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
-			@click="modal ? (modal = false) : goBack()"
-		></div>
+    <div
+      v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
+      class="practice-shield"
+      @click="modal ? (modal = false) : goBack()"
+    />
 
-		<transition name="slide" mode="out-in">
-			<div class="practice-modal shadow-lg" v-if="modal">
-				<AddPracticeSurgery @close="modal = false" />
-			</div>
-		</transition>
+    <transition name="slide" mode="out-in">
+      <div v-if="modal" class="practice-modal shadow-lg">
+        <AddPracticeSurgery @close="modal = false" />
+      </div>
+    </transition>
 
-		<nuxt-child />
-	</div>
+    <nuxt-child />
+  </div>
 </template>
 
 <script>
@@ -351,40 +351,41 @@ export default {
 			this.params.order_by = order_by
 			this.getPractices()
 		},
+
 		goBack () {
 			let url = `/practices`
-			if (this.fromUrl.name === "index-practices-pending-practices") {
+
+			if (this.fromUrl && this.fromUrl.name === "index-practices-pending-practices") {
 				url = `/practices/pending-practices`
-			} else if (this.fromUrl.name === "index-practices-bogus-practices") {
+			} else if (this.fromUrl && this.fromUrl.name === "index-practices-bogus-practices") {
 				url = "/practices/bogus-practices"
-			} else if (
-				this.fromUrl.name === "index-practices-deactivated-practices"
-			) {
+			} else if (this.fromUrl && this.fromUrl.name === "index-practices-deactivated-practices") {
 				url = "/practices/deactivated-practices"
-			} else {
-				url = `/practices`
 			}
+
 			this.$router.push(url)
-		}
-	}
+		},
+	},
+
 }
 </script>
+
 <style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
+  .page-button {
+    background: linear-gradient(to top, #f2d024, #efde86);
+  }
 
-.page-button-disabled {
-	background: linear-gradient(to top, #6b717e, #6b7386);
-	cursor: not-allowed;
-}
+  .page-button-disabled {
+    background: linear-gradient(to top, #6b717e, #6b7386);
+    cursor: not-allowed;
+  }
 
-.page-button:active {
-	transform: translate(2px, 2px);
-}
-.card {
-	min-width: 100px;
-	height: 250px;
-	box-sizing: content-box;
-}
+  .page-button:active {
+    transform: translate(2px, 2px);
+  }
+  .card {
+    min-width: 100px;
+    height: 250px;
+    box-sizing: content-box;
+  }
 </style>

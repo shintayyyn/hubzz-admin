@@ -1,0 +1,61 @@
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.highcharts.com/maps/highmaps.js"></script>
+<script src="https://code.highcharts.com/maps/modules/data.js"></script>
+<script src="https://code.highcharts.com/mapdata/countries/gb/gb-all.js"></script>
+
+<div id="container" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+<script>
+const data = Highcharts.geojson(Highcharts.maps['countries/gb/gb-all'])
+
+data.forEach((data) => {
+  data.value = data.name === 'Anglesey' ? 10 : 0
+})
+
+Highcharts.mapChart('container', {
+  title: {
+    text: null,
+  },
+
+  credits: {
+    enabled: false,
+  },
+
+  legend: {
+    layout: 'vertical',
+    align: 'right',
+    verticalAlign: 'middle',
+  },
+
+  colorAxis: {
+    min: 0,
+    minColor: '#606673',
+    maxColor: '#e4b32b',
+  },
+
+  mapNavigation: {
+    enabled: true,
+    buttonOptions: {
+      verticalAlign: 'bottom',
+    },
+  },
+
+  plotOptions: {
+    map: {
+      states: {
+        hover: {
+          color: '#e4b32b',
+        },
+      },
+    },
+  },
+
+  series: [
+    {
+      data: data,
+      name: 'GB',
+    },
+  ],
+})
+
+</script>

@@ -30,10 +30,8 @@ export default {
 	},
 	async asyncData ({ app, store, route, error }) {
 		try {
-			let response = await app.$axios.$get(
-				`/api/v1/admin/locum-detail-compliance-documents/${route.params.docId}`
-			)
-			const compliance_doc = response.data.locum_detail_compliance_document
+			let response = await app.$axios.$get(`/api/v1/admin/locum-compliance-documents/${route.params.docId}`)
+			const compliance_doc = response.data.locum_compliance_document
 
 			response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${route.params.id}`

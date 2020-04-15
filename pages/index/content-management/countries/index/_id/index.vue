@@ -23,7 +23,7 @@
       
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
-                  <span class="ml-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.name : null }}</span>
+                  <span class="pl-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.name : null }}</span>
                 </div>
               </div>
             </div>
@@ -37,7 +37,7 @@
       
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
-                  <span class="ml-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.code : null }}</span>
+                  <span class="pl-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.code : null }}</span>
                 </div>
               </div>
             </div>
@@ -51,7 +51,7 @@
       
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
-                  <span class="ml-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.compliance_document_count : null }}</span>
+                  <span class="pl-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.compliance_document_count : null }}</span>
                 </div>
               </div>
             </div>
@@ -65,7 +65,7 @@
       
               <div class="flex flex-row justify-start">
                 <div class="flex flex-col w-full">
-                  <span class="ml-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.locum_compliance_document_count : null }}</span>
+                  <span class="pl-4 py-2 font-bold text-xs sm:text-sm">{{ country ? country.locum_compliance_document_count : null }}</span>
                 </div>
               </div>
             </div>

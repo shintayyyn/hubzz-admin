@@ -1,64 +1,77 @@
 import * as practiceApi from '@/api/practices'
 export default {
-  async initializePracticeTransactionListener ({ state, commit }, route) {
+  async initializePracticeListener ({ commit }) {
     //-------------------PRACTICES-------------------
-    this.$socket.on("createdPractice", (payload) => {
-      commit('ADD_PRACTICE', payload.payload.practice)
-      // commit('ADD_PRACTICE_USER', payload.payload.user)
-    }),
-      this.$socket.on("deletePractice", practice => {
-        commit('DELETE_PRACTICE', practice)
-      }),
-      //------------------PRACTICE INFOS-------------------
-      this.$socket.on("updatedPractice", async (practice) => {
-        const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-        const updatedPractice = response.data.practice
-        commit('UPDATE_PRACTICE', updatedPractice)
-      }),
-
-      //-------------------PRACTICE RATES----------------------
-      this.$socket.on("updatedPracticeRates", async (practice) => {
-        const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-        const updatedPractice = response.data.practice
-        commit('UPDATE_PRACTICE', updatedPractice)
-      }),
-
-      //----------------------PRACTICE TYPES------------------------
-      this.$socket.on("updatedPracticeType", async (practice) => {
-        const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
-        const updatedPractice = response.data.practice
-        commit('UPDATE_PRACTICE', updatedPractice)
-        const routeName = this.$router.currentRoute.name
-
-        if (updatedPractice.type === 'Hub') {
-          if (routeName.includes('practice-hub')) {
-            const query = {
-              ...this.$router.currentRoute.query
-            }
-            this.$router.push({ path: `/practices/` + updatedPractice.id + `/practice-surgeries`, query })
-          }
-        }
-        if (updatedPractice.type === 'Spoke') {
-          if (routeName.includes('practice-surgeries')) {
-            const query = {
-              ...this.$router.currentRoute.query
-            }
-            this.$router.push({ path: `/practices/` + updatedPractice.id + `/practice-hub`, query })
-          }
-        }
-      }),
-
-
-      //--------------------PRACTICE DOCUMENTS----------------------
-      this.$socket.on("createdPracticeDocument", (practiceDocument) => {
-        commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
-      }),
-      this.$socket.on("updatedPracticeDocument", (practiceDocument) => {
-        commit('UPDATE_PRACTICE_DOCUMENT', practiceDocument)
-      }),
-      this.$socket.on("deletedPracticeDocument", (practiceDocument) => {
-        commit('DELETE_PRACTICE_DOCUMENT', practiceDocument)
+    this.$socket.on('Admin Notification Practice Created', async (payload) => {
+      console.log('hello')
+      console.log('practice', payload.id)
+      commit ('ADD_PRACTICE_NOTIFICATION', {
+        payload,
+        notificationType: 'Admin Notification Practice Created'
       })
+    })
+
+    // this.$socket.on('Admin Notification Practice Created', async (practice) => {
+    //   console.log('hello')
+    //   console.log('practice', practice.id)
+    //   // console.log('practice2', practice.practice_user_id)
+    //   commit('ADD_PRACTICE', practice)
+    //   commit('ADD_PRACTICE_NOTIFICATION', practice)
+    //   commit('ADD_PRACTICE_USER', practice.payload.user)
+    // }),
+    // this.$socket.on("deletePractice", practice => {
+    //   commit('DELETE_PRACTICE', practice)
+    // }),
+    // //------------------PRACTICE INFOS-------------------
+    // this.$socket.on("updatedPractice", async (practice) => {
+    //   const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+    //   const updatedPractice = response.data.practice
+    //   commit('UPDATE_PRACTICE', updatedPractice)
+    // }),
+
+    // //-------------------PRACTICE RATES----------------------
+    // this.$socket.on("updatedPracticeRates", async (practice) => {
+    //   const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+    //   const updatedPractice = response.data.practice
+    //   commit('UPDATE_PRACTICE', updatedPractice)
+    // }),
+
+    // //----------------------PRACTICE TYPES------------------------
+    // this.$socket.on("updatedPracticeType", async (practice) => {
+    //   const response = await practiceApi.fetchSpecificPractice(this.$axios, practice)
+    //   const updatedPractice = response.data.practice
+    //   commit('UPDATE_PRACTICE', updatedPractice)
+    //   const routeName = this.$router.currentRoute.name
+
+    //   if (updatedPractice.type === 'Hub') {
+    //     if (routeName.includes('practice-hub')) {
+    //       const query = {
+    //         ...this.$router.currentRoute.query
+    //       }
+    //       this.$router.push({ path: `/practices/` + updatedPractice.id + `/practice-surgeries`, query })
+    //     }
+    //   }
+    //   if (updatedPractice.type === 'Spoke') {
+    //     if (routeName.includes('practice-surgeries')) {
+    //       const query = {
+    //         ...this.$router.currentRoute.query
+    //       }
+    //       this.$router.push({ path: `/practices/` + updatedPractice.id + `/practice-hub`, query })
+    //     }
+    //   }
+    // }),
+
+
+    //--------------------PRACTICE DOCUMENTS----------------------
+    this.$socket.on("createdPracticeDocument", (practiceDocument) => {
+      commit('ADD_PRACTICE_DOCUMENT', practiceDocument)
+    }),
+    this.$socket.on("updatedPracticeDocument", (practiceDocument) => {
+      commit('UPDATE_PRACTICE_DOCUMENT', practiceDocument)
+    }),
+    this.$socket.on("deletedPracticeDocument", (practiceDocument) => {
+      commit('DELETE_PRACTICE_DOCUMENT', practiceDocument)
+    })
 
     //----------------------PRACTICE USERS-----------------------
     this.$socket.on("createdPracticeUser", (user) => {

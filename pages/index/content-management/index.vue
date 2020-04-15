@@ -44,6 +44,70 @@
             title: 'Professions',
             url: '/content-management/professions',
           },
+          {
+            title: 'Users',
+            url: '/content-management/users',
+          },
+          {
+            title: 'Practice Users',
+            url: '/content-management/practice-users',
+          },
+          {
+            title: 'Locum Users',
+            url: '/content-management/locum-users',
+          },
+          {
+            title: 'Locum Compliance Documents',
+            url: '/content-management/locum-compliance-documents',
+          },
+          {
+            title: 'Practices',
+            url: '/content-management/practices',
+          },
+          {
+            title: 'Jobs',
+            url: '/content-management/jobs',
+          },
+          {
+            title: 'Locum Available Jobs',
+            url: '/content-management/locum-available-jobs',
+          },
+          {
+            title: 'Platform Jobs',
+            url: '/content-management/platform-jobs',
+          },
+          {
+            title: 'Private Jobs',
+            url: '/content-management/private-jobs',
+          },
+          {
+            title: 'Notification Types',
+            url: '/content-management/notification-types',
+          },
+          {
+            title: 'Notifications',
+            url: '/content-management/notifications',
+          },
+          {
+            title: 'Email Types',
+            url: '/content-management/email-types',
+          },
+          {
+            title: 'Emails',
+            url: '/content-management/emails',
+          },
+          {
+            title: 'Locum Invoices',
+            url: '/content-management/locum-invoices',
+          },
+          {
+            title: 'Locum Form As',
+            url: '/content-management/locum-form-as',
+          },
+          {
+            title: 'Locum Form Bs',
+            url: '/content-management/locum-form-bs',
+          },
         ],
       }
     },

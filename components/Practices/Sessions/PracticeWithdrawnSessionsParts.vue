@@ -31,13 +31,17 @@
               <strong class="block md:hidden text-sm uppercase">Title</strong>
               <span class="">{{ item.job.title }}</span>
             </div>
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span class="">{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span class>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
             </div>
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span class="">{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span class>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Created</strong>
@@ -50,12 +54,12 @@
           </nuxt-link>
         </div>
       </div>
-      <div v-if="!withdrawnJobs.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :total-pages="totalPages"
           :current-page="currentPage"
-          :per-page="perPage"
+          :perPage="perPage"
           @pagechanged="pagechanged"
         />
       </div>
@@ -80,7 +84,7 @@ export default {
       AppJobHeaderSort
     },
     // eslint-disable-next-line vue/require-prop-types
-    props:['practice', 'practice_surgery'],
+    props:['practice', 'practiceSurgery'],
     data (){
       return{
         // withdrawnJobs:[],
@@ -113,7 +117,7 @@ export default {
       this.$router.push({ query })
     },
     async created (){
-      console.log('practice_surgery', this.practice_surgery)
+      console.log('practice_surgery', this.practiceSurgery)
       await this.$store.commit('jobs/TOGGLE_LOADING', true)
       const query = {
         ...this.$route.query,
@@ -121,8 +125,8 @@ export default {
       }
       this.currentPage = parseInt(query.job_page)
       let params = {
-        // viewing_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
-        job_practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        // viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+        job_practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
         status : 'Withdrawn'
       }
       Promise.all([
@@ -139,7 +143,7 @@ export default {
     methods:{
       checkRoute (itemId){
         if (this.$route.name.includes('practice-surgeries')) {
-          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-withdrawn-sessions/${itemId}` }
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-withdrawn-sessions/${itemId}` }
         } else if(this.$route.name.includes('practice-sessions')) {
           return { path: `/practices/${this.practice.id}/practice-sessions/practice-withdrawn-sessions/${itemId}` }
         }
@@ -150,7 +154,7 @@ export default {
           // viewing_practice_id : this.practice.id,
           status : 'Withdrawn',
           order_by : orderBy ? orderBy : this.$route.query.order_by,
-          job_practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+          job_practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
           limit: this.perPage,
           offset: offset
         }

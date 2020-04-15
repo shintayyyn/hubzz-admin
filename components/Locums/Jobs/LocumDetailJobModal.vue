@@ -39,7 +39,7 @@
 								</div>
 							</div>
 
-							<div class="w-full md:w-1/3 mb-4 md:px-2">
+							<div class="w-full md:w-1/3 mb-4 md:px-2"> 
 								<p class="mb-2 font-semibold">Duration</p>
 								<div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">From</span>
@@ -188,7 +188,7 @@ import { gmapApi } from "vue2-google-maps";
 export default {
 	props: ["job"],
 	created() {
-		// console.log("This is the job within the modal", this.job);
+		console.log("This is the job within the modal", this.job);
 	},
 	computed: {
 		google: gmapApi,

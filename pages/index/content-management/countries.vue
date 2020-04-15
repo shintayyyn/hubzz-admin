@@ -176,17 +176,18 @@
       },
 
       pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 0)
+        return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getCountries()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getCountries()
       },
 

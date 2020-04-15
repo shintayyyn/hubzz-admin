@@ -20,14 +20,7 @@
         </nuxt-link>
       </div>
     </div>
+
     <nuxt-child />
   </div>
 </template>
-<script>
-import AppButton from "@/components/Base/AppButton"
-export default {
-	components: {
-		AppButton
-	}
-}
-</script>

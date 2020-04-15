@@ -496,20 +496,14 @@
       async toPutLocumDetailComplianceDocs () {
         console.log(this.toPutLocumDetailCompliance)
         try {
-          if (this.toPutLocumDetailCompliance.status == "Rejected") {
+          if (this.toPutLocumDetailCompliance.status === "Rejected") {
             if (this.toPutLocumDetailCompliance.note) {
-              await this.$axios.put(
-                "/api/v1/admin/locum-detail-compliance-documents/" +
-                  this.locumComplianceDocument.id,
-                {
-                  status:
-                    this.toPutLocumDetailCompliance.status == "Expiring"
-                      ? "Approved"
-                      : this.toPutLocumDetailCompliance.status,
-                  expired_at: this.toPutLocumDetailCompliance.expired_at,
-                  note: this.toPutLocumDetailCompliance.note
-                }
-              )
+              await this.$axios.put(`/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocument.id}/update-status`, {
+                status: this.toPutLocumDetailCompliance.status,
+                expired_at: this.toPutLocumDetailCompliance.expired_at,
+                note: this.toPutLocumDetailCompliance.note,
+              })
+
               // await this.getLocums();
               this.$emit('complianceUpdated')
               this.$store.commit("SET_NOTIFICATION", {
@@ -517,7 +511,7 @@
                 status: "success",
                 text: "Saved"
               })
-            } else if (this.toPutLocumDetailCompliance.note == "") {
+            } else if (this.toPutLocumDetailCompliance.note === "") {
               this.$store.commit("SET_NOTIFICATION", {
                 enabled: true,
                 status: "danger",
@@ -525,21 +519,15 @@
               })
             }
           } else if (
-            this.toPutLocumDetailCompliance.status == "Approved" ||
-            this.toPutLocumDetailCompliance.status == "Expired" ||
-            this.toPutLocumDetailCompliance.status == ""
+            this.toPutLocumDetailCompliance.status === "Approved"
+            || this.toPutLocumDetailCompliance.status === "Expired"
+            || this.toPutLocumDetailCompliance.status === ""
           ) {
-            await this.$axios.put(
-              "/api/v1/admin/locum-detail-compliance-documents/" +
-                this.locumComplianceDocument.id,
-              {
-                status:
-                  this.toPutLocumDetailCompliance.status == "Expiring"
-                    ? "Approved"
-                    : this.toPutLocumDetailCompliance.status,
-                expired_at: this.toPutLocumDetailCompliance.expired_at
-              }
-            )
+            await this.$axios.put(`/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocument.id}/update-status`, {
+              status: this.toPutLocumDetailCompliance.status,
+              expired_at: this.toPutLocumDetailCompliance.expired_at,
+            })
+
             this.$emit('complianceUpdated')
             // await this.getLocums();
             this.$store.commit("SET_NOTIFICATION", {

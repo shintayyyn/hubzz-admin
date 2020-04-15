@@ -7,6 +7,7 @@
 		<div class="signout-shield" v-if="showLogoutModal" @click="showLogoutModal = false"></div>
 		<div class="sidebar-shield" v-if="$store.state.toggled_sidebar" @click="close"></div>
 		<AppNotification />
+		<PopUpNotification />
 		<div class="content h-screen flex flex-col justify-between">
 			<AppHeader />
 			<nuxt class="overflow-y-auto" />
@@ -15,52 +16,54 @@
 </template>
 
 <script>
-import AppNotification from "~/components/AppNotification";
-import AppHeader from "~/components/AppHeader";
-import AppSideBar from "~/components/AppSideBar";
-import SignOut from "~/components/Auth/SignOut";
+import AppNotification from "~/components/AppNotification"
+import PopUpNotification from "@/components/PopUpNotification"
+import AppHeader from "~/components/AppHeader"
+import AppSideBar from "~/components/AppSideBar"
+import SignOut from "~/components/Auth/SignOut"
 export default {
 	components: {
 		AppNotification,
+		PopUpNotification,
 		AppHeader,
 		AppSideBar,
 		SignOut
 	},
 
-	data() {
+	data () {
 		return {
 			showLogoutModal: false
-		};
+		}
 	},
 
 	computed: {
-		notify() {
-			return this.$store.state.notification.enabled;
+		notify () {
+			return this.$store.state.notification.enabled
 		},
-		doNotClose() {
-			return this.$store.state.notification.doNotClose;
+		doNotClose () {
+			return this.$store.state.notification.doNotClose
 		}
 	},
 
 	watch: {
-		notify(value) {
-			if (value && !this.doNotClose) {
-			}
-		},
-		mounted() {
-			const user = this.$auth.user;
-			console.log("user", user);
-			this.$store.commit("SET_ADMIN_USER_PERMISSIONS", user);
+		// notify (value) {
+		// 	if (value && !this.doNotClose) {
+		// 	}
+		// },
+		mounted () {
+			const user = this.$auth.user
+			console.log("user", user)
+			this.$store.commit("SET_ADMIN_USER_PERMISSIONS", user)
 		}
 	},
 
 	methods: {
-		close() {
-			this.$store.commit("TOGGLE_SIDEBAR", false);
-			document.body.style.overflow = "auto";
+		close () {
+			this.$store.commit("TOGGLE_SIDEBAR", false)
+			document.body.style.overflow = "auto"
 		}
 	}
-};
+}
 </script>
 
 <style>

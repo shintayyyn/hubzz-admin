@@ -25,7 +25,7 @@
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span class>{{ item.job.job_number }}</span>
+              <span class>{{ item.job_part_number }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -43,13 +43,13 @@
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span class>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span class>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span class>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span class>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
             </div>
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -57,7 +57,7 @@
               <strong class="block md:hidden text-sm uppercase">Created At</strong>
               <span class="">{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
-						<div
+            <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Completed At</strong>
@@ -77,7 +77,7 @@
           </nuxt-link>
         </div>
       </div>
-      <div v-if="!completedJobParts.length == 0" class>
+      <div class>
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -106,7 +106,21 @@ export default {
 		PracticeSessionModal,
 		AppJobHeaderSort
 	},
-	props: ["practice", "practice_surgery"],
+
+	props: {
+
+		practice: {
+			type: Object,
+			default: () => null,
+		},
+
+		practiceSurgery: {
+			type: Object,
+			default: () => null,
+		},
+	
+	},
+
 	data () {
 		return {
 			// completedJobParts:[],
@@ -145,7 +159,7 @@ export default {
 		}
 		this.currentPage = parseInt(query.completed_job_page)
 		let params = {
-			job_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+			job_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
 			status: "Completed"
 		}
 		Promise.all([
@@ -168,7 +182,7 @@ export default {
 	methods: {
     checkRoute (itemId){
       if (this.$route.name.includes('practice-surgeries')) {
-        return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-completed-sessions/${itemId}` }
+        return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-completed-sessions/${itemId}` }
       } else if(this.$route.name.includes('practice-sessions')) {
         return { path: `/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/${itemId}` }
       }
@@ -179,7 +193,7 @@ export default {
 			let params = {
 				status: "Completed",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-        job_practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        job_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
 				limit: this.perPage,
 				offset: offset
 			}

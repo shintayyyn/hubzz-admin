@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex items-center px-2 py-2">
-			<!-- <div class="flex py-2">
+      <!-- <div class="flex py-2">
 				<div class="relative">
 					<input
 						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
@@ -29,7 +29,7 @@
 					</button>
 				</div>
 			</div> -->
-		</div>
+    </div>
     <div class="overflow-x-auto xl:overflow-hidden">
       <div v-if="allocatedJobs.length === 0">
         <div
@@ -66,13 +66,17 @@
               <strong class="block md:hidden text-sm uppercase">Assigned to Locum</strong>
               <span class="">{{ item.platform_job.appointed_to_locum.user.personal_detail.name }}</span>
             </div>
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span class="">{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span class>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
             </div>
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+            <div
+              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+            >
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span class="">{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span class>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
             </div>
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Created</strong>
@@ -82,7 +86,7 @@
         </div>
       </div>
       <!--PAGINATION-->
-      <div v-if="!allocatedJobs.length == 0" class="">
+      <div class="">
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -103,19 +107,31 @@
   </div>
 </template>
 <script>
-import debounce from "lodash.debounce";
+import debounce from "lodash.debounce"
 import AppPagination from '@/components/Base/AppPagination'
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 import AppJobHeaderSort from '@/components/Base/AppJobHeaderSort'
-import AppInput from '@/components/Base/AppInput'
 export default {
     components:{
       AppPagination,
       PracticeSessionModal,
       AppJobHeaderSort,
-      AppInput,
     },
-    props:['practice', 'practice_surgery'],
+
+    props: {
+
+      practice: {
+        type: Object,
+        default: () => null,
+      },
+
+      practiceSurgery: {
+        type: Object,
+        default: () => null,
+      },
+
+    },
+
     watchQuery: ["search"],
     data (){
       return{ 
@@ -142,14 +158,14 @@ export default {
       }
     },
     watch: {
-      $route (to, from) {
+      $route (to) {
         this.currentPage = parseInt(to.query.job_page)
         this.getAllocatedJobs()
       },
-      "search.id"(value){
+      "search.id" (){
         this.searchSubmit()
       },
-      "search.title"(value){
+      "search.title" (){
         this.searchSubmit()
       }
     },
@@ -166,7 +182,7 @@ export default {
       }
       this.currentPage = parseInt(query.job_page)
       let params = {
-        practice_id : this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+        practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
         status: "Allocated"
       }
       Promise.all([
@@ -187,7 +203,7 @@ export default {
     methods:{
       checkRoute (itemId){
         if (this.$route.name.includes('practice-surgeries')) {
-          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}/surgery-sessions/surgery-allocated-sessions/${itemId}` }
+          return { path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-allocated-sessions/${itemId}` }
         } else if(this.$route.name.includes('practice-sessions')) {
           return { path: `/practices/${this.practice.id}/practice-sessions/practice-allocated-sessions/${itemId}` }
         }
@@ -198,7 +214,7 @@ export default {
         let params = {
           status : 'Allocated',
           order_by :  orderBy ? orderBy : this.$route.query.order_by,
-          practice_id: this.practice_surgery ? this.practice_surgery.child_practice_id : this.practice.id,
+          practice_id: this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
           limit: this.perPage,
           offset: offset
         }
@@ -235,18 +251,11 @@ export default {
         await this.$store.commit('jobs/TOGGLE_LOADING', false)
       },
       
-      searchSubmit: debounce(function(page, orderBy) {
+      searchSubmit: debounce(function () {
         let search = this.search
 
         let query = { ...this.$router.query, search}
 
-        // if (page === 1) {
-        //   delete query.page;
-        // }
-
-        // if (page) {
-        //   query = { ...this.$router.query, page, search };
-        // }
         this.$router.push({query})
       }, 500)
     }

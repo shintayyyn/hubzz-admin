@@ -229,11 +229,12 @@
 
     watch: {
       orderBy () {
+        this.activePage = 1
         this.getProfessions()
       },
 
       limit () {
-        this.page = 1
+        this.activePage = 1
         this.getProfessions()
       },
 

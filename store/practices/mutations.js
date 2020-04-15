@@ -2,6 +2,21 @@ export default{
     TOGGLE_LOADING (state, payload){
         state.loading_practices = payload
     },
+    ADD_PRACTICE_NOTIFICATION (state, payload) {
+        console.log('practice notification payload', payload)
+        let index = state.practiceNotifications.findIndex(practiceNotif => practiceNotif.payload.id === payload.id)
+        if (index < 0) {
+            state.practiceNotifications.unshift(payload)
+        } else if (index >= 0) {
+            state.practiceNotifications.splice(index, 1, payload)
+        }
+    },
+    REMOVE_PRACTICE_NOTIFICATION (state, payload) {
+        state.practiceNotifications = state.practiceNotifications.filter(practiceNotif => practiceNotif.payload.id !==payload)
+    },
+    CLEAR_PRACTICE_NOTIFICATIONS (state) {
+        state.practiceNotifications = []
+    }, 
     //------------PRACTICES--------------------------
     SET_PRACTICES (state, payload){
         state.allPractices = payload
@@ -19,7 +34,7 @@ export default{
             state.allPractices.pop()
         }
     },
-    UPDATE_PRACTICE (state, payload, redirect){
+    UPDATE_PRACTICE (state, payload,){
       let index = state.allPractices.findIndex(practice => practice.id === payload.id)
       if(index >= 0){
         state.allPractices.splice(index, 1, payload)

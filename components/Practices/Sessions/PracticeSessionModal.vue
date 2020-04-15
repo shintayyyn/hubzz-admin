@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="text-white mt-2 md:mx-2">
-        Date Posted: {{ job ? $moment(job.date_created).format('DD-MM-YYYY') : $moment(modalJobPart.date_created).format('DD-MM-YYYY') }}
+        Date Posted: {{ job ? $moment(job.date_created).format('DD/MM/YYYY') : $moment(modalJobPart.date_created).format('DD/MM/YYYY') }}
       </div>
       <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
@@ -74,11 +74,11 @@
                   </p>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-                    <span class="font-semibold">{{ $moment(job.date_start,'YYYY-MM-DD[T]').format('DD-MM-YYYY') }} | {{ $moment(job.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+                    <span class="font-semibold">{{ $moment(job.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(job.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                   </div>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-                    <span class="font-semibold">{{ $moment(job.date_end,'YYYY-MM-DD[T]').format('DD-MM-YYYY') }} | {{ $moment(job.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+                    <span class="font-semibold">{{ $moment(job.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(job.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                   </div>
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
@@ -398,11 +398,11 @@
                       </div>
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Date Start</strong>
-                        <span class="">{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD-MM-YYYY') }}</span>
+                        <span class="">{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
                       </div>
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Date End</strong>
-                        <span class="">{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD-MM-YYYY') }}</span>
+                        <span class="">{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
                       </div>
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
@@ -453,7 +453,18 @@
                 <!-- INFOS LEFT -->
                 <div class="sm:w-1/2 w-full mt-4 md:my-4 overflow-hidden">
                   <div class="mx-4 md:m-4 text-gray text-white">
-                    <p class="font-semibold">
+
+                    <!-- STATUS -->
+                    <div v-if="job_part &&  job_part.status === 'Completed'">
+                      <p class="font-semibold">Completed At</p>
+                      <p class="text-white">{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</p>
+                    </div>
+                    <div v-if="job_part && job_part.status === 'Approved'">
+                      <p class="mt-5 font-semibold">Approved At</p>
+                      <p class="text-white">{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</p>
+                    </div>
+                    <!-- STATUS -->
+                    <p class="mt-5 font-semibold">
                       Job Part Number
                     </p>
                     <p class="text-white">
@@ -493,11 +504,11 @@
                     </p>
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-                      <span class="font-semibold">{{ $moment(modalJobPart.date_start,'YYYY-MM-DD[T]').format('DD-MM-YYYY') }} | {{ $moment(modalJobPart.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+                      <span class="font-semibold">{{ $moment(modalJobPart.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(modalJobPart.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                     </div>
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-                      <span class="font-semibold">{{ $moment(modalJobPart.date_end,'YYYY-MM-DD[T]').format('DD-MM-YYYY') }} | {{ $moment(modalJobPart.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+                      <span class="font-semibold">{{ $moment(modalJobPart.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(modalJobPart.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                     </div>
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
@@ -675,7 +686,7 @@ export default {
       console.log('job', this.job)
     }
     if(this.job_part) {
-      // console.log('job part', this.job_part)
+      console.log('job part', this.job_part)
       this.modalJobPart = this.job_part
       await this.getLocum()
     }

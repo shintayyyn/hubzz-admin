@@ -1,9 +1,9 @@
 <template>
   <transition name="slide">
     <div
+      v-if="locumComplianceNotifications.length > 0 || practiceNotifications.length > 0"
       class="job-notification"
     >
-      <!-- v-if="jobNotifications.length > 0 || billingNotifications.length > 0 || locumComplianceNotifications.length > 0" -->
       <div
         class="my-2 mt-1 flex items-center"
         :class="toggleNotification ? 'justify-between' : 'justify-end'"
@@ -41,8 +41,8 @@
                         <div
                           v-if="!notification.billingStatus"
                           class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
-                          :class="bgStatus(notification.status ? notification.status : notification.locum_status)"
-                        >{{ status(notification.status ? notification.status : notification.locum_status) }}</div>
+                          :class="bgStatus(notification.status ? notification.status : '')"
+                        >{{ notification.status ? notification.status : '' }}</div>
                         <div
                           class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
                         >{{ notification.status_tag }}</div>
@@ -98,25 +98,28 @@ export default {
   },
   computed: {
     locumComplianceNotifications () {
-      return this.$store.getters("locums/getLocumComplianceNotifications")
+      return this.$store.getters["locums/getLocumComplianceNotifications"]
     },
-    jobNotifications () {
-      if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
-        return this.$store.getters["jobs/getPracticeJobNotifications"]
-      }
-      return this.$store.getters["jobs/getLocumJobNotifications"]
+    practiceNotifications () {
+      return this.$store.getters["practices/getPracticeNotifications"]
     },
-    billingNotifications () {
-      if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
-        return this.$store.getters["billing/getPracticeBillingNotifications"]
-      }
-      return this.$store.getters["billing/getLocumBillingNotifications"]
-    },
+    // jobNotifications () {
+    //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
+    //     return this.$store.getters["jobs/getPracticeJobNotifications"]
+    //   }
+    //   return this.$store.getters["jobs/getLocumJobNotifications"]
+    // },
+    // billingNotifications () {
+    //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
+    //     return this.$store.getters["billing/getPracticeBillingNotifications"]
+    //   }
+    //   return this.$store.getters["billing/getLocumBillingNotifications"]
+    // },
     url () {
       return this.$auth.user.domain === "Practice" ? "/sessions" : "/jobs"
     },
     notifications () {
-      return [...this.jobNotifications, ...this.billingNotifications, ...this.locumComplianceNotifications,].sort(
+      return [...this.locumComplianceNotifications,...this.practiceNotifications].sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
       )
     }
@@ -135,6 +138,11 @@ export default {
       }
     },
     locumComplianceNotifications () {
+      this.notifications.sort(
+        (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
+      )
+    },
+    practiceNotifications () {
       this.notifications.sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
       )
@@ -173,7 +181,6 @@ export default {
     }
   },
   created () {
-    console.log('notifications notify', this.locumComplianceNotifications)
   },
   methods: {
     show (id) {
@@ -197,24 +204,7 @@ export default {
       this.$store.commit("calendar/CREATE_JOB_MODAL", false)
       // path url
       let url = ""
-      if (type === "Jobs") {
-        url = this.$route.name.includes("dashboard")
-          ? this.$route.path
-          : !this.$route.name.includes("dashboard") &&
-            this.$auth.user.domain === "Practice" &&
-            notification.practice_id === this.$auth.user.practice_id
-          ? `/sessions`
-          : !this.$route.name.includes("dashboard") &&
-            this.$auth.user.domain === "Practice" &&
-            notification.practice_id !== this.$auth.user.practice_id
-          ? `/hub-surgery-management/${
-              notification.practice_surgery_id
-            }/surgery-sessions`
-          : !this.$route.name.includes("dashboard") &&
-            this.$auth.user.domain === "Locum"
-          ? `/jobs`
-          : null
-      } else if (type === "Billings") {
+      if (type === "Billings") {
         url =
           this.$auth.user.domain === "Practice" &&
           notification.practice_id === this.$auth.user.practice_id
@@ -231,6 +221,10 @@ export default {
               notification.notification_billing_type === "Private"
             ? `/locum-billing/private-invoices`
             : null
+      } else if (type === "Admin Locum Compliance") {
+        url = `/locums/${notification.locumDetailComplianceDocument.locum_user_id}/locum-compliance/${notification.id}`
+      } else if (type === 'Admin Practice Creation'){
+        url = `/practices/${notification.id}`
       }
 
       // for dashboard viewing, moves the date according to the job
@@ -252,190 +246,28 @@ export default {
             .format("YYYY-MM-DD")
         )
       }
-
-      // query
-      if (type === "Jobs") {
-        let routeStatus = ""
-
-        switch (status) {
-          case "Declined":
-            routeStatus = "Withdrawn"
-            break
-          case "Matched":
-            routeStatus = "Available"
-            break
-          case "Available":
-            routeStatus = "Public"
-            break
-          case "Terminated":
-            routeStatus = "Completed"
-            break
-          case "Updated":
-            routeStatus = null
-            break
-          default:
-            routeStatus = status
-        }
-
-        // console.log(url, status, routeStatus, notification)
-        // return
-
-        if (url === null) {
-          this.close(id, type, notification.notification_type)
-        } else if (url) {
-          this.$router.push({
-            path: `${url}`,
-            query: {
-              ...this.$route.query,
-              jobStatus: url.includes("surgery-management")
-                ? routeStatus
-                : null,
-              status: !url.includes("surgery-management") ? routeStatus : null
-            }
-          })
-        }
-        setTimeout(() => {
-          if (url === null) {
-            this.close(id, type, notification.notification_type)
-          } else if (url) {
-            this.$router.push({
-              path: `${url}/${id}`,
-              query: {
-                ...this.$route.query,
-                jobStatus: url.includes("surgery-management")
-                  ? routeStatus
-                  : null,
-                status: !url.includes("surgery-management") ? routeStatus : null
-              }
-            })
-          }
-        }, 500)
-      } else if (type === "Billings") {
-        let routeStatus = ""
-
-        switch (status) {
-          case "Draft":
-            routeStatus = "to-be-invoiced"
-            break
-          case "Issued":
-            routeStatus = "issued"
-            break
-          case "Paid":
-            routeStatus = "approved"
-            break
-          default:
-            routeStatus = status
-        }
-
-        // console.log(url, status, routeStatus, notification)
-        // return
-
-        if (id !== this.$route.params.id) {
-          this.$router.push({
-            path: `${url}`,
-            query: { ...this.$route.query, status: routeStatus }
-          })
-        }
-        setTimeout(() => {
-          this.$router.push({
-            path: `${url}/${id}/edit`,
-            query: { ...this.$route.query, status: routeStatus }
-          })
-        }, 500)
+      if(url) {
+        this.$router.push({
+          path: `${url}`,
+        })
       }
       this.close(id, type, notification.notification_type)
     },
     close (id, type, notificationType) {
-      if (type === "Jobs") {
-        if (
-          [
-            "Practice Notification Job Ongoing",
-            "Practice Notification Job Cancelled",
-            "Practice Notification Job Declined",
-            "Locum Notification Job Ongoing",
-            "Locum Notification Job Cancelled",
-            "Locum Notification Job Declined"
-          ].includes(notificationType)
-        ) {
-          switch (notificationType) {
-            case "Practice Notification Job Ongoing":
-              this.$store.commit(
-                "jobs/REMOVE_PRACTICE_JOB_NOTIFICATION",
-                this.$store.state.jobs.practice_job_notifications.find(notif =>
-                  notif.job_parts.find(jobPart => jobPart.status === "Ongoing")
-                ).id
-              )
-              break
-            case "Practice Notification Job Cancelled":
-              this.$store.commit(
-                "jobs/REMOVE_PRACTICE_JOB_NOTIFICATION",
-                this.$store.state.jobs.practice_job_notifications.find(notif =>
-                  notif.job_parts.find(
-                    jobPart => jobPart.status === "Cancelled"
-                  )
-                ).id
-              )
-              break
-            case "Practice Notification Job Declined":
-              this.$store.commit(
-                "jobs/REMOVE_PRACTICE_JOB_NOTIFICATION",
-                this.$store.state.jobs.practice_job_notifications.find(notif =>
-                  notif.job_parts.find(
-                    jobPart => jobPart.status === "Withdrawn"
-                  )
-                ).id
-              )
-              break
-            case "Locum Notification Job Ongoing":
-              this.$store.commit(
-                "jobs/REMOVE_LOCUM_JOB_NOTIFICATION",
-                this.$store.state.jobs.locum_job_notifications.find(notif =>
-                  notif.job_parts.find(jobPart => jobPart.status === "Ongoing")
-                ).id
-              )
-              break
-            case "Locum Notification Job Cancelled":
-              this.$store.commit(
-                "jobs/REMOVE_LOCUM_JOB_NOTIFICATION",
-                this.$store.state.jobs.locum_job_notifications.find(notif =>
-                  notif.job_parts.find(
-                    jobPart => jobPart.status === "Cancelled"
-                  )
-                ).id
-              )
-              break
-            case "Locum Notification Job Declined":
-              this.$store.commit(
-                "jobs/REMOVE_LOCUM_JOB_NOTIFICATION",
-                this.$store.state.jobs.locum_job_notifications.find(notif =>
-                  notif.job_parts.find(
-                    jobPart => jobPart.status === "Withdrawn"
-                  )
-                ).id
-              )
-              break
-          }
-        } else if (
-          ![
-            "Practice Notification Job Ongoing",
-            "Practice Notification Job Cancelled",
-            "Practice Notification Job Declined",
-            "Locum Notification Job Ongoing",
-            "Locum Notification Job Cancelled",
-            "Locum Notification Job Declined"
-          ].includes(notificationType)
-        ) {
-          this.$store.commit("jobs/REMOVE_PRACTICE_JOB_NOTIFICATION", id)
-          this.$store.commit("jobs/REMOVE_LOCUM_JOB_NOTIFICATION", id)
-        }
-      }
+      console.log('id', id)
       if (type === "Billings") {
         this.$store.commit("billing/REMOVE_PRACTICE_BILLING_NOTIFICATION", id)
         this.$store.commit("billing/REMOVE_LOCUM_BILLING_NOTIFICATION", id)
       }
+      if (type === "Admin Locum Compliance") {
+        this.$store.commit("locums/REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION", id)
+      }
+      if (type === "Admin Practice Creation") {
+        this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id)
+      }
     },
     status (status) {
-      return status === "Matched" ? "AVAILABLE" : status.toUpperCase()
+      // return status === "Matched" ? "AVAILABLE" : status.toUpperCase()
     },
     bgStatus (status) {
       let str = ""
@@ -470,10 +302,7 @@ export default {
       return str
     },
     clearNotifications () {
-      this.$store.commit("billing/CLEAR_PRACTICE_BILLING_NOTIFICATION")
-      this.$store.commit("billing/CLEAR_LOCUM_BILLING_NOTIFICATION")
-      this.$store.commit("jobs/CLEAR_PRACTICE_JOB_NOTIFICATION")
-      this.$store.commit("jobs/CLEAR_LOCUM_JOB_NOTIFICATION")
+      this.$store.commit("locums/CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION")
     }
   }
 }
