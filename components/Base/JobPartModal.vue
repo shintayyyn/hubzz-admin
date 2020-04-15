@@ -55,9 +55,9 @@
 									class="text-white no-underline"
 								>{{job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour"}}</p>
 								<p class="mt-5 font-semibold">Total Hours</p>
-								<p class="text-white">{{job_part.job ? job_part.job.total_hours+" Hours":null + " Hours"}}</p>
+								<p class="text-white">{{job_part.job.total_hours | hoursMinutes}}</p>
 								<p class="mt-5 font-semibold">Job Description</p>
-								<p class="text-white">{{job_part.job ? job_part.job.description: 'N/A'}}</p>
+								<p class="text-white">{{job_part.job ? job_part.job.description: '(none)'}}</p>
 							</div>
 						</div>
 						<!-- INFOS RIGHT -->

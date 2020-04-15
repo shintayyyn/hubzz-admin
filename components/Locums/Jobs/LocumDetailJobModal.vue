@@ -14,7 +14,9 @@
 					<br />
 				</div>
 			</div>
-			<p class="text-white my-2">{{"Posted On: "+$moment(job.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</p>
+			<p
+				class="text-white my-2"
+			>{{"Posted On: "+$moment(job.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</p>
 
 			<div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
 				<div class="inline-flex m-4">
@@ -29,11 +31,11 @@
 										class="text-white no-underline"
 									>{{job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour"}}</p>
 									<p class="mt-5 font-semibold">Total Hours</p>
-									<p class="text-white">{{job.total_hours ? job.total_hours+" Hours":null + " Hours"}}</p>
+									<p class="text-white">{{job.total_hours | hoursMinutes}}</p>
 									<p class="mt-5 font-semibold">Job Description</p>
-									<p class="text-white">{{job.description}}</p>
+									<p class="text-white">{{job.description ? job.description : '(none)'}}</p>
 									<p class="mt-5 font-semibold">Extra Information</p>
-									<p class="text-white">{{job.extra_information ? job.extra_information:null }}</p>
+									<p class="text-white">{{job.extra_information ? job.extra_information:'(none)' }}</p>
 								</div>
 							</div>
 
