@@ -68,7 +68,7 @@
                   <div class="pb-2 flex">
                     <span
                       class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-                    >{{ $moment(job_part.completed_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+                    >{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
                   </div>
                 </div>
                 <div v-if="job_part.status === 'Approved'">
@@ -76,17 +76,17 @@
                   <div class="pb-2 flex">
                     <span
                       class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-                    >{{ $moment(job_part.completed_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+                    >{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
                   </div>
                 </div>
 								<p class="font-semibold">Duration</p>
 								<div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-									<span class="font-semibold">{{$moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+									<span class="font-semibold">{{ $moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(job_part.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 								</div>
 								<div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-									<span class="font-semibold">{{$moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}}</span>
+									<span class="font-semibold">{{ $moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(job_part.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 								</div>
 								<div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
@@ -224,11 +224,11 @@
 									</div>
 									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
 										<strong class="block md:hidden text-sm uppercase">Date Start</strong>
-										<span class>{{item.date_start}} | | {{item.time_start}}</span>
+										<span class>{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} | {{ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 									</div>
 									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
 										<strong class="block md:hidden text-sm uppercase">Date End</strong>
-										<span class>{{item.date_end}} | {{ item.time_end }}</span>
+										<span class>{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} | {{ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 									</div>
 									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
 										<strong class="block md:hidden text-sm uppercase">Job Part Status</strong>

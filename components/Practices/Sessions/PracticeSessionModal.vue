@@ -457,11 +457,11 @@
                     <!-- STATUS -->
                     <div v-if="job_part &&  job_part.status === 'Completed'">
                       <p class="font-semibold">Completed At</p>
-                      <p class="text-white">{{ $moment(job_part.completed_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+                      <p class="text-white">{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</p>
                     </div>
                     <div v-if="job_part && job_part.status === 'Approved'">
                       <p class="mt-5 font-semibold">Approved At</p>
-                      <p class="text-white">{{ $moment(job_part.approved_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+                      <p class="text-white">{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</p>
                     </div>
                     <!-- STATUS -->
                     <p class="mt-5 font-semibold">
