@@ -143,6 +143,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Practice',
+            key: 'user_practice_name',
+            sort_key: 'user_practice_name',
+            column: (item) => item.user && item.user.practice? item.user.practice.name : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Seen At',
             key: 'seen_at',
             sort_key: 'seen_at',
