@@ -69,14 +69,10 @@
                 class
               >{{ $moment(item.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
-            <!-- <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
-              <strong class="block md:hidden text-sm uppercase">Created</strong>
-              <span
-                class
-              >{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
-            </div> -->
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Approved At</strong>
+              <span class="">{{ $moment(item.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+            </div>
           </div>
         </div>
       </div>

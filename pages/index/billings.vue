@@ -5,12 +5,12 @@
 			<div>
 				
 			</div>
-			<AppButton
+			<!-- <AppButton
         class="mr-2"
         :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
         :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
 				@click="goToTab()"
-      />
+      /> -->
 		</div>
 		<nuxt-child />
 	</div>
