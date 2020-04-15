@@ -1,8 +1,8 @@
 <template>
 	<div class="mt-5">
 		<div class="mx-4 md:mx-8">
-			<AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
 			<LocumJobsTabs :user="user" />
+			<AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
 			<nuxt-child />
 			<!-- <AppTable :columns="columns" :total="jobs.length" :items="jobs" /> -->
 		</div>
