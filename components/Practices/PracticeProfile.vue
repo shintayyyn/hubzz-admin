@@ -21,7 +21,7 @@
               Practice ID
             </p>
             <p class="mx-2">
-              {{ practice ? practice.id : null }}
+              {{ practice.id }}
             </p>
 
             <p class="flex font-bold">
