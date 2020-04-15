@@ -9,7 +9,11 @@
 				:class="showAll ? '' : 'text-sm'"
 			>
 				<p class="font-bold">Notifications</p>
-				<div class="flex items-center" :class="showAll ? 'text-sm' : 'text-xs'">
+				<div
+					class="flex items-center"
+					:class="showAll ? 'text-sm' : 'text-xs'"
+					v-if="notifications.length > 0"
+				>
 					<p class="cursor-pointer" @click="markAllAsRead">Mark all as read</p>
 					<span v-if="showAll" class="px-1 font-bold">·</span>
 					<span v-if="showAll" class="cursor-pointer" @click="showAll = false">Close</span>

@@ -55,19 +55,19 @@
                     Total Hours
                   </p>
                   <p class="text-white pb-2">
-                    {{ job.total_hours ? job.total_hours+" Hours":null + " Hours" }}
+                    {{ job.total_hours | hoursMinutes }}
                   </p>
                   <p class="font-semibold">
                     Job Description
                   </p>
                   <p class="text-white pb-2">
-                    {{ job.description }}
+                    {{ job.description ? job.description : '(none)' }}
                   </p>
                   <p class="font-semibold">
                     Extra Information
                   </p>
                   <p class="text-white pb-2">
-                    {{ job.platform_job ? job.platform_job.extra_information : 'N/A' }}
+                    {{ job.platform_job ? job.platform_job.extra_information : '(none)' }}
                   </p>
                   <p class="font-semibold">
                     Duration
@@ -193,7 +193,7 @@
                         Headline
                       </div>
                       <p class="my-2 font-lighttext-sm">
-                        {{ locumUser.locum_detail ? locumUser.locum_detail.headline : null }}
+                        {{ locumUser.locum_detail ? locumUser.locum_detail.headline : '(none)' }}
                       </p>
                     </div>
                   </div>
@@ -475,13 +475,13 @@
                       Total Hours
                     </p>
                     <p class="text-white">
-                      {{ modalJobPart.job ? modalJobPart.job.total_hours+" Hours":null + " Hours" }}
+                      {{ modalJobPart.job.total_hours | hoursMinutes }}
                     </p>
                     <p class="mt-5 font-semibold">
                       Job Description
                     </p>
                     <p class="text-white">
-                      {{ modalJobPart.job ? modalJobPart.job.description: 'N/A' }}
+                      {{ modalJobPart.job ? modalJobPart.job.description: '(none)' }}
                     </p>
                   </div>
                 </div>
