@@ -1,43 +1,40 @@
 <template>
-    <div class="job-modal shadow-lg">
-        <div class="mt-6 mx-4 md:mx-8 my-2">
-            <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-allocated-jobs` }" class="cursor-pointer">
-                <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
-            </nuxt-link>
-        </div>
-        <LocumDetailJobModal :job='job'/>
+  <div class="job-modal shadow-lg">
+    <div class="mt-6 mx-4 md:mx-8 my-2">
+      <nuxt-link :to="{ path: `/locums/${locumUserId}/locum-jobs/locum-allocated-jobs` }" class="cursor-pointer">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
+      </nuxt-link>
     </div>
+    <LocumDetailJobModal :job="job" />
+  </div>
 </template>
 <script>
 import LocumDetailJobModal from '@/components/Locums/Jobs/LocumDetailJobModal'
 export default {
-    data(){
-        return{
-            job:'',
-            locumUserId: ''
-        }
-    },
-    components:{
-        LocumDetailJobModal
-    },
-    computed:{
-
-    },
-    async asyncData({ app, store, route, error }){
-      try{
-        let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.locumJobId}`)
-        const job = response.data.job
-        const locumUserId = route.params.id
-        return{
-            job,
-            locumUserId
-        }
-      }catch(err){
-        error({statusCode: 404})
-        store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-        console.log('get job error!',err)
-      }
+  components: {
+      LocumDetailJobModal
+  },
+  data (){
+    return{
+      job:'',
+      locumUserId: ''
     }
+  },
+  async asyncData ({ app, store, route, error }){
+    try{
+      let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.locumJobId}`)
+      const job = response.data.job
+      const locumUserId = route.params.id
+      return{
+        job,
+        locumUserId
+      }
+    }catch(err){
+      error({statusCode: 404})
+      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
+      console.log('get job error!',err)
+    }
+  }
 }
 </script>
 <style>
