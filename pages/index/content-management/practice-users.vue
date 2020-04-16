@@ -187,6 +187,17 @@
             flexShrink: 0,
           },
           {
+            title: 'Practice Postcode',
+            key: 'practice_postcode',
+            sort_key: 'practice_postcode',
+            column: (item) => item.practice_detail && item.practice_detail.practice
+              ? item.practice_detail.practice.postcode
+              : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Status',
             key: 'status',
             sort_key: 'status',
