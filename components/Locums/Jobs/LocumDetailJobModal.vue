@@ -39,9 +39,33 @@
 								</div>
 							</div>
 
-							<div class="w-full md:w-1/3 mb-4 md:px-2"> 
+							<div class="w-full md:w-1/3 mb-4 md:px-2">
 								<p class="mb-2 font-semibold">Duration</p>
-								<div class="pb-2 flex">
+								<div class="text-xs sm:text-sm mb-8">
+									<p
+										class="px-1"
+									>{{ $moment(job.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(job.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+									<div class="flex">
+										<div class="px-1">
+											<p>Days:</p>
+											<p>Time:</p>
+											<p>Shift:</p>
+										</div>
+										<div class="px-1">
+											<p>{{ job.days }}</p>
+											<p>{{ job.time_start }} - {{ job.time_end }}</p>
+											<p>{{ job.shift ? job.shift.name : null }}</p>
+										</div>
+									</div>
+									<div class="overflow-y-auto" style="max-height: 205px;">
+										<div
+											v-for="(date, index) in job.dates"
+											:key="index"
+											class="m-1"
+										>{{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</div>
+									</div>
+								</div>
+								<!-- <div class="pb-2 flex">
 									<span class="text-black px-2 py-1 bg-white text-center w-16 rounded-lg">From</span>
 									<span
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
@@ -58,7 +82,7 @@
 									<span
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
 									>{{job.shift.name}}</span>
-								</div>
+								</div>-->
 								<p class="mt-5 font-semibold">Auto-assigns this job to the first applicant</p>
 							</div>
 

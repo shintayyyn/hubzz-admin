@@ -72,7 +72,7 @@
                   <p class="font-semibold">
                     Duration
                   </p>
-                  <div class="flex items-center py-2 mx-2 text-sm">
+                  <!-- <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
                     <span class="font-semibold">{{ $moment(job.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(job.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                   </div>
@@ -83,6 +83,24 @@
                   <div class="flex items-center py-2 mx-2 text-sm">
                     <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
                     <span class="font-semibold">{{ job.shift.name }}</span>
+                  </div> -->
+                  <div class="text-xs sm:text-sm mb-8">
+                    <p class="px-1">{{ $moment(job.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(job.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+                    <div class="flex">
+                      <div class="px-1">
+                        <p>Days:</p>
+                        <p>Time:</p>
+                        <p>Shift:</p>
+                      </div>
+                      <div class="px-1">
+                        <p>{{ job.days }}</p>
+                        <p>{{ job.time_start }} - {{ job.time_end }}</p>
+                        <p>{{ job.shift ? job.shift.name : null }}</p>
+                      </div> 
+                    </div>
+                    <div class="overflow-y-auto" style="max-height: 205px;">
+                      <div v-for="(date, index) in job.dates" :key="index" class="m-1"> {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -502,7 +520,25 @@
                     <p class="font-semibold">
                       Duration
                     </p>
-                    <div class="flex items-center py-2 mx-2 text-sm">
+                    <div class="text-xs sm:text-sm mb-8">
+                      <p class="px-1">{{ $moment(modalJobPart.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(modalJobPart.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+                      <div class="flex">
+                        <div class="px-1">
+                          <p>Days:</p>
+                          <p>Time:</p>
+                          <p>Shift:</p>
+                        </div>
+                        <div class="px-1">
+                          <p>{{ modalJobPart.days }}</p>
+                          <p>{{ modalJobPart.time_start }} - {{ modalJobPart.time_end }}</p>
+                          <p>{{ modalJobPart.job.shift ? modalJobPart.job.shift.name : null }}</p>
+                        </div> 
+                      </div>
+                      <div class="overflow-y-auto" style="max-height: 205px;">
+                        <div v-for="(date, index) in modalJobPart.dates" :key="index" class="m-1"> {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</div>
+                      </div>
+                    </div>
+                    <!-- <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
                       <span class="font-semibold">{{ $moment(modalJobPart.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(modalJobPart.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
                     </div>
@@ -513,7 +549,7 @@
                     <div class="flex items-center py-2 mx-2 text-sm">
                       <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
                       <span class="font-semibold">{{ modalJobPart.job ? modalJobPart.job.shift.name : null }}</span>
-                    </div>
+                    </div> -->
                     <p class="mt-5 font-semibold">
                       Invoiced?
                     </p>
