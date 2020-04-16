@@ -57,8 +57,20 @@
             url: '/content-management/locum-users',
           },
           {
+            title: 'Locum Compliance Documents',
+            url: '/content-management/locum-compliance-documents',
+          },
+          {
+            title: 'Practices',
+            url: '/content-management/practices',
+          },
+          {
             title: 'Jobs',
             url: '/content-management/jobs',
+          },
+          {
+            title: 'Locum Available Jobs',
+            url: '/content-management/locum-available-jobs',
           },
           {
             title: 'Platform Jobs',
@@ -83,6 +95,18 @@
           {
             title: 'Emails',
             url: '/content-management/emails',
+          },
+          {
+            title: 'Locum Invoices',
+            url: '/content-management/locum-invoices',
+          },
+          {
+            title: 'Locum Form As',
+            url: '/content-management/locum-form-as',
+          },
+          {
+            title: 'Locum Form Bs',
+            url: '/content-management/locum-form-bs',
           },
         ],
       }

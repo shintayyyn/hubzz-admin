@@ -159,7 +159,7 @@
       },
 
       pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 0)
+        return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 

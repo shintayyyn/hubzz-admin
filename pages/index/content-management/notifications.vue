@@ -143,6 +143,24 @@
             flexShrink: 0,
           },
           {
+            title: 'Practice ID',
+            key: 'user_practice_id',
+            sort_key: 'user_practice_id',
+            column: (item) => item.user && item.user.practice? item.user.practice.id : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Practice',
+            key: 'user_practice_name',
+            sort_key: 'user_practice_name',
+            column: (item) => item.user && item.user.practice? item.user.practice.name : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Seen At',
             key: 'seen_at',
             sort_key: 'seen_at',
@@ -164,7 +182,7 @@
       },
 
       pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 0)
+        return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 

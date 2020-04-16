@@ -182,7 +182,7 @@
       },
 
       pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 0)
+        return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 
@@ -227,14 +227,14 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/job-payloads/count', {
             params: {
               ...params,
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/job-payloads', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -272,7 +272,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/jobs-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/job-payloads', {
           params: {
             ...params,
             order_by: this.orderBy,

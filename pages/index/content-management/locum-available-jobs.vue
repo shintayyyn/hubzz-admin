@@ -1,53 +1,14 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Private Jobs
-    </div>
-
-    <div v-if="false" class="flex justify-end">
-      <nuxt-link
-        to="/content-management/private-jobs/create"
-        class="
-          flex items-center text-black text-sm rounded-lg py-2 px-4
-          font-bold focus:outline-none transitions-colors duration-150 ease-liner
-          bg-sunglow hover:bg-sunglow-dark
-        "
-      >
-        <span>Add Private Job</span>
-      </nuxt-link>
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex py-2">
-        <div class="relative">
-          <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search job number, title"
-            style="width: 250px;"
-            @keyup="searchSubmit"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div>
-      </div>
+      Locum Available Jobs
     </div>
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobs"
-      :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/private-jobs/${item.id}`"
+      :items="locumAvailableJobs"
+      :getItemKey="(item) => `${item.id}-${item.locum_user_id}`"
+      :getItemLink="(item) => true ? null : `/content-management/locum-available-jobs/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -76,15 +37,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-private-jobs'"
+      v-if="$route.name !== 'index-content-management-locum-available-jobs'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/private-jobs"
+      to="/content-management/locum-available-jobs"
     />
   
     <nuxt-child
-      @jobCreated="jobCreatedHandler"
-      @jobUpdated="jobUpdatedHandler"
-      @jobDeleted="jobDeletedHandler"
+      @locumAvailableJobCreated="locumAvailableJobCreatedHandler"
+      @locumAvailableJobUpdated="locumAvailableJobUpdatedHandler"
+      @locumAvailableJobDeleted="locumAvailableJobDeletedHandler"
     />
   </div>
 </template>
@@ -105,7 +66,7 @@
       return {
         loading: false,
         count: 0,
-        jobs: [],
+        locumAvailableJobs: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -116,20 +77,20 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.locumAvailableJobs.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.locumAvailableJobs.length, 0)
       },
 
       columnDetails () {
         return [
           {
-            title: 'ID',
+            title: 'Job ID',
             key: 'id',
             sort_key: 'id',
             column: (item) => item.id,
@@ -147,32 +108,82 @@
             flexShrink: 0,
           },
           {
-            title: 'Private Practice Name',
-            key: 'private_practice_name',
-            sort_key: 'private_practice_name',
-            column: (item) => item.private_practice
-              ? item.private_practice.name
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Private Practice Code',
-            key: 'private_practice_code',
-            sort_key: 'private_practice_code',
-            column: (item) => item.private_practice
-              ? item.private_practice.code
-              : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
             title: 'Status',
             key: 'status',
             sort_key: 'status',
             column: (item) => item.status,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Title',
+            key: 'title',
+            sort_key: 'title',
+            column: (item) => item.title,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Practice Name',
+            key: 'job_practice_name',
+            sort_key: 'job_practice_name',
+            column: (item) => item.job_practice_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Practice Code',
+            key: 'job_practice_code',
+            sort_key: 'job_practice_code',
+            column: (item) => item.job_practice_code,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Locum Status',
+            key: 'job_locum_status',
+            sort_key: 'job_locum_status',
+            column: (item) => item.job_locum_status,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum ID',
+            key: 'locum_user_id',
+            sort_key: 'locum_user_id',
+            column: (item) => item.locum_user ? item.locum_user.id : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum Email',
+            key: 'locum_user_email',
+            sort_key: 'locum_user_email',
+            column: (item) => item.locum_user ? item.locum_user.email : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum Name',
+            key: 'locum_user_name',
+            sort_key: 'locum_user_name',
+            column: (item) => item.locum_user ? item.locum_user.name : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum Status',
+            key: 'locum_user_status',
+            sort_key: 'locum_user_status',
+            column: (item) => item.locum_user ? item.locum_user.status : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -215,7 +226,7 @@
       getJobs () {
         this.loading = true
         this.count = 0
-        this.jobs = []
+        this.locumAvailableJobs = []
 
         const params = {}
 
@@ -226,35 +237,33 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/job-payloads/count', {
+          this.$axios.get('/api/v1/admin/locum-available-jobs/count', {
             params: {
               ...params,
-              type: 'Private',
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/job-payloads', {
+          this.$axios.get('/api/v1/admin/locum-available-jobs', {
             params: {
               ...params,
-              type: 'Private',
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.jobs
+            return responses.data.data.locum_available_jobs
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobs,
+              locumAvailableJobs,
             ] = results
 
             this.count = count
-            this.jobs = jobs
+            this.locumAvailableJobs = locumAvailableJobs
           }
         }).catch((err) => {
           console.log('err', err)
@@ -273,50 +282,49 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/job-payloads', {
+        this.$axios.get('/api/v1/admin/locum-available-jobs', {
           params: {
             ...params,
-            type: 'Private',
             order_by: this.orderBy,
             limit,
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.jobs.forEach((job) => {
-            this.jobs.push(job)
+          responses.data.data.locumAvailableJobs.forEach((locumAvailableJob) => {
+            this.locumAvailableJobs.push(locumAvailableJob)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobCreatedHandler (data) {
+      locumAvailableJobCreatedHandler (data) {
         const {
-          job
+          locumAvailableJob
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobs.length < this.limit) {
-            this.jobs.push(job)
+          if (this.activePage === this.pages && this.locumAvailableJobs.length < this.limit) {
+            this.locumAvailableJobs.push(locumAvailableJob)
           }
         }
       },
 
-      jobUpdatedHandler (data) {
+      locumAvailableJobUpdatedHandler (data) {
         const {
-          job
+          locumAvailableJob
         } = data
 
-        const index = this.jobs.findIndex(({ id }) => id === job.id)
+        const index = this.locumAvailableJobs.findIndex(({ id }) => id === locumAvailableJob.id)
 
         if (index > -1) {
-          this.jobs.splice(index, 1, job)
+          this.locumAvailableJobs.splice(index, 1, locumAvailableJob)
         }
       },
 
-      jobDeletedHandler (data) {
+      locumAvailableJobDeletedHandler (data) {
         const {
           id,
         } = data
@@ -326,10 +334,10 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobs.findIndex((job) => job.id === id)
+          const index = this.locumAvailableJobs.findIndex((locumAvailableJob) => locumAvailableJob.id === id)
 
           if (index > -1) {
-            this.jobs.splice(index, 1)
+            this.locumAvailableJobs.splice(index, 1)
 
             if (this.offset < this.count) {
               this.loadMoredJobs(1)

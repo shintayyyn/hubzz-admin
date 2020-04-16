@@ -1,29 +1,16 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Private Jobs
+      Locum Form Bs
     </div>
 
-    <div v-if="false" class="flex justify-end">
-      <nuxt-link
-        to="/content-management/private-jobs/create"
-        class="
-          flex items-center text-black text-sm rounded-lg py-2 px-4
-          font-bold focus:outline-none transitions-colors duration-150 ease-liner
-          bg-sunglow hover:bg-sunglow-dark
-        "
-      >
-        <span>Add Private Job</span>
-      </nuxt-link>
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-between md:items-center">
+    <div v-if="false" class="flex flex-col md:flex-row justify-between md:items-center">
       <div class="flex py-2">
         <div class="relative">
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search job number, title"
+            placeholder="Search name"
             style="width: 250px;"
             @keyup="searchSubmit"
           >
@@ -45,9 +32,9 @@
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobs"
+      :items="locumFormAs"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/private-jobs/${item.id}`"
+      :getItemLink="(item) => true ? null : `/content-management/locum-form-as/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -76,15 +63,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-private-jobs'"
+      v-if="$route.name !== 'index-content-management-locum-form-as'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/private-jobs"
+      to="/content-management/locum-form-as"
     />
   
     <nuxt-child
-      @jobCreated="jobCreatedHandler"
-      @jobUpdated="jobUpdatedHandler"
-      @jobDeleted="jobDeletedHandler"
+      @locumFormACreated="locumFormACreatedHandler"
+      @locumFormAUpdated="locumFormAUpdatedHandler"
+      @locumFormADeleted="locumFormADeletedHandler"
     />
   </div>
 </template>
@@ -105,7 +92,7 @@
       return {
         loading: false,
         count: 0,
-        jobs: [],
+        locumFormAs: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -116,14 +103,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobs.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.locumFormAs.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobs.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.locumFormAs.length, 0)
       },
 
       columnDetails () {
@@ -138,41 +125,55 @@
             flexShrink: 0,
           },
           {
-            title: 'Job Number',
-            key: 'job_number',
-            sort_key: 'job_number',
-            column: (item) => item.job_number,
+            title: 'Type',
+            key: 'type',
+            sort_key: 'type',
+            column: (item) => item.type,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Private Practice Name',
-            key: 'private_practice_name',
-            sort_key: 'private_practice_name',
-            column: (item) => item.private_practice
-              ? item.private_practice.name
-              : '',
+            title: 'Locum Email',
+            key: 'locum_user_email',
+            sort_key: 'locum_user_email',
+            column: (item) => item.locum_user ? item.locum_user.email : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Private Practice Code',
-            key: 'private_practice_code',
-            sort_key: 'private_practice_code',
-            column: (item) => item.private_practice
-              ? item.private_practice.code
-              : '',
+            title: 'Locum Name',
+            key: 'locum_user_name',
+            sort_key: 'locum_user_name',
+            column: (item) => item.locum_user ? item.locum_user.name : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Locum Invoice ID',
+            key: 'locum_invoice_id',
+            sort_key: 'locum_invoice_id',
+            column: (item) => item.locum_invoice_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum Form B ID',
+            key: 'locum_form_b_id',
+            sort_key: 'locum_form_b_id',
+            column: (item) => item.locum_form_b_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Date Created',
+            key: 'date_created',
+            sort_key: 'date_created',
+            column: (item) => item.date_created ? this.$moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -188,34 +189,34 @@
     watch: {
       orderBy () {
         this.activePage = 1
-        this.getJobs()
+        this.getLocumFormAs()
       },
 
       limit () {
         this.activePage = 1
-        this.getJobs()
+        this.getLocumFormAs()
       },
 
       activePage () {
-        this.getJobs()
+        this.getLocumFormAs()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getJobs()
+      this.getLocumFormAs()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getJobs()
+        this.getLocumFormAs()
       }, 500),
 
-      getJobs () {
+      getLocumFormAs () {
         this.loading = true
         this.count = 0
-        this.jobs = []
+        this.locumFormAs = []
 
         const params = {}
 
@@ -226,35 +227,33 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/job-payloads/count', {
+          this.$axios.get('/api/v1/admin/locum-form-as/count', {
             params: {
               ...params,
-              type: 'Private',
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/job-payloads', {
+          this.$axios.get('/api/v1/admin/locum-form-as', {
             params: {
               ...params,
-              type: 'Private',
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.jobs
+            return responses.data.data.locum_form_as
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobs,
+              locumFormAs,
             ] = results
 
             this.count = count
-            this.jobs = jobs
+            this.locumFormAs = locumFormAs
           }
         }).catch((err) => {
           console.log('err', err)
@@ -264,7 +263,7 @@
         })
       },
 
-      loadMoredJobs (limit) {
+      loadMoredLocumFormAs (limit) {
         const params = {}
 
         const search = this.search
@@ -273,50 +272,49 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/job-payloads', {
+        this.$axios.get('/api/v1/admin/locum-form-as', {
           params: {
             ...params,
-            type: 'Private',
             order_by: this.orderBy,
             limit,
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.jobs.forEach((job) => {
-            this.jobs.push(job)
+          responses.data.data.locumFormAs.forEach((locumFormA) => {
+            this.locumFormAs.push(locumFormA)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobCreatedHandler (data) {
+      locumFormACreatedHandler (data) {
         const {
-          job
+          locumFormA
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobs.length < this.limit) {
-            this.jobs.push(job)
+          if (this.activePage === this.pages && this.locumFormAs.length < this.limit) {
+            this.locumFormAs.push(locumFormA)
           }
         }
       },
 
-      jobUpdatedHandler (data) {
+      locumFormAUpdatedHandler (data) {
         const {
-          job
+          locumFormA
         } = data
 
-        const index = this.jobs.findIndex(({ id }) => id === job.id)
+        const index = this.locumFormAs.findIndex(({ id }) => id === locumFormA.id)
 
         if (index > -1) {
-          this.jobs.splice(index, 1, job)
+          this.locumFormAs.splice(index, 1, locumFormA)
         }
       },
 
-      jobDeletedHandler (data) {
+      locumFormADeletedHandler (data) {
         const {
           id,
         } = data
@@ -326,13 +324,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobs.findIndex((job) => job.id === id)
+          const index = this.locumFormAs.findIndex((locumFormA) => locumFormA.id === id)
 
           if (index > -1) {
-            this.jobs.splice(index, 1)
+            this.locumFormAs.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredJobs(1)
+              this.loadMoredLocumFormAs(1)
             }
           }
         }

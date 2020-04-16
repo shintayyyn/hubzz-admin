@@ -12,19 +12,19 @@
 </template>
 
 <script>
-import TerminateSurgery from "@/components/Practices/TerminateSurgery";
+import TerminateSurgery from "@/components/Practices/TerminateSurgery"
 export default {
   components: {
 		TerminateSurgery,
   },
-  data(){
+  data (){
     return {
       practice: '',
       childSurgery: '',
       terminationModal: '',
     }
   },
-  async asyncData({ app, route, store }) {
+  async asyncData ({ app, route, store }) {
     try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice

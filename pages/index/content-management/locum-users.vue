@@ -164,7 +164,7 @@
       },
 
       pages () {
-        return Math.max(Math.ceil(this.count / this.limit), 0)
+        return Math.max(Math.ceil(this.count / this.limit), 1)
       },
     },
 
@@ -209,14 +209,14 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/locum-users-to-notify-payload/count', {
+          this.$axios.get('/api/v1/admin/locum-user-payloads/count', {
             params: {
               ...params,
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/locum-users-to-notify-payload', {
+          this.$axios.get('/api/v1/admin/locum-user-payloads', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -254,7 +254,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/locum-users-to-notify-payload', {
+        this.$axios.get('/api/v1/admin/locum-user-payloads', {
           params: {
             ...params,
             order_by: this.orderBy,

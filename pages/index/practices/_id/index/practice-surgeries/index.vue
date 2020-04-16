@@ -1,7 +1,7 @@
 <template>
   <div class="mt-5">
-    <PracticeSurgeries :practice="practice"/>
-    <nuxt-child/>
+    <PracticeSurgeries :practice="practice" />
+    <nuxt-child />
   </div>
 </template>
 <script>
@@ -15,17 +15,17 @@ export default {
   components:{
     PracticeSurgeries,
   },
-  data() {
+  data () {
     return {
       // practice:null,
     }
   },
   computed:{
-    practice(){
+    practice (){
       return this.$store.state.practices.practice
     }
   },
-  async asyncData({app,store,route}){
+  async asyncData ({app,store,route}){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
