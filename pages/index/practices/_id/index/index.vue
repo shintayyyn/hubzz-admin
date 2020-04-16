@@ -19,9 +19,16 @@
 
     data () {
       return {
-        practice: null,
         professionComplianceCategories: [],
       }
+    },
+
+    computed: {
+
+      practice () {
+        return this.$store.state.practices.practice
+      },
+
     },
 
     async asyncData ({ app, store, route }) {
@@ -41,7 +48,6 @@
         store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
 
         return {
-          practice,
           professionComplianceCategories,
         }
       } catch (err) {
