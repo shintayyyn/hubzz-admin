@@ -143,6 +143,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Practice ID',
+            key: 'user_practice_id',
+            sort_key: 'user_practice_id',
+            column: (item) => item.user && item.user.practice? item.user.practice.id : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Practice',
             key: 'user_practice_name',
             sort_key: 'user_practice_name',
