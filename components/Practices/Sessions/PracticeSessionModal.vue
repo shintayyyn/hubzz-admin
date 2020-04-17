@@ -237,7 +237,7 @@
                        :key="locumRates.id + '-name1'"
                        class="m-2 text-white"
                     >
-                      {{ locumRates.rate_type.name }} £ {{ locumRates.min }} ~ {{ locumRates.max }}
+                      {{ locumRates.rate_type.name }}: £ {{ locumRates.min }}
                     </p>
 
                     <p class="m-2 mt-5 mr-20 font-semibold">
