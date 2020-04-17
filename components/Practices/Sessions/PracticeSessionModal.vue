@@ -510,7 +510,7 @@
                       Job Description
                     </p>
                     <p class="text-white">
-                      {{ modalJobPart.job ? modalJobPart.job.description: '(none)' }}
+                      {{ modalJobPart.job && modalJobPart.job.description ? modalJobPart.job.description: '(none)' }}
                     </p>
                   </div>
                 </div>
