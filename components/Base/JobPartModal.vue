@@ -12,19 +12,21 @@
 			</div>
 		</div>
 		<div class="flex flex-wrap my-4">
-			<div class="text-2xl text-white font-semibold mr-4">{{job_part.job ? job_part.job.title:null }}</div>
+			<div
+				class="text-2xl text-white font-semibold mr-4"
+			>{{job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}</div>
 			<div class="flex">
 				<div class="text-black p-2 bg-yellow-500 rounded">{{job_part.status}}</div>
 				<div
 					class="text-black p-2 text-white rounded ml-4"
 					:class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
-				>{{job_part.job ? job_part.job.type : null}}</div>
+				>{{job_part.job && job_part.job.type ? job_part.job.type : null}}</div>
 			</div>
 		</div>
 		<div class="flex flex-wrap">
 			<div
 				class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
-				:class="jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
+				:class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
 			>
 				<div
 					v-if="job_part.status === 'Withdrawn'"
