@@ -12,19 +12,21 @@
 			</div>
 		</div>
 		<div class="flex flex-wrap my-4">
-			<div class="text-2xl text-white font-semibold mr-4">{{job_part.job ? job_part.job.title:null }}</div>
+			<div
+				class="text-2xl text-white font-semibold mr-4"
+			>{{job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}</div>
 			<div class="flex">
 				<div class="text-black p-2 bg-yellow-500 rounded">{{job_part.status}}</div>
 				<div
 					class="text-black p-2 text-white rounded ml-4"
 					:class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
-				>{{job_part.job ? job_part.job.type : null}}</div>
+				>{{job_part.job && job_part.job.type ? job_part.job.type : null}}</div>
 			</div>
 		</div>
 		<div class="flex flex-wrap">
 			<div
 				class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
-				:class="jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
+				:class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
 			>
 				<div
 					v-if="job_part.status === 'Withdrawn'"
@@ -57,7 +59,9 @@
 								<p class="mt-5 font-semibold">Total Hours</p>
 								<p class="text-white">{{job_part.job.total_hours | hoursMinutes}}</p>
 								<p class="mt-5 font-semibold">Job Description</p>
-								<p class="text-white">{{job_part.job ? job_part.job.description: '(none)'}}</p>
+								<p
+									class="text-white"
+								>{{job_part.job && job_part.job.description? job_part.job.description: '(none)'}}</p>
 							</div>
 						</div>
 						<!-- INFOS RIGHT -->
@@ -293,16 +297,16 @@
 	</div>
 </template>
 <script>
-import { gmapApi } from "vue2-google-maps"
-import AppTable from "@/components/Base/AppTable"
-import AppPagination from "@/components/Base/AppPagination"
+import { gmapApi } from "vue2-google-maps";
+import AppTable from "@/components/Base/AppTable";
+import AppPagination from "@/components/Base/AppPagination";
 export default {
 	components: {
 		AppTable,
 		AppPagination
 	},
 	props: ["jobPartId", "specificJobPart", "isNuxtChild", "jobId"],
-	data () {
+	data() {
 		return {
 			jobParts: [],
 			currentPage: 1,
@@ -335,52 +339,52 @@ export default {
 				}
 			],
 			loading: false
-		}
+		};
 	},
-	created () {
+	created() {
 		this.totalPages = Math.ceil(
 			this.specificJobPart.job.job_parts.length / this.params.limit
-		)
-		this.job_part = this.specificJobPart
-		this.getJobParts(this.params)
+		);
+		this.job_part = this.specificJobPart;
+		this.getJobParts(this.params);
 
-		console.log("jobpart", this.job_part)
+		console.log("jobpart", this.job_part);
 	},
 	computed: {
-		loadingPractices () {
-			return this.$store.state.practices.loading_practices
+		loadingPractices() {
+			return this.$store.state.practices.loading_practices;
 		},
 		google: gmapApi,
-		latLangPlatform () {
+		latLangPlatform() {
 			return this.specificJobPart.job.platform_job.practice.surgery.address
-				.coordinates
+				.coordinates;
 		},
-		latLangPrivate () {
+		latLangPrivate() {
 			return this.specificJobPart.job.private_job.private_practice.surgery
-				.address.coordinates
+				.address.coordinates;
 		}
 	},
 	methods: {
-		async show (id) {
+		async show(id) {
 			this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
-				this.job_part = res.data.job_part
-			})
+				this.job_part = res.data.job_part;
+			});
 		},
-		getJobParts (params) {
-			this.loading = true
+		getJobParts(params) {
+			this.loading = true;
 			this.$axios
 				.$get(
 					`/api/v1/admin/job-parts?job_id=${this.jobId}&limit=${params.limit}&offset=${params.offset}`
 				)
 				.then(res => {
-					this.jobParts = res.data.job_parts
+					this.jobParts = res.data.job_parts;
 				})
 				.catch(err => {
-					console.log("get job parts error", err)
-				})
-			this.loading = false
+					console.log("get job parts error", err);
+				});
+			this.loading = false;
 		},
-		unclickableJobPart () {
+		unclickableJobPart() {
 			if (this.specificJobPart.job) {
 				if (
 					this.specificJobPart.job.status === "Live" ||
@@ -390,33 +394,33 @@ export default {
 					this.specificJobPart.job.status === "Cancelled" ||
 					this.specificJobPart.job.status === "Declined"
 				) {
-					return true
+					return true;
 				} else {
-					return false
+					return false;
 				}
 			}
 		},
-		pagechanged (page) {
+		pagechanged(page) {
 			const query = {
 				...this.$route.query,
 				page: page || 1
-			}
-			this.params.offset = this.params.limit * (page - 1)
-			this.currentPage = page
-			this.getJobParts(this.params)
+			};
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getJobParts(this.params);
 		},
-		sorted (order_by) {
+		sorted(order_by) {
 			// go back to page 1
-			this.currentPage = 1
+			this.currentPage = 1;
 			let query = {
 				...this.$router.query,
 				order_by
-			}
-			this.params.order_by = order_by
-			this.getJobParts(this.params)
+			};
+			this.params.order_by = order_by;
+			this.getJobParts(this.params);
 		}
 	}
-}
+};
 </script>
 <style>
 @media (min-width: 768px) {

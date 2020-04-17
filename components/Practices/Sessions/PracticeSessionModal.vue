@@ -67,7 +67,7 @@
                     Extra Information
                   </p>
                   <p class="text-white pb-2">
-                    {{ job.platform_job ? job.platform_job.extra_information : '(none)' }}
+                    {{ job.platform_job && job.platform_job.extra_information ? job.platform_job.extra_information : '(none)' }}
                   </p>
                   <p class="font-semibold">
                     Duration
@@ -510,7 +510,7 @@
                       Job Description
                     </p>
                     <p class="text-white">
-                      {{ modalJobPart.job ? modalJobPart.job.description: '(none)' }}
+                      {{ modalJobPart.job && modalJobPart.job.description ? modalJobPart.job.description: '(none)' }}
                     </p>
                   </div>
                 </div>

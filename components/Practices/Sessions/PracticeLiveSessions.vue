@@ -30,7 +30,7 @@
 							<strong class="block md:hidden text-sm uppercase">Title</strong>
 							<span
 								:class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
-							>{{ item.title }}</span>
+							>{{ item.title ? item.title : '(none)' }}</span>
 						</div>
 						<div
 							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
