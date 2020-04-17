@@ -11,7 +11,22 @@
         <div class="text-xl md:text-2xl text-white">
           <span>View Email</span>
         </div>
-    
+
+        <div class="mt-4">
+          <a
+            v-if="url"
+            :href="url"
+            target="_blank"
+            class="
+              inline-flex items-center text-black text-sm rounded-lg py-2 px-4
+              font-bold focus:outline-none transitions-colors duration-150 ease-liner
+              bg-sunglow hover:bg-sunglow-dark
+            "
+          >
+            <span>View HTML</span>
+          </a>
+        </div>
+      
         <div class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
           <div class="w-full text-gray-300 text-sm p-2">
             <div class="flex flex-col py-2">
@@ -154,6 +169,14 @@
       return {
         loading: false,
         email: null,
+      }
+    },
+
+    computed: {
+      url () {
+        return this.email
+          ? `${process.env.API_URL}/api/v1/admin/emails/${this.email.id}/html`
+          : null
       }
     },
 
