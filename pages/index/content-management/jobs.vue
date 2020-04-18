@@ -34,7 +34,7 @@
       :limit="limit"
       :items="jobs"
       :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/jobs/${item.id}`"
+      :getItemLink="(item) => `/content-management/jobs/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -174,6 +174,42 @@
             key: 'status',
             sort_key: 'status',
             column: (item) => item.status,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Original',
+            key: 'original',
+            sort_key: 'original',
+            column: (item) => item.original ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Original Job Number',
+            key: 'original_job_job_number',
+            sort_key: 'original_job_job_number',
+            column: (item) => item.original_job ? item.original_job.job_number : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Updated',
+            key: 'updated',
+            sort_key: 'updated',
+            column: (item) => item.updated ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Updated Job Number',
+            key: 'updated_job_job_number',
+            sort_key: 'updated_job_job_number',
+            column: (item) => item.updated_job ? item.updated_job.job_number : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
