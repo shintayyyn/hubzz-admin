@@ -225,7 +225,7 @@
 
       getPractices () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.practices = []
 
         const params = {}

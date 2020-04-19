@@ -254,7 +254,7 @@
 
       getLocumInvoices () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.locumInvoices = []
 
         const params = {}

@@ -242,7 +242,7 @@
 
       getNotifications () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.notifications = []
 
         const params = {}

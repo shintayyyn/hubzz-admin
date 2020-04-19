@@ -243,7 +243,7 @@
 
       getPracticeUsers () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.practiceUsers = []
 
         const params = {}
