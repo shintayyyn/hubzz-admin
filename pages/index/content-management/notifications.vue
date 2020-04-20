@@ -205,6 +205,24 @@
             flexGrow: 1,
             flexShrink: 0,
           },
+          {
+            title: 'User ID',
+            key: 'user_id',
+            sort_key: 'user_id',
+            column: (item) => item.user ? item.user.id : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Email',
+            key: 'user_email',
+            sort_key: 'user_email',
+            column: (item) => item.user ? item.user.email : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
         ]
       },
 
