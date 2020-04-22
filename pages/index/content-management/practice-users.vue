@@ -168,8 +168,8 @@
             title: 'Practice Name',
             key: 'practice_name',
             sort_key: 'practice_name',
-            column: (item) => item.practice_detail && item.practice_detail.practice
-              ? item.practice_detail.practice.name
+            column: (item) => item.practice
+              ? item.practice.name
               : '',
             justify: 'start',
             flexGrow: 1,
@@ -179,8 +179,8 @@
             title: 'Practice Code',
             key: 'practice_code',
             sort_key: 'practice_code',
-            column: (item) => item.practice_detail && item.practice_detail.practice
-              ? item.practice_detail.practice.code
+            column: (item) => item.practice
+              ? item.practice.code
               : '',
             justify: 'start',
             flexGrow: 1,
@@ -190,8 +190,8 @@
             title: 'Practice Postcode',
             key: 'practice_postcode',
             sort_key: 'practice_postcode',
-            column: (item) => item.practice_detail && item.practice_detail.practice
-              ? item.practice_detail.practice.postcode
+            column: (item) => item.practice
+              ? item.practice.postcode
               : '',
             justify: 'start',
             flexGrow: 1,
@@ -255,14 +255,14 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/practice-users/count', {
+          this.$axios.get('/api/v1/admin/practice-user-payloads/count', {
             params: {
               ...params,
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/practice-users', {
+          this.$axios.get('/api/v1/admin/practice-user-payloads', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -300,7 +300,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/practice-users', {
+        this.$axios.get('/api/v1/admin/practice-user-payloads', {
           params: {
             ...params,
             order_by: this.orderBy,
