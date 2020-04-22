@@ -91,6 +91,17 @@ export default {
 			src: '@/plugins/html2canvas.js',
 			mode: 'client',
 		},
+    {
+      src: '@/plugins/broadcast-channel.js',
+      mode: 'client',
+    },
+    {
+      src: '@/plugins/validator.js',
+      mode: 'client',
+    },
+    {
+      src: '@/plugins/axios.js',
+    },
 	],
 
 	modules: [
@@ -142,6 +153,6 @@ export default {
 			},
 		},
 		transpile: [/^vue2-google-maps($|\/)/],
-		extend(config, ctx) {},
+		extend () {},
 	},
 }

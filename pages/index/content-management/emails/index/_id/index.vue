@@ -32,6 +32,22 @@
             <div class="flex flex-col py-2">
               <div class="relative flex justify-between flex-wrap leading-none">
                 <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
+                  <span>Email</span>
+                </label>
+              </div>
+      
+              <div class="flex flex-row justify-start">
+                <div class="flex flex-col w-full">
+                  <span class="pl-4 py-2 font-bold text-xs sm:text-sm">
+                    <span>{{ email ? email.email : null }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col py-2">
+              <div class="relative flex justify-between flex-wrap leading-none">
+                <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
                   <span>User</span>
                 </label>
               </div>
@@ -133,7 +149,7 @@
               </div>
             </div>
 
-            <div class="mt-4">
+            <div v-if="false" class="mt-4">
               <nuxt-link
                 :to="`/content-management/emails/${$route.params.id}/edit`"
                 class="

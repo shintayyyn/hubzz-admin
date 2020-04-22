@@ -125,6 +125,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Email',
+            key: 'email',
+            sort_key: 'email',
+            column: (item) => item.email,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'User',
             key: 'user_name',
             sort_key: 'user_name',
