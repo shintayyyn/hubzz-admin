@@ -10,8 +10,8 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search name"
-            style="width: 250px;"
+            placeholder="Search user name, email, username"
+            style="width: 300px;"
             @keyup="searchSubmit"
           >
           <button
@@ -219,6 +219,15 @@
             key: 'user_email',
             sort_key: 'user_email',
             column: (item) => item.user ? item.user.email : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Username',
+            key: 'user_username',
+            sort_key: 'user_username',
+            column: (item) => item.user ? item.user.username : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

@@ -45,6 +45,24 @@
               </div>
             </div>
 
+            <div class="w-full text-gray-300 text-sm p-2">
+              <div class="flex flex-col py-2">
+                <div class="relative flex justify-between flex-wrap leading-none">
+                  <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
+                    <span>Username</span>
+                  </label>
+                </div>
+        
+                <div class="flex flex-row justify-start">
+                  <div class="flex flex-col w-full">
+                    <span class="pl-4 py-2 font-bold text-xs sm:text-sm">
+                      <span>{{ email ? email.username : null }}</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="flex flex-col py-2">
               <div class="relative flex justify-between flex-wrap leading-none">
                 <label class="text-xs sm:text-sm py-1 pr-2 font-bold">
