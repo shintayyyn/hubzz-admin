@@ -143,6 +143,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Payload Type',
+            key: 'payload_type',
+            sort_key: null,
+            column: (item) => item.payload_type,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Title',
             key: 'title',
             sort_key: null,
