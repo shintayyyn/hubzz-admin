@@ -64,6 +64,65 @@
                   <p class="text-white">
                     {{ job.extra_information ? job.extra_information:'(none)' }}
                   </p>
+                  <p class="text-white">
+                    {{ job.platform_job.profession.name }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Is there another Doctor on site?
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Is nurse support available?
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.is_nurse_available ? "Yes" : "No" }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Number of Patients
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.number_of_patients }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Duration for Each Appointment
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                  </p>
+                
+                  <p class="font-semibold">
+                    Opprtunity for Catch Up Slots
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Sessions Requirements
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.session_requirements }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Session Structure Information
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.session_structure_information }}
+                  </p>
+
+                  <p class="font-semibold">
+                    Unpaid Breaks (in minutes)
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.unpaid_breaks_in_minutes }}
+                  </p>
                 </div>
               </div>
 
@@ -137,65 +196,7 @@
                 <p class="mt-5 font-semibold mb-1">
                   Role
                 </p>
-                <p class="text-white">
-                  {{ job.platform_job.profession.name }}
-                </p>
-
-                <p class="font-semibold">
-                  Is there another Doctor on site?
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.is_another_doctor ? "Yes" : "No" }}
-                </p>
-
-                <p class="font-semibold">
-                  Is nurse support available?
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.is_nurse_available ? "Yes" : "No" }}
-                </p>
-
-                <p class="font-semibold">
-                  Number of Patients
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.number_of_patients }}
-                </p>
-
-                <p class="font-semibold">
-                  Duration for Each Appointment
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
-                </p>
-              
-                <p class="font-semibold">
-                  Opprtunity for Catch Up Slots
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
-                </p>
-
-                <p class="font-semibold">
-                  Sessions Requirements
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.session_requirements }}
-                </p>
-
-                <p class="font-semibold">
-                  Session Structure Information
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.session_structure_information }}
-                </p>
-
-                <p class="font-semibold">
-                  Unpaid Breaks (in minutes)
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ modalJobPart.job.platform_job.unpaid_breaks_in_minutes }}
-                </p>
+                
                 <p class="mt-5 font-semibold mb-1">
                   Speciality
                 </p>
