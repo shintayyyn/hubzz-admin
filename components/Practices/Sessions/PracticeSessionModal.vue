@@ -125,6 +125,62 @@
                       {{ job.platform_job.profession.name }}
                     </p>
 
+                    <p class="font-semibold">
+                      Is there another Doctor on site?
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Is nurse support available?
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.is_nurse_available ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Number of Patients
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.number_of_patients }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Duration for Each Appointment
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                    </p>
+                  
+                    <p class="font-semibold">
+                      Opprtunity for Catch Up Slots
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Sessions Requirements
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.session_requirements }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Session Structure Information
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.session_structure_information }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Unpaid Breaks (in minutes)
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.unpaid_breaks_in_minutes }}
+                    </p>
+
                     <p class=" w-1/2 font-semibold">
                       Speciality
                     </p>
@@ -158,26 +214,35 @@
                       {{ spokenLanguage ? spokenLanguage.name:null }}
                     </p>
 
+                    <p class="flex font-semibold">
+                      Compliance Requirements for GPs:
+                    </p>
                     <template v-if="job.platform_job.compliance_documents.length > 0">
-                      <p class="flex ml-2 font-semibold">
-                        Compliance Requirements for GPs:
-                      </p>
                       <div v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documents" :key="`${index}-${gpComplianceDocs.name}`"
                            class="text-sm ml-4 mb-2"
                       >
-                        <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span> 
+                        <span>{{ gpComplianceDocs ? gpComplianceDocs.name : null }}</span> 
                       </div>
                     </template>
-
-                    <template v-if="job.platform_job.mandatory_trainings.length > 0">
-                      <p class="flex ml-2 font-semibold">
-                        Mandatory Trainings
+                    <template v-else>
+                      <p class="flex font-semibold">
+                        (none)
                       </p>
+                    </template>
+                    <p class="flex font-semibold">
+                      Mandatory Trainings
+                    </p>
+                    <template v-if="job.platform_job.mandatory_trainings.length > 0">
                       <div v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings" :key="`${index}-${mandatoryTrainings.name}`"
                            class="text-sm ml-4 mb-2"
                       >
                         <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span> 
                       </div>
+                    </template>
+                    <template v-else>
+                      <p class="flex font-semibold">
+                        (none)
+                      </p>
                     </template>
                   </template>
                 </div>
@@ -471,15 +536,22 @@
                 <!-- INFOS LEFT -->
                 <div class="sm:w-1/2 w-full mt-4 md:my-4 overflow-hidden">
                   <div class="mx-4 md:m-4 text-gray text-white">
-
                     <!-- STATUS -->
-                    <div v-if="job_part &&  job_part.status === 'Completed'">
-                      <p class="font-semibold">Completed At</p>
-                      <p class="text-white">{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</p>
+                    <div v-if="job_part && job_part.status === 'Completed'">
+                      <p class="font-semibold">
+                        Completed At
+                      </p>
+                      <p class="text-white">
+                        {{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
+                      </p>
                     </div>
                     <div v-if="job_part && job_part.status === 'Approved'">
-                      <p class="mt-5 font-semibold">Approved At</p>
-                      <p class="text-white">{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')}}</p>
+                      <p class="mt-5 font-semibold">
+                        Approved At
+                      </p>
+                      <p class="text-white">
+                        {{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
+                      </p>
                     </div>
                     <!-- STATUS -->
                     <p class="mt-5 font-semibold">
@@ -512,6 +584,61 @@
                     <p class="text-white">
                       {{ modalJobPart.job && modalJobPart.job.description ? modalJobPart.job.description: '(none)' }}
                     </p>
+                    <p class="font-semibold">
+                      Is there another Doctor on site?
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Is nurse support available?
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.is_nurse_available ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Number of Patients
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.number_of_patients }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Duration for Each Appointment
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                    </p>
+                  
+                    <p class="font-semibold">
+                      Opprtunity for Catch Up Slots
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Sessions Requirements
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.session_requirements }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Session Structure Information
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.session_structure_information }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Unpaid Breaks (in minutes)
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.unpaid_breaks_in_minutes }}
+                    </p>
                   </div>
                 </div>
                 <!-- INFOS RIGHT -->
@@ -521,7 +648,9 @@
                       Duration
                     </p>
                     <div class="text-xs sm:text-sm mb-8">
-                      <p class="px-1">{{ $moment(modalJobPart.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(modalJobPart.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+                      <p class="px-1">
+                        {{ $moment(modalJobPart.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(modalJobPart.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                      </p>
                       <div class="flex">
                         <div class="px-1">
                           <p>Days:</p>
@@ -535,7 +664,9 @@
                         </div> 
                       </div>
                       <div class="overflow-y-auto" style="max-height: 205px;">
-                        <div v-for="(date, index) in modalJobPart.dates" :key="index" class="m-1"> {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</div>
+                        <div v-for="(date, index) in modalJobPart.dates" :key="index" class="m-1">
+                          {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                        </div>
                       </div>
                     </div>
                     <!-- <div class="flex items-center py-2 mx-2 text-sm">
