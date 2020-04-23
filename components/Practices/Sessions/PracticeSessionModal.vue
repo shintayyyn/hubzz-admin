@@ -154,10 +154,17 @@
                     </p>
                   
                     <p class="font-semibold">
-                      Opprtunity for Catch Up Slots
+                      Opportunity for Catch Up Slots
                     </p>
                     <p class="ml-2 mb-2">
                       {{ job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Only favorite locum will be notified until this date
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
                     </p>
 
                     <p class="font-semibold">
@@ -613,10 +620,17 @@
                     </p>
                   
                     <p class="font-semibold">
-                      Opprtunity for Catch Up Slots
+                      Opportunity for Catch Up Slots
                     </p>
                     <p class="ml-2 mb-2">
                       {{ modalJobPart.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                    </p>
+
+                    <p class="font-semibold">
+                      Only favorite locum will be notified until this date
+                    </p>
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart.job.platform_job.favorite_only_until ? $moment(modalJobPart.job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
                     </p>
 
                     <p class="font-semibold">

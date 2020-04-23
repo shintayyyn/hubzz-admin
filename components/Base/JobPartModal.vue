@@ -132,6 +132,13 @@
                 </p>
 
                 <p class="font-semibold">
+                  Only favorite locum will be notified until this date
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
+                </p>
+
+                <p class="font-semibold">
                   Sessions Requirements
                 </p>
                 <p class="ml-2 mb-2">
