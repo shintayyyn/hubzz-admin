@@ -8,6 +8,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Jobs not Filled
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-025
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
