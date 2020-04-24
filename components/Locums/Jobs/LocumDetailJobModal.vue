@@ -93,7 +93,7 @@
                     Duration for Each Appointment
                   </p>
                   <p class="ml-2 mb-2">
-                    {{ job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                    {{ job.platform_job.duration_for_each_appointment }}
                   </p>
                 
                   <p class="font-semibold">
@@ -107,7 +107,7 @@
                     Only favorite locum will be notified until this date
                   </p>
                   <p class="ml-2 mb-2">
-                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
+                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') : "N/A" }}
                   </p>
 
                   <p class="font-semibold">
