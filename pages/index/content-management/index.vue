@@ -73,8 +73,8 @@
             url: '/content-management/locum-available-jobs',
           },
           {
-            title: 'Job Applicant Locum Users',
-            url: '/content-management/job-applicant-locum-users',
+            title: 'Job Locum Users',
+            url: '/content-management/job-locum-users',
           },
           {
             title: 'Platform Jobs',
