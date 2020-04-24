@@ -6,12 +6,12 @@ Vue.filter('localDate', function (date, dateOnly) {
     return `${moment(date).format('L')}`
   }
   if (date) {
-    return `${moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY')} | ${moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('HH:mm')}`
+    return `${moment(date, 'YYYY-MM-DDTHH:mm:ss.SSSZ').utc().format('DD/MM/YYYY')} | ${moment(date).utc().format('HH:mm:ss')}`
   }
 })
 Vue.filter('currency', function (number) {
   if (number) {
-    return number.toFixed(2);
+    return number.toFixed(2)
   }
   return '0.00'
 })
