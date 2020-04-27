@@ -92,7 +92,7 @@
                   Job Description
                 </p>
                 <p
-                  class="text-white"
+                  class="text-white break-words"
                 >
                   {{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}
                 </p>

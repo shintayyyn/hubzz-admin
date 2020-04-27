@@ -55,7 +55,7 @@
                   <p class="mt-5 font-semibold">
                     Job Description
                   </p>
-                  <p class="text-white">
+                  <p class="text-white break-words">
                     {{ job.description ? job.description : '(none)' }}
                   </p>
                   <p class="mt-5 font-semibold">
