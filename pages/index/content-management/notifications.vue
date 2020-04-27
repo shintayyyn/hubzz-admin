@@ -10,8 +10,8 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search name"
-            style="width: 250px;"
+            placeholder="Search user name, email, username"
+            style="width: 300px;"
             @keyup="searchSubmit"
           >
           <button
@@ -143,19 +143,37 @@
             flexShrink: 0,
           },
           {
-            title: 'Practice ID',
-            key: 'user_practice_id',
-            sort_key: 'user_practice_id',
-            column: (item) => item.user && item.user.practice? item.user.practice.id : '',
+            title: 'Payload Type',
+            key: 'payload_type',
+            sort_key: null,
+            column: (item) => item.payload_type,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Practice',
-            key: 'user_practice_name',
-            sort_key: 'user_practice_name',
-            column: (item) => item.user && item.user.practice? item.user.practice.name : '',
+            title: 'Title',
+            key: 'title',
+            sort_key: null,
+            column: (item) => item.title,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Description',
+            key: 'description',
+            sort_key: null,
+            column: (item) => item.description,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Url',
+            key: 'url',
+            sort_key: null,
+            column: (item) => item.url,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -174,6 +192,51 @@
             key: 'created_at',
             sort_key: 'created_at',
             column: (item) => item.created_at ? this.$moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Practice ID',
+            key: 'user_practice_id',
+            sort_key: 'user_practice_id',
+            column: (item) => item.user && item.user.practice? item.user.practice.id : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Practice',
+            key: 'user_practice_name',
+            sort_key: 'user_practice_name',
+            column: (item) => item.user && item.user.practice? item.user.practice.name : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User ID',
+            key: 'user_id',
+            sort_key: 'user_id',
+            column: (item) => item.user ? item.user.id : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Email',
+            key: 'user_email',
+            sort_key: 'user_email',
+            column: (item) => item.user ? item.user.email : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Username',
+            key: 'user_username',
+            sort_key: 'user_username',
+            column: (item) => item.user ? item.user.username : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -215,7 +278,7 @@
 
       getNotifications () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.notifications = []
 
         const params = {}

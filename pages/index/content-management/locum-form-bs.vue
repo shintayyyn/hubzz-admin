@@ -171,7 +171,7 @@
 
       getLocumFormBs () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.locumFormBs = []
 
         const params = {}

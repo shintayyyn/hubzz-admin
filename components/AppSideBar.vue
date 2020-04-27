@@ -37,6 +37,9 @@
               <span v-if="item.name === 'Locums' && locumComplianceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ locumComplianceNotifications.length }}
               </span>
+              <span v-if="item.name === 'Practices' && practiceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{ practiceNotifications.length }}
+              </span>
               <span v-if="item.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ unacknowledgedCount }}
               </span>
@@ -85,6 +88,9 @@ export default {
   computed: {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
+    },
+    practiceNotifications () {
+      return this.$store.getters["practices/getPracticeNotifications"]
     },
     locumComplianceNotifications () {
       return this.$store.getters["locums/getLocumComplianceNotifications"]

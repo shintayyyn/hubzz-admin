@@ -1,40 +1,14 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Locum Invoices
-    </div>
-
-    <div v-if="false" class="flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex py-2">
-        <div class="relative">
-          <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search name"
-            style="width: 250px;"
-            @keyup="searchSubmit"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div>
-      </div>
+      Job Locum Users
     </div>
 
     <ContentManagementTable
       :limit="limit"
-      :items="locumInvoices"
-      :getItemKey="(item) => item.id"
-      :getItemLink="(item) => true ? null : `/content-management/locum-invoices/${item.id}`"
+      :items="jobLocumUsers"
+      :getItemKey="(item) => `${item.job_id}-${item.locum_user_id}`"
+      :getItemLink="(item) => true ? null : `/content-management/job-locum-users/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -63,15 +37,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-locum-invoices'"
+      v-if="$route.name !== 'index-content-management-job-locum-users'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/locum-invoices"
+      to="/content-management/job-locum-users"
     />
   
     <nuxt-child
-      @locumInvoiceCreated="locumInvoiceCreatedHandler"
-      @locumInvoiceUpdated="locumInvoiceUpdatedHandler"
-      @locumInvoiceDeleted="locumInvoiceDeletedHandler"
+      @jobLocumUserCreated="jobLocumUserCreatedHandler"
+      @jobLocumUserUpdated="jobLocumUserUpdatedHandler"
+      @jobLocumUserDeleted="jobLocumUserDeletedHandler"
     />
   </div>
 </template>
@@ -92,7 +66,7 @@
       return {
         loading: false,
         count: 0,
-        locumInvoices: [],
+        jobLocumUsers: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -103,115 +77,132 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.locumInvoices.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobLocumUsers.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.locumInvoices.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.jobLocumUsers.length, 0)
       },
 
       columnDetails () {
         return [
           {
-            title: 'ID',
-            key: 'id',
-            sort_key: 'id',
-            column: (item) => item.id,
+            title: 'Job ID',
+            key: 'job_id',
+            sort_key: 'job_id',
+            column: (item) => item.job_id,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
           },
           {
-            title: 'Type',
-            key: 'type',
-            sort_key: 'type',
-            column: (item) => item.type,
+            title: 'Original Job ID',
+            key: 'original_job_id',
+            sort_key: 'original_job_id',
+            column: (item) => item.original_job_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Updated Job ID',
+            key: 'updated_job_id',
+            sort_key: 'updated_job_id',
+            column: (item) => item.updated_job_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Locum ID',
+            key: 'locum_user_id',
+            sort_key: 'locum_user_id',
+            column: (item) => item.locum_user_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Qualified',
+            key: 'locum_user_qualified',
+            sort_key: 'locum_user_qualified',
+            column: (item) => item.locum_user_qualified ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum Email',
-            key: 'locum_user_email',
-            sort_key: 'locum_user_email',
-            column: (item) => item.locum_user ? item.locum_user.email : '',
+            title: 'Matched',
+            key: 'locum_user_matched',
+            sort_key: 'locum_user_matched',
+            column: (item) => item.locum_user_matched ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum Name',
-            key: 'locum_user_name',
-            sort_key: 'locum_user_name',
-            column: (item) => item.locum_user ? item.locum_user.name : '',
+            title: 'Applied At',
+            key: 'applied_at',
+            sort_key: 'applied_at',
+            column: (item) => item.applied_at ? this.$moment(item.applied_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Invoice Number',
-            key: 'invoice_number',
-            sort_key: 'invoice_number',
-            column: (item) => item.invoice_number,
+            title: 'Applied Update Accepted Until',
+            key: 'applied_update_accepted_until',
+            sort_key: 'applied_update_accepted_until',
+            column: (item) => item.applied_update_accepted_until ? this.$moment(item.applied_update_accepted_until, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Job Part Number',
-            key: 'job_part_number',
-            sort_key: 'job_part_number',
-            column: (item) => item.item && item.item.job_part ? item.item.job_part.job_part_number : '',
+            title: 'Applied Update Accepted',
+            key: 'applied_update_accepted',
+            sort_key: 'applied_update_accepted',
+            column: (item) => item.applied_update_accepted === true
+              ? 'Yes'
+              : item.applied_update_accepted === false
+                ? 'No'
+                : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Applied Update Accepted At',
+            key: 'applied_update_accepted_at',
+            sort_key: 'applied_update_accepted_at',
+            column: (item) => item.applied_update_accepted_at ? this.$moment(item.applied_update_accepted_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Issued At',
-            key: 'issued_at',
-            sort_key: 'issued_at',
-            column: (item) => item.issued_at ? this.$moment(item.issued_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
+            title: 'Notify Not Accept Applied Updated Jobs',
+            key: 'notify_not_accept_applied_updated_jobs',
+            sort_key: 'notify_not_accept_applied_updated_jobs',
+            column: (item) => item.notify_not_accept_applied_updated_jobs === true
+              ? 'Yes'
+              : item.notify_not_accept_applied_updated_jobs === false
+                ? 'No'
+                : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Approved At',
-            key: 'approved_at',
-            sort_key: 'approved_at',
-            column: (item) => item.approved_at ? this.$moment(item.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Paid At',
-            key: 'paid_at',
-            sort_key: 'paid_at',
-            column: (item) => item.paid_at ? this.$moment(item.paid_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY') : '',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date Created',
-            key: 'date_created',
-            sort_key: 'date_created',
-            column: (item) => item.date_created ? this.$moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
-            justify: 'start',
-            flexGrow: 1,
+            title: 'Appointed Locum ID',
+            key: 'appointed_to_locum_user_id',
+            sort_key: 'appointed_to_locum_user_id',
+            column: (item) => item.appointed_to_locum_user_id,
+            justify: 'end',
+            flexGrow: 0,
             flexShrink: 0,
           },
         ]
@@ -225,37 +216,34 @@
     watch: {
       orderBy () {
         this.activePage = 1
-        this.getLocumInvoices()
+        this.getJobs()
       },
 
       limit () {
         this.activePage = 1
-        this.getLocumInvoices()
+        this.getJobs()
       },
 
       activePage () {
-        this.getLocumInvoices()
+        this.getJobs()
       },
     },
 
     mounted () {
       this.search = ''
-      this.orderBy = [
-        'date_created:desc',
-      ]
-      // this.getLocumInvoices()
+      this.getJobs()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getLocumInvoices()
+        this.getJobs()
       }, 500),
 
-      getLocumInvoices () {
+      getJobs () {
         this.loading = true
         // this.count = 0
-        this.locumInvoices = []
+        this.jobLocumUsers = []
 
         const params = {}
 
@@ -266,14 +254,14 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/locum-invoice-payloads/count', {
+          this.$axios.get('/api/v1/admin/job-locum-users/count', {
             params: {
               ...params,
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/locum-invoice-payloads', {
+          this.$axios.get('/api/v1/admin/job-locum-users', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -281,18 +269,18 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_invoices
+            return responses.data.data.job_locum_users
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              locumInvoices,
+              jobLocumUsers,
             ] = results
 
             this.count = count
-            this.locumInvoices = locumInvoices
+            this.jobLocumUsers = jobLocumUsers
           }
         }).catch((err) => {
           console.log('err', err)
@@ -302,7 +290,7 @@
         })
       },
 
-      loadMoredLocumInvoices (limit) {
+      loadMoredJobs (limit) {
         const params = {}
 
         const search = this.search
@@ -311,7 +299,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/locum-invoice-payloads', {
+        this.$axios.get('/api/v1/admin/job-locum-users', {
           params: {
             ...params,
             order_by: this.orderBy,
@@ -319,41 +307,41 @@
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.locumInvoices.forEach((locumInvoice) => {
-            this.locumInvoices.push(locumInvoice)
+          responses.data.data.job_locum_users.forEach((jobLocumUser) => {
+            this.jobLocumUsers.push(jobLocumUser)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      locumInvoiceCreatedHandler (data) {
+      jobLocumUserCreatedHandler (data) {
         const {
-          locumInvoice
+          jobLocumUser
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.locumInvoices.length < this.limit) {
-            this.locumInvoices.push(locumInvoice)
+          if (this.activePage === this.pages && this.jobLocumUsers.length < this.limit) {
+            this.jobLocumUsers.push(jobLocumUser)
           }
         }
       },
 
-      locumInvoiceUpdatedHandler (data) {
+      jobLocumUserUpdatedHandler (data) {
         const {
-          locumInvoice
+          jobLocumUser
         } = data
 
-        const index = this.locumInvoices.findIndex(({ id }) => id === locumInvoice.id)
+        const index = this.jobLocumUsers.findIndex(({ id }) => id === jobLocumUser.id)
 
         if (index > -1) {
-          this.locumInvoices.splice(index, 1, locumInvoice)
+          this.jobLocumUsers.splice(index, 1, jobLocumUser)
         }
       },
 
-      locumInvoiceDeletedHandler (data) {
+      jobLocumUserDeletedHandler (data) {
         const {
           id,
         } = data
@@ -363,13 +351,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.locumInvoices.findIndex((locumInvoice) => locumInvoice.id === id)
+          const index = this.jobLocumUsers.findIndex((jobLocumUser) => jobLocumUser.id === id)
 
           if (index > -1) {
-            this.locumInvoices.splice(index, 1)
+            this.jobLocumUsers.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredLocumInvoices(1)
+              this.loadMoredJobs(1)
             }
           }
         }

@@ -7,6 +7,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Locums on System
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-004
+      </div>
+
       <div class="flex text-sm text-white">
         <nuxt-link
           to="/reports/locums"

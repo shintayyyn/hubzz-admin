@@ -7,6 +7,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Locums in an Area
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-019
+      </div>
+
       <div class="w-full flex flex-col md:flex-row justify-between">
         <div class="w-full md:w-auto flex items-center flex-wrap">
           <AppInput class="w-full md:w-auto my-1 md:mr-1" :type="'search'" :placeholder="'Search Area'" />

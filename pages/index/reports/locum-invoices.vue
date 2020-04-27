@@ -7,6 +7,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Tax Reporting - Money Earnt and Tax and NI Paid
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-012
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
