@@ -28,7 +28,14 @@
 			:orderBy="params.order_by"
 			@pagechanged="pagechanged"
 			@sorted="sorted"
-		/>
+		>
+			<template v-slot:from_slot="slotProps">
+				<div>{{ $moment(slotProps.item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ slotProps.item.time_start }}</div>
+			</template>
+			<template v-slot:to_slot="slotProps">
+				<div>{{ $moment(slotProps.item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ slotProps.item.time_end }}</div>
+			</template>
+		</AppTable>
 		<div v-else>
 			<div
 				class="mt-10 w-full text-white text-center"
@@ -93,13 +100,17 @@ export default {
 					name: "From",
 					dataIndex: "date_start",
 					class: "text-center localDate",
-					sortable: true
+					sortable: true,
+					slotName: "from_slot",
+					slot: true
 				},
 				{
 					name: "To",
 					dataIndex: "date_end",
 					class: "text-center localDate",
-					sortable: true
+					sortable: true,
+					slotName: "to_slot",
+					slot: true
 				},
 				{
 					name: "Created",

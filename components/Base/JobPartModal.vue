@@ -60,7 +60,7 @@
 								<p class="text-white">{{job_part.job.total_hours | hoursMinutes}}</p>
 								<p class="mt-5 font-semibold">Job Description</p>
 								<p
-									class="text-white"
+									class="text-white break-words"
 								>{{job_part.job && job_part.job.description? job_part.job.description: '(none)'}}</p>
 							</div>
 						</div>

@@ -60,7 +60,7 @@
                   <p class="font-semibold">
                     Job Description
                   </p>
-                  <p class="text-white pb-2">
+                  <p class="text-white pb-2 break-words">
                     {{ job.description ? job.description : '(none)' }}
                   </p>
                   <p class="font-semibold">
@@ -509,7 +509,7 @@
                     <p class="mt-5 font-semibold">
                       Job Description
                     </p>
-                    <p class="text-white">
+                    <p class="text-white break-words">
                       {{ modalJobPart.job && modalJobPart.job.description ? modalJobPart.job.description: '(none)' }}
                     </p>
                   </div>

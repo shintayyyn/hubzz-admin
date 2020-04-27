@@ -33,7 +33,7 @@
 									<p class="mt-5 font-semibold">Total Hours</p>
 									<p class="text-white">{{job.total_hours | hoursMinutes}}</p>
 									<p class="mt-5 font-semibold">Job Description</p>
-									<p class="text-white">{{job.description ? job.description : '(none)'}}</p>
+									<p class="text-white break-words">{{job.description ? job.description : '(none)'}}</p>
 									<p class="mt-5 font-semibold">Extra Information</p>
 									<p class="text-white">{{job.extra_information ? job.extra_information:'(none)' }}</p>
 								</div>
