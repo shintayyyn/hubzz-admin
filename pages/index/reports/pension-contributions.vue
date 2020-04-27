@@ -15,6 +15,7 @@
         Rep-003
       </div>
 
+      <!-- FILTER -->
       <div
         class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
@@ -107,6 +108,7 @@
           />
         </div>
       </div>
+      <!-- FILTER ENDS HERE -->
 
       <div v-if="false">
         <div>
@@ -149,7 +151,12 @@
           </div>
         </div>
   
-        <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />
+        <ReportPagination 
+          :count="count" 
+          :pages="pages" 
+          :page="activePage" 
+          @page="setPage"
+        />
       </div>
 
       <div

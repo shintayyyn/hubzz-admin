@@ -1,6 +1,48 @@
 <template>
   <div>
-    <div v-if="false">
+    <div>
+      <!-- FILTER -->
+      <div
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full">
+          <label class="text-md md:text-lg text-bold">Filters</label>
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncudes"
+            placeholder="Search locum"
+            type="text"
+            label="Locum"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="professionNameIncludes"
+            placeholder="Search profession"
+            type="text"
+            label="Profession"
+          />
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+      <!-- FILTER ENDS HERE -->
       <div>
         <label class="text-white">Limit: </label>
         <select v-model="limit">
@@ -29,7 +71,26 @@
       @setOrderBy="(value) => orderBy = value"
     />
 
-    <ReportPagination :pages="pages" :page="activePage" @setPage="(value) => activePage = value" />
+    <ReportPagination
+      :count="count" 
+      :pages="pages" 
+      :page="activePage"
+      @page="setPage" 
+    />
+    <div
+      class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+    >
+      <div class="md:px-1 flex flex-wrap w-full justify-end">
+        <button
+          :disabled="downloading"
+          class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+          @click="downloadCsv"
+        >
+          <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+          <span>Download CSV</span>
+        </button>
+      </div>
+    </div>
 
     <div v-if="true" class="text-white"> 
       <span>Count: {{ count }}</span>
@@ -44,7 +105,8 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
-
+  import AppButton from '@/components/Base/AppButton'
+  import AppInput from '@/components/Base/AppInput'
   export default {
 
     transition: 'fade',
@@ -52,11 +114,14 @@
     components: {
       ReportTable,
       ReportPagination,
+      AppButton,
+      AppInput,
     },
 
     data () {
       return {
         loading: false,
+        downloading: false,
         count: 0,
         locums: [],
         orderBy: [],
@@ -72,6 +137,8 @@
             direction: 'desc',
           },
         ],
+        locumNameIncudes: '',
+        professionNameIncludes: '',
         limit: 10,
         limits: [
           1,
@@ -105,6 +172,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Locum',
+            key: 'locum_user_name',
+            sort_key: 'locum_user_name',
+            column: (item) => item.locum_user_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Profession',
             key: 'profession_name',
             sort_key: 'profession_name',
@@ -126,7 +202,7 @@
             title: 'Min Rate per Hour',
             key: 'min_rate_per_hour',
             sort_key: 'min_rate_per_hour',
-            column: (item) => item.min_rate_per_hour.toFixed(2),
+            column: (item) => item.min_rate_per_hour ? item.min_rate_per_hour.toFixed(2) : null,
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -135,7 +211,7 @@
             title: 'Min Rate per Half Day Session',
             key: 'min_rate_per_half_day_session',
             sort_key: 'min_rate_per_half_day_session',
-            column: (item) => item.min_rate_per_half_day_session.toFixed(2),
+            column: (item) => item.min_rate_per_half_day_session ? item.min_rate_per_half_day_session.toFixed(2) : null,
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -144,7 +220,7 @@
             title: 'Min Rate per Whole Day Session',
             key: 'min_rate_per_whole_day_session',
             sort_key: 'min_rate_per_whole_day_session',
-            column: (item) => item.min_rate_per_whole_day_session.toFixed(2),
+            column: (item) => item.min_rate_per_whole_day_session ? item.min_rate_per_whole_day_session.toFixed(2) : null,
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -180,20 +256,93 @@
 
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
+      const {
+        locum_name_includes: locumNameIncudes,
+        profession_name_includes: professionNameIncludes,
+      } = this.$route.query
 
+      this.locumNameIncudes = locumNameIncudes ? locumNameIncudes : ''
+      this.professionNameIncludes = professionNameIncludes ? professionNameIncludes : ''
       this.getLocums()
     },
 
     methods: {
+      filterReset () {
+        this.locumNameIncudes = ''
+        this.professionNameIncludes = ''
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getLocums()
+      },
+
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getLocums()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getLocums()
+      },
+
       getLocums () {
         this.loading = true
         this.locums = []
+
+        const params = {
+          locum_name_includes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          profession_name_includes : this.professionNameIncludes ? this.professionNameIncludes : undefined,
+        }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/locums/count').then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/locums', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
@@ -215,6 +364,34 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/locums/generate-key', {
+          filename: `locums.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/locums/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },
