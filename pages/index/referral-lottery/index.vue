@@ -167,7 +167,6 @@
 
     data () {
       return {
-        canInitiateDraw: false,
         draw_modal: false,
         winner_modal: false,
         winner: null,
@@ -188,10 +187,17 @@
 
         date_start: null,
         date_end: null,
+
+        currentDateStart: null,
+        currentDateEnd: null,
       }
     },
 
     computed: {
+
+      canInitiateDraw () {
+        return this.currentDateStart && this.currentDateEnd && !this.loading && !this.initialLoading && this.users.length > 0
+      },
 
       columns () {
         let columns = []
@@ -297,7 +303,6 @@
           this.date_start = null
           this.date_end = null
           this.orderBy = []
-          this.canInitiateDraw = false
           this.initialLoading = true
           this.getUsersPromiseAll().finally(() => {
             this.initialLoading = false
@@ -360,47 +365,65 @@
 
     methods: {
 
-      async getUsersPromiseAll () {
-        try {
-          let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries' 
+      getUsersPromiseAll () {
+        let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries' 
 
-          let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
+        let url = routeQuery === 'entries' ? `/api/v1/admin/raffle-users` : `/api/v1/admin/raffles`
 
-          const params = {
-            date_start: this.date_start,
-            date_end: this.date_end,
+        const params = {
+          date_start: this.date_start,
+          date_end: this.date_end,
+        }
+
+        return Promise.all([
+          this.$axios.$get(`${url}/count`, {
+            params: {
+              ...params,
+            },
+          }).then(res => {
+            this.total = res.data && res.data.count ? res.data.count : 0
+          }),
+          this.$axios.$get(`${url}`, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+              limit: this.limit,
+              offset: (this.current_page - 1) * this.limit,
+            },
+          }).then(res => {
+            if (res.data && res.data.users) {
+              this.users = res.data.users 
+            } else if (res.data && res.data.raffles) {
+              this.raffles = res.data.raffles
+            }
+          })
+        ]).then(() => {
+          this.currentDateStart = this.date_start
+          this.currentDateEnd = this.date_end
+        }).catch((err) => {
+          console.log('err', err.response || err)
+
+          let message = null
+
+          if (err.response) {
+            message = err.response.data.message
+          } else if (err.request) {
+            message = 'Something went wrong!'
+          } else {
+            message = err.message
           }
 
-          return Promise.all([
-            this.$axios.$get(`${url}/count`, {
-              params: {
-                ...params,
-              },
-            }).then(res => {
-              this.total = res.data && res.data.count ? res.data.count : 0
-            }),
-            this.$axios.$get(`${url}`, {
-              params: {
-                ...params,
-                order_by: this.orderBy,
-                limit: this.limit,
-                offset: (this.current_page - 1) * this.limit,
-              },
-            }).then(res => {
-              if (res.data && res.data.users) {
-                this.users = res.data.users 
-                this.canInitiateDraw = this.users.length > 0 ? true : false
-              } else if (res.data && res.data.raffles) {
-                this.raffles = res.data.raffles
-              }
+          if (message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: [`${message}`],
             })
-          ])
-        } catch (err) {
-          return this.$nuxt.error({
-            status: 400,
-            message: err.response.message,
-          })
-        }
+            return
+          }
+
+          throw err
+        })
       },
 
       display () {
@@ -430,7 +453,7 @@
       },
 
       initiateDraw () {
-        if (!this.date_start || !this.date_end) {
+        if (!this.currentDateStart || !this.currentDateEnd) {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
@@ -440,9 +463,14 @@
           return
         }
 
-        this.$axios.$post(`/api/v1/admin/raffles`, {
-          date_start: this.date_start,
-          date_end: this.date_end
+        this.loading = true
+        this.getUsersPromiseAll().finally(() => {
+          this.loading = false
+        }).then(() => {
+          return this.$axios.$post(`/api/v1/admin/raffles`, {
+            date_start: this.currentDateStart,
+            date_end: this.currentDateEnd
+          })
         }).then(res => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
@@ -514,7 +542,6 @@
         this.date_start = null
         this.date_end = null
         this.orderBy = []
-        this.canInitiateDraw = false
         this.current_page = 1
         this.loading = true
         this.getUsersPromiseAll().then(() => {
