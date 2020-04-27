@@ -7,6 +7,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Practice Lead Time for Activation
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-018
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
@@ -50,8 +58,8 @@
 </template>
 
 <script>
-  import ReportTable from '@/components/Reports/ReportTable'
-  import ReportPagination from '@/components/Reports/ReportPagination'
+import ReportTable from '@/components/Reports/ReportTable'
+import ReportPagination from '@/components/Reports/ReportPagination'
 
   export default {
     components: {
@@ -182,6 +190,7 @@
 
     watch: {
       orderBy () {
+        console.log('order by', this.order_by)
         this.getActivatedPractices()
       },
 
@@ -211,6 +220,8 @@
       getActivatedPractices () {
         this.loading = true
         this.activatedPractices = []
+
+        console.log('order by', this.order_by)
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/activated-practices/count').then((responses) => {
             return responses.data.data.count

@@ -6,6 +6,14 @@
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
+
+      <div class="text-lg md:text-2xl text-white">
+        Locum Practice Referrals
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-021
+      </div>
   
       <div v-if="false">
         <div>
