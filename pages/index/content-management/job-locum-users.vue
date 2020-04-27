@@ -99,6 +99,24 @@
             flexShrink: 0,
           },
           {
+            title: 'Original Job ID',
+            key: 'original_job_id',
+            sort_key: 'original_job_id',
+            column: (item) => item.original_job_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Updated Job ID',
+            key: 'updated_job_id',
+            sort_key: 'updated_job_id',
+            column: (item) => item.updated_job_id,
+            justify: 'end',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
             title: 'Locum ID',
             key: 'locum_user_id',
             sort_key: 'locum_user_id',
@@ -108,10 +126,19 @@
             flexShrink: 0,
           },
           {
-            title: 'User Matched',
-            key: 'user_matched',
-            sort_key: 'user_matched',
-            column: (item) => item.user_matched ? 'Yes' : 'No',
+            title: 'Qualified',
+            key: 'locum_user_qualified',
+            sort_key: 'locum_user_qualified',
+            column: (item) => item.locum_user_qualified ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Matched',
+            key: 'locum_user_matched',
+            sort_key: 'locum_user_matched',
+            column: (item) => item.locum_user_matched ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -135,6 +162,19 @@
             flexShrink: 0,
           },
           {
+            title: 'Applied Update Accepted',
+            key: 'applied_update_accepted',
+            sort_key: 'applied_update_accepted',
+            column: (item) => item.applied_update_accepted === true
+              ? 'Yes'
+              : item.applied_update_accepted === false
+                ? 'No'
+                : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Applied Update Accepted At',
             key: 'applied_update_accepted_at',
             sort_key: 'applied_update_accepted_at',
@@ -147,9 +187,22 @@
             title: 'Notify Not Accept Applied Updated Jobs',
             key: 'notify_not_accept_applied_updated_jobs',
             sort_key: 'notify_not_accept_applied_updated_jobs',
-            column: (item) => item.notify_not_accept_applied_updated_jobs ? 'Yes' : 'No',
+            column: (item) => item.notify_not_accept_applied_updated_jobs === true
+              ? 'Yes'
+              : item.notify_not_accept_applied_updated_jobs === false
+                ? 'No'
+                : '',
             justify: 'start',
             flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Appointed Locum ID',
+            key: 'appointed_to_locum_user_id',
+            sort_key: 'appointed_to_locum_user_id',
+            column: (item) => item.appointed_to_locum_user_id,
+            justify: 'end',
+            flexGrow: 0,
             flexShrink: 0,
           },
         ]
