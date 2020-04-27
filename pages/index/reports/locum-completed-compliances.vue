@@ -7,6 +7,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Locum Lead Time for Compliance Completed
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-017
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>

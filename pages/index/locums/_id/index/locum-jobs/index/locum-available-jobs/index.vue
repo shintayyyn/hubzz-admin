@@ -1,21 +1,21 @@
 <template>
 	<div class="mt-2">
-		<nuxt-link
-			:to="`/locums/${user.id}/locum-jobs/locum-available-jobs`"
-			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
-			:class=" !$route.query.available_job_type ||($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'available') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-		>Available</nuxt-link>
-		<nuxt-link
-			:to="`/locums/${user.id}/locum-jobs/locum-available-jobs?available_job_type=Public
+		<!-- <nuxt-link
+      :to="`/locums/${user.id}/locum-jobs/locum-available-jobs`"
+      class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
+      :class=" !$route.query.available_job_type ||($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'available') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+    >Available</nuxt-link>
+    <nuxt-link
+      :to="`/locums/${user.id}/locum-jobs/locum-available-jobs?available_job_type=Public
       `"
-			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
-			:class="($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'public')? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-		>Public</nuxt-link>
-		<nuxt-link
-			:to="`/locums/${user.id}/locum-jobs/locum-available-jobs?available_job_type=Bank`"
-			class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
-			:class="($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'bank') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-		>Bank</nuxt-link>
+      class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
+      :class="($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'public')? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+    >Public</nuxt-link>
+    <nuxt-link
+      :to="`/locums/${user.id}/locum-jobs/locum-available-jobs?available_job_type=Bank`"
+      class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
+      :class="($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'bank') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+		>Bank</nuxt-link>-->
 
 		<AppTable
 			v-if="total > 0"
@@ -52,19 +52,19 @@ export default {
 		// LocumAvailableJobs,
 		AppTable
 	},
-	middleware({ query, error }) {
-		if (
-			query.status &&
-			!["matched", "available", "bank"].includes(
-				query.available_job_type.toLowerCase()
-			)
-		) {
-			return error({
-				status: 404,
-				message: "This Available Job Type is Invalid"
-			});
-		}
-	},
+	// middleware ({ query, error }) {
+	// 	if (
+	// 		query.status &&
+	// 		!["matched", "available", "bank"].includes(
+	// 			query.available_job_type.toLowerCase()
+	// 		)
+	// 	) {
+	// 		return error({
+	// 			status: 404,
+	// 			message: "This Available Job Type is Invalid"
+	// 		})
+	// 	}
+	// },
 	data() {
 		return {
 			loading: false,
@@ -73,7 +73,7 @@ export default {
 			params: {
 				viewing_locum_user_id: "",
 				locum_status: "",
-				practice_is_favorite_of_locum: "",
+				// practice_is_favorite_of_locum: "",
 				limit: 10,
 				offset: 0,
 				order_by: [],
@@ -122,38 +122,37 @@ export default {
 		};
 	},
 
-	watch: {
-		"$route.query.available_job_type"(newStatus) {
-			let locumStatus = "";
-			if (!newStatus || newStatus == "Available") {
-				locumStatus = "Matched";
-			} else if (newStatus == "Public") {
-				locumStatus = "Available";
-			} else if (newStatus == "Bank") {
-				locumStatus = "Matched";
-			}
-			let params = {};
-			params = {
-				viewing_locum_user_id: this.user.id,
-				locum_status: locumStatus,
-				practice_is_favorite_of_locum:
-					newStatus && newStatus == "Bank" ? true : null,
-				limit: 10,
-				offset: 0
-			};
-			(this.params.viewing_locum_user_id = params.viewing_locum_user_id),
-				(this.params.locum_status = params.locum_status),
-				(this.params.practice_is_favorite_of_locum =
-					params.practice_is_favorite_of_locum),
-				(this.params.limit = params.limit),
-				(this.params.offset = params.offset),
-				setTimeout(async () => {
-					await this.$store.commit("jobs/TOGGLE_LOADING", true);
-					await this.getAvailableJobs(this.params);
-					await this.$store.commit("jobs/TOGGLE_LOADING", false);
-				});
-		}
-	},
+	// watch: {
+	// 	"$route.query.available_job_type" (newStatus) {
+	// 		let locumStatus = ['Available', 'Matched']
+	// 		if (!newStatus || newStatus == "Available") {
+	// 			locumStatus = "Matched"
+	// 		} else if (newStatus == "Public") {
+	// 			locumStatus = "Available"
+	// 		} else if (newStatus == "Bank") {
+	// 			locumStatus = "Matched"
+	// 		}
+	// 		let params = {}
+	// 		params = {
+	//       viewing_locum_user_id: this.user.id,
+	//       locum_status: locumStatus,
+	//       practice_is_favorite_of_locum: true,
+	//       limit: 10,
+	//       offset: 0
+	//     };
+	// 		(this.params.viewing_locum_user_id = params.viewing_locum_user_id),
+	// 			(this.params.locum_status = params.locum_status),
+	// 			(this.params.practice_is_favorite_of_locum =
+	// 				params.practice_is_favorite_of_locum),
+	// 			(this.params.limit = params.limit),
+	// 			(this.params.offset = params.offset),
+	// 			setTimeout(async () => {
+	// 				await this.$store.commit("jobs/TOGGLE_LOADING", true)
+	// 				await this.getAvailableJobs(this.params)
+	// 				await this.$store.commit("jobs/TOGGLE_LOADING", false)
+	// 			})
+	// 	}
+	// },
 	computed: {
 		user() {
 			return this.$store.state.locums.locumUser;
@@ -184,30 +183,29 @@ export default {
 		}
 	},
 	created() {
-		let newStatus = this.$route.query.available_job_type
-			? this.$route.query.available_job_type
-			: null;
-		let locumStatus = "";
-		if (!newStatus || newStatus == "Available") {
-			locumStatus = "Matched";
-		} else if (newStatus == "Public") {
-			locumStatus = "Available";
-		} else if (newStatus == "Bank") {
-			locumStatus = "Matched";
-		}
+		// let newStatus = this.$route.query.available_job_type
+		// 	? this.$route.query.available_job_type
+		// 	: null
+		let locumStatus = ["Available", "Matched"];
+		// if (!newStatus || newStatus == "Available") {
+		// 	locumStatus = "Matched"
+		// } else if (newStatus == "Public") {
+		// 	locumStatus = "Available"
+		// } else if (newStatus == "Bank") {
+		// 	locumStatus = "Matched"
+		// }
 		let params = {};
 		params = {
 			viewing_locum_user_id: this.user.id,
 			locum_status: locumStatus,
-			practice_is_favorite_of_locum:
-				newStatus && newStatus == "Bank" ? true : null,
+			// practice_is_favorite_of_locum: true,
 			limit: 10,
 			offset: 0
 		};
 		(this.params.viewing_locum_user_id = params.viewing_locum_user_id),
 			(this.params.locum_status = params.locum_status),
-			(this.params.practice_is_favorite_of_locum =
-				params.practice_is_favorite_of_locum),
+			// (this.params.practice_is_favorite_of_locum =
+			// 	params.practice_is_favorite_of_locum),
 			(this.params.limit = params.limit),
 			(this.params.offset = params.offset),
 			this.getAvailableJobs(this.params);

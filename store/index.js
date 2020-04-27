@@ -36,64 +36,19 @@ export const mutations = {
     state.socket_id = payload
   },
   SET_NOTIFICATION (state, payload) {
-    state.notification.enabled = payload.enabled;
-    state.notification.status = payload.status;
-    state.notification.text = payload.text;
-    state.notification.closable = payload.closable;
-    state.notification.duration = payload.duration;
+    state.notification.enabled = payload.enabled
+    state.notification.status = payload.status
+    state.notification.text = payload.text
+    state.notification.closable = payload.closable
+    state.notification.duration = payload.duration
   },
   TOGGLE_SIDEBAR (state, payload) {
     state.toggled_sidebar = payload
   },
-  SET_ADMIN_USER_PERMISSIONS (state, payload) {
-    state.user.admin_detail.roles
-  }
 }
 
 export const actions = {
-  async login ({ getters, commit, dispatch }, { email, password }) {
-    const socketId = this.$socket.id
-
-    let response = await this.$axios.post('/api/v1/admin/login', {
-      email,
-      password,
-      socket_id: socketId
-    })
-
-    const token = response.data.data.token.token
-
-    this.$axios.setToken(token, 'Bearer')
-
-    this.$auth.$storage.setUniversal('_token.local', 'Bearer ' + token)
-
-    await this.$auth.fetchUser()
-
-    this.$router.push('/')
-
-    if (socketId) {
-      console.log('Socket Logged In')
-    }
-
-    // await this.$store.commit('SET_ADMIN_USER_LOGGED_IN', response.data.data.user)
-
-    dispatch('one-signal/setOneSignalUser')
-  },
-
-  async logout({ getters, commit, dispatch }) {
-    await this.$axios.post('/api/v1/admin/logout').catch((err) => {
-      console.log('err', err)
-    })
-
-    await this.$auth.logout()
-
-    this.$router.push('/sign-in')
-
-    console.log('Socket Logged Out')
-
-    dispatch('one-signal/setOneSignalUser')
-  },
-
-  async joinRoom({ dispatch }, payload) {
+  async joinRoom (ctx, payload) {
     try {
       await this.$axios.$post('/api/v1/socket/join-room', {
         socket_id: payload.socket_id,
@@ -104,7 +59,7 @@ export const actions = {
     }
   },
 
-  async leaveRoom({ }, payload) {
+  async leaveRoom (ctx, payload) {
     await this.$axios.$post('api/v1/socket/leave-room', {
       socket_id: payload.socket_id,
       room_name: payload.room_name

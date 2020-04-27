@@ -1,114 +1,220 @@
 <template>
-	<div class="m-6">
-		<!-- HEADER -->
-		<div v-if="!isNuxtChild" class="flex justify-between text-sm text-white">
-			<div @click="$emit('close')" class="cursor-pointer">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="text-white hover:text-sunglow fill-current"
-				/>
-			</div>
-		</div>
-		<div class="flex flex-wrap my-4">
-			<div
-				class="text-2xl text-white font-semibold mr-4"
-			>{{job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}</div>
-			<div class="flex">
-				<div class="text-black p-2 bg-yellow-500 rounded">{{job_part.status}}</div>
-				<div
-					class="text-black p-2 text-white rounded ml-4"
-					:class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
-				>{{job_part.job && job_part.job.type ? job_part.job.type : null}}</div>
-			</div>
-		</div>
-		<div class="flex flex-wrap">
-			<div
-				class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
-				:class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
-			>
-				<div
-					v-if="job_part.status === 'Withdrawn'"
-					class="shadow-lg rounded-lg bg-waterloo shadow p-4 mb-2"
-				>
-					<div class="leading-tight pb-4">
-						<p class="font-bold text-sm sm:text-md">Reason for Withdrawal</p>
-						<p
-							class="text-xs sm:text-sm"
-						>{{ job_part.job.platform_job.declined_reason ? job_part.job.platform_job.declined_reason : '(none)'}}</p>
-					</div>
-					<div class="leading-tight">
-						<p class="font-bold text-sm sm:text-md">Date of Withdrawal</p>
-						<p class="text-xs sm:text-sm">{{ job_part.job.platform_job.declined_at | localDate}}</p>
-					</div>
-				</div>
-				<div class="shadow-lg rounded-lg bg-waterloo shadow">
-					<div class="flex flex-wrap">
-						<!-- INFOS LEFT -->
-						<div class="xl:w-1/2 w-full overflow-hidden">
-							<div class="m-4 mt-5 text-gray text-white">
-								<p class="font-semibold">Job Part Number</p>
-								<p class="text-white">{{job_part.job_part_number}}</p>
-								<p class="mt-5 font-semibold">Job Part</p>
-								<p class="text-white">{{job_part.part}} of {{job_part.parts}}</p>
-								<p class="mt-5 font-semibold">Rate</p>
-								<p
-									class="text-white no-underline"
-								>{{job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour"}}</p>
-								<p class="mt-5 font-semibold">Total Hours</p>
-								<p class="text-white">{{job_part.job.total_hours | hoursMinutes}}</p>
-								<p class="mt-5 font-semibold">Job Description</p>
-								<p
-									class="text-white break-words"
-								>{{job_part.job && job_part.job.description? job_part.job.description: '(none)'}}</p>
-							</div>
-						</div>
-						<!-- INFOS RIGHT -->
-						<div class="text-white xl:w-1/2 w-full overflow-hidden">
-							<div class="m-4 mt-5">
-								<div v-if="job_part.status === 'Completed'">
-									<p class="mb-2 font-semibold">Completed At</p>
-									<div class="pb-2 flex">
-										<span
-											class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-										>{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
-									</div>
-								</div>
-								<div v-if="job_part.status === 'Approved'">
-									<p class="mb-2 font-semibold">Approved At</p>
-									<div class="pb-2 flex">
-										<span
-											class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-										>{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
-									</div>
-								</div>
-								<p class="font-semibold">Duration</p>
-								<div class="text-xs sm:text-sm mb-8">
-									<p
-										class="px-1"
-									>{{ $moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
-									<div class="flex">
-										<div class="px-1">
-											<p>Days:</p>
-											<p>Time:</p>
-											<p>Shift:</p>
-										</div>
-										<div class="px-1">
-											<p>{{ job_part.days }}</p>
-											<p>{{ job_part.time_start }} - {{ job_part.time_end }}</p>
-											<p>{{ job_part.job.shift ? job_part.job.shift.name : null }}</p>
-										</div>
-									</div>
-									<div class="overflow-y-auto" style="max-height: 205px;">
-										<div
-											v-for="(date, index) in job_part.dates"
-											:key="index"
-											class="m-1"
-										>{{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</div>
-									</div>
-								</div>
-								<!-- <div class="flex items-center py-2 mr-2 text-sm">
+  <div class="m-6">
+    <!-- HEADER -->
+    <div v-if="!isNuxtChild" class="flex justify-between text-sm text-white">
+      <div class="cursor-pointer" @click="$emit('close')">
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          width="32"
+          class="text-white hover:text-sunglow fill-current"
+        />
+      </div>
+    </div>
+    <div class="flex flex-wrap my-4">
+      <div
+        class="text-2xl text-white font-semibold mr-4"
+      >
+        {{ job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}
+      </div>
+      <div class="flex">
+        <div class="text-black p-2 bg-yellow-500 rounded">
+          {{ job_part.status }}
+        </div>
+        <div
+          class="text-black p-2 text-white rounded ml-4"
+          :class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
+        >
+          {{ job_part.job && job_part.job.type ? job_part.job.type : null }}
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap">
+      <div
+        class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
+        :class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
+      >
+        <div
+          v-if="job_part.status === 'Withdrawn'"
+          class="shadow-lg rounded-lg bg-waterloo shadow p-4 mb-2"
+        >
+          <div class="leading-tight pb-4">
+            <p class="font-bold text-sm sm:text-md">
+              Reason for Withdrawal
+            </p>
+            <p
+              class="text-xs sm:text-sm"
+            >
+              {{ job_part.job.platform_job.declined_reason ? job_part.job.platform_job.declined_reason : '(none)' }}
+            </p>
+          </div>
+          <div class="leading-tight">
+            <p class="font-bold text-sm sm:text-md">
+              Date of Withdrawal
+            </p>
+            <p class="text-xs sm:text-sm">
+              {{ job_part.job.platform_job.declined_at | localDate }}
+            </p>
+          </div>
+        </div>
+        <div class="shadow-lg rounded-lg bg-waterloo shadow">
+          <div class="flex flex-wrap">
+            <!-- INFOS LEFT -->
+            <div class="xl:w-1/2 w-full overflow-hidden">
+              <div class="m-4 mt-5 text-gray text-white">
+                <p class="font-semibold">
+                  Job Part Number
+                </p>
+                <p class="text-white">
+                  {{ job_part.job_part_number }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Job Part
+                </p>
+                <p class="text-white">
+                  {{ job_part.part }} of {{ job_part.parts }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Rate
+                </p>
+                <p
+                  class="text-white no-underline"
+                >
+                  {{ job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour" }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Total Hours
+                </p>
+                <p class="text-white">
+                  {{ job_part.job.total_hours | hoursMinutes }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Job Description
+                </p>
+                <p
+                  class="text-white break-words"
+                >
+                  {{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}
+                </p>
+                <p class="font-semibold">
+                  Is there another Doctor on site?
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                </p>
+
+                <p class="font-semibold">
+                  Is nurse support available?
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.is_nurse_available ? "Yes" : "No" }}
+                </p>
+
+                <p class="font-semibold">
+                  Number of Patients
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.number_of_patients }}
+                </p>
+
+                <p class="font-semibold">
+                  Duration for Each Appointment
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                </p>
+              
+                <p class="font-semibold">
+                  Opprtunity for Catch Up Slots
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                </p>
+
+                <p class="font-semibold">
+                  Only favorite locum will be notified until this date
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
+                </p>
+
+                <p class="font-semibold">
+                  Sessions Requirements
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.session_requirements }}
+                </p>
+
+                <p class="font-semibold">
+                  Session Structure Information
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.session_structure_information }}
+                </p>
+
+                <p class="font-semibold">
+                  Unpaid Breaks (in minutes)
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.unpaid_breaks_in_minutes }}
+                </p>
+              </div>
+            </div>
+            <!-- INFOS RIGHT -->
+            <div class="text-white xl:w-1/2 w-full overflow-hidden">
+              <div class="m-4 mt-5">
+                <div v-if="job_part.status === 'Completed'">
+                  <p class="mb-2 font-semibold">
+                    Completed At
+                  </p>
+                  <div class="pb-2 flex">
+                    <span
+                      class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+                    >{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                  </div>
+                </div>
+                <div v-if="job_part.status === 'Approved'">
+                  <p class="mb-2 font-semibold"> 
+                    Approved At
+                  </p>
+                  <div class="pb-2 flex">
+                    <span
+                      class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+                    >{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                  </div>
+                </div>
+                <p class="font-semibold">
+                  Duration
+                </p>
+                <div class="text-xs sm:text-sm mb-8">
+                  <p
+                    class="px-1"
+                  >
+                    {{ $moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                  </p>
+                  <div class="flex">
+                    <div class="px-1">
+                      <p>Days:</p>
+                      <p>Time:</p>
+                      <p>Shift:</p>
+                    </div>
+                    <div class="px-1">
+                      <p>{{ job_part.days }}</p>
+                      <p>{{ job_part.time_start }} - {{ job_part.time_end }}</p>
+                      <p>{{ job_part.job.shift ? job_part.job.shift.name : null }}</p>
+                    </div>
+                  </div>
+                  <div class="overflow-y-auto" style="max-height: 205px">
+                    <div
+                      v-for="(date, index) in job_part.dates"
+                      :key="index"
+                      class="m-1"
+                    >
+                      {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="flex items-center py-2 mr-2 text-sm">
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
 									<span class="font-semibold">{{ $moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(job_part.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
 								</div>
@@ -120,11 +226,19 @@
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
 									<span class="font-semibold">{{ job_part.job ? job_part.job.shift.name : null}}</span>
 								</div>-->
-								<p class="mt-5 font-semibold">Invoiced?</p>
-								<p class="text-white">{{job_part.invoiced ? 'Yes': 'No'}}</p>
-								<p class="mt-5 font-semibold">Issued?</p>
-								<p class="text-white">{{job_part.issued ? 'Yes': 'No'}}</p>
-								<!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
+                <p class="mt-5 font-semibold">
+                  Invoiced?
+                </p>
+                <p class="text-white">
+                  {{ job_part.invoiced ? 'Yes': 'No' }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Issued?
+                </p>
+                <p class="text-white">
+                  {{ job_part.issued ? 'Yes': 'No' }}
+                </p>
+                <!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
 							<div class="m-2 mt-5">
 								<span>This job is </span>
 								<span class="font-semibold">{{job_part.job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE"}}</span>
@@ -179,105 +293,121 @@
 							</div>
 							<div v-else-if="job_part.job ? job_part.job.private_job : null">
 								</div>-->
-							</div>
-						</div>
-					</div>
-					<!-- GOOGLE MAPS -->
-					<div
-						class="w-full p-2 md:p-4 overflow-hidden"
-						v-if="job_part.job ? job_part.job.platform_job : null"
-					>
-						<div class="text-white pb-2">
-							<div class="font-semibold">
-								Practice
-								<p>{{job_part.job ? job_part.job.platform_job.practice.surgery.name : null}}</p>
-							</div>
-							<p>
-								{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null}}
-								{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null}}
-								{{job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null}}
-							</p>
-						</div>
+              </div>
+            </div>
+          </div>
+          <!-- GOOGLE MAPS -->
+          <div
+            v-if="job_part.job ? job_part.job.platform_job : null"
+            class="w-full p-2 md:p-4 overflow-hidden"
+          >
+            <div class="text-white pb-2">
+              <div class="font-semibold">
+                Practice
+                <p>
+                  {{ job_part.job ? job_part.job.platform_job.practice.surgery.name : null }}
+                </p>
+              </div>
+              <p>
+                {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_1 : null }}
+                {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_2 : null }}
+                {{ job_part.job ? job_part.job.platform_job.practice.surgery.address.line_3 : null }}
+              </p>
+            </div>
 
-						<div class="w-full">
-							<GmapMap
-								:center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-								:zoom="15"
-								map-type-id="terrain"
-								style="width: 100% height:350px"
-							>
-								<GmapMarker
-									:position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
-								/>
-							</GmapMap>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div v-if="jobParts.length > 0" class="flex order-1 md:order-2 w-full md:w-1/2">
-				<div class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
-					<div class="mx-2 text-white font-semibold">Job Parts</div>
-					<!-- <AppTable
-						:total="specificJobPart.job.job_parts.length"
-						:items="jobParts"
-						:currentPage="currentPage"
-						:perPage="params.limit"
-						:columns="columns"
-						:loading="loading"
-						:orderBy="params.order_by"
-						:customWidth="700"
-						@pagechanged="pagechanged"
-						@sorted="sorted"
-					></AppTable>-->
-					<div class="flex flex-col text-white">
-						<div class="overflow-x-auto">
-							<div class="jobpart">
-								<div class="hidden md:flex flex-row font-semibold mx-2 text-center">
-									<div class="w-1/4">Job Part Number</div>
-									<div class="w-1/4">Date Start</div>
-									<div class="w-1/4">Date End</div>
-									<div class="w-1/4">Job Part Status</div>
-								</div>
-								<!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
-								<div
-									v-for="(item, index) in jobParts"
-									@click.prevent="show(item.id)"
-									:key="`item-${index}`"
-									class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
-									:class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', item.id == job_part.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
-								>
-									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-										<strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-										<span class>{{item.job_part_number}}</span>
-									</div>
-									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-										<strong class="block md:hidden text-sm uppercase">Date Start</strong>
-										<span
-											class
-										>{{$moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} | {{ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
-									</div>
-									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-										<strong class="block md:hidden text-sm uppercase">Date End</strong>
-										<span
-											class
-										>{{$moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} | {{ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
-									</div>
-									<div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
-										<strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
-										<span class>{{item.status}}</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<AppPagination
-							:total="specificJobPart.job.job_parts.length"
-							:totalPages="totalPages"
-							:currentPage="currentPage"
-							:perPage="params.limit"
-							@pagechanged="pagechanged"
-						/>
-						<!-- not working also -->
-						<!-- <nuxt-link
+            <div class="w-full">
+              <GmapMap
+                :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+                :zoom="15"
+                map-type-id="terrain"
+                style="width: 100% height:350px"
+              >
+                <GmapMarker
+                  :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
+                />
+              </GmapMap>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-if="jobParts.length > 0" class="flex order-1 md:order-2 w-full md:w-1/2">
+        <div class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
+          <div class="mx-2 text-white font-semibold">
+            Job Parts
+          </div>
+          <!-- <AppTable
+            :total="specificJobPart.job.job_parts.length"
+            :items="jobParts"
+            :currentPage="currentPage"
+            :perPage="params.limit"
+            :columns="columns"
+            :loading="loading"
+            :orderBy="params.order_by"
+            :customWidth="700"
+            @pagechanged="pagechanged"
+            @sorted="sorted"
+          ></AppTable>-->
+          <div class="flex flex-col text-white">
+            <div class="overflow-x-auto">
+              <div class="jobpart">
+                <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
+                  <div class="w-1/4">
+                    Job Part Number
+                  </div>
+                  <div class="w-1/4">
+                    Date Start
+                  </div>
+                  <div class="w-1/4">
+                    Date End
+                  </div>
+                  <div class="w-1/4">
+                    Job Part Status
+                  </div>
+                </div>
+                <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
+                <div
+                  v-for="(item, index) in jobParts"
+                  :key="`item-${index}`"
+                  class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
+                  :class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', item.id == job_part.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
+                  @click.prevent="show(item.id)"
+                >
+                  <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
+                    <span class>
+                      {{ item.job_part_number }}
+                    </span>
+                  </div>
+                  <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Date Start</strong>
+                    <span>
+                      {{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}
+                    </span>
+                  </div>
+                  <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Date End</strong>
+                    <span>
+                      {{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}
+                    </span>
+                  </div>
+                  <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
+                    <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
+                    <span>
+                      {{ item.status }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <AppPagination
+              :total="specificJobPart.job.job_parts.length"
+              :totalPages="totalPages"
+              :currentPage="currentPage"
+              :perPage="params.limit"
+              @pagechanged="pagechanged"
+            />
+            <!-- not working also -->
+            <!-- <nuxt-link
 							v-for="(item, index) in specificJobPart.job.job_parts"
 							:to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
 							:key="`item-${index}`"
@@ -289,24 +419,24 @@
 								<span class>{{item.job_part_number}}</span>
 								<span class>{{item.status}}</span>
 							</div>
-						</nuxt-link>-->
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            </nuxt-link>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-import { gmapApi } from "vue2-google-maps";
-import AppTable from "@/components/Base/AppTable";
-import AppPagination from "@/components/Base/AppPagination";
+import { gmapApi } from "vue2-google-maps"
+import AppTable from "@/components/Base/AppTable"
+import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		AppTable,
 		AppPagination
 	},
 	props: ["jobPartId", "specificJobPart", "isNuxtChild", "jobId"],
-	data() {
+	data () {
 		return {
 			jobParts: [],
 			currentPage: 1,
@@ -339,52 +469,52 @@ export default {
 				}
 			],
 			loading: false
-		};
+		}
 	},
-	created() {
+	created () {
 		this.totalPages = Math.ceil(
 			this.specificJobPart.job.job_parts.length / this.params.limit
-		);
-		this.job_part = this.specificJobPart;
-		this.getJobParts(this.params);
+		)
+		this.job_part = this.specificJobPart
+		this.getJobParts(this.params)
 
-		console.log("jobpart", this.job_part);
+		console.log("jobpart", this.job_part)
 	},
 	computed: {
-		loadingPractices() {
-			return this.$store.state.practices.loading_practices;
+		loadingPractices () {
+			return this.$store.state.practices.loading_practices
 		},
 		google: gmapApi,
-		latLangPlatform() {
+		latLangPlatform () {
 			return this.specificJobPart.job.platform_job.practice.surgery.address
-				.coordinates;
+				.coordinates
 		},
-		latLangPrivate() {
+		latLangPrivate () {
 			return this.specificJobPart.job.private_job.private_practice.surgery
-				.address.coordinates;
+				.address.coordinates
 		}
 	},
 	methods: {
-		async show(id) {
+		async show (id) {
 			this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
-				this.job_part = res.data.job_part;
-			});
+				this.job_part = res.data.job_part
+			})
 		},
-		getJobParts(params) {
-			this.loading = true;
+		getJobParts (params) {
+			this.loading = true
 			this.$axios
 				.$get(
 					`/api/v1/admin/job-parts?job_id=${this.jobId}&limit=${params.limit}&offset=${params.offset}`
 				)
 				.then(res => {
-					this.jobParts = res.data.job_parts;
+					this.jobParts = res.data.job_parts
 				})
 				.catch(err => {
-					console.log("get job parts error", err);
-				});
-			this.loading = false;
+					console.log("get job parts error", err)
+				})
+			this.loading = false
 		},
-		unclickableJobPart() {
+		unclickableJobPart () {
 			if (this.specificJobPart.job) {
 				if (
 					this.specificJobPart.job.status === "Live" ||
@@ -394,33 +524,33 @@ export default {
 					this.specificJobPart.job.status === "Cancelled" ||
 					this.specificJobPart.job.status === "Declined"
 				) {
-					return true;
+					return true
 				} else {
-					return false;
+					return false
 				}
 			}
 		},
-		pagechanged(page) {
+		pagechanged (page) {
 			const query = {
 				...this.$route.query,
 				page: page || 1
-			};
-			this.params.offset = this.params.limit * (page - 1);
-			this.currentPage = page;
-			this.getJobParts(this.params);
+			}
+			this.params.offset = this.params.limit * (page - 1)
+			this.currentPage = page
+			this.getJobParts(this.params)
 		},
-		sorted(order_by) {
+		sorted (order_by) {
 			// go back to page 1
-			this.currentPage = 1;
+			this.currentPage = 1
 			let query = {
 				...this.$router.query,
 				order_by
-			};
-			this.params.order_by = order_by;
-			this.getJobParts(this.params);
+			}
+			this.params.order_by = order_by
+			this.getJobParts(this.params)
 		}
 	}
-};
+}
 </script>
 <style>
 @media (min-width: 768px) {

@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Locum Available Jobs
+      Locum Available / Applied Jobs
     </div>
 
     <ContentManagementTable
@@ -225,7 +225,7 @@
 
       getJobs () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.locumAvailableJobs = []
 
         const params = {}
@@ -290,7 +290,7 @@
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.locumAvailableJobs.forEach((locumAvailableJob) => {
+          responses.data.data.locum_available_jobs.forEach((locumAvailableJob) => {
             this.locumAvailableJobs.push(locumAvailableJob)
           })
         }).catch((err) => {

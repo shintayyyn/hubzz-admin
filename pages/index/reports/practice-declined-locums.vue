@@ -8,6 +8,14 @@
         </nuxt-link>
       </div>
 
+      <div class="text-lg md:text-2xl text-white">
+        Locums that have Declined
+      </div>
+  
+      <div class="text-sm md:text-lg text-white">
+        Rep-007
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>

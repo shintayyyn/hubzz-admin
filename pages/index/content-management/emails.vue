@@ -10,8 +10,8 @@
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search name"
-            style="width: 250px;"
+            placeholder="Search email, user name, username, email"
+            style="width: 320px;"
             @keyup="searchSubmit"
           >
           <button
@@ -125,10 +125,10 @@
             flexShrink: 0,
           },
           {
-            title: 'User',
-            key: 'user_name',
-            sort_key: 'user_name',
-            column: (item) => item.user ? item.user.name : '',
+            title: 'Email',
+            key: 'email',
+            sort_key: 'email',
+            column: (item) => item.email,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -138,6 +138,33 @@
             key: 'email_type_name',
             sort_key: 'email_type_name',
             column: (item) => item.email_type ? item.email_type.name : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Name',
+            key: 'user_name',
+            sort_key: 'user_name',
+            column: (item) => item.user ? item.user.name : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Email',
+            key: 'user_email',
+            sort_key: 'user_email',
+            column: (item) => item.user ? item.user.email : '',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'User Username',
+            key: 'user_username',
+            sort_key: 'user_username',
+            column: (item) => item.user ? item.user.username : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -197,7 +224,7 @@
 
       getEmails () {
         this.loading = true
-        this.count = 0
+        // this.count = 0
         this.emails = []
 
         const params = {}
