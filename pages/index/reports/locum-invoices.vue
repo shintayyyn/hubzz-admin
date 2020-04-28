@@ -44,8 +44,12 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :count="count" :pages="pages" :page="activePage" @page="(value) => activePage = value" />
-
+      <ReportPagination
+        :count="count" 
+        :pages="pages" 
+        :page="activePage"
+        @page="setPage" 
+      />
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
@@ -216,6 +220,43 @@
     },
 
     methods: {
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getLocumInvoices()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getLocumInvoices()
+      },
+
       getLocumInvoices () {
         this.loading = true
         this.locumInvoices = []

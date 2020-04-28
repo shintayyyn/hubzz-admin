@@ -11,10 +11,6 @@
       <div class="text-lg md:text-2xl text-white">
         Locums Declined
       </div>
-  
-      <div class="text-sm md:text-lg text-white">
-        <Rep-023></Rep-023>
-      </div>
 
       <div v-if="false">
         <div>
@@ -45,7 +41,12 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :count="count" :pages="pages" :page="activePage" @page="(value) => activePage = value" />
+      <ReportPagination
+        :count="count" 
+        :pages="pages" 
+        :page="activePage"
+        @page="setPage" 
+      />
 
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
@@ -61,7 +62,6 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
-
   export default {
     components: {
       ReportTable,
@@ -217,6 +217,64 @@
     },
 
     methods: {
+      filterReset () {
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getDeclinedJobs()
+      },
+
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getDeclinedJobs()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getDeclinedJobs()
+      },
+
       getDeclinedJobs () {
         this.loading = true
         this.declinedJobs = []
