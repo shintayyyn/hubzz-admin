@@ -171,14 +171,14 @@
                       Sessions Requirements
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ job.platform_job.session_requirements }}
+                      {{ job.platform_job && job.platform_job.session_requirements ? job.platform_job.session_requirements : '(none)' }}
                     </p>
 
                     <p class="font-semibold">
                       Session Structure Information
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ job.platform_job.session_structure_information }}
+                      {{ job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)' }}
                     </p>
 
                     <p class="font-semibold">
@@ -637,14 +637,14 @@
                       Sessions Requirements
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.session_requirements }}
+                      {{ modalJobPart.job.platform_job && modalJobPart.job.platform_job.session_requirements ? modalJobPart.job.platform_job.session_requirements : '(none)' }}
                     </p>
 
                     <p class="font-semibold">
                       Session Structure Information
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.session_structure_information }}
+                      {{ modalJobPart.job.platform_job && modalJobPart.job.platform_job.session_structure_information ? modalJobPart.job.platform_job.session_structure_information : '(none)' }}
                     </p>
 
                     <p class="font-semibold">

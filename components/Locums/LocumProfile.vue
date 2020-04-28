@@ -150,6 +150,7 @@
             >
               {{ specialty ? specialty.name:'N/A' }}
             </p>
+            <p class="font-bold pl-2" v-if="!user.locum_detail.qualifications.length">N/A</p>
             <p class="mt-2">
               Clinical Systems
             </p>
@@ -161,6 +162,7 @@
             >
               {{ clinicalSystem ? clinicalSystem.name:'N/A' }}
             </p>
+            <p class="font-bold pl-2" v-if="!user.locum_detail.clinical_systems.length">N/A</p>
 
             <p class="mt-2">
               Spoken Languages
@@ -248,7 +250,7 @@
               </p>
               <span
                 v-if="!userMandatoryTrainings.length"
-                class="opacity-75"
+                class="opacity-75 pl-2"
               >No Mandatory Training Documents</span>
               <div
                 v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"

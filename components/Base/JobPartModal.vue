@@ -96,7 +96,7 @@
                 >
                   {{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}
                 </p>
-                <p class="font-semibold">
+                <p class="mt-5 font-semibold">
                   Is there another Doctor on site?
                 </p>
                 <p class="ml-2 mb-2">
@@ -142,14 +142,14 @@
                   Sessions Requirements
                 </p>
                 <p class="ml-2 mb-2">
-                  {{ job_part.job.platform_job.session_requirements }}
+                  {{ job_part.job.platform_job && job_part.job.platform_job.session_requirements ? job_part.job.platform_job.session_requirements : '(none)' }}
                 </p>
 
                 <p class="font-semibold">
                   Session Structure Information
                 </p>
                 <p class="ml-2 mb-2">
-                  {{ job_part.job.platform_job.session_structure_information }}
+                  {{ job_part.job.platform_job && job_part.job.platform_job.session_structure_information ? job_part.job.platform_job.session_structure_information : '(none)' }}
                 </p>
 
                 <p class="font-semibold">

@@ -295,7 +295,6 @@ export default {
 			if (str === null || str === "") {
 				str = "(none)";
 			}
-			console.log("str", str);
 			return str;
 		}
 	}
