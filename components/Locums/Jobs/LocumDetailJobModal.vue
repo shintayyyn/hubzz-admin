@@ -105,7 +105,7 @@
                     Only favorite locum will be notified until this date
                   </p>
                   <p class="text-white">
-                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') : "N/A" }}
+                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
                   </p>
 
                   <p class="mt-3 font-semibold">
@@ -181,8 +181,8 @@
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
 									>{{job.shift.name}}</span>
 								</div>-->
-                <p class="mt-5 font-semibold">
-                  Auto-assigns this job to the first applicant
+                <p class="mt-5 font-semibold"  v-if="job.platform_job.auto_assign_at">
+                  Auto-assigns this job to the first matching applicant
                 </p>
                 <!-- <div v-if="job.platform_job" class="w-full md:w-1/3 mb-4 md:px-2"> -->
                   <div class="md:mt-5 md:mt-0 text-white">
