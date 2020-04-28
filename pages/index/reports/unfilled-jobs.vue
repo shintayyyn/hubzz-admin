@@ -45,7 +45,12 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :count="count" :pages="pages" :page="activePage" @page="(value) => activePage = value" />
+      <ReportPagination
+        :count="count" 
+        :pages="pages" 
+        :page="activePage"
+        @page="setPage" 
+      />
 
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
@@ -182,16 +187,16 @@
 
     watch: {
       orderBy () {
-        this.getDeclinedJobs()
+        this.getUnfilledJobs()
       },
 
       limit () {
         this.page = 1
-        this.getDeclinedJobs()
+        this.getUnfilledJobs()
       },
 
       activePage () {
-        this.getDeclinedJobs()
+        this.getUnfilledJobs()
       },
     },
 
@@ -204,11 +209,48 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getDeclinedJobs()
+      this.getUnfilledJobs()
     },
 
     methods: {
-      getDeclinedJobs () {
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getUnfilledJobs()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getUnfilledJobs()
+      },
+
+      getUnfilledJobs () {
         this.loading = true
         this.unfilledJobs = []
         Promise.all([
