@@ -96,7 +96,7 @@
                 >
                   {{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}
                 </p>
-                <p class="font-semibold">
+                <p class="mt-5 font-semibold">
                   Is there another Doctor on site?
                 </p>
                 <p class="ml-2 mb-2">
@@ -121,7 +121,7 @@
                   Duration for Each Appointment
                 </p>
                 <p class="ml-2 mb-2">
-                  {{ job_part.job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                  {{ job_part.job.platform_job.duration_for_each_appointment}}
                 </p>
               
                 <p class="font-semibold">
@@ -135,21 +135,21 @@
                   Only favorite locum will be notified until this date
                 </p>
                 <p class="ml-2 mb-2">
-                  {{ job_part.job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
+                  {{ job_part.job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
                 </p>
 
                 <p class="font-semibold">
                   Sessions Requirements
                 </p>
                 <p class="ml-2 mb-2">
-                  {{ job_part.job.platform_job.session_requirements }}
+                  {{ job_part.job.platform_job && job_part.job.platform_job.session_requirements ? job_part.job.platform_job.session_requirements : '(none)' }}
                 </p>
 
                 <p class="font-semibold">
                   Session Structure Information
                 </p>
                 <p class="ml-2 mb-2">
-                  {{ job_part.job.platform_job.session_structure_information }}
+                  {{ job_part.job.platform_job && job_part.job.platform_job.session_structure_information ? job_part.job.platform_job.session_structure_information : '(none)' }}
                 </p>
 
                 <p class="font-semibold">

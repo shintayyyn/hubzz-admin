@@ -16,6 +16,40 @@
         Rep-007
       </div>
 
+      <!-- FILTER -->
+      <div
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full">
+          <label class="text-md md:text-lg text-bold">Filters</label>
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncludes"
+            placeholder="Search locum"
+            type="text"
+            label="Locum"
+          />
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+      <!-- FILTER ENDS HERE -->
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
@@ -45,7 +79,12 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :count="count" :pages="pages" :page="activePage" @page="(value) => activePage = value" />
+      <ReportPagination
+        :count="count" 
+        :pages="pages" 
+        :page="activePage"
+        @page="setPage" 
+      />
 
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
@@ -61,17 +100,21 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
-
+  import AppButton from '@/components/Base/AppButton'
+  import AppInput from '@/components/Base/AppInput'
   export default {
     components: {
       ReportTable,
       ReportPagination,
+      AppButton,
+      AppInput,
     },
 
     data () {
       return {
         loading: false,
         count: 0,
+        locumNameIncludes: '',
         practiceDeclinedLocums: [],
         orderBy: [],
         orderBys: [
@@ -203,20 +246,88 @@
 
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
-
+      const {
+        locum_name_includes: locumNameIncludes,
+      } = this.$route.query
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.getPracticeDeclinedLocums()
     },
 
     methods: {
+      filterReset () {
+        this.locumNameIncludes = ''
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getPracticeDeclinedLocums()
+      },
+
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getPracticeDeclinedLocums()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getPracticeDeclinedLocums()
+      },
+
       getPracticeDeclinedLocums () {
         this.loading = true
         this.practiceDeclinedLocums = []
+
+        const params = {
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+        }
+
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/practice-declined-locums/count').then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/practice-declined-locums', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,

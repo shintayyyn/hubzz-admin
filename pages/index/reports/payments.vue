@@ -158,7 +158,12 @@
           </div>
         </div>
   
-        <ReportPagination :count="count" :pages="pages" :page="activePage" @page="setPage" />
+        <ReportPagination 
+          :count="count" 
+          :pages="pages" 
+          :page="activePage" 
+          @page="setPage" 
+        />
       </div>
 
       <div

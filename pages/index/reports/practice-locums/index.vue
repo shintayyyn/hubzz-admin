@@ -1,20 +1,6 @@
 <template>
-  <div class="report-modal p-4 md:p-8 shadow-lg">
-    <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/reports" class="text-white hover:text-sunglow p-1">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
-      <div class="text-lg md:text-2xl text-white">
-        Compliance - Expiring
-      </div>
-  
-      <div class="text-sm md:text-lg text-white">
-        Rep-008
-      </div>
-
+  <div>
+    <div>
       <!-- FILTER -->
       <div
         class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
@@ -31,6 +17,25 @@
             label="Locum"
           />
         </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="professionNameIncludes"
+            placeholder="Search profession"
+            type="text"
+            label="Profession"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="practiceNameIncludes"
+            placeholder="Search practice name"
+            type="text"
+            label="Practice Name"
+          />
+        </div>
+
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
@@ -70,8 +75,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="locumComplianceDocuments"
-        :getItemKey="(item) => item.locum_compliance_document_id"
+        :items="practiceLocums"
+        :getItemKey="(item) => `${item.practice_id}_${item.locum_user_id}`"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -84,6 +89,21 @@
         :page="activePage"
         @page="setPage" 
       />
+
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
 
       <div v-if="true" class="text-white"> 
         <span>Count: {{ count }}</span>
@@ -113,7 +133,10 @@
       return {
         loading: false,
         count: 0,
-        locumComplianceDocuments: [],
+        locumNameIncludes: '',
+        practiceNameIncludes: '',
+        professionNameIncludes:'',
+        practiceLocums: [],
         orderBy: [],
         orderBys: [
           {
@@ -160,6 +183,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Practice',
+            key: 'practice_name',
+            sort_key: 'practice_name',
+            column: (item) => item.practice_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Locum',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
@@ -169,19 +201,55 @@
             flexShrink: 0,
           },
           {
-            title: 'Compliance',
-            key: 'compliance_document_name',
-            sort_key: 'compliance_document_name',
-            column: (item) => item.compliance_document_name,
+            title: 'Profession',
+            key: 'profession_name',
+            sort_key: 'profession_name',
+            column: (item) => item.profession_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Expiry Date',
-            key: 'expired_at',
-            sort_key: 'expired_at',
-            column: (item) => item.expired_at ? this.$moment(item.expired_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            title: 'Area',
+            key: 'locum_postcode',
+            sort_key: 'locum_postcode',
+            column: (item) => item.locum_postcode,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Min Rate per Hour',
+            key: 'min_rate_per_hour',
+            sort_key: 'min_rate_per_hour',
+            column: (item) => item.min_rate_per_hour.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Min Rate per Half Day Session',
+            key: 'min_rate_per_half_day_session',
+            sort_key: 'min_rate_per_half_day_session',
+            column: (item) => item.min_rate_per_half_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Min Rate per Whole Day Session',
+            key: 'min_rate_per_whole_day_session',
+            sort_key: 'min_rate_per_whole_day_session',
+            column: (item) => item.min_rate_per_whole_day_session.toFixed(2),
+            justify: 'end',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Marked as Bank',
+            key: 'locum_is_favorite_of_practice',
+            sort_key: 'locum_is_favorite_of_practice',
+            column: (item) => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
             justify: 'center',
             flexGrow: 1,
             flexShrink: 0,
@@ -196,16 +264,16 @@
 
     watch: {
       orderBy () {
-        this.getLocumComplianceDocuments()
+        this.getPracticeLocums()
       },
 
       limit () {
         this.page = 1
-        this.getLocumComplianceDocuments()
+        this.getPracticeLocums()
       },
 
       activePage () {
-        this.getLocumComplianceDocuments()
+        this.getPracticeLocums()
       },
     },
 
@@ -217,13 +285,21 @@
 
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
+      const {
+        locum_name_includes: locumNameIncludes,
+        profession_name_includes: professionNameIncludes,
+      } = this.$route.query
 
-      this.getLocumComplianceDocuments()
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+      this.professionNameIncludes = professionNameIncludes ? professionNameIncludes : ''
+      this.getPracticeLocums()
     },
 
     methods: {
       filterReset () {
         this.locumNameIncludes = ''
+        this.practiceNameIncludes = ''
+        this.professionNameIncludes = ''
 
         this.filterSearch()
       },
@@ -233,7 +309,8 @@
 
         const query = {
           ...this.$route.query,
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          locum_name_incudes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
           page: undefined,
         }
 
@@ -241,7 +318,7 @@
           this.$router.replace({ query })
         }
         
-        this.getLocumComplianceDocuments()
+        this.getLocums()
       },
 
       setPage (page) {
@@ -263,7 +340,7 @@
           })
         }
 
-        this.getLocumComplianceDocuments()
+        this.getPracticeLocums()
       },
 
       setOrderBy (orderBy) {
@@ -278,39 +355,74 @@
           }
         })
 
-        this.getLocumComplianceDocuments()
+        this.getPracticeLocums()
       },
 
-      getLocumComplianceDocuments () {
+      getPracticeLocums () {
         this.loading = true
-        this.locumComplianceDocuments = []
+        this.practiceLocums = []
+
+        const params = {
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          profession_name_includes : this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+        }
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/practice-locums/count').then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/locum-compliance-documents', {
+          this.$axios.get('/api/v1/admin/reports/practice-locums', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_compliance_documents
+            return responses.data.data.practice_locums
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            locumComplianceDocuments,
+            practiceLocums,
           ] = results
 
           this.count = count
-          this.locumComplianceDocuments = locumComplianceDocuments
+          this.practiceLocums = practiceLocums
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          locum_name_incudes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/practice-locums/generate-key', {
+          filename: `practice-locums.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/practice-locums/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },
