@@ -30,7 +30,7 @@
         <div class="inline-flex m-4">
           <div class="flex flex-col w-full overflow-hidden">
             <div class="flex flex-col md:flex-row w-full text-white">
-              <div class="w-full md:w-1/3 mb-4 md:px-2">
+              <div class="w-full md:w-1/2 mb-4 md:px-2">
                 <div class="text-gray text-white">
                   <p class="font-semibold">
                     Job Number
@@ -38,7 +38,7 @@
                   <p class="text-white">
                     {{ job.job_number }}
                   </p>
-                  <p class="mt-5 font-semibold mb-1"> 
+                  <p class="mt-3 font-semibold mb-1"> 
                     Rate
                   </p>
                   <p
@@ -46,94 +46,92 @@
                   >
                     {{ job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour" }}
                   </p>
-                  <p class="mt-5 font-semibold">
+                  <p class="mt-3 font-semibold">
                     Total Hours
                   </p>
                   <p class="text-white">
                     {{ job.total_hours | hoursMinutes }}
                   </p>
-                  <p class="mt-5 font-semibold">
+                  <p class="mt-3 font-semibold">
                     Job Description
                   </p>
-                  <p class="text-white">
+                  <p class="text-white break-words">
                     {{ job.description ? job.description : '(none)' }}
                   </p>
-                  <p class="mt-5 font-semibold">
+                  <p class="mt-3 font-semibold">
                     Extra Information
                   </p>
                   <p class="text-white">
                     {{ job.extra_information ? job.extra_information:'(none)' }}
                   </p>
-                  <p class="text-white">
-                    {{ job.platform_job.profession.name }}
-                  </p>
+                  
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Is there another Doctor on site?
                   </p>
-                  <p class="ml-2 mb-2">
+                  <p class="text-white">
                     {{ job.platform_job.is_another_doctor ? "Yes" : "No" }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Is nurse support available?
                   </p>
-                  <p class="ml-2 mb-2">
+                  <p class="text-white">
                     {{ job.platform_job.is_nurse_available ? "Yes" : "No" }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Number of Patients
                   </p>
-                  <p class="ml-2 mb-2">
+                  <p class="text-white">
                     {{ job.platform_job.number_of_patients }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Duration for Each Appointment
                   </p>
-                  <p class="ml-2 mb-2">
+                  <p class="text-white">
                     {{ job.platform_job.duration_for_each_appointment }}
                   </p>
                 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Opprtunity for Catch Up Slots
                   </p>
-                  <p class="ml-2 mb-2">
+                  <p class="text-white">
                     {{ job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Only favorite locum will be notified until this date
                   </p>
-                  <p class="ml-2 mb-2">
-                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') : "N/A" }}
+                  <p class="text-white">
+                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Sessions Requirements
                   </p>
-                  <p class="ml-2 mb-2">
-                    {{ job.platform_job.session_requirements }}
+                  <p class="text-white">
+                    {{ job.platform_job && job.platform_job.session_requirements ? job.platform_job.session_requirements : '(none)' }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Session Structure Information
                   </p>
-                  <p class="ml-2 mb-2">
-                    {{ job.platform_job.session_structure_information }}
+                  <p class="text-white">
+                    {{ job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)' }}
                   </p>
 
-                  <p class="font-semibold">
+                  <p class="mt-3 font-semibold">
                     Unpaid Breaks (in minutes)
                   </p>
-                  <p class="ml-2 mb-2">
+                  <p class="text-white">
                     {{ job.platform_job.unpaid_breaks_in_minutes }}
                   </p>
                 </div>
               </div>
 
-              <div class="w-full md:w-1/3 mb-4 md:px-2">
+              <div class="w-full md:w-1/2 mb-4 md:px-2">
                 <p class="mb-2 font-semibold">
                   Duration
                 </p>
@@ -183,89 +181,94 @@
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
 									>{{job.shift.name}}</span>
 								</div>-->
-                <p class="mt-5 font-semibold">
-                  Auto-assigns this job to the first applicant
+                <p class="mt-5 font-semibold"  v-if="job.platform_job.auto_assign_at">
+                  Auto-assigns this job to the first matching applicant
                 </p>
+                <!-- <div v-if="job.platform_job" class="w-full md:w-1/3 mb-4 md:px-2"> -->
+                  <div class="md:mt-5 md:mt-0 text-white">
+                    <span>
+                      This job is
+                      <span
+                        class="font-semibold"
+                      >{{ job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE" }}</span>
+                      of
+                      <span class="font-semibold">IR35</span>
+                    </span>
+                  </div>
+
+                  <p class="mt-5 font-semibold mb-1">
+                    Role
+                  </p>
+
+                  <p class="text-white">
+                      {{ job.platform_job.profession.name }}
+                    </p>
+                  
+                  <p class="mt-5 font-semibold mb-1">
+                    Speciality
+                  </p>
+                  <p
+                    v-for="specialty in job.platform_job.qualifications"
+                    :key="specialty.id + '-name'"
+                    class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                  >
+                    {{ specialty ? specialty.name:null }}
+                  </p>
+
+                  <p class="mt-5 font-semibold mb-1">
+                    Clinical Systems
+                  </p>
+                  <p
+                    v-for="clinicalSystem in job.platform_job.clinical_systems"
+                    :key="clinicalSystem.id + '-name1'"
+                    class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                  >
+                    {{ clinicalSystem ? clinicalSystem.name:null }}
+                  </p>
+
+                  <p class="mt-5 font-semibold mb-1">
+                    Spoken Languages
+                  </p>
+                  <p
+                    v-for="spokenLanguage in job.platform_job.spoken_languages"
+                    :key="spokenLanguage.id + '-name2'"
+                    class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                  >
+                    {{ spokenLanguage ? spokenLanguage.name:null }}
+                  </p>
+
+                  <div v-if="job.platform_job.compliance_documents.length > 0">
+                    <p class="flex">
+                      Compliance Requirements for GPs:
+                    </p>
+                    <div
+                      v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
+                      :key="`${index}-${gpComplianceDocs.name}`"
+                      class="text-white text-sm m-1 font-semibold"
+                    >
+                      <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span>
+                    </div>
+                  </div>
+
+                  <div v-if="job.platform_job.mandatory_trainings.length > 0">
+                    <p class="flex">
+                      Mandatory Trainings
+                    </p>
+                    <div
+                      v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
+                      :key="`${index}-${mandatoryTrainings.name}`"
+                      class="text-white text-sm m-1 font-semibold"
+                    >
+                      <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span>
+                    </div>
+                  </div>
+                <!-- </div> -->
               </div>
 
-              <div v-if="job.platform_job" class="w-full md:w-1/3 mb-4 md:px-2">
-                <div class="md:mt-5 md:mt-0 text-white">
-                  <span>
-                    This job is
-                    <span
-                      class="font-semibold"
-                    >{{ job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE" }}</span>
-                    of
-                    <span class="font-semibold">IR35</span>
-                  </span>
-                </div>
-
-                <p class="mt-5 font-semibold mb-1">
-                  Role
-                </p>
-                
-                <p class="mt-5 font-semibold mb-1">
-                  Speciality
-                </p>
-                <p
-                  v-for="specialty in job.platform_job.qualifications"
-                  :key="specialty.id + '-name'"
-                  class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                >
-                  {{ specialty ? specialty.name:null }}
-                </p>
-
-                <p class="mt-5 font-semibold mb-1">
-                  Clinical Systems
-                </p>
-                <p
-                  v-for="clinicalSystem in job.platform_job.clinical_systems"
-                  :key="clinicalSystem.id + '-name1'"
-                  class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                >
-                  {{ clinicalSystem ? clinicalSystem.name:null }}
-                </p>
-
-                <p class="mt-5 font-semibold mb-1">
-                  Spoken Languages
-                </p>
-                <p
-                  v-for="spokenLanguage in job.platform_job.spoken_languages"
-                  :key="spokenLanguage.id + '-name2'"
-                  class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                >
-                  {{ spokenLanguage ? spokenLanguage.name:null }}
-                </p>
-
-                <div v-if="job.platform_job.compliance_documents.length > 0">
-                  <p class="flex">
-                    Compliance Requirements for GPs:
-                  </p>
-                  <div
-                    v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
-                    :key="`${index}-${gpComplianceDocs.name}`"
-                    class="text-white text-sm m-1 font-semibold"
-                  >
-                    <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span>
-                  </div>
-                </div>
-
-                <div v-if="job.platform_job.mandatory_trainings.length > 0">
-                  <p class="flex">
-                    Mandatory Trainings
-                  </p>
-                  <div
-                    v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
-                    :key="`${index}-${mandatoryTrainings.name}`"
-                    class="text-white text-sm m-1 font-semibold"
-                  >
-                    <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span>
-                  </div>
-                </div>
-              </div>
+              
               <!-- <template v-else-if="job.private_job"></template>-->
             </div>
-            <div v-if="job.platform_job" class="w-full overflow-hidden">
+            <div v-if="job.platform_job" class="w-full overflow-hidden mx-2">
               <div class="text-white">
                 <p class="font-semibold">
                   <span class="pb-1 block">Practice</span>

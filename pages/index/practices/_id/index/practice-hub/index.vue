@@ -48,7 +48,7 @@
               <div class="flex flex-row items-center">
                 
                 <div class="text-lg text-white font-semibold">
-                  Spoke Permissions
+                  Spoke Permissions asd
                 </div>
                 <!-- <div
                   @click="edit()"

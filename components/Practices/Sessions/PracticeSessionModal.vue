@@ -60,7 +60,7 @@
                   <p class="font-semibold">
                     Job Description
                   </p>
-                  <p class="text-white pb-2">
+                  <p class="text-white pb-2 break-words">
                     {{ job.description ? job.description : '(none)' }}
                   </p>
                   <p class="font-semibold">
@@ -107,8 +107,8 @@
 
               <div class="md:w-1/2 overflow-hidden">
                 <div class="pb-2">
-                  <p class=" font-semibold">
-                    Auto-assigns this job to the first applicant
+                  <p class=" font-semibold" v-if="job.platform_job.auto_assign_at">
+                    Auto-assigns this job to the first matching applicant
                   </p>
                   <template v-if="job.platform_job">
                     <div class="pb-2">
@@ -150,7 +150,7 @@
                       Duration for Each Appointment
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                      {{ job.platform_job.duration_for_each_appointment }}
                     </p>
                   
                     <p class="font-semibold">
@@ -164,21 +164,21 @@
                       Only favorite locum will be notified until this date
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
+                      {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
                     </p>
 
                     <p class="font-semibold">
                       Sessions Requirements
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ job.platform_job.session_requirements }}
+                      {{ job.platform_job && job.platform_job.session_requirements ? job.platform_job.session_requirements : '(none)' }}
                     </p>
 
                     <p class="font-semibold">
                       Session Structure Information
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ job.platform_job.session_structure_information }}
+                      {{ job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)' }}
                     </p>
 
                     <p class="font-semibold">
@@ -409,7 +409,7 @@
                             name="cloud-download"
                             width="21"
                             height="21"
-                            color="transparent white"
+                            color="white"
                           />
                           <span class="pl-2">{{ specificMandatoryDoc.mandatory_training ? specificMandatoryDoc.mandatory_training.name:null }}</span>
                         </a>
@@ -588,7 +588,7 @@
                     <p class="mt-5 font-semibold">
                       Job Description
                     </p>
-                    <p class="text-white">
+                    <p class="text-white break-words">
                       {{ modalJobPart.job && modalJobPart.job.description ? modalJobPart.job.description: '(none)' }}
                     </p>
                     <p class="font-semibold">
@@ -616,7 +616,7 @@
                       Duration for Each Appointment
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.duration_for_each_appointment ? "Yes" : "No" }}
+                      {{ modalJobPart.job.platform_job.duration_for_each_appointment }}
                     </p>
                   
                     <p class="font-semibold">
@@ -630,21 +630,21 @@
                       Only favorite locum will be notified until this date
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.favorite_only_until ? $moment(modalJobPart.job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY') : "N/A" }}
+                      {{ modalJobPart.job.platform_job.favorite_only_until ? $moment(modalJobPart.job.platform_job.favorite_only_until,'YYYY-MM-DD[T]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
                     </p>
 
                     <p class="font-semibold">
                       Sessions Requirements
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.session_requirements }}
+                      {{ modalJobPart.job.platform_job && modalJobPart.job.platform_job.session_requirements ? modalJobPart.job.platform_job.session_requirements : '(none)' }}
                     </p>
 
                     <p class="font-semibold">
                       Session Structure Information
                     </p>
                     <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.session_structure_information }}
+                      {{ modalJobPart.job.platform_job && modalJobPart.job.platform_job.session_structure_information ? modalJobPart.job.platform_job.session_structure_information : '(none)' }}
                     </p>
 
                     <p class="font-semibold">

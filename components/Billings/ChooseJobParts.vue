@@ -1,54 +1,59 @@
 <template>
-	<div>
-		<div class="choose-job-parts-modal shadow-lg">
-			<div class="p-4 md:p-8">
-				<div class="p-1">
-					<svgicon
-						@click="$emit('close')"
-						name="arrow-left-solid"
-						height="32"
-						width="32"
-						class="fill-current cursor-pointer text-white hover:text-sunglow"
-					/>
-				</div>
-				<template v-if="jobPartCount > 0">
-					<AppTable
-						:total="jobPartCount"
-						:items="jobParts"
-						:currentPage="currentPage"
-						:perPage="params.limit"
-						:columns="columns"
-						:loading="loadingSessions"
-						:orderBy="params.order_by"
-						:customWidth="200"
-						@checkClicked="toggleCheck"
-						@pagechanged="pagechanged"
-						@sorted="sorted"
-					>
-						<template v-slot:checker="slotProps">
-							<input type="checkbox" :id="slotProps.item" :value="slotProps.item" v-model="chosenJobParts" >
-							<label :for="slotProps.item"/>
-						</template>
+  <div>
+    <div class="choose-job-parts-modal shadow-lg">
+      <div class="p-4 md:p-8">
+        <div class="p-1">
+          <svgicon
+            @click="$emit('close')"
+            name="arrow-left-solid"
+            height="32"
+            width="32"
+            class="fill-current cursor-pointer text-white hover:text-sunglow"
+          />
+        </div>
+        <template v-if="jobPartCount > 0">
+          <AppTable
+            :total="jobPartCount"
+            :items="jobParts"
+            :currentPage="currentPage"
+            :perPage="params.limit"
+            :columns="columns"
+            :loading="loadingSessions"
+            :orderBy="params.order_by"
+            :customWidth="200"
+            @checkClicked="toggleCheck"
+            @pagechanged="pagechanged"
+            @sorted="sorted"
+          >
+            <template v-slot:checker="slotProps">
+              <input 
+                :id="slotProps.item" 
+                v-model="chosenJobParts" 
+                type="checkbox" 
+                :value="slotProps.item" 
+              >
+              <label :for="slotProps.item" />
+            </template>
 
-						<template v-slot:status_slot="slotProps">
-							<div
-								class="rounded-full text-center px-4 py-1 w-32"
-								:class="statusStyle(slotProps.item.invoice_status)"
-							>
+            <template v-slot:status_slot="slotProps">
+              <div
+                class="rounded-full text-center px-4 py-1 w-32"
+                :class="statusStyle(slotProps.item.invoice_status)"
+              >
                 {{ slotProps.item.invoice_status }}
               </div>
-						</template>
-					</AppTable>
-					<AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
-				</template>
-				<template v-if="jobPartCount === 0">
-					<p class="text-gray-500 py-2 text-center"> 
+            </template>
+          </AppTable>
+          <AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
+        </template>
+        <template v-if="jobPartCount === 0">
+          <p class="text-gray-500 py-2 text-center"> 
             No jobs to invoice found.
           </p>
-				</template>
-			</div>
-		</div>
-	</div>
+        </template>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import AppTable from "@/components/Base/AppTable"
@@ -238,10 +243,10 @@ export default {
 		},
 
 		pagechanged (page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			}
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getJobParts(this.params)
@@ -250,10 +255,10 @@ export default {
 		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
-			let query = {
-				...this.$router.query,
-				order_by
-			}
+			// let query = {
+			// 	...this.$router.query,
+			// 	order_by
+			// }
 			this.params.order_by = order_by
 			console.log("sort params", this.params)
 			this.getJobParts(this.params)
@@ -272,7 +277,7 @@ export default {
 			}
 		}
 	}
-};
+}
 </script>
 
 <style>

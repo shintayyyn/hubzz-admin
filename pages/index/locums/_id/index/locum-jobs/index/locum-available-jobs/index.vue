@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-2">
-    <!-- <nuxt-link
+	<div class="mt-2">
+		<!-- <nuxt-link
       :to="`/locums/${user.id}/locum-jobs/locum-available-jobs`"
       class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
       :class=" !$route.query.available_job_type ||($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'available') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -15,33 +15,38 @@
       :to="`/locums/${user.id}/locum-jobs/locum-available-jobs?available_job_type=Bank`"
       class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
       :class="($route.query.available_job_type && $route.query.available_job_type.toLowerCase() === 'bank') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-    >Bank</nuxt-link> -->
+		>Bank</nuxt-link>-->
 
-    <AppTable
-      v-if="total > 0"
-      :total="total"
-      :items="availableJobs"
-      :currentPage="currentPage"
-      :perPage="params.limit"
-      :columns="columns"
-      :routerLink="`/locums/${user.id}/locum-jobs/locum-available-jobs`"
-      :orderBy="params.order_by"
-      @pagechanged="pagechanged"
-      @sorted="sorted"
-    />
-    <div v-else>
-      <div
-        class="mt-10 w-full text-white text-center"
-        style="font-family: Nunito"
-      >
-        This locum has no available jobs.
-      </div>
-    </div>
-    <!-- <LocumAvailableJobs :user='user'/> -->
-  </div>
+		<AppTable
+			v-if="total > 0"
+			:total="total"
+			:items="availableJobs"
+			:currentPage="currentPage"
+			:perPage="params.limit"
+			:columns="columns"
+			:routerLink="`/locums/${user.id}/locum-jobs/locum-available-jobs`"
+			:orderBy="params.order_by"
+			@pagechanged="pagechanged"
+			@sorted="sorted"
+		>
+			<template v-slot:from_slot="slotProps">
+				<div>{{ $moment(slotProps.item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ slotProps.item.time_start }}</div>
+			</template>
+			<template v-slot:to_slot="slotProps">
+				<div>{{ $moment(slotProps.item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ slotProps.item.time_end }}</div>
+			</template>
+		</AppTable>
+		<div v-else>
+			<div
+				class="mt-10 w-full text-white text-center"
+				style="font-family: Nunito"
+			>This locum has no available jobs.</div>
+		</div>
+		<!-- <LocumAvailableJobs :user='user'/> -->
+	</div>
 </template>
 <script>
-import AppTable from "@/components/Base/AppTable"
+import AppTable from "@/components/Base/AppTable";
 export default {
 	components: {
 		// LocumAvailableJobs,
@@ -60,7 +65,7 @@ export default {
 	// 		})
 	// 	}
 	// },
-	data () {
+	data() {
 		return {
 			loading: false,
 			currentPage: 1,
@@ -95,13 +100,17 @@ export default {
 					name: "From",
 					dataIndex: "date_start",
 					class: "text-center localDate",
-					sortable: true
+					sortable: true,
+					slotName: "from_slot",
+					slot: true
 				},
 				{
 					name: "To",
 					dataIndex: "date_end",
 					class: "text-center localDate",
-					sortable: true
+					sortable: true,
+					slotName: "to_slot",
+					slot: true
 				},
 				{
 					name: "Created",
@@ -110,7 +119,7 @@ export default {
 					sortable: true
 				}
 			]
-		}
+		};
 	},
 
 	// watch: {
@@ -125,12 +134,12 @@ export default {
 	// 		}
 	// 		let params = {}
 	// 		params = {
-  //       viewing_locum_user_id: this.user.id,
-  //       locum_status: locumStatus,
-  //       practice_is_favorite_of_locum: true,
-  //       limit: 10,
-  //       offset: 0
-  //     };
+	//       viewing_locum_user_id: this.user.id,
+	//       locum_status: locumStatus,
+	//       practice_is_favorite_of_locum: true,
+	//       limit: 10,
+	//       offset: 0
+	//     };
 	// 		(this.params.viewing_locum_user_id = params.viewing_locum_user_id),
 	// 			(this.params.locum_status = params.locum_status),
 	// 			(this.params.practice_is_favorite_of_locum =
@@ -145,39 +154,39 @@ export default {
 	// 	}
 	// },
 	computed: {
-		user () {
-			return this.$store.state.locums.locumUser
+		user() {
+			return this.$store.state.locums.locumUser;
 		},
-		total () {
-			return this.$store.state.jobs.locum_available_jobs_count
+		total() {
+			return this.$store.state.jobs.locum_available_jobs_count;
 		},
-		loadingJobs () {
-			return this.$store.state.jobs.loading_jobs
+		loadingJobs() {
+			return this.$store.state.jobs.loading_jobs;
 		},
-		availableJobs () {
-			return this.$store.state.jobs.locum_available_jobs
+		availableJobs() {
+			return this.$store.state.jobs.locum_available_jobs;
 		}
 	},
-	async asyncData ({ app, store, route }) {
+	async asyncData({ app, store, route }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/locum-users/${route.params.id}`
-			)
-			const user = response.data.user
+			);
+			const user = response.data.user;
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			})
-			console.log("get locum user error!", err)
+			});
+			console.log("get locum user error!", err);
 		}
 	},
-	created () {
+	created() {
 		// let newStatus = this.$route.query.available_job_type
 		// 	? this.$route.query.available_job_type
 		// 	: null
-		let locumStatus = ['Available', 'Matched']
+		let locumStatus = ["Available", "Matched"];
 		// if (!newStatus || newStatus == "Available") {
 		// 	locumStatus = "Matched"
 		// } else if (newStatus == "Public") {
@@ -185,7 +194,7 @@ export default {
 		// } else if (newStatus == "Bank") {
 		// 	locumStatus = "Matched"
 		// }
-		let params = {}
+		let params = {};
 		params = {
 			viewing_locum_user_id: this.user.id,
 			locum_status: locumStatus,
@@ -194,24 +203,24 @@ export default {
 			offset: 0
 		};
 		(this.params.viewing_locum_user_id = params.viewing_locum_user_id),
-    (this.params.locum_status = params.locum_status),
-    // (this.params.practice_is_favorite_of_locum =
-    // 	params.practice_is_favorite_of_locum),
-    (this.params.limit = params.limit),
-    (this.params.offset = params.offset),
-		this.getAvailableJobs(this.params)
+			(this.params.locum_status = params.locum_status),
+			// (this.params.practice_is_favorite_of_locum =
+			// 	params.practice_is_favorite_of_locum),
+			(this.params.limit = params.limit),
+			(this.params.offset = params.offset),
+			this.getAvailableJobs(this.params);
 	},
 	methods: {
-		async getAvailableJobs (params) {
+		async getAvailableJobs(params) {
 			await this.$store.commit("jobs/TOGGLE_LOADING", true);
 			await this.$axios
 				.$get(`/api/v1/admin/jobs/count`, { params })
 				.then(res => {
-					console.log("result", res.data.count)
+					console.log("result", res.data.count);
 					this.$store.commit(
 						"jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT",
 						res.data.count
-					)
+					);
 				})
 				.catch(() => {
 					this.$store.commit("jobs/TOGGLE_LOADING", false);
@@ -219,45 +228,45 @@ export default {
 						enabled: true,
 						status: "danger",
 						text: "Something went wrong!"
-					})
-				})
+					});
+				});
 
 			await this.$axios
 				.$get(`/api/v1/admin/jobs`, { params })
 				.then(res => {
-					console.log("result", res.data.jobs)
-					this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS", res.data.jobs)
+					console.log("result", res.data.jobs);
+					this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS", res.data.jobs);
 				})
 				.catch(() => {
-					this.$store.commit("jobs/TOGGLE_LOADING", false)
+					this.$store.commit("jobs/TOGGLE_LOADING", false);
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
 						text: "Something went wrong!"
-					})
-				})
-			await this.$store.commit("jobs/TOGGLE_LOADING", false)
+					});
+				});
+			await this.$store.commit("jobs/TOGGLE_LOADING", false);
 		},
-		async pagechanged (page) {
+		async pagechanged(page) {
 			const query = {
 				...this.$route.query,
 				page: page || 1
-			}
-			this.params.offset = this.params.limit * (page - 1)
-			this.currentPage = page
-			this.getAvailableJobs(this.params)
+			};
+			this.params.offset = this.params.limit * (page - 1);
+			this.currentPage = page;
+			this.getAvailableJobs(this.params);
 		},
-		async sorted (order_by) {
-			this.currentPage = 1
+		async sorted(order_by) {
+			this.currentPage = 1;
 			let query = {
 				...this.$router.query,
 				order_by
-			}
-			this.params.order_by = order_by
-			this.getAvailableJobs(this.params)
+			};
+			this.params.order_by = order_by;
+			this.getAvailableJobs(this.params);
 		}
 	}
-}
+};
 </script>
 <style>
 </style>

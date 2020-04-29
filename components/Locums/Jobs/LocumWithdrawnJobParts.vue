@@ -53,7 +53,7 @@
 							<strong class="block md:hidden text-sm uppercase">From</strong>
 							<span
 								class
-							>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_start,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+							>{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_start }}</span>
 						</div>
 						<div
 							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -61,7 +61,7 @@
 							<strong class="block md:hidden text-sm uppercase">To</strong>
 							<span
 								class
-							>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' '+ $moment(item.time_end,'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
+							>{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_end }}</span>
 						</div>
 						<div
 							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -71,6 +71,16 @@
 								<span
 									class
 								>{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+							</span>
+						</div>
+						<div
+							class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+						>
+							<strong class="block md:hidden text-sm uppercase">Withdrawn At</strong>
+							<span class>
+								<span
+									class
+								>{{ $moment(item.job.platform_job.declined_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
 							</span>
 						</div>
 					</div>

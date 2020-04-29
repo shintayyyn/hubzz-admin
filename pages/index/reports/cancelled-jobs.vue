@@ -45,7 +45,12 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination :count="count" :pages="pages" :page="activePage" @page="(value) => activePage = value" />
+      <ReportPagination
+        :count="count" 
+        :pages="pages" 
+        :page="activePage"
+        @page="setPage" 
+      />
 
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
@@ -61,7 +66,6 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
-
   export default {
     components: {
       ReportTable,
@@ -173,16 +177,16 @@
 
     watch: {
       orderBy () {
-        this.getDeclinedJobs()
+        this.getCancelledJobs()
       },
 
       limit () {
         this.page = 1
-        this.getDeclinedJobs()
+        this.getCancelledJobs()
       },
 
       activePage () {
-        this.getDeclinedJobs()
+        this.getCancelledJobs()
       },
     },
 
@@ -195,11 +199,69 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getDeclinedJobs()
+      this.getCancelledJobs()
     },
 
     methods: {
-      getDeclinedJobs () {
+      filterReset () {
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getCancelledJobs()
+      },
+
+      setPage (page) {
+        this.activePage = page
+
+        if (this.activePage === 1) {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: undefined,
+            }
+          })
+        } else {
+          this.$router.replace({
+            query: {
+              ...this.$route.query,
+              page: this.activePage,
+            }
+          })
+        }
+
+        this.getCancelledJobs()
+      },
+
+      setOrderBy (orderBy) {
+        this.orderBy = orderBy
+        this.activePage = 1
+
+        this.$router.replace({
+          query: {
+            ...this.$route.query,
+            order_by: this.orderBy,
+            page: undefined,
+          }
+        })
+
+        this.getCancelledJobs()
+      },
+
+      getCancelledJobs () {
         this.loading = true
         this.cancelledJobs = []
         Promise.all([
