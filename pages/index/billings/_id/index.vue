@@ -2,9 +2,9 @@
   <div class="billing-modal p-4 md:p-8 shadow-lg">
     <!-- HEADER -->
     <div class="flex items-center text-sm text-white py-2">
-      <nuxt-link :to="'/billings'" class="text-white hover:text-sunglow p-1">
+      <div @click="goBack()" class="text-white hover:text-sunglow p-1">
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-      </nuxt-link>
+      </div>
     </div>
     <!-- HEADER ENDS HERE -->
     <div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
@@ -111,26 +111,29 @@ export default {
 		}
 	},
 	methods: {
-		practiceTypeStyle(type) {
+		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
 					return "bg-indigo-500 text-white lg:px-4 sm:px-2";
-					break;
 				case "Hub":
 					return "bg-red-500 text-white lg:px-8 sm:px-2";
-					break;
 				case "Spoke":
 					return "bg-blue-500 text-white lg:px-8 sm:px-2";
-					break;
 				case "Type 2":
 					return "bg-purple-500 text-white lg:px-8 sm:px-2";
-					break;
 				default:
-					return;
+					return
 			}
-		}
+    },
+    goBack (){ 
+      if(this.$route.path.includes('bulk-billing')){
+        this.$router.push(`/billings/bulk-billing`)
+      }else{
+        this.$router.push(`/billings`)
+      }
+    },
 	}
-};
+}
 </script>
 <style>
 .billing-shield {

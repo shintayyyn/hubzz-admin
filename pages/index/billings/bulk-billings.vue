@@ -34,7 +34,7 @@
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
           />
-          <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+          <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
             <input 
               id="disputed" 
               v-model="showDisputedJobParts" 
@@ -42,7 +42,7 @@
               value="true"
             >
             <label for="disputed">Show Disputed Invoices</label>
-          </div>
+          </div> -->
           <!-- <AppInput
             v-model="showDisputedJobParts"
             :label="'Show Disputed Invoices'"
