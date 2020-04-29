@@ -1,77 +1,77 @@
 <template>
-	<div class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg" ref="modalContainer">
-		<div class="flex items-center text-sm text-white py-2">
-			<nuxt-link 
+  <div class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg" ref="modalContainer">
+    <div class="flex items-center text-sm text-white py-2">
+      <nuxt-link 
         :to="{path: `/billings/${$route.params.id}/hubzz-invoices`, query: $route.query}">
-				<svgicon
-					name="arrow-left-solid"
-					height="40"
-					width="40"
-					class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
-				/>
-			</nuxt-link>
-		</div>
-		<section class="max-w-lg">
-			<div class="flex flex-col md:flex-row justify-between md:items-center text-white">
-				<div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
-					<AppDate
-						class="w-full md:w-1/2 md:mx-2"
-						v-model="toFilter.approved_at_date_start"
-						:name="'approved_at_date_start'"
-						:label="'From'"
-					/>
-					<AppDate
-						class="w-full md:w-1/2 md:mx-2"
-						v-model="toFilter.approved_at_date_end"
-						:name="'approved_at_date_end'"
-						:label="'To'"
-					/>
-					<div class="w-full flex flex-col justify-center items-start">
-						<AppButton
-							class="whitespace-no-wrap"
-							:disabled="toFilter.approved_at_date_start && toFilter.approved_at_date_end ? false : true"
-							:label="'Search for Invoices'"
-							:icon="'search'"
-							@click="chooseJobPartsModal = true"
-						/>
+        <svgicon
+          name="arrow-left-solid"
+          height="40"
+          width="40"
+          class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
+        />
+      </nuxt-link>
+    </div>
+    <section class="max-w-lg">
+      <div class="flex flex-col md:flex-row justify-between md:items-center text-white">
+        <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
+          <AppDate
+            class="w-full md:w-1/2 md:mx-2"
+            v-model="toFilter.approved_at_date_start"
+            :name="'approved_at_date_start'"
+            :label="'From'"
+          />
+          <AppDate
+            class="w-full md:w-1/2 md:mx-2"
+            v-model="toFilter.approved_at_date_end"
+            :name="'approved_at_date_end'"
+            :label="'To'"
+          />
+          <div class="w-full flex flex-col justify-center items-start">
+            <AppButton
+              class="whitespace-no-wrap"
+              :disabled="toFilter.approved_at_date_start && toFilter.approved_at_date_end ? false : true"
+              :label="'Search for Invoices'"
+              :icon="'search'"
+              @click="chooseJobPartsModal = true"
+            />
 
-						<div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
-							<input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
-							<label for="disputed">Show Disputed Invoices</label>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
-			<HubzzInvoice
-				:forViewing="false"
-				:practice="practice"
-				:invoiceItems="invoiceItems"
-				:disputedItems="disputedItems"
-				@formError="scrollToTop"
-			/>
-			<!-- :dateStart="date_start"
-			:dateEnd="date_end"-->
+            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+              <input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
+              <label for="disputed">Show Disputed Invoices</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
+      <HubzzInvoice
+        :forViewing="false"
+        :practice="practice"
+        :invoiceItems="invoiceItems"
+        :disputedItems="disputedItems"
+        @formError="scrollToTop"
+      />
+      <!-- :dateStart="date_start"
+      :dateEnd="date_end"-->
 
-			<!-- :filterDateStart="toFilter.approved_at_date_start"
-			:filterDateEnd="toFilter.approved_at_date_end"-->
-			<div
-				class="issue-hubzz-invoice-shield"
-				v-if="chooseJobPartsModal == true"
-				@click="chooseJobPartsModal = false"
-			></div>
-		</section>
-		<transition name="slide" mode="out-in">
-			<div class="choose-job-parts-modal shadow-lg" v-if="chooseJobPartsModal">
-				<ChooseJobParts
-					:filter="toFilter"
-					:showDisputed="showDisputed"
-					@close="chooseJobPartsModal = false"
-					@chosenJobParts="toProcessInvoiceItems"
-				/>
-			</div>
-		</transition>
-	</div>
+      <!-- :filterDateStart="toFilter.approved_at_date_start"
+      :filterDateEnd="toFilter.approved_at_date_end"-->
+      <div
+        class="issue-hubzz-invoice-shield"
+        v-if="chooseJobPartsModal == true"
+        @click="chooseJobPartsModal = false"
+      ></div>
+    </section>
+    <transition name="slide" mode="out-in">
+      <div class="choose-job-parts-modal shadow-lg" v-if="chooseJobPartsModal">
+        <ChooseJobParts
+          :filter="toFilter"
+          :showDisputed="showDisputed"
+          @close="chooseJobPartsModal = false"
+          @chosenJobParts="toProcessInvoiceItems"
+        />
+      </div>
+    </transition>
+  </div>
 </template>
 <script>
 import AppButton from "@/components/Base/AppButton";

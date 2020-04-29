@@ -61,6 +61,7 @@
             :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
             :label="'Generate HUBZZ Invoices'"
             :icon="'add-rectangle'"
+            @click="createBulkBilling()"
           />
         </div>
       </div>
@@ -418,7 +419,61 @@ export default {
 			const practices = response.data.practices
 			await this.$store.commit("practices/SET_PRACTICES", practices)
 			await this.$store.commit("practices/TOGGLE_LOADING", false)
-		},
+    },
+    
+    async createBulkBilling () {
+      await this.$store.commit("practices/TOGGLE_LOADING", true)
+      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
+        const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
+          return {
+            type: 'Job Part - Invoiced',
+            job_part_id: jobPart.id,
+            description:
+              "Job Number " +
+              jobPart.job_part_number +
+              " for £" +
+              jobPart.practice_rate +
+              " from " +
+              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
+              " to " +
+              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
+            total: jobPart.total,
+          }
+        })
+
+        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
+
+        return {
+          practice_id: practice.id,
+          items,
+          date_start: this.practiceParams.practice_invoiceable_date_start,
+          date_end: this.practiceParams.practice_invoiceable_date_end,
+          total_amount,
+        }
+      })
+      
+      await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
+        practice_invoice_datas: practiceInvoiceDatas
+        })
+        .then(res => {
+          console.log('res',res)
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Success"
+          })
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        })
+
+      console.log('practice invoice datas', practiceInvoiceDatas)
+      await this.$store.commit("practices/TOGGLE_LOADING", false)
+    },
 
 		goToPage (page) {
 			if (page < 1) {
@@ -500,7 +555,9 @@ export default {
 				this.chosenPractices.splice(index, 1)
 			} else {
 				this.chosenPractices.push(item)
-			}
+      }
+      
+      console.log('chosen practices', this.chosenPractices)
 		},
 
 		getPractices () {
