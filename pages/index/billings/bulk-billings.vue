@@ -23,15 +23,15 @@
         </div>
         <div class="flex items-center w-full">
           <AppDate
-            v-model="jobPartsParams.approved_at_date_start"
+            v-model="practiceParams.practice_invoiceable_date_start"
             class="md:mx-2 text-white"
-            :name="'approved_at_date_start'"
+            :name="'practice_invoiceable_date_start'"
             :label="'From'"
           />
           <AppDate
-            v-model="jobPartsParams.approved_at_date_end"
+            v-model="practiceParams.practice_invoiceable_date_end"
             class="md:mx-2 text-white"
-            :name="'approved_at_date_end'"
+            :name="'practice_invoiceable_date_end'"
             :label="'To'"
           />
           <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
@@ -51,43 +51,45 @@
           />-->
           <AppButton
             class="whitespace-no-wrap"
-            :disabled="jobPartsParams.approved_at_date_start && jobPartsParams.approved_at_date_end ? false : true"
+            :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
             :label="'Search for Practices'"
             :icon="'search'"
-            @click="getJobParts()"
+            @click="getBillablePractices()"
           />
           <AppButton
             class="mx-2"
-            :disabled="jobPartsParams.approved_at_date_start && jobPartsParams.approved_at_date_end ? false : true"
+            :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
             :label="'Generate HUBZZ Invoices'"
             :icon="'add-rectangle'"
           />
         </div>
       </div>
     </div>
+    <!-- :routerLink="`/billings`" -->
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
       :items="getAllPractices"
       :currentPage="currentPage"
-      :perPage="params.limit"
+      :perPage="practiceParams.limit"
       :columns="columns"
       :loading="loadingPractices"
-      :routerLink="`/billings`"
-      :orderBy="params.order_by"
+      :orderBy="practiceParams.order_by"
       :customWidth="200"
       @pagechanged="pagechanged"
+      @checkClicked="toggleCheck"
       @sorted="sorted"
     >
       <template v-slot:checker="slotProps">
         <input 
           :id="slotProps.item" 
-          v-model="chosenJobParts" 
+          v-model="chosenPractices" 
           type="checkbox" 
           :value="slotProps.item"
         >
         <label :for="slotProps.item" />
       </template>
+
       <template v-slot:status_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
@@ -157,7 +159,8 @@ export default {
 			// for app table
 			currentPage: 1,
 			search: "",
-			showDisputedJobParts: false,
+      showDisputedJobParts: false,
+      chosenPractices:[],
 			jobPartsParams: {
 				approved_at_date_start: null,
 				approved_at_date_end: null,
@@ -165,17 +168,19 @@ export default {
 				invoice_status: null,
 				locum_invoiceable: null,
         practice_invoiced: false,
-        practice_invoiceable_date_start: null,
-        practice_invoiceable_date_end: null,
+        
 			},
 
-			params: {
+			practiceParams: {
 				id: [],
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"],
 				status: ["Active", "Dormant", "Suspended"],
-				verified: true,
+        verified: true,
+        practice_invoiceable_date_start: null,
+        practice_invoiceable_date_end: null,
+        practice_invoiceable: true,
 			},
 			loading: false,
 			columns: [
@@ -243,10 +248,10 @@ export default {
 			return this.$store.state.practices.itemCount
 		},
 		pageCount () {
-			return Math.ceil(this.itemCount / this.params.limit)
+			return Math.ceil(this.itemCount / this.practiceParams.limit)
 		},
 		totalPages () {
-			return Math.ceil(this.itemCount / this.params.limit)
+			return Math.ceil(this.itemCount / this.practiceParams.limit)
 		},
 		total () {
 			return this.getAllPractices.length
@@ -361,7 +366,8 @@ export default {
 			// 	return jobPart.practice_id
 			// })
 
-			this.params.id = await jobParts.reduce((accumulator, item) => {
+			this.practiceParams.id = await jobParts.reduce((accumulator, item) => {
+        console.log('practice ids', item.practice_id)
 				return accumulator.includes(item.practice_id)
 					? accumulator
 					: [...accumulator, item.practice_id]
@@ -382,12 +388,26 @@ export default {
 			const limit = 10
 			const offset = page * limit - limit
 			const status = ["Active", "Dormant", "Suspended"]
-			const id = this.params.id
+      // const id = this.practiceParams.id
+      const practice_invoiceable_date_start = this.practiceParams.practice_invoiceable_date_start
+      const practice_invoiceable_date_end = this.practiceParams.practice_invoiceable_date_end
+      const practice_invoiceable = this.practiceParams.practice_invoiceable
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc"
-			const params = { id, limit, offset, order_by, status }
+			const params = {
+        search, 
+        limit, 
+        offset, 
+        order_by, 
+        status, 
+        practice_invoiceable_date_start, 
+        practice_invoiceable_date_end, 
+        practice_invoiceable 
+      }
+      console.log('params', params)
+
 			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, {
 				params
 			})
@@ -469,28 +489,47 @@ export default {
 			this.getPractices()
 
 			this.$router.push({ query })
-		}, 500),
+    }, 500),
+    
+    toggleCheck (item) {
+			const index = this.chosenPractices.findIndex(practice => {
+				return practice.id === item.id
+			})
+
+			if (index > -1) {
+				this.chosenPractices.splice(index, 1)
+			} else {
+				this.chosenPractices.push(item)
+			}
+		},
 
 		getPractices () {
+      console.log('params get practices', this.practiceParams)
 			this.$store
 				.dispatch("practices/fetchPractices", {
-					id: this.params.id,
-					limit: this.params.limit,
+					id: this.practiceParams.id,
+					limit: this.practiceParams.limit,
 					search: this.search,
-					order_by: this.params.order_by,
-					offset: this.params.offset,
-					status: this.params.status,
+					order_by: this.practiceParams.order_by,
+					offset: this.practiceParams.offset,
+          status: this.practiceParams.status,
+          practice_invoiceable_date_start: this.practiceParams.practice_invoiceable_date_start, 
+          practice_invoiceable_date_end: this.practiceParams.practice_invoiceable_date_end, 
+          practice_invoiceable: this.practiceParams.practice_invoiceable,
 					verified: this.verified,
 					countOnly: true
 				})
 				.then(() => {
 					this.$store.dispatch("practices/fetchPractices", {
-						id: this.params.id,
-						limit: this.params.limit,
+						id: this.practiceParams.id,
+						limit: this.practiceParams.limit,
 						search: this.search,
-						order_by: this.params.order_by,
-						offset: this.params.offset,
-						status: this.params.status,
+						order_by: this.practiceParams.order_by,
+						offset: this.practiceParams.offset,
+            status: this.practiceParams.status,
+            practice_invoiceable_date_start: this.practiceParams.practice_invoiceable_date_start, 
+            practice_invoiceable_date_end: this.practiceParams.practice_invoiceable_date_end, 
+            practice_invoiceable: this.practiceParams.practice_invoiceable,
 						verified: this.verified
 					})
 				})
@@ -549,7 +588,7 @@ export default {
 				...this.$route.query,
 				page: page || 1
 			}
-			this.params.offset = this.params.limit * (page - 1)
+			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
 		},
@@ -560,8 +599,9 @@ export default {
 			let query = {
 				...this.$router.query,
 				order_by
-			}
-			this.params.order_by = order_by
+      }
+      console.log('order_by', order_by)
+			this.practiceParams.order_by = order_by
 			this.getPractices()
 		}
 	}
