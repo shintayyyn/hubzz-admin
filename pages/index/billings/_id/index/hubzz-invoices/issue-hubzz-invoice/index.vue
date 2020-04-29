@@ -56,13 +56,16 @@
       <!-- :filterDateStart="toFilter.approved_at_date_start"
       :filterDateEnd="toFilter.approved_at_date_end"-->
       <div
-        class="issue-hubzz-invoice-shield"
         v-if="chooseJobPartsModal == true"
+        class="issue-hubzz-invoice-shield"
         @click="chooseJobPartsModal = false"
-      ></div>
+      />
     </section>
     <transition name="slide" mode="out-in">
-      <div class="choose-job-parts-modal shadow-lg" v-if="chooseJobPartsModal">
+      <div 
+        v-if="chooseJobPartsModal" 
+        class="choose-job-parts-modal shadow-lg"
+      >
         <ChooseJobParts
           :filter="toFilter"
           :showDisputed="showDisputed"
@@ -74,19 +77,18 @@
   </div>
 </template>
 <script>
-import AppButton from "@/components/Base/AppButton";
-import AppDate from "@/components/Base/AppDate";
-import AppLoading from "@/components/Base/AppLoading";
-import HubzzInvoice from "@/components/Billings/HubzzInvoice";
-import ChooseJobParts from "@/components/Billings/ChooseJobParts";
+import AppButton from "@/components/Base/AppButton"
+import AppDate from "@/components/Base/AppDate"
+import HubzzInvoice from "@/components/Billings/HubzzInvoice"
+import ChooseJobParts from "@/components/Billings/ChooseJobParts"
 export default {
 	components: {
 		AppButton,
-		AppDate,
+    AppDate,
 		HubzzInvoice,
 		ChooseJobParts
 	},
-	data() {
+	data () {
 		return {
 			loading: false,
 			chooseJobPartsModal: false,
@@ -108,50 +110,50 @@ export default {
 			chosenJobParts: [],
 			invoiceItems: [],
 			disputedItems: []
-		};
-	},
-
-	created() {
-		if (this.showDisputed) {
-			this.toFilter.status = "";
-			this.toFilter.invoice_status = "Disputed";
-			this.toFilter.locum_invoiceable = null;
-		} else {
-			this.toFilter.status = "Approved";
-			this.toFilter.invoice_status = null;
-			this.toFilter.locum_invoiceable = true;
 		}
 	},
 
-	async asyncData({ app, route, store }) {
+	created () {
+		if (this.showDisputed) {
+			this.toFilter.status = ""
+			this.toFilter.invoice_status = "Disputed"
+			this.toFilter.locum_invoiceable = null
+		} else {
+			this.toFilter.status = "Approved"
+			this.toFilter.invoice_status = null
+			this.toFilter.locum_invoiceable = true
+		}
+	},
+
+	async asyncData ({ app, route }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
-			);
-			const practice = response.data.practice;
+			)
+			const practice = response.data.practice
 			return {
 				practice
-			};
+			}
 		} catch (err) {
-			console.log("get practice error", err);
+			console.log("get practice error", err)
 		}
 	},
 	methods: {
-		scrollToTop() {
+		scrollToTop () {
 			this.$nextTick(() => {
-				this.$refs.modalContainer.scrollTop = 0;
-			});
+				this.$refs.modalContainer.scrollTop = 0
+			})
 		},
-		toProcessInvoiceItems(chosenJobParts, isDisputed) {
-			this.chooseJobPartsModal = false;
+		toProcessInvoiceItems (chosenJobParts, isDisputed) {
+			this.chooseJobPartsModal = false
 
 			if (isDisputed == true) {
-				this.disputedItems = [];
+				this.disputedItems = []
 			} else {
-				this.invoiceItems = [];
+				this.invoiceItems = []
 			}
 			for (let i = 0; i < chosenJobParts.length; i++) {
-				console.log("chosenJobPart", chosenJobParts[i]);
+				console.log("chosenJobPart", chosenJobParts[i])
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
 					job_part_id: chosenJobParts[i].id,
@@ -168,19 +170,19 @@ export default {
 					total: parseFloat(
 						(chosenJobParts[i].final_hours/60) * chosenJobParts[i].practice_rate
 					).toFixed(2)
-				};
+				}
 
 				if (isDisputed == true) {
-					newItem.id = this.disputedItems.length + 1;
-					this.disputedItems.push(newItem);
+					newItem.id = this.disputedItems.length + 1
+					this.disputedItems.push(newItem)
 				} else {
-					newItem.id = this.invoiceItems.length + 1;
-					this.invoiceItems.push(newItem);
+					newItem.id = this.invoiceItems.length + 1
+					this.invoiceItems.push(newItem)
 				}
 			}
 		},
 
-		async goBack() {
+		async goBack () {
 			const query = {
 				...this.$route.query
       }
@@ -191,7 +193,7 @@ export default {
 			})
 		}
 	}
-};
+}
 </script>
 
 <style>

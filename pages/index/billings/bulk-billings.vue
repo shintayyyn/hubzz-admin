@@ -2,7 +2,7 @@
   <div>
     <div class="flex items-center px-2 py-2">
       <div class="relative w-full">
-        <div>
+        <!-- <div>
           <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
@@ -20,7 +20,7 @@
               class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
             />
           </button>
-        </div>
+        </div> -->
         <div class="flex items-center w-full">
           <AppDate
             v-model="practiceParams.practice_invoiceable_date_start"
@@ -147,13 +147,11 @@ import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
 		AppDate,
 		AppButton,
-		AppInput,
 	},
 	data () {
 		return {
@@ -473,6 +471,8 @@ export default {
 
       console.log('practice invoice datas', practiceInvoiceDatas)
       await this.$store.commit("practices/TOGGLE_LOADING", false)
+      await this.getPractices()
+      
     },
 
 		goToPage (page) {

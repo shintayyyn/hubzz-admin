@@ -132,7 +132,7 @@
             flexShrink: 0,
           },
           {
-            title: 'Referal Name',
+            title: 'Referral Name',
             key: 'referral_name',
             sort_key: 'referral_name',
             column: (item) => item.referral_name,
