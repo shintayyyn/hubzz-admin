@@ -1,102 +1,102 @@
 <template>
-	<div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-		<div class="px-2 text-xl md:text-4xl text-white">Locums</div>
-		<div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
-			<div class="flex py-2">
-				<div class="relative">
-					<input
-						v-model="search"
-						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-						placeholder="Search Locum by Name"
-						@keyup.enter="searchSubmit"
-					>
-					<button
-						v-if="search"
-						class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-						@click="(search = ''), searchSubmit()"
-					>
-						<svgicon
-							name="times-solid"
-							height="12"
-							width="12"
-							class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-						/>
-					</button>
-				</div>
-			</div>
-			<div class="flex flex-col w-full justify-end">
-				<div
-					class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
-				>
-					<label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
-					<select
-						id="grid-state"
-						v-model="filterCompliances"
-						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-					>
-						<option :value="null">All</option>
-						<option>Empty</option>
-						<option>Incomplete</option>
-						<option>Pending</option>
-						<option>Expiring</option>
-						<option>Expired</option>
-						<option>Rejected</option>
-						<option>Compliant</option>
-					</select>
-				</div>
-				<div
-					class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
-				>
-					<label class="text-sm text-white md:pr-2">Sort by</label>
-					<select
-						v-model="sort"
-						class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-					>
-						<option value selected>Name</option>
-						<option>Profession</option>
-						<option>Date signed-up</option>
-						<option>Sign-up verified</option>
-					</select>
-				</div>
-			</div>
-		</div>
+  <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+    <div class="px-2 text-xl md:text-4xl text-white">Locums</div>
+    <div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
+      <div class="flex py-2">
+        <div class="relative">
+          <input
+            v-model="search"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Search Locum by Name"
+            @keyup.enter="searchSubmit"
+          >
+          <button
+            v-if="search"
+            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            @click="(search = ''), searchSubmit()"
+          >
+            <svgicon
+              name="times-solid"
+              height="12"
+              width="12"
+              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+            />
+          </button>
+        </div>
+      </div>
+      <div class="flex flex-col w-full justify-end">
+        <div
+          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
+        >
+          <label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
+          <select
+            id="grid-state"
+            v-model="filterCompliances"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option :value="null">All</option>
+            <option>Empty</option>
+            <option>Incomplete</option>
+            <option>Pending</option>
+            <option>Expiring</option>
+            <option>Expired</option>
+            <option>Rejected</option>
+            <option>Compliant</option>
+          </select>
+        </div>
+        <div
+          class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
+        >
+          <label class="text-sm text-white md:pr-2">Sort by</label>
+          <select
+            v-model="sort"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option value selected>Name</option>
+            <option>Profession</option>
+            <option>Date signed-up</option>
+            <option>Sign-up verified</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-		<AppTable
-			v-if="itemCount !== 0"
-			:total="itemCount"
-			:items="locumUsers"
-			:currentPage="currentPage"
-			:perPage="perPage"
-			:columns="columns"
-			:loading="loadingLocums"
-			:routerLink="`/locums`"
-			:orderBy="params.order_by"
-			@pagechanged="pagechanged"
-			@limitchanged="limitchanged"
-			@sorted="sorted"
-		>
-			<template v-slot:status_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-					:class="statusStyle(slotProps.item.status)"
-				>{{ slotProps.item.status }}</div>
-			</template>
-			<template v-slot:compliance_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-					:class="complianceStatusStyle(slotProps.item.compliance_status)"
-				>{{ slotProps.item.compliance_status }}</div>
-			</template>
-		</AppTable>
-		<div v-else class="mt-2 w-full text-center text-white">No registered locums.</div>
-		<div
-			v-if="$route.name.includes('index-locums-id')"
-			class="locum-shield"
-			@click="$router.push({ path: `/locums`, query: $route.query })"
-		/>
+    <AppTable
+      v-if="itemCount !== 0"
+      :total="itemCount"
+      :items="locumUsers"
+      :currentPage="currentPage"
+      :perPage="perPage"
+      :columns="columns"
+      :loading="loadingLocums"
+      :routerLink="`/locums`"
+      :orderBy="params.order_by"
+      @pagechanged="pagechanged"
+      @limitchanged="limitchanged"
+      @sorted="sorted"
+    >
+      <template v-slot:status_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+          :class="statusStyle(slotProps.item.status)"
+        >{{ slotProps.item.status }}</div>
+      </template>
+      <template v-slot:compliance_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+          :class="complianceStatusStyle(slotProps.item.compliance_status)"
+        >{{ slotProps.item.compliance_status }}</div>
+      </template>
+    </AppTable>
+    <div v-else class="mt-2 w-full text-center text-white">No registered locums.</div>
+    <div
+      v-if="$route.name.includes('index-locums-id')"
+      class="locum-shield"
+      @click="$router.push({ path: `/locums`, query: $route.query })"
+    />
 
-		<nuxt-child @getLocums="getLocums" />
-	</div>
+    <nuxt-child @getLocums="getLocums" />
+  </div>
 </template>
 
 <script>

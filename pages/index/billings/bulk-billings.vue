@@ -2,25 +2,6 @@
   <div>
     <div class="flex items-center px-2 py-2">
       <div class="relative w-full">
-        <!-- <div>
-          <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Practice by Name"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div> -->
         <div class="flex items-center w-full">
           <AppDate
             v-model="practiceParams.practice_invoiceable_date_start"
@@ -58,11 +39,42 @@
           />
           <AppButton
             class="mx-2"
-            :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
+            :disabled="practiceParams.practice_invoiceable_date_start 
+              && practiceParams.practice_invoiceable_date_end
+              && chosenPractices.length > 0  
+              ? false : true"
             :label="'Generate HUBZZ Invoices'"
             :icon="'add-rectangle'"
             @click="createBulkBilling()"
           />
+        </div>
+        <div
+          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end" 
+          class="flex text-white"
+        >
+          <AppInput
+            v-model="search"
+            :name="'search'"
+            :type="'text'"
+            :label="'Filter Invoiceable Practices by Name'"
+          />
+          <!-- <input
+            v-model="search"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Search Practice by Name"
+          > -->
+          <!-- <button
+            v-if="search"
+            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            @click="(search = ''), searchSubmit()"
+          >
+            <svgicon
+              name="times-solid"
+              height="12"
+              width="12"
+              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+            />
+          </button> -->
         </div>
       </div>
     </div>
@@ -122,13 +134,13 @@
     </AppTable>
     <template v-else>
       <div
-        v-if="!jobPartsParams.approved_at_date_start || !jobPartsParams.approved_at_date_end"
+        v-if="!practiceParams.practice_invoiceable_date_start && !practiceParams.practice_invoiceable_date_end"
         class="mt-2 w-full text-center text-white"
       >
         Input Job Part Approval / Disputed Dates to see Billable Practices
       </div>
       <div v-else class="mt-2 w-full text-center text-white">
-        There are no verified Practices billable.
+        There are no available Verified Practices invoiceable.
       </div>
     </template>
     <div
@@ -147,11 +159,13 @@ import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
+import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
 		AppDate,
-		AppButton,
+    AppButton,
+    AppInput,
 	},
 	data () {
 		return {
@@ -160,15 +174,15 @@ export default {
 			search: "",
       showDisputedJobParts: false,
       chosenPractices:[],
-			jobPartsParams: {
-				approved_at_date_start: null,
-				approved_at_date_end: null,
-				status: null,
-				invoice_status: null,
-				locum_invoiceable: null,
-        practice_invoiced: false,
+			// jobPartsParams: {
+			// 	approved_at_date_start: null,
+			// 	approved_at_date_end: null,
+			// 	status: null,
+			// 	invoice_status: null,
+			// 	locum_invoiceable: null,
+      //   practice_invoiced: false,
         
-			},
+			// },
 
 			practiceParams: {
 				id: [],
@@ -460,6 +474,8 @@ export default {
             status: "success",
             text: "Success"
           })
+          this.chosenPractices = []
+          this.getPractices()
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
@@ -471,7 +487,7 @@ export default {
 
       console.log('practice invoice datas', practiceInvoiceDatas)
       await this.$store.commit("practices/TOGGLE_LOADING", false)
-      await this.getPractices()
+     
       
     },
 
