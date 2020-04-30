@@ -44,7 +44,11 @@
               </div>
             </template>
           </AppTable>
-          <AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
+          <AppButton 
+            :label="'Confirm'"
+            :disabled="(chosenJobParts.length + disputedJobParts.length) < 1 ? true : false " 
+            @click="emitChosenJobParts()" 
+          />
         </template>
         <template v-if="jobPartCount === 0">
           <p class="text-gray-500 py-2 text-center"> 
@@ -59,11 +63,11 @@
 import AppTable from "@/components/Base/AppTable"
 import AppButton from "@/components/Base/AppButton"
 export default {
-	props: ["filter", "showDisputed"],
 	components: {
 		AppButton,
 		AppTable
 	},
+	props: ["filter", "showDisputed"],
 	data () {
 		return {
 			// jobPartCount: 0,
@@ -214,7 +218,7 @@ export default {
 				this.chosenJobParts.push(item)
 			}
 		},
-		emitChosenJobParts (event) {
+		emitChosenJobParts () {
 			if (this.showDisputed === false) {
 				this.$emit("chosenJobParts", this.chosenJobParts, false)
 			} else if (this.showDisputed === true) {

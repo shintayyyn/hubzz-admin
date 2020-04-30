@@ -121,7 +121,9 @@
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="typeStyle(slotProps.item.type)"
-        >{{ slotProps.item.type }}</div>
+        >
+          {{ slotProps.item.type }}
+        </div>
       </template>
       <template v-slot:hub_type_slot="slotProps">
         <div
@@ -277,7 +279,7 @@ export default {
 			this.searchSubmit()
 		},
 
-		$route (to, from) {
+		$route () {
 			// this.getPractices()
 		}
 	},
@@ -657,10 +659,10 @@ export default {
 		},
 
 		pagechanged (page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			}
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
@@ -669,10 +671,10 @@ export default {
 		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
-			let query = {
-				...this.$router.query,
-				order_by
-      }
+			// let query = {
+			// 	...this.$router.query,
+			// 	order_by
+      // }
       console.log('order_by', order_by)
 			this.practiceParams.order_by = order_by
 			this.getPractices()

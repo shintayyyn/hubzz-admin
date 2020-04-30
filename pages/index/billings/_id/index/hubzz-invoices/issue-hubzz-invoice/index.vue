@@ -153,15 +153,22 @@ export default {
 				this.invoiceItems = []
 			}
 			for (let i = 0; i < chosenJobParts.length; i++) {
-				console.log("chosenJobPart", chosenJobParts[i])
+        console.log("chosenJobPart", chosenJobParts[i])
+        const roundedHours = Math.floor((chosenJobParts[i].final_hours)/60)
+        const minutes = Math.round(((chosenJobParts[i].final_hours/60) - roundedHours) * 60)
+        console.log("minutes "+minutes)
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
-					job_part_id: chosenJobParts[i].id,
+          job_part_id: chosenJobParts[i].id,
+          total_hours: (chosenJobParts[i].final_hours)/60,
 					description:
-						"Job Number " +
 						chosenJobParts[i].job_part_number +
 						" for £" +
-						chosenJobParts[i].practice_rate +
+            chosenJobParts[i].practice_rate +
+            " for a total time of " +
+            roundedHours +
+            " hours " + 
+            (minutes > 0 ? " and " + minutes + " minutes " : "") +
 						" from " +
 						this.$moment(chosenJobParts[i].date_start).format('DD/MM/YYYY') +
 						" to " +

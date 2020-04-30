@@ -133,7 +133,7 @@
             </div>
           </div>
         </div>
-        <!-- FOR INVOICES - INVOICE ITEMS -->
+        <!-------------------- FOR INVOICES - INVOICE ITEMS ------------------------>
         <div
           v-if="invoiceItems && invoiceItems.length > 0"
           class="flex flex-col overflow-x-auto"
@@ -150,19 +150,24 @@
                   <strong>Description</strong>
                 </div>
               </div>
+              <div :class="!byLocum ? 'w-1/6' : 'w-full'">
+                <div class="text-white text-sm text-left ">
+                  <strong>Total Hours</strong>
+                </div>
+              </div>
               <!-- this -->
-              <div class="w-2/6" v-if="!byLocum"> 
+              <div v-if="!byLocum" class="w-1/6"> 
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
                 </div>
               </div>
               <div v-if="forViewing == false">
-              <div class="mr-2" v-if="doNotShow">
-									<span
-										@click="addInvoiceItem()"
-										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-									>+</span>
-								</div>
+                <div v-if="doNotShow" class="mr-2">
+                  <span
+                    class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
+                    @click="addInvoiceItem()"
+                  >+</span>
+                </div>
               </div>
             </div>
           </div>
@@ -172,9 +177,10 @@
             :ref="`item-${index}`"
             :class="!doNotShow && 'px-4'"
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
-          >
+          > 
             <div class="flex w-full justify-center border-b border-gray-500 py-1">
-              <div v-if="forViewing == false" class="w-2/3 text-sm mx-1" >
+              <!-- DESCRIPTION -->
+              <div v-if="forViewing == false" class="w-4/6 text-sm mx-1">
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -189,11 +195,29 @@
                   {{ item.description ? item.description : "No Description" }}
                 </p>
               </div>
-              <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-2/3' : 'w-full'">
+              <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-4/6' : 'w-full'">
                 {{ item.description }}
               </div>
-              <!-- this -->
-              <div class="w-1/3 text-sm mx-1" v-if="!byLocum">
+              <!-- TOTAL HOURS -->
+              <div v-if="forViewing == false" class="w-1/6 text-sm mx-1">
+                <!-- <textarea
+                  v-if="doNotShow"
+                  v-model="item.description"
+                  rows="2"
+                  class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
+                  placeholder="Enter Description"
+                /> -->
+                <p
+                  class="text-left px-2 py-1"
+                >
+                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+                </p>
+              </div>
+              <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-1/6' : 'w-full'">
+                {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+              </div>
+              <!-- AMOUNT TOTAL -->
+              <div v-if="!byLocum" class="w-1/6 text-sm mx-1">
                 <template v-if="forViewing == false">
                   <input
                     v-if="doNotShow"
@@ -222,7 +246,7 @@
           </div>
         </div>
 
-        <!-- FOR DISPUTED ITEMS -->
+        <!----------------------- FOR DISPUTED ITEMS --------------------------->
         <div
           v-if="disputedItems && disputedItems.length > 0"
           class="flex flex-col overflow-x-auto"
