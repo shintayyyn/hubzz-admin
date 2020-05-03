@@ -5,7 +5,8 @@
         <div class="flex text-white font-bold p-2">
           <div class="flex-1 p-1 flex justify-between items-center">
             <div class="whitespace-no-wrap">
-              {{ columnDetail.title }}
+              <span>{{ columnDetail.title }}</span>
+              <span>&nbsp;</span>
             </div>
             <button v-if="columnDetail.sort_key" class="px-1 ml-2" @click="setOrderBy(columnDetail.sort_key)">
               <span v-if="getColumnOrderByDirection(columnDetail.sort_key) === null">
