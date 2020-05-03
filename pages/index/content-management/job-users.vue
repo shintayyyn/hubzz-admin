@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Job Locum Users
+      Job Users
     </div>
 
     <ContentManagementTable
