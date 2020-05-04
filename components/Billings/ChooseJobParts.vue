@@ -43,6 +43,16 @@
                 {{ slotProps.item.invoice_status }}
               </div>
             </template>
+            <template v-slot:actions="slotProps">
+              <div class="flex justify-center">
+                <div
+                  class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
+                  @click.prevent.stop="viewJobPart(slotProps.item.id)"
+                >
+                  View
+                </div>
+              </div>
+            </template>
           </AppTable>
           <AppButton 
             :label="'Confirm'"
@@ -128,7 +138,14 @@ export default {
 					class: "text-center",
 					slotName: "status_slot",
 					sortable: true
-				}
+        },
+        {
+          name: "Actions",
+          slot: true,
+          slotName: "actions",
+          dataIndex: "",
+          class: "text-center"
+        }
 			]
 		}
 	},
@@ -207,6 +224,10 @@ export default {
 		}
 	},
 	methods: {
+    viewJobPart (jobPartId) {
+      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices/issue-hubzz-invoice/${jobPartId}`)
+    },
+
 		toggleCheck (item) {
 			const index = this.chosenJobParts.findIndex(jobPart => {
 				return jobPart.id === item.id
@@ -217,7 +238,8 @@ export default {
 			} else {
 				this.chosenJobParts.push(item)
 			}
-		},
+    },
+    
 		emitChosenJobParts () {
 			if (this.showDisputed === false) {
 				this.$emit("chosenJobParts", this.chosenJobParts, false)
