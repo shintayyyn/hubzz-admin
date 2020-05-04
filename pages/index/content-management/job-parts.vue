@@ -1,14 +1,40 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Job Users
+      Job Parts
+    </div>
+
+    <div class="flex flex-col md:flex-row justify-between md:items-center">
+      <div class="flex py-2">
+        <div class="relative">
+          <input
+            v-model="search"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Search jobPart number, title"
+            style="width: 250px;"
+            @keyup="searchSubmit"
+          >
+          <button
+            v-if="search"
+            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            @click="(search = ''), searchSubmit()"
+          >
+            <svgicon
+              name="times-solid"
+              height="12"
+              width="12"
+              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+            />
+          </button>
+        </div>
+      </div>
     </div>
 
     <ContentManagementTable
       :limit="limit"
-      :items="jobUsers"
-      :getItemKey="(item) => `${item.job_id}-${item.locum_user_id}`"
-      :getItemLink="(item) => true ? null : `/content-management/job-users/${item.id}`"
+      :items="jobParts"
+      :getItemKey="(item) => item.id"
+      :getItemLink="(item) => `/content-management/job-parts/${item.id}`"
       :columnDetails="columnDetails"
       :orderBy="orderBy"
       :loading="loading"
@@ -37,15 +63,15 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-content-management-job-users'"
+      v-if="$route.name !== 'index-content-management-job-parts'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/content-management/job-users"
+      to="/content-management/job-parts"
     />
   
     <nuxt-child
-      @jobUserCreated="jobUserCreatedHandler"
-      @jobUserUpdated="jobUserUpdatedHandler"
-      @jobUserDeleted="jobUserDeletedHandler"
+      @jobPartCreated="jobPartCreatedHandler"
+      @jobPartUpdated="jobPartUpdatedHandler"
+      @jobPartDeleted="jobPartDeletedHandler"
     />
   </div>
 </template>
@@ -66,7 +92,7 @@
       return {
         loading: false,
         count: 0,
-        jobUsers: [],
+        jobParts: [],
         orderBy: [],
         limit: 10,
         activePage: 1,
@@ -77,14 +103,14 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min(this.limit * this.activePage - this.limit + 1, this.count)
-        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobUsers.length, this.count)
+        const lastItem = Math.min(this.limit * this.activePage - this.limit + this.jobParts.length, this.count)
         
 
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
 
       offset () {
-        return Math.max(this.activePage * this.limit - this.limit + this.jobUsers.length, 0)
+        return Math.max(this.activePage * this.limit - this.limit + this.jobParts.length, 0)
       },
 
       columnDetails () {
@@ -99,109 +125,64 @@
             flexShrink: 0,
           },
           {
-            title: 'Locum ID',
-            key: 'locum_user_id',
-            sort_key: 'locum_user_id',
-            column: (item) => item.locum_user_id,
+            title: 'ID',
+            key: 'id',
+            sort_key: 'id',
+            column: (item) => item.id,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
           },
           {
-            title: 'Job Locum Status',
-            key: 'job_locum_status',
-            sort_key: 'job_locum_status',
-            column: (item) => item.job_locum_status,
-            justify: 'end',
-            flexGrow: 0,
+            title: 'Job Type',
+            key: 'job_type',
+            sort_key: 'job_type',
+            column: (item) => item.job ? item.job.type : '',
+            justify: 'start',
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum Qualified',
-            key: 'locum_user_qualified',
-            sort_key: 'locum_user_qualified',
-            column: (item) => item.locum_user_qualified ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
+            title: 'Job Part Number',
+            key: 'job_part_number',
+            sort_key: 'job_part_number',
+            column: (item) => item.job_part_number,
+            justify: 'start',
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum Matched',
-            key: 'locum_user_matched',
-            sort_key: 'locum_user_matched',
-            column: (item) => item.locum_user_matched ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
+            title: 'Job Title',
+            key: 'job_title',
+            sort_key: 'job_title',
+            column: (item) => item.job_title,
+            justify: 'start',
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Practice ID',
-            key: 'practice_id',
-            sort_key: 'practice_id',
-            column: (item) => item.practice_id,
-            justify: 'end',
-            flexGrow: 0,
+            title: 'Practice Name',
+            key: 'practice_name',
+            sort_key: 'practice_name',
+            column: (item) => item.practice_name,
+            justify: 'start',
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Locum Is Favorite Of Practice',
-            key: 'locum_is_favorite_of_practice',
-            sort_key: 'locum_is_favorite_of_practice',
-            column: (item) => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
+            title: 'Practice Code',
+            key: 'practice_code',
+            sort_key: 'practice_code',
+            column: (item) => item.practice_code,
+            justify: 'start',
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Practice Is Favorite Of Locum',
-            key: 'practice_is_favorite_of_locum',
-            sort_key: 'practice_is_favorite_of_locum',
-            column: (item) => item.practice_is_favorite_of_locum ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title: 'Locum Applied',
-            key: 'locum_applied',
-            sort_key: 'locum_applied',
-            column: (item) => item.locum_applied ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title: 'Locum Allocated',
-            key: 'locum_allocated',
-            sort_key: 'locum_allocated',
-            column: (item) => item.locum_allocated ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title: 'Original',
-            key: 'original',
-            sort_key: 'original',
-            column: (item) => item.original ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title: 'Completed',
-            key: 'completed',
-            sort_key: 'completed',
-            column: (item) => item.completed ? 'Yes' : 'No',
-            justify: 'center',
-            flexGrow: 0,
-            flexShrink: 0,
-          },
-          {
-            title:  '',
-            key: null,
-            sort_key: null,
-            column: () => '',
+            title: 'Status',
+            key: 'status',
+            sort_key: 'status',
+            column: (item) => item.status,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -217,34 +198,34 @@
     watch: {
       orderBy () {
         this.activePage = 1
-        this.getJobs()
+        this.getJobParts()
       },
 
       limit () {
         this.activePage = 1
-        this.getJobs()
+        this.getJobParts()
       },
 
       activePage () {
-        this.getJobs()
+        this.getJobParts()
       },
     },
 
     mounted () {
       this.search = ''
-      this.getJobs()
+      this.getJobParts()
     },
     
     methods: {
       searchSubmit: debounce(function () {
         this.activePage = 1
-        this.getJobs()
+        this.getJobParts()
       }, 500),
 
-      getJobs () {
+      getJobParts () {
         this.loading = true
         // this.count = 0
-        this.jobUsers = []
+        this.jobParts = []
 
         const params = {}
 
@@ -255,14 +236,14 @@
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/job-users/count', {
+          this.$axios.get('/api/v1/admin/job-parts/count', {
             params: {
               ...params,
             }
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/job-users', {
+          this.$axios.get('/api/v1/admin/job-parts', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -270,18 +251,18 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.job_users
+            return responses.data.data.job_parts
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           if (!search || search === this.search) {
             const [
               count,
-              jobUsers,
+              jobParts,
             ] = results
 
             this.count = count
-            this.jobUsers = jobUsers
+            this.jobParts = jobParts
           }
         }).catch((err) => {
           console.log('err', err)
@@ -291,7 +272,7 @@
         })
       },
 
-      loadMoredJobs (limit) {
+      loadMoredJobParts (limit) {
         const params = {}
 
         const search = this.search
@@ -300,7 +281,7 @@
           params.search = search
         }
 
-        this.$axios.get('/api/v1/admin/job-users', {
+        this.$axios.get('/api/v1/admin/job-parts', {
           params: {
             ...params,
             order_by: this.orderBy,
@@ -308,41 +289,41 @@
             offset: this.offset,
           },
         }).then((responses) => {
-          responses.data.data.job_users.forEach((jobUser) => {
-            this.jobUsers.push(jobUser)
+          responses.data.data.job_parts.forEach((jobPart) => {
+            this.jobParts.push(jobPart)
           })
         }).catch((err) => {
           console.log('err', err)
         })
       },
 
-      jobUserCreatedHandler (data) {
+      jobPartCreatedHandler (data) {
         const {
-          jobUser
+          jobPart
         } = data
 
         if (this.search === '') {
           this.count++
 
-          if (this.activePage === this.pages && this.jobUsers.length < this.limit) {
-            this.jobUsers.push(jobUser)
+          if (this.activePage === this.pages && this.jobParts.length < this.limit) {
+            this.jobParts.push(jobPart)
           }
         }
       },
 
-      jobUserUpdatedHandler (data) {
+      jobPartUpdatedHandler (data) {
         const {
-          jobUser
+          jobPart
         } = data
 
-        const index = this.jobUsers.findIndex(({ id }) => id === jobUser.id)
+        const index = this.jobParts.findIndex(({ id }) => id === jobPart.id)
 
         if (index > -1) {
-          this.jobUsers.splice(index, 1, jobUser)
+          this.jobParts.splice(index, 1, jobPart)
         }
       },
 
-      jobUserDeletedHandler (data) {
+      jobPartDeletedHandler (data) {
         const {
           id,
         } = data
@@ -352,13 +333,13 @@
         if (this.activePage > this.pages) {
           this.activePage = this.pages
         } else {
-          const index = this.jobUsers.findIndex((jobUser) => jobUser.id === id)
+          const index = this.jobParts.findIndex((jobPart) => jobPart.id === id)
 
           if (index > -1) {
-            this.jobUsers.splice(index, 1)
+            this.jobParts.splice(index, 1)
 
             if (this.offset < this.count) {
-              this.loadMoredJobs(1)
+              this.loadMoredJobParts(1)
             }
           }
         }
