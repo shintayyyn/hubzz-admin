@@ -1,16 +1,16 @@
 <template>
   <transition name="slide" mode="out-in">
     <div class="specific-job-part-modal">
-      <nuxt-link 
-        :to="{path: `/billings/${$route.params.id}/hubzz-invoices`, query: $route.query}">
-        <svgicon
-          name="arrow-left-solid"
-          height="40"
-          width="40"
-          class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
-        />
-      </nuxt-link>
       <div class="mx-2">
+        <nuxt-link 
+          :to="{path: `/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`, query: $route.query}">
+          <svgicon
+            name="arrow-left-solid"
+            height="40"
+            width="40"
+            class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
+          />
+        </nuxt-link>
         <JobPartModal :specificJobPart="approvedJobPart" :isNuxtChild="true" />
       </div>
     </div>
