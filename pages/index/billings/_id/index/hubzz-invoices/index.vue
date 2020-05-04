@@ -137,7 +137,7 @@ export default {
 				practice_id: "",
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"]
+				order_by: ["date_created:desc"]
 			},
 			// practiceInvoices: [],
 			// practiceInvoicesCount: 0,
@@ -211,7 +211,10 @@ export default {
 	async asyncData ({ app, route, store }) {
 		try {
 			await store.commit("billings/TOGGLE_LOADING", true)
-			let { page = 1, order_by = [] } = route.query
+			let { 
+        page = 1, 
+        order_by = ["date_created:desc"] 
+      } = route.query
 
 			const practice_id = route.params.id
 			const limit = 10
