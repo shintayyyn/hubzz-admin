@@ -209,7 +209,7 @@
 
             <div v-if="practice.practice_profession_compliance_category_compliance_documents.length === 0">
               <p class="flex text-white md:text-base py-2 font-bold leading-tight">
-                <span>Compliance Documents is not yet set up by the Practice.</span>
+                <span>Compliance Documents is not yet set up by the Practice Hub.</span>
               </p>
             </div>
           </div>

@@ -2,25 +2,6 @@
   <div>
     <div class="flex items-center px-2 py-2">
       <div class="relative w-full">
-        <div>
-          <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Practice by Name"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div>
         <div class="flex items-center w-full">
           <AppDate
             v-model="practiceParams.practice_invoiceable_date_start"
@@ -34,7 +15,7 @@
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
           />
-          <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+          <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
             <input 
               id="disputed" 
               v-model="showDisputedJobParts" 
@@ -42,7 +23,7 @@
               value="true"
             >
             <label for="disputed">Show Disputed Invoices</label>
-          </div>
+          </div> -->
           <!-- <AppInput
             v-model="showDisputedJobParts"
             :label="'Show Disputed Invoices'"
@@ -58,10 +39,42 @@
           />
           <AppButton
             class="mx-2"
-            :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
+            :disabled="practiceParams.practice_invoiceable_date_start 
+              && practiceParams.practice_invoiceable_date_end
+              && chosenPractices.length > 0  
+              ? false : true"
             :label="'Generate HUBZZ Invoices'"
             :icon="'add-rectangle'"
+            @click="createBulkBilling()"
           />
+        </div>
+        <div
+          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end" 
+          class="flex text-white"
+        >
+          <AppInput
+            v-model="search"
+            :name="'search'"
+            :type="'text'"
+            :label="'Filter Invoiceable Practices by Name'"
+          />
+          <!-- <input
+            v-model="search"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Search Practice by Name"
+          > -->
+          <!-- <button
+            v-if="search"
+            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            @click="(search = ''), searchSubmit()"
+          >
+            <svgicon
+              name="times-solid"
+              height="12"
+              width="12"
+              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+            />
+          </button> -->
         </div>
       </div>
     </div>
@@ -108,7 +121,9 @@
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="typeStyle(slotProps.item.type)"
-        >{{ slotProps.item.type }}</div>
+        >
+          {{ slotProps.item.type }}
+        </div>
       </template>
       <template v-slot:hub_type_slot="slotProps">
         <div
@@ -121,13 +136,13 @@
     </AppTable>
     <template v-else>
       <div
-        v-if="!jobPartsParams.approved_at_date_start || !jobPartsParams.approved_at_date_end"
+        v-if="!practiceParams.practice_invoiceable_date_start && !practiceParams.practice_invoiceable_date_end"
         class="mt-2 w-full text-center text-white"
       >
         Input Job Part Approval / Disputed Dates to see Billable Practices
       </div>
       <div v-else class="mt-2 w-full text-center text-white">
-        There are no verified Practices billable.
+        There are no available Verified Practices invoiceable.
       </div>
     </template>
     <div
@@ -151,8 +166,8 @@ export default {
 	components: {
 		AppTable,
 		AppDate,
-		AppButton,
-		AppInput,
+    AppButton,
+    AppInput,
 	},
 	data () {
 		return {
@@ -161,15 +176,15 @@ export default {
 			search: "",
       showDisputedJobParts: false,
       chosenPractices:[],
-			jobPartsParams: {
-				approved_at_date_start: null,
-				approved_at_date_end: null,
-				status: null,
-				invoice_status: null,
-				locum_invoiceable: null,
-        practice_invoiced: false,
+			// jobPartsParams: {
+			// 	approved_at_date_start: null,
+			// 	approved_at_date_end: null,
+			// 	status: null,
+			// 	invoice_status: null,
+			// 	locum_invoiceable: null,
+      //   practice_invoiced: false,
         
-			},
+			// },
 
 			practiceParams: {
 				id: [],
@@ -264,7 +279,7 @@ export default {
 			this.searchSubmit()
 		},
 
-		$route (to, from) {
+		$route () {
 			// this.getPractices()
 		}
 	},
@@ -418,7 +433,65 @@ export default {
 			const practices = response.data.practices
 			await this.$store.commit("practices/SET_PRACTICES", practices)
 			await this.$store.commit("practices/TOGGLE_LOADING", false)
-		},
+    },
+    
+    async createBulkBilling () {
+      await this.$store.commit("practices/TOGGLE_LOADING", true)
+      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
+        const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
+          return {
+            type: 'Job Part - Invoiced',
+            job_part_id: jobPart.id,
+            description:
+              "Job Number " +
+              jobPart.job_part_number +
+              " for £" +
+              jobPart.practice_rate +
+              " from " +
+              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
+              " to " +
+              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
+            total: jobPart.total,
+          }
+        })
+
+        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
+
+        return {
+          practice_id: practice.id,
+          items,
+          date_start: this.practiceParams.practice_invoiceable_date_start,
+          date_end: this.practiceParams.practice_invoiceable_date_end,
+          total_amount,
+        }
+      })
+      
+      await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
+        practice_invoice_datas: practiceInvoiceDatas
+        })
+        .then(res => {
+          console.log('res',res)
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Success"
+          })
+          this.chosenPractices = []
+          this.getPractices()
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        })
+
+      console.log('practice invoice datas', practiceInvoiceDatas)
+      await this.$store.commit("practices/TOGGLE_LOADING", false)
+     
+      
+    },
 
 		goToPage (page) {
 			if (page < 1) {
@@ -500,7 +573,9 @@ export default {
 				this.chosenPractices.splice(index, 1)
 			} else {
 				this.chosenPractices.push(item)
-			}
+      }
+      
+      console.log('chosen practices', this.chosenPractices)
 		},
 
 		getPractices () {
@@ -584,10 +659,10 @@ export default {
 		},
 
 		pagechanged (page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			}
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
@@ -596,10 +671,10 @@ export default {
 		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
-			let query = {
-				...this.$router.query,
-				order_by
-      }
+			// let query = {
+			// 	...this.$router.query,
+			// 	order_by
+      // }
       console.log('order_by', order_by)
 			this.practiceParams.order_by = order_by
 			this.getPractices()

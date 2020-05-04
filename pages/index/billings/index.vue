@@ -66,19 +66,19 @@
       <div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
     </template>
 
-    <div
-      class="billing-shield"
+    <!-- <div
+      class="shield"
       v-if="
         $route.name.includes('index-billings-id') ||
           $route.name.includes('index-billings-addinvoice')
       "
       @click="$router.push(`/billings`)"
-    />
+    /> -->
   </div>
 </template>
 <script>
-import debounce from "lodash.debounce";
-import AppTable from "@/components/Base/AppTable";
+import debounce from "lodash.debounce"
+import AppTable from "@/components/Base/AppTable"
 export default {
 	components: {
 		AppTable,
@@ -133,119 +133,119 @@ export default {
 					class: "text-center"
 				}
 			]
-		};
+		}
 	},
 	computed: {
-		loadingPractices() {
-			return this.$store.state.practices.loading_practices;
+		loadingPractices () {
+			return this.$store.state.practices.loading_practices
 		},
-		getAllPractices() {
-			return this.$store.getters["practices/getAllPractices"];
+		getAllPractices () {
+			return this.$store.getters["practices/getAllPractices"]
 		},
-		itemCount() {
-			return this.$store.state.practices.itemCount;
+		itemCount () {
+			return this.$store.state.practices.itemCount
 		},
-		pageCount() {
-			return Math.ceil(this.itemCount / this.params.limit);
+		pageCount () {
+			return Math.ceil (this.itemCount / this.params.limit)
 		},
-		totalPages() {
-			return Math.ceil(this.itemCount / this.params.limit);
+		totalPages () {
+			return Math.ceil (this.itemCount / this.params.limit)
 		},
-		total() {
-			return this.getAllPractices.length;
+		total () {
+			return this.getAllPractices.length
 		}
 	},
 	async asyncData({ app, route, store }) {
 		try {
-			await store.commit("practices/TOGGLE_LOADING", true);
-			let { page = 1, search = "", order_by = [] } = route.query;
-			page = parseInt(page);
-			const createdRoute = route.query;
-			const limit = 10;
-      const offset = page * limit - limit;
+			await store.commit("practices/TOGGLE_LOADING", true)
+			let { page = 1, search = "", order_by = [] } = route.query
+			page = parseInt(page)
+			const createdRoute = route.query
+			const limit = 10
+      const offset = page * limit - limit
       const status = ["Active","Dormant","Suspended"]
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
-					: "created_at:desc";
-			const params = { limit, offset, order_by, status };
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params });
-			const itemCount = response.data.count;
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount);
+					: "created_at:desc"
+			const params = { limit, offset, order_by, status }
+			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params })
+			const itemCount = response.data.count
+			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 
-			response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
-			const practices = response.data.practices;
-			await store.commit("practices/SET_PRACTICES", practices);
-			await store.commit("practices/TOGGLE_LOADING", false);
+			response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
+			const practices = response.data.practices
+			await store.commit("practices/SET_PRACTICES", practices)
+			await store.commit("practices/TOGGLE_LOADING", false)
 			return {
 				// itemCount,
 				// practices
-			};
+			}
 		} catch (err) {
-			// error({ statusCode: 404 });
-			console.log("Get practices error!", err);
+			// error({ statusCode: 404 })
+			console.log("Get practices error!", err)
 		}
   },
   
   watch: {
     search(value) {
-			this.searchSubmit();
+			this.searchSubmit()
     },
 
     $route(to, from) {
-			this.getPractices();
+			this.getPractices()
 		},
   },
 
 	methods: {
 		goToPage(page) {
 			if (page < 1) {
-				return;
+				return
 			}
 
 			if (page > this.pageCount) {
-				return;
+				return
 			}
 
 			const query = {
 				...this.$router.query,
 				page
-			};
+			}
 
 			if (page === 1) {
-				delete query.page;
+				delete query.page
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
+				this.loading = true
 			}
 
-			this.$router.push({ query });
+			this.$router.push({ query })
 		},
 
 		searchSubmit: debounce(function(page, order_by) {
-      let search = this.search;
+      let search = this.search
       
 			let query = {
 				...this.$router.query,
 				search
-			};
+			}
 			if (page === 1) {
-				delete query.page;
+				delete query.page
 			}
 			if (page && page > 1) {
 				query = {
 					...this.$router.query,
 					page,
 					search
-				};
+				}
 			}
 			if (order_by) {
 				query = {
 					...this.$router.query,
 					search,
 					order_by
-				};
+				}
 			}
 			if (page && order_by) {
 				query = {
@@ -253,20 +253,20 @@ export default {
 					page,
 					search,
 					order_by
-				};
+				}
 			}
 
 			if (this.search === "") {
-				delete query.search;
+				delete query.search
 			}
 
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true;
+				this.loading = true
       }
 
-      this.getPractices();
+      this.getPractices()
       
-      this.$router.push({ query });
+      this.$router.push({ query })
       
 		}, 500),
 
@@ -287,64 +287,64 @@ export default {
           offset: this.params.offset,
           status: this.params.status,
           verified: this.verified,
-        });
+        })
       })
 		},
 
 		sortData: function(toSortBy) {
 			if ((toSortBy = this.sortBy)) {
-				this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc";
+				this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc"
 			}
-			this.sortBy = toSortBy;
+			this.sortBy = toSortBy
 		},
 
 		typeStyle(status) {
 			switch (status) {
 				case "Hub":
-					return "bg-red-500 text-white ";
-					break;
+					return "bg-red-500 text-white "
+					break
 				case "Spoke":
-					return "bg-blue-500 text-white";
-					break;
+					return "bg-blue-500 text-white"
+					break
 				case "Stand Alone":
-					return "bg-indigo-600 text-white";
-					break;
+					return "bg-indigo-600 text-white"
+					break
 				default:
-					return;
+					return
 			}
 		},
 
 		hubTypeStyle(hubType) {
 			switch (hubType) {
 				case "Type 1":
-					return "bg-red-500 text-white px-4 py-1";
-					break;
+					return "bg-red-500 text-white px-4 py-1"
+					break
 				case "Type 2":
-					return "bg-purple-500 text-white px-4 py-1";
+					return "bg-purple-500 text-white px-4 py-1"
 				default:
-					return;
+					return
 			}
 		},
 
 		statusStyle(status) {
 			switch (status) {
 				case "Active":
-					return "bg-green text-white lg:px-10 sm:px-2";
-					break;
+					return "bg-green text-white lg:px-10 sm:px-2"
+					break
 				case "Inactive":
-					return "bg-yellow text-black lg:px-10 sm:px-2";
-					break;
+					return "bg-yellow text-black lg:px-10 sm:px-2"
+					break
 				case "Deactivated":
-					return "bg-gray text-black lg:px-10 sm:px-2";
-					break;
+					return "bg-gray text-black lg:px-10 sm:px-2"
+					break
 				case "Suspended":
-					return "bg-red text-white lg:px-8 sm:px-2";
-					break;
+					return "bg-red text-white lg:px-8 sm:px-2"
+					break
 				case "Dormant":
-					return "bg-green-darker text-white lg:px-8 sm:px-2";
-					break;
+					return "bg-green-darker text-white lg:px-8 sm:px-2"
+					break
 				default:
-					return;
+					return
 			}
 		},
 
@@ -352,27 +352,55 @@ export default {
 			const query = {
 				...this.$route.query,
 				page: page || 1
-			};
-			this.params.offset = this.params.limit * (page - 1);
-			this.currentPage = page;
-			this.getPractices();
+			}
+			this.params.offset = this.params.limit * (page - 1)
+			this.currentPage = page
+			this.getPractices()
     },
     
 		sorted(order_by) {
 			// go back to page 1
-			this.currentPage = 1;
+			this.currentPage = 1
 			let query = {
 				...this.$router.query,
 				order_by
-			};
-			this.params.order_by = order_by;
-			this.getPractices();
+			}
+			this.params.order_by = order_by
+			this.getPractices()
 		}
 	}
-};
+}
 </script>
-
 <style>
+.billing-shield {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #333;
+	opacity: 0.5;
+	z-index: 511;
+	cursor: pointer;
+}
+.billing-modal {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin-right: 0%;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	border-left: solid 2px #ffc72c;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
+}
+@media screen and (min-width: 1200px) {
+	.billing-modal {
+		width: 80%;
+	}
+}
 .md\:table-cell:first-child {
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;

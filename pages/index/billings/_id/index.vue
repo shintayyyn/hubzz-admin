@@ -1,136 +1,149 @@
 <template>
-	<div class="billing-modal p-4 md:p-8 shadow-lg">
-		<!-- HEADER -->
-		<div class="flex items-center text-sm text-white py-2">
-			<div @click="$router.go(-1)" class="text-white hover:text-sunglow p-1">
-				<svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-			</div>
-		</div>
-		<!-- HEADER ENDS HERE -->
-		<div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
-			<p class="flex">Practice Name</p>
-			<p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-				<span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
-				<span
-					class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
-					:class="practiceTypeStyle(practice.type)"
-				>{{ practice.type }}</span>
-				<span
-					v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
-					class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
-					:class="practiceTypeStyle(practice.hub_type)"
-				>{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
-			</p>
+  <div class="billing-modal p-4 md:p-8 shadow-lg">
+    <!-- HEADER -->
+    <div class="flex items-center text-sm text-white py-2">
+      <div class="text-white hover:text-sunglow p-1" @click="goBack()">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
+      </div>
+    </div>
+    <!-- HEADER ENDS HERE -->
+    <div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
+      <p class="flex">
+        Practice Name
+      </p>
+      <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
+        <span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
+        <span
+          class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
+          :class="practiceTypeStyle(practice.type)"
+        >{{ practice.type }}</span>
+        <span
+          v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+          class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
+          :class="practiceTypeStyle(practice.hub_type)"
+        >{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
+      </p>
 
-			<p class="flex">Practice Code</p>
-			<p
-				class="flex text-white text-sm p-2 font-semibold"
-			>{{ practice.surgery ? practice.surgery.code : null }}</p>
-			<p class="flex">Address</p>
-			<p class="flex flex-col text-white text-sm p-2 font-semibold">
-				<span
-					v-if="practice.surgery.address && practice.surgery.address.line_1"
-				>{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
-				<span
-					v-if="practice.surgery.address && practice.surgery.address.line_2"
-				>{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
-				<span
-					v-if="practice.surgery.address && practice.surgery.address.line_3"
-				>{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
-			</p>
-		</div>
-		<div class="flex overflow-x-auto my-2">
-			<div class="inline-flex justify-start">
-				<nuxt-link
-					:to="getRoute('hubzz-invoices')"
-					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-					:class="$route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'"
-				>HUBZZ Invoices</nuxt-link>
-				<nuxt-link
-					:to="getRoute('invoices-by-locums')"
-					class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-					:class="$route.path == `/billings/${$route.params.id}/invoices-by-locums`
-              ? 'bg-waterloo hover:bg-gray-500'
-              : 'hover:bg-waterloo'"
-				>Invoices by Locums</nuxt-link>
-			</div>
-		</div>
-		<div
-			class="billing-shield"
-			v-if="$route.name.includes('issue-hubzz-invoice') ||
+      <p class="flex">
+        Practice Code
+      </p>
+      <p class="flex text-white text-sm p-2 font-semibold"> 
+        {{ practice.surgery ? practice.surgery.code : null }}
+      </p>
+      <p class="flex">
+        Address
+      </p>
+      <p class="flex flex-col text-white text-sm p-2 font-semibold">
+        <span
+          v-if="practice.surgery.address && practice.surgery.address.line_1"
+        >{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
+        <span
+          v-if="practice.surgery.address && practice.surgery.address.line_2"
+        >{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
+        <span
+          v-if="practice.surgery.address && practice.surgery.address.line_3"
+        >{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
+      </p>
+    </div>
+    <div class="flex overflow-x-auto my-2">
+      <div class="inline-flex justify-start">
+        <nuxt-link
+          :to="getRoute('hubzz-invoices')"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="$route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
+            ? 'bg-waterloo hover:bg-gray-500'
+            : 'hover:bg-waterloo'"
+        >
+          HUBZZ Invoices
+        </nuxt-link>
+        <nuxt-link
+          :to="getRoute('invoices-by-locums')"
+          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          :class="$route.path == `/billings/${$route.params.id}/invoices-by-locums`
+            ? 'bg-waterloo hover:bg-gray-500'
+            : 'hover:bg-waterloo'"
+        >
+          Invoices by Locums
+        </nuxt-link>
+      </div>
+    </div>
+    <div
+      v-if="$route.name.includes('issue-hubzz-invoice') ||
         $route.name.includes('hubzzInvoiceId') ||
         $route.name.includes('locumInvoiceId')"
-			@click="$router.go(-1)"
-		></div>
-		<nuxt-child />
-	</div>
+      class="billing-shield"
+      @click="$router.go(-1)"
+    />
+    <nuxt-child />
+  </div>
 </template>
 <script>
 export default {
-	data() {
+	data () {
 		return {
 			practice: ""
-		};
-	},
-	async asyncData({ app, route, store }) {
-		try {
-			let response = await app.$axios.$get(
-				`/api/v1/admin/practices/${route.params.id}`
-			);
-			const practice = response.data.practice;
-			return {
-				practice
-			};
-		} catch (err) {
-			console.log("Get specific invoice error!", err);
 		}
 	},
-	created() {
-		this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`);
-	},
 	computed: {
-		getRoute() {
+		getRoute () {
 			return tab => {
 				if (!tab) {
-					tab = "";
+					tab = ""
 				}
 				const query = {
 					...this.$route.query
-				};
-				delete query.order_by;
-				delete query.status;
+				}
+				delete query.order_by
+				delete query.status
 				return {
 					path: tab
 						? `/billings/${this.$route.params.id}/${tab}`
 						: `/billings/${this.$route.params.id}`,
 					query
-				};
-			};
-		}
-	},
-	methods: {
-		practiceTypeStyle(type) {
-			switch (type) {
-				case "Stand Alone":
-					return "bg-indigo-500 text-white lg:px-4 sm:px-2";
-					break;
-				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2";
-					break;
-				case "Spoke":
-					return "bg-blue-500 text-white lg:px-8 sm:px-2";
-					break;
-				case "Type 2":
-					return "bg-purple-500 text-white lg:px-8 sm:px-2";
-					break;
-				default:
-					return;
+				}
 			}
 		}
+	},
+	async asyncData ({ app, route }) {
+		try {
+			let response = await app.$axios.$get(
+				`/api/v1/admin/practices/${route.params.id}`
+			)
+			const practice = response.data.practice
+			return {
+				practice
+			}
+		} catch (err) {
+			console.log("Get specific invoice error!", err)
+		}
+	},
+	created () {
+		this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`)
+	},
+	methods: {
+		practiceTypeStyle (type) {
+			switch (type) {
+				case "Stand Alone":
+					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
+				case "Hub":
+					return "bg-red-500 text-white lg:px-8 sm:px-2"
+				case "Spoke":
+					return "bg-blue-500 text-white lg:px-8 sm:px-2"
+				case "Type 2":
+					return "bg-purple-500 text-white lg:px-8 sm:px-2"
+				default:
+					return
+			}
+    },
+    goBack (){ 
+      if(this.$route.path.includes('bulk-billing')){
+        this.$router.push(`/billings/bulk-billing`)
+      }else{
+        this.$router.push(`/billings`)
+      }
+    },
 	}
-};
+}
 </script>
 <style>
 .billing-shield {

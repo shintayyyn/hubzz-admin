@@ -43,8 +43,22 @@
                 {{ slotProps.item.invoice_status }}
               </div>
             </template>
+            <template v-slot:actions="slotProps">
+              <div class="flex justify-center">
+                <div
+                  class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
+                  @click.prevent.stop="viewJobPart(slotProps.item.id)"
+                >
+                  View
+                </div>
+              </div>
+            </template>
           </AppTable>
-          <AppButton :label="'Confirm'" @click="emitChosenJobParts()" />
+          <AppButton 
+            :label="'Confirm'"
+            :disabled="(chosenJobParts.length + disputedJobParts.length) < 1 ? true : false " 
+            @click="emitChosenJobParts()" 
+          />
         </template>
         <template v-if="jobPartCount === 0">
           <p class="text-gray-500 py-2 text-center"> 
@@ -59,11 +73,11 @@
 import AppTable from "@/components/Base/AppTable"
 import AppButton from "@/components/Base/AppButton"
 export default {
-	props: ["filter", "showDisputed"],
 	components: {
 		AppButton,
 		AppTable
 	},
+	props: ["filter", "showDisputed"],
 	data () {
 		return {
 			// jobPartCount: 0,
@@ -124,7 +138,14 @@ export default {
 					class: "text-center",
 					slotName: "status_slot",
 					sortable: true
-				}
+        },
+        {
+          name: "Actions",
+          slot: true,
+          slotName: "actions",
+          dataIndex: "",
+          class: "text-center"
+        }
 			]
 		}
 	},
@@ -203,6 +224,10 @@ export default {
 		}
 	},
 	methods: {
+    viewJobPart (jobPartId) {
+      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices/issue-hubzz-invoice/${jobPartId}`)
+    },
+
 		toggleCheck (item) {
 			const index = this.chosenJobParts.findIndex(jobPart => {
 				return jobPart.id === item.id
@@ -213,8 +238,9 @@ export default {
 			} else {
 				this.chosenJobParts.push(item)
 			}
-		},
-		emitChosenJobParts (event) {
+    },
+    
+		emitChosenJobParts () {
 			if (this.showDisputed === false) {
 				this.$emit("chosenJobParts", this.chosenJobParts, false)
 			} else if (this.showDisputed === true) {

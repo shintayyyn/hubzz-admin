@@ -77,6 +77,10 @@
             url: '/content-management/job-locum-users',
           },
           {
+            title: 'Job Users',
+            url: '/content-management/job-users',
+          },
+          {
             title: 'Platform Jobs',
             url: '/content-management/platform-jobs',
           },

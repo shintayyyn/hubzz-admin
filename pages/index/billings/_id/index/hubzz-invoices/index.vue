@@ -22,7 +22,7 @@
       @sorted="sorted"
     >
       <template v-slot:total_amount_slot="slotProps">
-        <div>{{ '£ '+slotProps.item.total_amount }}</div>
+        <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
       </template>
 
       <template v-slot:period="slotProps">

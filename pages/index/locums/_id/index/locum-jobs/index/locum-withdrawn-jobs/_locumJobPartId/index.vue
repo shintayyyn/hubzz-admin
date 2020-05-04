@@ -5,7 +5,7 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
     </div>
-     <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
+    <JobPartModal :specificJobPart="specificJobPart" :isNuxtChild="true"/>
   </div>
 </template>
 <script>
@@ -14,13 +14,13 @@ export default {
   components:{
     JobPartModal
   },
-  data(){
+  data (){
     return{
       specificJobPart: '',
       locumUserId:''
     }
   },
-  async asyncData({ app, store, route, error }){
+  async asyncData ({ app, store, route, error }){
     try{  
       let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.locumJobPartId}`)
       const specificJobPart = response.data.job_part

@@ -1,39 +1,39 @@
 <template>
-	<div class="hubzz-invoice-modal">
-		<div class="items-center text-sm text-white py-2 m-6">
-			<div class="p-1 mb-2">
-				<svgicon
-					@click="goBack()"
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="fill-current text-white hover:text-sunglow cursor-pointer"
-				/>
-			</div>
-			<div>
-				<HubzzInvoice
-					:forViewing="true"
-					:practice="practice"
-					:practiceInvoice="practiceInvoice"
-					:invoiceItems="invoiceItems"
-					:disputedItems="disputedItems"
-					:debitItems="debitItems"
-					:creditItems="creditItems"
-					:dateStart="practiceInvoice.date_start"
-					:dateEnd="practiceInvoice.date_end"
-					:byLocum="false"
-				/>
-			</div>
-		</div>
-	</div>
+  <div class="hubzz-invoice-modal">
+    <div class="items-center text-sm text-white py-2 m-6">
+      <div class="p-1 mb-2">
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          width="32"
+          class="fill-current text-white hover:text-sunglow cursor-pointer"
+          @click="goBack()"
+        />
+      </div>
+      <div>
+        <HubzzInvoice
+          :forViewing="true"
+          :practice="practice"
+          :practiceInvoice="practiceInvoice"
+          :invoiceItems="invoiceItems"
+          :disputedItems="disputedItems"
+          :debitItems="debitItems"
+          :creditItems="creditItems"
+          :dateStart="practiceInvoice.date_start"
+          :dateEnd="practiceInvoice.date_end"
+          :byLocum="false"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 <script>
-import HubzzInvoice from "@/components/Billings/HubzzInvoice";
+import HubzzInvoice from "@/components/Billings/HubzzInvoice"
 export default {
 	components: {
 		HubzzInvoice
 	},
-	data() {
+	data () {
 		return {
 			practiceInvoice: "",
 			practice: "",
@@ -41,60 +41,55 @@ export default {
 			disputedItems: [],
 			debitItems: [],
 			creditItems: []
-		};
+		}
 	},
-	async asyncData({ app, route }) {
+	async asyncData ({ app, route }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`,
 				{
-					viewing_practice_id: route.params.id
+          viewing_practice_id: route.params.id,
+          with_relations: true,
 				}
-			);
-			const practiceInvoice = response.data.practice_invoice;
-			console.log("practice invoice", practiceInvoice);
+			)
+			const practiceInvoice = response.data.practice_invoice
 
 			response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
-			);
-			const practice = response.data.practice;
-			const practiceInvoiceItems = practiceInvoice.practice_invoice_items;
-
-			let invoiceItems = [];
-			let disputedItems = [];
-			let debitItems = [];
-			let creditItems = [];
+			)
+			const practice = response.data.practice
+      const practiceInvoiceItems = practiceInvoice.practice_invoice_items
+			let invoiceItems = []
+			let disputedItems = []
+			let debitItems = []
+			let creditItems = []
 
 			for (let i = 0; i < practiceInvoiceItems.length; i++) {
+      
 				const newItem = {
 					job_part_id: practiceInvoiceItems[i].id,
 					description: practiceInvoiceItems[i].description,
-					total: practiceInvoiceItems[i].total.toFixed(2)
-				};
+          total: practiceInvoiceItems[i].total.toFixed(2),
+          total_hours: practiceInvoiceItems[i].job_part ? (practiceInvoiceItems[i].job_part.final_hours)/60 : null
+				}
 				if (
 					practiceInvoiceItems[i].type.includes("Job Part - Approved") ||
 					practiceInvoiceItems[i].type.includes("Job Part - Issued") ||
 					practiceInvoiceItems[i].type.includes("Job Part - Invoiced")
 				) {
-					console.log("normal invoice item has been pushed");
-					newItem.id = invoiceItems.length + 1;
-					invoiceItems.push(newItem);
+					newItem.id = invoiceItems.length + 1
+					invoiceItems.push(newItem)
 				} else if (
 					practiceInvoiceItems[i].type.includes("Job Part - Disputed")
 				) {
-					console.log("disputed invoice item has been pushed");
-					newItem.id = disputedItems.length + 1;
-					disputedItems.push(newItem);
+					newItem.id = disputedItems.length + 1
+					disputedItems.push(newItem)
 				} else if (practiceInvoiceItems[i].type.includes("Debit")) {
-					console.log("debit invoice item has been pushed");
-					newItem.id = debitItems.length + 1;
-					debitItems.push(newItem);
+					newItem.id = debitItems.length + 1
+					debitItems.push(newItem)
 				} else if (practiceInvoiceItems[i].type.includes("Credit")) {
-					console.log("credit invoice item has been pushed");
-					newItem.id = creditItems.length + 1;
-					creditItems.push(newItem);
-				} else {
-					console.log("it didnt work lol");
+					newItem.id = creditItems.length + 1
+					creditItems.push(newItem)
 				}
 			}
 			return {
@@ -104,23 +99,23 @@ export default {
 				disputedItems,
 				debitItems,
 				creditItems
-			};
+			}
 		} catch (err) {
-			console.log("get invoice error", err);
+			console.log("get invoice error", err)
 		}
 	},
 	methods: {
-		goBack() {
+		goBack () {
 			const query = {
 				...this.$route.query
-			};
+			}
 			this.$router.push({
 				path: `/billings/${this.$route.params.id}/hubzz-invoices`,
 				query
-			});
+			})
 		}
 	}
-};
+}
 </script>
 
 <style>

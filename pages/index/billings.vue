@@ -12,6 +12,11 @@
         @click="goToTab()"
       />
     </div>
+    <div
+      v-if="$route.name.includes('index-billings-id')"
+      class="shield"
+      @click="$router.push({ path: `/billings`, query: $route.query })"
+    />
     <nuxt-child />
   </div>
 </template>
