@@ -90,14 +90,14 @@ export default {
         },
         {
 					name: "Locum Billing Status",
-					dataIndex: "issued_at",
-					// class: "text-center localDate",
+					dataIndex: "status",
+					class: "text-center",
 					sortable: "true"
         },
         {
-					name: "HUBZZ Billing Statuss",
-					dataIndex: "issued_at",
-					// class: "text-center localDate",
+					name: "HUBZZ Billing Status",
+					dataIndex: "practice_invoice_item_status",
+					class: "text-center",
 					sortable: "true"
         },
 				// {
@@ -125,13 +125,13 @@ export default {
       } = route.query
 
       const practice_id = route.params.id
-      // const status = ["Issued", "Disputed", "Paid"]
+      const status = ["Issued", "Disputed", "Approved", "Paid"]
 			const limit = 10
 			const offset = page * limit - limit
 
 			let params = {
         practice_id,
-        // status,
+        status,
 				limit,
 				offset,
 				order_by

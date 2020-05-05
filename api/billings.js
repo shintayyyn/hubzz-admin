@@ -1,4 +1,4 @@
-export function fetchHubzzInvoices(axios, payload) {
+export function fetchHubzzInvoices (axios, payload) {
   // this is called practice invoices  in API
   let params = {}
   payload.id ? params.id = payload.id : null
@@ -13,7 +13,7 @@ export function fetchHubzzInvoices(axios, payload) {
   return axios.$get(`/api/v1/admin/practice-invoices${payload.countOnly ? `/count`:''}`, { params:params })
 }
 
-export function fetchPracticeInvoices(axios, payload) {
+export function fetchPracticeInvoices (axios, payload) {
   // this is called locum invoices in API
   let params = {}
   payload.practice_id ? params.practice_id = payload.practice_id : null

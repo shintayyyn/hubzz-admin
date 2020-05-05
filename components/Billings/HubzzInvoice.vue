@@ -210,11 +210,11 @@
                 <p
                   class="text-left px-2 py-1"
                 >
-                  {{ item.total_hours ? (item.total_hours).toFixed(2) + " Hours " : "N/A" }}
+                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
                 </p>
               </div>
               <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-1/6' : 'w-full'">
-                {{ item.total_hours ? (item.total_hours).toFixed(2) + " Hours " : "N/A" }}
+                {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
               </div>
               <!-- AMOUNT TOTAL -->
               <div v-if="!byLocum" class="w-1/6 text-sm mx-1">
