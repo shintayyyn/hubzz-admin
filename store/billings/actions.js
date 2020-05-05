@@ -10,7 +10,7 @@ export default{
     return commit ('SET_HUBZZ_INVOICES', response.data.practice_invoices)
   },
 
-  async fetchPracticeInvoices({ commit }, payload){
+  async fetchPracticeInvoices ({ commit }, payload){
     commit('TOGGLE_LOADING', true)
     const response = await billingApi.fetchPracticeInvoices(this.$axios, payload)
     commit('TOGGLE_LOADING', false)

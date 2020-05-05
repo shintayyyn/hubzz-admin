@@ -1,5 +1,5 @@
 <template>
-  <div class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg" ref="modalContainer">
+  <div ref="modalContainer" class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg">
     <div class="flex items-center text-sm text-white py-2">
       <nuxt-link 
         :to="{path: `/billings/${$route.params.id}/hubzz-invoices`, query: $route.query}">
@@ -36,7 +36,7 @@
             />
 
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
-              <input type="checkbox" id="disputed" value="true" v-model="showDisputed" />
+              <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
               <label for="disputed">Show Disputed Invoices</label>
             </div>
           </div>
@@ -71,6 +71,11 @@
           :showDisputed="showDisputed"
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"
+        />
+        <div
+          v-if="$route.name.includes('approvedJobPartId')"
+          class="issue-hubzz-invoice-shield"
+          @click="chooseJobPartsModal = false"
         />
         <nuxt-child />
       </div>
@@ -114,18 +119,6 @@ export default {
 		}
 	},
 
-	created () {
-		if (this.showDisputed) {
-			this.toFilter.status = ""
-			this.toFilter.invoice_status = "Disputed"
-			this.toFilter.locum_invoiceable = null
-		} else {
-			this.toFilter.status = "Approved"
-			this.toFilter.invoice_status = null
-			this.toFilter.locum_invoiceable = true
-		}
-	},
-
 	async asyncData ({ app, route }) {
 		try {
 			let response = await app.$axios.$get(
@@ -139,20 +132,29 @@ export default {
 			console.log("get practice error", err)
 		}
 	},
+
+	created () {
+		if (this.showDisputed) {
+			this.toFilter.status = ""
+			this.toFilter.invoice_status = ["Disputed", "Invoiced"]
+			this.toFilter.locum_invoiceable = null
+		} else {
+			this.toFilter.status = "Approved"
+			this.toFilter.invoice_status = null
+			this.toFilter.locum_invoiceable = true
+		}
+	},
 	methods: {
 		scrollToTop () {
 			this.$nextTick(() => {
 				this.$refs.modalContainer.scrollTop = 0
 			})
 		},
-		toProcessInvoiceItems (chosenJobParts, isDisputed) {
+		toProcessInvoiceItems (chosenJobParts) {
 			this.chooseJobPartsModal = false
+      this.disputedItems = []
+      this.invoiceItems = []
 
-			if (isDisputed == true) {
-				this.disputedItems = []
-			} else {
-				this.invoiceItems = []
-			}
 			for (let i = 0; i < chosenJobParts.length; i++) {
         console.log("chosenJobPart", chosenJobParts[i])
         const roundedHours = Math.floor((chosenJobParts[i].final_hours)/60)
@@ -161,7 +163,7 @@ export default {
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
           job_part_id: chosenJobParts[i].id,
-          total_hours: (chosenJobParts[i].final_hours)/60,
+          total_hours: parseFloat((chosenJobParts[i].final_hours)/60).toFixed(2),
 					description:
 						chosenJobParts[i].job_part_number +
 						" for £" +
@@ -180,12 +182,13 @@ export default {
 					).toFixed(2)
 				}
 
-				if (isDisputed == true) {
-					newItem.id = this.disputedItems.length + 1
-					this.disputedItems.push(newItem)
-				} else {
-					newItem.id = this.invoiceItems.length + 1
+				if (chosenJobParts[i].invoice_status === "Invoiced") {
+          newItem.id = this.invoiceItems.length + 1
 					this.invoiceItems.push(newItem)
+        } 
+        if (chosenJobParts[i].invoice_status === "Disputed") {
+          newItem.id = this.disputedItems.length + 1
+					this.disputedItems.push(newItem)
 				}
 			}
 		},

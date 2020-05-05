@@ -8,42 +8,61 @@
     </div>
     <!-- HEADER ENDS HERE -->
     <div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
-      <p class="flex">
-        Practice Name
-      </p>
-      <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-        <span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
-        <span
-          class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
-          :class="practiceTypeStyle(practice.type)"
-        >{{ practice.type }}</span>
-        <span
-          v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
-          class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
-          :class="practiceTypeStyle(practice.hub_type)"
-        >{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
-      </p>
+      <div class="flex flex-wrap overflow-hidden">
+        <div class="w-1/2 overflow-hidden">
+          <p class="flex">
+            Practice Name
+          </p>
+          <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
+            <span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
+            <span
+              class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
+              :class="practiceTypeStyle(practice.type)"
+            >{{ practice.type }}</span>
+            <span
+              v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+              class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
+              :class="practiceTypeStyle(practice.hub_type)"
+            >{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
+          </p>
 
-      <p class="flex">
-        Practice Code
-      </p>
-      <p class="flex text-white text-sm p-2 font-semibold"> 
-        {{ practice.surgery ? practice.surgery.code : null }}
-      </p>
-      <p class="flex">
-        Address
-      </p>
-      <p class="flex flex-col text-white text-sm p-2 font-semibold">
-        <span
-          v-if="practice.surgery.address && practice.surgery.address.line_1"
-        >{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
-        <span
-          v-if="practice.surgery.address && practice.surgery.address.line_2"
-        >{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
-        <span
-          v-if="practice.surgery.address && practice.surgery.address.line_3"
-        >{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
-      </p>
+          <p class="flex">
+            Practice Code
+          </p>
+          <p class="flex text-white text-sm p-2 font-semibold"> 
+            {{ practice.surgery ? practice.surgery.code : null }}
+          </p>
+          <p class="flex">
+            Address
+          </p>
+          <p class="flex flex-col text-white text-sm p-2 font-semibold">
+            <span
+              v-if="practice.surgery.address && practice.surgery.address.line_1"
+            >{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
+            <span
+              v-if="practice.surgery.address && practice.surgery.address.line_2"
+            >{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
+            <span
+              v-if="practice.surgery.address && practice.surgery.address.line_3"
+            >{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
+          </p>
+        </div>
+
+        <div class="w-1/2 overflow-hidden">
+          <p class="flex">
+            Outstanding Balance
+          </p>
+          <p class="flex text-white text-sm p-2 font-semibold">
+            {{ outstandingBalance ? '£ ' + outstandingBalance : 'N/A' }}
+          </p>
+          <p class="flex">
+            Latest Billing Issued at
+          </p>
+          <p class="flex text-white text-sm p-2 font-semibold">
+            {{ latestInvoice && latestInvoice.issued_at ? $moment(latestInvoice.issued_at, 'YYYY-MM-DDTHH:mm:ss.SSSZ').utc().format('DD/MM/YYYY | HH:mm:ss') : 'N/A' }}
+          </p>
+        </div>
+      </div>
     </div>
     <div class="flex overflow-x-auto my-2">
       <div class="inline-flex justify-start">
@@ -81,7 +100,9 @@
 export default {
 	data () {
 		return {
-			practice: ""
+      practice: "",
+      outstandingBalance: "",
+      latestInvoice: "",
 		}
 	},
 	computed: {
@@ -109,9 +130,21 @@ export default {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
-			const practice = response.data.practice
+      const practice = response.data.practice
+      const params = {
+        practice_id: practice.id
+      }
+      response = await app.$axios.$get(`/api/v1/admin/practice-invoices/outstanding-balance`,{
+        params
+      })
+      const outstandingBalance = response.data.outstanding_balance
+      const latestInvoice = response.data.latest_billing
+      console.log('response', response)
+      // const outstandingBalance = 
 			return {
-				practice
+        practice,
+        outstandingBalance,
+        latestInvoice,
 			}
 		} catch (err) {
 			console.log("Get specific invoice error!", err)

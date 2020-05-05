@@ -100,6 +100,11 @@ export default {
 					class: "text-center",
 					slotName: "checker",
 					eventName: "checkClicked"
+        },
+        {
+					name: "Invoice Number",
+					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
+					sortable: true
 				},
 				{
 					name: "Job Part Number",
@@ -159,7 +164,7 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: "date_end:asc"
+				: ["date_end:asc"]
 		let params = {
 			...this.filter,
 			limit,
@@ -172,14 +177,17 @@ export default {
 			params = {
 				completed_at_date_start: this.filter.approved_at_date_start,
 				completed_at_date_end: this.filter.approved_at_date_end,
-				invoice_status: ["Disputed", "Issued"],
+				invoice_status: ["Disputed", "Invoiced"],
 				job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,
-				order_by
-			}
+				order_by,
+      }
+      
+      this.params = params
 			console.log("disputed params", params)
-		}
+    }
+    
     let jobPartCount,jobParts = ""
     
 		await this.$axios
