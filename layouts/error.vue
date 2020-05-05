@@ -1,8 +1,6 @@
 <template>
   <div class="error-container overflow-auto">
-
     <div class="my-32 md:m-32 px-8">
-
       <div class="pb-2">
         <img src="~/assets/images/hubzz-logo.png">
       </div>
@@ -16,9 +14,7 @@
       </h1>
 
       <nuxt-link class="text-white underline text-sm" to="/">Go Home</nuxt-link>
-
     </div>
-
   </div>
 </template>
 
