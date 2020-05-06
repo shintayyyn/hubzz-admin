@@ -209,9 +209,14 @@ export default {
     async goTo (item) {
       console.log('notif item', item)
       console.log('notif name',item.notification_type.name)
+      console.log('notif domain', item.notification_type.domain)
       console.log('notif payload type', item.payload_type)
       console.log('notif payload', item.payload)
-      // if ()
+      if (item.notification_type.domain === 'Practice') {
+        if(item.url.includes('sessions')){
+          this.$router.push(`/practices/${item.user.practice.id}/practice-sessions/${item.payload.id}`)
+        }
+      }
     },
 		toggleSideBar () {
 			this.$store.commit("TOGGLE_SIDEBAR", true)
