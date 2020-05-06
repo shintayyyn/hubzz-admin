@@ -1,81 +1,81 @@
 <template>
-	<div class="practice-modal">
-		<div @click="goBack()" class="cursor-pointer m-6">
-			<svgicon
-				name="arrow-left-solid"
-				height="32"
-				width="32"
-				class="text-white hover:text-sunglow fill-current"
-			/>
-		</div>
-		<PracticeSessionModal :job="job" />
-	</div>
+  <div class="practice-modal">
+    <div @click="goBack()" class="cursor-pointer m-6">
+      <svgicon
+        name="arrow-left-solid"
+        height="32"
+        width="32"
+        class="text-white hover:text-sunglow fill-current"
+      />
+    </div>
+    <!-- <PracticeSessionModal :job="job" /> -->
+  </div>
 </template>
 <script>
-import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal";
+import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
 export default {
 	components: {
-		PracticeSessionModal
+		LocumDetailJobModal,
 	},
-	data() {
+	data () {
 		return {
 			job: ""
-		};
+		}
 	},
-	async asyncData({ app, store, route, error }) {
+	async asyncData ({ app, store, route, error }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/jobs/${route.params.specificJobId}`
-			);
-			const job = response.data.job;
+			)
+			const job = response.data.job
 
-			store.commit("jobs/TOGGLE_LOADING", false);
+			store.commit("jobs/TOGGLE_LOADING", false)
 			return {
 				job
-			};
+			}
 		} catch (err) {
-			error({ statusCode: 404 });
-			console.log("get job error!", err);
+			error({ statusCode: 404 })
+			console.log("get job error!", err)
 		}
 	},
 	methods: {
-		goBack() {
+		goBack () {
 			const query = {
 				...this.$route.query
-			};
+			}
 			if (this.$route.name.includes("locum-jobs")) {
 				this.$router.push({
 					path: `/locums/${this.$route.params.id}/locum-jobs`,
 					query
-				});
+				})
 			}
 			if (this.$route.name.includes("practice-sessions")) {
 				this.$router.push({
 					path: `/practices/${this.$route.params.id}/practice-sessions`,
 					query
-				});
+				})
 			}
 		}
 	}
-};
+}
 </script>
 <style>
 /* .practice-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #FFC72C;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
+  position: fixed
+  top: 0
+  right: 0
+  margin-right: 0%
+  width: 100%
+  height: 100%
+  overflow: auto
+  border-left: solid 2px #FFC72C
+  transition: all 0.3s ease-in-out
+  background-color:#505561
+  z-index: 512
 }
 @media screen and (min-width: 1200px) {
   .practice-modal {
-    width: 80%;
+    width: 80%
   }
 } */
 </style>

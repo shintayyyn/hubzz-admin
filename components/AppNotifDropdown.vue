@@ -62,22 +62,28 @@
 </template>
 <script>
 export default {
+  props: {
+    notifications: {
+        type: Object,
+        default: () => null,
+      }
+  },
 	data () {
 		return {
-			notifications: [
-				{
-					title: "Sample title 1",
-					message: "This is the message",
-					seen: false,
-					date: "03/04/2020"
-				},
-				{
-					title: "Sample title 2",
-					message: "This is the message",
-					seen: true,
-					date: "03/04/2020"
-				}
-			],
+			// notifications: [
+			// 	{
+			// 		title: "Sample title 1",
+			// 		message: "This is the message",
+			// 		seen: false,
+			// 		date: "03/04/2020"
+			// 	},
+			// 	{
+			// 		title: "Sample title 2",
+			// 		message: "This is the message",
+			// 		seen: true,
+			// 		date: "03/04/2020"
+			// 	}
+			// ],
 			showAll: false
 		}
 	},
