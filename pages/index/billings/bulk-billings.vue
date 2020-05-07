@@ -142,7 +142,7 @@
         Input Job Part Approval / Disputed Dates to see Billable Practices
       </div>
       <div v-else class="mt-2 w-full text-center text-white">
-        There are no available Verified Practices invoiceable.
+        No practice to invoice found
       </div>
     </template>
     <div
