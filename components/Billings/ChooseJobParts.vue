@@ -209,9 +209,9 @@ export default {
           isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
           tag_status: item.terminated ? "Terminated" : item.status,
           date_time_start: `${this.$moment(item.date_start)
-            .format("DD-MM-YYYY")} | ${item.time_start}`,
+            .format("DD/MM/YYYY")} | ${item.time_start}`,
           date_time_end: `${this.$moment(item.date_end)
-            .format("DD-MM-YYYY")} | ${item.time_end}`
+            .format("DD/MM/YYYY")} | ${item.time_end}`
         }
       })
 		})
