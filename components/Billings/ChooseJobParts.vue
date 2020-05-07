@@ -175,9 +175,11 @@ export default {
 		console.log("params", params)
 		if (this.showDisputed) {
 			params = {
-				completed_at_date_start: this.filter.approved_at_date_start,
-				completed_at_date_end: this.filter.approved_at_date_end,
-				invoice_status: ["Disputed", "Invoiced"],
+				practice_billable_date_start: this.filter.approved_at_date_start,
+				practice_billable_date_end: this.filter.approved_at_date_end,
+        invoice_status: ["Disputed", "Invoiced"],
+        practice_invoiceable: true,
+        practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,
@@ -194,7 +196,9 @@ export default {
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count
-			})
+      })
+    
+    console.log('job part count', jobPartCount)
 
 		await this.$store.commit(
 			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
@@ -258,16 +262,16 @@ export default {
     
 		getJobParts (params) {
       console.log('get job parts params', params)
-      console.log('params being used', {
-				...this.params,
-				limit: this.params.limit,
-				search: this.search,
-				order_by: this.params.order_by,
-				offset: params.offset,
-				forBilling: true
-			})
+      // console.log('params being used', {
+			// 	...this.params,
+			// 	limit: this.params.limit,
+			// 	search: this.search,
+			// 	order_by: this.params.order_by,
+			// 	offset: params.offset,
+			// 	forBilling: true
+			// })
 			this.$store.dispatch("jobs/fetchJobParts", {
-				...this.params,
+				...params,
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,
