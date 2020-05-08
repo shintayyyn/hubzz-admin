@@ -15,6 +15,12 @@
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
           />
+          <AppDate
+            v-model="dueDate"
+            class="md:mx-2 text-white"
+            :name="'due_date'"
+            :label="'Due Date'"
+          />
           <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
             <input 
               id="disputed" 
@@ -174,8 +180,8 @@ export default {
 			// for app table
 			currentPage: 1,
 			search: "",
-      showDisputedJobParts: false,
       chosenPractices:[],
+      dueDate: '',
 			// jobPartsParams: {
 			// 	approved_at_date_start: null,
 			// 	approved_at_date_end: null,
@@ -301,100 +307,6 @@ export default {
 	// },
 
 	methods: {
-		async getJobParts () {
-			await this.$store.commit("jobs/TOGGLE_LOADING", true)
-			if (this.showDisputedJobParts) {
-				this.jobPartsParams.status = ""
-				this.jobPartsParams.invoice_status = "Disputed"
-				this.jobPartsParams.locum_invoiceable = null
-			} else {
-				this.jobPartsParams.status = "Approved"
-				this.jobPartsParams.invoice_status = null
-				this.jobPartsParams.locum_invoiceable = true
-			}
-			let { page = 1, order_by = [] } = this.$route.query
-
-			page = parseInt(page)
-
-			const createdRoute = this.$route.query
-			const limit = 10
-			const offset = page * limit - limit
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "date_end:asc"
-			let params = {
-				...this.filter,
-				limit,
-				offset,
-				order_by
-			}
-
-			if (this.showDisputedJobParts) {
-				params = {
-					completed_at_date_start: this.jobPartsParams.approved_at_date_start,
-					completed_at_date_end: this.jobPartsParams.approved_at_date_end,
-					invoice_status: ["Disputed", "Issued"],
-					limit,
-					offset,
-					order_by
-				}
-				console.log("disputed params", params)
-			}
-
-			let jobPartCount,
-				jobParts = ""
-
-			await this.$axios
-				.$get(`/api/v1/admin/job-parts/count`, { params })
-				.then(res => {
-					jobPartCount = res.data.count
-				})
-
-			await this.$store.commit(
-				"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
-				jobPartCount
-			)
-
-			await this.$axios
-				.$get(`/api/v1/admin/job-parts`, { params })
-				.then(res => {
-					console.log("res", res)
-					jobParts = res.data.job_parts.map(item => {
-						return {
-							...item,
-							isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
-							tag_status: item.terminated ? "Terminated" : item.status,
-							date_time_start: `${this.$moment(item.date_start).format(
-								"DD-MM-YYYY"
-							)} | ${item.time_start}`,
-							date_time_end: `${this.$moment(item.date_end).format(
-								"DD-MM-YYYY"
-							)} | ${item.time_end}`
-						}
-					})
-				})
-
-			console.log("job parts", jobParts)
-
-			// practiceIds = await jobParts.map(jobPart => {
-			// 	return jobPart.practice_id
-			// })
-
-			this.practiceParams.id = await jobParts.reduce((accumulator, item) => {
-        console.log('practice ids', item.practice_id)
-				return accumulator.includes(item.practice_id)
-					? accumulator
-					: [...accumulator, item.practice_id]
-			}, [])
-
-			await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
-
-			await this.$store.commit("jobs/TOGGLE_LOADING", false)
-
-			await this.getBillablePractices()
-		},
-
 		async getBillablePractices () {
 			await this.$store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = this.$route.query
@@ -437,6 +349,7 @@ export default {
     
     async createBulkBilling () {
       await this.$store.commit("practices/TOGGLE_LOADING", true)
+      console.log('create')
       const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
         const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
           return {
@@ -463,11 +376,12 @@ export default {
           date_start: this.practiceParams.practice_invoiceable_date_start,
           date_end: this.practiceParams.practice_invoiceable_date_end,
           total_amount,
+          due_date: this.dueDate
         }
       })
       
       await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
-        practice_invoice_datas: practiceInvoiceDatas
+          practice_invoice_datas: practiceInvoiceDatas,
         })
         .then(res => {
           console.log('res',res)
@@ -487,10 +401,13 @@ export default {
           })
         })
 
-      console.log('practice invoice datas', practiceInvoiceDatas)
-      await this.$store.commit("practices/TOGGLE_LOADING", false)
-     
       
+      this.practiceParams.practice_invoiceable_date_start =  null
+      this.practiceParams.practice_invoiceable_date_end = null
+      this.search = ""
+      this.chosenPractices = []
+      this.dueDate = ''
+      await this.$store.commit("practices/TOGGLE_LOADING", false)
     },
 
 		goToPage (page) {

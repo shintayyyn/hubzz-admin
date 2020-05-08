@@ -40,7 +40,7 @@
                 class="rounded-full text-center px-4 py-1 w-32"
                 :class="statusStyle(slotProps.item.invoice_status)"
               >
-                {{ slotProps.item.invoice_status }}
+                {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }}
               </div>
             </template>
             <template v-slot:actions="slotProps">
@@ -307,7 +307,7 @@ export default {
 				case "Disputed":
 					return "bg-red-500 text-white "
 				case "Invoiced":
-					return "bg-blue-500 text-white"
+          return "bg-blue-500 text-white"
 				case "To Be Invoiced":
 					return "bg-indigo-600 text-white"
 				default:
