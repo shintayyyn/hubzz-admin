@@ -83,7 +83,7 @@ export default {
 	components: {
 		AppTable,
 	},
-	data() {
+	data () {
 		return {
 			// for app table
 			currentPage: 1,
@@ -155,7 +155,7 @@ export default {
 			return this.getAllPractices.length
 		}
 	},
-	async asyncData({ app, route, store }) {
+	async asyncData ({ app, route, store }) {
 		try {
 			await store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = route.query

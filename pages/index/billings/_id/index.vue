@@ -59,7 +59,7 @@
             Latest Billing Issued at
           </p>
           <p class="flex text-white text-sm p-2 font-semibold">
-            {{ latestInvoice && latestInvoice.issued_at ? $moment(latestInvoice.issued_at, 'YYYY-MM-DDTHH:mm:ss.SSSZ').utc().format('DD/MM/YYYY | HH:mm:ss') : 'N/A' }}
+            {{ latestInvoice && latestInvoice.date_created ? $moment(latestInvoice.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm:ss A') : 'N/A' }}
           </p>
         </div>
       </div>
@@ -151,7 +151,11 @@ export default {
 		}
 	},
 	created () {
-		this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`)
+    console.log('route name', this.$route.name)
+    if (!this.$route.name.includes('hubzzInvoiceId')){
+      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`)
+    }
+		
 	},
 	methods: {
 		practiceTypeStyle (type) {
