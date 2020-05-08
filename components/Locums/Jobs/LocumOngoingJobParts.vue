@@ -253,6 +253,7 @@ export default {
 					job_title_includes: this.job_title,
 					offset: 0,
 					limit: this.perPage,
+					order_by: "date_created:desc",
 				}
 			})
 			this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", response.data.job_parts)

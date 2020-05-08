@@ -313,6 +313,7 @@ export default {
 					title_includes: this.job_title,
 					offset: 0,
 					limit: this.perPage,
+					order_by: "date_created:desc",
 				}
 			})
 			this.$store.commit("jobs/SET_PRACTICE_ALLOCATED_SESSIONS", response.data.jobs)
