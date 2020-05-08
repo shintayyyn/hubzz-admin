@@ -43,6 +43,16 @@
                 {{ slotProps.item.invoice_status }}
               </div>
             </template>
+            <template v-slot:actions="slotProps">
+              <div class="flex justify-center">
+                <div
+                  class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
+                  @click.prevent.stop="viewJobPart(slotProps.item.id)"
+                >
+                  View
+                </div>
+              </div>
+            </template>
           </AppTable>
           <AppButton 
             :label="'Confirm'"
@@ -90,6 +100,11 @@ export default {
 					class: "text-center",
 					slotName: "checker",
 					eventName: "checkClicked"
+        },
+        {
+					name: "Invoice Number",
+					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
+					sortable: true
 				},
 				{
 					name: "Job Part Number",
@@ -128,7 +143,14 @@ export default {
 					class: "text-center",
 					slotName: "status_slot",
 					sortable: true
-				}
+        },
+        {
+          name: "Actions",
+          slot: true,
+          slotName: "actions",
+          dataIndex: "",
+          class: "text-center"
+        }
 			]
 		}
 	},
@@ -142,7 +164,7 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: "date_end:asc"
+				: ["date_end:asc"]
 		let params = {
 			...this.filter,
 			limit,
@@ -153,23 +175,30 @@ export default {
 		console.log("params", params)
 		if (this.showDisputed) {
 			params = {
-				completed_at_date_start: this.filter.approved_at_date_start,
-				completed_at_date_end: this.filter.approved_at_date_end,
-				invoice_status: ["Disputed", "Issued"],
+				practice_billable_date_start: this.filter.approved_at_date_start,
+				practice_billable_date_end: this.filter.approved_at_date_end,
+        invoice_status: ["Disputed", "Invoiced"],
+        practice_invoiceable: true,
+        practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,
-				order_by
-			}
+				order_by,
+      }
+      
+      this.params = params
 			console.log("disputed params", params)
-		}
+    }
+    
     let jobPartCount,jobParts = ""
     
 		await this.$axios
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count
-			})
+      })
+    
+    console.log('job part count', jobPartCount)
 
 		await this.$store.commit(
 			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
@@ -184,9 +213,9 @@ export default {
           isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
           tag_status: item.terminated ? "Terminated" : item.status,
           date_time_start: `${this.$moment(item.date_start)
-            .format("DD-MM-YYYY")} | ${item.time_start}`,
+            .format("DD/MM/YYYY")} | ${item.time_start}`,
           date_time_end: `${this.$moment(item.date_end)
-            .format("DD-MM-YYYY")} | ${item.time_end}`
+            .format("DD/MM/YYYY")} | ${item.time_end}`
         }
       })
 		})
@@ -207,6 +236,10 @@ export default {
 		}
 	},
 	methods: {
+    viewJobPart (jobPartId) {
+      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices/issue-hubzz-invoice/${jobPartId}`)
+    },
+
 		toggleCheck (item) {
 			const index = this.chosenJobParts.findIndex(jobPart => {
 				return jobPart.id === item.id
@@ -217,7 +250,8 @@ export default {
 			} else {
 				this.chosenJobParts.push(item)
 			}
-		},
+    },
+    
 		emitChosenJobParts () {
 			if (this.showDisputed === false) {
 				this.$emit("chosenJobParts", this.chosenJobParts, false)
@@ -228,16 +262,16 @@ export default {
     
 		getJobParts (params) {
       console.log('get job parts params', params)
-      console.log('params being used', {
-				...this.params,
-				limit: this.params.limit,
-				search: this.search,
-				order_by: this.params.order_by,
-				offset: params.offset,
-				forBilling: true
-			})
+      // console.log('params being used', {
+			// 	...this.params,
+			// 	limit: this.params.limit,
+			// 	search: this.search,
+			// 	order_by: this.params.order_by,
+			// 	offset: params.offset,
+			// 	forBilling: true
+			// })
 			this.$store.dispatch("jobs/fetchJobParts", {
-				...this.params,
+				...params,
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,

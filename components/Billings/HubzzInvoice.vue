@@ -554,10 +554,10 @@
         </div>
         <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
-          <br>Account name: XXX
-          <br>Bank: XXX
-          <br>Sort code: XXX
-          <br>Account number: XXX
+          <br>Account name: {{ locumInvoice && locumInvoice.account_name ? locumInvoice.account_name : 'N/A' }}
+          <br>Bank: {{ locumInvoice && locumInvoice.bank_name ? locumInvoice.bank_name : 'N/A' }}
+          <br>Sort code: {{ locumInvoice && locumInvoice.sort_code ? locumInvoice.sort_code : 'N/A' }}
+          <br>Account number: {{ locumInvoice && locumInvoice.account_number ? locumInvoice.account_number : 'N/A' }}
           <br>
         </div>
       </div>
