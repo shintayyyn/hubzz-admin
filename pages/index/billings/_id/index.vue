@@ -151,11 +151,9 @@ export default {
 		}
 	},
 	created () {
-    console.log('route name', this.$route.name)
-    if (!this.$route.name.includes('hubzzInvoiceId')){
+    if(this.$route.name === 'index-billings-id-index') {
       this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`)
     }
-		
 	},
 	methods: {
 		practiceTypeStyle (type) {
