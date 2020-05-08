@@ -270,6 +270,7 @@ export default {
 					job_title_includes: this.job_title,
 					offset: 0,
 					limit: this.perPage,
+					order_by: "date_created:desc",
 				}
 			})
 			this.$store.commit("jobs/SET_PRACTICE_ONGOING_SESSIONS", response.data.job_parts)

@@ -255,7 +255,8 @@ export default {
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
 					offset: 0,
-					limit: this.perPage,
+          limit: this.perPage,
+          order_by: "date_created:desc",
 				}
 			})
 			this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", response.data.job_parts)
