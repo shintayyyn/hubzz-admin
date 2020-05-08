@@ -59,7 +59,7 @@
           v-else
           class="px-2"
         >
-          {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY | HH:mm') : "Not yet paid" }}
+          {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
         </div>
       </template>
     </AppTable>
@@ -173,9 +173,13 @@ export default {
 					dataIndex: "total_amount",
 					slotName: "total_amount_slot",
 					class: "text-center",
-					sortable: "false"
-				},
-
+					sortable: "false",
+        },
+        {
+          name: "Due Date",
+          dataIndex:"due_date",
+          class:"text-center localDate",
+        },
 				{
 					name: "Paid",
 					dataIndex: "paid_at",

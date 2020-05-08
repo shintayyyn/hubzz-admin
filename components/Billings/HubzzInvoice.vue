@@ -63,6 +63,12 @@
           :name="'date_end'"
           :label="'To'"
         />
+        <AppDate
+          v-model="toPostPracticeInvoice.due_date"
+          class="w-full md:w-1/2 md:mx-2"
+          :name="'due_date'"
+          :label="'Due Date'"
+        />
       </div>
     </div>
 
@@ -150,8 +156,8 @@
                   <strong>Description</strong>
                 </div>
               </div>
-              <div :class="!byLocum ? 'w-1/6' : 'w-full'">
-                <div class="text-white text-sm text-left ">
+              <div class="w-1/6">
+                <div v-if="!byLocum" class="text-white text-sm text-left ">
                   <strong>Total Hours</strong>
                 </div>
               </div>
@@ -213,8 +219,10 @@
                   {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
                 </p>
               </div>
-              <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-1/6' : 'w-full'">
-                {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+              <div v-else>
+                <div v-if="!byLocum" class="max-w px-2 py-1 w-1/6">
+                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+                </div>
               </div>
               <!-- AMOUNT TOTAL -->
               <div v-if="!byLocum" class="w-1/6 text-sm mx-1">
@@ -529,12 +537,73 @@
         </div>
 
         <!-- TOTALS -->
-        <div ref="items-total" class="flex justify-betwen px-4 pt-2">
+        <div v-if="!byLocum" ref="items-total" class="flex justify-betwen px-4 pt-2">
           <div class="my-1 px-1 w-3/4 font-bold">
             Total
           </div>
           <div class="my-1 px-1 w-1/4 text-right text-lg font-semibold">
             {{ "£ " + amountTotal }}
+          </div>
+        </div>
+        <div v-else>
+          <div class="flex flex-col">
+            <div
+              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
+              :ref="'items-sub-total'"
+              class="flex justify-between md:m-2 text-lg px-3 pt-3"
+            >
+              <span class="w-3/4 font-bold">Subtotal</span>
+              <div class="w-1/4 flex justify-between">
+                <div class="w-full text-right">
+                  £
+                </div>
+                <div class="w-full text-right">
+                  {{ subTotal | currency }}
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
+              :ref="'items-ni-total'"
+              class="flex justify-between md:mx-2 text-lg px-3"
+            >
+              <span class="w-3/4 pl-2 text-sm">NI amount</span>
+              <div class="w-1/4 flex justify-between">
+                <div class="w-full text-right text-sm">
+                  £
+                </div>
+                <div class="w-full text-right text-sm">
+                  {{ locumInvoice.ni_amount | currency }}
+                </div>
+              </div>
+            </div>
+            <div
+              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
+              :ref="'items-paye-total'"
+              class="flex justify-between md:mx-2 text-lg px-3"
+            >
+              <span class="w-3/4 pl-2 text-sm">PAYE amount</span>
+              <div class="w-1/4 flex justify-between">
+                <div class="w-full text-right text-sm">
+                  £
+                </div>
+                <div class="w-full text-right text-sm">
+                  {{ locumInvoice.paye_amount | currency }}
+                </div>
+              </div>
+            </div>
+            <!-- ITEMS TOTAL -->
+            <div :ref="'items-total'" class="flex justify-between md:m-2 text-lg px-3 py-2">
+              <span class="w-3/4 font-bold">Total</span>
+              <div class="w-1/4 flex justify-between">
+                <div class="w-full text-right">
+                  £
+                </div>
+                <div class="w-full text-right">
+                  {{ totalAmount | currency }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -595,7 +664,8 @@ export default {
 		"debitItems",
 		"creditItems",
 		"dateStart",
-		"dateEnd",
+    "dateEnd",
+    "dueDate",
 		"byLocum"
 	],
 	data () {
@@ -605,8 +675,22 @@ export default {
 				date_start: "",
 				date_end: "",
 				items: [],
-				total_amount: ""
-			},
+        total_amount: "",
+        due_date: "",
+      },
+      form: {
+        date_start: null,
+        date_end: null,
+        items: [],
+        total_amount: 0,
+        final: false,
+        ir35: false,
+        minutes: 0,
+        hours: 0,
+        late_hours: 0,
+        late_minutes: 0
+      },
+      formError: [],
 			// createdInvoiceItems: [],
 			// createdDisputedItems: [],
 			createdDebitItems: [],
@@ -662,7 +746,71 @@ export default {
 			// console.log("credit items", this.createdCreditItems);
 			const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
 			return netSum
-		}
+    },
+    subTotal () {
+      if (this.locumInvoice ) {
+        let type = this.locumInvoice.items[0].job_part.job.locum_detail_rate_type
+          .name
+
+        let finalHours =
+          (parseInt(this.form.hours) * 60 + parseInt(this.form.minutes)) / 60
+
+        let totalHours = this.locumInvoice.items[0].job_part.job.total_hours / 60
+
+        let total = 0
+
+        switch (type) {
+          case "Per Hour":
+            total = finalHours * this.locumInvoice.items[0].job_part.job.rate
+            break
+          default:
+            total =
+              finalHours *
+              (this.locumInvoice.items[0].job_part.job.rate / totalHours)
+            break
+        }
+
+        return total
+      }
+
+      return 0
+    },
+    totalAmount () {
+      // Job Part Total Rate (Per Hour) = (Final Hours + (Final Minutes / 60)) * Rate
+      // Job Part Total Rate (Per Session) = (Final Hours + (Final Minutes / 60)) * (Rate / (Total Hours + (Total Minutes / 60)))
+
+      if (this.locumInvoice) {
+        let type = this.locumInvoice.items[0].job_part.job.locum_detail_rate_type
+          .name
+
+        let finalHours =
+          (parseInt(this.form.hours) * 60 + parseInt(this.form.minutes)) / 60
+
+        let totalHours = this.locumInvoice.items[0].job_part.job.total_hours / 60
+
+        let total = 0
+
+        switch (type) {
+          case "Per Hour":
+            total = finalHours * this.locumInvoice.items[0].job_part.job.rate
+            break
+          default:
+            total =
+              finalHours *
+              (this.locumInvoice.items[0].job_part.job.rate / totalHours)
+            break
+        }
+
+        if (this.locumInvoice) {
+          total =
+            total - this.locumInvoice.ni_amount - this.locumInvoice.paye_amount
+        }
+
+        return total
+      }
+
+      return 0
+    },
 	},
 	created () {
     console.log('locumInvoice', this.locumInvoice)
@@ -680,6 +828,11 @@ export default {
 		// }
     console.log("practice", this.practice)
     console.log("invoice items", this.invoiceItems)
+
+    if(this.locumInvoice) {
+      this.setInitialState()
+    }
+    
 		if (this.debitItems) {
 			this.createdDebitItems = this.debitItems
 		}
@@ -697,20 +850,8 @@ export default {
 
 		async testMultiplePage () {
 			window.open(`${process.env.API_URL}/practice-invoices/test/pdf`)
-		},
-
-		// async testHubzzInvoice() {
-		//   window.open(
-		//     `${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/pdf`
-		//   );
-		// },
-
-		// async testLocumInvoice() {
-		//   window.open(
-		//     `${process.env.API_URL}/api/v1/locum-invoices/${this.locumInvoice.id}/pdf`
-		//   )
-		// },
-
+    },
+    
 		toPDF () {
 			if (this.locumInvoice) {
 				window.open(
@@ -842,10 +983,43 @@ export default {
 					text: "Items to be invoiced is required"
 				})
 			}
-		},
+    },
+    
+    setInitialState () {
+      if (this.locumInvoice) {
+        this.form.locum_invoice_id = this.locumInvoice.id
+        this.form.date_start = this.locumInvoice.date_start
+        this.form.date_end = this.locumInvoice.date_end
+
+        this.form.items = [
+          {
+            type: "Job Part",
+            job_part_id: this.locumInvoice.items[0].job_part.id,
+            description: this.locumInvoice.items[0].description,
+            total: this.locumInvoice.items[0].total,
+
+            dispute: this.locumInvoice.items[0].disputed,
+            absent_days: this.locumInvoice.items[0].absent_days,
+            final_hours: this.locumInvoice.items[0].final_hours,
+            late_hours: this.locumInvoice.items[0].late_hours,
+            remarks: this.locumInvoice.items[0].remarks
+          }
+        ]
+
+        this.form.total_amount = this.locumInvoice.total_amount
+        this.form.final = false
+        this.form.ir35 = this.locumInvoice.ir35
+      }
+
+      this.form.hours = Math.floor(this.form.items[0].final_hours / 60)
+      this.form.minutes = Math.floor(this.form.items[0].final_hours % 60)
+      this.form.late_hours = Math.floor(this.form.items[0].late_hours / 60)
+      this.form.late_minutes = Math.floor(this.form.items[0].late_hours % 60)
+    },
 
 		async clearEntries () {}
-	}
+  }
+ 
 }
 </script>
 <style>

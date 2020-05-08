@@ -40,7 +40,7 @@
                 class="rounded-full text-center px-4 py-1 w-32"
                 :class="statusStyle(slotProps.item.invoice_status)"
               >
-                {{ slotProps.item.invoice_status }}
+                {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }}
               </div>
             </template>
             <template v-slot:actions="slotProps">
@@ -175,9 +175,11 @@ export default {
 		console.log("params", params)
 		if (this.showDisputed) {
 			params = {
-				completed_at_date_start: this.filter.approved_at_date_start,
-				completed_at_date_end: this.filter.approved_at_date_end,
-				invoice_status: ["Disputed", "Invoiced"],
+				practice_billable_date_start: this.filter.approved_at_date_start,
+				practice_billable_date_end: this.filter.approved_at_date_end,
+        invoice_status: ["Disputed", "Invoiced"],
+        practice_invoiceable: true,
+        practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
 				limit,
 				offset,
@@ -194,7 +196,9 @@ export default {
 			.$get(`/api/v1/admin/job-parts/count`, { params })
 			.then(res => {
 				jobPartCount = res.data.count
-			})
+      })
+    
+    console.log('job part count', jobPartCount)
 
 		await this.$store.commit(
 			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
@@ -209,9 +213,9 @@ export default {
           isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
           tag_status: item.terminated ? "Terminated" : item.status,
           date_time_start: `${this.$moment(item.date_start)
-            .format("DD-MM-YYYY")} | ${item.time_start}`,
+            .format("DD/MM/YYYY")} | ${item.time_start}`,
           date_time_end: `${this.$moment(item.date_end)
-            .format("DD-MM-YYYY")} | ${item.time_end}`
+            .format("DD/MM/YYYY")} | ${item.time_end}`
         }
       })
 		})
@@ -258,16 +262,16 @@ export default {
     
 		getJobParts (params) {
       console.log('get job parts params', params)
-      console.log('params being used', {
-				...this.params,
-				limit: this.params.limit,
-				search: this.search,
-				order_by: this.params.order_by,
-				offset: params.offset,
-				forBilling: true
-			})
+      // console.log('params being used', {
+			// 	...this.params,
+			// 	limit: this.params.limit,
+			// 	search: this.search,
+			// 	order_by: this.params.order_by,
+			// 	offset: params.offset,
+			// 	forBilling: true
+			// })
 			this.$store.dispatch("jobs/fetchJobParts", {
-				...this.params,
+				...params,
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,
@@ -303,7 +307,7 @@ export default {
 				case "Disputed":
 					return "bg-red-500 text-white "
 				case "Invoiced":
-					return "bg-blue-500 text-white"
+          return "bg-blue-500 text-white"
 				case "To Be Invoiced":
 					return "bg-indigo-600 text-white"
 				default:

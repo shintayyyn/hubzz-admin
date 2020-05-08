@@ -46,6 +46,7 @@
       <HubzzInvoice
         :forViewing="false"
         :practice="practice"
+        :dueDate="due_date"
         :invoiceItems="invoiceItems"
         :disputedItems="disputedItems"
         @formError="scrollToTop"
@@ -101,7 +102,6 @@ export default {
 			showDisputed: false,
 			date_start: "",
       date_end: "",
-      
 			toFilter: {
 				job_practice_id: this.$route.params.id,
 				approved_at_date_start: null,

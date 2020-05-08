@@ -35,11 +35,12 @@
               </div>
               
               <div class="m-4 overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
-                <div v-if="notificationsCount > 0">
+                <div v-if="notifications.length > 0">
                   <div
                     v-for="(item, index) in notifications"
                     :key="`item-${index}`"
                     class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
+                    :class="item.seen === true ? '' : 'border-orange-500'"
                     @click="goTo(item)"
                   >
                     <div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
@@ -101,14 +102,16 @@ export default {
       currentPage: 1,
       totalPages: 0,
       // 10 PER PAGER OR NOTIFICATIONS PER SEE-MORE 
-      params: {
+      notifParams: {
+        user_id: this.$auth.user.id,
         order_by: 'created_at:desc',
         limit: 10,
         offset: 0,
       },
 			notificationToggle: false,
 			notificationsCount: 0,
-			notifications: [],
+      notifications: [],
+      
 			sampleCount: 5,
 			sampleNotifs: [
 				{
@@ -157,25 +160,36 @@ export default {
 		}
 	},
 	async created () {
-		await this.$axios.$get(`/api/v1/admin/notifications/count`).then(res => {
+    const params = {
+        user_id: this.$auth.user.id,
+        seen: false,
+      }
+		await this.$axios.$get(`/api/v1/admin/notifications/count`, {
+      params
+    }).then(res => {
       this.notificationsCount = res.data.count
       this.totalPages = Math.ceil(this.notificationsCount / 10)
 		})
     await this.$axios.$get(`/api/v1/admin/notifications`, {
-      params: this.params,
+      params: this.notifParams,
     }).then(res => {
 			this.notifications = res.data.notifications
 		})
 	},
 	methods: {
 		async checkNotifications () {
-			this.notificationToggle = !this.notificationToggle
-			await this.$axios.$get(`/api/v1/admin/notifications/count`).then(res => {
+      this.notificationToggle = !this.notificationToggle
+      const params = {
+        user_id: this.$auth.user.id,
+        seen: false,
+      }
+			await this.$axios.$get(`/api/v1/admin/notifications/count`, { params }).then(res => {
         this.notificationsCount = res.data.count
         console.log('notif count', res.data.count)
-			})
+      })
+      console.log('notifparams', this.notifParams)
 			await this.$axios.$get(`/api/v1/admin/notifications`, {
-        params: this.params,
+        params: this.notifParams,
       }).then(res => {
         this.notifications = res.data.notifications
         console.log('notifs', this.notifications)
@@ -183,7 +197,7 @@ export default {
     },
     async showMoreNotifs () {
       let params = {
-        order_by: this.params.order_by,
+        order_by: this.notifParams.order_by,
         limit: 10,
         offset: 10 * (parseInt(this.currentPage) -1)
       }
@@ -201,17 +215,33 @@ export default {
       })
     },
     async clearAllNotifications () {
-      await this.$axios.$put(`/api/v1/admin/notifications/seen-all`).then(() => {
-        this.notifications = [],
+      await this.$axios.$put(`/api/v1/admin/notifications/seen-all`, {
+        user_id: this.$auth.user.id
+      }).then((res) => {
+        console.log('result', res)
+      }).finally(()=> {
         this.notificationsCount = 0
       })
     },
     async goTo (item) {
       console.log('notif item', item)
       console.log('notif name',item.notification_type.name)
+      console.log('notif domain', item.notification_type.domain)
       console.log('notif payload type', item.payload_type)
       console.log('notif payload', item.payload)
-      // if ()
+
+      if(item.notification_type.domain === 'Admin') {
+        this.$router.push(item.url)
+      }
+      if (item.notification_type.domain === 'Practice') {
+        if(item.url.includes('sessions')){
+          this.$router.push(`/practices/${item.user.practice.id}/practice-sessions/${item.payload.id}`)
+        }
+      }
+
+      await this.$axios.$put(`/api/v1/admin/notifications/${item.id}/seen`).then(res => {
+        console.log('res', res)
+      })
     },
 		toggleSideBar () {
 			this.$store.commit("TOGGLE_SIDEBAR", true)
