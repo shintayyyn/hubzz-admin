@@ -621,7 +621,15 @@
             </div>
           </div>
         </div>
-        <div class="border-2 border-gray-300 rounded-lg p-2 text-sm">
+        <div v-if="locumInvoice.paid_under_payroll === true" class="border-2 border-gray-300 rounded-lg p-2 text-sm">
+          Payment by BACS:
+          <br>Account name: {{ locumInvoice && locumInvoice.payroll_account_name ? locumInvoice.payroll_account_name : 'N/A' }}
+          <br>Bank: {{ locumInvoice && locumInvoice.payroll_bank_name ? locumInvoice.payroll_bank_name : 'N/A' }}
+          <br>Sort code: {{ locumInvoice && locumInvoice.payroll_sort_code ? locumInvoice.payroll_sort_code : 'N/A' }}
+          <br>Account number: {{ locumInvoice && locumInvoice.payroll_account_number ? locumInvoice.payroll_account_number : 'N/A' }}
+          <br>
+        </div>
+        <div v-else class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
           <br>Account name: {{ locumInvoice && locumInvoice.account_name ? locumInvoice.account_name : 'N/A' }}
           <br>Bank: {{ locumInvoice && locumInvoice.bank_name ? locumInvoice.bank_name : 'N/A' }}
