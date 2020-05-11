@@ -1,24 +1,30 @@
 <template>
   <div class="spoke-modal p-4 md:p-8 shadow-lg">
-    <div @click="goBack()" class="cursor-pointer mb-4">
-      <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+    <div class="cursor-pointer mb-4" @click="goBack()">
+      <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
     </div>
     <div class="flex justify-start overflow-x-auto">
       <nuxt-link
         :to="getRoute()" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path == `/practices/${practice.id}/practice-surgeries/${practiceSurgery.id}` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-      >Spoke Profile</nuxt-link>
+      >
+        Spoke Profile
+      </nuxt-link>
       <nuxt-link
         :to="getRoute('surgery-sessions')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path.includes(`surgery-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-      >Spoke Sessions</nuxt-link>
+      >
+        Spoke Sessions
+      </nuxt-link>
       <nuxt-link
         :to="getRoute('surgery-billing')"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path.includes(`surgery-billing`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
-      >Spoke Billings</nuxt-link>
+      >
+        Spoke Billings
+      </nuxt-link>
     </div>
     <nuxt-child />
   </div>
@@ -52,8 +58,8 @@ export default {
       }
     }
   },
-  async asyncData ({ app, store, route }){
-    try{
+  async asyncData ({ app, route }){
+    try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
       response = await app.$axios.$get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
@@ -63,9 +69,8 @@ export default {
         practice,
         practiceSurgery
       }
-    }catch(err){
-      store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-      console.log('get practice or practice surgery error', err)
+    } catch(err){
+      throw err
     }
   },
   methods:{
