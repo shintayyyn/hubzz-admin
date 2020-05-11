@@ -1,14 +1,14 @@
 export default {
 	getAllPractices (state) {
-		let users = []
-		state.allPractices.forEach(user => {
-			users.push({
-				...user,
-				practice_name: user.surgery.name,
-				practice_code: user.surgery.code
+		let practices = []
+		state.allPractices.forEach(practice => {
+			practices.push({
+				...practice,
+				practice_name: practice.surgery.name,
+				practice_code: practice.surgery.code
 			})
 		})
-		return users
+		return practices
 	},
 	getAllSpokes (state) {
 		return state.practiceSpokes

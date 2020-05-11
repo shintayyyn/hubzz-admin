@@ -407,6 +407,7 @@ export default {
       this.search = ""
       this.chosenPractices = []
       this.dueDate = ''
+      this.$store.dispatch('practices/clearPractices')
       await this.$store.commit("practices/TOGGLE_LOADING", false)
     },
 
