@@ -27,6 +27,9 @@ export default{
     SET_SPECIFIC_PRACTICE (state, payload){
         state.practice = payload
     },
+    CLEAR_PRACTICES (state) {
+      state.allPractices = []
+    },
     ADD_PRACTICE (state, payload){
         state.allPractices.unshift(payload)
         state.itemCount = state.itemCount +1
