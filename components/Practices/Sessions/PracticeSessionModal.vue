@@ -769,6 +769,8 @@ export default {
           jobPart => jobPart.id === this.modalJobPart.id
         );
         return test.status;
+      } else if (!this.modalJobPart && this.job) {
+        return this.job.status;
       }
       return `loading..`;
     },
