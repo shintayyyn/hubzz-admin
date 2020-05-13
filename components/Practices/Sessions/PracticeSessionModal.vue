@@ -583,6 +583,46 @@
                     <p class="text-white">{{ modalJobPart.invoiced ? 'Yes': 'No' }}</p>
                     <p class="mt-5 font-semibold">Issued?</p>
                     <p class="text-white">{{ modalJobPart.issued ? 'Yes': 'No' }}</p>
+                    <!--  -->
+                    <template
+                      v-if="['Completed', 'Approved', 'Cancelled'].includes(modalJobPart.status)"
+                    >
+                      <p class="mt-5 font-semibold">Was the Locum absent for session?</p>
+                      <p
+                        class="text-white"
+                      >{{ modalJobPart.absent_days > 0 || modalJobPart.absent_days_reason !== null ? 'Yes' : 'No' }}</p>
+                      <template
+                        v-if="modalJobPart.absent_days > 0 || modalJobPart.absent_days_reason !== null"
+                      >
+                        <p class="mt-5 font-semibold">Days of Absent:</p>
+                        <p class="text-white">{{ modalJobPart.absent_days }}</p>
+                        <p class="mt-5 font-semibold">Reason of Absence:</p>
+                        <p
+                          class="text-white"
+                        >{{ modalJobPart.absent_days_reason ? modalJobPart.absent_days_reason : 'None' }}</p>
+                      </template>
+
+                      <p class="mt-5 font-semibold">Was the Locum late for this session?</p>
+                      <p
+                        class="text-white"
+                      >{{ modalJobPart.late_hours > 0 || modalJobPart.late_hours_reason !== null ? 'Yes' : 'No' }}</p>
+                      <template
+                        v-if="modalJobPart.late_hours > 0 || modalJobPart.late_hours_reason !== null"
+                      >
+                        <p class="mt-5 font-semibold">Hours of Late:</p>
+                        <p class="text-white">{{ modalJobPart.late_hours }}</p>
+                        <p class="mt-5 font-semibold">Reason of Late:</p>
+                        <p
+                          class="text-white"
+                        >{{ modalJobPart.late_hours_reason ? modalJobPart.late_hours_reason : 'None' }}</p>
+                      </template>
+                      <p class="mt-5 font-semibold">Final Hours:</p>
+                      <p
+                        class="text-white"
+                        v-if="modalJobPart.final_hours > 0"
+                      >{{ modalJobPart.final_hours | hoursMinutes }}</p>
+                      <p class="text-white" v-else>{{ modalJobPart.final_hours }}</p>
+                    </template>
                   </div>
                 </div>
               </div>
