@@ -150,12 +150,19 @@
     <transition name="fade" mode="out-in">
       <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
         <transition name="drop" mode="out-in">
-          <AppDate
+          <AppDateToggled 
+            v-model="dueDate" 
+            class="m-4 text-white" 
+            :name="'due_date'" 
+            :label="'Due Date'" 
+            is-after 
+          />
+          <!-- <AppDate
             v-model="dueDate"
             class="m-4 text-white"
             :name="'due_date'"
             :label="'Due Date'"
-          />
+          /> -->
           <!-- <AppConfirm
             v-if="confirm"
             :in-style="'top:35%'"
@@ -218,12 +225,14 @@
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
+import AppDateToggled from "@/components/Base/AppDateToggled"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
-		AppDate,
+    AppDate,
+    AppDateToggled,
     AppButton,
     AppInput,
 	},
