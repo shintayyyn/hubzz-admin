@@ -491,6 +491,7 @@ export default {
 		},
 
 		searchSubmit: debounce(function (page, order_by) {
+      this.chosenPractices = []
 			let search = this.search
 
 			let query = {

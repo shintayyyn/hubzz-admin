@@ -4,7 +4,7 @@
       Reports
     </div>
 
-    <div class="text-sm md:text-xl text-white">
+    <!-- <div class="text-sm md:text-xl text-white">
       Practice Reports
     </div>
 
@@ -44,7 +44,7 @@
           </div>
         </div>
       </nuxt-link>
-    </div>
+    </div> -->
 
     <div class="text-sm md:text-xl text-white">
       Compliance Reports
