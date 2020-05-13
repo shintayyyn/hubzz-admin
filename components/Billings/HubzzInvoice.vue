@@ -673,7 +673,6 @@ export default {
 		"creditItems",
 		"dateStart",
     "dateEnd",
-    "dueDate",
 		"byLocum"
 	],
 	data () {

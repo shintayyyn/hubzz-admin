@@ -66,6 +66,11 @@
           </p>
         </template>
       </div>
+      <div
+        v-if="$route.name.includes('approvedJobPartId')"
+        class="issue-hubzz-invoice-shield"
+        @click="close()"
+      />
     </div>
   </div>
 </template>
@@ -258,6 +263,10 @@ export default {
 			} else if (this.showDisputed === true) {
 				this.$emit("chosenJobParts", this.chosenJobParts, true)
 			}
+    },
+
+    close () {
+      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices/issue-hubzz-invoice`)
     },
     
 		getJobParts (params) {
