@@ -14,15 +14,30 @@
       <div class="text-sm md:text-lg text-white">
         Rep-015
       </div>
+
       <div
         class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="locumNameIncludes"
-            placeholder="Search practice"
+            placeholder="Search Locum Name"
             type="text"
-            label="Practice"
+            label="Locum Name"
+          />
+        </div>
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
           />
         </div>
       </div>
@@ -77,11 +92,15 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
+  import AppInput from '@/components/Base/AppInput'
+  import AppButton from '@/components/Base/AppButton'
 
   export default {
     components: {
       ReportTable,
       ReportPagination,
+      AppInput,
+      AppButton
     },
 
     data () {
@@ -212,7 +231,7 @@
 
     methods: {
       filterReset () {
-        this.locumNameIncludes
+        this.locumNameIncludes = ''
 
         this.filterSearch()
       },
@@ -241,6 +260,7 @@
           this.$router.replace({
             query: {
               ...this.$route.query,
+              order_by: this.orderBy,
               page: undefined,
             }
           })
@@ -249,6 +269,7 @@
             query: {
               ...this.$route.query,
               page: this.activePage,
+              order_by: this.orderBy,
             }
           })
         }

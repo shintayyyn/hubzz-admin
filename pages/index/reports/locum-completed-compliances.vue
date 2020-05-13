@@ -15,6 +15,66 @@
         Rep-017
       </div>
 
+      <div
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncludes"
+            placeholder="Search Locum Name"
+            type="text"
+            label="Locum Name"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="registeredDateStart"
+            label="Registered Date Start"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="registeredDateEnd"
+            label="Registered Date End"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="approvedDateStart"
+            label="Approved Date Start"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="approvedDateEnd"
+            label="Approved Date End"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
@@ -65,10 +125,16 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
+  import AppInput from '@/components/Base/AppInput'
+  import AppButton from '@/components/Base/AppButton'
+  import AppDate from '@/components/Base/AppDate'
   export default {
     components: {
       ReportTable,
       ReportPagination,
+      AppInput,
+      AppButton,
+      AppDate,
     },
 
     data () {
@@ -102,6 +168,12 @@
           25,
         ],
         activePage: 1,
+
+        locumNameIncludes: '',
+        registeredDateStart: '',
+        registeredDateEnd: '',
+        approvedDateStart: '',
+        approvedDateEnd: '',
       }
     },
 
@@ -135,7 +207,7 @@
             key: 'date_registered',
             sort_key: 'date_registered',
             column: (item) => this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -144,7 +216,7 @@
             key: 'compliance_status',
             sort_key: 'compliance_status',
             column: (item) => item.compliance_status,
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -153,7 +225,7 @@
             key: 'first_actived_at',
             sort_key: 'first_actived_at',
             column: (item) => item.first_actived_at ? this.$moment(item.first_actived_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -181,19 +253,35 @@
     },
 
     mounted () {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
+     const {
+        locum_name_includes: locumNameIncludes,
+        registered_date_start: registeredDateStart,
+        registered_date_end: registeredDateEnd,
+        approved_date_start: approvedDateStart,
+        approved_date_end: approvedDateEnd,
+        order_by: orderBy = [],
+        page,
+      } = this.$route.query
 
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+      this.registeredDateStart = registeredDateStart ? registeredDateStart : ''
+      this.registeredDateEnd = registeredDateEnd ? registeredDateEnd : ''
+      this.approvedDateStart = approvedDateStart ? approvedDateStart : ''
+      this.approvedDateEnd = approvedDateEnd ? approvedDateEnd : ''
+
+      this.orderBy = orderBy
+      this.activePage = page ? Number.parseInt(page) : 1
 
       this.getLocumCompletedCompliances()
     },
 
     methods: {
       filterReset () {
+        this.locumNameIncludes = ''
+        this.registeredDateStart = ''
+        this.registeredDateEnd = ''
+        this.approvedDateStart = ''
+        this.approvedDateEnd = ''
 
         this.filterSearch()
       },
@@ -204,6 +292,11 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          registeredDateStart: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registeredDateEnd: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approvedDateStart: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approvedDateEnd: this.approvedDateEnd ? this.approvedDateEnd : undefined,
+          order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
 
@@ -254,12 +347,23 @@
       getLocumCompletedCompliances () {
         this.loading = true
         this.locumCompletedCompliances = []
+
+        const params = {
+          locumNameIncludes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          registeredDateStart: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registeredDateEnd: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approvedDateStart: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approvedDateEnd: this.approvedDateEnd ? this.approvedDateEnd : undefined,
+        }
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-completed-compliances/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locum-completed-compliances/count', {
+            params
+          }).then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/locum-completed-compliances', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
