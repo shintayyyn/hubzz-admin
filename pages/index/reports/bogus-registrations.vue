@@ -8,43 +8,41 @@
       </div>
 
       <div class="text-lg md:text-2xl text-white">
-        Sign Ups Practice
+        Bogus Registrations
       </div>
   
       <div class="text-sm md:text-lg text-white">
-        Rep-027
+        Rep-022
       </div>
 
-      <div
-        class="flex-col justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      <!-- <div
+        class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
-        <div class="flex flex-row w-full">
-          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppInput
-              v-model="areaPostCode"
-              placeholder="Search Area Postcode"
-              type="text"
-              label="Area Postcode"
-            />
-          </div>
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncludes"
+            placeholder="Search Locum Name"
+            type="text"
+            label="Locum Name"
+          />
         </div>
-        
-        <div class="flex flex-row w-full">
-          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppDate
-              v-model="dateStart"
-              label="Date Start"
-              format="YYYY-MM-DD"
-            />
-          </div>
 
-          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-            <AppDate
-              v-model="dateEnd"
-              label="Date End"
-              format="YYYY-MM-DD"
-            />
-          </div>
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="referralLocumNameIncludes"
+            placeholder="Search Referral Locum Name"
+            type="text"
+            label="Referral Locum Name"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="areaPostCode"
+            placeholder="Search Area Post Code"
+            type="text"
+            label="Area Postcode"
+          />
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -84,8 +82,8 @@
 
       <ReportTable
         :limit="limit"
-        :items="registeredPractices"
-        :getItemKey="(item) => item.practice_id"
+        :items="locumReferrals"
+        :getItemKey="(item) => item.id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -99,14 +97,14 @@
         @page="setPage" 
       />
 
-      <div v-if="false" class="text-white"> 
+      <div v-if="true" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
         <span>Order By: {{ orderBy.join(',') }}</span>
         <br>
         <span>Page {{ activePage }} of {{ pages }} pages</span>
-      </div>
-    </div>
+      </div> -->
+    </div> 
   </div>
 </template>
 
@@ -115,21 +113,19 @@
   import ReportPagination from '@/components/Reports/ReportPagination'
   import AppInput from '@/components/Base/AppInput'
   import AppButton from '@/components/Base/AppButton'
-  import AppDate from '@/components/Base/AppDate'
   export default {
     components: {
       ReportTable,
       ReportPagination,
       AppInput,
       AppButton,
-      AppDate
     },
 
     data () {
       return {
         loading: false,
         count: 0,
-        registeredPractices: [],
+        locumReferrals: [],
         orderBy: [],
         orderBys: [
           {
@@ -157,8 +153,8 @@
         ],
         activePage: 1,
 
-        dateStart: '',
-        dateEnd: '',
+        locumNameIncludes: '',
+        referralLocumNameIncludes: '',
         areaPostCode: '',
       }
     },
@@ -180,20 +176,29 @@
             flexShrink: 0,
           },
           {
-            title: 'Practice Name',
-            key: 'practice_name',
-            sort_key: 'practice_name',
-            column: (item) => item.practice_name,
+            title: 'Locum Name',
+            key: 'locum_name',
+            sort_key: 'locum_name',
+            column: (item) => item.locum_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Date Registered',
-            key: 'date_registered',
-            sort_key: 'date_registered',
-            column: (item) => item.date_registered ? this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            title: 'Referral Name',
+            key: 'referral_name',
+            sort_key: 'referral_name',
+            column: (item) => item.referral_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Profession',
+            key: 'profession',
+            sort_key: 'profession',
+            column: (item) => item.profession,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -207,10 +212,10 @@
             flexShrink: 0,
           },
           {
-            title: 'Status',
-            key: 'status',
-            sort_key: 'status',
-            column: (item) => item.status,
+            title: 'Date Referal Registered',
+            key: 'date_referral_registered',
+            sort_key: 'date_referral_registered',
+            column: (item) => this.$moment(item.date_referral_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -225,43 +230,43 @@
 
     watch: {
       orderBy () {
-        this.getPractices()
+        this.getLocumReferrals()
       },
 
       limit () {
         this.page = 1
-        this.getPractices()
+        this.getLocumReferrals()
       },
 
       activePage () {
-        this.getPractices()
+        this.getLocumReferrals()
       },
     },
 
     mounted () {      
       const {
-        date_start: dateStart,
-        date_end: dateEnd,
+        locum_name_includes: locumNameIncludes,
+        referral_locum_name_includes: referralLocumNameIncludes,
         area: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+      this.referralLocumNameIncludes = referralLocumNameIncludes ? referralLocumNameIncludes : ''
       this.areaPostCode = areaPostCode ? areaPostCode : ''
-      this.dateStart = dateStart ? dateStart : ''
-      this.dateEnd = dateEnd ? dateEnd : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getPractices()
+      this.getLocumReferrals()
     },
 
     methods: {
       filterReset () {
+        this.locumNameIncludes = ''
+        this.referralLocumNameIncludes = ''
         this.areaPostCode = ''
-        this.dateStart = ''
-        this.dateEnd = ''
 
         this.filterSearch()
       },
@@ -271,9 +276,9 @@
 
         const query = {
           ...this.$route.query,
-          areaPostCode: this.areaPostCode ? this.areaPostCode : '',
-          dateStart: this.dateStart ? this.dateStart : '',
-          dateEnd: this.dateEnd ? this.dateEnd : '',
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : undefined,
+          area: this.areaPostCode ? this.areaPostCode : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -282,7 +287,7 @@
           this.$router.replace({ query })
         }
         
-        this.getPractices()
+        this.getLocumReferrals()
       },
 
       setPage (page) {
@@ -304,7 +309,7 @@
           })
         }
 
-        this.getPractices()
+        this.getLocumReferrals()
       },
 
       setOrderBy (orderBy) {
@@ -319,25 +324,26 @@
           }
         })
 
-        this.getPractices()
+        this.getLocumReferrals()
       },
 
-      getPractices () {
+      getLocumReferrals () {
         this.loading = true
-        this.registeredPractices = []
+        this.locumReferrals = []
 
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
+          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
           area: this.areaPostCode ? this.areaPostCode : '',
         }
+
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/registered-practices/count', {
+          this.$axios.get('/api/v1/admin/reports/locum-referrals/count', {
             params
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/registered-practices', {
+          this.$axios.get('/api/v1/admin/reports/locum-referrals', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -345,19 +351,19 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.registered_practices
+            return responses.data.data.locum_referrals
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            registeredPractices,
+            locumReferrals,
           ] = results
 
           this.count = count
-          this.registeredPractices = registeredPractices
+          this.locumReferrals = locumReferrals
         }).catch((err) => {
-          console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
+          console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false

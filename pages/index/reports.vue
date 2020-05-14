@@ -236,6 +236,11 @@
             url: '/reports/locum-practice-referrals',
           },
           {
+            title: 'REP-022',
+            subtitle: 'Bogus Registrations',
+            url: '/reports/bogus-registrations',
+          },
+          {
             title: 'REP-023',
             subtitle: 'Locums Declined',
             url: '/reports/declined-jobs',

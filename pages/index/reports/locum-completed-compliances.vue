@@ -16,7 +16,7 @@
       </div>
 
       <div
-        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+        class="flex-col justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
@@ -27,36 +27,38 @@
           />
         </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="registeredDateStart"
-            label="Registered Date Start"
-            format="YYYY-MM-DD"
-          />
-        </div>
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="registeredDateStart"
+              label="Registered Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="registeredDateEnd"
-            label="Registered Date End"
-            format="YYYY-MM-DD"
-          />
-        </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="registeredDateEnd"
+              label="Registered Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="approvedDateStart"
-            label="Approved Date Start"
-            format="YYYY-MM-DD"
-          />
-        </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="approvedDateStart"
+              label="Approved Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="approvedDateEnd"
-            label="Approved Date End"
-            format="YYYY-MM-DD"
-          />
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="approvedDateEnd"
+              label="Approved Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -255,10 +257,10 @@
     mounted () {      
      const {
         locum_name_includes: locumNameIncludes,
-        registered_date_start: registeredDateStart,
-        registered_date_end: registeredDateEnd,
-        approved_date_start: approvedDateStart,
-        approved_date_end: approvedDateEnd,
+        registered_at_date_start: registeredDateStart,
+        registered_at_date_end: registeredDateEnd,
+        approved_at_date_start: approvedDateStart,
+        approved_at_date_end: approvedDateEnd,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -292,10 +294,10 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          registeredDateStart: this.registeredDateStart ? this.registeredDateStart : undefined,
-          registeredDateEnd: this.registeredDateEnd ? this.registeredDateEnd : undefined,
-          approvedDateStart: this.approvedDateStart ? this.approvedDateStart : undefined,
-          approvedDateEnd: this.approvedDateEnd ? this.approvedDateEnd : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -349,11 +351,11 @@
         this.locumCompletedCompliances = []
 
         const params = {
-          locumNameIncludes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          registeredDateStart: this.registeredDateStart ? this.registeredDateStart : undefined,
-          registeredDateEnd: this.registeredDateEnd ? this.registeredDateEnd : undefined,
-          approvedDateStart: this.approvedDateStart ? this.approvedDateStart : undefined,
-          approvedDateEnd: this.approvedDateEnd ? this.approvedDateEnd : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/locum-completed-compliances/count', {
