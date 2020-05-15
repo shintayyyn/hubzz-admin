@@ -11,7 +11,11 @@
             class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
           />
         </nuxt-link>
-        <JobPartModal :specificJobPart="approvedJobPart" :isNuxtChild="true" />
+        <JobPartModal 
+          :specificJobPart="approvedJobPart" 
+          :isNuxtChild="true"
+          :isInvoice="true" 
+        />
       </div>
     </div>
   </transition>

@@ -4,7 +4,7 @@
       Reports
     </div>
 
-    <div class="text-sm md:text-xl text-white">
+    <!-- <div class="text-sm md:text-xl text-white">
       Practice Reports
     </div>
 
@@ -44,7 +44,7 @@
           </div>
         </div>
       </nuxt-link>
-    </div>
+    </div> -->
 
     <div class="text-sm md:text-xl text-white">
       Compliance Reports
@@ -234,6 +234,11 @@
             title: 'REP-021',
             subtitle: 'Locum Practice Referrals',
             url: '/reports/locum-practice-referrals',
+          },
+          {
+            title: 'REP-022',
+            subtitle: 'Bogus Registrations',
+            url: '/reports/bogus-registrations',
           },
           {
             title: 'REP-023',

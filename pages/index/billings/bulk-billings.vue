@@ -15,12 +15,7 @@
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
           />
-          <AppDate
-            v-model="dueDate"
-            class="md:mx-2 text-white"
-            :name="'due_date'"
-            :label="'Due Date'"
-          />
+          
           <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
             <input 
               id="disputed" 
@@ -51,7 +46,7 @@
               ? false : true"
             :label="'Generate HUBZZ Invoices'"
             :icon="'add-rectangle'"
-            @click="createBulkBilling()"
+            @click="showPaidModal = true"
           />
         </div>
         <div
@@ -151,6 +146,63 @@
         No practice to invoice found
       </div>
     </template>
+
+    <transition name="fade" mode="out-in">
+      <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
+        <transition name="drop" mode="out-in">
+          <AppDateToggled 
+            v-model="dueDate" 
+            class="m-4 text-white" 
+            :name="'due_date'" 
+            :label="'Due Date'" 
+            is-after 
+          />
+          <!-- <AppDate
+            v-model="dueDate"
+            class="m-4 text-white"
+            :name="'due_date'"
+            :label="'Due Date'"
+          /> -->
+          <!-- <AppConfirm
+            v-if="confirm"
+            :in-style="'top:35%'"
+            :in-class="'rounded-lg'"
+            :message="'Are you sure you want to mark this bill as paid?'"
+            @cancel="confirm = false"
+            @confirm="toMarkAsPaid()"
+          /> -->
+        </transition>
+        <!-- TO PAID CONFIRM CANCEL -->
+        <!-- <div v-if="confirm == true" class="shield" @click="confirm = false" />
+        <div class="flex items-center text-sm text-white m-4">
+          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showPaidModal = false">
+            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
+          </div>
+        </div> -->
+
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <!-- <div class="justify-center">
+            <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
+          </div> -->
+          <div class="flex flex-row mb-4">
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+              @click="createBulkBilling()"
+            >
+              Confirm
+            </div>
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
+              @click="showPaidModal = false"
+            >
+              Cancel
+            </div>
+          </div>
+        </div>
+        <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
+      </div>
+    </transition>
+
     <div
       v-if="
         $route.name.includes('index-billings-id') ||
@@ -159,6 +211,13 @@
       class="billing-shield"
       @click="$router.push(`/billings`)"
     />
+    <div
+      v-if="
+        showPaidModal === true
+      "
+      class="billing-shield"
+      @click="showPaidModal = false"
+    />
     <nuxt-child />
   </div>
 </template>
@@ -166,17 +225,20 @@
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
+import AppDateToggled from "@/components/Base/AppDateToggled"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
-		AppDate,
+    AppDate,
+    AppDateToggled,
     AppButton,
     AppInput,
 	},
 	data () {
 		return {
+      showPaidModal: false,
 			// for app table
 			currentPage: 1,
 			search: "",
@@ -407,6 +469,7 @@ export default {
       this.search = ""
       this.chosenPractices = []
       this.dueDate = ''
+      this.showPaidModal = false,
       this.$store.dispatch('practices/clearPractices')
       await this.$store.commit("practices/TOGGLE_LOADING", false)
     },
@@ -437,6 +500,7 @@ export default {
 		},
 
 		searchSubmit: debounce(function (page, order_by) {
+      this.chosenPractices = []
 			let search = this.search
 
 			let query = {
@@ -609,5 +673,20 @@ export default {
 .md\:table-cell:last-child {
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
+}
+.mark-paid-modal {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	min-width: 600px;
+	min-height: 450px;
+	max-width: 95%;
+	max-height: 80%;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
 }
 </style>

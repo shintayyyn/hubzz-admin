@@ -15,6 +15,33 @@
         Rep-015
       </div>
 
+      <div
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncludes"
+            placeholder="Search Locum Name"
+            type="text"
+            label="Locum Name"
+          />
+        </div>
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
@@ -65,11 +92,15 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
+  import AppInput from '@/components/Base/AppInput'
+  import AppButton from '@/components/Base/AppButton'
 
   export default {
     components: {
       ReportTable,
       ReportPagination,
+      AppInput,
+      AppButton
     },
 
     data () {
@@ -103,6 +134,8 @@
           25,
         ],
         activePage: 1,
+
+        locumNameIncludes: '',
       }
     },
 
@@ -136,7 +169,7 @@
             key: 'date_registered',
             sort_key: 'date_registered',
             column: (item) => this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -145,7 +178,7 @@
             key: 'documents_not_approved_count',
             sort_key: 'documents_not_approved_count',
             column: (item) => item.documents_not_approved_count,
-            justify: 'end',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -154,7 +187,7 @@
             key: 'documents_not_uploaded_count',
             sort_key: 'documents_not_uploaded_count',
             column: (item) => item.documents_not_uploaded_count,
-            justify: 'end',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -182,18 +215,44 @@
     },
 
     mounted () {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
+      const {
+        locum_name_includes: locumNameIncludes,
+        order_by: orderBy = [],
+        page,
+      } = this.$route.query
 
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+
+      this.orderBy = orderBy
+      this.activePage = page ? Number.parseInt(page) : 1
 
       this.getLocumUploadedDocuments()
     },
 
     methods: {
+      filterReset () {
+        this.locumNameIncludes = ''
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          order_by: this.orderBy ? this.orderBy : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+
+        this.getLocumUploadedDocuments()
+      },
+
       setPage (page) {
         this.activePage = page
 
@@ -201,6 +260,7 @@
           this.$router.replace({
             query: {
               ...this.$route.query,
+              order_by: this.orderBy,
               page: undefined,
             }
           })
@@ -209,6 +269,7 @@
             query: {
               ...this.$route.query,
               page: this.activePage,
+              order_by: this.orderBy,
             }
           })
         }
@@ -234,12 +295,19 @@
       getLocumUploadedDocuments () {
         this.loading = true
         this.locumUploadedDocuments = []
+
+        const params = {
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+        }
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-uploaded-documents/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locum-uploaded-documents/count', {
+            params
+          }).then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/locum-uploaded-documents', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,

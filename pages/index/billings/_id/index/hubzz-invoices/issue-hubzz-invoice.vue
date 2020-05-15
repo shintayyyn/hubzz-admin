@@ -46,7 +46,6 @@
       <HubzzInvoice
         :forViewing="false"
         :practice="practice"
-        :dueDate="due_date"
         :invoiceItems="invoiceItems"
         :disputedItems="disputedItems"
         @formError="scrollToTop"

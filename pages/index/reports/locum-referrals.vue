@@ -12,7 +12,53 @@
       </div>
   
       <div class="text-sm md:text-lg text-white">
-        Rep-021
+        Rep-020
+      </div>
+
+      <div
+        class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="locumNameIncludes"
+            placeholder="Search Locum Name"
+            type="text"
+            label="Locum Name"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="referralLocumNameIncludes"
+            placeholder="Search Referral Locum Name"
+            type="text"
+            label="Referral Locum Name"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="areaPostCode"
+            placeholder="Search Area Post Code"
+            type="text"
+            label="Area Postcode"
+          />
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
       </div>
 
       <div v-if="false">
@@ -65,11 +111,14 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
-
+  import AppInput from '@/components/Base/AppInput'
+  import AppButton from '@/components/Base/AppButton'
   export default {
     components: {
       ReportTable,
       ReportPagination,
+      AppInput,
+      AppButton,
     },
 
     data () {
@@ -103,6 +152,10 @@
           25,
         ],
         activePage: 1,
+
+        locumNameIncludes: '',
+        referralLocumNameIncludes: '',
+        areaPostCode: '',
       }
     },
 
@@ -163,7 +216,7 @@
             key: 'date_referral_registered',
             sort_key: 'date_referral_registered',
             column: (item) => this.$moment(item.date_referral_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -191,18 +244,52 @@
     },
 
     mounted () {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
+      const {
+        locum_name_includes: locumNameIncludes,
+        referral_locum_name_includes: referralLocumNameIncludes,
+        area: areaPostCode,
+        order_by: orderBy = [],
+        page,
+      } = this.$route.query
 
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+      this.referralLocumNameIncludes = referralLocumNameIncludes ? referralLocumNameIncludes : ''
+      this.areaPostCode = areaPostCode ? areaPostCode : ''
+
+      this.orderBy = orderBy
+      this.activePage = page ? Number.parseInt(page) : 1
 
       this.getLocumReferrals()
     },
 
     methods: {
+      filterReset () {
+        this.locumNameIncludes = ''
+        this.referralLocumNameIncludes = ''
+        this.areaPostCode = ''
+
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : undefined,
+          area: this.areaPostCode ? this.areaPostCode : undefined,
+          order_by: this.orderBy ? this.orderBy : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getLocumReferrals()
+      },
+
       setPage (page) {
         this.activePage = page
 
@@ -243,12 +330,22 @@
       getLocumReferrals () {
         this.loading = true
         this.locumReferrals = []
+
+        const params = {
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
+          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
+          area: this.areaPostCode ? this.areaPostCode : '',
+        }
+
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-referrals/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/locum-referrals/count', {
+            params
+          }).then((responses) => {
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/locum-referrals', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
