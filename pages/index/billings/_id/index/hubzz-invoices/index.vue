@@ -37,6 +37,10 @@
         <div>{{ $moment(slotProps.item.issued_at).format('DD/MM/YYYY') }}</div>
       </template>
 
+      <template v-slot:due_date="slotProps">
+        <div>{{ $moment(slotProps.item.due_date).format('DD/MM/YYYY') }}</div>
+      </template>
+
       <template v-slot:paid_at="slotProps">
         <div v-if="!slotProps.item.paid_at" class="flex items-center justify-center">
           <AppButton
@@ -178,13 +182,14 @@ export default {
         {
           name: "Due Date",
           dataIndex:"due_date",
-          class:"text-center localDate",
+          slotName:"due_date",
+          class:"text-center",
         },
 				{
 					name: "Paid",
 					dataIndex: "paid_at",
 					slotName: "paid_at",
-					class: "text-center"
+					class: "text-center localDate"
 				}
 			],
 			// FOR MARKING INVOICE AS PAID

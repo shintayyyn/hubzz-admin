@@ -184,9 +184,9 @@
             :class="!doNotShow && 'px-4'"
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
           > 
-            <div class="flex w-full justify-center border-b border-gray-500 py-1">
+            <div class="flex w-full border-b border-gray-500 py-1">
               <!-- DESCRIPTION -->
-              <div v-if="forViewing == false" class="w-4/6 text-sm mx-1">
+              <div v-if="forViewing == false" class="w-4/6 text-sm">
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -205,7 +205,7 @@
                 {{ item.description }}
               </div>
               <!-- TOTAL HOURS -->
-              <div v-if="forViewing == false" class="w-1/6 text-sm mx-1">
+              <div v-if="forViewing == false" class="w-1/6 text-sm">
                 <!-- <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -214,14 +214,14 @@
                   placeholder="Enter Description"
                 /> -->
                 <p
-                  class="text-left px-2 py-1"
+                  class="w-full text-left px-2 py-1"
                 >
                   {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
                 </p>
               </div>
-              <div v-else>
-                <div v-if="!byLocum" class="max-w px-2 py-1 w-1/6">
-                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+              <div v-else class="max-w px-2 py-1 w-1/6">
+                <div v-if="!byLocum">
+                  {{ item.total_hours ? item.total_hours.toFixed(2) + " Hours " : "N/A" }}
                 </div>
               </div>
               <!-- AMOUNT TOTAL -->
@@ -238,9 +238,9 @@
                     placeholder="Enter Total"
                   >
                 </template>
-                <p v-else class="px-2 py-1 text-right text-black">
+                <div v-else class="max-w px-2 py-1 text-right text-black">
                   {{ item.total }}
-                </p>
+                </div>
               </div>
               <template v-if="forViewing == false">
                 <div v-if="doNotShow" class="mr-2 flex items-center">
@@ -542,7 +542,7 @@
             Total
           </div>
           <div class="my-1 px-1 w-1/4 text-right text-lg font-semibold">
-            {{ "£ " + amountTotal }}
+            {{ forViewing === true ? "£ " + practiceInvoice.total_amount.toFixed(2) : "£ " + amountTotal }}
           </div>
         </div>
         <div v-else>
@@ -751,7 +751,8 @@ export default {
 				creditTotal = createdCreditItems.reduce(reducer)
 			}
 			// console.log("credit items", this.createdCreditItems);
-			const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+      const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+      
 			return netSum
     },
     subTotal () {
@@ -832,7 +833,8 @@ export default {
 		// }
 		// if (this.practiceInvoice) {
 		// 	console.log("practice invoice", this.practiceInvoice);
-		// }
+    // }
+    console.log('practice invoice', this.practiceInvoice)
     console.log("practice", this.practice)
     console.log("invoice items", this.invoiceItems)
 
