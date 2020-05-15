@@ -116,14 +116,12 @@
 <script>
 import ReportTable from '@/components/Reports/ReportTable'
 import ReportPagination from '@/components/Reports/ReportPagination'
-import AppInput from '@/components/Base/AppInput'
 import AppButton from '@/components/Base/AppButton'
 import AppDate from '@/components/Base/AppDate'
   export default {
     components: {
       ReportTable,
       ReportPagination,
-      AppInput,
       AppButton,
       AppDate
     },
@@ -132,6 +130,7 @@ import AppDate from '@/components/Base/AppDate'
       return {
         loading: false,
         count: 0,
+        downloading: false,
         activatedPractices: [],
         orderBy: [],
         orderBys: [

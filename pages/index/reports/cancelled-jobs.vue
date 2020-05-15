@@ -139,6 +139,7 @@
       return {
         loading: false,
         count: 0,
+        downloading: false,
         cancelledJobs: [],
         orderBy: [],
         orderBys: [
