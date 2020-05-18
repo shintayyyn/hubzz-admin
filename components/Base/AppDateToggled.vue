@@ -431,9 +431,9 @@ export default {
 			}
 			if (this.isAfter) {
 				if (this.startDate) {
-					return this.$moment(date).isBefore(this.startDate)
+					return this.$moment(date).subtract(1, 'd').isBefore(this.startDate)
 				}
-				return this.$moment(date, "MM-DD-YYYY").isBefore(
+				return this.$moment(date, "MM-DD-YYYY").subtract(1, 'd').isBefore(
 					this.$moment(newDate, "MM-DD-YYYY")
 				)
 			}
