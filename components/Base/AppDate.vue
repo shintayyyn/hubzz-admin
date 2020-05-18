@@ -437,13 +437,13 @@ export default {
 				)
 			}
 			if (this.isAfter) {
-				if (this.isAfterDate) {
-					return this.$moment(date).subtract(1, 'd').isBefore(this.isAfterDate)
-				}
 				return this.$moment(date, "MM-DD-YYYY").subtract(1, 'd').isBefore(
 					this.$moment(newDate, "MM-DD-YYYY")
 				)
-			}
+      }
+      if (this.isAfterDate) {
+        return this.$moment(date).subtract(1, 'd').isBefore(this.isAfterDate)
+      }
 			// return false;
 			// let newDate = this.$moment.utc().format("MM-DD-YYYY");
 			// if (this.isAfter) {

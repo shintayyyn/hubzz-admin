@@ -14,7 +14,6 @@
             class="md:mx-2 text-white"
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
-            is-after
             :isAfterDate="practiceParams.practice_invoiceable_date_start"
           />
           

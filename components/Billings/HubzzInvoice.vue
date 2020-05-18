@@ -62,7 +62,6 @@
           class="w-full md:w-1/2 md:mx-2"
           :name="'date_end'"
           :label="'To'"
-          is-after
           :isAfterDate="toPostPracticeInvoice.date_start"
         />
 
