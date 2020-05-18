@@ -318,7 +318,11 @@ export default {
 		format: {
 			type: String,
 			default: "YYYY-MM-DD"
-		},
+    },
+    isAfterDate: {
+      type: String,
+      default: null
+    },
 		disabled: Boolean,
 		required: Boolean
 	},
@@ -345,11 +349,11 @@ export default {
 			// return this.months;
 			if (this.selectedYear === this.$moment().format("YYYY")) {
 				if (this.isAfter) {
-					return this.months.filter(
-						month =>
-							parseInt(month.value) >= parseInt(this.$moment().format("M"))
-					)
-				}
+          return this.months.filter(
+            month =>
+              parseInt(month.value) >= parseInt(this.$moment().format("M"))
+          )
+        }
 				if (this.isBefore) {
 					return this.months.filter(
 						month =>
@@ -433,8 +437,8 @@ export default {
 				)
 			}
 			if (this.isAfter) {
-				if (this.startDate) {
-					return this.$moment(date).isBefore(this.startDate)
+				if (this.isAfterDate) {
+					return this.$moment(date).isBefore(this.isAfterDate)
 				}
 				return this.$moment(date, "MM-DD-YYYY").isBefore(
 					this.$moment(newDate, "MM-DD-YYYY")

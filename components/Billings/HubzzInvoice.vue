@@ -62,12 +62,16 @@
           class="w-full md:w-1/2 md:mx-2"
           :name="'date_end'"
           :label="'To'"
+          is-after
+          :isAfterDate="toPostPracticeInvoice.date_start"
         />
-        <AppDate
+
+        <AppDate 
           v-model="toPostPracticeInvoice.due_date"
           class="w-full md:w-1/2 md:mx-2"
-          :name="'due_date'"
-          :label="'Due Date'"
+          :name="'due_date'" 
+          :label="'Due Date'" 
+          is-after 
         />
       </div>
     </div>
@@ -660,7 +664,7 @@ export default {
 	components: {
 		AppLoading,
 		AppButton,
-		AppDate
+		AppDate,
 	},
 	props: [
 		"forViewing",
@@ -697,6 +701,7 @@ export default {
         late_hours: 0,
         late_minutes: 0
       },
+      isAfterDate: null,
       formError: [],
 			// createdInvoiceItems: [],
 			// createdDisputedItems: [],

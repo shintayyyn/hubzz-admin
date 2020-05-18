@@ -310,10 +310,9 @@ export default {
 		error: Object,
 		inStyle: String,
 		inClass: String,
-		format: String,
 		// disabled all dates past the current date
 		isAfter: Boolean,
-		isBefore: Boolean,
+    isBefore: Boolean,
 		format: {
 			type: String,
 			default: "YYYY-MM-DD"

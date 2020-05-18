@@ -25,6 +25,8 @@
             class="w-full md:w-1/2 md:mx-2"
             :name="'approved_at_date_end'"
             :label="'To'"
+            is-after 
+            :isAfterDate="toFilter.approved_at_date_start"
           />
           <div class="w-full flex flex-col justify-center items-start">
             <AppButton
