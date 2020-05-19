@@ -102,6 +102,21 @@
         @page="setPage" 
       />
 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
@@ -397,6 +412,36 @@ import AppDate from '@/components/Base/AppDate'
           this.$nuxt.error(err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/activated-practices/generate-key', {
+          filename: `activatedPractices.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/activated-practices/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },

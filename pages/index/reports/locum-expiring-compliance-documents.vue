@@ -78,6 +78,21 @@
         @page="setPage" 
       />
 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
       <div v-if="true" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
@@ -106,6 +121,7 @@
     data () {
       return {
         loading: false,
+        downloading: false,
         count: 0,
         locumExpiringComplianceDocuments: [],
         orderBy: [],
@@ -317,6 +333,33 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/locum-expiring-compliance-documents/generate-key', {
+          filename: `locumExpiringComplianceDocumentsReport.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-expiring-compliance-documents/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },

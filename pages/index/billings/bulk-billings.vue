@@ -236,7 +236,8 @@ export default {
     AppDateToggled,
     AppButton,
     AppInput,
-	},
+  },
+  
 	data () {
 		return {
       showPaidModal: false,
@@ -313,7 +314,8 @@ export default {
 				}
 			]
 		}
-	},
+  },
+  
 	computed: {
 		loadingSessions () {
 			return this.$store.state.jobs.loading_jobs
