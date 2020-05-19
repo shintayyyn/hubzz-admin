@@ -4,17 +4,17 @@
       <div class="relative w-full">
         <div class="flex items-center w-full">
           <AppDate
-            v-model="practiceParams.practice_invoiceable_date_start"
+            v-model="invoiceableDateStart"
             class="md:mx-2 text-white"
             :name="'practice_invoiceable_date_start'"
             :label="'From'"
           />
           <AppDate
-            v-model="practiceParams.practice_invoiceable_date_end"
+            v-model="invoiceableDateEnd"
             class="md:mx-2 text-white"
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
-            :isAfterDate="practiceParams.practice_invoiceable_date_start"
+            :isAfterDate="invoiceableDateStart"
           />
           
           <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
@@ -34,7 +34,7 @@
           />-->
           <AppButton
             class="whitespace-no-wrap"
-            :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
+            :disabled="invoiceableDateStart && invoiceableDateEnd ? false : true"
             :label="'Search for Practices'"
             :icon="'search'"
             @click="getBillablePractices()"
@@ -245,6 +245,8 @@ export default {
 			search: "",
       chosenPractices:[],
       dueDate: '',
+      invoiceableDateStart: "",
+      invoiceableDateEnd: "",
 			// jobPartsParams: {
 			// 	approved_at_date_start: null,
 			// 	approved_at_date_end: null,
@@ -343,6 +345,17 @@ export default {
 	},
 
 	watch: {
+    invoiceableDateStart: function (value) {
+      console.log('value', value)
+      if (value > this.invoiceableDateEnd) { 
+        this.invoiceableDateEnd = ""
+      }
+      this.practiceParams.practice_invoiceable_date_start = value
+    },
+    invoiceableDateEnd: function (value) {
+      this.practiceParams.practice_invoiceable_date_end = value
+      console.log('value datend', value)
+    },
 		search (value) {
       console.log('search for', value)
 			this.searchSubmit()
