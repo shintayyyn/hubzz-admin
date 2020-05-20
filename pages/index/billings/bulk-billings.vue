@@ -143,8 +143,10 @@
       >
         Input Job Part Approval / Disputed Dates to see Billable Practices
       </div>
-      <div v-else class="mt-2 w-full text-center text-white">
-        No practice to invoice found
+      <div 
+        v-else-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount === 0 "
+        class="mt-2 w-full text-center text-white">
+        {{ searchMessage }}
       </div>
     </template>
 
@@ -240,6 +242,7 @@ export default {
   
 	data () {
 		return {
+      searchMessage: "",
       showPaidModal: false,
 			// for app table
 			currentPage: 1,
@@ -348,7 +351,6 @@ export default {
 
 	watch: {
     invoiceableDateStart: function (value) {
-      console.log('value', value)
       if (value > this.invoiceableDateEnd) { 
         this.invoiceableDateEnd = ""
       }
@@ -356,7 +358,6 @@ export default {
     },
     invoiceableDateEnd: function (value) {
       this.practiceParams.practice_invoiceable_date_end = value
-      console.log('value datend', value)
     },
 		search (value) {
       console.log('search for', value)
@@ -368,8 +369,8 @@ export default {
 		}
 	},
 	async created (){
-			await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
-			await this.$store.commit("practices/SET_PRACTICES", [])
+    await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
+    await this.$store.commit("practices/SET_PRACTICES", [])
 	},
 	// async asyncData ({ app, route, store }) {
 	// 	try {
@@ -416,7 +417,14 @@ export default {
 			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, {
 				params
 			})
-			const itemCount = response.data.count
+      const itemCount = response.data.count
+
+      if (itemCount > 0) {
+        this.searchMessage = ""
+      } else {
+        this.searchMessage = "No practice to invoice found"
+      }
+
 			await this.$store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 
 			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })

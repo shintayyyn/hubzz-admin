@@ -12,7 +12,7 @@
     <div class="flex flex-row justify-start mt-1">
       <div class="flex flex-col w-full">
         <input
-          :value="value ? $moment(value).format('YYYY-MM-DD') : $moment().format('YYYY-MM-DD')"
+          :value="value ? $moment(value).format('DD/MM/YYYY') : $moment().format('DD/MM/YYYY')"
           type="input"
           :placeholder="format"
           class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
