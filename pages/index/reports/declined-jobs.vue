@@ -126,6 +126,7 @@
       return {
         loading: false,
         count: 0,
+        downloading: false,
         declinedJobs: [],
         orderBy: [],
         orderBys: [

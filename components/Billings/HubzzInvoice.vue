@@ -52,22 +52,25 @@
       </div>
       <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2 text-white">
         <AppDate
-          v-model="toPostPracticeInvoice.date_start"
+          v-model="forPeriodDateStart"
           class="w-full md:w-1/2 md:mx-2"
           :name="'date_start'"
           :label="'From'"
         />
         <AppDate
-          v-model="toPostPracticeInvoice.date_end"
+          v-model="forPeriodDateEnd"
           class="w-full md:w-1/2 md:mx-2"
           :name="'date_end'"
           :label="'To'"
+          :isAfterDate="forPeriodDateStart"
         />
-        <AppDate
+
+        <AppDate 
           v-model="toPostPracticeInvoice.due_date"
           class="w-full md:w-1/2 md:mx-2"
-          :name="'due_date'"
-          :label="'Due Date'"
+          :name="'due_date'" 
+          :label="'Due Date'" 
+          is-after 
         />
       </div>
     </div>
@@ -140,11 +143,7 @@
           </div>
         </div>
         <!-------------------- FOR INVOICES - INVOICE ITEMS ------------------------>
-        <div
-          v-if="invoiceItems && invoiceItems.length > 0"
-          class="flex flex-col overflow-x-auto"
-          :class="doNotShow && 'mx-4'"
-        >
+        <div v-if="invoiceItems && invoiceItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
           <div
             :ref="'items-header'"
             :class="!doNotShow && 'px-4'"
@@ -184,9 +183,9 @@
             :class="!doNotShow && 'px-4'"
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
           > 
-            <div class="flex w-full justify-center border-b border-gray-500 py-1">
+            <div class="flex w-full border-b border-gray-500 py-1">
               <!-- DESCRIPTION -->
-              <div v-if="forViewing == false" class="w-4/6 text-sm mx-1">
+              <div v-if="forViewing == false" class="w-4/6 text-sm">
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -205,7 +204,7 @@
                 {{ item.description }}
               </div>
               <!-- TOTAL HOURS -->
-              <div v-if="forViewing == false" class="w-1/6 text-sm mx-1">
+              <div v-if="forViewing == false" class="w-1/6 text-sm">
                 <!-- <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -214,14 +213,14 @@
                   placeholder="Enter Description"
                 /> -->
                 <p
-                  class="text-left px-2 py-1"
+                  class="w-full text-left px-2 py-1"
                 >
                   {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
                 </p>
               </div>
-              <div v-else>
-                <div v-if="!byLocum" class="max-w px-2 py-1 w-1/6">
-                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+              <div v-else class="max-w px-2 py-1 w-1/6">
+                <div v-if="!byLocum">
+                  {{ item.total_hours ? item.total_hours.toFixed(2) + " Hours " : "N/A" }}
                 </div>
               </div>
               <!-- AMOUNT TOTAL -->
@@ -238,9 +237,9 @@
                     placeholder="Enter Total"
                   >
                 </template>
-                <p v-else class="px-2 py-1 text-right text-black">
+                <div v-else class="max-w px-2 py-1 text-right text-black">
                   {{ item.total }}
-                </p>
+                </div>
               </div>
               <template v-if="forViewing == false">
                 <div v-if="doNotShow" class="mr-2 flex items-center">
@@ -255,11 +254,7 @@
         </div>
 
         <!----------------------- FOR DISPUTED ITEMS --------------------------->
-        <div
-          v-if="disputedItems && disputedItems.length > 0"
-          class="flex flex-col overflow-x-auto"
-          :class="doNotShow && 'mx-4'"
-        >
+        <div v-if="disputedItems && disputedItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
           <div
             :ref="'items-header'"
             :class="!doNotShow && 'px-4'"
@@ -537,12 +532,22 @@
         </div>
 
         <!-- TOTALS -->
-        <div v-if="!byLocum" ref="items-total" class="flex justify-betwen px-4 pt-2">
-          <div class="my-1 px-1 w-3/4 font-bold">
-            Total
+        <div v-if="!byLocum" ref="items-total" class="flex flex-col justify-between px-4 pt-2">
+          <div class="flex flex-row justify-between w-full">
+            <div class="my-1 px-1 font-bold">
+              Total
+            </div>
+            <div class="my-1 px-1 text-right text-lg font-semibold">
+              {{ forViewing === true ? "£ " + practiceInvoice.total_amount.toFixed(2) : "£ " + amountTotal }}
+            </div>
           </div>
-          <div class="my-1 px-1 w-1/4 text-right text-lg font-semibold">
-            {{ "£ " + amountTotal }}
+          <div class="flex flex-row justify-between w-full">
+            <span class="my-1 px-1 font-bold">
+              Total Hours
+            </span>
+            <div class="my-1 px-1 text-right text-lg font-semibold">
+              {{ totalHoursSum + ' Hours' }}
+            </div>
           </div>
         </div>
         <div v-else>
@@ -660,7 +665,7 @@ export default {
 	components: {
 		AppLoading,
 		AppButton,
-		AppDate
+		AppDate,
 	},
 	props: [
 		"forViewing",
@@ -677,6 +682,8 @@ export default {
 	],
 	data () {
 		return {
+      forPeriodDateStart: "",
+      forPeriodDateEnd: "",
 			toPostPracticeInvoice: {
 				practice_id: "",
 				date_start: "",
@@ -697,6 +704,7 @@ export default {
         late_hours: 0,
         late_minutes: 0
       },
+      isAfterDate: null,
       formError: [],
 			// createdInvoiceItems: [],
 			// createdDisputedItems: [],
@@ -751,8 +759,20 @@ export default {
 				creditTotal = createdCreditItems.reduce(reducer)
 			}
 			// console.log("credit items", this.createdCreditItems);
-			const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+      const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+      
 			return netSum
+    },
+    totalHoursSum: function () {
+      let totalHours = 0
+      const reducer = (accumulator, currentValue) => accumulator + currentValue
+      if (this.invoiceItems && this.invoiceItems.length > 0) {
+        let invoiceItemHours = this.invoiceItems.map(invoiceItem => 
+          parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0)
+        )
+        totalHours = invoiceItemHours.reduce(reducer)
+      }
+      return totalHours.toFixed(2)
     },
     subTotal () {
       if (this.locumInvoice ) {
@@ -818,7 +838,20 @@ export default {
 
       return 0
     },
-	},
+  },
+
+  watch: {
+    forPeriodDateStart: function (value) {
+      console.log('value', value)
+      if (value > this.forPeriodDateEnd) { 
+        this.forPeriodDateEnd = ""
+      }
+    },
+    forPeriodDateEnd: function (value) {
+      console.log('value datend', value)
+    }
+  },
+  
 	created () {
     console.log('locumInvoice', this.locumInvoice)
 		// if (this.invoiceItems) {
@@ -832,7 +865,8 @@ export default {
 		// }
 		// if (this.practiceInvoice) {
 		// 	console.log("practice invoice", this.practiceInvoice);
-		// }
+    // }
+    console.log('practice invoice', this.practiceInvoice)
     console.log("practice", this.practice)
     console.log("invoice items", this.invoiceItems)
 
@@ -963,6 +997,8 @@ export default {
 				this.createdCreditItems
 			)
 			this.toPostPracticeInvoice.total_amount = await this.amountTotal
+      this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
+      this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
 
 			if (this.toPostPracticeInvoice.items.length > 0) {
 				await this.$axios

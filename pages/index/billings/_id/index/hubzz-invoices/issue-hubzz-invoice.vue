@@ -15,21 +15,22 @@
       <div class="flex flex-col md:flex-row justify-between md:items-center text-white">
         <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
           <AppDate
-            v-model="toFilter.approved_at_date_start"
+            v-model="approvedAtDateStart"
             class="w-full md:w-1/2 md:mx-2"
             :name="'approved_at_date_start'"
             :label="'From'"
           />
           <AppDate
-            v-model="toFilter.approved_at_date_end"
+            v-model="approvedAtDateEnd"
             class="w-full md:w-1/2 md:mx-2"
             :name="'approved_at_date_end'"
             :label="'To'"
+            :isAfterDate="approvedAtDateStart"
           />
           <div class="w-full flex flex-col justify-center items-start">
             <AppButton
               class="whitespace-no-wrap"
-              :disabled="toFilter.approved_at_date_start && toFilter.approved_at_date_end ? false : true"
+              :disabled="approvedAtDateStart && approvedAtDateEnd ? false : true"
               :label="'Search for Invoices'"
               :icon="'search'"
               @click="chooseJobPartsModal = true"
@@ -99,8 +100,8 @@ export default {
 			loading: false,
 			chooseJobPartsModal: false,
 			showDisputed: false,
-			date_start: "",
-      date_end: "",
+			approvedAtDateStart: "",
+      approvedAtDateEnd: "",
 			toFilter: {
 				job_practice_id: this.$route.params.id,
 				approved_at_date_start: null,
@@ -116,7 +117,21 @@ export default {
 			invoiceItems: [],
 			disputedItems: []
 		}
-	},
+  },
+  
+  watch: {
+    approvedAtDateStart: function (value) {
+      console.log('value', value)
+      if (value > this.approvedAtDateEnd) { 
+        this.approvedAtDateEnd = ""
+      }
+      this.toFilter.approved_at_date_start = value
+    },
+    approvedAtDateEnd: function (value) {
+      this.toFilter.approved_at_date_end = value
+      console.log('value datend', value)
+    }
+  },
 
 	async asyncData ({ app, route }) {
 		try {
@@ -177,7 +192,7 @@ export default {
 						this.$moment(chosenJobParts[i].date_end).format('DD/MM/YYYY'),
 						// divided by 60 to convert field "final_hours", from minutes to hours
 					total: parseFloat(
-						(chosenJobParts[i].final_hours/60) * chosenJobParts[i].practice_rate
+						(chosenJobParts[i].final_hours/60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
 					).toFixed(2)
 				}
 
@@ -189,7 +204,7 @@ export default {
           newItem.id = this.disputedItems.length + 1
 					this.disputedItems.push(newItem)
 				}
-			}
+      }
 		},
 
 		async goBack () {

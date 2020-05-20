@@ -4,16 +4,17 @@
       <div class="relative w-full">
         <div class="flex items-center w-full">
           <AppDate
-            v-model="practiceParams.practice_invoiceable_date_start"
+            v-model="invoiceableDateStart"
             class="md:mx-2 text-white"
             :name="'practice_invoiceable_date_start'"
             :label="'From'"
           />
           <AppDate
-            v-model="practiceParams.practice_invoiceable_date_end"
+            v-model="invoiceableDateEnd"
             class="md:mx-2 text-white"
             :name="'practice_invoiceable_date_end'"
             :label="'To'"
+            :isAfterDate="invoiceableDateStart"
           />
           
           <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
@@ -33,7 +34,7 @@
           />-->
           <AppButton
             class="whitespace-no-wrap"
-            :disabled="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end ? false : true"
+            :disabled="invoiceableDateStart && invoiceableDateEnd ? false : true"
             :label="'Search for Practices'"
             :icon="'search'"
             @click="getBillablePractices()"
@@ -142,8 +143,10 @@
       >
         Input Job Part Approval / Disputed Dates to see Billable Practices
       </div>
-      <div v-else class="mt-2 w-full text-center text-white">
-        No practice to invoice found
+      <div 
+        v-else-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount === 0 "
+        class="mt-2 w-full text-center text-white">
+        {{ searchMessage }}
       </div>
     </template>
 
@@ -235,15 +238,19 @@ export default {
     AppDateToggled,
     AppButton,
     AppInput,
-	},
+  },
+  
 	data () {
 		return {
+      searchMessage: "",
       showPaidModal: false,
 			// for app table
 			currentPage: 1,
 			search: "",
       chosenPractices:[],
       dueDate: '',
+      invoiceableDateStart: "",
+      invoiceableDateEnd: "",
 			// jobPartsParams: {
 			// 	approved_at_date_start: null,
 			// 	approved_at_date_end: null,
@@ -310,7 +317,8 @@ export default {
 				}
 			]
 		}
-	},
+  },
+  
 	computed: {
 		loadingSessions () {
 			return this.$store.state.jobs.loading_jobs
@@ -342,6 +350,15 @@ export default {
 	},
 
 	watch: {
+    invoiceableDateStart: function (value) {
+      if (value > this.invoiceableDateEnd) { 
+        this.invoiceableDateEnd = ""
+      }
+      this.practiceParams.practice_invoiceable_date_start = value
+    },
+    invoiceableDateEnd: function (value) {
+      this.practiceParams.practice_invoiceable_date_end = value
+    },
 		search (value) {
       console.log('search for', value)
 			this.searchSubmit()
@@ -352,8 +369,8 @@ export default {
 		}
 	},
 	async created (){
-			await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
-			await this.$store.commit("practices/SET_PRACTICES", [])
+    await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
+    await this.$store.commit("practices/SET_PRACTICES", [])
 	},
 	// async asyncData ({ app, route, store }) {
 	// 	try {
@@ -400,7 +417,14 @@ export default {
 			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, {
 				params
 			})
-			const itemCount = response.data.count
+      const itemCount = response.data.count
+
+      if (itemCount > 0) {
+        this.searchMessage = ""
+      } else {
+        this.searchMessage = "No practice to invoice found"
+      }
+
 			await this.$store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 
 			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })
