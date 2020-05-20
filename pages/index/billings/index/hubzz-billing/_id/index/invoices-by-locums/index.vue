@@ -9,7 +9,7 @@
         :perPage="params.limit"
         :columns="columns"
         :loading="loadingpracticeInvoices"
-        :routerLink="`/billings/${$route.params.id}/invoices-by-locums`"
+        :routerLink="`/billings/hubzz-billing/${$route.params.id}/invoices-by-locums`"
         :orderBy="params.order_by"
         :customWidth="200"
         @pagechanged="pagechanged"

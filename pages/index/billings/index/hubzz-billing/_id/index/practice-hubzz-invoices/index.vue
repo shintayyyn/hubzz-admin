@@ -3,7 +3,7 @@
     <div class="mx-2 float-right">
       <AppButton
         :label="'Issue HUBZZ Invoice'"
-        :nuxt-link="`/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`"
+        :nuxt-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`"
         class="my-2 text-sm"
       />
     </div>
@@ -15,7 +15,7 @@
       :perPage="params.limit"
       :columns="columns"
       :loading="loadingHubzzInvoices"
-      :router-link="`/billings/${$route.params.id}/hubzz-invoices`"
+      :router-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`"
       :order-by="params.order_by"
       :customWidth="1200"
       @pagechanged="pagechanged"

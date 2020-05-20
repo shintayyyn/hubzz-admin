@@ -48,14 +48,15 @@ export default {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/practice-invoices/${route.params.hubzzInvoiceId}`,
 				{
-          viewing_practice_id: route.params.id,
           with_relations: true,
 				}
 			)
-			const practiceInvoice = response.data.practice_invoice
+      const practiceInvoice = response.data.practice_invoice
+      
+      console.log('practice invoice', practiceInvoice)
 
 			response = await app.$axios.$get(
-				`/api/v1/admin/practices/${route.params.id}`
+				`/api/v1/admin/practices/${practiceInvoice.practice_id}`
 			)
 			const practice = response.data.practice
       const practiceInvoiceItems = practiceInvoice.practice_invoice_items
@@ -110,7 +111,7 @@ export default {
 				...this.$route.query
 			}
 			this.$router.push({
-				path: `/billings/${this.$route.params.id}/hubzz-invoices`,
+				path: `/billings/hubzz-invoices`,
 				query
 			})
 		}
@@ -134,7 +135,7 @@ export default {
 }
 @media screen and (min-width: 1200px) {
 	.hubzz-invoice-modal {
-		width: 70%;
+		width: 80%;
 	}
 }
 .document {
