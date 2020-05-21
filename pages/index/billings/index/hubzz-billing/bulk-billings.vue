@@ -39,7 +39,7 @@
             :icon="'search'"
             @click="getBillablePractices()"
           />
-          <AppButton
+          <!-- <AppButton
             class="mx-2"
             :disabled="practiceParams.practice_invoiceable_date_start 
               && practiceParams.practice_invoiceable_date_end
@@ -48,6 +48,16 @@
             :label="'Generate HUBZZ Invoices'"
             :icon="'add-rectangle'"
             @click="showPaidModal = true"
+          /> -->
+          <AppButton
+            class="mx-2"
+            :disabled="practiceParams.practice_invoiceable_date_start 
+              && practiceParams.practice_invoiceable_date_end
+              && chosenPractices.length > 0  
+              ? false : true"
+            :label="'Generate HUBZZ Invoices'"
+            :icon="'add-rectangle'"
+            @click="processBulkBilling()"
           />
         </div>
         <div
@@ -119,6 +129,7 @@
           {{ slotProps.item.status }}
         </div>
       </template>
+
       <template v-slot:type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
@@ -127,6 +138,7 @@
           {{ slotProps.item.type }}
         </div>
       </template>
+
       <template v-slot:hub_type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
@@ -149,7 +161,8 @@
         {{ searchMessage }}
       </div>
     </template>
-
+    
+    <!-- TO PAID CONFIRM CANCEL -->
     <transition name="fade" mode="out-in">
       <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
         <transition name="drop" mode="out-in">
@@ -160,33 +173,8 @@
             :label="'Due Date'" 
             is-after 
           />
-          <!-- <AppDate
-            v-model="dueDate"
-            class="m-4 text-white"
-            :name="'due_date'"
-            :label="'Due Date'"
-          /> -->
-          <!-- <AppConfirm
-            v-if="confirm"
-            :in-style="'top:35%'"
-            :in-class="'rounded-lg'"
-            :message="'Are you sure you want to mark this bill as paid?'"
-            @cancel="confirm = false"
-            @confirm="toMarkAsPaid()"
-          /> -->
         </transition>
-        <!-- TO PAID CONFIRM CANCEL -->
-        <!-- <div v-if="confirm == true" class="shield" @click="confirm = false" />
-        <div class="flex items-center text-sm text-white m-4">
-          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showPaidModal = false">
-            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
-          </div>
-        </div> -->
-
         <div class="flex flex-col w-full text-white px-8 justify-between">
-          <!-- <div class="justify-center">
-            <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
-          </div> -->
           <div class="flex flex-row mb-4">
             <div
               class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
@@ -202,9 +190,82 @@
             </div>
           </div>
         </div>
-        <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
       </div>
     </transition>
+    <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
+
+    <!-- TO SESSIONS MODAL -->
+    <transition name="fade" mode="out-in">
+      <div v-if="showSessionsModal == true" class="sessions-modal overflow-hidden">
+        <div class="m-4">
+          <div 
+            v-for="(item, index) in chosenPractices"
+            :key="`item-${index}`"
+            class="text-white"
+          >
+            <div>
+              {{ item.name }}
+            </div>
+            <AppTable
+              :total="item.practice_invoiceable_approved_filtered_job_parts.length"
+              :items="item.practice_invoiceable_approved_filtered_job_parts"
+              :currentPage="1"
+              :perPage="10"
+              :columns="jobPartsColumns"
+              :customWidth="200"
+              @checkClicked="toggleCheckJobParts"
+              @pagechanged="pagechanged"
+              @sorted="sorted"
+            >
+              <template v-slot:checker="slotProps">
+                <input 
+                  :id="slotProps.item" 
+                  v-model="chosenPracticeJobParts" 
+                  type="checkbox" 
+                  :value="slotProps.item" 
+                >
+                <label :for="slotProps.item" />
+              </template>
+
+              <template v-slot:status_slot="slotProps">
+                <div
+                  class="rounded-full text-center px-4 py-1 w-32"
+                  :class="statusStyle(slotProps.item.invoice_status)"
+                >
+                  {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }}
+                </div>
+              </template>
+            </AppTable>
+          </div>
+        </div>
+        <transition name="drop" mode="out-in">
+          <AppDate 
+            v-model="dueDate" 
+            class="m-4 text-white" 
+            :name="'due_date'" 
+            :label="'Due Date'" 
+            is-after 
+          />
+        </transition>
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div class="flex flex-row mb-4">
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+              @click="createBulkBillingChecked()"
+            >
+              Confirm
+            </div>
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
+              @click="showSessionsModal = false"
+            >
+              Cancel
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <!-- TO SESSIONS MODAL ENDS HERE -->
 
     <div
       v-if="
@@ -216,10 +277,10 @@
     />
     <div
       v-if="
-        showPaidModal === true
+        showPaidModal === true || showSessionsModal === true
       "
       class="billing-shield"
-      @click="showPaidModal = false"
+      @click="showSessionsModal === true"
     />
     <nuxt-child />
   </div>
@@ -244,13 +305,18 @@ export default {
 		return {
       searchMessage: "",
       showPaidModal: false,
+      showSessionsModal: false,
 			// for app table
 			currentPage: 1,
 			search: "",
       chosenPractices:[],
       dueDate: '',
+
       invoiceableDateStart: "",
       invoiceableDateEnd: "",
+      chosenPracticesInvoiceable: [],
+      chosenPracticeJobParts: [],
+      
 			// jobPartsParams: {
 			// 	approved_at_date_start: null,
 			// 	approved_at_date_end: null,
@@ -271,7 +337,8 @@ export default {
         practice_invoiceable_date_start: null,
         practice_invoiceable_date_end: null,
         practice_invoiceable: true,
-			},
+      },
+      
 			loading: false,
 			columns: [
 				{
@@ -315,6 +382,43 @@ export default {
 					slotName: "hub_type_slot",
 					class: "text-center"
 				}
+      ],
+      jobPartsColumns: [
+				{
+					name: "Check",
+					dataIndex: "checker",
+					class: "text-center",
+					slotName: "checker",
+					eventName: "checkClicked"
+        },
+        {
+					name: "Invoice Number",
+					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
+					sortable: false
+				},
+				{
+					name: "Job Part Number",
+					dataIndex: "job_part_number",
+					sortable: false
+				},
+				{
+          name: "Date Start",
+          dataIndex: "date_start",
+					class: "text-center localDate",
+					sortable: false
+				},
+				{
+          name: "Date End",
+          dataIndex: "date_end",
+					class: "text-center localDate",
+					sortable: false
+        },
+        {
+          name: "Total",
+          dataIndex: "total",
+					class: "text-center currency",
+					sortable: false
+				},
 			]
 		}
   },
@@ -498,6 +602,118 @@ export default {
       await this.$store.commit("practices/TOGGLE_LOADING", false)
     },
 
+    async processBulkBilling () {
+      console.log('chosenpractices', this.chosenPractices)
+      this.chosenPractices.forEach(practice => {
+        practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
+          this.chosenPracticeJobParts.push(jobPart)
+        })
+      })
+      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
+        const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
+          return {
+            type: 'Job Part - Invoiced',
+            job_part_id: jobPart.id,
+            description:
+              "Job Number " +
+              jobPart.job_part_number +
+              " for £" +
+              jobPart.practice_rate +
+              " from " +
+              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
+              " to " +
+              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
+            total: jobPart.total,
+          }
+        })
+
+        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
+
+        return {
+          practice_id: practice.id,
+          items,
+          date_start: this.practiceParams.practice_invoiceable_date_start,
+          date_end: this.practiceParams.practice_invoiceable_date_end,
+          total_amount,
+          due_date: this.dueDate
+        }
+      })
+      this.chosenPracticesInvoiceable = practiceInvoiceDatas
+      console.log('invoice dates', this.chosenPracticesInvoiceable)
+      this.showSessionsModal = true
+    },
+
+    async createBulkBillingChecked () {
+      await this.$store.commit("practices/TOGGLE_LOADING", true)
+      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
+        const chosenJobParts = this.chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === practice.id)
+        console.log('chosenjobparts', chosenJobParts)
+
+        const items = chosenJobParts.map((jobPart) => {
+          return {
+            type: 'Job Part - Invoiced',
+            job_part_id: jobPart.id,
+            description:
+              "Job Number " +
+              jobPart.job_part_number +
+              " for £" +
+              jobPart.practice_rate +
+              " from " +
+              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
+              " to " +
+              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
+            total: jobPart.total,
+          }
+        })
+
+        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
+
+        return {
+          practice_id: practice.id,
+          items,
+          date_start: this.practiceParams.practice_invoiceable_date_start,
+          date_end: this.practiceParams.practice_invoiceable_date_end,
+          total_amount,
+          due_date: this.dueDate
+        }
+      })
+
+      console.log('practice invoice datas to invoice', practiceInvoiceDatas)
+      
+      await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
+          practice_invoice_datas: practiceInvoiceDatas,
+        })
+        .then(res => {
+          console.log('res',res)
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Success"
+          })
+          this.chosenPractices = []
+          this.getPractices()
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        })
+
+      
+      this.practiceParams.practice_invoiceable_date_start =  null
+      this.practiceParams.practice_invoiceable_date_end = null
+      this.search = ""
+      this.chosenPractices = []
+      this.chosenPracticeJobParts = []
+      this.dueDate = ''
+      this.showPaidModal = false,
+      this.showSessionsModal = false,
+      this.$store.dispatch('practices/clearPractices')
+      await this.$store.commit("practices/TOGGLE_LOADING", false)
+    },
+
 		goToPage (page) {
 			if (page < 1) {
 				return
@@ -582,7 +798,19 @@ export default {
       }
       
       console.log('chosen practices', this.chosenPractices)
-		},
+    },
+
+    toggleCheckJobParts (item) {
+      const index = this.chosenPracticeJobParts.findIndex(jobPart => {
+        return jobPart.id === item.id
+      })
+      
+      if (index > -1) {
+        this.chosenPracticeJobParts.splice(index, 1)
+      } else {
+        this.chosenPracticeJobParts.push(item)
+      }
+    },
 
 		getPractices () {
       console.log('params get practices', this.practiceParams)
@@ -672,6 +900,16 @@ export default {
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
+    },
+
+    pageChangedJobPart (page) {
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
+			this.params.offset = this.params.limit * (page - 1)
+			this.currentPage = page
+			this.getJobParts(this.params)
 		},
 
 		sorted (order_by) {
@@ -697,6 +935,21 @@ export default {
 .md\:table-cell:last-child {
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
+}
+.sessions-modal {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	min-width: 900px;
+	min-height: 750px;
+	max-width: 100%;
+	max-height: 90%;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
 }
 .mark-paid-modal {
 	position: fixed;
