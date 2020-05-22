@@ -1,5 +1,22 @@
 <template>
   <div>
+    <div class="px-2 flex justify-start items-center flex-wrap">
+      <AppButton
+        class="mr-2"
+        :label="'Create SAGE.csv'"
+        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
+        @click="showSageChecker()"
+      />
+      <AppButton
+        v-if="sageChecker === true"
+        class="mr-2 text-white"
+        :background="'green'"
+        :label="'Confirm Invoices and Export SAGE.csv'"
+        :icon="'circle-check'"
+        :disabled="chosenInvoices.length == 0"
+        @click="confirmSage()"
+      />
+    </div>
     <AppTable
       v-if="hubzzInvoicesCount> 0"
       :total="hubzzInvoicesCount"
@@ -8,12 +25,24 @@
       :perPage="params.limit"
       :columns="columns"
       :loading="loadingHubzzInvoices"
-      :router-link="`/billings/hubzz-invoices`"
       :order-by="params.order_by"
       :customWidth="1200"
+      @checkClicked="toggleCheck"
       @pagechanged="pagechanged"
       @sorted="sorted"
     >
+      <template 
+        v-slot:checker="slotProps"
+      >
+        <input 
+          :id="slotProps.item" 
+          v-model="chosenInvoices" 
+          type="checkbox" 
+          :value="slotProps.item" 
+        >
+        <label :for="slotProps.item" />
+      </template>
+
       <template v-slot:total_amount_slot="slotProps">
         <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
       </template>
@@ -40,7 +69,7 @@
             :label="'Mark as Paid'"
             :background="'green'"
             class="text-white mr-2"
-            :disabled="slotProps.item.sage_ref"
+            :disabled="slotProps.item.sage_ref ? true : false"
             @click="toShowPaidModal(slotProps.item.id)"
           />
           <span
@@ -57,6 +86,16 @@
           class="px-2"
         >
           {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
+        </div>
+      </template>
+      <template v-slot:actions="slotProps">
+        <div class="flex justify-center">
+          <div
+            class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
+            @click.prevent.stop="viewInvoice(slotProps.item.id)"
+          >
+            View
+          </div>
         </div>
       </template>
     </AppTable>
@@ -130,13 +169,16 @@ export default {
 	data () {
 		return {
 			loading: false,
-			currentPage: 1,
+      currentPage: 1,
+      downloading: false,
 			params: {
 				practice_id: "",
 				limit: 10,
 				offset: 0,
 				order_by: ["date_created:desc"]
-			},
+      },
+      chosenInvoices: [],
+      sageChecker: false,
 			// practiceInvoices: [],
 			// practiceInvoicesCount: 0,
 			practice: "",
@@ -184,7 +226,14 @@ export default {
 					dataIndex: "paid_at",
 					slotName: "paid_at",
 					class: "text-center localDate"
-				}
+        },
+        {
+          name: "Actions",
+          slot: true,
+          slotName: "actions",
+          dataIndex: "",
+          class: "text-center"
+        }
 			],
 			// FOR MARKING INVOICE AS PAID
 			showPaidModal: false,
@@ -269,7 +318,72 @@ export default {
 		}
 	},
 	methods: {
-		goToIssue () {},
+    goToIssue () {},
+    showSageChecker () {
+      this.sageChecker = !this.sageChecker
+      const index = this.columns.findIndex(column => {
+        return column.name === "Check"
+      })
+
+      if (index > -1) {
+        this.columns.splice(index, 1)
+      } else {
+        this.columns.unshift(
+          {
+            name: "Check",
+            dataIndex: "checker",
+            class: "text-center",
+            slotName: "checker",
+            eventName: "checkClicked",
+            order: 1
+          },
+        )
+      }
+    },
+    confirmSage () {
+      const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
+
+      this.downloadCsv(invoiceIds)
+    },
+
+    downloadCsv (invoiceIds) {
+      this.downloading = true
+
+      this.$axios.post('/api/v1/admin/hq-invoice/generate-key', {
+        filename: `bulkSage.csv`,
+      }, {
+        params: {
+          practice_invoice_id: invoiceIds,
+        },
+      }).then((responses) => {
+        const token = responses.data.data.token
+        console.log('token', responses)
+
+        window.open(`${process.env.API_URL}/api/v1/admin/hq-invoice/bulk-sage?token=${token}`)
+      }).catch((err) => {
+        console.log('err', err)
+        this.$nuxt.error(err.response ? err.response.data : err)
+      }).finally(() => {
+        this.downloading = false
+      })
+    },
+
+    viewInvoice (invoiceId) {
+      this.$router.push(`/billings/hubzz-invoices/${invoiceId}`)
+    },
+    toggleCheck (item) {
+			const index = this.chosenInvoices.findIndex(invoice => {
+				return invoice.id === item.id
+			})
+
+			if (index > -1) {
+				this.chosenInvoices.splice(index, 1)
+			} else {
+				this.chosenInvoices.push(item)
+      }
+      
+      console.log('chosen invoices', this.chosenInvoices)
+    },
 		getHubzzInvoices (params) {
 			console.log("params", params)
 			this.$store.dispatch("billings/fetchHubzzInvoices", {

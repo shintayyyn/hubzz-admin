@@ -210,7 +210,7 @@
               :total="item.practice_invoiceable_approved_filtered_job_parts.length"
               :items="item.practice_invoiceable_approved_filtered_job_parts"
               :currentPage="1"
-              :perPage="10"
+              :perPage="50"
               :columns="jobPartsColumns"
               :customWidth="200"
               @checkClicked="toggleCheckJobParts"
@@ -280,7 +280,7 @@
         showPaidModal === true || showSessionsModal === true
       "
       class="billing-shield"
-      @click="showSessionsModal === true"
+      @click="showSessionsModal = false"
     />
     <nuxt-child />
   </div>
@@ -906,7 +906,13 @@ export default {
 			// const query = {
 			// 	...this.$route.query,
 			// 	page: page || 1
-			// }
+      // }
+
+      // const params = {
+      //   limit: 10,
+      //   offset: 1,
+      // }
+
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getJobParts(this.params)

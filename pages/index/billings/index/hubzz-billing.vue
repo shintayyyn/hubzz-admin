@@ -200,11 +200,11 @@ export default {
   },
   
   watch: {
-    search (value) {
+    search () {
 			this.searchSubmit()
     },
 
-    $route (to, from) {
+    $route () {
 			this.getPractices()
 		},
   },
@@ -235,7 +235,7 @@ export default {
 			this.$router.push({ query })
 		},
 
-		searchSubmit: debounce (function(page, order_by) {
+		searchSubmit: debounce (function (page, order_by) {
       let search = this.search
       
 			let query = {
@@ -338,7 +338,7 @@ export default {
 			}
 		},
 
-		statusStyle(status) {
+		statusStyle (status) {
 			switch (status) {
 				case "Active":
 					return "bg-green text-white lg:px-10 sm:px-2"
