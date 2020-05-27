@@ -434,6 +434,7 @@ import AppDate from '@/components/Base/AppDate'
             ...params,
           },
         }).then((responses) => {
+          console.log('responses', responses)
           const token = responses.data.data.token
 
           window.open(`${process.env.API_URL}/api/v1/admin/reports/activated-practices/csv?token=${token}`)

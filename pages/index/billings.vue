@@ -3,39 +3,42 @@
     <div class="px-2 text-2xl md:text-4xl text-white">
       Billing
     </div>
-    <div class="px-2 flex justify-between items-center flex-wrap">
-      <div /> 
-      <AppButton
-        class="mr-2"
-        :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
-        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
-        @click="goToTab()"
-      />
+    <div class="flex justify-start my-2">
+      <nuxt-link
+        :to="`/billings/hubzz-billing`" 
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path.includes(`hubzz-billing`) ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >
+        HUBZZ Billing
+      </nuxt-link>
+      <nuxt-link
+        :to="`/billings/hubzz-invoices`"
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path.includes(`hubzz-invoices`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >
+        HUBZZ Invoices
+      </nuxt-link>
     </div>
+    <nuxt-child/>
     <div
-      v-if="$route.name.includes('index-billings-id')"
+      v-if="$route.name.includes('index-billings-index-hubzz-billing-id-index')"
       class="shield"
-      @click="$router.push({ path: `/billings`, query: $route.query })"
+      @click="$router.push({ path: `/billings/hubzz-billing`, query: $route.query })"
     />
-    <nuxt-child />
+    <div
+      v-if="$route.name.includes('index-billings-index-hubzz-invoices-hubzzInvoiceId')"
+      class="shield"
+      @click="$router.push({ path: `/billings/hubzz-invoices`, query: $route.query })"
+    />
   </div>
 </template>
 
 <script>
-import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
-		AppButton,
   },
   methods: {
-    goToTab () {
-			console.log('route', this.$route.name)
-			if (this.$route.name.includes('bulk-billings')) {
-				this.$router.push(`/billings`)
-			} else {
-				this.$router.push(`/billings/bulk-billings`)
-			}
-		}
+    
   }
 }
 </script>

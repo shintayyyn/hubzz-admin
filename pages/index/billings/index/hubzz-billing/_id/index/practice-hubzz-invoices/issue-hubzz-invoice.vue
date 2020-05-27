@@ -2,7 +2,7 @@
   <div ref="modalContainer" class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg">
     <div class="flex items-center text-sm text-white py-2">
       <nuxt-link 
-        :to="{path: `/billings/${$route.params.id}/hubzz-invoices`, query: $route.query}">
+        :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`, query: $route.query}">
         <svgicon
           name="arrow-left-solid"
           height="40"

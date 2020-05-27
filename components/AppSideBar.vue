@@ -122,7 +122,7 @@ export default {
         addedLists.push({ name: "Practices", route: "/practices", order: 3})
       }
       if(this.authAdminPermissions.includes('View Hubzz Invoices')){
-        addedLists.push({ name: "Billing", route: "/billings", order: 4})
+        addedLists.push({ name: "Billing", route: "/billings/hubzz-billing", order: 4})
       }
       if(this.authAdminPermissions.includes('View Reports')){
         addedLists.push({ name: "Reports", route: "/reports", order: 5})

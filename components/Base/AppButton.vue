@@ -1,39 +1,39 @@
 <template>
-	<nuxt-link
-		v-if="nuxtLink"
-		:to="nuxtLink"
-		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
-		:class="[
-			disabled
-				? 'hover:text-gray-700 bg-gray-500'
-				: 'bg-sunglow hover:bg-sunglow-dark',
-			inClass
-		]"
-		:style="inStyle"
-	>
-		<template v-if="icon">
-			<svgicon :name="icon" :width="iconSize" class="mr-2" :color="iconColor" />
-		</template>
-		<span>{{ label }}</span>
-	</nuxt-link>
-	<!-- : 'bg-sunglow hover:bg-sunglow-dark', -->
-	<button
-		v-else
-		@click.prevent="$emit('click')"
-		:disabled="disabled"
-		class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
-		:class="[
-			disabled && 'text-gray-700 bg-gray-500 cursor-not-allowed',
-			background && !disabled ? getBackground(background) : '',
-			inClass
-		]"
-		:style="inStyle"
-	>
-		<template v-if="icon">
-			<svgicon :name="icon" :width="iconSize" class="mr-2 fill-current" />
-		</template>
-		<span>{{ label }}</span>
-	</button>
+  <nuxt-link
+    v-if="nuxtLink"
+    :to="nuxtLink"
+    class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
+    :class="[
+      disabled
+        ? 'hover:text-gray-700 bg-gray-500'
+        : 'bg-sunglow hover:bg-sunglow-dark',
+      inClass
+    ]"
+    :style="inStyle"
+  >
+    <template v-if="icon">
+      <svgicon :name="icon" :width="iconSize" class="mr-2" :color="iconColor" />
+    </template>
+    <span>{{ label }}</span>
+  </nuxt-link>
+  <!-- : 'bg-sunglow hover:bg-sunglow-dark', -->
+  <button
+    v-else
+    @click.prevent="$emit('click')"
+    :disabled="disabled"
+    class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
+    :class="[
+      disabled && 'text-gray-700 bg-gray-500 cursor-not-allowed',
+      background && !disabled ? getBackground(background) : '',
+      inClass
+    ]"
+    :style="inStyle"
+  >
+    <template v-if="icon">
+      <svgicon :name="icon" :width="iconSize" class="mr-2 fill-current" />
+    </template>
+    <span>{{ label }}</span>
+  </button>
 </template>
 <script>
 export default {
@@ -69,7 +69,7 @@ export default {
 		}
 	},
 	methods: {
-		getBackground(value) {
+		getBackground (value) {
 			let singleBackground = [
 				"sunglow",
 				"waterloo",
@@ -78,15 +78,15 @@ export default {
 				"transparent",
 				"white",
 				"black"
-			];
+			]
 			if (singleBackground.includes(value)) {
-				return `bg-${value} hover:bg-${value}-dark`;
+				return `bg-${value} hover:bg-${value}-dark`
 			} else {
-				return `bg-${value}-600 hover:bg-${value}-700`;
+				return `bg-${value}-600 hover:bg-${value}-700`
 			}
 		}
 	}
-};
+}
 </script>
 <style>
 .button {
