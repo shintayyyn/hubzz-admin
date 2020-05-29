@@ -108,8 +108,6 @@ export default {
       this.$axios.$get(`/api/v1/admin/supports/count`,{ params }).then(res => {
         this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
       })
-
-      console.log('permissions', this.authAdminPermissions)
       
       let defaultLists = [
         { name: "Dashboard", route: "/", order: 1},     

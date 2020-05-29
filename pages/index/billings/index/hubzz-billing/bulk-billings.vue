@@ -487,7 +487,7 @@ export default {
 			return Math.ceil(this.itemCount / this.practiceParams.limit)
 		},
 		total () {
-			return this.getAllPractices.length
+			return this.$store.state.itemCount
 		}
 	},
 
@@ -510,9 +510,10 @@ export default {
 			// this.getPractices()
 		}
   },
-  async created () {
-    await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
-    await this.$store.commit("practices/SET_PRACTICES", [])
+  created () {
+    console.log('store set 0')
+    this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
+    this.$store.commit("practices/CLEAR_PRACTICES")
   },
 
   // async asyncData ({ error, store}) {
@@ -531,6 +532,7 @@ export default {
   
 	methods: {
 		async getBillablePractices () {
+      console.log('get billable practices start')
 			await this.$store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = this.$route.query
 			page = parseInt(page)
