@@ -94,7 +94,7 @@
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
-      :items="getAllPractices"
+      :items="allPractices"
       :currentPage="currentPage"
       :perPage="practiceParams.limit"
       :columns="columns"
@@ -212,7 +212,7 @@
                 <AppButton
                   class="text-white"
                   :background="'red'"
-                  :disabled="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length > 0 ? true : false"
+                  :disabled="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_approved_filtered_job_parts.length ? false : true"
                   :label="'Remove'"
                   :icon="'garbage'"
                   @click="toggleCheckChosenPractices(item)"
@@ -390,7 +390,7 @@ export default {
 				},
 				{
 					name: "Practice/Surgery",
-					dataIndex: "practice_name",
+					dataIndex: "name",
 					sortable: true
 				},
 				{
@@ -431,11 +431,6 @@ export default {
 					slotName: "checker",
 					eventName: "checkClicked"
         },
-        {
-					name: "Invoice Number",
-					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
-					sortable: false
-				},
 				{
 					name: "Job Part Number",
 					dataIndex: "job_part_number",
@@ -475,7 +470,10 @@ export default {
 		},
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
-		},
+    },
+    allPractices () {
+      return this.$store.state.practices.allPractices
+    },
 		getAllPractices () {
 			return this.$store.getters["practices/getAllPractices"]
 		},
