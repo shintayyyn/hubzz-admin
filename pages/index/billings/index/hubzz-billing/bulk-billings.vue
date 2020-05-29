@@ -511,24 +511,26 @@ export default {
 		$route () {
 			// this.getPractices()
 		}
-	},
-	async created (){
+  },
+  async created () {
     await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
     await this.$store.commit("practices/SET_PRACTICES", [])
-	},
-	// async asyncData ({ app, route, store }) {
-	// 	try {
-		
-	// 		return {
-	// 			// itemCount,
-	// 			// practices
-	// 		}
-	// 	} catch (err) {
-	// 		// error({ statusCode: 404 })
-	// 		console.log("Get practices error!", err)
-	// 	}
-	// },
+  },
 
+  // async asyncData ({ error, store}) {
+  //   try{
+  //     await store.commit("practices/SET_PRACTICE_COUNT", 0)
+  //     await store.commit("practices/SET_PRACTICES", [])
+  //   }catch(err) {
+  //     if (err.response && err.response.status === 401) {
+  //       console.log("something went wrong")
+  //       error(err.response.data)
+  //       return
+  //     }
+	// 		throw err
+  //   }
+  // },
+  
 	methods: {
 		async getBillablePractices () {
 			await this.$store.commit("practices/TOGGLE_LOADING", true)
@@ -643,7 +645,6 @@ export default {
     },
 
     async processBulkBilling () {
-      console.log('process bulk billing before promise', this.chosenPractices)
       Promise.all([
         this.chosenPracticesFinalization =  this.chosenPractices
         // this.chosenPractices = this.chosenPractices.map(practice => {
@@ -671,7 +672,6 @@ export default {
             (1 - 1)*this.practicesFilteredJobPartsPerPage,
             1 * this.practicesFilteredJobPartsPerPage
           )
-          console.log('inside original chosen practice', practice)
           return {
             ...practice,
             practice_invoiceable_approved_filtered_job_parts_sliced,
@@ -780,7 +780,7 @@ export default {
       this.dueDate = ''
       this.showPaidModal = false,
       this.showSessionsModal = false,
-      await this.$store.dispatch('practices/clearPractices')
+      await this.$store.commit("practices/SET_PRACTICES", [])
       await this.$store.commit("practices/TOGGLE_LOADING", false)
     },
 

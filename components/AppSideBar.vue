@@ -22,13 +22,13 @@
           class="text-sm relative"
         >
           <span
-            v-if="`/${$route.path.split('/')[1]}` == item.route"
+            v-if="`/${$route.path.split('/')[1]}`== item.route"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
           />
           <nuxt-link :to="item.route">
             <div
               class="block font-sans no-underline p-4"
-              :class="`/${$route.path.split('/')[1]}` == item.route ? 
+              :class="`/${$route.path.split('/')[1]}`== item.route ? 
                 'text-yellow-500': 
                 'text-white hover:text-gray-500'"
               @click="close"
