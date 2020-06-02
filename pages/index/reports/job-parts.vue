@@ -245,7 +245,7 @@
             title: 'Total Hours',
             key: 'final_hours',
             sort_key: 'final_hours',
-            column: (item) => item.final_hours.toFixed(2),
+            column: (item) => parseFloat(item.final_hours / 60).toFixed(2) + ' Hours' ,
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
