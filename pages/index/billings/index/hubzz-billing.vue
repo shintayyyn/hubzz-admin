@@ -169,6 +169,7 @@ export default {
 	},
 	async asyncData ({ app, route, store }) {
 		try {
+      console.log('billing asyncdata start')
 			await store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = route.query
 			page = parseInt(page)
@@ -204,9 +205,9 @@ export default {
 			this.searchSubmit()
     },
 
-    $route () {
-			this.getPractices()
-		},
+    // $route () {
+		// 	this.getPractices()
+		// },
   },
 
 	methods: {

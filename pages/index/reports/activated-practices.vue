@@ -446,6 +446,5 @@ import AppDate from '@/components/Base/AppDate'
         })
       },
     },
-
   }
 </script>

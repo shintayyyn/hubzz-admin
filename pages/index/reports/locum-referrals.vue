@@ -97,6 +97,21 @@
         @page="setPage" 
       />
 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
       <div v-if="true" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
@@ -125,6 +140,7 @@
       return {
         loading: false,
         count: 0,
+        downloading: false,
         locumReferrals: [],
         orderBy: [],
         orderBys: [
@@ -367,6 +383,35 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
+          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
+          area: this.areaPostCode ? this.areaPostCode : '',
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/locum-referrals/generate-key', {
+          filename: `locumReferrals.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          console.log('responses', responses)
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-referrals/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },

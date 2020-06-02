@@ -94,7 +94,7 @@
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
-      :items="getAllPractices"
+      :items="allPractices"
       :currentPage="currentPage"
       :perPage="practiceParams.limit"
       :columns="columns"
@@ -197,24 +197,51 @@
     <!-- TO SESSIONS MODAL -->
     <transition name="fade" mode="out-in">
       <div v-if="showSessionsModal == true" class="sessions-modal overflow-hidden">
-        <div class="m-4">
+        <div class="m-4 border-b-4 border-double border-white">
           <div 
-            v-for="(item, index) in chosenPractices"
+            v-for="(item, index) in chosenPracticesFinalization"
             :key="`item-${index}`"
             class="text-white"
           >
-            <div>
-              {{ item.name }}
+            <div class="flex flex-row m-2">
+              <div
+                class="text-sm mt-2 m-2"
+              >{{ item.name }}</div>
+
+              <div>
+                <AppButton
+                  class="text-white"
+                  :background="'red'"
+                  :disabled="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_approved_filtered_job_parts.length ? false : true"
+                  :label="'Remove'"
+                  :icon="'garbage'"
+                  @click="toggleCheckChosenPractices(item)"
+                />
+              </div>
+
+              <!-- <div @click="toggleCheckChosenPractices(item)">
+                <input
+                  :id="item" 
+                  v-model="chosenPracticesFinalization" 
+                  type="checkbox" 
+                  :value="item"
+                >
+                <label
+                  :for="item"
+                  class="text-sm pl-1"
+                >{{ item.name }}</label>
+              </div> -->
             </div>
             <AppTable
-              :total="item.practice_invoiceable_approved_filtered_job_parts.length"
-              :items="item.practice_invoiceable_approved_filtered_job_parts"
-              :currentPage="1"
-              :perPage="50"
+              :nestedItem="item"
+              :total="item.practice_invoiceable_approved_job_part_count"
+              :items="item.practice_invoiceable_approved_filtered_job_parts_sliced"
+              :currentPage="item.current_page"
+              :perPage="10"
               :columns="jobPartsColumns"
               :customWidth="200"
               @checkClicked="toggleCheckJobParts"
-              @pagechanged="pagechanged"
+              @pagechanged="pageChangedJobPart"
               @sorted="sorted"
             >
               <template v-slot:checker="slotProps">
@@ -238,6 +265,19 @@
             </AppTable>
           </div>
         </div>
+        <div class="m-4">
+          <div class="m-2 text-white">
+            Pagination for Chosen Practices
+          </div>
+          <AppPagination
+            :total="chosenPractices.length"
+            :totalPages="Math.ceil(chosenPractices.length / practicesFinalizationPerPage)"
+            :currentPage="practicesFinalizationPage"
+            :perPage="practicesFinalizationPerPage"
+            @pagechanged="pageChangedPracticesFinalization"
+          />
+        </div>
+        
         <transition name="drop" mode="out-in">
           <AppDate 
             v-model="dueDate" 
@@ -257,7 +297,7 @@
             </div>
             <div
               class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="showSessionsModal = false"
+              @click="clearInvoiceableJobParts()"
             >
               Cancel
             </div>
@@ -280,7 +320,8 @@
         showPaidModal === true || showSessionsModal === true
       "
       class="billing-shield"
-      @click="showSessionsModal = false"
+      
+      @click="clearInvoiceableJobParts()"
     />
     <nuxt-child />
   </div>
@@ -292,6 +333,7 @@ import AppDate from "@/components/Base/AppDate"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
+import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		AppTable,
@@ -299,6 +341,7 @@ export default {
     AppDateToggled,
     AppButton,
     AppInput,
+    AppPagination,
   },
   
 	data () {
@@ -306,26 +349,23 @@ export default {
       searchMessage: "",
       showPaidModal: false,
       showSessionsModal: false,
+
 			// for app table
 			currentPage: 1,
 			search: "",
       chosenPractices:[],
       dueDate: '',
 
+      // for bulk billing processing
       invoiceableDateStart: "",
       invoiceableDateEnd: "",
-      chosenPracticesInvoiceable: [],
       chosenPracticeJobParts: [],
-      
-			// jobPartsParams: {
-			// 	approved_at_date_start: null,
-			// 	approved_at_date_end: null,
-			// 	status: null,
-			// 	invoice_status: null,
-			// 	locum_invoiceable: null,
-      //   practice_invoiced: false,
-        
-			// },
+
+      chosenPracticesFinalization: [],
+      practicesFinalizationPage: 1,
+      practicesFinalizationPerPage: 10,
+
+      practicesFilteredJobPartsPerPage: 10,
 
 			practiceParams: {
 				id: [],
@@ -350,7 +390,7 @@ export default {
 				},
 				{
 					name: "Practice/Surgery",
-					dataIndex: "practice_name",
+					dataIndex: "name",
 					sortable: true
 				},
 				{
@@ -391,11 +431,6 @@ export default {
 					slotName: "checker",
 					eventName: "checkClicked"
         },
-        {
-					name: "Invoice Number",
-					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
-					sortable: false
-				},
 				{
 					name: "Job Part Number",
 					dataIndex: "job_part_number",
@@ -435,7 +470,10 @@ export default {
 		},
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
-		},
+    },
+    allPractices () {
+      return this.$store.state.practices.allPractices
+    },
 		getAllPractices () {
 			return this.$store.getters["practices/getAllPractices"]
 		},
@@ -449,7 +487,7 @@ export default {
 			return Math.ceil(this.itemCount / this.practiceParams.limit)
 		},
 		total () {
-			return this.getAllPractices.length
+			return this.$store.state.itemCount
 		}
 	},
 
@@ -471,26 +509,30 @@ export default {
 		$route () {
 			// this.getPractices()
 		}
-	},
-	async created (){
-    await this.$store.commit("practices/SET_PRACTICE_COUNT", 0)
-    await this.$store.commit("practices/SET_PRACTICES", [])
-	},
-	// async asyncData ({ app, route, store }) {
-	// 	try {
-		
-	// 		return {
-	// 			// itemCount,
-	// 			// practices
-	// 		}
-	// 	} catch (err) {
-	// 		// error({ statusCode: 404 })
-	// 		console.log("Get practices error!", err)
-	// 	}
-	// },
+  },
+  created () {
+    console.log('store set 0')
+    this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
+    this.$store.commit("practices/CLEAR_PRACTICES")
+  },
 
+  // async asyncData ({ error, store}) {
+  //   try{
+  //     await store.commit("practices/SET_PRACTICE_COUNT", 0)
+  //     await store.commit("practices/SET_PRACTICES", [])
+  //   }catch(err) {
+  //     if (err.response && err.response.status === 401) {
+  //       console.log("something went wrong")
+  //       error(err.response.data)
+  //       return
+  //     }
+	// 		throw err
+  //   }
+  // },
+  
 	methods: {
 		async getBillablePractices () {
+      console.log('get billable practices start')
 			await this.$store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = this.$route.query
 			page = parseInt(page)
@@ -603,44 +645,72 @@ export default {
     },
 
     async processBulkBilling () {
-      console.log('chosenpractices', this.chosenPractices)
-      this.chosenPractices.forEach(practice => {
-        practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
-          this.chosenPracticeJobParts.push(jobPart)
-        })
-      })
-      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
-        const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
+      Promise.all([
+        this.chosenPracticesFinalization =  this.chosenPractices
+        // this.chosenPractices = this.chosenPractices.map(practice => {
+        //   practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
+        //     this.chosenPracticeJobParts.push(jobPart)
+        //   })
+        //   const practice_invoiceable_approved_filtered_job_parts_sliced = practice.practice_invoiceable_approved_filtered_job_parts.slice(
+        //     (1 - 1)*this.practicesFilteredJobPartsPerPage,
+        //     1 * this.practicesFilteredJobPartsPerPage
+        //   )
+        //   console.log('inside original chosen practice', practice)
+        //   return {
+        //     ...practice,
+        //     practice_invoiceable_approved_filtered_job_parts_sliced,
+        //     current_page: 1,
+        //   }
+        // }),
+        
+      ]).then(() => { 
+        this.chosenPracticesFinalization = this.chosenPracticesFinalization.map(practice => {
+          practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
+            this.chosenPracticeJobParts.push(jobPart)
+          })
+          const practice_invoiceable_approved_filtered_job_parts_sliced = practice.practice_invoiceable_approved_filtered_job_parts.slice(
+            (1 - 1)*this.practicesFilteredJobPartsPerPage,
+            1 * this.practicesFilteredJobPartsPerPage
+          )
           return {
-            type: 'Job Part - Invoiced',
-            job_part_id: jobPart.id,
-            description:
-              "Job Number " +
-              jobPart.job_part_number +
-              " for £" +
-              jobPart.practice_rate +
-              " from " +
-              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
-              " to " +
-              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
-            total: jobPart.total,
+            ...practice,
+            practice_invoiceable_approved_filtered_job_parts_sliced,
+            current_page: 1,
           }
         })
+        // const practiceInvoiceDatas = this.chosenPractices.map((practice) => {
+        //   const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
+        //     return {
+        //       type: 'Job Part - Invoiced',
+        //       job_part_id: jobPart.id,
+        //       description:
+        //         "Job Number " +
+        //         jobPart.job_part_number +
+        //         " for £" +
+        //         jobPart.practice_rate +
+        //         " from " +
+        //         this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
+        //         " to " +
+        //         this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
+        //       total: jobPart.total,
+        //     }
+        //   })
 
-        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
+        //   const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
 
-        return {
-          practice_id: practice.id,
-          items,
-          date_start: this.practiceParams.practice_invoiceable_date_start,
-          date_end: this.practiceParams.practice_invoiceable_date_end,
-          total_amount,
-          due_date: this.dueDate
-        }
+        //   return {
+        //     practice_id: practice.id,
+        //     items,
+        //     date_start: this.practiceParams.practice_invoiceable_date_start,
+        //     date_end: this.practiceParams.practice_invoiceable_date_end,
+        //     total_amount,
+        //     due_date: this.dueDate
+        //   }
+        // })
+        // this.chosenPracticesInvoiceable = practiceInvoiceDatas
+      }).finally(() => {
+        this.showSessionsModal = true
       })
-      this.chosenPracticesInvoiceable = practiceInvoiceDatas
-      console.log('invoice dates', this.chosenPracticesInvoiceable)
-      this.showSessionsModal = true
     },
 
     async createBulkBillingChecked () {
@@ -710,7 +780,7 @@ export default {
       this.dueDate = ''
       this.showPaidModal = false,
       this.showSessionsModal = false,
-      this.$store.dispatch('practices/clearPractices')
+      await this.$store.commit("practices/SET_PRACTICES", [])
       await this.$store.commit("practices/TOGGLE_LOADING", false)
     },
 
@@ -787,6 +857,7 @@ export default {
     }, 500),
     
     toggleCheck (item) {
+      console.log('togglecheck', this.chosenPractices)
 			const index = this.chosenPractices.findIndex(practice => {
 				return practice.id === item.id
 			})
@@ -796,8 +867,17 @@ export default {
 			} else {
 				this.chosenPractices.push(item)
       }
-      
-      console.log('chosen practices', this.chosenPractices)
+    },
+
+    toggleCheckChosenPractices (item) {
+      const index = this.chosenPracticesFinalization.findIndex(practice => {
+        return practice.id === item.id
+      })
+
+      if (index > -1) {
+        this.chosenPracticesFinalization.splice(index, 1)
+      }
+
     },
 
     toggleCheckJobParts (item) {
@@ -810,6 +890,8 @@ export default {
       } else {
         this.chosenPracticeJobParts.push(item)
       }
+
+      console.log('chosen job parts checker', this.chosenPracticeJobParts)
     },
 
 		getPractices () {
@@ -890,33 +972,72 @@ export default {
 				default:
 					return
 			}
-		},
+    },
 
-		pagechanged (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
-			// }
+    pagechanged (page) {
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
     },
+    
+    async pageChangedPracticesFinalization (page) {
+      this.practicesFinalizationPage = page
+      this.chosenPracticesFinalization = await this.chosenPractices.slice(
+        (page - 1)*this.practicesFinalizationPerPage,
+         page * this.practicesFinalizationPerPage
+      )
+      this.chosenPracticesFinalization = await this.chosenPracticesFinalization.map(practice => {
+        const practice_invoiceable_approved_filtered_job_parts_sliced = practice.practice_invoiceable_approved_filtered_job_parts.slice(
+          (1 - 1)*this.practicesFilteredJobPartsPerPage,
+          1 * this.practicesFilteredJobPartsPerPage
+        )
+        console.log('inside original chosen practice', practice)
+        return {
+          ...practice,
+          practice_invoiceable_approved_filtered_job_parts_sliced,
+          current_page: 1,
+        }
+      })
+    },
 
-    pageChangedJobPart (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
+    async pageChangedJobPart (page, practiceItem) {
+      console.log('page', page)
+      console.log('practice item before mod', practiceItem)
+      const originalPractice = this.chosenPractices.find(item => item.id === practiceItem.id)
+      console.log('originalPractice', this.chosenPractices)
+
+      Promise.all([
+        practiceItem.current_page = page,
+        practiceItem.practice_invoiceable_approved_filtered_job_parts_sliced = 
+          originalPractice.practice_invoiceable_approved_filtered_job_parts.slice(
+            (page - 1)*this.practicesFilteredJobPartsPerPage,
+            page * this.practicesFilteredJobPartsPerPage
+          ),
+      ]).then(()=>{
+        console.log('practice item', practiceItem)
+        const index = this.chosenPracticesFinalization.findIndex(item => item.id === practiceItem.id)
+
+        this.chosenPracticesFinalization[index] = practiceItem
+      })
+      // let params = {
+      //   job_practice_id: practiceItem.id,
+      //   approved_at_date_start: this.practiceParams.practice_invoiceable_date_start,
+      //   approved_at_date_end: this.practiceParams.practice_invoiceable_date_end,
+      //   status: 'Approved',
+      //   locum_invoiceable: true,
+      //   practice_invoiced: false,
       // }
 
-      // const params = {
-      //   limit: 10,
-      //   offset: 1,
-      // }
-
-			this.params.offset = this.params.limit * (page - 1)
-			this.currentPage = page
-			this.getJobParts(this.params)
-		},
+			// this.params.offset = this.params.limit * (page - 1)
+			// this.currentPage = page
+			// this.getJobParts(params)
+    },
+    
+    clearInvoiceableJobParts () {
+      this.chosenPracticeJobParts = []
+      this.chosenPracticesFinalization = []
+      this.showSessionsModal = false
+    },
 
 		sorted (order_by) {
 			// go back to page 1
