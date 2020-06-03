@@ -63,6 +63,12 @@
         <div>{{ $moment(slotProps.item.due_date).format('DD/MM/YYYY') }}</div>
       </template>
 
+      <template v-slot:exported_at="slotProps">
+        <div class="p-2 rounded-full" :class="slotProps.item.exported_at ? 'bg-green-500' : 'bg-red-500'">
+          <span class="m-2">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
+        </div>
+      </template>
+
       <template v-slot:paid_at="slotProps">
         <div v-if="!slotProps.item.paid_at" class="flex items-center justify-center">
           <AppButton
@@ -147,7 +153,74 @@
         <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
       </div>
     </transition>
-    <div v-if="$route.path.includes('hubzzInvoiceId')" class="billing-shield" @click="showPaidModal = false" />
+
+    <transition name="fade" mode="out-in">
+      <div v-if="exportedModal == true" class="mark-paid-modal overflow-hidden">
+        <transition name="drop" mode="out-in">
+          <AppConfirm
+            v-if="confirm"
+            :in-style="'top:35%'"
+            :in-class="'rounded-lg'"
+            :message="'Are you sure you want to continue?'"
+            @cancel="confirm = false"
+            @confirm="toMarkAsPaid()"
+          />
+        </transition>
+        <!-- TO EXPORT CONFIRM CANCEL -->
+        <div v-if="confirm == true" class="shield" @click="confirm = false" />
+        <div class="flex items-center text-sm text-white m-4">
+          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="exportedModal = false">
+            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div class="justify-center">
+            <div>
+              The following invoices have already been Exported on the following dates:
+            </div>
+            <div v-for="(item, index) in chosenInvoices"
+                 :key="`item-${index}`"
+                 class="text-white">
+              <div class="flex flex-row m-2">
+                <div class="mx-2">
+                  {{ 'ID: '+ item.id }}
+                </div>
+                <div class="mx-2">
+                  {{ 'Invoice Number: ' + item.invoice_number }}
+                </div>
+                <div class="mx-2">
+                  {{ 'Exported At: ' + $moment.utc(item.exported_at).format('DD/MM/YYYY HH:mm:ss') }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-row mb-4">
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+              @click="confirm = true"
+            >
+              Confirm
+            </div>
+            <div
+              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
+              @click="exportedModal = false"
+            >
+              Cancel
+            </div>
+          </div>
+        </div>
+        <!-- TO EXPORT CONFIRM CANCEL ENDS HERE -->
+      </div>
+    </transition>
+
+    <div 
+      v-if="$route.path.includes('hubzzInvoiceId') 
+        || showPaidModal === true 
+        || exportedModal === true" 
+      class="billing-shield" 
+      @click="showPaidModal = false"
+    />
     <nuxt-child />
   </div>
 </template>
@@ -178,6 +251,10 @@ export default {
 				order_by: ["date_created:desc"]
       },
       chosenInvoices: [],
+      
+      // EXPORTING MODALS
+      exportedModal: false,
+
       sageChecker: false,
 			// practiceInvoices: [],
 			// practiceInvoicesCount: 0,
@@ -228,13 +305,21 @@ export default {
 					class: "text-center localDate"
         },
         {
+          name: "Exported",
+          dataIndex:"exported_at",
+          slotName:"exported_at",
+          class:"text-center",
+        },
+        {
           name: "Actions",
           slot: true,
           slotName: "actions",
           dataIndex: "",
           class: "text-center"
-        }
-			],
+        },
+        
+      ],
+      
 			// FOR MARKING INVOICE AS PAID
 			showPaidModal: false,
 			paidAt: this.$moment().format("YYYY-MM-DD"),
@@ -340,10 +425,23 @@ export default {
         )
       }
     },
-    confirmSage () {
+    async confirmSage () {
+      const exported = this.chosenInvoices.filter(invoice => invoice.exported_at !== null)
+      console.log('exported', exported)
       const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
+      if(exported.length > 0){
+        this.exportedModal = true
+      } else {
+        await this.markExported(invoiceIds)
+      }
+    },
 
-      this.downloadCsv(invoiceIds)
+    async markExported (invoiceIds) {
+      await this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
+        id: invoiceIds,
+        exported_at: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
+      })
+      await this.downloadCsv(invoiceIds)
     },
 
     downloadCsv (invoiceIds) {
