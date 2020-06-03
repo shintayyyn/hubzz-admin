@@ -67,9 +67,9 @@
     <div class="flex overflow-x-auto my-2">
       <div class="inline-flex justify-start">
         <nuxt-link
-          :to="getRoute('hubzz-invoices')"
+          :to="getRoute('practice-hubzz-invoices')"
           class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="$route.path.includes(`/billings/${$route.params.id}/hubzz-invoices`)
+          :class="$route.path.includes(`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`)
             ? 'bg-waterloo hover:bg-gray-500'
             : 'hover:bg-waterloo'"
         >
@@ -78,7 +78,7 @@
         <nuxt-link
           :to="getRoute('invoices-by-locums')"
           class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-          :class="$route.path == `/billings/${$route.params.id}/invoices-by-locums`
+          :class="$route.path == `/billings/hubzz-billing/${$route.params.id}/invoices-by-locums`
             ? 'bg-waterloo hover:bg-gray-500'
             : 'hover:bg-waterloo'"
         >
@@ -118,8 +118,8 @@ export default {
 				delete query.status
 				return {
 					path: tab
-						? `/billings/${this.$route.params.id}/${tab}`
-						: `/billings/${this.$route.params.id}`,
+						? `/billings/hubzz-billing/${this.$route.params.id}/${tab}`
+						: `/billings/hubzz-billing/${this.$route.params.id}`,
 					query
 				}
 			}
@@ -151,8 +151,9 @@ export default {
 		}
 	},
 	created () {
-    if(this.$route.name === 'index-billings-id-index') {
-      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices`)
+    console.log('routename', this.$route.name)
+    if(this.$route.name === 'index-billings-index-hubzz-billing-id-index') {
+      this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`)
     }
 	},
 	methods: {
@@ -172,9 +173,9 @@ export default {
     },
     goBack (){ 
       if(this.$route.path.includes('bulk-billing')){
-        this.$router.push(`/billings/bulk-billing`)
+        this.$router.push(`/billings/hubzz-billing/bulk-billing`)
       }else{
-        this.$router.push(`/billings`)
+        this.$router.push(`/billings/hubzz-billing`)
       }
     },
 	}

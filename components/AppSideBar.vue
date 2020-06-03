@@ -22,13 +22,13 @@
           class="text-sm relative"
         >
           <span
-            v-if="`/${$route.path.split('/')[1]}` == item.route"
+            v-if="`/${$route.path.split('/')[1]}`== item.route"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
           />
           <nuxt-link :to="item.route">
             <div
               class="block font-sans no-underline p-4"
-              :class="`/${$route.path.split('/')[1]}` == item.route ? 
+              :class="`/${$route.path.split('/')[1]}`== item.route ? 
                 'text-yellow-500': 
                 'text-white hover:text-gray-500'"
               @click="close"
@@ -108,8 +108,6 @@ export default {
       this.$axios.$get(`/api/v1/admin/supports/count`,{ params }).then(res => {
         this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
       })
-
-      console.log('permissions', this.authAdminPermissions)
       
       let defaultLists = [
         { name: "Dashboard", route: "/", order: 1},     
@@ -122,7 +120,7 @@ export default {
         addedLists.push({ name: "Practices", route: "/practices", order: 3})
       }
       if(this.authAdminPermissions.includes('View Hubzz Invoices')){
-        addedLists.push({ name: "Billing", route: "/billings", order: 4})
+        addedLists.push({ name: "Billing", route: "/billings/hubzz-billing", order: 4})
       }
       if(this.authAdminPermissions.includes('View Reports')){
         addedLists.push({ name: "Reports", route: "/reports", order: 5})

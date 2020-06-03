@@ -109,6 +109,21 @@
         @page="setPage" 
       />
 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
@@ -139,6 +154,7 @@
       return {
         loading: false,
         count: 0,
+        downloading: false,
         unfilledJobs: [],
         orderBy: [],
         orderBys: [
@@ -230,7 +246,7 @@
             title: 'Total Hours',
             key: 'total_hours',
             sort_key: 'total_hours',
-            column: (item) => item.total_hours,
+            column: (item) => parseFloat(item.total_hours / 60).toFixed(2) + ' Hours' ,
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
@@ -396,6 +412,37 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
+          date_start: this.dateStart ? this.dateStart : '',
+          date_end: this.dateEnd ? this.dateEnd : '',
+          area: this.areaPostCode ? this.areaPostCode : '',
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/unfilled-jobs/generate-key', {
+          filename: `unfilledJobs.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          console.log('responses', responses)
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/unfilled-jobs/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },

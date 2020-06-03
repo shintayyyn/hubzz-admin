@@ -90,6 +90,9 @@ export default {
     })
 
   },
+  async clearPractices ({ commit },) {
+    return commit('CLEAR_PRACTICES')
+  },
 
   async fetchPractices({ commit }, payload) {
     commit('TOGGLE_LOADING', true)

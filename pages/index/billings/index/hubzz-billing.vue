@@ -1,6 +1,14 @@
 <template>
-  <!-- <div>
-    <div class="flex items-center px-2 py-2">
+  <div>
+    <div class="px-2 flex justify-start items-center flex-wrap">
+      <AppButton
+        class="mr-2"
+        :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
+        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
+        @click="goToTab()"
+      />
+    </div>
+    <div v-if="!$route.path.includes('bulk-billing')" class="flex items-center px-2 py-2">
       <div class="relative">
         <input
           v-model="search"
@@ -23,14 +31,14 @@
     </div>
 
     <AppTable
-      v-if="itemCount > 0"
+      v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
       :total="itemCount"
       :items="getAllPractices"
       :currentPage="currentPage"
       :perPage="params.limit"
       :columns="columns"
       :loading="loadingPractices"
-      :routerLink="`/billings`"
+      :routerLink="`/billings/hubzz-billing`"
       :orderBy="params.order_by"
       :customWidth="200"
       @pagechanged="pagechanged"
@@ -61,21 +69,31 @@
         >{{ slotProps.item.hub_type }}</div>
       </template>
     </AppTable>
+    <div 
+      v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
+      class="mt-2 w-full text-center text-white">
+      There are no verified Practices billable.
+    </div>
 
-    <template v-else>
-      <div class="mt-2 w-full text-center text-white">There are no verified Practices billable.</div>
-    </template>
-  </div> -->
-  <div>
+    <!-- <div
+      class="shield"
+      v-if="
+        $route.name.includes('index-billings-id') ||
+          $route.name.includes('index-billings-addinvoice')
+      "
+      @click="$router.push(`/billings`)"
+    /> -->
     <nuxt-child />
   </div>
 </template>
 <script>
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
+import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
-		AppTable,
+    AppTable,
+    AppButton,
 	},
 	data () {
 		return {
@@ -151,6 +169,7 @@ export default {
 	},
 	async asyncData ({ app, route, store }) {
 		try {
+      console.log('billing asyncdata start')
 			await store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = route.query
 			page = parseInt(page)
@@ -182,17 +201,17 @@ export default {
   },
   
   watch: {
-    search(value) {
+    search () {
 			this.searchSubmit()
     },
 
-    $route(to, from) {
-			this.getPractices()
-		},
+    // $route () {
+		// 	this.getPractices()
+		// },
   },
 
 	methods: {
-		goToPage(page) {
+		goToPage (page) {
 			if (page < 1) {
 				return
 			}
@@ -217,7 +236,7 @@ export default {
 			this.$router.push({ query })
 		},
 
-		searchSubmit: debounce(function(page, order_by) {
+		searchSubmit: debounce (function (page, order_by) {
       let search = this.search
       
 			let query = {
@@ -264,7 +283,7 @@ export default {
       
 		}, 500),
 
-		getPractices() {
+		getPractices () {
       this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
 				search: this.search,
@@ -285,14 +304,14 @@ export default {
       })
 		},
 
-		sortData: function(toSortBy) {
+		sortData: function (toSortBy) {
 			if ((toSortBy = this.sortBy)) {
 				this.sortDirection = this.sortDirection === "asc" ? "desc" : "asc"
 			}
 			this.sortBy = toSortBy
 		},
 
-		typeStyle(status) {
+		typeStyle (status) {
 			switch (status) {
 				case "Hub":
 					return "bg-red-500 text-white "
@@ -308,7 +327,7 @@ export default {
 			}
 		},
 
-		hubTypeStyle(hubType) {
+		hubTypeStyle (hubType) {
 			switch (hubType) {
 				case "Type 1":
 					return "bg-red-500 text-white px-4 py-1"
@@ -320,7 +339,7 @@ export default {
 			}
 		},
 
-		statusStyle(status) {
+		statusStyle (status) {
 			switch (status) {
 				case "Active":
 					return "bg-green text-white lg:px-10 sm:px-2"
@@ -342,7 +361,7 @@ export default {
 			}
 		},
 
-		pagechanged(page) {
+		pagechanged (page) {
 			const query = {
 				...this.$route.query,
 				page: page || 1
@@ -352,7 +371,7 @@ export default {
 			this.getPractices()
     },
     
-		sorted(order_by) {
+		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
 			let query = {
@@ -361,6 +380,15 @@ export default {
 			}
 			this.params.order_by = order_by
 			this.getPractices()
+    },
+    
+    goToTab () {
+			console.log('route', this.$route.name)
+			if (this.$route.name.includes('bulk-billings')) {
+				this.$router.push(`/billings/hubzz-billing`)
+			} else {
+				this.$router.push(`/billings/hubzz-billing/bulk-billings`)
+			}
 		}
 	}
 }

@@ -29,6 +29,9 @@ export default {
     CLEAR_PRACTICES(state) {
         state.allPractices = []
     },
+    CLEAR_PRACTICES_COUNT(state) {
+      state.itemCount = 0
+    },
     ADD_PRACTICE(state, payload) {
         state.allPractices.unshift(payload)
         state.itemCount = state.itemCount + 1
