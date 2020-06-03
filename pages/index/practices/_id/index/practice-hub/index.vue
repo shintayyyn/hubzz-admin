@@ -176,7 +176,7 @@
           <template v-slot:actions="slotProps">
             <!-- work in progress
             {{slotProps.item.id}}-->
-            <div class="flex justify-center">
+            <div class="flex justify-center" v-if="!slotProps.item.invitation_rejected">
               <!-- <AppButton
                 class="ml-2"
                 :label="'View'"
@@ -194,6 +194,9 @@
                 :label="'Reject'"
                 @click="toRejectInvitation(slotProps.item.id)"
               />
+            </div>
+            <div class="flex justify-center" v-if="slotProps.item.invitation_rejected">
+              <div class="bg-red-500 rounded-lg shadow-lg px-2 py-1">Rejected</div>
             </div>
           </template>
         </AppTable>
@@ -325,7 +328,6 @@ export default {
         { params }
       );
       const practiceInvitations = response.data.practice_surgeries;
-      console.log(practice);
       await store.commit("practices/SET_SPECIFIC_PRACTICE", practice);
       await store.commit("practices/SET_PRACTICE_HUB", practiceHub);
       await store.commit(
