@@ -15,7 +15,7 @@
         Rep-022
       </div>
 
-      <!-- <div
+      <div
         class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -103,7 +103,7 @@
         <span>Order By: {{ orderBy.join(',') }}</span>
         <br>
         <span>Page {{ activePage }} of {{ pages }} pages</span>
-      </div> -->
+      </div>
     </div> 
   </div>
 </template>
