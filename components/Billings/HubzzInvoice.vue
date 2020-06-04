@@ -17,6 +17,12 @@
         :disabled="practice && practice.sage_ref && practice.direct_debit === true ? false : true"
         @click="toSageCSV()"
       />
+      <div
+        v-if="practice && practiceInvoice && practiceInvoice.exported_at"
+        class="text-white m-2"
+      >
+        *This Invoice has already been exported on {{ $moment.utc(practiceInvoice.exported_at).format('DD/MM/YYYY HH:mm:ss') }}
+      </div>
       <!-- <AppButton
         v-if="forViewing == true" 
 				class="mr-2"
@@ -45,6 +51,7 @@
     >
       *Assign a SAGE Reference Number to this Practice to proceed with the file export.
     </div>
+    
     <!-- HEADER ENDS HERE -->
     <div v-if="forViewing == false">
       <div class="text-white font-bold text-xl mx-4">
