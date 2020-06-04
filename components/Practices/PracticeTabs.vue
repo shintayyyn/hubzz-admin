@@ -19,10 +19,10 @@
     >Hub</nuxt-link>
     <nuxt-link
       :to="getRoute('practice-invitations')"
-      v-if="practice.type == 'Hub' && (practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated')"
+      v-if="(practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated')"
       class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
       :class="$route.name.includes('index-practices-id-index-practice-invitations-index') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-    >Invitations</nuxt-link>
+    >{{`Invitation${practice.type === 'Hub' ? 's' : ''}`}}</nuxt-link>
     <nuxt-link
       v-if="practice.status !== 'Inactive' && practice.status !== 'Bogus'"
       :to="getRoute('practice-sessions')"
