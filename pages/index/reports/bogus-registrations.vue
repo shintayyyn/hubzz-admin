@@ -20,28 +20,22 @@
       >
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="locumNameIncludes"
-            placeholder="Search Locum Name"
+            v-model="nameIncludes"
+            placeholder="Search by Name"
             type="text"
-            label="Locum Name"
+            label="Full Name"
           />
         </div>
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="referralLocumNameIncludes"
-            placeholder="Search Referral Locum Name"
-            type="text"
-            label="Referral Locum Name"
-          />
-        </div>
-
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="areaPostCode"
-            placeholder="Search Area Post Code"
-            type="text"
-            label="Area Postcode"
+            v-model="domain"
+            class="w-full mr-2"
+            :type="'select'"
+            :name="'status'"
+            :placeholder="'Filter by Domain'"
+            :items="[{label: 'Practice', value: 'Practice'}, {label: 'Locum', value: 'Locum'}]"
+            :label="'Domain'"
           />
         </div>
 
@@ -82,7 +76,7 @@
 
       <ReportTable
         :limit="limit"
-        :items="locumReferrals"
+        :items="bogusRegistrations"
         :getItemKey="(item) => item.id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
@@ -125,7 +119,7 @@
       return {
         loading: false,
         count: 0,
-        locumReferrals: [],
+        bogusRegistrations: [],
         orderBy: [],
         orderBys: [
           {
@@ -153,9 +147,8 @@
         ],
         activePage: 1,
 
-        locumNameIncludes: '',
-        referralLocumNameIncludes: '',
-        areaPostCode: '',
+        nameIncludes: '',
+        domain: '',
       }
     },
 
@@ -171,51 +164,42 @@
             key: 'index',
             sort_key: null,
             column: (item, index) => this.offset + index + 1,
-            justify: 'end',
+            justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
           },
           {
-            title: 'Locum Name',
-            key: 'locum_name',
-            sort_key: 'locum_name',
-            column: (item) => item.locum_name,
+            title: 'User Id',
+            key: 'id',
+            sort_key: null,
+            column: (item) => item.id,
+            justify: 'start',
+            flexGrow: 0,
+            flexShrink: 0,
+          },
+          {
+            title: 'Full Name',
+            key: 'full_name',
+            sort_key: 'full_name',
+            column: (item) => item.full_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Referral Name',
-            key: 'referral_name',
-            sort_key: 'referral_name',
-            column: (item) => item.referral_name,
+            title: 'Domain',
+            key: 'domain',
+            sort_key: 'domain',
+            column: (item) => item.domain,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Profession',
-            key: 'profession',
-            sort_key: 'profession',
-            column: (item) => item.profession,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Area',
-            key: 'area',
-            sort_key: 'area',
-            column: (item) => item.area,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Date Referal Registered',
-            key: 'date_referral_registered',
-            sort_key: 'date_referral_registered',
-            column: (item) => this.$moment(item.date_referral_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
+            title: 'Domain',
+            key: 'domain',
+            sort_key: 'domain',
+            column: (item) => item.domain,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -245,16 +229,14 @@
 
     mounted () {      
       const {
-        locum_name_includes: locumNameIncludes,
-        referral_locum_name_includes: referralLocumNameIncludes,
-        area: areaPostCode,
+        name_includes: nameIncludes,
+        domain: domain,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
-      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
-      this.referralLocumNameIncludes = referralLocumNameIncludes ? referralLocumNameIncludes : ''
-      this.areaPostCode = areaPostCode ? areaPostCode : ''
+      this.nameIncludes = nameIncludes ? nameIncludes : ''
+      this.domain = domain ? domain : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -264,9 +246,8 @@
 
     methods: {
       filterReset () {
-        this.locumNameIncludes = ''
-        this.referralLocumNameIncludes = ''
-        this.areaPostCode = ''
+        this.nameIncludes = ''
+        this.domain = ''
 
         this.filterSearch()
       },
@@ -276,9 +257,8 @@
 
         const query = {
           ...this.$route.query,
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : undefined,
-          area: this.areaPostCode ? this.areaPostCode : undefined,
+          name_includes: this.nameIncludes ? this.nameIncludes : undefined,
+          domain: this.domain ? this.domain : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -329,21 +309,20 @@
 
       getLocumReferrals () {
         this.loading = true
-        this.locumReferrals = []
+        this.bogusRegistrations = []
 
         const params = {
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          name_includes: this.nameIncludes ? this.nameIncludes : '',
+          domain: this.domain ? this.domain : '',
         }
 
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/locum-referrals/count', {
+          this.$axios.get('/api/v1/admin/reports/bogus-registrations/count', {
             params
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/locum-referrals', {
+          this.$axios.get(`/api/v1/admin/reports/bogus-registrations`, {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -351,17 +330,17 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.locum_referrals
+            return responses.data.data.bogus_registrations
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            locumReferrals,
+            bogusRegistrations,
           ] = results
 
           this.count = count
-          this.locumReferrals = locumReferrals
+          this.bogusRegistrations = bogusRegistrations          
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)

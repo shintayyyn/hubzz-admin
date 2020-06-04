@@ -11,7 +11,18 @@
       />
     </transition>
     <transition name="fade" mode="out-in">
-      <div class="shield" v-if="confirm"></div>
+      <div v-if="confirm" class="shield" />
+    </transition>
+    <transition name="drop" mode="out-in">
+      <AppConfirm
+        v-if="confirmBogus"
+        :message="'Are you sure you want to mark this Locum as Bogus?'"
+        @cancel="confirmBogus = false"
+        @confirm="changeLocumUserStatus(user.id,'Bogus')"
+      />
+    </transition>
+    <transition name="fade" mode="out-in">
+      <div v-if="confirmBogus" class="shield" />
     </transition>
     <div class="inline-flex">
       <div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
@@ -298,11 +309,20 @@
               <span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{ user.status }}</span>
             </div>
 
+            <!-- <AppButton
+              v-if="user.status !== 'Bogus' && user.status !== 'Active' && user.status !== 'Dormant' && !user.first_actived_at"
+              :label="'Mark as Bogus'"
+              class="mx-auto"
+              :inClass="'mt-2 bg-red-700 hover:bg-red-800 text-white'"
+              :background="''"
+              @click="confirmBogus = true"
+            /> -->
+
             <AppButton
               v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Deactivate Locum')"
               :label="'Deactivate this Account'"
               class="mx-auto"
-              :inClass="'bg-gray-800 hover:bg-gray-900 text-white'"
+              :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
               :background="''"
               @click="confirm = true"
             />
@@ -358,7 +378,8 @@ export default {
 		return {
 			disabled: "true",
 
-			confirm: false,
+      confirm: false,
+      confirmBogus: false,
 
 			locumDetails: "",
 
@@ -458,14 +479,14 @@ export default {
 
 		async changeLocumUserStatus (locumID, activeDisabled) {
 			try {
-				console.log("locum details", this.user)
+				console.log("locum details", activeDisabled)
 				const response = await this.$axios.put(
 					`/api/v1/admin/locum-users/${locumID}/status`,
 					{ status: activeDisabled }
 				)
-				console.log("response", response)
+				console.log("response", response.data.data.user)
 				await this.getLocums()
-				if (this.user.compliance_status !== "Compliant") {
+				if (this.user.compliance_status !== "Compliant" || activeDisabled !== 'Bogus') {
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "alert",
