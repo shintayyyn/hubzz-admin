@@ -223,12 +223,36 @@ export default {
             this.spokes.splice(index, 1);
           }
         })
+        .catch(err => {
+          console.log("err", err.response || err);
+        })
         .finally(() => {
           this.toggle_reject_modal = false;
           this.selectedSpokeId = null;
         });
     },
-    cancelInvitation() {},
+    cancelInvitation() {
+      this.$axios
+        .$delete(
+          `/api/v1/admin/practices/${this.practice.hub_practice_id}/spoke-invitations/reject/${this.$route.params.id}`
+        )
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "sucess",
+            text: "Spoke Invitation Cancelled Successfully!"
+          });
+
+          this.practice.hub_practice = null;
+          this.practice.hub_practice_id = null;
+        })
+        .catch(err => {
+          console.log("err", err.response || err);
+        })
+        .finally(() => {
+          this.toggle_cancel_modal = false;
+        });
+    },
     async getInit() {
       try {
         let response = await this.$axios.$get(
