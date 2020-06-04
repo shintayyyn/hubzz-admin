@@ -59,7 +59,7 @@
             <p>
               {{
                 practiceDoc.file
-                  ? $moment(practiceDoc.file.created_at).format(
+                  ? $moment(practiceDoc.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format(
                     "DD/MM/YYYY HH:mm:ss"
                   )
                   : null
