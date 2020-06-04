@@ -158,10 +158,11 @@ export default {
   components: {
     AppInput
   },
+  props: ["practiceType"],
   data() {
     return {
       form: {
-        child_practice_id: this.$route.params.practiceId,
+        child_practice_id: null,
         allow_surgery_create_sessions: "",
         allow_surgery_create_permanent_jobs: "",
         max_hourly_rate_limit: "",
@@ -184,24 +185,42 @@ export default {
   },
   methods: {
     acceptInvitation() {
+      this.formError = [];
+
       let notRequired = [
         "max_hourly_rate_limit",
         "max_halfday_rate_limit",
         "max_wholeday_rate_limit",
         "max_ooh_rate_limit",
-        "max_excess_hours"
+        "max_excess_hours",
+        "child_practice_id"
       ];
       this.Validate(this.form, notRequired);
+
       if (!this.formError.length) {
+        let urlPath = null;
+        let formPayload = null;
+
+        if (this.practiceType === "Hub") {
+          formPayload = {
+            ...this.form,
+            practice_id: this.$route.params.id,
+            child_practice_id: this.$route.params.practiceId
+          };
+          urlPath = `/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations/accept`;
+        }
+
+        if (this.practiceType === "Spoke") {
+          formPayload = {
+            ...this.form,
+            practice_id: this.$route.params.practiceId,
+            child_practice_id: this.$route.params.id
+          };
+          urlPath = `/api/v1/admin/practices/${this.$route.params.practiceId}/spoke-invitations/accept`;
+        }
+
         this.$axios
-          .$post(
-            `/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations/accept`,
-            {
-              ...this.form,
-              practice_id: this.$route.params.id,
-              child_practice_id: this.$route.params.practiceId
-            }
-          )
+          .$post(urlPath, formPayload)
           .then(res => {
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
