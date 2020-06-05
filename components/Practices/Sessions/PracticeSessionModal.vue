@@ -779,8 +779,10 @@ export default {
         return test.status;
       } else if (!this.modalJobPart && this.job) {
         return this.job.status;
+      } else if (this.job) {
+        return this.job.status;
       }
-      return `loading..`;
+      // return `loading..`;
     },
     google: gmapApi,
     latLangPlatform() {
@@ -921,7 +923,7 @@ export default {
           `/practices/${
             this.$route.params.id
           }/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${itemId}`,
-          ...this.route.query
+          ...this.$route.query
         );
       });
     },
