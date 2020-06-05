@@ -167,6 +167,16 @@ export default {
 			return this.getAllPractices.length
 		}
 	},
+  
+  watch: {
+    search () {
+			this.searchSubmit()
+    },
+
+    $route () {
+			this.getPractices()
+		},
+  },
 	async asyncData ({ app, route, store }) {
 		try {
       console.log('billing asyncdata start')
@@ -181,7 +191,7 @@ export default {
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc"
-			const params = { limit, offset, order_by, status }
+			const params = { limit, offset, order_by, status, search }
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params })
 			const itemCount = response.data.count
 			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
@@ -198,16 +208,6 @@ export default {
 			// error({ statusCode: 404 })
 			console.log("Get practices error!", err)
 		}
-  },
-  
-  watch: {
-    search () {
-			this.searchSubmit()
-    },
-
-    // $route () {
-		// 	this.getPractices()
-		// },
   },
 
 	methods: {
@@ -236,7 +236,8 @@ export default {
 			this.$router.push({ query })
 		},
 
-		searchSubmit: debounce (function (page, order_by) {
+		searchSubmit: debounce (async function (page, order_by) {
+      console.log('initiate search')
       let search = this.search
       
 			let query = {
@@ -276,15 +277,14 @@ export default {
 			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
 				this.loading = true
       }
-
-      this.getPractices()
       
-      this.$router.push({ query })
+      await this.$router.push({ query })
       
-		}, 500),
+		}, 1000),
 
-		getPractices () {
-      this.$store.dispatch("practices/fetchPractices", {
+		async getPractices () {
+      console.log('get practices')
+      await this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
 				search: this.search,
 				order_by: this.params.order_by,
@@ -314,14 +314,11 @@ export default {
 		typeStyle (status) {
 			switch (status) {
 				case "Hub":
-					return "bg-red-500 text-white "
-					break
+					return "bg-red-500 text-white"
 				case "Spoke":
 					return "bg-blue-500 text-white"
-					break
 				case "Stand Alone":
 					return "bg-indigo-600 text-white"
-					break
 				default:
 					return
 			}
@@ -331,7 +328,6 @@ export default {
 			switch (hubType) {
 				case "Type 1":
 					return "bg-red-500 text-white px-4 py-1"
-					break
 				case "Type 2":
 					return "bg-purple-500 text-white px-4 py-1"
 				default:
@@ -343,19 +339,14 @@ export default {
 			switch (status) {
 				case "Active":
 					return "bg-green text-white lg:px-10 sm:px-2"
-					break
 				case "Inactive":
 					return "bg-yellow text-black lg:px-10 sm:px-2"
-					break
 				case "Deactivated":
 					return "bg-gray text-black lg:px-10 sm:px-2"
-					break
 				case "Suspended":
 					return "bg-red text-white lg:px-8 sm:px-2"
-					break
 				case "Dormant":
 					return "bg-green-darker text-white lg:px-8 sm:px-2"
-					break
 				default:
 					return
 			}

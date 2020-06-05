@@ -480,6 +480,14 @@
                         class="text-white"
                       >{{ $moment(modalJobPart.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</p>
                     </div>
+                    <div
+                      v-if="modalJobPart && ['Cancelled','Terminated'].includes(modalJobPart.status)"
+                    >
+                      <p class="mt-5 font-semibold">{{ `${modalJobPart.status} At` }}</p>
+                      <p
+                        class="text-white"
+                      >{{ $moment(modalJobPart.cancelled_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</p>
+                    </div>
                     <!-- STATUS -->
                     <p class="mt-5 font-semibold">Job Part Number</p>
                     <p class="text-white">{{ modalJobPart.job_part_number }}</p>
@@ -610,7 +618,7 @@
                         v-if="modalJobPart.late_hours > 0 || modalJobPart.late_hours_reason !== null"
                       >
                         <p class="mt-5 font-semibold">Hours of Late:</p>
-                        <p class="text-white">{{ modalJobPart.late_hours }}</p>
+                        <p class="text-white">{{ modalJobPart.late_hours | hoursMinutes}}</p>
                         <p class="mt-5 font-semibold">Reason of Late:</p>
                         <p
                           class="text-white"
@@ -771,8 +779,10 @@ export default {
         return test.status;
       } else if (!this.modalJobPart && this.job) {
         return this.job.status;
+      } else if (this.job) {
+        return this.job.status;
       }
-      return `loading..`;
+      // return `loading..`;
     },
     google: gmapApi,
     latLangPlatform() {
@@ -913,7 +923,7 @@ export default {
           `/practices/${
             this.$route.params.id
           }/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${itemId}`,
-          ...this.route.query
+          ...this.$route.query
         );
       });
     },

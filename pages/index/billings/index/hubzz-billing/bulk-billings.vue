@@ -507,7 +507,7 @@ export default {
 		},
 
 		$route () {
-			// this.getPractices()
+			// this.getPracticesForBulk()
 		}
   },
   created () {
@@ -515,21 +515,6 @@ export default {
     this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
     this.$store.commit("practices/CLEAR_PRACTICES")
   },
-
-  // async asyncData ({ error, store}) {
-  //   try{
-  //     await store.commit("practices/SET_PRACTICE_COUNT", 0)
-  //     await store.commit("practices/SET_PRACTICES", [])
-  //   }catch(err) {
-  //     if (err.response && err.response.status === 401) {
-  //       console.log("something went wrong")
-  //       error(err.response.data)
-  //       return
-  //     }
-	// 		throw err
-  //   }
-  // },
-  
 	methods: {
 		async getBillablePractices () {
       console.log('get billable practices start')
@@ -623,7 +608,7 @@ export default {
             text: "Success"
           })
           this.chosenPractices = []
-          this.getPractices()
+          this.getPracticesForBulk()
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
@@ -647,22 +632,6 @@ export default {
     async processBulkBilling () {
       Promise.all([
         this.chosenPracticesFinalization =  this.chosenPractices
-        // this.chosenPractices = this.chosenPractices.map(practice => {
-        //   practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
-        //     this.chosenPracticeJobParts.push(jobPart)
-        //   })
-        //   const practice_invoiceable_approved_filtered_job_parts_sliced = practice.practice_invoiceable_approved_filtered_job_parts.slice(
-        //     (1 - 1)*this.practicesFilteredJobPartsPerPage,
-        //     1 * this.practicesFilteredJobPartsPerPage
-        //   )
-        //   console.log('inside original chosen practice', practice)
-        //   return {
-        //     ...practice,
-        //     practice_invoiceable_approved_filtered_job_parts_sliced,
-        //     current_page: 1,
-        //   }
-        // }),
-        
       ]).then(() => { 
         this.chosenPracticesFinalization = this.chosenPracticesFinalization.map(practice => {
           practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
@@ -678,36 +647,6 @@ export default {
             current_page: 1,
           }
         })
-        // const practiceInvoiceDatas = this.chosenPractices.map((practice) => {
-        //   const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
-        //     return {
-        //       type: 'Job Part - Invoiced',
-        //       job_part_id: jobPart.id,
-        //       description:
-        //         "Job Number " +
-        //         jobPart.job_part_number +
-        //         " for £" +
-        //         jobPart.practice_rate +
-        //         " from " +
-        //         this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
-        //         " to " +
-        //         this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
-        //       total: jobPart.total,
-        //     }
-        //   })
-
-        //   const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
-
-        //   return {
-        //     practice_id: practice.id,
-        //     items,
-        //     date_start: this.practiceParams.practice_invoiceable_date_start,
-        //     date_end: this.practiceParams.practice_invoiceable_date_end,
-        //     total_amount,
-        //     due_date: this.dueDate
-        //   }
-        // })
-        // this.chosenPracticesInvoiceable = practiceInvoiceDatas
       }).finally(() => {
         this.showSessionsModal = true
       })
@@ -761,7 +700,7 @@ export default {
             text: "Success"
           })
           this.chosenPractices = []
-          this.getPractices()
+          this.getPracticesForBulk()
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
@@ -851,7 +790,7 @@ export default {
 				this.loading = true
 			}
 
-			this.getPractices()
+			this.getPracticesForBulk()
 
 			this.$router.push({ query })
     }, 500),
@@ -894,7 +833,7 @@ export default {
       console.log('chosen job parts checker', this.chosenPracticeJobParts)
     },
 
-		getPractices () {
+		getPracticesForBulk () {
       console.log('params get practices', this.practiceParams)
 			this.$store
 				.dispatch("practices/fetchPractices", {
@@ -977,7 +916,7 @@ export default {
     pagechanged (page) {
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
-			this.getPractices()
+			this.getPracticesForBulk()
     },
     
     async pageChangedPracticesFinalization (page) {
@@ -1048,7 +987,7 @@ export default {
       // }
       console.log('order_by', order_by)
 			this.practiceParams.order_by = order_by
-			this.getPractices()
+			this.getPracticesForBulk()
 		}
 	}
 }
