@@ -55,7 +55,9 @@
                 <p class="mt-5 font-semibold">Locum User ID</p>
                 <p class="text-white">{{ job_part.locum_invoice_item.locum_invoice.locum_user_id }}</p>
                 <p class="mt-5 font-semibold">Invoice Amount</p>
-                <p class="text-white">{{ "£ " + job_part.locum_invoice_item.locum_invoice.total_amount  }}</p>
+                <p
+                  class="text-white"
+                >{{ "£ " + job_part.locum_invoice_item.locum_invoice.total_amount }}</p>
                 <p class="mt-5 font-semibold">Final Hours</p>
                 <p class="text-white">{{ job_part.locum_invoice_item.final_hours + "Hours" }}</p>
                 <p class="mt-5 font-semibold">Other Remarks</p>
@@ -63,20 +65,20 @@
                 <div v-if="job_part.invoice_status === 'Disputed'">
                   <p class="mt-5 font-semibold">Disputed by Locum At</p>
                   <p class="text-white">
-                    {{ 
-                      job_part.locum_invoice_item 
-                        && job_part.locum_invoice_item.disputed_by_locum_at 
-                        ? $moment(job_part.locum_invoice_item.disputed_by_locum_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
-                        : 'N/A' 
+                    {{
+                    job_part.locum_invoice_item
+                    && job_part.locum_invoice_item.disputed_by_locum_at
+                    ? $moment(job_part.locum_invoice_item.disputed_by_locum_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
+                    : 'N/A'
                     }}
                   </p>
                   <p class="mt-5 font-semibold">Disputed by Practice At</p>
                   <p class="text-white">
-                    {{ 
-                      job_part.locum_invoice_item 
-                        && job_part.locum_invoice_item.disputed_by_practice_at 
-                        ? $moment(job_part.locum_invoice_item.disputed_by_practice_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
-                        : 'N/A' 
+                    {{
+                    job_part.locum_invoice_item
+                    && job_part.locum_invoice_item.disputed_by_practice_at
+                    ? $moment(job_part.locum_invoice_item.disputed_by_practice_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
+                    : 'N/A'
                     }}
                   </p>
                 </div>
@@ -217,7 +219,7 @@
                   >{{ job_part.late_hours > 0 || job_part.late_hours_reason !== null ? 'Yes' : 'No' }}</p>
                   <template v-if="job_part.late_hours > 0 || job_part.late_hours_reason !== null">
                     <p class="mt-5 font-semibold">Hours of Late:</p>
-                    <p class="text-white">{{ job_part.late_hours }}</p>
+                    <p class="text-white">{{ job_part.late_hours | hoursMinutes}}</p>
                     <p class="mt-5 font-semibold">Reason of Late:</p>
                     <p
                       class="text-white"
@@ -399,16 +401,16 @@
   </div>
 </template>
 <script>
-import { gmapApi } from "vue2-google-maps"
-import AppTable from "@/components/Base/AppTable"
-import AppPagination from "@/components/Base/AppPagination"
+import { gmapApi } from "vue2-google-maps";
+import AppTable from "@/components/Base/AppTable";
+import AppPagination from "@/components/Base/AppPagination";
 export default {
   components: {
     AppTable,
     AppPagination
   },
   props: ["jobPartId", "specificJobPart", "isNuxtChild", "isInvoice", "jobId"],
-  data () {
+  data() {
     return {
       jobParts: [],
       currentPage: 1,
@@ -441,53 +443,53 @@ export default {
         }
       ],
       loading: false
-    }
+    };
   },
-  created () {
-    console.log('isInvoice', this.isInvoice)
+  created() {
+    console.log("isInvoice", this.isInvoice);
     this.totalPages = Math.ceil(
       this.specificJobPart.job.job_parts.length / this.params.limit
-    )
-    this.job_part = this.specificJobPart
-    this.getJobParts(this.params)
+    );
+    this.job_part = this.specificJobPart;
+    this.getJobParts(this.params);
 
-    console.log("jobpart", this.job_part)
+    console.log("jobpart", this.job_part);
   },
   computed: {
-    loadingPractices () {
-      return this.$store.state.practices.loading_practices
+    loadingPractices() {
+      return this.$store.state.practices.loading_practices;
     },
     google: gmapApi,
-    latLangPlatform () {
+    latLangPlatform() {
       return this.specificJobPart.job.platform_job.practice.surgery.address
-        .coordinates
+        .coordinates;
     },
-    latLangPrivate () {
+    latLangPrivate() {
       return this.specificJobPart.job.private_job.private_practice.surgery
-        .address.coordinates
+        .address.coordinates;
     }
   },
   methods: {
-    async show (id) {
+    async show(id) {
       this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
-        this.job_part = res.data.job_part
-      })
+        this.job_part = res.data.job_part;
+      });
     },
-    getJobParts (params) {
-      this.loading = true
+    getJobParts(params) {
+      this.loading = true;
       this.$axios
         .$get(
           `/api/v1/admin/job-parts?job_id=${this.jobId}&limit=${params.limit}&offset=${params.offset}`
         )
         .then(res => {
-          this.jobParts = res.data.job_parts
+          this.jobParts = res.data.job_parts;
         })
         .catch(err => {
-          console.log("get job parts error", err)
-        })
-      this.loading = false
+          console.log("get job parts error", err);
+        });
+      this.loading = false;
     },
-    unclickableJobPart () {
+    unclickableJobPart() {
       if (this.specificJobPart.job) {
         if (
           this.specificJobPart.job.status === "Live" ||
@@ -497,33 +499,33 @@ export default {
           this.specificJobPart.job.status === "Cancelled" ||
           this.specificJobPart.job.status === "Declined"
         ) {
-          return true
+          return true;
         } else {
-          return false
+          return false;
         }
       }
     },
-    pagechanged (page) {
+    pagechanged(page) {
       const query = {
         ...this.$route.query,
         page: page || 1
-      }
-      this.params.offset = this.params.limit * (page - 1)
-      this.currentPage = page
-      this.getJobParts(this.params)
+      };
+      this.params.offset = this.params.limit * (page - 1);
+      this.currentPage = page;
+      this.getJobParts(this.params);
     },
-    sorted (order_by) {
+    sorted(order_by) {
       // go back to page 1
-      this.currentPage = 1
+      this.currentPage = 1;
       let query = {
         ...this.$router.query,
         order_by
-      }
-      this.params.order_by = order_by
-      this.getJobParts(this.params)
+      };
+      this.params.order_by = order_by;
+      this.getJobParts(this.params);
     }
   }
-}
+};
 </script>
 <style>
 @media (min-width: 768px) {
