@@ -192,7 +192,7 @@
                   {{ 'Invoice Number: ' + item.invoice_number }}
                 </div>
                 <div class="mx-2">
-                  {{ 'Exported At: ' + $moment.utc(item.exported_at).format('DD/MM/YYYY HH:mm:ss') }}
+                  {{ 'Exported At: ' + $moment(item.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY h:mm:ss a') }}
                 </div>
               </div>
             </div>
@@ -470,7 +470,10 @@ export default {
         this.$nuxt.error(err.response ? err.response.data : err)
       }).finally(() => {
         this.downloading = false
+        this.exportedModal = false
       })
+
+
     },
 
     viewInvoice (invoiceId) {

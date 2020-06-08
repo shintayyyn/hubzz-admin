@@ -286,7 +286,7 @@
               <p
                 class="flex md:mx-2 mb-2"
               >
-                {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
+                {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
               </p>
               <div class="flex flex-col item-center">
                 <div
