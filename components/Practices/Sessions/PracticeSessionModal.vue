@@ -30,7 +30,7 @@
       </div>
       <div
         class="text-white mt-2 md:mx-2"
-      >Date Posted: {{ job ? $moment(job.date_created).format('DD/MM/YYYY') : $moment(modalJobPart.date_created).format('DD/MM/YYYY') }}</div>
+      >Date Posted: {{ job ? $moment(job.created_at).utc().format('DD/MM/YYYY') : $moment(modalJobPart.job.created_at).utc().format('DD/MM/YYYY') }}</div>
       <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
         <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`" -->
