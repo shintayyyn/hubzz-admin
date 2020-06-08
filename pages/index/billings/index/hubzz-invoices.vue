@@ -2,8 +2,9 @@
   <div>
     <div class="px-2 flex justify-start items-center flex-wrap">
       <AppButton
-        class="mr-2"
-        :label="'Create SAGE.csv'"
+        :class="sageChecker ? 'text-white mr-2' : 'text-black mr-2'"
+        :background="sageChecker ? 'red' : 'sunglow'"
+        :label="sageChecker ? 'Cancel creating SAGE.csv' : 'Create SAGE.csv'"
         :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
         @click="showSageChecker()"
       />
@@ -35,6 +36,7 @@
         v-slot:checker="slotProps"
       >
         <input 
+          v-if="slotProps.item.sage_ref"
           :id="slotProps.item" 
           v-model="chosenInvoices" 
           type="checkbox" 
@@ -75,7 +77,7 @@
             :label="'Mark as Paid'"
             :background="'green'"
             class="text-white mr-2"
-            :disabled="slotProps.item.sage_ref ? true : false"
+            :disabled="slotProps.item.sage_ref ? false : true"
             @click="toShowPaidModal(slotProps.item.id)"
           />
           <span
@@ -163,7 +165,7 @@
             :in-class="'rounded-lg'"
             :message="'Are you sure you want to continue?'"
             @cancel="confirm = false"
-            @confirm="toMarkAsPaid()"
+            @confirm="markExported(chosenInvoices.map(invoice => invoice.id))"
           />
         </transition>
         <!-- TO EXPORT CONFIRM CANCEL -->
@@ -179,7 +181,7 @@
             <div>
               The following invoices have already been Exported on the following dates:
             </div>
-            <div v-for="(item, index) in chosenInvoices"
+            <div v-for="(item, index) in exportedChosenInvoices"
                  :key="`item-${index}`"
                  class="text-white">
               <div class="flex flex-row m-2">
@@ -190,9 +192,12 @@
                   {{ 'Invoice Number: ' + item.invoice_number }}
                 </div>
                 <div class="mx-2">
-                  {{ 'Exported At: ' + $moment.utc(item.exported_at).format('DD/MM/YYYY HH:mm:ss') }}
+                  {{ 'Exported At: ' + $moment(item.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY h:mm:ss a') }}
                 </div>
               </div>
+            </div>
+            <div>
+              Are you sure you'd like to export SAGE.csv with exported invoices?
             </div>
           </div>
           <div class="flex flex-row mb-4">
@@ -251,6 +256,7 @@ export default {
 				order_by: ["date_created:desc"]
       },
       chosenInvoices: [],
+      exportedChosenInvoices: [],
       
       // EXPORTING MODALS
       exportedModal: false,
@@ -427,16 +433,17 @@ export default {
     },
     async confirmSage () {
       const exported = this.chosenInvoices.filter(invoice => invoice.exported_at !== null)
-      console.log('exported', exported)
-      const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
+      this.exportedChosenInvoices = exported
       if(exported.length > 0){
         this.exportedModal = true
       } else {
-        await this.markExported(invoiceIds)
+        await this.markExported()
       }
     },
 
-    async markExported (invoiceIds) {
+    async markExported () {
+      const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
+
       await this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
         id: invoiceIds,
         exported_at: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -463,7 +470,10 @@ export default {
         this.$nuxt.error(err.response ? err.response.data : err)
       }).finally(() => {
         this.downloading = false
+        this.exportedModal = false
       })
+
+
     },
 
     viewInvoice (invoiceId) {

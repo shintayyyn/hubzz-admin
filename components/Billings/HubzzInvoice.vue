@@ -21,7 +21,7 @@
         v-if="practice && practiceInvoice && practiceInvoice.exported_at"
         class="text-white m-2"
       >
-        *This Invoice has already been exported on {{ $moment.utc(practiceInvoice.exported_at).format('DD/MM/YYYY HH:mm:ss') }}
+        *This Invoice has already been exported on {{ $moment(practiceInvoice.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY, h:mm:ss a') }}
       </div>
       <!-- <AppButton
         v-if="forViewing == true" 
@@ -910,7 +910,7 @@ export default {
 					`${process.env.API_URL}/api/v1/practice-invoices/${
 						this.practiceInvoice.id
 					}/pdf?filename=${"hubzz_" +
-						this.$moment(this.practiceInvoice.issued_at).format("DD/MM/YYYY") +
+						this.$moment(this.practiceInvoice.issued_at, 'YYYY-MM-DD[T]').utc().format("DD/MM/YYYY") +
 						"_" +
 						this.practiceInvoice.invoice_number +
 						"_" +
@@ -921,6 +921,10 @@ export default {
 
 		toSageCSV () {
 			if (this.practiceInvoice) {
+        this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
+          id: this.practiceInvoice.id,
+          exported_at: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
+        })
 				window.open(
 					`${process.env.API_URL}/api/v1/admin/practice-invoices/${
 						this.practiceInvoice.id

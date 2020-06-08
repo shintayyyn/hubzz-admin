@@ -59,7 +59,7 @@
             Latest Billing Issued at
           </p>
           <p class="flex text-white text-sm p-2 font-semibold">
-            {{ latestInvoice && latestInvoice.date_created ? $moment(latestInvoice.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm:ss A') : 'N/A' }}
+            {{ latestInvoice && latestInvoice.date_created ? $moment(latestInvoice.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY, h:mm:ss a') : 'N/A' }}
           </p>
         </div>
       </div>
