@@ -298,17 +298,24 @@
         </transition>
         <div class="flex flex-col w-full text-white px-8 justify-between">
           <div class="flex flex-row mb-4">
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-              @click="createBulkBillingChecked()"
-            >
-              Confirm
+            <div class="p-2 px-4">
+              <AppButton
+                class="text-white"
+                :background="'green'"
+                :disabled="chosenPracticeJobParts.length < 1 ? true : false"
+                :label="'Confirm'"
+                @click="createBulkBillingChecked()"
+              />
             </div>
             <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="clearInvoiceableJobParts()"
+              class="p-2 px-4"
             >
-              Cancel
+              <AppButton
+                class="text-white"
+                :background="'red'"
+                :label="'Cancel'"
+                @click="clearInvoiceableJobParts()"
+              />
             </div>
           </div>
         </div>
