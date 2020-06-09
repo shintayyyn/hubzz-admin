@@ -107,6 +107,11 @@ export default {
 					eventName: "checkClicked"
         },
         {
+					name: "Practice Name",
+					dataIndex: "practice_name",
+					sortable: true
+				},
+        {
 					name: "Invoice Number",
 					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
 					sortable: true

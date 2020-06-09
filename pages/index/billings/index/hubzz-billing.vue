@@ -187,6 +187,7 @@ export default {
     },
 
     $route () {
+      console.log('is this it')
 			this.getPractices()
 		},
   },
@@ -205,13 +206,17 @@ export default {
 					? createdRoute.order_by
 					: "created_at:desc"
 			const params = { limit, offset, order_by, status, search }
+
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params })
 			const itemCount = response.data.count
+      console.log('route name', route.name)
+      console.log('asyncdata is working')
 			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 
 			response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
 			const practices = response.data.practices
 			await store.commit("practices/SET_PRACTICES", practices)
+
 			await store.commit("practices/TOGGLE_LOADING", false)
 			return {
 				// itemCount,
@@ -296,25 +301,28 @@ export default {
 		}, 1000),
 
 		async getPractices () {
-      console.log('get practices')
-      await this.$store.dispatch("practices/fetchPractices", {
-				limit: this.params.limit,
-				search: this.search,
-				order_by: this.params.order_by,
-				offset: this.params.offset,
-        status: this.params.status,
-        verified: this.verified,
-        countOnly: true
-      }).then(() => {
-        this.$store.dispatch("practices/fetchPractices", {
+      if(!this.$route.name.includes('bulk-billing')) {
+        console.log('get practices')
+        await this.$store.dispatch("practices/fetchPractices", {
           limit: this.params.limit,
           search: this.search,
           order_by: this.params.order_by,
           offset: this.params.offset,
           status: this.params.status,
           verified: this.verified,
+          countOnly: true
+        }).then(() => {
+          this.$store.dispatch("practices/fetchPractices", {
+            limit: this.params.limit,
+            search: this.search,
+            order_by: this.params.order_by,
+            offset: this.params.offset,
+            status: this.params.status,
+            verified: this.verified,
+          })
         })
-      })
+      }
+      
 		},
 
 		sortData: function (toSortBy) {

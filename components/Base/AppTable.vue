@@ -202,10 +202,8 @@ export default {
 		pagechanged (pageNumber) {
       const nestedItem = this.nestedItem ? this.nestedItem : null
       if (this.nestedItem) {
-        console.log('something')
         this.$emit("pagechanged", pageNumber, nestedItem)
       } else {
-        console.log('nothing')
         this.$emit("pagechanged", pageNumber)
       }
 		},

@@ -94,11 +94,11 @@
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
-      :items="allPractices"
+      :items="allBillablePractices"
       :currentPage="currentPage"
       :perPage="practiceParams.limit"
       :columns="columns"
-      :loading="loadingPractices"
+      :loading="loadingBillablePractices"
       :orderBy="practiceParams.order_by"
       :customWidth="200"
       @pagechanged="pagechanged"
@@ -475,26 +475,14 @@ export default {
   },
   
 	computed: {
-		loadingSessions () {
-			return this.$store.state.jobs.loading_jobs
-		},
-		jobParts () {
-			return this.$store.state.jobs.practice_billing_sessions
-		},
-		jobPartCount () {
-			return this.$store.state.jobs.practice_billing_sessions_count
-		},
-		loadingPractices () {
-			return this.$store.state.practices.loading_practices
+    loadingBillablePractices () {
+      return this.$store.state.billings.loading_billable_practices
     },
-    allPractices () {
-      return this.$store.state.practices.allPractices
+    allBillablePractices () {
+      return this.$store.state.billings.billable_practices
     },
-		getAllPractices () {
-			return this.$store.getters["practices/getAllPractices"]
-		},
 		itemCount () {
-			return this.$store.state.practices.itemCount
+			return this.$store.state.billings.billable_practices_count
 		},
 		pageCount () {
 			return Math.ceil(this.itemCount / this.practiceParams.limit)
@@ -503,7 +491,7 @@ export default {
 			return Math.ceil(this.itemCount / this.practiceParams.limit)
 		},
 		total () {
-			return this.$store.state.itemCount
+			return this.allBillablePractices.length
 		}
 	},
 
@@ -530,11 +518,13 @@ export default {
     console.log('store set 0')
     this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
     this.$store.commit("practices/CLEAR_PRACTICES")
+    this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+    this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
   },
 	methods: {
 		async getBillablePractices () {
       console.log('get billable practices start')
-			await this.$store.commit("practices/TOGGLE_LOADING", true)
+			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
 			let { page = 1, search = "", order_by = [] } = this.$route.query
 			page = parseInt(page)
 			const createdRoute = this.$route.query
@@ -572,16 +562,16 @@ export default {
         this.searchMessage = "No practice to invoice found"
       }
 
-			await this.$store.commit("practices/SET_PRACTICE_COUNT", itemCount)
+			await this.$store.commit("billings/SET_BILLABLE_PRACTICES_COUNT", itemCount)
 
 			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })
 			const practices = response.data.practices
-			await this.$store.commit("practices/SET_PRACTICES", practices)
-			await this.$store.commit("practices/TOGGLE_LOADING", false)
+			await this.$store.commit("billings/SET_BILLABLE_PRACTICES", practices)
+			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
     },
     
     async createBulkBilling () {
-      await this.$store.commit("practices/TOGGLE_LOADING", true)
+      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
       console.log('create')
       const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
         const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
@@ -641,8 +631,9 @@ export default {
       this.chosenPractices = []
       this.dueDate = ''
       this.showPaidModal = false,
-      this.$store.dispatch('practices/clearPractices')
-      await this.$store.commit("practices/TOGGLE_LOADING", false)
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
+      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
     },
 
     async processBulkBilling () {
@@ -669,7 +660,7 @@ export default {
     },
 
     async createBulkBillingChecked () {
-      await this.$store.commit("practices/TOGGLE_LOADING", true)
+      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
       const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
         const chosenJobParts = this.chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === practice.id)
         console.log('chosenjobparts', chosenJobParts)
@@ -735,8 +726,9 @@ export default {
       this.dueDate = ''
       this.showPaidModal = false,
       this.showSessionsModal = false,
-      await this.$store.commit("practices/SET_PRACTICES", [])
-      await this.$store.commit("practices/TOGGLE_LOADING", false)
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
+      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
     },
 
 		goToPage (page) {
@@ -850,9 +842,9 @@ export default {
     },
 
 		getPracticesForBulk () {
-      console.log('params get practices', this.practiceParams)
+      console.log('params get billable practices', this.practiceParams)
 			this.$store
-				.dispatch("practices/fetchPractices", {
+				.dispatch("billings/fetchBillablePractices", {
 					id: this.practiceParams.id,
 					limit: this.practiceParams.limit,
 					search: this.search,
@@ -866,7 +858,7 @@ export default {
 					countOnly: true
 				})
 				.then(() => {
-					this.$store.dispatch("practices/fetchPractices", {
+					this.$store.dispatch("billings/fetchBillablePractices", {
 						id: this.practiceParams.id,
 						limit: this.practiceParams.limit,
 						search: this.search,
