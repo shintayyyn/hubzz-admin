@@ -1,5 +1,5 @@
 export default {
-	getAllPractices(state) {
+	getAllPractices (state) {
 		let practices = []
 		state.allPractices.forEach(practice => {
 			practices.push({
@@ -10,10 +10,10 @@ export default {
 		})
 		return practices
 	},
-	getAllSpokes(state) {
+	getAllSpokes (state) {
 		return state.practiceSpokes
 	},
-	getPracticeNotifications(state) {
+	getPracticeNotifications (state) {
 		let notifications = []
 		state.practiceNotifications.forEach(notif => {
 			console.log('notif', notif)
