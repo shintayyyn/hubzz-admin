@@ -1,10 +1,12 @@
 <template>
   <transition name="slide" mode="out-in">
     <div class="specific-job-part-modal">
-      <div class="mx-2">
-        <div class="m-2 mx-2">
+      <div class="m-6">
+        <div class="m-4">
           <nuxt-link 
-            :to="{path: `/billings/${$route.params.id}/hubzz-invoices/issue-hubzz-invoice`, query: $route.query}">
+            class="mb-2"
+            :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`, query: $route.query}"
+          >
             <svgicon
               name="arrow-left-solid"
               height="40"

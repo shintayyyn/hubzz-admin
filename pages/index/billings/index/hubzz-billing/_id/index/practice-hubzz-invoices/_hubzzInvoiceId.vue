@@ -1,7 +1,7 @@
 <template>
   <div class="practice-hubzz-invoice-modal">
     <div class="items-center text-sm text-white py-2 m-6">
-      <div class="p-1 mb-2">
+      <div class="p-3 mb-2">
         <svgicon
           name="arrow-left-solid"
           height="32"
@@ -110,7 +110,7 @@ export default {
 				...this.$route.query
 			}
 			this.$router.push({
-				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`,
+				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`,
 				query
 			})
 		}
