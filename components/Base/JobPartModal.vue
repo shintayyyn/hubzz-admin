@@ -11,23 +11,64 @@
         />
       </div>
     </div>
-    <div class="flex flex-wrap my-4">
+    <div class="flex flex-wrap font-semibold my-4">
       <div
-        class="text-2xl text-white font-semibold mr-4"
+        class="text-2xl text-white mr-4"
       >{{ job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}</div>
       <div class="flex">
-        <div class="text-black p-2 bg-yellow-500 rounded">{{ job_part.status }}</div>
+        <div class="ml-2 text-black p-2 bg-yellow-500 rounded">{{ job_part.status }}</div>
         <div
-          class="text-black p-2 text-white rounded ml-4"
+          v-if="job_part && job_part.terminated" 
+          class="ml-2 text-black p-2 bg-gray-300 rounded"
+        >{{ job_part && job_part.terminated ? 'Terminated' : null}}
+        </div>
+        <div
+          class="ml-2 text-black p-2 text-white rounded"
           :class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
         >{{ job_part.job && job_part.job.type ? job_part.job.type : null }}</div>
       </div>
     </div>
+    
     <div class="flex flex-wrap">
       <div
         class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
         :class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
       >
+        <div v-if="job_part.status === 'Cancelled'" class="flex flex-col text-white bg-waterloo rounded-lg leading-tight my-2">
+          <div class="m-4">
+            <div class="font-bold text-sm sm:text-md">Terminated At</div>
+            <div
+              class="text-xs sm:text-sm mb-8"
+            >{{ job_part.job.platform_job.cancelled_at | localDate }}</div>
+            <div class="font-bold text-sm sm:text-md">Reason for termination</div>
+            <div class="text-xs sm:text-sm mb-8">{{ job_part.job.platform_job.cancelled_reason }}</div>
+            <div>
+              <p
+                class="font-bold text-sm sm:text-md"
+              >{{ job_part.terminated ? 'Terminated By' : 'Cancelled By' }}</p>
+
+              <div class="flex justify-start">
+                <div class="text-xs sm:text-sm">
+                  {{
+                    job_part.cancelled_by_practice === 'Hub'
+                      ? job_part.parent_practice_name
+                      : job_part.cancelled_by_practice === 'Spoke'
+                        ? job_part.practice_name
+                        : job_part.practice_name
+                  }}
+                </div>
+                <div v-if="job_part.cancelled_by_user" class="mx-1">-</div>
+                <div v-if="job_part.cancelled_by_user" class="text-xs sm:text-sm">
+                  {{
+                    job_part.cancelled_by_user.email
+                      ? job_part.cancelled_by_user.email
+                      : job_part.cancelled_by_user.name
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           v-if="job_part.status === 'Withdrawn'"
           class="shadow-lg rounded-lg bg-waterloo shadow p-4 mb-2"

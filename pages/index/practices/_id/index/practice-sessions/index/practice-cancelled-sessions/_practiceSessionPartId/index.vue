@@ -14,13 +14,13 @@ export default {
   components:{
     PracticeSessionModal
   },  
-  data(){
+  data (){
     return{
       job_part:'',
       practiceId:''
     }
   },
-  async asyncData({ app, store, route, error }){
+  async asyncData ({ app, store, route, error }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
       const job_part = response.data.job_part

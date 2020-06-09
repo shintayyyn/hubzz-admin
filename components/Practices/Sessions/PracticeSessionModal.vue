@@ -2,14 +2,19 @@
   <div class="px-4 md:px-6">
     <!-- BODY -->
     <div class="w-full overflow-auto">
-      <div class="flex flex-wrap items-center md:m-2">
+      <div class="flex flex-wrap font-semibold items-center md:m-2">
         <div
           class="text-2xl text-white font-semibold mr-4"
         >{{ job ? job.title : modalJobPart.job.title }}</div>
         <div class="flex">
           <div
-            class="text-black p-2 bg-yellow-500 rounded"
+            class="mx-2 text-black p-2 bg-yellow-500 rounded"
           >{{status !== 'Declined' ? status : 'Withdrawn'}}</div>
+          <div
+            v-if="modalJobPart && modalJobPart.terminated" 
+            class="mx-2 text-black p-2 bg-gray-300 rounded"
+          >{{ modalJobPart && modalJobPart.terminated ? 'Terminated' : null}}</div>
+          
           <!-- <div 
             v-if="modalJobPart" 
             class="text-black p-2 bg-yellow-500 rounded"
@@ -23,7 +28,7 @@
             {{ job ? job.status : null }}
           </div>-->
           <div
-            class="text-black p-2 text-white rounded ml-4"
+            class="mx-2 text-black p-2 text-white rounded"
             :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'"
           >{{ job ? job.type : modalJobPart.job.type }}</div>
         </div>
@@ -439,6 +444,40 @@
             <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
             <div v-if="locumUser && job_part" class="w-full overflow-hidden flex flex-col">
+              <div v-if="modalJobPart.status === 'Cancelled'" class="flex flex-col text-white bg-waterloo rounded-lg leading-tight m-2">
+                <div class="m-4">
+                  <div class="font-bold text-sm sm:text-md">Terminated At</div>
+                  <div
+                    class="text-xs sm:text-sm mb-8"
+                  >{{ modalJobPart.job.platform_job.cancelled_at | localDate }}</div>
+                  <div class="font-bold text-sm sm:text-md">Reason for termination</div>
+                  <div class="text-xs sm:text-sm mb-8">{{ modalJobPart.job.platform_job.cancelled_reason }}</div>
+                  <div class="leading-tight mt-4">
+                    <p
+                      class="font-bold text-sm sm:text-md"
+                    >{{ modalJobPart.terminated ? 'Terminated By' : 'Cancelled By' }}</p>
+                    <div class="flex justify-start">
+                      <div class="text-xs sm:text-sm">
+                        {{
+                          modalJobPart.cancelled_by_practice === 'Hub'
+                            ? modalJobPart.parent_practice_name
+                            : modalJobPart.cancelled_by_practice === 'Spoke'
+                              ? modalJobPart.practice_name
+                              : modalJobPart.practice_name
+                        }}
+                      </div>
+                      <div v-if="modalJobPart.cancelled_by_user" class="mx-1">-</div>
+                      <div v-if="modalJobPart.cancelled_by_user" class="text-xs sm:text-sm">
+                        {{
+                          modalJobPart.cancelled_by_user.email
+                            ? modalJobPart.cancelled_by_user.email
+                            : modalJobPart.cancelled_by_user.name
+                        }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div
                 v-if="job_part.status === 'Withdrawn'"
                 class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow md:ml-2 mb-2"
