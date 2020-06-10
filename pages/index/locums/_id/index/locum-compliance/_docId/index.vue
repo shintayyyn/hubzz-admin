@@ -1,15 +1,19 @@
 <template>
   <div class="compliance-modal shadow-lg">
-    <LocumComplianceFile 
-      :user="user" 
-      :locumComplianceDocument="compliance_doc"
+    <AppLoading :loading="loading" spinner />
+
+    <LocumComplianceFile
+      v-if="locumUser && locumComplianceDocument"
+      :user="locumUser" 
+      :locumComplianceDocument="locumComplianceDocument"
       @complianceUpdated="$emit('updateLocumUsers')"
     />
   </div>
 </template>
 
-  <script>
+<script>
   import LocumComplianceFile from "@/components/Locums/LocumComplianceFile"
+  import AppLoading from '@/components/Base/AppLoading'
   
   export default {
     transition: {
@@ -18,47 +22,35 @@
     },
 
     components: {
-      LocumComplianceFile
+      LocumComplianceFile,
+      AppLoading,
+    },
+
+    props: {
+      locumUser: {
+        type: Object,
+        default: () => null,
+      }
     },
 
     data () {
       return {
-        compliance_doc: null
-        // user:null
+        loading: false,
+        locumComplianceDocument: null,
       }
     },
 
-    computed: {
-      user () {
-        return this.$store.state.locums.locumUser
-      }
-    },
-
-    async asyncData ({ app, store, route, error }) {
-      try {
-        let response = await app.$axios.$get(`/api/v1/admin/locum-compliance-documents/${route.params.docId}`)
-        const compliance_doc = response.data.locum_compliance_document
-
-        response = await app.$axios.$get(
-          `/api/v1/admin/locum-users/${route.params.id}`
-        )
-        const user = response.data.user
-
-        await store.commit("locums/SET_LOCUM_USER", user)
-
-        return {
-          compliance_doc
-          // user
-        }
-      } catch (err) {
-        error({ statusCode: 404 })
-        store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: "Something went wrong!"
-        })
-        console.log("index practices index create asyncData err", err)
-      }
+    mounted () {
+      const locumComplianceDocumentId = this.$route.params.docId
+      this.$store.commit('locums/SET_LOCUM_USER', null)
+      this.loading = true
+      this.$axios.get(`/api/v1/admin/locum-compliance-documents/${locumComplianceDocumentId}`).then((response) => {
+        this.locumComplianceDocument = response.data.data.locum_compliance_document
+      }).catch((err) => {
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loading = false
+      })
     },
 
   }

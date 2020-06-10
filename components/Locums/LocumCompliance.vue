@@ -604,24 +604,24 @@ export default {
   }
 }
 </script>
+
 <style>
-.note-modal {
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 10px;
-	max-height: 80%;
-	overflow: auto;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-
-@media screen and (min-width: 768px) {
   .note-modal {
-    min-width: 600px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    max-height: 80%;
+    overflow: auto;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
   }
-}
 
+  @media screen and (min-width: 768px) {
+    .note-modal {
+      min-width: 600px;
+    }
+  }
 </style>

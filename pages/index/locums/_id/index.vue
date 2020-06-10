@@ -11,7 +11,35 @@
         />
       </div>
 
-      <LocumTabs :user="user" />
+      <AppLoading :loading="loading" spinner />
+
+      <div class="flex flex-row flex-wrap justify-start">
+        <nuxt-link
+          :to="{ name: 'index-locums-id-index', params: { id: $route.params.id } }"
+          class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
+          :class="$route.name === 'index-locums-id-index' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+        >
+          Profile
+        </nuxt-link>
+
+        <nuxt-link
+          v-if="authAdminPermissions.includes('View Locum Jobs')"
+          :to="{ name: 'index-locums-id-index-locum-jobs-index', params: { id: $route.params.id } }"
+          class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
+          :class="$route.path.includes(`/locums/${$route.params.id}/locum-jobs`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+        >
+          Jobs
+        </nuxt-link>
+
+        <nuxt-link
+          v-if="locumUser && locumUser.status !== 'Deactivated' && authAdminPermissions.includes('View Locum Compliance Detail')"
+          :to="{ name: 'index-locums-id-index-locum-compliance', params: { id: $route.params.id } }"
+          class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
+          :class="$route.name === 'index-locums-id-index-locum-compliance' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+        >
+          Compliance
+        </nuxt-link>
+      </div>
 
       <div 
         v-if="$route.name.includes('locumJobPartId')" 
@@ -31,55 +59,42 @@
       />
     </div>
 
-    <nuxt-child @updateLocumUsers="$emit('updateLocumUsers')" />
+    <nuxt-child :locumUser="locumUser" @updateLocumUsers="$emit('updateLocumUsers')" />
   </div>
 </template>
 
 <script>
-  import LocumTabs from "@/components/Locums/LocumTabs"
+  import AppLoading from '@/components/Base/AppLoading'
 
   export default {
     components: {
-      LocumTabs
+      AppLoading,
+    },
+
+    data () {
+      return {
+        loading: false,
+        locumUser: null,
+      }
     },
 
     computed: {
-      user () {
-        return this.$store.state.locums.locumUser
-      }
-    },
-
-    async asyncData ({ app, store, route, error }) {
-      try {
-        let response = await app.$axios.$get(
-          `/api/v1/admin/locum-users/${route.params.id}`
-        )
-        const user = response.data.user
-
-        await store.commit("locums/SET_LOCUM_USER", user)
-
-        return {}
-      } catch (err) {
-        error({ statusCode: 404 })
-        store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: "Something went wrong!"
-        })
-        console.log("Get specific locum error!", err)
-      }
-    },
-
-    methods: {
-      goBack () {
-        const query = {
-          ...this.$route.query
-        }
-        if (query.job_status) {
-          delete query.job_status
-        }
-        this.$router.push({ path: "/locums", query })
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
       },
+    },
+
+    mounted () {
+      const locumUserId = this.$route.params.id
+      this.$store.commit('locums/SET_LOCUM_USER', null)
+      this.loading = true
+      this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`).then((response) => {
+        this.locumUser = response.data.data.user
+      }).catch((err) => {
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loading = false
+      })
     },
 
   }
