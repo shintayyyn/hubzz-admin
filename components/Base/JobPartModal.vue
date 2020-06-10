@@ -36,11 +36,11 @@
       >
         <div v-if="job_part.status === 'Cancelled'" class="flex flex-col text-white bg-waterloo rounded-lg leading-tight my-2">
           <div class="m-4">
-            <div class="font-bold text-sm sm:text-md">Terminated At</div>
+            <div class="font-bold text-sm sm:text-md">{{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At</div>
             <div
               class="text-xs sm:text-sm mb-8"
             >{{ job_part.job.platform_job.cancelled_at | localDate }}</div>
-            <div class="font-bold text-sm sm:text-md">Reason for termination</div>
+            <div class="font-bold text-sm sm:text-md">Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}</div>
             <div class="text-xs sm:text-sm mb-8">{{ job_part.job.platform_job.cancelled_reason }}</div>
             <div>
               <p

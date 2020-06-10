@@ -446,11 +446,11 @@
             <div v-if="locumUser && job_part" class="w-full overflow-hidden flex flex-col">
               <div v-if="modalJobPart.status === 'Cancelled'" class="flex flex-col text-white bg-waterloo rounded-lg leading-tight m-2">
                 <div class="m-4">
-                  <div class="font-bold text-sm sm:text-md">Terminated At</div>
+                  <div class="font-bold text-sm sm:text-md">{{ modalJobPart.terminated ? 'Terminated' : 'Cancelled' }} At</div>
                   <div
                     class="text-xs sm:text-sm mb-8"
                   >{{ modalJobPart.job.platform_job.cancelled_at | localDate }}</div>
-                  <div class="font-bold text-sm sm:text-md">Reason for termination</div>
+                  <div class="font-bold text-sm sm:text-md">Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}</div>
                   <div class="text-xs sm:text-sm mb-8">{{ modalJobPart.job.platform_job.cancelled_reason }}</div>
                   <div class="leading-tight mt-4">
                     <p
