@@ -144,7 +144,7 @@
         count: 0,
         professionComplianceCategories: [],
         orderBy: [],
-        limit: 5,
+        limit: 10,
         activePage: 1,
       }
     },
