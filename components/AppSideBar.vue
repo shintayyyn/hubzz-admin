@@ -48,7 +48,7 @@
         </div>
         <!-- LINKS END HERE -->
 
-        <div class="text-sm relative">
+        <div v-if="false" class="text-sm relative">
           <span
             v-if="$route.name === 'index-locum-change-email-requests' || $route.name === 'index-practice-change-email-requests'"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
