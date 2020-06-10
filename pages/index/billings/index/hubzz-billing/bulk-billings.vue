@@ -17,21 +17,6 @@
             :isAfterDate="invoiceableDateStart"
           />
           
-          <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
-            <input 
-              id="disputed" 
-              v-model="showDisputedJobParts" 
-              type="checkbox" 
-              value="true"
-            >
-            <label for="disputed">Show Disputed Invoices</label>
-          </div> -->
-          <!-- <AppInput
-            v-model="showDisputedJobParts"
-            :label="'Show Disputed Invoices'"
-            :type="'single-checkbox'"
-            class="text-white mx-2"
-          />-->
           <AppButton
             class="whitespace-no-wrap"
             :disabled="invoiceableDateStart && invoiceableDateEnd ? false : true"
@@ -51,32 +36,28 @@
           />
         </div>
         <div
-          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end" 
+          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount > 0" 
           class="flex text-white"
         >
-          <AppInput
-            v-model="search"
-            :name="'search'"
-            :type="'text'"
-            :label="'Filter Invoiceable Practices by Name'"
-          />
-          <!-- <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Practice by Name"
-          > -->
-          <!-- <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button> -->
+          <div class="w-full">
+            <input
+              v-model="search"
+              class="rounded-lg border-2 border-transparent text-sm text-white p-2 w-1/4 focus:border-sunglow focus:outline-none bg-waterloo"
+              placeholder="Filter Invoiceable Practices by Name"
+            >
+            <button
+              v-if="search"
+              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+              @click="(search = ''), searchSubmit()"
+            >
+              <svgicon
+                name="times-solid"
+                height="12"
+                width="12"
+                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -163,7 +144,7 @@
 
     <!-- SESSIONS MODAL -->
     <transition name="fade" mode="out-in">
-      <div v-if="showSessionsModal == true" class="sessions-modal overflow-hidden">
+      <div v-if="showSessionsModal == true" class="sessions-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
         <div class="m-4 border-b-4 border-double border-white">
           <div 
             v-for="(item, index) in chosenPracticesFinalization"
@@ -302,14 +283,12 @@ import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
 import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		AppTable,
     AppDate,
     AppButton,
-    AppInput,
     AppPagination,
   },
   
@@ -464,13 +443,12 @@ export default {
     invoiceableDateEnd: function (value) {
       this.practiceParams.practice_invoiceable_date_end = value
     },
-		search (value) {
-      console.log('search for', value)
+		search () {
 			this.searchSubmit()
 		},
 
 		$route () {
-			// this.getPracticesForBulk()
+			this.getPracticesForBulk()
 		}
   },
   created () {
@@ -855,11 +833,7 @@ export default {
     },
 
     async pageChangedJobPart (page, practiceItem) {
-      console.log('page', page)
-      console.log('practice item before mod', practiceItem)
       const originalPractice = this.chosenPractices.find(item => item.id === practiceItem.id)
-      console.log('originalPractice', this.chosenPractices)
-
       Promise.all([
         practiceItem.current_page = page,
         practiceItem.practice_invoiceable_approved_filtered_job_parts_sliced = 
@@ -868,23 +842,22 @@ export default {
             page * this.practicesFilteredJobPartsPerPage
           ),
       ]).then(()=>{
-        console.log('practice item', practiceItem)
         const index = this.chosenPracticesFinalization.findIndex(item => item.id === practiceItem.id)
-
         this.chosenPracticesFinalization[index] = practiceItem
       })
-      // let params = {
-      //   job_practice_id: practiceItem.id,
-      //   approved_at_date_start: this.practiceParams.practice_invoiceable_date_start,
-      //   approved_at_date_end: this.practiceParams.practice_invoiceable_date_end,
-      //   status: 'Approved',
-      //   locum_invoiceable: true,
-      //   practice_invoiced: false,
-      // }
+    },
 
-			// this.params.offset = this.params.limit * (page - 1)
-			// this.currentPage = page
-			// this.getJobParts(params)
+    reset () {
+      this.practiceParams.practice_invoiceable_date_start =  null
+      this.practiceParams.practice_invoiceable_date_end = null
+      this.invoiceableDateStart = null
+      this.invoiceableDateEnd = null
+      this.search = ""
+      this.chosenPractices = []
+      this.chosenPracticeJobParts = []
+      this.dueDate = ''
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
     },
     
     clearInvoiceableJobParts () {
@@ -923,28 +896,17 @@ export default {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 25px;
-	min-width: 900px;
-	min-height: 750px;
-	max-width: 100%;
+	width: 1300px;
+	max-width: 95%;
 	max-height: 90%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
 }
-.mark-paid-modal {
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 25px;
-	min-width: 600px;
-	min-height: 450px;
-	max-width: 95%;
-	max-height: 80%;
-	overflow: auto;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
+@media screen and (min-width: 768px) {
+	.sessions-modal {
+		max-height: 90%;
+	}
 }
 </style>

@@ -44,7 +44,6 @@ export default {
 </script>
 
 <style>
-
 .termination-modal {
 	position: fixed;
 	left: 50%;

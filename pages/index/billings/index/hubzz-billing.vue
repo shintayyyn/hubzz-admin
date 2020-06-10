@@ -187,7 +187,6 @@ export default {
     },
 
     $route () {
-      console.log('is this it')
 			this.getPractices()
 		},
   },
@@ -374,10 +373,10 @@ export default {
 		},
 
 		pagechanged (page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			}
+			// const query = {
+			// 	...this.$route.query,
+			// 	page: page || 1
+			// }
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
@@ -386,10 +385,10 @@ export default {
 		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
-			let query = {
-				...this.$router.query,
-				order_by
-			}
+			// let query = {
+			// 	...this.$router.query,
+			// 	order_by
+			// }
 			this.params.order_by = order_by
 			this.getPractices()
     },
