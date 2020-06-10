@@ -3,82 +3,85 @@
     <LocumComplianceFile 
       :user="user" 
       :locumComplianceDocument="compliance_doc"
-      @complianceUpdated="emitUpdateToIndex"
+      @complianceUpdated="$emit('updateLocumUsers')"
     />
   </div>
 </template>
-<script>
-import LocumComplianceFile from "@/components/Locums/LocumComplianceFile"
-export default {
-	transition: {
-		name: "slide",
-		mode: "out-in"
-	},
-	components: {
-		LocumComplianceFile
-	},
-	data () {
-		return {
-			compliance_doc: null
-			// user:null
-		}
-	},
-	computed: {
-		user () {
-			return this.$store.state.locums.locumUser
-		}
-	},
-	async asyncData ({ app, store, route, error }) {
-		try {
-			let response = await app.$axios.$get(`/api/v1/admin/locum-compliance-documents/${route.params.docId}`)
-			const compliance_doc = response.data.locum_compliance_document
 
-			response = await app.$axios.$get(
-				`/api/v1/admin/locum-users/${route.params.id}`
-			)
-			const user = response.data.user
+  <script>
+  import LocumComplianceFile from "@/components/Locums/LocumComplianceFile"
+  
+  export default {
+    transition: {
+      name: "slide",
+      mode: "out-in"
+    },
 
-			await store.commit("locums/SET_LOCUM_USER", user)
+    components: {
+      LocumComplianceFile
+    },
 
-			return {
-				compliance_doc
-				// user
-			}
-		} catch (err) {
-			error({ statusCode: 404 })
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			})
-			console.log("index practices index create asyncData err", err)
-		}
-	},
-	methods: {
-		async emitUpdateToIndex (){
-			await this.$emit('updateLocums')
-		}
-	}
-}
+    data () {
+      return {
+        compliance_doc: null
+        // user:null
+      }
+    },
+
+    computed: {
+      user () {
+        return this.$store.state.locums.locumUser
+      }
+    },
+
+    async asyncData ({ app, store, route, error }) {
+      try {
+        let response = await app.$axios.$get(`/api/v1/admin/locum-compliance-documents/${route.params.docId}`)
+        const compliance_doc = response.data.locum_compliance_document
+
+        response = await app.$axios.$get(
+          `/api/v1/admin/locum-users/${route.params.id}`
+        )
+        const user = response.data.user
+
+        await store.commit("locums/SET_LOCUM_USER", user)
+
+        return {
+          compliance_doc
+          // user
+        }
+      } catch (err) {
+        error({ statusCode: 404 })
+        store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Something went wrong!"
+        })
+        console.log("index practices index create asyncData err", err)
+      }
+    },
+
+  }
 </script>
 
 <style>
-.compliance-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-	.compliance-modal {
-		width: 70%;
-	}
-}
+  .compliance-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .compliance-modal {
+      width: 70%;
+    }
+  }
 </style>

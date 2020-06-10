@@ -1,11 +1,14 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <div class="px-2 text-xl md:text-4xl text-white">Locums</div>
+    <div class="px-2 text-xl md:text-4xl text-white">
+      Locums
+    </div>
     <div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
       <div class="flex py-2">
         <div class="relative">
           <input
             v-model="search"
+            style="width: 280px;"
             class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
             placeholder="Search Locum by Name"
             @keyup.enter="searchSubmit"
@@ -28,13 +31,35 @@
         <div
           class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
         >
+          <label class="text-sm text-white md:pr-2">Filter by Status</label>
+          <select
+            id="grid-state"
+            v-model="filterStatus"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option :value="null">
+              All
+            </option>
+            <option>Active</option>
+            <option>Dormant</option>
+            <option>Inactive</option>
+            <option>Bogus</option>
+            <option>Deactivated</option>
+            <option>Suspended</option>
+          </select>
+        </div>
+        <div
+          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
+        >
           <label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
           <select
             id="grid-state"
             v-model="filterCompliances"
             class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
           >
-            <option :value="null">All</option>
+            <option :value="null">
+              All
+            </option>
             <option>Empty</option>
             <option>Incomplete</option>
             <option>Pending</option>
@@ -49,496 +74,345 @@
         >
           <label class="text-sm text-white md:pr-2">Sort by</label>
           <select
-            v-model="sort"
+            v-model="orderByValue"
             class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
           >
-            <option value selected>Name</option>
-            <option>Profession</option>
-            <option>Date signed-up</option>
-            <option>Sign-up verified</option>
+            <option value="id">
+              ID (asc)
+            </option>
+            <option value="id:desc">
+              ID (desc)
+            </option>
+            <option value="name">
+              Name (asc)
+            </option>
+            <option value="name:desc">
+              Name (desc)
+            </option>
+            <option value="email">
+              E-Mail Address (asc)
+            </option>
+            <option value="email:desc">
+              E-Mail Address (desc)
+            </option>
+            <option value="profession">
+              Profession (asc)
+            </option>
+            <option value="profession:desc">
+              Profession (desc)
+            </option>
+            <option value="created_at">
+              Date Signed-up (asc)
+            </option>
+            <option value="created_at:desc">
+              Date Signed-up (desc)
+            </option>
+            <option value="status">
+              Status (asc)
+            </option>
+            <option value="status:desc">
+              Status (desc)
+            </option>
+            <option value="compliance_status">
+              Compliance Status (asc)
+            </option>
+            <option value="compliance_status:desc">
+              Compliance Status (desc)
+            </option>
           </select>
         </div>
       </div>
     </div>
 
     <AppTable
-      v-if="itemCount !== 0"
-      :total="itemCount"
+      v-if="count !== 0"
+      :total="count"
       :items="locumUsers"
       :currentPage="currentPage"
-      :perPage="perPage"
+      :perPage="limit"
       :columns="columns"
-      :loading="loadingLocums"
+      :loading="loading"
       :routerLink="`/locums`"
-      :orderBy="params.order_by"
-      @pagechanged="pagechanged"
-      @limitchanged="limitchanged"
-      @sorted="sorted"
+      :orderBy="orderBy"
+      @pagechanged="(value) => currentPage = value"
+      @sorted="(value) => orderBy = value"
     >
       <template v-slot:status_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
           :class="statusStyle(slotProps.item.status)"
-        >{{ slotProps.item.status }}</div>
+        >
+          {{ slotProps.item.status }}
+        </div>
       </template>
       <template v-slot:compliance_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
           :class="complianceStatusStyle(slotProps.item.compliance_status)"
-        >{{ slotProps.item.compliance_status }}</div>
+        >
+          {{ slotProps.item.compliance_status }}
+        </div>
       </template>
     </AppTable>
-    <div v-else class="mt-2 w-full text-center text-white">No registered locums.</div>
+
+    <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
+      <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
+    </div>
+
     <div
       v-if="$route.name.includes('index-locums-id')"
       class="locum-shield"
       @click="$router.push({ path: `/locums`, query: $route.query })"
     />
 
-    <nuxt-child @getLocums="getLocums" />
+    <nuxt-child @updateLocumUsers="getAllLocumUsers" />
   </div>
 </template>
 
 <script>
-import debounce from "lodash.debounce"
-import AppTable from "@/components/Base/AppTable"
+	import debounce from 'lodash.debounce'
+	import AppTable from '@/components/Base/AppTable'
 
-export default {
-	components: {
-		AppTable
-	},
-	data () {
-		return {
-			currentPage: 1,
+	export default {
 
-			filterCompliances: "",
-			search: "",
-			params: {
-				limit: 10,
-				offset: 0,
-				order_by: ["created_at:desc"],
-				compliance_status: ""
-			},
-			perPage: 0,
-			sort: "",
-			sortedBy: "",
-			sortType: "",
-			order_by: "",
-			name: true,
-			profession: true,
-			created_at: true,
-			email_verified_at: true,
-
-			columns: [
-				{
-					name: "User ID",
-					dataIndex: "id",
-					class: "text-center",
-					sortable: false
-				},
-				{
-					name: "Name",
-					dataIndex: "personal_detail_name",
-					class: "text-center",
-					sortable: true
-				},
-				{
-					name: "E-Mail Address",
-					dataIndex: "email",
-					class: "text-center",
-					sortable: true
-				},
-				{
-					name: "Profession",
-					dataIndex: "profession_name",
-					class: "text-center",
-					sortable: true
-				},
-				{
-					name: "Date Signed-up",
-					dataIndex: "created_at",
-					class: "localDate text-center",
-					sortable: true
-				},
-				{
-					name: "Sign-up verified",
-					dataIndex: "email_verified_at",
-					class: "localDate text-center",
-					sortable: true
-				},
-				{
-					name: "Status",
-					dataIndex: "status",
-					class: "text-center",
-					slot: true,
-					slotName: "status_slot"
-				},
-				{
-					name: "Compliance Status",
-					dataIndex: "compliance_status",
-					class: "text-center",
-					slot: true,
-					slotName: "compliance_slot"
-				}
-			]
-		}
-	},
-	watchQuery: ["page", "search", "compliance_status"],
-
-	computed: {
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
+		components: {
+			AppTable
 		},
-		loadingLocums () {
-			return this.$store.state.locums.loading_locums
-		},
-		locumUsers () {
-			// return this.$store.state.locums.locumUsers
-			return this.$store.getters["locums/getLocumUsers"]
-		},
-		itemCount () {
-			return this.$store.state.locums.itemCount
-		},
-		totalPages () {
-			return Math.ceil(this.itemCount / this.params.limit)
-		},
-		total () {
-			return this.locumUsers.length
-		}
-	},
 
-	watch: {
-		async filterCompliances () {
-			const query = {
-				...this.$router.query
-			}
-
-			query.compliance_status = this.filterCompliances
-
-			if (this.filterCompliances === "") {
-				delete query.compliance_status
-			}
-
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true
-			}
-
-			// this.$router.push({ query })
-
-			const params = {}
-
-			if (this.search) {
-				params.search = this.search
-			}
-
-			if (this.filterCompliances) {
-				params.compliance_status = this.filterCompliances
-			}
-
-			this.params.compliance_status = this.filterCompliances
-
-			this.getLocums(this.params)
-		},
-		search () {
-			this.searchSubmit()
-		},
-		sort (value) {
-			// for mobile responsive filter
-			if (value === "Name") {
-				this.sortBy(
-					"name",
-					this.currentPage,
-					this.search,
-					this.filterCompliances
-				)
-			}
-			if (value === "Profession") {
-				this.sortBy(
-					"profession",
-					this.currentPage,
-					this.search,
-					this.filterCompliances
-				)
-			}
-			if (value === "Date signed-up") {
-				this.sortBy(
-					"created_at",
-					this.currentPage,
-					this.search,
-					this.filterCompliances
-				)
-			}
-			if (value === "Sign-up verified") {
-				this.sortBy(
-					"email_verified_at",
-					this.currentPage,
-					this.search,
-					this.filterCompliances
-				)
-			}
-		}
-	},
-	async asyncData ({ app, store, route, error }) {
-		try {
-			await store.commit("locums/TOGGLE_LOADING", true)
-			let {
-				page = 1,
-				search = "",
-				order_by = [],
-				compliance_status = null
-			} = route.query
-
-			// if (!compliance_status) {
-			// }
-			page = parseInt(page)
-			const createdRoute = route.query
-			const limit = 10
-			const offset = page * limit - limit
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc"
-			const params = { limit, offset, order_by }
-
-			if (search) {
-				params.search = search
-			}
-			params.compliance_status = compliance_status
-			const getLocumUsersCountPromise = app.$axios.$get(
-				`/api/v1/admin/locum-users/count`,
-				{ params }
-			)
-			const getLocumUsersPromise = app.$axios.$get(
-				`/api/v1/admin/locum-users`,
-				{ params }
-			)
-
-			let response = await getLocumUsersCountPromise
-			const itemCount = response.data.count
-			await store.commit("locums/SET_LOCUM_COUNT", itemCount) // put the obtained data from the database to the state
-
-			response = await getLocumUsersPromise
-			const locumUsers = response.data.users
-
-			await store.commit("locums/SET_LOCUM_USERS", locumUsers) // 'SET_DATA_PROPERTY denotes a mutation
-
-			await store.commit("locums/TOGGLE_LOADING", false)
+		data () {
 			return {
-				filterCompliances: compliance_status,
-				perPage: limit,
-				currentPage: page,
-				search,
-				order_by
+        loading: false,
+				currentPage: 1,
+				filterStatus: null,
+				filterCompliances: null,
+				search: '',
+        limit: 10,
+        orderBy: [
+          'created_at:desc',
+        ],
+        count: 0,
+        locumUsers: [],
 			}
-		} catch (err) {
-			if (err.response && err.response.status === 401) {
-				console.log("something went wrong")
-				error(err.response.data)
-				return
-			}
-			throw err
-			// error({ statusCode: 404 })
-			// // store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
-			// console.log("Get locums error!", err)
-		}
-	},
-
-	methods: {
-		getQuery () {
-			const query = {
-				...this.$route.query
-			}
-			const offset = parseInt(query.page) * 10 - 10
-			return offset
-		},
-		getLocums () {
-			this.$store.dispatch("locums/fetchLocums", {
-				countOnly: true,
-				limit: this.params.limit,
-				search: this.params.search,
-				compliance_status: this.params.compliance_status,
-				order_by: this.params.order_by,
-				offset: this.params.offset
-			})
-			this.$store.dispatch("locums/fetchLocums", {
-				limit: this.params.limit,
-				search: this.params.search,
-				compliance_status: this.params.compliance_status,
-				order_by: this.params.order_by,
-				offset: this.params.offset
-			})
-		},
-		async sortBy (sortedBy, page, search, compliance_status) {
-			if (this.sortedBy == sortedBy && this.sortType == true) {
-				this.params.order_by = "created_at:desc"
-				this.sortedBy = ""
-			} else {
-				this.sortedBy = sortedBy
-				this.sortType = !this.sortType
-				this.params.order_by = await `${sortedBy}:${
-					this.sortType ? "asc" : "desc"
-				}`
-			}
-			let order_by = await this.params.order_by
-			// console.log(order_by)
-			let query = {
-				...this.$router.query,
-				order_by
-			}
-			if (page === 1) {
-				delete query.page
-			}
-			if (page) {
-				query = { ...this.$router.query, page, order_by }
-			}
-			if (search) {
-				query = { ...this.$router.query, search, order_by }
-			}
-			if (compliance_status) {
-				query = { ...this.$route.query, compliance_status, order_by }
-			}
-			if (page && search) {
-				query = { ...this.$router.query, page, search, order_by }
-			}
-			if (page && compliance_status) {
-				query = { ...this.$router.query, page, compliance_status, order_by }
-			}
-			if (search && compliance_status) {
-				query = { ...this.$router.query, search, compliance_status, order_by }
-			}
-			if (page && search && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status }
-			}
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true
-			}
-			this.$router.push({ query })
-
-			this.params.search = search
-			this.params.compliance_status = compliance_status
-			this.getLocums(this.params)
 		},
 
-		searchSubmit: debounce(function (page, order_by, compliance_status) {
-			let search = this.search
+		computed: {
 
-			let query = { ...this.$router.query, search }
+      columns () {
+        return [
+					{
+						name: 'User ID',
+						dataIndex: 'id',
+						class: 'text-center',
+						sortable: true,
+					},
+					{
+						name: 'Name',
+						dataIndex: 'name',
+						class: 'text-center',
+						sortable: true,
+					},
+					{
+						name: 'E-Mail Address',
+						dataIndex: 'email',
+						class: 'text-center',
+						sortable: true,
+					},
+					{
+						name: 'Profession',
+						dataIndex: 'profession_name',
+						class: 'text-center',
+						sortable: true
+					},
+					{
+						name: 'Date Signed-up',
+						dataIndex: 'created_at',
+						class: 'localDate text-center',
+						sortable: true,
+					},
+					{
+						name: 'Sign-up verified',
+						dataIndex: 'email_verified_at',
+						class: 'localDate text-center',
+						sortable: true,
+					},
+					{
+						name: 'Status',
+						dataIndex: 'status',
+						class: 'text-center',
+						sortable: true,
+						slot: true,
+						slotName: 'status_slot',
+					},
+					{
+						name: 'Compliance Status',
+						dataIndex: 'compliance_status',
+						class: 'text-center',
+						sortable: true,
+						slot: true,
+						slotName: 'compliance_slot',
+					},
+				]
+      },
 
-			if (page === 1) {
-				delete query.page
-			}
+      offset () {
+        return this.limit * (this.currentPage - 1)
+      },
 
-			if (page) {
-				query = { ...this.$router.query, page, search }
-			}
-			if (order_by) {
-				query = { ...this.$router.query, search, order_by }
-			}
-			if (compliance_status) {
-				query = { ...this.$router.query, search, compliance_status }
-			}
-			if (page && order_by) {
-				query = { ...this.$router.query, page, search, order_by }
-			}
-			if (page && compliance_status) {
-				query = { ...this.$router.query, page, search, compliance_status }
-			}
-			if (compliance_status && order_by) {
-				query = { ...this.$router.query, search, compliance_status, order_by }
-			}
-			if (page && compliance_status && order_by) {
-				query = {
-					...this.$router.query,
-					page,
-					search,
-					compliance_status,
-					order_by
+      hasFilter () {
+        return this.search || this.filterStatus || this.filterCompliances
+      },
+      
+			totalPages () {
+				return Math.ceil(this.count / this.limit)
+      },
+
+      orderByValue: {
+        get () {
+          return this.orderBy.length > 0 ? this.orderBy[0] : null
+        },
+        set (orderBy) {
+          this.orderBy = [orderBy]
+        },
+      },
+
+		},
+
+		watch: {
+			filterStatus () {
+				this.currentPage = 1
+        this.getAllLocumUsers()
+			},
+
+			filterCompliances () {
+				this.currentPage = 1
+        this.getAllLocumUsers()
+			},
+
+			search () {
+				this.searchSubmit()
+			},
+      
+			orderBy () {
+        this.currentPage = 1
+        this.getAllLocumUsers()
+      },
+      
+			currentPage () {
+        this.getAllLocumUsers()
+      },
+		},
+
+		mounted () {
+      this.count = 0
+      this.locumUsers = []
+			this.getAllLocumUsers()
+		},
+
+		methods: {
+
+			getAllLocumUsers () {
+        const filters = {}
+
+        if (this.search) {
+          filters.search = this.search
+        }
+
+        if (this.filterStatus) {
+          filters.status = this.filterStatus
+        }
+
+        if (this.filterCompliances) {
+          filters.compliance_status = this.filterCompliances
+        }
+
+        this.loading = true
+
+				Promise.all([
+					this.$axios.get('/api/v1/admin/locum-users/count', {
+						params: {
+							...filters,
+						},
+					}).then(response => response.data.data.count),
+					this.$axios.get('/api/v1/admin/locum-users', {
+						params: {
+              ...filters,
+              order_by: this.orderBy,
+							limit: this.limit,
+							offset: this.offset,
+						},
+					}).then(response => response.data.data.users),
+				]).then((responses) => {
+					const [
+						count,
+						locumUsers,
+					] = responses
+
+          this.count = count
+          this.locumUsers = locumUsers
+				}).finally(() => {
+          this.loading = false
+				})
+			},
+      
+			searchSubmit: debounce(function () {
+				this.currentPage = 1
+        this.getAllLocumUsers()
+			}, 500),
+      
+			statusStyle (status) {
+				switch (status) {
+					case 'Active':
+						return 'bg-green-500 text-white'
+					case 'Inactive':
+						return 'bg-gray-500 text-gray-700'
+					case 'Deactivated':
+						return 'bg-red-800 text-red-400'
+					case 'Suspended':
+						return 'bg-red-600 text-white'
+					case 'Dormant':
+						return 'bg-orange-500 text-white'
+					default:
+						return
 				}
-			}
-			if (this.search === "") {
-				delete query.search
-			}
+			},
 
-			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
-				this.loading = true
-			}
-
-			this.$router.push({ query })
-		}, 500),
-
-		statusStyle (status) {
-			switch (status) {
-				case "Active":
-					return "bg-green-500 text-white"
-				case "Inactive":
-					return "bg-gray-500 text-gray-700"
-				case "Deactivated":
-					return "bg-red-800 text-red-400"
-				case "Suspended":
-					return "bg-red-600 text-white"
-				case "Dormant":
-					return "bg-orange-500 text-white"
-				default:
-					return
-			}
+			complianceStatusStyle (status) {
+				switch (status) {
+					case 'Empty':
+						return 'border border-white text-white'
+					case 'Incomplete':
+						return 'bg-orange-600 text-white'
+					case 'Pending':
+						return 'bg-yellow-500 text-yellow-800'
+					case 'Expiring':
+						return 'bg-red-400 text-white'
+					case 'Expired':
+						return 'bg-red-800 text-red-400'
+					case 'Rejected':
+						return 'bg-red-600 text-white'
+					case 'Compliant':
+						return 'bg-green-500 text-white'
+					default:
+						return
+				}
+      },
+      
 		},
 
-		complianceStatusStyle (status) {
-			switch (status) {
-				case "Empty":
-					return "border border-white text-white"
-				case "Incomplete":
-					return "bg-orange-600 text-white"
-				case "Pending":
-					return "bg-yellow-500 text-yellow-800"
-				case "Expiring":
-					return "bg-red-400 text-white"
-				case "Expired":
-					return "bg-red-800 text-red-400"
-				case "Rejected":
-					return "bg-red-600 text-white"
-				case "Compliant":
-					return "bg-green-500 text-white"
-				default:
-					return
-			}
-		},
-		usersDeletedHandler (userId) {
-			console.log("usersDeletedHandler", userId)
-		},
-		pagechanged (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
-			// }
-			this.params.offset = this.params.limit * (page - 1)
-			this.currentPage = page
-			this.getLocums(this.params)
-		},
-		async limitchanged (limit) {
-			this.current_page = 1
-			this.params.limit = limit
-			await this.getLocums(this.params)
-		},
-		async sorted (order_by) {
-			this.current_page = 1
-			this.params.order_by = order_by
-			this.getLocums(this.params)
-		}
 	}
-}
 </script>
+
 <style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
+	.page-button {
+		background: linear-gradient(to top, #f2d024, #efde86);
+	}
 
-.page-button-disabled {
-	background: linear-gradient(to top, #6b717e, #6b7386);
-	cursor: not-allowed;
-}
+	.page-button-disabled {
+		background: linear-gradient(to top, #6b717e, #6b7386);
+		cursor: not-allowed;
+	}
 
-.page-button:active {
-	transform: translate(2px, 2px);
-}
+	.page-button:active {
+		transform: translate(2px, 2px);
+	}
 </style>
