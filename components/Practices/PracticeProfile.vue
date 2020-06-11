@@ -224,7 +224,7 @@
                 @click="edit()"
               />
             </div>
-            <!-- VIEW OTHER INFORMATION -->
+            <!-- VIEWING OTHER INFORMATION -->
             <div v-if="toEdit === false">
               <!-- <p class="flex text-gray-300 font-bold">
                 Direct Debit
@@ -311,7 +311,7 @@
                 </div>
               </div>
             </div>
-            <!-- EDIT OTHER INFORMATION -->
+            <!-- EDITING OTHER INFORMATION -->
             <div v-if="toEdit === true && authAdminPermissions.includes('Edit Practice Other Information')">
               <!-- <AppInput
                 v-model="toPutPractice.direct_debit"
@@ -608,12 +608,13 @@
 
       this.practiceDocuments = practiceDocuments
       this.practiceUser = practiceUser
-
+      // Here
       if (
         this.practice.rates.length > 0 &&
         this.practice.rates[0].rate &&
         this.practice.rates[1].rate &&
-        this.practiceDocuments.length >= 2
+        this.practiceDocuments.length >= 2 &&
+        this.practiceUser.status === 'Active'
       ) {
         this.practiceStatusChoices = [
           { label: "Active", value: "Active" },

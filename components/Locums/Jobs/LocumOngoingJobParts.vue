@@ -79,7 +79,7 @@
             v-for="(item, index) in locumOngoingJobParts"
             :key="`item-${index}`"
             class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
-            @click="$router.push(`/locums/${user.id}/locum-jobs/locum-ongoing-jobs/${item.id}`)"
+            @click="$router.push(`/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs/${item.id}`)"
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
@@ -145,165 +145,173 @@
     </div>
   </div>
 </template>
+
 <script>
-import AppPagination from "@/components/Base/AppPagination"
-import AppInput from "@/components/Base/AppInput"
-import AppButton from "@/components/Base/AppButton"
-import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
-import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
-export default {
-	components: {
-		AppPagination,
-		AppInput,
-		AppButton,
-		LocumDetailJobModal,
-		AppJobHeaderSort
-	},
-	props: ["user"],
-	data () {
-		return {
-			job_number: null,
-			job_title: null,
-			// 
-			filterModal: false,
-			isFiltered: false,
-			// locumOngoingJobParts: [],
-			// total:0,
-			totalPages: 0,
-			currentPage: 1,
-			perPage: 0,
-			ascendDescend: 0,
-			modal: false
-		}
-	},
-	computed: {
-		total () {
-			return this.$store.state.jobs.locum_ongoing_jobs_count
-		},
-		locumOngoingJobParts () {
-			return this.$store.state.jobs.locum_ongoing_jobs
-		}
-	},
-	watch: {
-		$route (to) {
-			this.currentPage = parseInt(to.query.job_parts_page)
-			this.getOngoingJobs("date_created:desc")
-		}
-	},
-	beforeDestroy () {
-		let query = Object.assign({}, this.$route.query)
-		delete query.job_parts_page
-		this.$router.push({ query })
-	},
-	async created () {
-		await this.$store.commit("jobs/TOGGLE_LOADING", true)
-		const query = {
-			...this.$route.query,
-			job_parts_page: this.$route.query.job_parts_page || 1
-		}
-		this.currentPage = parseInt(query.job_parts_page)
-		let params = {
-			viewing_locum_user_id: this.user.id,
-			locum_status: "Ongoing",
-			job_type: "Platform"
-		}
-		Promise.all([
-			console.log(this.user),
-			this.$axios
-				.$get(`/api/v1/admin/job-parts/count`, { params })
-				.then(res => {
-					this.$store.commit(
-						"jobs/SET_LOCUM_ONGOING_JOBS_COUNT",
-						res.data.count
-					)
-					console.log("res", res)
-					// this.total = res.data.count
-					this.perPage = 10
-					this.totalPages = Math.ceil(this.total / this.perPage)
-				})
-		]).then(() => {
-			this.getOngoingJobs("date_created:desc"),
-				console.log("ongoing job parts", this.locumOngoingJobParts)
-		})
-	},
-	methods: {
-		async getJobPartsPromiseAll () {
-			this.currentPage = 1
+  import AppPagination from "@/components/Base/AppPagination"
+  import AppInput from "@/components/Base/AppInput"
+  import AppButton from "@/components/Base/AppButton"
+  import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
+  import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
+  export default {
+    components: {
+      AppPagination,
+      AppInput,
+      AppButton,
+      LocumDetailJobModal,
+      AppJobHeaderSort
+    },
 
-			const responseCount = await this.$axios.$get(`/api/v1/admin/job-parts/count`, {
-				params: {
-					viewing_locum_user_id: this.user.id,
-					locum_status: "Ongoing",
-					job_type: "Platform",
-					job_part_number_includes: this.job_number,
-					job_title_includes: this.job_title,
-				}
-			})
-			this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS_COUNT", responseCount.data.count)
-			
-			this.perPage = 10
-			this.totalPages = Math.ceil(responseCount.data.count / this.perPage)
+    props: {
+      user: {
+        type: Object,
+        default: () => null,
+      }
+    },
 
-			const response = await this.$axios.$get(`/api/v1/admin/job-parts`, {
-				params: {
-					viewing_locum_user_id: this.user.id,
-					locum_status: "Ongoing",
-					job_type: "Platform",
-					job_part_number_includes: this.job_number,
-					job_title_includes: this.job_title,
-					offset: 0,
-					limit: this.perPage,
-					order_by: "date_created:desc",
-				}
-			})
-			this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", response.data.job_parts)
+    data () {
+      return {
+        job_number: null,
+        job_title: null,
+        // 
+        filterModal: false,
+        isFiltered: false,
+        // locumOngoingJobParts: [],
+        // total:0,
+        totalPages: 0,
+        currentPage: 1,
+        perPage: 0,
+        ascendDescend: 0,
+        modal: false
+      }
+    },
+    computed: {
+      total () {
+        return this.$store.state.jobs.locum_ongoing_jobs_count
+      },
+      locumOngoingJobParts () {
+        return this.$store.state.jobs.locum_ongoing_jobs
+      }
+    },
+    watch: {
+      $route (to) {
+        this.currentPage = parseInt(to.query.job_parts_page)
+        this.getOngoingJobs("date_created:desc")
+      }
+    },
+    beforeDestroy () {
+      let query = Object.assign({}, this.$route.query)
+      delete query.job_parts_page
+      this.$router.push({ query })
+    },
+    async created () {
+      await this.$store.commit("jobs/TOGGLE_LOADING", true)
+      const query = {
+        ...this.$route.query,
+        job_parts_page: this.$route.query.job_parts_page || 1
+      }
+      this.currentPage = parseInt(query.job_parts_page)
+      let params = {
+        viewing_locum_user_id: this.$route.params.id,
+        locum_status: "Ongoing",
+        job_type: "Platform"
+      }
+      Promise.all([
+        console.log(this.user),
+        this.$axios
+          .$get(`/api/v1/admin/job-parts/count`, { params })
+          .then(res => {
+            this.$store.commit(
+              "jobs/SET_LOCUM_ONGOING_JOBS_COUNT",
+              res.data.count
+            )
+            console.log("res", res)
+            // this.total = res.data.count
+            this.perPage = 10
+            this.totalPages = Math.ceil(this.total / this.perPage)
+          })
+      ]).then(() => {
+        this.getOngoingJobs("date_created:desc"),
+          console.log("ongoing job parts", this.locumOngoingJobParts)
+      })
+    },
+    methods: {
+      async getJobPartsPromiseAll () {
+        this.currentPage = 1
 
-			this.$store.commit("jobs/TOGGLE_LOADING", false)
-		},
-		async filterJobParts () {
-			this.currentPage = 1
-			// this.offset = 0
-			// this.limit = 5
-			// this.initialLoading = true
-			this.isFiltered = true
-			await this.getJobPartsPromiseAll()
-			// this.initialLoading = false
-			// this.filterModal = false
-		},
-		clearFilters () {
-			this.job_number = null
-			this.job_title = null
-		},
-		getOngoingJobs (orderBy) {
-			let offset =
-				parseInt(this.perPage) *
-				(parseInt(this.$route.query.job_parts_page) - 1)
-			let params = {
-				viewing_locum_user_id: this.user.id,
-				locum_status: "Ongoing",
-				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				limit: this.perPage,
-				offset: offset,
-				job_type: "Platform",
-				job_part_number_includes: this.job_number,
-				job_title_includes: this.job_title,
-			}
+        const responseCount = await this.$axios.$get(`/api/v1/admin/job-parts/count`, {
+          params: {
+            viewing_locum_user_id: this.$route.params.id,
+            locum_status: "Ongoing",
+            job_type: "Platform",
+            job_part_number_includes: this.job_number,
+            job_title_includes: this.job_title,
+          }
+        })
+        this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS_COUNT", responseCount.data.count)
+        
+        this.perPage = 10
+        this.totalPages = Math.ceil(responseCount.data.count / this.perPage)
 
-			this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
-				// this.locumOngoingJobParts =  res.data.job_parts
-				this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", res.data.job_parts)
-				this.$store.commit("jobs/TOGGLE_LOADING", false)
-			})
-		},
-		async pagechanged (e) {
-			const query = {
-				...this.$route.query,
-				job_parts_page: e || 1
-			}
-			await this.$store.commit("jobs/TOGGLE_LOADING", true)
-			await this.$router.push({ query })
-			await this.$store.commit("jobs/TOGGLE_LOADING", false)
-		}
-	}
-}
+        const response = await this.$axios.$get(`/api/v1/admin/job-parts`, {
+          params: {
+            viewing_locum_user_id: this.$route.params.id,
+            locum_status: "Ongoing",
+            job_type: "Platform",
+            job_part_number_includes: this.job_number,
+            job_title_includes: this.job_title,
+            offset: 0,
+            limit: this.perPage,
+            order_by: "date_created:desc",
+          }
+        })
+        this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", response.data.job_parts)
+
+        this.$store.commit("jobs/TOGGLE_LOADING", false)
+      },
+      async filterJobParts () {
+        this.currentPage = 1
+        // this.offset = 0
+        // this.limit = 5
+        // this.initialLoading = true
+        this.isFiltered = true
+        await this.getJobPartsPromiseAll()
+        // this.initialLoading = false
+        // this.filterModal = false
+      },
+      clearFilters () {
+        this.job_number = null
+        this.job_title = null
+      },
+      getOngoingJobs (orderBy) {
+        let offset =
+          parseInt(this.perPage) *
+          (parseInt(this.$route.query.job_parts_page) - 1)
+        let params = {
+          viewing_locum_user_id: this.$route.params.id,
+          locum_status: "Ongoing",
+          order_by: orderBy ? orderBy : this.$route.query.order_by,
+          limit: this.perPage,
+          offset: offset,
+          job_type: "Platform",
+          job_part_number_includes: this.job_number,
+          job_title_includes: this.job_title,
+        }
+
+        this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+          // this.locumOngoingJobParts =  res.data.job_parts
+          this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", res.data.job_parts)
+          this.$store.commit("jobs/TOGGLE_LOADING", false)
+        })
+      },
+      async pagechanged (e) {
+        const query = {
+          ...this.$route.query,
+          job_parts_page: e || 1
+        }
+        await this.$store.commit("jobs/TOGGLE_LOADING", true)
+        await this.$router.push({ query })
+        await this.$store.commit("jobs/TOGGLE_LOADING", false)
+      }
+    }
+  }
 </script>

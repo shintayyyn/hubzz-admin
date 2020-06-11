@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow mx-4 md:mx-8"
-  >
+  <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow mx-4 md:mx-8">
     <transition name="drop" mode="out-in">
       <AppConfirm
         v-if="confirm"
@@ -10,9 +8,11 @@
         @confirm="toDeactivateLocum()"
       />
     </transition>
+
     <transition name="fade" mode="out-in">
       <div v-if="confirm" class="shield" />
     </transition>
+
     <transition name="drop" mode="out-in">
       <AppConfirm
         v-if="confirmBogus"
@@ -21,9 +21,11 @@
         @confirm="changeLocumUserStatus(user.id,'Bogus')"
       />
     </transition>
+
     <transition name="fade" mode="out-in">
       <div v-if="confirmBogus" class="shield" />
     </transition>
+
     <div class="inline-flex">
       <div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
         <!--COLUMN 1-->
@@ -161,7 +163,9 @@
             >
               {{ specialty ? specialty.name:'N/A' }}
             </p>
-            <p class="font-bold pl-2" v-if="!user.locum_detail.qualifications.length">N/A</p>
+            <p v-if="!user.locum_detail.qualifications.length" class="font-bold pl-2">
+              N/A
+            </p>
             <p class="mt-2">
               Clinical Systems
             </p>
@@ -173,7 +177,9 @@
             >
               {{ clinicalSystem ? clinicalSystem.name:'N/A' }}
             </p>
-            <p class="font-bold pl-2" v-if="!user.locum_detail.clinical_systems.length">N/A</p>
+            <p v-if="!user.locum_detail.clinical_systems.length" class="font-bold pl-2">
+              N/A
+            </p>
 
             <p class="mt-2">
               Spoken Languages
@@ -362,169 +368,172 @@
 </template>
 
 <script>
-import AppInput from "@/components/Base/AppInput"
-import AppButton from "@/components/Base/AppButton"
-import AppConfirm from "@/components/Base/AppConfirm"
-import { mixin as clickaway } from "vue-clickaway"
-export default {
-	components: {
-		AppButton,
-		AppInput,
-		AppConfirm
-	},
-	mixins: [clickaway],
-	props: ["user"],
-	data () {
-		return {
-			disabled: "true",
+  import AppInput from "@/components/Base/AppInput"
+  import AppButton from "@/components/Base/AppButton"
+  import AppConfirm from "@/components/Base/AppConfirm"
+  import { mixin as clickaway } from "vue-clickaway"
 
-      confirm: false,
-      confirmBogus: false,
+  export default {
+    components: {
+      AppButton,
+      AppInput,
+      AppConfirm
+    },
 
-			locumDetails: "",
+    mixins: [clickaway],
 
-			locumStatusChoices: [],
-			selectedStatus: "",
-			profileTab: true,
-			jobTab: false,
+    props: {
+      user: {
+        type: Object,
+        default: () => null,
+      }
+    },
 
-			userComplianceDocuments: [],
-			userCurrentJobs: [],
-			qualifications: [],
-			clinicalSystems: [],
-			spokenLanguages: [],
-			specificLocumCompDocs: [],
-			userMandatoryTrainings: []
-		}
-	},
-  
-  computed: {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
-		},
-  },
+    data () {
+      return {
+        disabled: "true",
 
-	created () {
-		console.log("locum", this.user)
-		if (this.user.first_actived_at) {
-			this.locumStatusChoices = [
-				{ label: "Active", value: "Active" },
-				{ label: "Inactive", value: "Inactive" }
-			]
-		} else {
-			this.locumStatusChoices = [{ label: "Inactive" }]
-		}
-		this.locumDetails = this.user.locum_detail
-		this.userComplianceDocuments = this.user.locum_detail.compliance_documents
-		this.qualifications = this.user.locum_detail.qualifications
-		this.clinicalSystems = this.user.locum_detail.clinical_systems
-		this.spokenLanguages = this.user.locum_detail.spoken_languages
-  },
+        confirm: false,
+        confirmBogus: false,
 
-	methods: {
-		getLocums () {
-			this.$store.dispatch("locums/fetchLocums", {
-				limit: 8,
-				order_by: "created_at:desc",
-				offset: this.getQuery()
-			})
-		},
-		getQuery () {
-			const query = {
-				...this.$route.query
-			}
-			const offset = parseInt(query.page) * 10 - 10
-			return offset
-		},
-		downloadItem (imgUrl, imgFilename) {
-			const axios = require("axios")
-			axios({
-				url: imgUrl,
-				method: "GET",
-				responseType: "blob" // important
-			}).then(response => {
-				const url = window.URL.createObjectURL(new Blob([response.data]))
-				const link = document.createElement("a")
-				link.href = url
-				link.setAttribute("download", imgFilename)
-				document.body.appendChild(link)
-				link.click()
-			})
-		},
+        locumDetails: "",
 
-		async toDeactivateLocum () {
-			this.confirm = true
-			await this.$axios
-				.$put(
-					`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`,
-					{}
-				)
-				.then(res => {
-          console.log(res)
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Locum Successfully Deactivated"
-					})
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
-			this.confirm = false
-		},
+        locumStatusChoices: [],
+        selectedStatus: "",
+        profileTab: true,
+        jobTab: false,
 
-		async changeLocumUserStatus (locumID, activeDisabled) {
-			try {
-				console.log("locum details", activeDisabled)
-				const response = await this.$axios.put(
-					`/api/v1/admin/locum-users/${locumID}/status`,
-					{ status: activeDisabled }
-				)
-				console.log("response", response.data.data.user)
-				await this.getLocums()
-				if (this.user.compliance_status !== "Compliant" || activeDisabled !== 'Bogus') {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "alert",
-						text:
-							"You cannot make a Locum 'Active' if the Locum is not Compliant"
-					})
-				} else {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Saved"
-					})
-				}
-			} catch (err) {
-				console.log("index practices index put status err", err)
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})
-			}
-		},
-		statusStyle (status) {
-			switch (status) {
-				case "Active":
-					return "bg-green-500"
-				case "Inactive":
-					return "bg-yellow-500 text-black"
-				case "Deactivated":
-					return "bg-gray-500 text-black"
-				case "Suspended":
-					return "bg-red-500"
-				case "Dormant":
-					return "bg-green-600"
-				default:
-					return
-			}
-		}
-	}
-}
+        userComplianceDocuments: [],
+        userCurrentJobs: [],
+        qualifications: [],
+        clinicalSystems: [],
+        spokenLanguages: [],
+        specificLocumCompDocs: [],
+        userMandatoryTrainings: []
+      }
+    },
+    
+    computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+    },
+
+    created () {
+      console.log("locum", this.user)
+      if (this.user.first_actived_at) {
+        this.locumStatusChoices = [
+          { label: "Active", value: "Active" },
+          { label: "Inactive", value: "Inactive" }
+        ]
+      } else {
+        this.locumStatusChoices = [{ label: "Inactive" }]
+      }
+      this.locumDetails = this.user.locum_detail
+      this.userComplianceDocuments = this.user.locum_detail.compliance_documents
+      this.qualifications = this.user.locum_detail.qualifications
+      this.clinicalSystems = this.user.locum_detail.clinical_systems
+      this.spokenLanguages = this.user.locum_detail.spoken_languages
+    },
+
+    methods: {
+      getQuery () {
+        const query = {
+          ...this.$route.query
+        }
+        const offset = parseInt(query.page) * 10 - 10
+        return offset
+      },
+      downloadItem (imgUrl, imgFilename) {
+        const axios = require("axios")
+        axios({
+          url: imgUrl,
+          method: "GET",
+          responseType: "blob" // important
+        }).then(response => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement("a")
+          link.href = url
+          link.setAttribute("download", imgFilename)
+          document.body.appendChild(link)
+          link.click()
+        })
+      },
+
+      async toDeactivateLocum () {
+        this.confirm = true
+        await this.$axios
+          .$put(
+            `/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`,
+            {}
+          )
+          .then(res => {
+            console.log(res)
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Locum Successfully Deactivated"
+            })
+          })
+          .catch(err => {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "danger",
+              text: err.response.data.message
+            })
+          })
+        this.confirm = false
+      },
+
+      async changeLocumUserStatus (locumID, status) {
+        try {
+          console.log("locum details", status)
+
+          const response = await this.$axios.put(`/api/v1/admin/locum-users/${locumID}/status`, {
+            status,
+          })
+
+          console.log("response", response.data.data.user)
+          this.$emit('updateLocumUsers')
+          if (this.user.compliance_status !== "Compliant" || status !== 'Bogus') {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "alert",
+              text:
+                "You cannot make a Locum 'Active' if the Locum is not Compliant"
+            })
+          } else {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Saved"
+            })
+          }
+        } catch (err) {
+          console.log("index practices index put status err", err)
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        }
+      },
+      statusStyle (status) {
+				switch (status) {
+					case 'Active':
+						return 'bg-green-500 text-white'
+					case 'Inactive':
+						return 'bg-gray-500 text-gray-700'
+					case 'Deactivated':
+						return 'bg-red-800 text-red-400'
+					case 'Suspended':
+						return 'bg-red-600 text-white'
+					case 'Dormant':
+						return 'bg-orange-500 text-white'
+					default:
+						return
+        }
+      }
+    }
+  }
 </script>

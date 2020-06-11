@@ -107,6 +107,11 @@ export default {
 					eventName: "checkClicked"
         },
         {
+					name: "Practice Name",
+					dataIndex: "practice_name",
+					sortable: true
+				},
+        {
 					name: "Invoice Number",
 					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
 					sortable: true
@@ -242,7 +247,7 @@ export default {
 	},
 	methods: {
     viewJobPart (jobPartId) {
-      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices/issue-hubzz-invoice/${jobPartId}`)
+      this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice/${jobPartId}`)
     },
 
 		toggleCheck (item) {
@@ -266,7 +271,7 @@ export default {
     },
 
     close () {
-      this.$router.push(`/billings/${this.$route.params.id}/hubzz-invoices/issue-hubzz-invoice`)
+      this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`)
     },
     
 		getJobParts (params) {

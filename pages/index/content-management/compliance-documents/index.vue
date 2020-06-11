@@ -144,7 +144,7 @@
         count: 0,
         complianceDocuments: [],
         orderBy: [],
-        limit: 5,
+        limit: 30,
         activePage: 1,
       }
     },

@@ -1,6 +1,6 @@
 import * as practiceApi from '@/api/practices'
 export default {
-  async initializePracticeListener({ commit }) {
+  async initializePracticeListener ({ commit }) {
     //-------------------PRACTICES-------------------
     this.$socket.on('Admin Notification Practice Created', async (payload) => {
       commit('ADD_PRACTICE_NOTIFICATION', {
@@ -94,7 +94,7 @@ export default {
     return commit('CLEAR_PRACTICES')
   },
 
-  async fetchPractices({ commit }, payload) {
+  async fetchPractices ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchPractices(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
@@ -104,28 +104,28 @@ export default {
     return commit('SET_PRACTICES', response.data.practices)
   },
 
-  async fetchSpecificPractice({ commit }, payload) {
+  async fetchSpecificPractice ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchSpecificPractice(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
     return commit('SET_SPECIFIC_PRACTICE', response.data.practice)
   },
 
-  async fetchHub({ commit }, payload) {
+  async fetchHub ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchHub(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
     return commit('SET_PRACTICE_HUB', response.data.practice)
   },
 
-  async fetchPracticeParent({ commit }, payload) {
+  async fetchPracticeParent ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchPracticeParent(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
     return commit('SET_PRACTICE_PARENT', response.data.practice)
   },
 
-  async fetchHubInvitations({ commit }, payload) {
+  async fetchHubInvitations ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchHubInvitations(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
@@ -136,7 +136,7 @@ export default {
 
   },
 
-  async fetchSpokes({ commit }, payload) {
+  async fetchSpokes ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchSpokes(this.$axios, payload)
     commit('TOGGLE_LOADING', false)
@@ -146,11 +146,11 @@ export default {
     return commit('SET_PRACTICE_SPOKES', response.data.practice_surgeries)
   },
 
-  async updateSpokesPageCount({ commit }, payload) {
+  async updateSpokesPageCount ({ commit }, payload) {
     return commit('UPDATE_PRACTICE_SPOKES_PAGE_COUNT', payload)
   },
 
-  async fetchPracticeUsers({ commit }, payload) {
+  async fetchPracticeUsers ({ commit }, payload) {
     commit('TOGGLE_LOADING', true)
     const response = await practiceApi.fetchPracticeUsers(this.$axios, payload)
     commit('TOGGLE_LOADING', false)

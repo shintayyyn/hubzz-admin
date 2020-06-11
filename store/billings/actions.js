@@ -18,5 +18,15 @@ export default{
       return commit ('SET_PRACTICE_INVOICES_COUNT', response.data.count)
     }
     return commit('SET_PRACTICE_INVOICES', response.data.locum_invoices)
-  }
+  },
+
+  async fetchBillablePractices ({ commit }, payload) {
+    commit('TOGGLE_LOADING', true)
+    const response = await billingApi.fetchBillablePractices(this.$axios, payload)
+    commit('TOGGLE_LOADING', false)
+    if (payload.countOnly) {
+      return commit('SET_BILLABLE_PRACTICES_COUNT', response.data.count)
+    }
+    return commit('SET_BILLABLE_PRACTICES', response.data.practices)
+  },
 }

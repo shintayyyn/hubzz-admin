@@ -1,55 +1,29 @@
 <template>
-	<div class="mt-5">
-		<LocumCompliance 
-			:user="user"
-			@complianceUpdated="emitUpdateToIndex"
-		/>
-		<nuxt-child />
-	</div>
+  <div class="mt-5">
+    <LocumCompliance 
+      v-if="locumUser"
+      :user="locumUser"
+      @complianceUpdated="$emit('updateLocumUsers')"
+    />
+
+    <nuxt-child :locumUser="locumUser" />
+  </div>
 </template>
+
 <script>
-import LocumCompliance from "@/components/Locums/LocumCompliance";
-export default {
-	components: {
-		LocumCompliance
-	},
-	data() {
-		return {
-			// user:null
-		};
-	},
-	computed: {
-		user() {
-			return this.$store.state.locums.locumUser;
-		}
-	},
-	async asyncData({ app, store, route }) {
-		try {
-			let response = await app.$axios.$get(
-				`/api/v1/admin/locum-users/${route.params.id}`
-			);
-			const user = response.data.user;
+  import LocumCompliance from "@/components/Locums/LocumCompliance"
 
-			await store.commit("locums/SET_LOCUM_USER", user);
+  export default {
+    components: {
+      LocumCompliance,
+    },
 
-			return {
-				// user
-			};
-		} catch (err) {
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: "Something went wrong!"
-			});
-			console.log("get locum compliance error!", err);
-		}
-	},
-	methods:{
-		async emitUpdateToIndex(){
-			await this.$emit('updateLocums')
-		}
-	}
-};
+    props: {
+      locumUser: {
+        type: Object,
+        default: () => null,
+      }
+    },
+    
+  }
 </script>
-<style>
-</style>

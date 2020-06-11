@@ -1,6 +1,29 @@
 <template>
   <div>
     <div class="px-2 flex justify-start items-center flex-wrap">
+      <div
+        class="flex text-white m-2"
+      >
+        <div class="w-full">
+          <input
+            v-model="search"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-2 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Filter by Invoice ID"
+          >
+          <button
+            v-if="search"
+            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            @click="(search = ''), searchSubmit()"
+          >
+            <svgicon
+              name="times-solid"
+              height="12"
+              width="12"
+              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+            />
+          </button>
+        </div>
+      </div>
       <AppButton
         :class="sageChecker ? 'text-white mr-2' : 'text-black mr-2'"
         :background="sageChecker ? 'red' : 'sunglow'"
@@ -114,7 +137,7 @@
       </div>
     </template>
     <transition name="fade" mode="out-in">
-      <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
+      <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
         <transition name="drop" mode="out-in">
           <AppConfirm
             v-if="confirm"
@@ -234,6 +257,7 @@
 import AppButton from "@/components/Base/AppButton"
 import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
+import debounce from "lodash.debounce"
 // import AppDate from "@/components/Base/AppDate"
 import AppConfirm from "@/components/Base/AppConfirm"
 export default {
@@ -249,8 +273,10 @@ export default {
 			loading: false,
       currentPage: 1,
       downloading: false,
+      search: "",
 			params: {
-				practice_id: "",
+        practice_id: "",
+        invoice_number: "",
 				limit: 10,
 				offset: 0,
 				order_by: ["date_created:desc"]
@@ -349,7 +375,10 @@ export default {
 			if (value === false) {
 				this.getHubzzInvoices(this.params)
 			}
-		}
+    },
+    search () {
+			this.searchSubmit()
+		},
 	},
 	async asyncData ({ app, route, store }) {
 		try {
@@ -410,6 +439,53 @@ export default {
 	},
 	methods: {
     goToIssue () {},
+    searchSubmit: debounce(function (page, order_by) {
+      this.chosenInvoices = []
+      this.params.invoice_number = this.search
+			let search = this.search
+
+			let query = {
+				...this.$router.query,
+				search
+			}
+			if (page === 1) {
+				delete query.page
+			}
+			if (page && page > 1) {
+				query = {
+					...this.$router.query,
+					page,
+					search
+				}
+			}
+			if (order_by) {
+				query = {
+					...this.$router.query,
+					search,
+					order_by
+				}
+			}
+			if (page && order_by) {
+				query = {
+					...this.$router.query,
+					page,
+					search,
+					order_by
+				}
+			}
+
+			if (this.search === "") {
+				delete query.search
+			}
+
+			if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+				this.loading = true
+			}
+
+			this.getHubzzInvoices(this.params)
+
+			this.$router.push({ query })
+    }, 500),
     showSageChecker () {
       this.sageChecker = !this.sageChecker
       const index = this.columns.findIndex(column => {
@@ -494,12 +570,24 @@ export default {
     },
 		getHubzzInvoices (params) {
 			console.log("params", params)
-			this.$store.dispatch("billings/fetchHubzzInvoices", {
-				practice_id: params.practice_id,
-				limit: params.limit,
-				order_by: params.order_by,
-				offset: params.offset
-			})
+      this.$store
+      .dispatch("billings/fetchHubzzInvoices", {
+        practice_id: params.practice_id ? params.practice_id : '',
+        invoice_number: params.invoice_number ? params.invoice_number : '',
+				limit: params.limit ? params.limit : '',
+				order_by: params.order_by ? params.order_by : '' ,
+        offset: params.offset ? params.offset : '',
+        countOnly: true
+      })
+      .then(() => {
+        this.$store.dispatch("billings/fetchHubzzInvoices", {
+          practice_id: params.practice_id ? params.practice_id : '',
+          invoice_number: params.invoice_number ? params.invoice_number : '',
+          limit: params.limit ? params.limit : '',
+          order_by: params.order_by ? params.order_by : '' ,
+          offset: params.offset ? params.offset : '',
+        })
+      })
 		},
 		toShowPaidModal (itemId) {
 			this.showPaidModal = true
@@ -573,13 +661,17 @@ export default {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 25px;
-	min-width: 600px;
-	min-height: 640px;
+  width: 500px;
 	max-width: 95%;
-	max-height: 80%;
+	max-height: 70%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
+}
+@media screen and (min-width: 768px) {
+	.mark-paid-modal {
+		max-height: 60%;
+	}
 }
 </style>

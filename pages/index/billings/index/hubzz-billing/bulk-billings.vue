@@ -17,21 +17,6 @@
             :isAfterDate="invoiceableDateStart"
           />
           
-          <!-- <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
-            <input 
-              id="disputed" 
-              v-model="showDisputedJobParts" 
-              type="checkbox" 
-              value="true"
-            >
-            <label for="disputed">Show Disputed Invoices</label>
-          </div> -->
-          <!-- <AppInput
-            v-model="showDisputedJobParts"
-            :label="'Show Disputed Invoices'"
-            :type="'single-checkbox'"
-            class="text-white mx-2"
-          />-->
           <AppButton
             class="whitespace-no-wrap"
             :disabled="invoiceableDateStart && invoiceableDateEnd ? false : true"
@@ -39,16 +24,6 @@
             :icon="'search'"
             @click="getBillablePractices()"
           />
-          <!-- <AppButton
-            class="mx-2"
-            :disabled="practiceParams.practice_invoiceable_date_start 
-              && practiceParams.practice_invoiceable_date_end
-              && chosenPractices.length > 0  
-              ? false : true"
-            :label="'Generate HUBZZ Invoices'"
-            :icon="'add-rectangle'"
-            @click="showPaidModal = true"
-          /> -->
           <AppButton
             class="mx-2"
             :disabled="practiceParams.practice_invoiceable_date_start 
@@ -61,32 +36,28 @@
           />
         </div>
         <div
-          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end" 
+          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount > 0" 
           class="flex text-white"
         >
-          <AppInput
-            v-model="search"
-            :name="'search'"
-            :type="'text'"
-            :label="'Filter Invoiceable Practices by Name'"
-          />
-          <!-- <input
-            v-model="search"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Practice by Name"
-          > -->
-          <!-- <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button> -->
+          <div class="w-full">
+            <input
+              v-model="search"
+              class="rounded-lg border-2 border-transparent text-sm text-white p-2 w-1/4 focus:border-sunglow focus:outline-none bg-waterloo"
+              placeholder="Filter Invoiceable Practices by Name"
+            >
+            <button
+              v-if="search"
+              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+              @click="(search = ''), searchSubmit()"
+            >
+              <svgicon
+                name="times-solid"
+                height="12"
+                width="12"
+                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+              />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -94,11 +65,11 @@
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
-      :items="allPractices"
+      :items="allBillablePractices"
       :currentPage="currentPage"
       :perPage="practiceParams.limit"
       :columns="columns"
-      :loading="loadingPractices"
+      :loading="loadingBillablePractices"
       :orderBy="practiceParams.order_by"
       :customWidth="200"
       @pagechanged="pagechanged"
@@ -170,42 +141,10 @@
         {{ searchMessage }}
       </div>
     </template>
-    
-    <!-- TO PAID CONFIRM CANCEL -->
-    <transition name="fade" mode="out-in">
-      <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
-        <transition name="drop" mode="out-in">
-          <AppDateToggled 
-            v-model="dueDate" 
-            class="m-4 text-white" 
-            :name="'due_date'" 
-            :label="'Due Date'" 
-            is-after 
-          />
-        </transition>
-        <div class="flex flex-col w-full text-white px-8 justify-between">
-          <div class="flex flex-row mb-4">
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-              @click="createBulkBilling()"
-            >
-              Confirm
-            </div>
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="showPaidModal = false"
-            >
-              Cancel
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
 
-    <!-- TO SESSIONS MODAL -->
+    <!-- SESSIONS MODAL -->
     <transition name="fade" mode="out-in">
-      <div v-if="showSessionsModal == true" class="sessions-modal overflow-hidden">
+      <div v-if="showSessionsModal == true" class="sessions-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
         <div class="m-4 border-b-4 border-double border-white">
           <div 
             v-for="(item, index) in chosenPracticesFinalization"
@@ -217,16 +156,16 @@
                 class="text-sm mt-2 m-2"
               >{{ item.name }}</div>
 
-              <div>
+              <!-- <div>
                 <AppButton
                   class="text-white"
                   :background="'red'"
-                  :disabled="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_approved_filtered_job_parts.length ? false : true"
+                  :disabled="chosenPracticeJobParts && chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_approved_filtered_job_parts.length ? false : true"
                   :label="'Remove'"
                   :icon="'garbage'"
                   @click="toggleCheckChosenPractices(item)"
                 />
-              </div>
+              </div> -->
 
               <!-- <div @click="toggleCheckChosenPractices(item)">
                 <input
@@ -298,23 +237,30 @@
         </transition>
         <div class="flex flex-col w-full text-white px-8 justify-between">
           <div class="flex flex-row mb-4">
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-              @click="createBulkBillingChecked()"
-            >
-              Confirm
+            <div class="p-2 px-4">
+              <AppButton
+                class="text-white"
+                :background="'green'"
+                :disabled="chosenPracticeJobParts.length < 1 ? true : false"
+                :label="'Confirm'"
+                @click="createBulkBillingChecked()"
+              />
             </div>
             <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="clearInvoiceableJobParts()"
+              class="p-2 px-4"
             >
-              Cancel
+              <AppButton
+                class="text-white"
+                :background="'red'"
+                :label="'Cancel'"
+                @click="clearInvoiceableJobParts()"
+              />
             </div>
           </div>
         </div>
       </div>
     </transition>
-    <!-- TO SESSIONS MODAL ENDS HERE -->
+    <!-- SESSIONS MODAL ENDS HERE -->
 
     <div
       v-if="
@@ -325,11 +271,8 @@
       @click="$router.push(`/billings`)"
     />
     <div
-      v-if="
-        showPaidModal === true || showSessionsModal === true
-      "
+      v-if="showSessionsModal === true"
       class="billing-shield"
-      
       @click="clearInvoiceableJobParts()"
     />
     <nuxt-child />
@@ -339,24 +282,19 @@
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
-import AppDateToggled from "@/components/Base/AppDateToggled"
 import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
 import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		AppTable,
     AppDate,
-    AppDateToggled,
     AppButton,
-    AppInput,
     AppPagination,
   },
   
 	data () {
 		return {
       searchMessage: "",
-      showPaidModal: false,
       showSessionsModal: false,
 
 			// for app table
@@ -454,14 +392,14 @@ export default {
 				},
 				{
           name: "Date Start",
-          dataIndex: "date_start",
-					class: "text-center localDate",
+          dataIndex: "datetime_start_formatted",
+					class: "text-center",
 					sortable: false
-				},
+        },
 				{
           name: "Date End",
-          dataIndex: "date_end",
-					class: "text-center localDate",
+          dataIndex: "datetime_end_formatted",
+					class: "text-center",
 					sortable: false
         },
         {
@@ -475,26 +413,14 @@ export default {
   },
   
 	computed: {
-		loadingSessions () {
-			return this.$store.state.jobs.loading_jobs
-		},
-		jobParts () {
-			return this.$store.state.jobs.practice_billing_sessions
-		},
-		jobPartCount () {
-			return this.$store.state.jobs.practice_billing_sessions_count
-		},
-		loadingPractices () {
-			return this.$store.state.practices.loading_practices
+    loadingBillablePractices () {
+      return this.$store.state.billings.loading_billable_practices
     },
-    allPractices () {
-      return this.$store.state.practices.allPractices
+    allBillablePractices () {
+      return this.$store.state.billings.billable_practices
     },
-		getAllPractices () {
-			return this.$store.getters["practices/getAllPractices"]
-		},
 		itemCount () {
-			return this.$store.state.practices.itemCount
+			return this.$store.state.billings.billable_practices_count
 		},
 		pageCount () {
 			return Math.ceil(this.itemCount / this.practiceParams.limit)
@@ -503,7 +429,7 @@ export default {
 			return Math.ceil(this.itemCount / this.practiceParams.limit)
 		},
 		total () {
-			return this.$store.state.itemCount
+			return this.allBillablePractices.length
 		}
 	},
 
@@ -517,24 +443,25 @@ export default {
     invoiceableDateEnd: function (value) {
       this.practiceParams.practice_invoiceable_date_end = value
     },
-		search (value) {
-      console.log('search for', value)
+		search () {
 			this.searchSubmit()
 		},
 
 		$route () {
-			// this.getPracticesForBulk()
+			this.getPracticesForBulk()
 		}
   },
   created () {
     console.log('store set 0')
     this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
     this.$store.commit("practices/CLEAR_PRACTICES")
+    this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+    this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
   },
 	methods: {
 		async getBillablePractices () {
       console.log('get billable practices start')
-			await this.$store.commit("practices/TOGGLE_LOADING", true)
+			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
 			let { page = 1, search = "", order_by = [] } = this.$route.query
 			page = parseInt(page)
 			const createdRoute = this.$route.query
@@ -572,88 +499,32 @@ export default {
         this.searchMessage = "No practice to invoice found"
       }
 
-			await this.$store.commit("practices/SET_PRACTICE_COUNT", itemCount)
+			await this.$store.commit("billings/SET_BILLABLE_PRACTICES_COUNT", itemCount)
 
 			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })
 			const practices = response.data.practices
-			await this.$store.commit("practices/SET_PRACTICES", practices)
-			await this.$store.commit("practices/TOGGLE_LOADING", false)
-    },
-    
-    async createBulkBilling () {
-      await this.$store.commit("practices/TOGGLE_LOADING", true)
-      console.log('create')
-      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
-        const items = practice.practice_invoiceable_approved_filtered_job_parts.map((jobPart) => {
-          return {
-            type: 'Job Part - Invoiced',
-            job_part_id: jobPart.id,
-            description:
-              "Job Number " +
-              jobPart.job_part_number +
-              " for £" +
-              jobPart.practice_rate +
-              " from " +
-              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
-              " to " +
-              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
-            total: jobPart.total,
-          }
-        })
-
-        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
-
-        return {
-          practice_id: practice.id,
-          items,
-          date_start: this.practiceParams.practice_invoiceable_date_start,
-          date_end: this.practiceParams.practice_invoiceable_date_end,
-          total_amount,
-          due_date: this.dueDate
-        }
-      })
-      
-      await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
-          practice_invoice_datas: practiceInvoiceDatas,
-        })
-        .then(res => {
-          console.log('res',res)
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Success"
-          })
-          this.chosenPractices = []
-          this.getPracticesForBulk()
-        })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
-        })
-
-      
-      this.practiceParams.practice_invoiceable_date_start =  null
-      this.practiceParams.practice_invoiceable_date_end = null
-      this.search = ""
-      this.chosenPractices = []
-      this.dueDate = ''
-      this.showPaidModal = false,
-      this.$store.dispatch('practices/clearPractices')
-      await this.$store.commit("practices/TOGGLE_LOADING", false)
+			await this.$store.commit("billings/SET_BILLABLE_PRACTICES", practices)
+			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
     },
 
     async processBulkBilling () {
       Promise.all([
         this.chosenPracticesFinalization =  this.chosenPractices
       ]).then(() => { 
-        this.chosenPracticesFinalization = this.chosenPracticesFinalization.map(practice => {
-          practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
-            this.chosenPracticeJobParts.push(jobPart)
+        this.chosenPracticesFinalization = this.chosenPracticesFinalization.map( practice => {
+           practice.practice_invoiceable_approved_filtered_job_parts.map(jobPart => {
+            return{
+              ...jobPart,
+              date_time_start: `${this.$moment(jobPart.date_start, "YYYY-MM-DD").utc()
+                .format("DD/MM/YYYY")} | ${jobPart.time_start}`,
+              date_time_end: `${this.$moment(jobPart.date_end, "YYYY-MM-DD").utc()
+                .format("DD/MM/YYYY")} | ${jobPart.time_end}`
+            }
           })
-          const practice_invoiceable_approved_filtered_job_parts_sliced = practice.practice_invoiceable_approved_filtered_job_parts.slice(
+           practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
+              this.chosenPracticeJobParts.push(jobPart)
+            })
+          const practice_invoiceable_approved_filtered_job_parts_sliced =  practice.practice_invoiceable_approved_filtered_job_parts.slice(
             (1 - 1)*this.practicesFilteredJobPartsPerPage,
             1 * this.practicesFilteredJobPartsPerPage
           )
@@ -664,13 +535,15 @@ export default {
           }
         })
       }).finally(() => {
+        console.log('processed', this.chosenPracticesFinalization)
         this.showSessionsModal = true
       })
     },
 
     async createBulkBillingChecked () {
-      await this.$store.commit("practices/TOGGLE_LOADING", true)
-      const practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
+      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
+      console.log('chosenPractices', this.chosenPractices)
+      let practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
         const chosenJobParts = this.chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === practice.id)
         console.log('chosenjobparts', chosenJobParts)
 
@@ -703,40 +576,45 @@ export default {
         }
       })
 
-      console.log('practice invoice datas to invoice', practiceInvoiceDatas)
-      
+      practiceInvoiceDatas = await practiceInvoiceDatas.filter(practice => practice.items.length > 0)
+      console.log('practiceInvoiceDatas', practiceInvoiceDatas)
+
       await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
-          practice_invoice_datas: practiceInvoiceDatas,
+        practice_invoice_datas: practiceInvoiceDatas,
+      })
+      .then(res => {
+        console.log('res',res)
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Success"
         })
-        .then(res => {
-          console.log('res',res)
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Success"
-          })
-          this.chosenPractices = []
-          this.getPracticesForBulk()
+        this.practiceParams.practice_invoiceable_date_start =  null
+        this.practiceParams.practice_invoiceable_date_end = null
+        this.invoiceableDateStart = null
+        this.invoiceableDateEnd = null
+        this.search = ""
+        this.chosenPractices = []
+        this.chosenPracticeJobParts = []
+        this.dueDate = ''
+        this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+        this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
+        
+      })
+      .catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
-        })
+      })
+      .finally(() => {
+        this.showSessionsModal = false
+        this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
+      })
 
       
-      this.practiceParams.practice_invoiceable_date_start =  null
-      this.practiceParams.practice_invoiceable_date_end = null
-      this.search = ""
-      this.chosenPractices = []
-      this.chosenPracticeJobParts = []
-      this.dueDate = ''
-      this.showPaidModal = false,
-      this.showSessionsModal = false,
-      await this.$store.commit("practices/SET_PRACTICES", [])
-      await this.$store.commit("practices/TOGGLE_LOADING", false)
+      
     },
 
 		goToPage (page) {
@@ -812,7 +690,6 @@ export default {
     }, 500),
     
     toggleCheck (item) {
-      console.log('togglecheck', this.chosenPractices)
 			const index = this.chosenPractices.findIndex(practice => {
 				return practice.id === item.id
 			})
@@ -850,9 +727,9 @@ export default {
     },
 
 		getPracticesForBulk () {
-      console.log('params get practices', this.practiceParams)
+      console.log('params get billable practices', this.practiceParams)
 			this.$store
-				.dispatch("practices/fetchPractices", {
+				.dispatch("billings/fetchBillablePractices", {
 					id: this.practiceParams.id,
 					limit: this.practiceParams.limit,
 					search: this.search,
@@ -866,7 +743,7 @@ export default {
 					countOnly: true
 				})
 				.then(() => {
-					this.$store.dispatch("practices/fetchPractices", {
+					this.$store.dispatch("billings/fetchBillablePractices", {
 						id: this.practiceParams.id,
 						limit: this.practiceParams.limit,
 						search: this.search,
@@ -956,11 +833,7 @@ export default {
     },
 
     async pageChangedJobPart (page, practiceItem) {
-      console.log('page', page)
-      console.log('practice item before mod', practiceItem)
       const originalPractice = this.chosenPractices.find(item => item.id === practiceItem.id)
-      console.log('originalPractice', this.chosenPractices)
-
       Promise.all([
         practiceItem.current_page = page,
         practiceItem.practice_invoiceable_approved_filtered_job_parts_sliced = 
@@ -969,23 +842,22 @@ export default {
             page * this.practicesFilteredJobPartsPerPage
           ),
       ]).then(()=>{
-        console.log('practice item', practiceItem)
         const index = this.chosenPracticesFinalization.findIndex(item => item.id === practiceItem.id)
-
         this.chosenPracticesFinalization[index] = practiceItem
       })
-      // let params = {
-      //   job_practice_id: practiceItem.id,
-      //   approved_at_date_start: this.practiceParams.practice_invoiceable_date_start,
-      //   approved_at_date_end: this.practiceParams.practice_invoiceable_date_end,
-      //   status: 'Approved',
-      //   locum_invoiceable: true,
-      //   practice_invoiced: false,
-      // }
+    },
 
-			// this.params.offset = this.params.limit * (page - 1)
-			// this.currentPage = page
-			// this.getJobParts(params)
+    reset () {
+      this.practiceParams.practice_invoiceable_date_start =  null
+      this.practiceParams.practice_invoiceable_date_end = null
+      this.invoiceableDateStart = null
+      this.invoiceableDateEnd = null
+      this.search = ""
+      this.chosenPractices = []
+      this.chosenPracticeJobParts = []
+      this.dueDate = ''
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
     },
     
     clearInvoiceableJobParts () {
@@ -1024,28 +896,17 @@ export default {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 25px;
-	min-width: 900px;
-	min-height: 750px;
-	max-width: 100%;
+	width: 1300px;
+	max-width: 95%;
 	max-height: 90%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
 	background-color: #505561;
 	z-index: 512;
 }
-.mark-paid-modal {
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 25px;
-	min-width: 600px;
-	min-height: 450px;
-	max-width: 95%;
-	max-height: 80%;
-	overflow: auto;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
+@media screen and (min-width: 768px) {
+	.sessions-modal {
+		max-height: 90%;
+	}
 }
 </style>

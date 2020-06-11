@@ -41,7 +41,8 @@
       <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <div
           v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" 
-          class="flex justify-end mt-2 sm:m-0">
+          class="flex justify-end mt-2 sm:m-0"
+        >
           <button
             class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
             :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
@@ -62,7 +63,7 @@
             class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
             :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
           >
-            {{item.status}}
+            {{ item.status }}
           </div>
         </div>
       </div>
@@ -484,13 +485,6 @@ export default {
       await this.getCompliances()
     },
     methods:{
-      getLocums (){
-        this.$store.dispatch("locums/fetchLocums",{
-          limit:10,
-          order_by:'created_at:desc',
-          offset: this.getQuery()
-        })
-      },
       getQuery (){
         const query = {
           ...this.$route.query
@@ -571,7 +565,6 @@ export default {
           }).then(res => {
             this.$emit('complianceUpdated')
             this.rejectGmcNmc = false
-            // this.getLocums()
             this.getCompliances()
             this.$store.commit('SET_NOTIFICATION',{ 
               enabled: true, 
@@ -611,24 +604,24 @@ export default {
   }
 }
 </script>
+
 <style>
-.note-modal {
-	position: fixed;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	border-radius: 10px;
-	max-height: 80%;
-	overflow: auto;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-
-@media screen and (min-width: 768px) {
   .note-modal {
-    min-width: 600px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    max-height: 80%;
+    overflow: auto;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
   }
-}
 
+  @media screen and (min-width: 768px) {
+    .note-modal {
+      min-width: 600px;
+    }
+  }
 </style>
