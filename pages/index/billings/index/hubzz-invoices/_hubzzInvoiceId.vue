@@ -66,7 +66,6 @@ export default {
 			let creditItems = []
 
 			for (let i = 0; i < practiceInvoiceItems.length; i++) {
-      
 				const newItem = {
 					job_part_id: practiceInvoiceItems[i].id,
 					description: practiceInvoiceItems[i].description,
