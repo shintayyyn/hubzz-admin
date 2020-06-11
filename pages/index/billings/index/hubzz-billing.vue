@@ -60,7 +60,7 @@
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="slotProps.item.locum_invoice_disputed_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-        >{{ slotProps.item.locum_invoice_disputed_count > 0 ? "Yes, " + slotProps.item.locum_invoice_disputed_count : "None" }}</div>
+        >{{ slotProps.item.locum_invoice_disputed_count > 0 ? "Yes" + slotProps.item.locum_invoice_disputed_count : "None" }}</div>
       </template>
       <template v-slot:type_slot="slotProps">
         <div
