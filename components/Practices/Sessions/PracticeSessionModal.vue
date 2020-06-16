@@ -11,10 +11,10 @@
             class="mx-2 text-black p-2 bg-yellow-500 rounded"
           >{{status !== 'Declined' ? status : 'Withdrawn'}}</div>
           <div
-            v-if="modalJobPart && modalJobPart.terminated" 
+            v-if="modalJobPart && modalJobPart.terminated"
             class="mx-2 text-black p-2 bg-gray-300 rounded"
           >{{ modalJobPart && modalJobPart.terminated ? 'Terminated' : null}}</div>
-          
+
           <!-- <div 
             v-if="modalJobPart" 
             class="text-black p-2 bg-yellow-500 rounded"
@@ -440,18 +440,29 @@
                 />
               </div>
             </div>
+            <!-- SCHEDULES -->
+            <JobSchedules :modalJobPart="modalJobPart" />
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
             <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
             <div v-if="locumUser && job_part" class="w-full overflow-hidden flex flex-col">
-              <div v-if="modalJobPart.status === 'Cancelled'" class="flex flex-col text-white bg-waterloo rounded-lg leading-tight m-2">
+              <div
+                v-if="modalJobPart.status === 'Cancelled'"
+                class="flex flex-col text-white bg-waterloo rounded-lg leading-tight m-2"
+              >
                 <div class="m-4">
-                  <div class="font-bold text-sm sm:text-md">{{ modalJobPart.terminated ? 'Terminated' : 'Cancelled' }} At</div>
+                  <div
+                    class="font-bold text-sm sm:text-md"
+                  >{{ modalJobPart.terminated ? 'Terminated' : 'Cancelled' }} At</div>
                   <div
                     class="text-xs sm:text-sm mb-8"
                   >{{ modalJobPart.job.platform_job.cancelled_at | localDate }}</div>
-                  <div class="font-bold text-sm sm:text-md">Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}</div>
-                  <div class="text-xs sm:text-sm mb-8">{{ modalJobPart.job.platform_job.cancelled_reason }}</div>
+                  <div
+                    class="font-bold text-sm sm:text-md"
+                  >Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}</div>
+                  <div
+                    class="text-xs sm:text-sm mb-8"
+                  >{{ modalJobPart.job.platform_job.cancelled_reason }}</div>
                   <div class="leading-tight mt-4">
                     <p
                       class="font-bold text-sm sm:text-md"
@@ -459,19 +470,19 @@
                     <div class="flex justify-start">
                       <div class="text-xs sm:text-sm">
                         {{
-                          modalJobPart.cancelled_by_practice === 'Hub'
-                            ? modalJobPart.parent_practice_name
-                            : modalJobPart.cancelled_by_practice === 'Spoke'
-                              ? modalJobPart.practice_name
-                              : modalJobPart.practice_name
+                        modalJobPart.cancelled_by_practice === 'Hub'
+                        ? modalJobPart.parent_practice_name
+                        : modalJobPart.cancelled_by_practice === 'Spoke'
+                        ? modalJobPart.practice_name
+                        : modalJobPart.practice_name
                         }}
                       </div>
                       <div v-if="modalJobPart.cancelled_by_user" class="mx-1">-</div>
                       <div v-if="modalJobPart.cancelled_by_user" class="text-xs sm:text-sm">
                         {{
-                          modalJobPart.cancelled_by_user.email
-                            ? modalJobPart.cancelled_by_user.email
-                            : modalJobPart.cancelled_by_user.name
+                        modalJobPart.cancelled_by_user.email
+                        ? modalJobPart.cancelled_by_user.email
+                        : modalJobPart.cancelled_by_user.name
                         }}
                       </div>
                     </div>
@@ -536,8 +547,16 @@
                     <p
                       class="text-white no-underline"
                     >{{ modalJobPart.job ? "£ "+modalJobPart.job.rate+" Per Hour":null +" Per Hour" }}</p>
-                    <p class="mt-5 font-semibold">Total Hours</p>
-                    <p class="text-white">{{ modalJobPart.job.total_hours | hoursMinutes }}</p>
+                    <p class="mt-5 font-semibold">Total Original Hours</p>
+                    <p
+                      class="text-white"
+                    >{{ modalJobPart.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}</p>
+                    <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
+                      <p class="mt-5 font-semibold">Total Final Hours</p>
+                      <p
+                        class="text-white"
+                      >{{ modalJobPart.schedules.map(item => item.final_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}</p>
+                    </template>
                     <p class="mt-5 font-semibold">Job Description</p>
                     <p
                       class="text-white break-words"
@@ -631,7 +650,7 @@
                     <p class="mt-5 font-semibold">Issued?</p>
                     <p class="text-white">{{ modalJobPart.issued ? 'Yes': 'No' }}</p>
                     <!--  -->
-                    <template
+                    <!-- <template
                       v-if="['Completed', 'Approved', 'Cancelled'].includes(modalJobPart.status)"
                     >
                       <p class="mt-5 font-semibold">Was the Locum absent for session?</p>
@@ -669,7 +688,7 @@
                         v-if="modalJobPart.final_hours > 0"
                       >{{ modalJobPart.final_hours | hoursMinutes }}</p>
                       <p class="text-white" v-else>{{ modalJobPart.final_hours }}</p>
-                    </template>
+                    </template>-->
                   </div>
                 </div>
               </div>
@@ -758,11 +777,13 @@ import JobPartModal from "@/components/Base/JobPartModal";
 import AppPagination from "@/components/Base/AppPagination";
 import { gmapApi } from "vue2-google-maps";
 import AppLoading from "@/components/Base/AppLoading";
+import JobSchedules from "@/components/Base/JobSchedules";
 export default {
   components: {
     JobPartModal,
     AppPagination,
-    AppLoading
+    AppLoading,
+    JobSchedules
   },
   props: ["job", "job_part"],
   data() {
