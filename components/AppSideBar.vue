@@ -50,16 +50,19 @@
 
         <div v-if="false" class="text-sm relative">
           <span
-            v-if="$route.name === 'index-locum-change-email-requests' || $route.name === 'index-practice-change-email-requests'"
+            v-if="$route.name.includes('index-change-email-requests')"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
           />
-          <nuxt-link :to="{ name: 'index-locum-change-email-requests' }">
+          <nuxt-link :to="{ name: 'index-change-email-requests' }">
             <div
               class="block font-sans no-underline p-4"
-              :class="$route.name === 'index-locum-change-email-requests' || $route.name === 'index-practice-change-email-requests' ? 'text-yellow-500': 'text-white hover:text-gray-500'"
+              :class="$route.name.includes('index-change-email-requests') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
               @click="close"
             >
-              <span>Change Email Requests</span>
+              <span class="text-xs">Change Email Requests</span>
+              <span v-if="pendingChangeEmailRequestIds.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{ pendingChangeEmailRequestIds.length }}
+              </span>
             </div>
           </nuxt-link>
         </div>
@@ -98,9 +101,10 @@ export default {
       params: {
         acknowledged: false
       },
-      supportsBadge: 0
+      supportsBadge: 0,
     }
   },
+
   computed: {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
@@ -113,8 +117,12 @@ export default {
     },
     unacknowledgedCount () {
       return this.$store.state.supports.unacknowledgedCount
-    }
+    },
+    pendingChangeEmailRequestIds () {
+      return this.$store.getters['pendingChangeEmailRequestIds']
+    },
   },
+
   async created () {
     // $auth.user.domain
     if (this.$auth.loggedIn) {
@@ -201,7 +209,57 @@ export default {
       // this.menu = [...defaultMenu]
     }
   },
+
+  mounted () {
+    this.$store.dispatch('pendingChangeEmailRequestIds')
+    this.$socket.on('Admin Notification Change Email Request Pending', this.adminNotificationChangeEmailRequestPendingHandler)
+    this.$socket.on('Admin Notification Change Email Request Rejected', this.adminNotificationChangeEmailRequestRejectedHandler)
+    this.$socket.on('Admin Notification Change Email Request Accepted', this.adminNotificationChangeEmailRequestAcceptedHandler)
+  },
+
+  destroyed () {
+    this.$socket.removeListener('Admin Notification Change Email Request Pending', this.adminNotificationChangeEmailRequestPendingHandler)
+    this.$socket.removeListener('Admin Notification Change Email Request Rejected', this.adminNotificationChangeEmailRequestRejectedHandler)
+    this.$socket.removeListener('Admin Notification Change Email Request Accepted', this.adminNotificationChangeEmailRequestAcceptedHandler)
+  },
+
   methods: {
+    adminNotificationChangeEmailRequestPendingHandler (changeEmailRequest) {
+      const {
+        id: changeEmailRequestId,
+      } = changeEmailRequest
+
+      const pendingChangeEmailRequestIds = JSON.parse(JSON.stringify(this.pendingChangeEmailRequestIds))
+
+      const index = pendingChangeEmailRequestIds.findIndex(id => id === changeEmailRequestId)
+
+      if (index === -1) {
+        pendingChangeEmailRequestIds.push(changeEmailRequestId)
+
+        this.$store.commit('pendingChangeEmailRequestIds', pendingChangeEmailRequestIds)
+      }
+    },
+
+    removeChangeEmailRequestPendingId (changeEmailRequestId) {
+      const pendingChangeEmailRequestIds = JSON.parse(JSON.stringify(this.pendingChangeEmailRequestIds))
+
+      const index = pendingChangeEmailRequestIds.findIndex(id => id === changeEmailRequestId)
+
+      if (index > -1) {
+        pendingChangeEmailRequestIds.splice(index, 1)
+
+        this.$store.commit('pendingChangeEmailRequestIds', pendingChangeEmailRequestIds)
+      }
+    },
+
+    adminNotificationChangeEmailRequestRejectedHandler ({ id }) {
+      this.removeChangeEmailRequestPendingId(id)
+    },
+
+    adminNotificationChangeEmailRequestAcceptedHandler ({ id }) {
+      this.removeChangeEmailRequestPendingId(id)
+    },
+
     signout () {
       this.$emit("modal", true)
       // this.$store.commit('TOGGLE_SIGNOUT', true)
@@ -215,36 +273,36 @@ export default {
 </script>
 
 <style scoped>
-.sidebar {
-  position: fixed;
-  margin-left: -200px;
-  width: 200px;
-  height: 100%;
-  overflow: auto;
-  transition: all 0.3s ease-in-out;
-  z-index: 500;
-}
-.toggled-left {
-  margin-left: 0;
-}
-.close-button {
-  display: block;
-}
-@media screen and (min-width: 1200px) {
   .sidebar {
+    position: fixed;
+    margin-left: -200px;
+    width: 200px;
+    height: 100%;
+    overflow: auto;
+    transition: all 0.3s ease-in-out;
+    z-index: 500;
+  }
+  .toggled-left {
     margin-left: 0;
   }
   .close-button {
-    display: none;
+    display: block;
   }
-}
-.rotate {
-  transform: rotate(-90deg);
-  transition: transform 0.3s ease-in-out;
-}
+  @media screen and (min-width: 1200px) {
+    .sidebar {
+      margin-left: 0;
+    }
+    .close-button {
+      display: none;
+    }
+  }
+  .rotate {
+    transform: rotate(-90deg);
+    transition: transform 0.3s ease-in-out;
+  }
 
-.arrow {
-  transform: rotate(90deg);
-  transition: transform 0.3s ease-in-out;
-}
+  .arrow {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease-in-out;
+  }
 </style>
