@@ -18,29 +18,35 @@
       <div class="flex">
         <div class="ml-2 text-black p-2 bg-yellow-500 rounded">{{ job_part.status }}</div>
         <div
-          v-if="job_part && job_part.terminated" 
+          v-if="job_part && job_part.terminated"
           class="ml-2 text-black p-2 bg-gray-300 rounded"
-        >{{ job_part && job_part.terminated ? 'Terminated' : null}}
-        </div>
+        >{{ job_part && job_part.terminated ? 'Terminated' : null}}</div>
         <div
           class="ml-2 text-black p-2 text-white rounded"
           :class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
         >{{ job_part.job && job_part.job.type ? job_part.job.type : null }}</div>
       </div>
     </div>
-    
+
     <div class="flex flex-wrap">
       <div
         class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
         :class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
       >
-        <div v-if="job_part.status === 'Cancelled'" class="flex flex-col text-white bg-waterloo rounded-lg leading-tight my-2">
+        <div
+          v-if="job_part.status === 'Cancelled'"
+          class="flex flex-col text-white bg-waterloo rounded-lg leading-tight my-2"
+        >
           <div class="m-4">
-            <div class="font-bold text-sm sm:text-md">{{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At</div>
+            <div
+              class="font-bold text-sm sm:text-md"
+            >{{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At</div>
             <div
               class="text-xs sm:text-sm mb-8"
             >{{ job_part.job.platform_job.cancelled_at | localDate }}</div>
-            <div class="font-bold text-sm sm:text-md">Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}</div>
+            <div
+              class="font-bold text-sm sm:text-md"
+            >Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}</div>
             <div class="text-xs sm:text-sm mb-8">{{ job_part.job.platform_job.cancelled_reason }}</div>
             <div>
               <p
@@ -50,19 +56,19 @@
               <div class="flex justify-start">
                 <div class="text-xs sm:text-sm">
                   {{
-                    job_part.cancelled_by_practice === 'Hub'
-                      ? job_part.parent_practice_name
-                      : job_part.cancelled_by_practice === 'Spoke'
-                        ? job_part.practice_name
-                        : job_part.practice_name
+                  job_part.cancelled_by_practice === 'Hub'
+                  ? job_part.parent_practice_name
+                  : job_part.cancelled_by_practice === 'Spoke'
+                  ? job_part.practice_name
+                  : job_part.practice_name
                   }}
                 </div>
                 <div v-if="job_part.cancelled_by_user" class="mx-1">-</div>
                 <div v-if="job_part.cancelled_by_user" class="text-xs sm:text-sm">
                   {{
-                    job_part.cancelled_by_user.email
-                      ? job_part.cancelled_by_user.email
-                      : job_part.cancelled_by_user.name
+                  job_part.cancelled_by_user.email
+                  ? job_part.cancelled_by_user.email
+                  : job_part.cancelled_by_user.name
                   }}
                 </div>
               </div>
@@ -133,8 +139,18 @@
                 <p
                   class="text-white no-underline"
                 >{{ job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour" }}</p>
-                <p class="mt-5 font-semibold">Total Hours</p>
-                <p class="text-white">{{ job_part.job.total_hours | hoursMinutes }}</p>
+                <!-- <p class="mt-5 font-semibold">Total Hours</p>
+                <p class="text-white">{{ job_part.job.total_hours | hoursMinutes }}</p>-->
+                <p class="mt-5 font-semibold">Total Original Hours</p>
+                <p
+                  class="text-white"
+                >{{ job_part.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}</p>
+                <template v-if="['Completed', 'Approved'].includes(job_part.status)">
+                  <p class="mt-5 font-semibold">Total Final Hours</p>
+                  <p
+                    class="text-white"
+                  >{{ job_part.schedules.map(item => item.final_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}</p>
+                </template>
                 <p class="mt-5 font-semibold">Job Description</p>
                 <p
                   class="text-white break-words"
@@ -240,7 +256,7 @@
                 <p class="mt-5 font-semibold">Issued?</p>
                 <p class="text-white">{{ job_part.issued ? 'Yes': 'No' }}</p>
                 <!--  -->
-                <template v-if="['Completed', 'Approved', 'Cancelled'].includes(job_part.status)">
+                <!-- <template v-if="['Completed', 'Approved', 'Cancelled'].includes(job_part.status)">
                   <p class="mt-5 font-semibold">Was the Locum absent for session?</p>
                   <p
                     class="text-white"
@@ -272,7 +288,7 @@
                     v-if="job_part.final_hours > 0"
                   >{{ job_part.final_hours | hoursMinutes }}</p>
                   <p class="text-white" v-else>{{ job_part.final_hours }}</p>
-                </template>
+                </template>-->
                 <!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
 							<div class="m-2 mt-5">
 								<span>This job is </span>
@@ -363,8 +379,8 @@
           </div>
         </div>
       </div>
-      <div v-if="jobParts.length > 0" class="flex order-1 md:order-2 w-full md:w-1/2">
-        <div class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
+      <div class="flex-col order-1 md:order-2 w-full md:w-1/2">
+        <div v-if="jobParts.length > 0" class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
           <div class="mx-2 text-white font-semibold">Job Parts</div>
           <!-- <AppTable
             :total="specificJobPart.job.job_parts.length"
@@ -437,6 +453,8 @@
             </nuxt-link>-->
           </div>
         </div>
+        <!-- SCHEDULES -->
+        <JobSchedules :modalJobPart="job_part" />
       </div>
     </div>
   </div>
@@ -445,10 +463,12 @@
 import { gmapApi } from "vue2-google-maps";
 import AppTable from "@/components/Base/AppTable";
 import AppPagination from "@/components/Base/AppPagination";
+import JobSchedules from "@/components/Base/JobSchedules";
 export default {
   components: {
     AppTable,
-    AppPagination
+    AppPagination,
+    JobSchedules
   },
   props: ["jobPartId", "specificJobPart", "isNuxtChild", "isInvoice", "jobId"],
   data() {

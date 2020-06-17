@@ -1,4 +1,6 @@
 export const state = () => ({
+  pendingChangeEmailRequestIds: [],
+
   socket_id: '',
   notification: {
     enabled: false,
@@ -10,6 +12,10 @@ export const state = () => ({
 })
 
 export const getters = {
+  pendingChangeEmailRequestIds (state) {
+    return state.pendingChangeEmailRequestIds
+  },
+
   getAdminUserMe (state) {
     return state.admin_user_logged_in
   },
@@ -32,6 +38,10 @@ export const getters = {
 }
 
 export const mutations = {
+  pendingChangeEmailRequestIds (state, pendingChangeEmailRequestIds) {
+    state.pendingChangeEmailRequestIds = pendingChangeEmailRequestIds
+  },
+
   SET_SOCKET (state, payload) {
     state.socket_id = payload
   },
@@ -48,6 +58,12 @@ export const mutations = {
 }
 
 export const actions = {
+  pendingChangeEmailRequestIds ({ commit }) {
+    return this.$axios.get('/api/v1/admin/change-email-requests', {
+      params: { status: 'Pending', id_only: true, limit: 1000000 },
+    }).then(response => commit('pendingChangeEmailRequestIds', response.data.data.change_email_requests))
+  },
+
   async joinRoom (ctx, payload) {
     try {
       await this.$axios.$post('/api/v1/socket/join-room', {

@@ -1,5 +1,3 @@
-let colors = {}
-
 module.exports = {
 	prefix: "",
 	important: false,
@@ -288,6 +286,7 @@ module.exports = {
 			"3/6": "50%",
 			"4/6": "66.66667%",
 			"5/6": "83.33333%",
+			"7/10": "70%",
 			full: "100%",
 			screen: "100vw"
 		},
@@ -417,6 +416,7 @@ module.exports = {
 			"50": 50,
 			"511": 511,
 			"512": 512,
+			"513": 513,
 		},
 
 		opacity: {
@@ -503,4 +503,4 @@ module.exports = {
 	corePlugins: {},
 
 	plugins: []
-};
+}

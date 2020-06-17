@@ -56,9 +56,14 @@
           </AppTable>
           <AppButton 
             :label="'Confirm'"
-            :disabled="(chosenJobParts.length + disputedJobParts.length) < 1 ? true : false " 
+            :disabled="(chosenJobParts.length) < 1 ? true : false " 
             @click="emitChosenJobParts()" 
           />
+          <div class="text-white">
+            <div>
+              Chosen Approved Invoices Count: {{ chosenJobParts.length }}
+            </div>
+          </div>
         </template>
         <template v-if="jobPartCount === 0">
           <p class="text-gray-500 py-2 text-center"> 
@@ -88,7 +93,6 @@ export default {
 			// jobPartCount: 0,
 			// jobParts: [],
 			chosenJobParts: [],
-			disputedJobParts: [],
 			// for app table
 			currentPage: 1,
 			params: {

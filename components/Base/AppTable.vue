@@ -31,7 +31,14 @@
         </div>
         <div v-for="item in items" :key="item.id" class="row py-2">
           <nuxt-link
-            :to="{ path: `${routerLink}/${routerId ? item[routerId] : item.id}`, query: { ...$route.query } }"
+            :to="routerLink && {}.toString.call(routerLink) === '[object Function]'
+              ? routerLink(item)
+              : {
+                path: `${routerLink}/${routerId ? item[routerId] : item.id}`,
+                query: {
+                  ...$route.query,
+                },
+              }"
             :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
           >
             <div
@@ -161,7 +168,7 @@
         default: () => []
       },
       routerLink: {
-        type: String,
+        type: [String, Function],
         default: null
       },
       routerId: {

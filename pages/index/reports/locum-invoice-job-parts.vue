@@ -98,6 +98,21 @@
         @page="setPage" 
       />
 
+      <!-- <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading"
+            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div> -->
+
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
         <br>
@@ -128,6 +143,7 @@
       return {
         loading: false,
         count: 0,
+        downloading: false,
         locumInvoiceJobParts: [],
         orderBy: [],
         orderBys: [
@@ -175,7 +191,7 @@
             key: 'index',
             sort_key: null,
             column: (item, index) => this.offset + index + 1,
-            justify: 'end',
+            justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
           },
@@ -202,7 +218,7 @@
             key: 'date_start',
             sort_key: 'date_start',
             column: (item) => item.date_start ? this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -211,7 +227,15 @@
             key: 'date_end',
             sort_key: 'date_end',
             column: (item) => item.date_end ? this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Paid',
+            key: 'locum_invoice_paid_at',
+            column: (item) => item.locum_invoice_paid_at ? 'Yes' : 'No',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -219,8 +243,8 @@
             title: 'Total Hours',
             key: 'final_hours',
             sort_key: 'final_hours',
-            column: (item) => item.final_hours.toFixed(2),
-            justify: 'end',
+            column: (item) => (parseFloat(item.final_hours)/60).toFixed(2) + ' Hours',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -379,6 +403,36 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          date_start: this.dateStart ? this.dateStart : undefined,
+          date_end: this.dateEnd ? this.dateEnd : undefined,
+          order_by: this.orderBy ? this.orderBy : undefined,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/locum-invoice-job-parts/generate-key', {
+          filename: `hoursApproved.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          console.log('responses', responses)
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-invoice-job-parts/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },
