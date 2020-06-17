@@ -182,7 +182,7 @@
     data () {
       return {
         loading: false,
-        limit: 2,
+        limit: 10,
         page: 1,
         search: '',
         filterStatus: null,

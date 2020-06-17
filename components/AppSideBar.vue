@@ -48,7 +48,7 @@
         </div>
         <!-- LINKS END HERE -->
 
-        <div v-if="false" class="text-sm relative">
+        <div class="text-sm relative">
           <span
             v-if="$route.name.includes('index-change-email-requests')"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
