@@ -118,11 +118,11 @@
               :label="'Settle Payment'"
               :background="'green'"
               class="text-white mr-2"
-              :disabled="slotProps.item.sage_ref ? true : false"
+              :disabled="slotProps.item.sage_ref ? false : true"
               @click="toShowPaidModal(slotProps.item.id)"
             />
             <span
-              v-if="slotProps.item.sage_ref"
+              v-if="!slotProps.item.sage_ref"
               class="tool-left text-sm mr-2"
               data-tip="Sage Reference is not yet added on Practice Profile."
               tabindex="1"
