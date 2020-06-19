@@ -14,7 +14,7 @@
         class="mr-2"
         :label="'Export as Sage.csv'"
         :icon="'cloud-download'"
-        :disabled="practice && practice.sage_ref && practice.direct_debit === true ? false : true"
+        :disabled="practice && practice.sage_ref && practice.direct_debit ? false : true"
         @click="toSageCSV()"
       />
       <div
