@@ -100,7 +100,7 @@
             v-if="slotProps.item.unpaid_at" 
             class="px-2"
           >
-            {{ slotProps.item.unpaid_at ? 'Unpaid at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
+            {{ slotProps.item.unpaid_at ? 'Marked Invalid Payment at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
           </div>
           <div 
             v-if="slotProps.item.paid_at"
@@ -194,7 +194,7 @@
               class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
               @click="toMarkAsUnpaid()"
             >
-              Mark Invoice as Unpaid
+              Mark Invoice as Invalid
             </div>
           </div>
         </div>
@@ -666,10 +666,10 @@ export default {
 						enabled: true,
 						status: "success",
 						text: "Successfully Marked Invoice as Unpaid"
-					})
+          })
+          this.getHubzzInvoices(this.params)
         })
         .catch(err => {
-          this.getHubzzInvoices(this.params)
           this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "danger",
