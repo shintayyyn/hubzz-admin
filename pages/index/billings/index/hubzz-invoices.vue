@@ -197,7 +197,7 @@
               class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
               @click="confirm = true"
             >
-              Mark Invoice as Invalid
+              Mark Payment as Invalid
             </div>
           </div>
         </div>
