@@ -49,13 +49,14 @@
       :perPage="params.limit"
       :columns="columns"
       :loading="loadingHubzzInvoices"
+      :router-link="`/billings/hubzz-invoices`"
       :order-by="params.order_by"
       :customWidth="1200"
       @checkClicked="toggleCheck"
       @pagechanged="pagechanged"
       @sorted="sorted"
     >
-      <template 
+      <template
         v-slot:checker="slotProps"
       >
         <input 
@@ -89,8 +90,8 @@
       </template>
 
       <template v-slot:exported_at="slotProps">
-        <div class="p-1 rounded-full" :class="slotProps.item.exported_at ? 'bg-green-500' : 'bg-red-500'">
-          <span class="m-1">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
+        <div :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'">
+          <span class="font-bold text-lg">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
         </div>
       </template>
 
@@ -100,7 +101,7 @@
             v-if="slotProps.item.unpaid_at" 
             class="px-2"
           >
-            {{ slotProps.item.unpaid_at ? 'Marked Invalid Payment at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
+            {{ slotProps.item.unpaid_at ? 'Marked as Invalid Payment at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
           </div>
           <div 
             v-if="slotProps.item.paid_at"
@@ -137,22 +138,24 @@
             {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
           </div> -->
 
-          <div>
+          <!-- <div>
             <AppButton
               :label="'View'"
               class="mr-2"
               @click="viewInvoice(slotProps.item.id)"
             />
-          </div>
+          </div> -->
         </div>
       </template>
     </AppTable>
-
     <template v-else>
       <div class="m-2 w-full text-center text-white">
         There are no Invoices for HUBZZ
       </div>
     </template>
+
+    {{chosenInvoices.id}}
+
     <!--SETTLE PAYMENT MODAL -->
     <transition name="fade" mode="out-in">
       <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
@@ -162,9 +165,9 @@
             v-if="confirm"
             :in-style="'top:35%'"
             :in-class="'rounded-lg'"
-            :message="'Are you sure you want to mark this bill as paid?'"
+            :message="paidAt ? 'Are you sure you want to mark this bill as paid?' : 'Are you sure you want to mark this bill as invalid?'"
             @cancel="confirm = false"
-            @confirm="toMarkAsPaid()"
+            @confirm="settlePayment()"
           />
         </transition>
         <!-- SHIELD FOR CONFIRM CANCEL -->
@@ -192,9 +195,9 @@
           <div class="p-4">
             <div 
               class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="toMarkAsUnpaid()"
+              @click="confirm = true"
             >
-              Mark Invoice as Invalid
+              Mark Payment as Invalid
             </div>
           </div>
         </div>
@@ -205,24 +208,26 @@
               <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
             </div>
             <div class="flex flex-row mb-4">
-              <div
-                class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+              <AppButton
+                :label="'Confirm'"
+                :background="'green'"
+                class="text-white mr-2"
+                :disabled="paidAt ? false : true"
                 @click="confirm = true"
-              >
-                Confirm
-              </div>
-              <div
-                class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-                @click="paymentModal === false && modalPaidUnpaid === true"
-              >
-                Cancel
-              </div>
+              />
+              <AppButton
+                :label="'Cancel'"
+                :background="'red'"
+                class="text-white mr-2"
+                @click="cancelPaymentModal()"
+              />
             </div>
           </div>
         </div>
       </div>
     </transition>
 
+    <!-- SAGE CSV EXPORT MODAL -->
     <transition name="fade" mode="out-in">
       <div v-if="exportedModal == true" class="mark-paid-modal overflow-hidden">
         <transition name="drop" mode="out-in">
@@ -250,7 +255,8 @@
             </div>
             <div v-for="(item, index) in exportedChosenInvoices"
                  :key="`item-${index}`"
-                 class="text-white">
+                 class="text-white"
+            >
               <div class="flex flex-row m-2">
                 <div class="mx-2">
                   {{ 'ID: '+ item.id }}
@@ -327,18 +333,19 @@ export default {
       },
       chosenInvoices: [],
       exportedChosenInvoices: [],
+
       // FOR MARKING INVOICE AS PAID
 			showPaidModal: false,
       modalPaidUnpaid: false,
       paymentModal: false,
-			paidAt: this.$moment().format("YYYY-MM-DD"),
+			paidAt: null,
 			invoiceId: "",
 			confirm: false,
       
       // EXPORTING MODALS
       exportedModal: false,
-
       sageChecker: false,
+
 			// practiceInvoices: [],
 			// practiceInvoicesCount: 0,
 			practice: "",
@@ -400,7 +407,7 @@ export default {
           slot: true,
           slotName: "actions",
           dataIndex: "",
-          class: "text-center px-8"
+          class: "text-center"
         },
         
       ],
@@ -486,7 +493,6 @@ export default {
 		}
 	},
 	methods: {
-    goToIssue () {},
     searchSubmit: debounce(function (page, order_by) {
       this.chosenInvoices = []
       this.params.invoice_number = this.search
@@ -534,6 +540,28 @@ export default {
 
 			this.$router.push({ query })
     }, 500),
+    getHubzzInvoices (params) {
+			console.log("params", params)
+      this.$store
+      .dispatch("billings/fetchHubzzInvoices", {
+        practice_id: params.practice_id ? params.practice_id : '',
+        invoice_number: params.invoice_number ? params.invoice_number : '',
+				limit: params.limit ? params.limit : '',
+				order_by: params.order_by ? params.order_by : '' ,
+        offset: params.offset ? params.offset : '',
+        countOnly: true
+      })
+      .then(() => {
+        this.$store.dispatch("billings/fetchHubzzInvoices", {
+          practice_id: params.practice_id ? params.practice_id : '',
+          invoice_number: params.invoice_number ? params.invoice_number : '',
+          limit: params.limit ? params.limit : '',
+          order_by: params.order_by ? params.order_by : '' ,
+          offset: params.offset ? params.offset : '',
+        })
+      })
+    },
+    // BULK SAGE METHODS
     showSageChecker () {
       this.sageChecker = !this.sageChecker
       const index = this.columns.findIndex(column => {
@@ -564,7 +592,6 @@ export default {
         await this.markExported()
       }
     },
-
     async markExported () {
       const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
 
@@ -574,7 +601,6 @@ export default {
       })
       await this.downloadCsv(invoiceIds)
     },
-
     downloadCsv (invoiceIds) {
       this.downloading = true
 
@@ -586,9 +612,11 @@ export default {
         },
       }).then((responses) => {
         const token = responses.data.data.token
-        console.log('token', responses)
-
         window.open(`${process.env.API_URL}/api/v1/admin/hq-invoice/bulk-sage?token=${token}`)
+        this.confirm = false
+        this.exportedModal = false
+        this.chosenInvoices = []
+
       }).catch((err) => {
         console.log('err', err)
         this.$nuxt.error(err.response ? err.response.data : err)
@@ -596,10 +624,7 @@ export default {
         this.downloading = false
         this.exportedModal = false
       })
-
-
     },
-
     viewInvoice (invoiceId) {
       this.$router.push(`/billings/hubzz-invoices/${invoiceId}`)
     },
@@ -616,26 +641,12 @@ export default {
       
       console.log('chosen invoices', this.chosenInvoices)
     },
-		getHubzzInvoices (params) {
-			console.log("params", params)
-      this.$store
-      .dispatch("billings/fetchHubzzInvoices", {
-        practice_id: params.practice_id ? params.practice_id : '',
-        invoice_number: params.invoice_number ? params.invoice_number : '',
-				limit: params.limit ? params.limit : '',
-				order_by: params.order_by ? params.order_by : '' ,
-        offset: params.offset ? params.offset : '',
-        countOnly: true
-      })
-      .then(() => {
-        this.$store.dispatch("billings/fetchHubzzInvoices", {
-          practice_id: params.practice_id ? params.practice_id : '',
-          invoice_number: params.invoice_number ? params.invoice_number : '',
-          limit: params.limit ? params.limit : '',
-          order_by: params.order_by ? params.order_by : '' ,
-          offset: params.offset ? params.offset : '',
-        })
-      })
+
+    // SETTLE PAYMENT METHODS
+    cancelPaymentModal () {
+      this.paymentModal = false 
+      this.modalPaidUnpaid = true
+      this.paidAt = null
     },
     closeModals () {
       this.showPaidModal = false
@@ -643,16 +654,25 @@ export default {
       this.paymentModal = false
       this.confirm = false
       this.exportedModal = false
+      this.paidAt = null
     },
-    
 		toShowPaidModal (itemId) {
 			this.showPaidModal = true
       this.modalPaidUnpaid = true
-			this.invoiceId = itemId
+      this.invoiceId = itemId
+      this.paidAt = null
     },
     toShowPaymentModal () {
       this.modalPaidUnpaid = false
       this.paymentModal = true
+      this.paidAt = null
+    },
+    settlePayment (){
+      if(this.paidAt) {
+        this.toMarkAsPaid()
+      } else {
+        this.toMarkAsUnpaid()
+      }
     },
     async toMarkAsUnpaid () {
       await this.$axios
@@ -661,7 +681,8 @@ export default {
           this.confirm = false
           this.showPaidModal = false
           this.paymentModal = false 
-          this.modalPaidUnpaid =false
+          this.modalPaidUnpaid = false
+          this.paidAt = null
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -677,7 +698,6 @@ export default {
 					})
         })
     },
-
 		async toMarkAsPaid () {
 			await this.$axios
 				.$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/paid`, {
@@ -688,6 +708,7 @@ export default {
           this.showPaidModal = false
           this.paymentModal = false 
           this.modalPaidUnpaid = false
+          this.paidAt = null
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -701,7 +722,8 @@ export default {
 						text: err.response.data.message
 					})
 				})
-		},
+    },
+    
 		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":

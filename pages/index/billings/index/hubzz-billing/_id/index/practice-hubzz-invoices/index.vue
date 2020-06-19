@@ -41,17 +41,34 @@
         <div>{{ $moment(slotProps.item.due_date).format('DD/MM/YYYY') }}</div>
       </template>
 
+      <template v-slot:payment_status="slotProps">
+        <div class="flex flex-col">
+          <div
+            v-if="slotProps.item.unpaid_at" 
+            class="px-2"
+          >
+            {{ slotProps.item.unpaid_at ? 'Marked as Invalid Payment at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
+          </div>
+          <div 
+            v-if="slotProps.item.paid_at"
+            class="flex items-center justify-center"
+          >
+            {{ slotProps.item.paid_at ? 'Paid at ' + $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : null }}
+          </div>
+        </div>
+      </template>
+
       <template v-slot:paid_at="slotProps">
-        <div v-if="!slotProps.item.paid_at" class="flex items-center justify-center">
+        <div class="flex items-center justify-center">
           <AppButton
-            :label="'Mark as Paid'"
+            :label="'Settle Payment'"
             :background="'green'"
             class="text-white mr-2"
-            :disabled="practice && !practice.sage_ref"
+            :disabled="slotProps.item.sage_ref ? false : true"
             @click="toShowPaidModal(slotProps.item.id)"
           />
           <span
-            v-if="practice && !practice.sage_ref"
+            v-if="!slotProps.item.sage_ref"
             class="tool-left text-sm mr-2"
             data-tip="Sage Reference is not yet added on Practice Profile."
             tabindex="1"
@@ -59,12 +76,17 @@
             <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
           </span>
         </div>
-        <div
+        <!-- <div
           v-else
           class="px-2"
         >
-          {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
-        </div>
+          <div v-if="slotProps.item.paid_at">
+            {{ slotProps.item.paid_at ? "Paid At " +$moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
+          </div>
+          <div v-if="slotProps.item.unpaid_at">
+            {{ slotProps.item.unpaid_at ? "Marked Invalid Payment at " +$moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : "Not yet paid" }}
+          </div>
+        </div> -->
       </template>
     </AppTable>
 
@@ -73,7 +95,8 @@
         There are no Invoices for HUBZZ
       </div>
     </template>
-    <transition name="fade" mode="out-in">
+    <!-- MARK AS PAID UNPAID MODAL OLD -->
+    <!-- <transition name="fade" mode="out-in">
       <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
         <transition name="drop" mode="out-in">
           <AppConfirm
@@ -85,7 +108,6 @@
             @confirm="toMarkAsPaid()"
           />
         </transition>
-        <!-- TO PAID CONFIRM CANCEL -->
         <div v-if="confirm == true" class="shield" @click="confirm = false" />
         <div class="flex items-center text-sm text-white m-4">
           <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showPaidModal = false">
@@ -112,7 +134,77 @@
             </div>
           </div>
         </div>
+      </div>
+    </transition> -->
+
+    <!--SETTLE PAYMENT MODAL -->
+    <transition name="fade" mode="out-in">
+      <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
+        <!-- TO PAID CONFIRM CANCEL -->
+        <transition name="drop" mode="out-in">
+          <AppConfirm
+            v-if="confirm"
+            :in-style="'top:35%'"
+            :in-class="'rounded-lg'"
+            :message="paidAt ? 'Are you sure you want to mark this bill as paid?' : 'Are you sure you want to mark this bill as invalid?'"
+            @cancel="confirm = false"
+            @confirm="settlePayment()"
+          />
+        </transition>
+        <!-- SHIELD FOR CONFIRM CANCEL -->
+        <div v-if="confirm == true" class="shield" @click="confirm = false" />
+
+        <div class="flex items-center text-sm text-white m-4">
+          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="closeModals()">
+            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
+          </div>
+        </div>
+
         <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
+        <div
+          v-if="paymentModal === false && modalPaidUnpaid === true" 
+          class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white"
+        >
+          <div class="p-4 mt-2 border-b">
+            <div 
+              class="rounded-lg m-2 my-6 p-8 bg-green-500 hover:bg-green-600 cursor-pointer"
+              @click="toShowPaymentModal()"
+            >
+              Mark Invoice as Paid
+            </div>
+          </div>
+          <div class="p-4">
+            <div 
+              class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
+              @click="confirm = true"
+            >
+              Mark Invoice as Invalid
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div v-if="paymentModal === true && modalPaidUnpaid === false">
+            <div class="justify-center">
+              <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
+            </div>
+            <div class="flex flex-row mb-4">
+              <AppButton
+                :label="'Confirm'"
+                :background="'green'"
+                class="text-white mr-2"
+                :disabled="paidAt ? false : true"
+                @click="confirm = true"
+              />
+              <AppButton
+                :label="'Cancel'"
+                :background="'red'"
+                class="text-white mr-2"
+                @click="cancelPaymentModal()"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </transition>
 
@@ -185,18 +277,28 @@ export default {
           slotName:"due_date",
           class:"text-center",
         },
+        {
+          name: "Payment Status",
+          dataIndex: "",
+          slot: true,
+          slotName: "payment_status",
+					class: "text-center localDate"
+        },
 				{
-					name: "Paid",
+					name: "Actions",
 					dataIndex: "paid_at",
 					slotName: "paid_at",
 					class: "text-center localDate"
 				}
-			],
+      ],
+      
 			// FOR MARKING INVOICE AS PAID
 			showPaidModal: false,
-			paidAt: this.$moment().format("YYYY-MM-DD"),
+      modalPaidUnpaid: false,
+      paymentModal: false,
+			paidAt: null,
 			invoiceId: "",
-			confirm: false
+			confirm: false,
 		}
 	},
 	computed: {
@@ -286,11 +388,35 @@ export default {
 				order_by: params.order_by,
 				offset: params.offset
 			})
-		},
+    },
+
+    cancelPaymentModal () {
+      this.paymentModal = false 
+      this.modalPaidUnpaid = true
+      this.paidAt = null
+    },
+
+    toShowPaymentModal () {
+      this.modalPaidUnpaid = false
+      this.paymentModal = true
+      this.paidAt = null
+    },
+    
 		toShowPaidModal (itemId) {
 			this.showPaidModal = true
-			this.invoiceId = itemId
-		},
+      this.modalPaidUnpaid = true
+      this.invoiceId = itemId
+      this.paidAt = null
+    },
+
+    settlePayment (){
+      if(this.paidAt) {
+        this.toMarkAsPaid()
+      } else {
+        this.toMarkAsUnpaid()
+      }
+    },
+    
 		async toMarkAsPaid () {
 			await this.$axios
 				.$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/paid`, {
@@ -298,7 +424,10 @@ export default {
 				})
 				.then(() => {
 					this.confirm = false
-					this.showPaidModal = false
+          this.showPaidModal = false
+          this.paymentModal = false 
+          this.modalPaidUnpaid = false
+          this.paidAt = null
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -312,7 +441,41 @@ export default {
 						text: err.response.data.message
 					})
 				})
-		},
+    },
+
+    async toMarkAsUnpaid () {
+      await this.$axios
+        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`)
+        .then(() => {
+          this.confirm = false
+          this.showPaidModal = false
+          this.paymentModal = false 
+          this.modalPaidUnpaid =false
+          this.paidAt = null
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Successfully Marked Invoice as Unpaid"
+          })
+          this.getHubzzInvoices(this.params)
+        })
+        .catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					})
+        })
+    },
+
+    closeModals () {
+      this.showPaidModal = false
+      this.modalPaidUnpaid = false
+      this.paymentModal = false
+      this.confirm = false
+      this.paidAt = null
+    },
+
 		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
