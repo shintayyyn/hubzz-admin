@@ -56,7 +56,7 @@
       @pagechanged="pagechanged"
       @sorted="sorted"
     >
-      <template 
+      <template
         v-slot:checker="slotProps"
       >
         <input 
@@ -148,12 +148,13 @@
         </div>
       </template>
     </AppTable>
-
     <template v-else>
       <div class="m-2 w-full text-center text-white">
         There are no Invoices for HUBZZ
       </div>
     </template>
+
+    {{chosenInvoices.id}}
 
     <!--SETTLE PAYMENT MODAL -->
     <transition name="fade" mode="out-in">
@@ -254,7 +255,8 @@
             </div>
             <div v-for="(item, index) in exportedChosenInvoices"
                  :key="`item-${index}`"
-                 class="text-white">
+                 class="text-white"
+            >
               <div class="flex flex-row m-2">
                 <div class="mx-2">
                   {{ 'ID: '+ item.id }}
@@ -342,8 +344,8 @@ export default {
       
       // EXPORTING MODALS
       exportedModal: false,
-
       sageChecker: false,
+
 			// practiceInvoices: [],
 			// practiceInvoicesCount: 0,
 			practice: "",
@@ -491,7 +493,6 @@ export default {
 		}
 	},
 	methods: {
-    goToIssue () {},
     searchSubmit: debounce(function (page, order_by) {
       this.chosenInvoices = []
       this.params.invoice_number = this.search
@@ -539,6 +540,28 @@ export default {
 
 			this.$router.push({ query })
     }, 500),
+    getHubzzInvoices (params) {
+			console.log("params", params)
+      this.$store
+      .dispatch("billings/fetchHubzzInvoices", {
+        practice_id: params.practice_id ? params.practice_id : '',
+        invoice_number: params.invoice_number ? params.invoice_number : '',
+				limit: params.limit ? params.limit : '',
+				order_by: params.order_by ? params.order_by : '' ,
+        offset: params.offset ? params.offset : '',
+        countOnly: true
+      })
+      .then(() => {
+        this.$store.dispatch("billings/fetchHubzzInvoices", {
+          practice_id: params.practice_id ? params.practice_id : '',
+          invoice_number: params.invoice_number ? params.invoice_number : '',
+          limit: params.limit ? params.limit : '',
+          order_by: params.order_by ? params.order_by : '' ,
+          offset: params.offset ? params.offset : '',
+        })
+      })
+    },
+    // BULK SAGE METHODS
     showSageChecker () {
       this.sageChecker = !this.sageChecker
       const index = this.columns.findIndex(column => {
@@ -569,7 +592,6 @@ export default {
         await this.markExported()
       }
     },
-
     async markExported () {
       const invoiceIds = this.chosenInvoices.map(invoice => invoice.id)
 
@@ -579,7 +601,6 @@ export default {
       })
       await this.downloadCsv(invoiceIds)
     },
-
     downloadCsv (invoiceIds) {
       this.downloading = true
 
@@ -591,9 +612,11 @@ export default {
         },
       }).then((responses) => {
         const token = responses.data.data.token
-        console.log('token', responses)
-
         window.open(`${process.env.API_URL}/api/v1/admin/hq-invoice/bulk-sage?token=${token}`)
+        this.confirm = false
+        this.exportedModal = false
+        this.chosenInvoices = []
+
       }).catch((err) => {
         console.log('err', err)
         this.$nuxt.error(err.response ? err.response.data : err)
@@ -601,10 +624,7 @@ export default {
         this.downloading = false
         this.exportedModal = false
       })
-
-
     },
-
     viewInvoice (invoiceId) {
       this.$router.push(`/billings/hubzz-invoices/${invoiceId}`)
     },
@@ -621,28 +641,8 @@ export default {
       
       console.log('chosen invoices', this.chosenInvoices)
     },
-		getHubzzInvoices (params) {
-			console.log("params", params)
-      this.$store
-      .dispatch("billings/fetchHubzzInvoices", {
-        practice_id: params.practice_id ? params.practice_id : '',
-        invoice_number: params.invoice_number ? params.invoice_number : '',
-				limit: params.limit ? params.limit : '',
-				order_by: params.order_by ? params.order_by : '' ,
-        offset: params.offset ? params.offset : '',
-        countOnly: true
-      })
-      .then(() => {
-        this.$store.dispatch("billings/fetchHubzzInvoices", {
-          practice_id: params.practice_id ? params.practice_id : '',
-          invoice_number: params.invoice_number ? params.invoice_number : '',
-          limit: params.limit ? params.limit : '',
-          order_by: params.order_by ? params.order_by : '' ,
-          offset: params.offset ? params.offset : '',
-        })
-      })
-    },
 
+    // SETTLE PAYMENT METHODS
     cancelPaymentModal () {
       this.paymentModal = false 
       this.modalPaidUnpaid = true
