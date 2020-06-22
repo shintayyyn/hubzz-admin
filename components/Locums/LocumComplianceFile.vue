@@ -60,6 +60,15 @@
             </p>
           </div>
 
+          <div v-if="locumComplianceDocument && locumComplianceDocument.has_reference && locumComplianceDocument.reference" class="leading-tight pb-4">
+            <p class="font-bold text-base">
+              Reference
+            </p>
+            <p class="text-white">
+              {{ locumComplianceDocument.reference }}
+            </p>
+          </div>
+
           <div
             v-if="(locumComplianceDocument.type === 'Mandatory' || locumComplianceDocument.type !== 'Optional') && !locumComplianceDocument.mandatory_training"
             class="w-full"
