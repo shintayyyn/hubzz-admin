@@ -35,12 +35,22 @@
               <label :for="slotProps.item" />
             </template>
 
-            <template v-slot:status_slot="slotProps">
+            <template v-slot:invoice_status_slot="slotProps">
               <div
                 class="rounded-full text-center px-4 py-1 w-32"
                 :class="statusStyle(slotProps.item.invoice_status)"
               >
-                {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }}
+                <!-- {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }} -->
+								{{ slotProps.item.invoice_status }}
+              </div>
+            </template>
+						<template v-slot:status_slot="slotProps">
+              <div
+                class="rounded-full text-center px-4 py-1 w-32"
+                :class="statusStyle(slotProps.item.status)"
+              >
+                <!-- {{ slotProps.item.status && slotProps.item.status === "Invoiced" ? "Approved" : slotProps.item.status }} -->
+								{{ slotProps.item.status }}
               </div>
             </template>
             <template v-slot:actions="slotProps">
@@ -61,7 +71,7 @@
           />
           <div class="text-white">
             <div>
-              Chosen Approved Invoices Count: {{ chosenJobParts.length }}
+              Chosen Job Parts / Invoices Count: {{ chosenJobParts.length }}
             </div>
           </div>
         </template>
@@ -87,7 +97,7 @@ export default {
 		AppButton,
 		AppTable
 	},
-	props: ["filter", "showDisputed"],
+	props: ["filter", "showDisputed", "showCompleted"],
 	data () {
 		return {
 			// jobPartCount: 0,
@@ -143,17 +153,18 @@ export default {
 					class: "text-center",
 					sortable: true
 				},
-				// {
-				// 	name: "£ Amount",
-				// 	dataIndex: "total_amount",
-				//   class: "text-center",
-				//   slotName: "status_slot",
-				// 	sortable: true
-				// },
+				{
+					name: "Invoice Status",
+					slot: true,
+					dataIndex: "invoice_status",
+					class: "text-center",
+					slotName: "invoice_status_slot",
+					sortable: true
+				},
 				{
 					name: "Status",
 					slot: true,
-					dataIndex: "invoice_status",
+					dataIndex: "status",
 					class: "text-center",
 					slotName: "status_slot",
 					sortable: true
@@ -189,8 +200,8 @@ export default {
 		console.log("params", params)
 		if (this.showDisputed) {
 			params = {
-				practice_billable_date_start: this.filter.approved_at_date_start,
-				practice_billable_date_end: this.filter.approved_at_date_end,
+				completed_at_date_start: this.filter.approved_at_date_start,
+				completed_at_date_end: this.filter.approved_at_date_end,
         invoice_status: ["Disputed", "Invoiced"],
         practice_invoiceable: true,
         practice_invoiced: false,
@@ -202,7 +213,38 @@ export default {
       
       this.params = params
 			console.log("disputed params", params)
-    }
+		} else if (this.showCompleted) {
+			params = {
+				completed_at_date_start: this.filter.approved_at_date_start,
+				completed_at_date_end: this.filter.approved_at_date_end,
+				invoice_status: ["Invoiced"],
+				status: ["Approved","Completed"],
+        practice_invoiced: false,
+				job_practice_id: this.filter.job_practice_id,
+				limit,
+				offset,
+				order_by,
+      }
+      
+      this.params = params
+			console.log("completed params", params)
+    } else if (this.showDisputed && this.showCompleted) {
+			params = {
+				completed_at_date_start: this.filter.approved_at_date_start,
+				completed_at_date_end: this.filter.approved_at_date_end,
+				invoice_status: ["Disputed", "Invoiced"],
+				status: ["Completed"],
+        practice_invoiceable: true,
+        practice_invoiced: false,
+				job_practice_id: this.filter.job_practice_id,
+				limit,
+				offset,
+				order_by,
+      }
+      
+      this.params = params
+			console.log("disputed params", params)
+		}
     
     let jobPartCount,jobParts = ""
     
@@ -328,6 +370,10 @@ export default {
           return "bg-blue-500 text-white"
 				case "To Be Invoiced":
 					return "bg-indigo-600 text-white"
+				case "Completed":
+					return "bg-green-600 text-white"
+				case "Approved":
+					return "bg-blue-600 text-white"
 				default:
 					return
 			}

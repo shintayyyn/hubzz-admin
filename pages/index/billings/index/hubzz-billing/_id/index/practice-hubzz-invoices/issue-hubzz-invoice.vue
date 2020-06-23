@@ -39,6 +39,8 @@
             <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
               <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
               <label for="disputed">Show Disputed Invoices</label>
+              <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+              <label for="completed">Show Completed Invoices</label>
             </div>
           </div>
         </div>
@@ -70,6 +72,7 @@
         <ChooseJobParts
           :filter="toFilter"
           :showDisputed="showDisputed"
+          :showCompleted="showCompleted"
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"
         />
@@ -99,7 +102,8 @@ export default {
 		return {
 			loading: false,
 			chooseJobPartsModal: false,
-			showDisputed: false,
+      showDisputed: false,
+      showCompleted: false,
 			approvedAtDateStart: "",
       approvedAtDateEnd: "",
 			toFilter: {
@@ -152,8 +156,16 @@ export default {
 			this.toFilter.status = ""
 			this.toFilter.invoice_status = ["Disputed", "Invoiced"]
 			this.toFilter.locum_invoiceable = null
-		} else {
-			this.toFilter.status = "Approved"
+    } else if (this.showCompleted) {
+      this.toFilter.status = ["Completed"]
+			this.toFilter.locum_invoiceable = null
+    } else if (this.showDisputed && this.showCompleted) {
+      this.toFilter.status = ["Completed", "Approved"]
+      this.toFilter.invoice_status = ["Disputed", "Invoiced"]
+      this.toFilter.invoice_status = null
+			this.toFilter.locum_invoiceable = null
+    } else {
+			this.toFilter.status = ["Approved"]
 			this.toFilter.invoice_status = null
 			this.toFilter.locum_invoiceable = true
 		}
