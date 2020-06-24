@@ -34,6 +34,10 @@
             :icon="'add-rectangle'"
             @click="processBulkBilling()"
           />
+          <div class="text-white">
+            <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+            <label for="completed">Include Completed Invoices</label>
+          </div>
         </div>
         <div
           v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount > 0" 
@@ -182,7 +186,7 @@
             </div>
             <AppTable
               :nestedItem="item"
-              :total="item.practice_invoiceable_approved_job_part_count"
+              :total="item.job_parts_for_invoicing.length"
               :items="item.practice_invoiceable_approved_filtered_job_parts_sliced"
               :currentPage="item.current_page"
               :perPage="10"
@@ -201,13 +205,20 @@
                 >
                 <label :for="slotProps.item" />
               </template>
-
+              <template v-slot:invoice_status_slot="slotProps">
+                <div
+                  class="rounded-full text-center px-4 py-1 w-32"
+                  :class="invoiceStatusStyle(slotProps.item.invoice_status)"
+                >
+                  {{ slotProps.item.invoice_status }}
+                </div>
+              </template>
               <template v-slot:status_slot="slotProps">
                 <div
                   class="rounded-full text-center px-4 py-1 w-32"
-                  :class="statusStyle(slotProps.item.invoice_status)"
+                  :class="invoiceStatusStyle(slotProps.item.status)"
                 >
-                  {{ slotProps.item.invoice_status && slotProps.item.invoice_status === "Invoiced" ? "Approved" : slotProps.item.invoice_status }}
+                  {{ slotProps.item.status }}
                 </div>
               </template>
             </AppTable>
@@ -304,6 +315,7 @@ export default {
       dueDate: '',
 
       // for bulk billing processing
+      showCompleted: false,
       invoiceableDateStart: "",
       invoiceableDateEnd: "",
       chosenPracticeJobParts: [],
@@ -407,7 +419,23 @@ export default {
           dataIndex: "total",
 					class: "text-center currency",
 					sortable: false
-				},
+        },
+        // {
+				// 	name: "Invoice Status",
+				// 	slot: true,
+				// 	dataIndex: "invoice_status",
+				// 	class: "text-center",
+				// 	slotName: "invoice_status_slot",
+				// 	sortable: true
+				// },
+        {
+					name: "Status",
+					slot: true,
+					dataIndex: "status",
+					class: "text-center",
+					slotName: "status_slot",
+					sortable: true
+        },
 			]
 		}
   },
@@ -512,30 +540,37 @@ export default {
         this.chosenPracticesFinalization =  this.chosenPractices
       ]).then(() => { 
         this.chosenPracticesFinalization = this.chosenPracticesFinalization.map( practice => {
-           practice.practice_invoiceable_approved_filtered_job_parts.map(jobPart => {
-            return{
-              ...jobPart,
-              date_time_start: `${this.$moment(jobPart.date_start, "YYYY-MM-DD").utc()
-                .format("DD/MM/YYYY")} | ${jobPart.time_start}`,
-              date_time_end: `${this.$moment(jobPart.date_end, "YYYY-MM-DD").utc()
-                .format("DD/MM/YYYY")} | ${jobPart.time_end}`
-            }
+          // Create a new variable
+          let job_parts_for_invoicing = practice.practice_invoiceable_approved_filtered_job_parts
+          job_parts_for_invoicing.forEach(jobPart => {
+            this.chosenPracticeJobParts.push(jobPart)
           })
-           practice.practice_invoiceable_approved_filtered_job_parts.forEach(jobPart => {
+          if (this.showCompleted) {
+            const completed_job_parts_for_invoicing = practice.practice_invoiceable_invoiced_filtered_job_parts
+            completed_job_parts_for_invoicing.forEach(jobPart => {
               this.chosenPracticeJobParts.push(jobPart)
             })
-          const practice_invoiceable_approved_filtered_job_parts_sliced =  practice.practice_invoiceable_approved_filtered_job_parts.slice(
+            job_parts_for_invoicing = [
+              ...job_parts_for_invoicing,
+              ...completed_job_parts_for_invoicing,
+            ]
+          } 
+          const practice_invoiceable_approved_filtered_job_parts_sliced = job_parts_for_invoicing.slice(
             (1 - 1)*this.practicesFilteredJobPartsPerPage,
             1 * this.practicesFilteredJobPartsPerPage
           )
+          
+          console.log('sliced',practice_invoiceable_approved_filtered_job_parts_sliced )
           return {
             ...practice,
+            job_parts_for_invoicing,
             practice_invoiceable_approved_filtered_job_parts_sliced,
             current_page: 1,
           }
         })
       }).finally(() => {
         console.log('processed', this.chosenPracticesFinalization)
+        console.log('chosen practice job parts', this.chosenPracticeJobParts)
         this.showSessionsModal = true
       })
     },
@@ -833,11 +868,11 @@ export default {
     },
 
     async pageChangedJobPart (page, practiceItem) {
-      const originalPractice = this.chosenPractices.find(item => item.id === practiceItem.id)
+      const originalPractice = this.chosenPracticesFinalization.find(item => item.id === practiceItem.id)
       Promise.all([
         practiceItem.current_page = page,
         practiceItem.practice_invoiceable_approved_filtered_job_parts_sliced = 
-          originalPractice.practice_invoiceable_approved_filtered_job_parts.slice(
+          originalPractice.job_parts_for_invoicing.slice(
             (page - 1)*this.practicesFilteredJobPartsPerPage,
             page * this.practicesFilteredJobPartsPerPage
           ),
@@ -876,6 +911,25 @@ export default {
       console.log('order_by', order_by)
 			this.practiceParams.order_by = order_by
 			this.getPracticesForBulk()
+    },
+
+    invoiceStatusStyle (status) {
+			switch (status) {
+				case "Disputed":
+					return "bg-red-500 text-white "
+				case "Invoiced":
+          return "bg-blue-500 text-white"
+				case "To Be Invoiced":
+					return "bg-indigo-600 text-white"
+				case "Completed":
+					return "bg-green-600 text-white"
+				case "Approved":
+          return "bg-blue-600 text-white"
+        case "Cancelled":
+					return "bg-red-600 text-white"
+				default:
+					return
+			}
 		}
 	}
 }
