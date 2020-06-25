@@ -108,10 +108,10 @@ export default {
       approvedAtDateEnd: "",
 			toFilter: {
 				job_practice_id: this.$route.params.id,
-				approved_at_date_start: null,
-				approved_at_date_end: null,
-				status: null,
-				invoice_status: null,
+				practice_billable_date_start: null,
+				practice_billable_date_end: null,
+				status: ['Approved'],
+				invoice_status: ['Invoiced'],
 				locum_invoiceable: null,
 				practice_invoiced: false
 			},
@@ -129,10 +129,10 @@ export default {
       if (value > this.approvedAtDateEnd) { 
         this.approvedAtDateEnd = ""
       }
-      this.toFilter.approved_at_date_start = value
+      this.toFilter.practice_billable_date_start = value
     },
     approvedAtDateEnd: function (value) {
-      this.toFilter.approved_at_date_end = value
+      this.toFilter.practice_billable_date_end = value
       console.log('value datend', value)
     }
   },
@@ -152,23 +152,23 @@ export default {
 	},
 
 	created () {
-		if (this.showDisputed) {
-			this.toFilter.status = ""
-			this.toFilter.invoice_status = ["Disputed", "Invoiced"]
-			this.toFilter.locum_invoiceable = null
-    } else if (this.showCompleted) {
-      this.toFilter.status = ["Completed"]
-			this.toFilter.locum_invoiceable = null
-    } else if (this.showDisputed && this.showCompleted) {
-      this.toFilter.status = ["Completed", "Approved"]
-      this.toFilter.invoice_status = ["Disputed", "Invoiced"]
-      this.toFilter.invoice_status = null
-			this.toFilter.locum_invoiceable = null
-    } else {
-			this.toFilter.status = ["Approved"]
-			this.toFilter.invoice_status = null
-			this.toFilter.locum_invoiceable = true
-		}
+		// if (this.showDisputed) {
+		// 	this.toFilter.status = ""
+		// 	this.toFilter.invoice_status = ["Disputed", "Invoiced"]
+		// 	this.toFilter.locum_invoiceable = null
+    // } else if (this.showCompleted) {
+    //   this.toFilter.status = ["Completed"]
+		// 	this.toFilter.locum_invoiceable = null
+    // } else if (this.showDisputed && this.showCompleted) {
+    //   this.toFilter.status = ["Completed", "Approved"]
+    //   this.toFilter.invoice_status = ["Disputed", "Invoiced"]
+    //   this.toFilter.invoice_status = null
+		// 	this.toFilter.locum_invoiceable = null
+    // } else {
+		// 	this.toFilter.status = ["Approved"]
+		// 	this.toFilter.invoice_status = null
+		// 	this.toFilter.locum_invoiceable = true
+		// }
 	},
 	methods: {
 		scrollToTop () {

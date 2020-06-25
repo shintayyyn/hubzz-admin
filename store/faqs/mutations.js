@@ -23,7 +23,6 @@ export default {
   },
 
   ADD_FAQ(state, payload) {
-    console.log('payload', payload)
     if (payload[0].domain === 'Locum') {
       console.table('locumfaqs', state.locumFaqs)
       state.locumFaqs.push(payload[0])

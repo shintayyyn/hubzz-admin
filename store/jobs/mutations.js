@@ -291,7 +291,6 @@ export default {
     },
     //==================CANCELLED=====================
     SET_LOCUM_CANCELLED_JOBS(state, payload) {
-        console.log('payload', payload)
         state.locum_cancelled_jobs = payload
     },
     SET_LOCUM_CANCELLED_JOBS_COUNT(state, payload) {

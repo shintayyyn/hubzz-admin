@@ -200,9 +200,10 @@ export default {
 		console.log("params", params)
 		if (this.showDisputed) {
 			params = {
-				completed_at_date_start: this.filter.approved_at_date_start,
-				completed_at_date_end: this.filter.approved_at_date_end,
-        invoice_status: ["Disputed", "Invoiced"],
+				completed_at_date_start: this.filter.practice_billable_date_start,
+				completed_at_date_end: this.filter.practice_billable_date_end,
+				invoice_status: ["Disputed", "Invoiced"],
+				status: null,
         practice_invoiceable: true,
         practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
@@ -211,14 +212,17 @@ export default {
 				order_by,
       }
       
-      this.params = params
+      this.params = await params
 			console.log("disputed params", params)
 		} else if (this.showCompleted) {
 			params = {
-				completed_at_date_start: this.filter.approved_at_date_start,
-				completed_at_date_end: this.filter.approved_at_date_end,
+				// practice_billable_date_start: this.filter.practice_billable_date_start,
+				// practice_billable_date_end: this.filter.practice_billable_date_end,
+				completed_at_date_start: this.filter.practice_billable_date_start,
+				completed_at_date_end: this.filter.practice_billable_date_end,
 				invoice_status: ["Invoiced"],
 				status: ["Approved","Completed"],
+				practice_invoiceable: true,
         practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
 				limit,
@@ -226,12 +230,12 @@ export default {
 				order_by,
       }
       
-      this.params = params
+      this.params = await params
 			console.log("completed params", params)
     } else if (this.showDisputed && this.showCompleted) {
 			params = {
-				completed_at_date_start: this.filter.approved_at_date_start,
-				completed_at_date_end: this.filter.approved_at_date_end,
+				completed_at_date_start: this.filter.practice_billable_date_start,
+				completed_at_date_end: this.filter.practice_billable_date_end,
 				invoice_status: ["Disputed", "Invoiced"],
 				status: ["Completed"],
         practice_invoiceable: true,
@@ -242,41 +246,44 @@ export default {
 				order_by,
       }
       
-      this.params = params
+      this.params = await params
 			console.log("disputed params", params)
 		}
-    
-    let jobPartCount,jobParts = ""
-    
-		await this.$axios
-			.$get(`/api/v1/admin/job-parts/count`, { params })
-			.then(res => {
-				jobPartCount = res.data.count
-      })
-    
-    console.log('job part count', jobPartCount)
 
-		await this.$store.commit(
-			"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
-			jobPartCount
-		)
+		await this.getJobParts()
+    
+		// let jobPartCount = 0
+		// let jobParts = ""
+    
+		// await this.$axios
+		// 	.$get(`/api/v1/admin/job-parts/count`, { params })
+		// 	.then(res => {
+		// 		jobPartCount = res.data.count
+    //   })
+    
+    // console.log('job part count', jobPartCount)
 
-		await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
-			console.log("res", res)
-      jobParts = res.data.job_parts.map(item => {
-        return {
-          ...item,
-          isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
-          tag_status: item.terminated ? "Terminated" : item.status,
-          date_time_start: `${this.$moment(item.date_start)
-            .format("DD/MM/YYYY")} | ${item.time_start}`,
-          date_time_end: `${this.$moment(item.date_end)
-            .format("DD/MM/YYYY")} | ${item.time_end}`
-        }
-      })
-		})
-    console.log('job parts',jobParts)
-		await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
+		// await this.$store.commit(
+		// 	"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
+		// 	jobPartCount
+		// )
+
+		// await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
+		// 	console.log("res", res)
+    //   jobParts = res.data.job_parts.map(item => {
+    //     return {
+    //       ...item,
+    //       isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
+    //       tag_status: item.terminated ? "Terminated" : item.status,
+    //       date_time_start: `${this.$moment(item.date_start)
+    //         .format("DD/MM/YYYY")} | ${item.time_start}`,
+    //       date_time_end: `${this.$moment(item.date_end)
+    //         .format("DD/MM/YYYY")} | ${item.time_end}`
+    //     }
+    //   })
+		// })
+    // console.log('job parts',jobParts)
+		// await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
 
 		await this.$store.commit("jobs/TOGGLE_LOADING", false)
 	},
@@ -320,24 +327,24 @@ export default {
       this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`)
     },
     
-		getJobParts (params) {
-      console.log('get job parts params', params)
-      // console.log('params being used', {
-			// 	...this.params,
-			// 	limit: this.params.limit,
-			// 	search: this.search,
-			// 	order_by: this.params.order_by,
-			// 	offset: params.offset,
-			// 	forBilling: true
-			// })
+		getJobParts () {
+      console.log('get job parts params', this.params)
 			this.$store.dispatch("jobs/fetchJobParts", {
-				...params,
-				limit: this.params.limit,
-				search: this.search,
+				...this.params,
 				order_by: this.params.order_by,
-				offset: params.offset,
-				forBilling: true
+				offset: this.params.offset,
+				forBilling: true,
+				countOnly: true,
+			}).then(()=> {
+				this.$store.dispatch("jobs/fetchJobParts", {
+					...this.params,
+					limit: this.params.limit,
+					order_by: this.params.order_by,
+					offset: this.params.offset,
+					forBilling: true
+				})
 			})
+			
 		},
 
 		pagechanged (page) {
@@ -347,7 +354,7 @@ export default {
 			// }
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
-			this.getJobParts(this.params)
+			this.getJobParts()
 		},
 
 		sorted (order_by) {

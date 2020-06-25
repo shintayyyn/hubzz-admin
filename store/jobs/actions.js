@@ -288,7 +288,6 @@ export default{
     },
 
     async fetchJobParts({ commit }, payload) {
-
       console.log('payload', payload)
       commit('TOGGLE_LOADING', true)
       const response = await jobsApi.fetchJobParts(this.$axios, payload)
@@ -300,6 +299,7 @@ export default{
       // withdrawn
       if (payload.forBilling === true) {
         if(payload.countOnly) {
+          console.log('job parts billing count', response.data.count)
           commit('SET_HUBZZ_BILLING_SESSIONS_COUNT', response.data.count)
         }
         if(!payload.countOnly) {
@@ -314,6 +314,7 @@ export default{
                 .format("DD-MM-YYYY")} | ${item.time_end}`
             }
           })
+          console.log('job parts billing', response.data.job_parts)
           commit('SET_HUBZZ_BILLING_SESSIONS', response.data.job_parts)
         }
       }
