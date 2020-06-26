@@ -109,7 +109,7 @@ export default {
 				...this.filter,
 				limit: 10,
 				offset: 0,
-				order_by: ["date_end:asc"]
+				order_by: ["id:asc"]
 			},
 			loading: false,
 			columns: [
@@ -189,7 +189,7 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: ["date_end:asc"]
+				: ["id:asc"]
 		let params = {
 			...this.filter,
 			limit,
@@ -200,13 +200,10 @@ export default {
 		console.log("params", params)
 		if (this.showDisputed) {
 			params = {
-				completed_at_date_start: this.filter.practice_billable_date_start,
-				completed_at_date_end: this.filter.practice_billable_date_end,
-				invoice_status: ["Disputed", "Invoiced"],
-				status: null,
-        practice_invoiceable: true,
-        practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
+				practice_billable_date_start: this.filter.practice_billable_date_start,
+				practice_billable_date_end: this.filter.practice_billable_date_end,
+				practice_invoiceable_status: ["Approved", "Disputed"],
 				limit,
 				offset,
 				order_by,
@@ -216,15 +213,10 @@ export default {
 			console.log("disputed params", params)
 		} else if (this.showCompleted) {
 			params = {
-				// practice_billable_date_start: this.filter.practice_billable_date_start,
-				// practice_billable_date_end: this.filter.practice_billable_date_end,
-				completed_at_date_start: this.filter.practice_billable_date_start,
-				completed_at_date_end: this.filter.practice_billable_date_end,
-				invoice_status: ["Invoiced"],
-				status: ["Approved","Completed"],
-				practice_invoiceable: true,
-        practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
+				practice_billable_date_start: this.filter.practice_billable_date_start,
+				practice_billable_date_end: this.filter.practice_billable_date_end,
+				practice_invoiceable_status: ["Approved", "Disputed","Invoiced"],
 				limit,
 				offset,
 				order_by,
@@ -234,20 +226,17 @@ export default {
 			console.log("completed params", params)
     } else if (this.showDisputed && this.showCompleted) {
 			params = {
-				completed_at_date_start: this.filter.practice_billable_date_start,
-				completed_at_date_end: this.filter.practice_billable_date_end,
-				invoice_status: ["Disputed", "Invoiced"],
-				status: ["Completed"],
-        practice_invoiceable: true,
-        practice_invoiced: false,
 				job_practice_id: this.filter.job_practice_id,
+				practice_billable_date_start: this.filter.practice_billable_date_start,
+				practice_billable_date_end: this.filter.practice_billable_date_end,
+				practice_invoiceable_status: ["Approved", "Invoiced"],
 				limit,
 				offset,
 				order_by,
       }
       
       this.params = await params
-			console.log("disputed params", params)
+			console.log("completed disputed params", params)
 		}
 
 		await this.getJobParts()
@@ -285,7 +274,7 @@ export default {
     // console.log('job parts',jobParts)
 		// await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
 
-		await this.$store.commit("jobs/TOGGLE_LOADING", false)
+		// await this.$store.commit("jobs/TOGGLE_LOADING", false)
 	},
 	computed: {
 		loadingSessions () {

@@ -1,4 +1,4 @@
-export function fetchPracticeSessions(axios, payload){
+export function fetchPracticeSessions (axios, payload){
   let params = {}
   payload.jobId ? params.id = payload.jobId : null
   payload.viewing_practice_id ? params.viewing_practice_id = payload.viewing_practice_id : null
@@ -12,7 +12,7 @@ export function fetchPracticeSessions(axios, payload){
   return axios.$get(`/api/v1/admin/jobs${payload.countOnly ? '/count': ''}`, {params: params})
 }
 
-export function fetchLocumJobs(axios, payload){
+export function fetchLocumJobs (axios, payload){
   let params = {}
   payload.jobId ? params.id = payload.jobId : null
   payload.viewing_locum_user_id ? params.viewing_locum_user_id = payload.viewing_locum_user_id : null
@@ -25,7 +25,7 @@ export function fetchLocumJobs(axios, payload){
   return axios.$get(`/api/v1/admin/jobs${payload.countOnly ? '/count':''}`,{params: params})
 }
 
-export function fetchJobParts(axios, payload){
+export function fetchJobParts (axios, payload){
   let params = {}
   payload.jobPartId ? params.id = payload.jobPartId : null
   payload.status ? params.status = payload.status : null
@@ -41,12 +41,11 @@ export function fetchJobParts(axios, payload){
   payload.practice_billable_date_start ? params.practice_billable_date_start = payload.practice_billable_date_start : null
   payload.practice_billable_date_end ? params.practice_billable_date_end = payload.practice_billable_date_end : null
   payload.job_practice_id ? params.job_practice_id = payload.job_practice_id : null
-  payload.locum_invoiceable ? params.locum_invoiceable = payload.locum_invoiceable : null
-  payload.practice_invoiced ? params.practice_invoiced = payload.practice_invoiced : null
+  payload.practice_invoiceable_status ? params.practice_invoiceable_status = payload.practice_invoiceable_status : null
   return axios.$get(`/api/v1/admin/job-parts${payload.countOnly ? '/count' : ''}`,{params:params})
 }
 
-export function fetchSpecificJob(axios, payload){
+export function fetchSpecificJob (axios, payload){
     let params = {}
     params.detailed = false
     
@@ -59,7 +58,7 @@ export function fetchSpecificJob(axios, payload){
     return axios.$get(`/api/v1/admin/jobs/${payload.jobId}`,{ params })
 }
 
-export function fetchSpecificJobPart(axios, payload){
+export function fetchSpecificJobPart (axios, payload){
   let params = {}
   params.detailed = false 
 

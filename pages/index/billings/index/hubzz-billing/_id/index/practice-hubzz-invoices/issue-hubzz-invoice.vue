@@ -110,10 +110,7 @@ export default {
 				job_practice_id: this.$route.params.id,
 				practice_billable_date_start: null,
 				practice_billable_date_end: null,
-				status: ['Approved'],
-				invoice_status: ['Invoiced'],
-				locum_invoiceable: null,
-				practice_invoiced: false
+				practice_invoiceable_status: 'Approved',
 			},
 
 			practice: "",
