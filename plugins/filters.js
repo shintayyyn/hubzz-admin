@@ -9,12 +9,14 @@ Vue.filter('localDate', function (date, dateOnly) {
     return `${moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY')} | ${moment(date).utc().format('HH:mm:ss')}`
   }
 })
+
 Vue.filter('currency', function (number) {
   if (number) {
-    return number.toFixed(2)
+    return Number.parseFloat(number).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
   }
   return '0.00'
 })
+
 
 Vue.filter('StringMaxLength', function (str, numLength) {
   if (str) {

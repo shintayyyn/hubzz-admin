@@ -1,12 +1,16 @@
 <template>
-  <div class="locum-invoice-modal p-4 md:p-8 shadow-lg">
+  <div class="locum-invoice-modal p-4 md:p-8 shadow-lg ">
     <div class="flex items-center text-sm text-white py-2">
       <div class="text-white hover:text-sunglow p-1 cursor-pointer" @click="goBack()">
         <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
       </div>
     </div>
     <div>
-      <HubzzInvoice
+			<PracticeBillingInvoiceForm
+				:propInvoice="locumInvoice"
+				:practice="practice"
+			/>
+      <!-- <HubzzInvoice
         :forViewing="true"
         :practice="practice"
         :invoiceItems="invoiceItems"
@@ -14,15 +18,15 @@
         :dateEnd="locumInvoice.date_end"
         :locumInvoice="locumInvoice"
         :byLocum="true"
-      />
+      /> -->
     </div>
   </div>
 </template>
 <script>
-import HubzzInvoice from "@/components/Billings/HubzzInvoice"
+import PracticeBillingInvoiceForm from "@/components/Billings/PracticeBillingInvoiceForm"
 export default {
 	components: {
-		HubzzInvoice
+		PracticeBillingInvoiceForm
 	},
 	data () {
 		return {

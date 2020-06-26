@@ -110,7 +110,7 @@ export default {
 				...this.$route.query
 			}
 			this.$router.push({
-				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`,
+				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`,
 				query
 			})
 		}
