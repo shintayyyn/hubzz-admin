@@ -327,6 +327,7 @@ export default {
 			params: {
         practice_id: "",
         invoice_number: "",
+        exportable: true,
 				limit: 10,
 				offset: 0,
 				order_by: ["date_created:desc"]
@@ -394,7 +395,7 @@ export default {
           dataIndex: "",
           slot: true,
           slotName: "payment_status",
-					class: "text-center localDate"
+					class: "text-center"
         },
         {
           name: "Exported",
@@ -444,11 +445,13 @@ export default {
       } = route.query
 
 			const limit = 10
-			const offset = page * limit - limit
+      const offset = page * limit - limit
+      const exportable = true
 			let params = {
 				limit,
 				offset,
-				order_by
+        order_by,
+        exportable,
 			}
 
 			let response = await app.$axios.$get(
@@ -544,6 +547,7 @@ export default {
 			console.log("params", params)
       this.$store
       .dispatch("billings/fetchHubzzInvoices", {
+        exportable: params.exportable ? params.exportable : '',
         practice_id: params.practice_id ? params.practice_id : '',
         invoice_number: params.invoice_number ? params.invoice_number : '',
 				limit: params.limit ? params.limit : '',
@@ -553,6 +557,7 @@ export default {
       })
       .then(() => {
         this.$store.dispatch("billings/fetchHubzzInvoices", {
+          exportable: params.exportable ? params.exportable : '',
           practice_id: params.practice_id ? params.practice_id : '',
           invoice_number: params.invoice_number ? params.invoice_number : '',
           limit: params.limit ? params.limit : '',

@@ -98,7 +98,7 @@
         @page="setPage" 
       />
 
-      <!-- <div
+      <div
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -111,7 +111,7 @@
             <span>Download CSV</span>
           </button>
         </div>
-      </div> -->
+      </div>
 
       <div v-if="false" class="text-white"> 
         <span>Count: {{ count }}</span>
