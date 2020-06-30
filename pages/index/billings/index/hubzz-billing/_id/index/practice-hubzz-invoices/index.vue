@@ -260,8 +260,8 @@ export default {
 				},
 				{
 					name: "Issued At",
-					dataIndex: "date_created",
-					class: "text-center localDate",
+					dataIndex: "date_created_formatted",
+					class: "text-center",
 					sortable: "true"
 				},
 				{

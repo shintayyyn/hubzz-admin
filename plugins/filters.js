@@ -2,11 +2,15 @@ import Vue from 'vue'
 import moment from 'moment'
 
 Vue.filter('localDate', function (date, dateOnly) {
+  const formattedDate = moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY')
+
   if (dateOnly) {
-    return `${moment(date).format('L')}`
+    return formattedDate
   }
+  
   if (date) {
-    return `${moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY')} | ${moment(date).utc().format('HH:mm:ss')}`
+    const formattedTime = moment(date, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('HH:mm')
+    return `${formattedDate} | ${formattedTime}`
   }
 })
 
