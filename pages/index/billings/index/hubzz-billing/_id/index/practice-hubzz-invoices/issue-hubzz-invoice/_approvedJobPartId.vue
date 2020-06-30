@@ -28,7 +28,7 @@
           :isNuxtChild="true"
           :isInvoice="true" 
         />
-        <transition name="slide" mode="out-in">
+        <!-- <transition name="slide" mode="out-in">
           <div v-if="showInvoice" class="invoice-modal">
             <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showInvoice = false">
               <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
@@ -45,7 +45,7 @@
               />
             </div>
           </div>
-        </transition>
+        </transition> -->
       </div>
       <div v-if="showInvoice" class="billing-shield" @click="showInvoice = false" />
     </div>
@@ -76,34 +76,12 @@ export default {
     const approvedJobPart = response.data.job_part
     console.log('approvedjobpart', approvedJobPart)
     response = await app.$axios.$get(
-      `/api/v1/admin/practices/${route.params.id}/locum-invoices/${approvedJobPart.locum_invoice_item_id}`
-    )
-    const locumInvoice = response.data.locum_invoice
-    console.log('locum invoice', locumInvoice)
-
-    response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
       )
     const practice = response.data.practice
-
-    let invoiceItems = []
-    const locumInvoiceItems = locumInvoice.items
-    console.log("items", locumInvoiceItems)
-    for (let i = 0; i < locumInvoiceItems.length; i++) {
-      const newItem = {
-        job_part_id: locumInvoiceItems[i].id,
-        description: locumInvoiceItems[i].description,
-        total: locumInvoiceItems[i].total
-      }
-      newItem.id = invoiceItems.length + 1
-      invoiceItems.push(newItem)
-    }
-    
     return {
       approvedJobPart,
-      locumInvoice,
       practice,
-      invoiceItems
     }
   }
 }
