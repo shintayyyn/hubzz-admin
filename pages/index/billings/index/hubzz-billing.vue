@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="px-2 flex justify-start items-center flex-wrap">
+    <div class="px-2 flex justify-end items-center flex-wrap">
       <AppButton
         class="mr-2"
         :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
