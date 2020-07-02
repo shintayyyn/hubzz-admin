@@ -11,9 +11,9 @@
 
       <transition name="drop" mode="out-in">
         <AppConfirm
-          v-if="changeEmailRequestToRejectId"
+          v-if="changeEmailRequestToRejectId || changeEmailRequestToRejectUserId"
           :message="'Are you sure you want to reject this change email request?'"
-          @cancel="changeEmailRequestToRejectId = null"
+          @cancel="changeEmailRequestToRejectId = null, changeEmailRequestToRejectUserId = null"
           @confirm="rejectChangeEmailRequest"
         />
       </transition>
@@ -81,7 +81,7 @@
               <p class="m-2">
                 Rejected At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.rejected_at_formatted ? changeEmailRequest.rejected_at_formatted : 'N/A' }}</span>
               </p>
-              <div v-if="changeEmailRequest && changeEmailRequest.status === 'Pending'" class="m-2">
+              <div v-if="false && changeEmailRequest && changeEmailRequest.status === 'Pending'" class="m-2">
                 <span>Action</span>
                 <button
                   v-if="changeEmailRequest"
@@ -169,6 +169,14 @@
                   Accept
                 </button>
                 <button
+                  v-if="user.change_email_request_status === 'Pending'"
+                  class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full hover:bg-red-600 focus:outline-none"
+                  :class="`${false ? '' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-600 '}`"
+                  @click.prevent="changeEmailRequestToRejectUserId = user.id"
+                >
+                  Reject
+                </button>
+                <button
                   v-if="user.change_email_request_status === 'Accepted'"
                   class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
                   :class="`${true ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : ''}`"
@@ -194,7 +202,7 @@
     </div>
 
     <nuxt-link
-      v-if="$route.name !== 'index-change-email-requests-id-index-index' || changeEmailRequestToRejectId || changeEmailRequestToAcceptUserId"
+      v-if="$route.name !== 'index-change-email-requests-id-index-index' || changeEmailRequestToRejectId || changeEmailRequestToAcceptUserId || changeEmailRequestToRejectUserId"
       class="bg-shield z-511 fixed inset-0 opacity-50"
       :to="{ name: 'index-change-email-requests-id-index-index' }"
     />
@@ -231,6 +239,7 @@
         changeEmailRequest: null,
         changeEmailRequestToRejectId: null,
         changeEmailRequestToAcceptUserId: null,
+        changeEmailRequestToRejectUserId: null,
       }
     },
 
@@ -273,6 +282,7 @@
 
         this.changeEmailRequestToRejectId = null
         this.changeEmailRequestToAcceptUserId = null
+        this.changeEmailRequestToRejectUserId = null
 
         this.$store.commit('pendingChangeEmailRequestIds', this.$store.getters['pendingChangeEmailRequestIds'].filter(id => id !== changeEmailRequest.id))
       },
@@ -304,10 +314,19 @@
       },
 
       rejectChangeEmailRequest () {
-        if (!this.changeEmailRequestToRejectId) {
+        if (this.changeEmailRequestToRejectUserId) {
+          this.loading = true
+          const url = `/api/v1/admin/change-email-requests/${this.$route.params.id}/users/${this.changeEmailRequestToRejectUserId}/reject`
+          this.$axios.put(url).then(this.responseHandler).catch(this.errorHandler).finally(() => {
+            this.loading = false
+          })
           return
         }
 
+        if (!this.changeEmailRequestToRejectId) {
+          return
+        }
+        
         this.loading = true
         const url = `/api/v1/admin/change-email-requests/${this.changeEmailRequestToRejectId}/reject`
         this.$axios.put(url).then(this.responseHandler).catch(this.errorHandler).finally(() => {
