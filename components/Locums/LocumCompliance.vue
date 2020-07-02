@@ -538,12 +538,14 @@ export default {
 
       async getCompliances (){
         try {
+          this.$emit('loadingCompliances', true)
           await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
             this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
             this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
             this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
           })
-          this.locumMandatoryTrainings = await this.user.locum_detail.mandatory_trainings
+          this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
+          this.$emit('loadingCompliances', false)
         } catch (err) {
           console.log('err', err)
           this.$store.commit('SET_NOTIFICATION',{ 
@@ -551,6 +553,7 @@ export default {
             status:'danger', 
             text:err.response.data.message
           })
+          this.$emit('loadingCompliances', false)
         }
       },
       toRejectReferenceNums (id) {
