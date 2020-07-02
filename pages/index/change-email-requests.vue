@@ -156,6 +156,7 @@
       v-if="$route.name !== 'index-change-email-requests'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
       :to="{ name: 'index-change-email-requests' }"
+      draggable="false"
     />
 
     <nuxt-child

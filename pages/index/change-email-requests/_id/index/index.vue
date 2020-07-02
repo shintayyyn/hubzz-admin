@@ -2,7 +2,7 @@
   <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
     <div class="flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-change-email-requests' }" class="text-white hover:text-sunglow p-1">
+        <nuxt-link :to="{ name: 'index-change-email-requests' }" class="text-white hover:text-sunglow p-1" draggable="false">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
@@ -205,6 +205,7 @@
       v-if="$route.name !== 'index-change-email-requests-id-index-index' || changeEmailRequestToRejectId || changeEmailRequestToAcceptUserId || changeEmailRequestToRejectUserId"
       class="bg-shield z-511 fixed inset-0 opacity-50"
       :to="{ name: 'index-change-email-requests-id-index-index' }"
+      draggable="false"
     />
 
     <nuxt-child :changeEmailRequest="changeEmailRequest" />
