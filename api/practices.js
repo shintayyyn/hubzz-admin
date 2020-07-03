@@ -4,6 +4,9 @@ export function fetchPractices (axios, payload){
   payload.type ? params.type = payload.type : null
   payload.status ? params.status = payload.status : null
   payload.order_by ? params.order_by = payload.order_by : null
+  payload.verified ? params.verified = payload.verified : null
+  payload.hub_type ? params.hub_type = payload.hub_type : null
+  payload.billable_spoke ? params.billable_spoke = payload.billable_spoke : null
   payload.practice_invoiceable_date_start ? params.practice_invoiceable_date_start = payload.practice_invoiceable_date_start : null
   payload.practice_invoiceable_date_end ? params.practice_invoiceable_date_end = payload.practice_invoiceable_date_end : null
   payload.practice_invoiceable ? params.practice_invoiceable = payload.practice_invoiceable : null

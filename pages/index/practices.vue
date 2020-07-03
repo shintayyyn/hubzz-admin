@@ -177,7 +177,7 @@ export default {
 			} else if (this.$route.name.includes("deactivated-practices")) {
 				return ["Deactivated"]
 			} else {
-				return ["Active", "Dormant"]
+				return ["Active", "Dormant", "Suspended"]
 			}
 		},
 		verified () {

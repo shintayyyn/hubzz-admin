@@ -143,12 +143,19 @@ export default {
 			const createdRoute = route.query
 			const limit = 10
 			const offset = page * limit - limit
-			const status = ["Active", "Dormant"]
+			const verified = true
+			const status = ["Active", "Dormant", "Suspended"]
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
 					: "created_at:desc"
-			const params = { limit, offset, order_by, status }
+			const params = { 
+				limit, 
+				offset, 
+				order_by, 
+				status,
+				verified 
+			}
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
 				params
 			})
@@ -242,7 +249,8 @@ export default {
 				search: this.search,
 				order_by: params.order_by,
 				offset: params.offset,
-				status: ["Active", "Dormant"]
+				verified: true,
+				status: ["Active", "Dormant", "Suspended"]
 			})
 		},
 
