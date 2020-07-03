@@ -110,7 +110,7 @@
         </div>
       </div>
     </div>
-    <div v-if="total > 0" class="bottom-0 w-full">
+    <div v-if="total > 0 && disabledPagination === false" class="bottom-0 w-full">
       <AppPagination
         :total="total"
         :total-pages="totalPages"
@@ -133,6 +133,10 @@
       AppPagination
     },
     props: {
+      disabledPagination: {
+        type: Boolean,
+        default: false
+      },
       nestedItem: {
         type: Object,
         default: null,
