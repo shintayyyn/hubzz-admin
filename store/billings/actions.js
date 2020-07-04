@@ -21,9 +21,9 @@ export default{
   },
 
   async fetchBillablePractices ({ commit }, payload) {
-    commit('TOGGLE_LOADING', true)
+    commit('TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', true)
     const response = await billingApi.fetchBillablePractices(this.$axios, payload)
-    commit('TOGGLE_LOADING', false)
+    commit('TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', false)
     if (payload.countOnly) {
       return commit('SET_BILLABLE_PRACTICES_COUNT', response.data.count)
     }

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="flex items-center px-2 py-2">
+      <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
       <div class="relative w-full">
         <div class="flex items-center w-full">
           <AppDate
@@ -24,29 +25,8 @@
             :icon="'search'"
             @click="getBillablePractices()"
           />
-          <AppButton
-            class="mx-2"
-            :disabled="practiceParams.practice_invoiceable_date_start 
-              && practiceParams.practice_invoiceable_date_end
-              && chosenPractices.length > 0  
-              ? false : true"
-            :label="'Generate HUBZZ Invoices'"
-            :icon="'add-rectangle'"
-            @click="processBulkBilling()"
-          />
-          <div class="flex flex-col">
-            <div class="text-white">
-              <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-              <label for="completed">Include Completed Invoices</label>
-            </div>
-            <div class="text-white">
-              <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-              <label for="disputed">Include Disputed Invoices</label>
-            </div>
-          </div>
         </div>
         <div
-          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount > 0" 
           class="flex text-white"
         >
           <div class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo my-2">
@@ -69,13 +49,28 @@
               <input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
               <label for="healthBoardsOnly">Show Health Boards Only</label>
             </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+              <label for="completed">Include Completed Invoices</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
+              <label for="disputed">Include Disputed Invoices</label>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TABLE NEW STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
-    <div class="w-full overflow-x-auto">
+    <div v-if="allBillablePractices.length === 0">
+      <div
+        class="mt-10 w-full text-center text-white"
+      >
+        No Billable Practices Found.
+      </div>
+    </div>
+    <div v-else class="w-full overflow-x-auto">
       <!-- BODY -->
       <div
         v-for="(item, index) in allBillablePractices"
@@ -85,12 +80,19 @@
       >
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-          <span class>{{ item.name }}</span>
-          <input 
-            :id="item" 
-            type="checkbox"
+          <div>{{ item.name }}</div>
+          <div
+            class="rounded-full text-center px-4 py-1 w-32" 
+            :class="typeStyle(item.type)"
           >
-          <label for="chosenPractices">Select All</label>
+            {{ item.type }}
+          </div>
+          <div 
+            v-if="item.type === 'Spoke'"
+            class="text-blue-200"
+          >
+            {{ item.parent_practice.name }} (HUB)
+          </div>
         </div>
         <div
           class="flex flex-col md:justify-center sm:w-1/2 md:w-5/6 px-1 xl:px-2 py-2 align-middle md:text-center"
@@ -137,8 +139,35 @@
         </div>
       </div>
     </div>
+    <div>
+      <AppPagination
+        :total="total"
+        :totalPages="totalPages"
+        :currentPage="currentPage"
+        :perPage="20"
+        @pagechanged="pagechanged"
+      />
+    </div>
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TABLE NEW ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
+    <div class="flex flex-row justify-end">
+      <AppButton
+        class="mx-2"
+        :disabled="practiceParams.practice_invoiceable_date_start 
+          && practiceParams.practice_invoiceable_date_end
+          && chosenPractices.length > 0  
+          ? false : true"
+        :label="'Generate HUBZZ Invoices'"
+        :icon="'add-rectangle'"
+        @click="processBulkBilling()"
+      />
+      <AppButton
+        class="mx-2"
+        :label="'Clear Selection'"
+        :icon="'add-rectangle'"
+        @click="reset()"
+      />
+    </div>
+    
     <div
       v-if="
         $route.name.includes('index-billings-id') ||
@@ -160,13 +189,15 @@ import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
-// import AppPagination from "@/components/Base/AppPagination"
+import AppLoading from "@/components/Base/AppLoading"
+import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		AppTable,
     AppDate,
     AppButton,
-    // AppPagination,
+    AppLoading,
+    AppPagination,
   },
   
 	data () {
@@ -201,7 +232,7 @@ export default {
 
 			practiceParams: {
 				id: [],
-				limit: 10,
+				limit: 20,
 				offset: 0,
 				order_by: ["created_at:desc"],
 				status: ["Active", "Dormant", "Suspended"],
@@ -302,7 +333,7 @@ export default {
 		},
 
 		$route () {
-			this.getPracticesForBulk()
+			this.getBillablePractices()
     },
 
     showIndependentSpokesOnly: function (value) {
@@ -312,7 +343,7 @@ export default {
         this.practiceParams.billable_spoke = null
       }
 
-      this.getPracticesForBulk()
+      this.getBillablePractices()
     },
 
     showDependentSpokesOnly: function (value) {
@@ -322,92 +353,50 @@ export default {
         this.practiceParams.billable_spoke = null
       }
 
-      this.getPracticesForBulk()
+      this.getBillablePractices()
     },
 
-    showStandAloneOnly: function (value) {
-      if (value === true) {
+     showStandAloneOnly: function (value) {
+      if(value === true) {
         this.practiceParams.type.push('Stand Alone')
       } else {
-        this.practiceParams.type.filter(type => type!=='Stand Alone')
+        const index = this.practiceParams.type.findIndex(type => {
+          return type === 'Stand Alone'
+        })
+        if (index > -1) {
+          this.practiceParams.type.splice(index, 1)
+        }
       }
-      this.getPracticesForBulk()
+      
+      this.getBillablePractices()
     },
 
     showHealthBoardsOnly: function (value) {
       if (value === true) {
+
         this.practiceParams.hub_type.push('Type 2')
       } else {
-        this.practiceParams.type.filter(hub_type => hub_type!== 'Type 2')
+        const index = this.practiceParams.hub_type.findIndex(hub_type => {
+          return hub_type === 'Type 2'
+        })
+        if (index > -1) {
+          this.practiceParams.hub_type.splice(index, 1)
+        }
       }
-      this.getPracticesForBulk()
+      this.getBillablePractices()
     }
 
   },
+
   created () {
     console.log('store set 0')
     this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
     this.$store.commit("practices/CLEAR_PRACTICES")
     this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
     this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
+    this.getBillablePractices()
   },
 	methods: {
-		async getBillablePractices () {
-      console.log('get billable practices start')
-			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
-			let { page = 1, search = "", order_by = [] } = this.$route.query
-			page = parseInt(page)
-			const createdRoute = this.$route.query
-			const limit = 10
-			const offset = page * limit - limit
-			const status = ["Active", "Dormant", "Suspended"]
-      const type = this.practiceParams.type
-      const hub_type = this.practiceParams.type
-      const billable_spoke = this.practiceParams.billable_spoke
-      const verified = this.practiceParams.verified
-      const practice_invoiceable_date_start = this.practiceParams.practice_invoiceable_date_start
-      const practice_invoiceable_date_end = this.practiceParams.practice_invoiceable_date_end
-      const practice_invoiceable = this.practiceParams.practice_invoiceable
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc"
-			const params = {
-        search, 
-        limit, 
-        offset, 
-        order_by, 
-        status,
-        type,
-        hub_type,
-        billable_spoke,
-        verified, 
-        practice_invoiceable_date_start, 
-        practice_invoiceable_date_end, 
-        practice_invoiceable 
-      }
-      console.log('params', params)
-
-			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, {
-				params
-			})
-      const itemCount = response.data.count
-
-      if (itemCount > 0) {
-        this.searchMessage = ""
-      } else {
-        this.searchMessage = "No practice to invoice found"
-      }
-
-			await this.$store.commit("billings/SET_BILLABLE_PRACTICES_COUNT", itemCount)
-
-			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })
-			const practices = response.data.practices
-			await this.$store.commit("billings/SET_BILLABLE_PRACTICES", practices)
-      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
-
-    },
-
     async processBulkBilling () {
       Promise.all([
         this.chosenPracticesFinalization =  this.chosenPractices
@@ -592,7 +581,7 @@ export default {
 				this.loading = true
 			}
 
-			this.getPracticesForBulk()
+			this.getBillablePractices()
 
 			this.$router.push({ query })
     }, 500),
@@ -650,9 +639,10 @@ export default {
       console.log('chosen job parts checker', this.chosenPracticeJobParts)
     },
 
-		getPracticesForBulk () {
+		async getBillablePractices () {
       console.log('params get billable practices', this.practiceParams)
-			this.$store
+      // await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
+			await this.$store
 				.dispatch("billings/fetchBillablePractices", {
 					id: this.practiceParams.id,
 					limit: this.practiceParams.limit,
@@ -685,7 +675,8 @@ export default {
             practice_invoiceable: this.practiceParams.practice_invoiceable,
 						verified: this.verified
 					})
-				})
+        })
+      // await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
 		},
 
 		sortData: function (toSortBy) {
@@ -739,7 +730,7 @@ export default {
     pagechanged (page) {
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
-			this.getPracticesForBulk()
+			this.getBillablePractices()
     },
     
     async pageChangedPracticesFinalization (page) {
@@ -805,7 +796,7 @@ export default {
       // }
       console.log('order_by', order_by)
 			this.practiceParams.order_by = order_by
-			this.getPracticesForBulk()
+			this.getBillablePractices()
     },
 
     invoiceStatusStyle (status) {
