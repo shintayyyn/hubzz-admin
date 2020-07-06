@@ -21,12 +21,63 @@ export default{
   },
 
   async fetchBillablePractices ({ commit }, payload) {
+    let practices = []
     commit('TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', true)
     const response = await billingApi.fetchBillablePractices(this.$axios, payload)
+    console.log('payload inside actions',payload)
+    if(!payload.countOnly) {
+      if(payload.show_completed === true && payload.show_disputed === true) {
+        await response.data.practices.forEach(item => {
+          const practice_invoiceable_job_parts = [
+            ...item.practice_invoiceable_disputed_filtered_job_parts,
+            ...item.practice_invoiceable_invoiced_filtered_job_parts,
+            ...item.practice_invoiceable_approved_filtered_job_parts,
+          ]
+          practices.push({
+            ...item,
+            practice_invoiceable_job_parts,
+          })
+        })
+      }else if(payload.show_completed === true && payload.show_disputed === false) {
+        await response.data.practices.forEach(item => {
+          const practice_invoiceable_job_parts = [
+            ...item.practice_invoiceable_invoiced_filtered_job_parts,
+            ...item.practice_invoiceable_approved_filtered_job_parts,
+          ]
+          practices.push({
+            ...item,
+            practice_invoiceable_job_parts,
+          })
+        })
+      }else if(payload.show_completed === false && payload.show_disputed === true) {
+        await response.data.practices.forEach(item => {
+          const practice_invoiceable_job_parts = [
+            ...item.practice_invoiceable_disputed_filtered_job_parts,
+            ...item.practice_invoiceable_approved_filtered_job_parts,
+          ]
+          practices.push({
+            ...item,
+            practice_invoiceable_job_parts,
+          })
+        })
+      } else {
+        console.log('false false')
+        await response.data.practices.forEach(item => {
+          const practice_invoiceable_job_parts = [
+            ...item.practice_invoiceable_approved_filtered_job_parts,
+          ]
+          practices.push({
+            ...item,
+            practice_invoiceable_job_parts,
+          })
+        })
+      }
+    } 
     commit('TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', false)
     if (payload.countOnly) {
       return commit('SET_BILLABLE_PRACTICES_COUNT', response.data.count)
     }
-    return commit('SET_BILLABLE_PRACTICES', response.data.practices)
+    
+    return commit('SET_BILLABLE_PRACTICES', practices)
   },
 }
