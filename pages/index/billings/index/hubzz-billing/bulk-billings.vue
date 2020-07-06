@@ -554,7 +554,6 @@ export default {
       })
       .finally(() => {
         this.showSessionsModal = false
-        this.getBillablePractices()
         this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
       })  
     },
