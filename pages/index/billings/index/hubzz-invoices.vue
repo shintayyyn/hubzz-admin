@@ -116,10 +116,10 @@
         <div class="flex justify-center">
           <div class="flex items-center justify-center">
             <AppButton
-              :label="'Settle Payment'"
+              :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
               :background="'green'"
               class="text-white mr-2"
-              :disabled="slotProps.item.sage_ref ? false : true"
+              :disabled="slotProps.item.sage_ref && !slotProps.item.paid_at ? false : true"
               @click="toShowPaidModal(slotProps.item.id)"
             />
             <span
@@ -153,8 +153,6 @@
         There are no Invoices for HUBZZ
       </div>
     </template>
-
-    {{chosenInvoices.id}}
 
     <!--SETTLE PAYMENT MODAL -->
     <transition name="fade" mode="out-in">

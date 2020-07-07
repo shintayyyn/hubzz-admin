@@ -10,6 +10,12 @@
           @click="goBack()"
         />
       </div>
+			<div
+				v-if="practiceInvoice.paid_at" 
+				class="mx-4 my-2 font-semibold text-lg"
+			>
+				{{ '* This invoice has been marked as paid on ' + $moment(practiceInvoice.paid_at).format('DD/MM/YYYY' )}}
+			</div>
       <div>
         <HubzzInvoice
           :forViewing="true"

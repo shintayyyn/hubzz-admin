@@ -3,71 +3,77 @@
     <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
     <div class="flex items-center px-2 py-2">
       <div class="relative w-full">
-        <div class="flex items-center w-full">
-          <!-- <AppDate
-            v-model="invoiceableDateStart"
-            class="md:mx-2 text-white"
-            :name="'practice_invoiceable_date_start'"
-            :label="'From'"
-          /> -->
-          <AppDate
-            v-model="invoiceableDateEnd"
-            class="md:mx-2 text-white"
-            :name="'practice_invoiceable_date_end'"
-            :label="'Filter Job Parts Until'"
-            :isBefore="true"
-          />
-          <div class="flex flex-row">
-            <div class="md:px-1 w-full md:w-1/3 text-white">
-              <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-              <label for="completed">Include Completed Invoices</label>
+        <div class="flex flex-col text-white">
+          <!-- Upper Filter (Job parts, Required fields) -->
+          <div class="flex flex-row items-center w-full">
+            <!-- Job part filters -->
+            <div class="flex flex-col p-3">
+              <div class="px-1">
+                <div class="text-lg text-white font-semibold">
+                  Filter Job Parts
+                </div>
+                <div class="flex items-center">
+                  <AppDate
+                    v-model="invoiceableDateEnd"
+                    class="md:mx-2 text-white"
+                    :name="'practice_invoiceable_date_end'"
+                    :label="'Select Date Range'"
+                    :isBefore="true"
+                  />
+                  <div class="flex flex-col">
+                    <div class="w-full text-white">
+                      <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+                      <label for="completed">Include Completed Invoices</label>
+                    </div>
+                    <div class="w-full text-white">
+                      <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
+                      <label for="disputed">Include Disputed Invoices</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="md:px-1 w-full md:w-1/3 text-white">
-              <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-              <label for="disputed">Include Disputed Invoices</label>
+            <!-- Required Fields -->
+            <div class="text-white p-3 rounded-lg border-solid border-2 border-gray-200 ">
+              <div class="text-lg font-semibold">
+                Billing Period (Required Fields)
+              </div>
+              <div class="flex">
+                <AppDate
+                  v-model="billingPeriodDateStart"
+                  class="md:mx-2 text-white"
+                  :name="'billing_period_date_start'"
+                  :label="'Billing Date From(Required)'"
+                />
+                <AppDate
+                  v-model="billingPeriodDateEnd"
+                  class="md:mx-2 text-white"
+                  :name="'billing_period_date_end'"
+                  :label="'Billing Date To(Required)'"
+                  :isAfterDate="billingPeriodDateStart"
+                />
+                <AppDate
+                  v-model="dueDate"
+                  class="md:mx-2 text-white"
+                  :name="'due_date'"
+                  :label="'Due Date(Required)'"
+                  :isAfter="true"
+                />
+              </div>
             </div>
           </div>
-          <!-- <AppButton
-            class="whitespace-no-wrap"
-            :disabled="invoiceableDateStart && invoiceableDateEnd ? false : true"
-            :label="'Search for Practices'"
-            :icon="'search'"
-            @click="getBillablePractices()"
-          /> -->
-        </div>
-        <div class="text-white">
-          <div class="text-lg font-semibold">
-            Billing Period
-          </div>  
-          
-          <div class="flex">
-            <AppDate
-              v-model="billingPeriodDateStart"
-              class="md:mx-2 text-white"
-              :name="'billing_period_date_start'"
-              :label="'Billing Date From(Required)'"
-            />
-            <AppDate
-              v-model="billingPeriodDateEnd"
-              class="md:mx-2 text-white"
-              :name="'billing_period_date_end'"
-              :label="'Billing Date To(Required)'"
-              :isAfterDate="billingPeriodDateStart"
-            />
-            <AppDate
-              v-model="dueDate"
-              class="md:mx-2 text-white"
-              :name="'due_date'"
-              :label="'Due Date(Required)'"
-              :isAfter="true"
-            />
-          </div>
-        </div>  
-        
-        <div class="flex text-white">
-          <div class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo my-2">
-            <div class="md:px-1 w-full">
-              <label class="text-md md:text-lg text-bold">Filters</label>
+          <!-- Lower Filter (Practice filters) -->
+          <div class="flex flex-wrap justify-start items-center w-full p-3">
+            <div class="md:px-1 w-full mb-4">
+              <label class="text-md md:text-lg font-bold ">Filter Practices</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="orderAlphabticalAsc" v-model="orderAlphabeticalAsc" type="checkbox" value="true">
+              <label for="orderAlphabticalAsc">Sort Practice Alphabetically ↑</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
+              <label for="standAloneOnly">Show Stand Alone Practices Only</label>
             </div>
             <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
               <input id="independentSpokesOnly" v-model="showIndependentSpokesOnly" type="checkbox" value="true">
@@ -78,8 +84,8 @@
               <label for="dependentSpokesOnly">Show Spokes(grouped by Hubs)</label>
             </div>
             <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
-              <input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
-              <label for="standAloneOnly">Show Stand Alone Practices Only</label>
+              <input id="orderAlphabeticalDesc" v-model="orderAlphabeticalDesc" type="checkbox" value="true">
+              <label for="orderAlphabeticalDesc">Sort Practice Alphabetically ↓</label>
             </div>
             <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
               <input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
@@ -100,29 +106,52 @@
     </div>
     <div v-else class="w-full overflow-x-auto">
       <!-- BODY -->
+      <div class="hidden md:flex items-center text-sm text-white justify-around font-semibold">
+        <div class="align-middle text-center w-1/8">
+          Practice / Surgery
+        </div>
+        <div class="align-middle text-center w-2/8">
+          Check
+        </div>
+        <div class="align-middle text-center w-1/8">
+          Job Part Number
+        </div>
+        <div class="align-middle text-center w-2/8">
+          Approved at / Completed At
+        </div>
+        <div class="align-middle text-center w-1/8">
+          Total
+        </div>
+        <!-- <div class="align-middle text-center w-1/8">
+          Invoice Status
+        </div> -->
+        <div class="align-middle text-center w-1/8 align-right">
+          Status
+        </div>
+      </div>
       <div
         v-for="(item, index) in allBillablePractices"
         :key="`item-${index}`"
         class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-4 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo"
         draggable="false"
       >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
+        <div class="object-left-top md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
           <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-          <div class="flex flex-col m-1">
+          <div class="flex flex-col justify-center m-1">
             <div>{{ item.name }}</div>
             <div
-              class="rounded-full text-center px-4 py-1 w-32" 
+              class="m-1 rounded-full text-center px-4 py-1 w-32" 
               :class="typeStyle(item.type)"
             >
               {{ item.type }}
             </div>
             <div 
               v-if="item.type === 'Spoke'"
-              class="text-blue-200"
+              class="text-blue-200 m-1"
             >
               {{ item.parent_practice.name }} (HUB)
             </div>
-            <div>
+            <div class="m-1">
               <div>
                 <AppButton
                   v-if="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_job_parts.length"
@@ -144,52 +173,53 @@
           </div>
         </div>
         <div
-          class="flex flex-col md:justify-center sm:w-1/2 md:w-5/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+          class=" md:justify-center sm:w-1/2 md:w-5/6 px-1 xl:px-2 py-2 align-middle md:text-center "
+          :class="item.practice_invoiceable_job_parts.length > 9 ? 'h-160 overflow-y-auto' : ''"
         >
-          <strong class="block md:hidden text-sm uppercase">Job Parts</strong>
-          <!-- :nestedItem="item" -->
-          <AppTable
-            :total="item.practice_invoiceable_job_parts.length"
-            :items="item.practice_invoiceable_job_parts"
-            :currentPage="item.current_page"
-            :perPage="10"
-            :columns="jobPartsColumns"
-            :customWidth="200"
-            :disabledPagination="true"
-            @checkClicked="toggleCheckJobParts"
-            @sorted="sorted"
-          >
-            <template v-slot:checker="slotProps">
-              <input 
-                :id="slotProps.item" 
-                v-model="chosenPracticeJobParts" 
-                type="checkbox" 
-                :value="slotProps.item" 
-              >
-              <label :for="slotProps.item" />
-            </template>
-            <template v-slot:invoice_status_slot="slotProps">
-              <div
-                class="rounded-full text-center px-4 py-1 w-32"
-                :class="invoiceStatusStyle(slotProps.item.invoice_status)"
-              >
-                {{ slotProps.item.invoice_status }}
-              </div>
-            </template>
-            <template v-slot:approved_completed_at="slotProps">
-              <div>
-                {{ slotProps.item.approved_at ? slotProps.item.approved_at : slotProps.item.completed_at }}
-              </div>
-            </template>
-            <template v-slot:status_slot="slotProps">
-              <div
-                class="rounded-full text-center px-4 py-1 w-32"
-                :class="invoiceStatusStyle(slotProps.item.status)"
-              >
-                {{ slotProps.item.status }}
-              </div>
-            </template>
-          </AppTable>
+          <div>
+            <AppTable
+              :total="item.practice_invoiceable_job_parts.length"
+              :items="item.practice_invoiceable_job_parts"
+              :currentPage="item.current_page"
+              :columns="jobPartsColumns"
+              :customWidth="200"
+              :disabledPagination="true"
+              :disabledHeadings="true"
+              @checkClicked="toggleCheckJobParts"
+              @sorted="sorted"
+            >
+              <template v-slot:checker="slotProps">
+                <input 
+                  :id="slotProps.item" 
+                  v-model="chosenPracticeJobParts" 
+                  type="checkbox" 
+                  :value="slotProps.item" 
+                >
+                <label :for="slotProps.item" />
+              </template>
+              <!-- <template v-slot:invoice_status_slot="slotProps">
+                <div
+                  class="rounded-full text-center px-4 py-1 w-32"
+                  :class="invoiceStatusStyle(slotProps.item.invoice_status)"
+                >
+                  {{ slotProps.item.invoice_status }}
+                </div>
+              </template> -->
+              <template v-slot:approved_completed_at="slotProps">
+                <div>
+                  {{ slotProps.item.approved_at ? slotProps.item.approved_at : slotProps.item.completed_at }}
+                </div>
+              </template>
+              <template v-slot:status_slot="slotProps">
+                <div
+                  class="rounded-full text-center px-4 py-1 w-32"
+                  :class="invoiceStatusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
+                >
+                  {{ slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status }}
+                </div>
+              </template>
+            </AppTable>
+          </div>
         </div>
       </div>
     </div>
@@ -206,6 +236,12 @@
     <div class="flex flex-row justify-end">
       <AppButton
         class="mx-2"
+        :label="'Clear Selection'"
+        :icon="'add-rectangle'"
+        @click="reset()"
+      />
+      <AppButton
+        class="mx-2"
         :label="'Generate HUBZZ Invoices'"
         :icon="'add-rectangle'"
         :disabled="billingPeriodDateStart 
@@ -213,12 +249,6 @@
           && chosenPracticeJobParts.length > 0  
           ? false : true"
         @click="createBulkBillingChecked()"
-      />
-      <AppButton
-        class="mx-2"
-        :label="'Clear Selection'"
-        :icon="'add-rectangle'"
-        @click="reset()"
       />
     </div>
     
@@ -270,6 +300,8 @@ export default {
       showDisputed: false,
       // query filters
       invoiceableDateEnd: "",
+      orderAlphabeticalAsc: false,
+      orderAlphabeticalDesc: false,
       showIndependentSpokesOnly:false,
       showDependentSpokesOnly: false,
       showStandAloneOnly:false,
@@ -316,18 +348,6 @@ export default {
 					dataIndex: "job_part_number",
 					sortable: false
 				},
-				// {
-        //   name: "Date Start",
-        //   dataIndex: "datetime_start_formatted",
-				// 	class: "text-center",
-				// 	sortable: false
-        // },
-				// {
-        //   name: "Date End",
-        //   dataIndex: "datetime_end_formatted",
-				// 	class: "text-center",
-				// 	sortable: false
-        // },
         {
           name: "Approved At / Completed At",
           slot: true,
@@ -341,14 +361,14 @@ export default {
 					class: "text-center currency",
 					sortable: false
         },
-        {
-					name: "Invoice Status",
-					slot: true,
-					dataIndex: "invoice_status",
-					class: "text-center",
-					slotName: "invoice_status_slot",
-					sortable: true
-				},
+        // {
+				// 	name: "Invoice Status",
+				// 	slot: true,
+				// 	dataIndex: "invoice_status",
+				// 	class: "text-center",
+				// 	slotName: "invoice_status_slot",
+				// 	sortable: true
+				// },
         {
 					name: "Status",
 					slot: true,
@@ -390,7 +410,6 @@ export default {
       this.practiceParams.practice_invoiceable_date_start = value
     },
     invoiceableDateEnd: function (value) {
-      console.log('banana')
       this.practiceParams.practice_invoiceable_date_end = value
       this.getBillablePractices()
     },
@@ -401,6 +420,28 @@ export default {
 
 		$route () {
 			this.getBillablePractices()
+    },
+
+    orderAlphabeticalAsc: function (value) {
+      if (value === true) {
+        this.practiceParams.order_by = "practice_name:asc"
+        this.orderAlphabeticalDesc = false
+      } else {
+        this.practiceParams.order_by = "created_at:desc"
+      }
+      
+      this.getBillablePractices()
+    },
+
+    orderAlphabeticalDesc: function (value) {
+      if (value === true) {
+        this.practiceParams.order_by = "practice_name:desc"
+        this.orderAlphabeticalAsc = false
+      } else {
+        this.practiceParams.order_by = "created_at:desc"
+      }
+      
+      this.getBillablePractices()
     },
 
     showIndependentSpokesOnly: function (value) {
@@ -505,7 +546,6 @@ export default {
             type: 'Job Part - Invoiced',
             job_part_id: jobPart.id,
             description:
-              "Job Number " +
               jobPart.job_part_number +
               " for £" +
               jobPart.practice_rate +
@@ -540,7 +580,7 @@ export default {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "success",
-          text: "Success"
+          text: "Invoices Successfully Generated"
         })
         this.reset()
       })

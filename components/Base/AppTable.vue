@@ -6,7 +6,10 @@
         class="relative flex flex-col overflow-x-auto w-full px-2 mt-4"
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
-        <div class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
+        <div
+          v-if="disabledHeadings === false" 
+          class="row hidden md:flex text-white justify-start font-bold leading-none text-sm"
+        >
           <div
             v-for="(column, index) in columns"
             :key="`${column}-${index}`"
@@ -133,6 +136,10 @@
       AppPagination
     },
     props: {
+      disabledHeadings: {
+        type: Boolean,
+        default: false,
+      },
       disabledPagination: {
         type: Boolean,
         default: false
