@@ -3,6 +3,7 @@ export default{
   async fetchHubzzInvoices ({ commit }, payload){
     commit('TOGGLE_LOADING', true)
     const response = await billingApi.fetchHubzzInvoices(this.$axios, payload)
+    console.log('response invoices', response)
     commit('TOGGLE_LOADING', false)
     if(payload.countOnly){
       return commit ('SET_HUBZZ_INVOICES_COUNT', response.data.count)
@@ -36,6 +37,7 @@ export default{
           practices.push({
             ...item,
             practice_invoiceable_job_parts,
+            done: false,
           })
         })
       }else if(payload.show_completed === true && payload.show_disputed === false) {
@@ -47,6 +49,7 @@ export default{
           practices.push({
             ...item,
             practice_invoiceable_job_parts,
+            done: false,
           })
         })
       }else if(payload.show_completed === false && payload.show_disputed === true) {
@@ -61,7 +64,6 @@ export default{
           })
         })
       } else {
-        console.log('false false')
         await response.data.practices.forEach(item => {
           const practice_invoiceable_job_parts = [
             ...item.practice_invoiceable_approved_filtered_job_parts,

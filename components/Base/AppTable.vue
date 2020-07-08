@@ -32,7 +32,11 @@
             />
           </div>
         </div>
-        <div v-for="item in items" :key="item.id" class="row py-2">
+        <div 
+          v-for="item in items" 
+          :key="item.id" 
+          class="row py-2"
+        >
           <nuxt-link
             :to="routerLink && {}.toString.call(routerLink) === '[object Function]'
               ? routerLink(item)
@@ -45,8 +49,8 @@
             :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
           >
             <div
-              class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
-              :class="routerLink ? 'transition-hover hover:bg-waterloo-dark' : 'cursor-default'"
+              class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
+              :class="recordClass()"
             >
               <div
                 v-for="(column, index) in columns"
@@ -136,6 +140,10 @@
       AppPagination
     },
     props: {
+      itemsOnTop: {
+        type: Boolean,
+        default: false,
+      },
       disabledHeadings: {
         type: Boolean,
         default: false,
@@ -211,6 +219,17 @@
       // this.totalPages = Math.ceil(this.total / this.perPage);
     },
     methods: {
+      recordClass () {
+        if(this.routerLink && this.itemsOnTop === true) {
+          return "transition-hover hover:bg-waterloo-dark items-start"
+        } else if (this.routerLink && this.itemsOnTop === false) {
+          return "transition-hover hover:bg-waterloo-dark items-start md:items-center"
+        } else if (this.routerLink && this.itemsOnTop === true) {
+          return "cursor-default items-start"
+        } else if (this.routerLink && this.itemsOnTop === false) {
+          return "cursor-default items-start md:items-center"
+        } 
+      },
       sort (dataIndex) {
         if (!this.params.some(item => item.includes(`${dataIndex}`))) {
           this.params = []

@@ -97,15 +97,14 @@
     </div>
     
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TABLE NEW STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
-    <div v-if="allBillablePractices.length === 0">
+    <div v-if="itemCount === 0">
       <div
         class="mt-10 w-full text-center text-white"
       >
         No Billable Practices Found.
       </div>
     </div>
-    <div v-else class="w-full overflow-x-auto">
-      <!-- BODY -->
+    <div v-else class="border-b-2 border-white mt-2">
       <div class="hidden md:flex items-center text-sm text-white justify-around font-semibold">
         <div class="align-middle text-center w-1/8">
           Practice / Surgery
@@ -129,111 +128,108 @@
           Status
         </div>
       </div>
-      <div
-        v-for="(item, index) in allBillablePractices"
-        :key="`item-${index}`"
-        class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-4 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo"
-        draggable="false"
-      >
-        <div class="object-left-top md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
-          <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-          <div class="flex flex-col justify-center m-1">
-            <div>{{ item.name }}</div>
-            <div
-              class="m-1 rounded-full text-center px-4 py-1 w-32" 
-              :class="typeStyle(item.type)"
-            >
-              {{ item.type }}
-            </div>
-            <div 
-              v-if="item.type === 'Spoke'"
-              class="text-blue-200 m-1"
-            >
-              {{ item.parent_practice.name }} (HUB)
-            </div>
-            <div class="m-1">
+      <div class="w-full overflow-x-auto h-160 overflow-y-auto">
+        <!-- BODY -->
+        <div class="p-2">
+          <AppTable
+            :total="itemCount"
+            :items="allBillablePractices"
+            :currentPage="currentPage"
+            :perPage="practiceParams.limit"
+            :columns="practiceColumns"
+            :orderBy="practiceParams.order_by"
+            :customWidth="200"
+            :disabledHeadings="true"
+            :disabledPagination="true"
+            :itemsOnTop="true"
+            @pagechanged="pagechanged"
+            @checkClicked="toggleCheckPracticeCheckAll"
+            @sorted="sorted"
+          >
+            <template v-slot:checker="slotProps">
               <div>
-                <AppButton
-                  v-if="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_job_parts.length"
-                  :label="'Select All'"
-                  :icon="'add-rectangle'"
-                  @click="addAll(item.practice_invoiceable_job_parts)"
-                />
-              </div>  
-              
-              <AppButton
-                v-if="chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length === item.practice_invoiceable_job_parts.length"
-                class="text-white"
-                :label="'Remove All'"
-                :background="'red'"
-                :icon="'add-rectangle'"
-                @click="removeAll(item)"
-              />
-            </div>
-          </div>
-        </div>
-        <div
-          class=" md:justify-center sm:w-1/2 md:w-5/6 px-1 xl:px-2 py-2 align-middle md:text-center "
-          :class="item.practice_invoiceable_job_parts.length > 9 ? 'h-160 overflow-y-auto' : ''"
-        >
-          <div>
-            <AppTable
-              :total="item.practice_invoiceable_job_parts.length"
-              :items="item.practice_invoiceable_job_parts"
-              :currentPage="item.current_page"
-              :columns="jobPartsColumns"
-              :customWidth="200"
-              :disabledPagination="true"
-              :disabledHeadings="true"
-              @checkClicked="toggleCheckJobParts"
-              @sorted="sorted"
-            >
-              <template v-slot:checker="slotProps">
-                <input 
-                  :id="slotProps.item" 
-                  v-model="chosenPracticeJobParts" 
-                  type="checkbox" 
-                  :value="slotProps.item" 
-                >
-                <label :for="slotProps.item" />
-              </template>
-              <!-- <template v-slot:invoice_status_slot="slotProps">
-                <div
-                  class="rounded-full text-center px-4 py-1 w-32"
-                  :class="invoiceStatusStyle(slotProps.item.invoice_status)"
-                >
-                  {{ slotProps.item.invoice_status }}
+                <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
+                <div class="flex flex-col justify-center m-1">
+                  <div>{{ slotProps.item.name }}</div>
+                  <div
+                    class="m-1 rounded-full text-center px-4 py-1 w-32" 
+                    :class="typeStyle(slotProps.item.type)"
+                  >
+                    {{ slotProps.item.type }}
+                  </div>
+                  <div 
+                    v-if="slotProps.item.type === 'Spoke'"
+                    class="text-blue-200 m-1"
+                  >
+                    {{ slotProps.item.parent_practice.name }} (HUB)
+                  </div>
+                  <div class="m-1">
+                    <input 
+                      :id="slotProps.item" 
+                      v-model="chosenPractices" 
+                      type="checkbox" 
+                      :value="slotProps.item" 
+                    >
+                    <label :for="slotProps.item">
+                      Select All
+                    </label>
+                  </div>
                 </div>
-              </template> -->
-              <template v-slot:approved_completed_at="slotProps">
+              </div>
+            </template>
+            
+            <template v-slot:invoiceable_job_parts="slotProps">
+              <div class="md:justify-center sm:w-1/2 md:w-11/12 px-1 xl:px-2 align-middle md:text-center">
                 <div>
-                  {{ slotProps.item.approved_at ? slotProps.item.approved_at : slotProps.item.completed_at }}
+                  <AppTable
+                    :total="slotProps.item.practice_invoiceable_job_parts.length"
+                    :items="slotProps.item.practice_invoiceable_job_parts"
+                    :columns="jobPartsColumns"
+                    :customWidth="100"
+                    :disabledPagination="true"
+                    :disabledHeadings="true"
+                    @checkClicked="toggleCheckJobParts"
+                    @sorted="sorted"
+                  >
+                    <template v-slot:checker="slotProps">
+                      <input 
+                        :id="slotProps.item" 
+                        v-model="chosenPracticeJobParts" 
+                        type="checkbox" 
+                        :value="slotProps.item" 
+                      >
+                      <label :for="slotProps.item" />
+                    </template>
+                    <template v-slot:approved_completed_at="slotProps">
+                      <div>
+                        {{ slotProps.item.approved_at ? slotProps.item.approved_at : slotProps.item.completed_at }}
+                      </div>
+                    </template>
+                    <template v-slot:status_slot="slotProps">
+                      <div
+                        class="rounded-full text-center px-4 py-1 w-32"
+                        :class="invoiceStatusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
+                      >
+                        {{ slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status }}
+                      </div>
+                    </template>
+                  </AppTable>
                 </div>
-              </template>
-              <template v-slot:status_slot="slotProps">
-                <div
-                  class="rounded-full text-center px-4 py-1 w-32"
-                  :class="invoiceStatusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
-                >
-                  {{ slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status }}
-                </div>
-              </template>
-            </AppTable>
-          </div>
+              </div>
+            </template>
+          </AppTable>
         </div>
       </div>
-    </div>
-    <div>
       <AppPagination
-        :total="total"
+        :total="itemCount"
         :totalPages="totalPages"
         :currentPage="currentPage"
-        :perPage="20"
+        :perPage="practiceParams.limit"
         @pagechanged="pagechanged"
       />
     </div>
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TABLE NEW ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <div class="flex flex-row justify-end">
+    <div class="flex flex-row justify-end mt-4">
       <AppButton
         class="mx-2"
         :label="'Clear Selection'"
@@ -292,7 +288,6 @@ export default {
 			// for app table
 			currentPage: 1,
 			search: "",
-      chosenPractices:[],
       dueDate: '',
 
       // for bulk billing processing
@@ -310,14 +305,9 @@ export default {
       // billing period filters
       billingPeriodDateStart: "",
       billingPeriodDateEnd: "",
-
+      
+      chosenPractices:[],
       chosenPracticeJobParts: [],
-
-      chosenPracticesFinalization: [],
-      practicesFinalizationPage: 1,
-      practicesFinalizationPerPage: 10,
-
-      practicesFilteredJobPartsPerPage: 10,
 
 			practiceParams: {
 				id: [],
@@ -334,7 +324,23 @@ export default {
         practice_invoiceable: true,
       },
       
-			loading: false,
+      loading: false,
+      practiceColumns: [
+        {
+          name:"Practice",
+          dataIndex:"checker",
+          class:"text-center mt-4",
+          slotName:"checker",
+          eventName: "checkClicked"
+        },
+        {
+          name:"Job Parts",
+          dataIndex:"invoiceable_job_parts",
+          class:"text-center",
+          slotName:"invoiceable_job_parts",
+        },
+
+      ],
       jobPartsColumns: [
 				{
 					name: "Check",
@@ -513,6 +519,19 @@ export default {
     this.getBillablePractices()
   },
 	methods: {
+    toggleCheckPracticeCheckAll (item) {
+			const index = this.chosenPractices.findIndex(practice => {
+				return practice.id === item.id
+			})
+
+			if (index > -1) {
+        this.chosenPractices.splice(index, 1)
+        this.removeAll(item)
+			} else {
+        this.chosenPractices.push(item)
+        this.addAll(item.practice_invoiceable_job_parts)
+      }
+    },
     removeAll (practice) {
       this.chosenPracticeJobParts = this.chosenPracticeJobParts.filter(jobPart => jobPart.practice_id !== practice.id)
       console.log('chosenJobParts', this.chosenPracticeJobParts)
@@ -669,18 +688,6 @@ export default {
 
 			this.$router.push({ query })
     }, 500),
-    
-    toggleCheck (item) {
-			const index = this.chosenPractices.findIndex(practice => {
-				return practice.id === item.id
-			})
-
-			if (index > -1) {
-				this.chosenPractices.splice(index, 1)
-			} else {
-				this.chosenPractices.push(item)
-      }
-    },
 
     toggleCheckChosenPractices (item) {
       const index = this.chosenPractices.findIndex(practice => {
@@ -745,8 +752,12 @@ export default {
             show_completed: this.showCompleted,
             show_disputed: this.showDisputed,
 						verified: this.verified
-					})
+          })
+          .then(()=> {
+            console.log('billable practices', this.allBillablePractices)
+          })
         })
+     
 		},
 
 		sortData: function (toSortBy) {
