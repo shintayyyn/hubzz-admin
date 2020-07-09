@@ -62,6 +62,22 @@
           </nuxt-link>
         </div>
 
+        <div class="text-sm relative">
+          <span
+            v-if="$route.name.includes('index-compliance-document-reject-reasons')"
+            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
+          />
+          <nuxt-link :to="{ name: 'index-compliance-document-reject-reasons' }">
+            <div
+              class="block font-sans no-underline p-4"
+              :class="$route.name.includes('index-compliance-document-reject-reasons') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
+              @click="close"
+            >
+              <span class="text-xs">Compliance Reject Reasons</span>
+            </div>
+          </nuxt-link>
+        </div>
+
         <!-- SIGN OUT -->
         <div class="text-sm relative">
           <span
