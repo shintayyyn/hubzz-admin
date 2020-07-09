@@ -148,7 +148,7 @@
       </template>
     </AppTable>
 
-    <div v-if="count === 0" class="mt-2 w-full text-center text-white">
+    <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
       <span>No change email requests.</span>
     </div>
 
@@ -309,7 +309,13 @@
     },
 
     mounted () {
-      this.searchSubmit()
+      this.loading = true
+      this.getChangeEmailRequests().catch((err) => {
+        console.log('err', err)
+      }).finally(() => {
+        this.loading = false
+      })
+      
       this.$store.dispatch('pendingChangeEmailRequestIds')
       this.$socket.on('Admin Notification Change Email Request Pending', this.getChangeEmailRequests)
       this.$socket.on('Admin Notification Change Email Request Rejected', this.changeEmailRequestUpdated)
