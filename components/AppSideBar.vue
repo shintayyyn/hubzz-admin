@@ -54,7 +54,9 @@
               :class="$route.name.includes('index-change-email-requests') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
               @click="close"
             >
-              <span class="text-xs">Change Email Requests</span>
+              <span>Change Email</span>
+              <br>
+              <span>Requests</span>
               <span v-if="pendingChangeEmailRequestIds.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ pendingChangeEmailRequestIds.length }}
               </span>
@@ -73,7 +75,7 @@
               :class="$route.name.includes('index-compliance-document-reject-reasons') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
               @click="close"
             >
-              <span class="text-xs">Compliance Reject Reasons</span>
+              <span>Compliance Document Reject Reasons</span>
             </div>
           </nuxt-link>
         </div>
