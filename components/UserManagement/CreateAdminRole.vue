@@ -272,7 +272,8 @@ export default {
 			this.permissions = categories
 			this.setSubcategories(categories)
 		},
-		isChecked (permissions,) {
+		isChecked (permissions, category) {
+			console.log('category', category)
 			return !permissions.map(item => item.done).includes(false)
 			// let parents = []
 			// let filter = this.hierarchyPermissions.filter(

@@ -34,110 +34,244 @@
             :icon="'add-rectangle'"
             @click="processBulkBilling()"
           />
-          <div class="flex flex-col">
-            <div class="text-white">
-              <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-              <label for="completed">Include Completed Invoices</label>
-            </div>
-            <div class="text-white">
-              <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-              <label for="disputed">Include Disputed Invoices</label>
-            </div>
+          <div class="text-white">
+            <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+            <label for="completed">Include Completed Invoices</label>
           </div>
         </div>
         <div
           v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount > 0" 
           class="flex text-white"
         >
-          <div class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo my-2">
-            <div class="md:px-1 w-full">
-              <label class="text-md md:text-lg text-bold">Filters</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
-              <input id="independentSpokesOnly" v-model="showIndependentSpokesOnly" type="checkbox" value="true">
-              <label for="independentSpokesOnly">Show Billable Spokes Only</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
-              <input id="dependentSpokesOnly" v-model="showDependentSpokesOnly" type="checkbox" value="true">
-              <label for="dependentSpokesOnly">Show Spokes(grouped by Hubs)</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
-              <input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
-              <label for="standAloneOnly">Show Stand Alone Practices Only</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
-              <input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
-              <label for="healthBoardsOnly">Show Health Boards Only</label>
-            </div>
+          <div class="w-full">
+            <input
+              v-model="search"
+              class="rounded-lg border-2 border-transparent text-sm text-white p-2 w-1/4 focus:border-sunglow focus:outline-none bg-waterloo"
+              placeholder="Filter Invoiceable Practices by Name"
+            >
+            <button
+              v-if="search"
+              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+              @click="(search = ''), searchSubmit()"
+            >
+              <svgicon
+                name="times-solid"
+                height="12"
+                width="12"
+                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+              />
+            </button>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TABLE NEW STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
-    <div class="w-full overflow-x-auto">
-      <!-- BODY -->
-      <div
-        v-for="(item, index) in allBillablePractices"
-        :key="`item-${index}`"
-        class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-4 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo"
-        draggable="false"
-      >
-        <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
-          <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-          <span class>{{ item.name }}</span>
-          <input 
-            :id="item" 
-            type="checkbox"
-          >
-          <label for="chosenPractices">Select All</label>
-        </div>
-        <div
-          class="flex flex-col md:justify-center sm:w-1/2 md:w-5/6 px-1 xl:px-2 py-2 align-middle md:text-center"
+    <!-- :routerLink="`/billings`" -->
+    <AppTable
+      v-if="itemCount > 0"
+      :total="itemCount"
+      :items="allBillablePractices"
+      :currentPage="currentPage"
+      :perPage="practiceParams.limit"
+      :columns="columns"
+      :loading="loadingBillablePractices"
+      :orderBy="practiceParams.order_by"
+      :customWidth="200"
+      @pagechanged="pagechanged"
+      @checkClicked="toggleCheck"
+      @sorted="sorted"
+    >
+      <template v-slot:checker="slotProps">
+        <input 
+          :id="slotProps.item" 
+          v-model="chosenPractices" 
+          type="checkbox" 
+          :value="slotProps.item"
         >
-          <strong class="block md:hidden text-sm uppercase">Job Parts</strong>
-          <!-- :nestedItem="item" -->
-          <AppTable
-            :total="item.practice_invoiceable_approved_filtered_job_parts.length"
-            :items="item.practice_invoiceable_approved_filtered_job_parts"
-            :currentPage="item.current_page"
-            :perPage="10"
-            :columns="jobPartsColumns"
-            :customWidth="200"
-            :disabledPagination="true"
-            @checkClicked="toggleCheckJobParts"
-            @sorted="sorted"
+        <label :for="slotProps.item" />
+      </template>
+
+      <template v-slot:disputed_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+          :class="slotProps.item.practice_invoice_item_disputed_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
+        >
+          {{ slotProps.item.practice_invoice_item_disputed_count > 0 ? "Yes, " + slotProps.item.practice_invoice_item_disputed_count : "None" }}
+        </div>
+      </template>
+
+      <template v-slot:status_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+          :class="
+            `${
+              slotProps.item.status === 'Active'
+                ? 'bg-green-500'
+                : 'bg-gray-500 text-gray-700'
+            }`
+          "
+        >
+          {{ slotProps.item.status }}
+        </div>
+      </template>
+
+      <template v-slot:type_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+          :class="typeStyle(slotProps.item.type)"
+        >
+          {{ slotProps.item.type }}
+        </div>
+      </template>
+
+      <template v-slot:hub_type_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+          :class="hubTypeStyle(slotProps.item.hub_type)"
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
+      </template>
+    </AppTable>
+    <template v-else>
+      <div
+        v-if="!practiceParams.practice_invoiceable_date_start && !practiceParams.practice_invoiceable_date_end"
+        class="mt-2 w-full text-center text-white"
+      >
+        Input Job Part Approval / Disputed Dates to see Billable Practices
+      </div>
+      <div 
+        v-else-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount === 0 "
+        class="mt-2 w-full text-center text-white">
+        {{ searchMessage }}
+      </div>
+    </template>
+
+    <!-- SESSIONS MODAL -->
+    <transition name="fade" mode="out-in">
+      <div v-if="showSessionsModal == true" class="sessions-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
+        <div class="m-4 border-b-4 border-double border-white">
+          <div 
+            v-for="(item, index) in chosenPracticesFinalization"
+            :key="`item-${index}`"
+            class="text-white"
           >
-            <template v-slot:checker="slotProps">
-              <input 
-                :id="slotProps.item" 
-                v-model="chosenPracticeJobParts" 
-                type="checkbox" 
-                :value="slotProps.item" 
-              >
-              <label :for="slotProps.item" />
-            </template>
-            <template v-slot:invoice_status_slot="slotProps">
+            <div class="flex flex-row m-2">
               <div
-                class="rounded-full text-center px-4 py-1 w-32"
-                :class="invoiceStatusStyle(slotProps.item.invoice_status)"
-              >
-                {{ slotProps.item.invoice_status }}
-              </div>
-            </template>
-            <template v-slot:status_slot="slotProps">
-              <div
-                class="rounded-full text-center px-4 py-1 w-32"
-                :class="invoiceStatusStyle(slotProps.item.status)"
-              >
-                {{ slotProps.item.status }}
-              </div>
-            </template>
-          </AppTable>
+                class="text-sm mt-2 m-2"
+              >{{ item.name }}</div>
+
+              <!-- <div>
+                <AppButton
+                  class="text-white"
+                  :background="'red'"
+                  :disabled="chosenPracticeJobParts && chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_approved_filtered_job_parts.length ? false : true"
+                  :label="'Remove'"
+                  :icon="'garbage'"
+                  @click="toggleCheckChosenPractices(item)"
+                />
+              </div> -->
+
+              <!-- <div @click="toggleCheckChosenPractices(item)">
+                <input
+                  :id="item" 
+                  v-model="chosenPracticesFinalization" 
+                  type="checkbox" 
+                  :value="item"
+                >
+                <label
+                  :for="item"
+                  class="text-sm pl-1"
+                >{{ item.name }}</label>
+              </div> -->
+            </div>
+            <AppTable
+              :nestedItem="item"
+              :total="item.job_parts_for_invoicing.length"
+              :items="item.practice_invoiceable_approved_filtered_job_parts_sliced"
+              :currentPage="item.current_page"
+              :perPage="10"
+              :columns="jobPartsColumns"
+              :customWidth="200"
+              @checkClicked="toggleCheckJobParts"
+              @pagechanged="pageChangedJobPart"
+              @sorted="sorted"
+            >
+              <template v-slot:checker="slotProps">
+                <input 
+                  :id="slotProps.item" 
+                  v-model="chosenPracticeJobParts" 
+                  type="checkbox" 
+                  :value="slotProps.item" 
+                >
+                <label :for="slotProps.item" />
+              </template>
+              <template v-slot:invoice_status_slot="slotProps">
+                <div
+                  class="rounded-full text-center px-4 py-1 w-32"
+                  :class="invoiceStatusStyle(slotProps.item.invoice_status)"
+                >
+                  {{ slotProps.item.invoice_status }}
+                </div>
+              </template>
+              <template v-slot:status_slot="slotProps">
+                <div
+                  class="rounded-full text-center px-4 py-1 w-32"
+                  :class="invoiceStatusStyle(slotProps.item.status)"
+                >
+                  {{ slotProps.item.status }}
+                </div>
+              </template>
+            </AppTable>
+          </div>
+        </div>
+        <div class="m-4">
+          <div class="m-2 text-white">
+            Pagination for Chosen Practices
+          </div>
+          <AppPagination
+            :total="chosenPractices.length"
+            :totalPages="Math.ceil(chosenPractices.length / practicesFinalizationPerPage)"
+            :currentPage="practicesFinalizationPage"
+            :perPage="practicesFinalizationPerPage"
+            @pagechanged="pageChangedPracticesFinalization"
+          />
+        </div>
+        
+        <transition name="drop" mode="out-in">
+          <AppDate 
+            v-model="dueDate" 
+            class="m-4 text-white" 
+            :name="'due_date'" 
+            :label="'Due Date'" 
+            is-after 
+          />
+        </transition>
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div class="flex flex-row mb-4">
+            <div class="p-2 px-4">
+              <AppButton
+                class="text-white"
+                :background="'green'"
+                :disabled="chosenPracticeJobParts.length < 1 ? true : false"
+                :label="'Confirm'"
+                @click="createBulkBillingChecked()"
+              />
+            </div>
+            <div
+              class="p-2 px-4"
+            >
+              <AppButton
+                class="text-white"
+                :background="'red'"
+                :label="'Cancel'"
+                @click="clearInvoiceableJobParts()"
+              />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TABLE NEW ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    </transition>
+    <!-- SESSIONS MODAL ENDS HERE -->
 
     <div
       v-if="
@@ -160,13 +294,13 @@ import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
-// import AppPagination from "@/components/Base/AppPagination"
+import AppPagination from "@/components/Base/AppPagination"
 export default {
 	components: {
 		AppTable,
     AppDate,
     AppButton,
-    // AppPagination,
+    AppPagination,
   },
   
 	data () {
@@ -182,13 +316,6 @@ export default {
 
       // for bulk billing processing
       showCompleted: false,
-      showDisputed: false,
-      // after query filters
-      showIndependentSpokesOnly:false,
-      showDependentSpokesOnly: false,
-      showStandAloneOnly:false,
-      showHealthBoardsOnly:false,
-
       invoiceableDateStart: "",
       invoiceableDateEnd: "",
       chosenPracticeJobParts: [],
@@ -205,9 +332,6 @@ export default {
 				offset: 0,
 				order_by: ["created_at:desc"],
 				status: ["Active", "Dormant", "Suspended"],
-        type: [],
-        hub_type: [],
-        billable_spoke: null,
         verified: true,
         practice_invoiceable_date_start: null,
         practice_invoiceable_date_end: null,
@@ -215,6 +339,56 @@ export default {
       },
       
 			loading: false,
+			columns: [
+				{
+					name: "Check",
+					dataIndex: "checker",
+					class: "text-center",
+					slotName: "checker",
+					eventName: "checkClicked"
+				},
+				{
+					name: "Practice/Surgery",
+					dataIndex: "name",
+					sortable: true
+				},
+				{
+					name: "Expires",
+					dataIndex: "actived_until",
+					class: "text-center localDate",
+					sortable: true
+        },
+        {
+          name: "Has Disputed",
+          dataIndex: "practice_invoice_item_disputed_count",
+          slotName: "disputed_slot",
+          class: "text-center",
+          sortable:false,
+        },
+				{
+					name: "Status",
+					slot: true,
+					dataIndex: "status",
+					class: "text-center",
+					slotName: "status_slot",
+					sortable: true
+				},
+				{
+					name: "Type",
+					slot: true,
+					dataIndex: "type",
+					class: "text-center",
+					slotName: "type_slot",
+					sortable: true
+				},
+				{
+					name: "Hub Type",
+					slot: true,
+					dataIndex: "hub_type",
+					slotName: "hub_type_slot",
+					class: "text-center"
+				}
+      ],
       jobPartsColumns: [
 				{
 					name: "Check",
@@ -303,46 +477,7 @@ export default {
 
 		$route () {
 			this.getPracticesForBulk()
-    },
-
-    showIndependentSpokesOnly: function (value) {
-      if (value === true) {
-        this.practiceParams.billable_spoke = true
-      } else {
-        this.practiceParams.billable_spoke = null
-      }
-
-      this.getPracticesForBulk()
-    },
-
-    showDependentSpokesOnly: function (value) {
-      if (value === true) {
-        this.practiceParams.billable_spoke = false
-      } else {
-        this.practiceParams.billable_spoke = null
-      }
-
-      this.getPracticesForBulk()
-    },
-
-    showStandAloneOnly: function (value) {
-      if (value === true) {
-        this.practiceParams.type.push('Stand Alone')
-      } else {
-        this.practiceParams.type.filter(type => type!=='Stand Alone')
-      }
-      this.getPracticesForBulk()
-    },
-
-    showHealthBoardsOnly: function (value) {
-      if (value === true) {
-        this.practiceParams.hub_type.push('Type 2')
-      } else {
-        this.practiceParams.type.filter(hub_type => hub_type!== 'Type 2')
-      }
-      this.getPracticesForBulk()
-    }
-
+		}
   },
   created () {
     console.log('store set 0')
@@ -361,10 +496,7 @@ export default {
 			const limit = 10
 			const offset = page * limit - limit
 			const status = ["Active", "Dormant", "Suspended"]
-      const type = this.practiceParams.type
-      const hub_type = this.practiceParams.type
-      const billable_spoke = this.practiceParams.billable_spoke
-      const verified = this.practiceParams.verified
+      // const id = this.practiceParams.id
       const practice_invoiceable_date_start = this.practiceParams.practice_invoiceable_date_start
       const practice_invoiceable_date_end = this.practiceParams.practice_invoiceable_date_end
       const practice_invoiceable = this.practiceParams.practice_invoiceable
@@ -377,11 +509,7 @@ export default {
         limit, 
         offset, 
         order_by, 
-        status,
-        type,
-        hub_type,
-        billable_spoke,
-        verified, 
+        status, 
         practice_invoiceable_date_start, 
         practice_invoiceable_date_end, 
         practice_invoiceable 
@@ -404,8 +532,7 @@ export default {
 			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })
 			const practices = response.data.practices
 			await this.$store.commit("billings/SET_BILLABLE_PRACTICES", practices)
-      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
-
+			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
     },
 
     async processBulkBilling () {
@@ -610,32 +737,16 @@ export default {
     },
 
     toggleCheckChosenPractices (item) {
-      const index = this.chosenPractices.findIndex(practice => {
+      const index = this.chosenPracticesFinalization.findIndex(practice => {
         return practice.id === item.id
       })
+
       if (index > -1) {
-        this.chosenPractices.splice(index, 1)
-      } else {
-        this.chosenPractices.push(item)
+        this.chosenPracticesFinalization.splice(index, 1)
       }
 
-      console.log('chosenPractices', this.chosenPractices)
-
-      // const practiceJobParts = this.chosenPracticeJobParts.filter(jobParts => {
-      //   jobParts.practice_id === item.id
-      // })
-
-      // if (practiceJobParts > -1) {
-      //   this.chosenPracticesFinalization.filter()
-      // } else {
-      //   this.chosenPracticesFinalization = {
-      //     ...this.chosenPracticesFinalization,
-      //     ...item.practice_invoiceable_approved_filtered_job_parts,
-      //   }
-      // }
-
     },
-    
+
     toggleCheckJobParts (item) {
       const index = this.chosenPracticeJobParts.findIndex(jobPart => {
         return jobPart.id === item.id
@@ -660,9 +771,6 @@ export default {
 					order_by: this.practiceParams.order_by,
 					offset: this.practiceParams.offset,
           status: this.practiceParams.status,
-          type: this.practiceParams.type,
-          hub_type: this.practiceParams.hub_type,
-          billable_spoke: this.practiceParams.billable_spoke,
           practice_invoiceable_date_start: this.practiceParams.practice_invoiceable_date_start, 
           practice_invoiceable_date_end: this.practiceParams.practice_invoiceable_date_end, 
           practice_invoiceable: this.practiceParams.practice_invoiceable,
@@ -677,9 +785,6 @@ export default {
 						order_by: this.practiceParams.order_by,
 						offset: this.practiceParams.offset,
             status: this.practiceParams.status,
-            type: this.practiceParams.type,
-            hub_type: this.practiceParams.hub_type,
-            billable_spoke: this.practiceParams.billable_spoke,
             practice_invoiceable_date_start: this.practiceParams.practice_invoiceable_date_start, 
             practice_invoiceable_date_end: this.practiceParams.practice_invoiceable_date_end, 
             practice_invoiceable: this.practiceParams.practice_invoiceable,
