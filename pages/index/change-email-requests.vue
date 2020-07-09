@@ -75,50 +75,11 @@
         <div class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0">
           <label class="text-sm text-white md:pr-2">Sort by</label>
           <select
-            v-model="orderByValue"
+            v-model="selectedOrderByValue"
             class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
           >
-            <option value="id:asc">
-              ID (asc)
-            </option>
-            <option value="id:desc">
-              ID (desc)
-            </option>
-            <option value="new_email:asc">
-              New E-Mail Address (asc)
-            </option>
-            <option value="new_email:desc">
-              New E-Mail Address (desc)
-            </option>
-            <option value="user_count:asc">
-              User Count (asc)
-            </option>
-            <option value="user_count:desc">
-              User Count (desc)
-            </option>
-            <option value="requested_at_formatted:asc">
-              Requested At (asc)
-            </option>
-            <option value="requested_at_formatted:desc">
-              Requested At (desc)
-            </option>
-            <option value="status:asc">
-              Status (asc)
-            </option>
-            <option value="status:desc">
-              Status (desc)
-            </option>
-            <option value="accepted_at:asc">
-              Accepted At (asc)
-            </option>
-            <option value="accepted_at:desc">
-              Accepted At (desc)
-            </option>
-            <option value="rejected:asc">
-              Rejected At (asc)
-            </option>
-            <option value="rejected:desc">
-              Rejected At (desc)
+            <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
+              {{ orderByValue.displayLabel }}
             </option>
           </select>
         </div>
@@ -188,7 +149,9 @@
         search: '',
         filterStatus: null,
         sort: null,
-        orderBy: [],
+        orderBy: [
+          'requested_at_formatted:desc',
+        ],
         count: 0,
         changeEmailRequests: [],
       }
@@ -203,15 +166,6 @@
         return Math.max(this.page * this.limit - this.limit, 0)
       },
 
-      orderByValue: {
-        get () {
-          return this.orderBy.length > 0 ? this.orderBy[0] : null
-        },
-        set (orderBy) {
-          this.orderBy = [orderBy]
-        },
-      },
-
       columns () {
         return [
           {
@@ -220,30 +174,6 @@
             class: "text-center",
             sortable: true
           },
-          // {
-          //   name: "Memorable Word Category",
-          //   dataIndex: "memorable_word_category_name",
-          //   class: "text-center",
-          //   sortable: true
-          // },
-          // {
-          //   name: "Memorable Word",
-          //   dataIndex: "memorable_word",
-          //   class: "text-center",
-          //   sortable: true
-          // },
-          // {
-          //   name: "Memorable Date",
-          //   dataIndex: "memorable_date_formatted",
-          //   class: "text-center",
-          //   sortable: true
-          // },
-          // {
-          //   name: "Memorable Number",
-          //   dataIndex: "memorable_number",
-          //   class: "text-center",
-          //   sortable: true
-          // },
           {
             name: "New E-Mail Address",
             dataIndex: "new_email",
@@ -283,6 +213,39 @@
             sortable: true,
           },
         ]
+      },
+
+      orderByValues () {
+        return this.columns.reduce((orderByValues, column) => {
+          const {
+            name,
+            dataIndex,
+            sortable,
+          } = column
+
+          if (sortable) {
+            orderByValues.push({
+              displayLabel: `${name} (asc)`,
+              value: `${dataIndex}:asc`,
+            })
+
+            orderByValues.push({
+              displayLabel: `${name} (desc)`,
+              value: `${dataIndex}:desc`,
+            })
+          }
+
+          return orderByValues
+        }, [])
+      },
+
+      selectedOrderByValue: {
+        get () {
+          return this.orderBy.length > 0 ? this.orderBy[0] : null
+        },
+        set (orderBy) {
+          this.orderBy = [orderBy]
+        },
       },
 
       changeEmailRequestStatusColorClass () {
