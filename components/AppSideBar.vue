@@ -25,6 +25,7 @@
             v-if="`/${$route.path.split('/')[1]}`== item.route"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
           />
+
           <nuxt-link :to="item.route">
             <div
               class="block font-sans no-underline p-4"
@@ -34,12 +35,15 @@
               @click="close"
             >
               <span>{{ item.name }}</span>
+
               <span v-if="item.name === 'Locums' && locumComplianceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ locumComplianceNotifications.length }}
               </span>
+
               <span v-if="item.name === 'Practices' && practiceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ practiceNotifications.length }}
               </span>
+
               <span v-if="item.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ unacknowledgedCount }}
               </span>
@@ -91,6 +95,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data () {
