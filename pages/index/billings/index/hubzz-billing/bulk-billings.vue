@@ -105,26 +105,26 @@
       </div>
     </div>
     <div v-else class="border-b-2 border-white mt-2">
-      <div class="hidden md:flex pb-3 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle text-center w-1/8">
+      <div class="hidden md:flex pb-3  items-center text-sm text-white justify-around font-semibold">
+        <div class="align-middle text-center w-1/6">
           Practice / Surgery
         </div>
-        <div class="align-middle text-center w-2/8">
+        <div class="align-middle text-center w-1/6">
           Check
         </div>
-        <div class="align-middle text-center w-1/8">
+        <div class="align-middle text-center w-1/6">
           Job Part Number
         </div>
-        <div class="align-middle text-center w-2/8">
+        <div class="align-middle text-center w-1/6">
           Approved at / Completed At
         </div>
-        <div class="align-middle text-center w-1/8">
+        <div class="align-middle text-center w-1/6">
           Total
         </div>
-        <!-- <div class="align-middle text-center w-1/8">
+        <!-- <div class="align-middle text-center w-1/6">
           Invoice Status
         </div> -->
-        <div class="align-middle text-center w-1/8 align-right">
+        <div class="align-middle text-center w-1/6 align-right">
           Status
         </div>
       </div>
@@ -147,39 +147,36 @@
             @sorted="sorted"
           >
             <template v-slot:checker="slotProps">
-              <div>
-                <strong class="block md:hidden text-sm uppercase">Practice Name</strong>
-                <div class="flex flex-col justify-center m-1">
-                  <div>{{ slotProps.item.name }}</div>
-                  <div
-                    class="m-1 rounded-full text-center px-4 py-1 w-32" 
-                    :class="typeStyle(slotProps.item.type)"
+              <div class="flex flex-col items-center m-1">
+                <div>{{ slotProps.item.name }}</div>
+                <div
+                  class="m-1 rounded-full text-center px-4 py-1 w-32" 
+                  :class="typeStyle(slotProps.item.type)"
+                >
+                  {{ slotProps.item.type }}
+                </div>
+                <div 
+                  v-if="slotProps.item.type === 'Spoke'"
+                  class="text-blue-200 m-1"
+                >
+                  {{ slotProps.item.parent_practice.name }} (HUB)
+                </div>
+                <div class="m-1">
+                  <input 
+                    :id="slotProps.item" 
+                    v-model="chosenPractices" 
+                    type="checkbox" 
+                    :value="slotProps.item" 
                   >
-                    {{ slotProps.item.type }}
-                  </div>
-                  <div 
-                    v-if="slotProps.item.type === 'Spoke'"
-                    class="text-blue-200 m-1"
-                  >
-                    {{ slotProps.item.parent_practice.name }} (HUB)
-                  </div>
-                  <div class="m-1">
-                    <input 
-                      :id="slotProps.item" 
-                      v-model="chosenPractices" 
-                      type="checkbox" 
-                      :value="slotProps.item" 
-                    >
-                    <label :for="slotProps.item">
-                      Select All
-                    </label>
-                  </div>
+                  <label :for="slotProps.item">
+                    Select All
+                  </label>
                 </div>
               </div>
             </template>
             
             <template v-slot:invoiceable_job_parts="slotProps">
-              <div class="md:justify-center sm:w-1/2 md:w-11/12 px-1 xl:px-2 align-middle md:text-center">
+              <div class="md:justify-center sm:w-1/2 md:w-full px-1 xl:px-2 align-middle md:text-center">
                 <div>
                   <AppTable
                     :total="slotProps.item.practice_invoiceable_job_parts.length"
@@ -336,7 +333,7 @@ export default {
         {
           name:"Job Parts",
           dataIndex:"invoiceable_job_parts",
-          class:"text-center",
+          class:"w-full",
           slotName:"invoiceable_job_parts",
         },
 
