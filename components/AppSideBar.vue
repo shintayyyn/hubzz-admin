@@ -100,7 +100,6 @@
 export default {
   data () {
     return {
-      lists: [],
       menu: [],
       // GET SUPPORTS BADGE
       params: {
@@ -114,58 +113,67 @@ export default {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
     },
+
     practiceNotifications () {
       return this.$store.getters["practices/getPracticeNotifications"]
     },
+
     locumComplianceNotifications () {
       return this.$store.getters["locums/getLocumComplianceNotifications"]
     },
+
     unacknowledgedCount () {
       return this.$store.state.supports.unacknowledgedCount
     },
+
     pendingChangeEmailRequestIds () {
       return this.$store.getters['pendingChangeEmailRequestIds']
     },
-  },
 
-  async created () {
-    // $auth.user.domain
-    if (this.$auth.loggedIn) {
-      const acknowledged = false
-      const params = { acknowledged }
-
-      this.$axios.$get(`/api/v1/admin/supports/count`,{ params }).then(res => {
-        this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
-      })
-      
+    lists () {
       let defaultLists = [
-        { name: "Dashboard", route: "/", order: 1},     
+        {
+          name: "Dashboard",
+          route: "/",
+          order: 1,
+          active: this.$route.name === 'index',
+        },
       ]
+
       let addedLists = []
+
       if(this.authAdminPermissions.includes('View Locums')){
         addedLists.push({ name: "Locums", route: "/locums", order: 2})
       }
+
       if(this.authAdminPermissions.includes('View Practices')){
         addedLists.push({ name: "Practices", route: "/practices", order: 3})
       }
+
       if(this.authAdminPermissions.includes('View Hubzz Invoices')){
         addedLists.push({ name: "Billing", route: "/billings/hubzz-billing", order: 4})
       }
+
       if(this.authAdminPermissions.includes('View Reports')){
         addedLists.push({ name: "Reports", route: "/reports", order: 5})
       }
+
       if(this.authAdminPermissions.includes('View Standard Terms')){
         addedLists.push({ name: "Standard Terms", route: "/standard-terms", order: 6})
       }
+      
       if(this.authAdminPermissions.includes('View Referral Lottery')){
         addedLists.push({ name: "Referral Lottery", route: "/referral-lottery", order: 7})
       }
+
       if(this.authAdminPermissions.includes('View FAQ')){
         addedLists.push({ name: "FAQs", route: "/faqs", order: 8})
       }
+
       if(this.authAdminPermissions.includes('View Terms and Conditions & Privacy Policy')){
         addedLists.push({ name: "Terms and Conditions", route: "/tncs", order: 9})
       }
+      
       if(this.authAdminPermissions.includes('View Inquiries Messages')){
         addedLists.push({ name: "Inquiries", route: "/inquiries", order: 10})
       }
@@ -191,8 +199,8 @@ export default {
       //   ];
       // }
 
-      this.lists = [...defaultLists, ...addedLists]
-      this.list = this.lists.sort((a, b) => a.order - b.order)
+      const lists = [...defaultLists, ...addedLists]
+      lists.sort((a, b) => a.order - b.order)
       // let defaultMenu = [
       //   { name: "Dashboard", route: "/" },
       //   {
@@ -212,6 +220,21 @@ export default {
       // ]
 
       // this.menu = [...defaultMenu]
+
+      return lists
+    },
+  },
+
+  async created () {
+    // $auth.user.domain
+    if (this.$auth.loggedIn) {
+      this.$axios.$get(`/api/v1/admin/supports/count`, {
+        params: {
+          acknowledged: false,
+        }
+      }).then(res => {
+        this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT", res.data.count)
+      })
     }
   },
 
