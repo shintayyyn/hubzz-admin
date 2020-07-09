@@ -105,7 +105,7 @@
       </div>
     </div>
     <div v-else class="border-b-2 border-white mt-2">
-      <div class="hidden md:flex items-center text-sm text-white justify-around font-semibold">
+      <div class="hidden md:flex pb-3 items-center text-sm text-white justify-around font-semibold">
         <div class="align-middle text-center w-1/8">
           Practice / Surgery
         </div>
@@ -128,7 +128,7 @@
           Status
         </div>
       </div>
-      <div class="w-full overflow-x-auto h-160 overflow-y-auto">
+      <div class="w-full overflow-x-auto h-160 overflow-y-auto bg-charade rounded-lg">
         <!-- BODY -->
         <div class="p-2">
           <AppTable
@@ -345,13 +345,14 @@ export default {
 				{
 					name: "Check",
 					dataIndex: "checker",
-					class: "text-center",
+					class: "text-center ",
 					slotName: "checker",
 					eventName: "checkClicked"
         },
 				{
 					name: "Job Part Number",
-					dataIndex: "job_part_number",
+          dataIndex: "job_part_number",
+          class: "text-center",
 					sortable: false
 				},
         {

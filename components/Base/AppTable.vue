@@ -3,7 +3,7 @@
     <div>
       <AppLoading :loading="loading" spinner />
       <div
-        class="relative flex flex-col overflow-x-auto w-full px-2 mt-4"
+        class="relative flex flex-col overflow-x-auto w-full mt-4"
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
         <div
@@ -22,7 +22,7 @@
             ]"
             @click="column.sortable && sort(column.sortIndex || column.dataIndex)"
           >
-            <span class="pr-1">{{ column.name }}</span>
+            <span class="pr-1 text-right">{{ column.name }}</span>
             <svgicon
               v-if="column.sortable"
               :name="sortIcon(column.dataIndex)"
