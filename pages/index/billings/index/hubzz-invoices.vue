@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div class="flex justify-start w-full items-center">
-      <div class="">
+    <div class="flex flex-col md:flex-row justify-start w-full m-3">
+      <div class="flex-1">
         <input
           v-model="search"
-          class="rounded-lg border-2 border-transparent text-sm text-white w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
+          class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
           placeholder="Filter by Practice Name or Invoice Number"
         >
       </div>
-      <div class="text-white">
+      <div class="flex m-3 text-white">
         <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
         <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
       </div>
-      <div class="text-white">
+      <div class="flex-1 m-3 text-white">
         <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
         <label for="showCsvExportOnly">Show CSV Export Only</label>
       </div>
@@ -133,18 +133,16 @@
     </div>
     
     <div class="flex flex-row justify-end">
-      <AppButton
+      <!-- <AppButton
         :class="sageChecker ? 'text-white mr-2' : 'text-black mr-2'"
         :background="sageChecker ? 'red' : 'sunglow'"
         :label="sageChecker ? 'Cancel creating SAGE.csv' : 'Create SAGE.csv'"
         :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
         @click="showSageChecker()"
-      />
+      /> -->
       <AppButton
-        v-if="sageChecker === true"
-        class="mr-2 text-white"
-        :background="'green'"
-        :label="'Confirm Invoices and Export SAGE.csv'"
+        class="mr-2"
+        :label="'Create SAGE.csv'"
         :icon="'circle-check'"
         :disabled="chosenInvoices.length == 0"
         @click="confirmSage()"
@@ -343,13 +341,20 @@ export default {
       
       // EXPORTING MODALS
       exportedModal: false,
-      sageChecker: false,
 
 			// practiceInvoices: [],
 			// practiceInvoicesCount: 0,
 			practice: "",
 			sort: "",
 			columns: [
+         {
+          name: "Check",
+          dataIndex: "checker",
+          class: "text-center",
+          slotName: "checker",
+          eventName: "checkClicked",
+          order: 1
+        },
 				{
 					name: "Invoice Number",
           dataIndex: "invoice_number",
@@ -637,6 +642,7 @@ export default {
       }).finally(() => {
         this.downloading = false
         this.exportedModal = false
+        this.getHubzzInvoices()
       })
     },
     viewInvoice (invoiceId) {
