@@ -75,14 +75,18 @@
                     <div v-if="column.slotName == 'checker'" @click.prevent.stop="$emit(column.eventName, item)">
                       <slot :name="column.slotName" :item="item" />
                     </div>
+
                     <slot v-else :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
                   </template>
+
                   <template v-else-if="column.dataIndex === 'actions'">
                     <slot name="actions" :item="item" @click="$emit('click', item)" />
                   </template>
+
                   <template v-else-if="column.dataIndex === 'actions-button'">
                     <slot name="actions-button" :item="item" />
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -92,6 +96,7 @@
                   >
                     {{ dataCell(item, column) | localDate }}
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -101,6 +106,7 @@
                   >
                     {{ dataCell(item, column) | currency }}
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -110,6 +116,7 @@
                   >
                     {{ dataCell(item, column) | fileSize }}
                   </template>
+                  
                   <template v-else>
                     {{ dataCell(item, column) }}
                   </template>

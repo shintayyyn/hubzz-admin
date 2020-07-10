@@ -12,7 +12,7 @@
       <div class="py-4">
         <div class="mx-2 md:mx-4 text-white">
           <div class="text-lg font-bold">
-            Create Compliance Document Reject Reason
+            Edit Compliance Document Reject Reason
           </div>
         </div>
 
@@ -38,7 +38,7 @@
               required
             />
 
-            <AppButton class="mt-4" :label="creatingComplianceDocumentRejectReason ? 'Creating...' : 'Create'" @click="createComplianceDocumentRejectReason" />
+            <AppButton class="mt-4" :label="updatingComplianceDocumentRejectReason ? 'Updating...' : 'Update'" @click="updateComplianceDocumentRejectReason" />
           </div>
         </div>
       </div>
@@ -59,6 +59,11 @@
     },
 
     props: {
+      complianceDocumentRejectReasons: {
+        type: Array,
+        required: true,
+      },
+
       complianceDocuments: {
         type: Array,
         required: true,
@@ -77,14 +82,21 @@
 
     data () {
       return {
+        loading: false,
+        complianceDocumentRejectReason: null,
+
         complianceDocumentId: null,
         rejectReason: '',
         formErrors: [],
-        creatingComplianceDocumentRejectReason: false,
+        updatingComplianceDocumentRejectReason: false,
       }
     },
 
     computed: {
+      complianceDocumentRejectReasonId () {
+        return this.complianceDocumentRejectReason ? this.complianceDocumentRejectReason.id : null
+      },
+
       complianceDocument () {
         return this.complianceDocumentId
           ? this.complianceDocuments.find(({ id }) => id.toString() === this.complianceDocumentId.toString()) || null
@@ -128,8 +140,36 @@
       },
     },
 
+    mounted () {
+      const complianceDocumentRejectReason = this.complianceDocumentRejectReasons
+        && this.complianceDocumentRejectReasons.find(({ id }) => id.toString() === this.$route.params.id.toString())
+
+      if (complianceDocumentRejectReason) {
+        this.complianceDocumentRejectReason = complianceDocumentRejectReason
+        this.complianceDocumentId = this.complianceDocumentRejectReason.compliance_document_id
+        this.rejectReason = this.complianceDocumentRejectReason.reject_reason
+        return
+      }
+
+      this.loading = true
+      this.$axios.get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}`).then((response) => {
+        this.complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
+        this.complianceDocumentId = this.complianceDocumentRejectReason.compliance_document_id
+        this.rejectReason = this.complianceDocumentRejectReason.reject_reason
+      }).catch((err) => {
+        console.log('err', err.response || err)
+
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loading = false
+        // setTimeout(() => {
+        //   this.loading = false
+        // }, 1000)
+      })
+    },
+
     methods: {
-      async createComplianceDocumentRejectReason () {
+      async updateComplianceDocumentRejectReason () {
         try {
           const data = {
             compliance_document_id: this.complianceDocumentId,
@@ -150,23 +190,23 @@
             return
           }
 
-          this.creatingComplianceDocumentRejectReason = true
+          this.updatingComplianceDocumentRejectReason = true
 
-          const response = await this.$axios.post('/api/v1/admin/compliance-document-reject-reasons', data)
+          const response = await this.$axios.put(`/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}`, data)
 
           const complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
 
           const message = response.data.message
 
-          this.$emit('complianceDocumentRejectReasonCreated', complianceDocumentRejectReason)
+          this.$emit('complianceDocumentRejectReasonUpdated', complianceDocumentRejectReason)
 
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
             status: 'success',
-            text: message || 'Compliance Document Reject Reason Created!',
+            text: message || 'Compliance Document Reject Reason Updated!',
           })
 
-          this.creatingComplianceDocumentRejectReason = false
+          this.updatingComplianceDocumentRejectReason = false
 
           this.$router.push({ name: 'index-compliance-document-reject-reasons' })
         } catch (err) {
@@ -194,7 +234,7 @@
             })
           }
 
-          this.creatingComplianceDocumentRejectReason = false
+          this.updatingComplianceDocumentRejectReason = false
         }
       },
     },

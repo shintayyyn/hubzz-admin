@@ -104,8 +104,14 @@
     />
 
     <nuxt-child
+      :complianceDocuments="complianceDocuments"
+      :complianceDocumentSelectionList="complianceDocumentSelectionList"
+      :loadingComplianceDocuments="loadingComplianceDocuments"
       :complianceDocumentRejectReasons="complianceDocumentRejectReasons"
       @complianceDocumentRejectReasons="(_complianceDocumentRejectReasons) => complianceDocumentRejectReasons = _complianceDocumentRejectReasons"
+      @complianceDocumentRejectReasonCreated="getComplianceDocumentRejectReasons()"
+      @complianceDocumentRejectReasonUpdated="complianceDocumentRejectReasonUpdated"
+      @complianceDocumentRejectReasonDeleted="complianceDocumentRejectReasonDeleted"
     />
   </div>
 </template>
@@ -136,6 +142,9 @@ export default {
       ],
       count: 0,
       complianceDocumentRejectReasons: [],
+
+      loadingComplianceDocuments: false,
+      complianceDocuments: [],
     }
   },
 
@@ -155,19 +164,19 @@ export default {
           dataIndex: "id",
           class: "text-center",
           sortable: true,
-          flex: '1 0 0'
+          flex: '1 0 100px'
         },
         {
           name: "Compliance Document",
           dataIndex: "compliance_document_name",
           sortable: true,
-          flex: '3 1 0'
+          flex: '3 1 100px'
         },
         {
           name: "Reject Reason",
           dataIndex: "reject_reason",
           sortable: true,
-          flex: '6 2 0'
+          flex: '6 2 100px'
         },
       ]
     },
@@ -215,6 +224,13 @@ export default {
         this.orderBy = [orderBy]
       },
     },
+
+    complianceDocumentSelectionList () {
+      return this.complianceDocuments.map(complianceDocument => ({
+        label: complianceDocument.name,
+        value: complianceDocument.id,
+      }))
+    },
   },
 
   watch: {
@@ -238,25 +254,74 @@ export default {
     }).finally(() => {
       this.loading = false
     })
+
+    this.loadingComplianceDocuments = true
+    this.$axios.get('/api/v1/admin/compliance-documents', {
+      params: {
+        has_parent: false,
+        has_mandatory_profession_compliance_category: true,
+        limit: 999,
+      },
+    }).then((response) => {
+      this.complianceDocuments = response.data.data.compliance_documents
+    }).catch(this.errorHandler).finally(() => {
+      this.loadingComplianceDocuments = false
+    })
     
     this.$socket.on('Admin Notification Compliance Document Reject Reason Created', this.getComplianceDocumentRejectReasons)
     this.$socket.on('Admin Notification Compliance Document Reject Reason Updated', this.complianceDocumentRejectReasonUpdated)
-    this.$socket.on('Admin Notification Compliance Document Reject Reason Deleted', this.getComplianceDocumentRejectReasons)
+    this.$socket.on('Admin Notification Compliance Document Reject Reason Deleted', this.complianceDocumentRejectReasonDeleted)
   },
 
   destroyed () {
     this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Created', this.getComplianceDocumentRejectReasons)
     this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Updated', this.complianceDocumentRejectReasonUpdated)
-    this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Deleted', this.getComplianceDocumentRejectReasons)
+    this.$socket.removeListener('Admin Notification Compliance Document Reject Reason Deleted', this.complianceDocumentRejectReasonDeleted)
   },
 
   methods: {
+    errorHandler (err) {
+      console.log('err', err.response || err)
+
+      let message = null
+
+      if (err.response) {
+        if (err.response.status === 400 && err.response.data.error_messages) {
+          message = err.response.data.error_messages.map(({ message }) => message).join(', ')
+        } else {
+          message = err.response.data.message
+        }
+      } else if (err.request) {
+        message = 'Something went wrong!'
+      } else {
+        message = err.message
+      }
+
+      if (message) {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: message,
+        })
+      }
+    },
+
     complianceDocumentRejectReasonUpdated (complianceDocumentRejectReason) {
       const index = this.complianceDocumentRejectReasons.findIndex(({ id }) => id === complianceDocumentRejectReason.id)
 
       if (index > -1) {
         this.complianceDocumentRejectReasons.splice(index, 1, complianceDocumentRejectReason)
       }
+    },
+
+    complianceDocumentRejectReasonDeleted (complianceDocumentRejectReasonId) {
+      const index = this.complianceDocumentRejectReasons.findIndex(({ id }) => id === complianceDocumentRejectReasonId)
+
+      if (index > -1) {
+        this.complianceDocumentRejectReasons.splice(index, 1)
+      }
+
+      this.getComplianceDocumentRejectReasons()
     },
 
     searchSubmit: debounce(function () {

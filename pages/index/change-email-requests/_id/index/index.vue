@@ -285,7 +285,10 @@
         this.changeEmailRequestToAcceptUserId = null
         this.changeEmailRequestToRejectUserId = null
 
-        this.$store.commit('pendingChangeEmailRequestIds', this.$store.getters['pendingChangeEmailRequestIds'].filter(id => id !== changeEmailRequest.id))
+        this.$store.commit(
+          'pendingChangeEmailRequestIds',
+          this.$store.getters['pendingChangeEmailRequestIds'].filter(id => id !== changeEmailRequest.id),
+        )
       },
 
       errorHandler (err) {
