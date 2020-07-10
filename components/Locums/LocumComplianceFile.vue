@@ -112,22 +112,33 @@
               </div>
 							
               <!-- PUT NOTES IF REJECTING -->
-              <div v-if="notesAreVisible" class="w-full">
+              <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status === 'Rejected'" class="w-full">
                 <AppInput
+                  v-model="selectedComplianceDocumentRejectReasonValue"
+                  class="w-full mr-2"
+                  :type="'select'"
+                  :name="'complianceNote'"
+                  :placeholder="'Select...'"
+                  :items="complianceDocumentRejectReasonSeletionList"
+                  :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formError.find(item => item.field === 'note')"
+                  :label="'Reason for Rejection'"
+                  required
+                />
+
+                <AppInput
+                  v-if="selectedComplianceDocumentRejectReasonValue === ''"
                   v-model="toPutLocumDetailCompliance.note"
                   :name="'complianceNote'"
                   :placeholder="'Type Here'"
                   :type="'textarea'"
-                  :label="'Reason for Rejection'"
                   :rows="2"
                   :class="'font-normal'"
                   :error="formError.find(item => item.field === 'note')"
-                  required
                 />
               </div>
 
               <!-- PICK EXPIRATION DATE -->
-              <div v-else class="pb-4">
+              <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'" class="pb-4">
                 <AppDate
                   v-model="toPutLocumDetailCompliance.expired_at"
                   :name="'expired_at'"
@@ -243,7 +254,6 @@
           note: ""
         },
         emailContent: "",
-        notesAreVisible: false,
         formError: [],
         emailModal: false,
         editorOption: {
@@ -266,13 +276,35 @@
               ["link"]
             ]
           }
-        }
+        },
+        selectedComplianceDocumentRejectReasonValue: null,
       }
     },
 
     computed: {
       authAdminPermissions () {
         return this.$store.getters["permissions"]
+      },
+
+      complianceDocumentRejectReasonSeletionList () {
+        return this.locumComplianceDocument
+          ? this.locumComplianceDocument.compliance_document_reject_reasons
+            .map(({ reject_reason: rejectReason }) => ({
+              label: rejectReason,
+              value: rejectReason,
+            })).concat([{
+              label: 'Other',
+              value: '',
+            }])
+          : []
+      },
+    },
+    
+    watch: {
+      selectedComplianceDocumentRejectReasonValue (newVal, oldVal) {
+        if (!newVal && oldVal) {
+          this.toPutLocumDetailCompliance.note = ''
+        }
       },
     },
 
@@ -295,6 +327,17 @@
     },
 
     mounted () {
+      if (this.locumComplianceDocument) {
+        const selectedComplianceDocumentRejectReason = this.locumComplianceDocument.compliance_document_reject_reasons
+          .find(({ reject_reason: rejectReason }) => rejectReason === this.locumComplianceDocument.note)
+
+        this.selectedComplianceDocumentRejectReasonValue = selectedComplianceDocumentRejectReason
+          ? selectedComplianceDocumentRejectReason.reject_reason
+          : this.locumComplianceDocument.note
+            ? ''
+            : null
+      }
+
       if (this.locumComplianceDocument && this.locumComplianceDocument.file) {
         this.loadingFile = true
         const {
@@ -354,6 +397,8 @@
       publish () {
         this.formError = []
 
+        this.toPutLocumDetailCompliance.note = this.selectedComplianceDocumentRejectReasonValue || this.toPutLocumDetailCompliance.note
+
         console.log(
           "toPutLocumDetailCompliance",
           this.toPutLocumDetailCompliance
@@ -383,11 +428,6 @@
 
       setStatusData (incomingStatus) {
         this.toPutLocumDetailCompliance.status = incomingStatus
-        if (incomingStatus === "Rejected") {
-          this.notesAreVisible = true
-        } else {
-          this.notesAreVisible = false
-        }
       },
 
       downloadItem (fileUrl, fileFilename) {
