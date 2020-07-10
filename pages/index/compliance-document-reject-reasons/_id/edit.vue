@@ -152,7 +152,7 @@
       }
 
       this.loading = true
-      this.$axios.get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}`).then((response) => {
+      this.$axios.get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}?published=any`).then((response) => {
         this.complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
         this.complianceDocumentId = this.complianceDocumentRejectReason.compliance_document_id
         this.rejectReason = this.complianceDocumentRejectReason.reject_reason
@@ -192,7 +192,7 @@
 
           this.updatingComplianceDocumentRejectReason = true
 
-          const response = await this.$axios.put(`/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}`, data)
+          const response = await this.$axios.put(`/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}?published=any`, data)
 
           const complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
 

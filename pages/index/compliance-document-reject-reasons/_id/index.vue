@@ -36,27 +36,32 @@
             <div class="text-gray-400">
               <p class="m-2">
                 <span>ID</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason ? complianceDocumentRejectReason.id : null }}</span>
+                <span class="m-2 text-white">{{ complianceDocumentRejectReason.id }}</span>
               </p>
 
               <p class="m-2">
                 <span>Compliance Document</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason ? complianceDocumentRejectReason.compliance_document_name : null }}</span>
+                <span class="m-2 text-white">{{ complianceDocumentRejectReason.compliance_document_name }}</span>
               </p>
 
               <p class="m-2">
                 <span>Reject Reason</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason ? complianceDocumentRejectReason.reject_reason : null }}</span>
+                <span class="m-2 text-white">{{ complianceDocumentRejectReason.reject_reason }}</span>
               </p>
 
-              <p class="m-2">
+              <p v-if="false" class="m-2">
                 <span>Created At</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason ? complianceDocumentRejectReason.created_at_formatted : 'N/A' }}</span>
+                <span class="m-2 text-white">{{ complianceDocumentRejectReason.created_at_formatted || 'N/A' }}</span>
               </p>
 
-              <p class="m-2">
+              <p v-if="false" class="m-2">
                 <span>Updated At</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason ? complianceDocumentRejectReason.updated_at_formatted : 'N/A' }}</span>
+                <span class="m-2 text-white">{{ complianceDocumentRejectReason.updated_at_formatted || 'N/A' }}</span>
+              </p>
+
+              <p v-if="complianceDocumentRejectReason.deleted_at_formatted" class="m-2">
+                <span>Deleted At</span>
+                <span class="m-2 text-white">{{ complianceDocumentRejectReason.deleted_at_formatted }}</span>
               </p>
             </div>
 
@@ -136,7 +141,7 @@
       }
 
       this.loading = true
-      this.$axios.get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}`).then((response) => {
+      this.$axios.get(`/api/v1/admin/compliance-document-reject-reasons/${this.$route.params.id}?published=any`).then((response) => {
         this.complianceDocumentRejectReason = response.data.data.compliance_document_reject_reason
       }).catch((err) => {
         console.log('err', err.response || err)
@@ -154,7 +159,7 @@
       deleteComplianceDocumentRejectReason () {
         this.deletingComplianceDocumentRejectReason = true
 
-        this.$axios.delete(`/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}`).then((response) => {
+        this.$axios.delete(`/api/v1/admin/compliance-document-reject-reasons/${this.complianceDocumentRejectReasonId}?published=any`).then((response) => {
           const message = response.data.message
 
           this.$emit('complianceDocumentRejectReasonDeleted', this.complianceDocumentRejectReasonId)
