@@ -259,7 +259,7 @@ export default {
     this.$axios.get('/api/v1/admin/compliance-documents', {
       params: {
         has_parent: false,
-        has_mandatory_profession_compliance_category: true,
+        has_verifiable_profession_compliance_category: true,
         limit: 999,
       },
     }).then((response) => {
