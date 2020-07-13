@@ -288,8 +288,14 @@
 
       complianceDocumentRejectReasonSeletionList () {
         return this.locumComplianceDocument
-          ? this.locumComplianceDocument.compliance_document_reject_reasons
-            .map(({ reject_reason: rejectReason }) => ({
+          ? [
+              ...this.locumComplianceDocument.compliance_document_reject_reasons,
+              ...(
+                this.locumComplianceDocument.parent_compliance_document
+                  ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons
+                  : []
+              ),
+            ].map(({ reject_reason: rejectReason }) => ({
               label: rejectReason,
               value: rejectReason,
             })).concat([{
@@ -328,11 +334,26 @@
 
     mounted () {
       if (this.locumComplianceDocument) {
-        const selectedComplianceDocumentRejectReason = this.locumComplianceDocument.compliance_document_reject_reasons
-          .find(({ reject_reason: rejectReason }) => rejectReason === this.locumComplianceDocument.note)
+        const complianceDocumentRejectReasonSeletionList = [
+          ...this.locumComplianceDocument.compliance_document_reject_reasons,
+          ...(
+            this.locumComplianceDocument.parent_compliance_document
+              ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons
+              : []
+          ),
+        ].map(({ reject_reason: rejectReason }) => ({
+          label: rejectReason,
+          value: rejectReason,
+        })).concat([{
+          label: 'Other',
+          value: '',
+        }])
+
+        const selectedComplianceDocumentRejectReason = complianceDocumentRejectReasonSeletionList
+          .find(({ value }) => value === this.locumComplianceDocument.note)
 
         this.selectedComplianceDocumentRejectReasonValue = selectedComplianceDocumentRejectReason
-          ? selectedComplianceDocumentRejectReason.reject_reason
+          ? selectedComplianceDocumentRejectReason.value
           : this.locumComplianceDocument.note
             ? ''
             : null
