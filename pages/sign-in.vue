@@ -181,7 +181,7 @@
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'danger',
-              text: [`${message}`],
+              text: message,
             })
           }
 

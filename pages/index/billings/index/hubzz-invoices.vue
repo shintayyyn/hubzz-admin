@@ -45,7 +45,11 @@
           >
           <label :for="slotProps.item" />
         </template>
-
+        <template v-slot:practiceName="slotProps">
+          <div>
+            {{ slotProps.item.practice.name }}
+          </div>
+        </template>
         <template v-slot:total_amount_slot="slotProps">
           <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
         </template>
@@ -78,7 +82,7 @@
               v-if="slotProps.item.unpaid_at" 
               class="px-2"
             >
-              {{ slotProps.item.unpaid_at ? 'Marked as Invalid Payment at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
+              {{ slotProps.item.unpaid_at ? 'Marked Invalid at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
             </div>
             <div 
               v-if="slotProps.item.paid_at"
@@ -363,21 +367,21 @@ export default {
 				},
 				{
 					name: "Practice",
-					dataIndex: "practice.name",
+          dataIndex: "practice.name",
+          slotName: "practiceName",
 					class: "text-center",
-					customClass: "truncate",
 					sortable: "true"
 				},
 				{
 					name: "Period",
 					dataIndex: "period",
 					slotName: "period",
-					class: "text-center"
+					class: "text-center truncate pr-24"
 				},
 				{
 					name: "Issued At",
 					dataIndex: "date_created_formatted",
-					class: "text-center",
+          class: "text-center",
 					sortable: "true"
 				},
 				{
@@ -394,14 +398,14 @@ export default {
           class:"text-center",
         },
 				{
-          name: "Payment Status",
+          name: "Paid?",
           dataIndex: "",
           slot: true,
           slotName: "payment_status",
 					class: "text-center"
         },
         {
-          name: "Exported",
+          name: "CSV Exported?",
           dataIndex:"exported_at",
           slotName:"exported_at",
           class:"text-center",

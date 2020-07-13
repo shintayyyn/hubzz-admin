@@ -2,14 +2,9 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
-      <div
-        class="relative flex flex-col overflow-x-auto w-full px-2 mt-4"
-        :style="totalPages > 1 && `min-height: ${minHeight}`"
-      >
-        <div
-          v-if="disabledHeadings === false" 
-          class="row hidden md:flex text-white justify-start font-bold leading-none text-sm"
-        >
+
+      <div class="relative flex flex-col overflow-x-auto w-full mt-4" :style="totalPages > 1 && `min-height: ${minHeight}`">
+        <div v-if="disabledHeadings === false" class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
           <div
             v-for="(column, index) in columns"
             :key="`${column}-${index}`"
@@ -20,9 +15,13 @@
                 'justify-center',
               column.sortable && 'cursor-pointer'
             ]"
+            :style="[
+              column.flex ? { flex: column.flex } : {},
+            ]"
             @click="column.sortable && sort(column.sortIndex || column.dataIndex)"
           >
-            <span class="pr-1">{{ column.name }}</span>
+            <span class="pr-1 text-right">{{ column.name }}</span>
+
             <svgicon
               v-if="column.sortable"
               :name="sortIcon(column.dataIndex)"
@@ -32,6 +31,7 @@
             />
           </div>
         </div>
+
         <div 
           v-for="item in items" 
           :key="item.id" 
@@ -57,6 +57,9 @@
                 :key="index"
                 class="flex-1 px-2"
                 :class="column.class"
+                :style="[
+                  column.flex ? { flex: column.flex } : {},
+                ]"
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
                   <div
@@ -72,14 +75,18 @@
                     <div v-if="column.slotName == 'checker'" @click.prevent.stop="$emit(column.eventName, item)">
                       <slot :name="column.slotName" :item="item" />
                     </div>
+
                     <slot v-else :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
                   </template>
+
                   <template v-else-if="column.dataIndex === 'actions'">
                     <slot name="actions" :item="item" @click="$emit('click', item)" />
                   </template>
+
                   <template v-else-if="column.dataIndex === 'actions-button'">
                     <slot name="actions-button" :item="item" />
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -89,6 +96,7 @@
                   >
                     {{ dataCell(item, column) | localDate }}
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -98,6 +106,7 @@
                   >
                     {{ dataCell(item, column) | currency }}
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -107,6 +116,7 @@
                   >
                     {{ dataCell(item, column) | fileSize }}
                   </template>
+                  
                   <template v-else>
                     {{ dataCell(item, column) }}
                   </template>
@@ -117,6 +127,7 @@
         </div>
       </div>
     </div>
+
     <div v-if="total > 0 && disabledPagination === false" class="bottom-0 w-full">
       <AppPagination
         :total="total"
@@ -134,6 +145,7 @@
 <script>
   import AppPagination from "@/components/Base/AppPagination"
   import AppLoading from "@/components/Base/AppLoading"
+  
   export default {
     components: {
       AppLoading,

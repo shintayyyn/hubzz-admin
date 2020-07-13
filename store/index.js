@@ -20,6 +20,10 @@ export const getters = {
     return state.admin_user_logged_in
   },
   permissions (state) {
+    if (!state.auth.loggedIn) {
+      return []
+    }
+
     const adminRoles = state.auth.user.admin_detail.roles
     let toSetAdminPermissions = []
 

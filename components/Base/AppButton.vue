@@ -4,12 +4,12 @@
     :to="nuxtLink"
     class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
     :class="[
-      disabled
-        ? 'hover:text-gray-700 bg-gray-500'
-        : 'bg-sunglow hover:bg-sunglow-dark',
+      disabled && 'hover:text-gray-700 bg-gray-500',
+      background && !disabled ? getBackground(background) : '',
       inClass
     ]"
     :style="inStyle"
+    :draggable="draggable"
   >
     <template v-if="icon">
       <svgicon :name="icon" :width="iconSize" class="mr-2" :color="iconColor" />
@@ -19,7 +19,6 @@
   <!-- : 'bg-sunglow hover:bg-sunglow-dark', -->
   <button
     v-else
-    @click.prevent="$emit('click')"
     :disabled="disabled"
     class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
     :class="[
@@ -28,6 +27,7 @@
       inClass
     ]"
     :style="inStyle"
+    @click.prevent="$emit('click')"
   >
     <template v-if="icon">
       <svgicon :name="icon" :width="iconSize" class="mr-2 fill-current" />
@@ -35,39 +35,61 @@
     <span>{{ label }}</span>
   </button>
 </template>
+
 <script>
 export default {
 	props: {
 		label: {
 			type: String,
-			default: "Save"
-		},
+			default: "Save",
+    },
+    
 		inClass: {
-			type: String
-		},
+      type: String,
+      default: () => null,
+    },
+    
 		inStyle: {
-			type: String
-		},
+			type: String,
+      default: () => null,
+    },
+    
 		disabled: {
 			type: Boolean,
 			default: false
-		},
+    },
+    
+		draggable: {
+			type: Boolean,
+			default: true
+    },
+    
 		icon: {
-			type: String
-		},
+			type: String,
+      default: () => null,
+    },
+    
 		iconSize: {
 			type: String,
-			default: "21"
-		},
+			default: "21",
+    },
+    
 		iconColor: {
-			type: String
-		},
-		nuxtLink: [String, Array, Object],
+			type: String,
+      default: () => null,
+    },
+    
+		nuxtLink: {
+			type: [String, Array, Object],
+      default: () => null,
+    },
+    
 		background: {
 			type: String,
 			default: "sunglow"
 		}
-	},
+  },
+  
 	methods: {
 		getBackground (value) {
 			let singleBackground = [
