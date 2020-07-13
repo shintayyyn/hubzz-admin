@@ -231,7 +231,7 @@
 					},
 					{
 						name: 'Sign-up verified',
-						dataIndex: 'email_verified_at',
+						dataIndex: 'email_verified_at_gb_formatted',
 						class: 'localDate text-center',
 						sortable: true,
 					},
