@@ -62,7 +62,7 @@
     <nuxt-child
       :locumUser="locumUser"
       @updateLocumUsers="$emit('updateLocumUsers')"
-      @setViewLocumUser="(_locumUser) => locumUser = _locumUser"
+      @setViewLocumUser="setViewLocumUserHandler"
       @setViewLocumUserLoading="(_loading) => loading = _loading"
     />
   </div>
@@ -100,6 +100,13 @@
       }).finally(() => {
         this.loading = false
       })
+    },
+
+    methods: {
+      setViewLocumUserHandler (locumUser) {
+        this.locumUser = locumUser
+        this.$emit('locumUserUpdated', locumUser)
+      },
     },
   }
 </script>
