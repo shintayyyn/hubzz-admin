@@ -105,7 +105,7 @@
       </div>
     </div>
     <div v-else class="border-b-2 border-white mt-2">
-      <div class="hidden md:flex pb-3  items-center text-sm text-white justify-around font-semibold">
+      <div class="hidden md:flex pb-3 items-center text-sm text-white justify-around font-semibold">
         <div class="align-middle text-center w-1/6">
           Practice / Surgery
         </div>
@@ -128,9 +128,9 @@
           Status
         </div>
       </div>
-      <div class="w-full overflow-x-auto h-160 overflow-y-auto bg-charade rounded-lg">
+      <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
         <!-- BODY -->
-        <div class="p-2">
+        <div class="p-2 overflow-x-hidden">
           <AppTable
             :total="itemCount"
             :items="allBillablePractices"
@@ -138,7 +138,6 @@
             :perPage="practiceParams.limit"
             :columns="practiceColumns"
             :orderBy="practiceParams.order_by"
-            :customWidth="200"
             :disabledHeadings="true"
             :disabledPagination="true"
             :itemsOnTop="true"
@@ -182,7 +181,6 @@
                     :total="slotProps.item.practice_invoiceable_job_parts.length"
                     :items="slotProps.item.practice_invoiceable_job_parts"
                     :columns="jobPartsColumns"
-                    :customWidth="100"
                     :disabledPagination="true"
                     :disabledHeadings="true"
                     @checkClicked="toggleCheckJobParts"

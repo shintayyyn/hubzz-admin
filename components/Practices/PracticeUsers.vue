@@ -3,13 +3,12 @@
     <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
     <div class="w-full overflow-hidden">
       <div v-if="authAdminPermissions.includes('Create New Practice User')">
-        <button
-          v-if="practice.status !== 'Deactivated'"
-          class="inline-flex no-underline py-2 px-4 bg-sunglow text-sm font-semibold text-black rounded-lg shadow float-left"
+        <AppButton
+          :label="'Add User'"
+          :icon="'add-user'"
+          :disabled="practice.status === 'Deactivated'"
           @click="show()"
-        >
-          Add User
-        </button>
+        />
       </div>
     </div>
     <transition name="fade">
@@ -21,6 +20,7 @@
         :perPage="params.limit"
         :columns="columns"
         :orderBy="params.order_by"
+        :router-link="`/practices/${practice.id}/practice-users`"
         @pagechanged="pagechanged"
         @sorted="sorted"
       >
@@ -32,14 +32,14 @@
             {{ slotProps.item.status }}
           </div>
         </template>
-        <template v-slot:actions="slotProps">
-          <div 
-            class="px-4 py-1 rounded-full text-center w-32 mx-auto lg:px-6 sm:px-2 cursor-pointer"
-            :class="slotProps.item.status !== 'Deactivated' ? 'bg-yellow-500 text-black' : 'bg-gray-500 text-white cursor-not-allowed' " @click="slotProps.item.status !== 'Deactivated' ? $router.push({ path: `/practices/${practice.id}/practice-users/${slotProps.item.id}`}) : null"
-          >
-            View
-          </div>
-        </template>
+        <!-- <template v-slot:actions="slotProps">
+          <AppButton
+           
+            :label="'View'"
+            :disabled="slotProps.item.status === 'Deactivated'"
+            @click="$router.push({ path: `/practices/${practice.id}/practice-users/${slotProps.item.id}`})"
+          />
+        </template> -->
       </AppTable>
       <template v-else>
         <div class="mt-2 w-full text-center text-white">
@@ -71,13 +71,13 @@
   import CreateUser from "@/components/UserManagement/CreateUser"
   import AppLoading from "@/components/Base/AppLoading"
   import AppTable from "@/components/Base/AppTable"
-
+  import AppButton from "@/components/Base/AppButton"
   export default {
-
     components: {
       CreateUser,
       AppLoading,
-      AppTable
+      AppTable,
+      AppButton,
     },
     props: {
       practice: {
@@ -107,7 +107,8 @@
         columns: [
           {
             name: "Full Name",
-            dataIndex: "personal_detail.name"
+            dataIndex: "personal_detail.name",
+            class: "text-center"
           },
           {
             name: "Username",
@@ -137,11 +138,6 @@
             class: "text-center",
             sortable: true
           },
-          {
-            name: "Actions",
-            dataIndex: "actions",
-            class: "text-center"
-          }
         ]
       }
     },

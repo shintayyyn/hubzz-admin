@@ -85,10 +85,16 @@
               {{ slotProps.item.unpaid_at ? 'Marked Invalid at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
             </div>
             <div 
-              v-if="slotProps.item.paid_at"
+              v-else-if="slotProps.item.paid_at"
               class="flex items-center justify-center"
             >
               {{ slotProps.item.paid_at ? 'Paid at ' + $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : null }}
+            </div>
+            <div 
+              v-else
+              class="text-gray-400"
+            >
+              Payment not settled
             </div>
           </div>
         </template>
@@ -376,7 +382,7 @@ export default {
 					name: "Period",
 					dataIndex: "period",
 					slotName: "period",
-					class: "text-center truncate pr-24"
+					class: "text-center truncate pr-24 "
 				},
 				{
 					name: "Issued At",

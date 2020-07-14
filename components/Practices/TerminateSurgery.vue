@@ -3,7 +3,7 @@
 		class="flex flex-col justify-between w-full h-full text-white pt-4 pb-8 md:py-8 px-4"
 		:style="approveTemination || rejectTermination ? 'overflow: hidden' : 'overflow: auto'"
 	>
-    <!-- CONFIRM OR CANCEL MODAL -->
+		<!-- CONFIRM OR CANCEL MODAL -->
 		<transition name="drop" mode="out-in">
 			<AppConfirm
 				v-if="approveTemination"
@@ -25,7 +25,7 @@
 				@confirm="toRejectRequest(childSurgery.id)"
 			/>
 		</transition>
-     <!-- CONFIRM OR CANCEL MODAL ENDS HERE -->
+			<!-- CONFIRM OR CANCEL MODAL ENDS HERE -->
 		<div
 			class="shield cursor-pointer overflow-hidden"
 			v-if="approveTemination || rejectTermination"
@@ -33,7 +33,7 @@
 		></div>
 		<div class="w-full flex flex-wrap justify-between mb-2">
 			<svgicon
-				name="arrow-left-solid"
+				name="times-solid"
 				class="text-white hover:text-sunglow fill-current w-6 md:w-8 h-6 md:h-8 cursor-pointer"
 				@click="$router.go(-1)"
 			/>
@@ -80,23 +80,29 @@
 		</div>
 
 		<div class="flex flex-col md:flex-row justify-center cursor-pointer mb-4 md:mb-0">
-			<div
-				class="transition-hover flex-1 p-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-green-700 bg-green-600"
+			<AppButton
+				class="text-white ml-2"
+				:background="'green'"
+				:label=" childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? 'Approve Termination Request' : 'Approve Cancellation Request'"
 				@click="approveTemination = true"
-			>{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Approve Termination Request" : "Approve Cancellation Request"}}</div>
-			<div
-				class="transition-hover flex-1 p-2 md:ml-2 my-2 md:mt-3 md:mt-0 rounded-lg text-center hover:bg-red-700 bg-red-600"
+			/>
+			<AppButton
+				class="text-white ml-2"
+				:background="'red'"
+				:label="childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? 'Reject Termination Request' : 'Reject Cancellation Request'"
 				@click="rejectTermination = true"
-			>{{ childSurgery.invitation_accepted_at || childSurgery.invitation_rejected_at ? "Reject Termination Request" : "Reject Cancellation Request"}}</div>
+			/>
 		</div>
 	</div>
 </template>
 
 <script>
-import AppConfirm from "@/components/Base/AppConfirm";
+import AppConfirm from "@/components/Base/AppConfirm"
+import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
-		AppConfirm
+		AppConfirm,
+		AppButton,
 	},
 	props: ["practice", "childSurgery"],
 
