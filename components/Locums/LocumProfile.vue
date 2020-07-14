@@ -439,15 +439,33 @@
           return []
         }
 
+        if (this.user.status === 'Active' || this.user.status === 'Dormant') {
+          return [
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+          ]
+        }
+
+        if (this.user.status === 'Suspended') {
+          return [
+            {
+              label: 'Active',
+              value: 'Active',
+            },
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+          ]
+        }
+
         return [
           {
-            label: this.user.status === 'Active' || this.user.status === 'Dormant'
-              ? 'Inactive'
-              : 'Active',
-            value: this.user.status === 'Active' || this.user.status === 'Dormant'
-              ? 'Inactive'
-              : 'Active',
-          }
+            label: 'Active',
+            value: 'Active',
+          },
         ]
       },
       
