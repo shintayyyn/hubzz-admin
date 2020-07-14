@@ -50,10 +50,16 @@
             {{ slotProps.item.unpaid_at ? 'Marked as Invalid Payment at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
           </div>
           <div 
-            v-if="slotProps.item.paid_at"
+            v-else-if="slotProps.item.paid_at"
             class="flex items-center justify-center"
           >
             {{ slotProps.item.paid_at ? 'Paid at ' + $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : null }}
+          </div>
+          <div 
+            v-else
+            class="text-gray-400"
+          >
+            Payment not settled
           </div>
         </div>
       </template>
@@ -76,17 +82,6 @@
             <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
           </span>
         </div>
-        <!-- <div
-          v-else
-          class="px-2"
-        >
-          <div v-if="slotProps.item.paid_at">
-            {{ slotProps.item.paid_at ? "Paid At " +$moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
-          </div>
-          <div v-if="slotProps.item.unpaid_at">
-            {{ slotProps.item.unpaid_at ? "Marked Invalid Payment at " +$moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : "Not yet paid" }}
-          </div>
-        </div> -->
       </template>
     </AppTable>
 
@@ -95,47 +90,6 @@
         There are no Invoices for HUBZZ
       </div>
     </template>
-    <!-- MARK AS PAID UNPAID MODAL OLD -->
-    <!-- <transition name="fade" mode="out-in">
-      <div v-if="showPaidModal == true" class="mark-paid-modal overflow-hidden">
-        <transition name="drop" mode="out-in">
-          <AppConfirm
-            v-if="confirm"
-            :in-style="'top:35%'"
-            :in-class="'rounded-lg'"
-            :message="'Are you sure you want to mark this bill as paid?'"
-            @cancel="confirm = false"
-            @confirm="toMarkAsPaid()"
-          />
-        </transition>
-        <div v-if="confirm == true" class="shield" @click="confirm = false" />
-        <div class="flex items-center text-sm text-white m-4">
-          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showPaidModal = false">
-            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
-          </div>
-        </div>
-
-        <div class="flex flex-col w-full text-white px-8 justify-between">
-          <div class="justify-center">
-            <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
-          </div>
-          <div class="flex flex-row mb-4">
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-              @click="confirm = true"
-            >
-              Confirm
-            </div>
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="showPaidModal = false"
-            >
-              Cancel
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition> -->
 
     <!--SETTLE PAYMENT MODAL -->
     <transition name="fade" mode="out-in">

@@ -1,8 +1,8 @@
 <template>
-	<div>
-		<AppTable
-			v-if="itemCount > 0"
-			:total="itemCount"
+  <div>
+    <AppTable
+      v-if="itemCount > 0"
+      :total="itemCount"
 			:items="getAllPractices"
 			:currentPage="currentPage"
 			:perPage="params.limit"
@@ -12,7 +12,7 @@
 			:orderBy="params.order_by"
 			@pagechanged="pagechanged"
 			@sorted="sorted"
-		>
+			>
 			<template v-slot:status_slot="slotProps">
 				<div
 					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
@@ -38,20 +38,15 @@
 				>{{ slotProps.item.hub_type }}</div>
 			</template>
 		</AppTable>
-		<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
-				</span>
-		</div>-->
 		<template v-else>
-			<div class="mt-2 w-full text-center text-white">There are no verified practices.</div>
+			<div class="mt-2 w-full text-center text-white">
+				There are no verified practices.
+			</div>
 		</template>
 	</div>
 </template>
 
 <script>
-import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 export default {
 	components: {
@@ -132,13 +127,17 @@ export default {
 
 	watchQuery: ["page"],
 
+	watch: {
+		sort (value) {
+			this.params.order_by = value
+			this.sortBy(value, this.currentPage, this.search)
+		}
+	},
+
 	async asyncData ({ app, route, store, error }) {
 		try {
-			console.log("asyncdata")
-
 			await store.commit("practices/TOGGLE_LOADING", true)
-
-			let { page = 1, search = "", order_by = [] } = route.query
+			let { page = 1, order_by = [] } = route.query
 			page = parseInt(page)
 			const createdRoute = route.query
 			const limit = 10
@@ -154,7 +153,7 @@ export default {
 				offset, 
 				order_by, 
 				status,
-				verified 
+				verified,
 			}
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
 				params
@@ -167,46 +166,14 @@ export default {
 			await store.commit("practices/SET_PRACTICES", practices)
 			await store.commit("practices/TOGGLE_LOADING", false)
 
-			return {
-				// practiceCount,
-				// practices
-			}
 		} catch (err) {
 			if (err.response && err.response.status === 401) {
-        console.log("Get practices error!", err)
 				error(err.response.data)
 				return
 			}
 			throw err
 		}
 	},
-	// async created(){
-	//   try{
-	//     await this.$store.commit("practices/TOGGLE_LOADING", true)
-
-	//     await this.$axios.$get(`/api/v1/admin/practices/count`,{
-	//       params: this.params
-	//     }).then(res => {
-	//       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
-	//     })
-
-	//     await this.$axios.$get(`/api/v1/admin/practices`, {
-	//       params: this.params
-	//     }).then(res => {
-	//       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
-	//     })
-
-	//     await this.$store.commit("practices/TOGGLE_LOADING", false)
-	//   }catch (err) {
-	// 		this.store.commit("SET_NOTIFICATION", {
-	// 			enabled: true,
-	// 			status: "danger",
-	// 			text: "Something went Wrong!"
-	// 		})
-	//     console.log("Get practices error!", err)
-	//   }
-	// },
-
 	computed: {
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
@@ -231,13 +198,6 @@ export default {
 		}
 	},
 
-	watch: {
-		sort (value) {
-			this.params.order_by = value
-			this.sortBy(value, this.currentPage, this.search)
-		}
-	},
-
 	methods: {
 		show () {
 			this.modal = true
@@ -254,7 +214,7 @@ export default {
 			})
 		},
 
-		async sortBy (sortedBy, page, search) {
+		async sortBy (sortedBy,) {
 			this.params.order_by = [sortedBy]
 			this.getPractices(this.params)
 		},
