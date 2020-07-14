@@ -165,7 +165,10 @@
       @click="$router.push({ path: `/locums`, query: $route.query })"
     />
 
-    <nuxt-child @updateLocumUsers="getAllLocumUsers" />
+    <nuxt-child
+      @updateLocumUsers="getAllLocumUsers"
+      @locumUserUpdated="locumUserUpdatedHandler"
+    />
   </div>
 </template>
 
@@ -327,10 +330,16 @@
 		},
 
 		mounted () {
+      this.$socket.on("updateLocumStatus", this.locumUserUpdatedHandler)
+    
       this.count = 0
       this.locumUsers = []
 			this.getAllLocumUsers()
-		},
+    },
+    
+    destroyed () {
+      this.$socket.removeListener("updateLocumStatus", this.locumUserUpdatedHandler)
+    },
 
 		methods: {
 
@@ -376,7 +385,15 @@
 				}).finally(() => {
           this.loading = false
 				})
-			},
+      },
+      
+      locumUserUpdatedHandler (locumUser) {
+        const index = this.locumUsers.findIndex(({ id }) => id === locumUser.id)
+
+        if (index > -1) {
+          this.locumUsers.splice(index, 1, locumUser)
+        }
+      },
       
 			searchSubmit: debounce(function () {
 				this.currentPage = 1

@@ -548,8 +548,6 @@
 
           console.log("response", response.data.data.user)
 
-          this.$emit('updateLocumUsers')
-
           this.$emit('setViewLocumUser', response.data.data.user)
 
           this.$emit('setViewLocumUserLoading', false)

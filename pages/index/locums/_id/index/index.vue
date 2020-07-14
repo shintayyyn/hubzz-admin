@@ -5,7 +5,6 @@
         <LocumProfile
           v-if="locumUser"
           :user="locumUser"
-          @updateLocumUsers="$emit('updateLocumUsers')"
           @setViewLocumUser="(locumUser) => $emit('setViewLocumUser', locumUser)"
           @setViewLocumUserLoading="(loading) => $emit('setViewLocumUserLoading', loading)"
         />
