@@ -112,25 +112,40 @@
               {{ user.address_detail ? user.address_detail.address.line_3 : 'N/A' }}
             </p>
 
-            <p class="mt-2">
-              GMC / NMC Number
-            </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.gmc_or_nmc_number && 'opacity-75'"
+            <div
+              v-for="referenceLocumComplianceDocument in user.reference_locum_compliance_documents"
+              :key="referenceLocumComplianceDocument.compliance_document_id"
             >
-              {{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}
-            </p>
+              <p class="mt-2">
+                {{ referenceLocumComplianceDocument.compliance_document_name }}
+              </p>
+              
+              <p class="font-bold pl-2" :class="!referenceLocumComplianceDocument.reference && 'opacity-75'">
+                {{ referenceLocumComplianceDocument.reference ? referenceLocumComplianceDocument.reference : 'N/A' }}
+              </p>
+            </div>
 
-            <p class="mt-2">
-              MPL / NPL Number
-            </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.mpl_or_npl_number && 'opacity-75'"
-            >
-              {{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}
-            </p>
+            <template v-if="false">
+              <p class="mt-2">
+                GMC / NMC Number
+              </p>
+              <p
+                class="font-bold pl-2"
+                :class="!locumDetails.gmc_or_nmc_number && 'opacity-75'"
+              >
+                {{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}
+              </p>
+
+              <p class="mt-2">
+                MPL / NPL Number
+              </p>
+              <p
+                class="font-bold pl-2"
+                :class="!locumDetails.mpl_or_npl_number && 'opacity-75'"
+              >
+                {{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}
+              </p>
+            </template>
 
             <p class="mt-2">
               NHS Smart Card ID Number
@@ -197,6 +212,7 @@
             </p>
           </div>
         </div>
+
         <!--COLUMN 2-->
         <div class="flex flex-col order-3 md:order-2 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6">
@@ -289,6 +305,7 @@
             </div>
           </div>
         </div>
+
         <!--COLUMN 3-->
         <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6 border-b text-center pb-3">
