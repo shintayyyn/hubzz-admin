@@ -126,7 +126,7 @@
           },
           {
             name: "Sign-Up Verified",
-            dataIndex: "email_verified_at_gb_formatted",
+            dataIndex: "email_verified_at_in_gb_formatted",
             class: "text-center"
           },
           {
