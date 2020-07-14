@@ -97,7 +97,7 @@ export default {
     AppLoading
   },
   props: ["practice"],
-  data() {
+  data () {
     return {
       file: "",
       // specificPracticeDocumentTypes:[],
@@ -106,17 +106,17 @@ export default {
       practiceDocs: [],
       query: null,
       uploading: []
-    };
+    }
   },
   created() {
     (this.query = {
       ...this.$route.query
     }),
-      this.getData();
+      this.getData()
   },
   computed: {
     specificPracticeDocumentTypes() {
-      return this.$store.state.practices.specificPracticeDocumentTypes;
+      return this.$store.state.practices.specificPracticeDocumentTypes
     },
     authAdminPermissions() {
       return this.$store.getters["permissions"]
@@ -129,15 +129,15 @@ export default {
         const pracDocTypes = await this.$axios
           .$get(`/api/v1/admin/practice-document-types`)
           .then(res => {
-            this.practiceDocTypes = res.data.practice_document_types;
+            this.practiceDocTypes = res.data.practice_document_types
           })
           .catch(err => {
             store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "danger",
               text: "Something went wrong!"
-            });
-          });
+            })
+          })
         this.practiceDocs = await this.$axios.$get(
           `/api/v1/admin/practice-documents`,
           {
@@ -145,32 +145,32 @@ export default {
               practice_id: this.practice.id
             }
           }
-        );
+        )
         const specificPracticeDocumentTypes = this.practiceDocTypes.map(
           practiceDocType => {
             const practiceSpecificDoc = this.practiceDocs.data.practice_documents.find(
               practiceDoc => {
                 return (
                   practiceDoc.practice_document_type.id === practiceDocType.id
-                );
+                )
               }
-            );
+            )
             return {
               practiceDocType,
               practiceSpecificDoc
-            };
+            }
           }
-        );
+        )
         await this.$store.commit(
           "practices/SET_PRACTICE_DOCUMENTS",
           specificPracticeDocumentTypes
-        );
+        )
       } catch (err) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: "Something went wrong!"
-        });
+        })
       }
     },
     async handleFileUpload(refName, documentId, practiceID, practiceDocumentID, practiceSpecificDocument){
@@ -186,13 +186,13 @@ export default {
         practiceDocumentID,
         "prac document: ",
         practiceSpecificDocument
-      );
+      )
 
-      const el = this.$refs[refName][0];
+      const el = this.$refs[refName][0]
       if (el.files && el.files.length === 0) {
-        return;
+        return
       }
-      const file = el.files[0];
+      const file = el.files[0]
       let types = [
         "pdf",
         "jpeg",
@@ -202,17 +202,17 @@ export default {
         'vnd.openxmlformats-officedocument.wordprocessingml.template',
         'vnd.ms-word.document.macroEnabled.12',
         'vnd.ms-word.template.macroEnabled.12',
-      ];
+      ]
       console.log("legit file", file.name, file)
-      const fileReader = new FileReader();
+      const fileReader = new FileReader()
 
       if (!types.includes(file.type.split("/")[1])) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: "Invalid file format"
-        });
-        return;
+        })
+        return
       }
       // if (!types.includes(practiceSpecificDocument.file.subtype)){
       //   this.$store.commit("SET_NOTIFICATION", {
@@ -220,33 +220,33 @@ export default {
       //     status: "danger",
       //     text: "!!",
       //     doNotClose: true,
-      //   });
+      //   })
       //   return
       // }
       this.uploading.push(documentId)
 
-      fileReader.readAsDataURL(file);
+      fileReader.readAsDataURL(file)
       
 
-      const index = this.files.findIndex(({ id }) => id === documentId);
+      const index = this.files.findIndex(({ id }) => id === documentId)
 
       if (index > -1) {
         this.files.splice(index, 1, {
           id: documentId,
           file
-        });
+        })
       } else {
         this.files.push({
           id: documentId,
           file
-        });
+        })
       }
 
       try {
-        let formData = new FormData();
-        let file = this.files.find(({ id }) => id === practiceDocumentID);
+        let formData = new FormData()
+        let file = this.files.find(({ id }) => id === practiceDocumentID)
         if (file) {
-          file = file.file;
+          file = file.file
           // console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
           // console.log(file)
 
@@ -254,8 +254,8 @@ export default {
             // console.log('File exists: PUT Request (Updates Existing)')
             // console.log(practiceSpecificDocument)
 
-            formData.append("practice_document_id", practiceID);
-            formData.append("file", file);
+            formData.append("practice_document_id", practiceID)
+            formData.append("file", file)
 
             const response = await this.$axios
               .put(
@@ -279,7 +279,7 @@ export default {
                       practice_id: this.practice.id
                     }
                   }
-                );
+                )
                 // console.log('prac docs',this.practiceDocs.data.practice_documents)
 
                 let specificPracticeDocumentTypes = this.practiceDocTypes.map(
@@ -289,40 +289,40 @@ export default {
                         return (
                           practiceDoc.practice_document_type.id ===
                           practiceDocType.id
-                        );
+                        )
                       }
-                    );
+                    )
                     return {
                       practiceDocType,
                       practiceSpecificDoc
-                    };
+                    }
                   }
                 )
                 await this.$store.commit(
                   "practices/SET_PRACTICE_DOCUMENTS",
                   specificPracticeDocumentTypes
-                );
+                )
                 // console.log('practice docs',specificPracticeDocumentTypes)
                 this.uploading = []
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "success",
                   text: "Upload Success"
-                });
+                })
               })
               .catch(err => {
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "danger",
                   text: "Something went wrong!"
-                });
-                console.log(err);
-              });
+                })
+                console.log(err)
+              })
           } else {
             // console.log('File does not exist: POST Request (Posts new file)')
-            formData.append("file", file);
-            formData.append("practice_id", practiceID);
-            formData.append("practice_document_type_id", practiceDocumentID);
+            formData.append("file", file)
+            formData.append("practice_id", practiceID)
+            formData.append("practice_document_type_id", practiceDocumentID)
 
             const response = await this.$axios
               .post("/api/v1/admin/practice-documents", formData, {
@@ -339,7 +339,7 @@ export default {
                       practice_id: this.practice.id
                     }
                   }
-                );
+                )
                 // console.log('prac docs',practiceDocs.data.practice_documents)
 
                 let specificPracticeDocumentTypes = this.practiceDocTypes.map(
@@ -349,53 +349,53 @@ export default {
                         return (
                           practiceDoc.practice_document_type.id ===
                           practiceDocType.id
-                        );
+                        )
                       }
-                    );
+                    )
                     return {
                       practiceDocType,
                       practiceSpecificDoc
-                    };
+                    }
                   }
-                );
+                )
                 await this.$store.commit(
                   "practices/SET_PRACTICE_DOCUMENTS",
                   specificPracticeDocumentTypes
-                );
+                )
                 this.uploading = []
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "success",
                   text: "Upload Success!"
-                });
+                })
               })
               .catch(err => {
                 this.$store.commit("SET_NOTIFICATION", {
                   enabled: true,
                   status: "danger",
                   text: "Something went wrong!"
-                });
-                console.log(err);
-              });
+                })
+                console.log(err)
+              })
           }
         } else {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "alert",
             text: "Please choose a file to upload first."
-          });
+          })
         }
       } catch (err) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: "Something went wrong!"
-        });
-        console.log("index practices index _id index asyncData err", err);
+        })
+        console.log("index practices index _id index asyncData err", err)
       }
     },
   }
-};
+}
 </script>
 
 <style>

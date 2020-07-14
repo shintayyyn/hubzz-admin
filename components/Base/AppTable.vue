@@ -2,8 +2,11 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
-
-      <div class="relative flex flex-col overflow-x-auto w-full mt-4" :style="totalPages > 1 && `min-height: ${minHeight}`">
+      <div 
+        class="relative flex flex-col overflow-x-auto mt-4"
+        :class="customWidth ? customWidth : 'w-full'" 
+        :style="totalPages > 1 && `min-height: ${minHeight}`"
+      >
         <div v-if="disabledHeadings === false" class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
           <div
             v-for="(column, index) in columns"
@@ -207,7 +210,7 @@
         default: null
       },
       customWidth: {
-        type: Number,
+        type: String,
         default: null
       },
       minHeight: {

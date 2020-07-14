@@ -15,8 +15,9 @@
             authAdminPermissions.includes('Create New Practice') &&
               authAdminPermissions.includes('Create New Practice User')
           "
-          class="text-sm"
+					class="text-sm"
           :label="'Create New Practice'"
+					:icon="'add-rectangle'"
           @click="show()"
         />
       </div>
@@ -99,67 +100,10 @@ export default {
 				offset: 0,
 				order_by: ["created_at:desc"]
 			},
-			sort: "",
 			modal: false,
-
+			sort: "",
 			backUrl: "",
 			fromUrl: null,
-
-			//app table columns
-			columns: [
-				{
-					name: "Practice ID",
-					dataIndex: "id",
-					class: "text-center",
-					sortable: false
-				},
-				{
-					name: "Practice Name",
-					dataIndex: "practice_name",
-					sortable: true
-				},
-				{
-					name: "Practice Code",
-					dataIndex: "practice_code",
-					class: "text-center",
-					sortable: true
-				},
-				{
-					name: "Created",
-					dataIndex: "created_at",
-					class: "text-center localDate",
-					sortable: true
-				},
-				{
-					name: "Expires",
-					dataIndex: "actived_until",
-					class: "text-center localDate",
-					sortable: true
-				},
-				{
-					name: "Status",
-					slot: true,
-					dataIndex: "status",
-					class: "text-center",
-					slotName: "status_slot",
-					sortable: true
-				},
-				{
-					name: "Type",
-					slot: true,
-					dataIndex: "type",
-					class: "text-center",
-					slotName: "type_slot",
-					sortable: true
-				},
-				{
-					name: "Hub Type",
-					slot: true,
-					dataIndex: "hub_type",
-					slotName: "hub_type_slot",
-					class: "text-center"
-				}
-			]
 		}
 	},
 
@@ -217,11 +161,6 @@ export default {
 			this.searchSubmit()
 		},
 
-		sort (value) {
-			this.params.order_by = value
-			this.sortBy(value, this.currentPage, this.search)
-		},
-
 		$route (to, from) {
 			this.getPractices()
 			this.fromUrl = from
@@ -254,11 +193,6 @@ export default {
 						verified: this.verified
 					})
 				})
-		},
-
-		async sortBy (sortedBy) {
-			this.params.order_by = [sortedBy]
-			this.getPractices()
 		},
 
 		searchSubmit: debounce(function (page, order_by) {
@@ -332,22 +266,13 @@ export default {
 		},
 
 		pagechanged (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
-			// }
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
 		},
 
 		sorted (order_by) {
-			// go back to page 1
 			this.currentPage = 1
-			// let query = {
-			// 	...this.$router.query,
-			// 	order_by
-			// }
 			this.params.order_by = order_by
 			this.getPractices()
 		},

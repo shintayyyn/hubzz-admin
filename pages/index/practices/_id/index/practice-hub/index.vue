@@ -17,11 +17,11 @@
                 <p class="flex">Address</p>
                 <p class="flex text-white text-sm p-2 font-semibold">
                   {{ practiceHub.address_line_1 ? practiceHub.address_line_1 : null }}
-                  <br />
+                  <br>
                   {{ practiceHub.address_line_2 ? practiceHub.address_line_2 : null }}
-                  <br />
+                  <br>
                   {{ practiceHub.address_line_3 ? practiceHub.address_line_3 : null }}
-                  <br />
+                  <br>
                 </p>
                 <p class="flex">CCG</p>
                 <p
@@ -32,7 +32,7 @@
             <!-- SPOKE PERMISSIONS - PERMISSIONS OF THE SPOKE BEING VIEWED. -->
             <div class="w-1/2 text-white my-2">
               <div class="flex flex-row items-center">
-                <div class="text-lg text-white font-semibold">Spoke Permissions asd</div>
+                <div class="text-lg text-white font-semibold">Spoke Permissions</div>
                 <!-- <div
                   @click="edit()"
                   class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
@@ -156,10 +156,16 @@
           </div>
         </form>
 
-        <div
+        <!-- <div
           class="w-full sm:w-1/4 p-2 mt-4 text-white rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
           @click="confirm=true"
-        >Terminate this spoke from Hub</div>
+        >Terminate this spoke from Hub</div> -->
+        <AppButton
+          class="text-white mt-4"
+          :background="'red'"
+          :label="'Terminate this spoke from Hub'"
+          @click="confirm=true"
+        />
       </div>
       <div v-else-if="hubInvitations && hubInvitations.length > 0">
         <AppTable
@@ -174,14 +180,7 @@
           @pagechanged="pagechanged"
         >
           <template v-slot:actions="slotProps">
-            <!-- work in progress
-            {{slotProps.item.id}}-->
             <div class="flex justify-center" v-if="!slotProps.item.invitation_rejected">
-              <!-- <AppButton
-                class="ml-2"
-                :label="'View'"
-                @click.prevent="toViewInvitation(slotProps.item.id)"
-              />-->
               <AppButton
                 class="text-white ml-2"
                 :background="'green'"
@@ -233,9 +232,9 @@
   </div>
 </template>
 <script>
-import AppConfirm from "@/components/Base/AppConfirm";
-import AppTable from "@/components/Base/AppTable";
-import AppButton from "@/components/Base/AppButton";
+import AppConfirm from "@/components/Base/AppConfirm"
+import AppTable from "@/components/Base/AppTable"
+import AppButton from "@/components/Base/AppButton"
 export default {
   middleware: "changedPracticeType",
   components: {
@@ -243,7 +242,7 @@ export default {
     AppTable,
     AppButton
   },
-  data() {
+  data () {
     return {
       // practice:'',
       // practiceHub:'',
@@ -280,83 +279,83 @@ export default {
           class: "text-center"
         }
       ]
-    };
-  },
-  computed: {
-    loadingSurgeries() {
-      return this.$store.state.practices.loading_practices;
-    },
-    practice() {
-      return this.$store.state.practices.practice;
-    },
-    practiceHub() {
-      return this.$store.state.practices.practiceHub;
-    },
-    hubInvitationsCount() {
-      return this.$store.state.practices.hubInvitationsCount;
-    },
-    hubInvitations() {
-      return this.$store.state.practices.hubInvitations;
     }
   },
-  async asyncData({ app, store, route, error }) {
+  computed: {
+    loadingSurgeries () {
+      return this.$store.state.practices.loading_practices
+    },
+    practice () {
+      return this.$store.state.practices.practice
+    },
+    practiceHub () {
+      return this.$store.state.practices.practiceHub
+    },
+    hubInvitationsCount () {
+      return this.$store.state.practices.hubInvitationsCount
+    },
+    hubInvitations () {
+      return this.$store.state.practices.hubInvitations
+    }
+  },
+  async asyncData ({ app, store, route, error }) {
     try {
-      const limit = 10;
-      const offset = 0;
-      const order_by = "created_at:desc";
-      let params = { limit, offset, order_by };
+      const limit = 10
+      const offset = 0
+      const order_by = "created_at:desc"
+      let params = { limit, offset, order_by }
 
-      await store.commit("practices/TOGGLE_LOADING", true);
+      await store.commit("practices/TOGGLE_LOADING", true)
 
       let response = await app.$axios.$get(
         `/api/v1/admin/practices/${route.params.id}`
-      );
-      const practice = response.data.practice;
+      )
+      const practice = response.data.practice
 
       response = await app.$axios.$get(
         `/api/v1/admin/practices/${route.params.id}/parent-surgery`
-      );
-      const practiceHub = response.data.practice.parent_practice;
+      )
+      const practiceHub = response.data.practice.parent_practice
 
       response = await app.$axios.$get(
         `/api/v1/admin/practices/${route.params.id}/parent-surgery/invitations-count`
-      );
-      const practiceInvitationsCount = response.data.count;
+      )
+      const practiceInvitationsCount = response.data.count
 
       response = await app.$axios.$get(
         `/api/v1/admin/practices/${route.params.id}/parent-surgery/invitations`,
         { params }
-      );
-      const practiceInvitations = response.data.practice_surgeries;
-      await store.commit("practices/SET_SPECIFIC_PRACTICE", practice);
-      await store.commit("practices/SET_PRACTICE_HUB", practiceHub);
+      )
+      const practiceInvitations = response.data.practice_surgeries
+      await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+      await store.commit("practices/SET_PRACTICE_HUB", practiceHub)
       await store.commit(
         "practices/SET_HUBZZ_INVITATIONS_COUNT",
         practiceInvitationsCount
-      );
+      )
       await store.commit(
         "practices/SET_HUBZZ_INVITATIONS",
         practiceInvitations
-      );
+      )
 
-      await store.commit("practices/TOGGLE_LOADING", false);
+      await store.commit("practices/TOGGLE_LOADING", false)
       // return{
       // practice,
       // practiceHub,
       // practiceParent,
       // }
     } catch (err) {
-      error({ statusCode: 404 });
+      error({ statusCode: 404 })
       store.commit("SET_NOTIFICATION", {
         enabled: true,
         status: "danger",
         text: "Something went wrong!"
-      });
-      console.log("get parent practice error!!", err);
+      })
+      console.log("get parent practice error!!", err)
     }
   },
   methods: {
-    getHubInvitations() {
+    getHubInvitations () {
       this.$store
         .dispatch("practices/fetchHubInvitations", {
           practice_id: this.$route.params.id,
@@ -367,92 +366,92 @@ export default {
             practice_id: this.$route.params.id,
             limit: this.params.limit,
             offset: this.params.offset
-          });
-        });
+          })
+        })
     },
 
-    pagechanged(e) {
+    pagechanged (e) {
       const query = {
         ...this.$route.query,
         practice_children_page: e || 1
-      };
-      this.params.offset = this.params.limit * (page - 1);
-      this.$router.push({ query });
-      this.getHubInvitations();
+      }
+      this.params.offset = this.params.limit * (page - 1)
+      this.$router.push({ query })
+      this.getHubInvitations()
     },
 
     // async limitchanged(limit) {
-    // 	this.currentPage = 1;
-    // 	this.itemsPerPage = limit;
-    // 	await this.getHubInvitations(this.paramSort);
+    // 	this.currentPage = 1
+    // 	this.itemsPerPage = limit
+    // 	await this.getHubInvitations(this.paramSort)
     // },
-    async toTerminateFromHub() {
+    async toTerminateFromHub () {
       await this.$axios
         .$delete(
           `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery`
         )
-        .then(res => {
-          this.$store.commit("practices/SET_PRACTICE_HUB", null);
-          this.$store.commit("practices/SET_PRACTICE_PARENT", null);
+        .then(() => {
+          this.$store.commit("practices/SET_PRACTICE_HUB", null)
+          this.$store.commit("practices/SET_PRACTICE_PARENT", null)
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",
             text: "Successfully Terminated Spoke"
-          });
-          this.confirm = false;
+          })
+          this.confirm = false
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: err.response.data.message
-          });
-        });
+          })
+        })
     },
 
-    async toAcceptInvitation(id) {
+    async toAcceptInvitation (id) {
       await this.$axios
         .$put(
           `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/accept-invitation`
         )
-        .then(res => {
+        .then(() => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",
             text: "Successfully Accepted Invitation"
-          });
+          })
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: err.response.data.message
-          });
-        });
+          })
+        })
     },
 
-    async toRejectInvitation(id) {
+    async toRejectInvitation (id) {
       await this.$axios
         .$put(
           `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/reject-invitation`
         )
-        .then(res => {
+        .then(() => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",
             text: "Successfully Rejected Invitation"
-          });
+          })
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: err.response.data.message
-          });
-        });
+          })
+        })
     }
   }
-};
+}
 </script>
 <style>
 </style>
