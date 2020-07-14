@@ -126,8 +126,8 @@
           },
           {
             name: "Sign-Up Verified",
-            dataIndex: "email_verified_at",
-            class: "text-center localDate"
+            dataIndex: "email_verified_at_gb_formatted",
+            class: "text-center"
           },
           {
             name: "Status",

@@ -17,6 +17,8 @@
             ]"
             :style="[
               column.flex ? { flex: column.flex } : {},
+              column.minWidth ? { minWidth: column.minWidth } : {},
+              column.maxWidth ? { maxWidth: column.maxWidth } : {},
             ]"
             @click="column.sortable && sort(column.sortIndex || column.dataIndex)"
           >
@@ -59,6 +61,8 @@
                 :class="column.class"
                 :style="[
                   column.flex ? { flex: column.flex } : {},
+                  column.minWidth ? { minWidth: column.minWidth } : {},
+                  column.maxWidth ? { maxWidth: column.maxWidth } : {},
                 ]"
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
@@ -118,7 +122,7 @@
                   </template>
                   
                   <template v-else>
-                    {{ dataCell(item, column) }}
+                    <span class="break-words">{{ dataCell(item, column) }}</span>
                   </template>
                 </template>
               </div>
