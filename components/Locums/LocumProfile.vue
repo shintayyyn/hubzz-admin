@@ -415,7 +415,6 @@
 
         locumDetails: "",
 
-        locumStatusChoices: [],
         selectedStatus: "",
         profileTab: true,
         jobTab: false,
@@ -434,18 +433,34 @@
       authAdminPermissions () {
         return this.$store.getters["permissions"]
       },
+
+      locumStatusChoices () {
+        if (!this.user) {
+          return []
+        }
+
+        return [
+          {
+            label: this.user.status === 'Active' || this.user.status === 'Dormant'
+              ? 'Inactive'
+              : 'Active',
+            value: this.user.status === 'Active' || this.user.status === 'Dormant'
+              ? 'Inactive'
+              : 'Active',
+          }
+        ]
+      },
+      
+    },
+
+    watch: {
+      locumStatusChoices () {
+        this.selectedStatus = ''
+      },
     },
 
     created () {
       console.log("locum", this.user)
-      if (this.user.first_actived_at) {
-        this.locumStatusChoices = [
-          { label: "Active", value: "Active" },
-          { label: "Inactive", value: "Inactive" }
-        ]
-      } else {
-        this.locumStatusChoices = [{ label: "Inactive" }]
-      }
       this.locumDetails = this.user.locum_detail
       this.userComplianceDocuments = this.user.locum_detail.compliance_documents
       this.qualifications = this.user.locum_detail.qualifications
@@ -461,6 +476,7 @@
         const offset = parseInt(query.page) * 10 - 10
         return offset
       },
+      
       downloadItem (imgUrl, imgFilename) {
         const axios = require("axios")
         axios({
@@ -504,6 +520,8 @@
 
       async changeLocumUserStatus (locumID, status) {
         try {
+          this.$emit('setViewLocumUserLoading', true)
+
           console.log("locum details", status)
 
           const response = await this.$axios.put(`/api/v1/admin/locum-users/${locumID}/status`, {
@@ -511,21 +529,18 @@
           })
 
           console.log("response", response.data.data.user)
+
           this.$emit('updateLocumUsers')
-          if (this.user.compliance_status !== "Compliant" || status !== 'Bogus') {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "alert",
-              text:
-                "You cannot make a Locum 'Active' if the Locum is not Compliant"
-            })
-          } else {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Saved"
-            })
-          }
+
+          this.$emit('setViewLocumUser', response.data.data.user)
+
+          this.$emit('setViewLocumUserLoading', false)
+          
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: response.data.message || "Saved",
+          })
         } catch (err) {
           console.log("index practices index put status err", err)
           this.$store.commit("SET_NOTIFICATION", {
@@ -533,8 +548,11 @@
             status: "danger",
             text: err.response.data.message
           })
+
+          this.$emit('setViewLocumUserLoading', false)
         }
       },
+
       statusStyle (status) {
 				switch (status) {
 					case 'Active':

@@ -59,7 +59,12 @@
       />
     </div>
 
-    <nuxt-child :locumUser="locumUser" @updateLocumUsers="$emit('updateLocumUsers')" />
+    <nuxt-child
+      :locumUser="locumUser"
+      @updateLocumUsers="$emit('updateLocumUsers')"
+      @setViewLocumUser="(_locumUser) => locumUser = _locumUser"
+      @setViewLocumUserLoading="(_loading) => loading = _loading"
+    />
   </div>
 </template>
 
@@ -96,7 +101,6 @@
         this.loading = false
       })
     },
-
   }
 </script>
 
