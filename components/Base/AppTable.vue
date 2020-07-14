@@ -122,7 +122,7 @@
                   </template>
                   
                   <template v-else>
-                    {{ dataCell(item, column) }}
+                    <span class="break-words">{{ dataCell(item, column) }}</span>
                   </template>
                 </template>
               </div>

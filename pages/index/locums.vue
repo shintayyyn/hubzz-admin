@@ -211,6 +211,7 @@
 					{
 						name: 'Name',
 						dataIndex: 'name',
+						class: 'md:text-center',
 						sortable: true,
             flex: '1 0 0',
             minWidth: '120px',
@@ -219,6 +220,7 @@
 					{
 						name: 'E-Mail Address',
 						dataIndex: 'email',
+						class: 'md:text-center',
 						sortable: true,
             flex: '1 0 0',
             minWidth: '120px',
@@ -227,6 +229,7 @@
 					{
 						name: 'Profession',
 						dataIndex: 'profession_name',
+						class: 'md:text-center',
 						sortable: true,
             flex: '1 0 0',
             minWidth: '100px',
