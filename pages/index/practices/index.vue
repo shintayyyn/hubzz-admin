@@ -44,6 +44,7 @@
         </div>
       </template>
     </AppTable>
+
     <template v-else>
       <div class="mt-2 w-full text-center text-white">
         There are no verified practices.
@@ -54,6 +55,7 @@
 
 <script>
 import AppTable from "@/components/Base/AppTable"
+
 export default {
   transition: {
     name: 'fade',
@@ -77,7 +79,6 @@ export default {
 				status: ["Active", "Dormant"]
 			},
 			sort: "",
-			modal: false,
 
 			//app table columns
 			columns: [
@@ -137,7 +138,8 @@ export default {
 		}
 	},
 
-	watchQuery: ["page"],
+  watchQuery: ["page"],
+  
 	computed: {
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
@@ -211,10 +213,6 @@ export default {
 	},
 
 	methods: {
-		show () {
-			this.modal = true
-		},
-
 		getPractices (params) {
 			this.$store.dispatch("practices/fetchPractices", {
 				limit: this.params.limit,
@@ -270,22 +268,3 @@ export default {
 	}
 }
 </script>
-<style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
-
-.page-button-disabled {
-	background: linear-gradient(to top, #6b717e, #6b7386);
-	cursor: not-allowed;
-}
-
-.page-button:active {
-	transform: translate(2px, 2px);
-}
-.card {
-	min-width: 100px;
-	height: 250px;
-	box-sizing: content-box;
-}
-</style>
