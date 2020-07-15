@@ -104,17 +104,22 @@ export default {
 		AppConfirm,
 		AppButton,
 	},
-	props: ["practice", "childSurgery"],
+	props: {
+		practice: {
+      type: Object,
+      default: () => null
+		},
+		childSurgery: {
+      type: Object,
+      default: () => null
+    },
+	},
 
 	data() {
 		return {
 			approveTemination: false,
 			rejectTermination: false
 		};
-	},
-
-	created() {
-		console.log("childSurgery", this.childSurgery);
 	},
 
 	methods: {
