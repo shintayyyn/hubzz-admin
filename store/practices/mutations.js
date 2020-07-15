@@ -84,29 +84,12 @@ export default {
     SET_PRACTICE_USERS (state, payload) {
         state.practiceUsers = payload
     },
-    ADD_PRACTICE_USER (state, payload) {
-        let index = state.practiceUsers.findIndex(practiceUser =>
-            practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
-        if (index >= 0) {
-            state.practiceUsers.unshift(payload.user)
-            state.practiceUsersCount = state.practiceUsersCount + 1
-            if  (state.practiceUsersCount > 5) {
-                state.practiceUsers.pop()
-            }
-        }
-    },
-    SET_PRACTICE_USERS_PAGE_COUNT (state, payload) {
-        state.practiceUsersPageCount = payload
-    },
+
     UPDATE_PRACTICE_USER (state, payload) {
         let index = state.practiceUsers.findIndex(practiceUser => practiceUser.id === payload.user.id)
         if (index >= 0) {
             state.practiceUsers.splice(index, 1, payload.user)
         }
-    },
-    UPDATE_PRACTICE_USERS_PAGE_COUNT (state, payload) {
-        let pageCount = Math.ceil((payload.userCount + 1) / payload.perPage)
-        state.practiceUsersPageCount = pageCount
     },
 
     //---------------PRACTICE DOCUMENTS-------------------

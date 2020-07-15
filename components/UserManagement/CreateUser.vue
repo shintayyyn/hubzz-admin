@@ -684,33 +684,12 @@
         })
       },
 
-      getPracticeUsers () {
-        this.$store.dispatch("practices/fetchPractices", {
-          countOnly: true,
-          limit: 5,
-          practice_id: this.practice ? this.practice.id : ""
-        })
-        this.$store.dispatch("practices/fetchPracticeUsers", {
-          limit: 5,
-          practice_id: this.practice ? this.practice.id : "",
-          order_by: "created_at:desc"
-        })
-      },
-
       getAdminUsers () {
         this.$store.dispatch("adminusers/fetchAdminUsersCount", {})
         this.$store.dispatch("adminusers/fetchAdminUsers", {
           limit: 10
         })
         this.$store.commit("adminusers/ADD_ADMIN_USER", this.toPostUser)
-      },
-
-      updatePracticeUsersPageCount () {
-        let payload = {
-          userCount: this.userCount,
-          perPage: 5
-        }
-        this.$store.commit("practices/UPDATE_PRACTICE_USERS_PAGE_COUNT", payload)
       },
 
       errorMessage (field) {
@@ -936,21 +915,19 @@
       },
 
       async createPracticeUser (data) {
-        await this.$axios.post(`/api/v1/admin/practice-users`, data)
+        const response = await this.$axios.post(`/api/v1/admin/practice-users`, data)
+
+        const practiceUser = response.data.data.user
+
+        this.$emit('userCreated', practiceUser)
+
+        this.$emit('close')
 
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'success',
           text: 'Added new user.',
         })
-
-        this.$emit('userCreated')
-
-        this.$emit('close')
-
-        await this.getPracticeUsers()
-
-        await this.updatePracticeUsersPageCount()
       },
 
       async createAdminUser (data) {

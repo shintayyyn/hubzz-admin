@@ -38,7 +38,7 @@
               </button>
             </div>
             <div
-              v-if="authAdminPermissions.includes('Edit Practice User')"
+              v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User')"
               class="my-1 px-1 overflow-hidden"
             >
               <button
@@ -52,7 +52,7 @@
           </div>
 
           <div
-            v-if="authAdminPermissions.includes('Edit Practice User') && tab1"
+            v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
             class="my-1 px-1 overflow-hidden"
           >
             <button
@@ -260,7 +260,7 @@
             {{ practiceUser.status ? practiceUser.status : 'N/A' }}
           </div>
 
-          <div class="flex my-2">
+          <div v-if="practiceUser && practiceUser.status !== 'Deactivated'" class="flex my-2">
             <AppButton
               :label="'Deactivate this Practice User'"
               :background="'red'"
@@ -466,7 +466,9 @@
         last_name: this.practiceUser.last_name,
         suffix: this.practiceUser.suffix,
         practice_role: this.practiceUser.practice_detail.practice_role,
-        practice_user_role_id: this.practiceUser.practice_detail.role.id,
+        practice_user_role_id: this.practiceUser.practice_detail.role
+          ? this.practiceUser.practice_detail.role.id
+          : '',
         status: this.practiceUser.status,
       }
 
