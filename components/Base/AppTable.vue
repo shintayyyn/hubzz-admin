@@ -25,7 +25,7 @@
             ]"
             @click="column.sortable && sort(column.sortIndex || column.dataIndex)"
           >
-            <span class="pr-1 text-right">{{ column.name }}</span>
+            <span class="pr-1">{{ column.name }}</span>
 
             <svgicon
               v-if="column.sortable"

@@ -28,14 +28,11 @@
         :loading="loadingHubzzInvoices"
         :router-link="`/billings/hubzz-invoices`"
         :order-by="params.order_by"
-        :customWidth="1200"
         @checkClicked="toggleCheck"
         @pagechanged="pagechanged"
         @sorted="sorted"
       >
-        <template
-          v-slot:checker="slotProps"
-        >
+        <template v-slot:checker="slotProps">
           <input 
             v-if="slotProps.item.sage_ref"
             :id="slotProps.item" 
@@ -44,6 +41,13 @@
             :value="slotProps.item" 
           >
           <label :for="slotProps.item" />
+        </template>
+        <template v-slot:issuedAt="slotProps">
+          <div>
+            <!-- {{!$moment(slotProps.item.date_created_formatted).isBefore($moment(), "days")}} -->
+            <!-- {{$moment(0,"HH").diff(slotProps.item.date_created_formatted, "days") == 0}} -->
+            {{!$moment(slotProps.item.date_created).utc().isBefore($moment(), "day") ? $moment(slotProps.item.date_created).utc().fromNow() : slotProps.item.date_created_formatted}}
+          </div>
         </template>
         <template v-slot:practiceName="slotProps">
           <div>
@@ -385,8 +389,9 @@ export default {
 					class: "text-center truncate pr-24 "
 				},
 				{
-					name: "Issued At",
-					dataIndex: "date_created_formatted",
+          name: "Issued At",
+          dataIndex: "date_created",
+          slotName:"issuedAt",
           class: "text-center",
 					sortable: "true"
 				},

@@ -87,7 +87,12 @@
 </template>
 <script>
 export default {
-	props: ["practice"],
+	props: {
+		practice: {
+      type: Object,
+      default: () => null
+    },
+	},
 	data() {
 		return {
 			toEdit: false,

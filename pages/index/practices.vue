@@ -7,7 +7,55 @@
 
     <div class="px-2 flex justify-between items-center flex-wrap">
       <div>
-        <ListPracticeTabs />
+        <div class="flex justify-start -mx-2 overflow-x-auto">
+          <nuxt-link
+            :to="getRoute()"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path == `/practices`
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Verified
+          </nuxt-link>
+          
+          <nuxt-link
+            :to="getRoute('pending-practices')"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path.includes(`/practices/pending-practices`)
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Pending
+          </nuxt-link>
+
+          <nuxt-link
+            :to="getRoute('bogus-practices')"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path.includes(`/practices/bogus-practices`)
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Bogus
+          </nuxt-link>
+
+          <nuxt-link
+            :to="getRoute('deactivated-practices')"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path.includes(`/practices/deactivated-practices`)
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Deactivated
+          </nuxt-link>
+        </div>
       </div>
 
       <div>
@@ -84,14 +132,12 @@ import debounce from "lodash.debounce"
 import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
-import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
 
 export default {
 	components: {
 		AddPracticeSurgery,
 		AppButton,
 		AppInput,
-		ListPracticeTabs,
   },
   
 	data () {
@@ -115,6 +161,23 @@ export default {
 	watchQuery: ["page"],
 
 	computed: {
+    getRoute () {
+      return tab => {
+        if (!tab) {
+          tab = ""
+        }
+        const query = {
+          ...this.$route.query
+        }
+        delete query.page
+
+        return {
+          path: tab ? `/practices/${tab}` : `/practices`,
+          query
+        }
+      }
+    },
+
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
 		},
@@ -321,6 +384,7 @@ export default {
   .page-button:active {
     transform: translate(2px, 2px);
   }
+
   .card {
     min-width: 100px;
     height: 250px;

@@ -351,7 +351,7 @@
             />
           </div>
 
-          <div v-if="authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
+          <div v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
             <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
             <span
               class="tool inline-block"
@@ -435,21 +435,60 @@
       },
 
       locumStatusChoices () {
-        if (!this.user) {
+        if (!this.user || this.user.status === 'Deactivated') {
           return []
         }
 
         if (this.user.status === 'Active' || this.user.status === 'Dormant') {
-          return [
+          const locumStatusChoices = [
             {
               label: 'Inactive',
               value: 'Inactive',
             },
+            {
+              label: 'Bogus',
+              value: 'Bogus',
+            },
           ]
+
+          if (this.authAdminPermissions.includes('Deactivate Locum')) {
+            locumStatusChoices.push({
+              label: 'Deactivate',
+              value: 'Deactivate',
+            })
+          }
+
+          return locumStatusChoices
         }
 
         if (this.user.status === 'Suspended') {
-          return [
+          const locumStatusChoices = [
+            {
+              label: 'Active',
+              value: 'Active',
+            },
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+            {
+              label: 'Bogus',
+              value: 'Bogus',
+            },
+          ]
+
+          if (this.authAdminPermissions.includes('Deactivate Locum')) {
+            locumStatusChoices.push({
+              label: 'Deactivate',
+              value: 'Deactivate',
+            })
+          }
+
+          return locumStatusChoices
+        }
+
+        if (this.user.status === 'Bogus') {
+          const locumStatusChoices = [
             {
               label: 'Active',
               value: 'Active',
@@ -459,14 +498,37 @@
               value: 'Inactive',
             },
           ]
+
+          if (this.authAdminPermissions.includes('Deactivate Locum')) {
+            locumStatusChoices.push({
+              label: 'Deactivate',
+              value: 'Deactivate',
+            })
+          }
+
+          return locumStatusChoices
         }
 
-        return [
+
+        const locumStatusChoices = [
           {
             label: 'Active',
             value: 'Active',
           },
+          {
+            label: 'Bogus',
+            value: 'Bogus',
+          },
         ]
+
+        if (this.authAdminPermissions.includes('Deactivate Locum')) {
+          locumStatusChoices.push({
+            label: 'Deactivate',
+            value: 'Deactivate',
+          })
+        }
+
+        return locumStatusChoices
       },
       
     },
@@ -525,6 +587,8 @@
               status: "success",
               text: "Locum Successfully Deactivated"
             })
+
+            this.$emit('updateLocumUsers')
           })
           .catch(err => {
             this.$store.commit("SET_NOTIFICATION", {
@@ -538,6 +602,11 @@
 
       async changeLocumUserStatus (locumID, status) {
         try {
+          if (status === 'Deactivate') {
+            this.confirm = true
+            return
+          }
+
           this.$emit('setViewLocumUserLoading', true)
 
           console.log("locum details", status)
