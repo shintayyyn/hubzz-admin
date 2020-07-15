@@ -3,55 +3,67 @@
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
-			:items="getAllPractices"
-			:currentPage="currentPage"
-			:perPage="params.limit"
-			:columns="columns"
-			:loading="loadingPractices"
-			:routerLink="`/practices`"
-			:orderBy="params.order_by"
-			@pagechanged="pagechanged"
-			@sorted="sorted"
-			>
-			<template v-slot:status_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-					:class="
-							`${
-								slotProps.item.status === 'Active'
-									? 'bg-green-500'
-									: 'bg-gray-500 text-gray-700'
-							}`
-						"
-				>{{ slotProps.item.status }}</div>
-			</template>
-			<template v-slot:type_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-					:class="typeStyle(slotProps.item.type)"
-				>{{ slotProps.item.type }}</div>
-			</template>
-			<template v-slot:hub_type_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-					:class="hubTypeStyle(slotProps.item.hub_type)"
-				>{{ slotProps.item.hub_type }}</div>
-			</template>
-		</AppTable>
-		<template v-else>
-			<div class="mt-2 w-full text-center text-white">
-				There are no verified practices.
-			</div>
-		</template>
-	</div>
+      :items="getAllPractices"
+      :currentPage="currentPage"
+      :perPage="params.limit"
+      :columns="columns"
+      :loading="loadingPractices"
+      :routerLink="`/practices`"
+      :orderBy="params.order_by"
+      @pagechanged="pagechanged"
+      @sorted="sorted"
+    >
+      <template v-slot:status_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+          :class="
+            `${
+              slotProps.item.status === 'Active'
+                ? 'bg-green-500'
+                : 'bg-gray-500 text-gray-700'
+            }`
+          "
+        >
+          {{ slotProps.item.status }}
+        </div>
+      </template>
+      <template v-slot:type_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+          :class="typeStyle(slotProps.item.type)"
+        >
+          {{ slotProps.item.type }}
+        </div>
+      </template>
+      <template v-slot:hub_type_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+          :class="hubTypeStyle(slotProps.item.hub_type)"
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
+      </template>
+    </AppTable>
+    <template v-else>
+      <div class="mt-2 w-full text-center text-white">
+        There are no verified practices.
+      </div>
+    </template>
+  </div>
 </template>
 
 <script>
 import AppTable from "@/components/Base/AppTable"
 export default {
+  transition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+
 	components: {
 		AppTable
-	},
+  },
+  
 	data () {
 		return {
 			loading: false,
@@ -126,6 +138,29 @@ export default {
 	},
 
 	watchQuery: ["page"],
+	computed: {
+		loadingPractices () {
+			return this.$store.state.practices.loading_practices
+		},
+		getAllPractices () {
+			return this.$store.getters["practices/getAllPractices"]
+		},
+		itemCount () {
+			return this.$store.state.practices.itemCount
+		},
+		pageCount () {
+			return Math.ceil(this.itemCount / this.params.limit)
+		},
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		},
+		totalPages () {
+			return Math.ceil(this.itemCount / this.params.limit)
+		},
+		total () {
+			return this.getAllPractices.length
+		}
+	},
 
 	watch: {
 		sort (value) {
@@ -172,29 +207,6 @@ export default {
 				return
 			}
 			throw err
-		}
-	},
-	computed: {
-		loadingPractices () {
-			return this.$store.state.practices.loading_practices
-		},
-		getAllPractices () {
-			return this.$store.getters["practices/getAllPractices"]
-		},
-		itemCount () {
-			return this.$store.state.practices.itemCount
-		},
-		pageCount () {
-			return Math.ceil(this.itemCount / this.params.limit)
-		},
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
-		},
-		totalPages () {
-			return Math.ceil(this.itemCount / this.params.limit)
-		},
-		total () {
-			return this.getAllPractices.length
 		}
 	},
 
@@ -244,10 +256,6 @@ export default {
 		},
 
 		pagechanged (page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			}
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices(this.params)
@@ -256,10 +264,6 @@ export default {
 		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
-			let query = {
-				...this.$router.query,
-				order_by
-			}
 			this.params.order_by = order_by
 			this.getPractices(this.params)
 		}

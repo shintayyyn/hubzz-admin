@@ -46,6 +46,11 @@
   import CreateUser from "@/components/UserManagement/CreateUser"
 
   export default {
+    transition: {
+      name: 'fade',
+      mode: 'out-in',
+    },
+
     components: {
       AddPracticeSurgery,
       CreateUser

@@ -9,18 +9,20 @@
       <div>
         <ListPracticeTabs />
       </div>
+
       <div>
         <AppButton
           v-if="
             authAdminPermissions.includes('Create New Practice') &&
               authAdminPermissions.includes('Create New Practice User')
           "
-					class="text-sm"
+          class="text-sm"
           :label="'Create New Practice'"
-					:icon="'add-rectangle'"
-          @click="show()"
+          :icon="'add-rectangle'"
+          @click="$router.push(`/practices/add-practice`)"
         />
       </div>
+
       <AppInput
         v-model="sort"
         class="w-full sm:w-1/2 md:mr-2 text-white md:hidden"
@@ -45,6 +47,7 @@
           class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
           placeholder="Search Practice by Name"
         >
+
         <button
           v-if="search"
           class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
@@ -82,13 +85,15 @@ import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
 import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
+
 export default {
 	components: {
 		AddPracticeSurgery,
 		AppButton,
 		AppInput,
-		ListPracticeTabs
-	},
+		ListPracticeTabs,
+  },
+  
 	data () {
 		return {
 			loading: false,
@@ -123,7 +128,8 @@ export default {
 			} else {
 				return ["Active", "Dormant", "Suspended"]
 			}
-		},
+    },
+    
 		verified () {
 			if (
 				!this.$route.name.includes("pending-practices") ||
@@ -134,26 +140,31 @@ export default {
 			} else {
 				return false
 			}
-		},
+    },
+    
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
-		},
+    },
+    
 		getAllPractices () {
 			return this.$store.getters["practices/getAllPractices"]
-		},
+    },
+    
 		itemCount () {
 			return this.$store.state.practices.itemCount
-		},
+    },
+    
 		pageCount () {
 			return Math.ceil(this.itemCount / this.params.limit)
 		},
 		
 		totalPages () {
 			return Math.ceil(this.itemCount / this.params.limit)
-		},
+    },
+    
 		total () {
 			return this.getAllPractices.length
-		}
+		},
 	},
 
 	watch: {
@@ -162,16 +173,14 @@ export default {
 		},
 
 		$route (to, from) {
+      console.log('to', to)
+      console.log('from', from)
 			this.getPractices()
 			this.fromUrl = from
 		}
 	},
 
 	methods: {
-		show () {
-			this.$router.push(`/practices/add-practice`)
-		},
-
 		getPractices () {
 			this.$store
 				.dispatch("practices/fetchPractices", {
@@ -201,24 +210,28 @@ export default {
 			let query = {
 				...this.$router.query,
 				search
-			}
+      }
+      
 			if (page === 1) {
 				delete query.page
-			}
+      }
+      
 			if (page && page > 1) {
 				query = {
 					...this.$router.query,
 					page,
 					search
 				}
-			}
+      }
+      
 			if (order_by) {
 				query = {
 					...this.$router.query,
 					search,
 					order_by
 				}
-			}
+      }
+      
 			if (page && order_by) {
 				query = {
 					...this.$router.query,

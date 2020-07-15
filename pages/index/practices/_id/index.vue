@@ -41,54 +41,60 @@
   </div>
 </template>
 <script>
-import PracticeTabs from "@/components/Practices/PracticeTabs";
+import PracticeTabs from "@/components/Practices/PracticeTabs"
 export default {
+
+  transition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+  
   components: {
     PracticeTabs
   },
   computed: {
-    practice() {
-      return this.$store.state.practices.practice;
+    practice () {
+      return this.$store.state.practices.practice
     }
   },
-  async asyncData({ app, store, route, error }) {
+  async asyncData ({ app, store, route, error }) {
     try {
       let response = await app.$axios.$get(
         `/api/v1/admin/practices/${route.params.id}`
-      );
-      const practice = response.data.practice;
-      await store.commit("practices/SET_SPECIFIC_PRACTICE", practice);
-      return {};
+      )
+      const practice = response.data.practice
+      await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+      return {}
     } catch (err) {
-      error({ statusCode: 404 });
+      error({ statusCode: 404 })
       store.commit("SET_NOTIFICATION", {
         enabled: true,
         status: "danger",
         text: "Something went wrong!"
-      });
-      console.log("get practice error!!!!", err);
+      })
+      console.log("get practice error!!!!", err)
     }
   },
-  created() {},
+  created () {},
   methods: {
-    goBack() {
-      let url = "/practices";
+    goBack () {
+      let url = "/practices"
       if (this.practice.status === "Inactive") {
-        url = "/practices/pending-practices";
+        url = "/practices/pending-practices"
       }
       if (this.practice.status === "Bogus") {
-        url = "/practices/bogus-practices";
+        url = "/practices/bogus-practices"
       }
       if (this.practice.status === "Deactivated") {
-        url = "/practices/deactivated-practices";
+        url = "/practices/deactivated-practices"
       }
       const query = {
         ...this.$route.query
-      };
-      this.$router.push({ path: url, query });
+      }
+      this.$router.push({ path: url, query })
     }
   }
-};
+}
 </script>
 <style>
 .card {
