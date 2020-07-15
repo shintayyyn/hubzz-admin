@@ -23,19 +23,25 @@
                 : 'bg-gray-500 text-gray-700'
             }`
           "
-        >{{ slotProps.item.status }}</div>
+        >
+          {{ slotProps.item.status }}
+        </div>
       </template>
       <template v-slot:type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 mx-auto"
           :class="typeStyle(slotProps.item.type)"
-        >{{ slotProps.item.type }}</div>
+        >
+          {{ slotProps.item.type }}
+        </div>
       </template>
       <template v-slot:hub_type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 mx-auto"
           :class="hubTypeStyle(slotProps.item.hub_type)"
-        >{{ slotProps.item.hub_type }}</div>
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
       </template>
     </AppTable>
     <template v-else>
@@ -49,6 +55,11 @@
 <script>
 import AppTable from "@/components/Base/AppTable"
 export default {
+  transition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+
   components: {
     AppTable
   },
@@ -247,10 +258,6 @@ export default {
     },
 
     pagechanged (page) {
-      const query = {
-        ...this.$route.query,
-        page: page || 1
-      }
       this.params.offset = this.params.limit * (page - 1)
       this.currentPage = page
       this.getPractices(this.params)
@@ -259,15 +266,11 @@ export default {
     sorted (order_by) {
       // go back to page 1
       this.currentPage = 1
-      let query = {
-        ...this.$router.query,
-        order_by
-      }
       this.params.order_by = order_by
       this.getPractices(this.params)
     }
   }
-};
+}
 </script>
 
 <style>

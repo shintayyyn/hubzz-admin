@@ -1,25 +1,27 @@
 <template>
   <div class="m-2">
     <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
+
     <div class="w-full overflow-hidden">
       <div v-if="authAdminPermissions.includes('Create New Practice User')">
         <AppButton
           :label="'Add User'"
           :icon="'add-user'"
           :disabled="practice.status === 'Deactivated'"
-          @click="show()"
+          @click="modal = true"
         />
       </div>
     </div>
+
     <transition name="fade">
       <AppTable
-        v-if="total > 0"
-        :total="total"
-        :items="users"
+        v-if="count > 0"
+        :total="count"
+        :items="practiceUsers"
         :currentPage="currentPage"
-        :perPage="params.limit"
+        :perPage="perPage"
         :columns="columns"
-        :orderBy="params.order_by"
+        :orderBy="orderBy"
         :router-link="`/practices/${practice.id}/practice-users`"
         @pagechanged="pagechanged"
         @sorted="sorted"
@@ -27,7 +29,11 @@
         <template v-slot:status_slot="slotProps">
           <div
             class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-            :class="slotProps.item.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2'"
+            :class="
+              slotProps.item.status === 'Active'
+                ? 'bg-green-500 text-white lg:px-8 sm:px-2'
+                : 'bg-yellow-500 text-black lg:px-6 sm:px-2'
+            "
           >
             {{ slotProps.item.status }}
           </div>
@@ -41,6 +47,7 @@
           />
         </template> -->
       </AppTable>
+
       <template v-else>
         <div class="mt-2 w-full text-center text-white">
           This practice has no users.
@@ -53,14 +60,16 @@
       class="edit-practice-user-shield"
       @click="modal ? modal=false : $router.go(-1)"
     />
+
     <transition name="slide" mode="out-in">
       <!-- <div class="practice-user-modal shadow-lg" v-if="modal"> -->
       <CreateUser
         v-if="modal"
         :practice="practice"
-        :userCount="total"
+        :userCount="count"
         :registeeType="'practiceUser'"
         @close="modal = false"
+        @userCreated="createdPracticeUserHandler"
       />
       <!-- </div> -->
     </transition>
@@ -72,6 +81,7 @@
   import AppLoading from "@/components/Base/AppLoading"
   import AppTable from "@/components/Base/AppTable"
   import AppButton from "@/components/Base/AppButton"
+
   export default {
     components: {
       CreateUser,
@@ -79,28 +89,25 @@
       AppTable,
       AppButton,
     },
+
     props: {
       practice: {
         type: Object,
         required: true,
-      }
+      },
     },
 
     data () {
       return {
         loadingPracticeUsers: false,
-        modal: false,
-        // total:0,
-        // users:[],
-        // totalPages:0,
-        currentPage: 1,
-        perPage: 10,
+        count: 0,
+        practiceUsers: [],
 
-        params: {
-          limit: 10,
-          offset: 0,
-          order_by: ["created_at:desc"]
-        },
+        modal: false,
+        currentPage: 1,
+        perPage: 5,
+
+        orderBy: ["created_at:desc"],
 
         query: null,
 
@@ -138,120 +145,88 @@
             class: "text-center",
             sortable: true
           },
-        ]
+        ],
       }
     },
 
     computed: {
-      total () {
-        return this.$store.state.practices.practiceUsersCount
+      practiceId () {
+        return this.practice ? this.practice.id : null
       },
-      users () {
-        return this.$store.state.practices.practiceUsers
-      },
+
       totalPages () {
-        return this.$store.state.practices.practiceUsersPageCount
+        return Math.ceil(this.count / this.perPage)
       },
+
+      offset () {
+        return this.perPage * (this.currentPage - 1)
+      },
+
       authAdminPermissions () {
         return this.$store.getters["permissions"]
-      }
+      },
     },
 
-    watch: {
-      $route () {
-        this.currentPage = parseInt(this.$route.query.practice_users_page)
-        this.getAllPracticeUsers()
-      }
+    mounted () {
+      this.$socket.on('createdPracticeUser', this.createdPracticeUserHandler)
+
+      this.getPracticeUsers()
     },
 
-    beforeDestroy () {
-      let query = Object.assign({}, this.$route.query)
-      delete query.practice_users_page
-      this.$router.push({ query })
-    },
-
-    async created () {
-      this.loading = true
-
-      let practice_id = this.practice.id
-
-      let params = {
-        practice_id
-      }
-
-      try {
-        this.loadingPracticeUsers = true
-
-        await this.$axios
-          .$get(`/api/v1/admin/practice-users/count`, { params })
-          .then(res => {
-            this.$store.commit(
-              `practices/SET_PRACTICE_USERS_COUNT`,
-              res.data.count
-            )
-            this.perPage = 5
-            let pageCount = Math.ceil(this.total / this.perPage)
-            this.$store.commit(
-              "practices/SET_PRACTICE_USERS_PAGE_COUNT",
-              pageCount
-            )
-            this.getAllPracticeUsers()
-          })
-      } catch (err) {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: err.response.data.message
-        })
-        console.log(err)
-      }
+    destroyed () {
+      this.$socket.removeListener('createdPracticeUser', this.createdPracticeUserHandler)
     },
 
     methods: {
+      getPracticeUsers () {
+        this.loadingPracticeUsers = true
+        Promise.all([
+          this.$axios.get('/api/v1/admin/practice-users/count', {
+            params: {
+              practice_id: this.practiceId,
+            },
+          }).then(response => response.data.data.count),
 
-      async getAllPracticeUsers () {
-        let practice_id = this.practice.id
-        let limit = 5
-        let offset = this.perPage * (parseInt(this.$route.query.practice_users_page) - 1)
-        let params = {
-          practice_id,
-          order_by: "created_at:desc",
-          limit,
-          offset,
-        }
-        
-        await this.$axios
-          .$get(`/api/v1/admin/practice-users`, { params })
-          .then(res => {
-            this.$store.commit("practices/SET_PRACTICE_USERS", res.data.users)
+          this.$axios.get('/api/v1/admin/practice-users', {
+            params: {
+              practice_id: this.practiceId,
+              order_by: this.orderBy,
+              limit: this.perPage,
+              offset: this.offset,
+            }
+          }).then(response => response.data.data.users),
+        ]).then((responses) => {
+          const [
+            count,
+            practiceUsers,
+          ] = responses
+
+          this.count = count
+          this.practiceUsers = practiceUsers
+        }).catch((err) => {
+          console.log('err', err.response || err)
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
           })
-          .catch(err => {
-            console.log("get users error!", err)
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "danger",
-              text: err.response.data.message
-            })
-          })
-        this.loadingPracticeUsers = false
+        }).finally(() => {
+          this.loadingPracticeUsers = false
+        })
       },
 
-      show () {
-        this.modal = true
+      createdPracticeUserHandler () {
+        this.getPracticeUsers()
       },
 
-      pagechanged (e) {
-        const query = {
-          ...this.$route.query,
-          practice_users_page: e || 1
-        }
-        this.$router.push({ query })
-        this.getAllPracticeUsers()
+      pagechanged (page) {
+        this.currentPage = page || 1
+        this.getPracticeUsers()
       },
 
       sorted (orderBy) {
-        this.params.order_by = orderBy
-        this.getAllPracticeUsers(this.params)
+        this.orderBy = orderBy
+        this.getPracticeUsers()
       },
 
     },
@@ -270,6 +245,7 @@
     opacity: 0.5;
     z-index: 511;
   }
+
   .edit-practice-user-modal {
     position: fixed;
     top: 0;
@@ -283,6 +259,7 @@
     background-color: #505561;
     z-index: 512;
   }
+
   @media screen and (min-width: 1200px) {
     .edit-practice-user-modal {
       width: 70%;

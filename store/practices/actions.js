@@ -22,7 +22,6 @@ export default {
     //   // console.log('practice2', practice.practice_user_id)
     //   commit('ADD_PRACTICE', practice)
     //   commit('ADD_PRACTICE_NOTIFICATION', practice)
-    //   commit('ADD_PRACTICE_USER', practice.payload.user)
     // }),
     // this.$socket.on("deletePractice", practice => {
     //   commit('DELETE_PRACTICE', practice)
@@ -79,9 +78,6 @@ export default {
       })
 
     //----------------------PRACTICE USERS-----------------------
-    this.$socket.on("createdPracticeUser", (user) => {
-      commit('ADD_PRACTICE_USER', user)
-    })
     this.$socket.on("updatedPracticeUser", (user) => {
       commit('UPDATE_PRACTICE_USER', user)
     })
@@ -149,14 +145,4 @@ export default {
   async updateSpokesPageCount ({ commit }, payload) {
     return commit('UPDATE_PRACTICE_SPOKES_PAGE_COUNT', payload)
   },
-
-  async fetchPracticeUsers ({ commit }, payload) {
-    commit('TOGGLE_LOADING', true)
-    const response = await practiceApi.fetchPracticeUsers(this.$axios, payload)
-    commit('TOGGLE_LOADING', false)
-    if (payload.countOnly) {
-      return commit('SET_PRACTICE_USERS_COUNT', response.data.count)
-    }
-    return commit('SET_PRACTICE_USERS', response.data.users)
-  }
 }
