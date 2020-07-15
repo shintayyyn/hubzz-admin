@@ -89,14 +89,18 @@
   </div>
   <!-- END TABLE -->
 </template>
-
 <script>
 import AppLoading from '@/components/Base/AppLoading'
 export default {
   components: {
     AppLoading
   },
-  props: ["practice"],
+  props: {
+    practice: {
+      type: Object,
+      default: () => null
+    },
+  },
   data () {
     return {
       file: "",
