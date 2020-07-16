@@ -12,12 +12,71 @@
         <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
         <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
       </div>
-      <div class="flex-1 m-3 text-white">
+      <div class="flex m-3 text-white">
         <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
-        <label for="showCsvExportOnly">Show CSV Export Only</label>
+        <label for="showCsvExportOnly">Show CSV Exported Only</label>
+      </div>
+      <div class="flex-1 m-3 text-white">
+        <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
+        <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
       </div>
     </div>
     <div class="m-2 border-b-2 border-white">
+      <div class="hidden md:flex pb-1 items-center text-sm text-white justify-around font-semibold">
+        <div class="align-middle text-center w-1/10">
+          Check
+        </div>
+        <div 
+          class="align-middle text-center w-1/10"
+          @click="sorted('surgery_name')"
+        >
+          Invoice Number
+          <svgicon
+            v-if="!params.order_by.includes('surgery_name')"
+            class="inline align-baseline"
+            :name="sortIcon('surgery_name')"
+            height="12"
+            width="12"
+            color="white black"
+          />
+        </div>
+        <div 
+          class="align-middle -ml-6 text-center w-1/10"
+          @click="sorted('practice_name')"
+        >
+          Practice Name
+          <svgicon
+            v-if="!params.order_by.includes('practice_name')"
+            class="inline align-baseline"
+            :name="sortIcon('practice_name')"
+            height="12"
+            width="12"
+            color="white black"
+          />
+        </div>
+        
+        <div class="align-middle px-10 text-center w-1/10">
+          Period
+        </div>
+        <div class="align-middle text-center w-1/10">
+          Issued At
+        </div>
+        <div class="align-middle text-center w-1/10">
+          £ Amount
+        </div>
+        <div class="align-middle text-center w-1/10">
+          Due Date
+        </div>
+        <div class="align-middle  text-center w-1/10">
+          Payment Status
+        </div>
+        <div class="align-middle text-center w-1/10">
+          Exported?
+        </div>
+        <div class="align-middle pr-4 text-center w-1/10">
+          Actions
+        </div>
+      </div>
       <AppTable
         v-if="hubzzInvoices.length > 0"
         :total="hubzzInvoicesCount"
@@ -28,6 +87,7 @@
         :loading="loadingHubzzInvoices"
         :router-link="`/billings/hubzz-invoices`"
         :order-by="params.order_by"
+        :disabledHeadings="true"
         @checkClicked="toggleCheck"
         @pagechanged="pagechanged"
         @sorted="sorted"
@@ -44,7 +104,7 @@
         </template>
         <template v-slot:issuedAt="slotProps">
           <div>
-            {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? $moment(slotProps.item.date_created_in_gb).fromNow() : slotProps.item.date_created_formatted }}
+            {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? slotProps.item.date_created_in_gb_formatted_relative : $moment(slotProps.item.date_created_in_gb).format('DD/MM/YYYY') }}
           </div>
         </template>
         <template v-slot:practiceName="slotProps">
@@ -73,8 +133,13 @@
         </template>
 
         <template v-slot:exported_at="slotProps">
-          <div :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'">
-            <span class="font-bold text-lg">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
+          <div
+            v-if="slotProps.item.sage_ref"
+            :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'">
+            <span class="font-bold">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
+          </div>
+          <div v-else>
+            <span class="font-bold text-lg text-white">No Sage Reference</span>
           </div>
         </template>
 
@@ -145,13 +210,12 @@
     </div>
     
     <div class="flex flex-row justify-end">
-      <!-- <AppButton
-        :class="sageChecker ? 'text-white mr-2' : 'text-black mr-2'"
-        :background="sageChecker ? 'red' : 'sunglow'"
-        :label="sageChecker ? 'Cancel creating SAGE.csv' : 'Create SAGE.csv'"
-        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
-        @click="showSageChecker()"
-      /> -->
+      <AppButton
+        class="mx-2"
+        :label="'Clear Selection'"
+        :icon="'add-rectangle'"
+        @click="reset()"
+      />
       <AppButton
         class="mr-2"
         :label="'Create SAGE.csv'"
@@ -329,11 +393,12 @@ export default {
       search: "",
       showPaidInvoiceOnly: false,
       showCsvExportOnly: false,
+      showExportableInvoicesOnly: false,
 			params: {
         search: "",
         practice_id: "",
         invoice_number: "",
-        exportable: true,
+        // exportable: true,
 				limit: 10,
 				offset: 0,
 				order_by: ["date_created:desc"]
@@ -381,7 +446,8 @@ export default {
 				{
 					name: "Period",
 					dataIndex: "period",
-					slotName: "period",
+          slotName: "period",
+          minWidth: "36",
 					class: "text-center truncate pr-24 "
 				},
 				{
@@ -447,13 +513,20 @@ export default {
 			}
     },
     search () {
-			this.searchSubmit()
+      this.searchSubmit()
     },
     showPaidInvoiceOnly () {
       this.getHubzzInvoices()
+      this.currentPage = 1
     },
     showCsvExportOnly () {
       this.getHubzzInvoices()
+      this.currentPage = 1
+    },
+    showExportableInvoicesOnly () {
+      this.showCsvExportOnly = false
+      this.getHubzzInvoices()
+      this.currentPage = 1
     }
 	},
 	async asyncData ({ app, route, store }) {
@@ -466,12 +539,12 @@ export default {
 
 			const limit = 10
       const offset = page * limit - limit
-      const exportable = true
+      // const exportable = true
 			let params = {
 				limit,
 				offset,
         order_by,
-        exportable,
+        // exportable,
 			}
 
 			let response = await app.$axios.$get(
@@ -566,11 +639,11 @@ export default {
     getHubzzInvoices () {
       this.$store
       .dispatch("billings/fetchHubzzInvoices", {
-        exportable: this.params.exportable ? this.params.exportable : '',
+        exportable: this.showExportableInvoicesOnly === true ? true : null,
         practice_id: this.params.practice_id ? this.params.practice_id : '',
         search: this.params.search ? this.params.search : '',
         paid: this.showPaidInvoiceOnly === true ? true : null,
-        exported: this.showCsvExportOnly === true ? true : null,
+        exported: this.showCsvExportOnly === true ? true: null,
         invoice_number: this.params.invoice_number ? this.params.invoice_number : '',
 				limit: this.params.limit ? this.params.limit : '',
 				order_by: this.params.order_by ? this.params.order_by : '' ,
@@ -579,7 +652,7 @@ export default {
       })
       .then(() => {
         this.$store.dispatch("billings/fetchHubzzInvoices", {
-          exportable: this.params.exportable ? this.params.exportable : '',
+          exportable: this.showExportableInvoicesOnly ? this.showExportableInvoicesOnly : '',
           practice_id: this.params.practice_id ? this.params.practice_id : '',
           search: this.params.search ? this.params.search : '',
           paid: this.showPaidInvoiceOnly === true ? true : null,
@@ -669,11 +742,14 @@ export default {
 			} else {
 				this.chosenInvoices.push(item)
       }
-      
-      console.log('chosen invoices', this.chosenInvoices)
     },
 
     // SETTLE PAYMENT METHODS
+    reset () {
+      this.chosenInvoices = []
+      this.exportedChosenInvoices = []
+    },
+
     cancelPaymentModal () {
       this.paymentModal = false 
       this.modalPaidUnpaid = true
@@ -759,13 +835,10 @@ export default {
 			switch (type) {
 				case "Stand Alone":
 					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
-				// break
 				case "Hub":
 					return "bg-red-500 text-white lg:px-8 sm:px-2"
-				// break
 				case "Spoke":
 					return "bg-blue-500 text-white lg:px-8 sm:px-2"
-				// break
 				default:
 					return
 			}
@@ -780,16 +853,33 @@ export default {
 			this.getHubzzInvoices()
 		},
 
-		sorted (order_by) {
-			// go back to page 1
+		sorted (orderByParam) {
+      if (!this.params.order_by.some(item => item.includes(`${orderByParam}`))) {
+        this.params.order_by = []
+        this.params.order_by.push(`${orderByParam}:desc`)
+      } else {
+        let index = this.params.order_by.findIndex(item => item === `${orderByParam}:desc`)
+        if (index >= 0) {
+          this.params.order_by.splice(index, 1, `${orderByParam}:asc`)
+        } else {
+          this.params.order_by.splice(
+            this.params.order_by.findIndex(item => item === `${orderByParam}:asc`),
+            1
+          )
+        }
+      }
+
 			this.currentPage = 1
-			// let query = {
-			// 	...this.$router.query,
-			// 	order_by
-			// }
-			this.params.order_by = order_by
 			this.getHubzzInvoices()
-		}
+    },
+    
+    sortIcon (orderByParam) {
+      return this.params.order_by.some(orderBy => orderBy === orderByParam || orderBy === `${orderByParam}:asc`)
+        ? 'sort-ascend'
+        : this.params.order_by.some(orderBy => orderBy === `${orderByParam}:desc`)
+          ? 'sort-descend'
+          : 'sort'
+      },
 	}
 }
 </script>
