@@ -23,11 +23,11 @@
     </div>
     <div class="m-2 border-b-2 border-white">
       <div class="hidden md:flex pb-1 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle text-center w-1/10">
+        <div class="align-middle ml-4 text-center w-1/10">
           Check
         </div>
         <div 
-          class="align-middle text-center w-1/10"
+          class="align-middle -ml-2 px-1 text-center w-1/10"
           @click="sorted('surgery_name')"
         >
           Invoice Number
@@ -41,7 +41,7 @@
           />
         </div>
         <div 
-          class="align-middle -ml-6 text-center w-1/10"
+          class="align-middle -ml-8 text-center w-1/10"
           @click="sorted('practice_name')"
         >
           Practice Name
@@ -55,11 +55,22 @@
           />
         </div>
         
-        <div class="align-middle px-10 text-center w-1/10">
+        <div class="align-middle px-12 text-center w-1/10">
           Period
         </div>
-        <div class="align-middle text-center w-1/10">
+        <div 
+          class="align-middle text-center w-1/10"
+          @click="sorted('issued_at')"
+        >
           Issued At
+          <svgicon
+            v-if="!params.order_by.includes('issued_at')"
+            class="inline align-baseline"
+            :name="sortIcon('issued_at')"
+            height="12"
+            width="12"
+            color="white black"
+          />
         </div>
         <div class="align-middle text-center w-1/10">
           £ Amount
@@ -176,14 +187,14 @@
                 :disabled="slotProps.item.sage_ref && !slotProps.item.paid_at ? false : true"
                 @click="toShowPaidModal(slotProps.item.id)"
               />
-              <span
+              <!-- <span
                 v-if="!slotProps.item.sage_ref"
                 class="tool-left text-sm mr-2"
                 data-tip="Sage Reference is not yet added on Practice Profile."
                 tabindex="1"
               >
                 <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
-              </span>
+              </span> -->
             </div>
             <!-- <div
               v-else

@@ -183,6 +183,7 @@
                     :columns="jobPartsColumns"
                     :disabledPagination="true"
                     :disabledHeadings="true"
+                    :customWidth="'w-10.5/12'"
                     @checkClicked="toggleCheckJobParts"
                     @sorted="sorted"
                   >
