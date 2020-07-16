@@ -59,7 +59,12 @@
       />
     </div>
 
-    <nuxt-child :locumUser="locumUser" @updateLocumUsers="$emit('updateLocumUsers')" />
+    <nuxt-child
+      :locumUser="locumUser"
+      @updateLocumUsers="updateLocumUsersHandler"
+      @setViewLocumUser="setViewLocumUserHandler"
+      @setViewLocumUserLoading="(_loading) => loading = _loading"
+    />
   </div>
 </template>
 
@@ -85,18 +90,32 @@
     },
 
     mounted () {
-      const locumUserId = this.$route.params.id
-      this.$store.commit('locums/SET_LOCUM_USER', null)
-      this.loading = true
-      this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`).then((response) => {
-        this.locumUser = response.data.data.user
-      }).catch((err) => {
-        this.$nuxt.error(err)
-      }).finally(() => {
-        this.loading = false
-      })
+      this.getLocumUser()
     },
 
+    methods: {
+      getLocumUser () {
+        const locumUserId = this.$route.params.id
+        this.loading = true
+        this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`).then((response) => {
+          this.locumUser = response.data.data.user
+        }).catch((err) => {
+          this.$nuxt.error(err)
+        }).finally(() => {
+          this.loading = false
+        })
+      },
+
+      setViewLocumUserHandler (locumUser) {
+        this.locumUser = locumUser
+        this.$emit('locumUserUpdated', locumUser)
+      },
+
+      updateLocumUsersHandler () {
+        this.getLocumUser()
+        this.$emit('updateLocumUsers')
+      },
+     },
   }
 </script>
 

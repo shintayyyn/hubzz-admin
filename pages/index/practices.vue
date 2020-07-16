@@ -1,25 +1,72 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
-    <!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
     <div class="px-2 text-xl md:text-4xl text-white">
       Practices
     </div>
 
     <div class="px-2 flex justify-between items-center flex-wrap">
       <div>
-        <ListPracticeTabs />
+        <div class="flex justify-start -mx-2 overflow-x-auto">
+          <nuxt-link
+            :to="getRoute()"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path == `/practices`
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Verified
+          </nuxt-link>
+          
+          <nuxt-link
+            :to="getRoute('pending-practices')"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path.includes(`/practices/pending-practices`)
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Pending
+          </nuxt-link>
+
+          <nuxt-link
+            :to="getRoute('bogus-practices')"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path.includes(`/practices/bogus-practices`)
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Bogus
+          </nuxt-link>
+
+          <nuxt-link
+            :to="getRoute('deactivated-practices')"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="
+              $route.path.includes(`/practices/deactivated-practices`)
+                ? 'bg-sunglow hover:bg-sunglow-dark' :  
+                  'hover:bg-waterloo text-white'
+            "
+          >
+            Deactivated
+          </nuxt-link>
+        </div>
       </div>
+
       <div>
         <AppButton
-          v-if="
-            authAdminPermissions.includes('Create New Practice') &&
-              authAdminPermissions.includes('Create New Practice User')
-          "
+          v-if="authAdminPermissions.includes('Create New Practice') && authAdminPermissions.includes('Create New Practice User')"
           class="text-sm"
           :label="'Create New Practice'"
-          @click="show()"
+          :icon="'add-rectangle'"
+          @click="$router.push(`/practices/add-practice`)"
         />
       </div>
+
       <AppInput
         v-model="sort"
         class="w-full sm:w-1/2 md:mr-2 text-white md:hidden"
@@ -44,6 +91,7 @@
           class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
           placeholder="Search Practice by Name"
         >
+
         <button
           v-if="search"
           class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
@@ -60,16 +108,10 @@
     </div>
 
     <div
-      v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
+      v-if="$route.name.includes('index-practices-id') || $route.name.includes('index-practices-add-practice')"
       class="practice-shield"
-      @click="modal ? (modal = false) : goBack()"
+      @click="goBack()"
     />
-
-    <transition name="slide" mode="out-in">
-      <div v-if="modal" class="practice-modal shadow-lg">
-        <AddPracticeSurgery @close="modal = false" />
-      </div>
-    </transition>
 
     <nuxt-child />
   </div>
@@ -77,17 +119,15 @@
 
 <script>
 import debounce from "lodash.debounce"
-import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
-import ListPracticeTabs from "@/components/Practices/ListPracticeTabs"
+
 export default {
 	components: {
-		AddPracticeSurgery,
 		AppButton,
 		AppInput,
-		ListPracticeTabs
-	},
+  },
+  
 	data () {
 		return {
 			loading: false,
@@ -100,75 +140,35 @@ export default {
 				order_by: ["created_at:desc"]
 			},
 			sort: "",
-			modal: false,
-
 			backUrl: "",
 			fromUrl: null,
-
-			//app table columns
-			columns: [
-				{
-					name: "Practice ID",
-					dataIndex: "id",
-					class: "text-center",
-					sortable: false
-				},
-				{
-					name: "Practice Name",
-					dataIndex: "practice_name",
-					sortable: true
-				},
-				{
-					name: "Practice Code",
-					dataIndex: "practice_code",
-					class: "text-center",
-					sortable: true
-				},
-				{
-					name: "Created",
-					dataIndex: "created_at",
-					class: "text-center localDate",
-					sortable: true
-				},
-				{
-					name: "Expires",
-					dataIndex: "actived_until",
-					class: "text-center localDate",
-					sortable: true
-				},
-				{
-					name: "Status",
-					slot: true,
-					dataIndex: "status",
-					class: "text-center",
-					slotName: "status_slot",
-					sortable: true
-				},
-				{
-					name: "Type",
-					slot: true,
-					dataIndex: "type",
-					class: "text-center",
-					slotName: "type_slot",
-					sortable: true
-				},
-				{
-					name: "Hub Type",
-					slot: true,
-					dataIndex: "hub_type",
-					slotName: "hub_type_slot",
-					class: "text-center"
-				}
-			]
 		}
 	},
 
 	watchQuery: ["page"],
 
 	computed: {
+    getRoute () {
+      return tab => {
+        if (!tab) {
+          tab = ""
+        }
+        const query = {
+          ...this.$route.query
+        }
+        delete query.page
+
+        return {
+          path: tab ? `/practices/${tab}` : `/practices`,
+          query
+        }
+      }
+    },
+
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
-		},
+    },
+    
 		status () {
 			if (this.$route.name.includes("pending-practices")) {
 				return ["Inactive"]
@@ -177,9 +177,10 @@ export default {
 			} else if (this.$route.name.includes("deactivated-practices")) {
 				return ["Deactivated"]
 			} else {
-				return ["Active", "Dormant"]
+				return ["Active", "Dormant", "Suspended"]
 			}
-		},
+    },
+    
 		verified () {
 			if (
 				!this.$route.name.includes("pending-practices") ||
@@ -190,26 +191,31 @@ export default {
 			} else {
 				return false
 			}
-		},
+    },
+    
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
-		},
+    },
+    
 		getAllPractices () {
 			return this.$store.getters["practices/getAllPractices"]
-		},
+    },
+    
 		itemCount () {
 			return this.$store.state.practices.itemCount
-		},
+    },
+    
 		pageCount () {
 			return Math.ceil(this.itemCount / this.params.limit)
 		},
 		
 		totalPages () {
 			return Math.ceil(this.itemCount / this.params.limit)
-		},
+    },
+    
 		total () {
 			return this.getAllPractices.length
-		}
+		},
 	},
 
 	watch: {
@@ -217,22 +223,15 @@ export default {
 			this.searchSubmit()
 		},
 
-		sort (value) {
-			this.params.order_by = value
-			this.sortBy(value, this.currentPage, this.search)
-		},
-
 		$route (to, from) {
+      console.log('to', to)
+      console.log('from', from)
 			this.getPractices()
 			this.fromUrl = from
 		}
 	},
 
 	methods: {
-		show () {
-			this.$router.push(`/practices/add-practice`)
-		},
-
 		getPractices () {
 			this.$store
 				.dispatch("practices/fetchPractices", {
@@ -256,35 +255,34 @@ export default {
 				})
 		},
 
-		async sortBy (sortedBy) {
-			this.params.order_by = [sortedBy]
-			this.getPractices()
-		},
-
 		searchSubmit: debounce(function (page, order_by) {
 			let search = this.search
 
 			let query = {
 				...this.$router.query,
 				search
-			}
+      }
+      
 			if (page === 1) {
 				delete query.page
-			}
+      }
+      
 			if (page && page > 1) {
 				query = {
 					...this.$router.query,
 					page,
 					search
 				}
-			}
+      }
+      
 			if (order_by) {
 				query = {
 					...this.$router.query,
 					search,
 					order_by
 				}
-			}
+      }
+      
 			if (page && order_by) {
 				query = {
 					...this.$router.query,
@@ -332,22 +330,13 @@ export default {
 		},
 
 		pagechanged (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
-			// }
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getPractices()
 		},
 
 		sorted (order_by) {
-			// go back to page 1
 			this.currentPage = 1
-			// let query = {
-			// 	...this.$router.query,
-			// 	order_by
-			// }
 			this.params.order_by = order_by
 			this.getPractices()
 		},
@@ -383,6 +372,7 @@ export default {
   .page-button:active {
     transform: translate(2px, 2px);
   }
+
   .card {
     min-width: 100px;
     height: 250px;

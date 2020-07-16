@@ -16,48 +16,48 @@
       <template v-slot:status_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-          :class="
-							`${
-								slotProps.item.status === 'Active'
-									? 'bg-green-500'
-									: 'bg-gray-500 text-gray-700'
-							}`
-						"
-        >{{ slotProps.item.status }}</div>
+          :class="`${slotProps.item.status === 'Active'? 'bg-green-500': 'bg-gray-500 text-gray-700'}`"
+        >
+          {{ slotProps.item.status }}
+        </div>
       </template>
       <template v-slot:type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 mx-auto"
           :class="typeStyle(slotProps.item.type)"
-        >{{ slotProps.item.type }}</div>
+        >
+          {{ slotProps.item.type }}
+        </div>
       </template>
       <template v-slot:hub_type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 mx-auto"
           :class="hubTypeStyle(slotProps.item.hub_type)"
-        >{{ slotProps.item.hub_type }}</div>
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
       </template>
     </AppTable>
-    <!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
-				</span>
-    </div>-->
     <template v-else>
-      <div class="mt-2 w-full text-center text-white">There are no Deactivated Practices.</div>
+      <div class="mt-2 w-full text-center text-white">
+        There are no Deactivated Practices.
+      </div>
     </template>
   </div>
 </template>
 
 <script>
-import debounce from "lodash.debounce";
-import AppTable from "@/components/Base/AppTable";
+import AppTable from "@/components/Base/AppTable"
 export default {
+  transition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
+
   components: {
     AppTable
   },
-  data() {
+  data () {
     return {
       loading: false,
       currentPage: 1,
@@ -130,178 +130,134 @@ export default {
           class: "text-center localDate"
         }
       ]
-    };
+    }
   },
 
   watchQuery: ["page"],
 
-  async asyncData({ app, route, store, error }) {
-    try {
-      console.log("asyncdata");
-
-      await store.commit("practices/TOGGLE_LOADING", true);
-
-      let { page = 1, search = "", order_by = [] } = route.query;
-      page = parseInt(page);
-      const createdRoute = route.query;
-      const limit = 10;
-      const offset = page * limit - limit;
-      const status = "Deactivated";
-      order_by =
-        createdRoute && createdRoute.order_by
-          ? createdRoute.order_by
-          : "created_at:desc";
-      const params = { limit, offset, order_by, status };
-      let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
-        params
-      });
-      const practiceCount = response.data.count;
-      await store.commit("practices/SET_PRACTICE_COUNT", practiceCount);
-
-      response = await app.$axios.$get(`/api/v1/admin/practices`, { params });
-      const practices = response.data.practices;
-      await store.commit("practices/SET_PRACTICES", practices);
-      await store.commit("practices/TOGGLE_LOADING", false);
-
-      return {
-        // practiceCount,
-        // practices
-      };
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        console.log("Get practices error!", err);
-        error(err.response.data);
-        return;
-      }
-      console.log("Get practices error!", err);
-      throw err;
-    }
-  },
-
-  // async created(){
-  //   try{
-  //     await this.$store.commit("practices/TOGGLE_LOADING", true)
-
-  //     await this.$axios.$get(`/api/v1/admin/practices/count`,{
-  //       params: this.params
-  //     }).then(res => {
-  //       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
-  //     })
-
-  //     await this.$axios.$get(`/api/v1/admin/practices`, {
-  //       params: this.params
-  //     }).then(res => {
-  //       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
-  //     })
-
-  //     await this.$store.commit("practices/TOGGLE_LOADING", false)
-  //   }catch (err) {
-  // 		this.store.commit("SET_NOTIFICATION", {
-  // 			enabled: true,
-  // 			status: "danger",
-  // 			text: "Something went Wrong!"
-  // 		})
-  //     console.log("Get practices error!", err)
-  //   }
-  // },
-
   computed: {
-    loadingPractices() {
-      return this.$store.state.practices.loading_practices;
+    loadingPractices () {
+      return this.$store.state.practices.loading_practices
     },
-    getAllPractices() {
-      return this.$store.getters["practices/getAllPractices"];
+    getAllPractices () {
+      return this.$store.getters["practices/getAllPractices"]
     },
-    itemCount() {
-      return this.$store.state.practices.itemCount;
+    itemCount () {
+      return this.$store.state.practices.itemCount
     },
-    pageCount() {
-      return Math.ceil(this.itemCount / this.params.limit);
+    pageCount () {
+      return Math.ceil(this.itemCount / this.params.limit)
     },
-    authAdminPermissions() {
-      return this.$store.getters["permissions"];
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
     },
-    totalPages() {
-      return Math.ceil(this.itemCount / this.params.limit);
+    totalPages () {
+      return Math.ceil(this.itemCount / this.params.limit)
     },
-    total() {
-      return this.getAllPractices.length;
+    total () {
+      return this.getAllPractices.length
     }
   },
 
   watch: {
-    sort(value) {
-      this.params.order_by = value;
-      this.sortBy(value, this.currentPage, this.search);
+    sort (value) {
+      this.params.order_by = value
+      this.sortBy (value, this.currentPage, this.search)
+    }
+  },
+
+  async asyncData ({ app, route, store, error }) {
+    try {
+      await store.commit("practices/TOGGLE_LOADING", true)
+      let { page = 1, order_by = [] } = route.query
+      page = parseInt(page)
+      const createdRoute = route.query
+      const limit = 10
+      const offset = page * limit - limit
+      const status = "Deactivated"
+      order_by =
+        createdRoute && createdRoute.order_by
+          ? createdRoute.order_by
+          : "created_at:desc"
+      const params = { limit, offset, order_by, status, }
+      let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
+        params
+      })
+      const practiceCount = response.data.count
+      await store.commit("practices/SET_PRACTICE_COUNT", practiceCount)
+
+      response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
+      const practices = response.data.practices
+      await store.commit("practices/SET_PRACTICES", practices)
+      await store.commit("practices/TOGGLE_LOADING", false)
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        error(err.response.data)
+        return
+      }
+      console.log("Get practices error!", err)
+      throw err
     }
   },
 
   methods: {
-    show() {
-      this.modal = true;
+    show () {
+      this.modal = true
     },
 
-    getPractices(params) {
-      this.$store.dispatch("practices/fetchPractices", {
+    getPractices (params) {
+      this.$store.dispatch ("practices/fetchPractices", {
         limit: this.params.limit,
         search: this.search,
         order_by: params.order_by,
         offset: params.offset,
         status: "Deactivated"
-      });
+      })
     },
 
-    async sortBy(sortedBy, page, search) {
-      this.params.order_by = [sortedBy];
-      this.getPractices(this.params);
+    async sortBy (sortedBy,) {
+      this.params.order_by = [sortedBy]
+      this.getPractices (this.params)
     },
 
-    typeStyle(type) {
+    typeStyle (type) {
       switch (type) {
         case "Hub":
-          return "bg-red-500 text-white px-4 py-1";
+          return "bg-red-500 text-white px-4 py-1"
         case "Spoke":
-          return "bg-blue-500 text-white px-4 py-1";
+          return "bg-blue-500 text-white px-4 py-1"
         case "Stand Alone":
-          return "bg-indigo-600 text-white px-6 md:px-5 py-1";
+          return "bg-indigo-600 text-white px-6 md:px-5 py-1"
         default:
-          return;
+          return
       }
     },
 
-    hubTypeStyle(hubType) {
+    hubTypeStyle (hubType) {
       switch (hubType) {
         case "Type 1":
-          return "bg-red-500 text-white px-4 py-1";
+          return "bg-red-500 text-white px-4 py-1"
         case "Type 2":
-          return "bg-purple-500 text-white px-4 py-1";
+          return "bg-purple-500 text-white px-4 py-1"
         default:
-          return "";
+          return ""
       }
     },
 
-    pagechanged(page) {
-      const query = {
-        ...this.$route.query,
-        page: page || 1
-      };
-      this.params.offset = this.params.limit * (page - 1);
-      this.currentPage = page;
-      this.getPractices(this.params);
+    pagechanged (page) {
+      this.params.offset = this.params.limit * (page - 1)
+      this.currentPage = page
+      this.getPractices(this.params)
     },
 
-    sorted(order_by) {
+    sorted (order_by) {
       // go back to page 1
-      this.currentPage = 1;
-      let query = {
-        ...this.$router.query,
-        order_by
-      };
-      this.params.order_by = order_by;
-      this.getPractices(this.params);
+      this.currentPage = 1
+      this.params.order_by = order_by
+      this.getPractices(this.params)
     }
   }
-};
+}
 </script>
 
 <style>

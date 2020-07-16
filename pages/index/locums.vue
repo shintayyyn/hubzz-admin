@@ -165,7 +165,10 @@
       @click="$router.push({ path: `/locums`, query: $route.query })"
     />
 
-    <nuxt-child @updateLocumUsers="getAllLocumUsers" />
+    <nuxt-child
+      @updateLocumUsers="getAllLocumUsers"
+      @locumUserUpdated="locumUserUpdatedHandler"
+    />
   </div>
 </template>
 
@@ -202,54 +205,78 @@
 					{
 						name: 'User ID',
 						dataIndex: 'id',
-						class: 'text-center',
+						class: 'md:text-center',
 						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '140px',
 					},
 					{
 						name: 'Name',
 						dataIndex: 'name',
-						class: 'text-center',
+						class: 'md:text-center',
 						sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
 					},
 					{
 						name: 'E-Mail Address',
 						dataIndex: 'email',
-						class: 'text-center',
+						class: 'md:text-center',
 						sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
 					},
 					{
 						name: 'Profession',
 						dataIndex: 'profession_name',
-						class: 'text-center',
-						sortable: true
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '550px',
 					},
 					{
 						name: 'Date Signed-up',
-						dataIndex: 'created_at',
-						class: 'localDate text-center',
+						dataIndex: 'created_at_in_gb_formatted',
+						class: 'md:text-center',
 						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
 					},
 					{
 						name: 'Sign-up verified',
-						dataIndex: 'email_verified_at',
-						class: 'localDate text-center',
+						dataIndex: 'email_verified_at_in_gb_formatted',
+						class: 'md:text-center',
 						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
 					},
 					{
 						name: 'Status',
 						dataIndex: 'status',
-						class: 'text-center',
+						class: 'md:text-center',
 						sortable: true,
 						slot: true,
 						slotName: 'status_slot',
+            flex: '1 0 0',
+            minWidth: '150px',
+            maxWidth: '170px',
 					},
 					{
 						name: 'Compliance Status',
 						dataIndex: 'compliance_status',
-						class: 'text-center',
+						class: 'md:text-center',
 						sortable: true,
 						slot: true,
 						slotName: 'compliance_slot',
+            flex: '1 0 0',
+            minWidth: '150px',
+            maxWidth: '170px',
 					},
 				]
       },
@@ -303,10 +330,16 @@
 		},
 
 		mounted () {
+      this.$socket.on("updateLocumStatus", this.locumUserUpdatedHandler)
+    
       this.count = 0
       this.locumUsers = []
 			this.getAllLocumUsers()
-		},
+    },
+    
+    destroyed () {
+      this.$socket.removeListener("updateLocumStatus", this.locumUserUpdatedHandler)
+    },
 
 		methods: {
 
@@ -352,7 +385,15 @@
 				}).finally(() => {
           this.loading = false
 				})
-			},
+      },
+      
+      locumUserUpdatedHandler (locumUser) {
+        const index = this.locumUsers.findIndex(({ id }) => id === locumUser.id)
+
+        if (index > -1) {
+          this.locumUsers.splice(index, 1, locumUser)
+        }
+      },
       
 			searchSubmit: debounce(function () {
 				this.currentPage = 1

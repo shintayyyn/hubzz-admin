@@ -8,21 +8,6 @@ export default {
 	SET_LOCUM_COMP_DOCS (state, payload) {
 		state.locumCompDocs = payload
 	},
-	UPDATE_LOCUM_USER (state, payload) {
-		let index = state.locumUsers.findIndex(
-			locumUser => locumUser.id === payload.id
-		)
-		if (index >= 0) {
-			state.locumUsers.splice(index, 1, payload)
-			const updatedLocumUser = state.locumUsers.find(
-				locumUser => locumUser.id === payload.id
-			)
-
-			if (state.locumUser.id === updatedLocumUser.id) {
-				state.locumUser = updatedLocumUser
-			}
-		}
-	},
 	UPDATE_LOCUM_DOCUMENT (state, payload) {
 		let index = state.mandatoryComplianceDocuments.findIndex(
 			mandatoryCompDoc =>

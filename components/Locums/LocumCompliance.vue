@@ -21,6 +21,7 @@
         </div>
       </div>
     </div>
+
     <!--GMC / NMC NUMBER-->
     <div 
       v-for="(item, index) in referenceCompDocs" :key="`item-${index}`"
@@ -40,7 +41,7 @@
 
       <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
         <div
-          v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" 
+          v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
           class="flex justify-end mt-2 sm:m-0"
         >
           <button
@@ -53,12 +54,15 @@
           <button
             class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
             :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'}`"
-            @click.prevent="item.status === 'Rejected' ? null : toRejectReferenceNums(item.id)"
+            @click.prevent="item.status === 'Rejected' ? null : locumReferenceComplianceDocumentIdToRejectId = item.id"
           >
             {{ item.status == 'Rejected' ? 'Rejected' : 'Reject' }}
           </button>
         </div>
-        <div v-else>
+
+        <div
+          v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
+        >
           <div
             class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
             :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
@@ -68,28 +72,51 @@
         </div>
       </div>
 
-      <div v-if="rejectGmcNmc === true" class="note-modal">
+      <div v-if="locumReferenceComplianceDocumentIdToRejectId" class="note-modal">
         <div class="flex flex-col w-full p-4">
-          <p class="mb-2">
+          <p v-if="false" class="mb-2">
             Reason for Rejection
           </p>
-          <div class="border rounded-lg p-2 h-full w-full">
-            <textarea
-              v-model="notes" 
-              class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none w-full"
-              rows="4" 
-              name="complianceNote"
-              maxlength="255"
-            />
-          </div>
-          <p class="text-sm text-right">
-            {{ notes.length }}/255
-          </p>
+
+          <AppInput
+            v-model="selectedComplianceDocumentRejectReasonValue"
+            class="w-full mr-2"
+            :type="'select'"
+            :name="'complianceNote'"
+            :placeholder="'Select...'"
+            :items="complianceDocumentRejectReasonSeletionList"
+            :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formErrors.find(item => item.field === 'note')"
+            :label="'Reason for Rejection'"
+            required
+          />
+
+          <template v-if="selectedComplianceDocumentRejectReasonValue === ''">
+            <div class="border rounded-lg p-2 h-full w-full">
+              <textarea
+                v-model="notes" 
+                class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none w-full"
+                rows="4" 
+                name="complianceNote"
+                maxlength="255"
+              />
+            </div>
+
+            <p class="text-sm text-right">
+              {{ notes.length }}/255
+            </p>
+          </template>
+
           <div class="flex justify-end mt-2">
-            <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none" @click.prevent="toUpdateReferenceNums(referenceCompDocId, 'Rejected', notes)">
+            <button
+              class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+              @click.prevent="toUpdateReferenceNums(locumReferenceComplianceDocumentIdToRejectId, 'Rejected', notes)"
+            >
               <span>Confirm</span>
             </button>
-            <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none" @click.prevent="rejectGmcNmc = false">
+            <button
+              class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none"
+              @click.prevent="locumReferenceComplianceDocumentIdToRejectId = null"
+            >
               <span>Cancel</span>
             </button>
           </div>
@@ -102,6 +129,7 @@
     <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">
       Mandatory
     </p>
+
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <!-- HEADER --> 
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -273,6 +301,7 @@
     <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">
       Optional
     </p>
+
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <!-- HEADER --> 
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -368,11 +397,13 @@
     <p class=" text-sm text-white px-4 md:px-8 md:pt-8 font-semibold">
       Mandatory Trainings
     </p>
+
     <div v-if="locumMandatoryTrainings.length === 0" class="mb-8">
       <div class="w-full text-white font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8">
         This locum has not uploaded any Mandatory Training Documents.
       </div>
     </div>
+
     <!-- TABLE RESPONSIVE MANDATORY TRAININGS-->
     <div v-if="locumMandatoryTrainings.length > 0" class="w-full overflow-x-auto p-4 md:px-8 md:py-2"> 
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -430,52 +461,116 @@
       <!-- END BODY -->
     </div>
     
-    <div v-if="rejectGmcNmc" class="shield" @click="rejectGmcNmc=false" />
+    <div v-if="locumReferenceComplianceDocumentIdToRejectId" class="shield" @click="locumReferenceComplianceDocumentIdToRejectId = null" />
+
     <nuxt-child />
   </div>
 </template>
+
 <script>
+import AppInput from "@/components/Base/AppInput"
+
 export default {
+    components: {
+      AppInput,
+    },
+
     props: {
       user: {
         type: Object,
         default: () => null,
       }
     },
+
     data () {
       return {
-      locumUser: {
-        locum_detail: {
-          gmc_or_nmc_number:'',
-          mpl_or_npl_number: ''
-        }
-      },
-      referenceCompDocs: null,
-      referenceCompDocId: null,
-      rejectGmcNmc: false,
-      rejectMplNpl: false,
+        locumUser: {
+          locum_detail: {
+            gmc_or_nmc_number:'',
+            mpl_or_npl_number: ''
+          }
+        },
+        referenceCompDocs: null,
+        
+        rejectMplNpl: false,
 
-      professionCategoryId: null,
-      mandatoryCompDocs: null,
-      optionalCompDocs: null,
-      // mandatoryComplianceDocuments:[],
-      optionalComplianceDocuments: [],
-      locumMandatoryTrainings: [],
-      professionCategory: null,
-      disabled: 'true',
-      query: null,
-      
-      notes:''
+        professionCategoryId: null,
+        mandatoryCompDocs: null,
+        optionalCompDocs: null,
+        // mandatoryComplianceDocuments:[],
+        optionalComplianceDocuments: [],
+        locumMandatoryTrainings: [],
+        professionCategory: null,
+        disabled: 'true',
+        query: null,
+        
+        locumReferenceComplianceDocumentIdToRejectId: null,
+        selectedComplianceDocumentRejectReasonValue: null,
+        notes:'',
+        formErrors: [],
       }
     },
-    computed:{
+
+    computed: {
       mandatoryComplianceDocuments () {
         return this.$store.state.locums.mandatoryComplianceDocuments
       },
+
       authAdminPermissions () {
         return this.$store.getters["permissions"]
       },
+
+      complianceDocumentRejectReasonSeletionList () {
+        if (!this.locumReferenceComplianceDocumentIdToRejectId) {
+          return []
+        }
+
+        const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs
+          .find(({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId)
+
+        return locumReferenceComplianceDocumentIdToReject
+          ? (locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons || [])
+            .map(({ reject_reason: rejectReason }) => ({
+              label: rejectReason,
+              value: rejectReason,
+            })).concat([{
+              label: 'Other',
+              value: '',
+            }])
+          : []
+      },
     },
+    
+    watch: {
+      selectedComplianceDocumentRejectReasonValue (newVal, oldVal) {
+        if (!newVal && oldVal) {
+          this.notes = ''
+        }
+      },
+
+      locumReferenceComplianceDocumentIdToRejectId () {
+        if (!this.locumReferenceComplianceDocumentIdToRejectId) {
+          this.selectedComplianceDocumentRejectReasonValue = ''
+          this.notes = ''
+          return
+        }
+
+        const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs
+          .find(({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId)
+
+        if (locumReferenceComplianceDocumentIdToReject) {
+          const selectedComplianceDocumentRejectReason = locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons
+            .find(({ reject_reason: rejectReason }) => rejectReason === locumReferenceComplianceDocumentIdToReject.note)
+
+          this.selectedComplianceDocumentRejectReasonValue = selectedComplianceDocumentRejectReason
+            ? selectedComplianceDocumentRejectReason.reject_reason
+            : locumReferenceComplianceDocumentIdToReject.note
+              ? ''
+              : null
+        }
+      },
+    },
+
     async created () {
       // let route = this.$route.params.id
       // await this.getData()
@@ -538,12 +633,14 @@ export default {
 
       async getCompliances (){
         try {
+          this.$emit('loadingCompliances', true)
           await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
             this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
             this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
             this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
           })
-          this.locumMandatoryTrainings = await this.user.locum_detail.mandatory_trainings
+          this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
+          this.$emit('loadingCompliances', false)
         } catch (err) {
           console.log('err', err)
           this.$store.commit('SET_NOTIFICATION',{ 
@@ -551,33 +648,57 @@ export default {
             status:'danger', 
             text:err.response.data.message
           })
+          this.$emit('loadingCompliances', false)
         }
       },
-      toRejectReferenceNums (id) {
-        this.referenceCompDocId = id
-        this.rejectGmcNmc = true
-      },
+
       async toUpdateReferenceNums (id, status, note) {
+        this.$emit('loadingCompliances', true)
         try {
-          await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
+          const res = await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
             status: status,
-            note: note,
-          }).then(res => {
-            this.$emit('complianceUpdated')
-            this.rejectGmcNmc = false
-            this.getCompliances()
-            this.$store.commit('SET_NOTIFICATION',{ 
-              enabled: true, 
-              status: 'success', 
-              text: res.message 
-            })
+            note: this.selectedComplianceDocumentRejectReasonValue || note,
           })
+
+          this.$emit('complianceUpdated')
+
+          this.locumReferenceComplianceDocumentIdToRejectId = null
+
+          this.getCompliances()
+
+          this.$store.commit('SET_NOTIFICATION',{ 
+            enabled: true, 
+            status: 'success', 
+            text: res.message,
+          })
+
+          this.$emit('loadingCompliances', false)
         } catch (err) {
-             this.$store.commit('SET_NOTIFICATION',{ 
-              enabled: true, 
-              status: 'success', 
-              text: err.message
+          console.log('err', err.response || err)
+
+          let message = null
+
+          if (err.response) {
+            if (err.response.status === 400 || err.response.data.error_messages) {
+              this.formErrors = err.response.data.error_messages
+            } else {
+              message = err.response.data.message
+            }
+          } else if (err.request) {
+            message = 'Something went wrong!'
+          } else {
+            message = err.message
+          }
+
+          if (message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: message,
             })
+          }
+
+          this.$emit('loadingCompliances', false)
         }
       },
 

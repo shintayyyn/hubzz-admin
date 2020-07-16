@@ -16,7 +16,6 @@ export default()=>({
     //-------------Practice Users--------------
     practiceUsersCount:0,
     practiceUsers:[],
-    practiceUsersPageCount:0,
 
     specificPracticeDocumentTypes:[],
 

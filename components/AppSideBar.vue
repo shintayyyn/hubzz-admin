@@ -16,31 +16,26 @@
         <!-- CLOSE BUTTON ENDS HERE -->
 
         <!-- LINKS -->
-        <div
-          v-for="(item, index) in lists"
-          :key="index"
-          class="text-sm relative"
-        >
-          <span
-            v-if="`/${$route.path.split('/')[1]}`== item.route"
-            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
-          />
-          <nuxt-link :to="item.route">
+        <div v-for="(navigationTab, index) in navigationTabs" :key="index" class="text-sm relative">
+          <span v-if="navigationTab.active" class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full" />
+
+          <nuxt-link :to="navigationTab.route">
             <div
               class="block font-sans no-underline p-4"
-              :class="`/${$route.path.split('/')[1]}`== item.route ? 
-                'text-yellow-500': 
-                'text-white hover:text-gray-500'"
+              :class="navigationTab.active ? 'text-yellow-500' : 'text-white hover:text-gray-500'"
               @click="close"
             >
-              <span>{{ item.name }}</span>
-              <span v-if="item.name === 'Locums' && locumComplianceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+              <span>{{ navigationTab.name }}</span>
+
+              <span v-if="navigationTab.name === 'Locums' && locumComplianceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ locumComplianceNotifications.length }}
               </span>
-              <span v-if="item.name === 'Practices' && practiceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+
+              <span v-if="navigationTab.name === 'Practices' && practiceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ practiceNotifications.length }}
               </span>
-              <span v-if="item.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+
+              <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ unacknowledgedCount }}
               </span>
             </div>
@@ -59,10 +54,28 @@
               :class="$route.name.includes('index-change-email-requests') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
               @click="close"
             >
-              <span class="text-xs">Change Email Requests</span>
+              <span>Change Email</span>
+              <br>
+              <span>Requests</span>
               <span v-if="pendingChangeEmailRequestIds.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
                 {{ pendingChangeEmailRequestIds.length }}
               </span>
+            </div>
+          </nuxt-link>
+        </div>
+
+        <div class="text-sm relative">
+          <span
+            v-if="$route.name.includes('index-compliance-document-reject-reasons')"
+            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
+          />
+          <nuxt-link :to="{ name: 'index-compliance-document-reject-reasons' }">
+            <div
+              class="block font-sans no-underline p-4"
+              :class="$route.name.includes('index-compliance-document-reject-reasons') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
+              @click="close"
+            >
+              <span>Compliance Document Reject Reasons</span>
             </div>
           </nuxt-link>
         </div>
@@ -91,11 +104,11 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data () {
     return {
-      lists: [],
       menu: [],
       // GET SUPPORTS BADGE
       params: {
@@ -109,64 +122,123 @@ export default {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
     },
+
     practiceNotifications () {
       return this.$store.getters["practices/getPracticeNotifications"]
     },
+
     locumComplianceNotifications () {
       return this.$store.getters["locums/getLocumComplianceNotifications"]
     },
+
     unacknowledgedCount () {
       return this.$store.state.supports.unacknowledgedCount
     },
+
     pendingChangeEmailRequestIds () {
       return this.$store.getters['pendingChangeEmailRequestIds']
     },
-  },
 
-  async created () {
-    // $auth.user.domain
-    if (this.$auth.loggedIn) {
-      const acknowledged = false
-      const params = { acknowledged }
-
-      this.$axios.$get(`/api/v1/admin/supports/count`,{ params }).then(res => {
-        this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT",res.data.count)
-      })
-      
+    navigationTabs () {
       let defaultLists = [
-        { name: "Dashboard", route: "/", order: 1},     
+        {
+          name: "Dashboard",
+          route: "/",
+          order: 1,
+          active: this.$route.name === 'index',
+        },
       ]
+
       let addedLists = []
+
       if(this.authAdminPermissions.includes('View Locums')){
-        addedLists.push({ name: "Locums", route: "/locums", order: 2})
+        addedLists.push({
+          name: "Locums",
+          route: "/locums",
+          order: 2,
+          active: `/${this.$route.path.split('/')[1]}` === '/locums',
+        })
       }
+
       if(this.authAdminPermissions.includes('View Practices')){
-        addedLists.push({ name: "Practices", route: "/practices", order: 3})
+        addedLists.push({
+          name: "Practices",
+          route: "/practices",
+          order: 3,
+          active: `/${this.$route.path.split('/')[1]}` === '/practices',
+        })
       }
+
       if(this.authAdminPermissions.includes('View Hubzz Invoices')){
-        addedLists.push({ name: "Billing", route: "/billings/hubzz-billing", order: 4})
+        addedLists.push({
+          name: "Billing",
+          route: "/billings/hubzz-billing",
+          order: 4,
+          active: `/${this.$route.path.split('/')[1]}` === '/billings',
+        })
       }
+
       if(this.authAdminPermissions.includes('View Reports')){
-        addedLists.push({ name: "Reports", route: "/reports", order: 5})
+        addedLists.push({
+          name: "Reports",
+          route: "/reports",
+          order: 5,
+          active: `/${this.$route.path.split('/')[1]}` === '/reports',
+        })
       }
+
       if(this.authAdminPermissions.includes('View Standard Terms')){
-        addedLists.push({ name: "Standard Terms", route: "/standard-terms", order: 6})
+        addedLists.push({
+          name: "Standard Terms",
+          route: "/standard-terms",
+          order: 6,
+          active: `/${this.$route.path.split('/')[1]}` === '/standard-terms',
+        })
       }
+      
       if(this.authAdminPermissions.includes('View Referral Lottery')){
-        addedLists.push({ name: "Referral Lottery", route: "/referral-lottery", order: 7})
+        addedLists.push({
+          name: "Referral Lottery",
+          route: "/referral-lottery",
+          order: 7,
+          active: `/${this.$route.path.split('/')[1]}` === '/referral-lottery',
+        })
       }
+
       if(this.authAdminPermissions.includes('View FAQ')){
-        addedLists.push({ name: "FAQs", route: "/faqs", order: 8})
+        addedLists.push({
+          name: "FAQs",
+          route: "/faqs",
+          order: 8,
+          active: `/${this.$route.path.split('/')[1]}` === '/faqs',
+        })
       }
+
       if(this.authAdminPermissions.includes('View Terms and Conditions & Privacy Policy')){
-        addedLists.push({ name: "Terms and Conditions", route: "/tncs", order: 9})
+        addedLists.push({
+          name: "Terms and Conditions",
+          route: "/tncs",
+          order: 9,
+          active: `/${this.$route.path.split('/')[1]}` === '/tncs',
+        })
       }
+
       if(this.authAdminPermissions.includes('View Inquiries Messages')){
-        addedLists.push({ name: "Inquiries", route: "/inquiries", order: 10})
+        addedLists.push({
+          name: "Inquiries",
+          route: "/inquiries",
+          order: 10,
+          active: `/${this.$route.path.split('/')[1]}` === '/inquiries',
+        })
       }
     
       if(this.authAdminPermissions.includes('View Admin Accounts')){
-        addedLists.push({ name: "User Management", route: "/user-management", order: 11})
+        addedLists.push({
+          name: "User Management",
+          route: "/user-management",
+          active: `/${this.$route.path.split('/')[1]}` === '/user-management',
+          order: 11,
+        })
       }
 
       // =================INCLUDE BILLINGS PERMISSIONS, FAQS================
@@ -186,8 +258,8 @@ export default {
       //   ];
       // }
 
-      this.lists = [...defaultLists, ...addedLists]
-      this.list = this.lists.sort((a, b) => a.order - b.order)
+      const navigationTabs = [...defaultLists, ...addedLists]
+      navigationTabs.sort((a, b) => a.order - b.order)
       // let defaultMenu = [
       //   { name: "Dashboard", route: "/" },
       //   {
@@ -207,6 +279,21 @@ export default {
       // ]
 
       // this.menu = [...defaultMenu]
+
+      return navigationTabs
+    },
+  },
+
+  async created () {
+    // $auth.user.domain
+    if (this.$auth.loggedIn) {
+      this.$axios.$get(`/api/v1/admin/supports/count`, {
+        params: {
+          acknowledged: false,
+        }
+      }).then(res => {
+        this.$store.commit("supports/SET_UNACKNOWLEDGED_EMAILS_COUNT", res.data.count)
+      })
     }
   },
 

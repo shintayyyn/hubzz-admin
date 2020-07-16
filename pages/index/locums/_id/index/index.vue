@@ -2,7 +2,13 @@
   <div>
     <div class="mt-5">
       <transition name="fade" mode="out-in">
-        <LocumProfile v-if="locumUser" :user="locumUser" @updateLocumUsers="$emit('updateLocumUsers')" />
+        <LocumProfile
+          v-if="locumUser"
+          :user="locumUser"
+          @updateLocumUsers="() => $emit('updateLocumUsers')"
+          @setViewLocumUser="(locumUser) => $emit('setViewLocumUser', locumUser)"
+          @setViewLocumUserLoading="(loading) => $emit('setViewLocumUserLoading', loading)"
+        />
       </transition>
     </div>
 
