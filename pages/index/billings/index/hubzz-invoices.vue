@@ -44,9 +44,7 @@
         </template>
         <template v-slot:issuedAt="slotProps">
           <div>
-            <!-- {{!$moment(slotProps.item.date_created_formatted).isBefore($moment(), "days")}} -->
-            <!-- {{$moment(0,"HH").diff(slotProps.item.date_created_formatted, "days") == 0}} -->
-            {{!$moment(slotProps.item.date_created).utc().isBefore($moment(), "day") ? $moment(slotProps.item.date_created).utc().fromNow() : slotProps.item.date_created_formatted}}
+            {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? $moment(slotProps.item.date_created_in_gb).fromNow() : slotProps.item.date_created_formatted }}
           </div>
         </template>
         <template v-slot:practiceName="slotProps">
@@ -315,14 +313,12 @@ import AppButton from "@/components/Base/AppButton"
 import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 import debounce from "lodash.debounce"
-// import AppDate from "@/components/Base/AppDate"
 import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
 		AppButton,
 		AppTable,
 		AppDateToggled,
-		// AppDate,
 		AppConfirm
 	},
 	data () {
