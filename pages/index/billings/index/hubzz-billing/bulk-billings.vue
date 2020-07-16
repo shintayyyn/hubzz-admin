@@ -175,7 +175,7 @@
             </template>
             
             <template v-slot:invoiceable_job_parts="slotProps">
-              <div class="md:justify-center sm:w-1/2 md:w-full px-1 xl:px-2 align-middle md:text-center">
+              <div class="md:justify-center sm:w-1/2 md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden">
                 <div>
                   <AppTable
                     :total="slotProps.item.practice_invoiceable_job_parts.length"
@@ -183,6 +183,7 @@
                     :columns="jobPartsColumns"
                     :disabledPagination="true"
                     :disabledHeadings="true"
+                    :customWidth="'w-10.5/12'"
                     @checkClicked="toggleCheckJobParts"
                     @sorted="sorted"
                   >
@@ -324,7 +325,7 @@ export default {
         {
           name:"Practice",
           dataIndex:"checker",
-          class:"text-center mt-4",
+          class:"text-left mt-4",
           slotName:"checker",
           eventName: "checkClicked"
         },
@@ -363,19 +364,11 @@ export default {
 					class: "text-center currency",
 					sortable: false
         },
-        // {
-				// 	name: "Invoice Status",
-				// 	slot: true,
-				// 	dataIndex: "invoice_status",
-				// 	class: "text-center",
-				// 	slotName: "invoice_status_slot",
-				// 	sortable: true
-				// },
         {
 					name: "Status",
 					slot: true,
 					dataIndex: "status",
-					class: "text-center",
+					class:"flex-auto",
 					slotName: "status_slot",
 					sortable: true
         },

@@ -1,6 +1,5 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
-    <!-- <AppLoading :loading="loadingPractices" :message="'Loading Practices'" /> -->
     <div class="px-2 text-xl md:text-4xl text-white">
       Practices
     </div>
@@ -60,10 +59,7 @@
 
       <div>
         <AppButton
-          v-if="
-            authAdminPermissions.includes('Create New Practice') &&
-              authAdminPermissions.includes('Create New Practice User')
-          "
+          v-if="authAdminPermissions.includes('Create New Practice') && authAdminPermissions.includes('Create New Practice User')"
           class="text-sm"
           :label="'Create New Practice'"
           :icon="'add-rectangle'"
@@ -112,16 +108,10 @@
     </div>
 
     <div
-      v-if="$route.name.includes('index-practices-id') ||$route.name.includes('index-practices-add-practice')"
+      v-if="$route.name.includes('index-practices-id') || $route.name.includes('index-practices-add-practice')"
       class="practice-shield"
-      @click="modal ? (modal = false) : goBack()"
+      @click="goBack()"
     />
-
-    <transition name="slide" mode="out-in">
-      <div v-if="modal" class="practice-modal shadow-lg">
-        <AddPracticeSurgery @close="modal = false" />
-      </div>
-    </transition>
 
     <nuxt-child />
   </div>
@@ -129,13 +119,11 @@
 
 <script>
 import debounce from "lodash.debounce"
-import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
 
 export default {
 	components: {
-		AddPracticeSurgery,
 		AppButton,
 		AppInput,
   },
@@ -151,7 +139,6 @@ export default {
 				offset: 0,
 				order_by: ["created_at:desc"]
 			},
-			modal: false,
 			sort: "",
 			backUrl: "",
 			fromUrl: null,
@@ -180,7 +167,8 @@ export default {
 
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
-		},
+    },
+    
 		status () {
 			if (this.$route.name.includes("pending-practices")) {
 				return ["Inactive"]
