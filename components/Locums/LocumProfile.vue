@@ -451,12 +451,12 @@
             },
           ]
 
-          if (this.authAdminPermissions.includes('Deactivate Locum')) {
-            locumStatusChoices.push({
-              label: 'Deactivate',
-              value: 'Deactivate',
-            })
-          }
+          // if (this.authAdminPermissions.includes('Deactivate Locum')) {
+          //   locumStatusChoices.push({
+          //     label: 'Deactivate',
+          //     value: 'Deactivate',
+          //   })
+          // }
 
           return locumStatusChoices
         }
@@ -477,12 +477,12 @@
             },
           ]
 
-          if (this.authAdminPermissions.includes('Deactivate Locum')) {
-            locumStatusChoices.push({
-              label: 'Deactivate',
-              value: 'Deactivate',
-            })
-          }
+          // if (this.authAdminPermissions.includes('Deactivate Locum')) {
+          //   locumStatusChoices.push({
+          //     label: 'Deactivate',
+          //     value: 'Deactivate',
+          //   })
+          // }
 
           return locumStatusChoices
         }
@@ -499,12 +499,12 @@
             },
           ]
 
-          if (this.authAdminPermissions.includes('Deactivate Locum')) {
-            locumStatusChoices.push({
-              label: 'Deactivate',
-              value: 'Deactivate',
-            })
-          }
+          // if (this.authAdminPermissions.includes('Deactivate Locum')) {
+          //   locumStatusChoices.push({
+          //     label: 'Deactivate',
+          //     value: 'Deactivate',
+          //   })
+          // }
 
           return locumStatusChoices
         }
@@ -521,12 +521,12 @@
           },
         ]
 
-        if (this.authAdminPermissions.includes('Deactivate Locum')) {
-          locumStatusChoices.push({
-            label: 'Deactivate',
-            value: 'Deactivate',
-          })
-        }
+        // if (this.authAdminPermissions.includes('Deactivate Locum')) {
+        //   locumStatusChoices.push({
+        //     label: 'Deactivate',
+        //     value: 'Deactivate',
+        //   })
+        // }
 
         return locumStatusChoices
       },
