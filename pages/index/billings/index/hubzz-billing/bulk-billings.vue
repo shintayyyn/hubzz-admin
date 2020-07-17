@@ -106,31 +106,28 @@
     </div>
     <div v-else class="border-b-2 border-white mt-2">
       <div class="hidden md:flex pb-3 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle text-center w-2/12">
           Practice / Surgery
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle text-center w-2/12">
           Check
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle text-center w-2/12">
           Job Part Number
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle text-center w-3/12">
           Approved at / Completed At
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle text-center w-1/12">
           Total
         </div>
-        <!-- <div class="align-middle text-center w-1/6">
-          Invoice Status
-        </div> -->
-        <div class="align-middle text-center w-1/6 align-right">
+        <div class="align-middle text-center w-3/12 align-right">
           Status
         </div>
       </div>
       <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
         <!-- BODY -->
-        <div class="p-2 overflow-x-hidden">
+        <div class="px-2 overflow-x-hidden">
           <AppTable
             :total="itemCount"
             :items="allBillablePractices"
@@ -175,7 +172,7 @@
             </template>
             
             <template v-slot:invoiceable_job_parts="slotProps">
-              <div class="md:justify-center sm:w-1/2 md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden">
+              <div class="md:justify-center md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden">
                 <div>
                   <AppTable
                     :total="slotProps.item.practice_invoiceable_job_parts.length"
@@ -183,7 +180,7 @@
                     :columns="jobPartsColumns"
                     :disabledPagination="true"
                     :disabledHeadings="true"
-                    :customWidth="'w-10.5/12'"
+                    :customItemsWidth="'w-10.5/12'"
                     @checkClicked="toggleCheckJobParts"
                     @sorted="sorted"
                   >
@@ -325,14 +322,14 @@ export default {
         {
           name:"Practice",
           dataIndex:"checker",
-          class:"text-left mt-4",
+          class:"flex-initial mt-4",
           slotName:"checker",
           eventName: "checkClicked"
         },
         {
           name:"Job Parts",
           dataIndex:"invoiceable_job_parts",
-          class:"w-full",
+          class:"flex-initial",
           slotName:"invoiceable_job_parts",
         },
 
@@ -368,7 +365,6 @@ export default {
 					name: "Status",
 					slot: true,
 					dataIndex: "status",
-					class:"flex-auto",
 					slotName: "status_slot",
 					sortable: true
         },
