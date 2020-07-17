@@ -17,7 +17,6 @@
       :loading="loadingHubzzInvoices"
       :router-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`"
       :order-by="params.order_by"
-      :customWidth="1200"
       @pagechanged="pagechanged"
       @sorted="sorted"
     >
@@ -30,6 +29,12 @@
           {{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
             ' - ' +
             $moment(slotProps.item.date_end).format('DD/MM/YYYY') }}
+        </div>
+      </template>
+
+      <template v-slot:issuedAt="slotProps">
+        <div>
+          {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? slotProps.item.date_created_in_gb_formatted_relative : $moment(slotProps.item.date_created_in_gb).format('DD/MM/YYYY') }}
         </div>
       </template>
 
@@ -213,9 +218,10 @@ export default {
 					class: "text-center"
 				},
 				{
-					name: "Issued At",
-					dataIndex: "date_created_formatted",
-					class: "text-center",
+          name: "Issued At",
+          dataIndex: "date_created",
+          slotName:"issuedAt",
+          class: "text-center",
 					sortable: "true"
 				},
 				{
