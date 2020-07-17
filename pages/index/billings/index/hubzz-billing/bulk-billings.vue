@@ -109,19 +109,19 @@
         <div class="align-middle text-center w-2/12">
           Practice / Surgery
         </div>
-        <div class="align-middle text-center w-2/12">
+        <div class="align-middle ml-6 pl-3 text-center w-2/12">
           Check
         </div>
-        <div class="align-middle text-center w-2/12">
+        <div class="align-middle ml-8 pl-3 text-center w-2/12">
           Job Part Number
         </div>
-        <div class="align-middle text-center w-3/12">
+        <div class="align-middle ml-6 text-center w-3/12">
           Approved at / Completed At
         </div>
-        <div class="align-middle text-center w-1/12">
+        <div class="align-middle ml-6 text-center  w-1/12">
           Total
         </div>
-        <div class="align-middle text-center w-3/12 align-right">
+        <div class="align-middle ml-3 text-center w-3/12">
           Status
         </div>
       </div>
