@@ -17,10 +17,16 @@
         <div class="flex flex-wrap">
           <!-- VIEW PRIMARY INFORMATION -->
           <div class="w-full md:w-1/2 text-gray-300 text-sm">
-            <p class="flex font-bold">Practice ID</p>
-            <p class="mx-2">{{ practice.id }}</p>
+            <p class="flex font-bold">
+              Practice ID
+            </p>
+            <p class="mx-2">
+              {{ practice.id }}
+            </p>
 
-            <p class="flex font-bold">Practice Name</p>
+            <p class="flex font-bold">
+              Practice Name
+            </p>
             <p class="flex flex-wrap items-center text-white text-sm mb-2 md:px-2">
               <span class="mr-2">{{ practice.name }}</span>
               <span
@@ -34,13 +40,23 @@
               >'Health Board'</span>
             </p>
 
-            <p class="flex font-bold">Practice Code</p>
-            <p class="flex text-white text-sm md:px-2 mb-2">{{ practice.code }}</p>
+            <p class="flex font-bold">
+              Practice Code
+            </p>
+            <p class="flex text-white text-sm md:px-2 mb-2">
+              {{ practice.code }}
+            </p>
 
-            <p class="flex font-bold">Post Code</p>
-            <p class="flex text-white text-sm md:px-2 mb-2">{{ practice.postcode }}</p>
+            <p class="flex font-bold">
+              Post Code
+            </p>
+            <p class="flex text-white text-sm md:px-2 mb-2">
+              {{ practice.postcode }}
+            </p>
 
-            <p class="flex font-bold">Address</p>
+            <p class="flex font-bold">
+              Address
+            </p>
             <p class="flex flex-col text-white text-sm md:px-2 mb-2">
               <span v-if="practice.address_line_1">{{ practice.address_line_1 }}</span>
               <span v-if="practice.address_line_2">{{ practice.address_line_2 }}</span>
@@ -49,21 +65,31 @@
               <span v-if="practice.address_line_5">{{ practice.address_line_5 }}</span>
             </p>
 
-            <p class="flex font-bold">CCG</p>
+            <p class="flex font-bold">
+              CCG
+            </p>
             <p
               class="flex text-white text-sm md:px-2 mb-2"
-            >{{ practice.clinical_commissioning_group_name }}</p>
+            >
+              {{ practice.clinical_commissioning_group_name }}
+            </p>
 
-            <p class="flex font-bold">Practice Types</p>
+            <p class="flex font-bold">
+              Practice Types
+            </p>
             <div v-if="practice.practice_types.length > 0" class="flex flex-wrap mb-2">
               <p
                 v-for="practiceType in practice.practice_types"
                 :key="practiceType.id"
                 class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm text-black md:px-2 bg-yellow-500"
-              >{{ practiceType.name }}</p>
+              >
+                {{ practiceType.name }}
+              </p>
             </div>
             <div v-if="practice.practice_types.length === 0">
-              <p class="flex text-white text-sm md:px-2 mb-2">Not set</p>
+              <p class="flex text-white text-sm md:px-2 mb-2">
+                Not set
+              </p>
             </div>
 
             <div
@@ -74,7 +100,9 @@
             >
               <p
                 class="flex font-bold"
-              >Compliance Requirements for {{ professionComplianceCategory.name }}:</p>
+              >
+                Compliance Requirements for {{ professionComplianceCategory.name }}:
+              </p>
 
               <div
                 v-for="referenceComplianceDocument in professionComplianceCategory.reference_compliance_documents"
@@ -171,7 +199,9 @@
             </div>
 
             <div v-if="practice.mandatory_trainings.length > 0">
-              <p class="flex font-bold">Mandatory Trainings</p>
+              <p class="flex font-bold">
+                Mandatory Trainings
+              </p>
               <div
                 v-for="mandatoryTraining in practice.mandatory_trainings"
                 :key="mandatoryTraining.id"
@@ -209,27 +239,43 @@
                 {{ practice.direct_debit ? 'Yes' : 'No' }}
               </p>-->
               <template v-if="practice.direct_debit">
-                <p class="flex font-bold">Sage reference</p>
+                <p class="flex font-bold">
+                  Sage reference
+                </p>
                 <p
                   class="flex text-white text-sm md:px-2 mb-2"
-                >{{ practice.sage_ref ? practice.sage_ref : 'N/A' }}</p>
+                >
+                  {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
+                </p>
                 <!-- <p class="flex font-bold">Nominal code</p>
                 <p class="flex ftext-white text-sm md:px-2 mb-2">{{practice.nominal_code}}</p>-->
               </template>
-              <p class="flex text-gray-300 font-bold">Phone Number</p>
+              <p class="flex text-gray-300 font-bold">
+                Phone Number
+              </p>
               <p
                 class="flex md:mx-2 mb-2"
-              >{{ practice && practice.phone_number ? practice.phone_number : 'N/A' }}</p>
-              <p class="flex text-gray-300 font-bold">Full name to report to</p>
+              >
+                {{ practice && practice.phone_number ? practice.phone_number : 'N/A' }}
+              </p>
+              <p class="flex text-gray-300 font-bold">
+                Full name to report to
+              </p>
               <p
                 class="flex md:mx-2 mb-2"
-              >{{ practice && practice.report_to ? practice.report_to : 'N/A' }}</p>
+              >
+                {{ practice && practice.report_to ? practice.report_to : 'N/A' }}
+              </p>
               <p
                 class="flex text-gray-300 font-bold"
-              >Extra information (Parking restrictions, transport links, etc.)</p>
+              >
+                Extra information (Parking restrictions, transport links, etc.)
+              </p>
               <p
                 class="flex md:mx-2 mb-2"
-              >{{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}</p>
+              >
+                {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
+              </p>
               <div class="flex items-center mb-2">
                 <span class="text-gray-300 mr-2 font-bold">Status:</span>
                 <span
@@ -251,26 +297,36 @@
                 </span>
               </div>
               <template v-if="practice.status === 'Active'">
-                <p class="text-gray-300 font-bold">Active Until</p>
+                <p class="text-gray-300 font-bold">
+                  Active Until
+                </p>
                 <p
                   class="flex md:mx-2 mb-2"
-                >{{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}</p>
+                >
+                  {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
+                </p>
               </template>
               <div class="flex flex-col item-center">
                 <div
                   class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 hover:bg-gray-800 mx-2 p-2 cursor-pointer transition-hover"
                   @click="confirm=true"
-                >Deactivate this Practice</div>
+                >
+                  Deactivate this Practice
+                </div>
                 <div
                   v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
                   class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 hover:bg-red-700 mx-2 p-2 cursor-pointer transition-hover"
                   @click="toMarkBogus()"
-                >Mark as Bogus</div>
+                >
+                  Mark as Bogus
+                </div>
                 <div
                   v-if="practice.status === 'Bogus'"
                   class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-yellow-600 hover:bg-yellow-700 mx-2 p-2 cursor-pointer transition-hover"
                   @click="toUnmarkBogus()"
-                >Remove Bogus Status</div>
+                >
+                  Remove Bogus Status
+                </div>
               </div>
             </div>
             <!-- EDITING OTHER INFORMATION -->
@@ -414,13 +470,19 @@
         <div class="flex items-center font-bold">
           <svgicon name="idea" color="yellow black" width="32" height="32" />
           <div class="px-2 leading-none">
-            <p class="text-base">Practice Verification</p>
-            <p class="font-normal italic text-xs">Hover on item to for more instruction</p>
+            <p class="text-base">
+              Practice Verification
+            </p>
+            <p class="font-normal italic text-xs">
+              Hover on item to for more instruction
+            </p>
           </div>
         </div>
         <div class="px-1 py-4">
           <ul class>
-            <p v-if="practice.status !== 'Active'" class="font-bold">Profile</p>
+            <p v-if="practice.status !== 'Active'" class="font-bold">
+              Profile
+            </p>
             <li v-if="practice.status !== 'Active'" class="flex px-2">
               <span
                 class="tool flex"
@@ -433,7 +495,9 @@
             <p
               v-if="(practiceUser && practiceUser.status !== 'Active') && (practiceUser && practiceUser.email_verified_at === null)"
               class="font-bold mt-2"
-            >User</p>
+            >
+              User
+            </p>
             <li v-if="practiceUser && practiceUser.status !== 'Active'" class="flex px-2">
               <span class="tool flex" data-tip="This must be done by the user." tabindex="1">
                 <span
@@ -444,7 +508,9 @@
             <template
               v-if="practiceDocuments && (!practiceDocuments.find(item => item.practice_document_type.name === 'Agreement') || !practiceDocuments.find(item => item.practice_document_type.name === 'Direct debit'))"
             >
-              <p class="font-bold mt-2">Documents</p>
+              <p class="font-bold mt-2">
+                Documents
+              </p>
               <li class="flex px-2">
                 <span
                   class="tool flex"
@@ -457,13 +523,19 @@
               <ul class="px-8">
                 <li
                   v-if="!practiceDocuments.find(item => item.practice_document_type.name === 'Agreement')"
-                >Agreement</li>
+                >
+                  Agreement
+                </li>
                 <li
                   v-if="!practiceDocuments.find(item => item.practice_document_type.name === 'Direct debit')"
-                >Direct Debit</li>
+                >
+                  Direct Debit
+                </li>
               </ul>
             </template>
-            <p v-if="practice.rates && !practice.rates.length" class="font-bold mt-2">Rates</p>
+            <p v-if="practice.rates && !practice.rates.length" class="font-bold mt-2">
+              Rates
+            </p>
             <li v-if="practice.rates && !practice.rates.length" class="flex px-2">
               <span class="tool flex" data-tip="Go to Rates Tab and fill all fields." tabindex="1">
                 <span class="hover:font-bold">Rates must be filled out.</span>
@@ -481,10 +553,10 @@
 </template>
 
 <script>
-import AppDate from "@/components/Base/AppDate";
-import AppInput from "@/components/Base/AppInput";
-import AppButton from "@/components/Base/AppButton";
-import AppConfirm from "@/components/Base/AppConfirm";
+import AppDate from "@/components/Base/AppDate"
+import AppInput from "@/components/Base/AppInput"
+import AppButton from "@/components/Base/AppButton"
+import AppConfirm from "@/components/Base/AppConfirm"
 
 export default {
   components: {
@@ -505,8 +577,8 @@ export default {
       default: () => []
     }
   },
-
-  data() {
+ 
+  data () {
     return {
       practiceParent: "",
 
@@ -535,33 +607,33 @@ export default {
       },
 
       confirm: false
-    };
-  },
-
-  computed: {
-    authAdminPermissions() {
-      return this.$store.getters["permissions"];
     }
   },
 
-  async created() {
-    const practiceId = this.$route.params.id;
+  computed: {
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
+    }
+  },
+
+  async created () {
+    const practiceId = this.$route.params.id
 
     const [practiceDocuments, practiceUser] = await Promise.all([
       this.$axios
         .get(`/api/v1/admin/practices/${practiceId}/practice-documents`)
         .then(response => {
-          return response.data.data.practice_documents;
+          return response.data.data.practice_documents
         }),
       this.$axios
         .get(`/api/v1/admin/practice-users?practice_id=${practiceId}`)
         .then(response => {
-          return response.data.data.users.find((item, index) => index === 0);
+          return response.data.data.users.find((item, index) => index === 0)
         })
-    ]);
+    ])
 
-    this.practiceDocuments = practiceDocuments;
-    this.practiceUser = practiceUser;
+    this.practiceDocuments = practiceDocuments
+    this.practiceUser = practiceUser
     // Here
     if (
       this.practice.rates.length > 0 &&
@@ -574,55 +646,55 @@ export default {
         { label: "Active", value: "Active" },
         { label: "Inactive", value: "Inactive" },
         { label: "Suspended", value: "Suspended" }
-      ];
+      ]
     } else {
-      this.toBogus = true;
+      this.toBogus = true
       this.practiceStatusChoices = [
         { label: "Inactive", value: "Inactive" },
         { label: "Suspended", value: "Suspended" }
-      ];
+      ]
     }
     if (this.practice.type == "Spoke") {
       Promise.all([
         this.$axios
           .$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`)
           .then(res => {
-            this.practiceParent = res.data.practice.parent_surgery;
+            this.practiceParent = res.data.practice.parent_surgery
           })
       ]).then(() => {
-        console.log("get parent done");
-      });
+        console.log("get parent done")
+      })
     }
 
-    console.log("practice", this.practice);
+    console.log("practice", this.practice)
   },
 
-  mounted() {},
+  mounted () {},
 
   methods: {
-    getQuery() {
+    getQuery () {
       const query = {
         ...this.$route.query
-      };
-      const offset = parseInt(query.page) * 8 - 8;
-      return offset;
+      }
+      const offset = parseInt(query.page) * 8 - 8
+      return offset
     },
 
-    getPractices() {
+    getPractices () {
       this.$store.dispatch("practices/fetchPractices", {
         limit: 8,
         order_by: "created_at:desc",
         offset: this.getQuery()
-      });
+      })
     },
 
-    getPractice() {
+    getPractice () {
       this.$store.dispatch("practices/fetchSpecificPractice", {
         id: this.practice.id
-      });
+      })
     },
 
-    async toPutPracticeInfo(practiceID) {
+    async toPutPracticeInfo (practiceID) {
       try {
         // if (this.practice.rates.length > 0 &&
         // this.practice.rates[0].rate &&
@@ -632,15 +704,15 @@ export default {
         // }
         let response = await this.$axios.$get(
           `/api/v1/admin/practice-documents?practice_id=${practiceID}`
-        );
-        const practiceDocs = response.data.practice_documents.length;
+        )
+        const practiceDocs = response.data.practice_documents.length
 
         if (!this.practice.rates.length < 2 && practiceDocs < 2) {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: "Upload practice documents and set the practice rates first."
-          });
+          })
         } else if (
           this.toPutPractice.status === "Active" &&
           !this.toPutPractice.actived_until
@@ -649,7 +721,7 @@ export default {
             enabled: true,
             status: "danger",
             text: "Actived Until is Required"
-          });
+          })
         } else {
           await this.$axios
             .put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice)
@@ -658,49 +730,49 @@ export default {
                 enabled: true,
                 status: "success",
                 text: "Saved"
-              });
-              this.getPractices();
-              this.getPractice();
-              this.toEdit = false;
-            });
+              })
+              this.getPractices()
+              this.getPractice()
+              this.toEdit = false
+            })
         }
       } catch (err) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: err.response.data.message
-        });
-        console.log("put locum profile info error", err.message);
+        })
+        console.log("put locum profile info error", err.message)
       }
     },
 
-    async toChangePracticeType(practiceID) {
+    async toChangePracticeType (practiceID) {
       try {
         await this.$axios.put(
           `/api/v1/admin/practices/${practiceID}/practice-type`,
           this.toPutPracticeType
-        );
-        await this.getPractices();
-        await this.getPractice();
-        this.toEdit = false;
-        this.toEditPracticeType = false;
+        )
+        await this.getPractices()
+        await this.getPractice()
+        this.toEdit = false
+        this.toEditPracticeType = false
 
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "success",
           text: "Saved"
-        });
+        })
       } catch (err) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: err.response.data.message
-        });
-        console.log("change practice type error!", err.message);
+        })
+        console.log("change practice type error!", err.message)
       }
     },
 
-    async toMarkBogus() {
+    async toMarkBogus () {
       await this.$axios
         .put(`/api/v1/admin/practices/${this.practice.id}/bogus`, {})
         .then(() => {
@@ -708,21 +780,21 @@ export default {
             enabled: true,
             status: "success",
             text: "Practice Successfully Marked as Bogus"
-          });
-          this.getPractices();
-          this.getPractice();
-          this.confirm = false;
+          })
+          this.getPractices()
+          this.getPractice()
+          this.confirm = false
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: err.response.data.message
-          });
-        });
+          })
+        })
     },
 
-    async toUnmarkBogus() {
+    async toUnmarkBogus () {
       await this.$axios
         .put(`/api/v1/admin/practices/${this.practice.id}/unbogus`, {})
         .then(() => {
@@ -730,21 +802,21 @@ export default {
             enabled: true,
             status: "success",
             text: "Practice Successfully Unmarked Bogus"
-          });
-          this.getPractices();
-          this.getPractice();
-          this.confirm = false;
+          })
+          this.getPractices()
+          this.getPractice()
+          this.confirm = false
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: err.response.data.message
-          });
-        });
+          })
+        })
     },
 
-    async toDeactivate() {
+    async toDeactivate () {
       await this.$axios
         .put(`/api/v1/admin/practices/${this.practice.id}/deactivate`, {})
         .then(() => {
@@ -752,56 +824,56 @@ export default {
             enabled: true,
             status: "success",
             text: "Practice Successfully Deactivated"
-          });
+          })
 
-          this.getPractices();
-          this.getPractice();
-          this.confirm = false;
-          this.$router.push("/practices/deactivated-practices");
+          this.getPractices()
+          this.getPractice()
+          this.confirm = false
+          this.$router.push("/practices/deactivated-practices")
         })
         .catch(err => {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
             text: err.response.data.message
-          });
-        });
+          })
+        })
     },
 
-    practiceTypeStyle(type) {
+    practiceTypeStyle (type) {
       switch (type) {
         case "Stand Alone":
-          return "bg-indigo-500 text-white lg:px-4 sm:px-2";
+          return "bg-indigo-500 text-white lg:px-4 sm:px-2"
         case "Hub":
-          return "bg-red-500 text-white lg:px-8 sm:px-2";
+          return "bg-red-500 text-white lg:px-8 sm:px-2"
         case "Spoke":
-          return "bg-blue-500 text-white lg:px-8 sm:px-2";
+          return "bg-blue-500 text-white lg:px-8 sm:px-2"
         case "Type 2":
-          return "bg-purple-500 text-white lg:px-8 sm:px-2";
+          return "bg-purple-500 text-white lg:px-8 sm:px-2"
         default:
       }
     },
 
-    edit() {
-      this.toEdit = !this.toEdit;
+    edit () {
+      this.toEdit = !this.toEdit
       if (this.toEdit) {
-        this.toPutPractice.phone_number = this.practice.phone_number;
-        this.toPutPractice.report_to = this.practice.report_to;
-        this.toPutPractice.extra_information = this.practice.extra_information;
-        this.toPutPractice.status = this.practice.status;
-        this.toPutPractice.actived_until = this.practice.actived_until;
+        this.toPutPractice.phone_number = this.practice.phone_number
+        this.toPutPractice.report_to = this.practice.report_to
+        this.toPutPractice.extra_information = this.practice.extra_information
+        this.toPutPractice.status = this.practice.status
+        this.toPutPractice.actived_until = this.practice.actived_until
       }
     },
 
-    editPracticeType() {
-      this.toEditPracticeType = !this.toEditPracticeType;
+    editPracticeType () {
+      this.toEditPracticeType = !this.toEditPracticeType
       if (this.toEditPracticeType) {
-        this.toPutPracticeType.type = this.practice.type;
-        this.toPutPracticeType.hub_type = this.practice.hub_type;
+        this.toPutPracticeType.type = this.practice.type
+        this.toPutPracticeType.hub_type = this.practice.hub_type
       }
     }
   }
-};
+}
 </script>
 
 <style>
