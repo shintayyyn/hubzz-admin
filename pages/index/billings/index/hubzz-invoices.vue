@@ -23,11 +23,11 @@
     </div>
     <div class="m-2 border-b-2 border-white">
       <div class="hidden md:flex pb-1 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle ml-4 text-center w-1/10">
+        <div class="align-middle  text-center w-1/10">
           Check
         </div>
         <div 
-          class="align-middle -ml-2 px-1 text-center w-1/10"
+          class="align-middle  text-center w-1/10"
           @click="sorted('surgery_name')"
         >
           Invoice Number
@@ -41,7 +41,7 @@
           />
         </div>
         <div 
-          class="align-middle -ml-8 text-center w-1/10"
+          class="align-middle text-center w-1/10"
           @click="sorted('practice_name')"
         >
           Practice Name
@@ -55,11 +55,11 @@
           />
         </div>
         
-        <div class="align-middle px-12 text-center w-1/10">
+        <div class="align-middle px-16 text-center w-1/10">
           Period
         </div>
         <div 
-          class="align-middle text-center w-1/10"
+          class="align-middle pl-11 text-center w-1/10"
           @click="sorted('issued_at')"
         >
           Issued At
@@ -72,7 +72,7 @@
             color="white black"
           />
         </div>
-        <div class="align-middle text-center w-1/10">
+        <div class="align-middle pl-12 text-center w-1/10">
           £ Amount
         </div>
         <div class="align-middle text-center w-1/10">
@@ -84,7 +84,7 @@
         <div class="align-middle text-center w-1/10">
           Exported?
         </div>
-        <div class="align-middle pr-4 text-center w-1/10">
+        <div class="align-middle text-center w-1/10">
           Actions
         </div>
       </div>

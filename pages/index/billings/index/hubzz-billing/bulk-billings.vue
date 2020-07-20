@@ -5,30 +5,28 @@
       <div class="relative w-full">
         <div class="flex flex-col text-white">
           <!-- Upper Filter (Job parts, Required fields) -->
-          <div class="flex flex-row items-center w-full">
+          <div class="flex lg:flex-row flex-col items-center w-full">
             <!-- Job part filters -->
             <div class="flex flex-col p-3">
-              <div class="px-1">
-                <div class="text-lg text-white font-semibold">
-                  Filter Job Parts
-                </div>
-                <div class="flex items-center">
-                  <AppDate
-                    v-model="invoiceableDateEnd"
-                    class="md:mx-2 text-white"
-                    :name="'practice_invoiceable_date_end'"
-                    :label="'Select Date Range'"
-                    :isBefore="true"
-                  />
-                  <div class="flex flex-col">
-                    <div class="w-full text-white">
-                      <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-                      <label for="completed">Include Completed Invoices</label>
-                    </div>
-                    <div class="w-full text-white">
-                      <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-                      <label for="disputed">Include Disputed Invoices</label>
-                    </div>
+              <div class="text-lg text-white font-semibold">
+                Filter Job Parts
+              </div>
+              <div class="flex flex-row items-center">
+                <AppDate
+                  v-model="invoiceableDateEnd"
+                  class="md:mx-2 text-white"
+                  :name="'practice_invoiceable_date_end'"
+                  :label="'Filter from Beginning Until'"
+                  :isBefore="true"
+                />
+                <div class="flex flex-col mx-4">
+                  <div class="w-full text-white">
+                    <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+                    <label for="completed">Include Completed Invoices</label>
+                  </div>
+                  <div class="w-full text-white">
+                    <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
+                    <label for="disputed">Include Disputed Invoices</label>
                   </div>
                 </div>
               </div>
@@ -43,13 +41,13 @@
                   v-model="billingPeriodDateStart"
                   class="md:mx-2 text-white"
                   :name="'billing_period_date_start'"
-                  :label="'Billing Date From(Required)'"
+                  :label="'Billing Date From (Required)'"
                 />
                 <AppDate
                   v-model="billingPeriodDateEnd"
-                  class="md:mx-2 text-white"
+                  class="md:mx-2 p-2 text-white "
                   :name="'billing_period_date_end'"
-                  :label="'Billing Date To(Required)'"
+                  :label="'Billing Date To (Required)'"
                   :isAfterDate="billingPeriodDateStart"
                 />
                 <AppDate
@@ -106,31 +104,28 @@
     </div>
     <div v-else class="border-b-2 border-white mt-2">
       <div class="hidden md:flex pb-3 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle text-center w-2/12">
           Practice / Surgery
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle pl-1 text-center w-2/12">
           Check
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle pl-8 text-center w-2/12">
           Job Part Number
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle pr-6 text-center w-3/12">
           Approved at / Completed At
         </div>
-        <div class="align-middle text-center w-1/6">
+        <div class="align-middle pr-2 text-center w-1/12">
           Total
         </div>
-        <!-- <div class="align-middle text-center w-1/6">
-          Invoice Status
-        </div> -->
-        <div class="align-middle text-center w-1/6 align-right">
+        <div class="align-middle pr-10 text-center w-3/12">
           Status
         </div>
       </div>
       <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
         <!-- BODY -->
-        <div class="p-2 overflow-x-hidden">
+        <div class="px-2 overflow-x-hidden">
           <AppTable
             :total="itemCount"
             :items="allBillablePractices"
@@ -175,7 +170,7 @@
             </template>
             
             <template v-slot:invoiceable_job_parts="slotProps">
-              <div class="md:justify-center sm:w-1/2 md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden">
+              <div class="md:justify-center md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden">
                 <div>
                   <AppTable
                     :total="slotProps.item.practice_invoiceable_job_parts.length"
@@ -183,7 +178,7 @@
                     :columns="jobPartsColumns"
                     :disabledPagination="true"
                     :disabledHeadings="true"
-                    :customWidth="'w-10.5/12'"
+                    :customItemsWidth="'lg:w-10/12 w-full'"
                     @checkClicked="toggleCheckJobParts"
                     @sorted="sorted"
                   >
@@ -203,7 +198,6 @@
                     </template>
                     <template v-slot:status_slot="slotProps">
                       <div
-                        class="rounded-full text-center px-4 py-1 w-32"
                         :class="invoiceStatusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
                       >
                         {{ slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status }}
@@ -325,14 +319,14 @@ export default {
         {
           name:"Practice",
           dataIndex:"checker",
-          class:"text-left mt-4",
+          class:"flex-initial mt-4",
           slotName:"checker",
           eventName: "checkClicked"
         },
         {
           name:"Job Parts",
           dataIndex:"invoiceable_job_parts",
-          class:"w-full",
+          class:"flex-initial",
           slotName:"invoiceable_job_parts",
         },
 
@@ -368,7 +362,6 @@ export default {
 					name: "Status",
 					slot: true,
 					dataIndex: "status",
-					class:"flex-auto",
 					slotName: "status_slot",
 					sortable: true
         },
@@ -848,17 +841,17 @@ export default {
     invoiceStatusStyle (status) {
 			switch (status) {
 				case "Disputed":
-					return "bg-red-500 text-white "
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-500 text-white "
 				case "Invoiced":
-          return "bg-blue-500 text-white"
+          return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-blue-500 text-white"
 				case "To Be Invoiced":
-					return "bg-indigo-600 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-indigo-600 text-white"
 				case "Completed":
-					return "bg-green-600 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-green-600 text-white"
 				case "Approved":
-          return "bg-blue-600 text-white"
+          return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-blue-600 text-white"
         case "Cancelled":
-					return "bg-red-600 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-600 text-white"
 				default:
 					return
 			}

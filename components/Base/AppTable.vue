@@ -7,6 +7,7 @@
         :class="customWidth ? customWidth : 'w-full'" 
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
+        <!-- HEADER -->
         <div v-if="disabledHeadings === false" class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
           <div
             v-for="(column, index) in columns"
@@ -36,7 +37,7 @@
             />
           </div>
         </div>
-
+        <!-- HEADER ENDS HERE -->
         <div 
           v-for="item in items" 
           :key="item.id" 
@@ -213,6 +214,10 @@
         type: String,
         default: null
       },
+      customItemsWidth: {
+        type: String,
+        default: null,
+      },
       customWidth: {
         type: String,
         default: null
@@ -240,14 +245,16 @@
     methods: {
       recordClass () {
         if(this.routerLink && this.itemsOnTop === true) {
-          return "transition-hover hover:bg-waterloo-dark items-start"
+          return "transition-hover hover:bg-waterloo-dark items-start ".concat(this.customItemsWidth ? this.customItemsWidth : '') 
         } else if (this.routerLink && this.itemsOnTop === false) {
-          return "transition-hover hover:bg-waterloo-dark items-start md:items-center"
+          return "transition-hover hover:bg-waterloo-dark items-start md:items-center ".concat(this.customItemsWidth ? this.customItemsWidth : '')
         } else if (this.routerLink && this.itemsOnTop === true) {
-          return "cursor-default items-start"
+          return "cursor-default items-start ".concat(this.customItemsWidth ? this.customItemsWidth : '')
         } else if (this.routerLink && this.itemsOnTop === false) {
-          return "cursor-default items-start md:items-center"
-        } 
+          return "cursor-default items-start md:items-center ".concat(this.customItemsWidth ? this.customItemsWidth : '')
+        } else {
+          return this.customItemsWidth ? this.customItemsWidth : ''
+        }
       },
       sort (dataIndex) {
         if (!this.params.some(item => item.includes(`${dataIndex}`))) {
