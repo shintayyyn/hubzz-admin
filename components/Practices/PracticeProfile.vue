@@ -501,13 +501,23 @@
               Profile
             </p>
 
-            <li v-if="practice.status !== 'Active'" class="flex px-2">
+            <li v-if="practice.manual_status !== 'Active'" class="flex px-2">
               <span
                 class="tool flex"
                 data-tip="Edit Profile and set the status to active."
                 tabindex="1"
               >
                 <span class="hover:font-bold">Practice must be set to active.</span>
+              </span>
+            </li>
+
+            <li v-if="practice.manual_status === 'Active' && practice.past_actived_until" class="flex px-2">
+              <span
+                class="tool flex"
+                data-tip="Edit Profile and change practice active until."
+                tabindex="1"
+              >
+                <span class="hover:font-bold">Practice expires.</span>
               </span>
             </li>
 
