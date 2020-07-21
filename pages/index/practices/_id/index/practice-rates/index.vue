@@ -101,9 +101,15 @@ export default {
 		mode: "out-in"
 	},
 
+  props: {
+    practice: {
+      type: Object,
+      default: () => null,
+    },
+  },
+
 	data () {
 		return {
-			practice: null,
 			editing: false,
 			loading: false,
 			specificPractice: null,
@@ -183,36 +189,6 @@ export default {
 		}
 	},
 
-	async asyncData ({ app, store, route }) {
-		try {
-			let response = await app.$axios.get(
-				`/api/v1/admin/practices/${route.params.id}`
-			)
-
-			const practice = response.data.data.practice
-
-			store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-
-			return {
-				practice
-			}
-		} catch (err) {
-			console.log("err", err.response || err)
-
-			let message = "Something went wrong!"
-
-			if (err.response && err.response.data && err.response.data.message) {
-				message = err.response.data.message
-			}
-
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: message
-			})
-		}
-	},
-
 	created () {
 		this.setRate()
 	},
@@ -265,12 +241,6 @@ export default {
 			return offset
 		},
 
-		getPractices () {
-			this.$store.dispatch("practices/fetchSpecificPractice", {
-				id: this.$route.params.id
-			})
-		},
-
 		errorMessage (field, message) {
 			const error = this.formError.find(
 				error => error.field === field.toString()
@@ -289,53 +259,44 @@ export default {
 			this.Validate(this.toPutPracticeRate)
 
 			if (this.formError.length === 0) {
-				this.toPutPracticeRateInfo(this.practice.id)
+				this.updatePracticeRates(this.practice.id)
 			}
 		},
 
-		toPutPracticeRateInfo (practiceId) {
+		updatePracticeRates (practiceId) {
 			this.loading = true
-			this.$axios
-				.put(`/api/v1/admin/practices/${practiceId}/rates`, {
-					gp_rate: this.toPutPracticeRate.gp_rate,
-					others_rate: this.toPutPracticeRate.others_rate
-				})
-				.then(() => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Saved"
-					})
+			this.$axios.put(`/api/v1/admin/practices/${practiceId}/rates`, {
+        gp_rate: this.toPutPracticeRate.gp_rate,
+        others_rate: this.toPutPracticeRate.others_rate
+      }).then((response) => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Saved"
+        })
 
-					return this.$axios.get(`/api/v1/admin/practices/${practiceId}`)
-				})
-				.then(response => {
-					const practice = response.data.data.practice
+        const practice = response.data.data.practice
+        
+        this.$emit('practiceUpdated', practice)
 
-					this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+        this.editing = false
+      }).catch(err => {
+        console.log("err", err.response || err)
 
-					this.practice = practice
+        let message = "Something went wrong!"
 
-					this.editing = false
-				})
-				.catch(err => {
-					console.log("err", err.response || err)
+        if (err.response && err.response.data && err.response.data.message) {
+          message = err.response.data.message
+        }
 
-					let message = "Something went wrong!"
-
-					if (err.response && err.response.data && err.response.data.message) {
-						message = err.response.data.message
-					}
-
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: message
-					})
-				})
-				.finally(() => {
-					this.loading = false
-				})
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: message
+        })
+      }).finally(() => {
+        this.loading = false
+      })
 		},
 
 		setRate () {

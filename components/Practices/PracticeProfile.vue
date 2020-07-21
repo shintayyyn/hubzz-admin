@@ -77,7 +77,8 @@
             <p class="flex font-bold">
               Practice Types
             </p>
-            <div v-if="practice.practice_types.length > 0" class="flex flex-wrap mb-2">
+
+            <div v-if="practice.practice_types && practice.practice_types.length > 0" class="flex flex-wrap mb-2">
               <p
                 v-for="practiceType in practice.practice_types"
                 :key="practiceType.id"
@@ -86,7 +87,8 @@
                 {{ practiceType.name }}
               </p>
             </div>
-            <div v-if="practice.practice_types.length === 0">
+
+            <div v-if="practice.practice_types && practice.practice_types.length === 0">
               <p class="flex text-white text-sm md:px-2 mb-2">
                 Not set
               </p>
@@ -94,7 +96,10 @@
 
             <div
               v-for="professionComplianceCategory in professionComplianceCategories"
-              v-if="practice.practice_profession_compliance_category_compliance_documents.length > 0"
+              v-if="
+                practice.practice_profession_compliance_category_compliance_documents
+                  && practice.practice_profession_compliance_category_compliance_documents.length > 0
+              "
               :key="professionComplianceCategory.id"
               class="mb-4"
             >
@@ -198,7 +203,7 @@
               </div>
             </div>
 
-            <div v-if="practice.mandatory_trainings.length > 0">
+            <div v-if="practice.mandatory_trainings && practice.mandatory_trainings.length > 0">
               <p class="flex font-bold">
                 Mandatory Trainings
               </p>
@@ -212,7 +217,10 @@
             </div>
 
             <div
-              v-if="practice.practice_profession_compliance_category_compliance_documents.length === 0"
+              v-if="
+                practice.practice_profession_compliance_category_compliance_documents
+                  && practice.practice_profession_compliance_category_compliance_documents.length === 0
+              "
             >
               <p class="flex text-white md:text-base py-2 font-bold leading-tight">
                 <span>Compliance Documents is not yet set up by the Practice Hub.</span>
@@ -404,6 +412,7 @@
 
               <AppButton :label="'Save'" @click="toPutPracticeInfo(practice.id,toPutPractice)" />
             </div>
+
             <!-- VIEW PRACTICE TYPE -->
             <div class="flex flex-wrap justify-between items-center">
               <span class="text-lg mr-2 font-bold">Practice Type</span>
@@ -413,12 +422,15 @@
                 @click="editPracticeType()"
               />
             </div>
-            <div v-if="toEditPracticeType === false" class>
+
+            <div v-if="!toEditPracticeType" class>
               <span>Practice Type:</span>
+
               <span
                 class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
                 :class="practiceTypeStyle(practice.type)"
               >{{ practice.type }}</span>
+
               <span
                 v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
                 class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
@@ -428,7 +440,7 @@
 
             <!-- EDIT PRACTICE TYPE -->
             <div
-              v-if="toEditPracticeType === true && authAdminPermissions.includes('Change Practice Type') && !practiceParent"
+              v-if="toEditPracticeType && authAdminPermissions.includes('Change Practice Type')"
             >
               <AppInput
                 v-model="toPutPracticeType.type"
@@ -442,6 +454,7 @@
                   { label: 'Stand Alone', value: 'Stand Alone' }
                 ]"
               />
+
               <AppInput
                 v-if="toPutPracticeType.type === 'Hub'"
                 v-model="toPutPracticeType.hub_type"
@@ -453,6 +466,7 @@
                   { label: 'Type 2', value: 'Type 2' },
                 ]"
               />
+
               <AppButton
                 :label="'Change'"
                 @click="toChangePracticeType(practice.id,toPutPracticeType)"
@@ -469,20 +483,24 @@
       >
         <div class="flex items-center font-bold">
           <svgicon name="idea" color="yellow black" width="32" height="32" />
+
           <div class="px-2 leading-none">
             <p class="text-base">
               Practice Verification
             </p>
+
             <p class="font-normal italic text-xs">
               Hover on item to for more instruction
             </p>
           </div>
         </div>
+
         <div class="px-1 py-4">
           <ul class>
             <p v-if="practice.status !== 'Active'" class="font-bold">
               Profile
             </p>
+
             <li v-if="practice.status !== 'Active'" class="flex px-2">
               <span
                 class="tool flex"
@@ -492,25 +510,24 @@
                 <span class="hover:font-bold">Practice must be set to active.</span>
               </span>
             </li>
-            <p
-              v-if="(practiceUser && practiceUser.status !== 'Active') && (practiceUser && practiceUser.email_verified_at === null)"
-              class="font-bold mt-2"
-            >
+
+            <p v-if="!practice.has_active_user" class="font-bold mt-2">
               User
             </p>
-            <li v-if="practiceUser && practiceUser.status !== 'Active'" class="flex px-2">
+
+            <li v-if="!practice.has_active_user" class="flex px-2">
               <span class="tool flex" data-tip="This must be done by the user." tabindex="1">
                 <span
                   class="hover:font-bold"
                 >The user must verify his account via email verification.</span>
               </span>
             </li>
-            <template
-              v-if="practiceDocuments && (!practiceDocuments.find(item => item.practice_document_type.name === 'Agreement') || !practiceDocuments.find(item => item.practice_document_type.name === 'Direct debit'))"
-            >
+
+            <template v-if="practice && !practice.complete_document">
               <p class="font-bold mt-2">
                 Documents
               </p>
+
               <li class="flex px-2">
                 <span
                   class="tool flex"
@@ -520,27 +537,29 @@
                   <span class="hover:font-bold">Documents must be filled out.</span>
                 </span>
               </li>
+
               <ul class="px-8">
-                <li
-                  v-if="!practiceDocuments.find(item => item.practice_document_type.name === 'Agreement')"
-                >
+                <li v-if="practice && !practice.has_agreement_document">
                   Agreement
                 </li>
-                <li
-                  v-if="!practiceDocuments.find(item => item.practice_document_type.name === 'Direct debit')"
-                >
+
+                <li v-if="practice && !practice.has_direct_debit_document">
                   Direct Debit
                 </li>
               </ul>
             </template>
-            <p v-if="practice.rates && !practice.rates.length" class="font-bold mt-2">
-              Rates
-            </p>
-            <li v-if="practice.rates && !practice.rates.length" class="flex px-2">
-              <span class="tool flex" data-tip="Go to Rates Tab and fill all fields." tabindex="1">
-                <span class="hover:font-bold">Rates must be filled out.</span>
-              </span>
-            </li>
+
+            <template v-if="practice && !practice.complete_rate">
+              <p class="font-bold mt-2">
+                Rates
+              </p>
+              
+              <li class="flex px-2">
+                <span class="tool flex" data-tip="Go to Rates Tab and fill all fields." tabindex="1">
+                  <span class="hover:font-bold">Rates must be filled out.</span>
+                </span>
+              </li>
+            </template>
           </ul>
         </div>
       </div>
@@ -580,13 +599,8 @@ export default {
  
   data () {
     return {
-      practiceParent: "",
-
       practiceStatusChoices: [],
 
-      practiceUser: null,
-
-      practiceDocuments: [],
       toBogus: false,
       toPutPractice: {
         direct_debit: this.practice.direct_debit,
@@ -616,31 +630,11 @@ export default {
     }
   },
 
-  async created () {
-    const practiceId = this.$route.params.id
-
-    const [practiceDocuments, practiceUser] = await Promise.all([
-      this.$axios
-        .get(`/api/v1/admin/practices/${practiceId}/practice-documents`)
-        .then(response => {
-          return response.data.data.practice_documents
-        }),
-      this.$axios
-        .get(`/api/v1/admin/practice-users?practice_id=${practiceId}`)
-        .then(response => {
-          return response.data.data.users.find((item, index) => index === 0)
-        })
-    ])
-
-    this.practiceDocuments = practiceDocuments
-    this.practiceUser = practiceUser
-    // Here
+  async mounted () {
     if (
-      this.practice.rates.length > 0 &&
-      this.practice.rates[0].rate &&
-      this.practice.rates[1].rate &&
-      this.practiceDocuments.length >= 2 &&
-      this.practiceUser.status === "Active"
+      this.practice.complete_rate
+      && this.practice.complete_document
+      && this.practice.has_active_user
     ) {
       this.practiceStatusChoices = [
         { label: "Active", value: "Active" },
@@ -654,22 +648,9 @@ export default {
         { label: "Suspended", value: "Suspended" }
       ]
     }
-    if (this.practice.type == "Spoke") {
-      Promise.all([
-        this.$axios
-          .$get(`/api/v1/admin/practices/${this.practice.id}/parent-surgery`)
-          .then(res => {
-            this.practiceParent = res.data.practice.parent_surgery
-          })
-      ]).then(() => {
-        console.log("get parent done")
-      })
-    }
 
     console.log("practice", this.practice)
   },
-
-  mounted () {},
 
   methods: {
     getQuery () {
@@ -680,34 +661,9 @@ export default {
       return offset
     },
 
-    getPractices () {
-      this.$store.dispatch("practices/fetchPractices", {
-        limit: 8,
-        order_by: "created_at:desc",
-        offset: this.getQuery()
-      })
-    },
-
-    getPractice () {
-      this.$store.dispatch("practices/fetchSpecificPractice", {
-        id: this.practice.id
-      })
-    },
-
     async toPutPracticeInfo (practiceID) {
       try {
-        // if (this.practice.rates.length > 0 &&
-        // this.practice.rates[0].rate &&
-        // this.practice.rates[1].rate &&
-        // this.practiceDocuments.length >= 2) {
-
-        // }
-        let response = await this.$axios.$get(
-          `/api/v1/admin/practice-documents?practice_id=${practiceID}`
-        )
-        const practiceDocs = response.data.practice_documents.length
-
-        if (!this.practice.rates.length < 2 && practiceDocs < 2) {
+        if (!this.practice.complete_document || !this.practice.complete_rate) {
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "danger",
@@ -723,18 +679,19 @@ export default {
             text: "Actived Until is Required"
           })
         } else {
-          await this.$axios
-            .put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice)
-            .then(() => {
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "success",
-                text: "Saved"
-              })
-              this.getPractices()
-              this.getPractice()
-              this.toEdit = false
+          await this.$axios.put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice).then((response) => {
+            const practice = response.data.data.practice
+
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Saved"
             })
+
+            this.$emit('practiceUpdated', practice)
+
+            this.toEdit = false
+          })
         }
       } catch (err) {
         this.$store.commit("SET_NOTIFICATION", {
@@ -748,13 +705,12 @@ export default {
 
     async toChangePracticeType (practiceID) {
       try {
-        await this.$axios.put(
-          `/api/v1/admin/practices/${practiceID}/practice-type`,
-          this.toPutPracticeType
-        )
-        await this.getPractices()
-        await this.getPractice()
+        await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`, this.toPutPracticeType)
+
+        this.$emit('practiceUpdated')
+
         this.toEdit = false
+
         this.toEditPracticeType = false
 
         this.$store.commit("SET_NOTIFICATION", {
@@ -773,71 +729,71 @@ export default {
     },
 
     async toMarkBogus () {
-      await this.$axios
-        .put(`/api/v1/admin/practices/${this.practice.id}/bogus`, {})
-        .then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Practice Successfully Marked as Bogus"
-          })
-          this.getPractices()
-          this.getPractice()
-          this.confirm = false
+      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/bogus`).then((response) => {
+        const practice = response.data.data.practice
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Practice Successfully Marked as Bogus"
         })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
+
+        this.$emit('practiceUpdated', practice)
+
+        this.confirm = false
+      }).catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
+      })
     },
 
     async toUnmarkBogus () {
-      await this.$axios
-        .put(`/api/v1/admin/practices/${this.practice.id}/unbogus`, {})
-        .then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Practice Successfully Unmarked Bogus"
-          })
-          this.getPractices()
-          this.getPractice()
-          this.confirm = false
+      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/unbogus`).then((response) => {
+        const practice = response.data.data.practice
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Practice Successfully Unmarked Bogus"
         })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
+
+        this.$emit('practiceUpdated', practice)
+
+        this.confirm = false
+      }).catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
+      })
     },
 
     async toDeactivate () {
-      await this.$axios
-        .put(`/api/v1/admin/practices/${this.practice.id}/deactivate`, {})
-        .then(() => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Practice Successfully Deactivated"
-          })
+      await this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`).then((response) => {
+        const practice = response.data.data.practice
 
-          this.getPractices()
-          this.getPractice()
-          this.confirm = false
-          this.$router.push("/practices/deactivated-practices")
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Practice Successfully Deactivated"
         })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
+        
+        this.$emit('practiceUpdated', practice)
+
+        this.confirm = false
+
+        this.$router.push("/practices/deactivated-practices")
+      }).catch(err => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
+      })
     },
 
     practiceTypeStyle (type) {
@@ -871,13 +827,13 @@ export default {
         this.toPutPracticeType.type = this.practice.type
         this.toPutPracticeType.hub_type = this.practice.hub_type
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style>
-.shield {
-  z-index: 511;
-}
+  .shield {
+    z-index: 511;
+  }
 </style>

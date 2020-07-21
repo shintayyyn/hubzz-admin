@@ -10,20 +10,23 @@
         @click="goBack()"
       />
     </div>
+
+    <AppLoading :loading="loading" spinner />
+
     <!-- </nuxt-link> -->
-    <PracticeTabs :practice="practice" />
-    <nuxt-child />
-    <div v-if="$route.name.includes('pracUserId')" class="practice-shield" @click="goBack()" />
-
-    <div v-if="$route.name.includes('pracDocId')" class="practice-shield" @click="goBack()" />
-
-    <div v-if="$route.name.includes('invitationId')" class="practice-shield" @click="goBack()" />
+    <PracticeTabs v-if="practice" :practice="practice" />
 
     <div
-      v-if="$route.name.includes('practiceSessionId')"
+      v-if="
+        $route.name.includes('pracUserId')
+          || $route.name.includes('pracDocId')
+          || $route.name.includes('invitationId')
+          || $route.name.includes('practiceSessionId')
+      "
       class="practice-shield"
       @click="goBack()"
     />
+
     <!-- @click="$router.go(-1)" -->
     <div
       v-if="$route.name.includes('practiceSurgeryId')"
@@ -37,46 +40,72 @@
       @click="$router.go(-1)"
     />
 
-    <div v-if="$route.name.includes('add-spoke')" class="practice-shield" @click="$router.go(-1)" />
+    <div
+      v-if="$route.name.includes('add-spoke')"
+      class="practice-shield" @click="$router.go(-1)"
+    />
+
+    <nuxt-child
+      :practice="practice"
+      :professionComplianceCategories="professionComplianceCategories"
+      @practiceUpdated="practiceUpdatedHandler"
+    />
   </div>
 </template>
+
 <script>
 import PracticeTabs from "@/components/Practices/PracticeTabs"
+import AppLoading from '@/components/Base/AppLoading'
+
 export default {
 
-  transition: {
-    name: 'fade',
-    mode: 'out-in',
-  },
-  
   components: {
-    PracticeTabs
+    AppLoading,
+    PracticeTabs,
   },
-  computed: {
-    practice () {
-      return this.$store.state.practices.practice
+
+  props: {
+    professionComplianceCategories: {
+      type: Array,
+      default: () => null,
+    },
+  },
+
+  data () {
+    return {
+      loading: false,
+      practice: null,
     }
   },
-  async asyncData ({ app, store, route, error }) {
-    try {
-      let response = await app.$axios.$get(
-        `/api/v1/admin/practices/${route.params.id}`
-      )
-      const practice = response.data.practice
-      await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-      return {}
-    } catch (err) {
-      error({ statusCode: 404 })
-      store.commit("SET_NOTIFICATION", {
-        enabled: true,
-        status: "danger",
-        text: "Something went wrong!"
-      })
-      console.log("get practice error!!!!", err)
-    }
+
+  mounted () {
+    this.getPractice()
   },
-  created () {},
+
   methods: {
+    getPractice () {
+      const practiceId = this.$route.params.id
+      this.loading = true
+      this.$axios.get(`/api/v1/admin/practices/${practiceId}`).then((response) => {
+        this.practice = response.data.data.practice
+      }).catch((err) => {
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+
+    practiceUpdatedHandler (practice) {
+      console.log('practiceUpdatedHandler', practice)
+      if (practice) {
+        this.practice = practice
+      } else {
+        this.getPractice()
+      }
+
+      this.$emit('practiceUpdated', practice)
+    },
+
     goBack () {
       let url = "/practices"
       if (this.practice.status === "Inactive") {
@@ -92,42 +121,46 @@ export default {
         ...this.$route.query
       }
       this.$router.push({ path: url, query })
-    }
-  }
+    },
+  },
 }
 </script>
+
 <style>
-.card {
-  min-width: 100px;
-  height: 250px;
-  box-sizing: content-box;
-}
-.practice-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
-.practice-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #ffc72c;
-  transition: all 0.3s ease-in-out;
-  background-color: #505561;
-  z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-  .practice-modal {
-    width: 80%;
+  .card {
+    min-width: 100px;
+    height: 250px;
+    box-sizing: content-box;
   }
-}
+
+  .practice-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    opacity: 0.5;
+    z-index: 511;
+  }
+
+  .practice-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .practice-modal {
+      width: 80%;
+    }
+  }
 </style>

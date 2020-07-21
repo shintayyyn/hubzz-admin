@@ -217,6 +217,8 @@
 
       createdPracticeUserHandler () {
         this.getPracticeUsers()
+        
+        this.$emit('practiceUpdated')
       },
 
       pagechanged (page) {

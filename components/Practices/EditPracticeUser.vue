@@ -235,22 +235,25 @@
           >
             {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
           </div>
+
           <div class="flex py-2">
             Role
           </div>
+
           <div
             class="flex px-2 text-white"
           >
-            {{ practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
+            {{ practiceUser.practice_detail && practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
           </div>
 
           <div class="flex py-2">
             Practice User Role
           </div>
+          
           <div
             class="flex px-2 text-white"
           >
-            {{ practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
+            {{ practiceUser.practice_detail && practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
           </div>
 
           <div class="flex py-2">
@@ -589,14 +592,21 @@
 
       async toDeactivate () {
         await this.$axios
-          .$put(
+          .put(
             `/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`
           )
-          .then(() => {
+          .then((response) => {
+            const practiceUser = response.data.data.user
+
+            this.$emit('setPracticeUser', practiceUser)
+
             this.confirm = false
-            this.$router.push(
-              `/practices/${this.$route.params.id}/practice-users`
-            )
+
+            this.$router.push({
+              path:`/practices/${this.practice.id}/practice-users`,
+              query: this.$route.query,
+            })
+
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "success",

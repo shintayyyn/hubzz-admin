@@ -69,54 +69,54 @@
 </template>
 
 <script>
-  import AppLoading from '@/components/Base/AppLoading'
+import AppLoading from '@/components/Base/AppLoading'
 
-  export default {
-    components: {
-      AppLoading,
+export default {
+  components: {
+    AppLoading,
+  },
+
+  data () {
+    return {
+      loading: false,
+      locumUser: null,
+    }
+  },
+
+  computed: {
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
+    },
+  },
+
+  mounted () {
+    this.getLocumUser()
+  },
+
+  methods: {
+    getLocumUser () {
+      const locumUserId = this.$route.params.id
+      this.loading = true
+      this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`).then((response) => {
+        this.locumUser = response.data.data.user
+      }).catch((err) => {
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loading = false
+      })
     },
 
-    data () {
-      return {
-        loading: false,
-        locumUser: null,
-      }
+    setViewLocumUserHandler (locumUser) {
+      this.locumUser = locumUser
+      this.$emit('locumUserUpdated', locumUser)
     },
 
-    computed: {
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
-    },
-
-    mounted () {
+    updateLocumUsersHandler () {
       this.getLocumUser()
+      this.$emit('updateLocumUsers')
     },
-
-    methods: {
-      getLocumUser () {
-        const locumUserId = this.$route.params.id
-        this.loading = true
-        this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`).then((response) => {
-          this.locumUser = response.data.data.user
-        }).catch((err) => {
-          this.$nuxt.error(err)
-        }).finally(() => {
-          this.loading = false
-        })
-      },
-
-      setViewLocumUserHandler (locumUser) {
-        this.locumUser = locumUser
-        this.$emit('locumUserUpdated', locumUser)
-      },
-
-      updateLocumUsersHandler () {
-        this.getLocumUser()
-        this.$emit('updateLocumUsers')
-      },
-     },
-  }
+    },
+}
 </script>
 
 <style>
