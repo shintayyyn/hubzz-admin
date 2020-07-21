@@ -141,14 +141,14 @@ export default {
 	},
 	async asyncData ({ app }) {
 		try {
-			
 			let response = await app.$axios.$get(`/api/v1/admin/me`)
-			const me = response.data.user
+      const me = response.data.user
+      console.log('me', response)
 			return {
 				me
 			}
 		} catch (err) {
-			console.log("Get locums error! 111", err)
+			console.log("Get me error! 111", err)
 		}
 	},
 	async created (){
