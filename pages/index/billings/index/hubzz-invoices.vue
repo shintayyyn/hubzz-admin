@@ -9,16 +9,20 @@
         >
       </div>
       <div class="flex m-3 text-white">
+        <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true">
+        <label for="showUnpaidInvoiceOnly">Show Unpaid Invoices Only</label>
+      </div>
+      <div class="flex-1 m-3 text-white">
+        <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
+        <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
+      </div>
+      <div class="flex m-3 text-white">
         <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
         <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
       </div>
       <div class="flex m-3 text-white">
         <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
         <label for="showCsvExportOnly">Show CSV Exported Only</label>
-      </div>
-      <div class="flex-1 m-3 text-white">
-        <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
-        <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
       </div>
     </div>
     <div class="m-2 border-b-2 border-white">
@@ -402,6 +406,7 @@ export default {
       currentPage: 1,
       downloading: false,
       search: "",
+      showUnpaidInvoiceOnly: false,
       showPaidInvoiceOnly: false,
       showCsvExportOnly: false,
       showExportableInvoicesOnly: false,
@@ -526,16 +531,31 @@ export default {
     search () {
       this.searchSubmit()
     },
-    showPaidInvoiceOnly () {
+    showUnpaidInvoiceOnly (newValue) {
+      if (this.showPaidInvoiceOnly === true && newValue === true) {
+        this.showPaidInvoiceOnly = false
+      }
+      this.currentPage = 1,
+      this.getHubzzInvoices()
+    },
+    showPaidInvoiceOnly (newValue) {
+      if (this.showUnpaidInvoiceOnly === true && newValue === true) {
+        this.showUnpaidInvoiceOnly = false
+      }
+      this.currentPage = 1
+      this.getHubzzInvoices()
+    },
+    showCsvExportOnly (newValue) {
+       if (this.showExportableInvoicesOnly === true && newValue === true) {
+        this.showExportableInvoicesOnly = false
+      }
       this.getHubzzInvoices()
       this.currentPage = 1
     },
-    showCsvExportOnly () {
-      this.getHubzzInvoices()
-      this.currentPage = 1
-    },
-    showExportableInvoicesOnly () {
-      this.showCsvExportOnly = false
+    showExportableInvoicesOnly (newValue) {
+      if (this.showCsvExportOnly === true && newValue === true) {
+        this.showCsvExportOnly = false
+      }
       this.getHubzzInvoices()
       this.currentPage = 1
     }
@@ -648,13 +668,14 @@ export default {
     }, 500),
 
     getHubzzInvoices () {
+      console.log('show unpaid',this.showUnpaidInvoiceOnly)
       this.$store
       .dispatch("billings/fetchHubzzInvoices", {
         exportable: this.showExportableInvoicesOnly === true ? true : null,
         practice_id: this.params.practice_id ? this.params.practice_id : '',
         search: this.params.search ? this.params.search : '',
-        paid: this.showPaidInvoiceOnly === true ? true : null,
-        exported: this.showCsvExportOnly === true ? true: null,
+        paid: this.showPaidInvoiceOnly === true ? true : this.showUnpaidInvoiceOnly === true ? "false" : null,
+        exported: this.showCsvExportOnly === true ? true : this.showExportableInvoicesOnly === true ? "false" : null,
         invoice_number: this.params.invoice_number ? this.params.invoice_number : '',
 				limit: this.params.limit ? this.params.limit : '',
 				order_by: this.params.order_by ? this.params.order_by : '' ,
@@ -666,8 +687,8 @@ export default {
           exportable: this.showExportableInvoicesOnly ? this.showExportableInvoicesOnly : '',
           practice_id: this.params.practice_id ? this.params.practice_id : '',
           search: this.params.search ? this.params.search : '',
-          paid: this.showPaidInvoiceOnly === true ? true : null,
-          exported: this.showCsvExportOnly === true ? true : null,
+          paid:this.showPaidInvoiceOnly === true ? true : this.showUnpaidInvoiceOnly === true ? "false" : null,
+          exported: this.showCsvExportOnly === true ? true : this.showExportableInvoicesOnly === true ? "false" : null,
           invoice_number: this.params.invoice_number ? this.params.invoice_number : '',
           limit: this.params.limit ? this.params.limit : '',
           order_by: this.params.order_by ? this.params.order_by : '' ,
@@ -757,6 +778,7 @@ export default {
 
     // SETTLE PAYMENT METHODS
     reset () {
+      this.currentPage = 1
       this.chosenInvoices = []
       this.exportedChosenInvoices = []
     },
