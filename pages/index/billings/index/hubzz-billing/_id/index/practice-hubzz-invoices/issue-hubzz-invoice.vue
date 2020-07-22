@@ -12,39 +12,54 @@
       </nuxt-link>
     </div>
     <section class="max-w-lg">
-      <div class="flex flex-col md:flex-row justify-between md:items-center text-white">
-        <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
-          <AppDate
-            v-model="approvedAtDateStart"
-            class="w-full md:w-1/2 md:mx-2"
-            :name="'approved_at_date_start'"
-            :label="'From'"
-          />
-          <AppDate
-            v-model="approvedAtDateEnd"
-            class="w-full md:w-1/2 md:mx-2"
-            :name="'approved_at_date_end'"
-            :label="'To'"
-            :isAfterDate="approvedAtDateStart"
-          />
-          <div class="w-full flex flex-col justify-center items-start">
-            <AppButton
-              class="whitespace-no-wrap"
-              :disabled="approvedAtDateStart && approvedAtDateEnd ? false : true"
-              :label="'Search for Invoices'"
-              :icon="'search'"
-              @click="chooseJobPartsModal = true"
+      <div class="flex lg:flex-row flex-col justify-center">
+        <div class="flex flex-col justify-between md:items-center text-white">
+          <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
+            <AppDate
+              v-model="approvedAtDateStart"
+              class="w-full md:w-1/2 md:mx-2"
+              :name="'approved_at_date_start'"
+              :label="'From'"
             />
-
-            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+            <AppDate
+              v-model="approvedAtDateEnd"
+              class="w-full md:w-1/2 md:mx-2"
+              :name="'approved_at_date_end'"
+              :label="'To'"
+              :isAfterDate="approvedAtDateStart"
+            />
+          </div>
+          
+          <div class="flex flex-row md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+            <div class="m-1">
               <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-              <label for="disputed">Show Disputed Invoices</label>
+              <label for="disputed">Include Disputed Invoices</label>
+            </div>
+            <div class="m-1">
               <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-              <label for="completed">Show Completed Invoices</label>
+              <label for="completed">Include Completed Invoices</label>
+            </div>
+            <div class="m-1">
+              <input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
+              <label for="cancelled">Include Cancelled Invoices</label>
+            </div>
+            <div class="m-1">
+              <input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
+              <label for="invoiced">Include Invoiced Invoices</label>
             </div>
           </div>
         </div>
+        <div class="pt-12">
+          <AppButton
+            class="whitespace-no-wrap"
+            :disabled="approvedAtDateStart && approvedAtDateEnd ? false : true"
+            :label="'Search for Invoices'"
+            :icon="'search'"
+            @click="chooseJobPartsModal = true"
+          />
+        </div>
       </div>
+      
       <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
       <HubzzInvoice
         :forViewing="false"
@@ -53,11 +68,6 @@
         :disputedItems="disputedItems"
         @formError="scrollToTop"
       />
-      <!-- :dateStart="date_start"
-      :dateEnd="date_end"-->
-
-      <!-- :filterDateStart="toFilter.approved_at_date_start"
-      :filterDateEnd="toFilter.approved_at_date_end"-->
       <div
         v-if="chooseJobPartsModal == true"
         class="issue-hubzz-invoice-shield"
@@ -73,6 +83,7 @@
           :filter="toFilter"
           :showDisputed="showDisputed"
           :showCompleted="showCompleted"
+
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"
         />
@@ -104,13 +115,14 @@ export default {
 			chooseJobPartsModal: false,
       showDisputed: false,
       showCompleted: false,
+      showCancelled: false,
+      showInvoiced: false,
 			approvedAtDateStart: "",
       approvedAtDateEnd: "",
 			toFilter: {
 				job_practice_id: this.$route.params.id,
 				practice_billable_date_start: null,
 				practice_billable_date_end: null,
-				practice_invoiceable_status: 'Approved',
 			},
 
 			practice: "",
@@ -146,26 +158,6 @@ export default {
 		} catch (err) {
 			console.log("get practice error", err)
 		}
-	},
-
-	created () {
-		// if (this.showDisputed) {
-		// 	this.toFilter.status = ""
-		// 	this.toFilter.invoice_status = ["Disputed", "Invoiced"]
-		// 	this.toFilter.locum_invoiceable = null
-    // } else if (this.showCompleted) {
-    //   this.toFilter.status = ["Completed"]
-		// 	this.toFilter.locum_invoiceable = null
-    // } else if (this.showDisputed && this.showCompleted) {
-    //   this.toFilter.status = ["Completed", "Approved"]
-    //   this.toFilter.invoice_status = ["Disputed", "Invoiced"]
-    //   this.toFilter.invoice_status = null
-		// 	this.toFilter.locum_invoiceable = null
-    // } else {
-		// 	this.toFilter.status = ["Approved"]
-		// 	this.toFilter.invoice_status = null
-		// 	this.toFilter.locum_invoiceable = true
-		// }
 	},
 	methods: {
 		scrollToTop () {
