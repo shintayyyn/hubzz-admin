@@ -104,6 +104,10 @@
             <p class="text-sm text-right">
               {{ notes.length }}/255
             </p>
+
+            <div v-if="formErrors.find(item => item.field === 'note')" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
+              {{ formErrors.find(item => item.field === 'note').message }}
+            </div>
           </template>
 
           <div class="flex justify-end mt-2">
@@ -522,6 +526,8 @@ export default {
         if (!newVal && oldVal) {
           this.notes = ''
         }
+
+        this.formErrors = []
       },
 
       locumReferenceComplianceDocumentIdToRejectId () {
@@ -543,6 +549,19 @@ export default {
             : locumReferenceComplianceDocumentIdToReject.note
               ? ''
               : null
+        }
+      },
+      notes () {
+        this.formErrors = []
+
+        if (!(this.selectedComplianceDocumentRejectReasonValue || this.notes)) {
+          this.formErrors = [
+            {
+              field: 'note',
+              message: 'Note is required.',
+              validation: 'required',
+            },
+          ]
         }
       },
     },
@@ -629,6 +648,18 @@ export default {
       },
 
       async toUpdateReferenceNums (id, status, note) {
+        if (!(this.selectedComplianceDocumentRejectReasonValue || note)) {
+          this.formErrors = [
+            {
+              field: 'note',
+              message: 'Note is required.',
+              validation: 'required',
+            },
+          ]
+
+          return
+        }
+
         this.$emit('loadingCompliances', true)
         try {
           const res = await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
