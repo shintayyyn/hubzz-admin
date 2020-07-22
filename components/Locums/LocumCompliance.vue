@@ -187,26 +187,18 @@
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-            <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
+            <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
             </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-            <span class="break-all">
-              {{ item && item.expired_at 
-                ? $moment(item.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
-                : null }}
-            </span>
+            <span class="break-all">{{ item.expired_at_in_gb_formatted }}</span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-            <span class="break-all">
-              {{ (item && item.expired_at) && item.status !== "Expired" 
-                ? $moment(item.expired_at).diff($moment(), 'days')  
-                : null }}
-            </span>
+            <span class="break-all">{{ item.days_to_expire }}</span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -253,26 +245,18 @@
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-              <span>{{ childItem && childItem.file ? childItem.uploaded_at_formatted : null }}
+              <span>{{ childItem && childItem.file ? childItem.uploaded_at_in_gb_formatted : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-              <span class="break-all">
-                {{ childItem && childItem.expired_at 
-                  ? $moment(childItem.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
-                  : null }}
-              </span>
+              <span class="break-all">{{ childItem.expired_at_in_gb_formatted }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-              <span class="break-all">
-                {{ childItem && childItem.expired_at 
-                  ? $moment(childItem.expired_at).diff($moment(), 'days')  
-                  : null }}
-              </span>
+              <span class="break-all">{{ childItem.days_to_expire }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
@@ -357,26 +341,18 @@
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-          <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
+          <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
           </span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-          <span class="break-all">
-            {{ item && item.expired_at 
-              ? $moment(item.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
-              : null }}
-          </span>
+          <span class="break-all">{{ item.expired_at_in_gb_formatted }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-          <span class="break-all">
-            {{ item && item.expired_at 
-              ? $moment(item.expired_at).diff($moment(), 'days')  
-              : null }}
-          </span>
+          <span class="break-all">{{ item.days_to_expire }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -443,7 +419,7 @@
           : document.practiceSpecificDoc.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYYY, h:mm:ss a'):null }} -->
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-          <span class="break-all">{{ item.file ? $moment(item.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a'): null }}</span>
+          <span class="break-all">{{ item.uploaded_at_in_gb_formatted }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -638,8 +614,8 @@ export default {
             this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
             this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
             this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
+            this.locumMandatoryTrainings = res.data.user.locum_mandatory_trainings
           })
-          this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
           this.$emit('loadingCompliances', false)
         } catch (err) {
           console.log('err', err)
