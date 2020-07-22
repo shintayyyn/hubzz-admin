@@ -135,6 +135,7 @@
           </nuxt-link>
         </div>
       </div>
+
       <div class>
         <AppPagination
           :total="total"
@@ -146,6 +147,7 @@
       </div>
 
       <div v-if="modal" class="job-shield" />
+
       <transition name="slide" mode="out-in">
         <div v-if="modal" class="job-modal shadow-lg">
           <PracticeSessionModal :job="job" @close="modal = false" />
@@ -154,12 +156,14 @@
     </div>
   </div>
 </template>
+
 <script>
 import AppPagination from "@/components/Base/AppPagination"
 import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal"
 import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
+
 export default {
 	components: {
 		AppPagination,
@@ -196,7 +200,8 @@ export default {
 			ascendDescend: 0,
 			modal: false
 		}
-	},
+  },
+  
 	computed: {
 		total () {
 			return this.$store.state.jobs.practice_completed_sessions_count
@@ -204,31 +209,38 @@ export default {
 		completedJobParts () {
 			return this.$store.state.jobs.practice_completed_sessions
 		}
-	},
+  },
+  
 	watch: {
 		$route (to) {
 			this.currentPage = parseInt(to.query.completed_job_page)
 			this.getCompletedJobs()
 		}
-	},
+  },
+  
 	beforeDestroy () {
 		let query = Object.assign({}, this.$route.query)
 		delete query.completed_job_page
 		this.$router.push({ query })
-	},
+  },
+  
 	async created () {
-		await this.$store.commit("jobs/TOGGLE_LOADING", true)
+    await this.$store.commit("jobs/TOGGLE_LOADING", true)
+    
 		const query = {
 			...this.$route.query,
 			completed_job_page: this.$route.query.completed_job_page || 1
-		}
-		this.currentPage = parseInt(query.completed_job_page)
+    }
+    
+    this.currentPage = parseInt(query.completed_job_page)
+    
 		let params = {
 			job_practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
 				: this.practice.id,
 			status: "Completed"
-		}
+    }
+    
 		Promise.all([
 			this.$axios
 				.$get(`/api/v1/admin/job-parts/count`, { params })
@@ -245,7 +257,8 @@ export default {
 			this.getCompletedJobs("date_created:desc"),
 				console.log(this.completedJobParts)
 		})
-	},
+  },
+  
 	methods: {
 		async getJobPartsPromiseAll () {
 			this.currentPage = 1
@@ -281,7 +294,8 @@ export default {
 			this.$store.commit("jobs/SET_PRACTICE_COMPLETED_SESSIONS", response.data.job_parts)
 
 			this.$store.commit("jobs/TOGGLE_LOADING", false)
-		},
+    },
+    
 		async filterJobParts () {
 			this.currentPage = 1
 			// this.offset = 0
@@ -291,11 +305,13 @@ export default {
 			await this.getJobPartsPromiseAll()
 			// this.initialLoading = false
 			// this.filterModal = false
-		},
+    },
+    
 		clearFilters () {
 			this.job_number = null
 			this.job_title = null
-		},
+    },
+    
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
@@ -306,7 +322,8 @@ export default {
 					path: `/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/${itemId}`
 				}
 			}
-		},
+    },
+    
 		async getCompletedJobs (orderBy) {
 			let offset =
 				this.perPage * (parseInt(this.$route.query.completed_job_page) - 1)
@@ -339,7 +356,8 @@ export default {
 						text: "Something went wrong!"
 					})
 				})
-		},
+    },
+    
 		invoiceStatusStyle (status) {
 			switch (status) {
 				case "To Be Invoiced":
@@ -349,7 +367,8 @@ export default {
 				case "Invoiced":
 					return "bg-green-500 text-white opacity-75"
 			}
-		},
+    },
+    
 		async pagechanged (e) {
 			const query = {
 				...this.$route.query,
