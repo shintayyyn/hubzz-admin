@@ -46,21 +46,23 @@
   import CreateUser from "@/components/UserManagement/CreateUser"
 
   export default {
-    transition: {
-      name: 'fade',
-      mode: 'out-in',
-    },
+    // transition: {
+    //   name: 'fade',
+    //   mode: 'out-in',
+    // },
 
     components: {
       AddPracticeSurgery,
       CreateUser
     },
+
     data () {
       return {
         customSurgery: false,
         scroll: 0,
       }
     },
+    
     methods: {
       handleData () {
         this.$nextTick(() => {

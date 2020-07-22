@@ -2,7 +2,12 @@
   <div>
     <div class="mt-5">
       <transition name="fade" mode="out-in">
-        <PracticeProfile :practice="practice" :professionComplianceCategories="professionComplianceCategories" />
+        <PracticeProfile
+          v-if="practice"
+          :practice="practice"
+          :professionComplianceCategories="professionComplianceCategories"
+          @practiceUpdated="(practice) => $emit('practiceUpdated', practice)"
+        />
       </transition>
     </div>
   </div>
@@ -17,52 +22,19 @@
       PracticeProfile
     },
 
-    data () {
-      return {
-        professionComplianceCategories: [],
-      }
-    },
-
-    computed: {
-
-      practice () {
-        return this.$store.state.practices.practice
+    props: {
+      practice: {
+        type: Object,
+        default: () => null,
       },
 
-    },
-
-    async asyncData ({ app, store, route }) {
-      try {
-        const [
-          practice,
-          professionComplianceCategories,
-        ] = await Promise.all([
-          app.$axios.get(`/api/v1/admin/practices/${route.params.id}`).then((response) => {
-            return response.data.data.practice
-          }),
-          app.$axios.get('/api/v1/admin/profession-compliance-categories').then((response) => {
-            return response.data.data.profession_compliance_categories
-          }),
-        ])
-
-        store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-
-        return {
-          professionComplianceCategories,
-        }
-      } catch (err) {
-        store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: "Something went wrong!"
-        })
-
-        console.log("get practice error!!!!", err)
-      }
+      professionComplianceCategories: {
+        type: Array,
+        default: () => null,
+      },
     },
 
     methods: {
-
       goBack () {
         const query = {
           ...this.$route.query
@@ -74,7 +46,6 @@
 
         this.$router.push({ path: "/practices", query })
       },
-
     },
 
   }

@@ -40,7 +40,6 @@
       :loading="loadingPractices"
       :routerLink="`/billings/hubzz-billing`"
       :orderBy="params.order_by"
-      :customWidth="200"
       @pagechanged="pagechanged"
       @sorted="sorted"
     >

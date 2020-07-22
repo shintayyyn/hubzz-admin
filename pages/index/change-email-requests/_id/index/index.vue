@@ -76,10 +76,10 @@
                 >{{ changeEmailRequest.status }}</span>
               </p>
               <p class="m-2">
-                Accepted At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.accepted_at_formatted ? changeEmailRequest.accepted_at_formatted : 'N/A' }}</span>
+                Accepted At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.accepted_at_in_gb_formatted ? changeEmailRequest.accepted_at_in_gb_formatted : 'N/A' }}</span>
               </p>
               <p class="m-2">
-                Rejected At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.rejected_at_formatted ? changeEmailRequest.rejected_at_formatted : 'N/A' }}</span>
+                Rejected At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.rejected_at_in_gb_formatted ? changeEmailRequest.rejected_at_in_gb_formatted : 'N/A' }}</span>
               </p>
               <div v-if="false && changeEmailRequest && changeEmailRequest.status === 'Pending'" class="m-2">
                 <span>Action</span>

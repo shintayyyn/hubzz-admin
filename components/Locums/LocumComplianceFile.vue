@@ -33,6 +33,7 @@
               {{ locumComplianceDocument.compliance_document ? locumComplianceDocument.compliance_document.name: null }}
             </p>
           </div>
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               Locum
@@ -41,6 +42,7 @@
               {{ user.personal_detail ? user.personal_detail.name: null }}
             </p>
           </div>
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               File last uploaded
@@ -48,9 +50,10 @@
             <p
               class="text-white"
             >
-              {{ locumComplianceDocument.file ? $moment(locumComplianceDocument.file.created_at).utc().format('DD/MM/YYYY | HH:mm') : null }}
+              {{ locumComplianceDocument.uploaded_at_in_gb_formatted }}
             </p>
           </div>
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               Mobile phone number
@@ -289,10 +292,10 @@
       complianceDocumentRejectReasonSeletionList () {
         return this.locumComplianceDocument
           ? [
-              ...this.locumComplianceDocument.compliance_document_reject_reasons,
+              ...(this.locumComplianceDocument.compliance_document_reject_reasons || []),
               ...(
                 this.locumComplianceDocument.parent_compliance_document
-                  ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons
+                  ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons || []
                   : []
               ),
             ].map(({ reject_reason: rejectReason }) => ({
@@ -335,10 +338,10 @@
     mounted () {
       if (this.locumComplianceDocument) {
         const complianceDocumentRejectReasonSeletionList = [
-          ...this.locumComplianceDocument.compliance_document_reject_reasons,
+          ...(this.locumComplianceDocument.compliance_document_reject_reasons || []),
           ...(
             this.locumComplianceDocument.parent_compliance_document
-              ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons
+              ? this.locumComplianceDocument.parent_compliance_document.compliance_document_reject_reasons || []
               : []
           ),
         ].map(({ reject_reason: rejectReason }) => ({

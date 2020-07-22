@@ -123,6 +123,7 @@
           Status
         </div>
       </div>
+    
       <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
         <!-- BODY -->
         <div class="px-2 overflow-x-hidden">
@@ -198,7 +199,7 @@
                     </template>
                     <template v-slot:status_slot="slotProps">
                       <div
-                        :class="invoiceStatusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
+                        :class="statusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
                       >
                         {{ slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status }}
                       </div>
@@ -773,22 +774,22 @@ export default {
 			}
 		},
 
-		statusStyle (status) {
-			switch (status) {
-				case "Active":
-					return "bg-green text-white lg:px-10 sm:px-2"
-				case "Inactive":
-					return "bg-yellow text-black lg:px-10 sm:px-2"
-				case "Deactivated":
-					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Suspended":
-					return "bg-red text-white lg:px-8 sm:px-2"
-				case "Dormant":
-					return "bg-green-darker text-white lg:px-8 sm:px-2"
-				default:
-					return
-			}
-    },
+		// statusStyle (status) {
+		// 	switch (status) {
+		// 		case "Active":
+		// 			return "bg-green text-white lg:px-10 sm:px-2"
+		// 		case "Inactive":
+		// 			return "bg-yellow text-black lg:px-10 sm:px-2"
+		// 		case "Deactivated":
+		// 			return "bg-gray text-black lg:px-10 sm:px-2"
+		// 		case "Suspended":
+		// 			return "bg-red text-white lg:px-8 sm:px-2"
+		// 		case "Dormant":
+		// 			return "bg-green-darker text-white lg:px-8 sm:px-2"
+		// 		default:
+		// 			return
+		// 	}
+    // },
 
     pagechanged (page) {
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
@@ -838,12 +839,12 @@ export default {
 			this.getBillablePractices()
     },
 
-    invoiceStatusStyle (status) {
+    statusStyle (status) {
 			switch (status) {
 				case "Disputed":
 					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-500 text-white "
 				case "Invoiced":
-          return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-blue-500 text-white"
+          return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-teal-500 text-white"
 				case "To Be Invoiced":
 					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-indigo-600 text-white"
 				case "Completed":

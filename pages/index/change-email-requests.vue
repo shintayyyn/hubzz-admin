@@ -202,13 +202,13 @@
           },
           {
             name: "Accepted At",
-            dataIndex: "accepted_at_formatted",
+            dataIndex: "accepted_at_in_gb_formatted",
             class: "text-center",
             sortable: true,
           },
           {
             name: "Rejected At",
-            dataIndex: "rejected_at_formatted",
+            dataIndex: "rejected_at_in_gb_formatted",
             class: "text-center",
             sortable: true,
           },

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="false">
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
@@ -177,40 +177,40 @@ export default {
 		},
 	},
 
-	async asyncData ({ app, route, store, error }) {
-		try {
-			await store.commit("practices/TOGGLE_LOADING", true)
-			let { page = 1, order_by = [] } = route.query
-			page = parseInt(page)
-			const createdRoute = route.query
-			const limit = 10
-			const offset = page * limit - limit
-			const status = "Inactive"
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc"
-			const params = { limit, offset, order_by, status }
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
-				params
-			})
-			const practiceCount = response.data.count
-			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount)
+	// async asyncData ({ app, route, store, error }) {
+	// 	try {
+	// 		await store.commit("practices/TOGGLE_LOADING", true)
+	// 		let { page = 1, order_by = [] } = route.query
+	// 		page = parseInt(page)
+	// 		const createdRoute = route.query
+	// 		const limit = 10
+	// 		const offset = page * limit - limit
+	// 		const status = "Inactive"
+	// 		order_by =
+	// 			createdRoute && createdRoute.order_by
+	// 				? createdRoute.order_by
+	// 				: "created_at:desc"
+	// 		const params = { limit, offset, order_by, status }
+	// 		let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
+	// 			params
+	// 		})
+	// 		const practiceCount = response.data.count
+	// 		await store.commit("practices/SET_PRACTICE_COUNT", practiceCount)
 
-			response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
-			const practices = response.data.practices
-			await store.commit("practices/SET_PRACTICES", practices)
-			await store.commit("practices/TOGGLE_LOADING", false)
-		} catch (err) {
-			if (err.response && err.response.status === 401) {
-        console.log('something went wrong')
-				error(err.response.data)
-				return
-      }
+	// 		response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
+	// 		const practices = response.data.practices
+	// 		await store.commit("practices/SET_PRACTICES", practices)
+	// 		await store.commit("practices/TOGGLE_LOADING", false)
+	// 	} catch (err) {
+	// 		if (err.response && err.response.status === 401) {
+  //       console.log('something went wrong')
+	// 			error(err.response.data)
+	// 			return
+  //     }
       
-			throw err
-		}
-  },
+	// 		throw err
+	// 	}
+  // },
 
 	methods: {
 		getPractices (params) {

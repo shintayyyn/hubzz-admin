@@ -1157,6 +1157,7 @@ export default {
       }
     }
   },
+
   watch: {
     $route (to) {
       this.currentPage = parseInt(to.query.job_part_page)
@@ -1165,7 +1166,9 @@ export default {
       this.getJobParts()
     }
   },
+
   async created () {
+    console.log('created', this.job, this.job_part)
     if (this.job) {
       console.log("job", this.job)
     }
@@ -1195,6 +1198,7 @@ export default {
         this.getJobParts()
       })
   },
+
   methods: {
     async getJobParts () {
       let offset =

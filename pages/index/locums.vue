@@ -3,6 +3,7 @@
     <div class="px-2 text-xl md:text-4xl text-white">
       Locums
     </div>
+
     <div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
       <div class="flex py-2">
         <div class="relative">
@@ -27,6 +28,7 @@
           </button>
         </div>
       </div>
+
       <div class="flex flex-col w-full justify-end">
         <div
           class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
@@ -48,6 +50,7 @@
             <option>Suspended</option>
           </select>
         </div>
+
         <div
           class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
         >
@@ -69,6 +72,7 @@
             <option>Compliant</option>
           </select>
         </div>
+
         <div
           class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
         >
@@ -134,8 +138,8 @@
       :loading="loading"
       :routerLink="`/locums`"
       :orderBy="orderBy"
-      @pagechanged="(value) => currentPage = value"
-      @sorted="(value) => orderBy = value"
+      @pagechanged="pageChangedHandler"
+      @sorted="(_orderBy) => orderBy = _orderBy"
     >
       <template v-slot:status_slot="slotProps">
         <div
@@ -191,7 +195,7 @@
 				search: '',
         limit: 10,
         orderBy: [
-          'created_at:desc',
+          'created_at_in_gb_formatted:desc',
         ],
         count: 0,
         locumUsers: [],
@@ -323,10 +327,6 @@
         this.currentPage = 1
         this.getAllLocumUsers()
       },
-      
-			currentPage () {
-        this.getAllLocumUsers()
-      },
 		},
 
 		mounted () {
@@ -387,6 +387,16 @@
 				})
       },
       
+			searchSubmit: debounce(function () {
+				this.currentPage = 1
+        this.getAllLocumUsers()
+			}, 500),
+    
+      pageChangedHandler (page) {
+        this.currentPage = page
+        this.getAllLocumUsers()
+      },
+      
       locumUserUpdatedHandler (locumUser) {
         const index = this.locumUsers.findIndex(({ id }) => id === locumUser.id)
 
@@ -394,11 +404,6 @@
           this.locumUsers.splice(index, 1, locumUser)
         }
       },
-      
-			searchSubmit: debounce(function () {
-				this.currentPage = 1
-        this.getAllLocumUsers()
-			}, 500),
       
 			statusStyle (status) {
 				switch (status) {
