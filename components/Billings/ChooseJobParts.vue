@@ -20,7 +20,6 @@
             :columns="columns"
             :loading="loadingSessions"
             :orderBy="params.order_by"
-            :customWidth="200"
             @checkClicked="toggleCheck"
             @pagechanged="pagechanged"
             @sorted="sorted"
@@ -198,7 +197,20 @@ export default {
 		}
 		console.log("filter", this.filter)
 		console.log("params", params)
-		if (this.showDisputed) {
+		if (this.showDisputed && this.showCompleted) {
+			params = {
+				job_practice_id: this.filter.job_practice_id,
+				practice_billable_date_start: this.filter.practice_billable_date_start,
+				practice_billable_date_end: this.filter.practice_billable_date_end,
+				practice_invoiceable_status:  ["Approved", "Disputed","Invoiced"],
+				limit,
+				offset,
+				order_by,
+      }
+      
+      this.params = await params
+			console.log("completed disputed params", params)
+		} else	if (this.showDisputed) {
 			params = {
 				job_practice_id: this.filter.job_practice_id,
 				practice_billable_date_start: this.filter.practice_billable_date_start,
@@ -224,21 +236,7 @@ export default {
       
       this.params = await params
 			console.log("completed params", params)
-    } else if (this.showDisputed && this.showCompleted) {
-			params = {
-				job_practice_id: this.filter.job_practice_id,
-				practice_billable_date_start: this.filter.practice_billable_date_start,
-				practice_billable_date_end: this.filter.practice_billable_date_end,
-				practice_invoiceable_status:  ["Approved", "Disputed","Invoiced"],
-				limit,
-				offset,
-				order_by,
-      }
-      
-      this.params = await params
-			console.log("completed disputed params", params)
-		}
-
+    }
 		await this.getJobParts()
     
 		// let jobPartCount = 0
@@ -360,8 +358,10 @@ export default {
 
 		statusStyle (status) {
 			switch (status) {
-				case "Disputed":
+				case "Cancelled":
 					return "bg-red-500 text-white "
+				case "Disputed":
+					return "bg-red-600 text-white "
 				case "Invoiced":
           return "bg-blue-500 text-white"
 				case "To Be Invoiced":
