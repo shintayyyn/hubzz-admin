@@ -151,7 +151,7 @@
                   {{ slotProps.item.type }}
                 </div>
                 <div 
-                  v-if="slotProps.item.type === 'Spoke'"
+                  v-if="slotProps.item.type === 'Spoke' && slotProps.item.parent_practice"
                   class="text-blue-200 m-1"
                 >
                   {{ slotProps.item.parent_practice.name }} (HUB)
