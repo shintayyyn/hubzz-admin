@@ -28,24 +28,24 @@
           :isNuxtChild="true"
           :isInvoice="true" 
         />
-        <!-- <transition name="slide" mode="out-in">
-          <div v-if="showInvoice" class="invoice-modal">
+        <transition name="slide" mode="out-in">
+          <div v-if="showInvoice" class="invoice-modal p-2">
             <div class="text-white hover:text-sunglow p-1 ml-auto" @click="showInvoice = false">
               <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
             </div>
-            <div class="m-4">
-              <HubzzInvoice
-                :forViewing="true"
+            <div
+              v-if="locumInvoice !== null" 
+            >
+              <PracticeBillingInvoiceForm
+                :propInvoice="locumInvoice"
                 :practice="practice"
-                :invoiceItems="invoiceItems"
-                :dateStart="locumInvoice.date_start"
-                :dateEnd="locumInvoice.date_end"
-                :locumInvoice="locumInvoice"
-                :byLocum="true"
               />
             </div>
+            <div v-else>
+              Job part is not yet Invoiced.
+            </div>
           </div>
-        </transition> -->
+        </transition>
       </div>
       <div v-if="showInvoice" class="billing-shield" @click="showInvoice = false" />
     </div>
@@ -55,33 +55,52 @@
 <script>
 import JobPartModal from "@/components/Base/JobPartModal"
 import AppButton from "@/components/Base/AppButton"
-import HubzzInvoice from "@/components/Billings/HubzzInvoice"
+import PracticeBillingInvoiceForm from "@/components/Billings/PracticeBillingInvoiceForm"
 export default {
   components:{
     JobPartModal,
     AppButton,
-    HubzzInvoice,
+    PracticeBillingInvoiceForm,
   },
   data () {
     return {
       showInvoice: false,
-      locumInvoice: null,
       approvedJobPart: null,
+      locumInvoice: null,
       invoiceItems: [],
       practice: null,
     }
   },
-  async asyncData ({ app, route }) {
-    let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.approvedJobPartId}`)
-    const approvedJobPart = response.data.job_part
-    console.log('approvedjobpart', approvedJobPart)
-    response = await app.$axios.$get(
-				`/api/v1/admin/practices/${route.params.id}`
-      )
-    const practice = response.data.practice
-    return {
-      approvedJobPart,
-      practice,
+  async asyncData ({ app, route, store }) {
+    try {
+      let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.approvedJobPartId}`)
+      const approvedJobPart = response.data.job_part
+      
+      let locumInvoice = null
+      if (approvedJobPart.locum_invoice_id) {
+        response = await app.$axios.$get(
+          `/api/v1/admin/practices/${route.params.id}/locum-invoices/${approvedJobPart.locum_invoice_id}`
+          )
+        locumInvoice = response.data.locum_invoice
+      }
+      
+      console.log('approvedjobpart', approvedJobPart)
+      response = await app.$axios.$get(
+          `/api/v1/admin/practices/${route.params.id}`
+        )
+      const practice = response.data.practice
+      return {
+        approvedJobPart,
+        locumInvoice,
+        practice,
+      }
+    } catch (err) {
+      store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			})
+			console.log("Get hubzz invoices error!", err)
     }
   }
 }

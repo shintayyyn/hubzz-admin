@@ -4,11 +4,11 @@
       <div class="p-4 md:p-8">
         <div class="p-1">
           <svgicon
-            @click="$emit('close')"
             name="arrow-left-solid"
             height="32"
             width="32"
             class="fill-current cursor-pointer text-white hover:text-sunglow"
+            @click="$emit('close')"
           />
         </div>
         <template v-if="jobPartCount > 0">
@@ -108,7 +108,7 @@ export default {
 				...this.filter,
 				limit: 10,
 				offset: 0,
-				order_by: ["id:asc"]
+				order_by: ["status:asc"]
 			},
 			loading: false,
 			columns: [
@@ -178,6 +178,17 @@ export default {
 			]
 		}
 	},
+	computed: {
+		loadingSessions () {
+			return this.$store.state.jobs.loading_jobs
+		},
+		jobParts () {
+			return this.$store.state.jobs.practice_billing_sessions
+		},
+		jobPartCount () {
+			return this.$store.state.jobs.practice_billing_sessions_count
+		}
+	},
 	async created () {
 		await this.$store.commit("jobs/TOGGLE_LOADING", true)
 		let { page = 1, order_by = [] } = this.$route.query
@@ -188,7 +199,7 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: ["id:asc"]
+				: ["status:asc"]
 		let params = {
 			...this.filter,
 			limit,
@@ -273,17 +284,6 @@ export default {
 		// await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
 
 		// await this.$store.commit("jobs/TOGGLE_LOADING", false)
-	},
-	computed: {
-		loadingSessions () {
-			return this.$store.state.jobs.loading_jobs
-		},
-		jobParts () {
-			return this.$store.state.jobs.practice_billing_sessions
-		},
-		jobPartCount () {
-			return this.$store.state.jobs.practice_billing_sessions_count
-		}
 	},
 	methods: {
     viewJobPart (jobPartId) {
