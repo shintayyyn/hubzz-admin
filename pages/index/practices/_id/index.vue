@@ -1,19 +1,16 @@
 <template>
   <div class="practice-modal p-4 md:p-8 shadow-lg">
-    <!-- <nuxt-link :to="{path:'/practices', query:$route.query}"> -->
-    <div class="mb-4">
+    <nuxt-link class="block mb-4" :to="{ name: 'index-practices', query: $route.query }">
       <svgicon
         name="arrow-left-solid"
         height="32"
         width="32"
         class="cursor-pointer text-white hover:text-sunglow fill-current"
-        @click="goBack()"
       />
-    </div>
+    </nuxt-link>
 
     <AppLoading :loading="loading" spinner />
 
-    <!-- </nuxt-link> -->
     <PracticeTabs v-if="practice" :practice="practice" />
 
     <div
@@ -27,7 +24,6 @@
       @click="goBack()"
     />
 
-    <!-- @click="$router.go(-1)" -->
     <div
       v-if="$route.name.includes('practiceSurgeryId')"
       class="practice-shield"
