@@ -127,6 +127,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import AppPagination from "@/components/Base/AppPagination"
 import AppInput from "@/components/Base/AppInput"
@@ -188,20 +189,25 @@ export default {
 		let query = Object.assign({}, this.$route.query)
 		delete query.job_page
 		this.$router.push({ query })
-	},
-	async created () {
-		await this.$store.commit("jobs/TOGGLE_LOADING", true)
+  },
+  
+	async mounted () {
+    await this.$store.commit("jobs/TOGGLE_LOADING", true)
+    
 		const query = {
 			...this.$route.query,
 			job_page: this.$route.query.job_page || 1
-		}
-		this.currentPage = parseInt(query.job_page)
+    }
+    
+    this.currentPage = parseInt(query.job_page)
+    
 		let params = {
 			practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
-			status: "Live"
-		}
+				: this.$route.params.id,
+			status: "Live",
+    }
+    
 		Promise.all([
 			this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
 				// this.total = res.data.count
@@ -215,7 +221,8 @@ export default {
 		]).then(() => {
 			this.getLiveJobs("date_created:desc"), console.log(this.availableJobs)
 		})
-	},
+  },
+  
 	methods: {
 		async getJobPartsPromiseAll () {
 			this.currentPage = 1
@@ -224,7 +231,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Live",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -239,7 +246,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Live",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -274,29 +281,31 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-live-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-live-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-live-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-live-sessions/${itemId}`
 				}
 			}
 		},
 		async getLiveJobs (orderBy) {
 			let offset =
-				parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
+        parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
+        
 			let params = {
-				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Live",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				practice_id: this.practiceSurgery
 					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+					: this.$route.params.id,
 				limit: this.perPage,
 				offset: offset,
 				job_number_includes: this.job_number,
 				title_includes: this.job_title,
-			}
+      }
+      
 			await this.$axios
 				.$get(`/api/v1/admin/jobs`, { params })
 				.then(res => {

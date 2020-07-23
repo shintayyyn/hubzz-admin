@@ -1,11 +1,11 @@
 <template>
   <div class="job-modal shadow-lg">
     <div class="mt-6 mx-4 md:mx-8 my-2">
-      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-sessions/surgery-pending-sessions`}" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-sessions/surgery-unfilled-sessions`}" class="cursor-pointer">
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </nuxt-link>
     </div>
-    <PracticeSessionModal :job="job"/>
+    <PracticeSessionModal :job="job" />
   </div>
 </template>
 <script>
@@ -14,13 +14,13 @@ export default {
   components:{
     PracticeSessionModal
   },  
-  data(){
+  data (){
     return{
       job:'',
       practiceId:''
     }
   },
-  async asyncData({ app, store, route, error }){
+  async asyncData ({ app, store, route, error }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.spokeSessionId}`)
       const job = response.data.job
