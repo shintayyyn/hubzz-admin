@@ -4,15 +4,16 @@
       <div class="p-4 md:p-8">
         <div class="p-1">
           <svgicon
-            @click="$emit('close')"
             name="arrow-left-solid"
             height="32"
             width="32"
             class="fill-current cursor-pointer text-white hover:text-sunglow"
+            @click="$emit('close')"
           />
         </div>
         <template v-if="jobPartCount > 0">
           <AppTable
+            :router-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`"
             :total="jobPartCount"
             :items="jobParts"
             :currentPage="currentPage"
@@ -52,16 +53,6 @@
                 {{ slotProps.item.status }}
               </div>
             </template>
-            <template v-slot:actions="slotProps">
-              <div class="flex justify-center">
-                <div
-                  class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700"
-                  @click.prevent.stop="viewJobPart(slotProps.item.id)"
-                >
-                  View
-                </div>
-              </div>
-            </template>
           </AppTable>
           <AppButton 
             :label="'Confirm'"
@@ -96,19 +87,26 @@ export default {
 		AppButton,
 		AppTable
 	},
-	props: ["filter", "showDisputed", "showCompleted"],
+	props: {
+		filter: {
+			type: Object,
+			default: () => null
+		},
+		showDisputed: {
+			type: Boolean,
+			default: false,
+		},
+		showCompleted: {
+			type: Boolean,
+			default: false,
+		},
+	},
 	data () {
 		return {
-			// jobPartCount: 0,
-			// jobParts: [],
 			chosenJobParts: [],
-			// for app table
 			currentPage: 1,
 			params: {
-				...this.filter,
-				limit: 10,
-				offset: 0,
-				order_by: ["id:asc"]
+				
 			},
 			loading: false,
 			columns: [
@@ -168,14 +166,18 @@ export default {
 					slotName: "status_slot",
 					sortable: true
         },
-        {
-          name: "Actions",
-          slot: true,
-          slotName: "actions",
-          dataIndex: "",
-          class: "text-center"
-        }
 			]
+		}
+	},
+	computed: {
+		loadingSessions () {
+			return this.$store.state.jobs.loading_jobs
+		},
+		jobParts () {
+			return this.$store.state.jobs.practice_billing_sessions
+		},
+		jobPartCount () {
+			return this.$store.state.jobs.practice_billing_sessions_count
 		}
 	},
 	async created () {
@@ -188,102 +190,24 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: ["id:asc"]
-		let params = {
-			...this.filter,
+				: ["status:asc"]
+		console.log("filter", this.filter)
+		this.params = {
+			job_practice_id: this.filter.job_practice_id,
+			practice_billable_date_start: this.filter.practice_billable_date_start,
+			practice_billable_date_end: this.filter.practice_billable_date_end,
+			practice_invoiceable_status:  ["Approved"],
 			limit,
 			offset,
-			order_by
+			order_by,
 		}
-		console.log("filter", this.filter)
-		console.log("params", params)
-		if (this.showDisputed && this.showCompleted) {
-			params = {
-				job_practice_id: this.filter.job_practice_id,
-				practice_billable_date_start: this.filter.practice_billable_date_start,
-				practice_billable_date_end: this.filter.practice_billable_date_end,
-				practice_invoiceable_status:  ["Approved", "Disputed","Invoiced"],
-				limit,
-				offset,
-				order_by,
-      }
-      
-      this.params = await params
-			console.log("completed disputed params", params)
-		} else	if (this.showDisputed) {
-			params = {
-				job_practice_id: this.filter.job_practice_id,
-				practice_billable_date_start: this.filter.practice_billable_date_start,
-				practice_billable_date_end: this.filter.practice_billable_date_end,
-				practice_invoiceable_status: ["Approved", "Disputed"],
-				limit,
-				offset,
-				order_by,
-      }
-      
-      this.params = await params
-			console.log("disputed params", params)
-		} else if (this.showCompleted) {
-			params = {
-				job_practice_id: this.filter.job_practice_id,
-				practice_billable_date_start: this.filter.practice_billable_date_start,
-				practice_billable_date_end: this.filter.practice_billable_date_end,
-				practice_invoiceable_status:["Approved", "Invoiced"],
-				limit,
-				offset,
-				order_by,
-      }
-      
-      this.params = await params
-			console.log("completed params", params)
-    }
+		if (this.showDisputed) {
+			this.params.practice_invoiceable_status.push("Disputed")
+		}
+		if (this.showCompleted) {
+			this.params.practice_invoiceable_status.push("Invoiced")
+		}
 		await this.getJobParts()
-    
-		// let jobPartCount = 0
-		// let jobParts = ""
-    
-		// await this.$axios
-		// 	.$get(`/api/v1/admin/job-parts/count`, { params })
-		// 	.then(res => {
-		// 		jobPartCount = res.data.count
-    //   })
-    
-    // console.log('job part count', jobPartCount)
-
-		// await this.$store.commit(
-		// 	"jobs/SET_HUBZZ_BILLING_SESSIONS_COUNT",
-		// 	jobPartCount
-		// )
-
-		// await this.$axios.$get(`/api/v1/admin/job-parts`, { params }).then(res => {
-		// 	console.log("res", res)
-    //   jobParts = res.data.job_parts.map(item => {
-    //     return {
-    //       ...item,
-    //       isGp: item.profession.name === "GP" ? "GP" : "Non-GP",
-    //       tag_status: item.terminated ? "Terminated" : item.status,
-    //       date_time_start: `${this.$moment(item.date_start)
-    //         .format("DD/MM/YYYY")} | ${item.time_start}`,
-    //       date_time_end: `${this.$moment(item.date_end)
-    //         .format("DD/MM/YYYY")} | ${item.time_end}`
-    //     }
-    //   })
-		// })
-    // console.log('job parts',jobParts)
-		// await this.$store.commit("jobs/SET_HUBZZ_BILLING_SESSIONS", jobParts)
-
-		// await this.$store.commit("jobs/TOGGLE_LOADING", false)
-	},
-	computed: {
-		loadingSessions () {
-			return this.$store.state.jobs.loading_jobs
-		},
-		jobParts () {
-			return this.$store.state.jobs.practice_billing_sessions
-		},
-		jobPartCount () {
-			return this.$store.state.jobs.practice_billing_sessions_count
-		}
 	},
 	methods: {
     viewJobPart (jobPartId) {
@@ -315,7 +239,6 @@ export default {
     },
     
 		getJobParts () {
-      console.log('get job parts params', this.params)
 			this.$store.dispatch("jobs/fetchJobParts", {
 				...this.params,
 				order_by: this.params.order_by,
@@ -331,28 +254,17 @@ export default {
 					forBilling: true
 				})
 			})
-			
 		},
 
 		pagechanged (page) {
-			// const query = {
-			// 	...this.$route.query,
-			// 	page: page || 1
-			// }
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getJobParts()
 		},
 
 		sorted (order_by) {
-			// go back to page 1
 			this.currentPage = 1
-			// let query = {
-			// 	...this.$router.query,
-			// 	order_by
-			// }
 			this.params.order_by = order_by
-			console.log("sort params", this.params)
 			this.getJobParts(this.params)
 		},
 
@@ -377,6 +289,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-</style>
