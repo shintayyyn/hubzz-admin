@@ -16,6 +16,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal"
 import JobPartModal from "@/components/Base/JobPartModal"
