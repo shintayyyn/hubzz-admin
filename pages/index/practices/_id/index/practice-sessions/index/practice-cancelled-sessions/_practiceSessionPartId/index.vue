@@ -6,7 +6,7 @@
       </nuxt-link>
     </div>
     
-    <PracticeSessionModal :job_part="job_part" :job="job_part ? job_part.job : null" />
+    <PracticeSessionModal :jobPart="job_part" :job="job_part ? job_part.job : null" />
   </div>
 </template>
 <script>

@@ -1,41 +1,12 @@
 <template>
   <div>
-    <!-- <div class="flex items-center px-2 py-2"> -->
-    <!-- <div class="flex py-2">
-				<div class="relative">
-					<input
-						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-						placeholder="Search Jobs by ID"
-						v-model="search.id"
-						@keyup.enter="searchSubmit"
-					/>
-          <input
-						class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-						placeholder="Search Jobs by Title"
-						v-model="search.title"
-						@keyup.enter="searchSubmit"
-					/>
-					<button
-						v-if="search"
-						class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-						@click="(search = ''), searchSubmit()"
-					>
-						<svgicon
-							name="times-solid"
-							height="12"
-							width="12"
-							class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-						/>
-					</button>
-				</div>
-			</div>-->
-    <!-- </div> -->
     <div class="overflow-x-auto xl:overflow-hidden">
       <AppButton
         :label="'Filter'"
         :in-style="'padding:5px 14px;margin-bottom:5px;font-size:14px;'"
         @click="filterModal = !filterModal"
       />
+
       <div class="flex" :class="filterModal ? 'flex' : 'hidden'">
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
@@ -46,6 +17,7 @@
             :label="'Job number'"
           />
         </div>
+
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="job_title"
@@ -56,6 +28,7 @@
           />
         </div>
       </div>
+
       <div class="flex" :class="filterModal ? 'flex' : 'hidden'">
         <AppButton
           :label="'Clear'"
@@ -64,6 +37,7 @@
           :class="'border text-white hover:bg-gray-700 hover:border-none'"
           @click="clearFilters"
         />
+
         <AppButton
           :label="'Search'"
           class="mx-1"
@@ -72,6 +46,7 @@
           @click="filterJobParts"
         />
       </div>
+
       <div v-if="allocatedJobs.length === 0">
         <div v-if="isFiltered"
              class="mt-10 text-white w-full text-center"
@@ -83,6 +58,7 @@
           This practice is no allocated session/s.
         </div>
       </div>
+
       <div v-else>
         <AppJobHeaderSort
           :practice="practice"
@@ -90,6 +66,7 @@
           :currentPage="currentPage"
           :isJobParts="false"
         />
+
         <div class="w-full overflow-x-auto">
           <!-- BODY -->
           <nuxt-link
@@ -103,6 +80,7 @@
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
               <span class>{{ item.job_number }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -110,6 +88,7 @@
               <span v-if="item.platform_job" class>{{ item.platform_job.practice.surgery.name }}</span>
               <span v-else-if="item.private_job" class>{{ item.private_job.private_practice.surgery.name }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -118,12 +97,14 @@
                 :class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
               >{{ item.title ? item.title : '(none)' }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Assigned to Locum</strong>
               <span class>{{ item.platform_job.appointed_to_locum.user.personal_detail.name }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -132,6 +113,7 @@
                 class
               >{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_start }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -140,6 +122,7 @@
                 class
               >{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_end }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -151,6 +134,7 @@
           </nuxt-link>
         </div>
       </div>
+
       <!--PAGINATION-->
       <div class>
         <AppPagination
@@ -164,6 +148,7 @@
       <!--PAGINATION ENDS HERE-->
 
       <div v-if="modal" class="job-shield" />
+
       <transition name="slide" mode="out-in">
         <div v-if="modal" class="job-modal shadow-lg">
           <PracticeSessionModal :job="job" @close="modal = false" />
@@ -172,6 +157,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import debounce from "lodash.debounce"
 import AppPagination from "@/components/Base/AppPagination"
@@ -179,6 +165,7 @@ import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal"
 import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
+
 export default {
 	components: {
 		AppPagination,
@@ -200,7 +187,8 @@ export default {
 		}
 	},
 
-	watchQuery: ["search"],
+  watchQuery: ["search"],
+  
 	data () {
 		return {
 			job_number: null,
@@ -221,7 +209,8 @@ export default {
 			ascendDescend: 0,
 			modal: false
 		}
-	},
+  },
+  
 	computed: {
 		total () {
 			return this.$store.state.jobs.practice_allocated_sessions_count
@@ -229,7 +218,8 @@ export default {
 		allocatedJobs () {
 			return this.$store.state.jobs.practice_allocated_sessions
 		}
-	},
+  },
+  
 	watch: {
 		$route (to) {
 			this.currentPage = parseInt(to.query.job_page)
@@ -241,12 +231,14 @@ export default {
 		"search.title" () {
 			this.searchSubmit()
 		}
-	},
+  },
+  
 	beforeDestroy () {
 		let query = Object.assign({}, this.$route.query)
 		delete query.job_page
 		this.$router.push({ query })
-	},
+  },
+  
 	created () {
 		console.log("route name", this.$route.name)
 		const query = {
@@ -283,7 +275,8 @@ export default {
 					text: "Something went wrong!"
 				})
 			})
-	},
+  },
+  
 	methods: {
 		async getJobPartsPromiseAll () {
 			this.currentPage = 1
@@ -297,7 +290,8 @@ export default {
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
 				}
-			})
+      })
+      
 			this.$store.commit("jobs/SET_PRACTICE_ALLOCATED_SESSIONS_COUNT", responseCount.data.count)
 			
 			this.perPage = 10
@@ -411,38 +405,42 @@ export default {
 	}
 }
 </script>
+
 <style>
-.card {
-	min-width: 100px;
-	height: 250px;
-	box-sizing: content-box;
-}
-.job-shield {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #333;
-	opacity: 0.5;
-	z-index: 511;
-}
-.job-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-	.job-modal {
-		width: 70%;
-	}
-}
+  .card {
+    min-width: 100px;
+    height: 250px;
+    box-sizing: content-box;
+  }
+
+  .job-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    opacity: 0.5;
+    z-index: 511;
+  }
+
+  .job-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .job-modal {
+      width: 70%;
+    }
+  }
 </style>
