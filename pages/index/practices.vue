@@ -47,7 +47,7 @@
           class="text-sm"
           :label="'Create New Practice'"
           :icon="'add-rectangle'"
-          @click="$router.push(`/practices/add-practice`)"
+          :nuxtLink="{ name: 'index-practices-add-practice', query: $route.query }"
         />
       </div>
     </div>
@@ -62,6 +62,7 @@
             placeholder="Search Practice by Name"
             @keyup.enter="searchSubmit"
           >
+
           <button
             v-if="search"
             class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
@@ -83,6 +84,7 @@
           class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
         >
           <label class="text-sm text-white md:pr-2">Filter by Status</label>
+
           <select
             id="grid-state"
             v-model="filterPracticeStatus"
@@ -102,6 +104,7 @@
           class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
         >
           <label class="text-sm text-white md:pr-2">Filter by Type</label>
+
           <select
             id="grid-state"
             v-model="filterPracticeType"
@@ -120,6 +123,7 @@
           class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
         >
           <label class="text-sm text-white md:pr-2">Filter by Hub Type</label>
+
           <select
             id="grid-state"
             v-model="filterPracticeHubType"
@@ -137,6 +141,7 @@
           class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
         >
           <label class="text-sm text-white md:pr-2">Sort by</label>
+
           <select
             v-model="selectedOrderByValue"
             class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
@@ -192,9 +197,9 @@
     </div>
 
     <div
-      v-if="$route.name.includes('index-practices-id') || $route.name.includes('index-practices-add-practice')"
+      v-if="$route.name !== 'index-practices'"
       class="practice-shield"
-      @click="$router.push({ name: 'index-practices', query: { ...$route.query }})"
+      @click="$router.push({ name: 'index-practices', query: $route.query })"
     />
 
     <nuxt-child

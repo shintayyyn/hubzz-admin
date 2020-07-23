@@ -1,7 +1,7 @@
 <template>
   <div ref="modalContainer" class="practice-modal shadow-lg">
     <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
-      <nuxt-link to="/practices" class="cursor-pointer">
+      <nuxt-link :to="{ name: 'index-practices', query: $route.query }" class="cursor-pointer">
         <svgicon
           name="arrow-left-solid"
           height="32"
@@ -19,6 +19,7 @@
       >
         Practice with Existing Surgery
       </div>
+
       <div
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="customSurgery === true? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -30,6 +31,7 @@
     
     <transition name="slide" mode="out-in">
       <AddPracticeSurgery v-if="customSurgery === false" />
+      
       <div v-if="customSurgery === true">
         <CreateUser 
           :registeeType="'customSurgery'" 
