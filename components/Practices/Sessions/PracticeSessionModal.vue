@@ -1128,17 +1128,11 @@ export default {
 
   computed: {
     status () {
-      if (this.jobParts && this.jobParts.length > 0 && this.modalJobPart) {
-        let test = this.jobParts.find(
-          jobPart => jobPart.id === this.modalJobPart.id
-        )
-        return test.status
-      } else if (!this.modalJobPart && this.job) {
-        return this.job.status
+      if (this.modalJobPart) {
+        return this.modalJobPart.status
       } else if (this.job) {
         return this.job.status
       }
-      // return `loading..`;
 
       return null
     },
