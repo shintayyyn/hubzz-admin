@@ -9,38 +9,56 @@
       />
     </nuxt-link>
 
+    <AppLoading :loading="loadingPracticeSurgery" spinner />
+
     <div class="flex justify-start overflow-x-auto">
       <nuxt-link
-        :to="getRoute()" 
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}`, query: $route.query }" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path == `/practices/${$route.params.id}/practice-surgeries/${practiceSurgery.id}` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        :class="
+          $route.name === 'index-practices-id-index-practice-surgeries-practiceSurgeryId-index'
+            ? 'bg-waterloo hover:bg-gray-500'
+            : 'hover:bg-waterloo'
+        "
       >
         Spoke Profile
       </nuxt-link>
 
       <nuxt-link
-        :to="getRoute('surgery-sessions')"
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-sessions`, query: $route.query }" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path.includes(`surgery-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >
         Spoke Sessions
       </nuxt-link>
 
-      <nuxt-link
-        :to="getRoute('surgery-billing')"
+      <!-- <nuxt-link
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-billing`, query: $route.query }" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path.includes(`surgery-billing`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >
         Spoke Billings
-      </nuxt-link>
+      </nuxt-link> -->
     </div>
 
-    <nuxt-child />
+    <nuxt-child
+      :practice="practice"
+      :practiceSurgery="practiceSurgery"
+      :loadingPracticeSurgery="loadingPracticeSurgery"
+      @practiceSurgeryDeleted="(practiceSurgeryId) => $emit('practiceSurgeryDeleted', practiceSurgeryId)"
+      @practiceSurgeryUpdated="practiceSurgeryUpdatedHandler"
+    />
   </div>
 </template>
 
 <script>
+import AppLoading from '@/components/Base/AppLoading'
+
 export default {
+
+  components: {
+    AppLoading,
+  },
 
   props: {
     practice: {
@@ -51,45 +69,40 @@ export default {
 
   data (){
     return{
-      practiceSurgery: '',
+      loadingPracticeSurgery: false,
+      practiceSurgery: null,
     }
   },
 
-  computed:{
-    getRoute (tab){
-      console.log(tab)
-      return(tab) => {
-        if(!tab){
-          tab = ''
-        }
-
-        const query = {
-          ...this.$route.query,
-        }
-
-        delete query.order_by
-
-        return{
-          path: tab
-            ? `/practices/${this.$route.params.id}/practice-surgeries/${this.practiceSurgery.id}/${tab}`
-            : `/practices/${this.$route.params.id}/practice-surgeries/${this.practiceSurgery.id}` ,
-          query,
-        }
-      }
-    }
+  mounted () {
+    this.setPracticeSurgery()
   },
 
-  async asyncData ({ app, route }){
-    try {
-      const response = await app.$axios.get(`/api/v1/admin/practices/${route.params.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
-      
-      const practiceSurgery = response.data.data.practice_surgery
-
-      return {
-        practiceSurgery,
+  methods: {
+    practiceSurgeryUpdatedHandler (practiceSurgery) {
+      if (practiceSurgery) {
+        this.practiceSurgery = practiceSurgery
+        return
       }
-    } catch(err){
-      throw err
+
+      this.setPracticeSurgery()
+    },
+
+    setPracticeSurgery () {
+      const {
+        id: practiceId,
+        practiceSurgeryId,
+      } = this.$route.params
+
+      this.loadingPracticeSurgery = true
+      this.$axios.get(`/api/v1/admin/practices/${practiceId}/practice-surgeries/${practiceSurgeryId}`).then((response) => {
+        this.practiceSurgery = response.data.data.practice_surgery
+      }).catch((err) => {
+        console.log('err', err.response || err)
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loadingPracticeSurgery = false
+      })
     }
   },
 }

@@ -2,16 +2,12 @@
   <div class="max-w-xl bg-waterloo rounded-lg text-white my-4 mx-1">
     <div class="p-4 md:p-8">
       <div class="flex flex-row items-center mb-4">
-        <div
-          class="leading-loose font-bold text-md sm:text-lg"
-        >
-          {{ practice_surgery.child_practice.surgery.name ? practice_surgery.child_practice.surgery.name : null }}
+        <div class="leading-loose font-bold text-md sm:text-lg">
+          {{ practiceSurgery && practiceSurgery.child_practice.surgery.name ? practiceSurgery.child_practice.surgery.name : null }}
         </div>
         
-        <div
-          class="mx-2 text-sm sm:text-sm p-2 text-white-700 font-bold bg-blue-400 rounded-lg"
-        >
-          {{ practice_surgery.child_practice.surgery.code ? practice_surgery.child_practice.surgery.code : null }}
+        <div class="mx-2 text-sm sm:text-sm p-2 text-white-700 font-bold bg-blue-400 rounded-lg">
+          {{ practiceSurgery && practiceSurgery.child_practice.surgery.code ? practiceSurgery.child_practice.surgery.code : null }}
         </div>
       </div>
 
@@ -21,56 +17,55 @@
           <div class="text-lg text-white font-semibold">
             Spoke Permissions
           </div>
+
           <div
             class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
-            :class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
-            @click="edit()"
+            :class="`${!editPermissions ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
+            @click="editPermissions = !editPermissions"
           >
-            {{ editPermissions == false ? 'Edit' : 'Cancel Editing' }}
+            {{ editPermissions ? 'Cancel Editing' : 'Edit' }}
           </div>
         </div>
 
-        <div v-if="editPermissions === false" class="mt-2 mb-4 mx-2">
+        <div v-if="practiceSurgery && !editPermissions" class="mt-2 mb-4 mx-2">
           <div class>
             <div class="flex items-center pb-2">
               <span class="mr-2">
                 <svgicon
-                  :name="practice_surgery.allow_surgery_create_sessions === true ? 'circle-check' : 'times-solid'"
+                  :name="practiceSurgery.allow_surgery_create_sessions ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practice_surgery.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                 />
               </span>
+
               <p class="font-semibold">
                 Does Hub allow creation of Jobs/Sessions?
               </p>
-              <!-- <p class="text-sm mx-6">{{practice_surgery.allow_surgery_create_sessions === true ? 'Yes':'No'}}</p> -->
             </div>
-            <div
-              v-if="practice_surgery.allow_surgery_create_sessions === true"
-              class="bg-waterloo-dark p-2 rounded-lg mb-2"
-            >
+
+            <div v-if="practiceSurgery.allow_surgery_create_sessions" class="bg-waterloo-dark p-2 rounded-lg mb-2">
               <p class="font-semibold pt-2">
                 Rate Limits(Only effective when allowed to create jobs)
               </p>
+
               <div class="p-2">
                 <div class="flex flex-col md:flex-row">
                   <p class="font-semibold md:w-1/2">
                     Maximum Hourly Rate Limit
                   </p>
-                  <p
-                    class
-                  >
-                    {{ practice_surgery.max_hourly_rate_limit ?'£ '+ practice_surgery.max_hourly_rate_limit : 'N/A' }}
+
+                  <p>
+                    {{ practiceSurgery.max_hourly_rate_limit || practiceSurgery.max_hourly_rate_limit === 0 ? '£ '+ practiceSurgery.max_hourly_rate_limit : 'N/A' }}
                   </p>
                 </div>
+
                 <div class="flex flex-col md:flex-row">
                   <p class="font-semibold md:w-1/2">
                     Maximum Half Day Rate Limit
                   </p>
-                  <p
-                    class
-                  >
-                    {{ practice_surgery.max_halfday_rate_limit ?'£ '+ practice_surgery.max_halfday_rate_limit : 'N/A' }}
+                  
+                  <p>
+                    {{ practiceSurgery.max_halfday_rate_limit || practiceSurgery.max_halfday_rate_limit === 0 ? '£ '+ practiceSurgery.max_halfday_rate_limit : 'N/A' }}
                   </p>
                 </div>
 
@@ -78,10 +73,9 @@
                   <p class="font-semibold md:w-1/2">
                     Maximum Whole Day Rate Limit
                   </p>
-                  <p
-                    class
-                  >
-                    {{ practice_surgery.max_wholeday_rate_limit ?'£ '+ practice_surgery.max_wholeday_rate_limit : 'N/A' }}
+
+                  <p>
+                    {{ practiceSurgery.max_wholeday_rate_limit || practiceSurgery.max_wholeday_rate_limit === 0 ? '£ '+ practiceSurgery.max_wholeday_rate_limit : 'N/A' }}
                   </p>
                 </div>
 
@@ -89,10 +83,9 @@
                   <p class="font-semibold md:w-1/2">
                     Maximum Out-of-Hours Rate Limit
                   </p>
-                  <p
-                    class
-                  >
-                    {{ practice_surgery.max_ooh_rate_limit ?'£ '+ practice_surgery.max_ooh_rate_limit : 'N/A' }}
+
+                  <p>
+                    {{ practiceSurgery.max_ooh_rate_limit || practiceSurgery.max_ooh_rate_limit === 0 ? '£ '+ practiceSurgery.max_ooh_rate_limit : 'N/A' }}
                   </p>
                 </div>
 
@@ -100,10 +93,9 @@
                   <p class="font-semibold md:w-1/2">
                     Maximum Excess Hours
                   </p>
-                  <p
-                    class
-                  >
-                    {{ practice_surgery.max_excess_hours ? practice_surgery.max_excess_hours+' Hrs' : 'N/A' }}
+
+                  <p>
+                    {{ practiceSurgery.max_excess_hours || practiceSurgery.max_excess_hours === 0 ? practiceSurgery.max_excess_hours + ' Hrs' : 'N/A' }}
                   </p>
                 </div>
               </div>
@@ -112,11 +104,12 @@
             <div class="flex items-center pb-2">
               <span class="mr-2">
                 <svgicon
-                  :name="practice_surgery.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
+                  :name="practiceSurgery.allow_surgery_create_permanent_jobs ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practice_surgery.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                 />
               </span>
+
               <p class="font-semibold">
                 Does Hub allow the creation of Permanent Jobs?
               </p>
@@ -125,11 +118,12 @@
             <div class="flex items-center pb-2">
               <span class="mr-2">
                 <svgicon
-                  :name="practice_surgery.allow_surgery_bill_locum === true ? 'circle-check' : 'times-solid'"
+                  :name="practiceSurgery.allow_surgery_bill_locum ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practice_surgery.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                 />
               </span>
+
               <p class="font-semibold">
                 Does Hub permit billing of Locums?
               </p>
@@ -138,11 +132,12 @@
             <div class="flex items-center pb-2">
               <span class="mr-2">
                 <svgicon
-                  :name="practice_surgery.allow_surgery_bill_hubzz === true ? 'circle-check' : 'times-solid'"
+                  :name="practiceSurgery.allow_surgery_bill_hubzz ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practice_surgery.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                 />
               </span>
+
               <p class="font-semibold">
                 Does Hub permit billing for Hubzz?
               </p>
@@ -151,87 +146,93 @@
             <div class="flex items-center pb-2">
               <span class="mr-2">
                 <svgicon
-                  :name="practice_surgery.share_banks_to_other_surgeries === true ? 'circle-check' : 'times-solid'"
+                  :name="practiceSurgery.share_banks_to_other_surgeries ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practice_surgery.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                 />
               </span>
+
               <p class="font-semibold">
                 Can other Spokes see your Banks?
               </p>
             </div>
+
             <div class="flex items-center pb-2">
               <span class="mr-2">
                 <svgicon
-                  :name="practice_surgery.share_my_banks === true ? 'circle-check' : 'times-solid'"
+                  :name="practiceSurgery.share_my_banks ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practice_surgery.share_my_banks ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.share_my_banks ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
                 />
               </span>
+
               <p class="font-semibold">
                 Does Spoke allow to see Hub banks?
               </p>
             </div>
           </div>
         </div>
+
         <!--------------EDIT PERMISSIONS------------------>
-        <div v-if="editPermissions === true" class="bg-waterloo-dark rounded-lg shadow-md p-2 my-4">
+        <div v-if="editPermissions" class="bg-waterloo-dark rounded-lg shadow-md p-2 my-4">
           <div class="flex flex-col flex-wrap justify-between">
             <div class="w-full p-1">
               <AppInput
-                v-model="form.allow_surgery_create_sessions"
+                v-model="allowSurgeryCreateSessions"
                 :type="'select'"
                 :name="'allow_surgery_create_sessions'"
                 :label="'Allow Spoke to Create Jobs/Sessions?'"
                 :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                :items="[{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]"
                 required
               />
             </div>
             <!-- SET MAX RATES ;  NOT REQUIRED -->
-            <div
-              v-if="surgeryCreateSessions === 'true' || form.allow_surgery_create_sessions === true"
-              class="p-2 mx-2 bg-waterloo rounded-lg"
-            >
+
+            <div v-if="allowSurgeryCreateSessions === 'true'" class="p-2 mx-2 bg-waterloo rounded-lg">
               <div class="w-full p-1">
                 <AppInput
-                  v-model="form.max_hourly_rate_limit"
+                  v-model="maxHourlyRateLimit"
                   :type="'number'"
                   :name="'max_hourly_rate_limit'"
                   :label="'Set max hourly rate limit for Spoke'"
                   :inStyle="'text-align:right'"
                 />
               </div>
+
               <div class="w-full p-1">
                 <AppInput
-                  v-model="form.max_halfday_rate_limit"
+                  v-model="maxHalfdayRateLimit"
                   :type="'number'"
                   :name="'max_halfday_rate_limit'"
                   :label="'Set max half day rate limit for Spoke'"
                   :inStyle="'text-align:right'"
                 />
               </div>
+
               <div class="w-full p-1">
                 <AppInput
-                  v-model="form.max_wholeday_rate_limit"
+                  v-model="maxWholedayRteLimit"
                   :type="'number'"
                   :name="'max_wholeday_rate_limit'"
                   :label="'Set max whole day rate limit for Spoke'"
                   :inStyle="'text-align:right'"
                 />
               </div>
+
               <div class="w-full p-1">
                 <AppInput
-                  v-model="form.max_ooh_rate_limit"
+                  v-model="maxOohRateLimit"
                   :type="'number'"
                   :name="'max_ooh_rate_limit'"
                   :label="'Set max out-of-hours rate limit for Spoke'"
                   :inStyle="'text-align:right'"
                 />
               </div>
+
               <div class="w-full p-1">
                 <AppInput
-                  v-model="form.max_excess_hours"
+                  v-model="maxExcessHours"
                   :type="'number'"
                   :name="'max_excess_hours'"
                   :label="'Set max excess hours rate limit for Spoke'"
@@ -239,69 +240,77 @@
                 />
               </div>
             </div>
+
             <!-- SET MAX RATES END HERE -->
             <div class="w-full p-1">
               <AppInput
-                v-model="form.allow_surgery_create_permanent_jobs"
+                v-model="allowSurgeryCreatePermanentJobs"
                 :type="'select'"
                 :name="'allow_surgery_create_permanent_jobs'"
                 :label="'Allow Spoke to create permanent jobs?'"
                 :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                :items="[{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]"
                 required
               />
             </div>
+
             <div class="w-full p-1">
               <AppInput
-                v-model="form.allow_surgery_bill_locum"
+                v-model="allowSurgeryBillLocum"
                 :type="'select'"
                 :name="'allow_surgery_bill_locum'"
                 :label="'Allow Spoke to handle its own billing for Locum?'"
                 :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                :items="[{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]"
                 required
               />
             </div>
+
             <div class="w-full p-1">
               <AppInput
-                v-model="form.allow_surgery_bill_hubzz"
+                v-model="allowSurgeryBillHubzz"
                 :type="'select'"
                 :name="'allow_surgery_bill_hubzz'"
                 :label="'Allow Spoke to handle its own billing for HUBZZ?'"
                 :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                :items="[{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]"
                 required
               />
             </div>
+
             <div class="w-full p-1">
               <AppInput
-                v-model="form.share_banks_to_other_surgeries"
+                v-model="shareBanksToOtherSurgeries"
                 :type="'select'"
                 :name="'share_banks_to_other_surgeries'"
                 :label="'Share Banks to Other Surgeries'"
                 :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                :items="[{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]"
                 required
               />
             </div>
+
             <div class="w-full p-1">
               <AppInput
-                v-model="form.share_my_banks"
+                v-model="shareMyBanks"
                 :type="'select'"
                 :name="'share_my_banks'"
                 :label="'Allow Spoke to see Hub banks?'"
                 :placeholder="'Select...'"
-                :items="[{ label: 'Yes', value: true }, { label: 'No', value: false }]"
+                :items="[{ label: 'Yes', value: 'true' }, { label: 'No', value: 'false' }]"
                 required
               />
             </div>
           </div>
+
           <div class="flex flex-row justify-start px-1 mb-2 md:mb-4">
-            <AppButton :label="'Save'" :inStyle="'padding:5px 10px'" @click="save" />
+            <AppButton :label="'Save'" :inStyle="'padding:5px 10px'" @click="updatePracticeSurgery" />
           </div>
         </div>
       </div>
+
       <div
+        v-if="!editPermissions"
         class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
         @click="terminate = true"
       >
@@ -313,13 +322,15 @@
           v-if="terminate"
           :message="'Are you sure you want to terminate this spoke?'"
           @cancel="terminate = false"
-          @confirm="terminateSpoke()"
+          @confirm="deletePracticeSurgery()"
         />
       </transition>
+
       <div v-if="terminate" class="shield cursor-pointer" @click="terminate = false" />
     </div>
   </div>
 </template>
+
 <script>
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
@@ -329,174 +340,153 @@ export default {
     name: "fade",
     mode: "out-in"
   },
+  
   components: {
     AppButton,
     AppInput,
     AppConfirm
   },
+
+  props: {
+    practice: {
+      type: Object,
+      default: () => null,
+    },
+
+    practiceSurgery: {
+      type: Object,
+      default: () => null,
+    },
+  },
+
   data () {
     return {
       terminate: false,
-      practice: "",
-      practice_surgery: "",
       editPermissions: false,
-      form: {
-        allow_surgery_create_sessions: "",
-        allow_surgery_create_permanent_jobs: "",
-        max_hourly_rate_limit: "",
-        max_halfday_rate_limit: "",
-        max_wholeday_rate_limit: "",
-        max_ooh_rate_limit: "",
-        max_excess_hours: "",
-        allow_surgery_bill_locum: "",
-        allow_surgery_bill_hubzz: "",
-        share_banks_to_other_surgeries: "",
-        share_my_banks: ""
-      }
+      
+      allowSurgeryCreateSessions: 'false',
+      allowSurgeryCreatePermanentJobs: 'false',
+      maxHourlyRateLimit: '',
+      maxHalfdayRateLimit: '',
+      maxWholedayRteLimit: '',
+      maxOohRateLimit: '',
+      maxExcessHours: '',
+      allowSurgeryBillLocum: 'false',
+      allowSurgeryBillHubzz: 'false',
+      shareBanksToOtherSurgeries: 'false',
+      shareMyBanks: 'false',
     }
   },
+
   computed: {
-    surgeryCreateSessions: function () {
-      return this.form.allow_surgery_create_sessions
-    }
+    formData () {
+      return {
+        allow_surgery_create_sessions: this.allowSurgeryCreateSessions === 'true',
+        allow_surgery_create_permanent_jobs: this.allowSurgeryCreatePermanentJobs === 'true',
+        max_hourly_rate_limit: this.maxHourlyRateLimit,
+        max_halfday_rate_limit: this.maxHalfdayRateLimit,
+        max_wholeday_rate_limit: this.maxWholedayRteLimit,
+        max_ooh_rate_limit: this.maxOohRateLimit,
+        max_excess_hours: this.maxExcessHours,
+        allow_surgery_bill_locum: this.allowSurgeryBillLocum === 'true',
+        allow_surgery_bill_hubzz: this.allowSurgeryBillHubzz === 'true',
+        share_banks_to_other_surgeries: this.shareBanksToOtherSurgeries === 'true',
+        share_my_banks: this.shareMyBanks === 'true'
+      }
+    },
   },
 
   watch: {
     editPermissions () {
-      this.form.allow_surgery_create_sessions = this.practice_surgery.allow_surgery_create_sessions
-      this.form.max_hourly_rate_limit = this.practice_surgery.max_hourly_rate_limit
-      this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit
-      this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit
-      this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit
-      this.form.max_excess_hours = this.practice_surgery.max_excess_hours
-      this.form.allow_surgery_create_permanent_jobs = this.practice_surgery.allow_surgery_create_permanent_jobs
-      this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum
-      this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz
-      this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries
-      this.form.share_my_banks = this.practice_surgery.share_my_banks
+      this.setFrom()
     }
   },
 
-  async asyncData ({ app, route, store }) {
-    try {
-      let response = await app.$axios.$get(
-        `/api/v1/admin/practices/${route.params.id}`
-      )
-      const practice = response.data.practice
-      response = await app.$axios.$get(
-        `/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`
-      )
-      const practice_surgery = response.data.practice_surgery
-      console.log("pracsurgery", practice_surgery)
-      return {
-        practice,
-        practice_surgery
-      }
-    } catch (err) {
-      store.commit("SET_NOTIFICATION", {
-        enabled: true,
-        status: "danger",
-        text: err.response.data.message
-      })
-
-      console.log("get practice/practice surgery error", err)
-    }
-  },
-
-  async created () {
-    this.form.allow_surgery_create_sessions = this.practice_surgery.allow_surgery_create_sessions
-    this.form.max_hourly_rate_limit = this.practice_surgery.max_hourly_rate_limit
-    this.form.max_halfday_rate_limit = this.practice_surgery.max_halfday_rate_limit
-    this.form.max_wholeday_rate_limit = this.practice_surgery.max_wholeday_rate_limit
-    this.form.max_ooh_rate_limit = this.practice_surgery.max_ooh_rate_limit
-    this.form.max_excess_hours = this.practice_surgery.max_excess_hours
-    this.form.allow_surgery_create_permanent_jobs = this.practice_surgery.allow_surgery_create_permanent_jobs
-    this.form.allow_surgery_bill_locum = this.practice_surgery.allow_surgery_bill_locum
-    this.form.allow_surgery_bill_hubzz = this.practice_surgery.allow_surgery_bill_hubzz
-    this.form.share_banks_to_other_surgeries = this.practice_surgery.share_banks_to_other_surgeries
-    this.form.share_my_banks = this.practice_surgery.share_my_banks
+  mounted () {
+    this.setFrom()
   },
 
   methods: {
-    async terminateSpoke () {
-      await this.$axios
-        .$delete(
-          `/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}`
-        )
-        .then(() => {
-          this.terminate = false
-          console.log(this.$route)
-          this.$router.push(
-            `/practices/${this.$route.params.id}/practice-surgeries`
-          )
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Successfully Terminated Spoke"
-          })
-        })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
-        })
+    setFrom () {
+      if (this.practiceSurgery) {
+        this.allowSurgeryCreateSessions = this.practiceSurgery.allow_surgery_create_sessions ? 'true' : 'false'
+        this.allowSurgeryCreatePermanentJobs = this.practiceSurgery.allow_surgery_create_permanent_jobs ? 'true' : 'false'
+        this.maxHourlyRateLimit = this.practiceSurgery.max_hourly_rate_limit
+        this.maxHalfdayRateLimit = this.practiceSurgery.max_halfday_rate_limit
+        this.maxWholedayRteLimit = this.practiceSurgery.max_wholeday_rate_limit
+        this.maxOohRateLimit = this.practiceSurgery.max_ooh_rate_limit
+        this.maxExcessHours = this.practiceSurgery.max_excess_hours
+        this.allowSurgeryBillLocum = this.practiceSurgery.allow_surgery_bill_locum ? 'true' : 'false'
+        this.allowSurgeryBillHubzz = this.practiceSurgery.allow_surgery_bill_hubzz ? 'true' : 'false'
+        this.shareBanksToOtherSurgeries = this.practiceSurgery.share_banks_to_other_surgeries ? 'true' : 'false'
+        this.shareMyBanks = this.practiceSurgery.share_my_banks ? 'true' : 'false'
+      }
     },
-    edit () {
-      this.editPermissions = !this.editPermissions
+
+    deletePracticeSurgery () {
+      const {
+        id: practiceId,
+        practiceSurgeryId,
+      } = this.$route.params
+
+      this.loading = true
+      this.$axios.delete(`/api/v1/admin/practices/${practiceId}/practice-surgeries/${practiceSurgeryId}`).then(() => {
+        this.$emit('practiceSurgeryDeleted', practiceSurgeryId)
+
+        this.terminate = false
+
+        this.$router.push(`/practices/${practiceId}/practice-surgeries`)
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: 'success',
+          text: 'Successfully Terminated Spoke'
+        })
+      }).catch((err) => {
+        console.log('err', err.response || err)
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
+        })
+      }).finally(() => {
+        this.loading = false
+      })
     },
-    save () {
-      this.$axios
-        .$put(
-          `/api/v1/admin/practices/${this.practice.id}/practice-surgeries/${this.practice_surgery.id}`,
-          this.form
-        )
-        .then(res => {
-          console.log("res", res)
-          this.practice_surgery.allow_surgery_create_sessions =
-            res.data.practice_surgery.allow_surgery_create_sessions
-          this.practice_surgery.max_hourly_rate_limit =
-            res.data.practice_surgery.max_hourly_rate_limit
-          this.practice_surgery.max_halfday_rate_limit =
-            res.data.practice_surgery.max_halfday_rate_limit
-          this.practice_surgery.max_wholeday_rate_limit =
-            res.data.practice_surgery.max_wholeday_rate_limit
-          this.practice_surgery.max_ooh_rate_limit =
-            res.data.practice_surgery.max_ooh_rate_limit
-          this.practice_surgery.max_excess_hours =
-            res.data.practice_surgery.max_excess_hours
-          this.practice_surgery.allow_surgery_create_permanent_jobs =
-            res.data.practice_surgery.allow_surgery_create_permanent_jobs
-          this.practice_surgery.allow_surgery_bill_locum =
-            res.data.practice_surgery.allow_surgery_bill_locum
-          this.practice_surgery.allow_surgery_bill_hubzz =
-            res.data.practice_surgery.allow_surgery_bill_hubzz
-          this.practice_surgery.share_banks_to_other_surgeries =
-            res.data.practice_surgery.share_banks_to_other_surgeries
-          this.practice_surgery.share_my_banks =
-            res.data.practice_surgery.share_my_banks
-          this.$store.commit(
-            "profile/UPDATE_SURGERY",
-            res.data.practice_surgery
-          )
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: "Successfully Updated Spoke Permissions"
-          })
-          this.editPermissions = false
+
+    updatePracticeSurgery () {
+      const {
+        id: practiceId,
+        practiceSurgeryId,
+      } = this.$route.params
+
+      this.loading = true
+      this.$axios.put(`/api/v1/admin/practices/${practiceId}/practice-surgeries/${practiceSurgeryId}`, this.formData).then((response) => {
+        const practiceSurgery = response.data.data.practice_surgery
+
+        this.$emit('practiceSurgeryUpdated', practiceSurgery)
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'success',
+          text: 'Successfully Updated Spoke Permissions'
         })
-        .catch(err => {
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
+
+        this.editPermissions = false
+      }).catch((err) => {
+        console.log('err', err.response || err)
+
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: err.response.data.message
         })
-    }
-  }
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+
+  },
 }
 </script>
-<style>
-</style>

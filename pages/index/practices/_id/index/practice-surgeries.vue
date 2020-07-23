@@ -34,7 +34,6 @@
           :loading-message="'Loading Surgeries'"
           :router-link="`/practices/${$route.params.id}/practice-surgeries`"
           @pagechanged="pagechanged"
-          @limitchanged="limitchanged"
         >
           <template v-slot:type_slot="slotProps">
             <div class="flex justify-center">
@@ -48,7 +47,7 @@
               <div
                 v-if="slotProps.item.termination_requested_at"
                 class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
-                @click.prevent.stop="viewTerminationModal(slotProps.item.id)"
+                @click.prevent.stop="viewTerminationModal(slotProps.item)"
               >
                 <div class="p-1 bg-white rounded-lg">
                   <svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
@@ -65,36 +64,28 @@
         </div>
       </div>
 
-      <transition name="fade" mode="out-in">
-        <div
-          v-if="terminationModal"
-          class="termination-modal h-full flex border-l-4 border-r-4 border-sunglow shadow-lg"
-        >
-          <TerminateSurgery
-            :practice="practice"
-            :child-surgery="specificChildSurgery"
-            @close="terminationModal = false"
-          />
-        </div>
-      </transition>
       <!-- END TABLE -->
 
-      <div v-if="terminationModal" class="add-practice-shield" @click="closeModals()" />
-
       <transition name="slide" mode="out-in">
-        <div v-if="modal" class="add-practice-modal shadow-lg">
-          <AddPracticeSurgery :practice="practice" :spokesCount="total" @close="modal = false" />
+        <div v-if="addPracticeSurgeryModal" class="add-practice-modal shadow-lg">
+          <AddPracticeSurgery
+            :practice="practice"
+            :spokesCount="total"
+            @close="addPracticeSurgeryModal = false"
+          />
         </div>
       </transition>
     </div>
 
-    <nuxt-child :practice="practice" />
+    <nuxt-child
+      :practice="practice"
+      @practiceSurgeryDeleted="practiceSurgeryDeletedHandler"
+    />
   </div>
 </template>
 
 <script>
 import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
-import TerminateSurgery from "@/components/Practices/TerminateSurgery"
 import AppTable from "@/components/Base/AppTable"
 import AppButton from "@/components/Base/AppButton"
 
@@ -108,7 +99,6 @@ export default {
 
   components: {
     AddPracticeSurgery,
-    TerminateSurgery,
     AppTable,
     AppButton
   },
@@ -128,32 +118,66 @@ export default {
       deleteSurgery: false,
       currentPage: 1,
       perPage: 0,
-      modal: false,
+      addPracticeSurgeryModal: false,
       loadingSurgeries: false,
-      terminationModal: false,
       specificChildSurgery: "",
       columns: [
-        {
-          name: "Practice Name",
-          dataIndex: "child_practice.surgery.name"
-        },
-        {
-          name: "Practice Code",
-          dataIndex: "child_practice.surgery.code",
-          class: "text-center"
-        },
-        {
-          name: "Invited at",
-          dataIndex: "created_at",
-          class: "localDate text-center"
-        },
-        {
-          name: "Status",
+				{
+					name: "Practice ID",
+          dataIndex: 'child_practice.id',
+          class: 'md:text-center',
+          sortable: false,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '140px',
+				},
+				{
+          name: 'Practice Name',
+          dataIndex: 'child_practice.name',
+          class: 'md:text-center',
+          sortable: false,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+				},
+				{
+          name: 'Practice Code',
+          dataIndex: 'child_practice.code',
+          class: 'md:text-center',
+          sortable: false,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+				},
+				{ 
+          name: 'Invited',
+          dataIndex: 'created_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: false,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+				},
+				{ 
+          name: 'Accepted',
+          dataIndex: 'invitation_accepted_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: false,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+				},
+				{
+          name: 'Status',
+          dataIndex: 'status',
+          class: 'md:text-center',
+          sortable: false,
           slot: true,
-          slotName: "type_slot",
-          dataIndex: "",
-          class: "text-center"
-        }
+          slotName: 'type_slot',
+          flex: '1 0 0',
+          minWidth: '200px',
+          maxWidth: '200px',
+        },
       ]
     }
   },
@@ -186,7 +210,7 @@ export default {
 
       this.$store.commit('practices/SET_PRACTICE_SPOKES_PAGE_COUNT', pageCount)
 
-      this.getChildren()
+      this.getPracticeSurgeries()
     } catch (err) {
       console.log('err', err.response || err)
 
@@ -199,64 +223,51 @@ export default {
   },
 
   methods: {
-
-    async viewTerminationModal (childId) {
-      console.log("id", childId)
-
-      await this.$axios
-        .$get(
-          `/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/${childId}`
-        )
-        .then(res => {
-          this.specificChildSurgery = res.data.practice_surgery
-        })
-
-      this.$router.push(
-        `/practices/${this.$route.params.id}/practice-surgeries/${this.specificChildSurgery.id}/terminate-spoke`
-      )
-      // this.terminationModal = true;
+    practiceSurgeryDeletedHandler (practiceSurgeryId) {
+      console.log('practiceSurgeryDeletedHandler', practiceSurgeryId)
+      this.getPracticeSurgeries()
     },
 
-    closeModals () {
-      this.modal = false
-      this.terminationModal = false
+    async viewTerminationModal (practiceSurgery) {
+      console.log('viewTerminationModal', practiceSurgery)
+
+      this.specificChildSurgery = practiceSurgery
+
+      this.$router.push(`/practices/${this.$route.params.id}/practice-surgeries/${practiceSurgery.id}/terminate-spoke`)
     },
 
-    async getChildren () {
-      let limit = 5
-      let offset = 0
-      offset = this.perPage * (parseInt(this.$route.query.practice_children_page) - 1)
-      let params = { limit, offset }
+    getPracticeSurgeries () {
+      const limit = 5
 
-      await this.$axios
-        .$get(
-          `/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries`,
-          { params }
+      const offset = this.perPage * (parseInt(this.currentPage) - 1)
+
+      const params = { limit, offset }
+
+      this.$axios.get(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries`, {
+        params,
+      }).then((response) => {
+        this.$store.commit(
+          "practices/SET_PRACTICE_SPOKES",
+          response.data.data.practice_surgeries
         )
-        .then(res => {
-          this.$store.commit(
-            "practices/SET_PRACTICE_SPOKES",
-            res.data.practice_surgeries
-          )
+      }).catch(err => {
+        console.log("get children error!!!!", err)
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
-        .catch(err => {
-          console.log("get children error!!!!", err)
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "danger",
-            text: err.response.data.message
-          })
-        })
-      this.loadingSurgeries = false
+      }).finally(() => {
+        this.loadingSurgeries = false
+      })
     },
 
     pagechanged (page) {
       this.currentPage = page || 1
-      this.getChildren()
+      this.getPracticeSurgeries()
     },
 
     statusStyle (status) {
-      this.checkStatus(status)
       switch (this.checkStatus(status)) {
         case "Active":
           return "bg-green-500 text-white"
@@ -273,6 +284,7 @@ export default {
 
     checkStatus (invitation) {
       let result = "Invited"
+
       if (invitation.invitation_accepted_at) {
         result = "Active"
       }
@@ -292,20 +304,9 @@ export default {
       if (invitation.terminated_at) {
         result = "Terminated"
       }
+
       return result
     },
-
-    async limitchanged (limit) {
-      this.currentPage = 1
-      this.itemsPerPage = limit
-      await this.getChildren(this.paramSort)
-    },
-
-    sorted (order_by) {
-      this.currentPage = 1
-      this.paramSort.order_by = order_by
-      this.getChildren(this.paramSort)
-    }
   }
 }
 </script>

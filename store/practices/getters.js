@@ -1,18 +1,12 @@
 export default {
 	getAllPractices (state) {
-		let practices = []
-		state.allPractices.forEach(practice => {
-			practices.push({
-				...practice,
-				practice_name: practice.surgery.name,
-				practice_code: practice.surgery.code
-			})
-		})
-		return practices
-	},
+		return state.allPractices
+  },
+  
 	getAllSpokes (state) {
 		return state.practiceSpokes
-	},
+  },
+  
 	getPracticeNotifications (state) {
 		let notifications = []
 		state.practiceNotifications.forEach(notif => {
@@ -67,6 +61,5 @@ export default {
 			}
 		})
 		return notifications
-	}
-
+	},
 }
