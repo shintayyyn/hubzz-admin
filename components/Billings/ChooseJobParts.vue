@@ -198,7 +198,7 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: ["status:asc"]
+				: ["status:desc"]
 		console.log("filter", this.filter)
 		this.params = {
 			job_practice_id: this.filter.job_practice_id,

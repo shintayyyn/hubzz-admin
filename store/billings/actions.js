@@ -39,8 +39,8 @@ export default{
       if (payload.show_disputed === true) {
         await practices.forEach(item => {
           item.practice_invoiceable_job_parts = [
-            ...item.practice_invoiceable_job_parts,
             ...item.practice_invoiceable_disputed_filtered_job_parts,
+            ...item.practice_invoiceable_job_parts,
           ]
         })
       }
@@ -48,8 +48,8 @@ export default{
       if (payload.show_cancelled === true) {
         await practices.forEach(item => {
           item.practice_invoiceable_job_parts = [
-            ...item.practice_invoiceable_job_parts,
             ...item.practice_invoiceable_cancelled_filtered_job_parts,
+            ...item.practice_invoiceable_job_parts,
           ]
         })
       }
@@ -57,8 +57,8 @@ export default{
       if (payload.show_completed === true) {
         await practices.forEach(item => {
           item.practice_invoiceable_job_parts = [
-            ...item.practice_invoiceable_job_parts,
             ...item.practice_invoiceable_completed_filtered_job_parts,
+            ...item.practice_invoiceable_job_parts,
           ]
         })
       }
@@ -66,59 +66,11 @@ export default{
       if (payload.show_invoiced === true) {
         await practices.forEach(item => {
           item.practice_invoiceable_job_parts = [
-            ...item.practice_invoiceable_job_parts,
             ...item.practice_invoiceable_invoiced_filtered_job_parts,
+            ...item.practice_invoiceable_job_parts,
           ]
         })
       }
-
-      // if(payload.show_completed === true && payload.show_disputed === true) {
-      //   await response.data.practices.forEach(item => {
-      //     const practice_invoiceable_job_parts = [
-      //       ...item.practice_invoiceable_disputed_filtered_job_parts,
-      //       ...item.practice_invoiceable_invoiced_filtered_job_parts,
-      //       ...item.practice_invoiceable_approved_filtered_job_parts,
-      //     ]
-      //     practices.push({
-      //       ...item,
-      //       practice_invoiceable_job_parts,
-      //       done: false,
-      //     })
-      //   })
-      // }else if(payload.show_completed === true && payload.show_disputed === false) {
-      //   await response.data.practices.forEach(item => {
-      //     const practice_invoiceable_job_parts = [
-      //       ...item.practice_invoiceable_invoiced_filtered_job_parts,
-      //       ...item.practice_invoiceable_approved_filtered_job_parts,
-      //     ]
-      //     practices.push({
-      //       ...item,
-      //       practice_invoiceable_job_parts,
-      //       done: false,
-      //     })
-      //   })
-      // }else if(payload.show_completed === false && payload.show_disputed === true) {
-      //   await response.data.practices.forEach(item => {
-      //     const practice_invoiceable_job_parts = [
-      //       ...item.practice_invoiceable_disputed_filtered_job_parts,
-      //       ...item.practice_invoiceable_approved_filtered_job_parts,
-      //     ]
-      //     practices.push({
-      //       ...item,
-      //       practice_invoiceable_job_parts,
-      //     })
-      //   })
-      // } else {
-      //   await response.data.practices.forEach(item => {
-      //     const practice_invoiceable_job_parts = [
-      //       ...item.practice_invoiceable_approved_filtered_job_parts,
-      //     ]
-      //     practices.push({
-      //       ...item,
-      //       practice_invoiceable_job_parts,
-      //     })
-      //   })
-      // }
     } 
     commit('TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', false)
     if (payload.countOnly) {
