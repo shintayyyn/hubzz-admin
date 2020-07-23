@@ -6,6 +6,7 @@
         :in-style="'padding:5px 14px;margin-bottom:5px;font-size:14px;'"
         @click="filterModal = !filterModal"
       />
+
       <div class="flex" :class="filterModal ? 'flex' : 'hidden'">
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
@@ -26,6 +27,7 @@
           />
         </div>
       </div>
+
       <div class="flex" :class="filterModal ? 'flex' : 'hidden'">
         <AppButton
           :label="'Clear'"
@@ -42,6 +44,7 @@
           @click="filterJobParts"
         />
       </div>
+
       <div v-if="completedJobParts.length === 0">
         <div v-if="isFiltered"
              class="mt-10 text-white w-full text-center"
@@ -49,10 +52,12 @@
         >
           Session Not Found.
         </div>
+
         <div v-else-if="!isFiltered" class="mt-10 w-full text-center text-white">
           This practice has no completed session/s.
         </div>
       </div>
+
       <div v-else>
         <AppJobHeaderSort
           :practice="practice"
@@ -60,6 +65,7 @@
           :currentPage="currentPage"
           :isJobParts="true"
         />
+
         <div class="w-full overflow-x-auto">
           <!-- HEADER -->
           <!-- BODY -->
@@ -74,12 +80,14 @@
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
               <span class>{{ item.job_part_number }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
               <span class>{{ item.job.platform_job.practice.surgery.name }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -89,6 +97,7 @@
                 :class="item.job.title && item.job.title.split(' ') && item.job.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
               >{{ item.job.title ? item.job.title : '(none)' }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -97,6 +106,7 @@
                 class
               >{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_start }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -105,6 +115,7 @@
                 class
               >{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_end }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -113,6 +124,7 @@
                 class
               >{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
+
             <div
               class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
             >
@@ -121,6 +133,7 @@
                 class
               >{{ $moment(item.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
             </div>
+
             <div
               class="flex items-center md:flex-col md:justify-center w-1/2 md:w-64 px-1 xl:px-2 py-2 leading-tight align-middle md:text-center"
             >
@@ -377,7 +390,8 @@ export default {
 			await this.$store.commit("jobs/TOGGLE_LOADING", true)
 			await this.$router.push({ query })
 			await this.$store.commit("jobs/TOGGLE_LOADING", false)
-		}
-	}
+		},
+    
+	},
 }
 </script>

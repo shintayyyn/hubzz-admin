@@ -41,11 +41,13 @@
           </div>
         </div>
       </div>
+
       <div
         class="text-white mt-2 md:mx-2"
       >
         Date Posted: {{ job ? $moment(job.created_at).utc().format('DD/MM/YYYY') : $moment(modalJobPart.job.created_at).utc().format('DD/MM/YYYY') }}
       </div>
+
       <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">
         <!-- JOB / JOB DETAILS -->
         <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`" -->
@@ -516,7 +518,7 @@
           </div>
           <!-- GOOGLE MAPS -->
           <div
-            v-if="job_part && modalJobPart && modalJobPart.job ? modalJobPart.job.platform_job : null"
+            v-if="jobPart && modalJobPart && modalJobPart.job ? modalJobPart.job.platform_job : null"
             class="p-4 my-4 md:mt-0 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white"
           >
             <div class="text-white pb-2">
@@ -545,6 +547,7 @@
             </div>
           </div>
         </div>
+
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
         <div class="order-1 lg:order-2 lg:w-1/2 overflow-hidden">
           <div class="flex flex-col">
@@ -615,7 +618,7 @@
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
             <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-            <div v-if="locumUser && job_part" class="w-full overflow-hidden flex flex-col">
+            <div v-if="locumUser && jobPart" class="w-full overflow-hidden flex flex-col">
               <div
                 v-if="modalJobPart.status === 'Cancelled'"
                 class="flex flex-col text-white bg-waterloo rounded-lg leading-tight m-2"
@@ -672,7 +675,7 @@
                 </div>
               </div>
               <div
-                v-if="job_part.status === 'Withdrawn'"
+                v-if="jobPart.status === 'Withdrawn'"
                 class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow md:ml-2 mb-2"
               >
                 <AppLoading :loading="loading" spinner />
@@ -685,7 +688,7 @@
                     <p
                       class="text-xs sm:text-sm"
                     >
-                      {{ job_part.job.platform_job.declined_reason ? job_part.job.platform_job.declined_reason : '(none)' }}
+                      {{ jobPart.job.platform_job.declined_reason ? jobPart.job.platform_job.declined_reason : '(none)' }}
                     </p>
                   </div>
                   <div class="leading-tight">
@@ -695,7 +698,7 @@
                     <p
                       class="text-xs sm:text-sm"
                     >
-                      {{ job_part.job.platform_job.declined_at | localDate }}
+                      {{ jobPart.job.platform_job.declined_at | localDate }}
                     </p>
                   </div>
                 </div>
@@ -1035,7 +1038,9 @@
       </div>
     </div>
     <!-- BODY ENDS HERE -->
+
     <div v-if="modal" class="job-part-shield" @click="modal=false" />
+
     <transition name="slide" mode="out-in">
       <div v-if="modal" class="job-part-modal shadow-lg">
         <JobPartModal
@@ -1048,12 +1053,14 @@
     <nuxt-child />
   </div>
 </template>
+
 <script>
 import JobPartModal from "@/components/Base/JobPartModal"
 import AppPagination from "@/components/Base/AppPagination"
 import { gmapApi } from "vue2-google-maps"
 import AppLoading from "@/components/Base/AppLoading"
 import JobSchedules from "@/components/Base/JobSchedules"
+
 export default {
   components: {
     JobPartModal,
@@ -1118,6 +1125,7 @@ export default {
       ]
     }
   },
+
   computed: {
     status () {
       if (this.jobParts && this.jobParts.length > 0 && this.modalJobPart) {
@@ -1134,23 +1142,26 @@ export default {
 
       return null
     },
+
     google: gmapApi,
+
     latLangPlatform () {
       if (this.job) {
         return this.job.platform_job.practice.surgery.address.coordinates
-      } else if (this.job_part) {
-        return this.job_part.job.platform_job.practice.surgery.address
+      } else if (this.jobPart) {
+        return this.jobPart.job.platform_job.practice.surgery.address
           .coordinates
       } else {
         return ""
       }
     },
+
     latLangPrivate () {
       if (this.job) {
         return this.job.private_job.private_practice.surgery.address
           .coordinates
-      } else if (this.job_part) {
-        return this.job_part.job.private_job.private_practice.surgery.address
+      } else if (this.jobPart) {
+        return this.jobPart.job.private_job.private_practice.surgery.address
           .coordinates
       } else {
         return ""
@@ -1168,27 +1179,29 @@ export default {
   },
 
   async created () {
-    console.log('created', this.job, this.job_part)
+    console.log('created', this.job, this.jobPart)
+
     if (this.job) {
       console.log("job", this.job)
     }
-    if (this.job_part) {
-      console.log("job part", this.job_part)
-      this.modalJobPart = this.job_part
+    if (this.jobPart) {
+      console.log("job part", this.jobPart)
+      this.modalJobPart = this.jobPart
       await this.getLocum()
     }
 
     if (
       (this.job && this.job.platform_job.appointed_to_locum) ||
-      (this.job_part && this.job_part.job.platform_job.appointed_to_locum)
+      (this.jobPart && this.jobPart.job.platform_job.appointed_to_locum)
     ) {
       await this.getLocum()
     }
 
     let params = {
-      job_id: this.job ? this.job.id : this.job_part.job_id,
+      job_id: this.job ? this.job.id : this.jobPart.job_id,
       viewing_practice_id: this.$route.params.id
     }
+
     await this.$axios
       .$get(`/api/v1/admin/job-parts/count`, { params })
       .then(res => {
@@ -1204,12 +1217,14 @@ export default {
       let offset =
         parseInt(this.perPage) *
         (parseInt(this.$route.query.job_part_page) - 1)
+
       let params = {
         viewing_practice_id: this.$route.params.id,
-        job_id: this.job && this.job.id ? this.job.id : this.job_part.job_id,
+        job_id: this.job && this.job.id ? this.job.id : this.jobPart.job_id,
         limit: this.perPage,
         offset: offset
       }
+
       await this.$axios
         .$get(`/api/v1/admin/job-parts`, { params })
         .then(res => {
@@ -1225,6 +1240,7 @@ export default {
           })
         })
     },
+
     async getLocum () {
       if (this.job && this.job.appointed_to_locum_user_id) {
         await this.$axios
@@ -1242,14 +1258,14 @@ export default {
               text: "Something went wrong!"
             })
           })
-      } else if (this.job_part && this.job_part.appointed_to_locum_user_id) {
+      } else if (this.jobPart && this.jobPart.appointed_to_locum_user_id) {
         console.log(
           "job_part get locum",
-          this.job_part.appointed_to_locum_user_id
+          this.jobPart.appointed_to_locum_user_id
         )
         await this.$axios
           .$get(
-            `/api/v1/admin/locum-users/${this.job_part.appointed_to_locum_user_id}`
+            `/api/v1/admin/locum-users/${this.jobPart.appointed_to_locum_user_id}`
           )
           .then(res => {
             this.locumUser = res.data.user
@@ -1264,6 +1280,7 @@ export default {
           })
       }
     },
+
     async getJobPart (itemId) {
       this.loading = true
       this.$route.params.practiceSessionPartId = itemId
@@ -1273,12 +1290,12 @@ export default {
         //   ...this.$route.query,
         // }
         this.loading = false
-        this.$router.push(
-          `/practices/${
-            this.$route.params.id
-          }/practice-sessions/practice-${this.modalJobPart.status.toLowerCase()}-sessions/${itemId}`,
-          ...this.$route.query
-        )
+
+        const practiceId = this.$route.params.id
+
+        const status = this.modalJobPart.status.toLowerCase()
+        
+        this.$router.push(`/practices/${practiceId}/practice-sessions/practice-${status}-sessions/${itemId}`)
       })
     },
 
@@ -1292,10 +1309,11 @@ export default {
         } else {
           this.getJobPart(jobPartId)
         }
-      } else if (this.job_part) {
+      } else if (this.jobPart) {
         this.getJobPart(jobPartId)
       }
     },
+
     unclickableJobPart () {
       if (this.job) {
         if (
@@ -1312,6 +1330,7 @@ export default {
         }
       }
     },
+
     goTo (type) {
       const query = {
         ...this.$route.query,
@@ -1319,6 +1338,7 @@ export default {
       }
       this.$router.push({ query })
     },
+
     pagechanged (e) {
       // const query = {
       // 	...this.$route.query,
@@ -1335,43 +1355,46 @@ export default {
       this.$store.commit("jobs/TOGGLE_LOADING", true)
       this.$router.push({ query })
       this.$store.commit("jobs/TOGGLE_LOADING", false)
-    }
+    },
   }
 }
 </script>
-<style>
-.job-part-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
-.job-part-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #ffc72c;
-  transition: all 0.3s ease-in-out;
-  background-color: #505561;
-  z-index: 512;
-}
 
-@media (min-width: 768px) {
-  .jobpart {
-    min-width: 600px;
+<style>
+  .job-part-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    opacity: 0.5;
+    z-index: 511;
   }
-}
-@media screen and (min-width: 1200px) {
+
   .job-part-modal {
-    width: 60%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: #505561;
+    z-index: 512;
   }
-}
+
+  @media (min-width: 768px) {
+    .jobpart {
+      min-width: 600px;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .job-part-modal {
+      width: 60%;
+    }
+  }
 </style>
