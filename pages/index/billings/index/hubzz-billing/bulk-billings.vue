@@ -19,14 +19,22 @@
                   :label="'Filter from Beginning Until'"
                   :isBefore="true"
                 />
-                <div class="flex flex-col mx-4">
+                <div class="flex flex-col mx-4 text-sm md:text-base">
+                  <div class="w-full text-white">
+                    <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
+                    <label for="disputed">Include Disputed Invoices</label>
+                  </div>
+                  <div class="w-full text-white">
+                    <input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
+                    <label for="cancelled">Include Cancelled Invoices</label>
+                  </div>
                   <div class="w-full text-white">
                     <input id="completed" v-model="showCompleted" type="checkbox" value="true">
                     <label for="completed">Include Completed Invoices</label>
                   </div>
                   <div class="w-full text-white">
-                    <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-                    <label for="disputed">Include Disputed Invoices</label>
+                    <input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
+                    <label for="invoiced">Include Invoiced Invoices</label>
                   </div>
                 </div>
               </div>
@@ -199,9 +207,23 @@
                     </template>
                     <template v-slot:status_slot="slotProps">
                       <div
-                        :class="statusStyle(slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status)"
+                        :class="statusStyle(slotProps.item.invoice_status === 'To Be Invoiced'
+                          ? slotProps.item.status === 'Cancelled'
+                            || slotProps.item.status === 'Updated' 
+                            ? slotProps.item.status 
+                            : slotProps.item.invoice_status  
+                          : slotProps.item.invoice_status === 'Disputed'
+                            ? slotProps.item.invoice_status 
+                            : slotProps.item.status )"
                       >
-                        {{ slotProps.item.invoice_status === 'Disputed' ? 'Disputed' : slotProps.item.status }}
+                        {{ slotProps.item.invoice_status === 'To Be Invoiced'
+                          ? slotProps.item.status === 'Cancelled'
+                            || slotProps.item.status === 'Updated'  
+                            ? slotProps.item.status 
+                            : slotProps.item.invoice_status
+                          : slotProps.item.invoice_status === 'Disputed'
+                            ? slotProps.item.invoice_status
+                            : slotProps.item.status }}
                       </div>
                     </template>
                   </AppTable>
@@ -284,6 +306,8 @@ export default {
       // for bulk billing processing
       showCompleted: false,
       showDisputed: false,
+      showCancelled: false,
+      showInvoiced: false,
       // query filters
       invoiceableDateEnd: "",
       orderAlphabeticalAsc: false,
@@ -483,13 +507,23 @@ export default {
       this.getBillablePractices()
     },
 
-    showCompleted () {
+    showDisputed () {
       this.getBillablePractices()
     },
 
-    showDisputed () {
+    showCancelled () {
+      this.getBillablePractices()
+    },
+
+    showCompleted () {
+      this.getBillablePractices()
+    },
+    
+    showInvoiced () {
       this.getBillablePractices()
     }
+
+    
 
   },
 
@@ -734,6 +768,8 @@ export default {
             practice_invoiceable: this.practiceParams.practice_invoiceable,
             show_completed: this.showCompleted,
             show_disputed: this.showDisputed,
+            show_invoiced: this.showInvoiced,
+            show_cancelled: this.showCancelled,
 						verified: this.verified
           })
           .then(()=> {
@@ -841,8 +877,10 @@ export default {
 
     statusStyle (status) {
 			switch (status) {
+        case "Updated":
+          return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-orange-500 text-white"
 				case "Disputed":
-					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-500 text-white "
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-500 text-white"
 				case "Invoiced":
           return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-teal-500 text-white"
 				case "To Be Invoiced":
