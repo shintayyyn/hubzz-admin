@@ -281,7 +281,7 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-live-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-live-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
@@ -333,6 +333,7 @@ export default {
 	}
 }
 </script>
+
 <style>
 .double-truncate {
 	display: -webkit-box;

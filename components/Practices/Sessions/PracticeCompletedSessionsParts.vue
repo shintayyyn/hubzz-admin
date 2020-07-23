@@ -250,7 +250,7 @@ export default {
 		let params = {
 			job_practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+				: this.$route.params.id,
 			status: "Completed"
     }
     
@@ -280,7 +280,7 @@ export default {
 				params: {
 					job_practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Completed",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -295,7 +295,7 @@ export default {
 				params: {
 					job_practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Completed",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -328,11 +328,11 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-completed-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-completed-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-completed-sessions/${itemId}`
 				}
 			}
     },
@@ -345,7 +345,7 @@ export default {
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				job_practice_id: this.practiceSurgery
 					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+					: this.$route.params.id,
 				limit: this.perPage,
 				offset: offset,
 				job_part_number_includes: this.job_number,

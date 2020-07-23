@@ -117,7 +117,7 @@ export default {
 
         return {
           path: this.practiceSurgery
-            ? `/practices/${this.$route.params.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/${tab}`
+            ? `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/${tab}`
             : `/practices/${this.$route.params.id}/practice-sessions/${tab}`,
           query ,
         }

@@ -228,10 +228,10 @@ export default {
 		}
 		this.currentPage = parseInt(query.job_page)
 		let params = {
-			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 			job_practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+				: this.$route.params.id,
 			status: "Cancelled"
 		}
 		Promise.all([
@@ -258,7 +258,7 @@ export default {
 				params: {
 					job_practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Cancelled",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -273,7 +273,7 @@ export default {
 				params: {
 					job_practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Cancelled",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -303,23 +303,23 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-cancelled-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-cancelled-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-cancelled-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-cancelled-sessions/${itemId}`
 				}
 			}
 		},
 		async getCancelledJobs (orderBy) {
 			let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
 			let params = {
-				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Cancelled",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				job_practice_id: this.practiceSurgery
 					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+					: this.$route.params.id,
 				limit: this.perPage,
 				offset: offset,
 				job_part_number_includes: this.job_number,

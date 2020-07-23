@@ -249,7 +249,7 @@ export default {
 		let params = {
 			practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+				: this.$route.params.id,
 			status: "Allocated"
 		}
 		Promise.all([
@@ -285,7 +285,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Allocated",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -301,7 +301,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Allocated",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -331,11 +331,11 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-allocated-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-allocated-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-allocated-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-allocated-sessions/${itemId}`
 				}
 			}
 		},
@@ -347,7 +347,7 @@ export default {
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				practice_id: this.practiceSurgery
 					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+					: this.$route.params.id,
 				limit: this.perPage,
 				offset: offset,
 				job_number_includes: this.job_number,

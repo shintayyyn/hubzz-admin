@@ -201,10 +201,10 @@ export default {
 		}
 		this.currentPage = parseInt(query.job_page)
 		let params = {
-			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 			practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+				: this.$route.params.id,
 			status: "Unfilled"
 		}
 		Promise.all([
@@ -228,7 +228,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Unfilled",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -243,7 +243,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Unfilled",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -273,11 +273,11 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-unfilled-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-unfilled-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-unfilled-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-unfilled-sessions/${itemId}`
 				}
 			}
 		},
@@ -285,12 +285,12 @@ export default {
 			let offset =
 				parseInt(this.perPage) * (parseInt(this.$route.query.job_page) - 1)
 			let params = {
-				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Unfilled",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				practice_id: this.practiceSurgery
 					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+					: this.$route.params.id,
 				limit: this.perPage,
 				offset: offset,
 				job_number_includes: this.job_number,

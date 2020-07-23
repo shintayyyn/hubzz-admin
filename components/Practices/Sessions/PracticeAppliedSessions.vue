@@ -206,7 +206,7 @@ export default {
 		let params = {
 			practice_id: this.practiceSurgery
 				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+				: this.$route.params.id,
 			status: "Applied"
 		}
 		Promise.all([
@@ -240,7 +240,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Applied",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -255,7 +255,7 @@ export default {
 				params: {
 					practice_id: this.practiceSurgery
 						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+						: this.$route.params.id,
 					status: "Applied",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -285,11 +285,11 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-applied-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-applied-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-applied-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-applied-sessions/${itemId}`
 				}
 			}
 		},
@@ -297,12 +297,12 @@ export default {
 		async getAppliedJobs (orderBy) {
 			let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
 			let params = {
-				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
+				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Applied",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
 				practice_id: this.practiceSurgery
 					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+					: this.$route.params.id,
 				limit: this.perPage,
 				offset: offset,
 				job_number_includes: this.job_number,
