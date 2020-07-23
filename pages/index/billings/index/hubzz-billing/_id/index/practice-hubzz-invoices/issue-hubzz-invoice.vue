@@ -83,6 +83,8 @@
           :filter="toFilter"
           :showDisputed="showDisputed"
           :showCompleted="showCompleted"
+          :showCancelled="showCancelled"
+          :showInvoiced="showInvoiced"
 
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"

@@ -100,6 +100,14 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		showCancelled: {
+			type: Boolean,
+			default: false,
+		},
+		showInvoiced: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	data () {
 		return {
@@ -190,7 +198,7 @@ export default {
 		order_by =
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
-				: ["status:asc"]
+				: ["status:desc"]
 		console.log("filter", this.filter)
 		this.params = {
 			job_practice_id: this.filter.job_practice_id,
@@ -205,6 +213,12 @@ export default {
 			this.params.practice_invoiceable_status.push("Disputed")
 		}
 		if (this.showCompleted) {
+			this.params.practice_invoiceable_status.push("Completed")
+		}
+		if (this.showCancelled) {
+			this.params.practice_invoiceable_status.push("Cancelled")
+		}
+		if (this.showInvoiced) {
 			this.params.practice_invoiceable_status.push("Invoiced")
 		}
 		await this.getJobParts()
