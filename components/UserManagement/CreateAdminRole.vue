@@ -73,27 +73,27 @@
 						</div>
 					</div>-->
           <div class="flex flex-wrap justify-start">
-            <div v-for="(role, index) in permissions" :key="index" class="w-full md:w-1/2 p-2">
+            <div v-for="(role, roleIndex) in permissions" :key="roleIndex" class="w-full md:w-1/2 p-2">
               <div class="flex flex-col">
                 <div class="w-full flex flex-row items-center pb-1">
                   <input
                     :id="role.category"
                     type="checkbox"
                     :checked="isChecked(role.permissions, role.category)"
-                    @change="checkAll(index, $event.target.checked, role)"
+                    @change="checkAll(roleIndex, $event.target.checked, role)"
                   >
                   <label
                     class="font-bold md:text-xl pl-1 leading-none flex items-center"
                     :for="role.category"
-                  >{{role.category}} Management</label>
+                  >{{ role.category }} Management</label>
                 </div>
-                <div v-for="(item, index) in hierarchyPermissions" :key="index">
+                <div v-for="(item, hierarchyPermissionIndex) in hierarchyPermissions" :key="hierarchyPermissionIndex">
                   <template v-if="role.category === item.category">
                     <div class="w-full p-2">
                       <div class="flex flex-col w-full">
                         <div class="pl-4 w-full">
                           <div
-                            v-for="(permission, index) in item.permissions"
+                            v-for="(permission, permissionIndex) in item.permissions"
                             :key="permission.id"
                             class="flex flex-col px-1 w-full"
                           >
@@ -102,13 +102,13 @@
                               v-model="permission.done"
                               type="checkbox"
                               :checked="permission.done"
-                              @change="onChangeCategory(index, item.permissions, $event.target.checked)"
+                              @change="onChangeCategory(permissionIndex, item.permissions, $event.target.checked)"
                             >
                             <label
                               :for="permission.id"
                               class="text-sm pl-1"
-                              :class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
-                            >{{permission.name}}</label>
+                              :class="permissionIndex === 0 ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
+                            >{{ permission.name }}</label>
                           </div>
                         </div>
                       </div>
@@ -151,17 +151,8 @@ export default {
 		"form.permission_id" (value) {
 			console.log("value", value)
 		}
-	},
-	// async asyncData ({ app, error }) {
-	// 	try {
-	// 	} catch (err) {
-	// 		if (err.response && err.response.status === 401) {
-	// 			error(err.response.data)
-	// 			return
-	// 		}
-	// 		throw err
-	// 	}
-	// },
+  },
+  
 	mounted () {
 		this.getPermissions()
 	},
