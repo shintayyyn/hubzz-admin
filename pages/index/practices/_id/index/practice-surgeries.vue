@@ -1,86 +1,94 @@
 <template>
-  <div class="flex flex-col rounded-lg">
-    <div class="flex overflow-hidden">
-      <div class="flex overflow-x-auto mb-2">
-        <div v-if="practice && practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
-          <AppButton :label="'Add Spoke for this Hub'" :icon="'add-rectangle'" @click="show()" />
-        </div>
+  <div class="mt-5">
+    <div class="flex flex-col rounded-lg">
+      <div class="flex overflow-hidden">
+        <div class="flex overflow-x-auto mb-2">
+          <div v-if="practice && practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
+            <AppButton
+              :label="'Add Spoke for this Hub'"
+              :icon="'add-rectangle'"
+              :nuxtLink="{ path: `/practices/${this.$route.params.id}/practice-surgeries/add-spoke`, query: $route.query }"
+            />
+          </div>
 
-        <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
-          <button
-            class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
-            @click="deleteSurgery = false"
-          >
-            Done
-            <svgicon name="circle-check" width="21" height="21" color="white white" class="mx-1 -my-1" />
-          </button>
+          <div v-if="deleteSurgery == true" class="flex-3 mx-1 whitespace-no-wrap">
+            <button
+              class="inline-flex items-center no-underline py-2 px-4 bg-green-500 hover:bg-green-600 text-sm font-semibold text-white rounded-lg shadow float-right"
+              @click="deleteSurgery = false"
+            >
+              Done
+              <svgicon name="circle-check" width="21" height="21" color="white white" class="mx-1 -my-1" />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <template v-if="practiceChildren.length > 0">
-      <AppTable
-        :total="total"
-        :items="practiceChildren"
-        :current-page="currentPage"
-        :perPage="perPage"
-        :columns="columns"
-        :loading="loadingSurgeries"
-        :loading-message="'Loading Surgeries'"
-        :router-link="`/practices/${$route.params.id}/practice-surgeries`"
-        @pagechanged="pagechanged"
-        @limitchanged="limitchanged"
-      >
-        <template v-slot:type_slot="slotProps">
-          <div class="flex justify-center">
-            <div
-              class="rounded-full text-center py-2 px-4 md:px-8"
-              :class="statusStyle(slotProps.item)"
-            >
-              {{ checkStatus(slotProps.item) }}
-            </div>
-            
-            <div
-              v-if="slotProps.item.termination_requested_at"
-              class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
-              @click.prevent.stop="viewTerminationModal(slotProps.item.id)"
-            >
-              <div class="p-1 bg-white rounded-lg">
-                <svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
+      <template v-if="practiceChildren.length > 0">
+        <AppTable
+          :total="total"
+          :items="practiceChildren"
+          :current-page="currentPage"
+          :perPage="perPage"
+          :columns="columns"
+          :loading="loadingSurgeries"
+          :loading-message="'Loading Surgeries'"
+          :router-link="`/practices/${$route.params.id}/practice-surgeries`"
+          @pagechanged="pagechanged"
+          @limitchanged="limitchanged"
+        >
+          <template v-slot:type_slot="slotProps">
+            <div class="flex justify-center">
+              <div
+                class="rounded-full text-center py-2 px-4 md:px-8"
+                :class="statusStyle(slotProps.item)"
+              >
+                {{ checkStatus(slotProps.item) }}
+              </div>
+              
+              <div
+                v-if="slotProps.item.termination_requested_at"
+                class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
+                @click.prevent.stop="viewTerminationModal(slotProps.item.id)"
+              >
+                <div class="p-1 bg-white rounded-lg">
+                  <svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
+                </div>
               </div>
             </div>
-          </div>
-        </template>
-      </AppTable>
-    </template>
+          </template>
+        </AppTable>
+      </template>
 
-    <div v-else>
-      <div class="mt-10 text-white w-full text-center" style="font-family: Nunito">
-        <p>This practice has no children.</p>
+      <div v-else>
+        <div class="mt-10 text-white w-full text-center" style="font-family: Nunito">
+          <p>This practice has no children.</p>
+        </div>
       </div>
+
+      <transition name="fade" mode="out-in">
+        <div
+          v-if="terminationModal"
+          class="termination-modal h-full flex border-l-4 border-r-4 border-sunglow shadow-lg"
+        >
+          <TerminateSurgery
+            :practice="practice"
+            :child-surgery="specificChildSurgery"
+            @close="terminationModal = false"
+          />
+        </div>
+      </transition>
+      <!-- END TABLE -->
+
+      <div v-if="terminationModal" class="add-practice-shield" @click="closeModals()" />
+
+      <transition name="slide" mode="out-in">
+        <div v-if="modal" class="add-practice-modal shadow-lg">
+          <AddPracticeSurgery :practice="practice" :spokesCount="total" @close="modal = false" />
+        </div>
+      </transition>
     </div>
 
-    <transition name="fade" mode="out-in">
-      <div
-        v-if="terminationModal"
-        class="termination-modal h-full flex border-l-4 border-r-4 border-sunglow shadow-lg"
-      >
-        <TerminateSurgery
-          :practice="practice"
-          :child-surgery="specificChildSurgery"
-          @close="terminationModal = false"
-        />
-      </div>
-    </transition>
-    <!-- END TABLE -->
-
-    <div v-if="terminationModal" class="add-practice-shield" @click="closeModals()" />
-
-    <transition name="slide" mode="out-in">
-      <div v-if="modal" class="add-practice-modal shadow-lg">
-        <AddPracticeSurgery :practice="practice" :spokesCount="total" @close="modal = false" />
-      </div>
-    </transition>
+    <nuxt-child :practice="practice" />
   </div>
 </template>
 
@@ -91,6 +99,13 @@ import AppTable from "@/components/Base/AppTable"
 import AppButton from "@/components/Base/AppButton"
 
 export default {
+  middleware: 'changedPracticeType',
+
+  transition:{
+    name:'fade',
+    mode:'out-in'
+  },
+
   components: {
     AddPracticeSurgery,
     TerminateSurgery,
@@ -102,7 +117,7 @@ export default {
     practice: {
       type: Object,
       default: () => null,
-    }
+    },
   },
 
   data () {
@@ -155,23 +170,6 @@ export default {
     }
   },
 
-  watch: {
-    $route () {
-      this.currentPage = parseInt(this.$route.query.practice_children_page)
-      this.getChildren()
-    },
-  },
-
-  beforeDestroy () {
-    let query = {
-      ...this.$route.query,
-    }
-
-    delete query.practice_children_page
-
-    this.$router.push({ query })
-  },
-
   async created () {
     try {
       this.loadingSurgeries = true
@@ -201,11 +199,7 @@ export default {
   },
 
   methods: {
-    show () {
-      this.$router.push(
-        `/practices/${this.$route.params.id}/practice-surgeries/add-spoke`
-      )
-    },
+
     async viewTerminationModal (childId) {
       console.log("id", childId)
 
@@ -222,10 +216,12 @@ export default {
       )
       // this.terminationModal = true;
     },
+
     closeModals () {
       this.modal = false
       this.terminationModal = false
     },
+
     async getChildren () {
       let limit = 5
       let offset = 0
@@ -254,12 +250,8 @@ export default {
       this.loadingSurgeries = false
     },
 
-    pagechanged (e) {
-      const query = {
-        ...this.$route.query,
-        practice_children_page: e || 1
-      }
-      this.$router.push({ query })
+    pagechanged (page) {
+      this.currentPage = page || 1
       this.getChildren()
     },
 
@@ -278,6 +270,7 @@ export default {
           return "bg-yellow-400 text-black"
       }
     },
+
     checkStatus (invitation) {
       let result = "Invited"
       if (invitation.invitation_accepted_at) {
@@ -301,11 +294,13 @@ export default {
       }
       return result
     },
+
     async limitchanged (limit) {
       this.currentPage = 1
       this.itemsPerPage = limit
       await this.getChildren(this.paramSort)
     },
+
     sorted (order_by) {
       this.currentPage = 1
       this.paramSort.order_by = order_by
@@ -316,6 +311,17 @@ export default {
 </script>
 
 <style>
+  .add-spoke-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    opacity: 0.5;
+    z-index: 511;
+  }
+
   .card {
     min-width: 100px;
     height: 250px;
