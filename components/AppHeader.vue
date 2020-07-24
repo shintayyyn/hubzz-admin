@@ -24,7 +24,9 @@
             <div class="notification-modal overflow-hidden">
               <div class="flex flex-row m-4 justify-between">
                 <div class="">
-                  <p class="text-lg">Notifications</p>
+                  <p class="text-lg">
+                    Notifications
+                  </p>
                 </div>
                 <div 
                   class="text-white hover:text-gray-500"
@@ -47,7 +49,7 @@
                       <span class="uppercase text-xs font-bold">{{ item.notification_type.domain }}</span>
                       <span class="pb-2">{{ item.title }}</span>
                       <span class="uppercase text-xs font-bold">{{ item.notification_type.name }}</span>
-                      <span class>{{ item.description }}</span>
+                      <span>{{ item.description }}</span>
                     </div>
                   </div>
                 </div>
@@ -80,7 +82,9 @@
           </div>
           <div class="hidden md:block ml-2 mt-2 text-white">
             {{ $auth.user.email }}
-            <div class="font-hairline text-xs">My Account</div>
+            <div class="font-hairline text-xs">
+              My Account
+            </div>
           </div>
         </nuxt-link>
       </div>

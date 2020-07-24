@@ -65,50 +65,39 @@
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span class>{{ item.job_number }}</span>
+              <span>{{ item.job_number }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span>{{ item.platform_job.practice.surgery.name }}</span>
+              <span>{{ item.practice_name }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
               <span
                 :class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
               >{{ item.title ? item.title : '(none)' }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span
-                class
-              >{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_start }}</span>
+              <span>{{ item.datetime_start_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span
-                class
-              >{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_end }}</span>
+              <span>{{ item.datetime_end_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Created</strong>
-              <span
-                class
-              >{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <span>{{ item.date_created_in_gb_formatted }}</span>
             </div>
           </nuxt-link>
         </div>
       </div>
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -191,8 +180,8 @@ export default {
 		this.$router.push({ query })
   },
   
-	async mounted () {
-    await this.$store.commit("jobs/TOGGLE_LOADING", true)
+	mounted () {
+    this.$store.commit("jobs/TOGGLE_LOADING", true)
     
 		const query = {
 			...this.$route.query,
@@ -202,9 +191,12 @@ export default {
     this.currentPage = parseInt(query.job_page)
     
 		let params = {
-			practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.$route.params.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Live",
     }
     
@@ -229,9 +221,12 @@ export default {
 
 			const responseCount = await this.$axios.$get(`/api/v1/admin/jobs/count`, {
 				params: {
-					practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.$route.params.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Live",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -244,9 +239,12 @@ export default {
 
 			const response = await this.$axios.$get(`/api/v1/admin/jobs`, {
 				params: {
-					practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.$route.params.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Live",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -297,9 +295,12 @@ export default {
 				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Live",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.$route.params.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset,
 				job_number_includes: this.job_number,
@@ -333,14 +334,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-.double-truncate {
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	transition: all 0.3s linear;
-}
-</style>

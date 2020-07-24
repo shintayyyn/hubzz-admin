@@ -24,52 +24,40 @@
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span class>{{ item.job_number }}</span>
+              <span>{{ item.job_number }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span v-if="item.platform_job" class>{{ item.platform_job.practice.surgery.name }}</span>
-              <span v-else-if="item.private_job" class>{{ item.private_job.private_practice.surgery.name }}</span>
+              <span>{{ item.practice_name }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
               <span
                 :class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
               >{{ item.title ? item.title : '(none)' }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span
-                class
-              >{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_start }}</span>
+              <span>{{ item.datetime_start_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span
-                class
-              >{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_end }}</span>
+              <span>{{ item.datetime_end_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Created</strong>
-              <span
-                class
-              >{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <span>{{ item.date_created_in_gb_formatted }}</span>
             </div>
           </nuxt-link>
         </div>
       </div>
       <!--PAGINATION-->
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -148,14 +136,18 @@ export default {
 			...this.$route.query,
 			job_page: this.$route.query.job_page || 1
 		}
-		this.currentPage = parseInt(query.job_page)
+    this.currentPage = parseInt(query.job_page)
+    
 		let params = {
-			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
-			practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.$route.params.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Pending"
-		}
+    }
+    
 		Promise.all([
 			this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
 				// this.total = res.data.count
@@ -194,12 +186,14 @@ export default {
 		async getPendingJobs (orderBy) {
 			let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
 			let params = {
-				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Pending",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.$route.params.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset
 			}
