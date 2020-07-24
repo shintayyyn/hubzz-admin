@@ -117,7 +117,7 @@ export default {
 			columns: [
 				{
 					name: "Practice/Surgery",
-					dataIndex: "practice_name",
+					dataIndex: "name",
 					sortable: true
 				},
 				{
