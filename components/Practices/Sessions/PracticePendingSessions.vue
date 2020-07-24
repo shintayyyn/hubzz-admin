@@ -198,7 +198,6 @@ export default {
 		async getPendingJobs (orderBy) {
 			let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
 			let params = {
-				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Pending",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
         practice_id: this.$route.name.includes("practice-surgeries")
