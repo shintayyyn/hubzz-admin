@@ -100,12 +100,12 @@
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span>{{ item.datetime_start }}</span>
+              <span>{{ item.datetime_start_in_gb_formatted }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span>{{ item.datetime_end }}</span>
+              <span>{{ item.datetime_end_in_gb_formatted }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
