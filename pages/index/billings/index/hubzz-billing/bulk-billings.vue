@@ -69,6 +69,14 @@
 						<div class="md:px-1 w-full mb-4">
 							<label class="text-md md:text-lg font-bold">Filter Practices</label>
 						</div>
+						<div class="md:px-1 w-full mb-4">
+							<AppInput 
+								v-model="search"
+								:type="'text'"
+								:label="'Search by Practice Name'"
+								:placeholder="'Practice Name'"
+							/>
+						</div>
 						<div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
 							<input id="orderAlphabticalAsc" v-model="orderAlphabeticalAsc" type="checkbox" value="true" />
 							<label for="orderAlphabticalAsc">Sort Practice Alphabetically ↑</label>
@@ -276,13 +284,15 @@ import AppDate from "@/components/Base/AppDate";
 import AppButton from "@/components/Base/AppButton";
 import AppLoading from "@/components/Base/AppLoading";
 import AppPagination from "@/components/Base/AppPagination";
+import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
 		AppDate,
 		AppButton,
 		AppLoading,
-		AppPagination
+		AppPagination,
+		AppInput,
 	},
 
 	data() {
