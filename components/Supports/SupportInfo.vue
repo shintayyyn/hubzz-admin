@@ -16,7 +16,7 @@
     <div class="flex flex-wrap overflow-hidden border-b border-sunglow">
       <div class="flex-col text-white w-full mb-2 m-2 pb-3 text-sm md:text-base">
         <div class="flex justify-between my-1">
-          <div class>
+          <div>
             <span class="w-24 pr-3">Date Sent:</span>
             <span class="font-bold">
 							

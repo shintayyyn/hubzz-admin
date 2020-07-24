@@ -561,7 +561,7 @@
                     >
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-                        <span class>{{ item.job_part_number }}</span>
+                        <span>{{ item.job_part_number }}</span>
                       </div>
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Date Start</strong>
@@ -577,7 +577,7 @@
                       </div>
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                         <strong class="block md:hidden text-sm uppercase">Job Part Status</strong>
-                        <span class>{{ item.status }}</span>
+                        <span>{{ item.status }}</span>
                       </div>
                     </div>
                   </div>

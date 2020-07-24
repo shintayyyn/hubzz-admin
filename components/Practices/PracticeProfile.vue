@@ -423,7 +423,7 @@
               />
             </div>
 
-            <div v-if="!toEditPracticeType" class>
+            <div v-if="!toEditPracticeType">
               <span>Practice Type:</span>
 
               <span
@@ -496,7 +496,7 @@
         </div>
 
         <div class="px-1 py-4">
-          <ul class>
+          <ul>
             <p v-if="practice.status !== 'Active'" class="font-bold">
               Profile
             </p>

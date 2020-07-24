@@ -65,7 +65,7 @@
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span class>{{ item.job_number }}</span>
+              <span>{{ item.job_number }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
@@ -97,7 +97,7 @@
           </nuxt-link>
         </div>
       </div>
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :totalPages="totalPages"

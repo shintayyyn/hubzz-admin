@@ -117,7 +117,7 @@
       </div>
 
       <!--PAGINATION-->
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :totalPages="totalPages"

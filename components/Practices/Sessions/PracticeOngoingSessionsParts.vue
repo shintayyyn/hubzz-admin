@@ -81,13 +81,13 @@
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
               <span
-                :class="item.job.title && item.job.title.split(' ') && item.job.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
-              >{{ item.job.title ? item.job.title : '(none)' }}</span>
+                :class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
+              >{{ item.title ? item.title : '(none)' }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Assigned to Locum</strong>
-              <span class>{{ item.job.platform_job.appointed_to_locum.user.personal_detail.name }}</span>
+              <span>{{ item.job.platform_job.appointed_to_locum.user.personal_detail.name }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
@@ -107,7 +107,7 @@
           </nuxt-link>
         </div>
       </div>
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :totalPages="totalPages"
