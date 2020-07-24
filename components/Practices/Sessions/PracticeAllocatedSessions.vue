@@ -247,9 +247,12 @@ export default {
 		}
 		this.currentPage = parseInt(query.job_page)
 		let params = {
-			practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.$route.params.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Allocated"
 		}
 		Promise.all([
@@ -283,9 +286,12 @@ export default {
 
 			const responseCount = await this.$axios.$get(`/api/v1/admin/jobs/count`, {
 				params: {
-					practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.$route.params.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Allocated",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -299,9 +305,12 @@ export default {
 
 			const response = await this.$axios.$get(`/api/v1/admin/jobs`, {
 				params: {
-					practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.$route.params.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Allocated",
 					job_number_includes: this.job_number,
 					title_includes: this.job_title,
@@ -345,9 +354,12 @@ export default {
 			let params = {
 				status: "Allocated",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.$route.params.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset,
 				job_number_includes: this.job_number,

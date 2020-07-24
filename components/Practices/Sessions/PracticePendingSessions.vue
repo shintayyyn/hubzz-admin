@@ -148,14 +148,18 @@ export default {
 			...this.$route.query,
 			job_page: this.$route.query.job_page || 1
 		}
-		this.currentPage = parseInt(query.job_page)
+    this.currentPage = parseInt(query.job_page)
+    
 		let params = {
-			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
-			practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.$route.params.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Pending"
-		}
+    }
+    
 		Promise.all([
 			this.$axios.$get(`/api/v1/admin/jobs/count`, { params }).then(res => {
 				// this.total = res.data.count
@@ -197,9 +201,12 @@ export default {
 				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Pending",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.$route.params.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset
 			}

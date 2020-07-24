@@ -3,49 +3,27 @@
     <!-- BODY -->
     <div class="w-full overflow-auto">
       <div class="flex flex-wrap font-semibold items-center md:m-2">
-        <div
-          class="text-2xl text-white font-semibold mr-4"
-        >
+        <div class="text-2xl text-white font-semibold mr-4">
           {{ job ? job.title : modalJobPart.job.title }}
         </div>
+
         <div class="flex">
-          <div
-            class="mx-2 text-black p-2 bg-yellow-500 rounded"
-          >
+          <div class="mx-2 text-black p-2 bg-yellow-500 rounded">
             {{ status !== 'Declined' ? status : 'Withdrawn' }}
           </div>
-          <div
-            v-if="modalJobPart && modalJobPart.terminated"
-            class="mx-2 text-black p-2 bg-gray-300 rounded"
-          >
+
+          <div v-if="modalJobPart && modalJobPart.terminated" class="mx-2 text-black p-2 bg-gray-300 rounded">
             {{ modalJobPart && modalJobPart.terminated ? 'Terminated' : null }}
           </div>
 
-          <!-- <div 
-            v-if="modalJobPart" 
-            class="text-black p-2 bg-yellow-500 rounded"
-          >
-            {{ modalJobPart.job.status !== 'Declined' ? modalJobPart.job.status : 'Withdrawn' }}
-          </div>
-          <div 
-            v-else 
-            class="text-black p-2 bg-yellow-500 rounded"
-          >
-            {{ job ? job.status : null }}
-          </div>-->
-          <div
-            class="mx-2 text-black p-2 text-white rounded"
-            :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'"
-          >
+          <div class="mx-2 text-black p-2 text-white rounded" :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'">
             {{ job ? job.type : modalJobPart.job.type }}
           </div>
         </div>
       </div>
 
-      <div
-        class="text-white mt-2 md:mx-2"
-      >
-        Date Posted: {{ job ? $moment(job.created_at).utc().format('DD/MM/YYYY') : $moment(modalJobPart.job.created_at).utc().format('DD/MM/YYYY') }}
+      <div class="text-white mt-2 md:mx-2">
+        Date Posted: {{ job ? job.date_created_in_gb_formatted : null }}
       </div>
 
       <div class="flex flex-col lg:flex-row md:m-2 overflow-hidden mb-4">

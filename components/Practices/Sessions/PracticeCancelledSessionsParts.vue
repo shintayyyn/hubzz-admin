@@ -228,10 +228,12 @@ export default {
 		}
 		this.currentPage = parseInt(query.job_page)
 		let params = {
-			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
-			job_practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.$route.params.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Cancelled"
 		}
 		Promise.all([
@@ -256,9 +258,12 @@ export default {
 
 			const responseCount = await this.$axios.$get(`/api/v1/admin/job-parts/count`, {
 				params: {
-					job_practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.$route.params.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Cancelled",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -271,9 +276,12 @@ export default {
 
 			const response = await this.$axios.$get(`/api/v1/admin/job-parts`, {
 				params: {
-					job_practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.$route.params.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Cancelled",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -317,9 +325,12 @@ export default {
 				// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.$route.params.id,
 				status: "Cancelled",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				job_practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.$route.params.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset,
 				job_part_number_includes: this.job_number,
