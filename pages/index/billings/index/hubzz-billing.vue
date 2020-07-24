@@ -58,8 +58,8 @@
       <template v-slot:disputed_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="slotProps.item.locum_invoice_disputed_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-        >{{ slotProps.item.locum_invoice_disputed_count > 0 ? "Yes" + slotProps.item.locum_invoice_disputed_count : "None" }}</div>
+          :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
+        >{{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}</div>
       </template>
       <template v-slot:type_slot="slotProps">
         <div
@@ -117,7 +117,7 @@ export default {
 			columns: [
 				{
 					name: "Practice/Surgery",
-					dataIndex: "practice_name",
+					dataIndex: "name",
 					sortable: true
 				},
 				{

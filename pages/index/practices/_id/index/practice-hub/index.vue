@@ -57,7 +57,7 @@
               </div>
 
               <div class="mt-2 mb-4 mx-2">
-                <div class>
+                <div>
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon

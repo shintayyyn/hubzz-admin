@@ -379,7 +379,7 @@ export default {
           text: "Something went wrong!"
         })
 
-        console.log("index practices index _id index asyncData err", err)
+        console.log("index practices index _id index err", err)
       }
     },
   }

@@ -35,7 +35,7 @@
             {{ item.message }}
           </p>
         </div>
-        <div class>
+        <div>
           <p
             :title="item.seen ? 'Mark as unread' : 'Mark as read'"
             class="p-1 rounded-full cursor-pointer transition-hover"

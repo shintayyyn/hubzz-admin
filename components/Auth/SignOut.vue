@@ -2,7 +2,7 @@
   <div class="signout fixed top-0 w-full flex justify-center">
     <div class="signout-modal border-solid rounded-b-lg bg-yellow-500 px-6 py-2">
       <div class="flex justify-center py-2">
-        <div class>
+        <div>
           Proceed to sign-out?
         </div>
       </div>

@@ -111,26 +111,35 @@
       </div>
     </div>
     <div v-else class="border-b-2 border-white mt-2">
-      <div class="hidden md:flex pb-3 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle text-center w-2/12">
-          Practice / Surgery
+      <div class="hidden md:flex justify-around text-white font-semibold w-10/12 w-full">
+        <div class="flex-1 md:flex-auto">
+          <div class="flex justify-left md:justify-center">
+            <div class="align-center mx-10 text-left">
+              Practice
+            </div>
+          </div>
         </div>
-        <div class="align-middle pl-1 text-center w-2/12">
-          Check
-        </div>
-        <div class="align-middle pl-8 text-center w-2/12">
-          Job Part Number
-        </div>
-        <div class="align-middle pr-6 text-center w-3/12">
-          Approved at / Completed At
-        </div>
-        <div class="align-middle pr-2 text-center w-1/12">
-          Total
-        </div>
-        <div class="align-middle pr-10 text-center w-3/12">
-          Status
+        <div class="flex-1 md:flex-auto pb-3 text-sm justify-around ">
+          <div class="flex flex-row w-full">
+            <div class="align-left px-20 text-center">
+              Check
+            </div>
+            <div class="align-left px-10 text-center">
+              Job Part Number
+            </div>
+            <div class="align-left px-10 text-center">
+              Approved at / Completed At
+            </div>
+            <div class="align-left px-10 ml-10 text-center">
+              Total
+            </div>
+            <div class="align-right px-10 ml-10 text-center">
+              Status
+            </div>
+          </div>
         </div>
       </div>
+      
     
       <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
         <!-- BODY -->
@@ -151,7 +160,7 @@
           >
             <template v-slot:checker="slotProps">
               <div class="flex flex-col items-center m-1">
-                <div>{{ slotProps.item.name }}</div>
+                <div class="text-left">{{ slotProps.item.name }}</div>
                 <div
                   class="m-1 rounded-full text-center px-4 py-1 w-32" 
                   :class="typeStyle(slotProps.item.type)"
@@ -344,14 +353,14 @@ export default {
         {
           name:"Practice",
           dataIndex:"checker",
-          class:"flex-initial mt-4",
+          class:"flex-1 mt-4",
           slotName:"checker",
           eventName: "checkClicked"
         },
-        {
+        { 
           name:"Job Parts",
           dataIndex:"invoiceable_job_parts",
-          class:"flex-initial",
+          class:"flex-auto",
           slotName:"invoiceable_job_parts",
         },
 
@@ -360,27 +369,27 @@ export default {
 				{
 					name: "Check",
 					dataIndex: "checker",
-					class: "text-center ",
+					class: "flex-auto text-center",
 					slotName: "checker",
 					eventName: "checkClicked"
         },
 				{
 					name: "Job Part Number",
           dataIndex: "job_part_number",
-          class: "text-center",
+          class: "flex-auto text-center",
 					sortable: false
 				},
         {
           name: "Approved At / Completed At",
           slot: true,
           dataIndex: "approved_at",
-          class: "text-center localDate",
+          class: "flex-auto text-center localDate",
           slotName: "approved_completed_at"
         },
         {
           name: "Total",
           dataIndex: "total",
-					class: "text-center currency",
+					class: "flex-auto text-center currency",
 					sortable: false
         },
         {

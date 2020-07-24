@@ -78,60 +78,40 @@
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span class>{{ item.job_part_number }}</span>
+              <span>{{ item.job_part_number }}</span>
             </div>
 
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span class>{{ item.job.platform_job.practice.surgery.name }}</span>
+              <span>{{ item.practice_name }}</span>
             </div>
 
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
 
               <span
-                :class="item.job.title && item.job.title.split(' ') && item.job.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
-              >{{ item.job.title ? item.job.title : '(none)' }}</span>
+                :class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
+              >{{ item.title ? item.title : '(none)' }}</span>
             </div>
 
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span
-                class
-              >{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_start }}</span>
+              <span>{{ item.datetime_start_in_gb_formatted }}</span>
             </div>
 
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span
-                class
-              >{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') +' | '+ item.time_end }}</span>
+              <span>{{ item.datetime_end_in_gb_formatted }}</span>
             </div>
 
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Created At</strong>
-              <span
-                class
-              >{{ $moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <span>{{ item.date_created_in_gb_formatted }}</span>
             </div>
 
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Completed At</strong>
-              <span
-                class
-              >{{ $moment(item.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <span>{{ item.completed_at_in_gb_formatted }}</span>
             </div>
 
             <div
@@ -145,11 +125,21 @@
                 {{ item.invoice_status }}
               </div>
             </div>
+            <div
+              class="flex items-center md:flex-col md:justify-center w-1/2 md:w-64 px-1 xl:px-2 py-2 leading-tight align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase whitespace-no-wrap">HUBZZ Invoice Status</strong>
+              <div
+                class="py-2 px-4 rounded-lg whitespace-no-wrap text-center mx-2 font-semibold text-lg"
+              >
+                {{ item.practice_invoiced === true ? 'Yes' : 'No' }}
+              </div>
+            </div>
           </nuxt-link>
         </div>
       </div>
 
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :totalPages="totalPages"
@@ -248,9 +238,12 @@ export default {
     this.currentPage = parseInt(query.completed_job_page)
     
 		let params = {
-			job_practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Completed"
     }
     
@@ -278,9 +271,12 @@ export default {
 
 			const responseCount = await this.$axios.$get(`/api/v1/admin/job-parts/count`, {
 				params: {
-					job_practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Completed",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -293,9 +289,12 @@ export default {
 
 			const response = await this.$axios.$get(`/api/v1/admin/job-parts`, {
 				params: {
-					job_practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Completed",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -328,11 +327,11 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-completed-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-completed-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-completed-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-completed-sessions/${itemId}`
 				}
 			}
     },
@@ -343,9 +342,12 @@ export default {
 			let params = {
 				status: "Completed",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				job_practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset,
 				job_part_number_includes: this.job_number,

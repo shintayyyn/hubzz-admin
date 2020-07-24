@@ -31,7 +31,7 @@
               <span class="uppercase text-xs font-bold">Locum</span>
               <span class="pb-2">{{ item.locum_user.name }}</span>
               <span class="uppercase text-xs font-bold">Uploaded Compliance Document</span>
-              <span class>{{ item.compliance_document.name }}</span>
+              <span>{{ item.compliance_document.name }}</span>
             </div>
           </nuxt-link>
         </div>

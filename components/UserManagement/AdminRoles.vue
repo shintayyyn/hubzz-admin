@@ -221,7 +221,7 @@ export default {
 						res.data.count
 					)
 					this.perPage = 10
-					this.totalPages = Math.ceil(this.total / this.perPage)
+					// this.totalPages = Math.ceil(this.total / this.perPage)
 				})
 				.catch(err => {
 					console.log("get roles error!", err)

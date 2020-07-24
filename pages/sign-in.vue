@@ -110,7 +110,7 @@
           return
         }
       } catch (err) {
-        console.log('sign-in asyncData err', err)
+        console.log('sign-in err', err)
       }
     },
 
