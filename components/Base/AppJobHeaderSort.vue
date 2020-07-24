@@ -329,8 +329,11 @@
         <div
           v-if="tabStatus == 'Completed'"
           class="align-middle px-2 text-center w-64"
-          @click="sortBy('job_date_created',currentPage,search)"
-        >Invoice Status</div>
+        >Locum Invoice Status</div>
+        <div
+          v-if="tabStatus == 'Completed'"
+          class="align-middle px-2 text-center w-64"
+        >Invoiced by HUBZZ?</div>
       </div>
     </div>
   </div>

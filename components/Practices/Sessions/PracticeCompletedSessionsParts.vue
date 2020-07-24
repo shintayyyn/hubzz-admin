@@ -145,6 +145,16 @@
                 {{ item.invoice_status }}
               </div>
             </div>
+						<div
+              class="flex items-center md:flex-col md:justify-center w-1/2 md:w-64 px-1 xl:px-2 py-2 leading-tight align-middle md:text-center"
+            >
+              <strong class="block md:hidden text-sm uppercase whitespace-no-wrap">HUBZZ Invoice Status</strong>
+              <div
+                class="py-2 px-4 rounded-lg whitespace-no-wrap text-center mx-2 font-semibold text-lg"
+              >
+                {{ item.practice_invoiced === true ? 'Yes' : 'No' }}
+              </div>
+            </div>
           </nuxt-link>
         </div>
       </div>
