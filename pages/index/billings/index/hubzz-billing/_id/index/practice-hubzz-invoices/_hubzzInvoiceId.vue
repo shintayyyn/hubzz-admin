@@ -54,6 +54,8 @@ export default {
 			)
 			const practiceInvoice = response.data.practice_invoice
 
+			console.log('practice invoice', practiceInvoice)
+
 			response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
