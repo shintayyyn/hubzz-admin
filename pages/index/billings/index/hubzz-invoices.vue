@@ -1,18 +1,24 @@
 <template>
   <div>
     <div class="flex flex-col md:flex-row justify-start w-full m-3">
-      <div class="flex-1">
-        <input
+      <div class="flex-1 text-white">
+        <!-- <input
           v-model="search"
           class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
           placeholder="Filter by Practice Name or Invoice Number"
-        >
+        > -->
+        <AppInput 
+          v-model="search"
+          :type="'text'"
+          :label="'Search by Practice Name'"
+          :placeholder="'Practice Name'"
+        />
       </div>
       <div class="flex m-3 text-white">
         <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true">
         <label for="showUnpaidInvoiceOnly">Show Unpaid Invoices Only</label>
       </div>
-      <div class="flex-1 m-3 text-white">
+      <div class="flex m-3 text-white">
         <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
         <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
       </div>
@@ -82,14 +88,47 @@
         <div class="align-middle text-center w-1/10">
           Due Date
         </div>
-        <div class="align-middle  text-center w-1/10">
+        <div 
+          class="align-middle  text-center w-1/10"
+          @click="sorted('paid_at')"
+        >
           Payment Status
+          <svgicon
+            v-if="!params.order_by.includes('paid_at')"
+            class="inline align-baseline"
+            :name="sortIcon('paid_at')"
+            height="12"
+            width="12"
+            color="white black"
+          />
         </div>
-        <div class="align-middle text-center w-1/10">
+        <div 
+          class="align-middle text-center w-1/10"
+          @click="sorted('exported_at')"
+        >
           Exported?
+          <svgicon
+            v-if="!params.order_by.includes('exported_at')"
+            class="inline align-baseline"
+            :name="sortIcon('exported_at')"
+            height="12"
+            width="12"
+            color="white black"
+          />
         </div>
-        <div class="align-middle text-center w-1/10">
+        <div 
+          class="align-middle text-center w-1/10"
+          @click="sorted('paid')"
+        >
           Actions
+          <svgicon
+            v-if="!params.order_by.includes('paid')"
+            class="inline align-baseline"
+            :name="sortIcon('paid')"
+            height="12"
+            width="12"
+            color="white black"
+          />
         </div>
       </div>
       <AppTable
@@ -389,12 +428,14 @@
 
 <script>
 import AppButton from "@/components/Base/AppButton"
+import AppInput from "@/components/Base/AppInput"
 import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 import debounce from "lodash.debounce"
 import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
+    AppInput,
 		AppButton,
 		AppTable,
 		AppDateToggled,

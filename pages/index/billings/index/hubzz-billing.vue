@@ -8,27 +8,15 @@
         @click="goToTab()"
       />
     </div>
-    <div v-if="!$route.path.includes('bulk-billing')" class="flex items-center px-2 py-2">
-      <div class="relative">
-        <input
-          v-model="search"
-          class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-          placeholder="Search Practice by Name"
-        >
-        <button
-          v-if="search"
-          class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-          @click="(search = ''), searchSubmit()"
-        >
-          <svgicon
-            name="times-solid"
-            height="12"
-            width="12"
-            class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-          />
-        </button>
-      </div>
-    </div>
+
+		<div v-if="!$route.path.includes('bulk-billing')" class="text-white w-full md:w-1/2 p-2">
+			<AppInput 
+				v-model="search"
+				:type="'text'"
+				:label="'Search by Practice Name'"
+				:placeholder="'Practice Name'"
+			/>
+		</div>
 
     <AppTable
       v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
@@ -95,10 +83,12 @@
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppButton from "@/components/Base/AppButton"
+import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
     AppTable,
-    AppButton,
+		AppButton,
+		AppInput,
 	},
 	data () {
 		return {

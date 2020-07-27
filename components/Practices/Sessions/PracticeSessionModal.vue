@@ -41,23 +41,35 @@
                   <p class="font-semibold">
                     Job Number
                   </p>
+
                   <p class="text-white pb-2">
                     {{ job.job_number }}
                   </p>
+
                   <p class="font-semibold">
-                    Rate
+                    Job Gross Rate
                   </p>
-                  <p
-                    class="text-white pb-2 no-underline"
-                  >
-                    {{ job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour" }}
+
+                  <p class="text-white pb-2 no-underline">
+                    £ {{ job.job_gross_rate }}
                   </p>
+
+                  <p class="font-semibold">
+                    Job Hubzz Fee
+                  </p>
+
+                  <p class="text-white pb-2 no-underline">
+                    £ {{ job.job_hubzz_fee }}
+                  </p>
+
                   <p class="font-semibold">
                     Total Hours
                   </p>
+
                   <p class="text-white pb-2">
                     {{ job.total_hours | hoursMinutes }}
                   </p>
+
                   <p class="font-semibold">
                     Job Description
                   </p>
