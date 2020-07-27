@@ -648,7 +648,7 @@ export default {
       },
 
       async toUpdateReferenceNums (id, status, note) {
-        if (!(this.selectedComplianceDocumentRejectReasonValue || note)) {
+        if (status === 'Rejected' && !(this.selectedComplianceDocumentRejectReasonValue || note)) {
           this.formErrors = [
             {
               field: 'note',
