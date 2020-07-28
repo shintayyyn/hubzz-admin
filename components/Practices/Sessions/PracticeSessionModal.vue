@@ -733,35 +733,48 @@
                         {{ $moment(modalJobPart.cancelled_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
                       </p>
                     </div>
+
                     <!-- STATUS -->
                     <p class="mt-5 font-semibold">
                       Job Part Number
                     </p>
+
                     <p class="text-white">
                       {{ modalJobPart.job_part_number }}
                     </p>
+
                     <p class="mt-5 font-semibold">
                       Job Part
                     </p>
+
                     <p class="text-white">
                       {{ modalJobPart.part }} of {{ modalJobPart.parts }}
                     </p>
+
                     <p class="mt-5 font-semibold">
-                      Rate
+                      Job Part Gross Rate
                     </p>
-                    <p
-                      class="text-white no-underline"
-                    >
-                      {{ modalJobPart.job ? "£ "+modalJobPart.job.rate+" Per Hour":null +" Per Hour" }}
+
+                    <p class="text-white pb-2 no-underline">
+                      £ {{ modalJobPart.job_part_gross_rate_formatted }}
                     </p>
+
+                    <p class="mt-5 font-semibold">
+                      Job Part Hubzz Fee
+                    </p>
+
+                    <p class="text-white pb-2 no-underline">
+                      £ {{ modalJobPart.job_part_hubzz_fee_formatted }}
+                    </p>
+
                     <p class="mt-5 font-semibold">
                       Total Original Hours
                     </p>
-                    <p
-                      class="text-white"
-                    >
+
+                    <p class="text-white">
                       {{ modalJobPart.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
                     </p>
+
                     <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
                       <p class="mt-5 font-semibold">
                         Total Final Hours

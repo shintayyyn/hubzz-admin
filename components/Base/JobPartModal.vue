@@ -186,37 +186,48 @@
                   </p>
                 </div>
               </div>
+              
               <div class="m-4 mt-5 text-gray text-white">
                 <p class="font-semibold">
                   Job Part Number
                 </p>
+
                 <p class="text-white">
                   {{ job_part.job_part_number }}
                 </p>
+
                 <p class="mt-5 font-semibold">
                   Job Part
                 </p>
+
                 <p class="text-white">
                   {{ job_part.part }} of {{ job_part.parts }}
                 </p>
-                <p class="mt-5 font-semibold">
-                  Rate
+
+                <p class="font-semibold">
+                  Job Part Gross Rate
                 </p>
-                <p
-                  class="text-white no-underline"
-                >
-                  {{ job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour" }}
+
+                <p class="text-white pb-2 no-underline">
+                  £ {{ job_part.job_part_gross_rate_formatted }}
                 </p>
-                <!-- <p class="mt-5 font-semibold">Total Hours</p>
-                <p class="text-white">{{ job_part.job.total_hours | hoursMinutes }}</p>-->
+
+                <p class="font-semibold">
+                  Job Part Hubzz Fee
+                </p>
+
+                <p class="text-white pb-2 no-underline">
+                  £ {{ job_part.job_part_hubzz_fee_formatted }}
+                </p>
+
                 <p class="mt-5 font-semibold">
                   Total Original Hours
                 </p>
-                <p
-                  class="text-white"
-                >
+
+                <p class="text-white">
                   {{ job_part.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
                 </p>
+                
                 <template v-if="['Completed', 'Approved'].includes(job_part.status)">
                   <p class="mt-5 font-semibold">
                     Total Final Hours
