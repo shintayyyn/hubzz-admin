@@ -212,22 +212,15 @@
               </div>
               <!-- TOTAL HOURS -->
               <div v-if="forViewing == false" class="w-1/6 text-sm">
-                <!-- <textarea
-                  v-if="doNotShow"
-                  v-model="item.description"
-                  rows="2"
-                  class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
-                  placeholder="Enter Description"
-                /> -->
                 <p
                   class="w-full text-left px-2 py-1"
                 >
-                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+                  {{ item.total_hours | currency }}
                 </p>
               </div>
               <div v-else class="max-w px-2 py-1 w-1/6">
                 <div v-if="!byLocum">
-                  {{ item.total_hours ? item.total_hours.toFixed(2) + " Hours " : "N/A" }}
+                  {{ item.total_hours | currency }}
                 </div>
               </div>
               <!-- AMOUNT TOTAL -->
@@ -244,8 +237,8 @@
                     placeholder="Enter Total"
                   >
                 </template>
-                <div v-else class="max-w px-2 py-1 text-right text-black">
-                  {{ item.total }}
+                <div v-else class="max-w px-2 py-1 text-right text-black ">
+                  {{ item.total | currency }}
                 </div>
               </div>
               <template v-if="forViewing == false">
@@ -278,14 +271,6 @@
                   <strong>£ Amount</strong>
                 </div>
               </div>
-              <!-- <div v-if="forViewing == false">
-								<div class="mr-2" v-if="doNotShow">
-									<span
-										@click="addInvoiceItem()"
-										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-									>+</span>
-								</div>
-							</div>-->
             </div>
           </div>
           <div
@@ -296,7 +281,8 @@
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
           >
             <div class="flex w-full justify-center border-b border-gray-500 py-1">
-              <div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
+              <!-- Description -->
+              <div v-if="forViewing == false" class="w-4/6 text-sm mx-1">
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -314,7 +300,21 @@
               <div v-else class="w-full max-w px-2 py-1">
                 {{ item.description }}
               </div>
-              <div class="w-1/3 text-sm mx-1">
+              <!-- TOTAL HOURS -->
+              <div v-if="forViewing == false" class="w-1/6 text-sm">
+                <p
+                  class="w-full text-left px-2 py-1"
+                >
+                  {{ item.total_hours | currency }} Hours
+                </p>
+              </div>
+              <div v-else class="max-w px-2 py-1 w-1/6">
+                <div v-if="!byLocum">
+                  {{ item.total_hours | currency }} Hours
+                </div>
+              </div>
+              <!-- Amount -->
+              <div class="w-1/6 text-sm mx-1">
                 <template v-if="forViewing == false">
                   <input
                     v-if="doNotShow"
@@ -328,7 +328,7 @@
                   >
                 </template>
                 <p v-else class="px-2 py-1 text-right text-black">
-                  {{ item.total }}  
+                  {{ item.total | currency }}  
                 </p>
               </div>
               <template v-if="forViewing == false">
@@ -413,7 +413,7 @@
                     >
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
-                    {{ item.total }}
+                    {{ item.total | currency }}
                   </p>
                 </div>
                 <template v-if="forViewing == false">
@@ -510,7 +510,7 @@
                     >
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
-                    {{ '- '+item.total }}
+                    {{ '- ' + item.total | currency }}
                   </p>
                 </div>
                 <template v-if="forViewing == false">
@@ -545,7 +545,7 @@
               Total
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              {{ forViewing === true ? "£ " + practiceInvoice.total_amount.toFixed(2) : "£ " + amountTotal }}
+              £ {{ forViewing === true ? practiceInvoice.total_amount : amountTotal | currency }}
             </div>
           </div>
           <div class="flex flex-row justify-between w-full">
@@ -553,7 +553,7 @@
               Total Hours
             </span>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              {{ totalHoursSum + ' Hours' }}
+              {{ totalHoursSum | currency }} Hours
             </div>
           </div>
         </div>
