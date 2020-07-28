@@ -51,7 +51,7 @@
                   </p>
 
                   <p class="text-white pb-2 no-underline">
-                    £ {{ job.job_gross_rate }}
+                    £ {{ job.job_gross_rate_formatted }}
                   </p>
 
                   <p class="font-semibold">
@@ -59,7 +59,7 @@
                   </p>
 
                   <p class="text-white pb-2 no-underline">
-                    £ {{ job.job_hubzz_fee }}
+                    £ {{ job.job_hubzz_fee_formatted }}
                   </p>
 
                   <p class="font-semibold">
