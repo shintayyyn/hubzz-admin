@@ -56,6 +56,7 @@
       </div>
 
       <div v-if="false">
+        <!-- make this watch, then get -->
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
@@ -84,19 +85,26 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination
-        :count="count" 
-        :pages="pages" 
-        :page="activePage"
-        @page="setPage" 
-      />
-
-      <div v-if="true" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-white w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderBy.join(',') }}
+            </div>
+          </div>
+        </div>
+        <ReportPagination
+          :count="count" 
+          :pages="pages" 
+          :page="activePage"
+          @page="setPage" 
+        />
       </div>
     </div> 
   </div>
@@ -153,6 +161,13 @@
     },
 
     computed: {
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.bogusRegistrations.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
+
       offset () {
         return this.activePage * this.limit - this.limit
       },

@@ -74,19 +74,34 @@
       <ReportTable
         :limit="limit"
         :items="locumsInAnArea"
-        :getItemKey="(item) => item.area"
+        :getItemKey="(item) => item.locum_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination
-        :count="count" 
-        :pages="pages" 
-        :page="activePage"
-        @page="setPage" 
-      />
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-white w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderBy.join(',') }}
+            </div>
+          </div>
+        </div>
+        <ReportPagination
+          :count="count" 
+          :pages="pages" 
+          :page="activePage"
+          @page="setPage" 
+        />
+      </div>
 
       <div
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
@@ -103,9 +118,13 @@
         </div>
       </div>
 
-      <div v-if="loading">
-        <span>Loading...</span>
-      </div>
+      <!-- <div v-if="false" class="text-white"> 
+        <span>Count: {{ count }}</span>
+        <br>
+        <span>Order By: {{ orderBy.join(',') }}</span>
+        <br>
+        <span>Page {{ activePage }} of {{ pages }} pages</span>
+      </div> -->
     </div>
   </div>
 </template>
@@ -152,6 +171,12 @@ import ReportPagination from '@/components/Reports/ReportPagination'
 		},
 
 		computed: {
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumsInAnArea.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
       offset () {
         return this.activePage * this.limit - this.limit
       },
