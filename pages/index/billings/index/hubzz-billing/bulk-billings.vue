@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div ref="modalContainer">
 		<AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
 		<div class="flex items-center px-2 py-2">
 			<div class="relative w-full">
@@ -42,24 +42,27 @@
 							<div class="text-lg font-semibold">Billing Period (Required Fields)</div>
 							<div class="flex">
 								<AppDate
-									v-model="billingPeriodDateStart"
+									v-model="billing_period_date_start"
 									class="md:mx-2 text-white"
 									:name="'billing_period_date_start'"
 									:label="'Billing Date From (Required)'"
+									:error="formError.find(item => item.field === 'billing_period_date_start')"
 								/>
 								<AppDate
-									v-model="billingPeriodDateEnd"
+									v-model="billing_period_date_end"
 									class="md:mx-2 p-2 text-white"
 									:name="'billing_period_date_end'"
 									:label="'Billing Date To (Required)'"
-									:isAfterDate="billingPeriodDateStart"
+									:isAfterDate="billing_period_date_start"
+									:error="formError.find(item => item.field === 'billing_period_date_end')"
 								/>
 								<AppDate
-									v-model="dueDate"
+									v-model="due_date"
 									class="md:mx-2 text-white"
 									:name="'due_date'"
 									:label="'Due Date(Required)'"
 									:isAfter="true"
+									:error="formError.find(item => item.field === 'due_date')"
 								/>
 							</div>
 						</div>
@@ -253,17 +256,50 @@
 		</div>
 		<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TABLE NEW ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 		<div class="flex flex-row justify-end mt-4">
-			<AppButton class="mx-2" :label="'Clear Selection'" :icon="'add-rectangle'" @click="reset()" />
-			<AppButton
-				class="mx-2"
-				:label="'Generate HUBZZ Invoices'"
-				:icon="'add-rectangle'"
-				:disabled="billingPeriodDateStart 
-          && billingPeriodDateEnd
-          && chosenPracticeJobParts.length > 0  
-          ? false : true"
-				@click="createBulkBillingChecked()"
-			/>
+			<div class="flex flex-col">
+				<div 
+					v-if="!billing_period_date_start 
+					|| !billing_period_date_end
+					|| !due_date
+					|| chosenPracticeJobParts.length === 0"
+				>
+					<span class="p-2 bg-red-200 mb-2 py-1 border border-red-400 text-red-600 rounded flex items-center text-sm">
+						<svgicon name="exclamation-mark" class="w-4 h-4 mx-2 fill-current" />
+						<span>
+							Please
+						</span>
+						<span class="ml-1" v-if="chosenPracticeJobParts.length === 0">
+							Choose Job Parts, 
+						</span>
+						<span class="ml-1" v-if="!billing_period_date_start || !billing_period_date_end">
+							Input Billing Date From / To, 
+						</span>
+						<span class="ml-1" v-if="!due_date">
+							Input Due Date,
+						</span>
+						<span class="ml-1">
+							 to enable Generate HUBZZ Invoices 
+						</span>
+						<!-- Please Choose Job Parts, Input Billing Date From / To, and Due Date to enable Generate HUBZZ Invoices -->
+					</span>
+				</div>
+				<div>
+					<div class="flex flex-row justify-end">
+						<AppButton class="mx-2" :label="'Clear Selection'" :icon="'add-rectangle'" @click="reset()" />
+						<AppButton
+							class="mx-2"
+							:label="'Generate HUBZZ Invoices'"
+							:icon="'add-rectangle'"
+							:disabled="billing_period_date_start 
+								&& billing_period_date_end
+								&& chosenPracticeJobParts.length > 0
+								&& due_date  
+								? false : true"
+							@click="createBulkBillingChecked()"
+						/>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div
@@ -300,15 +336,16 @@ export default {
 		AppInput,
 	},
 
-	data() {
+	data () {
 		return {
 			searchMessage: "",
 			showSessionsModal: false,
+			formError: [],
 
 			// for app table
 			currentPage: 1,
 			search: "",
-			dueDate: "",
+			
 
 			// for bulk billing processing
 			showCompleted: false,
@@ -324,9 +361,10 @@ export default {
 			showStandAloneOnly: false,
 			showHealthBoardsOnly: false,
 
-			// billing period filters
-			billingPeriodDateStart: "",
-			billingPeriodDateEnd: "",
+			// form date start, end, due date
+			billing_period_date_start: "",
+			billing_period_date_end: "",
+			due_date: "",
 
 			chosenPractices: [],
 			chosenPracticeJobParts: [],
@@ -444,6 +482,40 @@ export default {
 	},
 
 	watch: {
+		billing_period_date_start: function (value) {
+			console.log('stpudoioic')
+			if(value !== null) {
+				let billing_period_date_start_index = this.formError.findIndex(
+					item => item.field === "billing_period_date_start"
+				)
+				let errors = this.formError.filter(
+					item => ["billing_period_date_start"].includes(item.field)
+				)
+				this.formError.splice(billing_period_date_start_index, errors.length)
+			}
+		},
+		billing_period_date_end: function (value) {
+			if(value !== null) {
+				let billing_period_date_end_index = this.formError.findIndex(
+					item => item.field === "billing_period_date_end"
+				)
+				let errors = this.formError.filter(
+					item => ["billing_period_date_end"].includes(item.field)
+				)
+				this.formError.splice(billing_period_date_end_index, errors.length)
+			}
+		},
+		due_date: function (value) {
+			if(value !== null) {
+				let due_date_index = this.formError.findIndex(
+					item => item.field === "due_date"
+				)
+				let errors = this.formError.filter(
+					item => ["due_date"].includes(item.field)
+				)
+				this.formError.splice(due_date_index, errors.length)
+			}
+		},
 		invoiceableDateStart: function(value) {
 			if (value > this.invoiceableDateEnd) {
 				this.invoiceableDateEnd = "";
@@ -592,11 +664,14 @@ export default {
 
 			console.log("chosenJobParts", this.chosenPracticeJobParts);
 		},
+
 		async createBulkBillingChecked() {
 			await this.$store.commit(
 				"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
 				true
 			);
+			// this.checkForm()
+
 			let chosenPracticeIds = await this.chosenPracticeJobParts.map(item => {
 				return item.practice_id;
 			});
@@ -632,10 +707,10 @@ export default {
 				return {
 					practice_id: practiceId,
 					items,
-					date_start: this.billingPeriodDateStart,
-					date_end: this.billingPeriodDateEnd,
+					date_start: this.billing_period_date_start,
+					date_end: this.billing_period_date_end,
 					total_amount,
-					due_date: this.dueDate
+					due_date: this.due_date
 				};
 			});
 
@@ -669,12 +744,11 @@ export default {
 					);
 				})
 				.finally(() => {
-					this.showSessionsModal = false;
 					this.$store.commit(
 						"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
 						false
 					);
-				});
+				});			
 		},
 
 		goToPage(page) {
@@ -888,11 +962,11 @@ export default {
 				(this.practiceParams.hub_type = []),
 				(this.practiceParams.billable_spoke = null),
 				(this.practiceParams.verified = true),
-				(this.billingPeriodDateStart = null);
-			this.billingPeriodDateEnd = null;
+				(this.billing_period_date_start = null);
+			this.billing_period_date_end = null;
 			this.search = "";
 			this.chosenPracticeJobParts = [];
-			this.dueDate = "";
+			this.due_date = "";
 			this.showCompleted = false;
 			this.showDisputed = false;
 			this.showIndependentSpokesOnly = false;

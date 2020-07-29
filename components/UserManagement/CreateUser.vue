@@ -343,7 +343,10 @@
             />
             <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED ENDS HERE -->
 
-            <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)" />
+            <AppButton 
+              :label="'Create'" 
+              @click="checkForm(toPostUser, toPostUser.surgery_id)" 
+            />
           </div>
         </div>
       </div>
@@ -544,7 +547,7 @@
             this.formError.push(error)
           }
         } else {
-          let confirm_index = this.formError.findIndex(
+            let confirm_index = this.formError.findIndex(
               item => item.field === "password_confirmation"
             )
             let password_index = this.formError.findIndex(
