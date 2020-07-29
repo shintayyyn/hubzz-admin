@@ -126,19 +126,23 @@
 			<div class="mt-10 w-full text-center text-white">No Billable Practices Found.</div>
 		</div>
 		<div v-else class="border-b-2 border-white mt-2">
-			<div class="hidden md:flex justify-around text-white font-semibold w-full px-4">
-				<div style="min-width: 390px">
+			<div
+				style="max-width: 1200px" 
+				class="hidden md:flex justify-around text-white font-semibold w-full px-4"
+			>
+				<!-- <div style="min-width: 390px">
 					<div class="flex justify-left md:justify-center">
-						<div class="align-center mx-10 text-left">Practice</div>
+						
 					</div>
-				</div>
+				</div> -->
 				<div class="flex-1 md:flex-auto pb-3 text-sm justify-around">
 					<div class="flex flex-row w-full px-2">
-						<div class="w-1/5 align-left text-center">Check</div>
-						<div class="w-1/5 align-left text-center">Job Part Number</div>
-						<div class="w-1/5 align-left text-center">Approved at / Completed At</div>
-						<div class="w-1/5 align-left text-center">Total</div>
-						<div class="w-1/5 align-right text-center mr-2">Status</div>
+						<div class="w-1/6 align-left text-center pl-2">Practice</div>
+						<div class="w-1/6 align-left text-center pl-4">Check</div>
+						<div class="w-1/6 align-left text-center pr-12">Job Part Number</div>
+						<div class="w-1/6 align-left text-center pr-2">Approved at / Completed At</div>
+						<div class="w-1/6 align-left text-center pr-4">Total</div>
+						<div class="w-1/6 align-left text-center pr-4">Status</div>
 					</div>
 				</div>
 			</div>
@@ -194,7 +198,8 @@
 									:columns="jobPartsColumns"
 									:disabledPagination="true"
 									:disabledHeadings="true"
-									:customItemsWidth="'w-full'"
+									:customWidth="'w-full overflow-x-hidden'"
+									:customItemsWidth="'w-full md:w-9/12'"
 									@checkClicked="toggleCheckJobParts"
 									@sorted="sorted"
 								>
@@ -344,18 +349,23 @@ export default {
 			loading: false,
 			practiceColumns: [
 				{
-					name: "Practice",
-					dataIndex: "checker",
-					class: "flex-1 mt-4",
-					slotName: "checker",
-					eventName: "checkClicked",
-					minWidth: "390px"
+					name: 'Practice',
+					dataIndex: 'checker',
+					class: 'flex-1 mt-4 items-center',
+					flex: '1 0 0',
+					slotName: 'checker',
+					eventName: 'checkClicked',
+					minWidth: '100px',
+					maxWidth: '250px',
 				},
 				{
-					name: "Job Parts",
-					dataIndex: "invoiceable_job_parts",
-					class: "flex-auto",
-					slotName: "invoiceable_job_parts"
+					name: 'Job Parts',
+					dataIndex: 'invoiceable_job_parts',
+					class: 'flex-initial',
+					slotName: 'invoiceable_job_parts',
+					flex: '1 0 0',
+					minWidth: '100px',
+					maxWidth: '1000px'
 				}
 			],
 			jobPartsColumns: [
@@ -364,11 +374,17 @@ export default {
 					dataIndex: "checker",
 					class: "flex items-center justify-center",
 					slotName: "checker",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '100px',
 					eventName: "checkClicked"
 				},
 				{
 					name: "Job Part Number",
 					dataIndex: "job_part_number",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '200px',
 					class: "flex items-center justify-center",
 					sortable: false
 				},
@@ -376,12 +392,18 @@ export default {
 					name: "Approved At / Completed At",
 					slot: true,
 					dataIndex: "approved_at",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '200px',
 					class: "flex items-center justify-center localDate",
 					slotName: "approved_completed_at"
 				},
 				{
 					name: "Total",
 					dataIndex: "total",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '200px',
 					class: "flex items-center justify-center currency",
 					sortable: false
 				},
@@ -389,12 +411,15 @@ export default {
 					name: "Status",
 					slot: true,
 					dataIndex: "status",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '200px',
 					slotName: "status_slot",
 					class: "flex items-center justify-center",
 					sortable: true
 				}
 			]
-		};
+		}
 	},
 
 	computed: {

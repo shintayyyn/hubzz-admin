@@ -3,8 +3,8 @@
     <div>
       <AppLoading :loading="loading" spinner />
       <div 
-        class="relative flex flex-col overflow-x-auto mt-4"
-        :class="customWidth ? customWidth : 'w-full'" 
+        class="relative flex flex-col mt-4"
+        :class="customWidth ? customWidth : 'w-full overflow-x-auto'" 
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
         <!-- HEADER -->
