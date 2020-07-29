@@ -72,24 +72,25 @@
       />
       <div class="w-full flex flex-wrap justfify-between items-center">
         <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
-          <div class="text-gray-500 w-full md:w-auto text-center md:text-left">
+          <div class="text-white w-full md:w-auto text-center md:text-left">
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>
             <div class="whitespace-no-wrap">
               Page: {{ activePage }} / {{ pages }}
             </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderBy.join(',') }}
+            </div>
           </div>
         </div>
-        <ReportPagination 
+        <ReportPagination
           :count="count" 
           :pages="pages" 
-          :page="activePage" 
+          :page="activePage"
           @page="setPage" 
         />
       </div>
-      
-
       <div
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
@@ -103,14 +104,6 @@
             <span>Download CSV</span>
           </button>
         </div>
-      </div>
-
-      <div v-if="true" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
     </div>
   </div>
