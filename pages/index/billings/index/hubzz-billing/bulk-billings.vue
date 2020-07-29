@@ -199,7 +199,7 @@
 									:disabledPagination="true"
 									:disabledHeadings="true"
 									:customWidth="'w-full overflow-x-hidden'"
-									:customItemsWidth="'w-full md:w-9/12'"
+									:customItemsWidth="'w-full md:w-8/10'"
 									@checkClicked="toggleCheckJobParts"
 									@sorted="sorted"
 								>
