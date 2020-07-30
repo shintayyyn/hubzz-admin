@@ -130,22 +130,45 @@
 		</div>
 		<div v-else class="border-b-2 border-white mt-2">
 			<div
-				style="max-width: 1200px" 
+				style="min-width: 768px; max-width: 1200px" 
 				class="hidden md:flex justify-around text-white font-semibold w-full px-4"
 			>
-				<!-- <div style="min-width: 390px">
-					<div class="flex justify-left md:justify-center">
-						
+				<div class="flex flex-row w-full pb-3 text-sm justify-around">
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 100px; max-width: 250px;" 
+					>
+						Practice
 					</div>
-				</div> -->
-				<div class="flex-1 md:flex-auto pb-3 text-sm justify-around">
-					<div class="flex flex-row w-full px-2">
-						<div class="w-1/6 align-left text-center pl-2">Practice</div>
-						<div class="w-1/6 align-left text-center pl-4">Check</div>
-						<div class="w-1/6 align-left text-center pr-12">Job Part Number</div>
-						<div class="w-1/6 align-left text-center pr-2">Approved at / Completed At</div>
-						<div class="w-1/6 align-left text-center pr-4">Total</div>
-						<div class="w-1/6 align-left text-center pr-4">Status</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 100px;"  
+					>
+						Check
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
+					>
+						Job Part Number
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
+					>
+						Approved at / Completed At
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 175px;"  
+					>
+						Total
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 220px;"  
+					>
+						Status
 					</div>
 				</div>
 			</div>
