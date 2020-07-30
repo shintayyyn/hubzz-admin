@@ -7,7 +7,7 @@
           class="md:mr-5 p-3 text-sm font-bold cursor-pointer"
           :class="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')? 'border rounded-lg border-yellow-500 bg-yellow-500' : 'text-white'"
         >
-          Raffle Entries
+          Prize Draw Entries
         </nuxt-link>
       </div>
       <div class="relative">
@@ -16,7 +16,7 @@
           class="md:mr-5 p-3 text-sm font-bold cursor-pointer"
           :class="$route.query && $route.query.status && $route.query.status.toLowerCase() === 'winners' ? 'border rounded-lg border-yellow-500 bg-yellow-500' : 'text-white'"
         >
-          Raffle Winners
+          Prize Draw Winners
         </nuxt-link>
       </div>
     </div>
