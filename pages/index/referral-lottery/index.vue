@@ -263,9 +263,9 @@
         let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries'
 
         if (routeQuery === 'entries' && this.users.length === 0) {
-          return `No Raffle ${routeQuery} Found`
+          return `No Prize Draw ${routeQuery} Found`
         } else if (routeQuery === 'winners' && this.raffles.length === 0) {
-          return `No Raffle ${routeQuery} Found`
+          return `No Prize Draw ${routeQuery} Found`
         }
 
         return ''
