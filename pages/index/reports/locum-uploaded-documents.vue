@@ -268,7 +268,7 @@
 
         const query = {
           ...this.$route.query,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -324,7 +324,7 @@
         this.locumUploadedDocuments = []
 
         const params = {
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/locum-uploaded-documents/count', {
@@ -362,7 +362,7 @@
       downloadCsv () {
         this.downloading = true
         const params = {
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

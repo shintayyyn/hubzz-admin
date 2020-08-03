@@ -42,7 +42,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="locumNameIncudes"
+            v-model="locumNameIncludes"
             placeholder="Search locum"
             type="text"
             label="Locum"
@@ -263,7 +263,7 @@
         activePage: 1,
 
         invoiceNumberIncludes: '',
-        locumNameIncudes: '',
+        locumNameIncludes: '',
         practiceNameIncludes: '',
         taxNumberIncludes: '',
         minNiAmount: '',
@@ -399,7 +399,7 @@
     mounted () {      
       const {
         invoice_number_includes: invoiceNumberIncludes,
-        locum_name_incudes: locumNameIncudes,
+        locum_name_includes: locumNameIncludes,
         practice_name_includes: practiceNameIncludes,
         tax_number_includes: taxNumberIncludes,
         min_ni_amount: minNiAmount,
@@ -415,7 +415,7 @@
       } = this.$route.query
 
       this.invoiceNumberIncludes = invoiceNumberIncludes ? invoiceNumberIncludes : ''
-      this.locumNameIncudes = locumNameIncudes ? locumNameIncudes : ''
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.taxNumberIncludes = taxNumberIncludes ? taxNumberIncludes : ''
       this.minNiAmount = minNiAmount ? minNiAmount : ''
@@ -437,7 +437,7 @@
     methods: {
       filterReset () {
         this.invoiceNumberIncludes = ''
-        this.locumNameIncudes = ''
+        this.locumNameIncludes = ''
         this.practiceNameIncludes = ''
         this.taxNumberIncludes = ''
         this.minNiAmount = ''
@@ -458,7 +458,7 @@
         const query = {
           ...this.$route.query,
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
           min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
@@ -523,7 +523,7 @@
 
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
           min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
@@ -575,7 +575,7 @@
         this.downloading = true
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           tax_number_includes: this.taxNumberIncludes ? this.taxNumberIncludes : undefined,
           min_ni_amount: this.minNiAmount ? this.minNiAmount : undefined,
