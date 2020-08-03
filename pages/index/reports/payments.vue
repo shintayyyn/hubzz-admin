@@ -33,7 +33,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="locumNameIncudes"
+            v-model="locumNameIncludes"
             placeholder="Search locum"
             type="text"
             label="Locum"
@@ -243,7 +243,7 @@
         activePage: 1,
 
         invoiceNumberIncludes: '',
-        locumNameIncudes: '',
+        locumNameIncludes: '',
         practiceNameIncludes: '',
         professionNameIncludes: '',
         jobPartNumberIncludes: '',
@@ -361,7 +361,7 @@
     mounted () {      
       const {
         invoice_number_includes: invoiceNumberIncludes,
-        locum_name_incudes: locumNameIncudes,
+        locum_name_includes: locumNameIncludes,
         practice_name_includes: practiceNameIncludes,
         profession_name_includes: professionNameIncludes,
         job_part_number_includes: jobPartNumberIncludes,
@@ -376,7 +376,7 @@
       } = this.$route.query
 
       this.invoiceNumberIncludes = invoiceNumberIncludes ? invoiceNumberIncludes : ''
-      this.locumNameIncudes = locumNameIncudes ? locumNameIncudes : ''
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.professionNameIncludes = professionNameIncludes ? professionNameIncludes : ''
       this.jobPartNumberIncludes = jobPartNumberIncludes ? jobPartNumberIncludes : ''
@@ -397,7 +397,7 @@
     methods: {
       filterReset () {
         this.invoiceNumberIncludes = ''
-        this.locumNameIncudes = ''
+        this.locumNameIncludes = ''
         this.practiceNameIncludes = ''
         this.professionNameIncludes = ''
         this.jobPartNumberIncludes = ''
@@ -417,7 +417,7 @@
         const query = {
           ...this.$route.query,
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
           job_part_number_includes: this.jobPartNumberIncludes ? this.jobPartNumberIncludes : undefined,
@@ -481,7 +481,7 @@
 
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
           job_part_number_includes: this.jobPartNumberIncludes ? this.jobPartNumberIncludes : undefined,
@@ -532,7 +532,7 @@
         this.downloading = true
         const params = {
           invoice_number_includes: this.invoiceNumberIncludes ? this.invoiceNumberIncludes : undefined,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
           job_part_number_includes: this.jobPartNumberIncludes ? this.jobPartNumberIncludes : undefined,

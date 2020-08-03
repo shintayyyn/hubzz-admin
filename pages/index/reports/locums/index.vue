@@ -11,7 +11,7 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="locumNameIncudes"
+            v-model="locumNameIncludes"
             placeholder="Search locum"
             type="text"
             label="Locum"
@@ -137,7 +137,7 @@
             direction: 'desc',
           },
         ],
-        locumNameIncudes: '',
+        locumNameIncludes: '',
         professionNameIncludes: '',
         limit: 10,
         limits: [
@@ -257,18 +257,18 @@
       // this.orderBy = orderBy
       // this.activePage = page ? Number.parseInt(page) : 1
       const {
-        locum_name_includes: locumNameIncudes,
+        locum_name_includes: locumNameIncludes,
         profession_name_includes: professionNameIncludes,
       } = this.$route.query
 
-      this.locumNameIncudes = locumNameIncudes ? locumNameIncudes : ''
+      this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.professionNameIncludes = professionNameIncludes ? professionNameIncludes : ''
       this.getLocums()
     },
 
     methods: {
       filterReset () {
-        this.locumNameIncudes = ''
+        this.locumNameIncludes = ''
         this.professionNameIncludes = ''
 
         this.filterSearch()
@@ -279,7 +279,7 @@
 
         const query = {
           ...this.$route.query,
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
           page: undefined,
         }
@@ -333,7 +333,7 @@
         this.locums = []
 
         const params = {
-          locum_name_includes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           profession_name_includes : this.professionNameIncludes ? this.professionNameIncludes : undefined,
         }
         Promise.all([
@@ -370,7 +370,7 @@
       downloadCsv () {
         this.downloading = true
         const params = {
-          locum_name_incudes: this.locumNameIncudes ? this.locumNameIncudes : undefined,
+          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           profession_name_includes: this.professionNameIncludes ? this.professionNameIncludes : undefined,
           order_by: this.orderBy,
           limit: 999,
