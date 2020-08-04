@@ -116,8 +116,9 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || locumReferrals.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="locumReferrals.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -231,16 +232,7 @@
             flexShrink: 0,
           },
           {
-            title: 'Referral User Area',
-            key: 'referral_user_area',
-            sort_key: 'referral_user_area',
-            column: (item) => item.referral_user_area,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Referral Locum Area',
+            title: 'Area',
             key: 'referral_locum_area',
             sort_key: 'referral_locum_area',
             column: (item) => item.referral_locum_area,
@@ -249,7 +241,7 @@
             flexShrink: 0,
           },
           {
-            title: 'Date Referal Registered',
+            title: 'Date Referral Registered',
             key: 'date_referral_registered',
             sort_key: 'date_referral_registered',
             column: (item) => this.$moment(item.date_referral_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
@@ -371,7 +363,7 @@
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
 
         Promise.all([
@@ -412,7 +404,7 @@
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           limit: 999,
           offset: 0,
         }

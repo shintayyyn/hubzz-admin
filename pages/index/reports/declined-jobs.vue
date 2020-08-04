@@ -30,10 +30,10 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="practiceName"
-            placeholder="Search Referral Locum Name"
+            v-model="practiceNameIncludes"
+            placeholder="Search Practice Name"
             type="text"
-            label="Referral Locum Name"
+            label="Practice Name"
           />
         </div>
 
@@ -118,8 +118,9 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || declinedJobs.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="declinedJobs.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -184,12 +185,12 @@
     },
 
     computed: {
-      // itemCountInfo () {
-      //   const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-      //   const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.declinedJobs.length), this.count)
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.declinedJobs.length), this.count)
         
-      //   return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
-      // },
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
 
       offset () {
         return this.activePage * this.limit - this.limit
@@ -296,7 +297,7 @@
       const {
         locum_name_includes: locumNameIncludes,
         practice_name_includes: practiceNameIncludes,
-        area: areaPostCode,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -314,7 +315,7 @@
     methods: {
       filterReset () {
         this.locumNameIncludes = ''
-        this.referralLocumNameIncludes = ''
+        this.practiceNameIncludes = ''
         this.areaPostCode = ''
 
         this.filterSearch()
@@ -327,7 +328,7 @@
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-          area: this.areaPostCode ? this.areaPostCode : undefined,
+          area_includes: this.areaPostCode ? this.areaPostCode : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -383,7 +384,7 @@
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/declined-jobs/count', {
@@ -423,7 +424,7 @@
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

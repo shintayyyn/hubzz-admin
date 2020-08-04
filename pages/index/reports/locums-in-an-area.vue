@@ -108,8 +108,9 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || locumsInAnArea.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="locumsInAnArea.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -117,14 +118,6 @@
           </button>
         </div>
       </div>
-
-      <!-- <div v-if="false" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
-      </div> -->
     </div>
   </div>
 </template>
@@ -188,8 +181,8 @@ import ReportPagination from '@/components/Reports/ReportPagination'
             key: 'area',
             sort_key: 'area',
             column: (item) => item.area,
-            justify: 'center',
-            flexGrow: 0,
+            justify: 'left',
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
@@ -197,7 +190,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
             key: 'profession',
             sort_key: 'profession',
             column: (item) => item.profession,
-            justify: 'center',
+            justify: 'left',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -206,7 +199,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
             key: 'number_locums_registered',
             sort_key: 'number_locums_registered',
             column: (item) => item.number_locums_registered,
-            justify: 'center',
+            justify: 'left',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -215,7 +208,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
             key: 'status',
             sort_key: 'status',
             column: (item) => item.status,
-            justify: 'center',
+            justify: 'left',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -328,7 +321,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
         this.locumsInAnArea = []
 
         const params = {
-          area: this.area ? this.area : undefined,
+          area_includes: this.area ? this.area : undefined,
           profession: this.profession ? this.profession : undefined,
         }
         Promise.all([
@@ -367,7 +360,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
       downloadCsv () {
         this.downloading = true
         const params = {
-          area: this.area ? this.area : undefined,
+          area_includes: this.area ? this.area : undefined,
           profession: this.profession ? this.profession : undefined,
           order_by: this.orderBy,
           limit: 999,

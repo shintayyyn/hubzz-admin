@@ -30,9 +30,9 @@
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="practiceName"
-            placeholder="Search Referral Locum Name"
+            placeholder="Search Practice Name"
             type="text"
-            label="Referral Locum Name"
+            label="Practice Name"
           />
         </div>
 
@@ -117,8 +117,9 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || locumPracticeReferrals.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="locumPracticeReferrals.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -298,7 +299,7 @@
             ...this.$route.query,
             locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
             practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-            area: this.areaPostCode ? this.areaPostCode : undefined,
+            area_includes: this.areaPostCode ? this.areaPostCode : undefined,
             order_by: this.orderBy ? this.orderBy : undefined,
             page: undefined,
           }
@@ -307,7 +308,7 @@
             this.$router.replace({ query })
           }
           
-          this.getLocumReferrals()
+          this.getLocumPracticeReferrals()
         },
         setPage (page) {
           this.activePage = page
@@ -352,7 +353,7 @@
           const params = {
             locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
             practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-            area: this.areaPostCode ? this.areaPostCode : '',
+            area_includes: this.areaPostCode ? this.areaPostCode : '',
           }
           Promise.all([
             this.$axios.get('/api/v1/admin/reports/locum-practice-referrals/count',{
@@ -392,7 +393,7 @@
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

@@ -129,22 +129,15 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || cancelledJobs.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="cancelledJobs.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
             <span>Download CSV</span>
           </button>
         </div>
-      </div>
-
-      <div v-if="false" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
     </div>
   </div>
@@ -300,7 +293,7 @@
         practice_name_includes: practiceNameIncludes,
         date_start: dateStart,
         date_end: dateEnd,
-        area: areaPostCode,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -391,7 +384,7 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/cancelled-jobs/count', {
@@ -432,7 +425,7 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
