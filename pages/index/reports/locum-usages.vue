@@ -108,8 +108,9 @@
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || locumUsages.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="locumUsages.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -292,7 +293,7 @@
     mounted () {      
       const {
         locum_name_includes: locumNameIncludes,
-        area: areaPostCode,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -320,7 +321,7 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          area: this.areaPostCode ? this.areaPostCode : undefined,
+          area_includes: this.areaPostCode ? this.areaPostCode : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -375,7 +376,7 @@
 
          const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
 
         Promise.all([
@@ -415,7 +416,7 @@
         this.downloading = true
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
