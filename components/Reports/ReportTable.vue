@@ -103,6 +103,9 @@
           return {
             flexGrow: columnDetail.flexGrow,
             flexShrink: columnDetail.flexShrink,
+            flexBasis: columnDetail.flexBasis,
+            minWidth: columnDetail.minWidth,
+            maxWidth: columnDetail.maxWidth,
           }
         }
       },
