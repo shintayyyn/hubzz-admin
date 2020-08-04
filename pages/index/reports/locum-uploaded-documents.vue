@@ -15,17 +15,54 @@
         Rep-015
       </div>
 
-      <div
-        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
-      >
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="locumNameIncludes"
-            placeholder="Search Locum Name"
-            type="text"
-            label="Locum Name"
-          />
+      <div class="flex-col justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2">
+        <div class="flex flex-col md:flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="locumNameIncludes"
+              placeholder="Search Locum Name"
+              type="text"
+              label="Locum Name"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes"
+              placeholder="Search Document Not Approved"
+              type="text"
+              label="Document Not Approved"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes"
+              placeholder="Search Document Not uploaded"
+              type="text"
+              label="Document Not uploaded"
+            />
+          </div>
         </div>
+
+        <div class="flex flex-col md:flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="registeredDateStart"
+              label="Date Registered Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="registeredDateEnd"
+              label="Date Registered End"
+              format="YYYY-MM-DD"
+            />
+          </div>
+        </div>
+
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
             label="Reset"
@@ -45,14 +82,17 @@
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
+
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
+
         <div>
           <label class="text-white">Page: </label>
+
           <select v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
@@ -64,26 +104,26 @@
       <ReportTable
         :limit="limit"
         :items="locumUploadedDocuments"
-        :getItemKey="(item) => item.locum_user_id"
+        :getItemKey="item => item.locum_user_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
-        @setOrderBy="(value) => orderBy = value"
+        @setOrderBy="setOrderBy"
       />
+
       <div class="w-full flex flex-wrap justfify-between items-center">
         <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
           <div class="text-white w-full md:w-auto text-center md:text-left">
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>
+
             <div class="whitespace-no-wrap">
               Page: {{ activePage }} / {{ pages }}
             </div>
-            <div class="whitespace-no-wrap">
-              Order By: {{ orderBy.join(',') }}
-            </div>
           </div>
         </div>
+
         <ReportPagination
           :count="count" 
           :pages="pages" 
@@ -91,9 +131,8 @@
           @page="setPage" 
         />
       </div>
-      <div
-        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
-      >
+
+      <div class="flex-wrap justify-start items-center w-full p-3 flex my-2">
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
             :disabled="downloading"
@@ -101,6 +140,7 @@
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+
             <span>Download CSV</span>
           </button>
         </div>
@@ -114,13 +154,15 @@
   import ReportPagination from '@/components/Reports/ReportPagination'
   import AppInput from '@/components/Base/AppInput'
   import AppButton from '@/components/Base/AppButton'
+  import AppDate from '@/components/Base/AppDate'
 
   export default {
     components: {
       ReportTable,
       ReportPagination,
       AppInput,
-      AppButton
+      AppButton,
+      AppDate,
     },
 
     data () {
@@ -157,16 +199,65 @@
         activePage: 1,
 
         locumNameIncludes: '',
+        verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes: '',
+        verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes: '',
+        registeredDateStart: '',
+        registeredDateEnd: '',
+        approvedDateStart: '',
+        approvedDateEnd: '',
+        complianceStatus: '',
+        complianceStatusSelectionList: [
+          {
+            label: 'All',
+            value: '',
+          },
+          {
+            label: 'Empty',
+            value: 'Empty',
+          },
+          {
+            label: 'Incomplete',
+            value: 'Incomplete',
+          },
+          {
+            label: 'Pending',
+            value: 'Pending',
+          },
+          {
+            label: 'Expiring',
+            value: 'Expiring',
+          },
+          {
+            label: 'Expired',
+            value: 'Expired',
+          },
+          {
+            label: 'Rejected',
+            value: 'Rejected',
+          },
+          {
+            label: 'Compliant',
+            value: 'Compliant',
+          },
+        ],
+        minCompliancePercentage: '',
+        maxCompliancePercentage: '',
       }
     },
 
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumUploadedDocuments.length), this.count)
+        const lastItem = Math.min(
+          (this.limit * this.activePage) - this.limit
+          +
+          (this.loading ? this.limit : this.locumUploadedDocuments.length),
+          this.count
+        )
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
+
       offset () {
         return this.activePage * this.limit - this.limit
       },
@@ -181,39 +272,51 @@
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
+            flexBasis: 'auto',
           },
           {
-            title: 'Locum',
+            title: 'ID',
+            key: 'locum_user_id',
+            sort_key: 'locum_user_id',
+            column: item => item.locum_user_id,
+            justify: 'center',
+            flexGrow: 0,
+            flexShrink: 0,
+            flexBasis: 'auto',
+          },
+          {
+            title: 'Locum Name',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
-            column: (item) => item.locum_user_name,
+            column: item => item.locum_user_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
             title: 'Date Registered',
-            key: 'date_registered',
+            key: 'date_registered_in_gb_formatted',
             sort_key: 'date_registered',
-            column: (item) => this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
-            justify: 'start',
-            flexGrow: 1,
+            column: item => item.date_registered_in_gb_formatted,
+            justify: 'center',
+            flexGrow: 0,
             flexShrink: 0,
+            flexBasis: 'auto',
           },
           {
             title: 'Documents Not Approved',
-            key: 'documents_not_approved_count',
-            sort_key: 'documents_not_approved_count',
-            column: (item) => item.documents_not_approved_count,
+            key: 'verifiable_must_be_verified_not_approved_compliance_document_names',
+            sort_key: 'verifiable_must_be_verified_not_approved_compliance_document_names',
+            column: item => item.verifiable_must_be_verified_not_approved_compliance_document_names || '(none)',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Documents Not Uploaded',
-            key: 'documents_not_uploaded_count',
-            sort_key: 'documents_not_uploaded_count',
-            column: (item) => item.documents_not_uploaded_count,
+            title: 'Documents Not uploaded',
+            key: 'verifiable_must_be_verified_not_upload_compliance_document_names',
+            sort_key: 'verifiable_must_be_verified_not_upload_compliance_document_names',
+            column: item => item.verifiable_must_be_verified_not_upload_compliance_document_names || '(none)',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -227,28 +330,44 @@
     },
 
     watch: {
-      orderBy () {
-        this.getLocumUploadedDocuments()
-      },
-
       limit () {
         this.page = 1
-        this.getLocumUploadedDocuments()
-      },
-
-      activePage () {
         this.getLocumUploadedDocuments()
       },
     },
 
     mounted () {      
-      const {
+     const {
         locum_name_includes: locumNameIncludes,
+        verifiable_must_be_verified_not_approved_compliance_document_names_includes:
+          verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes,
+        verifiable_must_be_verified_not_upload_compliance_document_names_includes:
+          verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes,
+        min_compliance_percentage: minCompliancePercentage,
+        max_compliance_percentage: maxCompliancePercentage,
+        compliance_status: complianceStatus,
+        registered_at_date_start: registeredDateStart,
+        registered_at_date_end: registeredDateEnd,
+        approved_at_date_start: approvedDateStart,
+        approved_at_date_end: approvedDateEnd,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+      this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes = verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+        ? verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+        : ''
+      this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes = verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+        ? verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+        : ''
+      this.minCompliancePercentage = minCompliancePercentage ? minCompliancePercentage : ''
+      this.maxCompliancePercentage = maxCompliancePercentage ? maxCompliancePercentage : ''
+      this.complianceStatus = complianceStatus ? complianceStatus : ''
+      this.registeredDateStart = registeredDateStart ? registeredDateStart : ''
+      this.registeredDateEnd = registeredDateEnd ? registeredDateEnd : ''
+      this.approvedDateStart = approvedDateStart ? approvedDateStart : ''
+      this.approvedDateEnd = approvedDateEnd ? approvedDateEnd : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -259,6 +378,15 @@
     methods: {
       filterReset () {
         this.locumNameIncludes = ''
+        this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes = ''
+        this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes = ''
+        this.complianceStatus = ''
+        this.minCompliancePercentage = ''
+        this.maxCompliancePercentage = ''
+        this.registeredDateStart = ''
+        this.registeredDateEnd = ''
+        this.approvedDateStart = ''
+        this.approvedDateEnd = ''
 
         this.filterSearch()
       },
@@ -269,6 +397,21 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          verifiable_must_be_verified_not_approved_compliance_document_names_includes:
+            this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+              ? this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+              : undefined,
+          verifiable_must_be_verified_not_upload_compliance_document_names_includes:
+            this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+              ? this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+              : undefined,
+          min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
+          max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
+          compliance_status: this.complianceStatus ? this.complianceStatus : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -276,7 +419,7 @@
         if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
           this.$router.replace({ query })
         }
-
+        
         this.getLocumUploadedDocuments()
       },
 
@@ -287,7 +430,6 @@
           this.$router.replace({
             query: {
               ...this.$route.query,
-              order_by: this.orderBy,
               page: undefined,
             }
           })
@@ -296,7 +438,6 @@
             query: {
               ...this.$route.query,
               page: this.activePage,
-              order_by: this.orderBy,
             }
           })
         }
@@ -325,13 +466,30 @@
 
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          verifiable_must_be_verified_not_approved_compliance_document_names_includes:
+            this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+              ? this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+              : undefined,
+          verifiable_must_be_verified_not_upload_compliance_document_names_includes:
+            this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+              ? this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+              : undefined,
+          min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
+          max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
+          compliance_status: this.complianceStatus ? this.complianceStatus : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
         }
+
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/locum-uploaded-documents/count', {
-            params
-          }).then((responses) => {
-            return responses.data.data.count
-          }),
+            params: {
+              ...params,
+            },
+          }).then(responses => responses.data.data.count),
+
           this.$axios.get('/api/v1/admin/reports/locum-uploaded-documents', {
             params: {
               ...params,
@@ -339,9 +497,8 @@
               limit: this.limit,
               offset: this.offset,
             },
-          }).then((responses) => {
-            return responses.data.data.locum_uploaded_documents
-          }),
+          }).then(responses => responses.data.data.locum_uploaded_documents),
+
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
@@ -363,6 +520,21 @@
         this.downloading = true
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          verifiable_must_be_verified_not_approved_compliance_document_names_includes:
+            this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+            ? this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+            : undefined,
+          verifiable_must_be_verified_not_upload_compliance_document_names_includes:
+            this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+            ? this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+            : undefined,
+          min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
+          max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
+          compliance_status: this.complianceStatus ? this.complianceStatus : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
