@@ -205,7 +205,7 @@
             key: 'expired_at',
             sort_key: 'expired_at',
             column: (item) => item.expired_at ? this.$moment(item.expired_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'left',
             flexGrow: 1,
             flexShrink: 0,
           },

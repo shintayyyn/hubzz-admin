@@ -328,7 +328,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
         this.locumsInAnArea = []
 
         const params = {
-          area: this.area ? this.area : undefined,
+          area_includes: this.area ? this.area : undefined,
           profession: this.profession ? this.profession : undefined,
         }
         Promise.all([
@@ -367,7 +367,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
       downloadCsv () {
         this.downloading = true
         const params = {
-          area: this.area ? this.area : undefined,
+          area_includes: this.area ? this.area : undefined,
           profession: this.profession ? this.profession : undefined,
           order_by: this.orderBy,
           limit: 999,
