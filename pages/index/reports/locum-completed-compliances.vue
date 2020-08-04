@@ -60,7 +60,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="registeredDateStart"
-              label="Registered Date Start"
+              label="Date Registered Start"
               format="YYYY-MM-DD"
             />
           </div>
@@ -68,7 +68,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="registeredDateEnd"
-              label="Registered Date End"
+              label="Date Registered End"
               format="YYYY-MM-DD"
             />
           </div>
@@ -76,7 +76,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="approvedDateStart"
-              label="Approved Date Start"
+              label="Date of Approved Start"
               format="YYYY-MM-DD"
             />
           </div>
@@ -84,7 +84,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="approvedDateEnd"
-              label="Approved Date End"
+              label="Date of Approved End"
               format="YYYY-MM-DD"
             />
           </div>
@@ -147,10 +147,6 @@
 
             <div class="whitespace-no-wrap">
               Page: {{ activePage }} / {{ pages }}
-            </div>
-
-            <div class="whitespace-no-wrap">
-              Order By: {{ orderBy.join(',') }}
             </div>
           </div>
         </div>
@@ -304,7 +300,7 @@
             flexBasis: 'auto',
           },
           {
-            title: 'User ID',
+            title: 'ID',
             key: 'locum_user_id',
             sort_key: 'locum_user_id',
             column: item => item.locum_user_id,
@@ -314,7 +310,7 @@
             flexBasis: 'auto',
           },
           {
-            title: 'Locum',
+            title: 'Locum Name',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
             column: item => item.locum_user_name,
