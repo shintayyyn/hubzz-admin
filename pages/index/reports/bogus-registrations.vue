@@ -189,7 +189,7 @@
             sort_key: null,
             column: (item) => item.id,
             justify: 'start',
-            flexGrow: 0,
+            flexGrow: 1,
             flexShrink: 0,
           },
           {
@@ -210,15 +210,15 @@
             flexGrow: 1,
             flexShrink: 0,
           },
-          {
-            title: 'Domain',
-            key: 'domain',
-            sort_key: 'domain',
-            column: (item) => item.domain,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
+          // {
+          //   title: 'Domain',
+          //   key: 'domain',
+          //   sort_key: 'domain',
+          //   column: (item) => item.domain,
+          //   justify: 'start',
+          //   flexGrow: 1,
+          //   flexShrink: 0,
+          // },
         ]
       },
 
