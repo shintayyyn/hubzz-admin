@@ -117,9 +117,11 @@
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>
-
             <div class="whitespace-no-wrap">
               Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderByProcessed }}
             </div>
           </div>
         </div>
@@ -172,6 +174,7 @@
         count: 0,
         locumUploadedDocuments: [],
         orderBy: [],
+        orderByProcessed: '',
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -333,6 +336,17 @@
       limit () {
         this.page = 1
         this.getLocumUploadedDocuments()
+      },
+      orderBy (value) {
+        let replaced = ''
+        if(value.length > 0) {
+          replaced = value[0].replace(/_/g, ' ')
+          replaced = replaced.replace(/:/g, ' - ')
+          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          replaced = replaced.replace('Desc', 'Descending')
+          replaced = replaced.replace('Asc', 'Ascending')
+        } 
+        this.orderByProcessed = replaced
       },
     },
 
