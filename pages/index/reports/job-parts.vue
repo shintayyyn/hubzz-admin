@@ -340,7 +340,7 @@
         practice_name_includes: practiceNameIncludes,
         date_start: dateStart,
         date_end: dateEnd,
-        area: areaPostCode,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -431,7 +431,7 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/job-parts/count', {
@@ -472,7 +472,7 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

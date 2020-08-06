@@ -273,6 +273,15 @@
             flexGrow: 1,
             flexShrink: 0,
           },
+          {
+            title: 'Paid',
+            key: 'practice_invoice_paid_at',
+            sort_key: 'practice_invoice_paid_at',
+            column: (item) => item.practice_invoice_paid_at ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
         ]
       },
 

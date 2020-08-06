@@ -288,9 +288,9 @@
 
     mounted () {      
       const {
-        date_start: dateStart,
-        date_end: dateEnd,
-        area: areaPostCode,
+        registered_at_date_start: dateStart,
+        registered_at_date_end: dateEnd,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -375,9 +375,9 @@
         this.registeredPractices = []
 
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          registered_at_date_start: this.dateStart ? this.dateStart : '',
+          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/registered-practices/count', {
@@ -415,9 +415,9 @@
       downloadCsv () {
         this.downloading = true
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          registered_at_date_start: this.dateStart ? this.dateStart : '',
+          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
