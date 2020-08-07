@@ -91,7 +91,7 @@
               Page: {{ activePage }} / {{ pages }}
             </div>
             <div class="whitespace-no-wrap">
-              Order By: {{ orderBy.join(',') }}
+              Order By: {{ orderByProcessed }}
             </div>
           </div>
         </div>
@@ -142,6 +142,7 @@
         downloading: false,
         locumUsages: [],
         orderBy: [],
+        orderByProcessed: '',
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -226,7 +227,7 @@
             title: 'Min Rate per Hour',
             key: 'min_rate_per_hour',
             sort_key: 'min_rate_per_hour',
-            column: (item) => item.min_rate_per_hour,
+            column: (item) => `£ ${item.min_rate_per_hour}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -235,7 +236,7 @@
             title: 'Min Rate per Half Day Session',
             key: 'min_rate_per_half_day_session',
             sort_key: 'min_rate_per_half_day_session',
-            column: (item) => item.min_rate_per_half_day_session,
+            column: (item) => `£ ${item.min_rate_per_half_day_session}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -244,7 +245,7 @@
             title: 'Min Rate per Whole Day Session',
             key: 'min_rate_per_whole_day_session',
             sort_key: 'min_rate_per_whole_day_session',
-            column: (item) => item.min_rate_per_whole_day_session,
+            column: (item) => `£ ${item.min_rate_per_whole_day_session}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -276,7 +277,16 @@
     },
 
     watch: {
-      orderBy () {
+      orderBy (value) {
+        let replaced = ''
+        if(value.length > 0) {
+          replaced = value[0].replace(/_/g, ' ')
+          replaced = replaced.replace(/:/g, ' - ')
+          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          replaced = replaced.replace('Desc', 'Descending')
+          replaced = replaced.replace('Asc', 'Ascending')
+        } 
+        this.orderByProcessed = replaced
         this.getPracticeLocums()
       },
 
