@@ -94,119 +94,123 @@
               </p>
             </div>
 
-            <div
-              v-for="professionComplianceCategory in professionComplianceCategories"
+            <template
               v-if="
                 practice.practice_profession_compliance_category_compliance_documents
                   && practice.practice_profession_compliance_category_compliance_documents.length > 0
               "
-              :key="professionComplianceCategory.id"
-              class="mb-4"
             >
-              <p
-                class="flex font-bold"
-              >
-                Compliance Requirements for {{ professionComplianceCategory.name }}:
-              </p>
-
               <div
-                v-for="referenceComplianceDocument in professionComplianceCategory.reference_compliance_documents"
-                v-if="
-                  practice.practice_profession_compliance_category_compliance_documents
-                    .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                      return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                        === referenceComplianceDocument.id
-                        && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                          === professionComplianceCategory.id
-                    })
-                "
-                :key="referenceComplianceDocument.id"
-                class="text-white text-sm m-1 mb-2"
+                v-for="professionComplianceCategory in professionComplianceCategories"
+                :key="professionComplianceCategory.id"
+                class="mb-4"
               >
-                <span>{{ referenceComplianceDocument.name }}</span>
-              </div>
+                <p class="flex font-bold">
+                  Compliance Requirements for {{ professionComplianceCategory.name }}:
+                </p>
 
-              <div
-                v-for="mandatoryComplianceDocument in professionComplianceCategory.mandatory_compliance_documents"
-                :key="mandatoryComplianceDocument.id"
-              >
                 <div
-                  v-if="
-                    mandatoryComplianceDocument.compliance_document_type_name !== 'Safeguarding'
-                      && practice.practice_profession_compliance_category_compliance_documents
-                        .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                          return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                            === mandatoryComplianceDocument.id
-                            && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                              === professionComplianceCategory.id
-                        })
+                  v-for="
+                    referenceComplianceDocument in professionComplianceCategory.reference_compliance_documents
+                      .filter((referenceComplianceDocument) => {
+                        return practice.practice_profession_compliance_category_compliance_documents
+                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
+                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
+                              === referenceComplianceDocument.id
+                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
+                                === professionComplianceCategory.id
+                          })
+                      })
                   "
+                  :key="referenceComplianceDocument.id"
                   class="text-white text-sm m-1 mb-2"
                 >
-                  <span>{{ mandatoryComplianceDocument.name }}</span>
+                  <span>{{ referenceComplianceDocument.name }}</span>
                 </div>
-                <div
-                  v-for="childComplianceDocument in mandatoryComplianceDocument.child_compliance_documents"
-                  v-if="
-                    mandatoryComplianceDocument.compliance_document_type_name === 'Safeguarding'
-                      && practice.practice_profession_compliance_category_compliance_documents
-                        .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                          return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                            === childComplianceDocument.id
-                            && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                              === professionComplianceCategory.id
-                        })
-                  "
-                  :key="childComplianceDocument.id"
-                  class="text-white text-sm m-1 mb-2"
-                >
-                  <span>{{ childComplianceDocument.name }}</span>
-                </div>
-              </div>
 
-              <div
-                v-for="optionalComplianceDocument in professionComplianceCategory.optional_compliance_documents"
-                :key="optionalComplianceDocument.id"
-              >
                 <div
-                  v-if="
-                    optionalComplianceDocument.compliance_document_type_name !== 'Safeguarding'
-                      && practice.practice_profession_compliance_category_compliance_documents
-                        .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                          return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                            === optionalComplianceDocument.id
-                            && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                              === professionComplianceCategory.id
-                        })
-                  "
-                  class="text-white text-sm m-1 mb-2"
+                  v-for="mandatoryComplianceDocument in professionComplianceCategory.mandatory_compliance_documents"
+                  :key="mandatoryComplianceDocument.id"
                 >
-                  <span>{{ optionalComplianceDocument.name }}</span>
+                  <div
+                    v-if="
+                      mandatoryComplianceDocument.compliance_document_type_name !== 'Safeguarding'
+                        && practice.practice_profession_compliance_category_compliance_documents
+                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
+                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
+                              === mandatoryComplianceDocument.id
+                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
+                                === professionComplianceCategory.id
+                          })
+                    "
+                    class="text-white text-sm m-1 mb-2"
+                  >
+                    <span>{{ mandatoryComplianceDocument.name }}</span>
+                  </div>
+                  <div
+                    v-for="childComplianceDocument in mandatoryComplianceDocument.child_compliance_documents"
+                    v-if="
+                      mandatoryComplianceDocument.compliance_document_type_name === 'Safeguarding'
+                        && practice.practice_profession_compliance_category_compliance_documents
+                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
+                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
+                              === childComplianceDocument.id
+                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
+                                === professionComplianceCategory.id
+                          })
+                    "
+                    :key="childComplianceDocument.id"
+                    class="text-white text-sm m-1 mb-2"
+                  >
+                    <span>{{ childComplianceDocument.name }}</span>
+                  </div>
                 </div>
+
                 <div
-                  v-for="childComplianceDocument in optionalComplianceDocument.child_compliance_documents"
-                  v-if="
-                    optionalComplianceDocument.compliance_document_type_name === 'Safeguarding'
-                      && practice.practice_profession_compliance_category_compliance_documents
-                        .some(practiceProfessionComplianceCategoryComplianceDocument => {
-                          return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
-                            === childComplianceDocument.id
-                            && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
-                              === professionComplianceCategory.id
-                        })
-                  "
-                  :key="childComplianceDocument.id"
-                  class="text-white text-sm m-1 mb-2"
+                  v-for="optionalComplianceDocument in professionComplianceCategory.optional_compliance_documents"
+                  :key="optionalComplianceDocument.id"
                 >
-                  <span>{{ childComplianceDocument.name }}</span>
+                  <div
+                    v-if="
+                      optionalComplianceDocument.compliance_document_type_name !== 'Safeguarding'
+                        && practice.practice_profession_compliance_category_compliance_documents
+                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
+                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
+                              === optionalComplianceDocument.id
+                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
+                                === professionComplianceCategory.id
+                          })
+                    "
+                    class="text-white text-sm m-1 mb-2"
+                  >
+                    <span>{{ optionalComplianceDocument.name }}</span>
+                  </div>
+                  <div
+                    v-for="childComplianceDocument in optionalComplianceDocument.child_compliance_documents"
+                    v-if="
+                      optionalComplianceDocument.compliance_document_type_name === 'Safeguarding'
+                        && practice.practice_profession_compliance_category_compliance_documents
+                          .some(practiceProfessionComplianceCategoryComplianceDocument => {
+                            return practiceProfessionComplianceCategoryComplianceDocument.compliance_document_id
+                              === childComplianceDocument.id
+                              && practiceProfessionComplianceCategoryComplianceDocument.profession_compliance_category_id
+                                === professionComplianceCategory.id
+                          })
+                    "
+                    :key="childComplianceDocument.id"
+                    class="text-white text-sm m-1 mb-2"
+                  >
+                    <span>{{ childComplianceDocument.name }}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
 
             <div v-if="practice.mandatory_trainings && practice.mandatory_trainings.length > 0">
               <p class="flex font-bold">
                 Mandatory Trainings
               </p>
+
               <div
                 v-for="mandatoryTraining in practice.mandatory_trainings"
                 :key="mandatoryTraining.id"
@@ -223,13 +227,75 @@
               "
             >
               <p class="flex text-white md:text-base py-2 font-bold leading-tight">
-                <span>Compliance Documents is not yet set up by the Practice Hub.</span>
+                <span>Compliance Documents is not yet set up by the Practice.</span>
               </p>
             </div>
           </div>
 
           <!-- VIEW / EDIT OTHER INFORMATION / PRACTICE TYPE -->
           <div v-if="practice.status !== 'Deactivated'" class="w-full text-sm text-white md:w-1/2">
+            <div class="flex flex-wrap justify-between items-center">
+              <span class="text-lg mr-2 font-bold">Invoicing Details</span>
+            </div>
+
+            <div>
+              <p class="flex text-gray-300 font-bold">
+                VAT Registered
+              </p>
+
+              <p class="flex text-white text-sm md:px-2 mb-2">
+                {{ practice.vat_registered ? 'Yes' : 'No' }}
+              </p>
+
+              <template v-if="practice.vat_registered">
+                <p class="flex font-bold">
+                  Vat Number
+                </p>
+
+                <p class="flex text-white text-sm md:px-2 mb-2">
+                  {{ practice.vat_number ? practice.vat_number : 'N/A' }}
+                </p>
+              </template>
+
+              <p class="flex text-gray-300 font-bold">
+                Bank Details
+              </p>
+
+              <div class="ml-2">
+                <p class="flex text-gray-300 font-bold">
+                  Account name
+                </p>
+
+                <p class="flex md:mx-2 mb-2">
+                  {{ practice && practice.account_name ? practice.account_name : 'N/A' }}
+                </p>
+
+                <p class="flex text-gray-300 font-bold">
+                  Bank name
+                </p>
+
+                <p class="flex md:mx-2 mb-2">
+                  {{ practice && practice.bank_name ? practice.bank_name : 'N/A' }}
+                </p>
+
+                <p class="flex text-gray-300 font-bold">
+                  Sort code
+                </p>
+
+                <p class="flex md:mx-2 mb-2">
+                  {{ practice && practice.sort_code ? practice.sort_code : 'N/A' }}
+                </p>
+
+                <p class="flex text-gray-300 font-bold">
+                  Account number
+                </p>
+
+                <p class="flex md:mx-2 mb-2">
+                  {{ practice && practice.account_number ? practice.account_number : 'N/A' }}
+                </p>
+              </div>
+            </div>
+
             <div class="flex flex-wrap justify-between items-center">
               <span class="text-lg mr-2 font-bold">Other Information</span>
               <AppButton
@@ -238,8 +304,9 @@
                 @click="edit()"
               />
             </div>
+
             <!-- VIEWING OTHER INFORMATION -->
-            <div v-if="toEdit === false">
+            <div v-if="!toEdit">
               <!-- <p class="flex text-gray-300 font-bold">
                 Direct Debit
               </p>
@@ -337,10 +404,9 @@
                 </div>
               </div>
             </div>
+            
             <!-- EDITING OTHER INFORMATION -->
-            <div
-              v-if="toEdit === true && authAdminPermissions.includes('Edit Practice Other Information')"
-            >
+            <div v-if="toEdit && authAdminPermissions.includes('Edit Practice Other Information')">
               <!-- <AppInput
                 v-model="toPutPractice.direct_debit"
                 class="w-2/3 md:w-1/2 mr-2"
@@ -416,6 +482,7 @@
             <!-- VIEW PRACTICE TYPE -->
             <div class="flex flex-wrap justify-between items-center">
               <span class="text-lg mr-2 font-bold">Practice Type</span>
+
               <AppButton
                 v-if="authAdminPermissions.includes('Edit Practice Other Information')"
                 :label="toEditPracticeType ? 'Cancel Editing' : 'Edit'"
@@ -439,9 +506,7 @@
             </div>
 
             <!-- EDIT PRACTICE TYPE -->
-            <div
-              v-if="toEditPracticeType && authAdminPermissions.includes('Change Practice Type')"
-            >
+            <div v-if="toEditPracticeType && authAdminPermissions.includes('Change Practice Type')">
               <AppInput
                 v-model="toPutPracticeType.type"
                 :type="'select'"
