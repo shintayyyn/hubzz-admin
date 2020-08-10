@@ -102,7 +102,7 @@
               Page: {{ activePage }} / {{ pages }}
             </div>
             <div class="whitespace-no-wrap">
-              Order By: {{ orderBy.join(',') }}
+              Order By: {{ orderByProcessed }}
             </div>
           </div>
         </div>
@@ -158,10 +158,12 @@
 
     data () {
       return {
+        downloading: false,
         loading: false,
         count: 0,
         registeredPractices: [],
         orderBy: [],
+        orderByProcessed: '',
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -262,8 +264,16 @@
     },
 
     watch: {
-      orderBy () {
-        this.getPractices()
+      orderBy (value) {
+        let replaced = ''
+        if(value.length > 0) {
+          replaced = value[0].replace(/_/g, ' ')
+          replaced = replaced.replace(/:/g, ' - ')
+          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          replaced = replaced.replace('Desc', 'Descending')
+          replaced = replaced.replace('Asc', 'Ascending')
+        } 
+        this.orderByProcessed = replaced
       },
 
       limit () {
@@ -278,9 +288,9 @@
 
     mounted () {      
       const {
-        date_start: dateStart,
-        date_end: dateEnd,
-        area: areaPostCode,
+        registered_at_date_start: dateStart,
+        registered_at_date_end: dateEnd,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -365,9 +375,9 @@
         this.registeredPractices = []
 
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          registered_at_date_start: this.dateStart ? this.dateStart : '',
+          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/registered-practices/count', {
@@ -405,9 +415,9 @@
       downloadCsv () {
         this.downloading = true
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          registered_at_date_start: this.dateStart ? this.dateStart : '',
+          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

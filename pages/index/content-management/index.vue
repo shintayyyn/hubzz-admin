@@ -73,6 +73,10 @@
             url: '/content-management/job-parts',
           },
           {
+            title: 'Job Part Schedules',
+            url: '/content-management/job-part-schedules',
+          },
+          {
             title: 'Locum Available Jobs',
             url: '/content-management/locum-available-jobs',
           },
