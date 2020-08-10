@@ -39,7 +39,7 @@
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="areaPostCode"
-            placeholder="Search Area Post Code"
+            placeholder="Search User Area Post Code"
             type="text"
             label="Area Postcode"
           />
@@ -234,9 +234,9 @@
           },
           {
             title: 'Area',
-            key: 'referral_locum_area',
-            sort_key: 'referral_locum_area',
-            column: (item) => item.referral_locum_area,
+            key: 'referral_user_area',
+            sort_key: 'referral_user_area',
+            column: (item) => item.referral_user_area,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

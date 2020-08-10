@@ -106,7 +106,7 @@
           @page="setPage" 
         />
       </div>
-      <!-- <div class="flex-wrap justify-start items-center w-full p-3 flex my-2">
+      <div class="flex-wrap justify-start items-center w-full p-3 flex my-2">
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
             :disabled="downloading || bogusRegistrations.length === 0"
@@ -118,7 +118,7 @@
             <span>Download CSV</span>
           </button>
         </div>
-      </div> -->
+      </div>
     </div> 
   </div>
 </template>
@@ -140,6 +140,7 @@
       return {
         loading: false,
         count: 0,
+        downloading: false,
         bogusRegistrations: [],
         orderBy: [],
         orderByProcessed: '',
@@ -252,16 +253,16 @@
           replaced = replaced.replace('Asc', 'Ascending')
         } 
         this.orderByProcessed = replaced
-        this.getLocumReferrals()
+        this.getBogusRegistrations()
       },
 
       limit () {
         this.page = 1
-        this.getLocumReferrals()
+        this.getBogusRegistrations()
       },
 
       activePage () {
-        this.getLocumReferrals()
+        this.getBogusRegistrations()
       },
     },
 
@@ -279,7 +280,7 @@
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getLocumReferrals()
+      this.getBogusRegistrations()
     },
 
     methods: {
@@ -305,7 +306,7 @@
           this.$router.replace({ query })
         }
         
-        this.getLocumReferrals()
+        this.getBogusRegistrations()
       },
 
       setPage (page) {
@@ -327,7 +328,7 @@
           })
         }
 
-        this.getLocumReferrals()
+        this.getBogusRegistrations()
       },
 
       setOrderBy (orderBy) {
@@ -342,10 +343,10 @@
           }
         })
 
-        this.getLocumReferrals()
+        this.getBogusRegistrations()
       },
 
-      getLocumReferrals () {
+      getBogusRegistrations () {
         this.loading = true
         this.bogusRegistrations = []
 
@@ -384,6 +385,35 @@
           this.$nuxt.error(err.response ? err.response.data : err)
         }).finally(() => {
           this.loading = false
+        })
+      },
+
+      downloadCsv () {
+        this.downloading = true
+        const params = {
+          name_includes: this.nameIncludes ? this.nameIncludes : undefined,
+          domain: this.domain ? this.domain : undefined,
+          order_by: this.orderBy,
+          limit: 999,
+          offset: 0,
+        }
+
+        this.$axios.post('/api/v1/admin/reports/bogus-registrations/generate-key', {
+          filename: `bogusRegistrations.csv`,
+        }, {
+          params: {
+            ...params,
+          },
+        }).then((responses) => {
+          console.log('responses', responses)
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/bogus-registrations/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
         })
       },
     },
