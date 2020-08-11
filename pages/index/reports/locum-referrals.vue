@@ -29,10 +29,10 @@
 
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
-            v-model="referralLocumNameIncludes"
-            placeholder="Search Referral Locum Name"
+            v-model="referredLocumNameIncludes"
+            placeholder="Search Referred Locum Name"
             type="text"
-            label="Referral Locum Name"
+            label="Referred Locum Name"
           />
         </div>
 
@@ -178,7 +178,7 @@
         activePage: 1,
 
         locumNameIncludes: '',
-        referralLocumNameIncludes: '',
+        referredLocumNameIncludes: '',
         areaPostCode: '',
       }
     },
@@ -215,7 +215,7 @@
             flexShrink: 0,
           },
           {
-            title: 'Referral Name',
+            title: 'Referred Locum Name',
             key: 'referral_name',
             sort_key: 'referral_name',
             column: (item) => item.referral_name,
@@ -285,14 +285,14 @@
     mounted () {      
       const {
         locum_name_includes: locumNameIncludes,
-        referral_locum_name_includes: referralLocumNameIncludes,
+        referral_locum_name_includes: referredLocumNameIncludes,
         area: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
-      this.referralLocumNameIncludes = referralLocumNameIncludes ? referralLocumNameIncludes : ''
+      this.referredLocumNameIncludes = referredLocumNameIncludes ? referredLocumNameIncludes : ''
       this.areaPostCode = areaPostCode ? areaPostCode : ''
 
       this.orderBy = orderBy
@@ -304,7 +304,7 @@
     methods: {
       filterReset () {
         this.locumNameIncludes = ''
-        this.referralLocumNameIncludes = ''
+        this.referredLocumNameIncludes = ''
         this.areaPostCode = ''
 
         this.filterSearch()
@@ -316,7 +316,7 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : undefined,
+          referral_locum_name_includes: this.referredLocumNameIncludes ? this.referredLocumNameIncludes : undefined,
           area: this.areaPostCode ? this.areaPostCode : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
@@ -372,7 +372,7 @@
 
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
+          referral_locum_name_includes: this.referredLocumNameIncludes ? this.referredLocumNameIncludes : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
 
@@ -413,7 +413,7 @@
         this.downloading = true
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          referral_locum_name_includes: this.referralLocumNameIncludes ? this.referralLocumNameIncludes : '',
+          referral_locum_name_includes: this.referredLocumNameIncludes ? this.referredLocumNameIncludes : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
           limit: 999,
           offset: 0,

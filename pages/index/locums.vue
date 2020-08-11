@@ -416,7 +416,9 @@
 					case 'Suspended':
 						return 'bg-red-600 text-white'
 					case 'Dormant':
-						return 'bg-orange-500 text-white'
+            return 'bg-orange-500 text-white'
+          case 'Bogus':
+						return 'bg-gray-700 text-white'
 					default:
 						return
 				}

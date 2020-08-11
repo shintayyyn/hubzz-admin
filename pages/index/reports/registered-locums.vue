@@ -27,6 +27,25 @@
               label="Area Postcode"
             />
           </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="status"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'status'"
+              :placeholder="'Filter By Status'"
+              :items="[
+                {label: 'All', value: ''},
+                {label: 'Active', value: 'Active'},
+                {label: 'Dormant', value: 'Dormant'},
+                {label: 'Inactive', value: 'Inactive'},
+                {label: 'Bogus', value: 'Bogus'},
+                {label: 'Deactivated', value: 'Deactivated'},
+                {label: 'Suspended', value: 'Suspended'},
+              ]"
+              :label="'Status'"
+            />
+          </div>
         </div>
         
         <div class="flex flex-row w-full">
@@ -185,6 +204,7 @@
         dateStart: '',
         dateEnd: '',
         areaPostCode: '',
+        status: '',
       }
     },
 
@@ -283,6 +303,7 @@
         registered_at_date_start: dateStart,
         registered_at_date_end: dateEnd,
         area_includes: areaPostCode,
+        status,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -290,7 +311,7 @@
       this.areaPostCode = areaPostCode ? areaPostCode : ''
       this.dateStart = dateStart ? dateStart : ''
       this.dateEnd = dateEnd ? dateEnd : ''
-
+      this.status = status ? status : ''
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
 
@@ -302,6 +323,7 @@
         this.areaPostCode = ''
         this.dateStart = ''
         this.dateEnd = ''
+        this.status = ''
 
         this.filterSearch()
       },
@@ -314,6 +336,7 @@
           areaPostCode: this.areaPostCode ? this.areaPostCode : '',
           dateStart: this.dateStart ? this.dateStart : '',
           dateEnd: this.dateEnd ? this.dateEnd : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -370,6 +393,7 @@
           registered_at_date_start: this.dateStart ? this.dateStart : '',
           registered_at_date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/registered-locums/count', {
@@ -410,6 +434,7 @@
           registered_at_date_start: this.dateStart ? this.dateStart : '',
           registered_at_date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
