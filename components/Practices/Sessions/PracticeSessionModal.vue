@@ -603,9 +603,11 @@
                 />
               </div>
             </div>
+
             <!-- SCHEDULES -->
             <JobSchedules :modalJobPart="modalJobPart" />
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
+            
             <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
             <div v-if="locumUser && jobPart" class="w-full overflow-hidden flex flex-col">
@@ -975,6 +977,7 @@
                 </div>
               </div>
             </div>
+            
             <div
               v-if="job && job.platform_job || job && job.private_job"
               class="p-4 my-4 md:mt-0 lg:m-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white"
