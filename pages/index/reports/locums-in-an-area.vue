@@ -32,7 +32,7 @@
             v-model="profession"
             placeholder="Search Profession"
             type="text"
-            label="Profesison"
+            label="Profession"
           />
         </div>
 

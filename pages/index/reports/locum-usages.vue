@@ -20,6 +20,15 @@
       >
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
+            v-model="practiceNameIncludes"
+            placeholder="Search Practice Name"
+            type="text"
+            label="Practice Name"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
             v-model="locumNameIncludes"
             placeholder="Search Locum Name"
             type="text"
@@ -55,14 +64,17 @@
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
+
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
+
         <div>
           <label class="text-white">Page: </label>
+
           <select v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
@@ -74,7 +86,7 @@
       <ReportTable
         :limit="limit"
         :items="locumUsages"
-        :getItemKey="(item) => `${item.locum_user_id}-${item.practice_id}`"
+        :getItemKey="item => `${item.locum_user_id}-${item.practice_id}`"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -169,6 +181,7 @@
         ],
         activePage: 1,
 
+        practiceNameIncludes: '',
         locumNameIncludes: '',
         areaPostCode: '',
       }
@@ -200,7 +213,7 @@
             title: 'Locum',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
-            column: (item) => item.locum_user_name,
+            column: item => item.locum_user_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -209,7 +222,7 @@
             title: 'Practice',
             key: 'practice_name',
             sort_key: 'practice_name',
-            column: (item) => item.practice_name,
+            column: item => item.practice_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -218,7 +231,7 @@
             title: 'Total Hours Assigned/Completed or Approved',
             key: 'completed_terminated_job_part_total_hours',
             sort_key: 'completed_terminated_job_part_total_hours',
-            column: (item) => (parseFloat(item.completed_terminated_job_part_total_hours)/60).toFixed(2) + ' Hours',
+            column: item => (parseFloat(item.completed_terminated_job_part_total_hours)/60).toFixed(2) + ' Hours',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -227,7 +240,7 @@
             title: 'Min Rate per Hour',
             key: 'min_rate_per_hour',
             sort_key: 'min_rate_per_hour',
-            column: (item) => `£ ${item.min_rate_per_hour}`,
+            column: item => `£ ${item.min_rate_per_hour}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -236,7 +249,7 @@
             title: 'Min Rate per Half Day Session',
             key: 'min_rate_per_half_day_session',
             sort_key: 'min_rate_per_half_day_session',
-            column: (item) => `£ ${item.min_rate_per_half_day_session}`,
+            column: item => `£ ${item.min_rate_per_half_day_session}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -245,7 +258,7 @@
             title: 'Min Rate per Whole Day Session',
             key: 'min_rate_per_whole_day_session',
             sort_key: 'min_rate_per_whole_day_session',
-            column: (item) => `£ ${item.min_rate_per_whole_day_session}`,
+            column: item => `£ ${item.min_rate_per_whole_day_session}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -254,16 +267,16 @@
             title: 'Marked as Favourite',
             key: 'locum_is_favorite_of_practice',
             sort_key: 'locum_is_favorite_of_practice',
-            column: (item) => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
+            column: item => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
             title: 'Area',
-            key: 'locum_postcode',
-            sort_key: 'locum_postcode',
-            column: (item) => item.locum_postcode,
+            key: 'postcode',
+            sort_key: 'postcode',
+            column: item => item.postcode,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -302,12 +315,14 @@
 
     mounted () {      
       const {
+        practice_name_includes: practiceNameIncludes,
         locum_name_includes: locumNameIncludes,
         area_includes: areaPostCode,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
+      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.areaPostCode = areaPostCode ? areaPostCode : ''
 
@@ -319,6 +334,7 @@
 
     methods: {
       filterReset () {
+        this.practiceNameIncludes = ''
         this.locumNameIncludes = ''
         this.areaPostCode = ''
 
@@ -330,6 +346,7 @@
 
         const query = {
           ...this.$route.query,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           area_includes: this.areaPostCode ? this.areaPostCode : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
@@ -385,6 +402,7 @@
         this.locumUsages = []
 
          const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
@@ -425,6 +443,7 @@
       downloadCsv () {
         this.downloading = true
         const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
