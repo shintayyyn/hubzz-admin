@@ -596,8 +596,13 @@
             </nuxt-link>-->
           </div>
         </div>
+        
         <!-- SCHEDULES -->
-        <JobSchedules :modalJobPart="job_part" />
+        <JobSchedules
+          v-if="job_part"        
+          :status="job_part.status"
+          :schedules="job_part.schedules"
+        />
       </div>
     </div>
   </div>
