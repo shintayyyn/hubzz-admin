@@ -606,9 +606,15 @@
 
             <!-- SCHEDULES -->
             <JobSchedules
-              v-if="modalJobPart"        
-              :status="modalJobPart.status"
-              :schedules="modalJobPart.schedules"
+              v-if="jobPart"        
+              :status="jobPart.status"
+              :schedules="jobPart.schedules"
+            />
+
+            <JobSchedules
+              v-if="!jobPart && job"        
+              :status="job.status"
+              :schedules="job.schedules"
             />
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
             
