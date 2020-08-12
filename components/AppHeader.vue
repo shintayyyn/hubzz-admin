@@ -5,9 +5,11 @@
       <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
         <img src="~/assets/images/hbg.png">
       </button>
+
       <nuxt-link to="/" class="py-3 cursor-pointer">
         <img src="~/assets/images/hubzz-icon-transparent.png">
       </nuxt-link>
+
       <div class="flex justify-right">
         <div class="m-4 cursor-pointer">
           <div @click="checkNotifications()">
@@ -15,11 +17,13 @@
               <div>
                 <svgicon name="notification" width="30" height="30" color="white" />
               </div>
+
               <div v-if="notificationsCount > 0" class="p-1 ml-4  bg-red-700 text-xs flex items-center justify-center rounded-full">
                 {{ notificationsCount }}
               </div>
             </div>
           </div>
+
           <div v-if="notificationToggle === true">
             <div class="notification-modal overflow-hidden">
               <div class="flex flex-row m-4 justify-between">
@@ -101,6 +105,7 @@ export default {
   components: {
     // AppNotifDropdown,
   },
+
 	data () {
 		return {
       currentPage: 1,
@@ -160,9 +165,30 @@ export default {
 					description:
 						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
 				}
-			]
+      ],
+      
+      notificationTypeNames: [
+        'Admin Notification Locum Compliance',
+        'Admin Notification Locum Invoice Disputed',
+        'Admin Notification Locum Profile Updated',
+        'Admin Notification Locum Registration',
+        'Admin Notification Practice Hub Accepted',
+        'Admin Notification Practice Hub Created',
+        'Admin Notification Practice Hub Deleted',
+        'Admin Notification Practice Hub Rejected',
+        'Admin Notification Practice Invoice Detail Updated',
+        'Admin Notification Practice Invoice Paid',
+        'Admin Notification Practice Invoice PastDue',
+        'Admin Notification Practice Invoice Unpaid',
+        'Admin Notification Practice Registration',
+        'Admin Notification Practice Surgery Created',
+        'Admin Notification Practice Surgery Deleted',
+        'Admin Notification Practice Surgery TerminationRequested',
+        'Admin Notification Practice Surgery Updated',
+      ],
 		}
-	},
+  },
+  
 	async created () {
     const params = {
         user_id: this.$auth.user.id,
@@ -179,19 +205,48 @@ export default {
     }).then(res => {
 			this.notifications = res.data.notifications
 		})
-	},
+  },
+
+  mounted () {
+    this.setSocketNotificationListener()
+  },
+
+  destroyed () {
+    this.removeSocketNotificationListener()
+  },
+  
 	methods: {
-		async checkNotifications () {
-      this.notificationToggle = !this.notificationToggle
+    setSocketNotificationListener () {
+      this.notificationTypeNames.forEach(notificationTypeName => {
+        this.$socket.on(notificationTypeName, this.newNotificationHandler)
+      })
+    },
+
+    removeSocketNotificationListener () {
+      this.notificationTypeNames.forEach(notificationTypeName => {
+        this.$socket.removeListener(notificationTypeName, this.newNotificationHandler)
+      })
+    },
+
+    newNotificationHandler () {
+      this.getNotifications().catch((err) => {
+        console.log('err', err.response || err)
+      })
+    },
+
+    async getNotifications () {
       const params = {
         user_id: this.$auth.user.id,
         seen: false,
       }
+      
 			await this.$axios.$get(`/api/v1/admin/notifications/count`, { params }).then(res => {
         this.notificationsCount = res.data.count
         console.log('notif count', res.data.count)
       })
+
       console.log('notifparams', this.notifParams)
+
 			await this.$axios.$get(`/api/v1/admin/notifications`, {
         params: this.notifParams,
       }).then(res => {
@@ -199,6 +254,12 @@ export default {
         console.log('notifs', this.notifications)
 			})
     },
+
+		async checkNotifications () {
+      this.notificationToggle = !this.notificationToggle
+      await this.getNotifications()
+    },
+
     async showMoreNotifs () {
       let params = {
         order_by: this.notifParams.order_by,
@@ -218,6 +279,7 @@ export default {
         console.log('notifications', this.notifications)
       })
     },
+
     async clearAllNotifications () {
       await this.$axios.$put(`/api/v1/admin/notifications/seen-all`, {
         user_id: this.$auth.user.id
@@ -227,6 +289,7 @@ export default {
         this.notificationsCount = 0
       })
     },
+
     async goTo (item) {
       console.log('notif item', item)
       console.log('notif name',item.notification_type.name)
@@ -247,6 +310,7 @@ export default {
         console.log('res', res)
       })
     },
+
 		toggleSideBar () {
 			this.$store.commit("TOGGLE_SIDEBAR", true)
 			document.body.style.overflow = "hidden"
