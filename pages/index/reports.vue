@@ -5,48 +5,6 @@
     </div>
 
     <!-- <div class="text-sm md:text-xl text-white">
-      Practice Reports
-    </div>
-
-    <div class="flex flex-col">
-      <nuxt-link
-        v-for="practiceReport in practiceReports"
-        :key="`practiceReports-${practiceReport.title}`"
-        :to="practiceReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
-      >
-        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
-          <span class="px-2 whitespace-no-wrap font-semibold">{{ practiceReport.title }}</span>
-          <span class="px-2 w-full leading-tight flex items-center">{{ practiceReport.subtitle }}</span>
-          <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
-          </div>
-        </div>
-      </nuxt-link>
-    </div>
-
-    <div class="text-sm md:text-xl text-white">
-      Locum Reports
-    </div>
-
-    <div class="flex flex-col">
-      <nuxt-link
-        v-for="locumReport in locumReports"
-        :key="`locumReports-${locumReport.title}`"
-        :to="locumReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
-      >
-        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
-          <span class="px-2 whitespace-no-wrap font-semibold">{{ locumReport.title }}</span>
-          <span class="px-2 w-full leading-tight flex items-center">{{ locumReport.subtitle }}</span>
-          <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
-          </div>
-        </div>
-      </nuxt-link>
-    </div> -->
-
-    <div class="text-sm md:text-xl text-white">
       Compliance Reports
     </div>
 
@@ -65,7 +23,7 @@
           </div>
         </div>
       </nuxt-link>
-    </div>
+    </div> -->
 
     <div class="text-sm md:text-xl text-white">
       HQ Analytics
