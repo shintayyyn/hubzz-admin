@@ -46,7 +46,7 @@
       </nuxt-link>
     </div>
 
-    <div class="text-sm md:text-xl text-white">
+    <!-- <div class="text-sm md:text-xl text-white">
       Pricing Reports
     </div>
 
@@ -65,7 +65,7 @@
           </div>
         </div>
       </nuxt-link>
-    </div>
+    </div> -->
 
     <nuxt-link
       v-if="$route.name !== 'index-reports'"

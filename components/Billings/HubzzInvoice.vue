@@ -510,7 +510,7 @@
                     >
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
-                    {{ '- ' + item.total | currency }}
+                    - {{ item.total | currency }}
                   </p>
                 </div>
                 <template v-if="forViewing == false">
@@ -997,11 +997,21 @@ export default {
 		},
 
 		async createInvoice () {
+      this.createdDebitItems = await this.createdDebitItems.filter(disputedItem => disputedItem.total !== 0)
+      this.createdCreditItems = await this.createdCreditItems.filter(creditItem => creditItem.total !== 0)
+      this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
+				this.disputedItems,
+				this.createdDebitItems,
+				this.createdCreditItems
+			)
+      
+			this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
+      this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+      
 			this.toPostPracticeInvoice.practice_id = (await this.practice.id)
 				? this.practice.id
-				: null
-			// this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
-			// this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+        : null
+        
 			this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
 				this.disputedItems,
 				this.createdDebitItems,
