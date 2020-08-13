@@ -248,14 +248,6 @@
             flexShrink: 0,
           },
           {
-            title: 'Paid',
-            key: 'locum_invoice_paid_at',
-            column: (item) => item.locum_invoice_paid_at ? 'Yes' : 'No',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
             title: 'Total Hours',
             key: 'final_hours',
             sort_key: 'final_hours',
@@ -274,7 +266,15 @@
             flexShrink: 0,
           },
           {
-            title: 'Paid',
+            title: 'Locum Invoice Paid?',
+            key: 'locum_invoice_paid_at',
+            column: (item) => item.locum_invoice_paid_at ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'HUBZZ Invoice Paid?',
             key: 'practice_invoice_paid_at',
             sort_key: 'practice_invoice_paid_at',
             column: (item) => item.practice_invoice_paid_at ? 'Yes' : 'No',

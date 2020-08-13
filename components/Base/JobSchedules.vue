@@ -10,7 +10,7 @@
           <p
             class="bg-gray-400 p-1 font-bold text-xs"
             :style="
-              ['Completed', 'Approved'].includes(modalJobPart.status)
+              ['Completed', 'Approved'].includes(status)
                 ? 'min-width:100px;max-width:100px'
                 : 'min-width:190px;max-width:190px'
             "
@@ -19,7 +19,7 @@
           </p>
 
           <p
-            v-if="['Completed', 'Approved'].includes(modalJobPart.status)"
+            v-if="['Completed', 'Approved'].includes(status)"
             class="text-center bg-gray-400 p-1 font-bold text-xs"
             style="min-width:100px;max-width:100px"
           >
@@ -29,7 +29,7 @@
           <p
             class="text-center bg-gray-400 p-1 font-bold text-xs"
             :style="
-              ['Completed', 'Approved'].includes(modalJobPart.status)
+              ['Completed', 'Approved'].includes(status)
                 ? 'min-width:100px;max-width:100px'
                 : 'min-width:180px;max-width:180px'
             "
@@ -40,7 +40,7 @@
           <p
             class="text-center bg-gray-400 p-1 font-bold text-xs"
             :style="
-              ['Completed', 'Approved'].includes(modalJobPart.status)
+              ['Completed', 'Approved'].includes(status)
                 ? 'min-width:100px;max-width:100px'
                 : 'min-width:180px;max-width:180px'
             "
@@ -48,7 +48,7 @@
             RATE
           </p>
 
-          <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
+          <template v-if="['Completed', 'Approved'].includes(status)">
             <p
               class="text-center bg-gray-400 p-1 font-bold text-xs"
               style="min-width:100px;max-width:100px"
@@ -66,10 +66,10 @@
         </div>
 
         <div class="text-white">
-          <div v-for="(sched, index) in modalJobPart.schedules" :key="index" class="flex pb-2">
+          <div v-for="(sched, index) in schedules" :key="index" class="flex pb-2">
             <p
               :style="
-                ['Completed', 'Approved'].includes(modalJobPart.status)
+                ['Completed', 'Approved'].includes(status)
                   ? 'min-width:100px;max-width:100px'
                   : 'min-width:190px;max-width:190px'
               "
@@ -78,7 +78,7 @@
             </p>
 
             <p
-              v-if="['Completed', 'Approved'].includes(modalJobPart.status)"
+              v-if="['Completed', 'Approved'].includes(status)"
               class="text-center"
               style="min-width:100px;max-width:100px"
             >
@@ -88,7 +88,7 @@
             <p
               class="text-center"
               :style="
-                ['Completed', 'Approved'].includes(modalJobPart.status)
+                ['Completed', 'Approved'].includes(status)
                   ? 'min-width:100px;max-width:100px'
                   : 'min-width:180px;max-width:180px'
               "
@@ -99,7 +99,7 @@
             <p
               class="text-center"
               :style="
-                ['Completed', 'Approved'].includes(modalJobPart.status)
+                ['Completed', 'Approved'].includes(status)
                   ? 'min-width:100px;max-width:100px'
                   : 'min-width:180px;max-width:180px'
               "
@@ -107,7 +107,7 @@
               £{{ sched.rate }} {{ sched.locum_detail_rate_type.name }}
             </p>
 
-            <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
+            <template v-if="['Completed', 'Approved'].includes(status)">
               <p
                 class="text-center"
                 style="min-width:100px;max-width:100px"
@@ -131,9 +131,14 @@
 <script>
 export default {
   props: {
-    modalJobPart: {
-      type: Object,
+    status: {
+      type: String,
       default: () => null,
+    },
+
+    schedules: {
+      type: Array,
+      default: () => [],
     },
   },
 
