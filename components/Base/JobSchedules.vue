@@ -12,7 +12,7 @@
             :style="
               ['Completed', 'Approved'].includes(status)
                 ? 'min-width:100px;max-width:200px'
-                : 'min-width:190px;max-width:290px'
+                : 'min-width:190px;max-width:450px'
             "
           >
             DATE
@@ -72,7 +72,7 @@
               :style="
                 ['Completed', 'Approved'].includes(status)
                   ? 'min-width:100px;max-width:200px'
-                  : 'min-width:190px;max-width:290px'
+                  : 'min-width:190px;max-width:450px'
               "
             >
               {{ $moment(sched.date, 'YYYY-MM-DD').format('DD/MM/YYYY') }} | {{ sched.time_start }}-{{ sched.time_end }}
