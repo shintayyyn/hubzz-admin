@@ -265,7 +265,7 @@
                 <svgicon name="alert" width="48" height="48" color="white" />
               </div>
               <div class="flex">
-                <p>This practice has no Hub nor has recieved any invitation from Hub.</p>
+                <p>This practice has no Hub nor has received any invitation from Hub.</p>
               </div>
             </div>
           </div>
@@ -314,11 +314,11 @@ export default {
       columns: [
         {
           name: "Practice Name",
-          dataIndex: "child_practice.surgery.name"
+          dataIndex: "practice.surgery.name"
         },
         {
           name: "Practice Code",
-          dataIndex: "child_practice.surgery.code",
+          dataIndex: "practice.surgery.code",
           class: "text-center"
         },
         {
