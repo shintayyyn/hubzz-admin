@@ -155,12 +155,6 @@
                 <p class="text-white">
                   {{ job_part.locum_invoice_item.final_hours + "Hours" }}
                 </p> -->
-                <!-- <p class="mt-5 font-semibold">
-                  Other Remarks
-                </p>
-                <p class="text-white">
-                  {{ job_part.locum_invoice_item.remarks }}
-                </p> -->
                 <div v-if="job_part.invoice_status === 'Disputed'">
                   <p class="mt-5 font-semibold">
                     Disputed by Locum At
@@ -399,6 +393,12 @@
                 </p>
                 <p class="text-white">
                   {{ job_part.issued ? 'Yes': 'No' }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Other Remarks
+                </p>
+                <p class="text-white">
+                  {{ job_part.locum_invoice_item.remarks }}
                 </p>
                 <!--  -->
                 <!-- <template v-if="['Completed', 'Approved', 'Cancelled'].includes(job_part.status)">
