@@ -1,9 +1,5 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
-    <div class="text-sm md:text-xl text-white">
-      Compliance Reports
-    </div>
-
     <div class="flex flex-col">
       <nuxt-link
         v-for="complianceReport in complianceReports"
@@ -20,12 +16,12 @@
         </div>
       </nuxt-link>
     </div>
+    <nuxt-child />
     <nuxt-link
       v-if="$route.name !== 'index-locums-compliance-reports'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
       to="/locums/compliance-reports"
     />
-    <nuxt-child />
   </div>
 </template>
 

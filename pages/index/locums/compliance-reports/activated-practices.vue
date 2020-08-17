@@ -18,37 +18,72 @@
       <div
         class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="registeredDateStart"
-            label="Registered Date Start"
-            format="YYYY-MM-DD"
-          />
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="practiceNameIncludes"
+              placeholder="Search Practice Name"
+              type="text"
+              label="Practice Name"
+            />
+          </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="status"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'status'"
+              :placeholder="'Filter by Status'"
+              :items="[
+                {label: 'Live', value: 'Live'}, 
+                {label: 'Updated', value: 'Updated'},
+                {label: 'Ongoing', value: 'Ongoing'},
+                {label: 'Approved', value: 'Approved'},
+                {label: 'Completed', value: 'Completed'},
+                {label: 'Withdrawn', value: 'Withdrawn'},
+                {label: 'Rejected', value: 'Rejected'},
+                {label: 'Pending', value: 'Pending'},
+                {label: 'Unfilled', value: 'Unfilled'},
+              ]"
+              :label="'Status'"
+            />
+          </div>
         </div>
+        
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="registeredDateStart"
+              label="Registered Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="registeredDateEnd"
-            label="Registered Date End"
-            format="YYYY-MM-DD"
-          />
-        </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="registeredDateEnd"
+              label="Registered Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="approvedDateStart"
-            label="Approved Date Start"
-            format="YYYY-MM-DD"
-          />
-        </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="approvedDateStart"
+              label="Approved Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppDate
-            v-model="approvedDateEnd"
-            label="Approved Date End"
-            format="YYYY-MM-DD"
-          />
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="approvedDateEnd"
+              label="Approved Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
         </div>
+        
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
@@ -139,12 +174,14 @@ import ReportTable from '@/components/Reports/ReportTable'
 import ReportPagination from '@/components/Reports/ReportPagination'
 import AppButton from '@/components/Base/AppButton'
 import AppDate from '@/components/Base/AppDate'
+import AppInput from '@/components/Base/AppInput'
   export default {
     components: {
       ReportTable,
       ReportPagination,
       AppButton,
-      AppDate
+      AppDate,
+      AppInput,
     },
 
     data () {
