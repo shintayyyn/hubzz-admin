@@ -255,6 +255,14 @@
                 <p class="flex text-white text-sm md:px-2 mb-2">
                   {{ practice.vat_number ? practice.vat_number : 'N/A' }}
                 </p>
+
+                <p class="flex font-bold">
+                  Tax Year End Date
+                </p>
+
+                <p class="flex text-white text-sm md:px-2 mb-2">
+                  {{ practice.tax_year_end_date ? $moment(practice.tax_year_end_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
+                </p>
               </template>
 
               <p class="flex text-gray-300 font-bold">

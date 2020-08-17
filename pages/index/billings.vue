@@ -18,6 +18,13 @@
       >
         HUBZZ Invoices
       </nuxt-link>
+      <nuxt-link
+        :to="`/billings/hubzz-pricing-reports`"
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path.includes(`hubzz-pricing-reports`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >
+        Pricing Reports
+      </nuxt-link>
     </div>
     <nuxt-child/>
     <div

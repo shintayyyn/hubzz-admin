@@ -37,6 +37,27 @@
               label="Area Postcode"
             />
           </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="status"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'status'"
+              :placeholder="'Filter by Status'"
+              :items="[
+                {label: 'Live', value: 'Live'}, 
+                {label: 'Updated', value: 'Updated'},
+                {label: 'Ongoing', value: 'Ongoing'},
+                {label: 'Approved', value: 'Approved'},
+                {label: 'Completed', value: 'Completed'},
+                {label: 'Withdrawn', value: 'Withdrawn'},
+                {label: 'Rejected', value: 'Rejected'},
+                {label: 'Pending', value: 'Pending'},
+                {label: 'Unfilled', value: 'Unfilled'},
+              ]"
+              :label="'Status'"
+            />
+          </div>
         </div>
         
         <div class="flex flex-row w-full">
@@ -196,6 +217,7 @@
         dateStart: '',
         dateEnd: '',
         areaPostCode: '',
+        status: '',
       }
     },
 
@@ -342,6 +364,7 @@
         date_end: dateEnd,
         area_includes: areaPostCode,
         order_by: orderBy = [],
+        status,
         page,
       } = this.$route.query
 
@@ -349,6 +372,7 @@
       this.areaPostCode = areaPostCode ? areaPostCode : ''
       this.dateStart = dateStart ? dateStart : ''
       this.dateEnd = dateEnd ? dateEnd : ''
+      this.status = status ? status : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -362,6 +386,7 @@
         this.areaPostCode = ''
         this.dateStart = ''
         this.dateEnd = ''
+        this.status =''
 
         this.filterSearch()
       },
@@ -375,6 +400,7 @@
           areaPostCode: this.areaPostCode ? this.areaPostCode : '',
           dateStart: this.dateStart ? this.dateStart : '',
           dateEnd: this.dateEnd ? this.dateEnd : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -432,6 +458,7 @@
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/job-parts/count', {
@@ -473,6 +500,7 @@
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
