@@ -45,11 +45,16 @@
               :name="'status'"
               :placeholder="'Filter by Status'"
               :items="[
-                {label: 'Active', value: 'Active'}, 
-                {label: 'Dormant', value: 'Dormant'},
-                {label: 'Inactive', value: 'Inactive'},
-                {label: 'Suspended', value: 'Suspended'},
-                {label: 'Bogus', value: 'Bogus'},
+                {label: 'Live', value: 'Live'},
+                {label: 'Updated', value: 'Updated'}, 
+                {label: 'Allocated', value: 'Allocated'},
+                {label: 'Ongoing', value: 'Ongoing'},
+                {label: 'Completed', value: 'Completed'},
+                {label: 'Approved', value: 'Approved'},
+                {label: 'Withdrawn', value: 'Withdrawn'},
+                {label: 'Cancelled', value: 'Cancelled'},
+                {label: 'Rejected', value: 'Rejected'},
+                {label: 'Pending', value: 'Pending'},
               ]"
               :label="'Status'"
             />
