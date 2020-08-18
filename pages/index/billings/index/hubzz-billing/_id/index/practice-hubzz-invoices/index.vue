@@ -1,10 +1,19 @@
 <template>
   <div class="w-full overflow-hidden">
-    <div class="mx-2 float-right">
+    <div class="flex flex-row mx-2 float-right">
+      <!-- <span
+        v-if="!practice.sage_ref"
+        class="tool-left text-sm mr-2"
+        data-tip="Sage Reference is not yet added on Practice Profile."
+        tabindex="1"
+      >
+        <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
+      </span> -->
       <AppButton
-        :label="'Issue HUBZZ Invoice'"
-        :nuxt-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`"
         class="my-2 text-sm"
+        :disabled="!practice.sage_ref ? true : false"
+        :label="'Issue HUBZZ Invoice'"
+        @click="issueHubzzInvoice()"
       />
     </div>
     <AppTable
@@ -339,7 +348,11 @@ export default {
 		}
 	},
 	methods: {
-		goToIssue () {},
+    goToIssue () {},
+    issueHubzzInvoice () {
+      this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`)
+    },
+
 		getHubzzInvoices (params) {
 			console.log("params", params)
 			this.$store.dispatch("billings/fetchHubzzInvoices", {

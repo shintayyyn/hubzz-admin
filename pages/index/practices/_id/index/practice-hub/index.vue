@@ -265,7 +265,7 @@
                 <svgicon name="alert" width="48" height="48" color="white" />
               </div>
               <div class="flex">
-                <p>This practice has no Hub nor has received any invitation from Hub.</p>
+                <p>This practice has no any invitation.</p>
               </div>
             </div>
           </div>

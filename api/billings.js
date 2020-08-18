@@ -37,6 +37,7 @@ export function fetchPracticeInvoices (axios, payload) {
 
 export function fetchBillablePractices (axios, payload){
   let params = {}
+  payload.has_sage_ref ? params.has_sage_ref = payload.has_sage_ref : null
   payload.search ? params.search = payload.search : null
   payload.type ? params.type = payload.type : null
   payload.status ? params.status = payload.status : null

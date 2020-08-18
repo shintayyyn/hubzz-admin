@@ -168,7 +168,7 @@ export default {
           maxWidth: '170px',
 				},
 				{
-          name: 'Status',
+          name: 'Invtation Status',
           dataIndex: 'status',
           class: 'md:text-center',
           sortable: false,

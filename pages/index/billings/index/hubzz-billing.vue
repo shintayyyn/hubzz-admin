@@ -9,14 +9,14 @@
       />
     </div>
 
-		<div v-if="!$route.path.includes('bulk-billing')" class="text-white w-full md:w-1/2 p-2">
-			<AppInput 
-				v-model="search"
-				:type="'text'"
-				:label="'Search by Practice Name'"
-				:placeholder="'Practice Name'"
-			/>
-		</div>
+    <div v-if="!$route.path.includes('bulk-billing')" class="text-white w-full md:w-1/2 p-2">
+      <AppInput 
+        v-model="search"
+        :type="'text'"
+        :label="'Search by Practice Name'"
+        :placeholder="'Practice Name'"
+      />
+    </div>
 
     <AppTable
       v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
@@ -145,6 +145,12 @@ export default {
 					dataIndex: "hub_type",
 					slotName: "hub_type_slot",
 					class: "text-center"
+				},
+				{
+					name: "Sage Ref",
+					slot: true,
+					dataIndex: "sage_ref",
+					class: "text-center"
 				}
 			]
 		}
@@ -188,7 +194,8 @@ export default {
 			const createdRoute = route.query
 			const limit = 10
       const offset = page * limit - limit
-      const status = ["Active","Dormant","Suspended"]
+			const status = ["Active","Dormant","Suspended"]
+			// const has_sage_ref = true
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
