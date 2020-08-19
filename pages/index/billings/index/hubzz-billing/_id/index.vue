@@ -67,7 +67,7 @@
             Latest Billing Issued at
           </p>
           <p class="flex text-white text-sm p-2 font-semibold">
-            {{ latestInvoice && latestInvoice.date_created_in_gb_formatted ? `${latestInvoice.date_created_in_gb_formatted_relative}, ${latestInvoice.date_created_in_gb_formatted}` : 'N/A' }}
+            {{ latestInvoice && latestInvoice.date_created_in_gb_formatted ? latestInvoice.date_created_in_gb_formatted : 'N/A' }}
           </p>
         </div>
       </div>

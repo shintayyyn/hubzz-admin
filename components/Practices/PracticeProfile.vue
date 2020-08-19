@@ -551,99 +551,133 @@
 
       <!-- TOOLTIPS FOR VERIFICATION -->
       <div
-        v-if="practice.status === 'Inactive'"
+        v-if="practice.status === 'Inactive' || practice.sage_ref === null"
         class="order-1 lg:order-2 bg-waterloo rounded-lg px-2 py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6 text-white text-sm"
       >
-        <div class="flex items-center font-bold">
-          <svgicon name="idea" color="yellow black" width="32" height="32" />
+        <div v-if="practice.status === 'Inactive'">
+          <!-- Title -->
+          <div class="flex items-center font-bold">
+            <svgicon name="idea" color="yellow black" width="32" height="32" />
 
-          <div class="px-2 leading-none">
-            <p class="text-base">
-              Practice Verification
-            </p>
-
-            <p class="font-normal italic text-xs">
-              Hover on item to for more instruction
-            </p>
-          </div>
-        </div>
-
-        <div class="px-1 py-4">
-          <ul>
-            <p v-if="practice.status !== 'Active'" class="font-bold">
-              Profile
-            </p>
-
-            <li v-if="practice.manual_status !== 'Active'" class="flex px-2">
-              <span
-                class="tool flex"
-                data-tip="Edit Profile and set the status to active."
-                tabindex="1"
-              >
-                <span class="hover:font-bold">Practice must be set to active.</span>
-              </span>
-            </li>
-
-            <li v-if="practice.manual_status === 'Active' && practice.past_actived_until" class="flex px-2">
-              <span
-                class="tool flex"
-                data-tip="Edit Profile and change practice active until."
-                tabindex="1"
-              >
-                <span class="hover:font-bold">Practice expires.</span>
-              </span>
-            </li>
-
-            <p v-if="!practice.has_active_user" class="font-bold mt-2">
-              User
-            </p>
-
-            <li v-if="!practice.has_active_user" class="flex px-2">
-              <span class="tool flex" data-tip="This must be done by the user." tabindex="1">
-                <span
-                  class="hover:font-bold"
-                >The user must verify his account via email verification.</span>
-              </span>
-            </li>
-
-            <template v-if="practice && !practice.complete_document">
-              <p class="font-bold mt-2">
-                Documents
+            <div class="px-2 leading-none">
+              <p class="text-base">
+                Practice Verification
               </p>
 
+              <p class="font-normal italic text-xs">
+                Hover on item to for more instruction
+              </p>
+            </div>
+          </div>
+          <!-- Content -->
+          <div class="px-1 py-4">
+            <ul>
+              <p v-if="practice.status !== 'Active'" class="font-bold">
+                Profile
+              </p>
+
+              <li v-if="practice.manual_status !== 'Active'" class="flex px-2">
+                <span
+                  class="tool flex"
+                  data-tip="Edit Profile and set the status to active."
+                  tabindex="1"
+                >
+                  <span class="hover:font-bold">Practice must be set to active.</span>
+                </span>
+              </li>
+
+              <li v-if="practice.manual_status === 'Active' && practice.past_actived_until" class="flex px-2">
+                <span
+                  class="tool flex"
+                  data-tip="Edit Profile and change practice active until."
+                  tabindex="1"
+                >
+                  <span class="hover:font-bold">Practice expires.</span>
+                </span>
+              </li>
+
+              <p v-if="!practice.has_active_user" class="font-bold mt-2">
+                User
+              </p>
+
+              <li v-if="!practice.has_active_user" class="flex px-2">
+                <span class="tool flex" data-tip="This must be done by the user." tabindex="1">
+                  <span
+                    class="hover:font-bold"
+                  >The user must verify his account via email verification.</span>
+                </span>
+              </li>
+
+              <template v-if="practice && !practice.complete_document">
+                <p class="font-bold mt-2">
+                  Documents
+                </p>
+
+                <li class="flex px-2">
+                  <span
+                    class="tool flex"
+                    data-tip="Go to Documents Tab and upload the documents specified below."
+                    tabindex="1"
+                  >
+                    <span class="hover:font-bold">Documents must be filled out.</span>
+                  </span>
+                </li>
+
+                <ul class="px-8">
+                  <li v-if="practice && !practice.has_agreement_document">
+                    Agreement
+                  </li>
+
+                  <li v-if="practice && !practice.has_direct_debit_document">
+                    Direct Debit
+                  </li>
+                </ul>
+              </template>
+
+              <template v-if="practice && !practice.complete_rate">
+                <p class="font-bold mt-2">
+                  Rates
+                </p>
+                
+                <li class="flex px-2">
+                  <span class="tool flex" data-tip="Go to Rates Tab and fill all fields." tabindex="1">
+                    <span class="hover:font-bold">Rates must be filled out.</span>
+                  </span>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </div>
+        <div v-if="practice.sage_ref === null">
+          <div class="flex items-center font-bold">
+            <svgicon name="idea" color="yellow black" width="32" height="32" />
+
+            <div class="px-2 leading-none">
+              <p class="text-base">
+                HUBZZ Billing Requirements
+              </p>
+
+              <p class="font-normal italic text-xs">
+                Hover on item to for more instruction
+              </p>
+            </div>
+          </div>
+          <div class="px-1 py-4">
+            <ul>
+              <p class="font-bold">
+                Other Information
+              </p>
               <li class="flex px-2">
                 <span
                   class="tool flex"
-                  data-tip="Go to Documents Tab and upload the documents specified below."
+                  data-tip="Click 'Edit' on the Other Information section in profile, then add the practice's SAGE Reference "
                   tabindex="1"
                 >
-                  <span class="hover:font-bold">Documents must be filled out.</span>
+                  <span class="hover:font-bold">SAGE Reference is Required</span>
                 </span>
               </li>
-
-              <ul class="px-8">
-                <li v-if="practice && !practice.has_agreement_document">
-                  Agreement
-                </li>
-
-                <li v-if="practice && !practice.has_direct_debit_document">
-                  Direct Debit
-                </li>
-              </ul>
-            </template>
-
-            <template v-if="practice && !practice.complete_rate">
-              <p class="font-bold mt-2">
-                Rates
-              </p>
-              
-              <li class="flex px-2">
-                <span class="tool flex" data-tip="Go to Rates Tab and fill all fields." tabindex="1">
-                  <span class="hover:font-bold">Rates must be filled out.</span>
-                </span>
-              </li>
-            </template>
-          </ul>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

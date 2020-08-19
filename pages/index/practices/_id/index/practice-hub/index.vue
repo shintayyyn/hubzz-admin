@@ -369,6 +369,15 @@ export default {
       const practice = response.data.practice
 
       let practiceHub = null
+      
+      if (practice.type === 'Hub') {
+        error({
+          statusCode: 403,
+          message: 'That function is not available on this practice.',
+        })
+
+        return
+      }
 
       if (practice.type === 'Spoke') {
         response = await app.$axios.$get(
