@@ -168,7 +168,7 @@ export default {
           maxWidth: '170px',
 				},
 				{
-          name: 'Status',
+          name: 'Invtation Status',
           dataIndex: 'status',
           class: 'md:text-center',
           sortable: false,
@@ -193,6 +193,30 @@ export default {
       return this.$store.state.practices.practiceSpokesPageCount
     }
   },
+
+  async asyncData ({ app, route, error }) {
+		try {
+      let response = await app.$axios.$get(
+				`/api/v1/admin/practices/${route.params.id}`
+			)
+      const practice = response.data.practice
+      
+      if (practice.type === 'Spoke') {
+        error({
+          statusCode: 403,
+          message: 'That function is not available on this practice.',
+        })
+
+        return
+      }
+			
+			return {
+				practice
+			}
+		} catch (err) {
+			console.log("get practice error", err)
+		}
+	},
 
   async created () {
     try {

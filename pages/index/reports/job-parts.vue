@@ -45,15 +45,16 @@
               :name="'status'"
               :placeholder="'Filter by Status'"
               :items="[
-                {label: 'Live', value: 'Live'}, 
-                {label: 'Updated', value: 'Updated'},
+                {label: 'Live', value: 'Live'},
+                {label: 'Updated', value: 'Updated'}, 
+                {label: 'Allocated', value: 'Allocated'},
                 {label: 'Ongoing', value: 'Ongoing'},
-                {label: 'Approved', value: 'Approved'},
                 {label: 'Completed', value: 'Completed'},
+                {label: 'Approved', value: 'Approved'},
                 {label: 'Withdrawn', value: 'Withdrawn'},
+                {label: 'Cancelled', value: 'Cancelled'},
                 {label: 'Rejected', value: 'Rejected'},
                 {label: 'Pending', value: 'Pending'},
-                {label: 'Unfilled', value: 'Unfilled'},
               ]"
               :label="'Status'"
             />
@@ -249,6 +250,15 @@
             key: 'practice_name',
             sort_key: 'practice_name',
             column: (item) => item.practice_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Part Number',
+            key: 'job_part_number',
+            sort_key: 'job_part_number',
+            column: (item) => item.job_part_number,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

@@ -148,12 +148,22 @@ export default {
     }
   },
 
-	async asyncData ({ app, route }) {
+	async asyncData ({ app, route, error }) {
 		try {
-			let response = await app.$axios.$get(
+      let response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
-			const practice = response.data.practice
+      const practice = response.data.practice
+      
+      if (practice.sage_ref === null) {
+        error({
+          statusCode: 403,
+          message: 'That function is not available on this practice.',
+        })
+
+        return
+      }
+			
 			return {
 				practice
 			}

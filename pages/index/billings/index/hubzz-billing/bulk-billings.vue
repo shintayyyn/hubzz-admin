@@ -875,6 +875,7 @@ export default {
 			console.log("params get billable practices", this.practiceParams);
 			await this.$store
 				.dispatch("billings/fetchBillablePractices", {
+					has_sage_ref: true,
 					id: this.practiceParams.id,
 					limit: this.practiceParams.limit,
 					search: this.search,
@@ -897,6 +898,7 @@ export default {
 				.then(() => {
 					this.$store
 						.dispatch("billings/fetchBillablePractices", {
+							has_sage_ref: true,
 							id: this.practiceParams.id,
 							limit: this.practiceParams.limit,
 							search: this.search,

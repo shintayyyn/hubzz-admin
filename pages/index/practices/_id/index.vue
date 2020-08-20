@@ -11,7 +11,94 @@
 
     <AppLoading :loading="loading" spinner />
 
-    <PracticeTabs v-if="practice" :practice="practice" />
+    <div class="flex justify-start overflow-x-auto">
+      <nuxt-link
+        :to="`/practices/${$route.params.id}`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="
+          $route.name === 'index-practices-id-index'
+            ? 'bg-sunglow hover:bg-sunglow-dark'
+            : 'hover:bg-waterloo text-white'
+        "
+      >
+        Practice
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="
+          practice 
+            && practice.type === 'Hub'
+            && practice.status !== 'Inactive'
+            && practice.status !== 'Bogus'
+            && practice.status !== 'Deactivated'
+        "
+        :to="`/practices/${$route.params.id}/practice-surgeries`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="
+          $route.path.includes(`/practices/${$route.params.id}/practice-surgeries`)
+            ? 'bg-sunglow hover:bg-sunglow-dark'
+            : 'hover:bg-waterloo text-white'
+        "
+      >
+        Surgery Management
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="
+          practice && practice.type === 'Spoke' && (practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated')
+        "
+        :to="`/practices/${$route.params.id}/practice-hub`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="$route.path == `/practices/${$route.params.id}/practice-hub`? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+      >
+        Hub
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="practice && practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated'"
+        :to="`/practices/${$route.params.id}/practice-invitations`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="$route.name.includes('index-practices-id-index-practice-invitations-index') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+      >
+        {{ `Invitation${practice.type === 'Hub' ? 's' : ''}` }}
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="practice && practice.status !== 'Inactive' && practice.status !== 'Bogus'"
+        :to="`/practices/${$route.params.id}/practice-sessions`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="$route.path.includes(`/practices/${$route.params.id}/practice-sessions`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+      >
+        Sessions
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="practice && practice.status !== 'Deactivated'"
+        :to="`/practices/${$route.params.id}/practice-users`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="$route.path.includes(`/practices/${$route.params.id}/practice-users`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+      >
+        Users
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deactivated'"
+        :to="`/practices/${$route.params.id}/practice-documents` "
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="$route.path == `/practices/${$route.params.id}/practice-documents` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+      >
+        Documents
+      </nuxt-link>
+
+      <nuxt-link
+        v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deactivated'"
+        :to="`/practices/${$route.params.id}/practice-rates`"
+        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        :class="$route.path == `/practices/${$route.params.id}/practice-rates` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+      >
+        Rates
+      </nuxt-link>
+    </div>
 
     <div
       v-if="
@@ -50,14 +137,10 @@
 </template>
 
 <script>
-import PracticeTabs from "@/components/Practices/PracticeTabs"
 import AppLoading from '@/components/Base/AppLoading'
-
 export default {
-
   components: {
     AppLoading,
-    PracticeTabs,
   },
 
   props: {
@@ -74,23 +157,46 @@ export default {
     }
   },
 
-  mounted () {
-    this.getPractice()
+  computed: {
+    getRoute () {
+      return tab => {
+        if (!tab) {
+          tab = ""
+        }
+        const query = {
+          ...this.$route.query
+        }
+        delete query.order_by
+        delete query.status
+        return {
+          path: tab
+            ? `/practices/${this.$route.params.id}/${tab}`
+            : `/practices/${this.$route.params.id}`,
+          query
+        }
+      }
+    }
+  },
+
+  async asyncData ({ app, route ,store }) {
+    try {
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+      const practice = response.data.practice
+      return {
+        practice
+      }
+
+    } catch (err) {
+      store.commit("SET_NOTIFICATION", {
+				enabled: true,
+				status: "danger",
+				text: "Something went wrong!"
+			})
+			console.log("Get hubzz invoices error!", err)
+    }
   },
 
   methods: {
-    getPractice () {
-      const practiceId = this.$route.params.id
-      this.loading = true
-      this.$axios.get(`/api/v1/admin/practices/${practiceId}`).then((response) => {
-        this.practice = response.data.data.practice
-      }).catch((err) => {
-        this.$nuxt.error(err)
-      }).finally(() => {
-        this.loading = false
-      })
-    },
-
     practiceUpdatedHandler (practice) {
       console.log('practiceUpdatedHandler', practice)
       if (practice) {

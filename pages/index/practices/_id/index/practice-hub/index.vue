@@ -265,7 +265,7 @@
                 <svgicon name="alert" width="48" height="48" color="white" />
               </div>
               <div class="flex">
-                <p>This practice has no Hub nor has received any invitation from Hub.</p>
+                <p>This practice has no any invitation.</p>
               </div>
             </div>
           </div>
@@ -369,6 +369,15 @@ export default {
       const practice = response.data.practice
 
       let practiceHub = null
+      
+      if (practice.type === 'Hub') {
+        error({
+          statusCode: 403,
+          message: 'That function is not available on this practice.',
+        })
+
+        return
+      }
 
       if (practice.type === 'Spoke') {
         response = await app.$axios.$get(
