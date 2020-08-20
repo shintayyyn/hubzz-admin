@@ -47,6 +47,7 @@
               :items="[
                 {label: 'Live', value: 'Live'},
                 {label: 'Updated', value: 'Updated'}, 
+                {label: 'Applied', value: 'Applied'},
                 {label: 'Allocated', value: 'Allocated'},
                 {label: 'Ongoing', value: 'Ongoing'},
                 {label: 'Completed', value: 'Completed'},
@@ -55,6 +56,7 @@
                 {label: 'Cancelled', value: 'Cancelled'},
                 {label: 'Rejected', value: 'Rejected'},
                 {label: 'Pending', value: 'Pending'},
+                {label: 'Unfilled', value: 'Unfilled'},
               ]"
               :label="'Status'"
             />
