@@ -314,7 +314,8 @@
             title: 'Rates',
             key: 'rates',
             sort_key: 'rate',
-            column: (item) => `£${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))} - £${Math.max(...item.job.job_part_schedules.map(item => item.schedule_rate))}`,
+            column: (item) => `${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))}` === `${Math.max(...item.job.job_part_schedules.map(item => item.schedule_rate))}` 
+            ? `£${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))}`: `£${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))} - £${Math.max(...item.job.job_part_schedules.map(item => item.schedule_rate))}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
