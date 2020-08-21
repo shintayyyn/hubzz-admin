@@ -47,6 +47,7 @@
               :items="[
                 {label: 'Live', value: 'Live'},
                 {label: 'Updated', value: 'Updated'}, 
+                {label: 'Applied', value: 'Applied'},
                 {label: 'Allocated', value: 'Allocated'},
                 {label: 'Ongoing', value: 'Ongoing'},
                 {label: 'Completed', value: 'Completed'},
@@ -55,6 +56,7 @@
                 {label: 'Cancelled', value: 'Cancelled'},
                 {label: 'Rejected', value: 'Rejected'},
                 {label: 'Pending', value: 'Pending'},
+                {label: 'Unfilled', value: 'Unfilled'},
               ]"
               :label="'Status'"
             />
@@ -309,10 +311,11 @@
             flexShrink: 0,
           },
           {
-            title: 'Rate',
-            key: 'rate',
+            title: 'Rates',
+            key: 'rates',
             sort_key: 'rate',
-            column: (item) => item.rate,
+            column: (item) => `${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))}` === `${Math.max(...item.job.job_part_schedules.map(item => item.schedule_rate))}` 
+            ? `£${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))}`: `£${Math.min(...item.job.job_part_schedules.map(item => item.schedule_rate))} - £${Math.max(...item.job.job_part_schedules.map(item => item.schedule_rate))}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -321,7 +324,7 @@
             title: 'Rate Type',
             key: 'rate_type_name',
             sort_key: 'rate_type_name',
-            column: (item) => item.rate_type_name,
+            column: (item) => [...new Set(item.job.job_part_schedules.map(item => item.schedule_rate_type_name))].join(","),
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

@@ -63,106 +63,132 @@
             </p>
           </div>
 
-          <div v-if="locumComplianceDocument && locumComplianceDocument.has_reference && locumComplianceDocument.reference" class="leading-tight pb-4">
-            <p class="font-bold text-base">
-              Reference
-            </p>
-            <p class="text-white">
-              {{ locumComplianceDocument.reference }}
-            </p>
-          </div>
-
-          <div
-            v-if="(locumComplianceDocument.type === 'Mandatory' || locumComplianceDocument.type !== 'Optional') && !locumComplianceDocument.mandatory_training"
-            class="w-full"
+          <template
+            v-if="
+              locumComplianceDocument
+                && locumComplianceDocument.compliance_document
+                && locumComplianceDocument.compliance_document.compliance_document_type
+                && locumComplianceDocument.compliance_document.compliance_document_type.name !== 'Reference'
+                && locumComplianceDocument.compliance_document.compliance_document_type.name !== 'MPL'
+            "
           >
-            <div class="leading-tight pb-4">
-              <p class="font-bold">
-                Expired At
+            <div
+              v-if="
+                locumComplianceDocument
+                  && locumComplianceDocument.has_reference
+                  && locumComplianceDocument.reference
+              "
+              class="leading-tight pb-4"
+            >
+              <p class="font-bold text-base">
+                Reference
               </p>
-              <p
-                :class="locumComplianceDocument && locumComplianceDocument.expired_at ? 'text-white' : 'text-gray-400'"
-              >
-                {{ locumComplianceDocument && locumComplianceDocument.expired_at ? $moment(locumComplianceDocument.expired_at).utc().format('DD/MM/YYYY | HH:mm') : 'No expiration date set.' }}
-              </p>
-            </div>
-            <div v-if="locumComplianceDocument.status == 'Rejected'" class="pb-2 mb-2">
-              <p class="font-bold">
-                Note
-              </p>
-              <p
-                class="text-white break-words"
-              >
-                {{ locumComplianceDocument && locumComplianceDocument.note ? locumComplianceDocument.note : 'N/A' }}
+              <p class="text-white">
+                {{ locumComplianceDocument.reference }}
               </p>
             </div>
-            <!-- UPDATE COMPLIANCE FILE STATUS -->
-            <div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
-              <!-- CHANGE STATUS  -->
-              <div>
-                <AppInput
-                  v-model="toPutLocumDetailCompliance.status"
-                  class="w-full mr-2"
-                  :type="'select'"
-                  :name="'status'"
-                  :placeholder="'Select...'"
-                  :items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
-                  :error="formError.find(item => item.field === 'status')"
-                  :label="'Status'"
-                  required
-                  @change="setStatusData($event)"
-                />
-              </div>
-							
-              <!-- PUT NOTES IF REJECTING -->
-              <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status === 'Rejected'" class="w-full">
-                <AppInput
-                  v-model="selectedComplianceDocumentRejectReasonValue"
-                  class="w-full mr-2"
-                  :type="'select'"
-                  :name="'complianceNote'"
-                  :placeholder="'Select...'"
-                  :items="complianceDocumentRejectReasonSeletionList"
-                  :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formError.find(item => item.field === 'note')"
-                  :label="'Reason for Rejection'"
-                  required
-                />
 
-                <AppInput
-                  v-if="selectedComplianceDocumentRejectReasonValue === ''"
-                  v-model="toPutLocumDetailCompliance.note"
-                  :name="'complianceNote'"
-                  :placeholder="'Type Here'"
-                  :type="'textarea'"
-                  :rows="2"
-                  :class="'font-normal'"
-                  :error="formError.find(item => item.field === 'note')"
-                />
+            <div
+              v-if="
+                (locumComplianceDocument.type === 'Mandatory' || locumComplianceDocument.type !== 'Optional')
+                  && !locumComplianceDocument.mandatory_training
+              "
+              class="w-full"
+            >
+              <div class="leading-tight pb-4">
+                <p class="font-bold">
+                  Expired At
+                </p>
+                <p
+                  :class="locumComplianceDocument && locumComplianceDocument.expired_at ? 'text-white' : 'text-gray-400'"
+                >
+                  {{
+                    locumComplianceDocument
+                      && locumComplianceDocument.expired_at
+                      ? $moment(locumComplianceDocument.expired_at).utc().format('DD/MM/YYYY | HH:mm')
+                      : 'No expiration date set.'
+                  }}
+                </p>
+              </div>
+              <div v-if="locumComplianceDocument.status == 'Rejected'" class="pb-2 mb-2">
+                <p class="font-bold">
+                  Note
+                </p>
+                <p
+                  class="text-white break-words"
+                >
+                  {{ locumComplianceDocument && locumComplianceDocument.note ? locumComplianceDocument.note : 'N/A' }}
+                </p>
               </div>
 
-              <!-- PICK EXPIRATION DATE -->
-              <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'" class="pb-4">
-                <AppDate
-                  v-model="toPutLocumDetailCompliance.expired_at"
-                  :name="'expired_at'"
-                  :label="'Change Expiration Date'"
-                  :error="formError.find(item => item.field === 'expired_at')"
-                  required
-                />
-              </div>
+              <!-- UPDATE COMPLIANCE FILE STATUS -->
+              <div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
+                <!-- CHANGE STATUS  -->
+                <div>
+                  <AppInput
+                    v-model="toPutLocumDetailCompliance.status"
+                    class="w-full mr-2"
+                    :type="'select'"
+                    :name="'status'"
+                    :placeholder="'Select...'"
+                    :items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
+                    :error="formError.find(item => item.field === 'status')"
+                    :label="'Status'"
+                    required
+                    @change="setStatusData($event)"
+                  />
+                </div>
+                
+                <!-- PUT NOTES IF REJECTING -->
+                <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status === 'Rejected'" class="w-full">
+                  <AppInput
+                    v-model="selectedComplianceDocumentRejectReasonValue"
+                    class="w-full mr-2"
+                    :type="'select'"
+                    :name="'complianceNote'"
+                    :placeholder="'Select...'"
+                    :items="complianceDocumentRejectReasonSeletionList"
+                    :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formError.find(item => item.field === 'note')"
+                    :label="'Reason for Rejection'"
+                    required
+                  />
 
-              <!-- CONFIRM BUTTON -->
-              <div class="flex">
-                <AppButton class="mr-2" :label="'Save'" @click="publish()" />
-                <AppButton
-                  v-if="['Expiring', 'Expired'].includes(locumComplianceDocument.status)"
-                  class="mr-2"
-                  :label="'Notify Locum'"
-                  @click="emailModal=true"
-                />
+                  <AppInput
+                    v-if="selectedComplianceDocumentRejectReasonValue === ''"
+                    v-model="toPutLocumDetailCompliance.note"
+                    :name="'complianceNote'"
+                    :placeholder="'Type Here'"
+                    :type="'textarea'"
+                    :rows="2"
+                    :class="'font-normal'"
+                    :error="formError.find(item => item.field === 'note')"
+                  />
+                </div>
+
+                <!-- PICK EXPIRATION DATE -->
+                <div v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'" class="pb-4">
+                  <AppDate
+                    v-model="toPutLocumDetailCompliance.expired_at"
+                    :name="'expired_at'"
+                    :label="'Change Expiration Date'"
+                    :error="formError.find(item => item.field === 'expired_at')"
+                    required
+                  />
+                </div>
+
+                <!-- CONFIRM BUTTON -->
+                <div class="flex">
+                  <AppButton class="mr-2" :label="'Save'" @click="publish()" />
+                  <AppButton
+                    v-if="['Expiring', 'Expired'].includes(locumComplianceDocument.status)"
+                    class="mr-2"
+                    :label="'Notify Locum'"
+                    @click="emailModal=true"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </template>
         </div>
 
         <div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
