@@ -5,7 +5,7 @@
     <LocumCompliance 
       v-if="locumUser"
       :user="locumUser"
-      @complianceUpdated="$emit('updateLocumUsers')"
+      @complianceUpdated="complianceUpdatedHandler"
       @loadingCompliances="(_loadingCompliances) => loadingCompliances = _loadingCompliances"
     />
 
@@ -35,6 +35,12 @@
       return {
         loadingCompliances: false,
       }
+    },
+
+    methods: {
+      complianceUpdatedHandler () {
+        this.$emit('updateLocumUsers')
+      },
     },
     
   }
