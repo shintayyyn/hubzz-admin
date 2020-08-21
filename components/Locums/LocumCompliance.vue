@@ -73,6 +73,7 @@
               class="flex flex-wrap md:justify-end mt-2 sm:m-0"
             >
               <button
+                v-if="item.file"
                 class="
                   w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
                   rounded-full focus:outline-none
@@ -81,6 +82,18 @@
                 @click.prevent="locumComplianceDocumentId = item.id, $refs.inputFile.click()"
               >
                 {{ updatingFile && locumComplianceDocumentId === item.id ? 'Updating File...' : 'Update File' }}
+              </button>
+              
+              <button
+                v-if="!item.file"
+                class="
+                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  rounded-full focus:outline-none
+                  bg-transparent px-2
+                "
+                @click.prevent="locumComplianceDocumentId = item.id, $refs.inputFile.click()"
+              >
+                {{ updatingFile && locumComplianceDocumentId === item.id ? 'Uploading File...' : 'Upload File' }}
               </button>
 
               <button
@@ -160,7 +173,7 @@
                 class="flex flex-wrap md:justify-end mt-2 sm:m-0"
               >
                 <button
-                  v-if="childItem.id"
+                  v-if="childItem.file"
                   class="
                     w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
                     rounded-full focus:outline-none
@@ -172,7 +185,7 @@
                 </button>
 
                 <button
-                  v-if="!childItem.id"
+                  v-if="!childItem.file"
                   class="
                     w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
                     rounded-full focus:outline-none
