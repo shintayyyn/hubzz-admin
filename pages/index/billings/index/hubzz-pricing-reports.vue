@@ -1,8 +1,5 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
-    <div class="text-sm md:text-xl text-white">
-      Pricing Reports
-    </div>
     <div class="flex flex-col">
       <nuxt-link
         v-for="pricingReport in pricingReports"
