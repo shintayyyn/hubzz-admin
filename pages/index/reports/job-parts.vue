@@ -296,7 +296,7 @@
             title: 'Total Hours',
             key: 'final_hours',
             sort_key: 'final_hours',
-            column: (item) => item.job_part_total_final_hours_in_minutes_formatted,
+            column: (item) => `${item.job_part_total_final_hours.toFixed(2)} Hours`,
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
