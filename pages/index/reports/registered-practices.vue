@@ -41,6 +41,8 @@
                 {label: 'Dormant', value: 'Dormant'},
                 {label: 'Inactive', value: 'Inactive'},
                 {label: 'Suspended', value: 'Suspended'},
+                {label: 'Bogus', value: 'Bogus'},
+                {label: 'Deactivated', value: 'Deactivated'},
               ]"
               :label="'Status'"
             />
@@ -293,6 +295,7 @@
           replaced = replaced.replace('Asc', 'Ascending')
         } 
         this.orderByProcessed = replaced
+        this.getPractices()
       },
 
       limit () {

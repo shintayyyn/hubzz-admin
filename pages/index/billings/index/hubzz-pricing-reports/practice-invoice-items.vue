@@ -305,7 +305,7 @@
             title: '£ Amount',
             key: 'practice_invoice_item_total ? ',
             sort_key: 'practice_invoice_item_total ? ',
-            column: (item) => item.practice_invoice_item_total ? `£ ${item.practice_invoice_item_total}`: "N/A",
+            column: (item) => item.practice_invoice_item_type !== 'Credit' ? `£ ${item.practice_invoice_item_total}`: "N/A",
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
