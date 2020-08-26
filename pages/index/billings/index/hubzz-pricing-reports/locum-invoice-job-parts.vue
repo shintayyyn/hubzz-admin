@@ -53,8 +53,9 @@
               :placeholder="'Filter by HUBZZ Invoice Status'"
               :items="[
                 {label: 'Paid', value: 'Paid'},
-                {label: 'Issued', value: 'Issued'}, 
-                {label: 'N/A', value: 'N/A'},
+                {label: 'To Be Invoiced', value: 'To Be Invoiced'}, 
+                {label: 'Invoiced', value: 'Invoiced'},
+                {label: 'Invoiced Before Approval', value: 'Invoiced Before Approval'},
               ]"
               :label="'Status'"
             />
