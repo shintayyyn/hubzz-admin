@@ -287,7 +287,7 @@
             title: 'Total Hours',
             key: 'job_total_final_hours',
             sort_key: 'job_total_final_hours',
-            column: (item) => item.job_total_final_hours ? `${item.job_total_final_hours.toFixed(2)} Hours` : "N/A",
+            column: (item) => item.job_total_final_hours ? `${item.job_total_final_hours.toFixed(2)}` : "N/A",
             justify: 'end',
             flexGrow: 1,
             flexShrink: 0,
