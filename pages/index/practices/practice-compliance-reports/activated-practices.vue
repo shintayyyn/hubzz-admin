@@ -40,7 +40,7 @@
                 {label: 'Suspended', value: 'Suspended'},
                 {label: 'Inactive', value: 'Inactive'},  
                 {label: 'Bogus', value: 'Bogus'},
-                {label: 'Deactivated', value: 'Deactivated'},  
+                {label: 'Deactivated', value: 'Deactivated'},   
               ]"
               :label="'Status'"
             />
