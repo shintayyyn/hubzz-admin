@@ -41,7 +41,7 @@
                 {label: 'To Be Invoiced', value: 'To Be Invoiced'},
                 {label: 'Disputed', value: 'Disputed'},
               ]"
-              :label="'Status'"
+              :label="'Locum Invoice Status'"
             />
           </div>
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -57,7 +57,7 @@
                 {label: 'Invoiced', value: 'Invoiced'},
                 {label: 'Invoiced Before Approval', value: 'Invoiced Before Approval'},
               ]"
-              :label="'Status'"
+              :label="'HUBZZ Invoice Status'"
             />
           </div>
         </div>
@@ -308,23 +308,6 @@
             key: 'hubzz_invoice_status',
             sort_key: 'hubzz_invoice_status',
             column: (item) => item.hubzz_invoice_status ? item.hubzz_invoice_status : "N/A",
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Locum Invoice Paid?',
-            key: 'locum_invoice_paid_at',
-            column: (item) => item.locum_invoice_paid_at ? 'Yes' : 'No',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'HUBZZ Invoice Paid?',
-            key: 'practice_invoice_paid_at',
-            sort_key: 'practice_invoice_paid_at',
-            column: (item) => item.practice_invoice_paid_at ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
