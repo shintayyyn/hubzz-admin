@@ -29,21 +29,18 @@
           </div>
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
-              v-model="status"
+              v-model="practiceStatus"
               class="w-full mr-2"
               :type="'select'"
-              :name="'status'"
+              :name="'practiceStatus'"
               :placeholder="'Filter by Status'"
               :items="[
-                {label: 'Live', value: 'Live'}, 
-                {label: 'Updated', value: 'Updated'},
-                {label: 'Ongoing', value: 'Ongoing'},
-                {label: 'Approved', value: 'Approved'},
-                {label: 'Completed', value: 'Completed'},
-                {label: 'Withdrawn', value: 'Withdrawn'},
-                {label: 'Rejected', value: 'Rejected'},
-                {label: 'Pending', value: 'Pending'},
-                {label: 'Unfilled', value: 'Unfilled'},
+                {label: 'Active', value: 'Active'},
+                {label: 'Dormant', value: 'Dormant'},  
+                {label: 'Suspended', value: 'Suspended'},
+                {label: 'Inactive', value: 'Inactive'},  
+                {label: 'Bogus', value: 'Bogus'},
+                {label: 'Deactivated', value: 'Deactivated'},  
               ]"
               :label="'Status'"
             />
@@ -218,6 +215,8 @@ import AppInput from '@/components/Base/AppInput'
         ],
         activePage: 1,
 
+        practiceNameIncludes: '',
+        practiceStatus: '',
         registeredDateStart: '',
         registeredDateEnd: '',
         approvedDateStart: '',
@@ -345,6 +344,8 @@ import AppInput from '@/components/Base/AppInput'
 
     mounted () {      
       const {
+        practice_name_includes: practiceNameIncludes,
+        practice_status: practiceStatus,
         registered_at_date_start: registeredDateStart,
         registered_at_date_end: registeredDateEnd,
         approved_at_date_start: approvedDateStart,
@@ -353,6 +354,8 @@ import AppInput from '@/components/Base/AppInput'
         page,
       } = this.$route.query
 
+      this.practiceStatus = practiceStatus ? practiceStatus : ''
+      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.registeredDateStart = registeredDateStart ? registeredDateStart : ''
       this.registeredDateEnd = registeredDateEnd ? registeredDateEnd : ''
       this.approvedDateStart = approvedDateStart ? approvedDateStart : ''
@@ -366,6 +369,8 @@ import AppInput from '@/components/Base/AppInput'
 
     methods: {
       filterReset () {
+        this.practiceNameIncludes = ''
+        this.practiceStatus = ''
         this.registeredDateStart = ''
         this.registeredDateEnd = ''
         this.approvedDateStart = ''
@@ -379,6 +384,8 @@ import AppInput from '@/components/Base/AppInput'
 
         const query = {
           ...this.$route.query,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
           registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
           registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
           approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
@@ -436,6 +443,8 @@ import AppInput from '@/components/Base/AppInput'
         this.activatedPractices = []
 
         const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
           registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
           registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
           approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
@@ -477,6 +486,8 @@ import AppInput from '@/components/Base/AppInput'
       downloadCsv () {
         this.downloading = true
         const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
           registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
           registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
           approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,

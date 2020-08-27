@@ -851,10 +851,9 @@
                     <p class="font-semibold">
                       Only favorite locum will be notified until this date
                     </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job.favorite_only_until ? $moment(modalJobPart.job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
+
+                    <p class="ml-2 mb-2">
+                      {{ modalJobPart ? modalJobPart.favorite_only_until_in_gb_formatted : null }}
                     </p>
 
                     <p class="font-semibold">

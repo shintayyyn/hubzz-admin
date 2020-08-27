@@ -19,14 +19,50 @@
       <div
         class="flex-col justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="practiceNameIncludes"
-            placeholder="Search Practice Name"
-            type="text"
-            label="Practice Name"
-          />
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="practiceNameIncludes"
+              placeholder="Search Practice Name"
+              type="text"
+              label="Practice Name"
+            />
+          </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="locumInvoiceStatus"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'locumInvoiceStatus'"
+              :placeholder="'Filter by Locum Invoice Status'"
+              :items="[
+                {label: 'Invoiced', value: 'Invoiced'},
+                {label: 'Approved', value: 'Approved'}, 
+                {label: 'To Be Invoiced', value: 'To Be Invoiced'},
+                {label: 'Disputed', value: 'Disputed'},
+              ]"
+              :label="'Locum Invoice Status'"
+            />
+          </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="hubzzInvoiceStatus"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'hubzzInvoiceStatus'"
+              :placeholder="'Filter by HUBZZ Invoice Status'"
+              :items="[
+                {label: 'Paid', value: 'Paid'},
+                {label: 'To Be Invoiced', value: 'To Be Invoiced'}, 
+                {label: 'Invoiced', value: 'Invoiced'},
+                {label: 'Invoiced Before Approval', value: 'Invoiced Before Approval'},
+              ]"
+              :label="'HUBZZ Invoice Status'"
+            />
+          </div>
         </div>
+        
+        
 
         <div class="flex flex-row w-full">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -185,6 +221,8 @@
         areaPostcode: '',
         dateStart: '',
         dateEnd: '',
+        locumInvoiceStatus: '',
+        hubzzInvoiceStatus: '',
       }
     },
 
@@ -251,7 +289,7 @@
             title: 'Total Hours',
             key: 'final_hours',
             sort_key: 'final_hours',
-            column: (item) => (parseFloat(item.final_hours)/60).toFixed(2) + ' Hours',
+            column: (item) => (parseFloat(item.final_hours)/60).toFixed(2),
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -269,24 +307,7 @@
             title: 'HUBZZ Invoice Status',
             key: 'hubzz_invoice_status',
             sort_key: 'hubzz_invoice_status',
-            column: (item) => item.hubzz_invoice_status,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Locum Invoice Paid?',
-            key: 'locum_invoice_paid_at',
-            column: (item) => item.locum_invoice_paid_at ? 'Yes' : 'No',
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'HUBZZ Invoice Paid?',
-            key: 'practice_invoice_paid_at',
-            sort_key: 'practice_invoice_paid_at',
-            column: (item) => item.practice_invoice_paid_at ? 'Yes' : 'No',
+            column: (item) => item.hubzz_invoice_status ? item.hubzz_invoice_status : "N/A",
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -326,6 +347,8 @@
     mounted () {      
      const {
         practice_name_includes: practiceNameIncludes,
+        locum_invoice_status: locumInvoiceStatus,
+        hubzz_invoice_status: hubzzInvoiceStatus,
         date_start: dateStart,
         date_end: dateEnd,
         order_by: orderBy = [],
@@ -335,6 +358,8 @@
       this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.dateStart = dateStart ? dateStart : ''
       this.dateEnd = dateEnd ? dateEnd : ''
+      this.locumInvoiceStatus = locumInvoiceStatus ? this.locumInvoiceStatus: ''
+      this.hubzzInvoiceStatus = hubzzInvoiceStatus ? this.hubzzInvoiceStatus: ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -345,6 +370,8 @@
     methods: {
       filterReset () {
         this.practiceNameIncludes = ''
+        this.locumInvoiceStatus = ''
+        this.hubzzInvoiceStatus = ''
         this.dateStart = ''
         this.dateEnd = ''
 
@@ -357,6 +384,8 @@
         const query = {
           ...this.$route.query,
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          locum_invoice_status: this.locumInvoiceStatus ? this.locumInvoiceStatus: undefined,
+          hubzz_invoice_status: this.hubzzInvoiceStatus ? this.hubzzInvoiceStatus: undefined,
           date_start: this.dateStart ? this.dateStart : undefined,
           date_end: this.dateEnd ? this.dateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
@@ -413,6 +442,8 @@
 
         const params = {
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          locum_invoice_status: this.locumInvoiceStatus ? this.locumInvoiceStatus: undefined,
+          hubzz_invoice_status: this.hubzzInvoiceStatus ? this.hubzzInvoiceStatus: undefined,
           date_start: this.dateStart ? this.dateStart : undefined,
           date_end: this.dateEnd ? this.dateEnd : undefined,
         }
@@ -453,6 +484,8 @@
         this.downloading = true
         const params = {
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          locum_invoice_status: this.locumInvoiceStatus ? this.locumInvoiceStatus: undefined,
+          hubzz_invoice_status: this.hubzzInvoiceStatus ? this.hubzzInvoiceStatus: undefined,
           date_start: this.dateStart ? this.dateStart : undefined,
           date_end: this.dateEnd ? this.dateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,

@@ -2,47 +2,45 @@
   <div class="report-modal p-4 md:p-8 shadow-lg">
     <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/reports" class="text-white hover:text-sunglow p-1">
+        <nuxt-link to="/locums/compliance-reports" class="text-white hover:text-sunglow p-1">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
 
       <div class="text-lg md:text-2xl text-white">
-        Sign Ups Practice
+        Practice Lead Time for Activation
       </div>
   
       <div class="text-sm md:text-lg text-white">
-        Rep-027
+        Rep-018
       </div>
 
       <div
-        class="flex-col justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
         <div class="flex flex-row w-full">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
-              v-model="areaPostCode"
-              placeholder="Search Area Postcode"
+              v-model="practiceNameIncludes"
+              placeholder="Search Practice Name"
               type="text"
-              label="Area Postcode"
+              label="Practice Name"
             />
           </div>
-
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
-              v-model="status"
+              v-model="practiceStatus"
               class="w-full mr-2"
               :type="'select'"
-              :name="'status'"
-              :placeholder="'Filter By Status'"
+              :name="'practiceStatus'"
+              :placeholder="'Filter by Status'"
               :items="[
-                {label: 'All', value: ''},
                 {label: 'Active', value: 'Active'},
-                {label: 'Dormant', value: 'Dormant'},
-                {label: 'Inactive', value: 'Inactive'},
+                {label: 'Dormant', value: 'Dormant'},  
                 {label: 'Suspended', value: 'Suspended'},
+                {label: 'Inactive', value: 'Inactive'},  
                 {label: 'Bogus', value: 'Bogus'},
-                {label: 'Deactivated', value: 'Deactivated'},
+                {label: 'Deactivated', value: 'Deactivated'},   
               ]"
               :label="'Status'"
             />
@@ -52,20 +50,37 @@
         <div class="flex flex-row w-full">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
-              v-model="dateStart"
-              label="Date Start"
+              v-model="registeredDateStart"
+              label="Registered Date Start"
               format="YYYY-MM-DD"
             />
           </div>
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
-              v-model="dateEnd"
-              label="Date End"
+              v-model="registeredDateEnd"
+              label="Registered Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="approvedDateStart"
+              label="Approved Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="approvedDateEnd"
+              label="Approved Date End"
               format="YYYY-MM-DD"
             />
           </div>
         </div>
+        
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
@@ -83,7 +98,7 @@
         </div>
       </div>
 
-      <div v-if="false">
+      <div v-if="true">
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
@@ -104,14 +119,13 @@
 
       <ReportTable
         :limit="limit"
-        :items="registeredPractices"
+        :items="activatedPractices"
         :getItemKey="(item) => item.practice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
         @setOrderBy="(value) => orderBy = value"
       />
-
       <div class="w-full flex flex-wrap justfify-between items-center">
         <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
           <div class="text-white w-full md:w-auto text-center md:text-left">
@@ -133,15 +147,14 @@
           @page="setPage" 
         />
       </div>
-
       <div
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading || registeredPractices.length === 0"
+            :disabled="downloading || activatedPractices.length === 0"
             class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
-            :class="registeredPractices.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
+            :class="activatedPractices.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -149,41 +162,33 @@
           </button>
         </div>
       </div>
-
-      <div v-if="false" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-  import ReportTable from '@/components/Reports/ReportTable'
-  import ReportPagination from '@/components/Reports/ReportPagination'
-  import AppInput from '@/components/Base/AppInput'
-  import AppButton from '@/components/Base/AppButton'
-  import AppDate from '@/components/Base/AppDate'
+import ReportTable from '@/components/Reports/ReportTable'
+import ReportPagination from '@/components/Reports/ReportPagination'
+import AppButton from '@/components/Base/AppButton'
+import AppDate from '@/components/Base/AppDate'
+import AppInput from '@/components/Base/AppInput'
   export default {
     components: {
       ReportTable,
       ReportPagination,
-      AppInput,
       AppButton,
-      AppDate
+      AppDate,
+      AppInput,
     },
 
     data () {
       return {
-        downloading: false,
         loading: false,
         count: 0,
-        registeredPractices: [],
+        downloading: false,
+        activatedPractices: [],
         orderBy: [],
-        orderByProcessed: '',
+        orderByProcessed: [],
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -210,17 +215,19 @@
         ],
         activePage: 1,
 
-        dateStart: '',
-        dateEnd: '',
-        areaPostCode: '',
-        status: '',
+        practiceNameIncludes: '',
+        practiceStatus: '',
+        registeredDateStart: '',
+        registeredDateEnd: '',
+        approvedDateStart: '',
+        approvedDateEnd: '',
       }
     },
 
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.registeredPractices.length), this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.activatedPractices.length), this.count)
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
@@ -253,16 +260,43 @@
             title: 'Date Registered',
             key: 'date_registered',
             sort_key: 'date_registered',
-            column: (item) => item.date_registered ? this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            column: (item) => this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY'),
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Area',
-            key: 'area',
-            sort_key: 'area',
-            column: (item) => item.area,
+            title: 'Sage Ref',
+            key: 'sage_ref',
+            sort_key: 'sage_ref',
+            column: (item) => item.sage_ref ? item.sage_ref : 'N/A',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Nominal Code',
+            key: 'nominal_code',
+            sort_key: 'nominal_code',
+            column: (item) => item.nominal_code ? item.nominal_code : 'N/A',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Direct Debit Set Up',
+            key: 'direct_debit',
+            sort_key: 'direct_debit',
+            column: (item) => item.direct_debit ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Date Approved',
+            key: 'first_actived_at',
+            sort_key: 'first_actived_at',
+            column: (item) => item.first_actived_at ? this.$moment(item.first_actived_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -295,46 +329,52 @@
           replaced = replaced.replace('Asc', 'Ascending')
         } 
         this.orderByProcessed = replaced
-        this.getPractices()
+        this.getActivatedPractices()
       },
 
       limit () {
         this.page = 1
-        this.getPractices()
+        this.getActivatedPractices()
       },
 
       activePage () {
-        this.getPractices()
+        this.getActivatedPractices()
       },
     },
 
     mounted () {      
       const {
-        registered_at_date_start: dateStart,
-        registered_at_date_end: dateEnd,
-        area_includes: areaPostCode,
-        status,
+        practice_name_includes: practiceNameIncludes,
+        practice_status: practiceStatus,
+        registered_at_date_start: registeredDateStart,
+        registered_at_date_end: registeredDateEnd,
+        approved_at_date_start: approvedDateStart,
+        approved_at_date_end: approvedDateEnd,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
-      this.areaPostCode = areaPostCode ? areaPostCode : ''
-      this.dateStart = dateStart ? dateStart : ''
-      this.dateEnd = dateEnd ? dateEnd : ''
-      this.status = status ? status : ''
+      this.practiceStatus = practiceStatus ? practiceStatus : ''
+      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
+      this.registeredDateStart = registeredDateStart ? registeredDateStart : ''
+      this.registeredDateEnd = registeredDateEnd ? registeredDateEnd : ''
+      this.approvedDateStart = approvedDateStart ? approvedDateStart : ''
+      this.approvedDateEnd = approvedDateEnd ? approvedDateEnd : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
 
-      this.getPractices()
+      this.getActivatedPractices()
     },
 
     methods: {
       filterReset () {
-        this.areaPostCode = ''
-        this.dateStart = ''
-        this.dateEnd = ''
-        this.status = ''
+        this.practiceNameIncludes = ''
+        this.practiceStatus = ''
+        this.registeredDateStart = ''
+        this.registeredDateEnd = ''
+        this.approvedDateStart = ''
+        this.approvedDateEnd = ''
 
         this.filterSearch()
       },
@@ -344,10 +384,12 @@
 
         const query = {
           ...this.$route.query,
-          areaPostCode: this.areaPostCode ? this.areaPostCode : '',
-          dateStart: this.dateStart ? this.dateStart : '',
-          dateEnd: this.dateEnd ? this.dateEnd : '',
-          status: this.status ? this.status : '',
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -356,7 +398,7 @@
           this.$router.replace({ query })
         }
         
-        this.getPractices()
+        this.getActivatedPractices()
       },
 
       setPage (page) {
@@ -378,7 +420,7 @@
           })
         }
 
-        this.getPractices()
+        this.getActivatedPractices()
       },
 
       setOrderBy (orderBy) {
@@ -393,26 +435,28 @@
           }
         })
 
-        this.getPractices()
+        this.getActivatedPractices()
       },
 
-      getPractices () {
+      getActivatedPractices () {
         this.loading = true
-        this.registeredPractices = []
+        this.activatedPractices = []
 
         const params = {
-          registered_at_date_start: this.dateStart ? this.dateStart : '',
-          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          status: this.status ? this.status : '',
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
         }
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/registered-practices/count', {
+          this.$axios.get('/api/v1/admin/reports/activated-practices/count', {
             params
           }).then((responses) => {
             return responses.data.data.count
           }),
-          this.$axios.get('/api/v1/admin/reports/registered-practices', {
+          this.$axios.get('/api/v1/admin/reports/activated-practices', {
             params: {
               ...params,
               order_by: this.orderBy,
@@ -420,20 +464,20 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            return responses.data.data.registered_practices
+            return responses.data.data.activated_practices
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
         ]).then((results) => {
           const [
             count,
-            registeredPractices,
+            activatedPractices,
           ] = results
 
           this.count = count
-          this.registeredPractices = registeredPractices
+          this.activatedPractices = activatedPractices
         }).catch((err) => {
-          console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
-          this.$nuxt.error(err.response ? err.response.data : err)
+          console.log('err', err)
+          this.$nuxt.error(err)
         }).finally(() => {
           this.loading = false
         })
@@ -442,17 +486,19 @@
       downloadCsv () {
         this.downloading = true
         const params = {
-          registered_at_date_start: this.dateStart ? this.dateStart : '',
-          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          status: this.status ? this.status : '',
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
+          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
+          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
+          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
+          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
+          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
         }
 
-        this.$axios.post('/api/v1/admin/reports/registered-practices/generate-key', {
-          filename: `registeredPractices.csv`,
+        this.$axios.post('/api/v1/admin/reports/activated-practices/generate-key', {
+          filename: `activatedPractices.csv`,
         }, {
           params: {
             ...params,
@@ -461,7 +507,7 @@
           console.log('responses', responses)
           const token = responses.data.data.token
 
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/registered-practices/csv?token=${token}`)
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/activated-practices/csv?token=${token}`)
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
