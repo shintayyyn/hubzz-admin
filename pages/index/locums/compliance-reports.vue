@@ -46,11 +46,11 @@ export default {
           subtitle: 'Locum Lead Time for Compliance Completed',
           url: '/locums/compliance-reports/locum-completed-compliances',
         },
-        {
-          title: 'REP-018',
-          subtitle: 'Practice Lead Time for Activation',
-          url: '/locums/compliance-reports/activated-practices',
-        },
+        // {
+        //   title: 'REP-018',
+        //   subtitle: 'Practice Lead Time for Activation',
+        //   url: '/locums/compliance-reports/activated-practices',
+        // },
       ],
     }
   }

@@ -3,7 +3,7 @@
     <div class="px-2 mx-5 text-xl md:text-4xl text-white">
       {{ $route.name.includes('practice-compliance-reports') ? 'Practice Compliance Reports' : 'Practices' }}
     </div>
-    <!-- <div class="flex justify-start my-2 mx-6">
+    <div class="flex justify-start my-2 mx-6">
       <nuxt-link
         :to="`/practices`" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
@@ -18,7 +18,7 @@
       >
         Practice Compliance Reports
       </nuxt-link>
-    </div> -->
+    </div>
     <nuxt-link
       v-if="$route.name.includes(`index-practices-id`)"
       class="bg-shield z-511 fixed inset-0 opacity-50"
