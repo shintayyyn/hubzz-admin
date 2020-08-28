@@ -28,7 +28,7 @@
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
-              v-model="verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes"
+              v-model="notApprovedComplianceDocumentNamesIncludes"
               placeholder="Search Document Not Approved"
               type="text"
               label="Document Not Approved"
@@ -37,7 +37,7 @@
 
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
-              v-model="verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes"
+              v-model="notUploadComplianceDocumentNamesIncludes"
               placeholder="Search Document Not uploaded"
               type="text"
               label="Document Not uploaded"
@@ -202,8 +202,8 @@
         activePage: 1,
 
         locumNameIncludes: '',
-        verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes: '',
-        verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes: '',
+        notApprovedComplianceDocumentNamesIncludes: '',
+        notUploadComplianceDocumentNamesIncludes: '',
         registeredDateStart: '',
         registeredDateEnd: '',
         approvedDateStart: '',
@@ -308,18 +308,18 @@
           },
           {
             title: 'Documents Not Approved',
-            key: 'verifiable_must_be_verified_not_approved_compliance_document_names',
-            sort_key: 'verifiable_must_be_verified_not_approved_compliance_document_names',
-            column: item => item.verifiable_must_be_verified_not_approved_compliance_document_names || '(none)',
+            key: 'not_approved_compliance_document_names',
+            sort_key: 'not_approved_compliance_document_names',
+            column: item => item.not_approved_compliance_document_names || '(none)',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
             title: 'Documents Not uploaded',
-            key: 'verifiable_must_be_verified_not_upload_compliance_document_names',
-            sort_key: 'verifiable_must_be_verified_not_upload_compliance_document_names',
-            column: item => item.verifiable_must_be_verified_not_upload_compliance_document_names || '(none)',
+            key: 'not_upload_compliance_document_names',
+            sort_key: 'not_upload_compliance_document_names',
+            column: item => item.not_upload_compliance_document_names || '(none)',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -353,10 +353,10 @@
     mounted () {      
      const {
         locum_name_includes: locumNameIncludes,
-        verifiable_must_be_verified_not_approved_compliance_document_names_includes:
-          verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes,
-        verifiable_must_be_verified_not_upload_compliance_document_names_includes:
-          verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes,
+        not_approved_compliance_document_names_includes:
+          notApprovedComplianceDocumentNamesIncludes,
+        not_upload_compliance_document_names_includes:
+          notUploadComplianceDocumentNamesIncludes,
         min_compliance_percentage: minCompliancePercentage,
         max_compliance_percentage: maxCompliancePercentage,
         compliance_status: complianceStatus,
@@ -369,11 +369,11 @@
       } = this.$route.query
 
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
-      this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes = verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
-        ? verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+      this.notApprovedComplianceDocumentNamesIncludes = notApprovedComplianceDocumentNamesIncludes
+        ? notApprovedComplianceDocumentNamesIncludes
         : ''
-      this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes = verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
-        ? verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+      this.notUploadComplianceDocumentNamesIncludes = notUploadComplianceDocumentNamesIncludes
+        ? notUploadComplianceDocumentNamesIncludes
         : ''
       this.minCompliancePercentage = minCompliancePercentage ? minCompliancePercentage : ''
       this.maxCompliancePercentage = maxCompliancePercentage ? maxCompliancePercentage : ''
@@ -392,8 +392,8 @@
     methods: {
       filterReset () {
         this.locumNameIncludes = ''
-        this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes = ''
-        this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes = ''
+        this.notApprovedComplianceDocumentNamesIncludes = ''
+        this.notUploadComplianceDocumentNamesIncludes = ''
         this.complianceStatus = ''
         this.minCompliancePercentage = ''
         this.maxCompliancePercentage = ''
@@ -411,13 +411,13 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          verifiable_must_be_verified_not_approved_compliance_document_names_includes:
-            this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
-              ? this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+          not_approved_compliance_document_names_includes:
+            this.notApprovedComplianceDocumentNamesIncludes
+              ? this.notApprovedComplianceDocumentNamesIncludes
               : undefined,
-          verifiable_must_be_verified_not_upload_compliance_document_names_includes:
-            this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
-              ? this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+          not_upload_compliance_document_names_includes:
+            this.notUploadComplianceDocumentNamesIncludes
+              ? this.notUploadComplianceDocumentNamesIncludes
               : undefined,
           min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
           max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
@@ -480,13 +480,13 @@
 
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          verifiable_must_be_verified_not_approved_compliance_document_names_includes:
-            this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
-              ? this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+          not_approved_compliance_document_names_includes:
+            this.notApprovedComplianceDocumentNamesIncludes
+              ? this.notApprovedComplianceDocumentNamesIncludes
               : undefined,
-          verifiable_must_be_verified_not_upload_compliance_document_names_includes:
-            this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
-              ? this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+          not_upload_compliance_document_names_includes:
+            this.notUploadComplianceDocumentNamesIncludes
+              ? this.notUploadComplianceDocumentNamesIncludes
               : undefined,
           min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
           max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
@@ -534,13 +534,13 @@
         this.downloading = true
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          verifiable_must_be_verified_not_approved_compliance_document_names_includes:
-            this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
-            ? this.verifiableMustBeVerifiedNotApprovedComplianceDocumentNamesIncludes
+          not_approved_compliance_document_names_includes:
+            this.notApprovedComplianceDocumentNamesIncludes
+            ? this.notApprovedComplianceDocumentNamesIncludes
             : undefined,
-          verifiable_must_be_verified_not_upload_compliance_document_names_includes:
-            this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
-            ? this.verifiableMustBeVerifiedNotUploadComplianceDocumentNamesIncludes
+          not_upload_compliance_document_names_includes:
+            this.notUploadComplianceDocumentNamesIncludes
+            ? this.notUploadComplianceDocumentNamesIncludes
             : undefined,
           min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
           max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
