@@ -358,7 +358,7 @@ export default {
           .get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`)
           .then(response => response.data.data.practice_surgeries);
 
-        params.status = "Active";
+        params.status = ["Active", "Dormant"];
 
         params.type = ["Stand Alone", "Spoke"];
 

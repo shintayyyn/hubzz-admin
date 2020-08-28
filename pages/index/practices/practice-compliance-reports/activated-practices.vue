@@ -36,11 +36,9 @@
               :placeholder="'Filter by Status'"
               :items="[
                 {label: 'Active', value: 'Active'},
+                {label: 'Inactive', value: 'Inactive'},
                 {label: 'Dormant', value: 'Dormant'},  
                 {label: 'Suspended', value: 'Suspended'},
-                {label: 'Inactive', value: 'Inactive'},  
-                {label: 'Bogus', value: 'Bogus'},
-                {label: 'Deactivated', value: 'Deactivated'},   
               ]"
               :label="'Status'"
             />
@@ -296,7 +294,7 @@ import AppInput from '@/components/Base/AppInput'
             title: 'Date Approved',
             key: 'first_actived_at',
             sort_key: 'first_actived_at',
-            column: (item) => item.first_actived_at ? this.$moment(item.first_actived_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
+            column: (item) => item.first_actived_at_in_gb ? this.$moment(item.first_actived_at_in_gb, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
