@@ -81,10 +81,10 @@
       <template v-slot:paid_at="slotProps">
         <div class="flex items-center justify-center">
           <AppButton
-            :label="'Settle Payment'"
+            :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
             :background="'green'"
             class="text-white mr-2"
-            :disabled="slotProps.item.sage_ref ? false : true"
+            :disabled="slotProps.item.sage_ref && slotProps.item.paid_at === null ? false : true"
             @click="toShowPaidModal(slotProps.item.id)"
           />
           <span
