@@ -67,6 +67,7 @@
         :invoiceItems="invoiceItems"
         :disputedItems="disputedItems"
         @formError="scrollToTop"
+        @goBack="goBack"
       />
       <div
         v-if="chooseJobPartsModal == true"
@@ -85,7 +86,6 @@
           :showCompleted="showCompleted"
           :showCancelled="showCancelled"
           :showInvoiced="showInvoiced"
-
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"
         />
@@ -226,7 +226,7 @@ export default {
       }
       console.log('go back params id',this.$route.params.id)
 			await this.$router.push({
-				path: `/billings/${this.$route.params.id}/hubzz-invoices`,
+				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`,
 				query
 			})
 		}

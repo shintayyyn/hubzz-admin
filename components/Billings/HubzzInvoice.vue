@@ -1029,8 +1029,9 @@ export default {
 							enabled: true,
 							status: "success",
 							text: "Invoice Posted"
-						})
-						this.$router.go(-1)
+            })
+            this.$emit("goBack")
+						// this.$router.go(-1)
 					})
 					.catch(err => {
 						this.$store.commit("SET_NOTIFICATION", {
