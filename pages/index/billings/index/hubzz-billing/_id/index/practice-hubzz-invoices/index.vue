@@ -81,10 +81,10 @@
       <template v-slot:paid_at="slotProps">
         <div class="flex items-center justify-center">
           <AppButton
-            :label="'Settle Payment'"
+            :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
             :background="'green'"
             class="text-white mr-2"
-            :disabled="slotProps.item.sage_ref ? false : true"
+            :disabled="slotProps.item.sage_ref && slotProps.item.paid_at === null ? false : true"
             @click="toShowPaidModal(slotProps.item.id)"
           />
           <span
@@ -114,7 +114,7 @@
             v-if="confirm"
             :in-style="'top:35%'"
             :in-class="'rounded-lg'"
-            :message="paidAt ? 'Are you sure you want to mark this bill as paid?' : 'Are you sure you want to mark this bill as invalid?'"
+            :message="paidAt ? 'Are you sure you want to mark this bill as paid? This action cannot be reversed.' : 'Are you sure you want to mark this bill as invalid?'"
             @cancel="confirm = false"
             @confirm="settlePayment()"
           />

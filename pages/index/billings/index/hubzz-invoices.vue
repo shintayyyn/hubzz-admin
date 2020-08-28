@@ -288,7 +288,7 @@
             v-if="confirm"
             :in-style="'top:35%'"
             :in-class="'rounded-lg'"
-            :message="paidAt ? 'Are you sure you want to mark this bill as paid?' : 'Are you sure you want to mark this bill as invalid?'"
+            :message="paidAt ? 'Are you sure you want to mark this bill as paid? This action cannot be reversed.' : 'Are you sure you want to mark this bill as invalid?'"
             @cancel="confirm = false"
             @confirm="settlePayment()"
           />
