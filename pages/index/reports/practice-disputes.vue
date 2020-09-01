@@ -37,7 +37,7 @@
       <ReportTable
         :limit="limit"
         :items="practiceDisputes"
-        :getItemKey="(item) => item.locum_invoice_id"
+        :getItemKey="(item) => item.practice_id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -138,7 +138,7 @@
     computed: {
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
-        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumInvoiceReports.length), this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.practiceDisputes.length), this.count)
         
         return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
       },
@@ -169,7 +169,7 @@
           },
           {
             title: 'Disputed Job Part Schedules Count',
-            key: 'disputed_job_part_schedules_count',
+            key: 'practice_id',
             sort_key: null,
             column: (item) => item.disputed_job_part_schedules_count,
             justify: 'start',
@@ -178,7 +178,7 @@
           },
           {
             title: 'Average Disputes per Month (Since Activation)',
-            key: 'monthly_average_disputes',
+            key: 'practice_id',
             sort_key: null,
             column: (item) => item.monthly_average_disputes,
             justify: 'start',
@@ -187,7 +187,7 @@
           },
           {
             title: 'Average Days Spent Settling Disputes',
-            key: 'monthly_average_disputes',
+            key: 'practice_id',
             sort_key: null,
             column: (item) => item.average_disputes_processing_days !== null ? `${item.average_disputes_processing_days} Days` : 'N/A',
             justify: 'start',
@@ -272,7 +272,7 @@
         this.practiceDisputes = []
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/practice-disputes/count').then((responses) => {
-            console.log('response', responses)
+            console.log('response', responses.data.data.count)
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/practice-disputes', {
@@ -282,7 +282,7 @@
               offset: this.offset,
             },
           }).then((responses) => {
-            console.log('response', responses)
+            console.log('response', responses.data.data.practice_disputes)
             return responses.data.data.practice_disputes
           }),
           new Promise((resolve) => setTimeout(resolve, 500))
