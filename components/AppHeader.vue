@@ -40,13 +40,13 @@
                 </div>
               </div>
               
-              <div class="m-4 overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
+              <div class="m-2 overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
                 <div v-if="notifications.length > 0">
                   <div
                     v-for="(item, index) in notifications"
                     :key="`item-${index}`"
-                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg"
-                    :class="item.seen === true ? '' : 'border-orange-500'"
+                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg  "
+                    :class="item.seen === true ? 'text-gray-400' : 'border-2 border-orange-500'"
                     @click="goTo(item)"
                   >
                     <div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
@@ -120,52 +120,6 @@ export default {
 			notificationToggle: false,
 			notificationsCount: 0,
       notifications: [],
-      
-			sampleCount: 5,
-			sampleNotifs: [
-				{
-					id: "1",
-					name: "work in progress",
-					type: "in",
-					description:
-						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
-				},
-				{
-					id: "2",
-					name: "work in progress",
-					type: "in",
-					description:
-						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
-				},
-				{
-					id: "3",
-					name: "work in progress",
-					type: "in",
-					description:
-						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
-				},
-				{
-					id: "4",
-					name: "work in progress",
-					type: "in",
-					description:
-						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
-				},
-				{
-					id: "5",
-					name: "work in progress",
-					type: "in",
-					description:
-						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
-				},
-				{
-					id: "6",
-					name: "work in progress",
-					type: "in",
-					description:
-						"Welcome to the Krusty Krab, Where the Clock of Evolution Ticks Backwards."
-				}
-      ],
       
       notificationTypeNames: [
         'Admin Notification Locum Compliance',
@@ -307,7 +261,7 @@ export default {
       }
 
       await this.$axios.$put(`/api/v1/admin/notifications/${item.id}/seen`).then(res => {
-        console.log('res', res)
+        this.getNotifications()
       })
     },
 
@@ -322,11 +276,11 @@ export default {
 <style>
 .notification-modal {
 	position: fixed;
-	left: 86%;
-	top: 15%;
+	left: 80%;
+	top: 19%;
 	transform: translate(-86%, -15%);
 	border-radius: 15px;
-	width: 400px;
+	width: 380px;
 	max-width: 95%;
 	overflow: hidden;
 	transition: all 0.3s ease-in-out;
@@ -335,7 +289,7 @@ export default {
 }
 @media screen and (min-width: 768px) {
 	.notification-modal {
-		max-height: 70%;
+		max-height: 80%;
 	}
 }
 .header {

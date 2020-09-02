@@ -27,8 +27,8 @@
             >
               <span>{{ navigationTab.name }}</span>
 
-              <span v-if="navigationTab.name === 'Locums' && locumComplianceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ locumComplianceNotifications.length }}
+              <span v-if="navigationTab.name === 'Locums' && locumNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{ locumNotifications.length }}
               </span>
 
               <span v-if="navigationTab.name === 'Practices' && practiceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
@@ -127,8 +127,8 @@ export default {
       return this.$store.getters["practices/getPracticeNotifications"]
     },
 
-    locumComplianceNotifications () {
-      return this.$store.getters["locums/getLocumComplianceNotifications"]
+    locumNotifications () {
+      return this.$store.getters["locums/getLocumNotifications"]
     },
 
     unacknowledgedCount () {

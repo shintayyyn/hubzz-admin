@@ -45,18 +45,20 @@ export default {
 	SET_LOCUM_DOC_ALERT (state, payload) {
 		state.locumDocAlert = payload
 	},
-	ADD_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state, payload) {
-		let index = state.locumComplianceNotifications.findIndex(locumCompDocNotif =>  locumCompDocNotif.id === payload.locumDetailComplianceDocument.id)
+	ADD_LOCUM_NOTIFICATION (state, payload) {
+		console.log('state.locumNotifications', state.locumNotifications)
+		console.log('payload', payload)
+		let index = state.locumNotifications.findIndex(locumNotif =>  locumNotif.locumNotification.id === payload.locumNotification.id)
 		if (index < 0) {
-			state.locumComplianceNotifications.unshift(payload)
+			state.locumNotifications.unshift(payload)
 		} else if (index >= 0) {
-			state.locumComplianceNotifications.splice(index, 1, payload)
+			state.locumNotifications.splice(index, 1, payload)
 		}
 	},
-	REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state, payload) {
-		state.locumComplianceNotifications = state.locumComplianceNotifications.filter(locumCompDocNotif => locumCompDocNotif.locumDetailComplianceDocument.id !==payload)
+	REMOVE_LOCUM_NOTIFICATION (state, payload) {
+		state.locumNotifications = state.locumNotifications.filter(locumNotif => locumNotif.locumNotification.id !== payload)
 	},
-	CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state) {
-		state.locumComplianceNotifications = []
+	CLEAR_LOCUM_NOTIFICATIONS (state) {
+		state.locumNotifications = []
 	},
 }
