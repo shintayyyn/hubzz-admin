@@ -143,7 +143,9 @@
         loading: false,
         count: 0,
         professions: [],
-        orderBy: [],
+        orderBy: [
+          'created_at:desc',
+        ],
         limit: 25,
         activePage: 1,
       }
