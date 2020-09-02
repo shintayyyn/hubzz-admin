@@ -106,7 +106,9 @@
         loading: false,
         count: 0,
         users: [],
-        orderBy: [],
+        orderBy: [
+          'created_at:desc',
+        ],
         limit: 10,
         activePage: 1,
         search: '',

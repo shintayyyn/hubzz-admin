@@ -67,7 +67,9 @@
         loading: false,
         count: 0,
         jobLocumUsers: [],
-        orderBy: [],
+        orderBy: [
+          'created_at:desc',
+        ],
         limit: 10,
         activePage: 1,
         search: '',
