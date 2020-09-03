@@ -63,6 +63,7 @@ a {
 	text-decoration: none;
 	color: black;
 }
+
 button:focus {
 	outline: none;
 }
@@ -225,6 +226,19 @@ table tbody td {
 		background: #7b8396;
 	}
 }
+
+/* ==========TOGGLE====== */
+.drop-down-enter-active,
+.drop-down-leave-active {
+	transition: all 0.5s;
+}
+
+.drop-down-enter,
+.drop-down-leave-active {
+	transform: translateY(-5px);
+	opacity: 0;
+}
+
 /*===========TOOLTIP=========*/
 .tool {
 	cursor: help;

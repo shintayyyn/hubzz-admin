@@ -9,6 +9,14 @@ export default {
       })
     })
 
+    this.$socket.on('Admin Notification Practice Invoice Detail Updated', async (payload) => {
+      console.log('it works here')
+      commit('ADD_PRACTICE_NOTIFICATION', {
+        payload,
+        notificationType: 'Admin Notification Practice Invoice Detail Updated'
+      })
+    })
+
     this.$socket.on('Admin Notification Practice Surgery Created', async (payload) => {
       commit('ADD_PRACTICE_NOTIFICATION', {
         payload,
