@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div
-      v-if="locumNotifications.length > 0 || practiceNotifications.length > 0"
+      v-if="locumNotifications.length > 0 || practiceNotifications.length > 0 || billingNotifications.length > 0"
       class="job-notification"
     >
       <div
@@ -105,7 +105,7 @@ export default {
       return this.$store.getters["practices/getPracticeNotifications"];
     },
     billingNotifications () {
-      return this.$store.getters["billing/getBillingNotifications"]
+      return this.$store.getters["billings/getBillingNotifications"];
     },
     // jobNotifications () {
     //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
@@ -120,7 +120,8 @@ export default {
     notifications() {
       return [
         ...this.locumNotifications,
-        ...this.practiceNotifications
+        ...this.practiceNotifications,
+        ...this.billingNotifications,
       ].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
     }
   },
@@ -203,33 +204,22 @@ export default {
       let dateStart = notification.date_start;
       // path url
       let url = "";
-      if (type === "Billings") {
-        url =
-          this.$auth.user.domain === "Practice" &&
-          notification.practice_id === this.$auth.user.practice_id
-            ? `/practice-billing/invoices-from-locums`
-            : this.$auth.user.domain === "Practice" &&
-              notification.practice_id !== this.$auth.user.practice_id
-            ? `/hub-surgery-management/${notification.practice_surgery_id}/surgery-billings/invoices-from-locums`
-            : this.$auth.user.domain === "Locum" &&
-              notification.notification_billing_type === "Platform"
-            ? `/locum-billing/invoices`
-            : this.$auth.user.domain === "Locum" &&
-              notification.notification_billing_type === "Private"
-            ? `/locum-billing/private-invoices`
-            : null
+      if (type === "Admin Locum Billing Disputed") {
+        url = `/billings/hubzz-billing/${notification.payload.practice_id}/invoices-by-locums/${notification.id}`
+      } else if (type === "Admin Practice Invoice Past Due") {
+        url = `/billings/hubzz-billing/${notification.payload.practice_id}/practice-hubzz-invoices/${notification.id}`
       } else if (type === "Admin Locum Compliance") {
-        url = `/locums/${notification.locumNotification.locum_user_id}/locum-compliance/${notification.id}`;
+        url = `/locums/${notification.payload.locum_user_id}/locum-compliance/${notification.id}`
       } else if (type === "Admin Locum Profile") {
-        url = `/locums/${notification.id}`;
+        url = `/locums/${notification.id}`
       } else if (type === "Admin Practice Creation" || type === "Admin Practice Profile") {
-        url = `/practices/${notification.id}`;
+        url = `/practices/${notification.id}`
       } else if (type === "Admin Practice Surgery Creation") {
         if (notification.status === "Invited") {
-          url = `/practices/${notification.practice_id}/practice-surgeries/${notification.id}`;
+          url = `/practices/${notification.practice_id}/practice-surgeries/${notification.id}`
         }
         if (notification.status === "Accepted") {
-          url = `/practices/${notification.child_practice_id}/practice-hub`;
+          url = `/practices/${notification.child_practice_id}/practice-hub`
         }
       }
       if (url) {
@@ -238,20 +228,18 @@ export default {
         }, 500);
       }
       this.close(id, type, notification.notification_type);
+      // await this.$axios.$put(`/api/v1/admin/notifications/${notification.id}/seen`)
     },
     close(id, type, notificationType) {
       console.log("id", id);
-      if (type === "Billings") {
-        this.$store.commit("billing/REMOVE_PRACTICE_BILLING_NOTIFICATION", id);
-        this.$store.commit("billing/REMOVE_LOCUM_BILLING_NOTIFICATION", id);
+      if (type === "Admin Locum Billing Disputed" || type === "Admin Practice Invoice Past Due") {
+        this.$store.commit("billings/REMOVE_BILLING_NOTIFICATION", id);
       }
       if (type === "Admin Locum Compliance" || type === "Admin Locum Profile") {
         this.$store.commit(
-          "locums/REMOVE_LOCUM_NOTIFICATION",
-          id
-        );
+          "locums/REMOVE_LOCUM_NOTIFICATION",id);
       }
-      if (type === "Admin Practice Creation") {
+      if (type === "Admin Practice Creation" || type === "Admin Practice Profile") {
         this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id);
       }
 
@@ -271,6 +259,7 @@ export default {
         case "Matched":
         case "Draft":
         case "Invited":
+        case "Dormant":
           str = "bg-yellow-500";
           break;
         case "Applied":
@@ -280,6 +269,7 @@ export default {
         case "Paid":
         case "Completed":
         case "Approved":
+        case "Active":
           str = "bg-green-500 text-white";
           break;
         case "Allocated":
@@ -300,6 +290,7 @@ export default {
     clearNotifications() {
       this.$store.commit("locums/CLEAR_LOCUM_NOTIFICATIONS");
       this.$store.commit("practices/CLEAR_PRACTICE_NOTIFICATIONS");
+      this.$store.commit("billings/CLEAR_BILLING_NOTIFICATIONS");
     }
   }
 };

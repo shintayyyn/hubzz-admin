@@ -48,7 +48,7 @@ export default {
 	ADD_LOCUM_NOTIFICATION (state, payload) {
 		console.log('state.locumNotifications', state.locumNotifications)
 		console.log('payload', payload)
-		let index = state.locumNotifications.findIndex(locumNotif =>  locumNotif.locumNotification.id === payload.locumNotification.id)
+		let index = state.locumNotifications.findIndex(locumNotif =>  locumNotif.payload.id === payload.payload.id)
 		if (index < 0) {
 			state.locumNotifications.unshift(payload)
 		} else if (index >= 0) {
@@ -56,7 +56,7 @@ export default {
 		}
 	},
 	REMOVE_LOCUM_NOTIFICATION (state, payload) {
-		state.locumNotifications = state.locumNotifications.filter(locumNotif => locumNotif.locumNotification.id !== payload)
+		state.locumNotifications = state.locumNotifications.filter(locumNotif => locumNotif.payload.id !== payload)
 	},
 	CLEAR_LOCUM_NOTIFICATIONS (state) {
 		state.locumNotifications = []

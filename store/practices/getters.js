@@ -48,7 +48,7 @@ export default {
 					...notif,
 					id: notif.payload.id,
 					user_id: notif.payload.practice_user_id,
-					status: notif.payload.practice.status,
+					status: notif.payload.status,
 					notification_type: notif.notificationType,
 					type: 'Admin Practice Profile',
 					message
