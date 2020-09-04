@@ -791,12 +791,12 @@
                       <p class="mt-5 font-semibold">
                         Total Final Hours
                       </p>
-                      <p
-                        class="text-white"
-                      >
+
+                      <p class="text-white">
                         {{ modalJobPart.schedules.map(item => item.final_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
                       </p>
                     </template>
+                    
                     <p class="mt-5 font-semibold">
                       Job Description
                     </p>
