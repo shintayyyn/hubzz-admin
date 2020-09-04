@@ -625,7 +625,7 @@
 							</div>
 						</div>
 					</transition>
-					<div class="shield" v-if="show_late_reason"></div>
+					<div class="shield" v-if="show_late_reason" @click="show_late_reason = false"></div>
 				</div>
 			</div>
 		</div>
