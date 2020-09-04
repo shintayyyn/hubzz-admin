@@ -599,7 +599,7 @@
         <!-- SCHEDULES -->
         <JobSchedules
           v-if="job_part"        
-          :status="job_part.status"
+          :locumInvoiceable="job_part.locum_invoiceable"
           :schedules="job_part.schedules"
         />
       </div>

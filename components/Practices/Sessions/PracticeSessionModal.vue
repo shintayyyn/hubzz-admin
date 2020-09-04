@@ -607,13 +607,13 @@
             <!-- SCHEDULES -->
             <JobSchedules
               v-if="jobPart"        
-              :status="jobPart.status"
+              :locumInvoiceable="jobPart.locum_invoiceable"
               :schedules="jobPart.schedules"
             />
 
             <JobSchedules
               v-if="!jobPart && job"        
-              :status="job.status"
+              :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
               :schedules="job.schedules"
             />
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
