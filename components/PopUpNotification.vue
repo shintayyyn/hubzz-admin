@@ -1,7 +1,7 @@
 <template>
   <transition name="slide">
     <div
-      v-if="locumComplianceNotifications.length > 0 || practiceNotifications.length > 0"
+      v-if="locumNotifications.length > 0 || practiceNotifications.length > 0 || billingNotifications.length > 0"
       class="job-notification"
     >
       <div
@@ -91,18 +91,21 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       toggleNotification: true,
       showFocus: false
-    };
+    }
   },
   computed: {
-    locumComplianceNotifications() {
-      return this.$store.getters["locums/getLocumComplianceNotifications"];
+    locumNotifications () {
+      return this.$store.getters["locums/getLocumNotifications"]
     },
-    practiceNotifications() {
-      return this.$store.getters["practices/getPracticeNotifications"];
+    practiceNotifications () {
+      return this.$store.getters["practices/getPracticeNotifications"]
+    },
+    billingNotifications () {
+      return this.$store.getters["billings/getBillingNotifications"]
     },
     // jobNotifications () {
     //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
@@ -110,24 +113,20 @@ export default {
     //   }
     //   return this.$store.getters["jobs/getLocumJobNotifications"]
     // },
-    // billingNotifications () {
-    //   if (this.$auth.loggedIn && this.$auth.user.domain === "Practice") {
-    //     return this.$store.getters["billing/getPracticeBillingNotifications"]
-    //   }
-    //   return this.$store.getters["billing/getLocumBillingNotifications"]
-    // },
-    url() {
-      return this.$auth.user.domain === "Practice" ? "/sessions" : "/jobs";
+    
+    url () {
+      return this.$auth.user.domain === "Practice" ? "/sessions" : "/jobs"
     },
-    notifications() {
+    notifications () {
       return [
-        ...this.locumComplianceNotifications,
-        ...this.practiceNotifications
-      ].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        ...this.locumNotifications,
+        ...this.practiceNotifications,
+        ...this.billingNotifications,
+      ].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
     }
   },
   watch: {
-    notify() {
+    notify () {
       if (!this.$store.state.notification.closable) {
         setTimeout(() => {
           this.$store.commit("SET_NOTIFICATION", {
@@ -135,35 +134,35 @@ export default {
             status: "",
             text: "",
             closable: false
-          });
-        }, 2000);
+          })
+        }, 2000)
       }
     },
-    locumComplianceNotifications() {
+    locumNotifications () {
       this.notifications.sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
-      );
+      )
     },
-    practiceNotifications() {
+    practiceNotifications () {
       this.notifications.sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
-      );
+      )
     },
-    billingNotifications() {
+    billingNotifications () {
       this.notifications.sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
-      );
+      )
     },
-    jobNotifications() {
+    jobNotifications () {
       this.notifications.sort(
         (a, b) => new Date(b.updated_at) - new Date(a.updated_at)
-      );
+      )
     },
-    notifications(value) {
+    notifications (value) {
       value.forEach(item => {
         item.notif_date = this.$moment()
           .utc()
-          .format("DD/MM/YYYY, HH:mm:ss");
+          .format("DD/MM/YYYY, HH:mm:ss")
         // if (!item.updated_at) {
         //   item.updated_at = this.$moment()
         //     .utc()
@@ -176,126 +175,80 @@ export default {
         //     .utc()
         //     .format("MM-DD-YYYY h:mm a")
         // }
-      });
+      })
       this.notifications.sort(
         (a, b) => new Date(b.notif_date) - new Date(a.notif_date)
-      );
+      )
     }
   },
-  created() {},
+  created () {},
   methods: {
-    show(id) {
+    show (id) {
       return this.$router.push({
         path: `${this.url}/${id}`
-      });
+      })
     },
-    proceed(id) {
+    proceed (id) {
       return this.$router.push({
         path: `${this.url}/${id}`
-      });
+      })
     },
-    async goTo(notification) {
-      console.log("4", notification);
-      console.log("5", notification.status);
-      let type = notification.type;
-      let id = notification.id;
-      let status = notification.status
-        ? notification.status
-        : notification.locum_status;
-      let dateStart = notification.date_start;
-
-      this.$store.commit("calendar/CREATE_JOB_MODAL", false);
+    async goTo (notification) {
+      console.log("4", notification)
+      console.log("5", notification.status)
+      let type = notification.type
+      let id = notification.id
+      let notification_id = notification.payload ? notification.payload.notification_id : null
       // path url
-      let url = "";
-      if (type === "Billings") {
-        url =
-          this.$auth.user.domain === "Practice" &&
-          notification.practice_id === this.$auth.user.practice_id
-            ? `/practice-billing/invoices-from-locums`
-            : this.$auth.user.domain === "Practice" &&
-              notification.practice_id !== this.$auth.user.practice_id
-            ? `/hub-surgery-management/${notification.practice_surgery_id}/surgery-billings/invoices-from-locums`
-            : this.$auth.user.domain === "Locum" &&
-              notification.notification_billing_type === "Platform"
-            ? `/locum-billing/invoices`
-            : this.$auth.user.domain === "Locum" &&
-              notification.notification_billing_type === "Private"
-            ? `/locum-billing/private-invoices`
-            : null;
+      let url = ""
+      if (type === "Admin Locum Billing Disputed") {
+        url = `/billings/hubzz-billing/${notification.payload.practice_id}/invoices-by-locums/${notification.id}`
+      } else if (type === "Admin Practice Invoice Past Due") {
+        url = `/billings/hubzz-billing/${notification.payload.practice_id}/practice-hubzz-invoices/${notification.id}`
       } else if (type === "Admin Locum Compliance") {
-        url = `/locums/${notification.locumDetailComplianceDocument.locum_user_id}/locum-compliance/${notification.id}`;
-      } else if (type === "Admin Practice Creation") {
-        url = `/practices/${notification.id}`;
+        url = `/locums/${notification.payload.locum_user_id}/locum-compliance/${notification.id}`
+      } else if (type === "Admin Locum Profile") {
+        url = `/locums/${notification.id}`
+      } else if (type === "Admin Practice Creation" || type === "Admin Practice Profile") {
+        url = `/practices/${notification.id}`
       } else if (type === "Admin Practice Surgery Creation") {
         if (notification.status === "Invited") {
-          url = `/practices/${notification.practice_id}/practice-surgeries/${notification.id}`;
+          url = `/practices/${notification.practice_id}/practice-surgeries/${notification.id}`
         }
         if (notification.status === "Accepted") {
-          url = `/practices/${notification.child_practice_id}/practice-hub`;
+          url = `/practices/${notification.child_practice_id}/practice-hub`
         }
-      }
-
-      // for dashboard viewing, moves the date according to the job
-      if (url && url.includes("/dashboard")) {
-        let selectedMonth =
-          this.$moment()
-            .month(dateStart)
-            .format("M") - 1;
-
-        let selectedYear = this.$moment()
-          .month(dateStart)
-          .format("YYYY");
-
-        this.$store.commit(
-          "calendar/SELECT_DATE",
-          this.$moment(dateStart, "YYYY-MM-DD")
-            .set("month", selectedMonth)
-            .set("year", selectedYear)
-            .format("YYYY-MM-DD")
-        );
-      }
-      if (
-        url &&
-        (url.includes("/practice-hub") || url.includes("/practice-surgeries"))
-      ) {
-        this.$router.push("/practices");
       }
       if (url) {
         setTimeout(() => {
-          this.$router.push(url);
-        }, 500);
-        // this.$router.push({
-        //   path: `${url}`
-        // });
-        // this.$router.push(url);
+          this.$router.push(url)
+        }, 500)
       }
-      this.close(id, type, notification.notification_type);
+      this.close(id, type, notification_id)
     },
-    close(id, type, notificationType) {
-      console.log("id", id);
-      if (type === "Billings") {
-        this.$store.commit("billing/REMOVE_PRACTICE_BILLING_NOTIFICATION", id);
-        this.$store.commit("billing/REMOVE_LOCUM_BILLING_NOTIFICATION", id);
+    async close (id, type, notification_id) {
+      console.log("id", id)
+      if (type === "Admin Locum Billing Disputed" || type === "Admin Practice Invoice Past Due") {
+        await this.$store.commit("billings/REMOVE_BILLING_NOTIFICATION", id)
       }
-      if (type === "Admin Locum Compliance") {
-        this.$store.commit(
-          "locums/REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION",
-          id
-        );
+      if (type === "Admin Locum Compliance" || type === "Admin Locum Profile") {
+        await this.$store.commit(
+          "locums/REMOVE_LOCUM_NOTIFICATION",id)
       }
-      if (type === "Admin Practice Creation") {
-        this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id);
+      if (type === "Admin Practice Creation" || type === "Admin Practice Profile") {
+        await this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id)
       }
 
       if (type === "Admin Practice Surgery Creation") {
-        this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id);
+        await this.$store.commit("practices/REMOVE_PRACTICE_NOTIFICATION", id)
+      }
+
+      if (notification_id) {
+        await this.$axios.$put(`/api/v1/admin/notifications/${notification_id}/seen`)
       }
     },
-    status(status) {
-      // return status === "Matched" ? "AVAILABLE" : status.toUpperCase()
-    },
-    bgStatus(status) {
-      let str = "";
+    bgStatus (status) {
+      let str = ""
       switch (status) {
         case "Issued":
         case "Live":
@@ -303,37 +256,41 @@ export default {
         case "Matched":
         case "Draft":
         case "Invited":
-          str = "bg-yellow-500";
-          break;
+        case "Dormant":
+          str = "bg-yellow-500"
+          break
         case "Applied":
         case "Pending":
-          str = "bg-orange-400 text-white";
-          break;
+          str = "bg-orange-400 text-white"
+          break
         case "Paid":
         case "Completed":
         case "Approved":
-          str = "bg-green-500 text-white";
-          break;
+        case "Active":
+          str = "bg-green-500 text-white"
+          break
         case "Allocated":
         case "Accepted":
-          str = "bg-green-300";
-          break;
+          str = "bg-green-300"
+          break
         case "Ongoing":
-          str = "bg-green-500";
-          break;
+          str = "bg-green-500"
+          break
         case "Reminder":
-          str = "bg-gray-500";
-          break;
+          str = "bg-gray-500"
+          break
         default:
-          str = "bg-red-500 text-white";
+          str = "bg-red-500 text-white"
       }
-      return str;
+      return str
     },
-    clearNotifications() {
-      this.$store.commit("locums/CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION");
+    clearNotifications () {
+      this.$store.commit("locums/CLEAR_LOCUM_NOTIFICATIONS")
+      this.$store.commit("practices/CLEAR_PRACTICE_NOTIFICATIONS")
+      this.$store.commit("billings/CLEAR_BILLING_NOTIFICATIONS")
     }
   }
-};
+}
 </script>
 <style>
 .job-notification {

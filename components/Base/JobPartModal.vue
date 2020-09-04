@@ -393,11 +393,11 @@
                 <p class="text-white">
                   {{ job_part.issued ? 'Yes': 'No' }}
                 </p>
-                <p class="mt-5 font-semibold">
+                <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="mt-5 font-semibold">
                   Other Remarks
                 </p>
-                <p class="text-white">
-                  {{ job_part.locum_invoice_item.remarks }}
+                <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="text-white">
+                  {{ job_part.locum_invoice_item && job_part.locum_invoice_item.remarks ? job_part.locum_invoice_item.remarks : '' }}
                 </p>
                 <!--  -->
                 <!-- <template v-if="['Completed', 'Approved', 'Cancelled'].includes(job_part.status)">

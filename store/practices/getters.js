@@ -35,6 +35,27 @@ export default {
 				notifications.push(notifObj)
 			}
 
+			if (notif.notificationType === 'Admin Notification Practice Invoice Detail Updated') {
+				switch (notif.notificationType) {
+					case 'Admin Notification Practice Invoice Detail Updated':
+						message = 'A Practice has updated their Invoicing Details'
+						break
+					default:
+						message = ''
+				}
+
+				notifObj = {
+					...notif,
+					id: notif.payload.id,
+					user_id: notif.payload.practice_user_id,
+					status: notif.payload.status,
+					notification_type: notif.notificationType,
+					type: 'Admin Practice Profile',
+					message
+				}
+				notifications.push(notifObj)
+			}
+
 			if (notif.notificationType === 'Admin Notification Practice Surgery Created') {
 				switch (notif.payload.invitation_accepted) {
 					case false:
