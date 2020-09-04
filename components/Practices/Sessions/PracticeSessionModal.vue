@@ -784,7 +784,7 @@
                     </p>
 
                     <p class="text-white">
-                      {{ modalJobPart.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
+                      {{ modalJobPart ? modalJobPart.job_part_total_original_hours_in_minutes_formatted : null }}
                     </p>
 
                     <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
@@ -793,7 +793,7 @@
                       </p>
 
                       <p class="text-white">
-                        {{ modalJobPart.schedules.map(item => item.final_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
+                        {{ modalJobPart ? modalJobPart.job_part_total_final_hours_in_minutes_formatted : null }}
                       </p>
                     </template>
                     
