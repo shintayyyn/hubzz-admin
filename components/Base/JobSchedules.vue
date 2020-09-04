@@ -10,7 +10,7 @@
           <p
             class="flex-1 bg-gray-400 p-1 font-bold text-xs"
             :style="
-              ['Completed', 'Approved'].includes(status)
+              locumInvoiceable
                 ? 'min-width:100px;max-width:200px'
                 : 'min-width:190px;max-width:450px'
             "
@@ -19,7 +19,7 @@
           </p>
 
           <p
-            v-if="['Completed', 'Approved'].includes(status)"
+            v-if="locumInvoiceable"
             class="flex-1 text-center bg-gray-400 p-1 font-bold text-xs"
             style="min-width:100px;max-width:200px"
           >
@@ -29,7 +29,7 @@
           <p
             class="flex-1 text-center bg-gray-400 p-1 font-bold text-xs"
             :style="
-              ['Completed', 'Approved'].includes(status)
+              locumInvoiceable
                 ? 'min-width:100px;max-width:200px'
                 : 'min-width:180px;max-width:280px'
             "
@@ -40,7 +40,7 @@
           <p
             class="flex-1 text-center bg-gray-400 p-1 font-bold text-xs"
             :style="
-              ['Completed', 'Approved'].includes(status)
+              locumInvoiceable
                 ? 'min-width:100px;max-width:200px'
                 : 'min-width:180px;max-width:280px'
             "
@@ -48,7 +48,7 @@
             RATE
           </p>
 
-          <template v-if="['Completed', 'Approved'].includes(status)">
+          <template v-if="locumInvoiceable">
             <p
               class="flex-1 text-center bg-gray-400 p-1 font-bold text-xs"
               style="min-width:100px;max-width:500px"
@@ -70,7 +70,7 @@
             <p
               class="flex-1"
               :style="
-                ['Completed', 'Approved'].includes(status)
+                locumInvoiceable
                   ? 'min-width:100px;max-width:200px'
                   : 'min-width:190px;max-width:450px'
               "
@@ -79,7 +79,7 @@
             </p>
 
             <p
-              v-if="['Completed', 'Approved'].includes(status)"
+              v-if="locumInvoiceable"
               class="flex-1 text-center"
               style="min-width:100px;max-width:200px"
             >
@@ -89,7 +89,7 @@
             <p
               class="flex-1 text-center"
               :style="
-                ['Completed', 'Approved'].includes(status)
+                locumInvoiceable
                   ? 'min-width:100px;max-width:200px'
                   : 'min-width:180px;max-width:280px'
               "
@@ -100,7 +100,7 @@
             <p
               class="flex-1 text-center"
               :style="
-                ['Completed', 'Approved'].includes(status)
+                locumInvoiceable
                   ? 'min-width:100px;max-width:200px'
                   : 'min-width:180px;max-width:280px'
               "
@@ -108,7 +108,7 @@
               £{{ sched.rate }} {{ sched.locum_detail_rate_type.name }}
             </p>
 
-            <template v-if="['Completed', 'Approved'].includes(status)">
+            <template v-if="locumInvoiceable">
               <p
                 class="flex-1 text-center"
                 style="min-width:100px;max-width:500px"
@@ -132,9 +132,9 @@
 <script>
 export default {
   props: {
-    status: {
-      type: String,
-      default: () => null,
+    locumInvoiceable: {
+      type: Boolean,
+      default: false,
     },
 
     schedules: {

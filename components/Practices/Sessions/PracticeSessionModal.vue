@@ -607,13 +607,13 @@
             <!-- SCHEDULES -->
             <JobSchedules
               v-if="jobPart"        
-              :status="jobPart.status"
+              :locumInvoiceable="jobPart.locum_invoiceable"
               :schedules="jobPart.schedules"
             />
 
             <JobSchedules
               v-if="!jobPart && job"        
-              :status="job.status"
+              :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
               :schedules="job.schedules"
             />
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
@@ -784,19 +784,19 @@
                     </p>
 
                     <p class="text-white">
-                      {{ modalJobPart.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
+                      {{ modalJobPart ? modalJobPart.job_part_total_original_hours_in_minutes_formatted : null }}
                     </p>
 
                     <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
                       <p class="mt-5 font-semibold">
                         Total Final Hours
                       </p>
-                      <p
-                        class="text-white"
-                      >
-                        {{ modalJobPart.schedules.map(item => item.final_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}
+
+                      <p class="text-white">
+                        {{ modalJobPart ? modalJobPart.job_part_total_final_hours_in_minutes_formatted : null }}
                       </p>
                     </template>
+                    
                     <p class="mt-5 font-semibold">
                       Job Description
                     </p>
