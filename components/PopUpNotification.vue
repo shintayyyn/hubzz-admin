@@ -159,22 +159,9 @@ export default {
       )
     },
     notifications (value) {
+      console.log('value', value)
       value.forEach(item => {
-        item.notif_date = this.$moment()
-          .utc()
-          .format("DD/MM/YYYY, HH:mm:ss")
-        // if (!item.updated_at) {
-        //   item.updated_at = this.$moment()
-        //     .utc()
-        //     .format("MM-DD-YYYY h:mm a")
-        // } else if (item.updated_at) {
-        //   item.updated_at = this.$moment(
-        //     item.updated_at,
-        //     "YYYY-MM-DD[T]HH:mm:ss.SSS[Z]"
-        //   )
-        //     .utc()
-        //     .format("MM-DD-YYYY h:mm a")
-        // }
+        item.notif_date = item.payload.notification.created_at_in_gb_formatted
       })
       this.notifications.sort(
         (a, b) => new Date(b.notif_date) - new Date(a.notif_date)
