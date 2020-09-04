@@ -144,7 +144,7 @@
           <div class="p-4">
             <div 
               class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="confirm = true"
+              @click="toShowUnpaidModal()"
             >
               Mark Invoice as Invalid
             </div>
@@ -173,6 +173,35 @@
             </div>
           </div>
         </div>
+
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div v-if="unpaidModal === true && modalPaidUnpaid === false">
+            <div class="justify-center">
+              <AppInput
+                v-model="unpaidReason"
+                :type="'textarea'"
+                :name="'unpaidReason'"
+                :label="'Mark as Unpaid Reason (Optional)'"
+                :resize="false"
+                :rows="2"
+              />
+            </div>
+            <div class="flex flex-row mb-4">
+              <AppButton
+                :label="'Confirm'"
+                :background="'green'"
+                class="text-white mr-2"
+                @click="confirm = true"
+              />
+              <AppButton
+                :label="'Cancel'"
+                :background="'red'"
+                class="text-white mr-2"
+                @click="cancelPaymentModal()"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </transition>
 
@@ -184,6 +213,7 @@ import AppButton from "@/components/Base/AppButton"
 import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 // import AppDate from "@/components/Base/AppDate"
+import AppInput from "@/components/Base/AppInput"
 import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
@@ -191,7 +221,8 @@ export default {
 		AppTable,
 		AppDateToggled,
 		// AppDate,
-		AppConfirm
+    AppConfirm,
+    AppInput,
 	},
 	data () {
 		return {
@@ -265,7 +296,9 @@ export default {
 			showPaidModal: false,
       modalPaidUnpaid: false,
       paymentModal: false,
-			paidAt: null,
+      unpaidModal: false,
+      paidAt: null,
+      unpaidReason: '',
 			invoiceId: "",
 			confirm: false,
 		}
@@ -369,17 +402,26 @@ export default {
       this.paidAt = null
     },
 
-    toShowPaymentModal () {
-      this.modalPaidUnpaid = false
-      this.paymentModal = true
-      this.paidAt = null
-    },
-    
-		toShowPaidModal (itemId) {
+    toShowPaidModal (itemId) {
 			this.showPaidModal = true
       this.modalPaidUnpaid = true
       this.invoiceId = itemId
       this.paidAt = null
+      this.unpaidReason = null
+    },
+
+    toShowPaymentModal () {
+      this.modalPaidUnpaid = false
+      this.paymentModal = true
+      this.paidAt = null
+      this.unpaidReason = null
+    },
+    
+    toShowUnpaidModal () {
+      this.unpaidModal = true
+      this.modalPaidUnpaid = false
+      this.paidAt = null
+      this.unpaidReason = null
     },
 
     settlePayment (){
@@ -418,7 +460,9 @@ export default {
 
     async toMarkAsUnpaid () {
       await this.$axios
-        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`)
+        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`,{
+          unpaid_reason: this.unpaidReason,
+        })
         .then(() => {
           this.confirm = false
           this.showPaidModal = false
@@ -443,10 +487,12 @@ export default {
 
     closeModals () {
       this.showPaidModal = false
+      this.unpaidModal = false
       this.modalPaidUnpaid = false
       this.paymentModal = false
       this.confirm = false
       this.paidAt = null
+      this.unpaidReason = null
     },
 
 		practiceTypeStyle (type) {

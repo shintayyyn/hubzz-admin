@@ -331,7 +331,7 @@
           class="align-middle px-2 text-center w-64"
         >Locum Invoice Status</div>
         <div
-          v-if="tabStatus == 'Completed'"
+          v-if="tabStatus == 'Completed' && !locumUser"
           class="align-middle px-2 text-center w-64"
         >Invoiced by HUBZZ?</div>
       </div>

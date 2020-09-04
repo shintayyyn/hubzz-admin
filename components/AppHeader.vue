@@ -28,7 +28,7 @@
             <div class="notification-modal overflow-hidden">
               <div class="flex flex-row m-4 justify-between">
                 <div class="">
-                  <p class="text-lg">
+                  <p class="text-xl font-bold tracking-normal">
                     Notifications
                   </p>
                 </div>
@@ -50,11 +50,12 @@
                     @click="goTo(item)"
                   >
                     <div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
-                      <span class="uppercase text-xs font-bold">{{ item.notification_type.domain }}</span>
-                      <span class="pb-2">{{ item.title }}</span>
-                      <span class="uppercase text-xs font-bold">{{ item.notification_type.name }}</span>
+                      <!-- <span class="uppercase text-xs font-bold">{{ item.notification_type.domain }}</span> -->
+                      <span class="uppercase text-xs font-bold pb-2">{{ item.title }}</span>
+                      <!-- <span class="uppercase text-xs font-bold">{{ item.notification_type.name }}</span> -->
                       <span>{{ item.description }}</span>
                     </div>
+                    <span class="text-xs text-gray-400">{{ item.created_at_in_gb_formatted }}</span>
                   </div>
                 </div>
                 <div v-else>
@@ -279,7 +280,7 @@ export default {
 	left: 80%;
 	top: 19%;
 	transform: translate(-86%, -15%);
-	border-radius: 15px;
+	border-radius: 10px;
 	width: 380px;
 	max-width: 95%;
 	overflow: hidden;

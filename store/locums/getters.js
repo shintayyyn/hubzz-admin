@@ -17,8 +17,8 @@ export default {
 	
 				notifObj = {
 					...notif,
-					id: notif.locumNotification.id,
-					status: notif.locumNotification.status,
+					id: notif.payload.id,
+					status: notif.payload.status,
 					notification_type: notif.notificationType,
 					type: 'Admin Locum Compliance',
 					message
@@ -37,8 +37,8 @@ export default {
 	
 				notifObj = {
 					...notif,
-					id: notif.locumNotification.id,
-					status: notif.locumNotification.status,
+					id: notif.payload.id,
+					status: notif.payload.status,
 					notification_type: notif.notificationType,
 					type: 'Admin Locum Profile',
 					message
@@ -57,8 +57,8 @@ export default {
 	
 				notifObj = {
 					...notif,
-					id: notif.locumNotification.id,
-					status: notif.locumNotification.status,
+					id: notif.payload.id,
+					status: notif.payload.status,
 					notification_type: notif.notificationType,
 					type: 'Admin Locum Profile',
 					message
@@ -77,8 +77,8 @@ export default {
 	
 				notifObj = {
 					...notif,
-					id: notif.locumNotification.id,
-					status: notif.locumNotification.status,
+					id: notif.payload.id,
+					status: notif.payload.status,
 					notification_type: notif.notificationType,
 					type: 'Admin Locum Billing',
 					message

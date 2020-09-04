@@ -281,7 +281,7 @@
 
     <!--SETTLE PAYMENT MODAL -->
     <transition name="fade" mode="out-in">
-      <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
+      <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border- -4 border-sunglow shadow-lg overflow-hidden">
         <!-- TO PAID CONFIRM CANCEL -->
         <transition name="drop" mode="out-in">
           <AppConfirm
@@ -318,12 +318,14 @@
           <div class="p-4">
             <div 
               class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="confirm = true"
+              @click="toShowUnpaidModal()"
             >
               Mark Payment as Invalid
             </div>
           </div>
         </div>
+
+        
 
         <div class="flex flex-col w-full text-white px-8 justify-between">
           <div v-if="paymentModal === true && modalPaidUnpaid === false">
@@ -336,6 +338,34 @@
                 :background="'green'"
                 class="text-white mr-2"
                 :disabled="paidAt ? false : true"
+                @click="confirm = true"
+              />
+              <AppButton
+                :label="'Cancel'"
+                :background="'red'"
+                class="text-white mr-2"
+                @click="cancelPaymentModal()"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col w-full text-white px-8 justify-between">
+          <div v-if="unpaidModal === true && modalPaidUnpaid === false">
+            <div class="justify-center">
+              <AppInput
+                v-model="unpaidReason"
+                :type="'textarea'"
+                :name="'unpaidReason'"
+                :label="'Mark as Unpaid Reason (Optional)'"
+                :resize="false"
+                :rows="2"
+              />
+            </div>
+            <div class="flex flex-row mb-4">
+              <AppButton
+                :label="'Confirm'"
+                :background="'green'"
+                class="text-white mr-2"
                 @click="confirm = true"
               />
               <AppButton
@@ -467,7 +497,9 @@ export default {
 			showPaidModal: false,
       modalPaidUnpaid: false,
       paymentModal: false,
-			paidAt: null,
+      unpaidModal: false,
+      paidAt: null,
+      unpaidReason: '',
 			invoiceId: "",
 			confirm: false,
       
@@ -825,9 +857,11 @@ export default {
     },
 
     cancelPaymentModal () {
-      this.paymentModal = false 
+      this.paymentModal = false
+      this.unpaidModal = false 
       this.modalPaidUnpaid = true
       this.paidAt = null
+      this.unpaidReason = null
     },
     closeModals () {
       this.showPaidModal = false
@@ -847,6 +881,13 @@ export default {
       this.modalPaidUnpaid = false
       this.paymentModal = true
       this.paidAt = null
+      this.unpaidReason = null
+    },
+    toShowUnpaidModal () {
+      this.modalPaidUnpaid = false
+      this.unpaidModal = true
+      this.paidAt = null
+      this.unpaidReason = null
     },
     settlePayment (){
       if(this.paidAt) {
@@ -857,13 +898,17 @@ export default {
     },
     async toMarkAsUnpaid () {
       await this.$axios
-        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`)
+        .$put(`/api/v1/admin/practice-invoices/${this.invoiceId}/unpaid`,{
+          unpaid_reason: this.unpaidReason,
+        })
         .then(() => {
           this.confirm = false
           this.showPaidModal = false
           this.paymentModal = false 
+          this.unpaidModal = false
           this.modalPaidUnpaid = false
           this.paidAt = null
+          this.unpaidReason = null
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
