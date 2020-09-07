@@ -210,6 +210,13 @@ export default {
       this.$emit('practiceUpdated', practice)
     },
 
+    async getPractice () {
+      await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
+        const practice = res.data.practice
+        this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+      })
+    },
+
     goBack () {
       let url = "/practices"
       if (this.practice.status === "Inactive") {

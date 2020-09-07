@@ -222,6 +222,11 @@ export default {
     try {
       this.loadingSurgeries = true
 
+      await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
+        const practice = res.data.practice
+        this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+      })
+
       const count = await this.$axios
         .get(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/count`)
         .then(response => response.data.data.count)

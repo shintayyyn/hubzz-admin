@@ -239,7 +239,7 @@
 														v-if="[true, 'true'].includes(shift.has_absences) && shift.absent_reason"
 														@click="lateChange(shift, index, i, 'absent')"
 														class="px-2 py-1 text-gray-700 border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
-													>Reason</button>
+													>Reasondsadsadsa</button>
 												</div>
 											</div>
 										</div>
@@ -2300,10 +2300,33 @@ export default {
 };
 </script>
 <style>
+.mark-paid-modal {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	min-width: 600px;
+	min-height: 640px;
+	max-width: 95%;
+	max-height: 80%;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	background-color: #505561;
+	z-index: 512;
+}
 .message-modal.mini-modal {
-	min-width: 25vw;
 	z-index: 56;
 	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	min-width: 25vw;
+	min-height: 15vw;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	z-index: 512;
 }
 select.custom-select {
 	background: transparent;

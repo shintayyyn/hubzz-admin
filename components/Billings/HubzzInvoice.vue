@@ -23,13 +23,6 @@
       >
         *This Invoice has already been exported on {{ $moment(practiceInvoice.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY, h:mm:ss a') }}
       </div>
-      <!-- <AppButton
-        v-if="forViewing == true" 
-				class="mr-2"
-				:label="'Test Multiple Page'"
-				:icon="'cloud-download'"
-				@click="testMultiplePage()"
-			/>-->
 
       <!-- <AppButton
         v-if="forViewing == false"
@@ -656,6 +649,7 @@
     <div class="m-4">
       <AppButton
         v-if="forViewing == false"
+        :disabled="saveAsDisabled ? true : false"
         :label="'Save as Final'"
         :icon="'save-icon'"
         @click="createInvoice()"
@@ -689,6 +683,7 @@ export default {
 	],
 	data () {
 		return {
+      saveAsDisabled: false,
       forPeriodDateStart: "",
       forPeriodDateEnd: "",
 			toPostPracticeInvoice: {
@@ -890,16 +885,6 @@ export default {
 	},
 
 	methods: {
-		async testHtml () {
-			window.open(
-				`${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/html`
-			)
-		},
-
-		async testMultiplePage () {
-			window.open(`${process.env.API_URL}/practice-invoices/test/pdf`)
-    },
-    
 		toPDF () {
 			if (this.locumInvoice) {
 				window.open(
@@ -997,6 +982,7 @@ export default {
 		},
 
 		async createInvoice () {
+      this.saveAsDisabled = true
       this.createdDebitItems = await this.createdDebitItems.filter(disputedItem => disputedItem.total !== 0)
       this.createdCreditItems = await this.createdCreditItems.filter(creditItem => creditItem.total !== 0)
       this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
@@ -1025,22 +1011,24 @@ export default {
 				await this.$axios
 					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 					.then(() => {
+            this.$emit("goBack")
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
 							text: "Invoice Posted"
             })
-            this.$emit("goBack")
-						// this.$router.go(-1)
+            this.saveAsDisabled = false
 					})
 					.catch(err => {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",
 							text: err.response.data.message
-						})
+            })
+            this.saveAsDisabled = false
 					})
 			} else {
+        this.saveAsDisabled = false
 				this.$emit("formError")
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,

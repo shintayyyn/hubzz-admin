@@ -38,12 +38,12 @@
                     {{ job.job_number }}
                   </p>
                   <p class="mt-3 font-semibold mb-1"> 
-                    Rate
+                    Rates
                   </p>
                   <p
                     class="text-white no-underline"
                   >
-                    {{ job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour" }}
+                    {{ job.job_rate_ranged_formatted && job.job_rate_type_names_formatted ? ` ${job.job_rate_ranged_formatted} | ${job.job_rate_type_names_formatted}`: '' }}
                   </p>
                   <p class="mt-3 font-semibold">
                     Total Hours
@@ -320,6 +320,11 @@
                 </GmapMap>
               </div>
             </div>
+            <!-- <JobSchedules
+              v-if="job_part"        
+              :locumInvoiceable="job_part.locum_invoiceable"
+              :schedules="job_part.schedules"
+            /> -->
           </div>
         </div>
       </div>
