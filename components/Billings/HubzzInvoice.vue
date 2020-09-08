@@ -1,5 +1,6 @@
 <template>
   <div class="text-black">
+    <AppLoading :loading="loading" spinner :message="'Processing'" />
     <!-- HEADER -->
     <div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
       <AppButton
@@ -21,7 +22,7 @@
         v-if="practice && practiceInvoice && practiceInvoice.exported_at"
         class="text-white m-2"
       >
-        *This Invoice has already been exported on {{ $moment(practiceInvoice.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY, h:mm:ss a') }}
+        *This Invoice has already been exported on {{ practiceInvoice.exported_at_in_gb_formatted }}
       </div>
 
       <!-- <AppButton
@@ -77,7 +78,7 @@
 
     <!-- BODY -->
     <!-- FIRST PAGE -->
-    <AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
+    
     <div
       id="toPrint"
       class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
@@ -121,8 +122,8 @@
                       <div>For the period</div>
                       <div>
                         <span>
-                          {{ dateStart ? $moment(dateStart).format('DD/MM/YYYY') : $moment(toPostPracticeInvoice.date_start).format('DD/MM/YYYY') }} to
-                          {{ dateEnd ? $moment(dateEnd).format('DD/MM/YYYY') : $moment(toPostPracticeInvoice.date_end).format('DD/MM/YYYY') }}
+                          {{ dateStart ? $moment(dateStart).format('DD/MM/YYYY') : $moment(forPeriodDateStart).format('DD/MM/YYYY') }} to
+                          {{ dateEnd ? $moment(dateEnd).format('DD/MM/YYYY') : $moment(forPeriodDateEnd).format('DD/MM/YYYY') }}
                         </span>
                       </div>
                     </div>
@@ -208,12 +209,12 @@
                 <p
                   class="w-full text-left px-2 py-1"
                 >
-                  {{ item.total_hours | currency }}
+                  {{ item.total_hours | currency }} Hours
                 </p>
               </div>
               <div v-else class="max-w px-2 py-1 w-1/6">
                 <div v-if="!byLocum">
-                  {{ item.total_hours | currency }}
+                  {{ item.total_hours | currency }} Hours 
                 </div>
               </div>
               <!-- AMOUNT TOTAL -->
@@ -772,8 +773,16 @@ export default {
         let invoiceItemHours = this.invoiceItems.map(invoiceItem => 
           parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0)
         )
-        totalHours = invoiceItemHours.reduce(reducer)
+        totalHours = totalHours + invoiceItemHours.reduce(reducer)
       }
+
+      if (this.disputedItems && this.disputedItems.length > 0) {
+        let invoiceItemHours = this.disputedItems.map(invoiceItem => 
+          parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0)
+        )
+        totalHours = totalHours + invoiceItemHours.reduce(reducer)
+      }
+      
       return totalHours.toFixed(2)
     },
     subTotal () {
@@ -1007,10 +1016,13 @@ export default {
       this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
 
+      console.log(this.toPostPracticeInvoice)
+
 			if (this.toPostPracticeInvoice.items.length > 0) {
 				await this.$axios
 					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 					.then(() => {
+  
             this.$emit("goBack")
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
@@ -1024,6 +1036,7 @@ export default {
 							status: "danger",
 							text: err.response.data.message
             })
+  
             this.saveAsDisabled = false
 					})
 			} else {
@@ -1038,6 +1051,7 @@ export default {
     },
     
     setInitialState () {
+      this.saveAsDisabled = false
       if (this.locumInvoice) {
         this.form.locum_invoice_id = this.locumInvoice.id
         this.form.date_start = this.locumInvoice.date_start

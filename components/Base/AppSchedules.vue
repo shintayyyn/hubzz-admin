@@ -554,7 +554,7 @@
                         <!-- FINAL START -->
                         <div class="flex flex-col items-center justify-center text-center w-2/12">
                           <!-- invoiceStatus === 'to-be-invoiced' || (shift.dispute && invoiceStatus !== 'to-be-invoiced') -->
-                          <template
+                          <!-- <template
                             v-if="
                               $auth.user.domain === 'Locum'
                                 ? !toDisplay
@@ -599,18 +599,16 @@
                             >
                               Invalid End Time
                             </p>
-                          </template>
+                          </template> -->
 
-                          <template
-                            v-else
-                          >
+                          <template>
                             {{ shift.final_time_start ? shift.final_time_start : '-' }}
                           </template>
                         </div>
 
                         <!-- FINAL END -->
                         <div class="flex items-center justify-center text-center w-2/12">
-                          <AppTime
+                          <!-- <AppTime
                             v-if="$auth.user.domain === 'Locum' ? !toDisplay : (shift.dispute && !['issued', 'approved'].includes(invoiceStatus))"
                             v-model="shift.final_time_end"
                             :name="`final_time_end-s${index}-${i}`"
@@ -641,8 +639,8 @@
                               onChangeField(shift, item.date)
                             "
                             @blur="CheckIfEmpty(shift.final_time_end, `final_time_end-s${index}-${i}`)"
-                          />
-                          <template v-else>
+                          /> -->
+                          <template>
                             {{ shift.final_time_end ? shift.final_time_end : '-' }}
                           </template>
                         </div>
