@@ -239,7 +239,7 @@
 										<label :for="slotProps.item" />
 									</template>
 									<template v-slot:approved_completed_at="slotProps">
-										<div>{{ slotProps.item.approved_at ? slotProps.item.approved_at : slotProps.item.completed_at }}</div>
+										<div>{{ slotProps.item.approved_at_in_gb_formatted ? slotProps.item.approved_at_in_gb_formatted : slotProps.item.completed_at_in_gb_formatted }}</div>
 									</template>
 									<template v-slot:status_slot="slotProps">
 										<div
