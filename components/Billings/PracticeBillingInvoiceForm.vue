@@ -476,7 +476,7 @@
 				</div>
 			</div>
 		</template>
-		<div class="flex justify-start items-center mb-6">
+		<!-- <div class="flex justify-start items-center mb-6">
 			<AppButton
 				v-if="propInvoice && !['Approved', 'Paid'].includes(propInvoice.status) && allowToBill"
 				class="m-1"
@@ -493,7 +493,7 @@
 				:disabled="saveLoading"
 				@click="save(false)"
 			/>
-		</div>
+		</div> -->
 	</section>
 </template>
 

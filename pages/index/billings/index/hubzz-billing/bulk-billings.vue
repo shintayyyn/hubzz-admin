@@ -104,7 +104,7 @@
 								type="checkbox"
 								value="true"
 							/>
-							<label for="dependentSpokesOnly">Show Spokes(grouped by Hubs)</label>
+							<label for="dependentSpokesOnly">Show Dependent Spokes(grouped by Hubs)</label>
 						</div>
 						<div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
 							<input
@@ -560,10 +560,10 @@ export default {
 
 		orderAlphabeticalAsc: function(value) {
 			if (value === true) {
-				this.practiceParams.order_by = "practice_name:asc";
+				this.practiceParams.order_by = ["practice_name:asc"];
 				this.orderAlphabeticalDesc = false;
 			} else {
-				this.practiceParams.order_by = "created_at:desc";
+				this.practiceParams.order_by = ["created_at:desc"];
 			}
 
 			this.getBillablePractices();
@@ -571,10 +571,10 @@ export default {
 
 		orderAlphabeticalDesc: function(value) {
 			if (value === true) {
-				this.practiceParams.order_by = "practice_name:desc";
+				this.practiceParams.order_by = ["practice_name:desc"];
 				this.orderAlphabeticalAsc = false;
 			} else {
-				this.practiceParams.order_by = "created_at:desc";
+				this.practiceParams.order_by = ["created_at:desc"];
 			}
 
 			this.getBillablePractices();
