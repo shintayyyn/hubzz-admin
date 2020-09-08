@@ -1017,7 +1017,6 @@ export default {
 							status: "success",
 							text: "Invoice Posted"
             })
-            this.saveAsDisabled = false
 					})
 					.catch(err => {
 						this.$store.commit("SET_NOTIFICATION", {
