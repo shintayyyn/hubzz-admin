@@ -2952,11 +2952,18 @@ export default {
 
 <style>
 .message-modal.mini-modal {
-  min-width: 25vw;
-  z-index: 56;
-  position: fixed;
+	z-index: 56;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	min-width: 25vw;
+	min-height: 15vw;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	z-index: 512;
 }
-
 select.custom-select {
   background: transparent;
   appearance: none;

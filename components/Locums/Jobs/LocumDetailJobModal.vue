@@ -131,6 +131,13 @@
               </div>
 
               <div class="w-full md:w-1/2 mb-4 md:px-2">
+                <JobSchedules
+                  v-if="job"
+                  class="-mx-2" 
+                  :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
+                  :schedules="job.schedules"
+                />
+
                 <p class="mb-2 font-semibold">
                   Duration
                 </p>
@@ -320,11 +327,6 @@
                 </GmapMap>
               </div>
             </div>
-            <!-- <JobSchedules
-              v-if="job_part"        
-              :locumInvoiceable="job_part.locum_invoiceable"
-              :schedules="job_part.schedules"
-            /> -->
           </div>
         </div>
       </div>
@@ -335,7 +337,11 @@
 </template>
 <script>
 import { gmapApi } from "vue2-google-maps"
+import JobSchedules from "@/components/Base/JobSchedules"
 export default {
+   components: {
+    JobSchedules,
+  },
 	props: ["job"],
 	computed: {
 		google: gmapApi,

@@ -821,11 +821,11 @@ export default {
     },
 
     async toChangePracticeType (practiceID) {
-      try {
-        await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`, this.toPutPracticeType)
+      await this.$axios.put(`/api/v1/admin/practices/${practiceID}/practice-type`, this.toPutPracticeType).then((response) => {
+        const practice = response.data.data.practice
 
-        this.$emit('practiceUpdated')
-
+        this.$emit('practiceUpdated', practice)
+        
         this.toEdit = false
 
         this.toEditPracticeType = false
@@ -835,14 +835,13 @@ export default {
           status: "success",
           text: "Saved"
         })
-      } catch (err) {
+      }).catch(err => {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: err.response.data.message
         })
-        console.log("change practice type error!", err.message)
-      }
+      })
     },
 
     async toMarkBogus () {
