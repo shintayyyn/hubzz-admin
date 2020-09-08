@@ -510,6 +510,8 @@ export default {
     },
   },
   
+
+
   mounted () {
     this.getPractices()
 

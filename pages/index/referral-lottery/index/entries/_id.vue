@@ -17,6 +17,7 @@
         :total="count"
         :items="entries"
         :current-page="current_page"
+        :customItemsWidth="'cursor-default'"
         :perPage="limit"
         :columns="columns"
         :loading="loading"

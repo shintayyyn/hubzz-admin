@@ -238,6 +238,18 @@ module.exports = {
 			contain: "contain"
 		},
 
+		cursor: {
+			auto: 'auto',
+			default: 'default',
+			pointer: 'pointer',
+      wait: 'wait',
+			text: 'text',
+      move: 'move',
+			'not-allowed': 'not-allowed',
+      crosshair: 'crosshair',
+      'zoom-in': 'zoom-in',
+		},
+
 		borderWidth: {
 			default: "1px",
 			"0": "0",

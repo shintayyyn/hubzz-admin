@@ -38,6 +38,7 @@
           </div>
         </div>
         <!-- HEADER ENDS HERE -->
+        <!-- RECORDS START HERE -->
         <div 
           v-for="item in items" 
           :key="item.id" 
@@ -245,9 +246,9 @@
     methods: {
       recordClass () {
         if(this.routerLink && this.itemsOnTop === true) {
-          return "transition-hover hover:bg-waterloo-dark items-start ".concat(this.customItemsWidth ? this.customItemsWidth : '') 
+          return "transition-hover hover:bg-waterloo-dark items-start".concat(this.customItemsWidth ? this.customItemsWidth : '') 
         } else if (this.routerLink && this.itemsOnTop === false) {
-          return "transition-hover hover:bg-waterloo-dark items-start md:items-center ".concat(this.customItemsWidth ? this.customItemsWidth : '')
+          return "transition-hover hover:bg-waterloo-dark items-start md:items-center".concat(this.customItemsWidth ? this.customItemsWidth : '')
         } else if (this.routerLink && this.itemsOnTop === true) {
           return "cursor-default items-start ".concat(this.customItemsWidth ? this.customItemsWidth : '')
         } else if (this.routerLink && this.itemsOnTop === false) {

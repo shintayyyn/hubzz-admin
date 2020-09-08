@@ -323,8 +323,8 @@ export default {
         },
         {
           name: "Invited at",
-          dataIndex: "created_at",
-          class: "localDate text-center"
+          dataIndex: "created_at_in_gb_formatted",
+          class: "text-center"
         },
         {
           name: "Actions",
@@ -426,6 +426,13 @@ export default {
   },
 
   methods: {
+    async getPractice () {
+      await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
+        const practice = res.data.practice
+        this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+      })
+    },
+    
     getHubInvitations () {
       this.$store
         .dispatch("practices/fetchHubInvitations", {

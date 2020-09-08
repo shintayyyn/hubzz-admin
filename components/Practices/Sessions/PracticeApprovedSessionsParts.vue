@@ -112,7 +112,7 @@
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Approved At</strong>
-              <span>{{ item.appointed_at_in_gb_formatted }}</span>
+              <span>{{ item.approved_at_in_gb_formatted }}</span>
             </div>
           </nuxt-link>
         </div>

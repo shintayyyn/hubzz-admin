@@ -34,7 +34,7 @@
                 >
                   <span
                     class="absolute top-0 right-0 cursor-pointer py-2 px-4 rounded-full text-lg font-bold hover:text-gray-700"
-                    @click.prevent.stop="close(notification.id, notification.type, notification.notification_type)"
+                    @click.prevent.stop="close(notification.id, notification.type, notification.payload.notification_id)"
                   >x</span>
                   <div class="flex flex-wrap w-48 md:w-64">
                     <div class="flex flex-col items-start my-1 w-full">
@@ -214,7 +214,9 @@ export default {
       this.close(id, type, notification_id)
     },
     async close (id, type, notification_id) {
-      console.log("id", id)
+      console.log("close id", id)
+      console.log("close type", type)
+      console.log("close notification_id", notification_id)
       if (type === "Admin Locum Billing Disputed" || type === "Admin Practice Invoice Past Due") {
         await this.$store.commit("billings/REMOVE_BILLING_NOTIFICATION", id)
       }

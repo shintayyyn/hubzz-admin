@@ -38,12 +38,12 @@
                     {{ job.job_number }}
                   </p>
                   <p class="mt-3 font-semibold mb-1"> 
-                    Rate
+                    Rates
                   </p>
                   <p
                     class="text-white no-underline"
                   >
-                    {{ job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour" }}
+                    {{ job.job_rate_ranged_formatted && job.job_rate_type_names_formatted ? ` ${job.job_rate_ranged_formatted} | ${job.job_rate_type_names_formatted}`: '' }}
                   </p>
                   <p class="mt-3 font-semibold">
                     Total Hours
@@ -131,6 +131,13 @@
               </div>
 
               <div class="w-full md:w-1/2 mb-4 md:px-2">
+                <JobSchedules
+                  v-if="job"
+                  class="-mx-2" 
+                  :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
+                  :schedules="job.schedules"
+                />
+
                 <p class="mb-2 font-semibold">
                   Duration
                 </p>
@@ -330,7 +337,11 @@
 </template>
 <script>
 import { gmapApi } from "vue2-google-maps"
+import JobSchedules from "@/components/Base/JobSchedules"
 export default {
+   components: {
+    JobSchedules,
+  },
 	props: ["job"],
 	computed: {
 		google: gmapApi,

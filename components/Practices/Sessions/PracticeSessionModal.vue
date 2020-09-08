@@ -507,9 +507,9 @@
             </div>
           </div>
           <!-- GOOGLE MAPS -->
-          <div
+          <!-- <div
             v-if="jobPart && modalJobPart && modalJobPart.job ? modalJobPart.job.platform_job : null"
-            class="p-4 my-4 md:mt-0 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white"
+            class="p-4 my-4 md:mt-0 text-sm no-underline shadow-lg rounded-lg bg-orange-500 shadow text-white"
           >
             <div class="text-white pb-2">
               <div class="font-semibold">
@@ -535,7 +535,7 @@
                 />
               </GmapMap>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
@@ -634,7 +634,7 @@
                   <div
                     class="text-xs sm:text-sm mb-8"
                   >
-                    {{ modalJobPart.job.platform_job.cancelled_at | localDate }}
+                    {{ modalJobPart.cancelled_at_in_gb_formatted }}
                   </div>
                   <div
                     class="font-bold text-sm sm:text-md"

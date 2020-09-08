@@ -142,19 +142,19 @@ export default {
 				},
 				{
 					name: "Approved At",
-					dataIndex: "approved_at",
-					class: "text-center localDate",
+					dataIndex: "approved_at_in_gb_formatted",
+					class: "text-center",
 					sortable: true
 				},
 				{
           name: "From",
-          dataIndex: "date_time_start",
+          dataIndex: "datetime_start_in_gb_formatted",
 					class: "text-center",
 					sortable: true
 				},
 				{
           name: "To",
-          dataIndex: "date_time_end",
+          dataIndex: "datetime_end_in_gb_formatted",
 					class: "text-center",
 					sortable: true
 				},

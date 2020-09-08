@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
-    <div class="flex flex-row justify-start overflow-x-auto py-3">
+    <div class="flex justify-start my-2">
       <div class="relative">
         <nuxt-link
           to="/referral-lottery?status=entries"
