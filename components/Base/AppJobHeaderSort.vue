@@ -172,7 +172,7 @@
           />
         </div>
         <div
-          v-if="tabStatus !== 'Approved' && tabStatus !== 'Allocated' && tabStatus !== 'Ongoing' "
+          v-if="tabStatus !== 'Approved' && tabStatus !== 'Allocated' && tabStatus !== 'Ongoing' && locumTabStatus !== 'Allocated' && locumTabStatus !== 'Ongoing' "
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
           @click="sortBy('job_date_created',currentPage,search)"
         >
@@ -203,7 +203,7 @@
           />
         </div>
         <div
-          v-if="tabStatus === 'Allocated' && tabStatus === 'Ongoing' "
+          v-if="tabStatus === 'Allocated' || tabStatus === 'Ongoing' || locumTabStatus === 'Allocated' || locumTabStatus === 'Ongoing'"
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
           @click="sortBy('job_appointed_at',currentPage,search)"
         >
@@ -396,6 +396,10 @@ export default {
       sortType: "",
       order_by: ""
     };
+  },
+
+  created () {
+    console.log('tabstatus',this.tabStatus)
   },
 
   watch: {
