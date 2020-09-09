@@ -203,13 +203,13 @@
               v-if="slotProps.item.unpaid_at" 
               class="px-2"
             >
-              {{ slotProps.item.unpaid_at ? 'Marked Invalid at ' + $moment(slotProps.item.unpaid_at).format('DD/MM/YYYY') : null }}
+              {{ slotProps.item.unpaid_at ? `Marked Invalid at  ${slotProps.item.unpaid_at_in_gb_formatted }`: null }}
             </div>
             <div 
               v-else-if="slotProps.item.paid_at"
               class="flex items-center justify-center"
             >
-              {{ slotProps.item.paid_at ? 'Paid at ' + $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : null }}
+              {{ slotProps.item.paid_at ? `Paid at ${slotProps.item.paid_at_in_gb_formatted}` : null }}
             </div>
             <div 
               v-else
