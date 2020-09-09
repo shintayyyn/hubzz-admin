@@ -24,20 +24,6 @@
       >
         *This Invoice has already been exported on {{ practiceInvoice.exported_at_in_gb_formatted }}
       </div>
-
-      <!-- <AppButton
-        v-if="forViewing == false"
-        class="m-2" 
-        :label="'Save as Draft'" 
-        :icon="'save-icon'"
-			/>-->
-      <!-- <AppButton
-        v-if="forViewing == false"
-        class="m-2" 
-        :label="'Clear Entries'" 
-        :icon="'save-icon'"
-        @click="clearEntries()"
-			/>-->
     </div>
     <div
       v-if="practice && practiceInvoice && practice.direct_debit === false"
@@ -547,68 +533,7 @@
               Total Hours
             </span>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              {{ totalHoursSum | currency }} Hours
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div class="flex flex-col">
-            <div
-              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
-              :ref="'items-sub-total'"
-              class="flex justify-between md:m-2 text-lg px-3 pt-3"
-            >
-              <span class="w-3/4 font-bold">Subtotal</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right">
-                  £
-                </div>
-                <div class="w-full text-right">
-                  {{ subTotal | currency }}
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
-              :ref="'items-ni-total'"
-              class="flex justify-between md:mx-2 text-lg px-3"
-            >
-              <span class="w-3/4 pl-2 text-sm">NI amount</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right text-sm">
-                  £
-                </div>
-                <div class="w-full text-right text-sm">
-                  {{ locumInvoice.ni_amount | currency }}
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
-              :ref="'items-paye-total'"
-              class="flex justify-between md:mx-2 text-lg px-3"
-            >
-              <span class="w-3/4 pl-2 text-sm">PAYE amount</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right text-sm">
-                  £
-                </div>
-                <div class="w-full text-right text-sm">
-                  {{ locumInvoice.paye_amount | currency }}
-                </div>
-              </div>
-            </div>
-            <!-- ITEMS TOTAL -->
-            <div :ref="'items-total'" class="flex justify-between md:m-2 text-lg px-3 py-2">
-              <span class="w-3/4 font-bold">Total</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right">
-                  £
-                </div>
-                <div class="w-full text-right">
-                  {{ totalAmount | currency }}
-                </div>
-              </div>
+              {{ totalHoursSum > 0 ? `${totalHoursSum}` : 'N/A' }} Hours
             </div>
           </div>
         </div>
@@ -768,17 +693,23 @@ export default {
     },
     totalHoursSum: function () {
       let totalHours = 0
+      // let invoiceItemHours = 0
+      // let disputedItemHours = 0
+
+      console.log("invoice items", this.invoiceItems)
+      console.log("disputed items", this.disputedItems)
+
       const reducer = (accumulator, currentValue) => accumulator + currentValue
       if (this.invoiceItems && this.invoiceItems.length > 0) {
         let invoiceItemHours = this.invoiceItems.map(invoiceItem => 
-          parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours.toFixed(2) : 0)
+          parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0)
         )
         totalHours = totalHours + invoiceItemHours.reduce(reducer)
       }
 
       if (this.disputedItems && this.disputedItems.length > 0) {
         let disputedItemHours = this.disputedItems.map(disputedItem => 
-          parseFloat(disputedItem.total_hours ? disputedItem.total_hours.toFixed(2) : 0)
+          parseFloat(disputedItem.total_hours ? disputedItem.total_hours : 0)
         )
         totalHours = totalHours + disputedItemHours.reduce(reducer)
       }
@@ -880,6 +811,7 @@ export default {
     console.log('practice invoice', this.practiceInvoice)
     console.log("practice", this.practice)
     console.log("invoice items", this.invoiceItems)
+    console.log("disputed items", this.disputedItems)
 
     if(this.locumInvoice) {
       this.setInitialState()

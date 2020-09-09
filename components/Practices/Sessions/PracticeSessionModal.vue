@@ -690,7 +690,7 @@
                       <p
                         class="text-white"
                       >
-                        {{ $moment(modalJobPart.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
+                        {{ modalJobPart.completed_at_in_gb_formatted }}
                       </p>
                     </div>
                     <div v-if="modalJobPart && modalJobPart.status === 'Approved'">
@@ -700,7 +700,7 @@
                       <p
                         class="text-white"
                       >
-                        {{ $moment(modalJobPart.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
+                        {{ modalJobPart.approved_at_in_gb_formatted }}
                       </p>
                     </div>
                     <div

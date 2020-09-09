@@ -325,7 +325,7 @@
                   <div class="pb-2 flex">
                     <span
                       class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-                    >{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                    >{{ job_part.completed_at_in_gb_formatted }}</span>
                   </div>
                 </div>
                 <div v-if="job_part.status === 'Approved'">
@@ -335,7 +335,7 @@
                   <div class="pb-2 flex">
                     <span
                       class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-                    >{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                    >{{ job_part.approved_at_in_gb_formatted }}</span>
                   </div>
                 </div>
                 <p class="font-semibold">

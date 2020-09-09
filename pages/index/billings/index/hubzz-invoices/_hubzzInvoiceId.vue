@@ -10,12 +10,19 @@
           @click="goBack()"
         />
       </div>
-			<div
-				v-if="practiceInvoice.paid_at" 
-				class="mx-4 my-2 font-semibold text-lg"
-			>
-				{{ '* This invoice has been marked as paid on ' + $moment(practiceInvoice.paid_at).format('DD/MM/YYYY' )}}
-			</div>
+      <div
+        v-if="practiceInvoice.paid_at_in_gb_formatted" 
+        class="mx-4 my-2 font-semibold text-lg"
+      >
+        {{ '* This invoice has been marked as paid on ' + practiceInvoice.paid_at_in_gb_formatted }}
+      </div>
+      <div
+        v-if="practiceInvoice.unpaid_at_in_gb_formatted" 
+        class="mx-4 my-2 font-semibold text-lg"
+      >
+        <div>{{ `* This invoice has been marked Invalid on ${practiceInvoice.unpaid_at_in_gb_formatted}` }}</div>
+        <div v-if="practiceInvoice.unpaid_reason">{{ `For the reason: ${practiceInvoice.unpaid_reason}` }}</div>
+      </div>
       <div>
         <HubzzInvoice
           :forViewing="true"
