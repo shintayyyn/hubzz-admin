@@ -186,6 +186,7 @@
 						:disabledHeadings="true"
 						:disabledPagination="true"
 						:itemsOnTop="true"
+						:customItemsWidth="'cursor-default'"
 						@pagechanged="pagechanged"
 						@checkClicked="toggleCheckPracticeCheckAll"
 						@sorted="sorted"
@@ -225,7 +226,7 @@
 									:disabledPagination="true"
 									:disabledHeadings="true"
 									:customWidth="'w-full overflow-x-hidden'"
-									:customItemsWidth="'w-full md:w-8/10'"
+									:customItemsWidth="'w-full md:w-8/10 cursor-default'"
 									@checkClicked="toggleCheckJobParts"
 									@sorted="sorted"
 								>

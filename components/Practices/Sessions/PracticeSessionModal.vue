@@ -221,12 +221,12 @@
                       {{ job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)' }}
                     </p>
 
-                    <p class="font-semibold">
+                    <!-- <p class="font-semibold">
                       Unpaid Breaks (in minutes)
                     </p>
                     <p class="ml-2 mb-2">
                       {{ job.platform_job.unpaid_breaks_in_minutes }}
-                    </p>
+                    </p> -->
 
                     <p class="w-1/2 font-semibold">
                       Speciality
@@ -506,36 +506,6 @@
               </div>
             </div>
           </div>
-          <!-- GOOGLE MAPS -->
-          <!-- <div
-            v-if="jobPart && modalJobPart && modalJobPart.job ? modalJobPart.job.platform_job : null"
-            class="p-4 my-4 md:mt-0 text-sm no-underline shadow-lg rounded-lg bg-orange-500 shadow text-white"
-          >
-            <div class="text-white pb-2">
-              <div class="font-semibold">
-                Practice
-                <p>{{ modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.name : null }}</p>
-              </div>
-              <p>
-                {{ modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_1 : null }}
-                {{ modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_2 : null }}
-                {{ modalJobPart.job ? modalJobPart.job.platform_job.practice.surgery.address.line_3 : null }}
-              </p>
-            </div>
-
-            <div class="w-full">
-              <GmapMap
-                :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
-                :zoom="15"
-                map-type-id="terrain"
-                style="width: 100%; height:350px"
-              >
-                <GmapMarker
-                  :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
-                />
-              </GmapMap>
-            </div>
-          </div> -->
         </div>
 
         <!-- OTHER JOB PARTS AND LOCUM INFO -->
@@ -796,99 +766,13 @@
                         {{ modalJobPart ? modalJobPart.job_part_total_final_hours_in_minutes_formatted : null }}
                       </p>
                     </template>
-                    
-                    <p class="mt-5 font-semibold">
-                      Job Description
-                    </p>
-                    <p
-                      class="text-white break-words"
-                    >
-                      {{ modalJobPart.job && modalJobPart.job.description ? modalJobPart.job.description: '(none)' }}
-                    </p>
-                    <p class="font-semibold">
-                      Is there another Doctor on site?
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job.is_another_doctor ? "Yes" : "No" }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Is nurse support available?
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job.is_nurse_available ? "Yes" : "No" }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Number of Patients
-                    </p>
-                    <p class="ml-2 mb-2">
-                      {{ modalJobPart.job.platform_job.number_of_patients }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Duration for Each Appointment
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job.duration_for_each_appointment }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Opportunity for Catch Up Slots
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Only favorite locum will be notified until this date
-                    </p>
-
-                    <p class="ml-2 mb-2">
-                      {{ modalJobPart ? modalJobPart.favorite_only_until_in_gb_formatted : null }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Sessions Requirements
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job && modalJobPart.job.platform_job.session_requirements ? modalJobPart.job.platform_job.session_requirements : '(none)' }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Session Structure Information
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job && modalJobPart.job.platform_job.session_structure_information ? modalJobPart.job.platform_job.session_structure_information : '(none)' }}
-                    </p>
-
-                    <p class="font-semibold">
-                      Unpaid Breaks (in minutes)
-                    </p>
-                    <p
-                      class="ml-2 mb-2"
-                    >
-                      {{ modalJobPart.job.platform_job.unpaid_breaks_in_minutes }}
-                    </p>
                   </div>
                 </div>
                 <!-- INFOS RIGHT -->
                 <div class="text-white sm:w-1/2 w-full my-4 overflow-hidden">
                   <div class="mx-4 md:m-4">
                     <p class="font-semibold">
-                      Duration
+                      Job Part Duration
                     </p>
                     <div class="text-xs sm:text-sm mb-8">
                       <p
@@ -918,70 +802,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- <div class="flex items-center py-2 mx-2 text-sm">
-                      <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">From</span>
-                      <span class="font-semibold">{{ $moment(modalJobPart.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(modalJobPart.time_start, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
-                    </div>
-                    <div class="flex items-center py-2 mx-2 text-sm">
-                      <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">To</span>
-                      <span class="font-semibold">{{ $moment(modalJobPart.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} | {{ $moment(modalJobPart.time_end, 'HH:mm:ss.SSS[Z]').format('h:mm:ss a') }}</span>
-                    </div>
-                    <div class="flex items-center py-2 mx-2 text-sm">
-                      <span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
-                      <span class="font-semibold">{{ modalJobPart.job ? modalJobPart.job.shift.name : null }}</span>
-                    </div>-->
-                    <p class="mt-5 font-semibold">
-                      Invoiced?
-                    </p>
-                    <p class="text-white">
-                      {{ modalJobPart.invoiced ? 'Yes': 'No' }}
-                    </p>
-                    <p class="mt-5 font-semibold">
-                      Issued?
-                    </p>
-                    <p class="text-white">
-                      {{ modalJobPart.issued ? 'Yes': 'No' }}
-                    </p>
-                    <!--  -->
-                    <!-- <template
-                      v-if="['Completed', 'Approved', 'Cancelled'].includes(modalJobPart.status)"
-                    >
-                      <p class="mt-5 font-semibold">Was the Locum absent for session?</p>
-                      <p
-                        class="text-white"
-                      >{{ modalJobPart.absent_days > 0 || modalJobPart.absent_days_reason !== null ? 'Yes' : 'No' }}</p>
-                      <template
-                        v-if="modalJobPart.absent_days > 0 || modalJobPart.absent_days_reason !== null"
-                      >
-                        <p class="mt-5 font-semibold">Days of Absent:</p>
-                        <p class="text-white">{{ modalJobPart.absent_days }}</p>
-                        <p class="mt-5 font-semibold">Reason of Absence:</p>
-                        <p
-                          class="text-white"
-                        >{{ modalJobPart.absent_days_reason ? modalJobPart.absent_days_reason : 'None' }}</p>
-                      </template>
-
-                      <p class="mt-5 font-semibold">Was the Locum late for this session?</p>
-                      <p
-                        class="text-white"
-                      >{{ modalJobPart.late_hours > 0 || modalJobPart.late_hours_reason !== null ? 'Yes' : 'No' }}</p>
-                      <template
-                        v-if="modalJobPart.late_hours > 0 || modalJobPart.late_hours_reason !== null"
-                      >
-                        <p class="mt-5 font-semibold">Hours of Late:</p>
-                        <p class="text-white">{{ modalJobPart.late_hours | hoursMinutes}}</p>
-                        <p class="mt-5 font-semibold">Reason of Late:</p>
-                        <p
-                          class="text-white"
-                        >{{ modalJobPart.late_hours_reason ? modalJobPart.late_hours_reason : 'None' }}</p>
-                      </template>
-                      <p class="mt-5 font-semibold">Final Hours:</p>
-                      <p
-                        class="text-white"
-                        v-if="modalJobPart.final_hours > 0"
-                      >{{ modalJobPart.final_hours | hoursMinutes }}</p>
-                      <p class="text-white" v-else>{{ modalJobPart.final_hours }}</p>
-                    </template>-->
                   </div>
                 </div>
               </div>

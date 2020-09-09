@@ -307,12 +307,12 @@
                   {{ job_part.job.platform_job && job_part.job.platform_job.session_structure_information ? job_part.job.platform_job.session_structure_information : '(none)' }}
                 </p>
 
-                <p class="font-semibold">
+                <!-- <p class="font-semibold">
                   Unpaid Breaks (in minutes)
                 </p>
                 <p class="ml-2 mb-2">
                   {{ job_part.job.platform_job.unpaid_breaks_in_minutes }}
-                </p>
+                </p> -->
               </div>
             </div>
             <!-- INFOS RIGHT -->

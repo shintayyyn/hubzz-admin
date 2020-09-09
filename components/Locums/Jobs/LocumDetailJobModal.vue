@@ -121,12 +121,12 @@
                     {{ job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)' }}
                   </p>
 
-                  <p class="mt-3 font-semibold">
+                  <!-- <p class="mt-3 font-semibold">
                     Unpaid Breaks (in minutes)
                   </p>
                   <p class="text-white">
                     {{ job.platform_job.unpaid_breaks_in_minutes }}
-                  </p>
+                  </p> -->
                 </div>
               </div>
 

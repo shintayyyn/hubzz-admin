@@ -172,7 +172,7 @@
           />
         </div>
         <div
-          v-if="tabStatus !== 'Approved'"
+          v-if="tabStatus !== 'Approved' && tabStatus !== 'Allocated' && tabStatus !== 'Ongoing' "
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
           @click="sortBy('job_date_created',currentPage,search)"
         >
@@ -195,6 +195,37 @@
           />
           <svgicon
             v-if="sortType==false && sortedBy=='job_date_created'"
+            class="inline align-baseline"
+            name="sort-descend"
+            height="12"
+            width="12"
+            color="white"
+          />
+        </div>
+        <div
+          v-if="tabStatus === 'Allocated' && tabStatus === 'Ongoing' "
+          class="align-middle px-2 text-center w-1/6 cursor-pointer"
+          @click="sortBy('job_appointed_at',currentPage,search)"
+        >
+          Allocated At
+          <svgicon
+            v-if="sortedBy!='job_appointed_at'"
+            class="inline align-baseline"
+            name="sort"
+            height="12"
+            width="12"
+            color="white black"
+          />
+          <svgicon
+            v-if="sortType==true && sortedBy=='job_appointed_at'"
+            class="inline align-baseline"
+            name="sort-ascend"
+            height="12"
+            width="12"
+            color="white"
+          />
+          <svgicon
+            v-if="sortType==false && sortedBy=='job_appointed_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
