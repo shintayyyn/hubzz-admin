@@ -301,8 +301,9 @@
             <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
           </div>
         </div>
-
         <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
+
+        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS -->
         <div
           v-if="paymentModal === false && modalPaidUnpaid === true" 
           class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white"
@@ -324,9 +325,9 @@
             </div>
           </div>
         </div>
-
+        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE -->
         
-
+        <!-- MARKING AS PAID MODAL WITH DATEPICKER -->
         <div class="flex flex-col w-full text-white px-8 justify-between">
           <div v-if="paymentModal === true && modalPaidUnpaid === false">
             <div class="justify-center">
@@ -349,6 +350,9 @@
             </div>
           </div>
         </div>
+        <!-- MARKING AS PAID MODAL WITH DATEPICKER ENDS HERE -->
+
+        <!-- MARKING AS UNPAID MODAL WITH TEXTFIELD -->
         <div class="flex flex-col w-full text-white px-8 justify-between">
           <div v-if="unpaidModal === true && modalPaidUnpaid === false">
             <div class="justify-center">
@@ -377,8 +381,10 @@
             </div>
           </div>
         </div>
+        <!-- MARKING AS UNPAID MODAL WITH TEXTFIELD ENDS HERE -->
       </div>
     </transition>
+    <!-- SETTLE PAYMENT MODAL ENDS HERE -->
 
     <!-- SAGE CSV EXPORT MODAL -->
     <transition name="fade" mode="out-in">
@@ -444,6 +450,7 @@
         <!-- TO EXPORT CONFIRM CANCEL ENDS HERE -->
       </div>
     </transition>
+    <!-- SAGE CSV EXPORT MODAL ENDS HERE -->
 
     <div 
       v-if="$route.path.includes('hubzzInvoiceId') 
@@ -867,15 +874,19 @@ export default {
       this.showPaidModal = false
       this.modalPaidUnpaid = false
       this.paymentModal = false
+      this.unpaidModal = false 
+
       this.confirm = false
       this.exportedModal = false
       this.paidAt = null
+      this.unpaidReason = null
     },
 		toShowPaidModal (itemId) {
 			this.showPaidModal = true
       this.modalPaidUnpaid = true
       this.invoiceId = itemId
       this.paidAt = null
+      this.unpaidReason = null
     },
     toShowPaymentModal () {
       this.modalPaidUnpaid = false

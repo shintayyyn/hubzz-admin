@@ -129,6 +129,8 @@
         </div>
 
         <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
+
+        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS -->
         <div
           v-if="paymentModal === false && modalPaidUnpaid === true" 
           class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white"
@@ -150,6 +152,7 @@
             </div>
           </div>
         </div>
+        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE-->
 
         <div class="flex flex-col w-full text-white px-8 justify-between">
           <div v-if="paymentModal === true && modalPaidUnpaid === false">
@@ -205,7 +208,7 @@
       </div>
     </transition>
 
-    <div v-if="showPaidModal == true" class="billing-shield" @click="showPaidModal = false" />
+    <div v-if="showPaidModal == true" class="billing-shield" @click="closeModals()" />
   </div>
 </template>
 <script>
@@ -424,6 +427,18 @@ export default {
       this.unpaidReason = null
     },
 
+    closeModals () {
+      this.showPaidModal = false
+      this.modalPaidUnpaid = false
+      this.paymentModal = false
+      this.unpaidModal = false 
+
+      this.confirm = false
+      this.exportedModal = false
+      this.paidAt = null
+      this.unpaidReason = null
+    },
+
     settlePayment (){
       if(this.paidAt) {
         this.toMarkAsPaid()
@@ -484,17 +499,7 @@ export default {
 					})
         })
     },
-
-    closeModals () {
-      this.showPaidModal = false
-      this.unpaidModal = false
-      this.modalPaidUnpaid = false
-      this.paymentModal = false
-      this.confirm = false
-      this.paidAt = null
-      this.unpaidReason = null
-    },
-
+    
 		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
