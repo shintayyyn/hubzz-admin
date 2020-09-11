@@ -18,31 +18,51 @@
       <div
         class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="practiceNameIncludes"
-            placeholder="Search Practice Name"
-            type="text"
-            label="Practice Name"
-          />
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="practiceNameIncludes"
+              placeholder="Search Practice Name"
+              type="text"
+              label="Practice Name"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="locumNameIncludes"
+              placeholder="Search Locum Name"
+              type="text"
+              label="Locum Name"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="areaPostCode"
+              placeholder="Search Area Post Code"
+              type="text"
+              label="Area Postcode"
+            />
+          </div>
         </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="locumNameIncludes"
-            placeholder="Search Locum Name"
-            type="text"
-            label="Locum Name"
-          />
-        </div>
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="dateStart"
+              label="Completed At Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="areaPostCode"
-            placeholder="Search Area Post Code"
-            type="text"
-            label="Area Postcode"
-          />
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="dateEnd"
+              label="Completed At Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -64,7 +84,6 @@
       <div v-if="false">
         <div>
           <label class="text-white">Limit: </label>
-
           <select v-model="limit">
             <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
               {{ limitOption }}
@@ -139,12 +158,14 @@
   import ReportPagination from '@/components/Reports/ReportPagination'
   import AppInput from '@/components/Base/AppInput'
   import AppButton from '@/components/Base/AppButton'
+  import AppDate from '@/components/Base/AppDate'
   export default {
     components: {
       ReportTable,
       ReportPagination,
       AppInput,
       AppButton,
+      AppDate,
     },
 
     data () {
@@ -184,6 +205,8 @@
         practiceNameIncludes: '',
         locumNameIncludes: '',
         areaPostCode: '',
+        dateStart: '',
+        dateEnd: '',
       }
     },
 
@@ -264,10 +287,19 @@
             flexShrink: 0,
           },
           {
-            title: 'Marked as Favourite',
+            title: 'Locum is Marked as Favourite by Practice',
             key: 'locum_is_favorite_of_practice',
             sort_key: 'locum_is_favorite_of_practice',
             column: item => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Practice is Marked as Favourite of Locum',
+            key: 'practice_is_favorite_of_locum',
+            sort_key: 'practice_is_favorite_of_locum',
+            column: item => item.practice_is_favorite_of_locum ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -319,13 +351,16 @@
         locum_name_includes: locumNameIncludes,
         area_includes: areaPostCode,
         order_by: orderBy = [],
+        date_start: dateStart,
+        date_end: dateEnd,
         page,
       } = this.$route.query
 
       this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.areaPostCode = areaPostCode ? areaPostCode : ''
-
+      this.dateStart = dateStart ? dateStart : ''
+      this.dateEnd = dateEnd ? dateEnd : ''
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
 
@@ -337,6 +372,8 @@
         this.practiceNameIncludes = ''
         this.locumNameIncludes = ''
         this.areaPostCode = ''
+        this.dateStart = ''
+        this.dateEnd = ''
 
         this.filterSearch()
       },
@@ -349,6 +386,8 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
           area_includes: this.areaPostCode ? this.areaPostCode : undefined,
+          date_start: this.dateStart ? this.dateStart : undefined,
+          date_end: this.dateEnd ? this.dateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -404,6 +443,8 @@
          const params = {
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
+          date_start: this.dateStart ? this.dateStart : '',
+          date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
 
@@ -445,6 +486,8 @@
         const params = {
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
+          date_start: this.dateStart ? this.dateStart : '',
+          date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
