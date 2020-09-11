@@ -23,7 +23,7 @@
             class="flex-1 text-center bg-gray-400 p-1 font-bold text-xs"
             style="min-width:100px;max-width:200px"
           >
-            FINAL TIME
+            {{ status === 'Approved' ? 'FINAL TIME' : 'COMPLETED TIME' }}
           </p>
 
           <p
@@ -83,7 +83,7 @@
               class="flex-1 text-center"
               style="min-width:100px;max-width:200px"
             >
-              {{ sched.final_time_start }} - {{ sched.final_time_end }}
+              {{ status === 'Approved' ? `${sched.approved_time_start} - ${sched.approved_time_end}` : `${sched.final_time_start} - ${sched.final_time_end}` }}
             </p>
 
             <p
@@ -113,13 +113,13 @@
                 class="flex-1 text-center"
                 style="min-width:100px;max-width:500px"
               >
-                {{ `${isAbsent(sched) ? 'Absent' : isLate(sched) ? 'Late' : 'N/A'}` }}
+                {{ status === 'Approved' ? sched.completed_remarks : sched.approved_remarks }}
               </p>
               <p
                 class="flex-1 text-center"
                 style="min-width:100px;max-width:500px"
               >
-                {{ `${isAbsent(sched) && sched.absent_reason ? sched.absent_reason : isLate(sched) && sched.late_hours_reason ? sched.late_hours_reason : 'N/A'}` }}
+                {{ status === 'Approved' ? sched.completed_reason : sched.approved_reason }}
               </p>
             </template>
           </div>
@@ -133,34 +133,18 @@
 export default {
   props: {
     locumInvoiceable: {
-      type: Boolean,
+      type: [Boolean, Number],
       default: false,
+    },
+
+    status: {
+      type: String,
+      default: null,
     },
 
     schedules: {
       type: Array,
       default: () => [],
-    },
-  },
-
-  methods: {
-    convertTimeToMinutes (payload) {
-      let hour = parseInt(payload.split(":")[0]) * 60
-
-      let minute = parseInt(payload.split(":")[1])
-
-      return hour + minute
-    },
-
-    isAbsent (payload) {
-      return payload.absent > 0
-    },
-
-    isLate (payload) {
-      return (
-        this.convertTimeToMinutes(payload.final_time_start) >
-        this.convertTimeToMinutes(payload.time_start)
-      )
     },
   },
 }
