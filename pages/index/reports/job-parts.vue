@@ -80,6 +80,25 @@
             />
           </div>
         </div>
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="minRate"
+              placeholder="0.00"
+              type="number"
+              label="Min Rate"
+            />
+          </div>          
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="maxRate"
+              placeholder="0.00"
+              type="number"
+              label="Max Rate"
+            />
+          </div>
+        </div>
+        
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
@@ -221,6 +240,8 @@
         dateEnd: '',
         areaPostCode: '',
         status: '',
+        minRate: '',
+        maxRate: '',
       }
     },
 
@@ -377,6 +398,8 @@
         area_includes: areaPostCode,
         order_by: orderBy = [],
         status,
+        min_rate: minRate,
+        max_rate: maxRate,
         page,
       } = this.$route.query
 
@@ -385,6 +408,8 @@
       this.dateStart = dateStart ? dateStart : ''
       this.dateEnd = dateEnd ? dateEnd : ''
       this.status = status ? status : ''
+      this.minRate = minRate ? minRate : ''
+      this.maxRate = maxRate ? maxRate : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -398,7 +423,9 @@
         this.areaPostCode = ''
         this.dateStart = ''
         this.dateEnd = ''
-        this.status =''
+        this.status = ''
+        this.minRate = ''
+        this.maxRate = ''
 
         this.filterSearch()
       },
@@ -413,6 +440,8 @@
           dateStart: this.dateStart ? this.dateStart : '',
           dateEnd: this.dateEnd ? this.dateEnd : '',
           status: this.status ? this.status : '',
+          minRate: this.minRate ? this.minRate : '',
+          maxRate: this.maxRate ? this.maxRate : '',
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -471,6 +500,8 @@
           date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
           status: this.status ? this.status : '',
+          min_rate: this.minRate ? this.minRate : '',
+          max_rate: this.maxRate ? this.maxRate : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/job-parts/count', {
@@ -512,6 +543,8 @@
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
           area_includes: this.areaPostCode ? this.areaPostCode : '',
+          min_rate: this.minRate ? this.minRate : '',
+          max_rate: this.maxRate ? this.maxRate : '',
           status: this.status ? this.status : '',
           order_by: this.orderBy,
           limit: 999,

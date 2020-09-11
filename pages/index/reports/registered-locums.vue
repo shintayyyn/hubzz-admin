@@ -240,6 +240,15 @@
             flexShrink: 0,
           },
           {
+            title: 'Profession',
+            key: 'profession_name',
+            sort_key: 'profession_name',
+            column: (item) => item.profession_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Date Registered',
             key: 'date_registered',
             sort_key: 'date_registered',

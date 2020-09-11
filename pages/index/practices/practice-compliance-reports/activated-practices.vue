@@ -300,6 +300,15 @@ import AppInput from '@/components/Base/AppInput'
             flexShrink: 0,
           },
           {
+            title: 'Days taken before Approval',
+            key: 'days_before_approval',
+            sort_key: 'days_before_approval',
+            column: (item) => `${item.days_before_approval} Days`,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
             title: 'Status',
             key: 'status',
             sort_key: 'status',
