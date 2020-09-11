@@ -189,7 +189,7 @@
             title: 'Average Disputes per Month (Since Activation)',
             key: 'practice_id',
             sort_key: null,
-            column: (item) => item.monthly_average_disputes.toFixed(2),
+            column: (item) => item.monthly_average_disputes > 0 ? item.monthly_average_disputes.toFixed(2) : 'N/A',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

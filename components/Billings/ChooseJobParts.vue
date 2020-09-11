@@ -147,6 +147,12 @@ export default {
 					sortable: true
 				},
 				{
+					name: "Completed At",
+					dataIndex: "completed_at_in_gb_formatted",
+					class: "text-center",
+					sortable: true
+				},
+				{
           name: "From",
           dataIndex: "datetime_start_in_gb_formatted",
 					class: "text-center",
