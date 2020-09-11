@@ -135,6 +135,7 @@
                   v-if="job"
                   class="-mx-2" 
                   :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
+                  :status="job.status"
                   :schedules="job.schedules"
                 />
 

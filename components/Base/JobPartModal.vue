@@ -600,6 +600,7 @@
         <JobSchedules
           v-if="job_part"        
           :locumInvoiceable="job_part.locum_invoiceable"
+          :status="job_part.status"
           :schedules="job_part.schedules"
         />
       </div>
