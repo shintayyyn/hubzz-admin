@@ -113,13 +113,13 @@
                 class="flex-1 text-center"
                 style="min-width:100px;max-width:500px"
               >
-                {{ status === 'Approved' ? sched.completed_remarks : sched.approved_remarks }}
+                {{ status === 'Approved' ? sched.approved_remarks : sched.completed_remarks }}
               </p>
               <p
                 class="flex-1 text-center"
                 style="min-width:100px;max-width:500px"
               >
-                {{ status === 'Approved' ? sched.completed_reason : sched.approved_reason }}
+                {{ status === 'Approved' ? sched.approved_reason : sched.completed_reason }}
               </p>
             </template>
           </div>
