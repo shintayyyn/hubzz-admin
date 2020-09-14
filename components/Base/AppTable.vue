@@ -220,7 +220,7 @@
         default: null,
       },
       customWidth: {
-        type: String,
+        type: [String, Number],
         default: null
       },
       minHeight: {

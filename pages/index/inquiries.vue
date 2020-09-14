@@ -3,6 +3,7 @@
     <div class="text-xl md:text-4xl text-white">
       Inquiries
     </div>
+
     <div class="flex py-2">
       <!-- <div class="relative">
 				<input
@@ -26,6 +27,7 @@
 			</div>-->
       <!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
     </div>
+
     <AppTable
       v-if="itemCount > 0"
       :total="itemCount"
@@ -46,27 +48,29 @@
               'mx-auto px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
           "
         >
-          <template
-            v-if="slotProps.item.acknowledged_at"
-          >
+          <template v-if="slotProps.item.acknowledged_at">
             {{ slotProps.item.acknowledged_at | localDate }}
           </template>
+
           <template v-else>
             Pending
           </template>
         </div>
       </template>
     </AppTable>
+
     <template v-else>
       <div class="mt-2 w-full text-center text-white">
         There are no inquiries messages.
       </div>
     </template>
+
     <div
       v-if="$route.name.includes('index-inquiries-id')"
       class="support-shield"
       @click="$router.go(-1)"
     />
+
     <nuxt-child />
   </div>
 </template>
@@ -78,6 +82,7 @@ export default {
 	components: {
 		AppTable
 	},
+
 	data () {
 		return {
 			// emails: [],
@@ -89,6 +94,7 @@ export default {
 				offset: 0,
 				order_by: ["created_at:desc"]
 			},
+
 			search: "",
 			activePage: 1,
 
@@ -118,7 +124,9 @@ export default {
 			]
 		}
 	},
+
 	watchQuery: ["page", "search"],
+
 	computed: {
 		loadingSupportEmail () {
 			return this.$store.state.supports.loading_support_emails
@@ -191,6 +199,7 @@ export default {
 			throw err
 		}
   },
+
 	methods: {
 		getInquiries (params) {
 			console.log(params)
@@ -201,9 +210,11 @@ export default {
 				offset: params.offset
 			})
 		},
+
 		show () {
 			this.modal = true
 		},
+
 		searchSubmit: debounce(function (page) {
 			let search = this.search
 
@@ -226,22 +237,25 @@ export default {
 
 			this.$router.push({ query })
 		}, 500),
+
 		pagechanged (page) {
 			this.params.offset = this.params.limit * (page - 1)
 			this.currentPage = page
 			this.getInquiries(this.params)
 		},
+
 		sorted (order_by) {
 			// go back to page 1
 			this.currentPage = 1
 			this.params.order_by = order_by
 			this.getInquiries(this.params)
-		}
-	}
+		},
+	},
 }
 </script>
+
 <style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
+  .page-button {
+    background: linear-gradient(to top, #f2d024, #efde86);
+  }
 </style>
