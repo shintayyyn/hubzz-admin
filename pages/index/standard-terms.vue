@@ -34,7 +34,7 @@
             <!-- TABLE BODY -->
             <div class="row py-2">
               <div class="relative">
-                <AppLoading :loading="!!uploading" message="Uploading" :spinner="false" class="rounded-lg" />
+                <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
 
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none transition-hover">
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
@@ -115,7 +115,6 @@
 
     methods: {
       handleInputFileChange () {
-        this.uploading = true
 
         if (
           !this.$refs.inputFile
@@ -154,7 +153,7 @@
 
         formData.append('file', file)
 
-        this.uploading = 1
+        this.uploading = true
         this.$axios.put('/api/v1/admin/standard-terms', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -181,7 +180,7 @@
             text: (err.response || err).message || 'Something went wrong!',
           })
         }).finally(() => {
-          this.uploading = 0
+          this.uploading = false
         })
       }
     },
