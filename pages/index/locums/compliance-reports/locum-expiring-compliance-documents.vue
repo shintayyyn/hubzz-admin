@@ -26,6 +26,21 @@
             label="Locum Name"
           />
         </div>
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="expiredAtDateStart"
+            label="Expiration Date Start"
+            format="YYYY-MM-DD"
+          />
+        </div>
+
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppDate
+            v-model="expiredAtDateEnd"
+            label="Expiration Date End"
+            format="YYYY-MM-DD"
+          />
+        </div>
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
             label="Reset"
@@ -115,13 +130,15 @@
   import ReportPagination from '@/components/Reports/ReportPagination'
   import AppInput from '@/components/Base/AppInput'
   import AppButton from '@/components/Base/AppButton'
+  import AppDate from '@/components/Base/AppDate'
 
   export default {
     components: {
       ReportTable,
       ReportPagination,
       AppInput,
-      AppButton
+      AppButton,
+      AppDate,
     },
 
     data () {
@@ -159,6 +176,8 @@
         activePage: 1,
 
         locumNameIncludes: '',
+        expiredAtDateStart: '',
+        expiredAtDateEnd: '',
       }
     },
 
@@ -194,7 +213,7 @@
             flexShrink: 0,
           },
           {
-            title: 'Compliance',
+            title: 'Compliance Document',
             key: 'compliance_document_name',
             sort_key: 'compliance_document_name',
             column: (item) => item.compliance_document_name,
@@ -208,6 +227,15 @@
             sort_key: 'expired_at',
             column: (item) => item.expired_at ? this.$moment(item.expired_at, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
             justify: 'left',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Status',
+            key: 'status',
+            sort_key: 'status',
+            column: (item) => item.status,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -246,11 +274,15 @@
     mounted () {      
       const {
         locum_name_includes: locumNameIncludes,
+        expired_at_date_start: expiredAtDateStart,
+        expired_at_date_end: expiredAtDateEnd,
         order_by: orderBy = [],
         page,
       } = this.$route.query
 
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
+      this.expiredAtDateStart = expiredAtDateStart ? expiredAtDateStart : ''
+      this.expiredAtDateEnd = expiredAtDateEnd ? expiredAtDateEnd : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -261,7 +293,8 @@
     methods: {
       filterReset () {
         this.locumNameIncludes = ''
-
+        this.expiredAtDateStart = ''
+        this.expiredAtDateEnd = ''
         this.filterSearch()
       },
 
@@ -271,6 +304,8 @@
         const query = {
           ...this.$route.query,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          expired_at_date_start: this.expiredAtDateStart ? this.expiredAtDateStart : undefined,
+          expired_at_date_end: this.expiredAtDateEnd ? this.expiredAtDateEnd : undefined,
           page: undefined,
         }
 
@@ -324,6 +359,8 @@
 
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          expired_at_date_start: this.expiredAtDateStart ? this.expiredAtDateStart : undefined,
+          expired_at_date_end: this.expiredAtDateEnd ? this.expiredAtDateEnd : undefined,
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/locum-expiring-compliance-documents/count', {
@@ -362,6 +399,8 @@
         this.downloading = true
         const params = {
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
+          expired_at_date_start: this.expiredAtDateStart ? this.expiredAtDateStart : undefined,
+          expired_at_date_end: this.expiredAtDateEnd ? this.expiredAtDateEnd : undefined,
           order_by: this.orderBy,
           limit: 999,
           offset: 0,
