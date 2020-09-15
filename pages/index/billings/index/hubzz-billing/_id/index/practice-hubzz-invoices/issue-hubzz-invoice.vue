@@ -183,7 +183,7 @@ export default {
       this.invoiceItems = []
 
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        console.log("chosenJobPart", chosenJobParts[i])
+        console.log("chosenJobPart", chosenJobParts[i].invoice_status)
         const roundedHours = Math.floor((chosenJobParts[i].final_hours)/60)
         const minutes = Math.round(((chosenJobParts[i].final_hours/60) - roundedHours) * 60)
         console.log("minutes "+minutes)
@@ -209,7 +209,7 @@ export default {
 					).toFixed(2)
 				}
 
-				if (chosenJobParts[i].invoice_status === "Invoiced") {
+				if (chosenJobParts[i].invoice_status === "Invoiced" || chosenJobParts[i].invoice_status === "To Be Invoiced") {
           newItem.id = this.invoiceItems.length + 1
 					this.invoiceItems.push(newItem)
         } 

@@ -377,7 +377,7 @@
         const params = {
           month: this.$moment(this.monthYear).format('MMMM'),
           year: this.$moment(this.monthYear).format('YYYY'),
-          last_date_of_month:this.$moment(this.monthYear).endOf('month'),
+          last_date_of_month:this.$moment(this.monthYear).endOf('month').format('YYYY-MM-DD'),
         }
 
         this.$axios.post('/api/v1/admin/reports/practice-disputes/generate-key', {
