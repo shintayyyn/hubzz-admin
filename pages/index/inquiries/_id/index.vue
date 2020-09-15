@@ -1,27 +1,31 @@
 <template>
   <div class="support-modal p-4 md:p-8 shadow-lg">
     <transition name="fade" mode="out-in">
-      <SupportInfo :email="email"/>
+      <SupportInfo :email="email" />
     </transition>
   </div>
 </template>
 
 <script>
 import SupportInfo from '@/components/Supports/SupportInfo'
+
 export default {
   components:{
-    SupportInfo
+    SupportInfo,
   },
   
-  data(){
+  data (){
     return{
       email: null,
     }
   },
-  async asyncData({app,route}){
+
+  async asyncData ({app,route}){
     try{
       let response =  await app.$axios.$get(`/api/v1/admin/supports/${route.params.id}`)
+
       const email = response.data.email
+
       return{
         email
       }
@@ -29,8 +33,9 @@ export default {
       console.log('getSupportinfo error!',err)
     }
   },
+
   methods:{
-    goBack(){
+    goBack (){
       const query = {
         ...this.$route.query
       }
@@ -39,18 +44,21 @@ export default {
       }
       this.$router.push({path:'/supports',query})
     },
-  }
+  },
 }
 </script>
+
 <style>
   .invoice{
     width: 100%;
   }
+
   .card {
     min-width: 100px;
     height: 250px;
     box-sizing: content-box;
   }
+
   .support-shield {
     position: fixed;
     top: 0;
@@ -61,6 +69,7 @@ export default {
     opacity: 0.5;
     z-index: 511;
   }
+
   .support-modal {
     position: fixed;
     top: 0;
@@ -74,6 +83,7 @@ export default {
     background-color:#505561;
     z-index: 512;
   }
+
   @media screen and (min-width: 1200px) {
     .support-modal {
       width: 80%;
