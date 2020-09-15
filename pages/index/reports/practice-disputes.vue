@@ -7,6 +7,39 @@
         </nuxt-link>
       </div>
 
+      <div
+        class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+      >
+        <div class="flex flex-row w-full text-white">
+          <div class="md:px-1 w-full lg:w-1/3 md:w-1/3">
+            <div>
+              <label for="start" class="text-white">Filter until Month/Year of Invoice Approval:</label>
+            </div>
+            <div>
+              <input id="start" v-model="monthYear" class="text-black" type="month" name="start" :max="this.$moment().subtract(1, 'month').format('YYYY-MM')">
+            </div>
+          </div>
+          <!-- Default {{monthYear}} || 
+          Month Only: {{this.$moment(monthYear).format('MMMM')}} || 
+          Year Only: {{this.$moment(monthYear).format('YYYY')}} -->
+        </div>
+
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <AppButton
+            label="Reset"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterReset"
+          />
+
+          <AppButton
+            class="mx-2"
+            label="Submit"
+            :in-style="'padding:5px 14px;margin-bottom:5px'"
+            @click="filterSearch"
+          />
+        </div>
+      </div>
+      
       <div class="text-lg md:text-2xl text-white">
         Practice Disputes
       </div>
@@ -93,11 +126,12 @@
 <script>
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
-
+  import AppButton from '@/components/Base/AppButton'
   export default {
     components: {
       ReportTable,
       ReportPagination,
+      AppButton
     },
 
     data () {
@@ -132,6 +166,8 @@
           25,
         ],
         activePage: 1,
+
+        monthYear:'',
       }
     },
 
@@ -176,17 +212,17 @@
             flexGrow: 1,
             flexShrink: 0,
           },
+          // {
+          //   title: 'Disputed Job Parts Count',
+          //   key: 'practice_id',
+          //   sort_key: null,
+          //   column: (item) => item.disputed_job_parts_count,
+          //   justify: 'start',
+          //   flexGrow: 1,
+          //   flexShrink: 0,
+          // },
           {
-            title: 'Disputed Job Parts Count',
-            key: 'practice_id',
-            sort_key: null,
-            column: (item) => item.disputed_job_parts_count,
-            justify: 'start',
-            flexGrow: 1,
-            flexShrink: 0,
-          },
-          {
-            title: 'Average Disputes per Month (Since Activation)',
+            title: 'Average Disputes for this Month',
             key: 'practice_id',
             sort_key: null,
             column: (item) => item.monthly_average_disputes > 0 ? item.monthly_average_disputes.toFixed(2) : 'N/A',
@@ -227,18 +263,34 @@
     },
 
     mounted () {      
-      // const {
-      //   order_by: orderBy = [],
-      //   page,
-      // } = this.$route.query
-
-      // this.orderBy = orderBy
-      // this.activePage = page ? Number.parseInt(page) : 1
-
+      this.monthYear = this.$moment().subtract(1, 'month')
       this.getPracticeDisputes()
     },
 
     methods: {
+      filterReset () {
+        this.monthYear = this.$moment().subtract(1, 'month')
+        this.filterSearch()
+      },
+
+      filterSearch () {
+        this.activePage = 1
+
+        const query = {
+          ...this.$route.query,
+          month: this.$moment(this.monthYear).format('MMMM'),
+          year: this.$moment(this.monthYear).format('YYYY'),
+          last_date_of_month:this.$moment(this.monthYear).endOf('month'),
+          order_by: this.orderBy ? this.orderBy : undefined,
+          page: undefined,
+        }
+
+        if (this.$router.resolve({ query }).href !== this.$route.fullPath) {
+          this.$router.replace({ query })
+        }
+        
+        this.getPracticeDisputes()
+      },
       setPage (page) {
         this.activePage = page
 
@@ -279,13 +331,22 @@
       getPracticeDisputes () {
         this.loading = true
         this.practiceDisputes = []
+
+        const params = {
+          month: this.$moment(this.monthYear).format('MMMM'),
+          year: this.$moment(this.monthYear).format('YYYY'),
+          last_date_of_month:this.$moment(this.monthYear).endOf('month').format('YYYY-MM-DD'),
+        }
         Promise.all([
-          this.$axios.get('/api/v1/admin/reports/practice-disputes/count').then((responses) => {
+          this.$axios.get('/api/v1/admin/reports/practice-disputes/count',{
+            params
+          }).then((responses) => {
             console.log('response', responses.data.data.count)
             return responses.data.data.count
           }),
           this.$axios.get('/api/v1/admin/reports/practice-disputes', {
             params: {
+              ...params,
               order_by: this.orderBy,
               limit: this.limit,
               offset: this.offset,
@@ -314,6 +375,9 @@
       downloadCsv () {
         this.downloading = true
         const params = {
+          month: this.$moment(this.monthYear).format('MMMM'),
+          year: this.$moment(this.monthYear).format('YYYY'),
+          last_date_of_month:this.$moment(this.monthYear).endOf('month'),
         }
 
         this.$axios.post('/api/v1/admin/reports/practice-disputes/generate-key', {
