@@ -4,6 +4,10 @@
       Inquiries
     </div>
 
+		<div class="bg-orange-500 p-4" @click="getInquiries">
+			tester
+		</div>
+
     <div class="flex py-2">
       <!-- <div class="relative">
 				<input
@@ -179,6 +183,8 @@ export default {
 
 			response = await app.$axios.$get(`/api/v1/admin/supports`, { params })
 			const emails = response.data.emails
+
+			console.log('inquiries', emails)
 			await store.commit("supports/SET_EMAILS", emails)
 
 			await store.commit("supports/TOGGLE_LOADING", false)

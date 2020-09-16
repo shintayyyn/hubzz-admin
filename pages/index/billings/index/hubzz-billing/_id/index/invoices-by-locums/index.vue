@@ -1,41 +1,40 @@
 <template>
   <div class="w-full overflow-hidden">
-    <div class="w-full overflow-hidden my-1 mx-1 rounded-lg">
-      <AppTable
-        v-if="practiceInvoicesCount> 0"
-        :total="practiceInvoicesCount"
-        :items="practiceInvoices"
-        :currentPage="currentPage"
-        :perPage="params.limit"
-        :columns="columns"
-        :loading="loadingpracticeInvoices"
-        :routerLink="`/billings/hubzz-billing/${$route.params.id}/invoices-by-locums`"
-        :orderBy="params.order_by"
-        :customWidth="200"
-        @pagechanged="pagechanged"
-        @sorted="sorted"
-      >
-        <template v-slot:total_amount_slot="slotProps">
-          <div>{{'£ '+slotProps.item.total_amount }}</div>
-        </template>
+		<AppTable
+			v-if="practiceInvoicesCount > 0"
+			:total="practiceInvoicesCount"
+			:items="practiceInvoices"
+			:currentPage="currentPage"
+			:perPage="params.limit"
+			:columns="columns"
+			:loading="loadingpracticeInvoices"
+			:routerLink="`/billings/hubzz-billing/${$route.params.id}/invoices-by-locums`"
+			:orderBy="params.order_by"
+			@pagechanged="pagechanged"
+			@sorted="sorted"
+		>
+			<template v-slot:total_amount_slot="slotProps">
+				<div>{{'£ '+slotProps.item.total_amount }}</div>
+			</template>
 
-        <template v-slot:paid_at="slotProps">
-          <div>{{ slotProps.item.paid_at ? slotProps.item.paid_at : "Not yet paid" }}</div>
-        </template>
+			<template v-slot:paid_at="slotProps">
+				<div>{{ slotProps.item.paid_at ? slotProps.item.paid_at : "Not yet paid" }}</div>
+			</template>
 
-        <!-- <template v-slot:hub_type_slot="slotProps">
-          <div
-            class="px-4 py-1 rounded-full w-32 text-center"
-            :class="hubTypeStyle(slotProps.item.hub_type)"
-          >
-            {{ slotProps.item.hub_type }}
-          </div>
-        </template>-->
-      </AppTable>
-      <template v-else>
-        <div class="mt-2 w-full text-center text-white">There are no Practice Invoices.</div>
-      </template>
-    </div>
+			<!-- <template v-slot:hub_type_slot="slotProps">
+				<div
+					class="px-4 py-1 rounded-full w-32 text-center"
+					:class="hubTypeStyle(slotProps.item.hub_type)"
+				>
+					{{ slotProps.item.hub_type }}
+				</div>
+			</template>-->
+		</AppTable>
+		<template v-else>
+      <div class="m-2 w-full text-center text-white">
+        There are no Locum Invoices
+      </div>
+    </template>
     <div
       v-if="$route.name.includes('invoices-by-locums-locumInvoiceId')"
       class="billing-shield"
@@ -70,12 +69,12 @@ export default {
 					class: "text-center",
 					sortable: true
 				},
-				{
-					name: "Locum E-Mail",
-					dataIndex: "locum_user.email",
-					class: "text-center",
-					sortable: "true"
-				},
+				// {
+				// 	name: "Locum E-Mail",
+				// 	dataIndex: "locum_user.email",
+				// 	class: "text-center",
+				// 	sortable: "true"
+				// },
 				{
 					name: "Locum Name",
 					dataIndex: "locum_user.name",
@@ -86,6 +85,12 @@ export default {
 					name: "Issued At",
 					dataIndex: "issued_at",
 					class: "text-center localDate",
+					sortable: "true"
+				},
+				{
+					name: "With Disputes (QA)",
+					dataIndex: "job_part_items_disputed_at",
+					class: "text-center",
 					sortable: "true"
         },
         {
@@ -125,7 +130,7 @@ export default {
       } = route.query
 
       const practice_id = route.params.id
-      const status = ["Issued", "Disputed", "Approved", "Paid"]
+      // const status = ["Issued", "Disputed", "Approved", "Paid"]
 			const limit = 10
 			const offset = page * limit - limit
 
