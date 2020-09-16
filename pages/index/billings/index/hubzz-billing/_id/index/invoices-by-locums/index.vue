@@ -136,7 +136,7 @@ export default {
 
 			let params = {
         practice_id,
-        status,
+        // status,
 				limit,
 				offset,
 				order_by
