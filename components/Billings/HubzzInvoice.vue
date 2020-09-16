@@ -963,6 +963,7 @@ export default {
             })
 					})
 					.catch(err => {
+            console.log('err', err)
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",

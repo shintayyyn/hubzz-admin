@@ -124,7 +124,7 @@
 			</div>
 		</div>
 
-		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TABLE NEW STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB PART PICKER STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
 		<div v-if="itemCount === 0">
 			<div class="mt-10 w-full text-center text-white">No Billable Practices Found.</div>
 		</div>
@@ -239,7 +239,7 @@
 						@sorted="sorted"
 					>
 						<template v-slot:checker="slotProps">
-							<div class="flex flex-col items-center m-1">
+							<div class="flex flex-col items-center justify-between m-1">
 								<div class="text-left">{{ slotProps.item.name }}</div>
 								<div
 									class="m-1 rounded-full text-center px-4 py-1 w-32"
@@ -257,6 +257,9 @@
 										:value="slotProps.item"
 									/>
 									<label :for="slotProps.item">Select All</label>
+								</div>
+								<div>
+									Picked {{chosenPracticeJobParts.filter(item => item.practice_id === slotProps.item.id).length}} of {{slotProps.item.practice_invoiceable_job_parts.length}}
 								</div>
 							</div>
 						</template>
@@ -328,7 +331,7 @@
 				@pagechanged="pagechanged"
 			/>
 		</div>
-		<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TABLE NEW ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  JOB PART PICKER ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 		<div class="flex flex-row justify-end mt-4">
 			<div class="flex flex-col">
 				<div 
@@ -833,7 +836,6 @@ export default {
 				"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
 				true
 			);
-			// this.checkForm()
 
 			let chosenPracticeIds = await this.chosenPracticeJobParts.map(item => {
 				return item.practice_id;
@@ -1063,6 +1065,8 @@ export default {
 							console.log("billable practices", this.allBillablePractices);
 						});
 				});
+
+
 		},
 
 		sortData: function(toSortBy) {
