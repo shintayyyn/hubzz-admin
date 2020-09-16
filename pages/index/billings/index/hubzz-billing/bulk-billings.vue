@@ -134,7 +134,8 @@
 				class="hidden md:flex justify-around text-white font-semibold w-full px-4"
 			>
 				<div class="flex flex-row w-full pb-3 text-sm justify-around">
-					<div
+					<!-- ORIGINAL -->
+					<!-- <div
 						class="text-center"
 						style="flex: 1 0 0; min-width: 100px; max-width: 250px;" 
 					>
@@ -169,7 +170,53 @@
 						style="flex: 1 0 0; min-width: 90px; max-width: 220px;"  
 					>
 						Status
+					</div> -->
+					<!-- ORIGINAL ENDS HERE -->
+
+					<!-- FOR QA TESTING ONLY -->
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 100px; max-width: 200px;" 
+					>
+						Practice
 					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 100px;"  
+					>
+						Check
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 150px;"  
+					>
+						Job Part Number
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 170px;"  
+					>
+						Approved at / Completed At
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 120px;"  
+					>
+						Total
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 120px;"  
+					>
+						Status
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 150px;"  
+					>
+						With Dispute (QA)
+					</div>
+					<!-- FOR QA TESTING COLUMNS ENDS HERE -->
 				</div>
 			</div>
 
@@ -262,6 +309,9 @@
 											? slotProps.item.invoice_status
 											: slotProps.item.status }}
 										</div>
+									</template>
+									<template v-slot:job_part_items_disputed_at_slot="slotProps">
+										<div>{{ slotProps.item.job_part_items_disputed_at ? slotProps.item.job_part_items_disputed_at : 'N/A'}}</div>
 									</template>
 								</AppTable>
 								<!-- </div> -->
@@ -410,6 +460,29 @@ export default {
 
 			loading: false,
 			practiceColumns: [
+				// ===========ORIGINAL COLUMNS===========
+				// {
+				// 	name: 'Practice',
+				// 	dataIndex: 'checker',
+				// 	class: 'flex-1 mt-4 items-center',
+				// 	flex: '1 0 0',
+				// 	slotName: 'checker',
+				// 	eventName: 'checkClicked',
+				// 	minWidth: '100px',
+				// 	maxWidth: '250px',
+				// },
+				// {
+				// 	name: 'Job Parts',
+				// 	dataIndex: 'invoiceable_job_parts',
+				// 	class: 'flex-initial',
+				// 	slotName: 'invoiceable_job_parts',
+				// 	flex: '1 0 0',
+				// 	minWidth: '100px',
+				// 	maxWidth: '1000px'
+				// },
+				// ===========ORIGINAL COLUMNS ENDS HERE===========
+
+				// ===========FOR QA TESTING ONLY===========
 				{
 					name: 'Practice',
 					dataIndex: 'checker',
@@ -418,7 +491,7 @@ export default {
 					slotName: 'checker',
 					eventName: 'checkClicked',
 					minWidth: '100px',
-					maxWidth: '250px',
+					maxWidth: '200px',
 				},
 				{
 					name: 'Job Parts',
@@ -429,8 +502,62 @@ export default {
 					minWidth: '100px',
 					maxWidth: '1000px'
 				}
+				// ===========FOR QA TESTING ONLY ENDS HERE===========
 			],
 			jobPartsColumns: [
+				// ===========ORIGINAL COLUMNS===========
+				// {
+				// 	name: "Check",
+				// 	dataIndex: "checker",
+				// 	class: "flex items-center justify-center",
+				// 	slotName: "checker",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '100px',
+				// 	eventName: "checkClicked"
+				// },
+				// {
+				// 	name: "Job Part Number",
+				// 	dataIndex: "job_part_number",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	class: "flex items-center justify-center",
+				// 	sortable: false
+				// },
+				// {
+				// 	name: "Approved At / Completed At",
+				// 	slot: true,
+				// 	dataIndex: "approved_at",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	class: "flex items-center justify-center localDate",
+				// 	slotName: "approved_completed_at"
+				// },
+				// {
+				// 	name: "Total",
+				// 	dataIndex: "total",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	class: "flex items-center justify-center currency",
+				// 	sortable: false
+				// },
+				// {
+				// 	name: "Status",
+				// 	slot: true,
+				// 	dataIndex: "status",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	slotName: "status_slot",
+				// 	class: "flex items-center justify-center",
+				// 	sortable: true
+				// },
+				// ===========ORIGINAL COLUMNS ENDS HERE===========
+
+				// ===========FOR QA TESTING ONLY===========
 				{
 					name: "Check",
 					dataIndex: "checker",
@@ -465,7 +592,7 @@ export default {
 					dataIndex: "total",
 					flex: '1 0 0',
 					minWidth: '90px',
-					maxWidth: '200px',
+					maxWidth: '180px',
 					class: "flex items-center justify-center currency",
 					sortable: false
 				},
@@ -475,11 +602,23 @@ export default {
 					dataIndex: "status",
 					flex: '1 0 0',
 					minWidth: '90px',
-					maxWidth: '200px',
+					maxWidth: '150px',
 					slotName: "status_slot",
 					class: "flex items-center justify-center",
 					sortable: true
-				}
+				},
+				{
+					name: "With Disputes",
+					slot: true,
+					dataIndex: "job_part_items_disputed_at",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '180px',
+					slotName: "job_part_items_disputed_at_slot",
+					class: "flex items-center justify-center",
+					sortable: true
+				},
+				// ===========FOR QA TESTING COLUMNS ENDS HERE===========
 			]
 		}
 	},
