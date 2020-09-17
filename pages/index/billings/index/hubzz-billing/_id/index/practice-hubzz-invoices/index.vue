@@ -391,10 +391,12 @@ export default {
 			})
     },
 
-    cancelPaymentModal () {
-      this.paymentModal = false 
+     cancelPaymentModal () {
+      this.paymentModal = false
+      this.unpaidModal = false 
       this.modalPaidUnpaid = true
       this.paidAt = null
+      this.unpaidReason = null
     },
 
     toShowPaidModal (itemId) {

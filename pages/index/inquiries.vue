@@ -3,11 +3,6 @@
     <div class="text-xl md:text-4xl text-white">
       Inquiries
     </div>
-
-		<div class="bg-orange-500 p-4" @click="getInquiries">
-			tester
-		</div>
-
     <div class="flex py-2">
       <!-- <div class="relative">
 				<input
@@ -114,13 +109,13 @@ export default {
 				},
 				{
 					name: "Date Sent",
-					dataIndex: "created_at",
+					dataIndex: "created_at_in_gb_formatted",
 					class: "localDate text-center"
 					// sortable: true
 				},
 				{
 					name: "Acknowledged At",
-					dataIndex: "acknowledged_at",
+					dataIndex: "acknowledged_at_in_gb_formatted",
 					class: "text-center",
 					slot: true,
 					slotName: "acknowledged"
