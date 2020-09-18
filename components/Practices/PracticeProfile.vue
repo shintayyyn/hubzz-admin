@@ -359,7 +359,7 @@
               >
                 {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
               </p>
-              <div class="flex items-center mb-2">
+              <!-- <div class="flex items-center mb-2">
                 <span class="text-gray-300 mr-2 font-bold">Status:</span>
                 <span
                   class="text-white px-4 py-1 rounded-lg"
@@ -378,8 +378,8 @@
                     class="ml-2"
                   />
                 </span>
-              </div>
-              <template v-if="practice.status === 'Active'">
+              </div> -->
+              <!-- <template v-if="practice.status === 'Active'">
                 <p class="text-gray-300 font-bold">
                   Active Until
                 </p>
@@ -388,7 +388,7 @@
                 >
                   {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
                 </p>
-              </template>
+              </template> -->
               <div class="flex flex-col item-center">
                 <div
                   class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 hover:bg-gray-800 mx-2 p-2 cursor-pointer transition-hover"
@@ -457,7 +457,83 @@
                 :resize="false"
                 :rows="2"
               />
-              <div class="flex items-center mb-4">
+              <!-- <div class="flex items-center mb-4">
+                <AppInput
+                  v-model="toPutPractice.status"
+                  class="w-2/3 md:w-1/2 mr-2"
+                  :type="'select'"
+                  :name="'status'"
+                  :label="'Status'"
+                  :placeholder="'Select...'"
+                  :items="practiceStatusChoices"
+                />
+                <span
+                  class="tool"
+                  data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified at least once, since the day it was created."
+                  tabindex="1"
+                >
+                  <svgicon name="info" width="21" height="21" color="white transparent black" />
+                </span>
+              </div> -->
+              <!-- <AppDate
+                v-if="toPutPractice.status === 'Active'"
+                v-model="toPutPractice.actived_until"
+                :name="'actived_until'"
+                :label="'Active Until'"
+                is-after
+                @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
+              /> -->
+
+              <AppButton :label="'Save'" @click="toPutPracticeInfo(practice.id,toPutPractice)" />
+            </div>
+
+            <!-- VIEW PRACTICE STATUS -->
+            <div class="flex flex-wrap justify-between items-center">
+              <span class="text-lg mr-2 font-bold">Practice Status</span>
+
+              <AppButton
+                v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+                :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
+                @click="editPracticeStatus()"
+              />
+            </div>
+            <div v-if="!toEditPracticeStatus" class="flex flex-col mb-2">
+              <div class="flex flex-row m-2">
+                <span class="text-gray-300 mr-2 font-bold">Status:</span>
+                <span
+                  class="text-white px-4 py-1 rounded-lg"
+                  :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
+                >{{ practice.status }}</span>
+                <span
+                  class="tool"
+                  data-tip="Manual status control will only work when verification requirements are already completed (Documents and Rates)."
+                  tabindex="1"
+                >
+                  <svgicon
+                    name="info"
+                    width="21"
+                    height="21"
+                    color="white transparent black"
+                    class="ml-2"
+                  />
+                </span>
+              </div>
+              <div class="m-2">
+                <template v-if="practice.status === 'Active'">
+                  <p class="text-gray-300 font-bold">
+                    Active Until
+                  </p>
+                  <p
+                    class="flex md:mx-2 mb-2"
+                  >
+                    {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
+                  </p>
+                </template>
+              </div>
+            </div>
+            <!-- EDITING PRACTICE STATUS -->
+            <div v-if="toEditPracticeStatus" class="flex flex-col mb-4">
+              <div class="flex">
                 <AppInput
                   v-model="toPutPractice.status"
                   class="w-2/3 md:w-1/2 mr-2"
@@ -475,17 +551,26 @@
                   <svgicon name="info" width="21" height="21" color="white transparent black" />
                 </span>
               </div>
-              <AppDate
-                v-if="toPutPractice.status === 'Active'"
-                v-model="toPutPractice.actived_until"
-                :name="'actived_until'"
-                :label="'Active Until'"
-                is-after
-                @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
-              />
-
-              <AppButton :label="'Save'" @click="toPutPracticeInfo(practice.id,toPutPractice)" />
+              
+              <div>
+                <AppDate
+                  v-if="toPutPractice.status === 'Active'"
+                  v-model="toPutPractice.actived_until"
+                  :name="'actived_until'"
+                  :label="'Active Until'"
+                  is-after
+                  @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
+                />
+              </div>
+              
+              <div>
+                <AppButton
+                  :label="'Change'"
+                  @click="toPutPracticeInfo(practice.id,toPutPractice)"
+                />
+              </div>
             </div>
+
 
             <!-- VIEW PRACTICE TYPE -->
             <div class="flex flex-wrap justify-between items-center">
@@ -737,6 +822,11 @@ export default {
         hub_type: this.practice.hub_type
       },
 
+      toEditPracticeStatus: false,
+      toPutPracticeStatus: {
+        status: this.practice.status,
+      },
+
       confirm: false
     }
   },
@@ -752,6 +842,7 @@ export default {
       this.practice.complete_rate
       && this.practice.complete_document
       && this.practice.has_active_user
+      && (this.practice.sage_ref || this.toPutPractice.sage_ref !== null)
     ) {
       this.practiceStatusChoices = [
         { label: "Active", value: "Active" },
@@ -808,6 +899,7 @@ export default {
             this.$emit('practiceUpdated', practice)
 
             this.toEdit = false
+            this.toEditPracticeStatus = false
           })
         }
       } catch (err) {
@@ -934,6 +1026,13 @@ export default {
         this.toPutPractice.extra_information = this.practice.extra_information
         this.toPutPractice.status = this.practice.status
         this.toPutPractice.actived_until = this.practice.actived_until
+      }
+    },
+
+    editPracticeStatus () {
+      this.toEditPracticeStatus = !this.toEditPracticeStatus
+      if (this.toEditPracticeStatus) {
+        this.toPutPracticeStatus = this.practice.status
       }
     },
 

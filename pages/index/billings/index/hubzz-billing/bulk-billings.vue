@@ -458,6 +458,7 @@ export default {
 				verified: true,
 				practice_invoiceable_date_start: null,
 				practice_invoiceable_date_end: null,
+				practice_invoiceable_status: ['Approved'],
 				practice_invoiceable: true
 			},
 
@@ -772,20 +773,59 @@ export default {
 			this.getBillablePractices();
 		},
 
-		showDisputed() {
-			this.getBillablePractices();
+		showDisputed (value) {
+			console.log('showDisputed', value)
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Disputed'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Disputed')
+				this.getBillablePractices()
+			}
+			
+			
 		},
 
-		showCancelled() {
-			this.getBillablePractices();
+		showCancelled (value) {
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Cancelled'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Cancelled')
+				this.getBillablePractices()
+			}
 		},
 
-		showCompleted() {
-			this.getBillablePractices();
+		showCompleted (value) {
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Completed'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Completed')
+				this.getBillablePractices()
+			}
 		},
 
-		showInvoiced() {
-			this.getBillablePractices();
+		showInvoiced (value) {
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Invoiced'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Invoiced')
+				this.getBillablePractices()
+			}
 		}
 	},
 
@@ -1032,6 +1072,7 @@ export default {
 					practice_invoiceable_date_end: this.practiceParams
 						.practice_invoiceable_date_end,
 					practice_invoiceable: this.practiceParams.practice_invoiceable,
+					practice_invoiceable_status: this.practiceParams.practice_invoiceable_status,
 					show_completed: this.showCompleted,
 					show_disputed: this.showDisputed,
 					verified: this.verified,
@@ -1055,6 +1096,7 @@ export default {
 							practice_invoiceable_date_end: this.practiceParams
 								.practice_invoiceable_date_end,
 							practice_invoiceable: this.practiceParams.practice_invoiceable,
+							practice_invoiceable_status: this.practiceParams.practice_invoiceable_status,
 							show_completed: this.showCompleted,
 							show_disputed: this.showDisputed,
 							show_invoiced: this.showInvoiced,
