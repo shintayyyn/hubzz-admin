@@ -489,8 +489,26 @@
 
             <!-- VIEW PRACTICE STATUS -->
             <div class="flex flex-wrap justify-between items-center">
-              <span class="text-lg mr-2 font-bold">Practice Status</span>
-
+              <div class="flex flex-row">
+                <span class="text-lg mr-2 font-bold">Practice Status</span>
+                <span
+                  class="tool"
+                  data-tip="
+                    Manual status control will only work when verification requirements are already completed (Documents and Rates).
+                    Status cannot be set to 'Active' until the Practice is Verified at least once, since the day it was created
+                  "
+                  tabindex="1"
+                >
+                  <svgicon
+                    name="info"
+                    width="21"
+                    height="21"
+                    color="white transparent black"
+                    class="ml-2"
+                  />
+                </span>
+              </div>
+              
               <AppButton
                 v-if="authAdminPermissions.includes('Edit Practice Other Information')"
                 :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
@@ -504,19 +522,6 @@
                   class="text-white px-4 py-1 rounded-lg"
                   :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
                 >{{ practice.status }}</span>
-                <span
-                  class="tool"
-                  data-tip="Manual status control will only work when verification requirements are already completed (Documents and Rates)."
-                  tabindex="1"
-                >
-                  <svgicon
-                    name="info"
-                    width="21"
-                    height="21"
-                    color="white transparent black"
-                    class="ml-2"
-                  />
-                </span>
               </div>
               <div class="m-2">
                 <template v-if="practice.status === 'Active'">
@@ -543,13 +548,6 @@
                   :placeholder="'Select...'"
                   :items="practiceStatusChoices"
                 />
-                <span
-                  class="tool"
-                  data-tip="Practice Status cannot be set to 'Active' until the Practice is Verified at least once, since the day it was created."
-                  tabindex="1"
-                >
-                  <svgicon name="info" width="21" height="21" color="white transparent black" />
-                </span>
               </div>
               
               <div>
@@ -856,7 +854,6 @@ export default {
         { label: "Suspended", value: "Suspended" }
       ]
     }
-
     console.log("practice", this.practice)
   },
 
@@ -878,6 +875,7 @@ export default {
             text: "Upload practice documents and set the practice rates first."
           })
         } else if (
+          this.practice.status !== this.toPutPractice.status &&
           this.toPutPractice.status === "Active" &&
           !this.toPutPractice.actived_until
         ) {
@@ -887,20 +885,40 @@ export default {
             text: "Actived Until is Required"
           })
         } else {
-          await this.$axios.put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice).then((response) => {
-            const practice = response.data.data.practice
+          await this.$axios.put(`/api/v1/admin/practices/${practiceID}`, this.toPutPractice)
+            .then((response) => {
+              const practice = response.data.data.practice
 
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Saved"
+              this.$store.commit("SET_NOTIFICATION", {
+                enabled: true,
+                status: "success",
+                text: "Saved"
+              })
+
+              this.$emit('practiceUpdated', practice)
+              
+              if (
+                practice.complete_rate
+                && practice.complete_document
+                && practice.has_active_user
+                && practice.sage_ref
+              ) {
+                this.practiceStatusChoices = [
+                  { label: "Active", value: "Active" },
+                  { label: "Inactive", value: "Inactive" },
+                  { label: "Suspended", value: "Suspended" }
+                ]
+              } else {
+                this.toBogus = true
+                this.practiceStatusChoices = [
+                  { label: "Inactive", value: "Inactive" },
+                  { label: "Suspended", value: "Suspended" }
+                ]
+              }
+              
+              this.toEdit = false
+              this.toEditPracticeStatus = false
             })
-
-            this.$emit('practiceUpdated', practice)
-
-            this.toEdit = false
-            this.toEditPracticeStatus = false
-          })
         }
       } catch (err) {
         this.$store.commit("SET_NOTIFICATION", {
