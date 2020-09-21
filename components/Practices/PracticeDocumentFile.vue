@@ -57,13 +57,7 @@
               File last uploaded
             </p>
             <p>
-              {{
-                practiceDoc.file
-                  ? $moment(practiceDoc.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format(
-                    "DD/MM/YYYY HH:mm:ss"
-                  )
-                  : null
-              }}
+              {{ practiceDoc && practiceDoc.last_uploaded_at_in_gb_formatted ? practiceDoc.last_uploaded_at_in_gb_formatted : null }}
             </p>
           </div>
         </div>
