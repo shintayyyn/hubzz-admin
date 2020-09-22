@@ -447,11 +447,7 @@ export default {
 					paid_at: this.paidAt
 				})
 				.then(() => {
-					this.confirm = false
-          this.showPaidModal = false
-          this.paymentModal = false 
-          this.modalPaidUnpaid = false
-          this.paidAt = null
+					this.closeModals()
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -473,11 +469,7 @@ export default {
           unpaid_reason: this.unpaidReason,
         })
         .then(() => {
-          this.confirm = false
-          this.showPaidModal = false
-          this.paymentModal = false 
-          this.modalPaidUnpaid =false
-          this.paidAt = null
+          this.closeModals()
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
