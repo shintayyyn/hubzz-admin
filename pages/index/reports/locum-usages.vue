@@ -51,7 +51,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="dateStart"
-              label="Completed At Date Start"
+              label="Date Start"
               format="YYYY-MM-DD"
             />
           </div>
@@ -59,7 +59,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="dateEnd"
-              label="Completed At Date End"
+              label="Date End"
               format="YYYY-MM-DD"
             />
           </div>
