@@ -249,7 +249,11 @@ export default {
 			rolePermissions: [],
 			allPermissions: [],
 			editingPermissions: false,
-
+			motherPermissions:[
+				'View Locums',
+				'View Practices',
+				''
+			],
 			permissions: [],
 			hierarchyPermissions: [],
 
@@ -441,9 +445,13 @@ export default {
 					findSub.permissions.push(permission);
 				});
 			});
+			console.log('dasdas', subCategories)
 			this.hierarchyPermissions = subCategories;
 		},
 		onChangeCategory(index, permissions, e) {
+			console.log('apple', index)
+			console.log('cherry', permissions)
+			console.log('banana', e)
 			if (index === 0) {
 				permissions.forEach(item => {
 					item.done = e;
@@ -458,6 +466,7 @@ export default {
 			}
 		},
 		isChecked(permissions, category) {
+			// console.log('hierarchy permissions', this.hierarchyPermissions)
 			let checkedPermissions = []
 			checkedPermissions = permissions.filter( item => item.done === true)
 			if(checkedPermissions.length > 0) {
@@ -465,8 +474,8 @@ export default {
 			} else {
 				return false
 			}
-			// console.log('hierarchy permissions', this.hierarchyPermissions)
-			// // return !permissions.map(item => item.done).includes(false);
+			
+			// return !permissions.map(item => item.done).includes(false);
 			// let parents = [];
 			// let filter = this.hierarchyPermissions.filter(
 			// 	item => item.category === category

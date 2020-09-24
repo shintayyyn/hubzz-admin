@@ -151,7 +151,10 @@ export default {
 
       let addedLists = []
 
-      if(this.authAdminPermissions.includes('View Locums')){
+      if(this.authAdminPermissions.includes('View Locums') 
+        || this.authAdminPermissions.includes('View Locum Jobs')
+        || this.authAdminPermissions.includes('View Locum Compliance Detail')
+      ){
         addedLists.push({
           name: "Locums",
           route: "/locums",

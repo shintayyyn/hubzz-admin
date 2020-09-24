@@ -28,6 +28,36 @@
   </div>
 </template>
 <script>
+export default{
+  data () {
+    
+  },
+  async asyncData ({ store, error }) {
+    try {
+      const authAdminpermissions = store.getters["permissions"]
+
+      if (authAdminpermissions.includes('View Practices') === false 
+        && authAdminpermissions.includes('View Practice Sessions') === false
+        && authAdminpermissions.includes('View Practice Users') === false
+        && authAdminpermissions.includes('View Practice Documents') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
+    } catch(err) {
+      error({ statusCode: 404 })
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      })
+      console.log("get parent practice error!!", err)
+    }
+  }
+}
 </script>
 <style>
 	.page-button {

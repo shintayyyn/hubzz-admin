@@ -15,6 +15,7 @@
 
       <div class="flex flex-row flex-wrap justify-start">
         <nuxt-link
+          v-if="authAdminPermissions.includes('View Locums')"
           :to="{ name: 'index-locums-id-index', params: { id: $route.params.id } }"
           class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
           :class="$route.name === 'index-locums-id-index' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -80,6 +81,7 @@ export default {
     return {
       loading: false,
       locumUser: null,
+      locumPermissions: null,
     }
   },
 
@@ -89,21 +91,67 @@ export default {
     },
   },
 
+   async asyncData ({ store, error }) {
+    try {
+      const authAdminpermissions = store.getters["permissions"]
+      
+      const locumPermissions = authAdminpermissions.filter(item => item.includes('View Locum'))
+
+      return {
+        locumPermissions,
+      }
+
+    } catch(err) {
+      error({ statusCode: 404 })
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      })
+      console.log("get parent practice error!!", err)
+    }
+  },
+
   mounted () {
     this.getLocumUser()
   },
 
   methods: {
-    getLocumUser () {
-      const locumUserId = this.$route.params.id
-      this.loading = true
-      this.$axios.get(`/api/v1/admin/locum-users/${locumUserId}`).then((response) => {
-        this.locumUser = response.data.data.user
-      }).catch((err) => {
-        this.$nuxt.error(err)
-      }).finally(() => {
-        this.loading = false
-      })
+    async getLocumUser () {
+      let route = ''
+      console.log('locumpermissions', this.locumPermissions)
+      if (this.locumPermissions){
+        switch (this.locumPermissions[0]) {
+          case "View Locum Jobs":
+            route = "locum-jobs"
+            break
+          case "View Locum Compliance Detail":
+            route = "locum-compliance"
+            break
+          default:
+            route = ''
+        }
+      }
+      console.log('route', route)
+      if (route !== '') {
+        this.$axios.get(`/api/v1/admin/locum-users/${this.$route.params.id}`).then((response) => {
+          this.locumUser = response.data.data.user
+        }).catch((err) => {
+          this.$nuxt.error(err)
+        }).finally(() => {
+          this.$router.push(`/locums/${this.$route.params.id}/${route}`)
+        })
+      } else {
+        this.loading = true
+        this.$axios.get(`/api/v1/admin/locum-users/${this.$route.params.id}`).then((response) => {
+          this.locumUser = response.data.data.user
+        }).catch((err) => {
+          this.$nuxt.error(err)
+        }).finally(() => {
+          this.loading = false
+        })
+      }
+      
     },
 
     setViewLocumUserHandler (locumUser) {
@@ -115,7 +163,7 @@ export default {
       this.getLocumUser()
       this.$emit('updateLocumUsers')
     },
-    },
+  },
 }
 </script>
 
