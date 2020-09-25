@@ -391,10 +391,16 @@
               </template> -->
               <div class="flex flex-col item-center">
                 <div
-                  class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-gray-700 hover:bg-gray-800 mx-2 p-2 cursor-pointer transition-hover"
-                  @click="confirm=true"
+                  class="w-full sm:w-1/2 m-2 "
                 >
-                  Deactivate this Practice
+                  <AppButton
+                    :inClass="'text-white'"
+                    :label="'Deactivate this Practice'" 
+                    :background="'charade'"
+                    :disabled="authAdminPermissions.includes('Edit Practice Other Information') === false"
+                    @click="confirm=true"
+                  />
+                  <!-- Deactivate this Practice -->
                 </div>
                 <div
                   v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"

@@ -9,6 +9,7 @@ export const state = () => ({
   },
   toggled_sidebar: false,
   totalPages: 0,
+  
 })
 
 export const getters = {
@@ -38,7 +39,7 @@ export const getters = {
       }
     }
     return toSetAdminPermissions.map(item => item.name)
-  }
+  },
 }
 
 export const mutations = {

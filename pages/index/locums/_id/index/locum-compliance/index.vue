@@ -18,7 +18,6 @@
   import LocumCompliance from "@/components/Locums/LocumCompliance"
 
   export default {
-
     components: {
       AppLoading,
       LocumCompliance,

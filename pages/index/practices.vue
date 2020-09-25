@@ -12,6 +12,7 @@
         Practices
       </nuxt-link>
       <nuxt-link
+        v-if="authAdminPermissions.includes('View Reports')"
         :to="`/practices/practice-compliance-reports`"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.name.includes(`practice-compliance-reports`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -28,9 +29,11 @@
   </div>
 </template>
 <script>
-export default{
-  data () {
-    
+export default {
+  computed : {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
   },
   async asyncData ({ store, error }) {
     try {
@@ -39,7 +42,8 @@ export default{
       if (authAdminpermissions.includes('View Practices') === false 
         && authAdminpermissions.includes('View Practice Sessions') === false
         && authAdminpermissions.includes('View Practice Users') === false
-        && authAdminpermissions.includes('View Practice Documents') === false) {
+        && authAdminpermissions.includes('View Practice Documents') === false
+        && authAdminpermissions.includes('View Practice Rates') === false) {
         error({
           statusCode: 403,
           message: 'You are not authorized to view this page.',

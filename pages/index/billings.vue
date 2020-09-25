@@ -26,7 +26,7 @@
         Pricing Reports
       </nuxt-link>
     </div>
-    <nuxt-child/>
+    <nuxt-child />
     <div
       v-if="$route.name.includes('index-billings-index-hubzz-billing-id-index')"
       class="shield"
@@ -42,10 +42,31 @@
 
 <script>
 export default {
-	components: {
+	computed : {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
   },
-  methods: {
-    
+  async asyncData ({ store, error }) {
+    try {
+      const authAdminpermissions = store.getters["permissions"]
+
+      if (authAdminpermissions.includes('View Hubzz Invoices') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
+    } catch(err) {
+      error({ statusCode: 404 })
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      })
+    }
   }
 }
 </script>

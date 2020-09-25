@@ -163,7 +163,10 @@ export default {
         })
       }
 
-      if(this.authAdminPermissions.includes('View Practices')){
+      if(this.authAdminPermissions.includes('View Practices')
+        || this.authAdminPermissions.includes('View Practice Sessions')
+        || this.authAdminPermissions.includes('View Practice Users')
+        || this.authAdminPermissions.includes('View Practce Documents')){
         addedLists.push({
           name: "Practices",
           route: "/practices",
@@ -235,7 +238,8 @@ export default {
         })
       }
     
-      if(this.authAdminPermissions.includes('View Admin Accounts')){
+      if(this.authAdminPermissions.includes('View Admin Accounts')
+        || this.authAdminPermissions.includes('View Roles')){
         addedLists.push({
           name: "User Management",
           route: "/user-management",

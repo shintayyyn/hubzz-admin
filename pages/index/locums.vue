@@ -5,6 +5,7 @@
     </div>
     <div class="flex justify-start my-2 mx-6">
       <nuxt-link
+        v-if="authAdminPermissions.includes('View Locums')"
         :to="`/locums`" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.name ===`index-locums` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -12,6 +13,7 @@
         Locums
       </nuxt-link>
       <nuxt-link
+        v-if="authAdminPermissions.includes('View Reports')"
         :to="`/locums/compliance-reports`"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.name.includes(`compliance-reports`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -29,7 +31,12 @@
 </template>
 
 <script>
-	export default{
+	export default {
+  computed : {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+  },
   async asyncData ({ store, error }) {
     try {
       const authAdminpermissions = store.getters["permissions"]

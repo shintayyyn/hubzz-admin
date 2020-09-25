@@ -13,6 +13,7 @@
 
     <div class="flex justify-start overflow-x-auto">
       <nuxt-link
+        v-if="practicePermissions.includes('View Practices')"
         :to="`/practices/${$route.params.id}`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="
@@ -45,7 +46,11 @@
 
       <nuxt-link
         v-if="
-          practice && practice.type === 'Spoke' && (practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated')
+          practice 
+            && practice.type === 'Spoke' 
+            && (practice.status !== 'Inactive' 
+            && practice.status !== 'Bogus' 
+            && practice.status !== 'Deactivated')
         "
         :to="`/practices/${$route.params.id}/practice-hub`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
@@ -55,7 +60,12 @@
       </nuxt-link>
 
       <nuxt-link
-        v-if="practice && practice.status !== 'Inactive' && practice.status !== 'Bogus' && practice.status !== 'Deactivated'"
+        v-if="
+          practice 
+            && practice.status !== 'Inactive' 
+            && practice.status !== 'Bogus' 
+            && practice.status !== 'Deactivated'
+        "
         :to="`/practices/${$route.params.id}/practice-invitations`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="$route.name.includes('index-practices-id-index-practice-invitations-index') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -64,7 +74,12 @@
       </nuxt-link>
 
       <nuxt-link
-        v-if="practice && practice.status !== 'Inactive' && practice.status !== 'Bogus'"
+        v-if="
+          practice 
+            && practice.status !== 'Inactive' 
+            && practice.status !== 'Bogus'
+            && practicePermissions.includes('View Practice Sessions')
+        "
         :to="`/practices/${$route.params.id}/practice-sessions`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="$route.path.includes(`/practices/${$route.params.id}/practice-sessions`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -73,7 +88,11 @@
       </nuxt-link>
 
       <nuxt-link
-        v-if="practice && practice.status !== 'Deactivated'"
+        v-if="
+          practice 
+            && practice.status !== 'Deactivated'
+            && practicePermissions.includes('View Practice Users')
+        "
         :to="`/practices/${$route.params.id}/practice-users`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="$route.path.includes(`/practices/${$route.params.id}/practice-users`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -82,7 +101,12 @@
       </nuxt-link>
 
       <nuxt-link
-        v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deactivated'"
+        v-if="
+          practice 
+            && practice.status !== 'Bogus' 
+            && practice.status !== 'Deactivated'
+            && practicePermissions.includes('View Practice Documents')
+        "
         :to="`/practices/${$route.params.id}/practice-documents` "
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="$route.path == `/practices/${$route.params.id}/practice-documents` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -91,7 +115,12 @@
       </nuxt-link>
 
       <nuxt-link
-        v-if="practice && practice.status !== 'Bogus' && practice.status !== 'Deactivated'"
+        v-if="
+          practice 
+            && practice.status !== 'Bogus' 
+            && practice.status !== 'Deactivated'
+            && practicePermissions.includes('View Practice Rates')
+        "
         :to="`/practices/${$route.params.id}/practice-rates`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="$route.path == `/practices/${$route.params.id}/practice-rates` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
@@ -154,6 +183,7 @@ export default {
     return {
       loading: false,
       practice: null,
+      practicePermissions: null,
     }
   },
 
@@ -182,10 +212,16 @@ export default {
     try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
+
+      const authAdminpermissions = store.getters["permissions"]
       
+      const practicePermissions = authAdminpermissions.filter(item => item.includes('View Practice'))
+
       await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+      
       return {
-        practice
+        practice,
+        practicePermissions
       }
 
     } catch (err) {
@@ -195,6 +231,30 @@ export default {
 				text: "Something went wrong!"
 			})
 			console.log("Get hubzz invoices error!", err)
+    }
+  },
+
+  created () {
+    let toRedirect = ''
+    if (this.practicePermissions.find(item => item === 'View Practices') === undefined) {
+      console.log('redirecting')
+      switch (this.practicePermissions[0]) {
+        case "View Practice Sessions":
+          toRedirect = "practice-sessions"
+          break
+        case "View Practice Users":
+          toRedirect = "practice-users"
+          break
+        case "View Practice Documents":
+          toRedirect = "practice-documents"
+          break
+        case "View Practice Rates":
+          toRedirect = "practice-rates"
+          break
+        default:
+          toRedirect = ''
+      }
+      this.$router.push(`/practices/${this.$route.params.id}/${toRedirect}`)
     }
   },
 

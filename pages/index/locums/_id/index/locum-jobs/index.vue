@@ -11,7 +11,6 @@
 <script>
   import AppLoading from "@/components/Base/AppLoading"
   import LocumJobsTabs from "@/components/Locums/LocumJobsTabs"
-
   export default {
     components: {
       AppLoading,

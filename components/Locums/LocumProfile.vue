@@ -266,7 +266,8 @@
               >
                 <a
                   v-if="userComplianceDoc.file"
-                  class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+                  class="text-gray-300 flex items-center"
+                  :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
                   @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
                 >
@@ -293,6 +294,7 @@
                 <a
                   v-if="userMandatoryTraining.file"
                   class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+                  :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
                   @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
                 >
@@ -558,19 +560,23 @@
       },
       
       downloadItem (imgUrl, imgFilename) {
-        const axios = require("axios")
-        axios({
-          url: imgUrl,
-          method: "GET",
-          responseType: "blob" // important
-        }).then(response => {
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement("a")
-          link.href = url
-          link.setAttribute("download", imgFilename)
-          document.body.appendChild(link)
-          link.click()
-        })
+        if(this.authAdminPermissions.includes('Download Locum Compliance Documents')) {
+          const axios = require("axios")
+          axios({
+            url: imgUrl,
+            method: "GET",
+            responseType: "blob" // important
+          }).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement("a")
+            link.href = url
+            link.setAttribute("download", imgFilename)
+            document.body.appendChild(link)
+            link.click()
+          })
+        } else {
+          console.log('You are not permitted to perform such action')
+        }
       },
 
       async toDeactivateLocum () {

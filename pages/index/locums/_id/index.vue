@@ -118,30 +118,30 @@ export default {
 
   methods: {
     async getLocumUser () {
-      let route = ''
-      console.log('locumpermissions', this.locumPermissions)
-      if (this.locumPermissions){
+      let toRedirect = ''
+      console.log('dsadsa', this.locumPermissions.find(item => item === 'View Locums'))
+      if (this.locumPermissions.find(item => item === 'View Locums') === undefined){
+        console.log('gago')
         switch (this.locumPermissions[0]) {
           case "View Locum Jobs":
-            route = "locum-jobs"
+            toRedirect = "locum-jobs"
             break
           case "View Locum Compliance Detail":
-            route = "locum-compliance"
+            toRedirect = "locum-compliance"
             break
           default:
-            route = ''
+            toRedirect = ''
         }
-      }
-      console.log('route', route)
-      if (route !== '') {
+        console.log('redirect')
         this.$axios.get(`/api/v1/admin/locum-users/${this.$route.params.id}`).then((response) => {
           this.locumUser = response.data.data.user
         }).catch((err) => {
           this.$nuxt.error(err)
         }).finally(() => {
-          this.$router.push(`/locums/${this.$route.params.id}/${route}`)
+          this.$router.push(`/locums/${this.$route.params.id}/${toRedirect}`)
         })
       } else {
+        console.log('tang ina')
         this.loading = true
         this.$axios.get(`/api/v1/admin/locum-users/${this.$route.params.id}`).then((response) => {
           this.locumUser = response.data.data.user
@@ -151,7 +151,6 @@ export default {
           this.loading = false
         })
       }
-      
     },
 
     setViewLocumUserHandler (locumUser) {

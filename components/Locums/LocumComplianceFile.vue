@@ -11,6 +11,7 @@
       </div>
 
       <button
+        v-if="authAdminPermissions.includes('Download Locum Compliance Documents')"
         :disabled="downloading"
         class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
@@ -206,8 +207,14 @@
                 class="object-contain object-left-top"
               >
               <embed
-                v-if="locumComplianceDocument.file.type !== 'image'"
+                v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === true"
                 :src="fileUrl"
+                class="object-contain object-left-top w-full document h-full"
+              > 
+              <!-- <iframe id="myframe" :src="disabledFileUrl"/> -->
+              <embed
+                v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === false"
+                :src="disabledFileUrl"
                 class="object-contain object-left-top w-full document h-full"
               > 
             </template>
@@ -274,7 +281,9 @@
       return {
         loadingFile: false,
         fileUrl: null,
+        disabledFileUrl: null,
 
+        myframe: null,
         downloading: false,
 
         toPutLocumDetailCompliance: {
@@ -362,6 +371,16 @@
     },
 
     mounted () {
+
+      if (this.authAdminPermissions.includes('Download Locum Compliance Documents') === false) {
+        window.addEventListener('contextmenu', function (e) {
+          e.preventDefault()
+        }, false)
+
+        // this.myframe = document.getElementById('myframe')
+        // this.myframe.window.eval(document.addEventListener("contextmenu", function (e) {e.preventDefault();}, false))
+      }
+      
       if (this.locumComplianceDocument) {
         const complianceDocumentRejectReasonSeletionList = [
           ...(this.locumComplianceDocument.compliance_document_reject_reasons || []),
@@ -408,6 +427,10 @@
           this.fileUrl = window.URL.createObjectURL(new Blob([response.data], {
             type: `${type}/${subtype}`,
           }))
+
+          this.disabledFileUrl = `${this.fileUrl}#toolbar=0`
+
+          console.log('fileUrl', `${this.fileUrl}#toolbar=0`)
 
           // const fileReader = new window.FileReader()
           // fileReader.onload = function () {
@@ -481,28 +504,33 @@
       },
 
       downloadItem (fileUrl, fileFilename) {
-        const axios = require('axios')
-        this.downloading = true
-        axios.get(fileUrl, {
-          responseType: 'blob',
-        }).then(response => {
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement('a')
-          link.setAttribute('href', url)
-          link.setAttribute('download', fileFilename)
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }).catch(err => {
-          console.log('download file error', err)
-          this.$store.commit('SET_NOTIFICATION', {
-            enabled: true,
-            status: 'danger',
-            text: err.response.data.message
+        if (this.authAdminPermissions.includes('Download Locum Compliance Documents')) {
+          const axios = require('axios')
+          this.downloading = true
+          axios.get(fileUrl, {
+            responseType: 'blob',
+          }).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.setAttribute('href', url)
+            link.setAttribute('download', fileFilename)
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+          }).catch(err => {
+            console.log('download file error', err)
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: err.response.data.message
+            })
+          }).finally(() => {
+            this.downloading = false
           })
-        }).finally(() => {
-          this.downloading = false
-        })
+        } else {
+          console.log('You are not allowed to perform such action.')
+        }
+        
       },
 
       getFileUrl (file) {
