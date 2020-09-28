@@ -1,10 +1,15 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-2 overflow-y-auto">
-    <div class="px-2 mx-5 text-xl md:text-4xl text-white">
+  <div class="flex-1 flex flex-col p-2 md:px-6 overflow-auto">
+    <div class="px-2 text-2xl md:text-4xl text-white">
       {{ $route.name.includes('practice-compliance-reports') ? 'Practice Compliance Reports' : 'Practices' }}
     </div>
-    <div class="flex justify-start my-2 mx-6">
+    <div class="flex justify-start my-2">
       <nuxt-link
+        v-if="authAdminPermissions.includes('View Practices') 
+          || authAdminPermissions.includes('View Practice Sessions')
+          || authAdminPermissions.includes('View Practice Users')
+          || authAdminPermissions.includes('View Practice Documents')
+          || authAdminPermissions.includes('View Practice Rates')"
         :to="`/practices`" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.name ===`index-practices` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
@@ -30,20 +35,22 @@
 </template>
 <script>
 export default {
-  computed : {
+  computed: {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
     },
   },
+
   async asyncData ({ store, error }) {
     try {
-      const authAdminpermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters["permissions"]
 
-      if (authAdminpermissions.includes('View Practices') === false 
-        && authAdminpermissions.includes('View Practice Sessions') === false
-        && authAdminpermissions.includes('View Practice Users') === false
-        && authAdminpermissions.includes('View Practice Documents') === false
-        && authAdminpermissions.includes('View Practice Rates') === false) {
+      if (authAdminPermissions.includes('View Practices') === false 
+        && authAdminPermissions.includes('View Practice Sessions') === false
+        && authAdminPermissions.includes('View Practice Users') === false
+        && authAdminPermissions.includes('View Practice Documents') === false
+        && authAdminPermissions.includes('View Practice Rates') === false
+        && authAdminPermissions.includes('View Reports') === false) {
         error({
           statusCode: 403,
           message: 'You are not authorized to view this page.',
@@ -60,7 +67,14 @@ export default {
       })
       console.log("get parent practice error!!", err)
     }
-  }
+  },
+  created () {
+    if (this.authAdminPermissions.includes('View Reports')
+      && this.authAdminPermissions.includes('View Practices') === false
+    ) {
+      this.$router.push(`/practices/practice-compliance-reports`)
+    }
+  },
 }
 </script>
 <style>

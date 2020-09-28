@@ -154,6 +154,7 @@ export default {
       if(this.authAdminPermissions.includes('View Locums') 
         || this.authAdminPermissions.includes('View Locum Jobs')
         || this.authAdminPermissions.includes('View Locum Compliance Detail')
+        || this.authAdminPermissions.includes('View Reports')
       ){
         addedLists.push({
           name: "Locums",
@@ -166,7 +167,8 @@ export default {
       if(this.authAdminPermissions.includes('View Practices')
         || this.authAdminPermissions.includes('View Practice Sessions')
         || this.authAdminPermissions.includes('View Practice Users')
-        || this.authAdminPermissions.includes('View Practce Documents')){
+        || this.authAdminPermissions.includes('View Practce Documents')
+        || this.authAdminPermissions.includes('View Reports')){
         addedLists.push({
           name: "Practices",
           route: "/practices",
@@ -175,7 +177,8 @@ export default {
         })
       }
 
-      if(this.authAdminPermissions.includes('View Hubzz Invoices')){
+      if(this.authAdminPermissions.includes('View Hubzz Invoices')
+        || this.authAdminPermissions.includes('View Reports')){
         addedLists.push({
           name: "Billing",
           route: "/billings/hubzz-billing",

@@ -1,5 +1,10 @@
 <template>
-  <div class="flex-1 flex flex-col md:px-6 overflow-y-auto">
+  <div 
+    v-if="authAdminPermissions.includes('View Locums') 
+      || authAdminPermissions.includes('View Locum Jobs')
+      || authAdminPermissions.includes('View Locum Compliance Detail')"
+    class="flex-1 flex flex-col md:px-6 overflow-y-auto"
+  >
     <div class="flex flex-col md:flex-row justify-between md:items-center">
       <div class="flex py-2">
         <div class="relative">
@@ -193,7 +198,9 @@
 		},
 
 		computed: {
-
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
       columns () {
         return [
 					{

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
     <div class="px-2 flex justify-start items-center flex-wrap">
       <AppButton
         class="mr-2"
@@ -41,30 +41,39 @@
                 : 'bg-gray-500 text-gray-700'
             }`
           "
-        >{{ slotProps.item.status }}</div>
+        >
+          {{ slotProps.item.status }}
+        </div>
       </template>
       <template v-slot:disputed_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-        >{{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}</div>
+        >
+          {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
+        </div>
       </template>
       <template v-slot:type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="typeStyle(slotProps.item.type)"
-        >{{ slotProps.item.type }}</div>
+        >
+          {{ slotProps.item.type }}
+        </div>
       </template>
       <template v-slot:hub_type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="hubTypeStyle(slotProps.item.hub_type)"
-        >{{ slotProps.item.hub_type }}</div>
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
       </template>
     </AppTable>
     <div 
       v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
-      class="mt-2 w-full text-center text-white">
+      class="mt-2 w-full text-center text-white"
+    >
       There are no verified Practices billable.
     </div>
 
@@ -156,6 +165,9 @@ export default {
 		}
 	},
 	computed: {
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
 		},

@@ -39,11 +39,12 @@
   },
   async asyncData ({ store, error }) {
     try {
-      const authAdminpermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters["permissions"]
 
-      if (authAdminpermissions.includes('View Locums') === false 
-        && authAdminpermissions.includes('View Locum Jobs') === false
-        && authAdminpermissions.includes('View Locum Compliance Detail') === false) {
+      if (authAdminPermissions.includes('View Locums') === false 
+        && authAdminPermissions.includes('View Locum Jobs') === false
+        && authAdminPermissions.includes('View Locum Compliance Detail') === false
+        && authAdminPermissions.includes('View Reports') === false) {
         error({
           statusCode: 403,
           message: 'You are not authorized to view this page.',
@@ -60,7 +61,14 @@
       })
       console.log("get parent practice error!!", err)
     }
-  }
+  },
+  created () {
+    if (this.authAdminPermissions.includes('View Reports')
+      && this.authAdminPermissions.includes('View Locums') === false
+    ) {
+      this.$router.push(`/locums/compliance-reports`)
+    }
+  },
 }
 </script>
 

@@ -1,5 +1,12 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
+  <div
+    v-if="authAdminPermissions.includes('View Practices') 
+      || authAdminPermissions.includes('View Practice Sessions')
+      || authAdminPermissions.includes('View Practice Users')
+      || authAdminPermissions.includes('View Practice Documents')
+      || authAdminPermissions.includes('View Practice Rates')"
+    class="flex-1 flex flex-col py-2"
+  >
     <div class="px-2 flex justify-between items-center flex-wrap">
       <div>
         <div class="flex justify-start -mx-2 overflow-x-auto">
@@ -241,6 +248,10 @@ export default {
 	},
 
 	computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+
     practiceTab () {
       const practiceTab = this.$route.query.practice_tab
 
@@ -474,9 +485,7 @@ export default {
       return Math.ceil(this.count / this.limit)
     },
 
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
-    },
+		
 	},
 
 	watch: {

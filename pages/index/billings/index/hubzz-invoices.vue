@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
     <div class="flex flex-col md:flex-row justify-start w-full m-3">
       <div class="flex-1 text-white">
         <!-- <input
@@ -189,7 +189,8 @@
         <template v-slot:exported_at="slotProps">
           <div
             v-if="slotProps.item.sage_ref"
-            :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'">
+            :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'"
+          >
             <span class="font-bold">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
           </div>
           <div v-else>
@@ -592,6 +593,9 @@ export default {
 		}
 	},
 	computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
 		loadingHubzzInvoices () {
 			return this.$store.state.billings.loading_invoices
 		},
