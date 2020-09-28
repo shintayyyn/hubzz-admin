@@ -43,12 +43,12 @@
       <template v-slot:acknowledged="slotProps">
         <div
           :class="
-            !slotProps.item.acknowledged_at &&
+            !slotProps.item.acknowledged_at_in_gb_formatted &&
               'mx-auto px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
           "
         >
-          <template v-if="slotProps.item.acknowledged_at">
-            {{ slotProps.item.acknowledged_at | localDate }}
+          <template v-if="slotProps.item.acknowledged_at_in_gb_formatted">
+            {{ slotProps.item.acknowledged_at_in_gb_formatted }}
           </template>
 
           <template v-else>
@@ -110,7 +110,7 @@ export default {
 				{
 					name: "Date Sent",
 					dataIndex: "created_at_in_gb_formatted",
-					class: "localDate text-center"
+					class: "text-center"
 					// sortable: true
 				},
 				{
