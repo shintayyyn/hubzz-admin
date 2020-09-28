@@ -201,40 +201,50 @@ export default {
 		};
 	},
 	computed: {
-		locumFaqs() {
-			return this.$store.state.faqs.locumFaqs;
+		locumFaqs () {
+			return this.$store.state.faqs.locumFaqs
 		},
-		practiceFaqs() {
-			return this.$store.state.faqs.practiceFaqs;
+		practiceFaqs () {
+			return this.$store.state.faqs.practiceFaqs
 		},
-		authAdminPermissions() {
-			return this.$store.getters["permissions"];
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
 		}
 	},
-	async asyncData({ app, route, store, error }) {
+	async asyncData ({ app, store, error }) {
 		try {
-			let response = await app.$axios.$get(`/api/v1/admin/faqs?domain=Locum`);
-			let locumFaqs = response.data.faqs;
+			let response = await app.$axios.$get(`/api/v1/admin/faqs?domain=Locum`)
+			let locumFaqs = response.data.faqs
 
-			response = await app.$axios.$get("/api/v1/admin/faqs?domain=Practice");
-			let practiceFaqs = response.data.faqs;
+			response = await app.$axios.$get("/api/v1/admin/faqs?domain=Practice")
+			let practiceFaqs = response.data.faqs
 
-			await store.commit("faqs/SET_LOCUM_FAQS", locumFaqs);
-			await store.commit("faqs/SET_PRACTICE_FAQS", practiceFaqs);
+			await store.commit("faqs/SET_LOCUM_FAQS", locumFaqs)
+			await store.commit("faqs/SET_PRACTICE_FAQS", practiceFaqs)
+
+			const authAdminpermissions = store.getters["permissions"]
+
+      if (authAdminpermissions.includes('View FAQ') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: err.response.data.message
-			});
-			console.log("faqs error!", err);
+			})
+			console.log("faqs error!", err)
 		}
 	},
 	methods: {
-		getLocumFaqs() {
+		getLocumFaqs () {
 			this.$store.dispatch("faqs/fetchLocumFaqs");
 		},
-		getPracticeFaqs() {
+		getPracticeFaqs () {
 			this.$store.dispatch("faqs/fetchPracticeFaqs");
 		},
 		async toggleFaqOn(itemFaq) {

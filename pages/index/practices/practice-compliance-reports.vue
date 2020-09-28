@@ -38,6 +38,32 @@ export default {
         },
       ],
     }
+  },
+  computed : {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+  },
+  async asyncData ({ store, error }) {
+    try {
+      const authAdminpermissions = store.getters["permissions"]
+
+      if (authAdminpermissions.includes('View Reports') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
+    } catch(err) {
+      error({ statusCode: 404 })
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      })
+    }
   }
 }
 </script>

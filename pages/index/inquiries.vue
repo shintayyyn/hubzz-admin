@@ -182,6 +182,16 @@ export default {
 			console.log('inquiries', emails)
 			await store.commit("supports/SET_EMAILS", emails)
 
+			const authAdminpermissions = store.getters["permissions"]
+
+      if (authAdminpermissions.includes('View Inquiries Messages') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
 			await store.commit("supports/TOGGLE_LOADING", false)
 			return {
 				itemsPerPage: limit,

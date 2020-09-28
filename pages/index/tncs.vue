@@ -36,16 +36,19 @@ export default {
 		PrivacyPolicy,
 	},
 	computed: {
-		activeComponent() {
-			return this.$route.query.active_tab;
+		activeComponent () {
+			return this.$route.query.active_tab
+		},
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
 		}
 	},
-	data() {
+	data () {
 		return {
 			terms: null,
 			tnc: null,
 			privacypolicy: null
-		};
+		}
 	},
 	watch:{
 		"$route.query.active_tab" (newTab, oldTab){
@@ -61,17 +64,11 @@ export default {
 						status: "danger",
 						text: "Something went wrong!"
 					});
+					console.log("get TNCS error!!!!", err);
 				})
 		}
 	},
-	created() {
-		const query = {
-			...this.$route.query,
-			active_tab: this.$route.query.active_tab || "termsAndConditions"
-		};
-		this.$router.push({ query });
-	},
-	async asyncData({ app, store, route }) {
+	async asyncData ({ app, store, error }) {
 		try {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/terms-and-conditions`
@@ -79,11 +76,21 @@ export default {
 			const terms = response.data.terms;
 			const tnc = response.data.terms.terms_and_conditions;
 			const privacypolicy = response.data.terms.privacy_policy;
+
+			const authAdminpermissions = store.getters["permissions"]
+
+      if (authAdminpermissions.includes('View Terms and Conditions & Privacy Policy') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
 			return {
 				terms,
 				tnc,
 				privacypolicy
-			};
+			}
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
@@ -92,6 +99,13 @@ export default {
 			});
 			console.log("get TNCS error!!!!", err);
 		}
+	},
+	created() {
+		const query = {
+			...this.$route.query,
+			active_tab: this.$route.query.active_tab || "termsAndConditions"
+		};
+		this.$router.push({ query });
 	},
 	methods: {
 		goTo(type) {

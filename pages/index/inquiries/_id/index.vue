@@ -24,7 +24,11 @@
               </div>
 
               <AppButton
-                v-if="!email.acknowledged_by_user_id && !email.acknowledged_at"
+                v-if="
+                  !email.acknowledged_by_user_id 
+                    && !email.acknowledged_at
+                    && authAdminPermissions.includes('Acknowledge Inquiries Messages')
+                "
                 :label="'Acknowledge'"
                 @click="acknowledgeInquiry()"
               />
@@ -85,6 +89,12 @@ export default {
     return{
       email: null,
     }
+  },
+
+  computed : {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
   },
 
   async asyncData ({ app, route }){
