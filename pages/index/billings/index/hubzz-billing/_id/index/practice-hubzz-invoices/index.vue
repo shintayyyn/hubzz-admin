@@ -2,6 +2,7 @@
   <div class="w-full overflow-hidden">
     <div class="flex flex-row mx-2 float-right">
       <AppButton
+        v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
         class="my-2 text-sm"
         :disabled="!practice.sage_ref ? true : false"
         :label="'Issue HUBZZ Invoice'"
@@ -279,12 +280,6 @@ export default {
           slotName: "payment_status",
 					class: "text-center localDate"
         },
-				{
-					name: "Actions",
-					dataIndex: "paid_at",
-					slotName: "paid_at",
-					class: "text-center localDate"
-				}
       ],
       
 			// FOR MARKING INVOICE AS PAID
@@ -299,6 +294,9 @@ export default {
 		}
 	},
 	computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
 		loadingHubzzInvoices () {
 			return this.$store.state.billings.loading_invoices
 		},
@@ -374,9 +372,20 @@ export default {
 			})
 			console.log("Get hubzz invoices error!", err)
 		}
-	},
+  },
+
+  created () {
+    if (this.authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')) {
+      this.columns.push({
+        name: "Actions",
+        dataIndex: "paid_at",
+        slotName: "paid_at",
+        class: "text-center"
+      })
+    }
+  },
+  
 	methods: {
-    goToIssue () {},
     issueHubzzInvoice () {
       this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`)
     },

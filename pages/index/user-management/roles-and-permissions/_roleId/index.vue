@@ -201,6 +201,8 @@
 							</div>
 
 							<div v-for="(item, index) in hierarchyPermissions" :key="index">
+								<!-- {{item.category}}
+								{{item.permissions}} -->
 								<template v-if="role.category === item.category">
 									<div class="w-full p-2">
 										<div class="flex flex-col w-full">
@@ -215,12 +217,12 @@
 														type="checkbox"
 														:id="permission.id"
 														:checked="permission.done"
-														@change="onChangeCategory(index, item.permissions, $event.target.checked)"
+														@change="onChangeCategory(index, item.permissions, $event.target.checked, permission.name)"
 													/>
 													<label
 														:for="permission.id"
 														class="text-sm pl-1"
-														:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
+														:class="permission.name.includes('View') ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
 													>{{permission.name}}</label>
 												</div>
 											</div>
@@ -432,10 +434,12 @@ export default {
 					}
 				});
 			});
+
 			this.setHierarchy(subCategories);
 		},
-		setHierarchy(subCategories) {
-			this.permissions.forEach(item => {
+		async setHierarchy(subCategories) {
+			console.log('set hierarchy subcategories', subCategories)
+			await this.permissions.forEach(item => {
 				item.permissions.forEach(permission => {
 					let findSub = subCategories.find(
 						sub =>
@@ -445,14 +449,11 @@ export default {
 					findSub.permissions.push(permission);
 				});
 			});
-			console.log('dasdas', subCategories)
-			this.hierarchyPermissions = subCategories;
+
+			this.hierarchyPermissions = await subCategories
 		},
-		onChangeCategory(index, permissions, e) {
-			console.log('apple', index)
-			console.log('cherry', permissions)
-			console.log('banana', e)
-			if (index === 0) {
+		onChangeCategory(index, permissions, e, permission) {
+			if (permission.includes('View') || index === 0) {
 				permissions.forEach(item => {
 					item.done = e;
 				});

@@ -1,6 +1,9 @@
 <template>
   <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
-    <div class="px-2 flex justify-start items-center flex-wrap">
+    <div
+      v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
+      class="px-2 flex justify-start items-center flex-wrap"
+    >
       <AppButton
         class="mr-2"
         :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
@@ -216,19 +219,13 @@ export default {
 
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params })
 			const itemCount = response.data.count
-      console.log('route name', route.name)
-      console.log('asyncdata is working')
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 
+			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 			response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
 			const practices = response.data.practices
 			await store.commit("practices/SET_PRACTICES", practices)
 
 			await store.commit("practices/TOGGLE_LOADING", false)
-			return {
-				// itemCount,
-				// practices
-			}
 		} catch (err) {
 			// error({ statusCode: 404 })
 			console.log("Get practices error!", err)

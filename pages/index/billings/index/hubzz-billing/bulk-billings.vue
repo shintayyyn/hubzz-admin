@@ -829,7 +829,29 @@ export default {
 		}
 	},
 
-	created() {
+	async asyncData ({ store, error }) {
+    try {
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('Create Hubzz Invoices') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
+    } catch(err) {
+      error({ statusCode: 404 })
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      })
+    }
+  },
+
+	created () {
 		console.log("store set 0");
 		this.$store.commit("practices/CLEAR_PRACTICES_COUNT");
 		this.$store.commit("practices/CLEAR_PRACTICES");

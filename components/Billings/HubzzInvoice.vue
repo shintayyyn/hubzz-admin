@@ -4,14 +4,14 @@
     <!-- HEADER -->
     <div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
       <AppButton
-        v-if="forViewing == true"
+        v-if="forViewing == true && authAdminPermissions.includes('Export Hubzz Invoices')"
         class="mr-2"
         :label="'Export As PDF'"
         :icon="'cloud-download'"
         @click="toPDF()"
       />
       <AppButton
-        v-if="forViewing == true && practiceInvoice"
+        v-if="forViewing == true && practiceInvoice && authAdminPermissions.includes('Export Sage Csv')"
         class="mr-2"
         :label="'Export as Sage.csv'"
         :icon="'cloud-download'"
@@ -649,6 +649,9 @@ export default {
 	},
 
 	computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
 		amountTotal: function () {
 			let grossSum = 0
 			let invoiceItemTotal = 0

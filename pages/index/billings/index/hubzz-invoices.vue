@@ -33,7 +33,9 @@
     </div>
     <div class="m-2 border-b-2 border-white">
       <div class="hidden md:flex pb-1 items-center text-sm text-white justify-around font-semibold">
-        <div class="align-middle  text-center w-1/10">
+        <div 
+          v-if="authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')"
+          class="align-middle  text-center w-1/10">
           Check
         </div>
         <div 
@@ -102,7 +104,7 @@
             color="white black"
           />
         </div>
-        <div 
+        <div
           class="align-middle text-center w-1/10"
           @click="sorted('exported_at')"
         >
@@ -116,7 +118,8 @@
             color="white black"
           />
         </div>
-        <div 
+        <div
+          v-if="authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')"
           class="align-middle text-center w-1/10"
           @click="sorted('paid')"
         >
@@ -264,7 +267,10 @@
       </template>
     </div>
     
-    <div class="flex flex-row justify-end">
+    <div 
+      v-if="authAdminPermissions.includes('Export Sage Csv')"
+      class="flex flex-row justify-end"
+    >
       <AppButton
         class="mx-2"
         :label="'Clear Selection'"
@@ -519,14 +525,14 @@ export default {
 			practice: "",
 			sort: "",
 			columns: [
-         {
-          name: "Check",
-          dataIndex: "checker",
-          class: "text-center",
-          slotName: "checker",
-          eventName: "checkClicked",
-          order: 1
-        },
+        //  {
+        //   name: "Check",
+        //   dataIndex: "checker",
+        //   class: "text-center",
+        //   slotName: "checker",
+        //   eventName: "checkClicked",
+        //   order: 1
+        // },
 				{
 					name: "Invoice Number",
           dataIndex: "invoice_number",
@@ -580,16 +586,7 @@ export default {
           slotName:"exported_at",
           class:"text-center",
         },
-        {
-          name: "Actions",
-          slot: true,
-          slotName: "actions",
-          dataIndex: "",
-          class: "text-center"
-        },
-        
       ],
-			
 		}
 	},
 	computed: {
@@ -643,7 +640,29 @@ export default {
       this.getHubzzInvoices()
       this.currentPage = 1
     }
-	},
+  },
+  created () {
+    if (this.authAdminPermissions.includes('Export Sage Csv')) {
+      this.columns.unshift({
+        name: "Check",
+        dataIndex: "checker",
+        class: "text-center",
+        slotName: "checker",
+        eventName: "checkClicked",
+        order: 1
+      })
+    }
+    if (this.authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')) {
+      this.columns.push({
+        name: "Actions",
+        slot: true,
+        slotName: "actions",
+        dataIndex: "",
+        class: "text-center"
+      })
+    }
+    
+  },
 	async asyncData ({ app, route, store }) {
 		try {
 			await store.commit("billings/TOGGLE_LOADING", true)

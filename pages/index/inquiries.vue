@@ -178,8 +178,7 @@ export default {
 
 			response = await app.$axios.$get(`/api/v1/admin/supports`, { params })
 			const emails = response.data.emails
-
-			console.log('inquiries', emails)
+			
 			await store.commit("supports/SET_EMAILS", emails)
 
 			const authAdminpermissions = store.getters["permissions"]
