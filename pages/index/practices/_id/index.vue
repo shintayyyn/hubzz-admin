@@ -32,6 +32,7 @@
             && practice.status !== 'Inactive'
             && practice.status !== 'Bogus'
             && practice.status !== 'Deactivated'
+            && practicePermissions.includes('View Surgery Management')
         "
         :to="`/practices/${$route.params.id}/practice-surgeries`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
@@ -51,6 +52,7 @@
             && (practice.status !== 'Inactive' 
             && practice.status !== 'Bogus' 
             && practice.status !== 'Deactivated')
+            && practicePermissions.includes('View Surgery Management')
         "
         :to="`/practices/${$route.params.id}/practice-hub`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
@@ -65,6 +67,7 @@
             && practice.status !== 'Inactive' 
             && practice.status !== 'Bogus' 
             && practice.status !== 'Deactivated'
+            && practicePermissions.includes('View Surgery Management')
         "
         :to="`/practices/${$route.params.id}/practice-invitations`"
         class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
@@ -213,9 +216,9 @@ export default {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
 
-      const authAdminpermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters["permissions"]
       
-      const practicePermissions = authAdminpermissions.filter(item => item.includes('View Practice'))
+      const practicePermissions = authAdminPermissions.filter(item => item.includes('View Practice') || item.includes('View Surgery Management'))
 
       await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
       
@@ -241,6 +244,13 @@ export default {
       switch (this.practicePermissions[0]) {
         case "View Practice Sessions":
           toRedirect = "practice-sessions"
+          break
+        case "View Surgery Management":
+          if (this.practice.type !== 'Hub') {
+            toRedirect = "practice-hub"
+          } else {
+            toRedirect = "practice-surgeries"
+          }
           break
         case "View Practice Users":
           toRedirect = "practice-users"

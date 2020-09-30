@@ -5,7 +5,8 @@
     </div>
     <div class="flex justify-start my-2">
       <nuxt-link
-        v-if="authAdminPermissions.includes('View Practices') 
+        v-if="authAdminPermissions.includes('View Practices')
+          || authAdminPermissions.includes('View Surgery Management') 
           || authAdminPermissions.includes('View Practice Sessions')
           || authAdminPermissions.includes('View Practice Users')
           || authAdminPermissions.includes('View Practice Documents')
@@ -45,7 +46,8 @@ export default {
     try {
       const authAdminPermissions = store.getters["permissions"]
 
-      if (authAdminPermissions.includes('View Practices') === false 
+      if (authAdminPermissions.includes('View Practices') === false
+        && authAdminPermissions.includes('View Surgery Management') === false 
         && authAdminPermissions.includes('View Practice Sessions') === false
         && authAdminPermissions.includes('View Practice Users') === false
         && authAdminPermissions.includes('View Practice Documents') === false

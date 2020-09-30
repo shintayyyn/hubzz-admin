@@ -36,5 +36,16 @@ export default {
       // practice: null
     }
   },
+
+  async asyncData ({ store, error }) {
+    const authAdminPermissions = store.getters["permissions"]
+    if (authAdminPermissions.includes('View Practice Documents') === false) {
+      error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.',
+      })
+      return
+    }
+  }
 }
 </script>

@@ -67,6 +67,7 @@
 
             <div class="flex justify-start">
               <AppButton
+                v-if="authAdminPermissions.includes('Edit Compliance Document Reject Reasons')"
                 class="mt-2"
                 background="blue"
                 inClass="text-white"
@@ -76,6 +77,7 @@
               />
 
               <AppButton
+                v-if="authAdminPermissions.includes('Delete Compliance Document Reject Reasons')"
                 class="ml-2 mt-2"
                 background="red"
                 inClass="text-white"
@@ -126,6 +128,9 @@
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
       complianceDocumentRejectReasonId () {
         return this.complianceDocumentRejectReason ? this.complianceDocumentRejectReason.id : null
       }

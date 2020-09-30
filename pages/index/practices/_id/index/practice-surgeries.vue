@@ -194,12 +194,22 @@ export default {
     }
   },
 
-  async asyncData ({ app, route, error }) {
+  async asyncData ({ app, route, store, error }) {
 		try {
       let response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
       const practice = response.data.practice
+
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('View Surgery Management') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
       
       if (practice.type === 'Spoke') {
         error({

@@ -222,9 +222,9 @@ export default {
 			await store.commit("faqs/SET_LOCUM_FAQS", locumFaqs)
 			await store.commit("faqs/SET_PRACTICE_FAQS", practiceFaqs)
 
-			const authAdminpermissions = store.getters["permissions"]
+			const authAdminPermissions = store.getters["permissions"]
 
-      if (authAdminpermissions.includes('View FAQ') === false) {
+      if (authAdminPermissions.includes('View FAQ') === false) {
         error({
           statusCode: 403,
           message: 'You are not authorized to view this page.',

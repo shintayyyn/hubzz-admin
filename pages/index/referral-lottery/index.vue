@@ -26,7 +26,13 @@
           @click="display"
         />
         <div class="mx-1" />
-        <AppButton :label="'Initiate Draw'" class="mx-1" :disabled="!canInitiateDraw" @click="draw_modal = true" />
+        <AppButton
+          v-if="authAdminPermissions.includes('Referral Lottery Processes')"
+          :label="'Initiate Draw'" 
+          class="mx-1" 
+          :disabled="!canInitiateDraw" 
+          @click="draw_modal = true" 
+        />
       </div>
     </template>
 
@@ -194,6 +200,9 @@
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
 
       canInitiateDraw () {
         return this.currentDateStart && this.currentDateEnd && !this.loading && !this.initialLoading && this.users.length > 0

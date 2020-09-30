@@ -8,6 +8,7 @@
 
     <div class="flex justify-end">
       <nuxt-link
+        v-if="authAdminPermissions.includes('Create Compliance Document Reject Reasons')"
         :to="{ name: 'index-compliance-document-reject-reasons-create' }"
         class="
           flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover
@@ -149,6 +150,10 @@ export default {
   },
 
   computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+
     pages () {
       return Math.max(Math.ceil(this.count / this.limit), 1)
     },
@@ -245,6 +250,18 @@ export default {
     orderBy () {
       this.searchSubmit()
     },
+  },
+
+  async asyncData ({ store, error }) {
+    const authAdminPermissions = store.getters["permissions"]
+
+    if (authAdminPermissions.includes('View Compliance Document Reject Reasons') === false) {
+      error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.',
+      })
+      return
+    }
   },
 
   mounted () {

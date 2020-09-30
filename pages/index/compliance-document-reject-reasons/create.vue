@@ -128,6 +128,18 @@
       },
     },
 
+    async asyncData ({ store, error }) {
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('Create Compliance Document Reject Reasons') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+    },
+
     methods: {
       async createComplianceDocumentRejectReason () {
         try {

@@ -189,6 +189,18 @@ export default {
 		}
 	},
 
+	async asyncData ({ store, error }) {
+		const authAdminPermissions = store.getters["permissions"]
+
+		if (authAdminPermissions.includes('View Practice Rates') === false) {
+			error({
+				statusCode: 403,
+				message: 'You are not authorized to view this page.',
+			})
+			return
+		}
+	},
+
 	created () {
 		this.setRate()
 	},

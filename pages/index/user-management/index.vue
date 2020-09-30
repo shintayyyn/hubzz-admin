@@ -29,7 +29,7 @@
         />
       </template>
     </div>
-    <div v-if="adminUsers.length > 0" class="w-full px-4 md:px-6 py-2">
+    <div v-if="adminUsers.length > 0 && authAdminPermissions.includes('View Admin Accounts')" class="w-full px-4 md:px-6 py-2">
       <div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
         <div v-if="deleteAdminUser == true" class="align-middle w-10" />
         <div class="align-middle px-2 w-1/3">
@@ -207,6 +207,9 @@ export default {
 		}
 	},
 	computed: {
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+		},
 		socketId () {
 			return this.$store.state.socket_id
 		},
@@ -215,9 +218,6 @@ export default {
 		},
 		adminUsers () {
 			return this.$store.getters["adminusers/getAdminUsers"]
-		},
-		authAdminPermissions () {
-			return this.$store.getters["permissions"]
 		},
 		itemCount () {
 			return this.$store.state.adminusers.itemCount
@@ -275,9 +275,6 @@ export default {
 			})
 			console.log("get users error", err)
 		}
-	},
-	created () {
-		console.log("admin users", this.adminUsers)
 	},
 	watchQuery: ["page", "search"],
 	methods: {

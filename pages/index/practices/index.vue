@@ -1,6 +1,7 @@
 <template>
   <div
-    v-if="authAdminPermissions.includes('View Practices') 
+    v-if="authAdminPermissions.includes('View Practices')
+      || authAdminPermissions.includes('View Surgery Management') 
       || authAdminPermissions.includes('View Practice Sessions')
       || authAdminPermissions.includes('View Practice Users')
       || authAdminPermissions.includes('View Practice Documents')

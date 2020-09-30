@@ -165,6 +165,7 @@ export default {
       }
 
       if(this.authAdminPermissions.includes('View Practices')
+        || this.authAdminPermissions.includes('View Surgery Management')
         || this.authAdminPermissions.includes('View Practice Sessions')
         || this.authAdminPermissions.includes('View Practice Users')
         || this.authAdminPermissions.includes('View Practce Documents')

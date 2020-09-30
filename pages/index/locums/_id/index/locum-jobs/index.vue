@@ -30,8 +30,18 @@
       }
     },
 
-    async asyncData ({ store, route }) {
+    async asyncData ({ store, route, error }) {
       try {
+        const authAdminPermissions = store.getters["permissions"]
+
+        if (authAdminPermissions.includes('View Locum Jobs') === false) {
+          error({
+            statusCode: 403,
+            message: 'You are not authorized to view this page.',
+          })
+          return
+        }
+
         await store.commit("jobs/SET_JOBS_LOCUM_USER_ID_VIEWER", route.params.id)
       } catch (err) {
         store.commit("SET_NOTIFICATION", {

@@ -39,6 +39,18 @@ export default {
 			return this.$store.state.jobs.loading_jobs
 		}
   },
+
+  async asyncData ({ store, error }) {
+    const authAdminPermissions = store.getters["permissions"]
+
+    if (authAdminPermissions.includes('View Practice Sessions') === false) {
+      error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.',
+      })
+      return
+    }
+  },
   
 	created () {
     this.$store.commit("jobs/SET_SESSIONS_PRACTICE_ID_VIEWER", parseInt(this.$route.params.id))

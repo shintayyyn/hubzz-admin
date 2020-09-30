@@ -93,9 +93,9 @@ export default {
 
    async asyncData ({ store, error }) {
     try {
-      const authAdminpermissions = store.getters["permissions"]
+      const authAdminPermissions = store.getters["permissions"]
       
-      const locumPermissions = authAdminpermissions.filter(item => item.includes('View Locum'))
+      const locumPermissions = authAdminPermissions.filter(item => item.includes('View Locum'))
 
       return {
         locumPermissions,
@@ -119,9 +119,7 @@ export default {
   methods: {
     async getLocumUser () {
       let toRedirect = ''
-      console.log('dsadsa', this.locumPermissions.find(item => item === 'View Locums'))
       if (this.locumPermissions.find(item => item === 'View Locums') === undefined){
-        console.log('gago')
         switch (this.locumPermissions[0]) {
           case "View Locum Jobs":
             toRedirect = "locum-jobs"
@@ -132,7 +130,6 @@ export default {
           default:
             toRedirect = ''
         }
-        console.log('redirect')
         this.$axios.get(`/api/v1/admin/locum-users/${this.$route.params.id}`).then((response) => {
           this.locumUser = response.data.data.user
         }).catch((err) => {
@@ -141,7 +138,6 @@ export default {
           this.$router.push(`/locums/${this.$route.params.id}/${toRedirect}`)
         })
       } else {
-        console.log('tang ina')
         this.loading = true
         this.$axios.get(`/api/v1/admin/locum-users/${this.$route.params.id}`).then((response) => {
           this.locumUser = response.data.data.user

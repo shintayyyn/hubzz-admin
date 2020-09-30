@@ -77,9 +77,9 @@ export default {
 			const tnc = response.data.terms.terms_and_conditions;
 			const privacypolicy = response.data.terms.privacy_policy;
 
-			const authAdminpermissions = store.getters["permissions"]
+			const authAdminPermissions = store.getters["permissions"]
 
-      if (authAdminpermissions.includes('View Terms and Conditions & Privacy Policy') === false) {
+      if (authAdminPermissions.includes('View Terms and Conditions & Privacy Policy') === false) {
         error({
           statusCode: 403,
           message: 'You are not authorized to view this page.',

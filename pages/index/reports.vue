@@ -152,9 +152,9 @@
     },
     async asyncData ({ store, error }) {
       try {
-        const authAdminpermissions = store.getters["permissions"]
+        const authAdminPermissions = store.getters["permissions"]
 
-        if (authAdminpermissions.includes('View Reports') === false) {
+        if (authAdminPermissions.includes('View Reports') === false) {
           error({
             statusCode: 403,
             message: 'You are not authorized to view this page.',

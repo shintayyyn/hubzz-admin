@@ -356,6 +356,16 @@ export default {
 
   async asyncData ({ app, store, route, error }) {
     try {
+      const authAdminPermissions = store.getters["permissions"]
+      
+      if (authAdminPermissions.includes('View Surgery Management') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
       const limit = 10
       const offset = 0
       const order_by = "created_at:desc"

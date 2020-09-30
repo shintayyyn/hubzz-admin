@@ -181,9 +181,9 @@ export default {
 			
 			await store.commit("supports/SET_EMAILS", emails)
 
-			const authAdminpermissions = store.getters["permissions"]
+			const authAdminPermissions = store.getters["permissions"]
 
-      if (authAdminpermissions.includes('View Inquiries Messages') === false) {
+      if (authAdminPermissions.includes('View Inquiries Messages') === false) {
         error({
           statusCode: 403,
           message: 'You are not authorized to view this page.',

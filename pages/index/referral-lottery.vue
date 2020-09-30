@@ -24,3 +24,19 @@
     <nuxt-child />
   </div>
 </template>
+<script>
+export default {
+  async asyncData ({ store, error }) {
+    const authAdminPermissions = store.getters["permissions"]
+
+    if (authAdminPermissions.includes('View Referral Lottery') === false) {
+      error({
+        statusCode: 403,
+        message: 'You are not authorized to view this page.',
+      })
+      return
+    }
+  }
+}
+</script>
+

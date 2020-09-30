@@ -36,6 +36,18 @@
       }
     },
 
+    async asyncData ({ store, error }) {
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('View Locum Compliance Detail') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+    },
+
     methods: {
       complianceUpdatedHandler () {
         this.$emit('updateLocumUsers')

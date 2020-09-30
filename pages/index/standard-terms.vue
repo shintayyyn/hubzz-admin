@@ -56,7 +56,9 @@
                           <span class="pl-2">View</span>
                         </nuxt-link>
                       </div>
-                      <div class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
+                      <div 
+                        v-if="authAdminPermissions.includes('Modify Standard Terms')"
+                        class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
                         <div class="flex justify-center text-white text-sm">
                           <label>
                             <input ref="inputFile" class="hidden" type="file" @change="handleInputFileChange">
@@ -100,11 +102,17 @@
       }
     },
 
+    computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+    },
+
     async asyncData ({ store, error }) {
       try {
-        const authAdminpermissions = store.getters["permissions"]
+        const authAdminPermissions = store.getters["permissions"]
 
-        if (authAdminpermissions.includes('View Standard Terms') === false) {
+        if (authAdminPermissions.includes('View Standard Terms') === false) {
           error({
             statusCode: 403,
             message: 'You are not authorized to view this page.',
