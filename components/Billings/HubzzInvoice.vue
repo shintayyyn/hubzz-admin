@@ -95,9 +95,13 @@
                 :class="doNotShow ? 'md:w-full' : 'w-full'"
               >
                 <div class="">
-                  <div class="text-base py-1">To: Accounts Department</div>
+                  <div class="text-base py-1">
+                    To: Accounts Department
+                  </div>
                   <div class="w-full">
-                    <p class="font-bold text-lg mb-2">{{ practice.surgery.name }}</p>
+                    <p class="font-bold text-lg mb-2">
+                      {{ practice.surgery.name }}
+                    </p>
                     <div class="text-xs sm:text-sm">
                       <p>{{ practice.surgery.address.line_1 }}</p>
                       <p>{{ practice.surgery.address.line_2 }}</p>
@@ -558,6 +562,7 @@
           <br>Bank: {{ locumInvoice && locumInvoice.payroll_bank_name ? locumInvoice.payroll_bank_name : 'N/A' }}
           <br>Sort code: {{ locumInvoice && locumInvoice.payroll_sort_code ? locumInvoice.payroll_sort_code : 'N/A' }}
           <br>Account number: {{ locumInvoice && locumInvoice.payroll_account_number ? locumInvoice.payroll_account_number : 'N/A' }}
+          <br>Payroll reference number: {{ locumInvoice && locumInvoice.payroll_reference_number ? locumInvoice.payroll_reference_number : 'N/A' }}
           <br>
         </div>
         <div v-else class="border-2 border-gray-300 rounded-lg p-2 text-sm">
