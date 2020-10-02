@@ -29,6 +29,7 @@
                     && !email.acknowledged_at
                     && authAdminPermissions.includes('Acknowledge Inquiries Messages')
                 "
+                class="cursor-pointer"
                 :label="'Acknowledge'"
                 @click="acknowledgeInquiry()"
               />
@@ -133,12 +134,24 @@ export default {
 		},
 
 		async acknowledgeInquiry () {
+      const query = {
+        ...this.$route.query
+      }
 			await this.$axios
 				.$put(`/api/v1/admin/supports/${this.email.id}`)
 				.then(res => {
-					this.email = res.data.email
-					// this.admin = res.data.acknowledged_by_user;
-					this.getSupportEmails()
+          console.log('res', res.data.email)
+          this.email = res.data.email
+          
+          this.getSupportEmails()
+
+          this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Successfully Acknowledged"
+          })
+
+          this.$router.push({ path:'/inquiries', query })
 				})
 		},
     goBack (){
