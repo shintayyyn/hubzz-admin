@@ -1,7 +1,7 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
     <div class="text-xl md:text-2xl text-white">
-      Users
+      Locum Users
     </div>
 
     <div class="flex flex-col md:flex-row justify-between md:items-center">
@@ -153,11 +153,20 @@
             flexGrow: 1,
             flexShrink: 0,
           },
+          // {
+          //   title: 'Created At',
+          //   key: 'created_at',
+          //   sort_key: 'created_at',
+          //   column: (item) => item.created_at ? this.$moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
+          //   justify: 'start',
+          //   flexGrow: 1,
+          //   flexShrink: 0,
+          // },
           {
-            title: 'Created At',
+            title: 'Created At (DST)',
             key: 'created_at',
             sort_key: 'created_at',
-            column: (item) => item.created_at ? this.$moment(item.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
+            column: (item) => item.created_at_in_gb_formatted ? item.created_at_in_gb_formatted : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

@@ -128,10 +128,10 @@
             flexShrink: 0,
           },
           {
-            title: 'Date Created',
+            title: 'Date Created (DST)',
             key: 'date_created',
             sort_key: 'date_created',
-            column: (item) => item.date_created ? this.$moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS').format('DD/MM/YYYY | HH:mm') : '',
+            column: (item) => item.date_created_in_gb_formatted ? item.date_created_in_gb_formatted : '',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
