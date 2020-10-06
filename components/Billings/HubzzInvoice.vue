@@ -857,7 +857,6 @@ export default {
 			if (this.practiceInvoice) {
         this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
           id: this.practiceInvoice.id,
-          exported_at: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
         })
 				window.open(
 					`${process.env.API_URL}/api/v1/admin/practice-invoices/${

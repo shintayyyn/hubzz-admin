@@ -24,7 +24,9 @@
             </div>
           </div>
 
-          <div v-if="notificationToggle === true">
+          <div
+            v-if="notificationToggle === true"
+          >
             <div class="notification-modal overflow-hidden">
               <div class="flex flex-row m-4 justify-between">
                 <div class="">
@@ -171,6 +173,9 @@ export default {
   },
   
 	methods: {
+    close() {
+      console.log('banana')
+    },
     setSocketNotificationListener () {
       this.notificationTypeNames.forEach(notificationTypeName => {
         this.$socket.on(notificationTypeName, this.newNotificationHandler)

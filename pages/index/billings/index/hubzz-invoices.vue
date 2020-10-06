@@ -835,7 +835,6 @@ export default {
 
       await this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
         id: invoiceIds,
-        exported_at: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
       })
       await this.downloadCsv(invoiceIds)
     },
