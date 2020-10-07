@@ -105,8 +105,7 @@
           >
             <strong class="block md:hidden text-xs uppercase">Created At</strong>
             <span>
-              {{ $moment(user.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') }}
-              <!-- {{$moment(user.created_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
+              {{ user.created_at_in_gb_formatted }}
             </span>
           </div>
           <div
@@ -114,8 +113,7 @@
           >
             <strong class="block md:hidden text-xs uppercase">Updated At</strong>
             <span>
-              {{ $moment(user.updated_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') }}
-              <!-- {{$moment(user.updated_at,'YYYY-MM-DD[T]').format('DD/MM/YYYY')}} -->
+              {{ user.updated_at_in_gb_formatted }}
             </span>
           </div>
         </nuxt-link>

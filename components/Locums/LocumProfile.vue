@@ -452,18 +452,11 @@
               value: 'Bogus',
             },
           ]
-
-          // if (this.authAdminPermissions.includes('Deactivate Locum')) {
-          //   locumStatusChoices.push({
-          //     label: 'Deactivate',
-          //     value: 'Deactivate',
-          //   })
-          // }
-
           return locumStatusChoices
         }
 
-        if (this.user.status === 'Suspended') {
+        if (this.user.status === 'Suspended' 
+          && (this.user.compliance_status === 'Compliant' || this.user.compliance_status === 'Expiring')) {
           const locumStatusChoices = [
             {
               label: 'Active',
@@ -479,12 +472,21 @@
             },
           ]
 
-          // if (this.authAdminPermissions.includes('Deactivate Locum')) {
-          //   locumStatusChoices.push({
-          //     label: 'Deactivate',
-          //     value: 'Deactivate',
-          //   })
-          // }
+          return locumStatusChoices
+        }
+        
+        if (this.user.status === 'Suspended' 
+          && (this.user.compliance_status !== 'Compliant' || this.user.compliance_status !== 'Expiring')) {
+          const locumStatusChoices = [
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+            {
+              label: 'Bogus',
+              value: 'Bogus',
+            },
+          ]
 
           return locumStatusChoices
         }
@@ -501,16 +503,8 @@
             },
           ]
 
-          // if (this.authAdminPermissions.includes('Deactivate Locum')) {
-          //   locumStatusChoices.push({
-          //     label: 'Deactivate',
-          //     value: 'Deactivate',
-          //   })
-          // }
-
           return locumStatusChoices
         }
-
 
         const locumStatusChoices = [
           {
@@ -522,14 +516,6 @@
             value: 'Bogus',
           },
         ]
-
-        // if (this.authAdminPermissions.includes('Deactivate Locum')) {
-        //   locumStatusChoices.push({
-        //     label: 'Deactivate',
-        //     value: 'Deactivate',
-        //   })
-        // }
-
         return locumStatusChoices
       },
       
@@ -617,21 +603,33 @@
 
           console.log("locum details", status)
 
-          const response = await this.$axios.put(`/api/v1/admin/locum-users/${locumID}/status`, {
+          await this.$axios.$put(`/api/v1/admin/locum-users/${locumID}/status`, {
             status,
+          }).then(res => {
+            console.log('res', res)
+            if (res.data.user.compliance_status !== 'Compliant'
+            && res.data.user.compliance_status !== 'Expiring'  
+            && status === 'Active') {
+              this.$store.commit("SET_NOTIFICATION", {
+                enabled: true,
+                status: "alert",
+                text: "Unsuccessfully Changed Locum status. Locum is Not Compliant.",
+              })
+            } else {
+              this.$store.commit("SET_NOTIFICATION", {
+                enabled: true,
+                status: "success",
+                text: res.data.message || "Saved",
+              })
+            }
+            console.log("res", res.data.user)
+
+            this.$emit('setViewLocumUser', res.data.user)
+
+            this.$emit('setViewLocumUserLoading', false)
           })
 
-          console.log("response", response.data.data.user)
-
-          this.$emit('setViewLocumUser', response.data.data.user)
-
-          this.$emit('setViewLocumUserLoading', false)
           
-          this.$store.commit("SET_NOTIFICATION", {
-            enabled: true,
-            status: "success",
-            text: response.data.message || "Saved",
-          })
         } catch (err) {
           console.log("index practices index put status err", err)
           this.$store.commit("SET_NOTIFICATION", {
