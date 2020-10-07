@@ -3,7 +3,9 @@
     <div class="flex flex-col rounded-lg">
       <div class="flex overflow-hidden">
         <div class="flex overflow-x-auto mb-2">
-          <div v-if="practice && practice.status === 'Active'" class="flex-3 mx-1 whitespace-no-wrap">
+          <div 
+            v-if="practice && practice.status === 'Active' && authAdminPermissions.includes('Create New Spoke To Hub')" 
+            class="flex-3 mx-1 whitespace-no-wrap">
             <AppButton
               :label="'Add Spoke for this Hub'"
               :icon="'add-rectangle'"
@@ -183,6 +185,9 @@ export default {
   },
   
   computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
     total () {
       return this.$store.state.practices.practiceSpokesCount
     },

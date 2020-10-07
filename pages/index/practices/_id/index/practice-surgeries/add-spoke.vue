@@ -20,16 +20,25 @@ export default {
     }
   },
   
-  async asyncData ({ app, route, store }) {
+  async asyncData ({ app, route, store, error }) {
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
       const practice = response.data.practice
-      console.log('practice', practice)
-      console.log('route', route.name)
+
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('View Surgery Management') === false || authAdminPermissions.includes('Create New Spoke To Hub') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
       return {
         practice
       }
-    }catch(err){
+    } catch(err) {
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log('get practice error!!!!',err)
     }

@@ -95,14 +95,14 @@
 					</div>
 					<div
 						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
-						v-if="rolePermissions.find(permission => permission.category === 'Misc')"
+						v-if="rolePermissions.find(permission => permission.category === 'Miscellaneous')"
 					>
 						<div class="text-lg font-semibold">Miscellaneous</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
 							:key="`permission-${index}`"
 							class="px-2"
-						>{{ permission.category === "Misc" ? permission.name : null }}</div>
+						>{{ permission.category === "Miscellaneous" ? permission.name : null }}</div>
 					</div>
 					<div
 						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
@@ -112,6 +112,58 @@
 						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
 							{{
 							permission.category === "User"
+							? permission.name
+							: null
+							}}
+						</div>
+					</div>
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Change Email Requests')"
+					>
+						<div class="text-lg font-semibold">Change Email Requests Management</div>
+						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
+							{{
+							permission.category === "Change Email Requests"
+							? permission.name
+							: null
+							}}
+						</div>
+					</div>
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Reports')"
+					>
+						<div class="text-lg font-semibold">Reports Management</div>
+						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
+							{{
+							permission.category === "Reports"
+							? permission.name
+							: null
+							}}
+						</div>
+					</div>
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Standard Terms')"
+					>
+						<div class="text-lg font-semibold">Standard Terms Management</div>
+						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
+							{{
+							permission.category === "Standard Terms"
+							? permission.name
+							: null
+							}}
+						</div>
+					</div>
+					<div
+						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Referral Lottery')"
+					>
+						<div class="text-lg font-semibold">Referral Lottery Management</div>
+						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
+							{{
+							permission.category === "Referral Lottery"
 							? permission.name
 							: null
 							}}

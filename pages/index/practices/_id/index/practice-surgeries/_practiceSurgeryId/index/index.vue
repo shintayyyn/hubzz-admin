@@ -19,6 +19,7 @@
           </div>
 
           <div
+            v-if="authAdminPermissions.includes('Edit Spoke Permissions')"
             class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
             :class="`${!editPermissions ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
             @click="editPermissions = !editPermissions"
@@ -310,7 +311,7 @@
       </div>
 
       <div
-        v-if="!editPermissions"
+        v-if="!editPermissions && authAdminPermissions.includes('Terminate Spoke')"
         class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
         @click="terminate = true"
       >
@@ -379,6 +380,9 @@ export default {
   },
 
   computed: {
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
+    },
     formData () {
       return {
         allow_surgery_create_sessions: this.allowSurgeryCreateSessions === 'true',

@@ -158,6 +158,9 @@
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
       pages () {
         return Math.max(Math.ceil(this.count / this.limit), 1)
       },
@@ -269,6 +272,29 @@
       orderBy () {
         this.searchSubmit()
       },
+    },
+
+    async asyncData ({ store, error }) {
+      try {
+        const authAdminPermissions = store.getters["permissions"]
+
+        if (authAdminPermissions.includes('View Change Email Requests') === false) {
+          error({
+            statusCode: 403,
+            message: 'You are not authorized to view this page.',
+          })
+          return
+        }
+
+      } catch(err) {
+        error({ statusCode: 404 })
+        store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Something went wrong!"
+        })
+        console.log("get parent practice error!!", err)
+      }
     },
 
     mounted () {
