@@ -134,6 +134,7 @@
       </div>
 
       <div
+        v-if="authAdminPermissions.includes('Generate Reports')"
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -209,6 +210,10 @@
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+      
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
         const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.registeredLocums.length), this.count)

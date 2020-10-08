@@ -263,7 +263,12 @@
             {{ practiceUser.status ? practiceUser.status : 'N/A' }}
           </div>
 
-          <div v-if="practiceUser && practiceUser.status !== 'Deactivated'" class="flex my-2">
+          <div 
+            v-if="practiceUser 
+              && practiceUser.status !== 'Deactivated' 
+              && authAdminPermissions.includes('Delete Practice User')" 
+            class="flex my-2"
+          >
             <AppButton
               :label="'Deactivate this Practice User'"
               :background="'red'"

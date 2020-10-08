@@ -134,11 +134,15 @@
         />
       </div>
 
-      <div class="flex-wrap justify-start items-center w-full p-3 flex my-2">
+      <div v-if="authAdminPermissions.includes('Generate Reports')" class="flex-wrap justify-start items-center w-full p-3 flex my-2">
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading 
+              || locumUploadedDocuments.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="locumUploadedDocuments.length === 0 
+              ? 'bg-gray-500' 
+              : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -249,6 +253,10 @@
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+
       itemCountInfo () {
         const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
         const lastItem = Math.min(
