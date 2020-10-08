@@ -145,13 +145,13 @@ export default {
 				},
 				{
 					name: "Created At",
-					dataIndex: "created_at",
-					class: "localDate text-center"
+					dataIndex: "created_at_in_gb_formatted",
+					class: "text-center"
 				},
 				{
 					name: "Updated At",
-					dataIndex: "updated_at",
-					class: "localDate text-center"
+					dataIndex: "updated_at_in_gb_formatted",
+					class: "text-center"
 				}
 			],
 			columns: []

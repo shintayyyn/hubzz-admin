@@ -714,7 +714,7 @@
                       <p
                         class="text-white"
                       >
-                        {{ $moment(modalJobPart.cancelled_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
+                        {{ modalJobPart.cancelled_at_in_gb_formatted }}
                       </p>
                     </div>
 

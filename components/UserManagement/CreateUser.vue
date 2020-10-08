@@ -463,6 +463,17 @@
     },
 
     watch: {
+      // "toPostUser.sort_code" (value) {
+      //   let final = ''
+      //   if (value && value.length > 0) {
+      //     let digit = value.split('-').join('')
+
+      //     final = digit.match(/.{1,2}/g).join('-')
+      //     this.form.sort_code = final
+      //   } else {
+      //     return ''
+      //   }
+      // },
       "toPostUser.username" () {
         const index = this.formError.findIndex(formError => formError.field === 'username')
 

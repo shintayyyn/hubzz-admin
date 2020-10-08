@@ -431,7 +431,7 @@
                   {{ 'Invoice Number: ' + item.invoice_number }}
                 </div>
                 <div class="mx-2">
-                  {{ 'Exported At: ' + $moment(item.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY h:mm:ss a') }}
+                  {{ 'Exported At: ' + item.exported_at_in_gb_formatted }}
                 </div>
               </div>
             </div>
