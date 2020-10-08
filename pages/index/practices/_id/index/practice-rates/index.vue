@@ -39,14 +39,14 @@
           <div class="flex items-center justify-between py-1">
             GP Rate (Per Hour)
           </div>
-
+          <!--  @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')" -->
           <input
             v-model.number="toPutPracticeRate.gp_rate"
             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('gp_rate') && 'border-red-800'"
             step="any"
             aria-label
-            @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')"
+           
             @keypress="keyPressHandler"
           >
           <div
@@ -59,13 +59,13 @@
           <div class="flex items-center justify-between py-1">
             Others Rate (Per Hour)
           </div>
+          <!-- @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')" -->
           <input
             v-model.number="toPutPracticeRate.others_rate"
             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('others_rate') && 'border-red-800'"
             step="any"
             aria-label="newtext"
-            @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')"
             @keypress="keyPressHandler"
           >
           <div
@@ -78,7 +78,7 @@
           <button
             :disabled="loading"
             class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
-            @click.prevent="checkForm()"
+            @click.prevent="updatePracticeRates()"
           >
             Save Changes
           </button>
@@ -265,19 +265,32 @@ export default {
 			return
 		},
 
-		checkForm: function () {
-			this.formError = []
+		// checkForm: function () {
+		// 	this.formError = []
 
-			this.Validate(this.toPutPracticeRate)
+		// 	this.Validate(this.toPutPracticeRate)
 
-			if (this.formError.length === 0) {
-				this.updatePracticeRates(this.practice.id)
-			}
-		},
 
-		updatePracticeRates (practiceId) {
+		// 	if (this.formError.length === 0) {
+		// 		this.updatePracticeRates(this.practice.id)
+		// 	}
+		// },
+
+		async updatePracticeRates () {
 			this.loading = true
-			this.$axios.put(`/api/v1/admin/practices/${practiceId}/rates`, {
+
+			if (this.toPutPracticeRate.gp_rate === 0 
+				|| this.toPutPracticeRate.gp_rate === null 
+				|| this.toPutPracticeRate.gp_rate === '') {
+				this.toPutPracticeRate === 0.00
+			}
+			if (this.toPutPracticeRate.others_rate === 0 
+				|| this.toPutPracticeRate.others_rate === null 
+				|| this.toPutPracticeRate.others_rate === '') {
+				this.toPutPracticeRate === 0.00
+			}
+
+			await this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}/rates`, {
         gp_rate: this.toPutPracticeRate.gp_rate,
         others_rate: this.toPutPracticeRate.others_rate
       }).then((response) => {

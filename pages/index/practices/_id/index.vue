@@ -8,7 +8,7 @@
         class="cursor-pointer text-white hover:text-sunglow fill-current"
       />
     </nuxt-link>
-
+    <!-- {{$route.name}}  do this for later-->
     <AppLoading :loading="loading" spinner />
 
     <div class="flex justify-start overflow-x-auto">
