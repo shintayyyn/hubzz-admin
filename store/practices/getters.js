@@ -10,9 +10,30 @@ export default {
 	getPracticeNotifications (state) {
 		let notifications = []
 		state.practiceNotifications.forEach(notif => {
-			console.log('notif', notif)
+			console.log('notification payload', notif)
 			let message = ''
 			let notifObj = null
+
+			if (notif.notificationType === 'Admin Notification Practice Registration') {
+				switch (notif.notificationType) {
+					case 'Admin Notification Practice Registration':
+						message = 'A Practice has been created and needs to be verified'
+						break
+					default:
+						message = ''
+				}
+
+				notifObj = {
+					...notif,
+					id: notif.payload.id,
+					user_id: notif.payload.practice_user_id,
+					status: notif.payload.practice.status,
+					notification_type: notif.notificationType,
+					type: 'Admin Practice Creation',
+					message
+				}
+				notifications.push(notifObj)
+			}
 
 			if (notif.notificationType === 'Admin Notification Practice Created') {
 				switch (notif.notificationType) {
@@ -26,8 +47,8 @@ export default {
 				notifObj = {
 					...notif,
 					id: notif.payload.id,
-					user_id: notif.payload.practice_user_id,
-					status: notif.payload.practice.status,
+					practice_id: notif.payload.practice_id,
+					status: notif.payload.status,
 					notification_type: notif.notificationType,
 					type: 'Admin Practice Creation',
 					message

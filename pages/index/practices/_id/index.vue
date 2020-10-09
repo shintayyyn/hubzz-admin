@@ -214,11 +214,14 @@ export default {
   async asyncData ({ app, route ,store }) {
     try {
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
+
       const practice = response.data.practice
 
-      const authAdminPermissions = store.getters["permissions"]
+      const authAdminPermissions = await store.getters["permissions"]
       
-      const practicePermissions = authAdminPermissions.filter(item => item.includes('View Practice') || item.includes('View Surgery Management'))
+      console.log('dsadas', authAdminPermissions)
+      
+      const practicePermissions = await authAdminPermissions.filter(item => item.includes('View Practice') || item.includes('View Surgery Management'))
 
       await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
       

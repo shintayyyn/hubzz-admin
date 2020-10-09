@@ -1,11 +1,11 @@
-import Vue from "vue";
+import Vue from "vue"
 Vue.mixin({
 	methods: {
-		scrollToTop() {
-			window.scrollTo(0, 0);
+		scrollToTop () {
+			window.scrollTo(0, 0)
 		},
-		CheckEmptyField(inputField, fieldName) {
-			let trimmedFieldName = fieldName;
+		CheckEmptyField (inputField, fieldName) {
+			let trimmedFieldName = fieldName
 			if (fieldName.includes('_id')) {
 				trimmedFieldName = fieldName.replace(/_id/g, "")
 			}
@@ -16,7 +16,7 @@ Vue.mixin({
 			}
 			let index = this.formError.findIndex(item => item.field === fieldName);
 			if (index >= 0) {
-				this.formError.splice(index, 1);
+				this.formError.splice(index, 1)
 			}
 			if (!(inputField instanceof Array) && !inputField) {
 				this.formError.push({
@@ -54,10 +54,10 @@ Vue.mixin({
 				}
 			}
 		},
-		Validate(form, lists) {
-			let items = Object.entries(form);
+		Validate (form, lists) {
+			let items = Object.entries(form)
 			for (const [key, value] of items) {
-				let trimmedFieldName = key;
+				let trimmedFieldName = key
 				if (key.includes('_id')) {
 					let removed_id = key.replace(/_id/g, "")
 					trimmedFieldName = removed_id.charAt(0).toUpperCase() + removed_id.slice(1).replace(/_/g, " ")
@@ -70,13 +70,13 @@ Vue.mixin({
 							this.formError.push({
 								field: key,
 								message: `${displayFieldName} is required`
-							});
+							})
 						}
 						if (lists && !lists.includes(key)) {
 							this.formError.push({
 								field: key,
 								message: `${displayFieldName} is required`
-							});
+							})
 						}
 					}
 				} else {
@@ -91,7 +91,7 @@ Vue.mixin({
 							this.formError.push({
 								field: key,
 								message: `${displayFieldName} is required`
-							});
+							})
 						}
 					}
 				}
@@ -103,7 +103,7 @@ Vue.mixin({
 				this.scrollToTop()
 			}
 		},
-		ValidateSamePassword(password, password_confirmation) {
+		ValidateSamePassword (password, password_confirmation) {
 			if (
 				password &&
 				password_confirmation &&
@@ -112,19 +112,19 @@ Vue.mixin({
 				return {
 					field: "password_confirmation",
 					message: "The Password must be the same"
-				};
+				}
 			}
 		},
-		ValidateEmail(email) {
+		ValidateEmail (email) {
 			let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			if (email && !re.test(String(email).toLowerCase())) {
 				return {
 					field: "email",
 					message: "This is not a valid email"
-				};
+				}
 			}
 		},
-		isNumber(e) {
+		isNumber (e) {
 			// for input type number to avoid entering 'e'
 			e = e ? e : window.event
 			let charCode = (e.which) ? e.which : e.keyCode
@@ -135,7 +135,8 @@ Vue.mixin({
 				return true
 			}
 		},
-		inputNumberOnly(e) {
+
+		inputNumberOnly (e) {
 			// numbers only [0-9]
 			e = (e) ? e : window.event
 			var charCode = (e.which) ? e.which : e.keyCode
@@ -145,7 +146,17 @@ Vue.mixin({
 				return true
 			}
 		},
-		alphaNumeric(e) {
+
+		isNumberDash (e) {
+      var charCode = (e.which) ? e.which : e.keyCode
+      // && charCode != 45 
+      if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+        e.preventDefault()
+      }
+      return true
+		},
+		
+		alphaNumeric (e) {
 			// numbers only [0-9]
 			e = (e) ? e : window.event
 			var charCode = (e.which) ? e.which : e.keyCode
@@ -156,7 +167,7 @@ Vue.mixin({
 				e.preventDefault()
 			}
 		},
-		datesToJobParts(dates) {
+		datesToJobParts (dates) {
       const datesDays = dates
         .reduce((datesDays, date) => {
           datesDays[date] = this.$moment(date, 'YYYY-MM-DD').format('dddd')
@@ -218,4 +229,4 @@ Vue.mixin({
       return jobParts
     },
 	}
-});
+})

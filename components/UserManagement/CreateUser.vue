@@ -209,10 +209,11 @@
               />
               <AppInput 
                 v-model="toPostUser.sort_code"
-                :type="'text'"
+                :type="'numberDash'"
                 :label="'Sort Code'"
                 :placeholder="'Sort Code'"
                 :error="formError.find(item => item.field === 'sort_code')"
+                :limit="8"
                 required
                 @blur="CheckEmptyField(toPostUser.sort_code, 'sort_code')"
               />
@@ -222,6 +223,7 @@
                 :label="'Account Number'"
                 :placeholder="'Account Number'"
                 :error="formError.find(item => item.field === 'account_number')"
+                :limit="8"
                 required
                 @blur="CheckEmptyField(toPostUser.account_number, 'account_number')"
               />
@@ -463,17 +465,17 @@
     },
 
     watch: {
-      // "toPostUser.sort_code" (value) {
-      //   let final = ''
-      //   if (value && value.length > 0) {
-      //     let digit = value.split('-').join('')
+      "toPostUser.sort_code" (value) {
+        let final = ''
+        if (value && value.length > 0) {
+          let digit = value.split('-').join('')
 
-      //     final = digit.match(/.{1,2}/g).join('-')
-      //     this.form.sort_code = final
-      //   } else {
-      //     return ''
-      //   }
-      // },
+          final = digit.match(/.{1,2}/g).join('-')
+          this.toPostUser.sort_code = final
+        } else {
+          return ''
+        }
+      },
       "toPostUser.username" () {
         const index = this.formError.findIndex(formError => formError.field === 'username')
 
@@ -913,7 +915,7 @@
       async createPractice (data) {
         await this.$axios.post(`/api/v1/admin/practices`, data)
 
-        this.$router.push('/practices/pending-practices')
+        this.$router.push('/practices')
         
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,

@@ -27,7 +27,7 @@
       </nuxt-link>
     </div>
     <nuxt-link
-      v-if="$route.name.includes(`index-practices-id`)"
+      v-if="$route.name.includes(`index-practices-id`) || $route.name.includes(`index-practices-add-practice`)"
       class="bg-shield z-511 fixed inset-0 opacity-50"
       to="/practices"
     />

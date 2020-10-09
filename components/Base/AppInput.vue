@@ -11,7 +11,8 @@
           'select',
           'textarea',
           'multi-checkbox',
-          'number'
+          'number',
+          'numberDash'
         ].includes(type)
       "
     >
@@ -67,7 +68,7 @@
           <div class="flex flex-row justify-start">
             <template
               v-if="
-                ['text', 'time', 'email', 'number'].includes(type)
+                ['text', 'time', 'email', 'number', 'numberDash'].includes(type)
               "
             >
               <div class="flex flex-col w-full">
@@ -77,8 +78,10 @@
                   :placeholder="placeholder"
                   class="bg-transparent border-b-2 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
                   :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
+                  :maxlength="limit"
+                  :max="maxInput"
                   @input="$emit('input', $event.target.value)"
-                  @keypress.enter="$emit('submit')"
+                  @keypress="type === 'number' ? isNumber($event) : type === 'numberDash' ? isNumberDash($event) : $emit('keypress')"
                   @blur="$emit('blur')"
                   :style="inStyle"
                   :checked="value"
@@ -362,14 +365,25 @@ export default {
       type: Boolean
     },
     // for multicheckbox
-    lists: Array,
+    lists: {
+      type: Array,
+      default: () => null,
+    },
     //
     disabled: {
       type: Boolean,
       default: false
-    }
+    },
+    limit: {
+      type: Number,
+      default: null,
+    },
+    maxInput: {
+      type: Number,
+      default: null,
+    },
   },
-  data(){
+  data (){
     return{
       passwordValue: '',
       // show/hide password
@@ -382,7 +396,7 @@ export default {
     }
   }, 
   methods: {
-    togglePassword(){
+    togglePassword (){
       if (this.passwordToggle) {
         return 'text'
       }else{
@@ -390,13 +404,28 @@ export default {
       }
     },
     // for multi checkbox
-    inputMultiCheck(e) {
+    inputMultiCheck (e) {
       if (e.target.checked) {
-        this.$emit("checked", e.target.value);
+        this.$emit("checked", e.target.value)
       } else {
-        this.$emit("unchecked", e.target.value);
+        this.$emit("unchecked", e.target.value)
       }
-    }
+    },
+    limitInput (e) {
+      let acceptedKeys = [
+        "Backspace",
+        "Delete",
+        "Tab",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+      ]
+
+      if (e.target.value.length >= this.limit && !acceptedKeys.includes(e.key)) {
+        e.preventDefault()
+      }
+    },
   }
-};
+}
 </script>
