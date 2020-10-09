@@ -66,12 +66,10 @@
           </div>
         </div>
 
-        <div class="my-2 md:mx-2">
-          <div
-            class="flex flex-col rounded-lg bg-waterloo text-white py-2 px-4 w-full h-full break-words"
-          >
+        <div class="flex flex-col rounded-lg bg-waterloo text-white py-2 px-4 w-full h-full break-words my-2 md:mx-2">
+          <span class="message whitespace-pre-line">
             {{ email.message }}
-          </div>
+          </span>
         </div>
       </div>
     </transition>
@@ -168,6 +166,11 @@ export default {
 </script>
 
 <style>
+  .message {
+    word-wrap: wrap;
+    word-break: break-word;
+  }
+
   .invoice{
     width: 100%;
   }
