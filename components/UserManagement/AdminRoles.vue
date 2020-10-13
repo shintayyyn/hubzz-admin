@@ -26,56 +26,6 @@
         />
       </template>
     </div>
-
-    <!--  -->
-    <!-- <div v-if="adminRoles.length" class="w-full px-4 md:px-8">
-			<div class="hidden md:flex items-center text-white justify-around font-semibold">
-				<div class="pr-3 md:px-4" v-if="deletingAdminRole == true"></div>
-				<div class="align-middle px-2 w-1/3">Role Name</div>
-				<div class="align-middle px-2 w-1/3">Date Created</div>
-				<div class="align-middle px-2 w-1/3">Description</div>
-			</div>
-			<div v-for="(role, index) in adminRoles" :key="`role-${index}`" class="flex">
-				<div
-					@click="toDeleteAdminRole(role.id)"
-					v-if="deletingAdminRole == true"
-					class="flex items-center pr-3 cursor-pointer text-red-600 hover:text-red-700"
-				>
-					<svgicon name="garbage" width="22" height="22" class="fill-current" />
-				</div>
-				<nuxt-link
-					:to="{ path: `/user-management/roles-and-permissions/${role.id}` }"
-					class="w-full flex flex-col md:flex-row px-2 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-				>
-					<div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
-						<strong class="block md:hidden text-xs uppercase">Role Name</strong>
-						<span>{{ role.name }}</span>
-					</div>
-					<div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
-						<strong class="block md:hidden text-xs uppercase">Date Created</strong>
-						<span>{{ $moment(role.created_at).format("MMM D, YYYY") }}</span>
-					</div>
-					<div class="flex flex-col md:justify-center md:w-1/3 p-1 md:p-2 align-middle leading-none">
-						<strong class="block md:hidden text-xs uppercase">Description</strong>
-						<span
-							style="display:-webkit-box;webkit-line-clamp:2;-webkit-box-orient: vertical;overflow: hidden; text-overflow: ellipsis;"
-						>{{ role.description }}</span>
-					</div>
-				</nuxt-link>
-			</div>
-		</div>
-		<div v-else class="text-center text-gray-400 py-4">No admin roles</div>-->
-
-    <!-- <div>
-			<AppPagination
-				class="px-4 md:px-8"
-				:total="total"
-				:totalPages="totalPages"
-				:currentPage="currentPage"
-				:perPage="perPage"
-				@pagechanged="pagechanged"
-			/>
-		</div>-->
     <div class="m-2">
       <AppTable
         v-if="total > 0"
@@ -88,6 +38,11 @@
         :routerLink="`/user-management/roles-and-permissions`"
         @pagechanged="pagechanged"
       >
+        <template v-slot:updated_at="slotProps">
+          <div>
+            {{ slotProps.item.created_at_in_gb_formatted === slotProps.item.updated_at_in_gb_formatted ? '(none)' : slotProps.item.updated_at_in_gb_formatted }}
+          </div>
+        </template>
         <template v-if="authAdminPermissions.includes('Delete Role')" v-slot:actions="slotProps">
           <div class="flex justify-center">
             <div
@@ -150,7 +105,9 @@ export default {
 				},
 				{
 					name: "Updated At",
-					dataIndex: "updated_at_in_gb_formatted",
+					dataIndex: "",
+					slot: true,
+					slotName: 'updated_at',
 					class: "text-center"
 				}
 			],

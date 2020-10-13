@@ -27,7 +27,7 @@ export default {
   components:{
     AppTable
   },
-  data(){
+  data (){
     return{
       currentPage: 1,
       perPage: 10,
@@ -60,18 +60,18 @@ export default {
       ]
     }
   },
-  beforeDestroy() {
-		let query = Object.assign({}, this.$route.query);
-		delete query.practice_roles_page;
-		this.$router.push({ query });
-	},
 	watch: {
-		$route(to, from) {
-			this.currentPage = parseInt(to.query.practice_roles_page);
-			this.getPracticeRoles();
+		$route (to, from) {
+			this.currentPage = parseInt(to.query.practice_roles_page)
+			this.getPracticeRoles()
 		}
 	},
-  async asyncData({ app, route, store }){
+  beforeDestroy () {
+		let query = Object.assign({}, this.$route.query)
+		delete query.practice_roles_page
+		this.$router.push({ query })
+	},
+  async asyncData ({ app, route, store }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/practice-roles/count`)
       console.log(response)
@@ -92,23 +92,23 @@ export default {
 				enabled: true,
 				status: "danger",
 				text: err.response.data.message
-			});
-			console.log('get roles error!',err);
+			})
+			console.log('get roles error!',err)
     }
   },
   methods: {
-    pagechanged(e) {
+    pagechanged (e) {
 			const query = {
 				...this.$route.query,
 				practice_users_page: e || 1
-			};
-			this.$router.push({ query });
-			this.getPracticeRoles();
+			}
+			this.$router.push({ query })
+			this.getPracticeRoles()
     },
-    async getPracticeRoles(){
-      let limit = 5;
-      let offset = 0;
-      offset = this.perPage * (parseInt(this.$route.query.practice_roles_page) - 1);
+    async getPracticeRoles (){
+      let limit = 5
+      let offset = 0
+      offset = this.perPage * (parseInt(this.$route.query.practice_roles_page) - 1)
       let params = {
         limit,
         offset,

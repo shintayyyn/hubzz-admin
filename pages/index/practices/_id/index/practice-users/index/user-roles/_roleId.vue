@@ -71,12 +71,12 @@
 
 <script>
 export default {
-  data(){
+  data (){
     return {
       practiceRolePermissions:[]
     }
   },
-  async asyncData({ app, route, store }) {
+  async asyncData ({ app, route, store }) {
     try{
       // let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/practice-roles/${route.params.roleId}`)
       // const practiceRolePermissions = response.data.role
