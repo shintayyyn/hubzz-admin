@@ -9,10 +9,14 @@ export const state = () => ({
   },
   toggled_sidebar: false,
   totalPages: 0,
-  
+  session_expiring: false,
 })
 
 export const getters = {
+  sessionExpiring (state) {
+    return state.session_expiring
+  },
+
   pendingChangeEmailRequestIds (state) {
     return state.pendingChangeEmailRequestIds
   },
@@ -60,9 +64,24 @@ export const mutations = {
   TOGGLE_SIDEBAR (state, payload) {
     state.toggled_sidebar = payload
   },
+  SESSION_EXPIRING (state, payload) {
+    state.session_expiring = payload
+  }
 }
 
 export const actions = {
+  async initializeSessionListener ({ commit }) {
+    this.$socket.on('Admin Session Expiring', async () => {
+      console.log('session expiring')
+			commit('SESSION_EXPIRING', true)
+    })
+    
+    this.$socket.on('Admin Session Expired', async () => {
+			console.log('session expired')
+			this.$router.push(`/session-expired`)
+    })
+  },
+
   pendingChangeEmailRequestIds ({ commit }) {
     return this.$axios.get('/api/v1/admin/change-email-requests', {
       params: { status: 'Pending', id_only: true, limit: 1000000 },

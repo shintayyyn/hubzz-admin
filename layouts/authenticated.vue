@@ -7,9 +7,12 @@
     </transition>
     
     <div v-if="showLogoutModal" class="signout-shield" @click="showLogoutModal = false" />
-    
+    <div v-if="sessionExpiring" class="signout-shield" />
     <div v-if="$store.state.toggled_sidebar" class="sidebar-shield" @click="close" />
-    
+
+    <transition name="drop" mode="out-in">
+      <SessionExpiring @logout="logout" />
+    </transition>
     <AppNotification />
     
     <PopUpNotification />
@@ -27,7 +30,7 @@
   import AppHeader from "~/components/AppHeader"
   import AppSideBar from "~/components/AppSideBar"
   import SignOut from "~/components/Auth/SignOut"
-
+  import SessionExpiring from "~/components/Auth/SessionExpiring"
   export default {
     components: {
       AppNotification,
@@ -35,11 +38,19 @@
       AppHeader,
       AppSideBar,
       SignOut,
+      SessionExpiring,
     },
 
     data () {
       return {
         showLogoutModal: false,
+        showSessionExpiringModal: false,
+      }
+    },
+
+    computed: {
+      sessionExpiring () {
+        return this.$store.getters["sessionExpiring"]
       }
     },
 
