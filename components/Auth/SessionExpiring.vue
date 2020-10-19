@@ -11,16 +11,14 @@
           <div class="flex justify-center my-1">
             <AppButton
               class="mr-2"
-              :label="'Yes'"
-              @click="cancel"
+              :label="'Log Out'"
+              @click="$emit('logout')"
             />
             <AppButton
               class="mr-2"
-              :label="'No'"
-              @click="$emit('logout')"
+              :label="'Continue with Session'"
+              @click="continueSession"
             />
-
-
             <!-- <div class="mx-2">
               <button
                 class="border border-solid bg-yellow-500 hover:text-red-600 focus:outline-none text-black font-bold px-4 py-2 md:py-4 rounded-lg"
@@ -57,9 +55,12 @@ export default {
   },
 
   methods: {
-    async cancel () {
-      await this.$axios.$get(`/api/v1/admin/me`)
-      this.$store.commit("SESSION_EXPIRING", false)
+    async continueSession () {
+      console.log('haha')
+      await this.$axios.$get(`/api/v1/admin/me`).then((res) => {
+        console.log('res', res.data)
+        this.$store.commit("SESSION_EXPIRING", false)
+      })
     }
   },
 
