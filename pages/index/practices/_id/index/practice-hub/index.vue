@@ -211,6 +211,7 @@
           @click="confirm=true"
         >Terminate this spoke from Hub</div> -->
         <AppButton
+          v-if="authAdminPermissions.includes('Terminate Spoke')"
           class="text-white mt-4"
           :background="'red'"
           :label="'Terminate this spoke from Hub'"
@@ -230,7 +231,7 @@
           @pagechanged="pagechanged"
         >
           <template v-slot:actions="slotProps">
-            <div v-if="!slotProps.item.invitation_rejected" class="flex justify-center">
+            <div v-if="!slotProps.item.invitation_rejected && authAdminPermissions.includes('Terminate Spoke')" class="flex justify-center">
               <AppButton
                 class="text-white ml-2"
                 :background="'green'"
@@ -337,6 +338,9 @@ export default {
     }
   },
   computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
     loadingSurgeries () {
       return this.$store.state.practices.loading_practices
     },
