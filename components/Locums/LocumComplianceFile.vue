@@ -371,14 +371,10 @@
     },
 
     mounted () {
-
       if (this.authAdminPermissions.includes('Download Locum Compliance Documents') === false) {
         window.addEventListener('contextmenu', function (e) {
           e.preventDefault()
         }, false)
-
-        // this.myframe = document.getElementById('myframe')
-        // this.myframe.window.eval(document.addEventListener("contextmenu", function (e) {e.preventDefault();}, false))
       }
       
       if (this.locumComplianceDocument) {

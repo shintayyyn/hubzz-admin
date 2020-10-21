@@ -7,18 +7,9 @@
       :currentPage="currentPage"
       :perPage="params.limit"
       :columns="columns"
-     
+      :routerLink="`/practices/${$route.params.id}/practice-users/user-roles`"
       @pagechanged="pagechanged"
-    >
-    <!-- :routerLink="`/practices/${$route.params.id}/practice-users/user-roles`" -->
-
-      <!-- <template v-slot:status_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-          :class="slotProps.item.status === 'Active' ? 'bg-green-500 text-white lg:px-8 sm:px-2' : 'bg-yellow-500 text-black lg:px-6 sm:px-2'"
-        >{{ slotProps.item.status }}</div>
-      </template> -->
-    </AppTable>
+    />
   </div>
 </template>
 <script>
@@ -61,7 +52,7 @@ export default {
     }
   },
 	watch: {
-		$route (to, from) {
+		$route (to,) {
 			this.currentPage = parseInt(to.query.practice_roles_page)
 			this.getPracticeRoles()
 		}

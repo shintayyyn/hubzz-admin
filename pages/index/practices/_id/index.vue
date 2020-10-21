@@ -138,6 +138,7 @@
           || $route.name.includes('pracDocId')
           || $route.name.includes('invitationId')
           || $route.name.includes('practiceSessionId')
+          || $route.name.includes('roleId')
       "
       class="practice-shield"
       @click="goBack()"

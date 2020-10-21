@@ -172,7 +172,7 @@ export default {
         || this.authAdminPermissions.includes('View Surgery Management')
         || this.authAdminPermissions.includes('View Practice Sessions')
         || this.authAdminPermissions.includes('View Practice Users')
-        || this.authAdminPermissions.includes('View Practce Documents')
+        || this.authAdminPermissions.includes('View Practice Documents')
         || this.authAdminPermissions.includes('View Reports')){
         addedLists.push({
           name: "Practices",
