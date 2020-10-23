@@ -21,6 +21,14 @@
         HUBZZ Invoices
       </nuxt-link>
       <nuxt-link
+        v-if="authAdminPermissions.includes('View Hubzz Invoices')"
+        :to="`/billings/practice-tax-rate`"
+        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        :class="$route.path.includes(`practice-tax-rate`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      >
+        Practice Tax Rate
+      </nuxt-link>
+      <nuxt-link
         v-if="authAdminPermissions.includes('View Reports')"
         :to="`/billings/hubzz-pricing-reports`"
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
