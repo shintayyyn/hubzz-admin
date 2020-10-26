@@ -32,9 +32,9 @@
           <AppInput 
             v-model="toPutPracticeTaxRate.practice_tax_rate"
             :type="'number'"
-            :limit="3"
             required
             :label="'Practice Tax Rate'"
+            :limit="3"
             :placeholder="'Practice Tax Rate'"
           />
           <div class="flex flex-row">
@@ -108,6 +108,13 @@ export default {
           enabled: true,
           status: "success",
           text: "Success"
+        })
+      })
+      .catch((err) => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
       })
     }
