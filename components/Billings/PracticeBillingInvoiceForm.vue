@@ -167,7 +167,7 @@
 						<div>{{ propInvoice.postcode }}</div>
 						<div>Tel {{ propInvoice.mobile_number }}</div>
 						<div>{{ propInvoice.locum_user.email }}</div>
-						<div>{{ `UTR ${propInvoice.utr_number}` }}</div>
+						<div>{{ propInvoice.utr_number ? `UTR ${propInvoice.utr_number}` : null }}</div>
 					</div>
 					<div class="flex flex-wrap justify-between my-2">
 						<div

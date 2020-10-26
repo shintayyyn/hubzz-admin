@@ -28,14 +28,19 @@
             v-if="notificationToggle === true"
           >
             <div class="notification-modal overflow-hidden">
-              <div class="flex flex-row m-4 justify-between">
+              <div class="flex flex-row-reverse">
+                <div class="p-1 m-1 mx-2 mt-1" @click="notificationToggle = false">
+                  <svgicon name="times-solid" width="15" height="15" color="white" />
+                </div>
+              </div>
+              <div class="flex flex-row mx-4 justify-between">
                 <div class="">
                   <p class="text-xl font-bold tracking-normal">
                     Notifications
                   </p>
                 </div>
                 <div 
-                  class="text-white hover:text-gray-500"
+                  class="text-white hover:text-gray-500 mt-1"
                   @click="clearAllNotifications()"
                 >
                   Mark All as Read
