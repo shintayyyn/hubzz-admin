@@ -41,7 +41,8 @@
                 {label: 'Inactive', value: 'Inactive'},
                 {label: 'Bogus', value: 'Bogus'},
                 {label: 'Deactivated', value: 'Deactivated'},
-                {label: 'Suspended', value: 'Suspended'},
+                {label: 'Account Suspension', value: 'Account Suspension'},
+                {label: 'Compliance Suspension', value: 'Compliance Suspension'},
               ]"
               :label="'Status'"
             />

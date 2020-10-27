@@ -48,7 +48,8 @@
             <option>Inactive</option>
             <option>Bogus</option>
             <option>Deactivated</option>
-            <option>Suspended</option>
+            <option>Account Suspension</option>
+            <option>Compliance Suspension</option>
           </select>
         </div>
 
@@ -410,7 +411,9 @@
 						return 'bg-gray-500 text-gray-700'
 					case 'Deactivated':
 						return 'bg-red-800 text-red-400'
-					case 'Suspended':
+					case 'Account Suspension':
+						return 'bg-red-600 text-white'
+					case 'Compliance Suspension':
 						return 'bg-red-600 text-white'
 					case 'Dormant':
             return 'bg-orange-500 text-white'

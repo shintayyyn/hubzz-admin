@@ -38,7 +38,8 @@
                 {label: 'Active', value: 'Active'},
                 {label: 'Inactive', value: 'Inactive'},
                 {label: 'Dormant', value: 'Dormant'},  
-                {label: 'Suspended', value: 'Suspended'},
+                {label: 'Account Suspension', value: 'Account Suspension'},
+                {label: 'Compliance Suspension', value: 'Compliance Suspension'},
               ]"
               :label="'Status'"
             />

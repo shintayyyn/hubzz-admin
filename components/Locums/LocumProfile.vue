@@ -451,12 +451,18 @@
               label: 'Bogus',
               value: 'Bogus',
             },
+            {
+              label: 'Account Suspension',
+              value: 'Account Suspension',
+            },
           ]
           return locumStatusChoices
         }
 
-        if (this.user.status === 'Suspended' 
-          && (this.user.compliance_status === 'Compliant' || this.user.compliance_status === 'Expiring')) {
+        if (
+          this.user.status === 'Compliance Suspension' 
+          && (this.user.compliance_status === 'Compliant' || this.user.compliance_status === 'Expiring')
+        ) {
           const locumStatusChoices = [
             {
               label: 'Active',
@@ -470,13 +476,19 @@
               label: 'Bogus',
               value: 'Bogus',
             },
+            {
+              label: 'Account Suspension',
+              value: 'Account Suspension',
+            },
           ]
 
           return locumStatusChoices
         }
         
-        if (this.user.status === 'Suspended' 
-          && (this.user.compliance_status !== 'Compliant' || this.user.compliance_status !== 'Expiring')) {
+        if (
+          this.user.status === 'Compliance Suspension' 
+          && (this.user.compliance_status !== 'Compliant' || this.user.compliance_status !== 'Expiring')
+        ) {
           const locumStatusChoices = [
             {
               label: 'Inactive',
@@ -485,6 +497,10 @@
             {
               label: 'Bogus',
               value: 'Bogus',
+            },
+            {
+              label: 'Account Suspension',
+              value: 'Account Suspension',
             },
           ]
 
@@ -650,7 +666,9 @@
 						return 'bg-gray-500 text-gray-700'
 					case 'Deactivated':
 						return 'bg-red-800 text-red-400'
-					case 'Suspended':
+					case 'Account Suspension':
+						return 'bg-red-600 text-white'
+					case 'Compliance Suspension':
 						return 'bg-red-600 text-white'
 					case 'Dormant':
 						return 'bg-orange-500 text-white'

@@ -851,13 +851,13 @@ export default {
       this.practiceStatusChoices = [
         { label: "Active", value: "Active" },
         { label: "Inactive", value: "Inactive" },
-        { label: "Suspended", value: "Suspended" }
+        { label: "Account Suspension", value: "Account Suspension" }
       ]
     } else {
       this.toBogus = true
       this.practiceStatusChoices = [
         { label: "Inactive", value: "Inactive" },
-        { label: "Suspended", value: "Suspended" }
+        { label: "Account Suspension", value: "Account Suspension" }
       ]
     }
     console.log("practice", this.practice)
@@ -912,13 +912,13 @@ export default {
                 this.practiceStatusChoices = [
                   { label: "Active", value: "Active" },
                   { label: "Inactive", value: "Inactive" },
-                  { label: "Suspended", value: "Suspended" }
+                  { label: "Account Suspension", value: "Account Suspension" }
                 ]
               } else {
                 this.toBogus = true
                 this.practiceStatusChoices = [
                   { label: "Inactive", value: "Inactive" },
-                  { label: "Suspended", value: "Suspended" }
+                  { label: "Account Suspension", value: "Account Suspension" }
                 ]
               }
               

@@ -40,7 +40,7 @@
                 {label: 'Active', value: 'Active'},
                 {label: 'Dormant', value: 'Dormant'},
                 {label: 'Inactive', value: 'Inactive'},
-                {label: 'Suspended', value: 'Suspended'},
+                {label: 'Account Suspension', value: 'Account Suspension'},
                 {label: 'Bogus', value: 'Bogus'},
                 {label: 'Deactivated', value: 'Deactivated'},
               ]"

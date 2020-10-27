@@ -111,7 +111,7 @@ export default {
 				limit: 10,
 				offset: 0,
         order_by: ["created_at:desc"],
-        status: ["Active","Dormant","Suspended"],
+        status: ["Active","Dormant","Account Suspension"],
         verified: true,
 			},
 
@@ -209,7 +209,7 @@ export default {
 			const createdRoute = route.query
 			const limit = 10
       const offset = page * limit - limit
-			const status = ["Active","Dormant","Suspended"]
+			const status = ["Active","Dormant","Account Suspension"]
 			// const has_sage_ref = true
 			order_by =
 				createdRoute && createdRoute.order_by
@@ -368,7 +368,7 @@ export default {
 					return "bg-yellow text-black lg:px-10 sm:px-2"
 				case "Deactivated":
 					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Suspended":
+				case "Account Suspension":
 					return "bg-red text-white lg:px-8 sm:px-2"
 				case "Dormant":
 					return "bg-green-darker text-white lg:px-8 sm:px-2"

@@ -100,7 +100,7 @@
             <option>Active</option>
             <option>Dormant</option>
             <option>Inactive</option>
-            <option>Suspended</option>
+            <option>Account Suspension</option>
           </select>
         </div>
 

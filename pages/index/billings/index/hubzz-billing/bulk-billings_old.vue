@@ -141,7 +141,8 @@
       </div>
       <div 
         v-else-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount === 0 "
-        class="mt-2 w-full text-center text-white">
+        class="mt-2 w-full text-center text-white"
+      >
         {{ searchMessage }}
       </div>
     </template>
@@ -158,7 +159,9 @@
             <div class="flex flex-row m-2">
               <div
                 class="text-sm mt-2 m-2"
-              >{{ item.name }}</div>
+              >
+                {{ item.name }}
+              </div>
 
               <!-- <div>
                 <AppButton
@@ -331,7 +334,7 @@ export default {
 				limit: 10,
 				offset: 0,
 				order_by: ["created_at:desc"],
-				status: ["Active", "Dormant", "Suspended"],
+				status: ["Active", "Dormant", "Account Suspension"],
         verified: true,
         practice_invoiceable_date_start: null,
         practice_invoiceable_date_end: null,
@@ -495,7 +498,7 @@ export default {
 			const createdRoute = this.$route.query
 			const limit = 10
 			const offset = page * limit - limit
-			const status = ["Active", "Dormant", "Suspended"]
+			const status = ["Active", "Dormant", "Account Suspension"]
       // const id = this.practiceParams.id
       const practice_invoiceable_date_start = this.practiceParams.practice_invoiceable_date_start
       const practice_invoiceable_date_end = this.practiceParams.practice_invoiceable_date_end
@@ -832,7 +835,7 @@ export default {
 					return "bg-yellow text-black lg:px-10 sm:px-2"
 				case "Deactivated":
 					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Suspended":
+				case "Account Suspension":
 					return "bg-red text-white lg:px-8 sm:px-2"
 				case "Dormant":
 					return "bg-green-darker text-white lg:px-8 sm:px-2"
