@@ -434,7 +434,6 @@ export default {
 			// for app table
 			currentPage: 1,
 			search: "",
-			
 
 			// for bulk billing processing
 			showCompleted: false,
@@ -457,6 +456,10 @@ export default {
 
 			chosenPractices: [],
 			chosenPracticeJobParts: [],
+
+			// tax rate
+			practiceTaxRate: 0,
+			practiceTaxRateFormatted: 0,
 
 			practiceParams: {
 				id: [],
@@ -662,7 +665,6 @@ export default {
 
 	watch: {
 		billing_period_date_start: function (value) {
-			console.log('stpudoioic')
 			if(value !== null) {
 				let billing_period_date_start_index = this.formError.findIndex(
 					item => item.field === "billing_period_date_start"
@@ -865,6 +867,11 @@ export default {
 
 	created () {
 		console.log("store set 0")
+		this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
+			console.log('tax rates',res.data.tax_rates )
+			this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
+			this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
+		})
 		this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
 		this.$store.commit("practices/CLEAR_PRACTICES")
 		this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
@@ -915,7 +922,6 @@ export default {
 				return item.practice_id
 			})
 			chosenPracticeIds = [...new Set(chosenPracticeIds)]
-			console.log("chosenPracticeIds", chosenPracticeIds)
 			let practiceInvoiceDatas = await chosenPracticeIds.map(practiceId => {
 				const chosenJobParts = this.chosenPracticeJobParts.filter(
 					jobPart => jobPart.practice_id === practiceId
@@ -938,10 +944,19 @@ export default {
 					}
 				})
 
-				const total_amount = items.reduce(
-					(total_amount, item) => total_amount + item.total,
-					0
-				)
+				const vatRegistered = chosenJobParts.filter(item => item.practice_vat_registered === true).length > 0 ? true : false
+
+				const untaxed_total_amount = items.reduce(
+						(total_amount, item) => total_amount + item.total,
+						0
+					)
+				const tax_amount = vatRegistered === true ? untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted).toFixed(2) : 0
+
+				const total_amount = vatRegistered === true ? untaxed_total_amount + tax_amount : untaxed_total_amount
+
+				console.log('untaxed', untaxed_total_amount)
+				console.log('tax amount', tax_amount)
+				console.log('taxed', total_amount)
 
 				return {
 					practice_id: practiceId,
@@ -949,6 +964,7 @@ export default {
 					date_start: this.billing_period_date_start,
 					date_end: this.billing_period_date_end,
 					total_amount,
+					tax_amount,
 					due_date: this.due_date
 				}
 			})
@@ -987,7 +1003,12 @@ export default {
 						"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
 						false
 					)
-				})			
+				})	
+			
+			this.$store.commit(
+				"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
+				false
+			)
 		},
 
 		goToPage (page) {

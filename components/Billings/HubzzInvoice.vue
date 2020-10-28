@@ -524,14 +524,31 @@
 
         <!-- TOTALS -->
         <div v-if="!byLocum" ref="items-total" class="flex flex-col justify-between px-4 pt-2">
-          <div class="flex flex-row justify-between w-full">
+          <!-- <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               Total
+            </div>
+            <div class="my-1 px-1 text-right text-lg font-semibold">
+              £ {{ forViewing === true ? `${practiceInvoice.total_amount - practiceInvoice.tax_amount}` : amountTotal | currency }}
+            </div>
+          </div> -->
+          <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
+            <div class="my-1 px-1 font-bold">
+              VAT Amount
+            </div>
+            <div class="my-1 px-1 text-right text-lg font-semibold">
+              £ {{ forViewing === true ? practiceInvoice.tax_amount : taxAmount | currency }}
+            </div>
+          </div>
+          <div class="flex flex-row justify-between w-full">
+            <div class="my-1 px-1 font-bold">
+              {{ practice.vat_registered === true ? 'Total (with added VAT)':'Total' }}
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
               £ {{ forViewing === true ? practiceInvoice.total_amount : amountTotal | currency }}
             </div>
           </div>
+          
           <div class="flex flex-row justify-between w-full">
             <span class="my-1 px-1 font-bold">
               Total Hours
@@ -623,6 +640,7 @@ export default {
 				date_end: "",
 				items: [],
         total_amount: "",
+        tax_amount: "",
         due_date: "",
       },
       form: {
@@ -647,7 +665,11 @@ export default {
 			doNotShow: true,
 			practices: [],
 			chosenPractice: [],
-			loading: false,
+      loading: false,
+      
+      // tax rate
+			practiceTaxRate: 0,
+			practiceTaxRateFormatted: 0,
 
 			maxChars: 100
 		}
@@ -695,9 +717,18 @@ export default {
 				creditTotal = createdCreditItems.reduce(reducer)
 			}
 			// console.log("credit items", this.createdCreditItems);
-      const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
-      
-			return netSum
+      const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+      console.log('untaxed', untaxedNetSum)
+      const tax_amount = this.practice.vat_registered === true ? untaxedNetSum * parseFloat(this.practiceTaxRateFormatted).toFixed(2) : 0
+      console.log('tax amount', tax_amount)
+      const total_amount = this.practice.vat_registered === true ? parseFloat(untaxedNetSum) + parseFloat(tax_amount) : untaxedNetSum
+      console.log('taxed amount', total_amount)
+			return total_amount
+    },
+    taxAmount () {
+      const tax_amount = this.practice.vat_registered === true ? parseFloat(this.amountTotal) * parseFloat(this.practiceTaxRateFormatted).toFixed(2) : 0
+      console.log('tax amount banana', tax_amount)
+      return tax_amount
     },
     totalHoursSum: function () {
       let totalHours = 0
@@ -804,22 +835,15 @@ export default {
   
 	created () {
     console.log('locumInvoice', this.locumInvoice)
-		// if (this.invoiceItems) {
-		//   this.createdInvoiceItems = this.invoiceItems
-		// }
-		// if (this.disputeditems) {
-		//   this.createdDisputedItems = this.createdDisputedItems
-		// }ff
-		// if (this.locumInvoice) {
-		// 	console.log("locum invoice", this.locumInvoice);
-		// }
-		// if (this.practiceInvoice) {
-		// 	console.log("practice invoice", this.practiceInvoice);
-    // }
     console.log('practice invoice', this.practiceInvoice)
     console.log("practice", this.practice)
     console.log("invoice items", this.invoiceItems)
     console.log("disputed items", this.disputedItems)
+    this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
+      console.log('tax rates',res.data.tax_rates )
+      this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
+      this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
+    })
 
     if(this.locumInvoice) {
       this.setInitialState()
@@ -951,7 +975,8 @@ export default {
 				this.createdDebitItems,
 				this.createdCreditItems
 			)
-			this.toPostPracticeInvoice.total_amount = await this.amountTotal
+      this.toPostPracticeInvoice.total_amount = await this.amountTotal
+      this.toPostPracticeInvoice.tax_amount = await this.taxAmount
       this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
 
@@ -961,7 +986,6 @@ export default {
 				await this.$axios
 					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 					.then(() => {
-  
             this.$emit("goBack")
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
