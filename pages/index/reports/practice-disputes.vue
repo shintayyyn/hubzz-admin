@@ -16,12 +16,20 @@
               <label for="start" class="text-white">Filter until Month/Year of Invoice Approval:</label>
             </div>
             <div>
-              <input id="start" v-model="monthYear" class="text-black" type="month" name="start" :max="this.$moment().subtract(1, 'month').format('YYYY-MM')">
+              <!-- <input 
+                id="start" 
+                v-model="monthYear" 
+                class="text-black" 
+                type="month" 
+                name="start" 
+                :max="this.$moment().subtract(1, 'month').format('YYYY-MM')"
+              > -->
+              <AppMonthYear
+                v-model="monthYear"
+                :isBefore="true"
+              />
             </div>
           </div>
-          <!-- Default {{monthYear}} || 
-          Month Only: {{this.$moment(monthYear).format('MMMM')}} || 
-          Year Only: {{this.$moment(monthYear).format('YYYY')}} -->
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -128,11 +136,13 @@
   import ReportTable from '@/components/Reports/ReportTable'
   import ReportPagination from '@/components/Reports/ReportPagination'
   import AppButton from '@/components/Base/AppButton'
+  import AppMonthYear from '@/components/Base/AppMonthYear'
   export default {
     components: {
       ReportTable,
       ReportPagination,
-      AppButton
+      AppButton,
+      AppMonthYear,
     },
 
     data () {
