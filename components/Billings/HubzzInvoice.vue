@@ -524,14 +524,14 @@
 
         <!-- TOTALS -->
         <div v-if="!byLocum" ref="items-total" class="flex flex-col justify-between px-4 pt-2">
-          <!-- <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
+          <div class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               Total
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              £ {{ forViewing === true ? `${practiceInvoice.total_amount - practiceInvoice.tax_amount}` : amountTotal | currency }}
+              £ {{ forViewing === true ? practice.vat_registered === true ? practiceInvoice.untaxed_total_amount : practiceInvoice.total_amount : untaxedAmountTotal | currency }}
             </div>
-          </div> -->
+          </div>
           <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               VAT Amount
@@ -540,12 +540,12 @@
               £ {{ forViewing === true ? practiceInvoice.tax_amount : taxAmount | currency }}
             </div>
           </div>
-          <div class="flex flex-row justify-between w-full">
+          <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
-              {{ practice.vat_registered === true ? 'Total (with added VAT)':'Total' }}
+              Total (with added VAT)
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              £ {{ forViewing === true ? practiceInvoice.total_amount : amountTotal | currency }}
+              £ {{ forViewing === true ? practiceInvoice.total_amount : taxedAmountTotal | currency }}
             </div>
           </div>
           
@@ -680,7 +680,7 @@ export default {
 			return this.$store.getters["permissions"]
     },
 
-    taxAmount () {
+    untaxedAmountTotal () {
       let grossSum = 0
 			let invoiceItemTotal = 0
 			let disputedItemTotal = 0
@@ -719,50 +719,17 @@ export default {
 			}
 
       const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
-      const tax_amount = this.practice.vat_registered === true ? parseFloat(untaxedNetSum).toFixed(2) * parseFloat(this.practiceTaxRateFormatted) : 0
+
+      return untaxedNetSum
+    },
+
+    taxAmount () {
+      const tax_amount = this.practice.vat_registered === true ? parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted) : 0
       return tax_amount
     },
 
-		amountTotal: function () {
-			let grossSum = 0
-			let invoiceItemTotal = 0
-			let disputedItemTotal = 0
-			let debitTotal = 0
-			let creditTotal = 0
-			const reducer = (accumulator, currentValue) => accumulator + currentValue
-
-			if (this.invoiceItems && this.invoiceItems.length > 0) {
-				let invoiceItems = this.invoiceItems.map(invoiceItem =>
-					parseFloat(invoiceItem.total ? invoiceItem.total : 0)
-				)
-				invoiceItemTotal = invoiceItems.reduce(reducer)
-			}
-
-			if (this.disputedItems && this.disputedItems.length > 0) {
-				let disputedItems = this.disputedItems.map(disputedItem =>
-					parseFloat(disputedItem.total ? disputedItem.total : 0)
-				)
-				disputedItemTotal = disputedItems.reduce(reducer)
-			}
-
-			grossSum = parseFloat(invoiceItemTotal + disputedItemTotal)
-
-			if (this.createdDebitItems && this.createdDebitItems.length > 0) {
-				let createdDebitItems = this.createdDebitItems.map(debitItem =>
-					parseFloat(debitItem.total ? debitItem.total : 0)
-				)
-				debitTotal = createdDebitItems.reduce(reducer)
-			}
-
-			if (this.createdCreditItems && this.createdCreditItems.length > 0) {
-				let createdCreditItems = this.createdCreditItems.map(creditItem =>
-					parseFloat(creditItem.total ? creditItem.total : 0)
-				)
-				creditTotal = createdCreditItems.reduce(reducer)
-			}
-
-      const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
-      const total_amount = this.practice.vat_registered === true ? parseFloat(untaxedNetSum) + parseFloat(this.taxAmount) : untaxedNetSum
+		taxedAmountTotal: function () {
+      const total_amount = this.practice.vat_registered === true ? parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount) : untaxedNetSum
 			return total_amount
     },
     
@@ -1005,7 +972,7 @@ export default {
 				this.createdDebitItems,
 				this.createdCreditItems
 			)
-      this.toPostPracticeInvoice.total_amount = await this.amountTotal
+      this.toPostPracticeInvoice.total_amount = this.practice.vat_registered === true ? await this.taxedAmountTotal : await this.untaxedAmountTotal
       this.toPostPracticeInvoice.tax_amount = await this.taxAmount
       this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
