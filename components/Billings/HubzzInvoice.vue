@@ -679,6 +679,50 @@ export default {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
     },
+
+    taxAmount () {
+      let grossSum = 0
+			let invoiceItemTotal = 0
+			let disputedItemTotal = 0
+			let debitTotal = 0
+			let creditTotal = 0
+			const reducer = (accumulator, currentValue) => accumulator + currentValue
+
+			if (this.invoiceItems && this.invoiceItems.length > 0) {
+				let invoiceItems = this.invoiceItems.map(invoiceItem =>
+					parseFloat(invoiceItem.total ? invoiceItem.total : 0)
+				)
+				invoiceItemTotal = invoiceItems.reduce(reducer)
+			}
+
+			if (this.disputedItems && this.disputedItems.length > 0) {
+				let disputedItems = this.disputedItems.map(disputedItem =>
+					parseFloat(disputedItem.total ? disputedItem.total : 0)
+				)
+				disputedItemTotal = disputedItems.reduce(reducer)
+			}
+
+			grossSum = parseFloat(invoiceItemTotal + disputedItemTotal)
+
+			if (this.createdDebitItems && this.createdDebitItems.length > 0) {
+				let createdDebitItems = this.createdDebitItems.map(debitItem =>
+					parseFloat(debitItem.total ? debitItem.total : 0)
+				)
+				debitTotal = createdDebitItems.reduce(reducer)
+			}
+
+			if (this.createdCreditItems && this.createdCreditItems.length > 0) {
+				let createdCreditItems = this.createdCreditItems.map(creditItem =>
+					parseFloat(creditItem.total ? creditItem.total : 0)
+				)
+				creditTotal = createdCreditItems.reduce(reducer)
+			}
+
+      const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+      const tax_amount = this.practice.vat_registered === true ? parseFloat(untaxedNetSum).toFixed(2) * parseFloat(this.practiceTaxRateFormatted) : 0
+      return tax_amount
+    },
+
 		amountTotal: function () {
 			let grossSum = 0
 			let invoiceItemTotal = 0
@@ -693,14 +737,14 @@ export default {
 				)
 				invoiceItemTotal = invoiceItems.reduce(reducer)
 			}
-			// console.log("invoice items", this.invoiceItems);
+
 			if (this.disputedItems && this.disputedItems.length > 0) {
 				let disputedItems = this.disputedItems.map(disputedItem =>
 					parseFloat(disputedItem.total ? disputedItem.total : 0)
 				)
 				disputedItemTotal = disputedItems.reduce(reducer)
 			}
-			// console.log("disputed items", this.disputedItems);
+
 			grossSum = parseFloat(invoiceItemTotal + disputedItemTotal)
 
 			if (this.createdDebitItems && this.createdDebitItems.length > 0) {
@@ -709,35 +753,21 @@ export default {
 				)
 				debitTotal = createdDebitItems.reduce(reducer)
 			}
-			// console.log("debit items", this.createdDebitItems);
+
 			if (this.createdCreditItems && this.createdCreditItems.length > 0) {
 				let createdCreditItems = this.createdCreditItems.map(creditItem =>
 					parseFloat(creditItem.total ? creditItem.total : 0)
 				)
 				creditTotal = createdCreditItems.reduce(reducer)
 			}
-			// console.log("credit items", this.createdCreditItems);
+
       const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
-      console.log('untaxed', untaxedNetSum)
-      const tax_amount = this.practice.vat_registered === true ? untaxedNetSum * parseFloat(this.practiceTaxRateFormatted).toFixed(2) : 0
-      console.log('tax amount', tax_amount)
-      const total_amount = this.practice.vat_registered === true ? parseFloat(untaxedNetSum) + parseFloat(tax_amount) : untaxedNetSum
-      console.log('taxed amount', total_amount)
+      const total_amount = this.practice.vat_registered === true ? parseFloat(untaxedNetSum) + parseFloat(this.taxAmount) : untaxedNetSum
 			return total_amount
     },
-    taxAmount () {
-      const tax_amount = this.practice.vat_registered === true ? parseFloat(this.amountTotal) * parseFloat(this.practiceTaxRateFormatted).toFixed(2) : 0
-      console.log('tax amount banana', tax_amount)
-      return tax_amount
-    },
+    
     totalHoursSum: function () {
       let totalHours = 0
-      // let invoiceItemHours = 0
-      // let disputedItemHours = 0
-
-      console.log("invoice items", this.invoiceItems)
-      console.log("disputed items", this.disputedItems)
-
       const reducer = (accumulator, currentValue) => accumulator + currentValue
       if (this.invoiceItems && this.invoiceItems.length > 0) {
         let invoiceItemHours = this.invoiceItems.map(invoiceItem => 

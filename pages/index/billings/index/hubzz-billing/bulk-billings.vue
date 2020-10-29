@@ -950,7 +950,7 @@ export default {
 						(total_amount, item) => total_amount + item.total,
 						0
 					)
-				const tax_amount = vatRegistered === true ? untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted).toFixed(2) : 0
+				const tax_amount = vatRegistered === true ? untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted) : 0
 
 				const total_amount = vatRegistered === true ? untaxed_total_amount + tax_amount : untaxed_total_amount
 
@@ -1004,11 +1004,10 @@ export default {
 						false
 					)
 				})	
-			
-			this.$store.commit(
-				"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
-				false
-			)
+			// this.$store.commit(
+			// 	"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
+			// 	false
+			// )
 		},
 
 		goToPage (page) {
