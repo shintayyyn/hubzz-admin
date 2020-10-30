@@ -12,6 +12,7 @@
           'textarea',
           'multi-checkbox',
           'number',
+          'numberText',
           'numberDash'
         ].includes(type)
       "
@@ -22,20 +23,20 @@
         >
           <label :for="name" class="text-xs sm:text-sm py-1 pr-2 font-bold">{{ label }} <span v-if="required" class="text-red-500">*</span></label>
           
-          <div class="flex items-center" v-if="info || error">
+          <div v-if="info || error" class="flex items-center">
             <div
-              class="bg-gray-300 text-black rounded px-1 md:px-4 py-1 text-xs sm:text-sm"
               v-if="info"
+              class="bg-gray-300 text-black rounded px-1 md:px-4 py-1 text-xs sm:text-sm"
             >
               {{ info }}
             </div>
             <div
-              class="bg-red-300 text-red-700 py-1 px-2 text-xs"
               v-if="error && (type.includes('checkbox'))"
+              class="bg-red-300 text-red-700 py-1 px-2 text-xs"
             >
               {{
                 error.message.charAt(0).toUpperCase() +
-                error.message.slice(1).replace(/_/g, " ")
+                  error.message.slice(1).replace(/_/g, " ")
               }}
             </div>
           </div>
@@ -44,23 +45,23 @@
         <!-- multi-checkbox -->
         <template v-if="type === 'multi-checkbox'">
           <div
-            class="flex flex-row justify-start items-center mt-1"
             v-for="(item, index) in lists"
             :key="index"
+            class="flex flex-row justify-start items-center mt-1"
           >
             <input
-              :value="item.value"
               :id="`${name}-${index}`"
+              :value="item.value"
               type="checkbox"
-              @input="inputMultiCheck"
               :checked="Array.isArray(value) ? value.includes(item.value) : value"
               :class="inClass"
               :style="inStyle"
-            />
+              @input="inputMultiCheck"
+            >
             <label
               :for="`${name}-${index}`"
               class="text-xs sm:text-sm flex items-center"
-            >{{item.label}}</label>
+            >{{ item.label }}</label>
           </div>
         </template>
 
@@ -68,7 +69,7 @@
           <div class="flex flex-row justify-start">
             <template
               v-if="
-                ['text', 'time', 'email', 'number', 'numberDash'].includes(type)
+                ['text', 'time', 'email', 'number', 'numberDash', 'numberText'].includes(type)
               "
             >
               <div class="flex flex-col w-full">
@@ -80,22 +81,21 @@
                   :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
                   :maxlength="limit"
                   :max="maxInput"
-                  @input="$emit('input', $event.target.value)"
-                  @keypress="type === 'number' ? isNumber($event) : type === 'numberDash' ? isNumberDash($event) : $emit('keypress')"
-                  @blur="$emit('blur')"
                   :style="inStyle"
                   :checked="value"
                   :min="type === 'number' && 0"
                   step="any"
-                />
+                  @input="$emit('input', $event.target.value)"
+                  @keypress="type === 'number' ? isNumber($event) : type === 'numberDash' || type === 'numberText' ? isNumberDash($event) : $emit('keypress')"
+                  @blur="$emit('blur')"
+                >
                 <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
-                    error.message.slice(1).replace(/_/g, " ")
+                      error.message.slice(1).replace(/_/g, " ")
                   }}
                 </div>
               </div>
-
             </template>
 
             <template v-if=" type === 'password' ">
@@ -106,24 +106,23 @@
                   :type="togglePassword()"
                   :placeholder="placeholder"
                   :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
+                  :style="inStyle"
                   @input="$emit('input', $event.target.value)"
                   @keypress.enter="$emit('submit')"
                   @blur="$emit('blur')"
                   @focus="showPasswordFocus = true"
-                  :style="inStyle"
-                />
-                <button @click="passwordToggle = !passwordToggle" class="absolute right-0 h-full" :class="error && '-mt-2'" tabindex="-1">
-                  <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
-                  <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current"/>
+                >
+                <button class="absolute right-0 h-full" :class="error && '-mt-2'" tabindex="-1" @click="passwordToggle = !passwordToggle">
+                  <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current" />
+                  <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current" />
                 </button>
                 
                 <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
-                    error.message.slice(1).replace(/_/g, " ")
+                      error.message.slice(1).replace(/_/g, " ")
                   }}
                 </div>
-                
               </div>
             </template>
 
@@ -145,25 +144,28 @@
                       inClass
                     ]"
                     :multiple="multiple"
-                    @input="$emit('input', $event.target.value)"
                     :style="inStyle"
+                    :disabled="disabled"
+                    @input="$emit('input', $event.target.value)"
                     @change="$emit('change', $event.target.value)"
                     @blur="$emit('blur')"
-                    :disabled="disabled"
                   >
-                    <option value disabled selected v-if="placeholder">{{
-                      placeholder
-                    }}</option>
+                    <option v-if="placeholder" value disabled selected>
+                      {{
+                        placeholder
+                      }}
+                    </option>
                     <option
                       v-for="(item, index) in items"
                       :key="index"
                       :value="item.value"
                       :selected="value === item.value"
                       class="text-black"
-                      >{{ item.label }}</option
                     >
+                      {{ item.label }}
+                    </option>
                   </select>
-                  <span class="absolute right-0" v-if="!multiple">
+                  <span v-if="!multiple" class="absolute right-0">
                     <svgicon
                       name="arrow-up"
                       class="h-full w-10 p-2 fill-current"
@@ -172,8 +174,8 @@
                   </span>
                 </div>
                 <div
-                  class="bg-red-300 text-red-700 py-1 px-2 text-xs w-full"
                   v-if="error && (type === 'select' || type.includes('checkbox'))"
+                  class="bg-red-300 text-red-700 py-1 px-2 text-xs w-full"
                 >
                   {{
                     error.message.charAt(0).toUpperCase() +
@@ -200,10 +202,10 @@
                   ]"
                   @input="$emit('input', $event.target.value)"
                   @blur="$emit('blur', $event)"
-                ></textarea>
+                />
                 <div
-                  class="bg-red-300 text-red-700 py-1 px-2 text-xs"
                   v-if="error"
+                  class="bg-red-300 text-red-700 py-1 px-2 text-xs"
                 >
                   {{
                     error.message.charAt(0).toUpperCase() +
@@ -222,8 +224,8 @@
       <div class="flex flex-col py-2 mb-2">
         <div class="flex justify-end">
           <div
-            class="rounded-lg bg-red-500 bg-red-300 text-red-700 py-1 px-2 text-xs sm:text-sm text-white"
             v-if="error"
+            class="rounded-lg bg-red-500 bg-red-300 text-red-700 py-1 px-2 text-xs sm:text-sm text-white"
           >
             {{
               error.message.charAt(0).toUpperCase() +
@@ -233,19 +235,18 @@
         </div>
         <div class="flex flex-row flex-no-wrap justify-start items-center">
           <input
-            type="checkbox"
             :id="name"
-            @change="$emit('input', $event.target.checked)"
+            type="checkbox"
             :checked="value"
             :disabled="disabled"
             :class="inClass"
             :style="inStyle"
-          />
+            @change="$emit('input', $event.target.checked)"
+          >
           <label
             :for="name"
             class="text-xs sm:text-sm py-1 flex items-center"
-            >{{ label }}</label
-          >
+          >{{ label }}</label>
         </div>
       </div>
     </template>
@@ -258,13 +259,11 @@
             <label :for="name" class="text-xs sm:text-sm py-1">{{
               label
             }}</label>
-            <span class="ml-2 bg-gray-300 rounded px-4 py-1 text-xs"
-              >Seperate with commas</span
-            >
+            <span class="ml-2 bg-gray-300 rounded px-4 py-1 text-xs">Seperate with commas</span>
           </div>
           <div
-            class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
             v-if="error"
+            class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
           >
             {{
               error.message.charAt(0).toUpperCase() +
@@ -281,7 +280,7 @@
             :class="[error ? 'border-red-600' : '', inClass]"
             :style="inStyle"
             @input="$emit('input', $event.target.value)"
-          />
+          >
         </div>
       </div>
     </template>
@@ -296,14 +295,14 @@
           <label :for="name" class="text-xs sm:text-sm py-1">{{ label }}</label>
           <div class="flex">
             <div
-              class="bg-gray-300 rounded px-4 py-1 text-xs sm:text-sm"
               v-if="info"
+              class="bg-gray-300 rounded px-4 py-1 text-xs sm:text-sm"
             >
               {{ info }}
             </div>
             <div
-              class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
               v-if="error"
+              class="absolute right-0 bg-red-500 py-1 px-2 text-xs sm:text-sm text-white"
             >
               {{
                 error.message.charAt(0).toUpperCase() +
@@ -321,11 +320,11 @@
             :placeholder="placeholder"
             class="appearance-none w-full rounded-lg border-2 border-transparent focus:border-sunglow text-sm text-white p-2 bg-waterloo focus:outline-none transition-hover"
             :class="[error ? 'border-red-600' : '', inClass]"
-            @input="$emit('input', $event.target.value)"
             :style="inStyle"
+            @input="$emit('input', $event.target.value)"
             @keypress.enter="$emit('submit')"
             @blur="$emit('blur')"
-          />
+          >
           <span v-if="value" class="absolute right-0 h-full p-2 cursor-pointer hover:text-sunglow bg-waterloo rounded-r-lg" @click="(value='')">x</span>
         </div>
       </div>

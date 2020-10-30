@@ -18,11 +18,13 @@
               @click="toEdit = true"
             />
           </div>
-          <div class="flex py-1">Practice Tax Rate</div>
+          <div class="flex py-1">
+            Practice Tax Rate
+          </div>
           <div
             class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
           >
-            {{ `${practiceTaxRate.practice_tax_rate}%` }} 
+            {{ `${toPutPracticeTaxRate.practice_tax_rate}%` }} 
           </div>
         </div>
         <div
@@ -34,7 +36,6 @@
             :type="'number'"
             required
             :label="'Practice Tax Rate'"
-            :limit="3"
             :placeholder="'Practice Tax Rate'"
           />
           <div class="flex flex-row">
@@ -46,7 +47,7 @@
             <AppButton
               class="mx-2"
               :label="'Cancel'"
-              @click="toEdit = false"
+              @click="cancelEditing"
             />
           </div>
         </div>
@@ -69,7 +70,7 @@ export default {
 			toEdit: false,
       practiceTaxRate: '',
       toPutPracticeTaxRate: {
-        practice_tax_rate: null
+        practice_tax_rate: 0
       },
 			formError: []
 		}
@@ -78,45 +79,54 @@ export default {
 		authAdminPermissions () {
 			return this.$store.getters["permissions"]
 		},
-
   },
-  async asyncData ({ app, store, error }) {
-    try {
-      let response = await app.$axios.$get(`/api/v1/admin/tax-rates`)
-      const practiceTaxRate = response.data.tax_rates
-      return {
-        practiceTaxRate
-      }
-    } catch (err) {
-      error({ statusCode: 404 })
-      store.commit("SET_NOTIFICATION", {
+
+  async created () {
+    await this.$axios.$get(`/api/v1/admin/tax-rates`).then(res=> {
+      console.log('tax_rates', res.data.tax_rates)
+      this.practiceTaxRate = res.data.tax_rates
+      this.toPutPracticeTaxRate.practice_tax_rate = res.data.tax_rates.practice_tax_rate
+    }).catch(err => {
+      this.$store.commit("SET_NOTIFICATION", {
         enabled: true,
         status: "danger",
-        text: "Something went wrong!"
+        text: err.response.data.message
       })
-    }
-
-    return
+    })
   },
   methods: {
     async updatePracticeTaxRate () {
-      await this.$axios.$put(`/api/v1/admin/tax-rates`, this.toPutPracticeTaxRate)
-      .then(res => {
-        this.practiceTaxRate = res.data.tax_rates
-        this.toEdit = false
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Success"
-        })
-      })
-      .catch((err) => {
+      if (this.toPutPracticeTaxRate.practice_tax_rate !== null) {
+        await this.$axios.$put(`/api/v1/admin/tax-rates`, this.toPutPracticeTaxRate)
+          .then(res => {
+            this.practiceTaxRate = res.data.tax_rates
+            this.toPutPracticeTaxRate.practice_tax_rate = res.data.tax_rates.practice_tax_rate
+            this.toEdit = false
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: "Success"
+            })
+          })
+          .catch((err) => {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "danger",
+              text: err.response.data.message
+            })
+          })
+      }else {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
-          text: err.response.data.message
+          text: 'Practice Tax Rate is Required'
         })
-      })
+      } 
+    },
+    
+    cancelEditing () {
+      this.toPutPracticeTaxRate.practice_tax_rate = this.practiceTaxRate.practice_tax_rate
+      this.toEdit = false
     }
   }
 }

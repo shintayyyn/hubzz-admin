@@ -113,8 +113,8 @@ export default {
 			months,
 			monthLists: [],
 			yearLists: [],
-			selectedMonth: this.$moment.utc().format("M"),
-			selectedYear: this.$moment.utc().format("YYYY"),
+			selectedMonth: this.$moment().utc().subtract(1, 'month').format("M"),
+			selectedYear: this.$moment().utc().subtract(1, 'month').format("YYYY"),
 			daysInMonth: []
 		}
 	},
