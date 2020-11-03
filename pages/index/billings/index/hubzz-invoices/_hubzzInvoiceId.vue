@@ -88,7 +88,8 @@ export default {
 				if (
 					practiceInvoiceItems[i].type.includes("Job Part - Approved") ||
 					practiceInvoiceItems[i].type.includes("Job Part - Issued") ||
-					practiceInvoiceItems[i].type.includes("Job Part - Invoiced")
+					practiceInvoiceItems[i].type.includes("Job Part - Invoiced")||
+					practiceInvoiceItems[i].type.includes("Job Part - To Be Invoiced")
 				) {
 					newItem.id = invoiceItems.length + 1
 					invoiceItems.push(newItem)
