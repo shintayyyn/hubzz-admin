@@ -7,7 +7,7 @@
       >
         <div
           v-if="toEdit == false && authAdminPermissions.includes('Create New or Edit Practice Rates')"
-          class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2"
+          class="relative w-full class overflow-hidden text-gray-300 text-sm px-2 md:p-2"
         >
           <div
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
@@ -18,13 +18,25 @@
               @click="toEdit = true"
             />
           </div>
-          <div class="flex py-1">
-            Practice Tax Rate
+          <div>
+            <div class="flex py-1">
+              Practice Tax Rate
+            </div>
+            <div
+              class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
+            >
+              {{ `${toPutTaxRates.practice_tax_rate}%` }} 
+            </div>
           </div>
-          <div
-            class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
-          >
-            {{ `${toPutPracticeTaxRate.practice_tax_rate}%` }} 
+          <div>
+            <div class="flex py-1">
+              Locum Tax Rate
+            </div>
+            <div
+              class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
+            >
+              {{ `${toPutTaxRates.locum_tax_rate}%` }} 
+            </div>
           </div>
         </div>
         <div
@@ -32,17 +44,24 @@
           class="w-full overflow-hidden text-gray-300 text-sm p-2"
         >
           <AppInput 
-            v-model="toPutPracticeTaxRate.practice_tax_rate"
+            v-model="toPutTaxRates.practice_tax_rate"
             :type="'number'"
             required
             :label="'Practice Tax Rate'"
             :placeholder="'Practice Tax Rate'"
           />
+          <AppInput 
+            v-model="toPutTaxRates.locum_tax_rate"
+            :type="'number'"
+            required
+            :label="'Locum Tax Rate'"
+            :placeholder="'Locum Tax Rate'"
+          />
           <div class="flex flex-row">
             <AppButton
               class="mx-2"
               :label="'Save Changes'"
-              @click="updatePracticeTaxRate()"
+              @click="updateTaxRates()"
             />
             <AppButton
               class="mx-2"
@@ -68,8 +87,8 @@ export default {
   data () {
 		return {
 			toEdit: false,
-      practiceTaxRate: '',
-      toPutPracticeTaxRate: {
+      taxRates: '',
+      toPutTaxRates: {
         practice_tax_rate: 0
       },
 			formError: []
@@ -84,8 +103,10 @@ export default {
   async created () {
     await this.$axios.$get(`/api/v1/admin/tax-rates`).then(res=> {
       console.log('tax_rates', res.data.tax_rates)
-      this.practiceTaxRate = res.data.tax_rates
-      this.toPutPracticeTaxRate.practice_tax_rate = res.data.tax_rates.practice_tax_rate
+      this.taxRates = res.data.tax_rates
+      this.locumTaxRate = res.data.tax_rates
+      this.toPutTaxRates.practice_tax_rate = res.data.tax_rates.practice_tax_rate
+      this.toPutTaxRates.locum_tax_rate = res.data.tax_rates.locum_tax_rate
     }).catch(err => {
       this.$store.commit("SET_NOTIFICATION", {
         enabled: true,
@@ -95,12 +116,13 @@ export default {
     })
   },
   methods: {
-    async updatePracticeTaxRate () {
-      if (this.toPutPracticeTaxRate.practice_tax_rate !== null) {
-        await this.$axios.$put(`/api/v1/admin/tax-rates`, this.toPutPracticeTaxRate)
+    async updateTaxRates () {
+      if (this.toPutTaxRates.practice_tax_rate !== null) {
+        await this.$axios.$put(`/api/v1/admin/tax-rates`, this.toPutTaxRates)
           .then(res => {
-            this.practiceTaxRate = res.data.tax_rates
-            this.toPutPracticeTaxRate.practice_tax_rate = res.data.tax_rates.practice_tax_rate
+            this.taxRates = res.data.tax_rates
+            this.toPutTaxRates.practice_tax_rate = res.data.tax_rates.practice_tax_rate
+            this.toPutTaxRates.locum_tax_rate = res.data.tax_rates.locum_tax_rate
             this.toEdit = false
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
@@ -125,7 +147,8 @@ export default {
     },
     
     cancelEditing () {
-      this.toPutPracticeTaxRate.practice_tax_rate = this.practiceTaxRate.practice_tax_rate
+      this.toPutTaxRates.practice_tax_rate = this.taxRates.practice_tax_rate
+      this.toPutTaxRates.locum_tax_rate = this.taxRates.locum_tax_rate
       this.toEdit = false
     }
   }
