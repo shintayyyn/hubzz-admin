@@ -54,7 +54,7 @@
         <!-- <span class="">{{ $moment(item.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span> -->
         <span
           class="break-all"
-        >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.last_uploaded_at_in_gb_formatted ? document.practiceSpecificDoc.last_uploaded_at_in_gb_formatted : "N/A"  }}
+        >{{ document.practiceSpecificDoc && document.practiceSpecificDoc.last_uploaded_at_in_gb_formatted ? document.practiceSpecificDoc.last_uploaded_at_in_gb_formatted : "N/A" }}
         </span>
       </div>
       <div class="w-full md:w-1/4 py-2  flex flex-col md:flex-row md:items-center md:justify-center">
@@ -70,7 +70,13 @@
                   id="file"
                   :ref="`file-${document.practiceDocType.id}`"
                   type="file"
-                  @change="handleFileUpload(`file-${document.practiceDocType.id}`, document.practiceDocType.id, practice.id, document.practiceDocType.id, document.practiceSpecificDoc)"
+                  @change="handleFileUpload(
+                    `file-${document.practiceDocType.id}`, 
+                    document.practiceDocType.id, 
+                    practice.id, 
+                    document.practiceDocType.id, 
+                    document.practiceSpecificDoc
+                  )"
                 >
                 <span class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500 '">
                   <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
@@ -193,6 +199,8 @@ export default {
         practiceSpecificDocument
       )
 
+      console.log('this.$refs[refName][0]', this.$refs[refName][0])
+
       const el = this.$refs[refName][0]
       if (el.files && el.files.length === 0) {
         return
@@ -223,16 +231,6 @@ export default {
         return
       }
 
-      // if (!types.includes(practiceSpecificDocument.file.subtype)){
-      //   this.$store.commit("SET_NOTIFICATION", {
-      //     enabled: true,
-      //     status: "danger",
-      //     text: "!!",
-      //     doNotClose: true,
-      //   })
-      //   return
-      // }
-
       this.uploading.push(documentId)
 
       fileReader.readAsDataURL(file)
@@ -258,8 +256,6 @@ export default {
 
         if (file) {
           file = file.file
-          // console.log("practice id: "+practiceID+"practice doc id: "+practiceDocumentID)
-          // console.log(file)
 
           if (practiceSpecificDocument) {
             formData.append("practice_document_id", practiceID)

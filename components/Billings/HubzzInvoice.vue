@@ -729,7 +729,7 @@ export default {
     },
 
 		taxedAmountTotal: function () {
-      const total_amount = this.practice.vat_registered === true ? parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount) : untaxedNetSum
+      const total_amount = this.practice.vat_registered === true ? parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount) : this.untaxedAmountTotal
 			return total_amount
     },
     
