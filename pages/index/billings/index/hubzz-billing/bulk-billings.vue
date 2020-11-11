@@ -220,7 +220,7 @@
             class="text-center"
             style="flex: 1 0 0; min-width: 90px; max-width: 150px;"  
           >
-            With Dispute (QA)
+            With Dispute
           </div>
           <!-- FOR QA TESTING COLUMNS ENDS HERE -->
         </div>
