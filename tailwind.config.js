@@ -1,8 +1,8 @@
 module.exports = {
 	purge: {
-    enabled: false,
-    content: []
-  },
+		enabled: false,
+		content: []
+	},
 	prefix: "",
 	important: false,
 	separator: ":",
@@ -139,6 +139,7 @@ module.exports = {
 			"waterloo-light": "#9ba2b1",
 			waterloo: "#7B8396",
 			"waterloo-dark": "#606673",
+			"waterloo-darker": "#3e424c",
 			trout: "#505561",
 			"trout-dark": "3b3f47",
 			charade: "#2C2F38",
@@ -242,12 +243,12 @@ module.exports = {
 			auto: 'auto',
 			default: 'default',
 			pointer: 'pointer',
-      wait: 'wait',
+			wait: 'wait',
 			text: 'text',
-      move: 'move',
+			move: 'move',
 			'not-allowed': 'not-allowed',
-      crosshair: 'crosshair',
-      'zoom-in': 'zoom-in',
+			crosshair: 'crosshair',
+			'zoom-in': 'zoom-in',
 		},
 
 		borderWidth: {
@@ -268,7 +269,7 @@ module.exports = {
 			sm: ".125rem",
 			default: ".25rem",
 			lg: ".5rem",
-			lger:"1.25rem",
+			lger: "1.25rem",
 			full: "9999px"
 		},
 
@@ -316,13 +317,13 @@ module.exports = {
 			"8/10": "80%",
 			"9/10": "90%",
 			'1/12': '8.333333%',
-      '2/12': '16.666667%',
-      '3/12': '25%',
-      '4/12': '33.333333%',
-      '5/12': '41.666667%',
-      '6/12': '50%',
-      '7/12': '58.333333%',
-      '8/12': '66.666667%',
+			'2/12': '16.666667%',
+			'3/12': '25%',
+			'4/12': '33.333333%',
+			'5/12': '41.666667%',
+			'6/12': '50%',
+			'7/12': '58.333333%',
+			'8/12': '66.666667%',
 			'9/12': '75%',
 			'10/12': '83.333333%',
 			'10.5/12': '87.5%',
