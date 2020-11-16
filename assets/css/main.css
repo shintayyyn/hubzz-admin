@@ -92,6 +92,10 @@ table tbody td {
 	word-break: break-word;
 }
 
+.flip-list-move {
+  transition: transform 0.5s;
+}
+
 @keyframes dots {
 	0%,
 	20% {
