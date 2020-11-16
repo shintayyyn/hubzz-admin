@@ -1,56 +1,76 @@
 <template>
-	<div class="add-faq-modal shadow-lg" ref="modalContainer">
-		<!-- <nuxt-child /> -->
-		<div class="p-4 md:p-8 text-white">
-			<div @click="goBack()" class="cursor-pointer">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					widht="32"
-					class="text-white hover:text-sunglow fill-current"
-				/>
-			</div>
-			<div class="mt-4 text-2xl md:text-4xl text-white">Add a FAQ for {{$route.query.domain}}s</div>
-			<CreateFaq :domain="$route.query.domain" @formError="scrollToTop" @close="goBack()" />
-			<div class="add-faq-shield" v-if="$route.name.includes('index-faqs-add')"></div>
-			<nuxt-child />
-		</div>
-	</div>
+  <div ref="modalContainer" class="add-faq-modal shadow-lg">
+    <!-- <nuxt-child /> -->
+    <div class="p-4 md:p-8 text-white">
+      <div class="cursor-pointer" @click="goBack()">
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          widht="32"
+          class="text-white hover:text-sunglow fill-current"
+        />
+      </div>
+      <div class="mt-4 text-2xl md:text-4xl text-white">
+        Add a FAQ for {{ $route.query.domain }}s
+      </div>
+      <CreateFaq 
+        :domain="$route.query.domain"
+        :locumFaqs="locumFaqs"
+        :practiceFaqs="practiceFaqs" 
+        @formError="scrollToTop" 
+        @close="goBack()" 
+      />
+      <div v-if="$route.name.includes('index-faqs-add')" class="add-faq-shield" />
+      <nuxt-child />
+    </div>
+  </div>
 </template>
 <script>
-import CreateFaq from "@/components/Faqs/CreateFaq";
+import CreateFaq from "@/components/Faqs/CreateFaq"
 export default {
 	components: {
 		CreateFaq
 	},
-	data() {
+	data () {
 		return {
 			// domain: "Locum"
-		};
+			locumFaqs: '',
+			practiceFaqs: '',
+		}
+	},
+	async created () {
+		await this.$axios.$get(`/api/v1/admin/faqs?domain=Locum`).then(res => {
+			this.locumFaqs = res.data.faqs
+		})
+		
+		await this.$axios.$get("/api/v1/admin/faqs?domain=Practice").then(res => {
+			this.practiceFaqs = res.data.faqs
+		})
+		
 	},
 	methods: {
-		goBack() {
+		goBack () {
 			const query = {
 				...this.$route.query
-			};
+			}
 			if (query.job_status) {
-				delete query.job_status;
+				delete query.job_status
 			}
 			if (query.domain) {
-				delete query.domain;
+				delete query.domain
 			}
-			this.$router.push({ path: "/faqs", query });
+			this.$router.push({ path: "/faqs", query })
 		},
-		scrollHandler(e) {
-			console.log(e.target.scrollTop);
+		scrollHandler (e) {
+			console.log(e.target.scrollTop)
 		},
-		scrollToTop() {
+		scrollToTop () {
 			this.$nextTick(() => {
-				this.$refs.modalContainer.scrollTop = 0;
-			});
+				this.$refs.modalContainer.scrollTop = 0
+			})
 		}
 	}
-};
+}
 </script>
 <style>
 .add-faq-shield {
