@@ -308,7 +308,6 @@
                     <div
                       :class="statusStyle(slotProps.item.invoice_status === 'To Be Invoiced'
                         ? slotProps.item.status === 'Cancelled'
-                          || slotProps.item.status === 'Updated' 
                           ? slotProps.item.status 
                           : slotProps.item.invoice_status  
                         : slotProps.item.invoice_status === 'Disputed'
@@ -317,7 +316,6 @@
                     >
                       {{ slotProps.item.invoice_status === 'To Be Invoiced'
                         ? slotProps.item.status === 'Cancelled'
-                          || slotProps.item.status === 'Updated'
                           ? slotProps.item.status
                           : slotProps.item.invoice_status
                         : slotProps.item.invoice_status === 'Disputed'
