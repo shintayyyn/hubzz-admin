@@ -1,5 +1,5 @@
 <template>
-	<div class="role-modal">
+	<div ref="modalContainer" class="role-modal">
 		<div class="p-4 md:p-6 text-white">
 			<div class="pb-4">
 				<svgicon
@@ -549,7 +549,9 @@ export default {
 				});
 			});
 			this.form.permission_id = ids;
-			this.$axios
+			this.Validate(this.form)
+			if (!this.formError.length) {
+				this.$axios
 				.$put(
 					`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,
 					this.form
@@ -566,6 +568,13 @@ export default {
 					// this.role.description = res.data.role.description;
 					this.editingPermissions = false;
 				});
+			} else {
+				this.$store.commit("SET_NOTIFICATION", {
+					enabled: true,
+					status: "danger",
+					text: "Something went wrong!"
+				});
+			}
 		}
 	}
 };

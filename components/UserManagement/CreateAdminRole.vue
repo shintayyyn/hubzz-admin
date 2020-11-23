@@ -319,6 +319,11 @@ export default {
 				this.$nextTick(() => {
 					this.$refs.modalContainer.scrollTop = 0
 				})
+				this.$store.commit("SET_NOTIFICATION", {
+					enabled: true,
+					status: "danger",
+					text: "Something went wrong!"
+				});
 			}
 		}
 	}
