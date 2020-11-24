@@ -12,7 +12,9 @@
           v-if="toggleNotification"
           class="bg-yellow-500 px-4 py-1 rounded-lg hover:bg-yellow-400 transition-hover text-xs focus:outline-none"
           @click="clearNotifications"
-        >Mark all as read</button>
+        >
+          Mark all as read
+        </button>
         <svgicon
           name="notification"
           class="w-6 h-6 mr-2 cursor-pointer"
@@ -43,41 +45,59 @@
                           v-if="!notification.billingStatus"
                           class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
                           :class="bgStatus(notification.status ? notification.status : '')"
-                        >{{ notification.status ? notification.status : '' }}</div>
+                        >
+                          {{ notification.status ? notification.status : '' }}
+                        </div>
                         <div
                           class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase"
-                        >{{ notification.status_tag }}</div>
+                        >
+                          {{ notification.status_tag }}
+                        </div>
                       </div>
                       <div
                         v-if="notification.type === 'Jobs' && notification.billingStatus"
                         class="px-2 py-1 md:text-xs font-bold rounded-lg max-w-sm cursor-pointer uppercase mt-1"
                         :class="bgStatus(notification.billingStatus)"
-                      >{{ notification.billingStatus }}</div>
+                      >
+                        {{ notification.billingStatus }}
+                      </div>
                       <div
                         v-if="notification.status !== 'Draft' && notification.type === 'Billings'"
                         class="font-bold md:text-md leading-none mr-1 uppercase pt-4 truncate-title"
                         style="-webkit-box-orient: vertical"
-                      >{{ notification.invoice_number }}</div>
+                      >
+                        {{ notification.invoice_number }}
+                      </div>
                       <div
                         v-else
                         class="font-bold md:text-md leading-tight mr-1 uppercase pt-4 truncate-title"
                         style="-webkit-box-orient: vertical"
-                      >{{ notification.title }}</div>
+                      >
+                        {{ notification.title }}
+                      </div>
                     </div>
                     <div class="w-full">
-                      <div class="leading-tight pt-1">{{ notification.message }}</div>
+                      <div class="leading-tight pt-1">
+                        {{ notification.message }}
+                      </div>
                       <div
                         v-if="notification.type === 'Jobs' && notification.platform_job"
                         class="leading-tight mt-2"
                       >
-                        <div class="font-bold">Extra Information:</div>
+                        <div class="font-bold">
+                          Extra Information:
+                        </div>
                         <div
                           class="mt-1 truncate-info"
-                        >{{ notification.platform_job.extra_information }}</div>
+                        >
+                          {{ notification.platform_job.extra_information }}
+                        </div>
                       </div>
                       <div
                         class="leading-tight text-xs pt-2 text-right text-gray-600"
-                      >{{notification.notif_date}}</div>
+                      >
+                        {{ notification.notif_date }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -196,9 +216,11 @@ export default {
         url = `/locums/${notification.payload.locum_user_id}/locum-compliance/${notification.id}`
       } else if (type === "Admin Locum Profile") {
         url = `/locums/${notification.id}`
-      } else if (type === "Admin Practice Creation" || type === "Admin Practice Profile") {
+      } else if (type === "Admin Practice Creation") {
+        url = `/practices/${notification.payload.practice_id}`
+      } else if (type === "Admin Practice Profile") {
         url = `/practices/${notification.id}`
-      } else if (type === "Admin Practice Surgery Creation") {
+      }else if (type === "Admin Practice Surgery Creation") {
         if (notification.status === "Invited") {
           url = `/practices/${notification.practice_id}/practice-surgeries/${notification.id}`
         }
