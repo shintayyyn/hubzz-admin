@@ -300,7 +300,9 @@ export default {
           text: "Saved"
         })
 
-        const practice = response.data.data.practice
+				const practice = response.data.data.practice
+				
+				console.log('response', response.data.data.practice)
         
         this.$emit('practiceUpdated', practice)
 

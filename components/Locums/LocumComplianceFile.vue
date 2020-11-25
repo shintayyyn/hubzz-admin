@@ -31,7 +31,7 @@
             <p
               class="text-white"
             >
-              {{ locumComplianceDocument.compliance_document ? locumComplianceDocument.compliance_document.name: null }}
+              {{ locumComplianceDocument.compliance_document ? locumComplianceDocument.compliance_document.name: "N/A" }}
             </p>
           </div>
 
@@ -40,7 +40,7 @@
               Locum
             </p>
             <p class="text-white">
-              {{ user.personal_detail ? user.personal_detail.name: null }}
+              {{ user.personal_detail ? user.personal_detail.name: "N/A" }}
             </p>
           </div>
 
@@ -51,16 +51,16 @@
             <p
               class="text-white"
             >
-              {{ locumComplianceDocument.uploaded_at_in_gb_formatted }}
+              {{ locumComplianceDocument.uploaded_at_in_gb_formatted ? locumComplianceDocument.uploaded_at_in_gb_formatted : "N/A" }}
             </p>
           </div>
 
-          <div class="leading-tight pb-4">
+          <div vclass="leading-tight pb-4">
             <p class="font-bold text-base">
               Mobile phone number
             </p>
             <p class="text-white">
-              {{ user.contact_detail ? user.contact_detail.mobile_number : null }}
+              {{ user.contact_detail ? user.contact_detail.mobile_number : "N/A" }}
             </p>
           </div>
 

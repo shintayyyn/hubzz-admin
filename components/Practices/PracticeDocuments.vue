@@ -266,10 +266,12 @@ export default {
                 "Content-Type": "multipart/form-data"
               },
               onUploadProgress: function () {
-                console.log('ew')
+                console.log('On upload progress')
               },
             }).then((response) => {
-              this.$emit('practiceUpdated')
+              console.log('response', response.data.data.practice)
+
+              this.$emit('practiceUpdated', response.data.data.practice)
 
               const practiceDocument = response.data.data.practice_document
 
@@ -318,7 +320,9 @@ export default {
                 "Content-Type": "multipart/form-data"
               }
             }).then((response) => {
-              this.$emit('practiceUpdated')
+              console.log('response', response.data.data.practice)
+
+              this.$emit('practiceUpdated', response.data.data.practice)
 
               const practiceDocument = response.data.data.practice_document
 

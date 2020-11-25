@@ -220,8 +220,6 @@ export default {
 
       const authAdminPermissions = await store.getters["permissions"]
       
-      console.log('dsadas', authAdminPermissions)
-      
       const practicePermissions = await authAdminPermissions.filter(item => item.includes('View Practice') || item.includes('View Surgery Management'))
 
       await store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
