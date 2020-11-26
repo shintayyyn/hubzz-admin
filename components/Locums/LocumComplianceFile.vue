@@ -31,7 +31,10 @@
             <p
               class="text-white"
             >
-              {{ locumComplianceDocument.compliance_document ? locumComplianceDocument.compliance_document.name: "N/A" }}
+              {{ locumComplianceDocument.compliance_document 
+                && locumComplianceDocument.compliance_document.name 
+                ? locumComplianceDocument.compliance_document.name
+                : "N/A" }}
             </p>
           </div>
 
@@ -40,7 +43,11 @@
               Locum
             </p>
             <p class="text-white">
-              {{ user.personal_detail ? user.personal_detail.name: "N/A" }}
+              {{ user.personal_detail 
+                && user.personal_detail.name 
+                ? user.personal_detail.name
+                : "N/A" 
+              }}
             </p>
           </div>
 
@@ -51,7 +58,10 @@
             <p
               class="text-white"
             >
-              {{ locumComplianceDocument.uploaded_at_in_gb_formatted ? locumComplianceDocument.uploaded_at_in_gb_formatted : "N/A" }}
+              {{ locumComplianceDocument 
+                && locumComplianceDocument.uploaded_at_in_gb_formatted 
+                ? locumComplianceDocument.uploaded_at_in_gb_formatted 
+                : "N/A" }}
             </p>
           </div>
 
@@ -60,7 +70,10 @@
               Mobile phone number
             </p>
             <p class="text-white">
-              {{ user.contact_detail ? user.contact_detail.mobile_number : "N/A" }}
+              {{ user.contact_detail 
+                && user.contact_detail.mobile_number 
+                ? user.contact_detail.mobile_number 
+                : "N/A" }}
             </p>
           </div>
 
