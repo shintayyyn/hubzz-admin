@@ -794,7 +794,8 @@
 
           console.log('formError', this.formError)
 
-          this.$nextTick(() => {
+          this.$nextTick(() => { // here
+            console.log(this.$refs.modalContainer)
             this.$refs.modalContainer.scrollTop = 0
           })
 

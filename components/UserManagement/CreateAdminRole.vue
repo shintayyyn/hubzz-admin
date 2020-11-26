@@ -150,11 +150,11 @@ export default {
 			formError: []
 		};
 	},
-	watch: {
-		"form.permission_id"(value) {
-			console.log("value", value);
-		}
-	},
+	// watch: {
+	// 	"form.permission_id"(value) {
+	// 		console.log("value", value);
+	// 	}
+	// },
 
 	mounted() {
 		this.getPermissions();
@@ -267,7 +267,6 @@ export default {
 			this.setSubcategories(categories);
 		},
 		isChecked(permissions, category) {
-			console.log("category", category);
 			return !permissions.map(item => item.done).includes(false);
 			// let parents = []
 			// let filter = this.hierarchyPermissions.filter(
@@ -285,6 +284,8 @@ export default {
 			});
 		},
 		async create() {
+			
+			
 			this.formError = [];
 			let ids = [];
 			this.permissions.forEach(item => {
@@ -294,7 +295,6 @@ export default {
 					}
 				});
 			});
-			console.log("ids", ids);
 			this.form.permission_id = ids;
 			this.Validate(this.form);
 			if (!this.formError.length) {
@@ -313,21 +313,25 @@ export default {
 					})
 					.catch(err => {
 						console.log(err.response.data.message);
-						this.$nextTick(() => {
-							this.$refs.modalContainer.scrollTop = 0;
+						this.$store.commit("SET_NOTIFICATION", {
+							enabled: true,
+							status: "danger",
+							text: [`${err.response.data.message}`]
 						});
 					});
 				this.$emit("close");
 			} else {
 				this.$nextTick(() => {
-					this.$refs.modalContainer.scrollTop = 0;
+					console.log('refs', this.$refs.modalContainer)
+					this.$refs.modalContainer.scrollTop = 0
 				});
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
 					status: "danger",
-					text: "Something went wrong!"
+					text: "Required field is empty."
 				});
 			}
+			
 		}
 	}
 };

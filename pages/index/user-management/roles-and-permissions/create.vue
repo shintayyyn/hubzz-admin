@@ -1,17 +1,27 @@
 <template>
-	<transition name="slide" mode="out-in">
-		<div class="role-modal shadow-lg">
-			<CreateAdminRole @close="$router.push('/user-management/roles-and-permissions')" />
-		</div>
-	</transition>
+	<div ref="modalContainer">
+		<transition name="slide" mode="out-in">
+			<div class="role-modal shadow-lg">
+				<CreateAdminRole
+					@close="$router.push('/user-management/roles-and-permissions')" />
+			</div>
+		</transition>
+	</div>
 </template>
 <script>
 import CreateAdminRole from "@/components/UserManagement/CreateAdminRole";
 export default {
 	components: {
 		CreateAdminRole
-	}
-};
+	},
+	methods: {
+		handleData () {
+			this.$nextTick(() => {
+				this.$refs.modalContainer.scrollTop = 0
+			})
+		},
+	},
+}
 </script>
 <style>
 .modal-container {
