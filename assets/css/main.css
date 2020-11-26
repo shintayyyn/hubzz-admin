@@ -408,6 +408,15 @@ table tbody td {
 	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
 }
 
+.masorny-container {
+	column-count: 1;
+	column-gap: 0;
+}
+
+.masorny-container .item {
+	break-inside: avoid;
+}
+
 /* @media (max-width: 760px) {
 	.tool-left::after {
 		font-size: 0.75em;
@@ -432,6 +441,14 @@ table tbody td {
 	}
 }
 @media (min-width: 768px) {
+	.masorny-container.two {
+		column-count: 2;
+		column-gap: 0;
+	}
+	.masorny-container.three {
+		column-count: 2;
+		column-gap: 0;
+	}
 	.tool-left::before {
 		bottom: 0;
 		border-width: 0.75em 1em;
@@ -447,6 +464,10 @@ table tbody td {
 	}
 }
 @media (min-width: 1200px) {
+	.masorny-container.three {
+		column-count: 3;
+		column-gap: 0;
+	}
 	.tool::after {
 		width: 14em;
 		margin-left: -10em;
