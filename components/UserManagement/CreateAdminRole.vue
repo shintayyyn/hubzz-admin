@@ -284,8 +284,6 @@ export default {
 			});
 		},
 		async create() {
-			
-			
 			this.formError = [];
 			let ids = [];
 			this.permissions.forEach(item => {
@@ -321,17 +319,8 @@ export default {
 					});
 				this.$emit("close");
 			} else {
-				this.$nextTick(() => {
-					console.log('refs', this.$refs.modalContainer)
-					this.$refs.modalContainer.scrollTop = 0
-				});
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: "Required field is empty."
-				});
+				this.$emit("scrollToTop");
 			}
-			
 		}
 	}
 };
