@@ -531,6 +531,7 @@ export default {
 		},
 
 		save() {
+			this.formError = [];
 			let ids = [];
 			this.permissions.forEach(item => {
 				item.permissions.forEach(permission => {
@@ -560,11 +561,15 @@ export default {
 						this.editingPermissions = false;
 					});
 			} else {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: "Something went wrong!"
+				console.log("form error", this.formError);
+				this.$nextTick(() => {
+					this.$refs.modalContainer.scrollTop = 0;
 				});
+				// this.$store.commit("SET_NOTIFICATION", {
+				// 	enabled: true,
+				// 	status: "danger",
+				// 	text: "Something went wrong!"
+				// });
 			}
 		}
 	}
