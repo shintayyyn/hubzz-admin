@@ -205,7 +205,6 @@ export default {
 			createdRoute && createdRoute.order_by
 				? createdRoute.order_by
 				: ["status:desc"]
-		console.log("filter", this.filter)
 		this.params = {
 			job_practice_id: this.filter.job_practice_id,
 			practice_billable_date_start: this.filter.practice_billable_date_start,
@@ -235,7 +234,6 @@ export default {
     },
 
 		toggleCheck (item) {
-			console.log('banana', this.chosenJobParts)
 			const index = this.chosenJobParts.findIndex(jobPart => {
 				return jobPart.id === item.id
 			})

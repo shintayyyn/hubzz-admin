@@ -137,7 +137,6 @@ export default {
   
   watch: {
     approvedAtDateStart: function (value) {
-      console.log('value', value)
       if (value > this.approvedAtDateEnd) { 
         this.approvedAtDateEnd = ""
       }
@@ -145,7 +144,6 @@ export default {
     },
     approvedAtDateEnd: function (value) {
       this.toFilter.practice_billable_date_end = value
-      console.log('value datend', value)
     }
   },
 
@@ -179,7 +177,6 @@ export default {
 			})
 		},
 		toProcessInvoiceItems (chosenJobParts) {
-      console.log('banmana', chosenJobParts)
 			this.chooseJobPartsModal = false
       this.disputedItems = []
       this.invoiceItems = []
@@ -208,8 +205,6 @@ export default {
 						(chosenJobParts[i].final_hours/60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
 					).toFixed(2)
         }
-        
-        console.log('chosenJobPart',chosenJobParts[i].invoice_status )
 
 				if (chosenJobParts[i].invoice_status === "Invoiced" || chosenJobParts[i].invoice_status === "Approved" || chosenJobParts[i].invoice_status === "To Be Invoiced") {
           newItem.id = this.invoiceItems.length + 1
@@ -228,7 +223,6 @@ export default {
 			const query = {
 				...this.$route.query
       }
-      console.log('go back params id',this.$route.params.id)
 			await this.$router.push({
 				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`,
 				query
