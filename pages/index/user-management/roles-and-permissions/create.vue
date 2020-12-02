@@ -1,9 +1,11 @@
 <template>
-	<div ref="modalContainer">
+	<div>
 		<transition name="slide" mode="out-in">
-			<div class="role-modal shadow-lg">
+			<div class="role-modal shadow-lg" ref="modalContainer">
 				<CreateAdminRole
-					@close="$router.push('/user-management/roles-and-permissions')" />
+					@close="$router.push('/user-management/roles-and-permissions')"
+					@scrollToTop="scrollTop"
+				/>
 			</div>
 		</transition>
 	</div>
@@ -15,13 +17,18 @@ export default {
 		CreateAdminRole
 	},
 	methods: {
-		handleData () {
+		handleData() {
 			this.$nextTick(() => {
-				this.$refs.modalContainer.scrollTop = 0
-			})
+				this.$refs.modalContainer.scrollTop = 0;
+			});
 		},
-	},
-}
+		scrollTop() {
+			this.$nextTick(() => {
+				this.$refs.modalContainer.scrollTop = 0;
+			});
+		}
+	}
+};
 </script>
 <style>
 .modal-container {
@@ -47,5 +54,4 @@ export default {
 		width: 80%;
 	}
 }
-
 </style>
