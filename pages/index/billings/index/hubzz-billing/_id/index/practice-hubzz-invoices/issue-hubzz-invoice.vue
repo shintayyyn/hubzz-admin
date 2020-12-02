@@ -2,7 +2,8 @@
   <div ref="modalContainer" class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg">
     <div class="flex items-center text-sm text-white py-2">
       <nuxt-link 
-        :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`, query: $route.query}">
+        :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`, query: $route.query}"
+      >
         <svgicon
           name="arrow-left-solid"
           height="40"
@@ -178,15 +179,14 @@ export default {
 			})
 		},
 		toProcessInvoiceItems (chosenJobParts) {
+      console.log('banmana', chosenJobParts)
 			this.chooseJobPartsModal = false
       this.disputedItems = []
       this.invoiceItems = []
 
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        console.log("chosenJobPart", chosenJobParts[i].invoice_status)
         const roundedHours = Math.floor((chosenJobParts[i].final_hours)/60)
         const minutes = Math.round(((chosenJobParts[i].final_hours/60) - roundedHours) * 60)
-        console.log("minutes "+minutes)
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
           job_part_id: chosenJobParts[i].id,
@@ -207,16 +207,20 @@ export default {
 					total: parseFloat(
 						(chosenJobParts[i].final_hours/60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
 					).toFixed(2)
-				}
+        }
+        
+        console.log('chosenJobPart',chosenJobParts[i].invoice_status )
 
-				if (chosenJobParts[i].invoice_status === "Invoiced" || chosenJobParts[i].invoice_status === "To Be Invoiced") {
+				if (chosenJobParts[i].invoice_status === "Invoiced" || chosenJobParts[i].invoice_status === "Approved" || chosenJobParts[i].invoice_status === "To Be Invoiced") {
           newItem.id = this.invoiceItems.length + 1
 					this.invoiceItems.push(newItem)
         } 
         if (chosenJobParts[i].invoice_status === "Disputed") {
           newItem.id = this.disputedItems.length + 1
 					this.disputedItems.push(newItem)
-				}
+        }
+        
+        
       }
 		},
 

@@ -573,7 +573,7 @@
             :class="statusStyle(item && item.file ? 'Present' : 'Empty')"
           >
             <span>
-              {{ item && item.file ? 'Present' : 'Empty' }}
+              {{ item && item.file ? 'Uploaded' : 'Not Uploaded' }}
             </span>
           </div>
         </div>

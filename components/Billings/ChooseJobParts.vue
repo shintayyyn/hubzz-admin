@@ -235,6 +235,7 @@ export default {
     },
 
 		toggleCheck (item) {
+			console.log('banana', this.chosenJobParts)
 			const index = this.chosenJobParts.findIndex(jobPart => {
 				return jobPart.id === item.id
 			})

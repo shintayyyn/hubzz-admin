@@ -353,7 +353,7 @@
             />
           </div>
 
-          <div v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
+          <div v-if="user.status !== 'Deactivated' && user.first_actived_at && authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
             <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
             <span
               class="tool inline-block"
