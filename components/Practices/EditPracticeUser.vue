@@ -123,6 +123,7 @@
           />
 
           <AppInput
+            v-if="false"
             v-model="toPutPracticeUser.suffix"
             :type="'text'"
             :name="'suffix'"
@@ -227,14 +228,16 @@
           >
             {{ practiceUser.last_name ? practiceUser.last_name : 'N/A' }}
           </div>
-          <div class="flex py-2">
-            Suffix
-          </div>
-          <div
-            class="flex px-2 text-white"
-          >
-            {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
-          </div>
+
+          <template v-if="false">
+            <div class="flex py-2">
+              Suffix
+            </div>
+
+            <div class="flex px-2 text-white">
+              {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
+            </div>
+          </template>
 
           <div class="flex py-2">
             Role
