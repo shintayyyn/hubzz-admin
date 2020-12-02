@@ -50,7 +50,9 @@
               required
               @blur="CheckEmptyField(toPostUser.last_name, 'last_name')"
             />
-            <AppInput 
+
+            <AppInput
+              v-if="false"
               v-model="toPostUser.suffix"
               :type="'text'"
               :label="'Suffix'"
