@@ -10,9 +10,9 @@
 				<div>
 					<img src="~/assets/images/hubzz-icon-transparent.png" />
 				</div>
-				<div class="m-2 text-xl">
+				<!-- <div class="m-2 text-xl">
 					{{}}
-				</div>
+				</div> -->
 			</div>
 
 			<div class="flex justify-right">
