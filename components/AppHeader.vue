@@ -6,9 +6,14 @@
 				<img src="~/assets/images/hbg.png" />
 			</button>
 
-			<nuxt-link to="/" class="py-3 cursor-pointer">
-				<img src="~/assets/images/hubzz-icon-transparent.png" />
-			</nuxt-link>
+			<div class="flex flex-row py-3 cursor-pointer">
+				<div>
+					<img src="~/assets/images/hubzz-icon-transparent.png" />
+				</div>
+				<div class="m-2 text-xl">
+					{{}}
+				</div>
+			</div>
 
 			<div class="flex justify-right">
 				<div class="m-4 sm:relative">
@@ -111,6 +116,9 @@ export default {
 
 	data() {
 		return {
+			// HEADER NAME
+			headerName: '',
+
 			currentPage: 1,
 			totalPages: 0,
 			// 10 PER PAGER OR NOTIFICATIONS PER SEE-MORE
