@@ -1,11 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
     <AppLoading :loading="loading" spinner />
-
-    <div class="text-lg md:text-2xl text-white">
-      <span>Change Email Requests</span>
-    </div>
-
     <div v-if="false" class="mt-2">
       <div class="flex justify-start overflow-x-auto">
         <nuxt-link

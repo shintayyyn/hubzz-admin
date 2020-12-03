@@ -1,8 +1,8 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 overflow-y-auto">
-    <div class="px-2 mx-5 text-xl md:text-4xl text-white">
+    <!-- <div class="px-2 mx-5 text-xl md:text-4xl text-white">
       {{ $route.name.includes('compliance-reports') ? 'Compliance Reports' : 'Locums' }}
-    </div>
+    </div> -->
     <div class="flex justify-start my-2 mx-6">
       <nuxt-link
         v-if="authAdminPermissions.includes('View Locums')"

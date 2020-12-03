@@ -1,9 +1,5 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <div class="px-2 text-xl md:text-4xl text-white">
-      Standard Terms
-    </div>
-
     <div class="text-white">
       <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
     </div>

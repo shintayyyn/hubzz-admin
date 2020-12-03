@@ -1,9 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-4 md:px-6">
-    <div class="text-xl md:text-4xl text-white">
-      Reports
-    </div>
-
+  <div class="flex-1 flex flex-col py-2 px-4 md:px-6 mx-1">
     <!-- <div class="text-sm md:text-xl text-white">
       Compliance Reports
     </div>

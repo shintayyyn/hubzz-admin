@@ -1,8 +1,8 @@
 <template>
   <div class="flex-1 flex flex-col p-2 md:px-6 overflow-auto">
-    <div class="px-2 text-2xl md:text-4xl text-white">
+    <!-- <div class="px-2 text-2xl md:text-4xl text-white">
       Billing
-    </div>
+    </div> -->
     <div class="flex justify-start my-2">
       <nuxt-link
         v-if="authAdminPermissions.includes('View Hubzz Invoices')"
@@ -37,7 +37,9 @@
         Pricing Reports
       </nuxt-link>
     </div>
+   
     <nuxt-child />
+ 
     <div
       v-if="$route.name.includes('index-billings-index-hubzz-billing-id-index')"
       class="shield"

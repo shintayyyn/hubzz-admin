@@ -6,13 +6,13 @@
 				<img src="~/assets/images/hbg.png" />
 			</button>
 
-			<div class="flex flex-row py-3 cursor-pointer">
-				<div>
+			<div class="flex flex-row py-2 cursor-pointer">
+				<!-- <div>
 					<img src="~/assets/images/hubzz-icon-transparent.png" />
-				</div>
-				<!-- <div class="m-2 text-xl">
-					{{}}
 				</div> -->
+				<div class="m-2 mt-3 text-xl md:text-4xl">
+					{{ headerName }}
+				</div>
 			</div>
 
 			<div class="flex justify-right">
@@ -114,10 +114,41 @@ export default {
 		// AppNotifDropdown,
 	},
 
-	data() {
+	watch: {
+		"$route.name" (value) {
+			if (value.includes('index-locums'))
+				this.headerName = 'Locums'
+			else if (value.includes('index-practices'))
+				this.headerName = 'Practices'
+			else if (value.includes('index-billings'))
+				this.headerName = 'Billings'
+			else if (value.includes('index-reports'))
+				this.headerName = 'Reports'
+			else if (value.includes('index-standard-terms'))
+				this.headerName = 'Standard Terms'
+			else if (value.includes('index-referral-lottery'))
+				this.headerName = 'Referral Lottery'
+			else if (value.includes('index-faqs'))
+				this.headerName = 'Frequently Asked Questions'
+			else if (value.includes('index-tncs'))
+				this.headerName = 'Terms and Conditions'
+			else if (value.includes('index-inquiries'))
+				this.headerName = 'Inquiries'
+			else if (value.includes('index-user-management'))
+				this.headerName = 'User Management'
+			else if (value.includes('index-change-email-requests'))
+				this.headerName = 'Change Email Requests'
+			else if (value.includes('index-compliance-document-reject-reasons'))
+				this.headerName = 'Compliance Document Reject Reasons'
+			else
+				this.headerName = 'Dashboard' 
+		}	
+	},
+
+	data () {
 		return {
 			// HEADER NAME
-			headerName: '',
+			headerName: 'Dashboard',
 
 			currentPage: 1,
 			totalPages: 0,
@@ -154,11 +185,39 @@ export default {
 		};
 	},
 
-	async created() {
+	async created () {
+		if (this.$route.name.includes('index-locums'))
+			this.headerName = 'Locums'
+		else if (this.$route.name.includes('index-practices'))
+			this.headerName = 'Practices'
+		else if (this.$route.name.includes('index-billings'))
+			this.headerName = 'Billings'
+		else if (this.$route.name.includes('index-reports'))
+			this.headerName = 'Reports'
+		else if (this.$route.name.includes('index-standard-terms'))
+			this.headerName = 'Standard Terms'
+		else if (this.$route.name.includes('index-referral-lottery'))
+			this.headerName = 'Referral Lottery'
+		else if (this.$route.name.includes('index-faqs'))
+			this.headerName = 'Frequently Asked Questions'
+		else if (this.$route.name.includes('index-tncs'))
+			this.headerName = 'Terms and Conditions'
+		else if (this.$route.name.includes('index-inquiries'))
+			this.headerName = 'Inquiries'
+		else if (this.$route.name.includes('index-user-management'))
+			this.headerName = 'User Management'
+		else if (this.$route.name.includes('index-change-email-requests'))
+			this.headerName = 'Change Email Requests'
+		else if (this.$route.name.includes('index-compliance-document-reject-reasons'))
+			this.headerName = 'Compliance Document Reject Reasons'
+		else
+			this.headerName = 'Dashboard'
+		
 		const params = {
 			user_id: this.$auth.user.id,
 			seen: false
-		};
+		}
+		
 		await this.$axios
 			.$get(`/api/v1/admin/notifications/count`, {
 				params
