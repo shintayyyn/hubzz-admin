@@ -71,23 +71,86 @@
         </div>
         <div class="flex-1 rounded m-2 bg-charade">
           <div class="m-2">
-            Billing
+            <div class="text-xs text-gray-500">
+              Billing
+            </div>
+            <div class="font-bold">
+              <span>
+                Total Approved Hours
+              </span>
+              <span class="text-yellow-500">
+                {{ billing_counts.approved_total_hours_formatted.toFixed(0) + ' Hours'}}
+              </span>
+            </div>
+            <div class="font-bold">
+              <span>
+                Completed Hours
+              </span>
+              <span class="text-yellow-500">
+                {{ billing_counts.total_completed_final_hours_formatted.toFixed(0) + ' Hours' }}
+              </span>
+            </div>
+            <div class="font-bold">
+              <span>
+                Billed Hours
+              </span>
+              <span class="text-yellow-500">
+                {{ billing_counts.billed_total_hours_formatted.toFixed(0) + ' Hours' }}
+              </span>
+            </div>
+            <div class="font-bold">
+              <span>
+                Revenue
+              </span>
+              <span class="text-yellow-500">
+                {{ billing_counts.total_revenue | currency }}
+              </span>
+            </div>
+            <div class="font-bold">
+              <span>
+                VAT
+              </span>
+              <span class="text-yellow-500">
+                {{ billing_counts.total_taxes | currency }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
+      <!-- LOCUMS -->
       <div class="flex flex-row w-full ">
         <div class="flex-1 rounded m-2 bg-charade">
-          <div class="m-2">
+          <div class="m-4">
             <div class="text-xs text-gray-500">
               Locums
             </div>
-            <div>
-
+            <div class="font-bold">
+              <span>
+                Active Locums
+              </span>
+              <span class="text-yellow-500">
+                {{ locum_counts.active_locums }}
+              </span>
+            </div>
+            <div 
+              v-for="(locumCountsByProfession, index) in locum_counts.active_locums_by_profession"
+              :key="`user-${index}`"
+              class="mx-2 text-sm"
+            >
+              <div>
+                <span>
+                  {{ locumCountsByProfession.name }}
+                </span>
+                <span class="text-yellow-500">
+                  {{ locumCountsByProfession.locum_count }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
+        <!-- PRACTICES -->
         <div class="flex-1 rounded m-2 bg-charade">
-          <div class="m-2">
+          <div class="m-4">
             <div class="text-xs text-gray-500">
               Practices
             </div>
@@ -95,62 +158,91 @@
               <span>
                 Active Practices
               </span>
-              <span class="text-orange-400">
+              <span class="text-yellow-500">
                 {{ practice_counts.active_practices }}
               </span>
             </div>
-            <div class="mx-2">
-              <div class="">
+            <div 
+              v-for="(practiceCounts, index) in practice_counts.practices_by_type"
+              :key="`user-${index}`"
+              class="mx-2 text-sm"
+            >
+              <div>
                 <span>
-                  Stand Alone
+                  {{ practiceCounts.type }}
                 </span>
-                <span class="text-orange-400">
-                  {{ practice_counts.active_stand_alone }}
-                </span>
-              </div>
-              <div class="">
-                <span>
-                  Hub I
-                </span>
-                <span class="text-orange-400">
-                  {{ practice_counts.active_hub_type_1 }}
-                </span>
-              </div>
-              <div class="">
-                <span>
-                  Hub II
-                </span>
-                <span class="text-orange-400">
-                  {{ practice_counts.active_hub_type_2 }}
-                </span>
-              </div>
-              <div class="">
-                <span>
-                  Spokes
-                </span>
-                <span class="text-orange-400">
-                  {{ practice_counts.active_spokes }}
-                </span>
-              </div>
-              <div class="">
-                <span>
-                  Inactive Practices
-                </span>
-                <span class="text-orange-400">
-                  {{ practice_counts.inactive_practices }}
+                <span class="text-yellow-500">
+                  {{ practiceCounts.count }}
                 </span>
               </div>
             </div>
           </div>
         </div>
+        <!-- JOBS -->
         <div class="flex-1 rounded m-2 bg-charade">
-          <div class="m-2">
-            Jobs
+          <div class="m-4">
+            <div class="text-xs text-gray-500">
+              Jobs
+            </div>
+            <div class="font-bold">
+              <span>
+                Platform Jobs
+              </span>
+              <span class="text-yellow-500">
+                {{ job_counts.platform_jobs }}
+              </span>
+            </div>
+            <div 
+              v-for="(jobCountsByStatus, index) in job_counts.job_counts_by_status"
+              :key="`user-${index}`"
+              class="mx-2 text-sm"
+            >
+              <div>
+                <span>
+                  {{ jobCountsByStatus.status }}
+                </span>
+                <span class="text-yellow-500">
+                  {{ jobCountsByStatus.count }}
+                </span>
+              </div>
+            </div>
+            <div class="font-bold">
+              <span>
+                Private Jobs
+              </span>
+              <span class="text-yellow-500">
+                {{ job_counts.private_jobs }}
+              </span>
+            </div>
           </div>
         </div>
         <div class="flex-1 rounded m-2 bg-charade">
-          <div class="m-2">
-            Disputes
+          <div class="m-4">
+            <div class="text-xs text-gray-500">
+              Job Disputes
+            </div>
+            <div class="font-bold">
+              <span>
+                Disputes
+              </span>
+              <span class="text-yellow-500">
+                {{ dispute_counts.disputes_count }}
+              </span>
+            </div>
+            <div 
+              v-for="(disputesCountByStatus, index) in dispute_counts.disputes_count_by_status"
+              :key="`user-${index}`"
+              class="mx-2 text-sm"
+            >
+              <div>
+                <span>
+                  {{ disputesCountByStatus.status }}
+                </span>
+                <span class="text-yellow-500">
+                  {{ disputesCountByStatus.count }}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -181,20 +273,34 @@ export default {
       },
       locum_counts: '',
       practice_counts: '',
+      job_counts: '',
+      dispute_counts: '',
+      billing_counts: '',
     }
   },
   async asyncData ({ app }) {
     try {
       let response = await app.$axios.get(`/api/v1/admin/locum-counts`)
-
       const locum_counts = response.data.data.all_locums
 
       response = await app.$axios.get(`/api/v1/admin/practice-counts`)
-      
       const practice_counts = response.data.data.all_practices
+
+      response = await app.$axios.get(`/api/v1/admin/job-counts`)
+      const job_counts = response.data.data.all_jobs
+
+      response = await app.$axios.get(`/api/v1/admin/disputes-counts`)
+      const dispute_counts = response.data.data.all_disputes
+
+      response = await app.$axios.get(`/api/v1/admin/billings-counts`)
+      const billing_counts = response.data.data.all_billings
+
       return {
         locum_counts,
         practice_counts,
+        job_counts,
+        dispute_counts,
+        billing_counts,
       }
     } catch (err) {
       console.log('something went wrong', err)
