@@ -57,4 +57,5 @@ export default (ctx, inject) => {
   ctx.store.dispatch('practices/initializePracticeListener')
   ctx.store.dispatch('faqs/initializeFaqTransactionListener')
   ctx.store.dispatch('jobs/initializeAdminJobTransactionListener')
+  ctx.store.dispatch('dashboard/initializeDashboardListener')
 }
