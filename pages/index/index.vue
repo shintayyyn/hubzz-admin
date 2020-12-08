@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8 text-white">
-    <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" />
+    <!-- <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" /> -->
     <div class="flex flex-wrap justify-between items-start w-full shadow-lg p-3 rounded flex bg-charade text-white my-2">
       <div class="flex flex-col lg:flex-row w-full">
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -40,6 +40,7 @@
               class="mx-2"
               label="Apply Filters"
               :in-style="'padding:5px 14px;margin-bottom:5px'"
+              :disabled="loadingDashboard"
               @click="filterSearch"
             /> 
           </div>
@@ -48,6 +49,7 @@
               label="Clear Filters"
               :background="'waterloo'"
               :in-style="'padding:5px 14px;margin-bottom:5px'"
+              :disabled="loadingDashboard"
               @click="filterReset"
             />
           </div>
@@ -61,6 +63,12 @@
         <!-- LOCUM REGISTRATIONS -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Locum Registrations</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
+            </div>
             <div class="flex justify-between font-bold">
               <div>
                 Locum Sign-Ups
@@ -90,6 +98,12 @@
         <!-- PRACTICE REGISTRATIONS -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Practice Registrations</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
+            </div>
             <div class="flex justify-between font-bold">
               <div>
                 Practice Sign-Ups
@@ -127,8 +141,11 @@
         <!-- SUCCESSFUL REFERRERS -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Referrers with Successful Referrals
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Referrers with Successful Referrals</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
             <div class="flex justify-between text-sm text-gray-300">
               <div>
@@ -151,8 +168,11 @@
         <!-- BILLING TOTALS -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Billing
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Billing</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
@@ -202,8 +222,11 @@
         <!-- LOCUMS IN PLATFORM -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Locums
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Locums</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
@@ -240,8 +263,11 @@
         <!-- PRACTICES IN PLATFORM -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Practices
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Practices</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
@@ -270,8 +296,11 @@
         <!-- JOBS IN PLATFORM -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Jobs
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Jobs</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
@@ -308,8 +337,11 @@
         <!-- DISPUTES -->
         <div class="flex-1 rounded p-1 m-1 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Job Disputes
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Job Disputes</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
@@ -417,7 +449,11 @@ export default {
       return this.$store.state.dashboard.job_disputes
     },
   },
-  created () {
+  // created () {
+  //   this.getEverything()
+  // },
+
+  mounted () {
     this.getEverything()
   },
 
