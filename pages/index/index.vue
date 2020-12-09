@@ -1,8 +1,8 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8 text-white">
     <!-- <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" /> -->
-    <div class="flex flex-wrap justify-between items-start w-full shadow-lg p-3 rounded flex bg-charade text-white my-2">
-      <div class="flex flex-col lg:flex-row w-full">
+    <div class="flex flex-wrap justify-between items-start w-full shadow-lg rounded flex bg-charade text-white my-2">
+      <div class="flex flex-col lg:flex-row w-full m-4">
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppDate
             v-model="filter.registered_at_date_start"
@@ -61,7 +61,7 @@
     <div class="flex flex-col">
       <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUM REGISTRATIONS -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mr-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Locum Registrations</div>
@@ -77,26 +77,26 @@
                 {{ locumSignUps && locumSignUps.locum_users ? locumSignUps.locum_users : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between text-sm my-1 text-gray-300">
               <div>
                 Organic
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ locumSignUps && locumSignUps.organic_locum_users ? locumSignUps.organic_locum_users : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between text-sm my-1 text-gray-300">
               <div>
                 Referred by Other Locums
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ locumSignUps && locumSignUps.referred_locum_users ? locumSignUps.referred_locum_users : 0 }}
               </div>
             </div>
           </div>
         </div>
         <!-- PRACTICE REGISTRATIONS -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Practice Registrations</div>
@@ -104,42 +104,42 @@
                 <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
               </div> 
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Practice Sign-Ups
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.practice_users ? practiceSignUps.practice_users : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Organic
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.organic_practice_registrations ? practiceSignUps.organic_practice_registrations : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Referred by Other Locums
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.referred_by_locum ? practiceSignUps.referred_by_locum : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Referred by Other Practices
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.referred_by_practice ? practiceSignUps.referred_by_practice : 0 }}
               </div>
             </div>
           </div>
         </div>
         <!-- SUCCESSFUL REFERRERS -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Referrers with Successful Referrals</div>
@@ -147,7 +147,7 @@
                 <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
               </div> 
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Locums
               </div>
@@ -155,7 +155,7 @@
                 {{ successfulReferrals && successfulReferrals.locum_referees ? successfulReferrals.locum_referees : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Practices
               </div>
@@ -166,7 +166,7 @@
           </div>
         </div>
         <!-- BILLING TOTALS -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:ml-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Billing</div>
@@ -174,7 +174,7 @@
                 <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
               </div> 
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Total Approved Hours
               </div>
@@ -182,7 +182,7 @@
                 {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 }}
               </div>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Completed Hours
               </div>
@@ -190,7 +190,7 @@
                 {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 }}
               </div>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Billed Hours
               </div>
@@ -198,7 +198,7 @@
                 {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 }}
               </div>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Revenue
               </div>
@@ -206,7 +206,7 @@
                 £ {{ billingTotals && billingTotals.total_revenue ? billingTotals.total_revenue : 0 | currency }}
               </div>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 VAT
               </div>
@@ -220,7 +220,7 @@
       
       <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUMS IN PLATFORM -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mr-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Locums</div>
@@ -241,11 +241,11 @@
               :key="`user-${index}`"
               class="ml-2 text-sm text-gray-300"
             >
-              <div class="flex justify-between">
-                <div>
+              <div class="flex justify-between my-1">
+                <div class="mr-4">
                   {{ locumCountsByProfession.name }}
                 </div>
-                <div class="text-yellow-500">
+                <div class="text-yellow-500 font-bold">
                   {{ locumCountsByProfession.locum_count }}
                 </div>
               </div>
@@ -261,7 +261,7 @@
           </div>
         </div>
         <!-- PRACTICES IN PLATFORM -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Practices</div>
@@ -282,11 +282,11 @@
               :key="`user-${index}`"
               class="ml-2 text-sm"
             >
-              <div class="flex justify-between">
+              <div class="flex justify-between my-1">
                 <div>
                   {{ practiceCounts.type }}
                 </div>
-                <div class="text-yellow-500">
+                <div class="text-yellow-500 font-bold">
                   {{ practiceCounts.count }}
                 </div>
               </div>
@@ -294,7 +294,7 @@
           </div>
         </div>
         <!-- JOBS IN PLATFORM -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Jobs</div>
@@ -302,7 +302,7 @@
                 <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
               </div> 
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between font-bold my-1">
               <div>
                 Platform Jobs
               </div>
@@ -315,16 +315,16 @@
               :key="`user-${index}`"
               class="ml-2 text-sm"
             >
-              <div class="flex justify-between">
+              <div class="flex justify-between my-1">
                 <div>
                   {{ jobCountsByStatus.status }}
                 </div>
-                <div class="text-yellow-500">
+                <div class="text-yellow-500 font-bold">
                   {{ jobCountsByStatus.count }}
                 </div>
               </div>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Private Jobs
               </div>
@@ -335,7 +335,7 @@
           </div>
         </div>
         <!-- DISPUTES -->
-        <div class="flex-1 rounded p-1 m-1 bg-charade">
+        <div class="flex-1 rounded my-2 lg:ml-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Job Disputes</div>
@@ -343,7 +343,7 @@
                 <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
               </div> 
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Disputes
               </div>
@@ -356,16 +356,16 @@
               :key="`user-${index}`"
               class="ml-2 text-sm"
             >
-              <div class="flex justify-between">
+              <div class="flex justify-between my-1">
                 <div>
                   {{ disputesCountByStatus.status }}
                 </div>
-                <div class="text-yellow-500">
+                <div class="text-yellow-500 font-bold">
                   {{ disputesCountByStatus.count }}
                 </div>
               </div>
             </div>
-            <div class="flex justify-between font-bold">
+            <div class="flex justify-between my-1 font-bold">
               <div>
                 Average Resolve Time
               </div>
@@ -384,14 +384,14 @@ import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
 import AppPostCode from "@/components/Base/AppPostCode"
-import AppLoading from "@/components/Base/AppLoading"
+// import AppLoading from "@/components/Base/AppLoading"
 export default {
   components: {
     AppInput,
     AppButton,
     AppDate,
     AppPostCode,
-    AppLoading,
+    // AppLoading,
   },
   data () {
     return {
@@ -449,9 +449,6 @@ export default {
       return this.$store.state.dashboard.job_disputes
     },
   },
-  // created () {
-  //   this.getEverything()
-  // },
 
   mounted () {
     this.getEverything()
