@@ -29,6 +29,7 @@
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="filter.proximity"
+            :disabled="!filter.post_code"
             placeholder="Proximity"
             type="number"
             label="Proximity"
@@ -400,15 +401,9 @@ export default {
         registered_at_date_end: '',
         post_code: '',
         proximity: '',
+        coordinate_x: '',
+        coordinate_y: '',
       },
-      // locum_counts: '',
-      // practice_counts: '',
-      // job_counts: '',
-      // dispute_counts: '',
-      // billing_counts: '',
-      // locum_registrations: '',
-      // practice_registrations: '',
-      // successful_referrals: '',
     }
   },
 
@@ -449,6 +444,7 @@ export default {
       return this.$store.state.dashboard.job_disputes
     },
   },
+
 
   mounted () {
     this.getEverything()
