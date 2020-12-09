@@ -52,7 +52,8 @@ export default {
 	data() {
 		return {
 			form: {
-				email: ""
+				email: "",
+				domain: 'Admin',
 			},
 			sendRequest: true,
 			formError: []
