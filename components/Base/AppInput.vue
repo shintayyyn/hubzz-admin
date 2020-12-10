@@ -17,7 +17,7 @@
         ].includes(type)
       "
     >
-      <div class="flex flex-col py-2">
+      <div class="flex flex-col py-3">
         <div
           class="relative flex justify-between flex-wrap leading-none"
         >
@@ -77,12 +77,17 @@
                   :value="value"
                   :type="type"
                   :placeholder="placeholder"
-                  class="bg-transparent border-b-2 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
-                  :class="[error ? 'border-red-500' : 'focus:border-yellow-500', inClass]"
+                  class="bg-transparent border-b-2 focus:outline-none py-3 font-bold text-xs sm:text-sm w-full"
+                  :class="[
+                    error ? 'border-red-500' : 'focus:border-yellow-500', 
+                    disabled ? 'border-gray-500 text-gray-500 cursor-not-allowed' : 'cursor-pointer',
+                    inClass
+                  ]"
                   :maxlength="limit"
                   :max="maxInput"
                   :style="inStyle"
                   :checked="value"
+                  :disabled="disabled"
                   :min="type === 'number' && 0"
                   step="any"
                   @input="$emit('input', $event.target.value)"

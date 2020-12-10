@@ -3,6 +3,14 @@ export default {
     state.loading_dashboard = payload
   },
 
+  SET_FILTERS (state, payload) {
+    console.log('payload', payload)
+    state.registered_at_date_start = payload.registered_at_date_start
+    state.registered_at_date_end = payload.registered_at_date_end
+    state.post_code = payload.post_code
+    state.proximity = payload.proximity
+  },
+
   SET_LOCUM_SIGN_UPS (state, payload) {
     state.locum_sign_ups = payload
   },

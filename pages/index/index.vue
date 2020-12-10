@@ -1,9 +1,9 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8 text-white">
-    <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" />
-    <div class="flex flex-wrap justify-between items-start w-full shadow-lg p-3 rounded-lg flex bg-charade text-white my-2">
-      <div class="flex flex-row w-full">
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+    <!-- <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" /> -->
+    <div class="flex flex-wrap justify-between items-start w-full shadow-lg rounded flex bg-charade text-white my-2">
+      <div class="flex flex-col lg:flex-row w-full m-4">
+        <div class="md:px-1 w-full lg:w-1/4">
           <AppDate
             v-model="filter.registered_at_date_start"
             label="Date Start"
@@ -11,14 +11,14 @@
           />
         </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+        <div class="md:px-1 w-full lg:w-1/4">
           <AppDate
             v-model="filter.registered_at_date_end"
             label="Date End"
             format="YYYY-MM-DD"
           />
         </div>
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 ">
+        <div class="md:px-1 w-full lg:w-1/4 ">
           <AppPostCode
             v-model="filter.post_code"
             :url-index="'/api/v1/postcode-coordinates'"
@@ -26,288 +26,352 @@
             :label="'Post Code'"
           />
         </div>
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+        <div class="md:px-1 w-full lg:w-1/4">
           <AppInput
             v-model="filter.proximity"
+            :disabled="!filter.post_code"
             placeholder="Proximity"
             type="number"
             label="Proximity"
           />
         </div>
-      </div>
-
-      <div class="flex flex-wrap w-full justify-end">
-        <AppButton
-          class="mx-2"
-          label="Submit"
-          :in-style="'padding:5px 14px;margin-bottom:5px'"
-          @click="filterSearch"
-        />
-         
-        <AppButton
-          label="Reset"
-          :in-style="'padding:5px 14px;margin-bottom:5px'"
-          @click="filterReset"
-        />        
+        <div class="flex w-full justify-end">
+          <div class="mt-6">
+            <AppButton
+              class="mx-2"
+              label="Apply Filters"
+              :in-style="'padding:5px 14px;margin-bottom:5px'"
+              :disabled="loadingDashboard"
+              @click="filterSearch"
+            /> 
+          </div>
+          <div class="mt-6">
+            <AppButton
+              label="Clear Filters"
+              :background="'waterloo'"
+              :in-style="'padding:5px 14px;margin-bottom:5px'"
+              :disabled="loadingDashboard"
+              @click="filterReset"
+            />
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- DASHBOARD BODY -->
     <div class="flex flex-col">
-      <div class="flex flex-row w-full ">
+      <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUM REGISTRATIONS -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mr-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Locum Registrations
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Locum Registrations</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between font-bold">
+              <div>
+                Locum Sign-Ups
+              </div>
+              <div class="text-yellow-500">
+                {{ locumSignUps && locumSignUps.locum_users ? locumSignUps.locum_users : 0 }}
+              </div>
+            </div>
+            <div class="flex justify-between text-sm my-1 text-gray-300">
+              <div>
                 Organic
-              </span>
-              <span class="text-yellow-500">
-                {{ locumSignUps && locumSignUps.organic_locum_user ? locumSignUps.organic_locum_user : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500 font-bold">
+                {{ locumSignUps && locumSignUps.organic_locum_users ? locumSignUps.organic_locum_users : 0 }}
+              </div>
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between text-sm my-1 text-gray-300">
+              <div>
                 Referred by Other Locums
-              </span>
-              <span class="text-yellow-500">
-                {{ locumSignUps && locumSignUps.referred_locum_user ? locumSignUps.referred_locum_user : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500 font-bold">
+                {{ locumSignUps && locumSignUps.referred_locum_users ? locumSignUps.referred_locum_users : 0 }}
+              </div>
             </div>
           </div>
         </div>
         <!-- PRACTICE REGISTRATIONS -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Practice Registrations
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Practice Registrations</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
+                Practice Sign-Ups
+              </div>
+              <div class="text-yellow-500 font-bold">
+                {{ practiceSignUps && practiceSignUps.practice_users ? practiceSignUps.practice_users : 0 }}
+              </div>
+            </div>
+            <div class="flex justify-between my-1 text-sm text-gray-300">
+              <div>
                 Organic
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.organic_practice_registrations ? practiceSignUps.organic_practice_registrations : 0 }}
-              </span>
+              </div>
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between my-1 text-sm text-gray-300">
+              <div>
                 Referred by Other Locums
-              </span>
-              <span class="text-yellow-500">
-                {{ practiceSignUps && practiceSignUps.referred_by_locum_count ? practiceSignUps.referred_by_locum_count : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500 font-bold">
+                {{ practiceSignUps && practiceSignUps.referred_by_locum ? practiceSignUps.referred_by_locum : 0 }}
+              </div>
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between my-1 text-sm text-gray-300">
+              <div>
                 Referred by Other Practices
-              </span>
-              <span class="text-yellow-500">
-                {{ practiceSignUps && practiceSignUps.referred_by_practice_count ? practiceSignUps.referred_by_practice_count : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500 font-bold">
+                {{ practiceSignUps && practiceSignUps.referred_by_practice ? practiceSignUps.referred_by_practice : 0 }}
+              </div>
             </div>
           </div>
         </div>
         <!-- SUCCESSFUL REFERRERS -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Referrers with Successful Referrals
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Referrers with Successful Referrals</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between my-1 text-sm text-gray-300">
+              <div>
                 Locums
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500 font-bold">
                 {{ successfulReferrals && successfulReferrals.locum_referees ? successfulReferrals.locum_referees : 0 }}
-              </span>
+              </div>
             </div>
-            <div class="text-sm text-gray-300">
-              <span>
+            <div class="flex justify-between my-1 text-sm text-gray-300">
+              <div>
                 Practices
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500 font-bold">
                 {{ successfulReferrals && successfulReferrals.practice_referees ? successfulReferrals.practice_referees : 0 }}
-              </span>
+              </div>
             </div>
           </div>
         </div>
         <!-- BILLING TOTALS -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:ml-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Billing
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Billing</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Total Approved Hours
-              </span>
-              <span class="text-yellow-500">
-                {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500">
+                {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
+              </div>
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Completed Hours
-              </span>
-              <span class="text-yellow-500">
-                {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500">
+                {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
+              </div>
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Billed Hours
-              </span>
-              <span class="text-yellow-500">
-                {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 }}
-              </span>
+              </div>
+              <div class="text-yellow-500">
+                {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
+              </div>
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Revenue
-              </span>
-              <span class="text-yellow-500">
-                {{ billingTotals && billingTotals.total_revenue ? billingTotals.total_revenue : 0 | currency }}
-              </span>
+              </div>
+              <div class="text-yellow-500">
+                £ {{ billingTotals && billingTotals.total_revenue ? billingTotals.total_revenue : 0 | currency }}
+              </div>
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 VAT
-              </span>
-              <span class="text-yellow-500">
-                {{ billingTotals && billingTotals.total_taxes ? billingTotals.total_taxes : 0 | currency }}
-              </span>
+              </div>
+              <div class="text-gray-500">
+                £ {{ billingTotals && billingTotals.total_taxes ? billingTotals.total_taxes : 0 | currency }}
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      <div class="flex flex-row w-full ">
+      <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUMS IN PLATFORM -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mr-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Locums
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Locums</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between font-bold">
+              <div>
                 Active Locums
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500">
                 {{ locumsInPlatform.active_locums }}
-              </span>
+              </div>
             </div>
             <div 
               v-for="(locumCountsByProfession, index) in locumsInPlatform.active_locums_by_profession"
               :key="`user-${index}`"
-              class="mx-2 text-sm text-gray-300"
+              class="ml-2 text-sm text-gray-300"
             >
-              <div>
-                <span>
+              <div class="flex justify-between my-1">
+                <div class="mr-4">
                   {{ locumCountsByProfession.name }}
-                </span>
-                <span class="text-yellow-500">
+                </div>
+                <div class="text-yellow-500 font-bold">
                   {{ locumCountsByProfession.locum_count }}
-                </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between font-bold">
+              <div>
+                Inactive Locums
+              </div>
+              <div class="text-yellow-500">
+                {{ locumsInPlatform.inactive_locums }}
               </div>
             </div>
           </div>
         </div>
         <!-- PRACTICES IN PLATFORM -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Practices
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Practices</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between font-bold">
+              <div>
                 Active Practices
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500">
                 {{ practicesInPlatform.active_practices }}
-              </span>
+              </div>
             </div>
             <div 
               v-for="(practiceCounts, index) in practicesInPlatform.practices_by_type"
               :key="`user-${index}`"
-              class="mx-2 text-sm"
+              class="ml-2 text-sm"
             >
-              <div>
-                <span>
+              <div class="flex justify-between my-1">
+                <div>
                   {{ practiceCounts.type }}
-                </span>
-                <span class="text-yellow-500">
+                </div>
+                <div class="text-yellow-500 font-bold">
                   {{ practiceCounts.count }}
-                </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <!-- JOBS IN PLATFORM -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Jobs
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Jobs</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between font-bold my-1">
+              <div>
                 Platform Jobs
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500">
                 {{ jobsInPlatform.platform_jobs }}
-              </span>
+              </div>
             </div>
             <div 
               v-for="(jobCountsByStatus, index) in jobsInPlatform.job_counts_by_status"
               :key="`user-${index}`"
-              class="mx-2 text-sm"
+              class="ml-2 text-sm"
             >
-              <div>
-                <span>
+              <div class="flex justify-between my-1">
+                <div>
                   {{ jobCountsByStatus.status }}
-                </span>
-                <span class="text-yellow-500">
+                </div>
+                <div class="text-yellow-500 font-bold">
                   {{ jobCountsByStatus.count }}
-                </span>
+                </div>
               </div>
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Private Jobs
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500">
                 {{ jobsInPlatform.private_jobs }}
-              </span>
+              </div>
             </div>
           </div>
         </div>
         <!-- DISPUTES -->
-        <div class="flex-1 rounded m-2 bg-charade">
+        <div class="flex-1 rounded my-2 lg:ml-2 bg-charade">
           <div class="m-4">
-            <div class="text-xs text-gray-500">
-              Job Disputes
+            <div class="flex flex-row text-xs text-gray-500">
+              <div>Job Disputes</div>
+              <div class="-my-2">
+                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+              </div> 
             </div>
-            <div class="font-bold">
-              <span>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Disputes
-              </span>
-              <span class="text-yellow-500">
+              </div>
+              <div class="text-yellow-500">
                 {{ jobDisputes.disputes_count }}
-              </span>
+              </div>
             </div>
             <div 
               v-for="(disputesCountByStatus, index) in jobDisputes.disputes_count_by_status"
               :key="`user-${index}`"
-              class="mx-2 text-sm"
+              class="ml-2 text-sm"
             >
-              <div>
-                <span>
+              <div class="flex justify-between my-1">
+                <div>
                   {{ disputesCountByStatus.status }}
-                </span>
-                <span class="text-yellow-500">
+                </div>
+                <div class="text-yellow-500 font-bold">
                   {{ disputesCountByStatus.count }}
-                </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between my-1 font-bold">
+              <div>
+                Average Resolve Time
+              </div>
+              <div class="text-yellow-500">
+                {{ jobDisputes.ave_resolve_time }}
               </div>
             </div>
           </div>
@@ -316,20 +380,19 @@
     </div>
   </div>
 </template>
-
 <script>
 import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
 import AppPostCode from "@/components/Base/AppPostCode"
-import AppLoading from "@/components/Base/AppLoading"
+// import AppLoading from "@/components/Base/AppLoading"
 export default {
   components: {
     AppInput,
     AppButton,
     AppDate,
     AppPostCode,
-    AppLoading,
+    // AppLoading,
   },
   data () {
     return {
@@ -339,14 +402,6 @@ export default {
         post_code: '',
         proximity: '',
       },
-      // locum_counts: '',
-      // practice_counts: '',
-      // job_counts: '',
-      // dispute_counts: '',
-      // billing_counts: '',
-      // locum_registrations: '',
-      // practice_registrations: '',
-      // successful_referrals: '',
     }
   },
 
@@ -387,13 +442,15 @@ export default {
       return this.$store.state.dashboard.job_disputes
     },
   },
-  created () {
+
+  mounted () {
     this.getEverything()
   },
 
   methods: {
     async getEverything () {
       Promise.all([
+        this.$store.commit("dashboard/SET_FILTERS", this.filter),
         this.$store.commit("dashboard/TOGGLE_LOADING", true),
         this.getLocumRegistrations(),
         this.getPracticeRegistrations(),
@@ -405,7 +462,6 @@ export default {
         this.getDisputes(),
       ]).then(() => {
         this.$store.commit("dashboard/TOGGLE_LOADING", false)
-        console.log('tapos na')
       }).catch(() => {
         this.$store.commit("dashboard/TOGGLE_LOADING", false)
       })

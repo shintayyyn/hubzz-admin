@@ -1,12 +1,12 @@
 <template>
-	<div class="flex flex-col py-2 mb-3 md:mb-6" v-on-clickaway="toggledOff">
+	<div class="flex flex-col py-2 mb-2 md:mb-4" v-on-clickaway="toggledOff">
 		<div class="relative flex flex-row flex-no-wrap justify-between">
 			<label :for="name" class="text-xs sm:text-sm py-1 font-bold">
 				{{label}}
 				<span v-if="required" class="text-red-500">*</span>
 			</label>
 		</div>
-		<div class="flex flex-col justify-start">
+		<div class="flex flex-col py-1 justify-start">
 			<input
 				v-model="search"
 				ref="search"
