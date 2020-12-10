@@ -1,9 +1,6 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-4 overflow-auto">
-    <div class="text-xl md:text-4xl text-white">
-      Inquiries
-    </div>
-    <div class="flex py-2">
+  <div class="flex-1 flex flex-col px-4 mx-1 md:mx-2 overflow-auto">
+    <div class="flex">
       <!-- <div class="relative">
 				<input
 					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"

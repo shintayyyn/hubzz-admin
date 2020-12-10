@@ -8,7 +8,7 @@
       || authAdminPermissions.includes('View Practice Rates')"
     class="flex-1 flex flex-col py-2"
   >
-    <div class="px-2 flex justify-between items-center flex-wrap">
+    <div class="px-1 flex justify-between items-center flex-wrap">
       <div>
         <div class="flex justify-start -mx-2 overflow-x-auto">
           <nuxt-link
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="m-1">
         <AppButton
           v-if="authAdminPermissions.includes('Create New Practice') && authAdminPermissions.includes('Create New Practice User')"
           class="text-sm"
@@ -57,7 +57,7 @@
     </div>
 
     <div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex py-2">
+      <div class="flex">
         <div class="relative">
           <input
             v-model="search"

@@ -1,11 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
     <AppLoading :loading="loading" spinner />
-
-    <div class="text-lg md:text-2xl text-white">
-      <span>Compliance Document Reject Reasons</span>
-    </div>
-
     <div class="flex justify-end">
       <nuxt-link
         v-if="authAdminPermissions.includes('Create Compliance Document Reject Reasons')"
@@ -20,7 +15,7 @@
       </nuxt-link>
     </div>
 
-    <div class="mt-2 flex flex-col md:flex-row justify-between md:items-center">
+    <div class="flex flex-col md:flex-row justify-between md:items-center">
       <div v-if="false" class="flex py-2">
         <div class="relative">
           <input

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-x-hidden">
+  <div class="flex-1 flex flex-col py-2 px-2 mx-2 md:px-6 overflow-x-hidden">
     <div class="flex justify-start my-2">
       <div class="relative">
         <nuxt-link

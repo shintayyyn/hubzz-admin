@@ -1,8 +1,8 @@
 <template>
   <div class="flex-1 flex flex-col p-2 md:px-6 overflow-auto">
-    <div class="px-2 text-2xl md:text-4xl text-white">
+    <!-- <div class="px-2 text-2xl md:text-4xl text-white">
       {{ $route.name.includes('practice-compliance-reports') ? 'Practice Compliance Reports' : 'Practices' }}
-    </div>
+    </div> -->
     <div class="flex justify-start my-2">
       <nuxt-link
         v-if="authAdminPermissions.includes('View Practices')
