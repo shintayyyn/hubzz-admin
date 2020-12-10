@@ -2,29 +2,13 @@ export default {
   TOGGLE_LOADING (state, payload) {
     state.loading_dashboard = payload
   },
-  TOGGLE_LOADING_LOCUM_SIGN_UPS (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_PRACTICE_SIGN_UPS (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_SUCCESSFUL_REFERRALS (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_BILLING_TOTALS (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_LOCUMS_IN_PLATFORM (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_PRACTICES_IN_PLATFORM (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_JOBS_IN_PLATFORM (state, payload) {
-    state.loading_dashboard = payload
-  },
-  TOGGLE_LOADING_JOB_DISPUTES (state, payload) {
-    state.loading_dashboard = payload
+
+  SET_FILTERS (state, payload) {
+    console.log('payload', payload)
+    state.registered_at_date_start = payload.registered_at_date_start
+    state.registered_at_date_end = payload.registered_at_date_end
+    state.post_code = payload.post_code
+    state.proximity = payload.proximity
   },
 
   SET_LOCUM_SIGN_UPS (state, payload) {

@@ -1,16 +1,17 @@
 export default {
-  async initializeDashboardListener ({ commit }) {
+  async initializeDashboardListener ({ commit, getters }, ) {
     this.$socket.on('Update Dashboard', async () => {
+      const params = await getters.getFilters
       commit("TOGGLE_LOADING", true)
       Promise.all([
-        this.$axios.$get(`/api/v1/admin/locum-registrations`),
-        this.$axios.$get(`/api/v1/admin/practice-registrations`),
-        this.$axios.$get(`/api/v1/admin/successful-referrals`),
-        this.$axios.$get(`/api/v1/admin/billings-counts`),
-        this.$axios.$get(`/api/v1/admin/locum-counts`),
-        this.$axios.$get(`/api/v1/admin/practice-counts`),
-        this.$axios.$get(`/api/v1/admin/job-counts`),
-        this.$axios.$get(`/api/v1/admin/disputes-counts`)
+        this.$axios.$get(`/api/v1/admin/locum-registrations`, { params }),
+        this.$axios.$get(`/api/v1/admin/practice-registrations`, { params }),
+        this.$axios.$get(`/api/v1/admin/successful-referrals`, { params }),
+        this.$axios.$get(`/api/v1/admin/billings-counts`, { params }),
+        this.$axios.$get(`/api/v1/admin/locum-counts`, { params }),
+        this.$axios.$get(`/api/v1/admin/practice-counts`, { params }),
+        this.$axios.$get(`/api/v1/admin/job-counts`, { params }),
+        this.$axios.$get(`/api/v1/admin/disputes-counts`, { params })
       ]).then(responses => {
         const [
           locumRegistrations, 
@@ -35,13 +36,12 @@ export default {
       }).catch(() => {
         commit("TOGGLE_LOADING", false)
       })
-
-      
     })
   },
 
   async fetchLocumRegistrations ({ commit }, payload) {
     const params = payload
+    commit('SET_FILTERS', payload)
     const response = await this.$axios.$get(`/api/v1/admin/locum-registrations`, { params })
     return commit('SET_LOCUM_SIGN_UPS', response.data.locum_registrations)
   },
