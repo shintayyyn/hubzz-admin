@@ -22,7 +22,7 @@ export default (ctx, inject) => {
 
   })
 
-  socket.on('connect_error', reason => {
+  socket.on('connect_error', () => {
     ctx.store.commit("SET_NOTIFICATION", {
       enabled: true,
       status: "danger",
@@ -38,13 +38,13 @@ export default (ctx, inject) => {
       socket.connect()
     }
 
-    if (reason === 'transport close') {
-      ctx.store.commit("SET_NOTIFICATION", {
-        enabled: true,
-        status: "danger",
-        text: 'Server Shut Down',
-      })
-    }
+    // if (reason === 'transport close') {
+    //   ctx.store.commit("SET_NOTIFICATION", {
+    //     enabled: true,
+    //     status: "danger",
+    //     text: 'Server Shut Down',
+    //   })
+    // }
   })
 
   ctx.$socket = socket
