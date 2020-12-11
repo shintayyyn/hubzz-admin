@@ -151,7 +151,20 @@ export default {
 				tailwindcss: path.join(__dirname, 'tailwind.config.js'),
 				autoprefixer: {},
 			},
-		},
+    },
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true
+          }
+        }
+      }
+    },
 		transpile: [/^vue2-google-maps($|\/)/],
 		extend () {},
 	},
