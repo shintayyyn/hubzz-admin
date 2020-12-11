@@ -2,15 +2,11 @@ export default() => ({
   // LOADING
   loading_dashboard: true,
 
-  // LOADINGS
-  loading_locum_sign_ups: '',
-  loading_practice_sign_ups: '',
-  loading_successful_referrals: '',
-  loading_billing_totals: '',
-  loading_locums_in_platform: '',
-  loading_practices_in_platform: '',
-  loading_jobs_in_platform: '',
-  loading_job_disputes: '',
+  // Filters
+  registered_at_date_start: '',
+  registered_at_date_end: '',
+  post_code: '',
+  proximity: '',
 
   locum_sign_ups: '',
   practice_sign_ups: '',

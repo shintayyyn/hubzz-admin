@@ -3,7 +3,7 @@
     <!-- <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" /> -->
     <div class="flex flex-wrap justify-between items-start w-full shadow-lg rounded flex bg-charade text-white my-2">
       <div class="flex flex-col lg:flex-row w-full m-4">
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+        <div class="md:px-1 w-full lg:w-1/4">
           <AppDate
             v-model="filter.registered_at_date_start"
             label="Date Start"
@@ -11,14 +11,14 @@
           />
         </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+        <div class="md:px-1 w-full lg:w-1/4">
           <AppDate
             v-model="filter.registered_at_date_end"
             label="Date End"
             format="YYYY-MM-DD"
           />
         </div>
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 ">
+        <div class="md:px-1 w-full lg:w-1/4 ">
           <AppPostCode
             v-model="filter.post_code"
             :url-index="'/api/v1/postcode-coordinates'"
@@ -26,7 +26,7 @@
             :label="'Post Code'"
           />
         </div>
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+        <div class="md:px-1 w-full lg:w-1/4">
           <AppInput
             v-model="filter.proximity"
             :disabled="!filter.post_code"
@@ -152,7 +152,7 @@
               <div>
                 Locums
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ successfulReferrals && successfulReferrals.locum_referees ? successfulReferrals.locum_referees : 0 }}
               </div>
             </div>
@@ -160,7 +160,7 @@
               <div>
                 Practices
               </div>
-              <div class="text-yellow-500">
+              <div class="text-yellow-500 font-bold">
                 {{ successfulReferrals && successfulReferrals.practice_referees ? successfulReferrals.practice_referees : 0 }}
               </div>
             </div>
@@ -180,7 +180,7 @@
                 Total Approved Hours
               </div>
               <div class="text-yellow-500">
-                {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 }}
+                {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
             <div class="flex justify-between my-1 font-bold">
@@ -188,7 +188,7 @@
                 Completed Hours
               </div>
               <div class="text-yellow-500">
-                {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 }}
+                {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
             <div class="flex justify-between my-1 font-bold">
@@ -196,7 +196,7 @@
                 Billed Hours
               </div>
               <div class="text-yellow-500">
-                {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 }}
+                {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
             <div class="flex justify-between my-1 font-bold">
@@ -401,8 +401,6 @@ export default {
         registered_at_date_end: '',
         post_code: '',
         proximity: '',
-        coordinate_x: '',
-        coordinate_y: '',
       },
     }
   },
@@ -445,7 +443,6 @@ export default {
     },
   },
 
-
   mounted () {
     this.getEverything()
   },
@@ -453,6 +450,7 @@ export default {
   methods: {
     async getEverything () {
       Promise.all([
+        this.$store.commit("dashboard/SET_FILTERS", this.filter),
         this.$store.commit("dashboard/TOGGLE_LOADING", true),
         this.getLocumRegistrations(),
         this.getPracticeRegistrations(),

@@ -21,6 +21,13 @@ Vue.filter('currency', function (number) {
   return '0.00'
 })
 
+Vue.filter('amount', function (number) {
+  if (number) {
+    return Number.parseFloat(number).toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+  }
+  return '0.00'
+})
+
 
 Vue.filter('StringMaxLength', function (str, numLength) {
   if (str) {
