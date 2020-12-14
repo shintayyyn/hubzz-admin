@@ -45,7 +45,8 @@
 
         <div 
           v-if="authAdminPermissions.includes('View Change Email Requests')"
-          class="text-sm relative">
+          class="text-sm relative"
+        >
           <span
             v-if="$route.name.includes('index-change-email-requests')"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
@@ -68,7 +69,8 @@
 
         <div
           v-if="authAdminPermissions.includes('View Compliance Document Reject Reasons')" 
-          class="text-sm relative">
+          class="text-sm relative"
+        >
           <span
             v-if="$route.name.includes('index-compliance-document-reject-reasons')"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
@@ -80,6 +82,23 @@
               @click="close"
             >
               <span>Compliance Document Reject Reasons</span>
+            </div>
+          </nuxt-link>
+        </div>
+
+        <div class="text-sm relative">
+          <span
+            v-if="$route.name.includes('index-test-script')"
+            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
+          />
+          
+          <nuxt-link :to="{ name: 'index-test-script' }">
+            <div
+              class="block font-sans no-underline p-4"
+              :class="$route.name.includes('index-test-script') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
+              @click="close"
+            >
+              <span>Test Script</span>
             </div>
           </nuxt-link>
         </div>

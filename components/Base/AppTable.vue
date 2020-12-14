@@ -45,6 +45,7 @@
           class="row py-2"
         >
           <nuxt-link
+            :class="addClass"
             :to="routerLink && {}.toString.call(routerLink) === '[object Function]'
               ? routerLink(item)
               : {
@@ -226,6 +227,10 @@
       minHeight: {
         type: String,
         default: null
+      },
+      addClass: {
+        type: String,
+        default: ''
       }
     },
     data () {
