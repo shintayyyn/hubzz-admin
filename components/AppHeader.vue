@@ -128,9 +128,6 @@ export default {
 
 	data () {
 		return {
-			// HEADER NAME
-			headerName: 'Dashboard',
-
 			currentPage: 1,
 			totalPages: 0,
 			// 10 PER PAGER OR NOTIFICATIONS PER SEE-MORE
@@ -167,65 +164,40 @@ export default {
 		}
 	},
 
-	watch: {
-		"$route.name" (value) {
-			if (value.includes('index-locums'))
-				this.headerName = 'Locums'
-			else if (value.includes('index-practices'))
-				this.headerName = 'Practices'
-			else if (value.includes('index-billings'))
-				this.headerName = 'Billings'
-			else if (value.includes('index-reports'))
-				this.headerName = 'Reports'
-			else if (value.includes('index-standard-terms'))
-				this.headerName = 'Standard Terms'
-			else if (value.includes('index-referral-lottery'))
-				this.headerName = 'Referral Lottery'
-			else if (value.includes('index-faqs'))
-				this.headerName = 'Frequently Asked Questions'
-			else if (value.includes('index-tncs'))
-				this.headerName = 'Terms and Conditions'
-			else if (value.includes('index-inquiries'))
-				this.headerName = 'Inquiries'
-			else if (value.includes('index-user-management'))
-				this.headerName = 'User Management'
-			else if (value.includes('index-change-email-requests'))
-				this.headerName = 'Change Email Requests'
-			else if (value.includes('index-compliance-document-reject-reasons'))
-				this.headerName = 'Compliance Document Reject Reasons'
+  computed: {
+    headerName() {
+			if (this.$route.name.includes('index-locums'))
+				return 'Locums'
+			else if (this.$route.name.includes('index-practices'))
+				return 'Practices'
+			else if (this.$route.name.includes('index-billings'))
+				return 'Billings'
+			else if (this.$route.name.includes('index-reports'))
+				return 'Reports'
+			else if (this.$route.name.includes('index-standard-terms'))
+				return 'Standard Terms'
+			else if (this.$route.name.includes('index-referral-lottery'))
+				return 'Referral Lottery'
+			else if (this.$route.name.includes('index-faqs'))
+				return 'Frequently Asked Questions'
+			else if (this.$route.name.includes('index-tncs'))
+				return 'Terms and Conditions'
+			else if (this.$route.name.includes('index-inquiries'))
+				return 'Inquiries'
+			else if (this.$route.name.includes('index-user-management'))
+				return 'User Management'
+			else if (this.$route.name.includes('index-change-email-requests'))
+				return 'Change Email Requests'
+			else if (this.$route.name.includes('index-compliance-document-reject-reasons'))
+				return 'Compliance Document Reject Reasons'
+			else if (this.$route.name.includes('index-test-script'))
+				return 'Test Script'
 			else
-				this.headerName = 'Dashboard' 
-		}	
-	},
+				return 'Dashboard' 
+    }
+  },
 
 	async created () {
-		if (this.$route.name.includes('index-locums'))
-			this.headerName = 'Locums'
-		else if (this.$route.name.includes('index-practices'))
-			this.headerName = 'Practices'
-		else if (this.$route.name.includes('index-billings'))
-			this.headerName = 'Billings'
-		else if (this.$route.name.includes('index-reports'))
-			this.headerName = 'Reports'
-		else if (this.$route.name.includes('index-standard-terms'))
-			this.headerName = 'Standard Terms'
-		else if (this.$route.name.includes('index-referral-lottery'))
-			this.headerName = 'Referral Lottery'
-		else if (this.$route.name.includes('index-faqs'))
-			this.headerName = 'Frequently Asked Questions'
-		else if (this.$route.name.includes('index-tncs'))
-			this.headerName = 'Terms and Conditions'
-		else if (this.$route.name.includes('index-inquiries'))
-			this.headerName = 'Inquiries'
-		else if (this.$route.name.includes('index-user-management'))
-			this.headerName = 'User Management'
-		else if (this.$route.name.includes('index-change-email-requests'))
-			this.headerName = 'Change Email Requests'
-		else if (this.$route.name.includes('index-compliance-document-reject-reasons'))
-			this.headerName = 'Compliance Document Reject Reasons'
-		else
-			this.headerName = 'Dashboard'
-		
 		const params = {
 			user_id: this.$auth.user.id,
 			seen: false
