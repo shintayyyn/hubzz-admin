@@ -165,7 +165,7 @@ export default {
 	},
 
   computed: {
-    headerName() {
+    headerName () {
 			if (this.$route.name.includes('index-locums'))
 				return 'Locums'
 			else if (this.$route.name.includes('index-practices'))

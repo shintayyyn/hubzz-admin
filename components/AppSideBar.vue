@@ -45,7 +45,8 @@
 
         <div 
           v-if="authAdminPermissions.includes('View Change Email Requests')"
-          class="text-sm relative">
+          class="text-sm relative"
+        >
           <span
             v-if="$route.name.includes('index-change-email-requests')"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
@@ -68,7 +69,8 @@
 
         <div
           v-if="authAdminPermissions.includes('View Compliance Document Reject Reasons')" 
-          class="text-sm relative">
+          class="text-sm relative"
+        >
           <span
             v-if="$route.name.includes('index-compliance-document-reject-reasons')"
             class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"

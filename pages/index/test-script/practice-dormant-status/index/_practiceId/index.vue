@@ -61,9 +61,9 @@
           :loading="practiceJobsLoading"
           :routerLink="practiceJobsRouterLink"
           :orderBy="practiceJobsOrderBy"
+          addClass="cursor-default"
           @pagechanged="practiceJobsPageChangedHandler"
           @sorted="(_practiceJobsOrderBy) => practiceJobsOrderBy = _practiceJobsOrderBy"
-          addClass="cursor-default"
         />
 
         <div v-if="practiceJobsCount === 0 && !practiceJobsLoading" class="mt-2 w-full text-center text-white">
@@ -216,7 +216,7 @@
     },
     
 		methods: {
-      getPractice() {
+      getPractice () {
         return Promise.all([
           this.$axios.get(`/api/v1/admin/practices/${this.$route.params.practiceId}`)
             .then(response => response.data.data.practice),

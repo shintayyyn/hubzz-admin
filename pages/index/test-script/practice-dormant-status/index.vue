@@ -110,7 +110,7 @@
       draggable="false"
     />
 
-    <nuxt-child/>
+    <nuxt-child />
   </div>
 </template>
 
