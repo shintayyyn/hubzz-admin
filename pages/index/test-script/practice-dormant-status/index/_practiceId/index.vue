@@ -35,12 +35,81 @@
         </div>
 
         <div class="py-4">
-          <div class="mx-2 md:mx-4 text-white flex items-center">
-            <div class="text-lg font-bold">
+          <div class="mx-2 md:mx-4 text-white flex flex-wrap items-center">
+            <div class="text-lg font-bold" style="width: 150px;">
               Override created: 
             </div>
-            <div class="px-2">
-              <AppDate v-model="overrideCreated" :isBefore="true" />
+
+            <div class="px-2 flex flex-wrap items-center">
+              <div class="px-2">
+                <AppDate v-model="overrideCreatedDate" :isBefore="true" />
+              </div>
+
+              <div class="px-2">
+                <AppTime
+                  v-model="overrideCreatedTime"
+                  :wrapperClass="'px-1 mt-2 mb-2'"
+                  :inStyle="`background-color: transparent;`"
+                  optionsContainerClass="bg-trout"
+                />
+              </div>
+            </div>
+
+            <div class="px-2 flex">
+              <AppButton
+                label="Reset"
+                class="mx-1"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :background="''"
+                @click="resetOverrideCreated"
+              />
+
+              <AppButton
+                label="Save"
+                class="mx-1"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :background="''"
+                @click="saveOverrideCreated"
+              />
+            </div>
+          </div>
+
+          <div class="mx-2 md:mx-4 text-white flex flex-wrap items-center">
+            <div class="text-lg font-bold" style="width: 150px;">
+              Override last job posted date: 
+            </div>
+
+            <div class="px-2 flex flex-wrap items-center">
+              <div class="px-2">
+                <AppDate v-model="overrideLastJobPostedDateDate" :isBefore="true" />
+              </div>
+
+              <div class="px-2">
+                <AppTime
+                  v-model="overrideLastJobPostedDateTime"
+                  :wrapperClass="'px-1 mt-2 mb-2'"
+                  :inStyle="`background-color: transparent;`"
+                  optionsContainerClass="bg-trout"
+                />
+              </div>
+            </div>
+
+            <div class="px-2 flex">
+              <AppButton
+                label="Reset"
+                class="mx-1"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :background="''"
+                @click="resetOverrideLastJobDateCreated"
+              />
+
+              <AppButton
+                label="Save"
+                class="mx-1"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :background="''"
+                @click="saveOverrideLastJobDateCreated"
+              />
             </div>
           </div>
         </div>
@@ -75,10 +144,9 @@
 </template>
 
 <script>
-  import debounce from 'lodash.debounce'
-  
   import AppLoading from '@/components/Base/AppLoading'
   import AppDate from '@/components/Base/AppDate'
+  import AppTime from '@/components/Base/AppTime'
   import AppTable from '@/components/Base/AppTable'
   import AppButton from '@/components/Base/AppButton'
 
@@ -86,6 +154,7 @@
     components: {
       AppLoading,
       AppDate,
+      AppTime,
       AppTable,
       AppButton,
     },
@@ -105,7 +174,11 @@
         practiceJobs: [],
         practiceJobsLoading: true,
 
-        overrideCreated: null,
+        overrideCreatedDate: null,
+        overrideCreatedTime: null,
+
+        overrideLastJobPostedDateDate: null,
+        overrideLastJobPostedDateTime: null,
       }
     },
 
@@ -208,7 +281,9 @@
 		mounted () {
       this.loading = true
       Promise.all([
-        this.getPractice(),
+        this.getPractice().then(() => {
+          this.setValues()
+        }),
         this.getPracticeJobs(),
       ]).finally(() => {
         this.loading = false
@@ -216,6 +291,122 @@
     },
     
 		methods: {
+      setValues () {
+        this.overrideCreatedDate = this.practice && this.practice.override_created_at
+          ? this.$moment(this.practice.override_created_at, 'YYYY-MM-DD HH:mm:ss.SSS').format('YYYY-MM-DD')
+          : null
+
+        this.overrideCreatedTime = this.practice && this.practice.override_created_at
+          ? this.$moment(this.practice.override_created_at, 'YYYY-MM-DD HH:mm:ss.SSS').format('HH:mm')
+          : null
+
+        this.overrideLastJobPostedDateDate = this.practice && this.practice.override_last_job_posted_date
+          ? this.$moment(this.practice.override_last_job_posted_date, 'YYYY-MM-DD HH:mm:ss.SSS').format('YYYY-MM-DD')
+          : null
+
+        this.overrideLastJobPostedDateTime = this.practice && this.practice.override_last_job_posted_date
+          ? this.$moment(this.practice.override_last_job_posted_date, 'YYYY-MM-DD HH:mm:ss.SSS').format('HH:mm')
+          : null
+      },
+
+      resetOverrideCreated () {
+        this.overrideCreatedDate = null
+        this.overrideCreatedTime = null
+        this.saveOverrideCreated()
+      },
+
+      saveOverrideCreated () {
+        const data = {
+          override_created_at: this.overrideCreatedDate
+            ? this.overrideCreatedTime
+              ? `${this.overrideCreatedDate} ${this.overrideCreatedTime}`
+              : `${this.overrideCreatedDate} 00:00`
+            : null,
+        }
+
+        this.loading = true
+        this.$axios.put(`/api/v1/admin/practices/${this.$route.params.practiceId}/override-created-at`, data).then((response) => {
+          this.practice = response.data.data.practice
+
+          this.setValues()
+
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: response.data.message,
+          })
+
+          this.$emit('refreshPracticeTable')
+        }).catch((err) => {
+          console.log('err', err.response || err)
+
+          if (err.response) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: err.response.data.message
+            })
+          } else {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: err.message
+            })
+          }
+        }).finally(() => {
+          this.loading = false
+        })
+      },
+
+      resetOverrideLastJobDateCreated () {
+        this.overrideLastJobPostedDateDate = null
+        this.overrideLastJobPostedDateTime = null
+        this.saveOverrideLastJobDateCreated()
+      },
+
+      saveOverrideLastJobDateCreated () {
+        const data = {
+          override_last_job_posted_date: this.overrideLastJobPostedDateDate
+            ? this.overrideLastJobPostedDateTime
+              ? `${this.overrideLastJobPostedDateDate} ${this.overrideLastJobPostedDateTime}`
+              : `${this.overrideLastJobPostedDateDate} 00:00`
+            : null,
+        }
+
+        this.loading = true
+        this.$axios.put(`/api/v1/admin/practices/${this.$route.params.practiceId}/override-last-job-posted-date`, data).then((response) => {
+          this.practice = response.data.data.practice
+
+          this.setValues()
+
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'success',
+            text: response.data.message,
+          })
+
+          this.$emit('refreshPracticeTable')
+        }).catch((err) => {
+          console.log('err', err.response || err)
+
+          if (err.response) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: err.response.data.message
+            })
+          } else {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: err.message
+            })
+          }
+        }).finally(() => {
+          this.loading = false
+        })
+      },
+
       getPractice () {
         return Promise.all([
           this.$axios.get(`/api/v1/admin/practices/${this.$route.params.practiceId}`)

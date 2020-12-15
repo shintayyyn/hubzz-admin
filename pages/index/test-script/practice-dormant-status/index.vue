@@ -66,8 +66,8 @@
                 v-model="orderByValue"
                 class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
               >
-                <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
-                  {{ orderByValue.displayLabel }}
+                <option v-for="tempOrderByValue in orderByValues" :key="tempOrderByValue.value" :value="tempOrderByValue.value">
+                  {{ tempOrderByValue.displayLabel }}
                 </option>
               </select>
             </div>
@@ -110,7 +110,7 @@
       draggable="false"
     />
 
-    <nuxt-child />
+    <nuxt-child @refreshPracticeTable="getPractices" />
   </div>
 </template>
 
@@ -118,12 +118,10 @@
   import debounce from 'lodash.debounce'
   
   import AppTable from '@/components/Base/AppTable'
-  import AppButton from '@/components/Base/AppButton'
 
   export default {
     components: {
       AppTable,
-      AppButton,
     },
 
     data () {
@@ -195,6 +193,24 @@
           { 
             name: 'Last job date created',
             dataIndex: 'last_job_posted_date_in_gb_formatted',
+            class: 'md:text-center',
+            sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+          },
+          { 
+            name: 'Override Created',
+            dataIndex: 'override_created_at_in_gb_formatted',
+            class: 'md:text-center',
+            sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+          },
+          { 
+            name: 'Override last job posted date',
+            dataIndex: 'override_last_job_posted_date_in_gb_formatted',
             class: 'md:text-center',
             sortable: true,
             flex: '1 0 0',
