@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
+  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-10/12 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
     <div class="flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
         <nuxt-link :to="{ name: 'index-test-script' }" class="text-white hover:text-sunglow p-1" draggable="false">
@@ -22,7 +22,7 @@
           :perPage="limit"
           :columns="columns"
           :loading="loading"
-          :routerLink="`/locums`"
+          :routerLink="routerLink"
           :orderBy="orderBy"
           @pagechanged="pageChangedHandler"
           @sorted="(_orderBy) => orderBy = _orderBy"
@@ -42,6 +42,15 @@
         </div>
       </div>
     </div>
+
+    <nuxt-link
+      v-if="$route.name !== 'index-test-script-locum-dormant-status-index'"
+      class="bg-shield z-511 fixed inset-0 opacity-50"
+      :to="{ name: 'index-test-script-locum-dormant-status-index' }"
+      draggable="false"
+    />
+
+    <nuxt-child @refreshLocumUserTable="getLocumUsers" />
   </div>
 </template>
 
@@ -49,12 +58,10 @@
   import debounce from 'lodash.debounce'
   
   import AppTable from '@/components/Base/AppTable'
-  import AppButton from '@/components/Base/AppButton'
 
   export default {
     components: {
       AppTable,
-      AppButton,
     },
 
     data () {
@@ -71,6 +78,17 @@
     },
 
     computed: {
+      routerLink () {
+        return (locumUser) => {
+          return {
+            name: 'index-test-script-locum-dormant-status-index-locumUserId',
+            params: {
+              locumUserId: locumUser.id,
+            },
+          }
+        }
+      },
+
       columns () {
         return [
 					{
@@ -109,6 +127,24 @@
             minWidth: '100px',
             maxWidth: '170px',
 					},
+          { 
+            name: 'Override Date Signed-up',
+            dataIndex: 'override_created_at_in_gb_formatted',
+            class: 'md:text-center',
+            sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+          },
+          { 
+            name: 'Override last application date',
+            dataIndex: 'override_last_job_application_date_in_gb_formatted',
+            class: 'md:text-center',
+            sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+          },
 					{
 						name: 'Status',
 						dataIndex: 'status',
@@ -146,7 +182,7 @@
     
       this.count = 0
       this.locumUsers = []
-			this.getAllLocumUsers()
+			this.getLocumUsers()
     },
     
     destroyed () {
@@ -155,7 +191,7 @@
 
 		methods: {
 
-			getAllLocumUsers () {
+			getLocumUsers () {
         const filters = {
           status: [
             'Active',
@@ -194,12 +230,12 @@
       
 			searchSubmit: debounce(function () {
 				this.currentPage = 1
-        this.getAllLocumUsers()
+        this.getLocumUsers()
 			}, 500),
     
       pageChangedHandler (page) {
         this.currentPage = page
-        this.getAllLocumUsers()
+        this.getLocumUsers()
       },
       
       locumUserUpdatedHandler (locumUser) {

@@ -4,7 +4,7 @@
       <div>
         <div class="relative flex flex-col mt-4 w-full overflow-x-auto">
           <div class="row py-2">
-            <nuxt-link :to="{ name: 'index-test-script-locum-dormant-status' }">
+            <nuxt-link :to="{ name: 'index-test-script-locum-dormant-status-index' }">
               <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none">
                 <div class="flex-1 px-2">
                   <span class="break-words">Locum Dormant Status</span>
@@ -38,13 +38,7 @@
 </template>
 
 <script>
-import AppTable from "@/components/Base/AppTable"
-
 export default {
-
-  components: {
-    AppTable,
-  },
 
   data () {
     return {
