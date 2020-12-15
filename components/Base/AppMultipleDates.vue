@@ -42,7 +42,7 @@
 				v-if="!isDisplay ? isOpen ? isOpen : modal : true"
 			>
 				<div
-					class="border bg-white"
+					class="border bg-transparent"
 					:class="isDisplay ? 'w-full' : 'rounded-b-lg calendar absolute shadow-md'"
 				>
 					<div
@@ -51,7 +51,7 @@
 						<div class="m-1 w-1/2 flex flex-no-wrap">
 							<select
 								v-model="selectedMonth"
-								class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-gray-200 hover:bg-gray-300 focus:outline-none"
+								class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent hover:bg-gray-700 focus:outline-none"
 							>
 								<option
 									:value="month.value"
@@ -61,7 +61,7 @@
 							</select>
 							<select
 								v-model="selectedYear"
-								class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-gray-200 hover:bg-gray-300 focus:outline-none"
+								class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent hover:bg-gray-700 focus:outline-none"
 							>
 								<option :value="year" v-for="(year, index) in yearLists" :key="index">{{year}}</option>
 							</select>
@@ -115,7 +115,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 1"
 									>
 										<div class="w-full">
@@ -159,7 +159,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 2"
 									>
 										<div class="w-full">
@@ -192,7 +192,7 @@
 									:class="{
 									'border-yellow-500 border-2': isSame(item.fullDate),
 									'text-gray-500': isDisabled(item.fullDate), 
-									'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
+									'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
 									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
                     'bg-yellow-500' : dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
 									}"
@@ -203,7 +203,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 3"
 									>
 										<div class="w-full">
@@ -236,7 +236,7 @@
 									:class="{
 									'border-yellow-500 border-2': isSame(item.fullDate),
 									'text-gray-500': isDisabled(item.fullDate), 
-									'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
+									'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
 									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
                     'bg-yellow-500' : dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
 									}"
@@ -247,7 +247,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 4"
 									>
 										<div class="w-full">
@@ -280,7 +280,7 @@
 									:class="{
 									'border-yellow-500 border-2': isSame(item.fullDate),
 									'text-gray-500': isDisabled(item.fullDate), 
-									'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
+									'cursor-pointer hover:yellow-500': !isDisabled(item.fullDate) && !disableSelection,
 									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
                     'bg-yellow-500' : dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
 									}"
@@ -291,7 +291,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 5"
 									>
 										<div class="w-full">
@@ -324,7 +324,7 @@
 									:class="{
 									'border-yellow-500 border-2': isSame(item.fullDate),
 									'text-gray-500': isDisabled(item.fullDate), 
-									'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
+									'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
 									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
                     'bg-yellow-500' : dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
 									}"
@@ -335,7 +335,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 6"
 									>
 										<div class="w-full">
@@ -368,7 +368,7 @@
 									:class="{
 									'border-yellow-500 border-2': isSame(item.fullDate),
 									'text-gray-500': isDisabled(item.fullDate), 
-									'cursor-pointer hover:bg-gray-300': !isDisabled(item.fullDate) && !disableSelection,
+									'cursor-pointer hover:bg-yellow-500': !isDisabled(item.fullDate) && !disableSelection,
 									'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date),
 									'bg-yellow-500' : dates.length && dates.includes($moment(item.fullDate, 'MM-DD-YYYY').format(format))
 									}"
@@ -379,7 +379,7 @@
 								<transition name="fade">
 									<div
 										@mouseleave="showDetail=false, hoverDate=''"
-										class="hover-details absolute bg-white border border-gray-400 text-xs z-50 flex flex-col items-center"
+										class="hover-details absolute bg-transparent border border-gray-400 text-xs z-50 flex flex-col items-center"
 										v-if="hoverDate===item.fullDate && item.day === 0"
 									>
 										<div class="w-full">

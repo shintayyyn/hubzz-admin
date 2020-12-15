@@ -19,7 +19,7 @@
           />
         </div>
         <div class="md:px-1 w-full lg:w-1/4 ">
-          <AppPostCode
+          <AppSuggestSelect
             v-model="filter.post_code"
             :url-index="'/api/v1/postcode-coordinates'"
             :name="'postcode'"
@@ -384,14 +384,14 @@
 import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
-import AppPostCode from "@/components/Base/AppPostCode"
+import AppSuggestSelect from "@/components/Base/AppSuggestSelect"
 // import AppLoading from "@/components/Base/AppLoading"
 export default {
   components: {
     AppInput,
     AppButton,
     AppDate,
-    AppPostCode,
+    AppSuggestSelect,
     // AppLoading,
   },
   data () {
