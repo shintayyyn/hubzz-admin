@@ -20,11 +20,11 @@
     <div class="flex">
       <div v-if="type === 'create'" class="pl-0 p-4">
         <div class="border rounded-lg w-full h-full">
-          <p class="text-gray-700 text-center text-lg font-bold pt-6">
+          <p class="text-white text-center text-lg font-bold pt-6">
             <span>DATES</span>
           </p>
 
-          <p class="text-center text-xs text-gray-700">
+          <p class="text-center text-xs text-white">
             <span>Select date range or use the calendar</span>
             <br>
             <span>to pick out specific dates</span>
@@ -62,13 +62,13 @@
 
             <div v-if="scheduleDates.length">
               <div>
-                <p class="text-gray-700">
+                <p class="text-white">
                   <span>Selected:</span>
                   <span class="font-bold">{{ scheduleDates.length }}</span>
                   <span class="font-bold">Date{{ scheduleDates.length > 1 ? 's' : '' }}</span>
                 </p>
 
-                <p class="text-gray-700">
+                <p class="text-white">
                   <span>Job Parts:</span>
                   <span class="font-bold">{{ job_parts.length }}</span>
                   <span class="font-bold">Part{{ job_parts.length > 1 ? 's' : '' }}</span>
@@ -85,14 +85,14 @@
           :class="['complete', 'terminate', 'invoice'].includes(type) ? '' : 'border rounded-lg '"
         >
           <div>
-            <p v-if="type === 'create'" class="text-gray-700 text-center text-lg font-bold py-6">
+            <p v-if="type === 'create'" class="text-white text-center text-lg font-bold py-6">
               <span>SHIFTS &amp; RATES</span>
             </p>
 
             <template v-if="schedules && schedules.length">
               <div
                 v-if="type === 'create'"
-                class="flex items-center w-2/5 mx-auto mb-6 text-gray-600"
+                class="flex items-center w-2/5 mx-auto mb-6 text-white"
               >
                 <p class="text-sm whitespace-no-wrap mr-2 font-bold">
                   <span>Job Part</span>
@@ -139,7 +139,7 @@
               </div>
 
               <div class="px-4">
-                <div class="flex items-end text-sm pb-2 font-bold text-gray-700">
+                <div class="flex items-end text-sm pb-2 font-bold text-white">
                   <p class="px-2" :class="type === 'create' ? 'w-2/12' : 'w-1/12'">
                     Date
                   </p>
@@ -444,7 +444,7 @@
                         <div class="w-2/12 flex items-center px-1">
                           <button
                             v-if="[true, 'true'].includes(shift.has_late) && shift.late_hours_reason"
-                            class="px-2 py-1 text-gray-700 border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
+                            class="px-2 py-1 text-white border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
                             @click="lateChange(shift, index, i, 'late')"
                           >
                             Reason
@@ -471,7 +471,7 @@
                         <div class="w-2/12 flex items-center px-1">
                           <button
                             v-if="[true, 'true'].includes(shift.has_absences) && shift.absent_reason"
-                            class="px-2 py-1 text-gray-700 border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
+                            class="px-2 py-1 text-white border-2 border-orange-500 cursor-pointer focus:outline-none rounded w-full"
                             @click="lateChange(shift, index, i, 'absent')"
                           >
                             Reason
@@ -723,14 +723,14 @@
                   <template v-else>
                     <div
                       class="w-2/12 pl-3 pr-1 pt-4 pb-8 rounded-l-lg border-l border-t border-b"
-                      :class="index % 2 ? 'bg-lighter-gray' : 'bg-light-gray'"
+                      :class="index % 2 ? 'bg-waterloo' : 'bg-waterloo-dark'"
                     >
                       {{ item.date }}
                     </div>
 
                     <div
                       class="w-9/12 flex flex-col items-start rounded-r-lg border-r border-t border-b"
-                      :class="index % 2 ? 'bg-lighter-gray' : 'bg-light-gray'"
+                      :class="index % 2 ? 'bg-waterloo' : 'bg-waterloo-dark'"
                     >
                       <div v-for="(shift, i) in item.shifts" :key="i" class="w-full flex flex-col">
                         <div class="flex items-end w-full">
@@ -921,8 +921,8 @@
                       <!-- Add button -->
                       <div class="flex justify-start items-center mt-3 mb-4 w-1/4">
                         <button
-                          class="whitespace-no-wrap w-1/2 flex items-center justify-center border border-gray-500 hover:bg-gray-200 text-gray-700 font-bold bg-white py-1 rounded-lg text-xs transition-hover px-4 focus:outline-none ml-1"
-                          :class="rowNotFilled(item.shifts)?'cursor-not-allowed bg-gray-300 text-gray-500':''"
+                          class="whitespace-no-wrap w-1/2 flex items-center justify-center border border-gray-500 hover:bg-gray-200 text-black font-bold bg-yellow-500 py-1 rounded-lg text-xs transition-hover px-4 focus:outline-none ml-1"
+                          :class="rowNotFilled(item.shifts)?'cursor-not-allowed bg-yellow-500 text-gray-500':''"
                           @click="addShift(item.shifts, index, item.date)"
                         >
                           <svgicon
@@ -981,7 +981,7 @@
             :class="type === 'create' ? 'w-10/12' : 'w-full px-4'"
           >
             <div
-              class="flex flex-col text-lg text-gray-600 font-bold text-right"
+              class="flex flex-col text-lg text-white font-bold text-right"
               :class="type === 'create' ? ' w-2/4' : 'w-2/5'"
             >
               <div class="flex justify-between">

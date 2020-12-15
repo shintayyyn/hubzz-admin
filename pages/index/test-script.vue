@@ -22,6 +22,16 @@
               </div>
             </nuxt-link>
           </div>
+
+          <div class="row py-2">
+            <nuxt-link :to="'/test-script/job-scripts'">
+              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none">
+                <div class="flex-1 px-2">
+                  <span class="break-words">Jobs</span>
+                </div>
+              </div>
+            </nuxt-link>
+          </div>
         </div>
       </div>
     </section>

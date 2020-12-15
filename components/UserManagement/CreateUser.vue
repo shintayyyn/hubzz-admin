@@ -151,7 +151,7 @@
               :label="'Post Code'"
               :items="postCodes"
             /> -->
-              <AppPostCode
+              <AppSuggestSelect
                 v-model="toPostUser.postcode"
                 :url-index="'/api/v1/postcode-coordinates'"
                 :name="'postcode'"
@@ -363,7 +363,7 @@
   import debounce from "lodash.debounce"
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
-  import AppPostCode from "@/components/Base/AppPostCode"
+  import AppSuggestSelect from "@/components/Base/AppSuggestSelect"
   import AppDate from "@/components/Base/AppDate"
   import AppFormError from "@/components/Base/AppFormError"
 
@@ -372,7 +372,7 @@
       AppDate,
       AppInput,
       AppButton,
-      AppPostCode,
+      AppSuggestSelect,
       AppFormError,
     },
     

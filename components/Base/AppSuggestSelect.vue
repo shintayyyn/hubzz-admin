@@ -19,6 +19,7 @@
 				@input="$emit('input', $event.target.value)"
 				@blur="$emit('blur')"
 			/>
+			
 			<transition name="drop-down">
 				<div
 					v-if="error"
@@ -54,7 +55,7 @@ export default {
 		AppLoading
 	},
 	props: {
-		value: [String, Object],
+		value: [String, Number, Object],
 		name: String,
 		label: String,
 		urlIndex: String,
@@ -103,16 +104,23 @@ export default {
 			let selectedPostCode = this.predictions[this.activeIndex];
 			this.predictions = [];
 			this.showLists = false;
-			this.$emit("input", selectedPostCode.label);
+			if (this.dataIndex === "practices") {
+				this.$emit("input", selectedPostCode.value)
+			} else {
+				this.$emit("input", selectedPostCode.label);
+			}
 		},
 		getPredictions: debounce(function(input) {
 			const params = {
 				search: input,
 				offset: 0,
-				limit: 5
+				limit: 5,
+				detailed: this.dataIndex === "practices" ? false : null,
+				status: this.dataIndex === "practices" ? ['Active', 'Dormant'] : null
 			};
 			this.predictions = [];
 			this.$axios.$get(this.url, { params }).then(res => {
+				console.log('params', params)
 				if (this.dataIndex) {
 					if (res.data[this.dataIndex].length > 0) {
 						res.data[this.dataIndex].forEach(item => {
