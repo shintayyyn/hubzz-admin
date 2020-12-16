@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
+  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-10.5/12 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
     <div class="flex-1 flex flex-col self-end bg-trout">
       <div class="flex justify-between text-sm text-white">
         <nuxt-link :to="{ name: 'index-test-script' }" class="text-white hover:text-sunglow p-1" draggable="false">
@@ -281,7 +281,7 @@
 
   @media screen and (min-width: 1200px) {
     .modal {
-      width: 70%;
+      width: 86%;
     }
   }
 </style>

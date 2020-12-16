@@ -363,10 +363,12 @@
                               && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
                                 ? 'border-color: #f56565;'
                                 : ''
-                            }`
-                            "
+                            }`"
+                            
                             :error="shiftErrors.find(err => err.field === `final_time_start-s${index}-${i}`)"
                             :disabled="[true, 'true'].includes(shift.has_absences)"
+                            
+                            :optionsContainerClass="'bg-trout'"
                             @change="
                               CheckIfEmpty(shift.final_time_start, `final_time_start-s${index}-${i}`),
                               changeStartTime(shift, true),
@@ -400,14 +402,15 @@
                               && totalHours(shift.final_time_start, shift.final_time_end, item.date) <= 0
                                 ? 'border-color: #f56565;'
                                 : ''
-                            }`
-                            "
+                            }`"
+                            
                             :error="
                               shiftErrors.find(err => err.field === `final_time_end-s${index}-${i}`)
                                 ? shiftErrors.find(err => err.field === `final_time_end-s${index}-${i}`)
                                 : formError.find(err => err.field === `final_time_end-s${index}-${i}`)
                             "
                             :disabled="[true, 'true'].includes(shift.has_absences)"
+                            :optionsContainerClass="'bg-trout'"
                             @change="CheckIfEmpty(shift.final_time_end, `final_time_end-s${index}-${i}`), emitSchedule()"
                             @blur="CheckIfEmpty(shift.final_time_end, `final_time_end-s${index}-${i}`)"
                           />
@@ -736,7 +739,7 @@
                         <div class="flex items-end w-full">
                           <div class="flex flex-col w-3/12 px-1 mb-2 pt-2">
                             <div
-                              class="flex border text-gray-500 border-gray-500 justify-between items-center w-full px-2 py-1 text-sm rounded cursor-pointer"
+                              class="flex border text-gray-300 border-gray-500 justify-between items-center w-full px-2 py-1 text-sm rounded cursor-pointer"
                               :class="shiftColor(shift.shift_id)"
                             >
                               <div class="flex justify-between items-center font-bold">
@@ -752,7 +755,7 @@
 
                             <select
                               v-model="shift.shift_id"
-                              class="custom-select -mt-8 py-1 text-sm px-2"
+                              class="custom-select -mt-8 py-1 text-sm px-2 text-black"
                               @change="changeShiftId(shift.shift_id, item.shifts, i, shift)"
                             >
                               <option
@@ -802,6 +805,7 @@
                                     ? shiftErrors.find(err => err.field === `time_start-s${index}-${i}`)
                                     : null
                               "
+                              :optionsContainerClass="'bg-trout'"
                               @change="
                                 emitSchedule(),
                                 CheckIfEmptyFormError(shift.time_start, `time_start-s${index}-${i}`),
@@ -832,6 +836,7 @@
                                     ? shiftErrors.find(err => err.field === `time_end-s${index}-${i}`)
                                     : null
                               "
+                              :optionsContainerClass="'bg-trout'"
                               @change="
                                 emitSchedule(),
                                 CheckIfEmptyFormError(shift.time_end, `time_end-s${index}-${i}`)
@@ -843,8 +848,7 @@
                             <template
                               v-if="totalHours(shift.time_start, shift.time_end, item.date) > 0"
                             >
-                              <p>{{ totalHours(shift.time_start, shift.time_end, item.date) | hours }}</p>
-                              <p>{{ totalHours(shift.time_start, shift.time_end, item.date) | minutes }}</p>
+                              <p>{{ totalHours(shift.time_start, shift.time_end, item.date) | hoursMinutes }}</p>
                             </template>
 
                             <template
@@ -1203,6 +1207,11 @@ export default {
     invoiceStatus: {
       type: String,
       default: null,
+    },
+    
+    rate_lists: {
+      type: Array,
+      default: () => null,
     },
   },
 
@@ -2706,6 +2715,7 @@ export default {
     },
 
     addShift (shifts, index) {
+      console.log('shifts')
       let rowError = []
 
       if (shifts.length) {
