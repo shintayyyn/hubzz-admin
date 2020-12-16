@@ -248,7 +248,7 @@
             title: 'Average Days Spent Settling Disputes per Invoice',
             key: 'practice_id',
             sort_key: null,
-            column: (item) => item.ave_days_spent_resolve_disputes !== null  ? `${item.ave_days_spent_resolve_disputes > 0 ? item.ave_days_spent_resolve_disputes.toFixed(2) : 'Less Than 1'} Day(s)` : 'N/A',
+            column: (item) => item.ave_days_spent_resolve_disputes !== null  ? `${item.ave_days_spent_resolve_disputes > 1 ? item.ave_days_spent_resolve_disputes.toFixed(2) : 'Less Than 1'} Day(s)` : 'N/A',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
