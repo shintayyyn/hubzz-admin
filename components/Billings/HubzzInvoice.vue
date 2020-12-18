@@ -529,10 +529,10 @@
               Total
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              £ {{ forViewing === true ? practice.vat_registered === true ? practiceInvoice.untaxed_total_amount : practiceInvoice.total_amount : untaxedAmountTotal | currency }}
+              £ {{ forViewing === true ? practiceInvoice.untaxed_total_amount : untaxedAmountTotal | currency }}
             </div>
           </div>
-          <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
+          <div class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               VAT Amount
             </div>
@@ -540,7 +540,7 @@
               £ {{ forViewing === true ? practiceInvoice.tax_amount : taxAmount | currency }}
             </div>
           </div>
-          <div v-if="practice.vat_registered === true" class="flex flex-row justify-between w-full">
+          <div class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               Total (with added VAT)
             </div>
@@ -724,12 +724,12 @@ export default {
     },
 
     taxAmount () {
-      const tax_amount = this.practice.vat_registered === true ? parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted) : 0
+      const tax_amount = parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted)
       return tax_amount
     },
 
 		taxedAmountTotal: function () {
-      const total_amount = this.practice.vat_registered === true ? parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount) : this.untaxedAmountTotal
+      const total_amount = parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount)
 			return total_amount
     },
     
