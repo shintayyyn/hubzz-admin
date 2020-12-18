@@ -1,12 +1,12 @@
 <template>
   <div class="modal shadow-lg">
     <div class="flex-1 flex flex-col self-end text-white m-6">
-      <div class="flex justify-between text-sm text-white">
+      <div class="flex justify-between text-sm text-white my-2">
         <nuxt-link :to="{ name: 'index-test-script-job-scripts' }" class="text-white hover:text-sunglow p-1" draggable="false">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
-      <div>
+      <div class="text-xl font-bold">
         Create a new job
       </div>
       <div class="md:px-1 w-full lg:w-1/4 ">
@@ -390,39 +390,71 @@
           />
         </div>
 
-        <!-- PAGE 3 CHOOSE LOCUMS -->
-        Locums to Hire
-        <AppTable
-          v-if="locumCount !== 0"
-          :total="locumCount"
-          :items="locums"
-          :currentPage="locumFilter.currentPage"
-          :perPage="locumFilter.limit"
-          :columns="columns"
-          :loading="loading"
-          :routerLink="`/locums`"
-          :orderBy="locumFilter.order_by"
-          @pagechanged="pageChangedHandler"
-          @sorted="(_orderBy) => locumFilter.order_by = _orderBy"
-        >
-          <template v-slot:status_slot="slotProps">
-            <div
-              class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-              :class="statusStyle(slotProps.item.status)"
-            >
-              {{ slotProps.item.status }}
+        <div class="font-bold text-xl">
+          Job Status
+          <div class="flex flex-row">
+            <div class="mx-3 text-lg">
+              <input id="live" v-model="jobStatus" type="radio" value="Live">
+              <label for="live">Live</label>
             </div>
-          </template>
-          <template v-slot:compliance_slot="slotProps">
-            <div
-              class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-              :class="complianceStatusStyle(slotProps.item.compliance_status)"
-            >
-              {{ slotProps.item.compliance_status }}
+            <div class="mx-3 text-lg">
+              <input id="applied" v-model="jobStatus" type="radio" value="Applied">
+              <label for="applied">Applied</label>
             </div>
-          </template>
-        </AppTable>
+            <!-- <div>
+              <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
+              <label for="allocated">Allocated</label>
+            </div> -->
+          </div>
+        </div>
 
+        <!-- PAGE 3 CHOOSE LOCUMS -->
+        <div>
+          <div class="text-xl font-bold">
+            Candidate Locums (Choose Applicants)
+          </div>
+          
+          <AppTable
+            v-if="locumCount !== 0"
+            :total="locumCount"
+            :items="locums"
+            :currentPage="locumFilter.currentPage"
+            :perPage="locumFilter.limit"
+            :columns="columns"
+            :loading="loading"
+            :orderBy="locumFilter.order_by"
+            @pagechanged="pageChangedHandler"
+            @checkClicked="toggleCheckLocums"
+            @sorted="(_orderBy) => locumFilter.order_by = _orderBy"
+          >
+            <template v-slot:checker="slotProps">
+              <input
+                :id="slotProps.item"
+                v-model="chosenLocums"
+                type="checkbox"
+                :value="slotProps.item"
+              >
+              <label :for="slotProps.item" />
+            </template>
+            <template v-slot:status_slot="slotProps">
+              <div
+                class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+                :class="statusStyle(slotProps.item.status)"
+              >
+                {{ slotProps.item.status }}
+              </div>
+            </template>
+            <template v-slot:compliance_slot="slotProps">
+              <div
+                class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+                :class="complianceStatusStyle(slotProps.item.compliance_status)"
+              >
+                {{ slotProps.item.compliance_status }}
+              </div>
+            </template>
+          </AppTable>
+        </div>
+        
         <div class="pt-4 pb-8 w-full flex justify-between">
           <!-- <AppButton class="mr-2" :label="'Back'" :disabled="loading" @click="tabActive='details'" /> -->
           <AppButton
@@ -559,81 +591,85 @@ export default {
         locum_status: ['Active','Dormant'],
         compliance_status: ['Compliant'],
         profession_id: '',
+        area_includes: '',
         currentPage: 1,
         limit: 10,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
       },
+      chosenLocums: [],
+      jobStatus: '',
       
       // Shows
       showCriteriaInputs: false,
+      showLocumPicker: false,
       // Errors
       formError: []
     }
   },
  computed: {
 		authPermissions () {
-			return this.$store.getters["permissions"];
+			return this.$store.getters["permissions"]
 		},
 
 		repostJob () {
-			return this.$store.state.calendar.repost_job;
+			return this.$store.state.calendar.repost_job
 		},
 
 		hasBanks () {
-			return this.banksCount > 0 ? true : false;
+			return this.banksCount > 0 ? true : false
 		},
 
 		complianceListLabel () {
-			return `For ${this.selectedProfession.profession_compliance_category_name}:`;
+			return `For ${this.selectedProfession.profession_compliance_category_name}:`
 		},
 
 		selectedProfession () {
 			if (!this.form.role) {
-				return null;
+				return null
 			}
 
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
-			);
+			)
 
 			if (!profession) {
-				return null;
+				return null
 			}
 
-			return profession;
+			return profession
 		},
 
 		selectedProfessionComplianceCategory () {
 			if (!this.form.role) {
-				return null;
+				return null
 			}
 
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
-			);
+			)
 
 			if (!profession) {
-				return null;
+				return null
 			}
 
 			const professionComplianceCategory = this.professionComplianceCategories.find(
 				professionComplianceCategory =>
 					professionComplianceCategory.id ===
 					profession.profession_compliance_category_id
-			);
+			)
 
-			return professionComplianceCategory || null;
+			return professionComplianceCategory || null
 		},
 
 		emptyComplianceDocumentId: {
-			get() {
-				return this.form.compliance_document_id.length === 0;
+			get () {
+				return this.form.compliance_document_id.length === 0
 			},
-			set(emptyComplianceDocumentId) {
+			set (emptyComplianceDocumentId) {
 				if (emptyComplianceDocumentId) {
-					this.form.compliance_document_id = [];
+					this.form.compliance_document_id = []
 				}
 			}
 		},
@@ -717,7 +753,7 @@ export default {
 						professionComplianceCategoryId ===
 							this.selectedProfessionComplianceCategory.id &&
 						complianceDocumentIds.includes(complianceDocumentId)
-					);
+					)
 				})
 				.map(practiceProfessionComplianceCategoryComplianceDocument => {
 					const {
@@ -728,45 +764,45 @@ export default {
 					return {
 						label: complianceDocumentName,
 						value: complianceDocumentId
-					};
-				});
+					}
+				})
 		},
 
 		practice_rate () {
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
-			);
+			)
 
 			const practiceRates =
 				this.$auth.user &&
 				this.$auth.user.practice_detail &&
 				this.$auth.user.practice_detail.practice
 					? this.$auth.user.practice_detail.practice.practice_rates
-					: [];
+					: []
 
 			const practiceRate = practiceRates.find(
 				item => item.type === profession.profession_category_name
-			);
+			)
 
-			return practiceRate ? practiceRate.rate : 0;
+			return practiceRate ? practiceRate.rate : 0
 		},
 
 		hubzz_fee () {
 			return this.schedules
 				.reduce((scheduleTotal, sched) => {
 					const shiftTotal = sched.shifts.reduce((shiftTotal, shift) => {
-						const time_start = shift.time_start;
+						const time_start = shift.time_start
 
-						const time_end = shift.time_end;
+						const time_end = shift.time_end
 
 						const total_hours = this.totalHours(
 							time_start,
 							time_end,
 							sched.date
-						);
+						)
 
 						if (total_hours > 0) {
-							const num = parseInt(total_hours);
+							const num = parseInt(total_hours)
 
 							if (!isNaN(num)) {
 								shiftTotal =
@@ -776,30 +812,31 @@ export default {
 											this.practice_rate *
 											100
 									) /
-										100;
+										100
 							}
 						}
 
-						return shiftTotal;
-					}, 0);
+						return shiftTotal
+					}, 0)
 
-					return scheduleTotal + shiftTotal;
+					return scheduleTotal + shiftTotal
 				}, 0)
-				.toFixed(2);
+				.toFixed(2)
     },
     
     // for locums
     columns () {
       return [
         {
-          name: 'User ID',
-          dataIndex: 'id',
-          class: 'md:text-center',
-          sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '140px',
-        },
+					name: "Check",
+					dataIndex: "checker",
+					class: "flex items-center justify-center",
+					slotName: "checker",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '100px',
+					eventName: "checkClicked"
+				},
         {
           name: 'Name',
           dataIndex: 'name',
@@ -876,15 +913,33 @@ export default {
 
 	},
   watch: {
-    async "form.practice_id" (value) {
+    "form.practice_id" (value) {
       if (value !== "" && Number.isInteger(value)) {
         this.tailorForPractice()
-        this.getCompatibleLocums()
         this.showCriteriaInputs = true
       } else {
         this.showCriteriaInputs = false
       }
     },
+
+    "form.role" (value) {
+      this.locumFilter.profession_id = value
+    },
+
+    jobStatus (value) {
+      if (value === 'Applied') {
+        this.chosenLocums = []
+        console.log('thius.form', this.locumFilter)
+        // this.locumFilter.profession_id = this.form.role
+        this.getCompatibleLocums()
+        
+        this.showLocumPicker = true
+      } else {
+        this.locums = []
+        this.chosenLocums = []
+        this.showLocumPicker = false
+      }
+    }
   },
   methods: {
     tailorForPractice () {
@@ -1347,7 +1402,7 @@ export default {
     },
     
     getCompatibleLocums () {
-      console.log('banana')
+      console.log('locumFilter', this.locumFilter)
       Promise.all([
         this.$axios.get('/api/v1/admin/locum-users/count', {
           params: {
@@ -1380,48 +1435,62 @@ export default {
         this.loading = false
       })
     },
-    statusStyle (status) {
-				switch (status) {
-					case 'Active':
-						return 'bg-green-500 text-white'
-					case 'Inactive':
-						return 'bg-gray-500 text-gray-700'
-					case 'Deactivated':
-						return 'bg-red-800 text-red-400'
-					case 'Account Suspension':
-						return 'bg-red-600 text-white'
-					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
-					case 'Dormant':
-            return 'bg-orange-500 text-white'
-          case 'Bogus':
-						return 'bg-gray-700 text-white'
-					default:
-						return
-				}
-			},
 
-			complianceStatusStyle (status) {
-				switch (status) {
-					case 'Empty':
-						return 'border border-white text-white'
-					case 'Incomplete':
-						return 'bg-orange-600 text-white'
-					case 'Pending':
-						return 'bg-yellow-500 text-yellow-800'
-					case 'Expiring':
-						return 'bg-red-400 text-white'
-					case 'Expired':
-						return 'bg-red-800 text-red-400'
-					case 'Rejected':
-						return 'bg-red-600 text-white'
-					case 'Compliant':
-						return 'bg-green-500 text-white'
-					default:
-						return
-				}
-      },
-      
+    toggleCheckLocums (item) {
+			const index = this.chosenLocums.findIndex(locum => {
+				return locum.id === item.id
+			})
+
+			if (index > -1) {
+				this.chosenLocums.splice(index, 1)
+			} else {
+				this.chosenLocums.push(item)
+			}
+
+			console.log("chosen chosenLocumsChecker", this.chosenLocums)
+		},
+
+    statusStyle (status) {
+      switch (status) {
+        case 'Active':
+          return 'bg-green-500 text-white'
+        case 'Inactive':
+          return 'bg-gray-500 text-gray-700'
+        case 'Deactivated':
+          return 'bg-red-800 text-red-400'
+        case 'Account Suspension':
+          return 'bg-red-600 text-white'
+        case 'Compliance Suspension':
+          return 'bg-red-600 text-white'
+        case 'Dormant':
+          return 'bg-orange-500 text-white'
+        case 'Bogus':
+          return 'bg-gray-700 text-white'
+        default:
+          return
+      }
+    },
+
+    complianceStatusStyle (status) {
+      switch (status) {
+        case 'Empty':
+          return 'border border-white text-white'
+        case 'Incomplete':
+          return 'bg-orange-600 text-white'
+        case 'Pending':
+          return 'bg-yellow-500 text-yellow-800'
+        case 'Expiring':
+          return 'bg-red-400 text-white'
+        case 'Expired':
+          return 'bg-red-800 text-red-400'
+        case 'Rejected':
+          return 'bg-red-600 text-white'
+        case 'Compliant':
+          return 'bg-green-500 text-white'
+        default:
+          return
+      }
+    },
   }
 }
 </script>

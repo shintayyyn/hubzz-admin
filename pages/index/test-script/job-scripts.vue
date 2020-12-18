@@ -56,7 +56,7 @@
       :to="{ name: 'index-test-script-job-scripts' }"
       draggable="false"
     />
-    <nuxt-child/>
+    <nuxt-child />
   </div>
 </template>
 
@@ -281,7 +281,7 @@
 
   @media screen and (min-width: 1200px) {
     .modal {
-      width: 86%;
+      width: 88%;
     }
   }
 </style>

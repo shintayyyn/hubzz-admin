@@ -890,12 +890,14 @@ export default {
 				this.addAll(item.practice_invoiceable_job_parts)
 			}
 		},
+
 		removeAll (practice) {
 			this.chosenPracticeJobParts = this.chosenPracticeJobParts.filter(
 				jobPart => jobPart.practice_id !== practice.id
 			)
 			console.log("chosenJobParts", this.chosenPracticeJobParts)
 		},
+		
 		addAll (jobParts) {
 			jobParts.forEach(item => {
 				const index = this.chosenPracticeJobParts.findIndex(jobPart => {
