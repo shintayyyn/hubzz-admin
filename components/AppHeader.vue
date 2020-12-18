@@ -290,6 +290,7 @@ export default {
 
 		async showMoreNotifs () {
 			let params = {
+				user_id: this.$auth.user.id,
 				order_by: this.notifParams.order_by,
 				limit: 10,
 				offset: 10 * (parseInt(this.currentPage) - 1)
