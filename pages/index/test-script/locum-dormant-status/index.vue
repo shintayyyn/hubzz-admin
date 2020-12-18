@@ -119,7 +119,7 @@
             maxWidth: '170px',
 					},
 					{
-						name: 'Last application date',
+						name: 'Last job application date',
 						dataIndex: 'last_job_application_date_in_gb_formatted',
 						class: 'md:text-center',
 						sortable: true,
@@ -137,7 +137,7 @@
             maxWidth: '170px',
           },
           { 
-            name: 'Override last application date',
+            name: 'Override last job application date',
             dataIndex: 'override_last_job_application_date_in_gb_formatted',
             class: 'md:text-center',
             sortable: true,
