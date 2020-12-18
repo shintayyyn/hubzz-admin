@@ -922,6 +922,7 @@ export default {
 				return item.practice_id
 			})
 			chosenPracticeIds = [...new Set(chosenPracticeIds)]
+
 			let practiceInvoiceDatas = await chosenPracticeIds.map(practiceId => {
 				const chosenJobParts = this.chosenPracticeJobParts.filter(
 					jobPart => jobPart.practice_id === practiceId
@@ -944,16 +945,15 @@ export default {
 					}
 				})
 
-				const vatRegistered = chosenJobParts.filter(item => item.practice_vat_registered === true).length > 0 ? true : false
+				// const vatRegistered = chosenJobParts.filter(item => item.practice_vat_registered === true).length > 0 ? true : false
 
-				const untaxed_total_amount = items.reduce(
-						(total_amount, item) => total_amount + item.total,
-						0
-					)
-				const tax_amount = vatRegistered === true ? untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted) : 0
+				const untaxed_total_amount = items.reduce((total_amount, item) => total_amount + item.total,0)
 
-				const total_amount = vatRegistered === true ? untaxed_total_amount + tax_amount : untaxed_total_amount
+				const tax_amount = untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted) 
 
+				const total_amount = untaxed_total_amount + tax_amount
+
+				console.log('practice id', practiceId)
 				console.log('untaxed', untaxed_total_amount)
 				console.log('tax amount', tax_amount)
 				console.log('taxed', total_amount)
@@ -1004,6 +1004,7 @@ export default {
 						false
 					)
 				})	
+			
 			// this.$store.commit(
 			// 	"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
 			// 	false
