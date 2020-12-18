@@ -145,6 +145,15 @@
             minWidth: '100px',
             maxWidth: '170px',
           },
+          { 
+            name: 'Dormant Date',
+            dataIndex: 'dormanted_at_in_gb_formatted',
+            class: 'md:text-center',
+            sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+          },
 					{
 						name: 'Status',
 						dataIndex: 'status',

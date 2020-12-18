@@ -1,12 +1,12 @@
 <template>
   <div class="modal shadow-lg">
     <div class="flex-1 flex flex-col self-end text-white m-6">
-      <div class="flex justify-between text-sm text-white">
+      <div class="flex justify-between text-sm text-white my-2">
         <nuxt-link :to="{ name: 'index-test-script-job-scripts' }" class="text-white hover:text-sunglow p-1" draggable="false">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
-      <div>
+      <div class="text-xl font-bold">
         Create a new job
       </div>
       <div class="md:px-1 w-full lg:w-1/4 ">
@@ -26,182 +26,194 @@
         <!-- PAGE 1 -->
         <div class="flex flex-row">
           <div class="w-full md:w-1/2 lg:pl-4 mb-4">
-          <!-- CRITERIA -->
-          <div>
-            <h4 class="font-bold mt-4">Criteria</h4>
-            <AppInput
-              v-model="form.role"
-              :type="'select'"
-              :name="'role'"
-              :label="'Role'"
-              :placeholder="'Select...'"
-              :items="professions"
-              :error="formError.find(item => item.field === 'role')"
-              required
-              @blur="CheckEmptyField(form.role,'role')"
-            />
-
-            <template v-if="form.role">
-              <AppFilterSearch
-                v-model="form.specialty"
-                :name="'specialty'"
-                :label="'Specialty'"
-                :placeholder="'Select...'"
-                :info="'Choose at least one qualification'"
-                :url="'/api/v1/qualifications'"
-                :professionCategoryId="selectedProfession && selectedProfession.profession_category
-                  ? selectedProfession.profession_category.id.toString()
-                  : null
-                "
-                :error="formError.find(item => item.field === 'specialty')"
-                required
-              />
-
-              <AppFilterSearch
-                v-model="form.clinical_system"
-                :name="'clinical_system'"
-                :label="'Clinical systems'"
-                :placeholder="'Select...'"
-                :info="'Choose at least one IT system'"
-                :url="'/api/v1/clinical-systems'"
-                :error="formError.find(item => item.field === 'clinical_system')"
-                required
-              />
-
-              <AppFilterSearch
-                v-model="form.spoken_language_id"
-                :name="'spoken_language_id'"
-                :label="'Spoken languages'"
-                :placeholder="'Select...'"
-                :info="'Choose other languages you can speak'"
-                :url="'/api/v1/spoken-languages'"
-                :default-item="'English'"
-              />
-
-              <template v-if="form.practice_id">
-                <div class="relative flex flex-col pt-2">
-                  <div class>Compliance documents</div>
-                </div>
-
-                <AppInput
-                  v-model="form.compliance_document_id"
-                  :type="'multi-checkbox'"
-                  :error="formError.find(item => item.field === 'compliance_document_id')"
-                  :name="'compliance_document_id'"
-                  :label="`${complianceListLabel}`"
-                  :lists="compliances"
-                  :info="'Check all that apply'"
-                  @checked="form.compliance_document_id.push(parseInt($event))"
-                  @unchecked="form.compliance_document_id.splice(form.compliance_document_id.findIndex(item => item === parseInt($event)), 1)"
-                  @uncheckAll="form.compliance_document_id = []"
-                />
-
-                <!-- <div v-if="compliances.length === 0" class="mb-6 text-center md:text-left mt-2">
-                  <AppButton :label="'Go to Profile to add items here'" @click="goToProfile" />
-                </div> -->
-              </template>
-              <template v-else-if="!form.practice_id">
-                <div class="mb-2">Compliance Documents</div>
-                <div class="mb-4 text-sm">Please Select a Practice first</div>
-              </template>
-            </template>
-          </div>
-          <!-- DURATION -->
-          <div class="flex flex-col">
-            <h4 class="font-bold mt-4">Duration</h4>
-            
-            <AppInput
-              v-model="auto_assign_job"
-              :type="'select'"
-              :name="'auto_assign_job'"
-              :label="'Use AUTO-MATCH on this Job?'"
-              :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
-            />
-
-            <template v-if="['false', false].includes(auto_assign_job)">
+            <!-- CRITERIA -->
+            <div>
+              <h4 class="font-bold mt-4">
+                Criteria
+              </h4>
               <AppInput
-                v-model="selection_notification"
+                v-model="form.role"
                 :type="'select'"
-                :name="'selection_notification'"
-                :label="'Add a selection date?'"
-                :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
-              />
-              <template v-if="selection_notification === true || selection_notification === 'true'">
-                <div>Selection will be made and you will receive a notification by this date</div>
-                <div class="flex flex-row flex-wrap justify-between items-end">
-                  <div class="px-1 w-full md:w-1/2">
-                    <AppDate
-                      v-model="selection_date.date"
-                      :name="'selection_date'"
-                      :label="'Date'"
-                      is-after
-                      :error="formError.find(item => item.field === 'selection_date')"
-                      required
-                    />
-                  </div>
-                  <div class="px-1 w-full md:w-1/2">
-                    <AppTime
-                      v-model="selection_date.time"
-                      :type="'time'"
-                      :name="'time_end'"
-                      :label="'Time'"
-                      :error="formError.find(item => item.field === 'selection_date')"
-                      required
-                    />
-                  </div>
-                </div>
-              </template>
-            </template>
-
-            <template v-if="hasBanks">
-              <AppInput
-                v-model="form.favorite_only"
-                :type="'select'"
-                :name="'favorite_only'"
-                :label="'Make this Job available for Bank Only?'"
-                :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
+                :name="'role'"
+                :label="'Role'"
+                :placeholder="'Select...'"
+                :items="professions"
+                :error="formError.find(item => item.field === 'role')"
                 required
+                @blur="CheckEmptyField(form.role,'role')"
               />
-              <template v-if="['false', false].includes(form.favorite_only)">
-                <AppInput
-                  v-model="bank_first"
-                  :type="'select'"
-                  :name="'bank_first'"
-                  :label="'Make this Job available for Bank First?'"
-                  :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
+
+              <template v-if="form.role">
+                <AppFilterSearch
+                  v-model="form.specialty"
+                  :name="'specialty'"
+                  :label="'Specialty'"
+                  :placeholder="'Select...'"
+                  :info="'Choose at least one qualification'"
+                  :url="'/api/v1/qualifications'"
+                  :professionCategoryId="selectedProfession && selectedProfession.profession_category
+                    ? selectedProfession.profession_category.id.toString()
+                    : null
+                  "
+                  :error="formError.find(item => item.field === 'specialty')"
                   required
                 />
-                <template v-if="bank_first === true || bank_first === 'true'">
-                  <div>Only favorite locum will be notified until this date</div>
+
+                <AppFilterSearch
+                  v-model="form.clinical_system"
+                  :name="'clinical_system'"
+                  :label="'Clinical systems'"
+                  :placeholder="'Select...'"
+                  :info="'Choose at least one IT system'"
+                  :url="'/api/v1/clinical-systems'"
+                  :error="formError.find(item => item.field === 'clinical_system')"
+                  required
+                />
+
+                <AppFilterSearch
+                  v-model="form.spoken_language_id"
+                  :name="'spoken_language_id'"
+                  :label="'Spoken languages'"
+                  :placeholder="'Select...'"
+                  :info="'Choose other languages you can speak'"
+                  :url="'/api/v1/spoken-languages'"
+                  :default-item="'English'"
+                />
+
+                <template v-if="form.practice_id">
+                  <div class="relative flex flex-col pt-2">
+                    <div class>
+                      Compliance documents
+                    </div>
+                  </div>
+
+                  <AppInput
+                    v-model="form.compliance_document_id"
+                    :type="'multi-checkbox'"
+                    :error="formError.find(item => item.field === 'compliance_document_id')"
+                    :name="'compliance_document_id'"
+                    :label="`${complianceListLabel}`"
+                    :lists="compliances"
+                    :info="'Check all that apply'"
+                    @checked="form.compliance_document_id.push(parseInt($event))"
+                    @unchecked="form.compliance_document_id.splice(form.compliance_document_id.findIndex(item => item === parseInt($event)), 1)"
+                    @uncheckAll="form.compliance_document_id = []"
+                  />
+
+                  <!-- <div v-if="compliances.length === 0" class="mb-6 text-center md:text-left mt-2">
+                    <AppButton :label="'Go to Profile to add items here'" @click="goToProfile" />
+                  </div> -->
+                </template>
+                <template v-else-if="!form.practice_id">
+                  <div class="mb-2">
+                    Compliance Documents
+                  </div>
+                  <div class="mb-4 text-sm">
+                    Please Select a Practice first
+                  </div>
+                </template>
+              </template>
+            </div>
+            <!-- DURATION -->
+            <div class="flex flex-col">
+              <h4 class="font-bold mt-4">
+                Duration
+              </h4>
+              
+              <AppInput
+                v-model="auto_assign_job"
+                :type="'select'"
+                :name="'auto_assign_job'"
+                :label="'Use AUTO-MATCH on this Job?'"
+                :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
+              />
+
+              <template v-if="['false', false].includes(auto_assign_job)">
+                <AppInput
+                  v-model="selection_notification"
+                  :type="'select'"
+                  :name="'selection_notification'"
+                  :label="'Add a selection date?'"
+                  :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
+                />
+                <template v-if="selection_notification === true || selection_notification === 'true'">
+                  <div>Selection will be made and you will receive a notification by this date</div>
                   <div class="flex flex-row flex-wrap justify-between items-end">
                     <div class="px-1 w-full md:w-1/2">
                       <AppDate
-                        v-model="favorite_only_until.date"
-                        :name="'favorite_only_until'"
+                        v-model="selection_date.date"
+                        :name="'selection_date'"
                         :label="'Date'"
                         is-after
-                        :error="formError.find(item => item.field === 'favorite_only_until')"
+                        :error="formError.find(item => item.field === 'selection_date')"
                         required
                       />
                     </div>
                     <div class="px-1 w-full md:w-1/2">
                       <AppTime
-                        v-model="favorite_only_until.time"
+                        v-model="selection_date.time"
                         :type="'time'"
                         :name="'time_end'"
                         :label="'Time'"
-                        :error="formError.find(item => item.field === 'favorite_only_until')"
+                        :error="formError.find(item => item.field === 'selection_date')"
                         required
                       />
                     </div>
                   </div>
                 </template>
               </template>
-            </template>
-          </div>
+
+              <template v-if="hasBanks">
+                <AppInput
+                  v-model="form.favorite_only"
+                  :type="'select'"
+                  :name="'favorite_only'"
+                  :label="'Make this Job available for Bank Only?'"
+                  :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
+                  required
+                />
+                <template v-if="['false', false].includes(form.favorite_only)">
+                  <AppInput
+                    v-model="bank_first"
+                    :type="'select'"
+                    :name="'bank_first'"
+                    :label="'Make this Job available for Bank First?'"
+                    :items="[ {value: false, label: 'No'}, {value: true, label: 'Yes'} ]"
+                    required
+                  />
+                  <template v-if="bank_first === true || bank_first === 'true'">
+                    <div>Only favorite locum will be notified until this date</div>
+                    <div class="flex flex-row flex-wrap justify-between items-end">
+                      <div class="px-1 w-full md:w-1/2">
+                        <AppDate
+                          v-model="favorite_only_until.date"
+                          :name="'favorite_only_until'"
+                          :label="'Date'"
+                          is-after
+                          :error="formError.find(item => item.field === 'favorite_only_until')"
+                          required
+                        />
+                      </div>
+                      <div class="px-1 w-full md:w-1/2">
+                        <AppTime
+                          v-model="favorite_only_until.time"
+                          :type="'time'"
+                          :name="'time_end'"
+                          :label="'Time'"
+                          :error="formError.find(item => item.field === 'favorite_only_until')"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </template>
+                </template>
+              </template>
+            </div>
           </div>
           <div class="w-full md:w-1/2 lg:pl-4 mb-4">
-            <h4 class="font-bold mt-4">Overview</h4>
+            <h4 class="font-bold mt-4">
+              Overview
+            </h4>
 
             <div class="rounded-lg shadow-lg px-4 md:px-8 py-4 mt-4">
               <AppInput v-model="form.title" :type="'text'" :name="'title'" :label="'Title'" />
@@ -354,8 +366,12 @@
               </template>
 
               <template v-else-if="!form.practice_id">
-                <div class="mb-2">Mandatory Training List</div>
-                <div class="mb-4 text-sm">Please Select a Practice first</div>
+                <div class="mb-2">
+                  Mandatory Training List
+                </div>
+                <div class="mb-4 text-sm">
+                  Please Select a Practice first
+                </div>
               </template>
             </div>
           </div>
@@ -372,15 +388,80 @@
             :type="'create'"
             @getSchedule="getSchedule"
           />
-          <div class="pt-4 pb-8 w-full flex justify-between">
-            <AppButton class="mr-2" :label="'Back'" :disabled="loading" @click="tabActive='details'" />
-            <AppButton
-              v-if="authPermissions.includes('Create Sessions Job')"
-              :disabled="!form.schedules.length || loading"
-              :label="'Publish'"
-              @click="canPublish"
-            />
+        </div>
+
+        <div class="font-bold text-xl">
+          Job Status
+          <div class="flex flex-row">
+            <div class="mx-3 text-lg">
+              <input id="live" v-model="jobStatus" type="radio" value="Live">
+              <label for="live">Live</label>
+            </div>
+            <div class="mx-3 text-lg">
+              <input id="applied" v-model="jobStatus" type="radio" value="Applied">
+              <label for="applied">Applied</label>
+            </div>
+            <!-- <div>
+              <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
+              <label for="allocated">Allocated</label>
+            </div> -->
           </div>
+        </div>
+
+        <!-- PAGE 3 CHOOSE LOCUMS -->
+        <div>
+          <div class="text-xl font-bold">
+            Candidate Locums (Choose Applicants)
+          </div>
+          
+          <AppTable
+            v-if="locumCount !== 0"
+            :total="locumCount"
+            :items="locums"
+            :currentPage="locumFilter.currentPage"
+            :perPage="locumFilter.limit"
+            :columns="columns"
+            :loading="loading"
+            :orderBy="locumFilter.order_by"
+            @pagechanged="pageChangedHandler"
+            @checkClicked="toggleCheckLocums"
+            @sorted="(_orderBy) => locumFilter.order_by = _orderBy"
+          >
+            <template v-slot:checker="slotProps">
+              <input
+                :id="slotProps.item"
+                v-model="chosenLocums"
+                type="checkbox"
+                :value="slotProps.item"
+              >
+              <label :for="slotProps.item" />
+            </template>
+            <template v-slot:status_slot="slotProps">
+              <div
+                class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+                :class="statusStyle(slotProps.item.status)"
+              >
+                {{ slotProps.item.status }}
+              </div>
+            </template>
+            <template v-slot:compliance_slot="slotProps">
+              <div
+                class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+                :class="complianceStatusStyle(slotProps.item.compliance_status)"
+              >
+                {{ slotProps.item.compliance_status }}
+              </div>
+            </template>
+          </AppTable>
+        </div>
+        
+        <div class="pt-4 pb-8 w-full flex justify-between">
+          <!-- <AppButton class="mr-2" :label="'Back'" :disabled="loading" @click="tabActive='details'" /> -->
+          <AppButton
+            :disabled="!form.schedules.length || loading"
+            :label="'Publish'"
+            @click="canPublish"
+          />
         </div>
       </div>
     </div>
@@ -393,6 +474,7 @@ import AppInput from "@/components/Base/AppInput"
 import AppFilterSearch from "@/components/Base/AppFilterSearch"
 import AppButton from "@/components/Base/AppButton"
 import AppSchedules from "@/components/Base/AppSchedules"
+import AppTable from "@/components/Base/AppTable"
 
 const session_requirements_lists = [
 	{ label: "Practice admin", value: "Practice admin" },
@@ -406,12 +488,14 @@ export default {
     AppFilterSearch,
     AppButton,
     AppSchedules,
+    AppTable,
   },
   data () {
     return {
       loading: false,
       dataLoading: false,
 
+      // Practice infos to job
       selectedPractice: '',
       rate_lists: [],
 			mandatory_training: [],
@@ -443,8 +527,18 @@ export default {
 			selectedQualification: [],
 			selectedClinicalSystem: [],
       selectedSpokenLanguage: [],
+
+      // SPLIT JOBS
+			tabActive: "details",
+			hasShiftError: false,
+			total_working_hours: 0,
+			total_gross_locum_wages: 0,
+			shiftErrors: [],
+			toPublish: false,
+			schedules: [],
+			job_parts: [],
       
-      // To Input
+      // To Input for jobs
       form: {
 				practice_id: "",
 				title: "",
@@ -488,75 +582,94 @@ export default {
 				favorite_only: false,
 				favorite_only_until: null
       },
+
+      // Locums
+      locumCount: 0,
+      locums: [],
+      locumFilter: {
+        search: '',
+        locum_status: ['Active','Dormant'],
+        compliance_status: ['Compliant'],
+        profession_id: '',
+        area_includes: '',
+        currentPage: 1,
+        limit: 10,
+        orderBy: [
+          'created_at_in_gb_formatted:desc',
+        ],
+      },
+      chosenLocums: [],
+      jobStatus: '',
       
       // Shows
       showCriteriaInputs: false,
+      showLocumPicker: false,
       // Errors
       formError: []
     }
   },
  computed: {
 		authPermissions () {
-			return this.$store.getters["permissions"];
+			return this.$store.getters["permissions"]
 		},
 
 		repostJob () {
-			return this.$store.state.calendar.repost_job;
+			return this.$store.state.calendar.repost_job
 		},
 
 		hasBanks () {
-			return this.banksCount > 0 ? true : false;
+			return this.banksCount > 0 ? true : false
 		},
 
 		complianceListLabel () {
-			return `For ${this.selectedProfession.profession_compliance_category_name}:`;
+			return `For ${this.selectedProfession.profession_compliance_category_name}:`
 		},
 
 		selectedProfession () {
 			if (!this.form.role) {
-				return null;
+				return null
 			}
 
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
-			);
+			)
 
 			if (!profession) {
-				return null;
+				return null
 			}
 
-			return profession;
+			return profession
 		},
 
 		selectedProfessionComplianceCategory () {
 			if (!this.form.role) {
-				return null;
+				return null
 			}
 
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
-			);
+			)
 
 			if (!profession) {
-				return null;
+				return null
 			}
 
 			const professionComplianceCategory = this.professionComplianceCategories.find(
 				professionComplianceCategory =>
 					professionComplianceCategory.id ===
 					profession.profession_compliance_category_id
-			);
+			)
 
-			return professionComplianceCategory || null;
+			return professionComplianceCategory || null
 		},
 
 		emptyComplianceDocumentId: {
-			get() {
-				return this.form.compliance_document_id.length === 0;
+			get () {
+				return this.form.compliance_document_id.length === 0
 			},
-			set(emptyComplianceDocumentId) {
+			set (emptyComplianceDocumentId) {
 				if (emptyComplianceDocumentId) {
-					this.form.compliance_document_id = [];
+					this.form.compliance_document_id = []
 				}
 			}
 		},
@@ -640,7 +753,7 @@ export default {
 						professionComplianceCategoryId ===
 							this.selectedProfessionComplianceCategory.id &&
 						complianceDocumentIds.includes(complianceDocumentId)
-					);
+					)
 				})
 				.map(practiceProfessionComplianceCategoryComplianceDocument => {
 					const {
@@ -651,45 +764,45 @@ export default {
 					return {
 						label: complianceDocumentName,
 						value: complianceDocumentId
-					};
-				});
+					}
+				})
 		},
 
-		practice_rate() {
+		practice_rate () {
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
-			);
+			)
 
 			const practiceRates =
 				this.$auth.user &&
 				this.$auth.user.practice_detail &&
 				this.$auth.user.practice_detail.practice
 					? this.$auth.user.practice_detail.practice.practice_rates
-					: [];
+					: []
 
 			const practiceRate = practiceRates.find(
 				item => item.type === profession.profession_category_name
-			);
+			)
 
-			return practiceRate ? practiceRate.rate : 0;
+			return practiceRate ? practiceRate.rate : 0
 		},
 
-		hubzz_fee() {
+		hubzz_fee () {
 			return this.schedules
 				.reduce((scheduleTotal, sched) => {
 					const shiftTotal = sched.shifts.reduce((shiftTotal, shift) => {
-						const time_start = shift.time_start;
+						const time_start = shift.time_start
 
-						const time_end = shift.time_end;
+						const time_end = shift.time_end
 
 						const total_hours = this.totalHours(
 							time_start,
 							time_end,
 							sched.date
-						);
+						)
 
 						if (total_hours > 0) {
-							const num = parseInt(total_hours);
+							const num = parseInt(total_hours)
 
 							if (!isNaN(num)) {
 								shiftTotal =
@@ -699,20 +812,108 @@ export default {
 											this.practice_rate *
 											100
 									) /
-										100;
+										100
 							}
 						}
 
-						return shiftTotal;
-					}, 0);
+						return shiftTotal
+					}, 0)
 
-					return scheduleTotal + shiftTotal;
+					return scheduleTotal + shiftTotal
 				}, 0)
-				.toFixed(2);
-		}
+				.toFixed(2)
+    },
+    
+    // for locums
+    columns () {
+      return [
+        {
+					name: "Check",
+					dataIndex: "checker",
+					class: "flex items-center justify-center",
+					slotName: "checker",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '100px',
+					eventName: "checkClicked"
+				},
+        {
+          name: 'Name',
+          dataIndex: 'name',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+        },
+        {
+          name: 'E-Mail Address',
+          dataIndex: 'email',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+        },
+        {
+          name: 'Profession',
+          dataIndex: 'profession_name',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '550px',
+        },
+        {
+          name: 'Date Signed-up',
+          dataIndex: 'created_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+        },
+        {
+          name: 'Sign-up verified',
+          dataIndex: 'email_verified_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+        },
+        {
+          name: 'Status',
+          dataIndex: 'status',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'status_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+        },
+        {
+          name: 'Compliance Status',
+          dataIndex: 'compliance_status',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'compliance_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+        },
+      ]
+    },
+
+    "locumFilter.offset" () {
+      return this.locumFilter.limit * (this.locumFilter.currentPage - 1)
+    },
+
 	},
   watch: {
-    async "form.practice_id" (value) {
+    "form.practice_id" (value) {
       if (value !== "" && Number.isInteger(value)) {
         this.tailorForPractice()
         this.showCriteriaInputs = true
@@ -720,6 +921,25 @@ export default {
         this.showCriteriaInputs = false
       }
     },
+
+    "form.role" (value) {
+      this.locumFilter.profession_id = value
+    },
+
+    jobStatus (value) {
+      if (value === 'Applied') {
+        this.chosenLocums = []
+        console.log('thius.form', this.locumFilter)
+        // this.locumFilter.profession_id = this.form.role
+        this.getCompatibleLocums()
+        
+        this.showLocumPicker = true
+      } else {
+        this.locums = []
+        this.chosenLocums = []
+        this.showLocumPicker = false
+      }
+    }
   },
   methods: {
     tailorForPractice () {
@@ -762,6 +982,8 @@ export default {
 
           this.selectedPractice = profileProfile
 
+          console.log('rateLists', rateLists)
+
           this.rate_lists = rateLists
           this.shifts = shiftLists
           this.professions = professions.map(profession => ({
@@ -784,7 +1006,491 @@ export default {
         .finally(() => {
           this.dataLoading = false
         })
-    }
+    },
+
+    getSchedule (
+			schedule,
+			total_gross_locum_wages,
+			total_working_hours,
+			deductions,
+			total_lates,
+			hasError,
+			job_parts
+		) {
+			this.form.schedules = []
+
+			this.schedules = schedule
+
+			schedule.forEach((sched, index) => {
+				if (sched.shifts && sched.shifts.length) {
+					let dateErrIndex = this.shiftErrors.findIndex(
+						err => err.field === `shift-${sched.date}`
+					)
+
+					if (dateErrIndex > -1) {
+						this.shiftErrors.splice(dateErrIndex, 1)
+					}
+
+					sched.shifts.forEach((shift, i) => {
+						this.form.schedules.push({
+							date: this.$moment(sched.date, "DD/MM/YYYY").format("YYYY-MM-DD"),
+							shift_id: shift.shift_id,
+							time_start: shift.time_start,
+							time_end: shift.time_end,
+							locum_detail_rate_type_id: shift.locum_detail_rate_type_id,
+							rate: shift.rate
+						})
+
+						if (shift.time_start) {
+							let startIndex = this.shiftErrors.findIndex(
+								err => err.field === `time_start-s${index}-${i}`
+							)
+
+							if (startIndex > -1) {
+								this.shiftErrors.splice(startIndex, 1)
+							}
+						}
+
+						if (shift.time_end) {
+							let endIndex = this.shiftErrors.findIndex(
+								err => err.field === `time_end-s${index}-${i}`
+							)
+
+							if (endIndex > -1) {
+								this.shiftErrors.splice(endIndex, 1)
+							}
+						}
+
+						if (
+							shift.locum_detail_rate_type_id !== 0 &&
+							shift.locum_detail_rate_type_id !== ""
+						) {
+							let rateTypeIndex = this.shiftErrors.findIndex(
+								err => err.field === `locum_detail_rate_type_id-s${index}-${i}`
+							)
+
+							if (rateTypeIndex > -1) {
+								this.shiftErrors.splice(rateTypeIndex, 1)
+							}
+						}
+
+						if (shift.shift_id !== 0 && shift.shift_id !== "") {
+							let shiftIdIndex = this.shiftErrors.findIndex(
+								err => err.field === `shift_id-s${index}-${i}`
+							)
+
+							if (shiftIdIndex > -1) {
+								this.shiftErrors.splice(shiftIdIndex, 1)
+							}
+						}
+
+						if (shift.rate !== 0 && shift.rate !== "") {
+							let rateIndex = this.shiftErrors.findIndex(
+								err => err.field === `rate-s${index}-${i}`
+							)
+
+							if (rateIndex > -1) {
+								this.shiftErrors.splice(rateIndex, 1)
+							}
+						}
+					})
+				}
+			})
+
+			this.total_working_hours = total_working_hours
+
+			this.total_gross_locum_wages = total_gross_locum_wages
+
+			this.hasShiftError = hasError
+
+			this.job_parts = job_parts
+    },
+
+    canPublish () {
+			this.shiftErrors = []
+			this.formError = []
+			let has_conflict = false
+			this.schedules.forEach((sched, index) => {
+				if (!sched.shifts.length) {
+					this.shiftErrors.push({
+						field: `shift-${sched.date}`,
+						message: "Schedule is required. Add Shift to create schedule."
+					})
+				} else {
+					sched.shifts.forEach((shift, i) => {
+						if (!shift.time_start) {
+							this.shiftErrors.push({
+								field: `time_start-s${index}-${i}`,
+								message: "Start is required."
+							})
+						}
+						if (!shift.time_end) {
+							this.shiftErrors.push({
+								field: `time_end-s${index}-${i}`,
+								message: "End is required."
+							})
+						}
+						if (shift.locum_detail_rate_type_id === 0) {
+							this.shiftErrors.push({
+								field: `locum_detail_rate_type_id-s${index}-${i}`,
+								message: "Rate type is required."
+							})
+						}
+						if (shift.shift_id === 0) {
+							this.shiftErrors.push({
+								field: `shift_id-s${index}-${i}`,
+								message: "Shift is required."
+							})
+						}
+						if (shift.rate === 0) {
+							this.shiftErrors.push({
+								field: `rate-s${index}-${i}`,
+								message: "Rate is required."
+							})
+						}
+					})
+				}
+			})
+			if (!this.shiftErrors.length) {
+				this.form.profession_id = this.form.role
+				this.form.shift_id = this.form.shift
+				this.selectedClinicalSystem = [...this.form.clinical_system]
+				this.form.clinical_system_id = this.form.clinical_system.map(
+					item => item.value
+				)
+				this.selectedQualification = [...this.form.specialty]
+				this.form.qualification_id = this.form.specialty.map(
+					item => item.value
+				)
+				this.selectedSpokenLanguage = [...this.form.spoken_language_id]
+				this.form.spoken_language_id = this.form.spoken_language_id.map(
+					item => item.value
+				)
+
+				if (Array.isArray(this.form.session_requirements)) {
+					if (this.form.session_requirements.length === 1) {
+						this.form.session_requirements = this.form.session_requirements[0]
+					} else if (this.form.session_requirements.length > 0) {
+						this.form.session_requirements = this.form.session_requirements.join()
+					} else if (this.form.session_requirements.length === 0) {
+						this.form.session_requirements = ""
+					}
+				}
+
+				this.form.auto_assign_at = null
+				if (["true", true].includes(this.auto_assign_job)) {
+					this.form.auto_assign_at = "1970-01-01 00:00"
+				}
+
+				this.form.selection_date = null
+				if (["false", false].includes(this.auto_assign_job)) {
+					if (["true", true].includes(this.selection_notification)) {
+						this.form.selection_date = `${this.$moment(
+							this.selection_date.date,
+							"YYYY-MM-DD"
+						).format("YYYY-MM-DD")} ${this.selection_date.time}`
+					}
+				}
+
+				this.form.favorite_only_until = null
+				if (["true", true].includes(this.bank_first)) {
+					this.form.favorite_only_until = `${this.$moment(
+						this.favorite_only_until.date,
+						"YYYY-MM-DD"
+					).format("YYYY-MM-DD")} ${this.favorite_only_until.time}`
+				}
+
+				if (["15", 15, "30", 30, "60", 60].includes(this.unpaid_breaks)) {
+					this.form.unpaid_breaks_in_minutes = this.unpaid_breaks
+				}
+				if (this.unpaid_breaks === "other") {
+					this.form.unpaid_breaks_in_minutes = this.form.unpaid_breaks_in_minutes
+				}
+				if (["false", false].includes(this.unpaid_breaks)) {
+					this.form.unpaid_breaks_in_minutes = ""
+				}
+
+				this.form.ir35 =
+					this.selectedProfession &&
+					this.selectedProfession.profession_category.name === "GP"
+						? this.form.ir35
+						: false
+
+				this.loading = true
+
+				this.$axios
+					.$post(`/api/v1/practice/jobs/check`, {
+						...this.form,
+						old_job_id:
+							this.repostJob && !["Cancelled"].includes(this.repostJob.status)
+								? this.repostJob.id
+								: null
+					})
+					.then(() => {
+						if (
+							!this.shiftErrors.length &&
+							!this.hasShiftError &&
+							!this.formError.length &&
+							!has_conflict
+						) {
+							this.toPublish = true
+						}
+						this.loading = false
+					})
+					.catch(err => {
+						console.log("err", err.response || err)
+
+						this.$refs.modalContainer.scrollTop = 0
+
+						this.form.clinical_system = this.selectedClinicalSystem
+
+						this.form.specialty = this.selectedQualification
+
+						this.form.spoken_language_id = this.selectedSpokenLanguage
+
+						this.form.session_requirements = this.form.session_requirements
+							? this.form.session_requirements.split(",")
+							: []
+
+						let message = null
+
+						if (err.response) {
+							if (
+								err.response.data.error_messages &&
+								err.response.data.error_messages.length > 0
+							) {
+								this.shiftErrors = err.response.data.error_messages
+								// let detailsError = [
+								//   "practice_id",
+								//   "number_of_patients",
+								//   "duration_for_each_appointment",
+								//   "role",
+								//   "specialty",
+								//   "clinical_system",
+								// ]
+								let sched_has_conflict = this.shiftErrors.find(
+									err => err.field === "schedules"
+								)
+								if (sched_has_conflict) {
+									has_conflict = true
+									sched_has_conflict.conflictSchedules.forEach(item => {
+										this.shiftErrors.push({
+											field: `conflict-${this.$moment(
+												item.date,
+												"YYYY-MM-DD"
+											).format("DD/MM/YYYY")}-${item.index}`,
+											message:
+												"This schedule has a conflict with another schedule."
+										})
+									})
+									let conflictDates = sched_has_conflict.conflictSchedules
+										.map(item => item.date)
+										.filter(item => item)
+									let job_parts = []
+									conflictDates.forEach(date => {
+										let job_part = this.job_parts.find(item =>
+											item.dates.includes(date)
+										)
+										if (!job_parts.includes(job_part.value)) {
+											job_parts.push(job_part.value)
+										}
+									})
+									this.$store.commit("SET_NOTIFICATION", {
+										enabled: true,
+										status: "danger",
+										text: [
+											`Conflict schedule on Job Part/s (${job_parts.join(",")})`
+										],
+										duration: 3000
+									})
+								}
+
+								this.formError = err.response.data.error_messages
+
+								console.log("formErropr", this.formError)
+								let detailsError = [
+									"practice_id",
+									"number_of_patients",
+									"duration_for_each_appointment",
+									"role",
+									"specialty",
+									"clinical_system"
+								]
+
+								let hasDetailsError = this.formError
+									.map(err => detailsError.includes(err.field))
+									.includes(true)
+								if (hasDetailsError) {
+									this.tabActive = "details"
+								} else if (
+									this.formError
+										.map(err => ["schedules", "dates"].includes(err.field))
+										.includes(true)
+								) {
+									this.tabActive = "schedule"
+								}
+							} else {
+								message = err.response.data.message
+							}
+							// if (this.shiftErrors.length) {
+							//   let sched_has_conflict = this.shiftErrors.find(
+							//     err => err.field === "schedules"
+							//   )
+							// }
+						} else if (err.request) {
+							message = "Something weng wrong!"
+						} else {
+							message = err.message
+						}
+
+						if (message) {
+							this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "danger",
+								text: [`${message}`]
+							})
+						}
+						this.loading = false
+					})
+			}
+			if (this.shiftErrors.length) {
+				let has_empty_sched_dates = this.shiftErrors.filter(err =>
+					err.field.includes("shift-")
+				)
+				let job_parts = []
+				if (has_empty_sched_dates.length) {
+					has_empty_sched_dates.forEach(err => {
+						let empty_date = err.field.split("-")[1]
+						let job_part = this.job_parts.find(part =>
+							part.dates.includes(
+								this.$moment(empty_date, "DD/MM/YYYY").format("YYYY-MM-DD")
+							)
+						)
+						let exist = job_parts.find(item => item === `${job_part.value}`)
+						if (job_part && !exist) {
+							job_parts.push(`${job_part.value}`)
+						}
+					})
+					let partsLabel = ""
+					job_parts.forEach((item, index) => {
+						if (job_parts.length > 1) {
+							if (index !== job_parts.length - 1) {
+								partsLabel += `${item}, `
+							} else if (index === job_parts.length - 1) {
+								partsLabel += `${item}`
+							}
+							//  else {
+							// partsLabel += ` and ${item}`
+							// }
+						} else {
+							partsLabel += item
+						}
+					})
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: [`Empty schedule on Job Part/s (${partsLabel})`],
+						duration: 3000
+					})
+				}
+			}
+    },
+
+    pageChangedHandler (page) {
+      this.locumFilter.currentPage = page
+      this.getCompatibleLocums()
+    },
+    
+    getCompatibleLocums () {
+      console.log('locumFilter', this.locumFilter)
+      Promise.all([
+        this.$axios.get('/api/v1/admin/locum-users/count', {
+          params: {
+            search: this.locumFilter.search,
+            profession_id: this.locumFilter.profession_id,
+            locum_status: this.locumFilter.locum_status,
+            compliance_status: this.locumFilter.compliance_status,
+          },
+        }).then(response => response.data.data.count),
+        this.$axios.get('/api/v1/admin/locum-users', {
+          params: {
+            search: this.locumFilter.search,
+            profession_id: this.locumFilter.profession_id,
+            locum_status: this.locumFilter.locum_status,
+            compliance_status: this.locumFilter.compliance_status,
+            order_by: this.locumFilter.order_by,
+            limit: this.locumFilter.limit,
+            offset: 0,
+          },
+        }).then(response => response.data.data.users),
+      ]).then((responses) => {
+        const [
+          count,
+          locums,
+        ] = responses
+
+        this.locumCount = count
+        this.locums = locums
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+
+    toggleCheckLocums (item) {
+			const index = this.chosenLocums.findIndex(locum => {
+				return locum.id === item.id
+			})
+
+			if (index > -1) {
+				this.chosenLocums.splice(index, 1)
+			} else {
+				this.chosenLocums.push(item)
+			}
+
+			console.log("chosen chosenLocumsChecker", this.chosenLocums)
+		},
+
+    statusStyle (status) {
+      switch (status) {
+        case 'Active':
+          return 'bg-green-500 text-white'
+        case 'Inactive':
+          return 'bg-gray-500 text-gray-700'
+        case 'Deactivated':
+          return 'bg-red-800 text-red-400'
+        case 'Account Suspension':
+          return 'bg-red-600 text-white'
+        case 'Compliance Suspension':
+          return 'bg-red-600 text-white'
+        case 'Dormant':
+          return 'bg-orange-500 text-white'
+        case 'Bogus':
+          return 'bg-gray-700 text-white'
+        default:
+          return
+      }
+    },
+
+    complianceStatusStyle (status) {
+      switch (status) {
+        case 'Empty':
+          return 'border border-white text-white'
+        case 'Incomplete':
+          return 'bg-orange-600 text-white'
+        case 'Pending':
+          return 'bg-yellow-500 text-yellow-800'
+        case 'Expiring':
+          return 'bg-red-400 text-white'
+        case 'Expired':
+          return 'bg-red-800 text-red-400'
+        case 'Rejected':
+          return 'bg-red-600 text-white'
+        case 'Compliant':
+          return 'bg-green-500 text-white'
+        default:
+          return
+      }
+    },
   }
 }
 </script>

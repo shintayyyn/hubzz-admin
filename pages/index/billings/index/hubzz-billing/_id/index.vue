@@ -32,6 +32,12 @@
           <p class="flex text-white text-sm p-2 font-semibold"> 
             {{ practice.surgery ? practice.surgery.code : null }}
           </p>
+          <p class="flex">
+            VAT Registered
+          </p>
+          <p class="flex text-white text-sm p-2 font-semibold"> 
+            {{ practice.vat_registered === true ? 'Yes' : 'No' }}
+          </p>
           <p class="flex font-bold">
             Sage reference
           </p>
