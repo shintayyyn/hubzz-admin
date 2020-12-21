@@ -1,15 +1,18 @@
 <template>
-  <div class="modal shadow-lg">
+  <div ref="modalContainer" class="modal shadow-lg">
     <div class="flex-1 flex flex-col self-end text-white m-6">
       <div class="flex justify-between text-sm text-white my-2">
         <nuxt-link :to="{ name: 'index-test-script-job-scripts' }" class="text-white hover:text-sunglow p-1" draggable="false">
           <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
         </nuxt-link>
       </div>
-      <div class="text-xl font-bold">
+      <div class="text-xl font-bold w-full border-b-2 my-4">
         Create a new job
       </div>
-      <div class="md:px-1 w-full lg:w-1/4 ">
+      <div class="w-full lg:w-1/4 ">
+        <div class="text-xl font-bold">
+          1. Choose Practice
+        </div>
         <AppSuggestSelect
           v-model="form.practice_id"
           :dataIndex="'practices'"
@@ -22,7 +25,33 @@
         </div>
       </div>
 
-      <div v-if="showCriteriaInputs" class="flex flex-col">
+      <div v-if="showCriteriaInputs" class="font-bold text-xl">
+        2. Job Status
+        <div class="flex flex-row">
+          <div class="mx-3 text-lg">
+            <input id="live" v-model="jobStatus" type="radio" value="Live">
+            <label for="live">Live</label>
+          </div>
+          <div class="mx-3 text-lg">
+            <input id="applied" v-model="jobStatus" type="radio" value="Applied">
+            <label for="applied">Applied</label>
+          </div>
+          <!-- <div>
+            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
+            <label for="allocated">Allocated</label>
+          </div> -->
+          <!-- <div>
+            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
+            <label for="allocated">Disputed</label>
+          </div> -->
+          <!-- <div>
+            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
+            <label for="allocated">Completed</label>
+          </div> -->
+        </div>
+      </div>
+
+      <div v-if="showCriteriaInputs && jobStatus" class="flex flex-col">
         <!-- PAGE 1 -->
         <div class="flex flex-row">
           <div class="w-full md:w-1/2 lg:pl-4 mb-4">
@@ -389,29 +418,44 @@
             @getSchedule="getSchedule"
           />
         </div>
-
-        <div class="font-bold text-xl">
-          Job Status
-          <div class="flex flex-row">
-            <div class="mx-3 text-lg">
-              <input id="live" v-model="jobStatus" type="radio" value="Live">
-              <label for="live">Live</label>
+        <transition name="fade">
+          <div
+            v-if="toPublish"
+            class="message-modal job-notification bg-white p-4 rounded font-bold text-gray-700"
+          >
+            <p
+              class="text-center pb-2 mb-4 border-b-2 border-gray-600 text-lg font-bold"
+            >JOB NOTIFICATION SUMMARY</p>
+            <div class="px-4">
+              <div class="flex justify-between pb-2">
+                <p>Total Working Hours:</p>
+                <p class="pl-1">{{ total_working_hours | hoursMinutes }}</p>
+              </div>
+              <div class="flex justify-between pb-2">
+                <p>Total Gross Locum Wages:</p>
+                <p class="pl-1">£ {{ total_gross_locum_wages | currency }}</p>
+              </div>
+              <div class="flex justify-between pb-2">
+                <p>
+                  Hubzz Fee*
+                  <span class="font-normal text-sm">(£{{ practice_rate.toFixed(2) }} per hour)</span>:
+                </p>
+                <p class="pl-1">£ {{ hubzz_fee | currency }}</p>
+              </div>
             </div>
-            <div class="mx-3 text-lg">
-              <input id="applied" v-model="jobStatus" type="radio" value="Applied">
-              <label for="applied">Applied</label>
+            <div class="flex justify-end items-center text-black mt-3">
+              <AppButton :label="'Cancel'" class="mr-1" :disabled="loading" @click="toPublish=false" />
+              <AppButton :label="'Confirm & Publish'" :disabled="loading" @click="createJob" />
             </div>
-            <!-- <div>
-              <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
-              <label for="allocated">Allocated</label>
-            </div> -->
           </div>
-        </div>
+        </transition>
+
+        
 
         <!-- PAGE 3 CHOOSE LOCUMS -->
-        <div>
+        <div v-if="jobStatus === 'Applied'">
           <div class="text-xl font-bold">
-            Candidate Locums (Choose Applicants)
+            3. Candidate Locums (Choose Applicants)
           </div>
           
           <AppTable
@@ -494,6 +538,11 @@ export default {
     return {
       loading: false,
       dataLoading: false,
+      
+      // Job infos prior to creation
+      datePosted: '',
+      dateClosing: '',
+      jobStatus: '',
 
       // Practice infos to job
       selectedPractice: '',
@@ -593,13 +642,13 @@ export default {
         profession_id: '',
         area_includes: '',
         currentPage: 1,
-        limit: 10,
+        limit: 5,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
       },
       chosenLocums: [],
-      jobStatus: '',
+      
       
       // Shows
       showCriteriaInputs: false,
@@ -788,6 +837,7 @@ export default {
 		},
 
 		hubzz_fee () {
+      console.log('totalHours', this.totalHours)
 			return this.schedules
 				.reduce((scheduleTotal, sched) => {
 					const shiftTotal = sched.shifts.reduce((shiftTotal, shift) => {
@@ -799,7 +849,8 @@ export default {
 							time_start,
 							time_end,
 							sched.date
-						)
+            )
+            
 
 						if (total_hours > 0) {
 							const num = parseInt(total_hours)
@@ -942,6 +993,14 @@ export default {
     }
   },
   methods: {
+    totalHours (start, end, date) {
+			let startDate = this.$moment(date + " " + start, "DD/MM/YYYY HH:mm")
+			let endDate = this.$moment(date + " " + end, "DD/MM/YYYY HH:mm")
+			return start && end
+				? this.$moment(endDate, "DD/MM/YYYY HH:mm").diff(startDate, "minutes")
+				: 0
+    },
+    
     tailorForPractice () {
       console.log(this.form)
       this.dataLoading = true
@@ -1152,6 +1211,7 @@ export default {
 				}
 			})
 			if (!this.shiftErrors.length) {
+        console.log('there are no errors')
 				this.form.profession_id = this.form.role
 				this.form.shift_id = this.form.shift
 				this.selectedClinicalSystem = [...this.form.clinical_system]
@@ -1219,7 +1279,7 @@ export default {
 				this.loading = true
 
 				this.$axios
-					.$post(`/api/v1/practice/jobs/check`, {
+					.$post(`/api/v1/admin/admin-seeder/jobs/create-job/check`, {
 						...this.form,
 						old_job_id:
 							this.repostJob && !["Cancelled"].includes(this.repostJob.status)
@@ -1395,6 +1455,278 @@ export default {
 				}
 			}
     },
+
+    createJob () {
+			this.formError = [];
+			let notRequired = [
+				"title",
+				"description",
+				"session_requirements",
+				"session_structure_information",
+				"extra_information",
+				"is_another_doctor",
+				"is_nurse_available",
+				"opportunity_for_catch_up_slots",
+				"spoken_language_id",
+				"ir35",
+				"mandatory_training_id",
+				"other_mandatory_training_id",
+				"include_saturday",
+				"include_sunday",
+				"compliance_document_id",
+				"auto_assign_at",
+				"total_hours",
+				"hours",
+				"minutes",
+				"favorite_only",
+				"shift_id",
+				"schedule_templates",
+				"unpaid_breaks_in_minutes"
+			];
+			if (!this.hasBanks) {
+				this.form.favorite_only = false;
+				this.bank_first = false;
+				this.favorite_only_until.date = null;
+				this.favorite_only_until.time = null;
+			}
+
+			if (["true", true].includes(this.auto_assign_job)) {
+				this.selection_notification = false;
+			}
+
+			if (["false", false].includes(this.selection_notification)) {
+				notRequired.push("selection_date");
+			} else if (
+				["true", true].includes(this.selection_notification) &&
+				this.selection_date.date &&
+				this.selection_date.time
+			) {
+				notRequired.push("selection_date");
+			}
+
+			if (["true", true].includes(this.form.favorite_only)) {
+				this.bank_first = false;
+			}
+
+			if (["false", false].includes(this.bank_first)) {
+				notRequired.push("favorite_only_until");
+			} else if (
+				["true", true].includes(this.bank_first) &&
+				this.favorite_only_until.date &&
+				this.favorite_only_until.time
+			) {
+				notRequired.push("favorite_only_until");
+			}
+
+			this.Validate(this.form, notRequired);
+
+			if (!this.formError.length) {
+				this.form.profession_id = this.form.role;
+				this.form.shift_id = this.form.shift;
+				this.selectedClinicalSystem = [...this.form.clinical_system];
+				this.form.clinical_system_id = this.form.clinical_system.map(
+					item => item.value
+				);
+				this.selectedQualification = [...this.form.specialty];
+				this.form.qualification_id = this.form.specialty.map(
+					item => item.value
+				);
+				this.selectedSpokenLanguage = [...this.form.spoken_language_id];
+				this.form.spoken_language_id = this.form.spoken_language_id.map(
+					item => item.value
+				);
+				// this.form.date_start = this.$moment(
+				//   this.form.date_start,
+				//   "YYYY-MM-DD"
+				// ).format("YYYY-MM-DD")
+				// this.form.date_end = this.$moment(
+				//   this.form.date_end,
+				//   "YYYY-MM-DD"
+				// ).format("YYYY-MM-DD")
+
+				if (Array.isArray(this.form.session_requirements)) {
+					if (this.form.session_requirements.length === 1) {
+						this.form.session_requirements = this.form.session_requirements[0];
+					} else if (this.form.session_requirements.length > 0) {
+						this.form.session_requirements = this.form.session_requirements.join();
+					} else if (this.form.session_requirements.length === 0) {
+						this.form.session_requirements = "";
+					}
+				}
+
+				this.form.auto_assign_at = null;
+				if (["true", true].includes(this.auto_assign_job)) {
+					this.form.auto_assign_at = "1970-01-01 00:00";
+				}
+
+				this.form.selection_date = null;
+				if (["false", false].includes(this.auto_assign_job)) {
+					if (["true", true].includes(this.selection_notification)) {
+						this.form.selection_date = `${this.$moment(
+							this.selection_date.date,
+							"YYYY-MM-DD"
+						).format("YYYY-MM-DD")} ${this.selection_date.time}`;
+					}
+				}
+
+				this.form.favorite_only_until = null;
+				if (["true", true].includes(this.bank_first)) {
+					this.form.favorite_only_until = `${this.$moment(
+						this.favorite_only_until.date,
+						"YYYY-MM-DD"
+					).format("YYYY-MM-DD")} ${this.favorite_only_until.time}`;
+				}
+
+				if (["15", 15, "30", 30, "60", 60].includes(this.unpaid_breaks)) {
+					this.form.unpaid_breaks_in_minutes = this.unpaid_breaks;
+				}
+				if (this.unpaid_breaks === "other") {
+					this.form.unpaid_breaks_in_minutes = this.form.unpaid_breaks_in_minutes;
+				}
+				if (["false", false].includes(this.unpaid_breaks)) {
+					this.form.unpaid_breaks_in_minutes = "";
+				}
+
+				this.form.ir35 =
+					this.selectedProfession &&
+					this.selectedProfession.profession_category.name === "GP"
+						? this.form.ir35
+						: false;
+
+				this.loading = true;
+
+				this.$axios
+					.$post(`/api/v1/admin/admin-seeder/jobs/create-job`, {
+						...this.form,
+						old_job_id:
+							this.repostJob && !["Cancelled"].includes(this.repostJob.status)
+								? this.repostJob.id
+								: null
+					})
+					.then(res => {
+						if (this.$route.name === "dashboard-create") {
+							this.$router.push("/dashboard");
+						} else if (this.$route.name !== "dashboard-create") {
+							this.$store.commit("calendar/CREATE_JOB_MODAL", false);
+
+							console.log("res.data", res.data);
+						}
+
+						const job = res.data.job;
+
+						if (job.status === "Live") {
+							this.$store.commit("jobs/ADD_PRACTICE_AVAILABLE_JOB", job);
+						}
+
+						if (this.repostJob) {
+							if (this.repostJob.status === "Unfilled") {
+								this.$store.commit(
+									"jobs/REMOVE_PRACTICE_UNFILLED_JOB",
+									this.repostJob.id
+								);
+							}
+
+							if (this.repostJob.status === "Withdrawn") {
+								this.$store.commit(
+									"jobs/REMOVE_PRACTICE_WITHDRAWN_JOB_PARTS_WHERE_JOB_ID_IS",
+									this.repostJob.id
+								);
+							}
+						}
+
+						this.$store.commit("SET_NOTIFICATION", {
+							enabled: true,
+							status: "success",
+							text: ["Successfully created job"]
+						});
+					})
+					.catch(err => {
+						console.log("err", err.response || err);
+
+						this.$refs.modalContainer.scrollTop = 0;
+
+						this.form.clinical_system = this.selectedClinicalSystem;
+
+						this.form.specialty = this.selectedQualification;
+
+						this.form.spoken_language_id = this.selectedSpokenLanguage;
+
+						this.form.session_requirements = this.form.session_requirements
+							? this.form.session_requirements.split(",")
+							: [];
+
+						let message = null;
+
+						if (err.response) {
+							if (
+								err.response.data.error_messages &&
+								err.response.data.error_messages.length > 0
+							) {
+								this.formError = err.response.data.error_messages;
+								let detailsError = [
+									"practice_id",
+									"number_of_patients",
+									"duration_for_each_appointment",
+									"role",
+									"specialty",
+									"clinical_system"
+								];
+
+								let hasDetailsError = this.formError
+									.map(err => detailsError.includes(err.field))
+									.includes(true);
+								if (hasDetailsError) {
+									this.tabActive = "details";
+								} else if (
+									this.formError
+										.map(err => ["schedules", "dates"].includes(err.field))
+										.includes(true)
+								) {
+									this.tabActive = "schedule";
+								}
+							} else {
+								message = err.response.data.message;
+							}
+						} else if (err.request) {
+							message = "Something weng wrong!";
+						} else {
+							message = err.message;
+						}
+
+						if (message) {
+							this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "danger",
+								text: [`${message}`]
+							});
+						}
+					})
+					.finally(() => {
+						this.toPublish = false;
+						this.loading = false;
+					});
+			} else {
+				let detailsError = [
+					"practice_id",
+					"number_of_patients",
+					"duration_for_each_appointment",
+					"role",
+					"specialty",
+					"clinical_system"
+				];
+				let hasDetailsError = this.formError
+					.map(err => detailsError.includes(err.field))
+					.includes(true);
+				if (hasDetailsError) {
+					this.tabActive = "details";
+				}
+				console.log("errors", this.formError);
+				this.toPublish = false;
+				this.$nextTick(() => {
+					this.$refs.modalContainer.scrollTop = 0;
+				});
+			}
+		},
 
     pageChangedHandler (page) {
       this.locumFilter.currentPage = page
