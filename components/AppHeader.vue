@@ -1,132 +1,120 @@
 <template>
-  <section class="header">
-    <!-- HEADER -->
-    <div class="flex justify-between items-center text-sm text-white px-4 md:px-6">
-      <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
-        <img src="~/assets/images/hbg.png">
-      </button>
+	<section class="header">
+		<!-- HEADER -->
+		<div class="flex justify-between items-center text-sm text-white px-4 md:px-6">
+			<button class="toggle text-white focus:outline-none" @click="toggleSideBar">
+				<img src="~/assets/images/hbg.png" />
+			</button>
 
-      <div class="flex flex-row py-2 cursor-pointer">
-        <!-- <div>
+			<div class="flex flex-row py-2 cursor-pointer">
+				<!-- <div>
 					<img src="~/assets/images/hubzz-icon-transparent.png" />
-				</div> -->
-        <div class="m-2 mt-3 text-xl md:text-4xl">
-          {{ headerName }}
-        </div>
-      </div>
+				</div>-->
+				<div class="m-2 mt-3 text-xl md:text-4xl">{{ headerName }}</div>
+			</div>
 
-      <div class="flex justify-right">
-        <div class="m-4 sm:relative">
-          <div class="flex flex-col relative cursor-pointer" @click="checkNotifications()">
-            <div>
-              <svgicon
-                name="notification"
-                width="30"
-                height="30"
-                :color="notificationToggle === true ? '#ffc72c' : 'white'"
-              />
-            </div>
+			<div class="flex justify-right">
+				<div class="m-4 sm:relative">
+					<div class="flex flex-col relative cursor-pointer" @click="checkNotifications()">
+						<div>
+							<svgicon
+								name="notification"
+								width="30"
+								height="30"
+								:color="notificationToggle === true ? '#ffc72c' : 'white'"
+							/>
+						</div>
 
-            <div
-              v-if="notificationsCount > 0"
-              class="absolute bottom-0 z-50 -mb-3 -mr-3 py-1 px-2 ml-4 bg-red-700 text-xs flex items-center justify-center rounded-full"
-            >
-              {{ notificationsCount }}
-            </div>
-          </div>
-          <div v-if="notificationToggle === true">
-            <div v-on-clickaway="onClickaway" class="notification-modal mx-auto sm:mx-0 overflow-hidden">
-              <!-- <div class="flex flex-row-reverse">
+						<div
+							v-if="notificationsCount > 0"
+							class="absolute bottom-0 z-50 -mb-3 -mr-3 py-1 px-2 ml-4 bg-red-700 text-xs flex items-center justify-center rounded-full"
+						>{{ notificationsCount }}</div>
+					</div>
+					<div v-if="notificationToggle === true">
+						<div v-on-clickaway="onClickaway" class="notification-modal mx-auto sm:mx-0 overflow-hidden">
+							<!-- <div class="flex flex-row-reverse">
 								<div class="p-1 m-1 mx-2 mt-1" @click="notificationToggle = false">
 									<svgicon name="times-solid" width="15" height="15" color="white" />
 								</div>
 							</div>-->
-              <div class="flex flex-row mx-4 justify-between pt-4">
-                <div class>
-                  <p class="text-xl font-bold tracking-normal">
-                    Notifications
-                  </p>
-                </div>
-                <div
-                  class="text-white hover:text-gray-500 mt-1 cursor-pointer"
-                  @click="clearAllNotifications()"
-                >
-                  Mark All as Read
-                </div>
-              </div>
+							<div class="flex flex-row mx-4 items-center justify-between pt-4">
+								<div class>
+									<p class="text-xl font-bold tracking-normal">Notifications</p>
+								</div>
+								<div
+									v-if="notifications && notifications.filter(item => item.seen === false).length"
+									class="text-white hover:text-gray-500 mt-1 cursor-pointer"
+									@click="clearAllNotifications()"
+								>Mark All as Read</div>
+								<p v-else class="text-xs italic text-gray-400">Click outside to Close</p>
+							</div>
 
-              <div class="m-2 overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
-                <div v-if="notifications.length > 0">
-                  <div
-                    v-for="(item, index) in notifications"
-                    :key="`item-${index}`"
-                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg cursor-pointer"
-                    :class="item.seen === true ? 'text-gray-400' : 'border-2 border-orange-500'"
-                    @click="goTo(item)"
-                  >
-                    <div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
-                      <!-- <span class="uppercase text-xs font-bold">{{ item.notification_type.domain }}</span> -->
-                      <span class="uppercase text-xs font-bold pb-2">{{ item.title }}</span>
-                      <!-- <span class="uppercase text-xs font-bold">{{ item.notification_type.name }}</span> -->
-                      <span>{{ item.description }}</span>
-                    </div>
-                    <span class="text-xs text-gray-400">{{ item.created_at_in_gb_formatted }}</span>
-                  </div>
-                </div>
-                <div v-else>
-                  No New Notifications
-                </div>
-              </div>
-              <div class="flex justify-center m-4">
-                <p
-                  class="text-white hover:text-gray-500 cursor-pointer px-2"
-                  @click="showMoreNotifs()"
-                >
-                  Show More
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+							<div class="m-2 overflow-y-auto overflow-x-hidden px-2" style="max-height: 500px;">
+								<div v-if="notifications.length > 0">
+									<div
+										v-for="(item, index) in notifications"
+										:key="`item-${index}`"
+										class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg cursor-pointer"
+										:class="item.seen === true ? 'text-gray-400' : 'border-2 border-orange-500'"
+										@click="goTo(item)"
+									>
+										<div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
+											<!-- <span class="uppercase text-xs font-bold">{{ item.notification_type.domain }}</span> -->
+											<span class="uppercase text-xs font-bold pb-2">{{ item.title }}</span>
+											<!-- <span class="uppercase text-xs font-bold">{{ item.notification_type.name }}</span> -->
+											<span>{{ item.description }}</span>
+										</div>
+										<span class="text-xs text-gray-400">{{ item.created_at_in_gb_formatted }}</span>
+									</div>
+								</div>
+								<div v-else>No New Notifications</div>
+							</div>
+							<div class="flex justify-center m-4">
+								<p
+									class="text-white hover:text-gray-500 cursor-pointer px-2"
+									@click="showMoreNotifs()"
+								>Show More</p>
+							</div>
+						</div>
+					</div>
+				</div>
 
-        <nuxt-link
-          v-if="$auth.loggedIn"
-          to="/account"
-          class="flex flex-row py-2 text-sm cursor-pointer"
-        >
-          <div>
-            <img
-              src="~/assets/images/default-user-image.png"
-              class="rounded-full"
-              width="48px"
-              height="48px"
-            >
-          </div>
-          <div class="hidden md:block ml-2 mt-2 text-white">
-            {{ $auth.user.email }}
-            <div class="font-hairline text-xs">
-              My Account
-            </div>
-          </div>
-        </nuxt-link>
-      </div>
-      <!-- <div>
+				<nuxt-link
+					v-if="$auth.loggedIn"
+					to="/account"
+					class="flex flex-row py-2 text-sm cursor-pointer"
+				>
+					<div>
+						<img
+							src="~/assets/images/default-user-image.png"
+							class="rounded-full"
+							width="48px"
+							height="48px"
+						/>
+					</div>
+					<div class="hidden md:block ml-2 mt-2 text-white">
+						{{ $auth.user.email }}
+						<div class="font-hairline text-xs">My Account</div>
+					</div>
+				</nuxt-link>
+			</div>
+			<!-- <div>
         <AppNotifDropdown :notifications="notifications"/>
 			</div>-->
-    </div>
-    <!-- HEADER -->
-  </section>
+		</div>
+		<!-- HEADER -->
+	</section>
 </template>
 <script>
 // import AppNotifDropdown from "@/components/AppNotifDropdown"
-import { mixin as clickaway } from "vue-clickaway"
+import { mixin as clickaway } from "vue-clickaway";
 export default {
 	components: {
 		// AppNotifDropdown,
 	},
 	mixins: [clickaway],
 
-	data () {
+	data() {
 		return {
 			currentPage: 1,
 			totalPages: 0,
@@ -161,139 +149,136 @@ export default {
 				"Admin Notification Practice Surgery TerminationRequested",
 				"Admin Notification Practice Surgery Updated"
 			]
+		};
+	},
+
+	computed: {
+		headerName() {
+			if (this.$route.name.includes("index-locums")) return "Locums";
+			else if (this.$route.name.includes("index-practices")) return "Practices";
+			else if (this.$route.name.includes("index-billings")) return "Billings";
+			else if (this.$route.name.includes("index-reports")) return "Reports";
+			else if (this.$route.name.includes("index-standard-terms"))
+				return "Standard Terms";
+			else if (this.$route.name.includes("index-referral-lottery"))
+				return "Referral Lottery";
+			else if (this.$route.name.includes("index-faqs"))
+				return "Frequently Asked Questions";
+			else if (this.$route.name.includes("index-tncs"))
+				return "Terms and Conditions";
+			else if (this.$route.name.includes("index-inquiries")) return "Inquiries";
+			else if (this.$route.name.includes("index-user-management"))
+				return "User Management";
+			else if (this.$route.name.includes("index-change-email-requests"))
+				return "Change Email Requests";
+			else if (
+				this.$route.name.includes("index-compliance-document-reject-reasons")
+			)
+				return "Compliance Document Reject Reasons";
+			else if (this.$route.name.includes("index-test-script"))
+				return "Test Script";
+			else return "Dashboard";
 		}
 	},
 
-  computed: {
-    headerName () {
-			if (this.$route.name.includes('index-locums'))
-				return 'Locums'
-			else if (this.$route.name.includes('index-practices'))
-				return 'Practices'
-			else if (this.$route.name.includes('index-billings'))
-				return 'Billings'
-			else if (this.$route.name.includes('index-reports'))
-				return 'Reports'
-			else if (this.$route.name.includes('index-standard-terms'))
-				return 'Standard Terms'
-			else if (this.$route.name.includes('index-referral-lottery'))
-				return 'Referral Lottery'
-			else if (this.$route.name.includes('index-faqs'))
-				return 'Frequently Asked Questions'
-			else if (this.$route.name.includes('index-tncs'))
-				return 'Terms and Conditions'
-			else if (this.$route.name.includes('index-inquiries'))
-				return 'Inquiries'
-			else if (this.$route.name.includes('index-user-management'))
-				return 'User Management'
-			else if (this.$route.name.includes('index-change-email-requests'))
-				return 'Change Email Requests'
-			else if (this.$route.name.includes('index-compliance-document-reject-reasons'))
-				return 'Compliance Document Reject Reasons'
-			else if (this.$route.name.includes('index-test-script'))
-				return 'Test Script'
-			else
-				return 'Dashboard' 
-    }
-  },
-
-	async created () {
+	async created() {
 		const params = {
 			user_id: this.$auth.user.id,
 			seen: false
-		}
-		
+		};
+
 		await this.$axios
 			.$get(`/api/v1/admin/notifications/count`, {
 				params
 			})
 			.then(res => {
-				this.notificationsCount = res.data.count
-				this.totalPages = Math.ceil(this.notificationsCount / 10)
-			})
+				this.notificationsCount = res.data.count;
+				this.totalPages = Math.ceil(this.notificationsCount / 10);
+			});
 		await this.$axios
 			.$get(`/api/v1/admin/notifications`, {
 				params: this.notifParams
 			})
 			.then(res => {
-				this.notifications = res.data.notifications
-			})
+				this.notifications = res.data.notifications;
+			});
 	},
 
-	mounted () {
-		this.setSocketNotificationListener()
+	mounted() {
+		this.setSocketNotificationListener();
 	},
 
-	destroyed () {
-		this.removeSocketNotificationListener()
+	destroyed() {
+		this.removeSocketNotificationListener();
 	},
 
 	methods: {
-		close () {
-			console.log("banana")
+		close() {
+			console.log("banana");
 		},
-		onClickaway () {
+		onClickaway() {
 			if (this.notificationToggle) {
-				this.notificationToggle = false
+				this.notificationToggle = false;
 			}
 		},
-		setSocketNotificationListener () {
+		setSocketNotificationListener() {
 			this.notificationTypeNames.forEach(notificationTypeName => {
-				this.$socket.on(notificationTypeName, this.newNotificationHandler)
-			})
+				this.$socket.on(notificationTypeName, this.newNotificationHandler);
+			});
 		},
 
-		removeSocketNotificationListener () {
+		removeSocketNotificationListener() {
 			this.notificationTypeNames.forEach(notificationTypeName => {
 				this.$socket.removeListener(
 					notificationTypeName,
 					this.newNotificationHandler
-				)
-			})
+				);
+			});
 		},
 
-		newNotificationHandler () {
+		newNotificationHandler() {
 			this.getNotifications().catch(err => {
-				console.log("err", err.response || err)
-			})
+				console.log("err", err.response || err);
+			});
 		},
 
-		async getNotifications () {
+		async getNotifications() {
 			const params = {
 				user_id: this.$auth.user.id,
 				seen: false
-			}
+			};
 
 			await this.$axios
 				.$get(`/api/v1/admin/notifications/count`, { params })
 				.then(res => {
-					this.notificationsCount = res.data.count
-					console.log("notif count", res.data.count)
-				})
+					this.notificationsCount = res.data.count;
+					console.log("notif count", res.data.count);
+				});
 
-			console.log("notifparams", this.notifParams)
+			console.log("notifparams", this.notifParams);
 
 			await this.$axios
 				.$get(`/api/v1/admin/notifications`, {
 					params: this.notifParams
 				})
 				.then(res => {
-					this.notifications = res.data.notifications
-					console.log("notifs", this.notifications)
-				})
+					this.notifications = res.data.notifications;
+					console.log("notifs", this.notifications);
+				});
 		},
 
-		async checkNotifications () {
-			this.notificationToggle = !this.notificationToggle
-			await this.getNotifications()
+		async checkNotifications() {
+			this.notificationToggle = !this.notificationToggle;
+			await this.getNotifications();
 		},
 
-		async showMoreNotifs () {
+		async showMoreNotifs() {
 			let params = {
+				user_id: this.$auth.user.id,
 				order_by: this.notifParams.order_by,
 				limit: 10,
 				offset: 10 * (parseInt(this.currentPage) - 1)
-			}
+			};
 			await this.$axios
 				.$get(`/api/v1/admin/notifications`, {
 					params
@@ -304,60 +289,60 @@ export default {
 					//   res.data.notifications,
 					// ]
 					res.data.notifications.forEach(item => {
-						this.notifications.push(item)
-					})
-					console.log("notifications", this.notifications)
-				})
+						this.notifications.push(item);
+					});
+					console.log("notifications", this.notifications);
+				});
 		},
 
-		async clearAllNotifications () {
+		async clearAllNotifications() {
 			await this.$axios
 				.$put(`/api/v1/admin/notifications/seen-all`, {
 					user_id: this.$auth.user.id
 				})
 				.then(res => {
-					console.log("result", res)
+					console.log("result", res);
 
-          this.notifications
-            .filter(notification => !notification.seen)
-            .forEach(notification => (notification.seen = true))
+					this.notifications
+						.filter(notification => !notification.seen)
+						.forEach(notification => (notification.seen = true));
 				})
 				.finally(() => {
-					this.notificationsCount = 0
-				})
+					this.notificationsCount = 0;
+				});
 		},
 
-		async goTo (item) {
-			console.log("notif item", item)
-			console.log("notif name", item.notification_type.name)
-			console.log("notif domain", item.notification_type.domain)
-			console.log("notif payload type", item.payload_type)
-			console.log("notif payload", item.payload)
+		async goTo(item) {
+			console.log("notif item", item);
+			console.log("notif name", item.notification_type.name);
+			console.log("notif domain", item.notification_type.domain);
+			console.log("notif payload type", item.payload_type);
+			console.log("notif payload", item.payload);
 
 			if (item.notification_type.domain === "Admin") {
-				this.$router.push(item.url)
+				this.$router.push(item.url);
 			}
 			if (item.notification_type.domain === "Practice") {
 				if (item.url.includes("sessions")) {
 					this.$router.push(
 						`/practices/${item.user.practice.id}/practice-sessions/${item.payload.id}`
-					)
+					);
 				}
 			}
 
 			await this.$axios
 				.$put(`/api/v1/admin/notifications/${item.id}/seen`)
 				.then(() => {
-					this.getNotifications()
-				})
+					this.getNotifications();
+				});
 		},
 
-		toggleSideBar () {
-			this.$store.commit("TOGGLE_SIDEBAR", true)
-			document.body.style.overflow = "hidden"
+		toggleSideBar() {
+			this.$store.commit("TOGGLE_SIDEBAR", true);
+			document.body.style.overflow = "hidden";
 		}
 	}
-}
+};
 </script>
 
 <style>
