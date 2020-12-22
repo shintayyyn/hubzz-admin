@@ -418,40 +418,9 @@
             @getSchedule="getSchedule"
           />
         </div>
-        <transition name="fade">
-          <div
-            v-if="toPublish"
-            class="message-modal job-notification bg-white p-4 rounded font-bold text-gray-700"
-          >
-            <p
-              class="text-center pb-2 mb-4 border-b-2 border-gray-600 text-lg font-bold"
-            >JOB NOTIFICATION SUMMARY</p>
-            <div class="px-4">
-              <div class="flex justify-between pb-2">
-                <p>Total Working Hours:</p>
-                <p class="pl-1">{{ total_working_hours | hoursMinutes }}</p>
-              </div>
-              <div class="flex justify-between pb-2">
-                <p>Total Gross Locum Wages:</p>
-                <p class="pl-1">£ {{ total_gross_locum_wages | currency }}</p>
-              </div>
-              <div class="flex justify-between pb-2">
-                <p>
-                  Hubzz Fee*
-                  <span class="font-normal text-sm">(£{{ practice_rate.toFixed(2) }} per hour)</span>:
-                </p>
-                <p class="pl-1">£ {{ hubzz_fee | currency }}</p>
-              </div>
-            </div>
-            <div class="flex justify-end items-center text-black mt-3">
-              <AppButton :label="'Cancel'" class="mr-1" :disabled="loading" @click="toPublish=false" />
-              <AppButton :label="'Confirm & Publish'" :disabled="loading" @click="createJob" />
-            </div>
-          </div>
-        </transition>
-
         
-
+        <div v-if="toPublish" class="shield" />
+        
         <!-- PAGE 3 CHOOSE LOCUMS -->
         <div v-if="jobStatus === 'Applied'">
           <div class="text-xl font-bold">
@@ -508,6 +477,46 @@
           />
         </div>
       </div>
+
+      <transition name="fade">
+        <div
+          v-if="toPublish"
+          class="job-notification-modal p-4 rounded font-bold text-white"
+        >
+          <p
+            class="text-center pb-2 mb-4 border-b-2 border-gray-600 text-lg font-bold"
+          >
+            JOB NOTIFICATION SUMMARY
+          </p>
+          <div class="px-4">
+            <div class="flex justify-between pb-2">
+              <p>Total Working Hours:</p>
+              <p class="pl-1">
+                {{ total_working_hours | hoursMinutes }}
+              </p>
+            </div>
+            <div class="flex justify-between pb-2">
+              <p>Total Gross Locum Wages:</p>
+              <p class="pl-1">
+                £ {{ total_gross_locum_wages | currency }}
+              </p>
+            </div>
+            <div class="flex justify-between pb-2">
+              <p>
+                Hubzz Fee*
+                <span class="font-normal text-sm">(£{{ practice_rate.toFixed(2) }} per hour)</span>:
+              </p>
+              <p class="pl-1">
+                £ {{ hubzz_fee | currency }}
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-end items-center text-black mt-3">
+            <AppButton :label="'Cancel'" class="mr-1" :disabled="loading" @click="toPublish=false" />
+            <AppButton :label="'Confirm & Publish'" :disabled="loading" @click="createJob" />
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -629,7 +638,7 @@ export default {
 				auto_assign_at: null,
 				selection_date: null,
 				favorite_only: false,
-				favorite_only_until: null
+				favorite_only_until: null,
       },
 
       // Locums
@@ -1281,6 +1290,9 @@ export default {
 				this.$axios
 					.$post(`/api/v1/admin/admin-seeder/jobs/create-job/check`, {
 						...this.form,
+						// for Locums
+						posting_status: this.jobStatus,
+						locum_applicants: this.jobStatus !== 'Live' ? this.chosenLocums : [],
 						old_job_id:
 							this.repostJob && !["Cancelled"].includes(this.repostJob.status)
 								? this.repostJob.id
@@ -1457,7 +1469,7 @@ export default {
     },
 
     createJob () {
-			this.formError = [];
+			this.formError = []
 			let notRequired = [
 				"title",
 				"description",
@@ -1481,60 +1493,62 @@ export default {
 				"favorite_only",
 				"shift_id",
 				"schedule_templates",
-				"unpaid_breaks_in_minutes"
-			];
+				"unpaid_breaks_in_minutes",
+				"posting_status",
+				"chosen_locums",
+			]
 			if (!this.hasBanks) {
-				this.form.favorite_only = false;
-				this.bank_first = false;
-				this.favorite_only_until.date = null;
-				this.favorite_only_until.time = null;
+				this.form.favorite_only = false
+				this.bank_first = false
+				this.favorite_only_until.date = null
+				this.favorite_only_until.time = null
 			}
 
 			if (["true", true].includes(this.auto_assign_job)) {
-				this.selection_notification = false;
+				this.selection_notification = false
 			}
 
 			if (["false", false].includes(this.selection_notification)) {
-				notRequired.push("selection_date");
+				notRequired.push("selection_date")
 			} else if (
 				["true", true].includes(this.selection_notification) &&
 				this.selection_date.date &&
 				this.selection_date.time
 			) {
-				notRequired.push("selection_date");
+				notRequired.push("selection_date")
 			}
 
 			if (["true", true].includes(this.form.favorite_only)) {
-				this.bank_first = false;
+				this.bank_first = false
 			}
 
 			if (["false", false].includes(this.bank_first)) {
-				notRequired.push("favorite_only_until");
+				notRequired.push("favorite_only_until")
 			} else if (
 				["true", true].includes(this.bank_first) &&
 				this.favorite_only_until.date &&
 				this.favorite_only_until.time
 			) {
-				notRequired.push("favorite_only_until");
+				notRequired.push("favorite_only_until")
 			}
 
-			this.Validate(this.form, notRequired);
+			this.Validate(this.form, notRequired)
 
 			if (!this.formError.length) {
-				this.form.profession_id = this.form.role;
-				this.form.shift_id = this.form.shift;
-				this.selectedClinicalSystem = [...this.form.clinical_system];
+				this.form.profession_id = this.form.role
+				this.form.shift_id = this.form.shift
+				this.selectedClinicalSystem = [...this.form.clinical_system]
 				this.form.clinical_system_id = this.form.clinical_system.map(
 					item => item.value
-				);
-				this.selectedQualification = [...this.form.specialty];
+				)
+				this.selectedQualification = [...this.form.specialty]
 				this.form.qualification_id = this.form.specialty.map(
 					item => item.value
-				);
-				this.selectedSpokenLanguage = [...this.form.spoken_language_id];
+				)
+				this.selectedSpokenLanguage = [...this.form.spoken_language_id]
 				this.form.spoken_language_id = this.form.spoken_language_id.map(
 					item => item.value
-				);
+				)
 				// this.form.date_start = this.$moment(
 				//   this.form.date_start,
 				//   "YYYY-MM-DD"
@@ -1546,123 +1560,96 @@ export default {
 
 				if (Array.isArray(this.form.session_requirements)) {
 					if (this.form.session_requirements.length === 1) {
-						this.form.session_requirements = this.form.session_requirements[0];
+						this.form.session_requirements = this.form.session_requirements[0]
 					} else if (this.form.session_requirements.length > 0) {
-						this.form.session_requirements = this.form.session_requirements.join();
+						this.form.session_requirements = this.form.session_requirements.join()
 					} else if (this.form.session_requirements.length === 0) {
-						this.form.session_requirements = "";
+						this.form.session_requirements = ""
 					}
 				}
 
-				this.form.auto_assign_at = null;
+				this.form.auto_assign_at = null
 				if (["true", true].includes(this.auto_assign_job)) {
-					this.form.auto_assign_at = "1970-01-01 00:00";
+					this.form.auto_assign_at = "1970-01-01 00:00"
 				}
 
-				this.form.selection_date = null;
+				this.form.selection_date = null
 				if (["false", false].includes(this.auto_assign_job)) {
 					if (["true", true].includes(this.selection_notification)) {
 						this.form.selection_date = `${this.$moment(
 							this.selection_date.date,
 							"YYYY-MM-DD"
-						).format("YYYY-MM-DD")} ${this.selection_date.time}`;
+						).format("YYYY-MM-DD")} ${this.selection_date.time}`
 					}
 				}
 
-				this.form.favorite_only_until = null;
+				this.form.favorite_only_until = null
 				if (["true", true].includes(this.bank_first)) {
 					this.form.favorite_only_until = `${this.$moment(
 						this.favorite_only_until.date,
 						"YYYY-MM-DD"
-					).format("YYYY-MM-DD")} ${this.favorite_only_until.time}`;
+					).format("YYYY-MM-DD")} ${this.favorite_only_until.time}`
 				}
 
 				if (["15", 15, "30", 30, "60", 60].includes(this.unpaid_breaks)) {
-					this.form.unpaid_breaks_in_minutes = this.unpaid_breaks;
+					this.form.unpaid_breaks_in_minutes = this.unpaid_breaks
 				}
 				if (this.unpaid_breaks === "other") {
-					this.form.unpaid_breaks_in_minutes = this.form.unpaid_breaks_in_minutes;
+					this.form.unpaid_breaks_in_minutes = this.form.unpaid_breaks_in_minutes
 				}
 				if (["false", false].includes(this.unpaid_breaks)) {
-					this.form.unpaid_breaks_in_minutes = "";
+					this.form.unpaid_breaks_in_minutes = ""
 				}
 
 				this.form.ir35 =
 					this.selectedProfession &&
 					this.selectedProfession.profession_category.name === "GP"
 						? this.form.ir35
-						: false;
+						: false
 
-				this.loading = true;
+				this.loading = true
 
 				this.$axios
 					.$post(`/api/v1/admin/admin-seeder/jobs/create-job`, {
 						...this.form,
+						// for Locums
+						posting_status: this.jobStatus,
+						locum_applicants: this.jobStatus !== 'Live' ? this.chosenLocums : [],
 						old_job_id:
 							this.repostJob && !["Cancelled"].includes(this.repostJob.status)
 								? this.repostJob.id
 								: null
 					})
-					.then(res => {
-						if (this.$route.name === "dashboard-create") {
-							this.$router.push("/dashboard");
-						} else if (this.$route.name !== "dashboard-create") {
-							this.$store.commit("calendar/CREATE_JOB_MODAL", false);
-
-							console.log("res.data", res.data);
-						}
-
-						const job = res.data.job;
-
-						if (job.status === "Live") {
-							this.$store.commit("jobs/ADD_PRACTICE_AVAILABLE_JOB", job);
-						}
-
-						if (this.repostJob) {
-							if (this.repostJob.status === "Unfilled") {
-								this.$store.commit(
-									"jobs/REMOVE_PRACTICE_UNFILLED_JOB",
-									this.repostJob.id
-								);
-							}
-
-							if (this.repostJob.status === "Withdrawn") {
-								this.$store.commit(
-									"jobs/REMOVE_PRACTICE_WITHDRAWN_JOB_PARTS_WHERE_JOB_ID_IS",
-									this.repostJob.id
-								);
-							}
-						}
-
+					.then(() => {
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
-							text: ["Successfully created job"]
-						});
+							text: "Successfully created job",
+						})
 					})
 					.catch(err => {
-						console.log("err", err.response || err);
+						console.log("err", err.response || err)
 
-						this.$refs.modalContainer.scrollTop = 0;
+						this.$refs.modalContainer.scrollTop = 0
 
-						this.form.clinical_system = this.selectedClinicalSystem;
+						this.form.clinical_system = this.selectedClinicalSystem
 
-						this.form.specialty = this.selectedQualification;
+						this.form.specialty = this.selectedQualification
 
-						this.form.spoken_language_id = this.selectedSpokenLanguage;
+						this.form.spoken_language_id = this.selectedSpokenLanguage
 
 						this.form.session_requirements = this.form.session_requirements
 							? this.form.session_requirements.split(",")
-							: [];
+							: []
 
-						let message = null;
+						let message = null
 
 						if (err.response) {
 							if (
 								err.response.data.error_messages &&
 								err.response.data.error_messages.length > 0
 							) {
-								this.formError = err.response.data.error_messages;
+								this.formError = err.response.data.error_messages
 								let detailsError = [
 									"practice_id",
 									"number_of_patients",
@@ -1670,27 +1657,27 @@ export default {
 									"role",
 									"specialty",
 									"clinical_system"
-								];
+								]
 
 								let hasDetailsError = this.formError
 									.map(err => detailsError.includes(err.field))
-									.includes(true);
+									.includes(true)
 								if (hasDetailsError) {
-									this.tabActive = "details";
+									this.tabActive = "details"
 								} else if (
 									this.formError
 										.map(err => ["schedules", "dates"].includes(err.field))
 										.includes(true)
 								) {
-									this.tabActive = "schedule";
+									this.tabActive = "schedule"
 								}
 							} else {
-								message = err.response.data.message;
+								message = err.response.data.message
 							}
 						} else if (err.request) {
-							message = "Something weng wrong!";
+							message = "Something weng wrong!"
 						} else {
-							message = err.message;
+							message = err.message
 						}
 
 						if (message) {
@@ -1698,13 +1685,13 @@ export default {
 								enabled: true,
 								status: "danger",
 								text: [`${message}`]
-							});
+							})
 						}
 					})
 					.finally(() => {
-						this.toPublish = false;
-						this.loading = false;
-					});
+						this.toPublish = false
+						this.loading = false
+					})
 			} else {
 				let detailsError = [
 					"practice_id",
@@ -1713,18 +1700,18 @@ export default {
 					"role",
 					"specialty",
 					"clinical_system"
-				];
+				]
 				let hasDetailsError = this.formError
 					.map(err => detailsError.includes(err.field))
-					.includes(true);
+					.includes(true)
 				if (hasDetailsError) {
-					this.tabActive = "details";
+					this.tabActive = "details"
 				}
-				console.log("errors", this.formError);
-				this.toPublish = false;
+				console.log("errors", this.formError)
+				this.toPublish = false
 				this.$nextTick(() => {
-					this.$refs.modalContainer.scrollTop = 0;
-				});
+					this.$refs.modalContainer.scrollTop = 0
+				})
 			}
 		},
 
@@ -1828,5 +1815,35 @@ export default {
 </script>
 
 <style>
+.message-modal.job-notification-modal {
+	min-width: 50vw;
+}
+
+@media (min-width: 768px) {
+	.message-modal.job-notification-modal {
+		min-width: 25vw;
+	}
+}
+
+.job-notification-modal {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 25px;
+	width: 800px;
+	max-width: 95%;
+	max-height: 80%;
+	overflow: auto;
+	transition: all 0.3s ease-in-out;
+	background-color: #424650;
+	z-index: 512;
+}
+
+@media screen and (min-width: 768px) {
+	.job-notification-modal {
+		max-height: 60%;
+	}
+}
 
 </style>
