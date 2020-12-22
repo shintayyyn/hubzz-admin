@@ -90,6 +90,18 @@
               "
               class="leading-tight pb-4"
             >
+              <div class="flex flex-row my-1">
+                <svgicon
+                  name="success-checkmark"
+                  height="28"
+                  width="28"
+                  class="text-green-400 hover:text-sunglow fill-current"
+                />
+                <p class="font-bold text-sm m-1">
+                  HUBZZ is permitted to do update checks
+                </p>
+              </div>
+              
               <p class="font-bold text-base">
                 Reference
               </p>
