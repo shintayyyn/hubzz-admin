@@ -33,7 +33,11 @@
           <div class="px-4 pb-4 pt-6">
             <div class="flex">
               <div class="px-1 w-full md:w-1/2">
-                <AppDate v-model="start_date" :name="'date_start'" :label="'Start Date'" isAfter />
+                <AppDate 
+                  v-model="start_date" 
+                  :name="'date_start'" 
+                  :label="'Start Date'" 
+                  isAfter/>
               </div>
 
               <div class="px-1 w-full md:w-1/2">
@@ -50,7 +54,7 @@
             <AppMultipleDates
               v-model="scheduleDates"
               :name="'dates'"
-              is-after
+              :isAfter="jobStatus === 'Ongoing' ? false : true"
               multipleSelection
               isDisplay
               class="multiple-date-picker"
@@ -1213,6 +1217,11 @@ export default {
       type: Array,
       default: () => null,
     },
+
+    jobSeederType: {
+      type: String,
+      default: null,
+    }
   },
 
   data () {

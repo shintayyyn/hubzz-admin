@@ -36,10 +36,14 @@
             <input id="applied" v-model="jobStatus" type="radio" value="Applied">
             <label for="applied">Applied</label>
           </div>
-          <!-- <div>
+          <div class="mx-3 text-lg">
             <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
             <label for="allocated">Allocated</label>
-          </div> -->
+          </div>
+          <div class="mx-3 text-lg">
+            <input id="ongoing" v-model="jobStatus" type="radio" value="Ongoing">
+            <label for="ongoing">Ongoing</label>
+          </div>
           <!-- <div>
             <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
             <label for="allocated">Disputed</label>
@@ -415,6 +419,7 @@
             :error="formError.find(err => err.field === 'schedules')"
             :shiftErrors="shiftErrors"
             :type="'create'"
+            :jobSeederType="jobStatus"
             @getSchedule="getSchedule"
           />
         </div>
@@ -422,7 +427,7 @@
         <div v-if="toPublish" class="shield" />
         
         <!-- PAGE 3 CHOOSE LOCUMS -->
-        <div v-if="jobStatus === 'Applied'">
+        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated'">
           <div class="text-xl font-bold">
             3. Candidate Locums (Choose Applicants)
           </div>
@@ -987,9 +992,8 @@ export default {
     },
 
     jobStatus (value) {
-      if (value === 'Applied') {
+      if (value === 'Applied' || value === 'Allocated') {
         this.chosenLocums = []
-        console.log('thius.form', this.locumFilter)
         // this.locumFilter.profession_id = this.form.role
         this.getCompatibleLocums()
         
@@ -1756,16 +1760,25 @@ export default {
     },
 
     toggleCheckLocums (item) {
-			const index = this.chosenLocums.findIndex(locum => {
-				return locum.id === item.id
-			})
-
-			if (index > -1) {
-				this.chosenLocums.splice(index, 1)
+			if (this.jobStatus === 'Applied' || (this.jobStatus === 'Allocated' && this.chosenLocums.length <=0)) {
+				const index = this.chosenLocums.findIndex(locum => {
+					return locum.id === item.id
+				})
+ 
+				if (index > -1) {
+					this.chosenLocums.splice(index, 1)
+				} else {
+					this.chosenLocums.push(item)
+				}
 			} else {
-				this.chosenLocums.push(item)
-			}
+				const index = this.chosenLocums.findIndex(locum => {
+					return locum.id === item.id
+				})
 
+				if (index > -1) {
+					this.chosenLocums.splice(index, 1)
+				}
+			}
 			console.log("chosen chosenLocumsChecker", this.chosenLocums)
 		},
 
