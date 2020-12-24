@@ -412,6 +412,9 @@
 
         <!-- PAGE 2 -->
         <div>
+          <div v-if="jobStatus === 'Ongoing'" class="font-bold text-lg">
+            Ongoing Jobs should include days before and after {{ $moment().format('DD/MM/YYYY') }}
+          </div>
           <AppSchedules
             :shifts="shifts"
             :rate_lists="rate_lists"
@@ -427,7 +430,7 @@
         <div v-if="toPublish" class="shield" />
         
         <!-- PAGE 3 CHOOSE LOCUMS -->
-        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated'">
+        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated' || jobStatus === 'Ongoing'">
           <div class="text-xl font-bold">
             3. Candidate Locums (Choose Applicants)
           </div>
@@ -992,7 +995,7 @@ export default {
     },
 
     jobStatus (value) {
-      if (value === 'Applied' || value === 'Allocated') {
+      if (value !== 'Live') {
         this.chosenLocums = []
         // this.locumFilter.profession_id = this.form.role
         this.getCompatibleLocums()
@@ -1760,7 +1763,10 @@ export default {
     },
 
     toggleCheckLocums (item) {
-			if (this.jobStatus === 'Applied' || (this.jobStatus === 'Allocated' && this.chosenLocums.length <=0)) {
+			if (this.jobStatus === 'Applied' 
+				|| (this.jobStatus === 'Allocated' && this.chosenLocums.length <=0)
+				|| (this.jobStatus === 'Ongoing' && this.chosenLocums.length <=0)
+			) {
 				const index = this.chosenLocums.findIndex(locum => {
 					return locum.id === item.id
 				})

@@ -37,7 +37,8 @@
                   v-model="start_date" 
                   :name="'date_start'" 
                   :label="'Start Date'" 
-                  isAfter/>
+                  isAfter
+                />
               </div>
 
               <div class="px-1 w-full md:w-1/2">
@@ -54,7 +55,7 @@
             <AppMultipleDates
               v-model="scheduleDates"
               :name="'dates'"
-              :isAfter="jobStatus === 'Ongoing' ? false : true"
+              :isAfter="jobSeederType === 'Ongoing' ? false : true"
               multipleSelection
               isDisplay
               class="multiple-date-picker"
