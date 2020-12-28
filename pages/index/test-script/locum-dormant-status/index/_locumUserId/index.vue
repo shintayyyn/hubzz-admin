@@ -168,7 +168,7 @@
         locumUserJobsCurrentPage: 1,
         locumUserJobsLimit: 5,
         locumUserJobsOrderBy: [
-          'date_created_in_gb_formatted:desc',
+          'locum_user_applied_at_in_gb_formatted:desc',
         ],
         locumUserJobsCount: 0,
         locumUserJobs: [],
@@ -221,13 +221,22 @@
             maxWidth: '550px',
           },
           { 
-            name: 'Date Created',
-            dataIndex: 'date_created_in_gb_formatted',
+            name: 'Job application date',
+            dataIndex: 'locum_user_applied_at_in_gb_formatted',
             class: 'md:text-center',
             sortable: true,
             flex: '1 0 0',
             minWidth: '100px',
             maxWidth: '170px',
+          },
+          {
+            name: 'Status',
+            dataIndex: 'locum_status',
+            class: 'md:text-center',
+            sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
           },
         ]
       },
@@ -423,38 +432,39 @@
       getLocumUserAppliedInJobs () {
         console.log('getLocumUserAppliedInJobs')
 
-        // const filters = {
-        //   locum_user_id: this.$route.params.locumUserId,
-        // }
+        const filters = {
+          viewing_locum_user_id: this.$route.params.locumUserId,
+          applied: true,
+        }
 
-        // this.locumUserJobsLoading = true
+        this.locumUserJobsLoading = true
 
-        // return Promise.all([
-        //   this.$axios.get('/api/v1/admin/jobs/count', {
-        //     params: {
-        //       ...filters,
-        //     },
-        //   }).then((response) => response.data.data.count),
+        return Promise.all([
+          this.$axios.get('/api/v1/admin/test/jobs/count', {
+            params: {
+              ...filters,
+            },
+          }).then((response) => response.data.data.count),
 
-        //   this.$axios.get('/api/v1/admin/jobs', {
-        //     params: {
-        //       ...filters,
-        //       order_by: this.locumUserJobsOrderBy,
-        //       limit: this.locumUserJobsLimit,
-        //       offset: this.locumUserJobsOffset,
-        //     },
-        //   }).then((response) => response.data.data.jobs),
-        // ]).then((responses) => {
-        //   const [
-        //     locumUserJobsCount,
-        //     locumUserJobs,
-        //   ] = responses
+          this.$axios.get('/api/v1/admin/test/jobs', {
+            params: {
+              ...filters,
+              order_by: this.locumUserJobsOrderBy,
+              limit: this.locumUserJobsLimit,
+              offset: this.locumUserJobsOffset,
+            },
+          }).then((response) => response.data.data.jobs),
+        ]).then((responses) => {
+          const [
+            locumUserJobsCount,
+            locumUserJobs,
+          ] = responses
 
-        //   this.locumUserJobsCount = locumUserJobsCount
-        //   this.locumUserJobs = locumUserJobs
-        // }).finally(() => {
-        //   this.locumUserJobsLoading = false
-        // })
+          this.locumUserJobsCount = locumUserJobsCount
+          this.locumUserJobs = locumUserJobs
+        }).finally(() => {
+          this.locumUserJobsLoading = false
+        })
       },
       
       locumUserJobsPageChangedHandler (page) {
