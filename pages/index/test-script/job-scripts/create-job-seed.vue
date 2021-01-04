@@ -44,14 +44,10 @@
             <input id="ongoing" v-model="jobStatus" type="radio" value="Ongoing">
             <label for="ongoing">Ongoing</label>
           </div>
-          <!-- <div>
-            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
-            <label for="allocated">Disputed</label>
-          </div> -->
-          <!-- <div>
-            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
-            <label for="allocated">Completed</label>
-          </div> -->
+          <div>
+            <input id="completed" v-model="jobStatus" type="radio" value="Completed">
+            <label for="completed">Completed</label>
+          </div>
           <!-- <div>
             <input id="approved" v-model="jobStatus" type="radio" value="Approved">
             <label for="approved">Approved</label>
@@ -432,7 +428,7 @@
         </div>
     
         <!-- PAGE 3 CHOOSE LOCUMS -->
-        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated' || jobStatus === 'Ongoing'">
+        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated' || jobStatus === 'Ongoing' || jobStatus === 'Completed'">
           <div class="text-xl font-bold">
             3. Candidate Locums (Choose Applicants)
           </div>
@@ -669,7 +665,6 @@ export default {
         ],
       },
       chosenLocums: [],
-      
       
       // Shows
       showCriteriaInputs: false,
@@ -1770,6 +1765,7 @@ export default {
 			if (this.jobStatus === 'Applied' 
 				|| (this.jobStatus === 'Allocated' && this.chosenLocums.length <=0)
 				|| (this.jobStatus === 'Ongoing' && this.chosenLocums.length <=0)
+				|| (this.jobStatus === 'Completed' && this.chosenLocums.length <=0)
 			) {
 				const index = this.chosenLocums.findIndex(locum => {
 					return locum.id === item.id
