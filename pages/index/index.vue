@@ -443,8 +443,17 @@ export default {
     },
   },
 
-  mounted () {
+  created () {
     this.getEverything()
+  },
+
+  mounted () {
+    window.setTimeout(() => {
+      this.getEverything()
+      window.setInterval(() => {
+        this.getEverything()
+      }, 1000 * 300 * 1)
+    }, 1000 * 300)
   },
 
   methods: {
