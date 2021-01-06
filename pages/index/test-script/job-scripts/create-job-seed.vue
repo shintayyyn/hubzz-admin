@@ -1474,7 +1474,7 @@ export default {
 			}
 		},
 
-		createJob () {
+		async createJob () {
 			this.formError = []
 			let notRequired = [
 				"title",
@@ -1615,7 +1615,7 @@ export default {
 
 				this.loading = true
 
-				this.$axios
+				await this.$axios
 					.$post(`/api/v1/admin/admin-seeder/jobs/create-job`, {
 						...this.form,
 						// for Locums
@@ -1626,12 +1626,27 @@ export default {
 								? this.repostJob.id
 								: null
 					})
-					.then(() => {
-						this.$store.commit("SET_NOTIFICATION", {
-							enabled: true,
-							status: "success",
-							text: "Successfully created job",
-						})
+					.then(async (res) => {
+						console.log('res', res)
+						if(this.jobStatus === 'Completed') {
+							const jobParts = res.data.job.job_parts
+							await jobParts.forEach((jobPart) => {
+								this.$axios.$put(`/api/v1/admin/admin-seeder/job-parts/${jobPart.id}/complete`)
+							})
+							await this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "success",
+								text: "Job Seed Successfully Created",
+							})
+							
+						} else {
+							this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "success",
+								text: "Job Seed Successfully Created",
+							})
+						}
+						
 					})
 					.catch(err => {
 						console.log("err", err.response || err)
