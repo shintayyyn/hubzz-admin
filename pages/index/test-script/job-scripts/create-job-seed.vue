@@ -659,7 +659,8 @@ export default {
         profession_id: '',
         area_includes: '',
         currentPage: 1,
-        limit: 5,
+				limit: 5,
+				offset: 0,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
@@ -974,15 +975,15 @@ export default {
       ]
     },
 
-    "locumFilter.offset" () {
+		locumFilterOffset () {
       return this.locumFilter.limit * (this.locumFilter.currentPage - 1)
     },
-
 	},
 	watch: {
 		"form.practice_id" (value) {
 			if (value !== "" && Number.isInteger(value)) {
 				this.tailorForPractice()
+				this.getCompatibleLocums()
 				this.showCriteriaInputs = true
 			} else {
 				this.showCriteriaInputs = false
@@ -991,6 +992,7 @@ export default {
 
 		"form.role" (value) {
 			this.locumFilter.profession_id = value
+			this.getCompatibleLocums()
 		},
 
 		jobStatus (value) {
@@ -1760,7 +1762,7 @@ export default {
 						compliance_status: this.locumFilter.compliance_status,
 						order_by: this.locumFilter.order_by,
 						limit: this.locumFilter.limit,
-						offset: 0,
+						offset: this.locumFilterOffset,
 					},
 				}).then(response => response.data.data.users),
 			]).then((responses) => {
