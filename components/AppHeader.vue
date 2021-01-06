@@ -70,7 +70,7 @@
                       <span>{{ item.description }}</span>
                     </div>
 
-                    <span class="text-xs text-gray-400">{{ item.created_at_in_gb_formatted }}{{ true ? ` (${item.id})` : '' }}</span>
+                    <span class="text-xs text-gray-400">{{ item.created_at_in_gb_formatted }}{{ false ? ` (${item.id})` : '' }}</span>
                   </div>
                 </div>
 

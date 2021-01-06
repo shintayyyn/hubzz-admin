@@ -73,26 +73,27 @@
           'Admin Notification Locum Invoice Disputed',
           'Admin Notification Locum Profile Updated',
           'Admin Notification Locum Registration',
+          'Admin Notification Locum Dormanted',
+
           'Admin Notification Practice Hub Accepted',
           'Admin Notification Practice Hub Created',
           'Admin Notification Practice Hub Deleted',
           'Admin Notification Practice Hub Rejected',
+
           'Admin Notification Practice Invoice Detail Updated',
           'Admin Notification Practice Profile Updated',
           'Admin Notification Practice Invoice Paid',
           'Admin Notification Practice Invoice PastDue',
           'Admin Notification Practice Invoice Unpaid',
+          'Admin Notification Practice Invoice Past Due',
+
           'Admin Notification Practice Registration',
           'Admin Notification Practice Created',
+          'Admin Notification Practice Dormanted',
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Surgery Deleted',
           'Admin Notification Practice Surgery TerminationRequested',
           'Admin Notification Practice Surgery Updated',
-          
-          'Admin Notification Locum Dormanted',
-          'Admin Notification Practice Dormanted',
-          
-          'Admin Notification Practice Invoice Past Due',
         ],
 
         popUpNotifications: [],
@@ -101,6 +102,7 @@
           'Admin Notification Locum Compliance',
           'Admin Notification Locum Registration',
           'Admin Notification Locum Profile Updated',
+          'Admin Notification Locum Dormanted',
         ],
 
         practiceSideBarNotificationsTypeNames: [
@@ -108,6 +110,7 @@
           'Admin Notification Practice Created',
           'Admin Notification Practice Invoice Detail Updated',
           'Admin Notification Practice Surgery Created',
+          'Admin Notification Practice Dormanted',
         ],
 
         billingSideBarNotificationsTypeNames: [
