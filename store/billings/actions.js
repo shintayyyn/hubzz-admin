@@ -1,23 +1,5 @@
 import * as billingApi from '@/api/billings'
 export default{
-  async initializeBillingTransactionListener ({ commit }) {
-    this.$socket.on('Admin Notification Locum Invoice Disputed', async (payload) => {
-      console.log('notif locuminvoice disputed', payload)
-			commit ('ADD_BILLING_NOTIFICATION', {
-				payload, 
-				notificationType: 'Admin Notification Locum Invoice Disputed'
-			})
-    })
-    
-    this.$socket.on('Admin Notification Practice Invoice Past Due', async (payload) => {
-      console.log('notif locuminvoice past due', payload)
-			commit ('ADD_BILLING_NOTIFICATION', {
-				payload, 
-				notificationType: 'Admin Notification Practice Invoice Past Due'
-			})
-		})
-  },
-
   async fetchHubzzInvoices ({ commit }, payload){
     commit('TOGGLE_LOADING', true)
     const response = await billingApi.fetchHubzzInvoices(this.$axios, payload)
