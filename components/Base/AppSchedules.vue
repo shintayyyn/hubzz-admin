@@ -31,7 +31,7 @@
           </p>
 
           <div class="px-4 pb-4 pt-6">
-            <div class="flex">
+            <div v-if="jobSeederType && jobSeederType !== 'Completed'" class="flex">
               <div class="px-1 w-full md:w-1/2">
                 <AppDate 
                   v-model="start_date" 
@@ -56,6 +56,8 @@
               v-model="scheduleDates"
               :name="'dates'"
               :isAfter="jobSeederType === 'Ongoing' ? false : true"
+              :isBefore="jobSeederType === 'Completed' ? true : false"
+              :maxYearBefore="1"
               multipleSelection
               isDisplay
               class="multiple-date-picker"

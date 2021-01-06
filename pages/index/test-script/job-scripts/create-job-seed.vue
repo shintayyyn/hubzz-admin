@@ -44,13 +44,13 @@
             <input id="ongoing" v-model="jobStatus" type="radio" value="Ongoing">
             <label for="ongoing">Ongoing</label>
           </div>
+          <div>
+            <input id="completed" v-model="jobStatus" type="radio" value="Completed">
+            <label for="completed">Completed</label>
+          </div>
           <!-- <div>
-            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
-            <label for="allocated">Disputed</label>
-          </div> -->
-          <!-- <div>
-            <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
-            <label for="allocated">Completed</label>
+            <input id="approved" v-model="jobStatus" type="radio" value="Approved">
+            <label for="approved">Approved</label>
           </div> -->
         </div>
       </div>
@@ -426,11 +426,9 @@
             @getSchedule="getSchedule"
           />
         </div>
-        
-        <div v-if="toPublish" class="shield" />
-        
+    
         <!-- PAGE 3 CHOOSE LOCUMS -->
-        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated' || jobStatus === 'Ongoing'">
+        <div v-if="jobStatus === 'Applied' || jobStatus === 'Allocated' || jobStatus === 'Ongoing' || jobStatus === 'Completed'">
           <div class="text-xl font-bold">
             3. Candidate Locums (Choose Applicants)
           </div>
@@ -485,6 +483,8 @@
           />
         </div>
       </div>
+
+      <div v-if="toPublish" class="shield" />
 
       <transition name="fade">
         <div
@@ -659,13 +659,13 @@ export default {
         profession_id: '',
         area_includes: '',
         currentPage: 1,
-        limit: 5,
+				limit: 5,
+				offset: 0,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
       },
       chosenLocums: [],
-      
       
       // Shows
       showCriteriaInputs: false,
@@ -674,7 +674,7 @@ export default {
       formError: []
     }
   },
- computed: {
+  computed: {
 		authPermissions () {
 			return this.$store.getters["permissions"]
 		},
@@ -975,115 +975,116 @@ export default {
       ]
     },
 
-    "locumFilter.offset" () {
+		locumFilterOffset () {
       return this.locumFilter.limit * (this.locumFilter.currentPage - 1)
     },
-
 	},
-  watch: {
-    "form.practice_id" (value) {
-      if (value !== "" && Number.isInteger(value)) {
-        this.tailorForPractice()
-        this.showCriteriaInputs = true
-      } else {
-        this.showCriteriaInputs = false
-      }
-    },
+	watch: {
+		"form.practice_id" (value) {
+			if (value !== "" && Number.isInteger(value)) {
+				this.tailorForPractice()
+				this.getCompatibleLocums()
+				this.showCriteriaInputs = true
+			} else {
+				this.showCriteriaInputs = false
+			}
+		},
 
-    "form.role" (value) {
-      this.locumFilter.profession_id = value
-    },
+		"form.role" (value) {
+			this.locumFilter.profession_id = value
+			this.getCompatibleLocums()
+		},
 
-    jobStatus (value) {
-      if (value !== 'Live') {
-        this.chosenLocums = []
-        // this.locumFilter.profession_id = this.form.role
-        this.getCompatibleLocums()
-        
-        this.showLocumPicker = true
-      } else {
-        this.locums = []
-        this.chosenLocums = []
-        this.showLocumPicker = false
-      }
-    }
-  },
-  methods: {
-    totalHours (start, end, date) {
+		jobStatus (value) {
+			if (value !== 'Live') {
+				this.chosenLocums = []
+				// this.locumFilter.profession_id = this.form.role
+				this.getCompatibleLocums()
+				
+				this.showLocumPicker = true
+			} else {
+				this.locums = []
+				this.chosenLocums = []
+				this.showLocumPicker = false
+			}
+		}
+	},
+	methods: {
+		totalHours (start, end, date) {
 			let startDate = this.$moment(date + " " + start, "DD/MM/YYYY HH:mm")
 			let endDate = this.$moment(date + " " + end, "DD/MM/YYYY HH:mm")
 			return start && end
 				? this.$moment(endDate, "DD/MM/YYYY HH:mm").diff(startDate, "minutes")
 				: 0
-    },
-    
-    tailorForPractice () {
-      console.log(this.form)
-      this.dataLoading = true
+		},
+		
+		tailorForPractice () {
+			console.log(this.form)
+			this.dataLoading = true
 
-      Promise.all([
-        this.$axios.get("/api/v1/locum-detail-rate-types").then(response =>
-          response.data.data.locum_detail_rate_types.map(rateType => ({
-            label: rateType.name,
-            value: rateType.id
-          }))
-        ),
-        this.$axios.get("/api/v1/shifts").then(response =>
-          response.data.data.shifts.map(shift => ({
-            label: shift.name,
-            value: shift.id
-          }))
-        ),
-        this.$axios
-          .get("/api/v1/professions")
-          .then(response => response.data.data.professions),
-        this.$axios
-          .get(`/api/v1/admin/practices/${this.form.practice_id}`)
-          .then(response => response.data.data.practice),
-        this.$axios
-          .get("/api/v1/profession-compliance-categories")
-          .then(response => {
-            return response.data.data.profession_compliance_categories
-          })
-      ])
-        .then(responses => {
-          const [
-            rateLists,
-            shiftLists,
-            professions,
-            profileProfile,
-            professionComplianceCategories
-          ] = responses
+			Promise.all([
+				this.$axios.get("/api/v1/locum-detail-rate-types").then(response =>
+					response.data.data.locum_detail_rate_types.map(rateType => ({
+						label: rateType.name,
+						value: rateType.id
+					}))
+				),
+				this.$axios.get("/api/v1/shifts").then(response =>
+					response.data.data.shifts.map(shift => ({
+						label: shift.name,
+						value: shift.id
+					}))
+				),
+				this.$axios
+					.get("/api/v1/professions")
+					.then(response => response.data.data.professions),
+				this.$axios
+					.get(`/api/v1/admin/practices/${this.form.practice_id}`)
+					.then(response => response.data.data.practice),
+				this.$axios
+					.get("/api/v1/profession-compliance-categories")
+					.then(response => {
+						return response.data.data.profession_compliance_categories
+					})
+			])
+				.then(responses => {
+					const [
+						rateLists,
+						shiftLists,
+						professions,
+						profileProfile,
+						professionComplianceCategories
+					] = responses
 
-          this.selectedPractice = profileProfile
+					this.selectedPractice = profileProfile
 
-          console.log('rateLists', rateLists)
+					console.log('rateLists', rateLists)
 
-          this.rate_lists = rateLists
-          this.shifts = shiftLists
-          this.professions = professions.map(profession => ({
-            label: profession.name,
-            value: profession.id
-          }))
-          this.professions_categories = professions
-          this.professionComplianceCategories = professionComplianceCategories
+					this.rate_lists = rateLists
+					this.shifts = shiftLists
+					this.professions = professions.map(profession => ({
+						label: profession.name,
+						value: profession.id
+					}))
+					this.professions_categories = professions
+					this.professionComplianceCategories = professionComplianceCategories
 
-          const {
-            report_to: reportTo,
-            email,
-            extra_information: extraInformation
-          } = profileProfile
+					const {
+						report_to: reportTo,
+						email,
+						extra_information: extraInformation
+					} = profileProfile
 
-          this.form.report_to = reportTo
-          this.form.email = email
-          this.form.extra_information = extraInformation
-        })
-        .finally(() => {
-          this.dataLoading = false
-        })
-    },
+					this.form.report_to = reportTo
+					this.form.email = email
+					this.form.extra_information = extraInformation
+				})
+				.finally(() => {
+					this.dataLoading = false
+				})
+		},
 
-    getSchedule (
+		getSchedule (
 			schedule,
 			total_gross_locum_wages,
 			total_working_hours,
@@ -1179,9 +1180,9 @@ export default {
 			this.hasShiftError = hasError
 
 			this.job_parts = job_parts
-    },
+		},
 
-    canPublish () {
+		canPublish () {
 			this.shiftErrors = []
 			this.formError = []
 			let has_conflict = false
@@ -1227,7 +1228,7 @@ export default {
 				}
 			})
 			if (!this.shiftErrors.length) {
-        console.log('there are no errors')
+				console.log('there are no errors')
 				this.form.profession_id = this.form.role
 				this.form.shift_id = this.form.shift
 				this.selectedClinicalSystem = [...this.form.clinical_system]
@@ -1473,9 +1474,9 @@ export default {
 					})
 				}
 			}
-    },
+		},
 
-    createJob () {
+		async createJob () {
 			this.formError = []
 			let notRequired = [
 				"title",
@@ -1616,7 +1617,7 @@ export default {
 
 				this.loading = true
 
-				this.$axios
+				await this.$axios
 					.$post(`/api/v1/admin/admin-seeder/jobs/create-job`, {
 						...this.form,
 						// for Locums
@@ -1627,12 +1628,27 @@ export default {
 								? this.repostJob.id
 								: null
 					})
-					.then(() => {
-						this.$store.commit("SET_NOTIFICATION", {
-							enabled: true,
-							status: "success",
-							text: "Successfully created job",
-						})
+					.then(async (res) => {
+						console.log('res', res)
+						if(this.jobStatus === 'Completed') {
+							const jobParts = res.data.job.job_parts
+							await jobParts.forEach((jobPart) => {
+								this.$axios.$put(`/api/v1/admin/admin-seeder/job-parts/${jobPart.id}/complete`)
+							})
+							await this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "success",
+								text: "Job Seed Successfully Created",
+							})
+							
+						} else {
+							this.$store.commit("SET_NOTIFICATION", {
+								enabled: true,
+								status: "success",
+								text: "Job Seed Successfully Created",
+							})
+						}
+						
 					})
 					.catch(err => {
 						console.log("err", err.response || err)
@@ -1722,55 +1738,56 @@ export default {
 			}
 		},
 
-    pageChangedHandler (page) {
-      this.locumFilter.currentPage = page
-      this.getCompatibleLocums()
-    },
-    
-    getCompatibleLocums () {
-      console.log('locumFilter', this.locumFilter)
-      Promise.all([
-        this.$axios.get('/api/v1/admin/locum-users/count', {
-          params: {
-            search: this.locumFilter.search,
-            profession_id: this.locumFilter.profession_id,
-            locum_status: this.locumFilter.locum_status,
-            compliance_status: this.locumFilter.compliance_status,
-          },
-        }).then(response => response.data.data.count),
-        this.$axios.get('/api/v1/admin/locum-users', {
-          params: {
-            search: this.locumFilter.search,
-            profession_id: this.locumFilter.profession_id,
-            locum_status: this.locumFilter.locum_status,
-            compliance_status: this.locumFilter.compliance_status,
-            order_by: this.locumFilter.order_by,
-            limit: this.locumFilter.limit,
-            offset: 0,
-          },
-        }).then(response => response.data.data.users),
-      ]).then((responses) => {
-        const [
-          count,
-          locums,
-        ] = responses
+		pageChangedHandler (page) {
+			this.locumFilter.currentPage = page
+			this.getCompatibleLocums()
+		},
+		
+		getCompatibleLocums () {
+			console.log('locumFilter', this.locumFilter)
+			Promise.all([
+				this.$axios.get('/api/v1/admin/locum-users/count', {
+					params: {
+						search: this.locumFilter.search,
+						profession_id: this.locumFilter.profession_id,
+						locum_status: this.locumFilter.locum_status,
+						compliance_status: this.locumFilter.compliance_status,
+					},
+				}).then(response => response.data.data.count),
+				this.$axios.get('/api/v1/admin/locum-users', {
+					params: {
+						search: this.locumFilter.search,
+						profession_id: this.locumFilter.profession_id,
+						locum_status: this.locumFilter.locum_status,
+						compliance_status: this.locumFilter.compliance_status,
+						order_by: this.locumFilter.order_by,
+						limit: this.locumFilter.limit,
+						offset: this.locumFilterOffset,
+					},
+				}).then(response => response.data.data.users),
+			]).then((responses) => {
+				const [
+					count,
+					locums,
+				] = responses
 
-        this.locumCount = count
-        this.locums = locums
-      }).finally(() => {
-        this.loading = false
-      })
-    },
+				this.locumCount = count
+				this.locums = locums
+			}).finally(() => {
+				this.loading = false
+			})
+		},
 
-    toggleCheckLocums (item) {
+		toggleCheckLocums (item) {
 			if (this.jobStatus === 'Applied' 
 				|| (this.jobStatus === 'Allocated' && this.chosenLocums.length <=0)
 				|| (this.jobStatus === 'Ongoing' && this.chosenLocums.length <=0)
+				|| (this.jobStatus === 'Completed' && this.chosenLocums.length <=0)
 			) {
 				const index = this.chosenLocums.findIndex(locum => {
 					return locum.id === item.id
 				})
- 
+
 				if (index > -1) {
 					this.chosenLocums.splice(index, 1)
 				} else {
@@ -1788,48 +1805,48 @@ export default {
 			console.log("chosen chosenLocumsChecker", this.chosenLocums)
 		},
 
-    statusStyle (status) {
-      switch (status) {
-        case 'Active':
-          return 'bg-green-500 text-white'
-        case 'Inactive':
-          return 'bg-gray-500 text-gray-700'
-        case 'Deactivated':
-          return 'bg-red-800 text-red-400'
-        case 'Account Suspension':
-          return 'bg-red-600 text-white'
-        case 'Compliance Suspension':
-          return 'bg-red-600 text-white'
-        case 'Dormant':
-          return 'bg-orange-500 text-white'
-        case 'Bogus':
-          return 'bg-gray-700 text-white'
-        default:
-          return
-      }
-    },
+		statusStyle (status) {
+			switch (status) {
+				case 'Active':
+					return 'bg-green-500 text-white'
+				case 'Inactive':
+					return 'bg-gray-500 text-gray-700'
+				case 'Deactivated':
+					return 'bg-red-800 text-red-400'
+				case 'Account Suspension':
+					return 'bg-red-600 text-white'
+				case 'Compliance Suspension':
+					return 'bg-red-600 text-white'
+				case 'Dormant':
+					return 'bg-orange-500 text-white'
+				case 'Bogus':
+					return 'bg-gray-700 text-white'
+				default:
+					return
+			}
+		},
 
-    complianceStatusStyle (status) {
-      switch (status) {
-        case 'Empty':
-          return 'border border-white text-white'
-        case 'Incomplete':
-          return 'bg-orange-600 text-white'
-        case 'Pending':
-          return 'bg-yellow-500 text-yellow-800'
-        case 'Expiring':
-          return 'bg-red-400 text-white'
-        case 'Expired':
-          return 'bg-red-800 text-red-400'
-        case 'Rejected':
-          return 'bg-red-600 text-white'
-        case 'Compliant':
-          return 'bg-green-500 text-white'
-        default:
-          return
-      }
-    },
-  }
+		complianceStatusStyle (status) {
+			switch (status) {
+				case 'Empty':
+					return 'border border-white text-white'
+				case 'Incomplete':
+					return 'bg-orange-600 text-white'
+				case 'Pending':
+					return 'bg-yellow-500 text-yellow-800'
+				case 'Expiring':
+					return 'bg-red-400 text-white'
+				case 'Expired':
+					return 'bg-red-800 text-red-400'
+				case 'Rejected':
+					return 'bg-red-600 text-white'
+				case 'Compliant':
+					return 'bg-green-500 text-white'
+				default:
+					return
+			}
+		},
+	}
 }
 </script>
 
