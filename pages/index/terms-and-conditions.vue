@@ -73,9 +73,9 @@ export default {
 			let response = await app.$axios.$get(
 				`/api/v1/admin/terms-and-conditions`
 			);
-			const terms = response.data.terms;
-			const tnc = response.data.terms.terms_and_conditions;
-			const privacypolicy = response.data.terms.privacy_policy;
+			const terms = response.data.terms
+			const tnc = response.data.terms.terms_and_conditions
+			const privacypolicy = response.data.terms.privacy_policy
 
 			const authAdminPermissions = store.getters["permissions"]
 
@@ -97,7 +97,7 @@ export default {
 				status: "danger",
 				text: "Something went wrong!"
 			});
-			console.log("get TNCS error!!!!", err);
+			console.log("get terms and conditions error!!!!", err);
 		}
 	},
 	created() {

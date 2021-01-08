@@ -254,9 +254,9 @@ export default {
       if(this.authAdminPermissions.includes('View Terms and Conditions & Privacy Policy')){
         addedLists.push({
           name: "Terms and Conditions",
-          route: "/tncs",
+          route: "/terms-and-conditions",
           order: 9,
-          active: `/${this.$route.path.split('/')[1]}` === '/tncs',
+          active: `/${this.$route.path.split('/')[1]}` === '/terms-and-conditions',
         })
       }
 
@@ -312,7 +312,7 @@ export default {
       //   { name: "Reports", route: "/reports" },
       //   { name: "Billing", route: "/billings" },
       //   { name: "FAQs", route: "/faqs" },
-      //   { name: "Terms and Conditions", route: "/tncs" },
+      //   { name: "Terms and Conditions", route: "/terms-and-conditions" },
       //   { name: "Inquiries", route: "/inquiries" }
       // ]
 

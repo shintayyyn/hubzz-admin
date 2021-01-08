@@ -114,7 +114,7 @@ export default {
 						text: "Terms and Conditions Updated"
 					});
 				} catch (err) {
-					console.log("update tncs error!", err);
+					console.log("update terms and conditions error!", err);
 				}
 			} else {
 				this.$emit("formError");

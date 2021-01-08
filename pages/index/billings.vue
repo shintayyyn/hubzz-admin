@@ -39,16 +39,11 @@
     </div>
    
     <nuxt-child />
- 
+
     <div
-      v-if="$route.name.includes('index-billings-index-hubzz-billing-id-index')"
+      v-if="$route.name.includes('index-billings-index-hubzz-invoices-hubzzInvoiceId') || $route.name.includes('index-billings-index-hubzz-billing-id-index')"
       class="shield"
-      @click="$router.push({ path: `/billings/hubzz-billing`, query: $route.query })"
-    />
-    <div
-      v-if="$route.name.includes('index-billings-index-hubzz-invoices-hubzzInvoiceId')"
-      class="shield"
-      @click="$router.push({ path: `/billings/hubzz-invoices`, query: $route.query })"
+      @click="redirect()"
     />
   </div>
 </template>
@@ -89,6 +84,16 @@ export default {
       this.$router.push(`/billings/hubzz-pricing-reports`)
     }
   },
+
+  methods: {
+    redirect () {
+      if (this.$route.name.includes('index-billings-index-hubzz-invoices-hubzzInvoiceId')) {
+        this.$router.push(`/billings/hubzz-invoices`)
+      } else if (this.$route.name.includes('index-billings-index-hubzz-billing-id-index')) {
+        this.$router.push(`/billings/hubzz-billing`)
+      }
+    }
+  }
 }
 </script>
 

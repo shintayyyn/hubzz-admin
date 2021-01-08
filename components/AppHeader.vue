@@ -147,7 +147,7 @@ export default {
 				return 'Referral Lottery'
 			else if (this.$route.name.includes('index-faqs'))
 				return 'Frequently Asked Questions'
-			else if (this.$route.name.includes('index-tncs'))
+			else if (this.$route.name.includes('index-terms-and-conditions'))
 				return 'Terms and Conditions'
 			else if (this.$route.name.includes('index-inquiries')) return 'Inquiries'
 			else if (this.$route.name.includes('index-user-management'))
