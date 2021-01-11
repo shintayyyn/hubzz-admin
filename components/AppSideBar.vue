@@ -27,12 +27,12 @@
             >
               <span>{{ navigationTab.name }}</span>
 
-              <span v-if="navigationTab.name === 'Locums' && locumNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ locumNotifications.length }}
+              <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{ unseenLocumNotificationsCount }}
               </span>
 
-              <span v-if="navigationTab.name === 'Practices' && practiceNotifications.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ practiceNotifications.length }}
+              <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
+                {{ unseenPracticeNotificationsCount }}
               </span>
 
               <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
@@ -130,6 +130,18 @@
 
 <script>
 export default {
+  props: {
+    unseenLocumNotificationsCount: {
+      type: Number,
+      default: 0,
+    },
+
+    unseenPracticeNotificationsCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+
   data () {
     return {
       menu: [],
@@ -144,14 +156,6 @@ export default {
   computed: {
     authAdminPermissions () {
 			return this.$store.getters["permissions"]
-    },
-
-    practiceNotifications () {
-      return this.$store.getters["practices/getPracticeNotifications"]
-    },
-
-    locumNotifications () {
-      return this.$store.getters["locums/getLocumNotifications"]
     },
 
     unacknowledgedCount () {
@@ -250,9 +254,9 @@ export default {
       if(this.authAdminPermissions.includes('View Terms and Conditions & Privacy Policy')){
         addedLists.push({
           name: "Terms and Conditions",
-          route: "/tncs",
+          route: "/terms-and-conditions",
           order: 9,
-          active: `/${this.$route.path.split('/')[1]}` === '/tncs',
+          active: `/${this.$route.path.split('/')[1]}` === '/terms-and-conditions',
         })
       }
 
@@ -308,7 +312,7 @@ export default {
       //   { name: "Reports", route: "/reports" },
       //   { name: "Billing", route: "/billings" },
       //   { name: "FAQs", route: "/faqs" },
-      //   { name: "Terms and Conditions", route: "/tncs" },
+      //   { name: "Terms and Conditions", route: "/terms-and-conditions" },
       //   { name: "Inquiries", route: "/inquiries" }
       // ]
 

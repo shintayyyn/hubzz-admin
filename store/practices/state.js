@@ -18,7 +18,4 @@ export default()=>({
     practiceUsers:[],
 
     specificPracticeDocumentTypes:[],
-
-    //--------------Notifications--------------
-    practiceNotifications: []
 })

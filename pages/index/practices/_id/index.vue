@@ -8,9 +8,7 @@
         class="cursor-pointer text-white hover:text-sunglow fill-current"
       />
     </nuxt-link>
-    <!-- {{$route.name}}  do this for later-->
     <AppLoading :loading="loading" spinner />
-
     <div class="flex justify-start overflow-x-auto">
       <nuxt-link
         v-if="practicePermissions.includes('View Practices')"
@@ -141,7 +139,7 @@
           || $route.name.includes('roleId')
       "
       class="practice-shield"
-      @click="goBack()"
+      @click="$router.go(-1)"
     />
 
     <div

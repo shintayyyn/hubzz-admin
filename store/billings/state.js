@@ -10,6 +10,4 @@ export default () => ({
 
   billable_practices_count: 0,
   billable_practices: [],
-
-  billingNotifications: []
 })
