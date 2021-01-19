@@ -75,6 +75,7 @@
           'Admin Notification Locum Registration',
           'Admin Notification Locum Dormanted',
           'Admin Notification Locum Invoice Approved Disputed',
+          'Admin Notification Completed Ongoing Job 7 Days',
 
           'Admin Notification Practice Hub Accepted',
           'Admin Notification Practice Hub Created',
