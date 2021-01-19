@@ -4,7 +4,6 @@ export default {
   },
 
   SET_FILTERS (state, payload) {
-    console.log('payload', payload)
     state.registered_at_date_start = payload.registered_at_date_start
     state.registered_at_date_end = payload.registered_at_date_end
     state.post_code = payload.post_code
