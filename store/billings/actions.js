@@ -25,7 +25,6 @@ export default{
     let practices = []
     commit('TOGGLE_LOADING_FOR_BILLABLE_PRACTICES', true)
     const response = await billingApi.fetchBillablePractices(this.$axios, payload)
-    console.log('payloadie inside actions',payload)
     if(!payload.countOnly) {
       await response.data.practices.forEach(item => {
         const practice_invoiceable_job_parts = [

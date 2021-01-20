@@ -62,7 +62,7 @@
     <div class="flex flex-col">
       <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUM REGISTRATIONS -->
-        <div class="flex-1 rounded my-2 lg:mr-2 bg-charade">
+        <div v-if="authAdminPermissions.includes('View Locums')" class="flex-1 rounded my-2 lg:mr-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Locum Registrations</div>
@@ -97,7 +97,7 @@
           </div>
         </div>
         <!-- PRACTICE REGISTRATIONS -->
-        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
+        <div v-if="authAdminPermissions.includes('View Practices')" class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Practice Registrations</div>
@@ -140,7 +140,11 @@
           </div>
         </div>
         <!-- SUCCESSFUL REFERRERS -->
-        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Locums') 
+            || authAdminPermissions.includes('View Practices')" 
+          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Referrers with Successful Referrals</div>
@@ -148,7 +152,7 @@
                 <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
               </div> 
             </div>
-            <div class="flex justify-between my-1 text-sm text-gray-300">
+            <div v-if="authAdminPermissions.includes('View Locums')" class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Locums
               </div>
@@ -156,7 +160,7 @@
                 {{ successfulReferrals && successfulReferrals.locum_referees ? successfulReferrals.locum_referees : 0 }}
               </div>
             </div>
-            <div class="flex justify-between my-1 text-sm text-gray-300">
+            <div v-if="authAdminPermissions.includes('View Practices')" class="flex justify-between my-1 text-sm text-gray-300">
               <div>
                 Practices
               </div>
@@ -167,7 +171,7 @@
           </div>
         </div>
         <!-- BILLING TOTALS -->
-        <div class="flex-1 rounded my-2 lg:ml-2 bg-charade">
+        <div v-if="authAdminPermissions.includes('View Hubzz Invoices')" class="flex-1 rounded my-2 lg:ml-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Billing</div>
@@ -221,7 +225,7 @@
       
       <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUMS IN PLATFORM -->
-        <div class="flex-1 rounded my-2 lg:mr-2 bg-charade">
+        <div v-if="authAdminPermissions.includes('View Locums')" class="flex-1 rounded my-2 lg:mr-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Locums</div>
@@ -262,7 +266,7 @@
           </div>
         </div>
         <!-- PRACTICES IN PLATFORM -->
-        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
+        <div v-if="authAdminPermissions.includes('View Practices')" class="flex-1 rounded my-2 lg:mx-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Practices</div>
@@ -295,7 +299,11 @@
           </div>
         </div>
         <!-- JOBS IN PLATFORM -->
-        <div class="flex-1 rounded my-2 lg:mx-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Locum Jobs') 
+            || authAdminPermissions.includes('View Practice Sessions')" 
+          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Jobs</div>
@@ -336,7 +344,10 @@
           </div>
         </div>
         <!-- DISPUTES -->
-        <div class="flex-1 rounded my-2 lg:ml-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Practice Sessions') 
+            || authAdminPermissions.includes('View Locum Jobs')" 
+          class="flex-1 rounded my-2 lg:ml-2 bg-charade">
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Job Disputes</div>
@@ -406,6 +417,10 @@ export default {
   },
 
   computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+
     loadingDashboard () {
       return this.$store.state.dashboard.loading_dashboard
     },
@@ -458,17 +473,32 @@ export default {
 
   methods: {
     async getEverything () {
+      let promises = []
+
+      if (this.authAdminPermissions.includes('View Locums')) {
+        promises.push(this.getLocumRegistrations(), this.getLocumsInPlatform())
+      }
+
+      if (this.authAdminPermissions.includes('View Practices')) {
+        promises.push(this.getPracticeRegistrations(), this.getPracticesInPlatform())
+      }
+
+      if (this.authAdminPermissions.includes('View Hubzz Invoices')) {
+        promises.push(this.getBillingTotals())
+      }
+
+      if (this.authAdminPermissions.includes('View Locums') || this.authAdminPermissions.includes('View Practices')) {
+        promises.push(this.getSuccessfulReferrals())
+      }
+
+      if (this.authAdminPermissions.includes('View Locum Jobs') || this.authAdminPermissions.includes('View Practice Sessions')) {
+        promises.push(this.getJobsInPlatform(), this.getDisputes())
+      }
+
       Promise.all([
         this.$store.commit("dashboard/SET_FILTERS", this.filter),
         this.$store.commit("dashboard/TOGGLE_LOADING", true),
-        this.getLocumRegistrations(),
-        this.getPracticeRegistrations(),
-        this.getSuccessfulReferrals(),
-        this.getBillingTotals(),
-        this.getLocumsInPlatform(),
-        this.getPracticesInPlatform(),
-        this.getJobsInPlatform(),
-        this.getDisputes(),
+        ...promises,
       ]).then(() => {
         this.$store.commit("dashboard/TOGGLE_LOADING", false)
       }).catch(() => {

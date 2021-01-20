@@ -74,6 +74,8 @@
           'Admin Notification Locum Profile Updated',
           'Admin Notification Locum Registration',
           'Admin Notification Locum Dormanted',
+          'Admin Notification Locum Invoice Approved Disputed',
+          'Admin Notification Completed Ongoing Job 7 Days',
 
           'Admin Notification Practice Hub Accepted',
           'Admin Notification Practice Hub Created',
@@ -115,6 +117,7 @@
 
         billingSideBarNotificationsTypeNames: [
           'Admin Notification Locum Invoice Disputed',
+          'Admin Notification Locum Invoice Approved Disputed',
           'Admin Notification Practice Invoice Past Due',
         ],
       }
