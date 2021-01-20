@@ -19,7 +19,6 @@ export default {
         state.practice_pending_sessions_count = payload
     },
     // ADD_PRACTICE_AVAILABLE_SESSIONS(state, payload){
-    //     console.log('add practice available is working', payload)
     //     state.practice_available_sessions.unshift(payload)
     //     state.practice_available_sessions_count = state.practice_available_sessions_count + 1
     //     if(state.practice_available_sessions_count > 10){
@@ -27,7 +26,6 @@ export default {
     //     }
     // },
     // DEDUCT_PRACTICE_AVAILABLE_SESSIONS(state, payload){
-    //     console.log('deduct practice available jobs is working', payload)
 
     //     let index = state.practice_available_sessions.findIndex(
     //         job => job.id === payload.id
@@ -44,7 +42,6 @@ export default {
         state.practice_available_sessions_count = payload
     },
     ADD_PRACTICE_AVAILABLE_SESSIONS(state, payload) {
-        //   console.log('add practice available is working', payload)
         state.practice_available_sessions.unshift(payload)
         state.practice_available_sessions_count = state.practice_available_sessions_count + 1
         if (state.practice_available_sessions_count > 10) {
@@ -52,8 +49,6 @@ export default {
         }
     },
     DEDUCT_PRACTICE_AVAILABLE_SESSIONS(state, payload) {
-        console.log('deduct practice available jobs is working', payload)
-
         let index = state.practice_available_sessions.findIndex(
             job => job.id === payload.id
         )
@@ -68,7 +63,6 @@ export default {
         state.practice_applied_sessions_count = payload
     },
     ADD_PRACTICE_APPLIED_SESSIONS(state, payload) {
-        console.log('add practice applied is working', payload)
         state.practice_applied_sessions.unshift(payload)
         state.practice_applied_sessions_count = state.practice_applied_sessions_count + 1
         if (state.practice_applied_sessions_count > 10) {
@@ -76,8 +70,6 @@ export default {
         }
     },
     DEDUCT_PRACTICE_APPLIED_SESSIONS(state, payload) {
-        console.log('deduct practice applied jobs is working', payload)
-
         let index = state.practice_applied_sessions.findIndex(
             job => job.id === payload.id
         )
@@ -92,7 +84,6 @@ export default {
         state.practice_allocated_sessions_count = payload
     },
     ADD_PRACTICE_ALLOCATED_SESSIONS(state, payload) {
-        console.log('add practice allocated is working', payload)
         state.practice_allocated_sessions.unshift(payload)
         state.practice_allocated_sessions_count = state.practice_allocated_sessions_count + 1
         if (state.practice_allocated_sessions_count > 10) {
@@ -100,8 +91,6 @@ export default {
         }
     },
     DEDUCT_PRACTICE_ALLOCATED_SESSIONS(state, payload) {
-        console.log('deduct practice allocated jobs is working', payload)
-
         let index = state.practice_allocated_sessions.findIndex(
             job => job.id === payload.id
         )
@@ -123,7 +112,6 @@ export default {
         state.practice_completed_sessions_count = payload
     },
     ADD_PRACTICE_COMPLETED_SESSIONS(state, payload) {
-        console.log('add practice completed is working', payload)
         state.practice_completed_sessions.unshift(payload)
         state.practice_completed_sessions_count = state.practice_completed_sessions_count + 1
         if (state.practice_completed_sessions_count > 10) {
@@ -160,7 +148,6 @@ export default {
         state.practice_cancelled_sessions_count = payload
     },
     ADD_PRACTICE_CANCELLED_SESSIONS(state, payload) {
-        console.log('add practice current is working', payload)
         state.practice_cancelled_sessions.unshift(payload)
         state.practice_cancelled_sessions_count = state.practice_cancelled_sessions_count + 1
         if (state.practice_cancelled_sessions_count > 10) {
@@ -175,7 +162,6 @@ export default {
         state.practice_withdrawn_sessions_count = payload
     },
     ADD_PRACTICE_WITHDRAWN_SESSIONS(state, payload) {
-        console.log('add practice withdrawn is working', payload)
         state.practice_withdrawn_sessions.unshift(payload)
         state.practice_withdrawn_sessions_count = state.practice_withdrawn_sessions_count + 1
         if (state.practice_withdrawn_sessions_count > 10) {
@@ -192,7 +178,6 @@ export default {
         state.locum_allocated_jobs_count = payload
     },
     ADD_LOCUM_ALLOCATED_JOBS(state, payload) {
-        console.log('add locum allocated jobs is working', payload)
         state.locum_allocated_jobs.unshift(payload)
         state.locum_allocated_jobs_count = state.locum_allocated_jobs_count + 1
         if (state.locum_allocated_jobs_count > 10) {
@@ -200,7 +185,6 @@ export default {
         }
     },
     DEDUCT_LOCUM_ALLOCATED_JOBS(state, payload) {
-        console.log('deduct locum allocated jobs is working', payload)
         let index = state.locum_allocated_jobs.findIndex(
             job => job.id === payload.id
         )
@@ -224,7 +208,6 @@ export default {
         state.locum_available_jobs_count = payload
     },
     ADD_LOCUM_AVAILABLE_JOBS(state, payload) {
-        console.log('add locum available jobs is working', payload)
         state.locum_available_jobs.unshift(payload)
         state.locum_available_jobs_count = state.locum_available_jobs_count + 1
         if (state.locum_available_jobs_count > 10) {
@@ -232,7 +215,6 @@ export default {
         }
     },
     DEDUCT_LOCUM_AVAILABLE_JOBS(state, payload) {
-        console.log('deduct locum available jobs is working', payload)
         let index = state.locum_available_jobs.findIndex(
             job => job.id === payload.id
         )
@@ -247,7 +229,6 @@ export default {
         state.locum_matched_jobs_count = payload
     },
     ADD_LOCUM_MATCHED_JOBS(state, payload) {
-        console.log('add locum matched jobs is working', payload)
         state.locum_matched_jobs.unshift(payload)
         state.locum_matched_jobs_count = state.locum_matched_jobs_count + 1
         if (state.locum_matched_jobs_count > 10) {
@@ -255,8 +236,6 @@ export default {
         }
     },
     DEDUCT_LOCUM_MATCHED_JOBS(state, payload) {
-        console.log('deduct locum matched jobs is working', payload)
-
         let index = state.locum_matched_jobs.findIndex(
             job => job.id === payload.id
         )
@@ -271,18 +250,14 @@ export default {
         state.locum_applied_jobs_count = payload
     },
     ADD_LOCUM_APPLIED_JOBS(state, payload) {
-        console.log('applied jobs count', state.locum_applied_jobs_count)
         state.locum_applied_jobs.unshift(payload)
         state.locum_applied_jobs_count = state.locum_applied_jobs_count + 1
         if (state.locum_applied_jobs_count > 10) {
             state.locum_applied_jobs.pop()
         }
-        console.log('add locum applied jobs is working', state.locum_applied_jobs)
 
     },
     DEDUCT_LOCUM_APPLIED_JOBS(state, payload) {
-        console.log('deduct locum applied jobs is working', payload)
-
         let index = state.locum_applied_jobs.findIndex(
             job => job.id === payload.id
         )
@@ -297,7 +272,6 @@ export default {
         state.locum_cancelled_jobs_count = payload
     },
     ADD_LOCUM_CANCELLED_JOBS(state, payload) {
-        console.log('add locum cancelled jobs is working', payload)
         state.locum_cancelled_jobs.unshift(payload)
         state.locum_cancelled_jobs_count = state.locum_cancelled_jobs_count + 1
         if (state.locum_cancelled_jobs_count > 10) {
@@ -312,7 +286,6 @@ export default {
         state.locum_unsuccessful_jobs_count = payload
     },
     ADD_LOCUM_UNSUCCESSFUL_JOBS(state, payload) {
-        console.log('add locum unsuccessful jobs is working', payload)
         state.locum_unsuccessful_jobs.unshift(payload)
         state.locum_unsuccessful_jobs_count = state.locum_unsuccessful_jobs_count + 1
         if (state.locum_unsuccessful_jobs_count > 10) {
@@ -327,7 +300,6 @@ export default {
         state.locum_withdrawn_jobs_count = payload
     },
     ADD_LOCUM_WITHDRAWN_JOBS(state, payload) {
-        console.log('add locum withdrawn jobs is working', payload)
         state.locum_withdrawn_jobs.unshift(payload)
         state.locum_withdrawn_jobs_count = state.locum_withdrawn_jobs_count + 1
         if (state.locum_withdrawn_jobs_count > 10) {
@@ -342,7 +314,6 @@ export default {
         state.locum_completed_jobs_count = payload
     },
     ADD_LOCUM_COMPLETED_JOBS(state, payload) {
-        console.log('add locum completed jobs is working', payload)
         state.locum_completed_jobs.unshift(payload)
         state.locum_completed_jobs_count = state.locum_completed_jobs_count + 1
         if (state.locum_completed_jobs_count > 10) {
@@ -367,7 +338,6 @@ export default {
     // =================== JOB NOTIFICATION ================
     ADD_PRACTICE_JOB_NOTIFICATION(state, payload) {
         let index = state.practice_job_notifications.findIndex(jobNotif => jobNotif.id === payload.id)
-        console.log('test', index, state.practice_job_notifications, payload)
         if (index < 0) {
             state.practice_job_notifications.unshift(payload)
         } else if (index >= 0) {

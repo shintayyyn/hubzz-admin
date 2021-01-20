@@ -1,6 +1,5 @@
 export function fetchHubzzInvoices (axios, payload) {
   // this is called practice invoices  in API
-  console.log('payload', payload)
   let params = {}
   payload.exportable ? params.exportable = payload.exportable : null
   payload.id ? params.id = payload.id : null

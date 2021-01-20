@@ -83,8 +83,6 @@ export default {
           )
         locumInvoice = response.data.locum_invoice
       }
-      
-      console.log('approvedjobpart', approvedJobPart)
       response = await app.$axios.$get(
           `/api/v1/admin/practices/${route.params.id}`
         )

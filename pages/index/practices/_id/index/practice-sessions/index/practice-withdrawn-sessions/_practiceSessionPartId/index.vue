@@ -25,7 +25,6 @@ export default {
     try{
       let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
       const job_part = response.data.job_part
-      console.log('job', job_part)
       const practiceId = route.params.id
       return{
         job_part,
