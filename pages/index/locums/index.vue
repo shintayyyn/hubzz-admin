@@ -340,7 +340,6 @@
     },
 
 		methods: {
-
 			getAllLocumUsers () {
         const filters = {}
 
