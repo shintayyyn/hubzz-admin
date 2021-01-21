@@ -35,7 +35,8 @@
       <div class="hidden md:flex pb-1 items-center text-sm text-white justify-around font-semibold">
         <div 
           v-if="authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')"
-          class="align-middle  text-center w-1/10">
+          class="align-middle  text-center w-1/10"
+        >
           Check
         </div>
         <div 
@@ -613,55 +614,40 @@ export default {
       this.searchSubmit()
     },
     showUnpaidInvoiceOnly (newValue) {
+      this.currentPage = 1
+      this.params.offset = 0
       if (this.showPaidInvoiceOnly === true && newValue === true) {
         this.showPaidInvoiceOnly = false
       }
-      this.currentPage = 1,
+
       this.getHubzzInvoices()
     },
     showPaidInvoiceOnly (newValue) {
+      this.currentPage = 1
+      this.params.offset = 0
       if (this.showUnpaidInvoiceOnly === true && newValue === true) {
         this.showUnpaidInvoiceOnly = false
       }
-      this.currentPage = 1
+      
       this.getHubzzInvoices()
     },
     showCsvExportOnly (newValue) {
-       if (this.showExportableInvoicesOnly === true && newValue === true) {
+      this.currentPage = 1
+      this.params.offset = 0
+      if (this.showExportableInvoicesOnly === true && newValue === true) {
         this.showExportableInvoicesOnly = false
       }
       this.getHubzzInvoices()
-      this.currentPage = 1
+      
     },
     showExportableInvoicesOnly (newValue) {
+      this.currentPage = 1
+      this.params.offset = 0
       if (this.showCsvExportOnly === true && newValue === true) {
         this.showCsvExportOnly = false
       }
       this.getHubzzInvoices()
-      this.currentPage = 1
     }
-  },
-  created () {
-    if (this.authAdminPermissions.includes('Export Sage Csv')) {
-      this.columns.unshift({
-        name: "Check",
-        dataIndex: "checker",
-        class: "text-center",
-        slotName: "checker",
-        eventName: "checkClicked",
-        order: 1
-      })
-    }
-    if (this.authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')) {
-      this.columns.push({
-        name: "Actions",
-        slot: true,
-        slotName: "actions",
-        dataIndex: "",
-        class: "text-center"
-      })
-    }
-    
   },
 	async asyncData ({ app, route, store }) {
 		try {
@@ -722,6 +708,28 @@ export default {
 			console.log("Get hubzz invoices error!", err)
 		}
 	},
+  created () {
+    if (this.authAdminPermissions.includes('Export Sage Csv')) {
+      this.columns.unshift({
+        name: "Check",
+        dataIndex: "checker",
+        class: "text-center",
+        slotName: "checker",
+        eventName: "checkClicked",
+        order: 1
+      })
+    }
+    if (this.authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')) {
+      this.columns.push({
+        name: "Actions",
+        slot: true,
+        slotName: "actions",
+        dataIndex: "",
+        class: "text-center"
+      })
+    }
+    
+  },
 	methods: {
     searchSubmit: debounce(function (page, order_by) {
       this.chosenInvoices = []

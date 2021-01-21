@@ -481,7 +481,6 @@ export default {
 
   methods: {
     async getEverything () {
-      console.log('filter', this.filter)
       let promises = []
 
       if (this.authAdminPermissions.includes('View Locums')) {

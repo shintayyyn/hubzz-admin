@@ -60,7 +60,7 @@ export default {
 
   async fetchBillingTotals ({ commit }, payload) {
     const params = payload
-    const response = await this.$axios.$get(`/api/v1/admin/billings-counts`, { params })
+    const response = await this.$axios.$get(`/api/v1/admin/hubzz-billings-counts`, { params })
     return commit('SET_BILLING_TOTALS', response.data.all_billings)
   },
 
