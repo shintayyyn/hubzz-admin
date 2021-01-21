@@ -57,7 +57,6 @@ export default {
   methods: {
     async continueSession () {
       await this.$axios.$patch(`/api/v1/admin/me/update-token`).then((res) => {
-        console.log('res', res.data)
         this.$store.commit("SESSION_EXPIRING", false)
       })
     }

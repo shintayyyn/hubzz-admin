@@ -22,12 +22,13 @@ export default (ctx, inject) => {
 
   })
 
-  socket.on('connect_error', () => {
-    ctx.store.commit("SET_NOTIFICATION", {
-      enabled: true,
-      status: "danger",
-      text: 'Server Offline',
-    })
+  socket.on('connect_error', (reason) => {
+    console.log('connect_error', reason)
+    // ctx.store.commit("SET_NOTIFICATION", {
+    //   enabled: true,
+    //   status: "danger",
+    //   text: 'Server Offline',
+    // })
   })
 
   socket.on('disconnect', reason => {

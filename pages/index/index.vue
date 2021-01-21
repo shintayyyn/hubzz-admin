@@ -347,7 +347,8 @@
         <div 
           v-if="authAdminPermissions.includes('View Practice Sessions') 
             || authAdminPermissions.includes('View Locum Jobs')" 
-          class="flex-1 rounded my-2 lg:ml-2 bg-charade">
+          class="flex-1 rounded my-2 lg:ml-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Job Disputes</div>
@@ -459,7 +460,14 @@ export default {
   },
 
   created () {
-    this.getEverything()
+    Promise.all([
+      this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DD'),
+      this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DD'),
+      this.filter.post_code = '',
+      this.filter.proximity = '',
+    ]).then(() => {
+      this.getEverything()
+    })
   },
 
   mounted () {
@@ -512,8 +520,8 @@ export default {
 
     async filterReset () {
       Promise.all([
-        this.filter.registered_at_date_start = '',
-        this.filter.registered_at_date_end = '',
+        this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DD'),
+        this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DD'),
         this.filter.post_code = '',
         this.filter.proximity = '',
       ]).then(() => {
