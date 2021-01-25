@@ -36,6 +36,23 @@
             </p>
           </div>
 
+          <div 
+            v-if="locumComplianceDocument.compliance_document_name === 'Passport'"
+            class="leading-tight pb-4"
+          >
+            <p class="font-bold text-base">
+              Country
+            </p>
+            <p class="text-white">
+              {{ locumComplianceDocument.country_name
+                && locumComplianceDocument.country_name
+                ? locumComplianceDocument.country_name
+                : "N/A" }}
+            </p>
+          </div>
+
+          
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               Locum
@@ -197,7 +214,9 @@
                   class="pb-4"
                 >
                   <!-- IF NOT APPLICABLE -->
-                  <div v-if="locumComplianceDocument.compliance_document.name === 'Passport'">
+                  <div v-if="locumComplianceDocument.compliance_document_type_name === 'Passport' 
+                    && (locumComplianceDocument.country_name === 'United Kingdom' || locumComplianceDocument.name === 'Ireland')"
+                  >
                     <input
                       id="notApplicable" 
                       v-model="expiration_not_applicable" 
@@ -205,7 +224,7 @@
                       name="notApplicable" 
                       :value="true"
                     >
-                    <label for="notApplicable">Not Applicable</label>
+                    <label for="notApplicable">Expiration Not Applicable (British Passport Only)</label>
                   </div>
                   
 
@@ -216,7 +235,7 @@
                     :name="'expired_at'"
                     :label="'Change Expiration Date'"
                     :error="formError.find(item => item.field === 'expired_at')"
-                    required
+                    :required="expiration_not_applicable === false ? true : false"
                   />
                 </div>
 
@@ -397,14 +416,31 @@ export default {
       if (!newVal && oldVal) {
         this.toPutLocumDetailCompliance.note = ""
       }
+    },
+
+    expiration_not_applicable (value) {
+      if (value === true) {
+        this.toPutLocumDetailCompliance.expired_at = null
+      } else {
+        this.toPutLocumDetailCompliance.expired_at = 
+          this.toPutLocumDetailCompliance.expired_at 
+            ? this.toPutLocumDetailCompliance.expired_at 
+            : this.locumComplianceDocument.expired_at
+      }
     }
   },
 
   created () {
+    if (this.locumComplianceDocument.expired_at === null && this.locumComplianceDocument.status === 'Approved') {
+      this.expiration_not_applicable = true
+    } else {
+      this.expiration_not_applicable = false
+    }
+    
     this.toPutLocumDetailCompliance.expired_at = this.locumComplianceDocument.expired_at
     this.toPutLocumDetailCompliance.status = this.locumComplianceDocument.status
     this.toPutLocumDetailCompliance.note = this.locumComplianceDocument.note
-    console.log("to put locum compliance", this.toPutLocumDetailCompliance)
+
     if (this.locumComplianceDocument.status === "Expiring") {
       this.toPutLocumDetailCompliance.status = "Approved"
     }
@@ -546,6 +582,9 @@ export default {
         // notRequired.push("status");
         this.toPutLocumDetailCompliance.note = ""
         notRequired.push("note")
+        if (this.locumComplianceDocument.compliance_document_name && this.expiration_not_applicable === true) {
+          notRequired.push("expired_at")
+        }
       }
 
       if (this.toPutLocumDetailCompliance.status === "Rejected") {
