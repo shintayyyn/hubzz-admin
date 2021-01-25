@@ -189,14 +189,30 @@
                     :error="formError.find(item => item.field === 'note')"
                   />
                 </div>
+                
 
                 <!-- PICK EXPIRATION DATE -->
                 <div
                   v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'"
                   class="pb-4"
                 >
+                  <!-- IF NOT APPLICABLE -->
+                  <div v-if="locumComplianceDocument.compliance_document.name === 'Passport'">
+                    <input
+                      id="notApplicable" 
+                      v-model="expiration_not_applicable" 
+                      type="checkbox" 
+                      name="notApplicable" 
+                      :value="true"
+                    >
+                    <label for="notApplicable">Not Applicable</label>
+                  </div>
+                  
+
                   <AppDate
                     v-model="toPutLocumDetailCompliance.expired_at"
+                    :disabled="expiration_not_applicable === false ? false : true"
+                    :isDisabled="expiration_not_applicable === false ? false : true"
                     :name="'expired_at'"
                     :label="'Change Expiration Date'"
                     :error="formError.find(item => item.field === 'expired_at')"
@@ -306,6 +322,7 @@ export default {
 
   data () {
     return {
+      expiration_not_applicable: false,
       loadingFile: false,
       fileUrl: null,
       disabledFileUrl: null,

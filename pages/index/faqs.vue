@@ -294,7 +294,7 @@ export default {
 			let practiceFaqs = response.data.faqs
 
 			await store.commit("faqs/SET_LOCUM_FAQS", locumFaqs)
-			await store.commit("faqs/SET_PRACTICE_FAQS", practiceFaqs)
+      await store.commit("faqs/SET_PRACTICE_FAQS", practiceFaqs)
 
 			const authAdminPermissions = store.getters["permissions"]
 
@@ -366,7 +366,6 @@ export default {
 			// Position is yung pupuntahan ng dinrag
 			const itemID = evt.dataTransfer.getData("itemID")
 			
-
 			if (domain !== this.dragging) {
 				this.draggedId = null
 				this.hoveredId = null
@@ -382,12 +381,9 @@ export default {
 					element => element.position == position
 				)
 
-				console.log('being dragged', itemBeingDragged.position)
-				console.log('being replaced', itemBeingReplaced.position)
-
 				if (!itemBeingDragged || !itemBeingReplaced) {
 					return
-				}
+        }
 
 				this.$axios
 					.$put(`/api/v1/admin/faqs/rearrange`, {
