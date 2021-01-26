@@ -159,6 +159,14 @@
           {{ slotProps.item.compliance_status }}
         </div>
       </template>
+
+      <template v-slot:registration_type_slot="slotProps">
+        <div
+          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+        >
+          {{ registrationType(slotProps.item.referrer_domain) }}
+        </div>
+      </template>
     </AppTable>
 
     <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
@@ -276,6 +284,17 @@
 						sortable: true,
 						slot: true,
 						slotName: 'compliance_slot',
+            flex: '1 0 0',
+            minWidth: '150px',
+            maxWidth: '170px',
+          },
+          {
+						name: 'Registration Type',
+						dataIndex: 'referrer_domain',
+						class: 'md:text-center',
+						sortable: true,
+						slot: true,
+						slotName: 'registration_type_slot',
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',
@@ -443,6 +462,19 @@
 						return
 				}
       },
+
+      registrationType (type) {
+        let registrationType = ''
+        if (type === 'Practice') {
+          registrationType = 'Referred by Practice'
+        } else if (type === 'Locum') {
+          registrationType = 'Referred by Locum'
+        } else {
+          registrationType = 'Organic'
+        }
+
+        return registrationType
+      }
       
 		},
 

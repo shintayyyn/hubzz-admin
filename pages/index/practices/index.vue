@@ -192,6 +192,14 @@
             {{ slotProps.item.hub_type }}
           </div>
         </template>
+
+        <template v-slot:registration_type_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+          >
+            {{ registrationType(slotProps.item.referrer_domain) }}
+          </div>
+        </template>
       </AppTable>
 
       <div v-if="!loadingPractices && practices.length === 0" class="mt-2 w-full text-center text-white">
@@ -353,7 +361,18 @@ export default {
           flex: '1 0 0',
           minWidth: '130px',
           maxWidth: '150px',
-				},
+        },
+        {
+						name: 'Registration Type',
+						dataIndex: 'referrer_domain',
+						class: 'md:text-center',
+						sortable: true,
+						slot: true,
+						slotName: 'registration_type_slot',
+            flex: '1 0 0',
+            minWidth: '150px',
+            maxWidth: '170px',
+					},
       ]
 
       if (!this.filterPracticeType || this.filterPracticeType === 'Hub') {
@@ -614,6 +633,19 @@ export default {
 					return ""
 			}
 		},
+
+    registrationType (type) {
+      let registrationType = ''
+      if (type === 'Practice') {
+        registrationType = 'Referred by Practice'
+      } else if (type === 'Locum') {
+        registrationType = 'Referred by Locum'
+      } else {
+        registrationType = 'Organic'
+      }
+
+      return registrationType
+    }
 	},
 
 }
