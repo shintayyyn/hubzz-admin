@@ -378,8 +378,6 @@ export default {
 
         this.getOrphanSpokes(params)
       } else if (!this.practice) {
-
-        console.log('params', params)
         this.total = await this.$axios
           .get(`/api/v1/admin/surgeries/count`, { params })
           .then(response => response.data.data.count)
@@ -529,27 +527,4 @@ export default {
   z-index: 511;
 }
 
-/* .practice-user-modal,
-  .practice-user-modal-small {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
-  }
-
-  @media screen and (min-width: 1200px) {
-    .practice-user-modal {
-      width: 70%;
-    }
-    .practice-user-modal-small {
-      width: 60%;
-    }
-  } */
 </style>

@@ -62,7 +62,10 @@
     <div class="flex flex-col">
       <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUM REGISTRATIONS -->
-        <div v-if="authAdminPermissions.includes('View Locums')" class="flex-1 rounded my-2 lg:mr-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Locums')" 
+          class="flex-1 rounded my-2 lg:mr-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Locum Registrations</div>
@@ -97,7 +100,10 @@
           </div>
         </div>
         <!-- PRACTICE REGISTRATIONS -->
-        <div v-if="authAdminPermissions.includes('View Practices')" class="flex-1 rounded my-2 lg:mx-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Practices')" 
+          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Practice Registrations</div>
@@ -171,7 +177,10 @@
           </div>
         </div>
         <!-- BILLING TOTALS -->
-        <div v-if="authAdminPermissions.includes('View Hubzz Invoices')" class="flex-1 rounded my-2 lg:ml-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Hubzz Invoices')" 
+          class="flex-1 rounded my-2 lg:ml-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Billing</div>
@@ -225,7 +234,10 @@
       
       <div class="flex flex-col lg:flex-row w-full ">
         <!-- LOCUMS IN PLATFORM -->
-        <div v-if="authAdminPermissions.includes('View Locums')" class="flex-1 rounded my-2 lg:mr-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Locums')" 
+          class="flex-1 rounded my-2 lg:mr-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Locums</div>
@@ -266,7 +278,10 @@
           </div>
         </div>
         <!-- PRACTICES IN PLATFORM -->
-        <div v-if="authAdminPermissions.includes('View Practices')" class="flex-1 rounded my-2 lg:mx-2 bg-charade">
+        <div 
+          v-if="authAdminPermissions.includes('View Practices')" 
+          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+        >
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-500">
               <div>Practices</div>

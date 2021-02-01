@@ -107,54 +107,184 @@
           :type="'invoice'"
           :invoiceDetails="propInvoice"
           :invoiceStatus="$route.query.status"
+          :tax_rates="tax_rates"
+          :locum_vat_registered="propInvoice.locum_user_vat_registered "
           :toDisplay="['Approved', 'Paid', 'Issued'].includes(propInvoice.status)"
           @getSchedule="getSchedule"
         />
       </div>
 
-      <div class="w-full flex justify-between py-4">
-        <div class="flex items-end">
-          <p class="text-sm">
-            TOTAL LATES:
-          </p>
-          <p class="font-bold mx-2">
-            {{ total_late_hours === '00:00' ? 'None' : total_late_hours }}
-          </p>
+      <div class="w-full flex flex-wrap justify-between py-4">
+        <div class="flex flex-col w-full sm:w-1/2 px-2">
+          <div class="flex flex-wrap justify-between">
+            <p class="text-sm w-1/2">
+              TOTAL LATES:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              {{ total_late_hours === '00:00' ? 'None' : total_late_hours }}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap justify-between">
+            <p class="text-sm w-1/2">
+              TOTAL ABSENCES:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              {{ total_absences > 0 ? total_absences : 'None' }}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap justify-between">
+            <p class="text-sm w-1/2">
+              TOTAL WORK HOURS:
+            </p>
+
+            <p v-if="total_working_hours > 0" class="font-bold w-1/2 text-right">
+              {{ total_working_hours | hoursMinutes }}
+            </p>
+
+            <p v-else class="font-bold w-1/2 text-right">
+              0
+            </p>
+          </div>
+
+          <div class="flex flex-wrap justify-between">
+            <p class="text-sm w-1/2">
+              TOTAL DEDUCTIONS:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              £ {{ total_deductions | currency }}
+            </p>
+          </div>
+          
+          <div
+            v-if="propInvoice && ((!propInvoice.ooh && propInvoice.generate_form) || (propInvoice.ooh))"
+            class="flex flex-wrap justify-between"
+          >
+            <p class="text-sm w-1/2">
+              Form Type:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              {{ isOOH ? 'Solo Form' : 'Form A' }}
+            </p>
+          </div>
+
+          <div class="flex flex-wrap justify-between">
+            <p class="text-sm w-1/2">
+              STATUS:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              {{ propInvoice && propInvoice.status }}
+            </p>
+          </div>
+
+          <div
+            v-if="propInvoice && (propInvoice.generate_form || propInvoice.locum_form_a_id || propInvoice.locum_solo_form_id)"
+            class="flex flex-wrap justify-between"
+          >
+            <p class="text-sm w-1/2">
+              GENERATE FORM:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              {{ propInvoice && (propInvoice.generate_form || propInvoice.locum_form_a_id || propInvoice.locum_solo_form_id) ? 'Yes' : 'No' }}
+            </p>
+          </div>
         </div>
-        <div class="flex items-end">
-          <p class="text-sm">
-            TOTAL ABSENCES:
-          </p>
-          <p class="font-bold mx-2">
-            {{ total_absences > 0 ? total_absences : 'None' }}
-          </p>
-        </div>
-        <div class="flex items-end">
-          <p class="text-sm">
-            TOTAL WORK HOURS:
-          </p>
-          <p v-if="total_working_hours>0" class="font-bold mx-2">
-            {{ total_working_hours | hoursMinutes }}
-          </p>
-          <p v-else class="font-bold mx-2">
-            0
-          </p>
-        </div>
-        <div class="flex items-end">
-          <p class="text-sm">
-            TOTAL DEDUCTIONS:
-          </p>
-          <p class="font-bold mx-2">
-            £ {{ total_deductions | currency }}
-          </p>
-        </div>
-        <div class="flex items-end">
-          <p class="text-sm">
-            TOTAL WORK PAYMENT:
-          </p>
-          <p class="font-bold mx-2">
-            £ {{ total_gross_locum_wages | currency }}
-          </p>
+
+        <div class="flex flex-col w-full sm:w-1/2 px-2 pt-5 sm:pt-0">
+          <div class="flex flex-wrap justify-between">
+            <p class="text-sm w-1/2">
+              TOTAL WORK PAYMENT:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              £ {{ total_gross_locum_wages | currency }}
+            </p>
+          </div>
+
+          <div 
+            v-if="propInvoice 
+              ? propInvoice.untaxed_total_amount !== propInvoice.total_amount 
+                ? true 
+                : false 
+              : propJobPart 
+                ? propInvoice.locum_user_vat_registered  
+                  ? true
+                  : false 
+                : false" 
+            class="flex flex-wrap justify-between"
+          >
+            <p class="text-sm w-1/2">
+              TAX AMOUNT:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              £ {{ tax_amount | currency }}
+            </p>
+          </div>
+
+          <div 
+            v-if="propInvoice 
+              ? propInvoice.untaxed_total_amount !== propInvoice.total_amount 
+                ? true 
+                : false 
+              : propJobPart 
+                ? propInvoice.locum_user_vat_registered  
+                  ? true
+                  : false 
+                : false" 
+            class="flex flex-wrap justify-between"
+          >
+            <p class="text-sm w-1/2">
+              TAXED TOTAL WORK PAYMENT:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              £ {{ taxed_gross_rate | currency }}
+            </p>
+          </div>
+
+          <template v-if="propInvoice && propInvoice.approved">
+            <div class="flex flex-wrap justify-between">
+              <p class="text-sm w-1/2">
+                NI / PAYE:
+              </p>
+
+              <p class="font-bold w-1/2 text-right">
+                <span class="mr-5">-</span>
+                £ {{ ni_paye_amount | currency }}
+              </p>
+            </div>
+
+            <div class="flex flex-wrap justify-between border-t-4 pt-2">
+              <p class="text-sm w-1/2">
+                GRAND TOTAL:
+              </p>
+
+              <p class="font-bold w-1/2 text-right">
+                £ {{ grand_total | currency }}
+              </p>
+            </div>
+          </template>
+
+          <div
+            v-if="propInvoice && propInvoice.approved && ((!propInvoice.ooh && propInvoice.generate_form) || (propInvoice.ooh))"
+            class="flex flex-wrap justify-between mt-4 p-2 border border-gray-600 bg-gray-300"
+          >
+            <p class="text-sm w-1/2">
+              PENSION AMOUNT:
+            </p>
+
+            <p class="font-bold w-1/2 text-right">
+              £ {{ pension_amount | currency }}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -626,12 +756,16 @@ export default {
 			shiftErrors: [],
 			schedule: [],
 			total_working_hours: 0,
-			total_gross_locum_wages: 0,
+      total_gross_locum_wages: 0,
+      tax_amount: 0,
+      taxed_gross_rate: 0,
 			total_deductions: 0,
 			total_late_hours: "",
 			total_absences: 0,
 			hasShiftError: false,
-			sched_has_changes: false
+      sched_has_changes: false,
+      
+      tax_rates: {},
 		}
 	},
 
@@ -721,7 +855,8 @@ export default {
 				` Total of ${finalHoursInMinutesHours} hour${hourOrHours}${hasMinutes}`
 
 			return description
-		},
+    },
+    
 		job_part () {
 			let jobPartNumber
 			let jobType
@@ -748,7 +883,8 @@ export default {
 				date_start: formattedDateStart,
 				date_end: formattedDateEnd
 			}
-		},
+    },
+    
 		practice_rate () {
 			let practice_rates = this.practice.rates
 			let rate_type_id = this.propInvoice.items[0].job_part.job
@@ -763,7 +899,11 @@ export default {
 				rate = 0
 			}
 			return rate
-		}
+    },
+    
+    isOOH () {
+      return this.propInvoice && this.propInvoice.ooh ? true : false
+    },
 	},
 
 	watch: {
@@ -796,7 +936,19 @@ export default {
 			// }
 			this.form.items[0].approve = value
 		}
-	},
+  },
+  
+  created () {
+    Promise.all([
+      this.$axios.$get("/api/v1/admin/tax-rates").then(response => 
+        response.data.tax_rates
+      ),
+    ])
+      .then(responses => {
+        const [taxRates,] = responses
+        this.tax_rates = taxRates
+      })
+  },
 
 	mounted () {
 		if (this.propInvoice) {
@@ -846,7 +998,9 @@ export default {
 	methods: {
 		getSchedule (
 			schedule,
-			total_gross_locum_wages,
+      total_gross_locum_wages,
+      tax_amount, //getJobTaxRate
+      taxed_gross_rate, // getJobTaxedGrossRate
 			total_working_hours,
 			deductions,
 			total_lates,
@@ -901,8 +1055,11 @@ export default {
 			this.total_absences = absentCount
 			this.total_deductions = deductions
 			this.total_working_hours = total_working_hours
-			this.total_gross_locum_wages = total_gross_locum_wages
-			this.form.total_amount = total_gross_locum_wages
+      this.total_gross_locum_wages = total_gross_locum_wages
+      
+			this.form.total_amount = this.propInvoice && this.propInvoice.locum_user_vat_registered ? taxed_gross_rate : total_gross_locum_wages
+      this.tax_amount = this.propInvoice && this.propInvoice.approved ? this.propInvoice.tax_amount : tax_amount
+      this.taxed_gross_rate = taxed_gross_rate
 			this.hasShiftError = hasError
 			this.sched_has_changes =
 				this.$route.query.status === "issued" ? false : hasChanges

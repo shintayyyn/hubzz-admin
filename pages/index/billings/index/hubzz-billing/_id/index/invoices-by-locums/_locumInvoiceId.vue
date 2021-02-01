@@ -41,14 +41,12 @@ export default {
 				`/api/v1/admin/practices/${route.params.id}/locum-invoices/${route.params.locumInvoiceId}`
 			)
 			const locumInvoice = response.data.locum_invoice
-			console.log("locumInvoice", locumInvoice)
 			response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
 			const practice = response.data.practice
 			let invoiceItems = []
 			const locumInvoiceItems = locumInvoice.items
-			console.log("items", locumInvoiceItems)
 			for (let i = 0; i < locumInvoiceItems.length; i++) {
 				const newItem = {
 					job_part_id: locumInvoiceItems[i].id,
@@ -99,7 +97,7 @@ export default {
 }
 @media screen and (min-width: 1200px) {
 	.locum-invoice-modal {
-		width: 70%;
+		width: 80%;
 	}
 }
 .document {

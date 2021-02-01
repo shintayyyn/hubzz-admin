@@ -398,10 +398,6 @@ export default {
     };
   },
 
-  created () {
-    console.log('tabstatus',this.tabStatus)
-  },
-
   watch: {
     sort(value) {
       if (value === "Job Number") {
@@ -449,7 +445,6 @@ export default {
     },
 
     async sortBy(sortedBy, job_page, search) {
-      console.log("qa alvin", sortedBy);
       await this.$store.commit("jobs/TOGGLE_LOADING", true);
 
       if (this.sortedBy == sortedBy && this.sortType == true) {
@@ -526,16 +521,12 @@ export default {
         )
         .then(async res => {
           if (this.practice) {
-            console.log("jobs", res.data.jobs);
-            console.log("job parts", res.data.job_parts);
             await this.$store.commit(
               `jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`,
               this.isJobParts === true ? res.data.job_parts : res.data.jobs
             );
             await this.$store.commit("jobs/TOGGLE_LOADING", false);
           } else if (this.locumUser) {
-            console.log("jobs", res.data.jobs);
-            console.log("job parts", res.data.job_parts);
             await this.$store.commit(
               `jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`,
               this.isJobParts === true ? res.data.job_parts : res.data.jobs
