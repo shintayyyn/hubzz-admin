@@ -288,15 +288,16 @@
   </div>
 </template>
 <script>
+import AppButton from "@/components/Base/AppButton"
 import AppConfirm from "@/components/Base/AppConfirm"
 import AppTable from "@/components/Base/AppTable"
-import AppButton from "@/components/Base/AppButton"
+
 export default {
   middleware: "changedPracticeType",
   components: {
+    AppButton,
     AppConfirm,
     AppTable,
-    AppButton
   },
   data () {
     return {
@@ -545,5 +546,3 @@ export default {
   }
 }
 </script>
-<style>
-</style>

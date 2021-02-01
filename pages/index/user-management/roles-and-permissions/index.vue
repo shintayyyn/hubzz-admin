@@ -11,15 +11,5 @@ export default {
 	components: {
 		AdminRoles
 	},
-	data() {
-		return {};
-	},
-	async asyncData({ app, route, store }) {
-		try {
-		} catch (err) {}
-	},
-	methods: {}
-};
+}
 </script>
-<style>
-</style>
