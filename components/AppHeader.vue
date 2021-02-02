@@ -1,43 +1,28 @@
 <template>
   <section class="header">
-    <div class="flex justify-between items-center text-sm text-white px-4 md:px-6">
-      <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
+    <div class="flex justify-end items-center text-sm text-white px-4 md:px-6">
+      <!-- <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
         <img src="~/assets/images/hbg.png">
-      </button>
+      </button> -->
 
-      <div class="flex flex-row py-2 cursor-pointer">
+      <!-- <div class="flex flex-row py-2 cursor-pointer text-gray-500">
         <div class="m-2 mt-3 text-xl md:text-4xl">
           {{ headerName }}
         </div>
-      </div>
+      </div> -->
 
-      <div class="flex justify-right">
-        <div class="m-4 sm:relative">
-          <div class="flex flex-col relative cursor-pointer" @click="showDropdownNotifications = !showDropdownNotifications">
-            <div>
-              <svgicon
-                name="notification"
-                width="30"
-                height="30"
-                :color="showDropdownNotifications ? '#ffc72c' : 'white'"
-              />
-            </div>
-
-            <div
-              v-if="unseenNotificationsCount > 0"
-              class="absolute bottom-0 z-50 -mb-3 -mr-3 py-1 px-2 ml-4 bg-red-700 text-xs flex items-center justify-center rounded-full"
-            >
-              {{ unseenNotificationsCount }}
-            </div>
-          </div>
-          
+      <div class="flex">
+        <div class="m-2 sm:relative">
+          <AppButton
+            icon="bell"
+            :label="'Notification'"
+            class="notif-btn"
+            :customTheme="'border-2 border-gray-400 text-black'"
+            :badge="unseenNotificationsCount"
+            @click="showDropdownNotifications = !showDropdownNotifications"
+          />
           <div v-if="showDropdownNotifications">
             <div v-on-clickaway="onClickaway" class="notification-modal mx-auto sm:mx-0 overflow-hidden">
-              <!-- <div class="flex flex-row-reverse">
-								<div class="p-1 m-1 mx-2 mt-1" @click="showDropdownNotifications = false">
-									<svgicon name="times-solid" width="15" height="15" color="white" />
-								</div>
-							</div>-->
               <div class="flex flex-row mx-4 items-center justify-between pt-4">
                 <div class>
                   <p class="text-xl font-bold tracking-normal">
@@ -87,25 +72,15 @@
             </div>
           </div>
         </div>
-
-        <nuxt-link v-if="$auth.loggedIn" to="/account" class="flex flex-row py-2 text-sm cursor-pointer">
-          <div>
-            <img
-              src="~/assets/images/default-user-image.png"
-              class="rounded-full"
-              width="48px"
-              height="48px"
-            >
-          </div>
-
-          <div class="hidden md:block ml-2 mt-2 text-white">
-            {{ $auth.user.email }}
-
-            <div class="font-hairline text-xs">
-              My Account
-            </div>
-          </div>
-        </nuxt-link>
+        <div v-if="$auth.loggedIn" class="m-2 sm:relative">
+          <AppButton
+            icon="user"
+            :label="'My Account'"
+            class="notif-btn"
+            :customTheme="'border-2 border-gray-400 text-black'"
+            @click="$router.push('/account')"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -113,8 +88,12 @@
 
 <script>
 import { mixin as clickaway } from "vue-clickaway"
+import AppButton from "@/components/Base/AppButton"
 
 export default {
+  components: {
+    AppButton,
+  },
   mixins: [clickaway],
   
   props: {
@@ -228,4 +207,10 @@ export default {
       display: none;
     }
   }
+  @media (min-width: 768px) {
+    .notif-btn {
+      min-width: 150px;
+    }
+  }
+  
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8 text-white">
-    <!-- <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" /> -->
+    <!-- Filters -->
     <div class="flex flex-wrap justify-between items-start w-full shadow-lg rounded flex bg-charade text-white my-2">
       <div class="flex flex-col lg:flex-row w-full m-4">
         <div class="md:px-1 w-full lg:w-1/4">
@@ -412,14 +412,12 @@ import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
 import AppSuggestSelect from "@/components/Base/AppSuggestSelect"
-// import AppLoading from "@/components/Base/AppLoading"
 export default {
   components: {
     AppInput,
     AppButton,
     AppDate,
     AppSuggestSelect,
-    // AppLoading,
   },
   data () {
     return {

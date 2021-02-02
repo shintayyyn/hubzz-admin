@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col bg-trout">
+  <div class="relative flex flex-col default">
     <AppSideBar
       :unseenLocumNotificationsCount="unseenLocumNotificationsCount"
       :unseenPracticeNotificationsCount="unseenPracticeNotificationsCount"
@@ -351,6 +351,9 @@
 </script>
 
 <style>
+  .default {
+    background-color: white
+  }
 	.content {
 		margin-left: 0;
 		min-height: 100vh;
