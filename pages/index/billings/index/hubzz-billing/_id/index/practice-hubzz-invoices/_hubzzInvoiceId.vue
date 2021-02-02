@@ -10,6 +10,21 @@
           @click="goBack()"
         />
       </div>
+
+      <div
+        v-if="practiceInvoice.paid_at_in_gb_formatted" 
+        class="mx-4 my-2 font-semibold text-lg"
+      >
+        {{ '* This invoice has been marked as paid on ' + practiceInvoice.paid_at_in_gb_formatted }}
+      </div>
+      <div
+        v-if="practiceInvoice.unpaid_at_in_gb_formatted" 
+        class="mx-4 my-2 font-semibold text-lg"
+      >
+        <div>{{ `* This invoice has been marked Invalid on ${practiceInvoice.unpaid_at_in_gb_formatted}` }}</div>
+        <div v-if="practiceInvoice.unpaid_reason">{{ `For the reason: ${practiceInvoice.unpaid_reason}` }}</div>
+      </div>
+
       <div>
         <HubzzInvoice
           :forViewing="true"
@@ -54,6 +69,8 @@ export default {
 			)
 			const practiceInvoice = response.data.practice_invoice
 
+			console.log('practice invoice', practiceInvoice)
+
 			response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
@@ -75,7 +92,8 @@ export default {
 				if (
 					practiceInvoiceItems[i].type.includes("Job Part - Approved") ||
 					practiceInvoiceItems[i].type.includes("Job Part - Issued") ||
-					practiceInvoiceItems[i].type.includes("Job Part - Invoiced")
+					practiceInvoiceItems[i].type.includes("Job Part - Invoiced")||
+					practiceInvoiceItems[i].type.includes("Job Part - To Be Invoiced")
 				) {
 					newItem.id = invoiceItems.length + 1
 					invoiceItems.push(newItem)

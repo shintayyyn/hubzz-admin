@@ -14,17 +14,25 @@
     <div class="flex flex-wrap font-semibold my-4">
       <div
         class="text-2xl text-white mr-4"
-      >{{ job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}</div>
+      >
+        {{ job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}
+      </div>
       <div class="flex">
-        <div class="ml-2 text-black p-2 bg-yellow-500 rounded">{{ job_part.status }}</div>
+        <div class="ml-2 text-black p-2 bg-yellow-500 rounded">
+          {{ job_part.status }}
+        </div>
         <div
           v-if="job_part && job_part.terminated"
           class="ml-2 text-black p-2 bg-gray-300 rounded"
-        >{{ job_part && job_part.terminated ? 'Terminated' : null}}</div>
+        >
+          {{ job_part && job_part.terminated ? 'Terminated' : null }}
+        </div>
         <div
           class="ml-2 text-black p-2 text-white rounded"
           :class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
-        >{{ job_part.job && job_part.job.type ? job_part.job.type : null }}</div>
+        >
+          {{ job_part.job && job_part.job.type ? job_part.job.type : null }}
+        </div>
       </div>
     </div>
 
@@ -40,35 +48,47 @@
           <div class="m-4">
             <div
               class="font-bold text-sm sm:text-md"
-            >{{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At</div>
+            >
+              {{ job_part.terminated ? 'Terminated' : 'Cancelled' }} At
+            </div>
             <div
               class="text-xs sm:text-sm mb-8"
-            >{{ job_part.job.platform_job.cancelled_at | localDate }}</div>
+            >
+              {{ job_part.cancelled_at_in_gb_formatted }}
+            </div>
             <div
               class="font-bold text-sm sm:text-md"
-            >Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}</div>
-            <div class="text-xs sm:text-sm mb-8">{{ job_part.job.platform_job.cancelled_reason }}</div>
+            >
+              Reason for {{ job_part.terminated ? 'Termination' : 'Cancellation' }}
+            </div>
+            <div class="text-xs sm:text-sm mb-8">
+              {{ job_part.job.platform_job.cancelled_reason }}
+            </div>
             <div>
               <p
                 class="font-bold text-sm sm:text-md"
-              >{{ job_part.terminated ? 'Terminated By' : 'Cancelled By' }}</p>
+              >
+                {{ job_part.terminated ? 'Terminated By' : 'Cancelled By' }}
+              </p>
 
               <div class="flex justify-start">
                 <div class="text-xs sm:text-sm">
                   {{
-                  job_part.cancelled_by_practice === 'Hub'
-                  ? job_part.parent_practice_name
-                  : job_part.cancelled_by_practice === 'Spoke'
-                  ? job_part.practice_name
-                  : job_part.practice_name
+                    job_part.cancelled_by_practice === 'Hub'
+                      ? job_part.parent_practice_name
+                      : job_part.cancelled_by_practice === 'Spoke'
+                        ? job_part.practice_name
+                        : job_part.practice_name
                   }}
                 </div>
-                <div v-if="job_part.cancelled_by_user" class="mx-1">-</div>
+                <div v-if="job_part.cancelled_by_user" class="mx-1">
+                  -
+                </div>
                 <div v-if="job_part.cancelled_by_user" class="text-xs sm:text-sm">
                   {{
-                  job_part.cancelled_by_user.email
-                  ? job_part.cancelled_by_user.email
-                  : job_part.cancelled_by_user.name
+                    job_part.cancelled_by_user.email
+                      ? job_part.cancelled_by_user.email
+                      : job_part.cancelled_by_user.name
                   }}
                 </div>
               </div>
@@ -80,14 +100,22 @@
           class="shadow-lg rounded-lg bg-waterloo shadow p-4 mb-2"
         >
           <div class="leading-tight pb-4">
-            <p class="font-bold text-sm sm:text-md">Reason for Withdrawal</p>
+            <p class="font-bold text-sm sm:text-md">
+              Reason for Withdrawal
+            </p>
             <p
               class="text-xs sm:text-sm"
-            >{{ job_part.job.platform_job.declined_reason ? job_part.job.platform_job.declined_reason : '(none)' }}</p>
+            >
+              {{ job_part.job.platform_job.declined_reason ? job_part.job.platform_job.declined_reason : '(none)' }}
+            </p>
           </div>
           <div class="leading-tight">
-            <p class="font-bold text-sm sm:text-md">Date of Withdrawal</p>
-            <p class="text-xs sm:text-sm">{{ job_part.job.platform_job.declined_at | localDate }}</p>
+            <p class="font-bold text-sm sm:text-md">
+              Date of Withdrawal
+            </p>
+            <p class="text-xs sm:text-sm">
+              {{ job_part.job.platform_job.declined_at | localDate }}
+            </p>
           </div>
         </div>
         <div class="shadow-lg rounded-lg bg-waterloo shadow">
@@ -95,130 +123,230 @@
             <!-- INFOS LEFT -->
             <div class="xl:w-1/2 w-full overflow-hidden">
               <div v-if="isInvoice === true" class="m-4 mt-5 text-gray text-white">
-                <p class="font-semibold">Invoice Number</p>
-                <p class="text-white">{{ job_part.locum_invoice_item.locum_invoice.invoice_number }}</p>
-                <p class="mt-5 font-semibold">Session ID</p>
-                <p class="text-white">{{ job_part.job_id}}</p>
-                <p class="mt-5 font-semibold">Locum User ID</p>
-                <p class="text-white">{{ job_part.locum_invoice_item.locum_invoice.locum_user_id }}</p>
-                <p class="mt-5 font-semibold">Invoice Amount</p>
+                <p class="font-semibold">
+                  Invoice Number
+                </p>
+                <p class="text-white">
+                  {{ job_part.locum_invoice_item.locum_invoice.invoice_number }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Session ID
+                </p>
+                <p class="text-white">
+                  {{ job_part.job_id }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Locum User ID
+                </p>
+                <p class="text-white">
+                  {{ job_part.locum_invoice_item.locum_invoice.locum_user_id }}
+                </p>
+                <!-- <p class="mt-5 font-semibold">
+                  Invoice Amount
+                </p>
                 <p
                   class="text-white"
-                >{{ "£ " + job_part.locum_invoice_item.locum_invoice.total_amount }}</p>
-                <p class="mt-5 font-semibold">Final Hours</p>
-                <p class="text-white">{{ job_part.locum_invoice_item.final_hours + "Hours" }}</p>
-                <p class="mt-5 font-semibold">Other Remarks</p>
-                <p class="text-white">{{ job_part.locum_invoice_item.remarks }}</p>
+                >
+                  {{ "£ " + job_part.locum_invoice_item.locum_invoice.total_amount }}
+                </p> -->
+                <!-- <p class="mt-5 font-semibold">
+                  Final Hours
+                </p>
+                <p class="text-white">
+                  {{ job_part.locum_invoice_item.final_hours + "Hours" }}
+                </p> -->
                 <div v-if="job_part.invoice_status === 'Disputed'">
-                  <p class="mt-5 font-semibold">Disputed by Locum At</p>
+                  <p class="mt-5 font-semibold">
+                    Disputed by Locum At
+                  </p>
                   <p class="text-white">
                     {{
-                    job_part.locum_invoice_item
-                    && job_part.locum_invoice_item.disputed_by_locum_at
-                    ? $moment(job_part.locum_invoice_item.disputed_by_locum_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
-                    : 'N/A'
+                      job_part.locum_invoice_item
+                        && job_part.locum_invoice_item.disputed_by_locum_at
+                        ? $moment(job_part.locum_invoice_item.disputed_by_locum_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
+                        : 'N/A'
                     }}
                   </p>
-                  <p class="mt-5 font-semibold">Disputed by Practice At</p>
+                  <p class="mt-5 font-semibold">
+                    Disputed by Practice At
+                  </p>
                   <p class="text-white">
                     {{
-                    job_part.locum_invoice_item
-                    && job_part.locum_invoice_item.disputed_by_practice_at
-                    ? $moment(job_part.locum_invoice_item.disputed_by_practice_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
-                    : 'N/A'
+                      job_part.locum_invoice_item
+                        && job_part.locum_invoice_item.disputed_by_practice_at
+                        ? $moment(job_part.locum_invoice_item.disputed_by_practice_at ,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm')
+                        : 'N/A'
                     }}
                   </p>
                 </div>
               </div>
+              
               <div class="m-4 mt-5 text-gray text-white">
-                <p class="font-semibold">Job Part Number</p>
-                <p class="text-white">{{ job_part.job_part_number }}</p>
-                <p class="mt-5 font-semibold">Job Part</p>
-                <p class="text-white">{{ job_part.part }} of {{ job_part.parts }}</p>
-                <p class="mt-5 font-semibold">Rate</p>
-                <p
-                  class="text-white no-underline"
-                >{{ job_part.job ? "£ "+job_part.job.rate+" Per Hour":null +" Per Hour" }}</p>
-                <!-- <p class="mt-5 font-semibold">Total Hours</p>
-                <p class="text-white">{{ job_part.job.total_hours | hoursMinutes }}</p>-->
-                <p class="mt-5 font-semibold">Total Original Hours</p>
-                <p
-                  class="text-white"
-                >{{ job_part.schedules.map(item => item.original_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}</p>
+                <p class="font-semibold">
+                  Job Part Number
+                </p>
+
+                <p class="text-white">
+                  {{ job_part.job_part_number }}
+                </p>
+
+                <p class="mt-5 font-semibold">
+                  Job Part
+                </p>
+
+                <p class="text-white">
+                  {{ job_part.part }} of {{ job_part.parts }}
+                </p>
+
+                <p class="font-semibold">
+                  Job Part Gross Rate
+                </p>
+
+                <p class="text-white pb-2 no-underline">
+                  £ {{ job_part.job_part_gross_rate_formatted }}
+                </p>
+
+                <p class="font-semibold">
+                  Job Part Hubzz Fee
+                </p>
+
+                <p class="text-white pb-2 no-underline">
+                  £ {{ job_part.job_part_hubzz_fee_formatted }}
+                </p>
+
+                <p class="mt-5 font-semibold">
+                  Total Original Hours
+                </p>
+
+                <p class="text-white">
+                  {{ job_part ? job_part.job_part_total_original_hours_in_minutes_formatted : null }}
+                </p>
+                
                 <template v-if="['Completed', 'Approved'].includes(job_part.status)">
-                  <p class="mt-5 font-semibold">Total Final Hours</p>
-                  <p
-                    class="text-white"
-                  >{{ job_part.schedules.map(item => item.final_hours_in_minutes).reduce((acc, cur) => acc + cur) | hoursMinutes }}</p>
+                  <p class="mt-5 font-semibold">
+                    Total Final Hours
+                  </p>
+                  
+                  <p class="text-white">
+                    {{ job_part ? job_part.job_part_total_final_hours_in_minutes_formatted : null }}
+                  </p>
                 </template>
-                <p class="mt-5 font-semibold">Job Description</p>
+
+                <p class="mt-5 font-semibold">
+                  Job Description
+                </p>
                 <p
                   class="text-white break-words"
-                >{{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}</p>
-                <p class="mt-5 font-semibold">Is there another Doctor on site?</p>
+                >
+                  {{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Is there another Doctor on site?
+                </p>
                 <p
                   class="ml-2 mb-2"
-                >{{ job_part.job.platform_job.is_another_doctor ? "Yes" : "No" }}</p>
+                >
+                  {{ job_part.job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                </p>
 
-                <p class="font-semibold">Is nurse support available?</p>
+                <p class="font-semibold">
+                  Is nurse support available?
+                </p>
                 <p
                   class="ml-2 mb-2"
-                >{{ job_part.job.platform_job.is_nurse_available ? "Yes" : "No" }}</p>
+                >
+                  {{ job_part.job.platform_job.is_nurse_available ? "Yes" : "No" }}
+                </p>
 
-                <p class="font-semibold">Number of Patients</p>
-                <p class="ml-2 mb-2">{{ job_part.job.platform_job.number_of_patients }}</p>
+                <p class="font-semibold">
+                  Number of Patients
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.number_of_patients }}
+                </p>
 
-                <p class="font-semibold">Duration for Each Appointment</p>
-                <p class="ml-2 mb-2">{{ job_part.job.platform_job.duration_for_each_appointment}}</p>
+                <p class="font-semibold">
+                  Duration for Each Appointment
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.duration_for_each_appointment }}
+                </p>
 
-                <p class="font-semibold">Opprtunity for Catch Up Slots</p>
+                <p class="font-semibold">
+                  Opprtunity for Catch Up Slots
+                </p>
                 <p
                   class="ml-2 mb-2"
-                >{{ job_part.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}</p>
+                >
+                  {{ job_part.job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                </p>
 
-                <p class="font-semibold">Only favorite locum will be notified until this date</p>
+                <p class="font-semibold">
+                  Only favorite locum will be notified until this date
+                </p>
+
+                <p class="ml-2 mb-2">
+                  {{ job_part ? job_part.favorite_only_until_in_gb_formatted : null }}
+                </p>
+
+                <p class="font-semibold">
+                  Sessions Requirements
+                </p>
                 <p
                   class="ml-2 mb-2"
-                >{{ job_part.job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') : "N/A" }}</p>
+                >
+                  {{ job_part.job.platform_job && job_part.job.platform_job.session_requirements ? job_part.job.platform_job.session_requirements : '(none)' }}
+                </p>
 
-                <p class="font-semibold">Sessions Requirements</p>
+                <p class="font-semibold">
+                  Session Structure Information
+                </p>
                 <p
                   class="ml-2 mb-2"
-                >{{ job_part.job.platform_job && job_part.job.platform_job.session_requirements ? job_part.job.platform_job.session_requirements : '(none)' }}</p>
+                >
+                  {{ job_part.job.platform_job && job_part.job.platform_job.session_structure_information ? job_part.job.platform_job.session_structure_information : '(none)' }}
+                </p>
 
-                <p class="font-semibold">Session Structure Information</p>
-                <p
-                  class="ml-2 mb-2"
-                >{{ job_part.job.platform_job && job_part.job.platform_job.session_structure_information ? job_part.job.platform_job.session_structure_information : '(none)' }}</p>
-
-                <p class="font-semibold">Unpaid Breaks (in minutes)</p>
-                <p class="ml-2 mb-2">{{ job_part.job.platform_job.unpaid_breaks_in_minutes }}</p>
+                <!-- <p class="font-semibold">
+                  Unpaid Breaks (in minutes)
+                </p>
+                <p class="ml-2 mb-2">
+                  {{ job_part.job.platform_job.unpaid_breaks_in_minutes }}
+                </p> -->
               </div>
             </div>
             <!-- INFOS RIGHT -->
             <div class="text-white xl:w-1/2 w-full overflow-hidden">
               <div class="m-4 mt-5">
                 <div v-if="job_part.status === 'Completed'">
-                  <p class="mb-2 font-semibold">Completed At</p>
+                  <p class="mb-2 font-semibold">
+                    Completed At
+                  </p>
                   <div class="pb-2 flex">
                     <span
                       class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-                    >{{ $moment(job_part.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                    >{{ job_part.completed_at_in_gb_formatted }}</span>
                   </div>
                 </div>
                 <div v-if="job_part.status === 'Approved'">
-                  <p class="mb-2 font-semibold">Approved At</p>
+                  <p class="mb-2 font-semibold">
+                    Approved At
+                  </p>
                   <div class="pb-2 flex">
                     <span
                       class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
-                    >{{ $moment(job_part.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+                    >{{ job_part.approved_at_in_gb_formatted }}</span>
                   </div>
                 </div>
-                <p class="font-semibold">Duration</p>
+                <p class="font-semibold">
+                  Duration
+                </p>
                 <div class="text-xs sm:text-sm mb-8">
                   <p
                     class="px-1"
-                  >{{ $moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</p>
+                  >
+                    {{ $moment(job_part.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(job_part.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                  </p>
                   <div class="flex">
                     <div class="px-1">
                       <p>Days:</p>
@@ -236,7 +364,9 @@
                       v-for="(date, index) in job_part.dates"
                       :key="index"
                       class="m-1"
-                    >{{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</div>
+                    >
+                      {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                    </div>
                   </div>
                 </div>
                 <!-- <div class="flex items-center py-2 mr-2 text-sm">
@@ -251,10 +381,24 @@
 									<span class="w-16 text-black bg-white p-2 rounded-lg text-center mr-2">Shift</span>
 									<span class="font-semibold">{{ job_part.job ? job_part.job.shift.name : null}}</span>
                 </div>-->
-                <p class="mt-5 font-semibold">Invoiced?</p>
-                <p class="text-white">{{ job_part.invoiced ? 'Yes': 'No' }}</p>
-                <p class="mt-5 font-semibold">Issued?</p>
-                <p class="text-white">{{ job_part.issued ? 'Yes': 'No' }}</p>
+                <p class="mt-5 font-semibold">
+                  Invoiced?
+                </p>
+                <p class="text-white">
+                  {{ job_part.invoiced ? 'Yes': 'No' }}
+                </p>
+                <p class="mt-5 font-semibold">
+                  Issued?
+                </p>
+                <p class="text-white">
+                  {{ job_part.issued ? 'Yes': 'No' }}
+                </p>
+                <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="mt-5 font-semibold">
+                  Other Remarks
+                </p>
+                <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="text-white">
+                  {{ job_part.locum_invoice_item && job_part.locum_invoice_item.remarks ? job_part.locum_invoice_item.remarks : '' }}
+                </p>
                 <!--  -->
                 <!-- <template v-if="['Completed', 'Approved', 'Cancelled'].includes(job_part.status)">
                   <p class="mt-5 font-semibold">Was the Locum absent for session?</p>
@@ -381,27 +525,25 @@
       </div>
       <div class="flex-col order-1 md:order-2 w-full md:w-1/2">
         <div v-if="jobParts.length > 0" class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
-          <div class="mx-2 text-white font-semibold">Job Parts</div>
-          <!-- <AppTable
-            :total="specificJobPart.job.job_parts.length"
-            :items="jobParts"
-            :currentPage="currentPage"
-            :perPage="params.limit"
-            :columns="columns"
-            :loading="loading"
-            :orderBy="params.order_by"
-            :customWidth="700"
-            @pagechanged="pagechanged"
-            @sorted="sorted"
-          ></AppTable>-->
+          <div class="mx-2 text-white font-semibold">
+            Job Parts
+          </div>
           <div class="flex flex-col text-white">
             <div class="overflow-x-auto">
               <div class="jobpart">
                 <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
-                  <div class="w-1/4">Job Part Number</div>
-                  <div class="w-1/4">Date Start</div>
-                  <div class="w-1/4">Date End</div>
-                  <div class="w-1/4">Job Part Status</div>
+                  <div class="w-1/4">
+                    Job Part Number
+                  </div>
+                  <div class="w-1/4">
+                    Date Start
+                  </div>
+                  <div class="w-1/4">
+                    Date End
+                  </div>
+                  <div class="w-1/4">
+                    Job Part Status
+                  </div>
                 </div>
                 <!-- :class="`${jobParts.length > 3 && job.platform_job.appointed_to_locum  ? 'h-48' : 'h-full'}`" -->
                 <div
@@ -413,7 +555,7 @@
                 >
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-                    <span class>{{ item.job_part_number }}</span>
+                    <span>{{ item.job_part_number }}</span>
                   </div>
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
                     <strong class="block md:hidden text-sm uppercase">Date Start</strong>
@@ -447,31 +589,62 @@
 						>
 							<div class="flex flex-col text-white leading-tight">
 								<strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
-								<span class>{{item.job_part_number}}</span>
-								<span class>{{item.status}}</span>
+								<span>{{item.job_part_number}}</span>
+								<span>{{item.status}}</span>
 							</div>
             </nuxt-link>-->
           </div>
         </div>
+        
         <!-- SCHEDULES -->
-        <JobSchedules :modalJobPart="job_part" />
+        <JobSchedules
+          v-if="job_part"        
+          :locumInvoiceable="job_part.locum_invoiceable"
+          :status="job_part.status"
+          :schedules="job_part.schedules"
+        />
       </div>
     </div>
   </div>
 </template>
 <script>
-import { gmapApi } from "vue2-google-maps";
-import AppTable from "@/components/Base/AppTable";
-import AppPagination from "@/components/Base/AppPagination";
-import JobSchedules from "@/components/Base/JobSchedules";
+import { gmapApi } from "vue2-google-maps"
+import AppPagination from "@/components/Base/AppPagination"
+import JobSchedules from "@/components/Base/JobSchedules"
 export default {
   components: {
-    AppTable,
     AppPagination,
     JobSchedules
   },
-  props: ["jobPartId", "specificJobPart", "isNuxtChild", "isInvoice", "jobId"],
-  data() {
+
+  props: {
+    jobPartId: {
+      type: [Number, String],
+      default: () => null,
+    },
+    
+    specificJobPart: {
+      type: Object,
+      default: () => null,
+    },
+    
+    isNuxtChild: {
+      type: Boolean,
+      default: false,
+    },
+    
+    isInvoice: {
+      type: Boolean,
+      default: false,
+    },
+
+    jobId: {
+      type: [Number, String],
+      default: () => null,
+    },
+  },
+
+  data () {
     return {
       jobParts: [],
       currentPage: 1,
@@ -504,53 +677,53 @@ export default {
         }
       ],
       loading: false
-    };
-  },
-  created() {
-    console.log("isInvoice", this.isInvoice);
-    this.totalPages = Math.ceil(
-      this.specificJobPart.job.job_parts.length / this.params.limit
-    );
-    this.job_part = this.specificJobPart;
-    this.getJobParts(this.params);
-
-    console.log("jobpart", this.job_part);
-  },
-  computed: {
-    loadingPractices() {
-      return this.$store.state.practices.loading_practices;
-    },
-    google: gmapApi,
-    latLangPlatform() {
-      return this.specificJobPart.job.platform_job.practice.surgery.address
-        .coordinates;
-    },
-    latLangPrivate() {
-      return this.specificJobPart.job.private_job.private_practice.surgery
-        .address.coordinates;
     }
   },
-  methods: {
-    async show(id) {
-      this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
-        this.job_part = res.data.job_part;
-      });
+  computed: {
+    loadingPractices () {
+      return this.$store.state.practices.loading_practices
     },
-    getJobParts(params) {
-      this.loading = true;
+    google: gmapApi,
+    latLangPlatform () {
+      return this.specificJobPart.job.platform_job.practice.surgery.address
+        .coordinates
+    },
+    latLangPrivate () {
+      return this.specificJobPart.job.private_job.private_practice.surgery
+        .address.coordinates
+    }
+  },
+  created () {
+    console.log("isInvoice", this.isInvoice)
+    this.totalPages = Math.ceil(
+      this.specificJobPart.job.job_parts.length / this.params.limit
+    )
+    this.job_part = this.specificJobPart
+    this.getJobParts(this.params)
+
+    console.log("jobpart", this.job_part)
+  },
+  methods: {
+    async show (id) {
+      this.$axios.$get(`/api/v1/admin/job-parts/${id}`).then(res => {
+        this.job_part = res.data.job_part
+      })
+    },
+    getJobParts (params) {
+      this.loading = true
       this.$axios
         .$get(
           `/api/v1/admin/job-parts?job_id=${this.jobId}&limit=${params.limit}&offset=${params.offset}`
         )
         .then(res => {
-          this.jobParts = res.data.job_parts;
+          this.jobParts = res.data.job_parts
         })
         .catch(err => {
-          console.log("get job parts error", err);
-        });
-      this.loading = false;
+          console.log("get job parts error", err)
+        })
+      this.loading = false
     },
-    unclickableJobPart() {
+    unclickableJobPart () {
       if (this.specificJobPart.job) {
         if (
           this.specificJobPart.job.status === "Live" ||
@@ -560,33 +733,25 @@ export default {
           this.specificJobPart.job.status === "Cancelled" ||
           this.specificJobPart.job.status === "Declined"
         ) {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
       }
     },
-    pagechanged(page) {
-      const query = {
-        ...this.$route.query,
-        page: page || 1
-      };
-      this.params.offset = this.params.limit * (page - 1);
-      this.currentPage = page;
-      this.getJobParts(this.params);
+    pagechanged (page) {
+      this.params.offset = this.params.limit * (page - 1)
+      this.currentPage = page
+      this.getJobParts(this.params)
     },
-    sorted(order_by) {
+    sorted (order_by) {
       // go back to page 1
-      this.currentPage = 1;
-      let query = {
-        ...this.$router.query,
-        order_by
-      };
-      this.params.order_by = order_by;
-      this.getJobParts(this.params);
+      this.currentPage = 1
+      this.params.order_by = order_by
+      this.getJobParts(this.params)
     }
   }
-};
+}
 </script>
 <style>
 @media (min-width: 768px) {

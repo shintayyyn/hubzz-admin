@@ -5,13 +5,19 @@ export const state = () => ({
   notification: {
     enabled: false,
     status: '',
-    text: ''
+    text: '',
+    duration: "",
   },
   toggled_sidebar: false,
   totalPages: 0,
+  session_expiring: false,
 })
 
 export const getters = {
+  sessionExpiring (state) {
+    return state.session_expiring
+  },
+
   pendingChangeEmailRequestIds (state) {
     return state.pendingChangeEmailRequestIds
   },
@@ -20,6 +26,10 @@ export const getters = {
     return state.admin_user_logged_in
   },
   permissions (state) {
+    if (!state.auth.loggedIn) {
+      return []
+    }
+
     const adminRoles = state.auth.user.admin_detail.roles
     let toSetAdminPermissions = []
 
@@ -34,7 +44,7 @@ export const getters = {
       }
     }
     return toSetAdminPermissions.map(item => item.name)
-  }
+  },
 }
 
 export const mutations = {
@@ -55,9 +65,40 @@ export const mutations = {
   TOGGLE_SIDEBAR (state, payload) {
     state.toggled_sidebar = payload
   },
+  SESSION_EXPIRING (state, payload) {
+    state.session_expiring = payload
+  }
 }
 
 export const actions = {
+  async initializeSessionListener ({ commit }) {
+    this.$socket.on('Admin Session Refresh', async () => {
+      console.log('session refresh')
+			commit('SESSION_EXPIRING', false)
+    })
+    
+    this.$socket.on('Admin Session Expiring', async () => {
+      console.log('session expiring')
+			commit('SESSION_EXPIRING', true)
+    })
+    
+    this.$socket.on('Admin Session Expired', async () => {
+			console.log('session expired')
+      // this.$router.push(`/session-expired`)
+      this.$auth.logout().finally(() => {
+        this.$auth.$storage.setUniversal('_token.local', '')
+        this.$router.push('/sign-in')
+      })
+      commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Session Expired",
+        duration: 5000,
+      })
+      
+    })
+  },
+
   pendingChangeEmailRequestIds ({ commit }) {
     return this.$axios.get('/api/v1/admin/change-email-requests', {
       params: { status: 'Pending', id_only: true, limit: 1000000 },

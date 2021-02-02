@@ -20,10 +20,9 @@
           <br>
         </div>
       </div>
-      <p
-        class="text-white my-2"
-      >
-        {{ "Posted On: "+$moment(job.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}
+
+      <p class="text-white my-2">
+        Posted On: {{ job.date_created_in_gb_formatted }}
       </p>
 
       <div class="flex xs:flex-col text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow">
@@ -39,12 +38,12 @@
                     {{ job.job_number }}
                   </p>
                   <p class="mt-3 font-semibold mb-1"> 
-                    Rate
+                    Rates
                   </p>
                   <p
                     class="text-white no-underline"
                   >
-                    {{ job.rate ? "£ "+job.rate+" Per Hour":null +" Per Hour" }}
+                    {{ job.job_rate_ranged_formatted && job.job_rate_type_names_formatted ? ` ${job.job_rate_ranged_formatted} | ${job.job_rate_type_names_formatted}`: '' }}
                   </p>
                   <p class="mt-3 font-semibold">
                     Total Hours
@@ -122,16 +121,24 @@
                     {{ job.platform_job && job.platform_job.session_structure_information ? job.platform_job.session_structure_information : '(none)' }}
                   </p>
 
-                  <p class="mt-3 font-semibold">
+                  <!-- <p class="mt-3 font-semibold">
                     Unpaid Breaks (in minutes)
                   </p>
                   <p class="text-white">
                     {{ job.platform_job.unpaid_breaks_in_minutes }}
-                  </p>
+                  </p> -->
                 </div>
               </div>
 
               <div class="w-full md:w-1/2 mb-4 md:px-2">
+                <JobSchedules
+                  v-if="job"
+                  class="-mx-2" 
+                  :locumInvoiceable="job.locum_invoiceable || job.status === 'Completed'"
+                  :status="job.status"
+                  :schedules="job.schedules"
+                />
+
                 <p class="mb-2 font-semibold">
                   Duration
                 </p>
@@ -181,87 +188,87 @@
 										class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
 									>{{job.shift.name}}</span>
 								</div>-->
-                <p class="mt-5 font-semibold"  v-if="job.platform_job.auto_assign_at">
+                <p v-if="job.platform_job.auto_assign_at" class="mt-5 font-semibold">
                   Auto-assigns this job to the first matching applicant
                 </p>
                 <!-- <div v-if="job.platform_job" class="w-full md:w-1/3 mb-4 md:px-2"> -->
-                  <div class="md:mt-5 md:mt-0 text-white">
-                    <span>
-                      This job is
-                      <span
-                        class="font-semibold"
-                      >{{ job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE" }}</span>
-                      of
-                      <span class="font-semibold">IR35</span>
-                    </span>
-                  </div>
+                <div class="md:mt-5 md:mt-0 text-white">
+                  <span>
+                    This job is
+                    <span
+                      class="font-semibold"
+                    >{{ job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE" }}</span>
+                    of
+                    <span class="font-semibold">IR35</span>
+                  </span>
+                </div>
 
-                  <p class="mt-5 font-semibold mb-1">
-                    Role
-                  </p>
+                <p class="mt-5 font-semibold mb-1">
+                  Role
+                </p>
 
-                  <p class="text-white">
-                      {{ job.platform_job.profession.name }}
-                    </p>
+                <p class="text-white">
+                  {{ job.platform_job.profession.name }}
+                </p>
                   
-                  <p class="mt-5 font-semibold mb-1">
-                    Speciality
-                  </p>
-                  <p
-                    v-for="specialty in job.platform_job.qualifications"
-                    :key="specialty.id + '-name'"
-                    class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                  >
-                    {{ specialty ? specialty.name:null }}
-                  </p>
+                <p class="mt-5 font-semibold mb-1">
+                  Speciality
+                </p>
+                <p
+                  v-for="specialty in job.platform_job.qualifications"
+                  :key="specialty.id + '-name'"
+                  class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                >
+                  {{ specialty ? specialty.name:null }}
+                </p>
 
-                  <p class="mt-5 font-semibold mb-1">
-                    Clinical Systems
-                  </p>
-                  <p
-                    v-for="clinicalSystem in job.platform_job.clinical_systems"
-                    :key="clinicalSystem.id + '-name1'"
-                    class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                  >
-                    {{ clinicalSystem ? clinicalSystem.name:null }}
-                  </p>
+                <p class="mt-5 font-semibold mb-1">
+                  Clinical Systems
+                </p>
+                <p
+                  v-for="clinicalSystem in job.platform_job.clinical_systems"
+                  :key="clinicalSystem.id + '-name1'"
+                  class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                >
+                  {{ clinicalSystem ? clinicalSystem.name:null }}
+                </p>
 
-                  <p class="mt-5 font-semibold mb-1">
-                    Spoken Languages
-                  </p>
-                  <p
-                    v-for="spokenLanguage in job.platform_job.spoken_languages"
-                    :key="spokenLanguage.id + '-name2'"
-                    class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
-                  >
-                    {{ spokenLanguage ? spokenLanguage.name:null }}
-                  </p>
+                <p class="mt-5 font-semibold mb-1">
+                  Spoken Languages
+                </p>
+                <p
+                  v-for="spokenLanguage in job.platform_job.spoken_languages"
+                  :key="spokenLanguage.id + '-name2'"
+                  class="inline-flex mr-2 rounded-lg text-sm text-black p-2 bg-yellow-500"
+                >
+                  {{ spokenLanguage ? spokenLanguage.name:null }}
+                </p>
 
-                  <div v-if="job.platform_job.compliance_documents.length > 0">
-                    <p class="flex">
-                      Compliance Requirements for GPs:
-                    </p>
-                    <div
-                      v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
-                      :key="`${index}-${gpComplianceDocs.name}`"
-                      class="text-white text-sm m-1 font-semibold"
-                    >
-                      <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span>
-                    </div>
+                <div v-if="job.platform_job.compliance_documents.length > 0">
+                  <p class="flex">
+                    Compliance Requirements for GPs:
+                  </p>
+                  <div
+                    v-for="(gpComplianceDocs,index) in job.platform_job.compliance_documentss"
+                    :key="`${index}-${gpComplianceDocs.name}`"
+                    class="text-white text-sm m-1 font-semibold"
+                  >
+                    <span>{{ gpComplianceDocs ? gpComplianceDocs.name:"(none)" }}</span>
                   </div>
+                </div>
 
-                  <div v-if="job.platform_job.mandatory_trainings.length > 0">
-                    <p class="flex">
-                      Mandatory Trainings
-                    </p>
-                    <div
-                      v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
-                      :key="`${index}-${mandatoryTrainings.name}`"
-                      class="text-white text-sm m-1 font-semibold"
-                    >
-                      <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span>
-                    </div>
+                <div v-if="job.platform_job.mandatory_trainings.length > 0">
+                  <p class="flex">
+                    Mandatory Trainings
+                  </p>
+                  <div
+                    v-for="(mandatoryTrainings, index) in job.platform_job.mandatory_trainings"
+                    :key="`${index}-${mandatoryTrainings.name}`"
+                    class="text-white text-sm m-1 font-semibold"
+                  >
+                    <span>{{ mandatoryTrainings ? mandatoryTrainings.name:"(none)" }}</span>
                   </div>
+                </div>
                 <!-- </div> -->
               </div>
 
@@ -331,7 +338,11 @@
 </template>
 <script>
 import { gmapApi } from "vue2-google-maps"
+import JobSchedules from "@/components/Base/JobSchedules"
 export default {
+   components: {
+    JobSchedules,
+  },
 	props: ["job"],
 	computed: {
 		google: gmapApi,

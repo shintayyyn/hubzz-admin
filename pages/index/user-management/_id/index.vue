@@ -20,27 +20,37 @@
 </template>
 <script>
 export default {
-	data: {
-		user: '',
+	data () {
+		return {
+			user: '',
+		}
 	},
-  async asyncData({ app, store, route }) {
+  async asyncData ({ app, store, route, error }) {
 		try {
+			const authAdminPermissions = store.getters["permissions"]
+			if (authAdminPermissions.includes('View Admin Accounts') === false) {
+				error({
+					statusCode: 403,
+					message: 'You are not authorized to view this page.',
+				})
+				return
+			}
 			let response = await app.$axios.$get(
 				`/api/v1/admin/admin-users/${route.params.id}`
-			);
-			const user = response.data.user;
+			)
+			const user = response.data.user
 			return {
 				user
-			};
+			}
 		} catch (err) {
 			store.commit("SET_NOTIFICATION", {
 				enabled: true,
 				status: "danger",
 				text: "Something went wrong!"
-			});
+			})
 		}
 	},
-};
+}
 </script>
 <style>
 .admin-user-shield {

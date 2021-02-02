@@ -1,255 +1,614 @@
 <template>
-	<div>
-		<AppTable
-			v-if="itemCount > 0"
-			:total="itemCount"
-			:items="getAllPractices"
-			:currentPage="currentPage"
-			:perPage="params.limit"
-			:columns="columns"
-			:loading="loadingPractices"
-			:routerLink="`/practices`"
-			:orderBy="params.order_by"
-			@pagechanged="pagechanged"
-			@sorted="sorted"
-		>
-			<template v-slot:status_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-					:class="
-							`${
-								slotProps.item.status === 'Active'
-									? 'bg-green-500'
-									: 'bg-gray-500 text-gray-700'
-							}`
-						"
-				>{{ slotProps.item.status }}</div>
-			</template>
-			<template v-slot:type_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-					:class="typeStyle(slotProps.item.type)"
-				>{{ slotProps.item.type }}</div>
-			</template>
-			<template v-slot:hub_type_slot="slotProps">
-				<div
-					class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-					:class="hubTypeStyle(slotProps.item.hub_type)"
-				>{{ slotProps.item.hub_type }}</div>
-			</template>
-		</AppTable>
-		<!-- <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/6 p-1 md:p-2 align-middle leading-none md:text-center">
-				<strong class="block md:hidden text-xs uppercase pb-1">Type</strong>
-				<span class="inline-flex justify-center no-underline px-4 py-2 w-32 min-w-0 text-sm rounded-full shadow whitespace-no-wrap"
-				:class="typeStyle(practice.type)">{{ !practice.hub_type || practice.hub_type !== 'Type 2' ? practice.type : 'Hub - Health Board'}}
-				</span>
-		</div>-->
-		<template v-else>
-			<div class="mt-2 w-full text-center text-white">There are no verified practices.</div>
-		</template>
-	</div>
+  <div
+    v-if="authAdminPermissions.includes('View Practices')
+      || authAdminPermissions.includes('View Surgery Management') 
+      || authAdminPermissions.includes('View Practice Sessions')
+      || authAdminPermissions.includes('View Practice Users')
+      || authAdminPermissions.includes('View Practice Documents')
+      || authAdminPermissions.includes('View Practice Rates')"
+    class="flex-1 flex flex-col py-2"
+  >
+    <div class="px-1 flex justify-between items-center flex-wrap">
+      <div>
+        <div class="flex justify-start -mx-2 overflow-x-auto">
+          <nuxt-link
+            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: undefined }}"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="practiceTab === 'Verified' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          >
+            Verified
+          </nuxt-link>
+          
+          <nuxt-link
+            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Pending' }}"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="practiceTab === 'Pending' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          >
+            Pending
+          </nuxt-link>
+
+          <nuxt-link
+            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Bogus' }}"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="practiceTab === 'Bogus' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          >
+            Bogus
+          </nuxt-link>
+
+          <nuxt-link
+            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Deactivated' }}"
+            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+            :class="practiceTab === 'Deactivated' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          >
+            Deactivated
+          </nuxt-link>
+        </div>
+      </div>
+
+      <div class="m-1">
+        <AppButton
+          v-if="authAdminPermissions.includes('Create New Practice') && authAdminPermissions.includes('Create New Practice User')"
+          class="text-sm"
+          :label="'Create New Practice'"
+          :icon="'add-rectangle'"
+          :nuxtLink="{ name: 'index-practices-add-practice', query: $route.query }"
+        />
+      </div>
+    </div>
+
+    <div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
+      <div class="flex">
+        <div class="relative">
+          <input
+            v-model="search"
+            style="width: 280px;"
+            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Search Practice by Name"
+            @keyup.enter="searchSubmit"
+          >
+
+          <button
+            v-if="search"
+            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            @click="(search = ''), searchSubmit()"
+          >
+            <svgicon
+              name="times-solid"
+              height="12"
+              width="12"
+              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+            />
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-col w-full justify-end">
+        <div
+          v-if="practiceTab === 'Verified'"
+          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
+        >
+          <label class="text-sm text-white md:pr-2">Filter by Status</label>
+
+          <select
+            id="grid-state"
+            v-model="filterPracticeStatus"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option :value="null">
+              All
+            </option>
+            <option>Active</option>
+            <option>Dormant</option>
+            <option>Inactive</option>
+            <option>Account Suspension</option>
+          </select>
+        </div>
+
+        <div
+          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
+        >
+          <label class="text-sm text-white md:pr-2">Filter by Type</label>
+
+          <select
+            id="grid-state"
+            v-model="filterPracticeType"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option :value="null">
+              All
+            </option>
+            <option>Hub</option>
+            <option>Spoke</option>
+            <option>Stand Alone</option>
+          </select>
+        </div>
+
+        <div
+          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
+        >
+          <label class="text-sm text-white md:pr-2">Filter by Hub Type</label>
+
+          <select
+            id="grid-state"
+            v-model="filterPracticeHubType"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option :value="null">
+              All
+            </option>
+            <option>Type 1</option>
+            <option>Type 2</option>
+          </select>
+        </div>
+        
+        <div
+          class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
+        >
+          <label class="text-sm text-white md:pr-2">Sort by</label>
+
+          <select
+            v-model="selectedOrderByValue"
+            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+          >
+            <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
+              {{ orderByValue.displayLabel }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <AppTable
+        v-if="count > 0"
+        :total="count"
+        :items="practices"
+        :currentPage="currentPage"
+        :perPage="limit"
+        :columns="columns"
+        :loading="loadingPractices"
+        :routerLink="routerLink"
+        :orderBy="orderBy"
+        @pagechanged="pageChangedHandler"
+        @sorted="(_orderBy) => orderBy = _orderBy"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full text-center w-32 mx-auto"
+            :class="slotProps.item.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'"
+          >
+            {{ slotProps.item.status }}
+          </div>
+        </template>
+
+        <template v-slot:type_slot="slotProps">
+          <div class="px-4 py-1 rounded-full text-center w-32 mx-auto" :class="typeStyle(slotProps.item.type)">
+            {{ slotProps.item.type }}
+          </div>
+        </template>
+
+        <template v-slot:hub_type_slot="slotProps">
+          <div class="px-4 py-1 rounded-full text-center w-32 mx-auto" :class="hubTypeStyle(slotProps.item.hub_type)">
+            {{ slotProps.item.hub_type }}
+          </div>
+        </template>
+
+        <template v-slot:registration_type_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+          >
+            {{ registrationType(slotProps.item.referrer_domain) }}
+          </div>
+        </template>
+      </AppTable>
+
+      <div v-if="!loadingPractices && practices.length === 0" class="mt-2 w-full text-center text-white">
+        <span v-if="hasFilter">No practices found.</span>
+        <span v-if="!hasFilter">There are no {{ practiceTab.toLowerCase() }} practices.</span>
+      </div>
+    </div>
+
+    <div
+      v-if="$route.name !== 'index-practices'"
+      class="practice-shield"
+      @click="$router.push({ name: 'index-practices', query: $route.query })"
+    />
+
+    <nuxt-child
+      :professionComplianceCategories="professionComplianceCategories"
+      @updatePractices="getPractices"
+      @practiceUpdated="practiceUpdatedHandler"
+    />
+  </div>
 </template>
 
 <script>
 import debounce from "lodash.debounce"
+import AppButton from "@/components/Base/AppButton"
 import AppTable from "@/components/Base/AppTable"
+
 export default {
 	components: {
-		AppTable
-	},
+		AppButton,
+    AppTable,
+  },
+  
 	data () {
 		return {
-			loading: false,
-			currentPage: 1,
-			search: "",
-			perPage: 0,
+      loadingPractices: true,
+      count: 0,
+      practices: [],
+      currentPage: 1,
+      orderBy: [
+        'created_at_in_gb_formatted:desc',
+      ],
+      limit: 10,
+      search: '',
+      filterPracticeStatus: null,
+      filterPracticeType: null,
+      filterPracticeHubType: null,
 			params: {
 				limit: 10,
 				offset: 0,
-				order_by: ["created_at:desc"],
-				status: ["Active", "Dormant"]
-			},
-			sort: "",
-			modal: false,
-
-			//app table columns
-			columns: [
-				{
-					name: "Practice ID",
-					dataIndex: "id",
-					class: "text-center",
-					sortable: false
-				},
-				{
-					name: "Practice Name",
-					dataIndex: "practice_name",
-					sortable: true
-				},
-				{
-					name: "Practice Code",
-					dataIndex: "practice_code",
-					class: "text-center",
-					sortable: true
-				},
-				{
-					name: "Created",
-					dataIndex: "created_at",
-					class: "text-center localDate",
-					sortable: true
-				},
-				{
-					name: "Expires",
-					dataIndex: "actived_until",
-					class: "text-center localDate",
-					sortable: true
-				},
-				{
-					name: "Status",
-					slot: true,
-					dataIndex: "status",
-					class: "text-center",
-					slotName: "status_slot",
-					sortable: true
-				},
-				{
-					name: "Type",
-					slot: true,
-					dataIndex: "type",
-					class: "text-center",
-					slotName: "type_slot",
-					sortable: true
-				},
-				{
-					name: "Hub Type",
-					slot: true,
-					dataIndex: "hub_type",
-					slotName: "hub_type_slot",
-					class: "text-center"
-				}
-			]
+				order_by: ["created_at:desc"]
+      },
+      professionComplianceCategories: [],
 		}
 	},
-
-	watchQuery: ["page"],
-
-	async asyncData ({ app, route, store, error }) {
-		try {
-			console.log("asyncdata")
-
-			await store.commit("practices/TOGGLE_LOADING", true)
-
-			let { page = 1, search = "", order_by = [] } = route.query
-			page = parseInt(page)
-			const createdRoute = route.query
-			const limit = 10
-			const offset = page * limit - limit
-			const status = ["Active", "Dormant"]
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc"
-			const params = { limit, offset, order_by, status }
-			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, {
-				params
-			})
-			const practiceCount = response.data.count
-			await store.commit("practices/SET_PRACTICE_COUNT", practiceCount)
-
-			response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
-			const practices = response.data.practices
-			await store.commit("practices/SET_PRACTICES", practices)
-			await store.commit("practices/TOGGLE_LOADING", false)
-
-			return {
-				// practiceCount,
-				// practices
-			}
-		} catch (err) {
-			if (err.response && err.response.status === 401) {
-        console.log("Get practices error!", err)
-				error(err.response.data)
-				return
-			}
-			throw err
-		}
-	},
-	// async created(){
-	//   try{
-	//     await this.$store.commit("practices/TOGGLE_LOADING", true)
-
-	//     await this.$axios.$get(`/api/v1/admin/practices/count`,{
-	//       params: this.params
-	//     }).then(res => {
-	//       this.$store.commit("practices/SET_PRACTICE_COUNT", res.data.count)
-	//     })
-
-	//     await this.$axios.$get(`/api/v1/admin/practices`, {
-	//       params: this.params
-	//     }).then(res => {
-	//       this.$store.commit("practices/SET_PRACTICES", res.data.practices)
-	//     })
-
-	//     await this.$store.commit("practices/TOGGLE_LOADING", false)
-	//   }catch (err) {
-	// 		this.store.commit("SET_NOTIFICATION", {
-	// 			enabled: true,
-	// 			status: "danger",
-	// 			text: "Something went Wrong!"
-	// 		})
-	//     console.log("Get practices error!", err)
-	//   }
-	// },
 
 	computed: {
-		loadingPractices () {
-			return this.$store.state.practices.loading_practices
-		},
-		getAllPractices () {
-			return this.$store.getters["practices/getAllPractices"]
-		},
-		itemCount () {
-			return this.$store.state.practices.itemCount
-		},
-		pageCount () {
-			return Math.ceil(this.itemCount / this.params.limit)
-		},
-		authAdminPermissions () {
+    authAdminPermissions () {
 			return this.$store.getters["permissions"]
-		},
-		totalPages () {
-			return Math.ceil(this.itemCount / this.params.limit)
-		},
-		total () {
-			return this.getAllPractices.length
-		}
+    },
+
+    practiceTab () {
+      const practiceTab = this.$route.query.practice_tab
+
+      if (practiceTab && practiceTab.toLowerCase() === 'pending') {
+        return 'Pending'
+      }
+
+      if (practiceTab && practiceTab.toLowerCase() === 'bogus') {
+        return 'Bogus'
+      }
+
+      if (practiceTab && practiceTab.toLowerCase() === 'deactivated') {
+        return 'Deactivated'
+      }
+
+      return 'Verified'
+    },
+
+    routerLink () {
+      return (practice) => {
+        return {
+          name: 'index-practices-id-index',
+          params: {
+            id: practice.id,
+          },
+          query: {
+            ...this.$route.query,
+          },
+        }
+      }
+    },
+
+    columns () {
+      const columns = [
+				{
+					name: "Practice ID",
+          dataIndex: 'id',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '140px',
+				},
+				{
+          name: 'Practice Name',
+          dataIndex: 'name',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+				},
+				{
+          name: 'Practice Code',
+          dataIndex: 'code',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+				},
+				{ 
+          name: 'Created',
+          dataIndex: 'created_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+				},
+				{
+          name: 'Expires',
+          dataIndex: 'actived_until_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+				},
+				{
+          name: 'Status',
+          dataIndex: 'status',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'status_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+				},
+				{
+          name: 'Type',
+          dataIndex: 'type',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'type_slot',
+          flex: '1 0 0',
+          minWidth: '130px',
+          maxWidth: '150px',
+        },
+        {
+						name: 'Registration Type',
+						dataIndex: 'referrer_domain',
+						class: 'md:text-center',
+						sortable: true,
+						slot: true,
+						slotName: 'registration_type_slot',
+            flex: '1 0 0',
+            minWidth: '150px',
+            maxWidth: '170px',
+					},
+      ]
+
+      if (!this.filterPracticeType || this.filterPracticeType === 'Hub') {
+        columns.push({
+          name: 'Hub Type',
+          dataIndex: 'hub_type',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'hub_type_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+				})
+      }
+
+      if (this.filterPracticeType && this.filterPracticeType === 'Spoke') {
+        columns.push({
+          name: 'Hub',
+          dataIndex: 'parent_practice_name',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '550px',
+				})
+      }
+
+      if (this.practiceTab === 'Verified') {
+        columns.push({ 
+          name: 'Verified',
+          dataIndex: 'first_actived_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+				})
+      }
+
+      if (this.practiceTab === 'Bogus') {
+        columns.push({ 
+          name: 'Verified',
+          dataIndex: 'first_actived_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+        })
+        
+        columns.push({ 
+          name: 'Marked Bogus',
+          dataIndex: 'marked_bogus_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '120px',
+          maxWidth: '170px',
+				})
+      }
+
+      if (this.practiceTab === 'Deactivated') {
+        columns.push({ 
+          name: 'Verified',
+          dataIndex: 'first_actived_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+        })
+
+        columns.push({ 
+          name: 'Deactivated',
+          dataIndex: 'deactivated_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+				})
+      }
+      
+      return columns
+    },
+
+    offset () {
+      return this.limit * (this.currentPage - 1)
+    },
+
+    hasFilter () {
+      return this.search || this.filterPracticeStatus || this.filterPracticeType || this.filterPracticeHubType
+    },
+
+    orderByValues () {
+      return this.columns.reduce((orderByValues, column) => {
+        const {
+          name,
+          dataIndex,
+          sortable,
+        } = column
+
+        if (sortable) {
+          orderByValues.push({
+            displayLabel: `${name} (asc)`,
+            value: `${dataIndex}:asc`,
+          })
+
+          orderByValues.push({
+            displayLabel: `${name} (desc)`,
+            value: `${dataIndex}:desc`,
+          })
+        }
+
+        return orderByValues
+      }, [])
+    },
+
+    selectedOrderByValue: {
+      get () {
+        return this.orderBy.length > 0 ? this.orderBy[0] : null
+      },
+      set (orderBy) {
+        this.orderBy = [orderBy]
+      },
+    },
+      
+    totalPages () {
+      return Math.ceil(this.count / this.limit)
+    },
+
+		
 	},
 
 	watch: {
-		sort (value) {
-			this.params.order_by = value
-			this.sortBy(value, this.currentPage, this.search)
-		}
-	},
+    practiceTab () {
+      this.currentPage = 1
+			this.getPractices()
+    },
+
+    filterPracticeStatus () {
+      this.currentPage = 1
+			this.getPractices()
+    },
+
+    filterPracticeType () {
+      this.currentPage = 1
+			this.getPractices()
+    },
+
+    filterPracticeHubType () {
+      this.currentPage = 1
+			this.getPractices()
+    },
+
+		search () {
+			this.searchSubmit()
+		},
+    
+    orderBy () {
+      this.currentPage = 1
+			this.getPractices()
+    },
+  },
+  
+
+
+  mounted () {
+    this.getPractices()
+
+    this.$axios.get('/api/v1/admin/profession-compliance-categories').then((response) => {
+      this.professionComplianceCategories = response.data.data.profession_compliance_categories
+    })
+  },
 
 	methods: {
-		show () {
-			this.modal = true
-		},
+    getPractices () {
+      this.loadingPractices = true
+      const filters = {
+        search: this.search,
+        practice_tab: this.practiceTab,
+        status: this.practiceTab === 'Verified' ? this.filterPracticeStatus : null,
+        type: this.filterPracticeType,
+        hub_type: this.filterPracticeHubType,
+      }
+      Promise.all([
+        this.$axios.get('/api/v1/admin/practices/count', {
+          params: {
+            ...filters,
+          },
+        }).then((response) => response.data.data.count),
 
-		getPractices (params) {
-			this.$store.dispatch("practices/fetchPractices", {
-				limit: this.params.limit,
-				search: this.search,
-				order_by: params.order_by,
-				offset: params.offset,
-				status: ["Active", "Dormant"]
-			})
-		},
+        this.$axios.get('/api/v1/admin/practices', {
+          params: {
+            ...filters,
+            order_by: this.orderBy,
+            limit: this.limit,
+            offset: this.offset,
+          },
+        }).then((response) => response.data.data.practices),
+      ]).then((responses) => {
+        const [
+          count,
+          practices,
+        ] = responses
 
-		async sortBy (sortedBy, page, search) {
-			this.params.order_by = [sortedBy]
-			this.getPractices(this.params)
-		},
+        this.count = count
+        this.practices = practices
+      }).finally(() => {
+        this.loadingPractices = false
+      })
+    },
+
+		searchSubmit: debounce(function () {
+      this.currentPage = 1
+			this.getPractices()
+    }, 500),
+    
+    pageChangedHandler (page) {
+      this.currentPage = page
+      this.getPractices()
+    },
+      
+    practiceUpdatedHandler (practice) {
+      if (!practice) {
+        this.getPractices()
+        return
+      }
+      
+      const index = this.practices.findIndex(({ id }) => id === practice.id)
+
+      if (index > -1) {
+        this.practices.splice(index, 1, practice)
+      }
+    },
 
 		typeStyle (type) {
 			switch (type) {
@@ -275,45 +634,48 @@ export default {
 			}
 		},
 
-		pagechanged (page) {
-			const query = {
-				...this.$route.query,
-				page: page || 1
-			}
-			this.params.offset = this.params.limit * (page - 1)
-			this.currentPage = page
-			this.getPractices(this.params)
-		},
+    registrationType (type) {
+      let registrationType = ''
+      if (type === 'Practice') {
+        registrationType = 'Referred by Practice'
+      } else if (type === 'Locum') {
+        registrationType = 'Referred by Locum'
+      } else {
+        registrationType = 'Organic'
+      }
 
-		sorted (order_by) {
-			// go back to page 1
-			this.currentPage = 1
-			let query = {
-				...this.$router.query,
-				order_by
-			}
-			this.params.order_by = order_by
-			this.getPractices(this.params)
-		}
-	}
+      return registrationType
+    }
+	},
+
 }
 </script>
+
 <style>
-.page-button {
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
+  .page-button {
+    background: linear-gradient(to top, #f2d024, #efde86);
+  }
 
-.page-button-disabled {
-	background: linear-gradient(to top, #6b717e, #6b7386);
-	cursor: not-allowed;
-}
+  .page-button-disabled {
+    background: linear-gradient(to top, #6b717e, #6b7386);
+    cursor: not-allowed;
+  }
 
-.page-button:active {
-	transform: translate(2px, 2px);
-}
-.card {
-	min-width: 100px;
-	height: 250px;
-	box-sizing: content-box;
-}
+  .page-button:active {
+    transform: translate(2px, 2px);
+  }
+
+  .card {
+    min-width: 100px;
+    height: 250px;
+    box-sizing: content-box;
+  }
+  .double-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s linear;
+  }
 </style>

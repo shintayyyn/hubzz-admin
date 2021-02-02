@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <div class="px-2 flex justify-end items-center flex-wrap">
+  <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
+    <div
+      v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
+      class="px-2 flex justify-start items-center flex-wrap"
+    >
       <AppButton
         class="mr-2"
         :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
@@ -8,26 +11,14 @@
         @click="goToTab()"
       />
     </div>
-    <div v-if="!$route.path.includes('bulk-billing')" class="flex items-center px-2 py-2">
-      <div class="relative">
-        <input
-          v-model="search"
-          class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-          placeholder="Search Practice by Name"
-        >
-        <button
-          v-if="search"
-          class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-          @click="(search = ''), searchSubmit()"
-        >
-          <svgicon
-            name="times-solid"
-            height="12"
-            width="12"
-            class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-          />
-        </button>
-      </div>
+
+    <div v-if="!$route.path.includes('bulk-billing')" class="text-white w-full md:w-1/2 p-2">
+      <AppInput 
+        v-model="search"
+        :type="'text'"
+        :label="'Search by Practice Name'"
+        :placeholder="'Practice Name'"
+      />
     </div>
 
     <AppTable
@@ -40,7 +31,6 @@
       :loading="loadingPractices"
       :routerLink="`/billings/hubzz-billing`"
       :orderBy="params.order_by"
-      :customWidth="200"
       @pagechanged="pagechanged"
       @sorted="sorted"
     >
@@ -54,30 +44,39 @@
                 : 'bg-gray-500 text-gray-700'
             }`
           "
-        >{{ slotProps.item.status }}</div>
+        >
+          {{ slotProps.item.status }}
+        </div>
       </template>
       <template v-slot:disputed_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="slotProps.item.locum_invoice_disputed_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-        >{{ slotProps.item.locum_invoice_disputed_count > 0 ? "Yes" + slotProps.item.locum_invoice_disputed_count : "None" }}</div>
+          :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
+        >
+          {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
+        </div>
       </template>
       <template v-slot:type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="typeStyle(slotProps.item.type)"
-        >{{ slotProps.item.type }}</div>
+        >
+          {{ slotProps.item.type }}
+        </div>
       </template>
       <template v-slot:hub_type_slot="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
           :class="hubTypeStyle(slotProps.item.hub_type)"
-        >{{ slotProps.item.hub_type }}</div>
+        >
+          {{ slotProps.item.hub_type }}
+        </div>
       </template>
     </AppTable>
     <div 
       v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
-      class="mt-2 w-full text-center text-white">
+      class="mt-2 w-full text-center text-white"
+    >
       There are no verified Practices billable.
     </div>
 
@@ -96,10 +95,12 @@
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppButton from "@/components/Base/AppButton"
+import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
     AppTable,
-    AppButton,
+		AppButton,
+		AppInput,
 	},
 	data () {
 		return {
@@ -110,7 +111,7 @@ export default {
 				limit: 10,
 				offset: 0,
         order_by: ["created_at:desc"],
-        status: ["Active","Dormant","Suspended"],
+        status: ["Active","Dormant","Account Suspension"],
         verified: true,
 			},
 
@@ -118,7 +119,7 @@ export default {
 			columns: [
 				{
 					name: "Practice/Surgery",
-					dataIndex: "practice_name",
+					dataIndex: "name",
 					sortable: true
 				},
 				{
@@ -156,11 +157,20 @@ export default {
 					dataIndex: "hub_type",
 					slotName: "hub_type_slot",
 					class: "text-center"
+				},
+				{
+					name: "Sage Ref",
+					slot: true,
+					dataIndex: "sage_ref",
+					class: "text-center"
 				}
 			]
 		}
 	},
 	computed: {
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
 		loadingPractices () {
 			return this.$store.state.practices.loading_practices
 		},
@@ -192,14 +202,14 @@ export default {
   },
 	async asyncData ({ app, route, store }) {
 		try {
-      console.log('billing asyncdata start')
 			await store.commit("practices/TOGGLE_LOADING", true)
 			let { page = 1, search = "", order_by = [] } = route.query
 			page = parseInt(page)
 			const createdRoute = route.query
 			const limit = 10
       const offset = page * limit - limit
-      const status = ["Active","Dormant","Suspended"]
+			const status = ["Active","Dormant","Account Suspension"]
+			// const has_sage_ref = true
 			order_by =
 				createdRoute && createdRoute.order_by
 					? createdRoute.order_by
@@ -208,19 +218,13 @@ export default {
 
 			let response = await app.$axios.$get(`/api/v1/admin/practices/count`, { params })
 			const itemCount = response.data.count
-      console.log('route name', route.name)
-      console.log('asyncdata is working')
-			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 
+			await store.commit("practices/SET_PRACTICE_COUNT", itemCount)
 			response = await app.$axios.$get(`/api/v1/admin/practices`, { params })
 			const practices = response.data.practices
 			await store.commit("practices/SET_PRACTICES", practices)
 
 			await store.commit("practices/TOGGLE_LOADING", false)
-			return {
-				// itemCount,
-				// practices
-			}
 		} catch (err) {
 			// error({ statusCode: 404 })
 			console.log("Get practices error!", err)
@@ -363,7 +367,7 @@ export default {
 					return "bg-yellow text-black lg:px-10 sm:px-2"
 				case "Deactivated":
 					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Suspended":
+				case "Account Suspension":
 					return "bg-red text-white lg:px-8 sm:px-2"
 				case "Dormant":
 					return "bg-green-darker text-white lg:px-8 sm:px-2"

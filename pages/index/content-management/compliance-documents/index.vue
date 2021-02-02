@@ -143,7 +143,9 @@
         loading: false,
         count: 0,
         complianceDocuments: [],
-        orderBy: [],
+        orderBy: [
+          'created_at:desc',
+        ],
         limit: 30,
         activePage: 1,
       }

@@ -27,6 +27,26 @@
               label="Area Postcode"
             />
           </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="status"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'status'"
+              :placeholder="'Filter By Status'"
+              :items="[
+                {label: 'All', value: ''},
+                {label: 'Active', value: 'Active'},
+                {label: 'Dormant', value: 'Dormant'},
+                {label: 'Inactive', value: 'Inactive'},
+                {label: 'Account Suspension', value: 'Account Suspension'},
+                {label: 'Bogus', value: 'Bogus'},
+                {label: 'Deactivated', value: 'Deactivated'},
+              ]"
+              :label="'Status'"
+            />
+          </div>
         </div>
         
         <div class="flex flex-row w-full">
@@ -92,20 +112,37 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination
-        :count="count" 
-        :pages="pages" 
-        :page="activePage"
-        @page="setPage" 
-      />
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-white w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderByProcessed }}
+            </div>
+          </div>
+        </div>
+        <ReportPagination
+          :count="count" 
+          :pages="pages" 
+          :page="activePage"
+          @page="setPage" 
+        />
+      </div>
 
       <div
+        v-if="authAdminPermissions.includes('Generate Reports')"
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || registeredPractices.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="registeredPractices.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
@@ -142,10 +179,12 @@
 
     data () {
       return {
+        downloading: false,
         loading: false,
         count: 0,
         registeredPractices: [],
         orderBy: [],
+        orderByProcessed: '',
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -175,10 +214,22 @@
         dateStart: '',
         dateEnd: '',
         areaPostCode: '',
+        status: '',
       }
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.registeredPractices.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
+
       offset () {
         return this.activePage * this.limit - this.limit
       },
@@ -208,7 +259,7 @@
             key: 'date_registered',
             sort_key: 'date_registered',
             column: (item) => item.date_registered ? this.$moment(item.date_registered, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -239,7 +290,16 @@
     },
 
     watch: {
-      orderBy () {
+      orderBy (value) {
+        let replaced = ''
+        if(value.length > 0) {
+          replaced = value[0].replace(/_/g, ' ')
+          replaced = replaced.replace(/:/g, ' - ')
+          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          replaced = replaced.replace('Desc', 'Descending')
+          replaced = replaced.replace('Asc', 'Ascending')
+        } 
+        this.orderByProcessed = replaced
         this.getPractices()
       },
 
@@ -255,9 +315,10 @@
 
     mounted () {      
       const {
-        date_start: dateStart,
-        date_end: dateEnd,
-        area: areaPostCode,
+        registered_at_date_start: dateStart,
+        registered_at_date_end: dateEnd,
+        area_includes: areaPostCode,
+        status,
         order_by: orderBy = [],
         page,
       } = this.$route.query
@@ -265,6 +326,7 @@
       this.areaPostCode = areaPostCode ? areaPostCode : ''
       this.dateStart = dateStart ? dateStart : ''
       this.dateEnd = dateEnd ? dateEnd : ''
+      this.status = status ? status : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -277,6 +339,7 @@
         this.areaPostCode = ''
         this.dateStart = ''
         this.dateEnd = ''
+        this.status = ''
 
         this.filterSearch()
       },
@@ -289,6 +352,7 @@
           areaPostCode: this.areaPostCode ? this.areaPostCode : '',
           dateStart: this.dateStart ? this.dateStart : '',
           dateEnd: this.dateEnd ? this.dateEnd : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -342,9 +406,10 @@
         this.registeredPractices = []
 
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          registered_at_date_start: this.dateStart ? this.dateStart : '',
+          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/registered-practices/count', {
@@ -382,9 +447,10 @@
       downloadCsv () {
         this.downloading = true
         const params = {
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          registered_at_date_start: this.dateStart ? this.dateStart : '',
+          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

@@ -1,85 +1,162 @@
 <template>
   <div class="role-modal">
-    <div class="flex justify-between text-sm text-white py-2 px-6">
+    <div class="m-4 flex justify-between text-sm text-white py-2 px-6">
       <nuxt-link :to="{path:`/practices/${$route.params.id}/practice-users/user-roles`,query:$route.query}" class="text-white p-1">
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
       </nuxt-link>
-      
-      <!-- <div class="my-2 md:my-4" v-if="editingPermissions == false">
-        <div class="flex flex-wrap overflow-hidden">
-          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">Locum Management</div>
-            <div
-              v-for="(permission, index) in rolePermissions"
-              :key="`permission-${index}`"
-              class="px-2"
-            >
-              {{ permission.category === "Locum" ? permission.name : null }}
-            </div>
-          </div>
-          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">Practice Management</div>
-            <div
-              v-for="(permission, index) in rolePermissions"
-              :key="`permission-${index}`"
-              class="px-2"
-            >
-              {{ permission.category === "Practice" ? permission.name : null }}
-            </div>
-          </div>
-          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">
-              Billing and Reports Management
-            </div>
-            <div
-              v-for="(permission, index) in rolePermissions"
-              :key="`permission-${index}`"
-              class="px-2"
-            >
-              {{ permission.category === "Billing" ? permission.name : null }}
-            </div>
-          </div>
-          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">Miscellaneous</div>
-            <div
-              v-for="(permission, index) in rolePermissions"
-              :key="`permission-${index}`"
-              class="px-2"
-            >
-              {{ permission.category === "Misc" ? permission.name : null }}
-            </div>
-          </div>
-          <div class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1">
-            <div class="text-lg font-semibold">User Management</div>
-            <div
-              v-for="(permission, index) in rolePermissions"
-              :key="`permission-${index}`"
-              class="px-2"
-            >
-              {{
-                permission.category === "User Management"
-                  ? permission.name
-                  : null
-              }}
-            </div>
+    </div>
+    <div class="text-white m-8 md:my-4">
+      <div class="flex flex-wrap overflow-hidden">
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Profile')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">Profile Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{ permission.category === "Profile" ? permission.name : null }}
           </div>
         </div>
-      </div> -->
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Billings')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">Billings Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{ permission.category === "Billings" ? permission.name : null }}
+          </div>
+        </div>
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Surgery')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">
+            Surgery Management
+          </div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{ permission.category === "Surgery" ? permission.name : null }}
+          </div>
+        </div>
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Sessions')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">Sessions Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{ permission.category === "Sessions" ? permission.name : null }}
+          </div>
+        </div>
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Permanent Jobs')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">Permanent Jobs Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{
+              permission.category === "Permanent Jobs"
+                ? permission.name
+                : null
+            }}
+          </div>
+        </div>
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'My Banks')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">My Banks Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{
+              permission.category === "My Banks"
+                ? permission.name
+                : null
+            }}
+          </div>
+        </div>
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Practice Reports')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">Practice Reports Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{
+              permission.category === "Practice Reports"
+                ? permission.name
+                : null
+            }}
+          </div>
+        </div>
+        <div 
+          v-if="practiceRolePermissions.find(permission => permission.category === 'Roles and Permissions')"
+          class="w-full md:w-1/2 xl:w-1/3 overflow-hidden pb-3 md:p-1"
+        >
+          <div class="text-lg font-semibold">Roles and Permissions Management</div>
+          <div
+            v-for="(permission, index) in practiceRolePermissions"
+            :key="`permission-${index}`"
+            :class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+            class="px-2"
+          >
+            {{
+              permission.category === "Roles and Permissions"
+                ? permission.name
+                : null
+            }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  data(){
+  data (){
     return {
       practiceRolePermissions:[]
     }
   },
-  async asyncData({ app, route, store }) {
+  async asyncData ({ app, route, store }) {
     try{
-      // let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/practice-roles/${route.params.roleId}`)
-      // const practiceRolePermissions = response.data.role
+      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}/practice-roles/${route.params.roleId}`)
+      const practiceRolePermissions = response.data.role.permissions
+      console.log('das', practiceRolePermissions)
+      return {
+        practiceRolePermissions
+      }
     }catch(err){
       store.commit('SET_NOTIFICATION',{ enabled: true, status:'danger', text:'Something went wrong!'})
       console.log("something went wrong!",err)

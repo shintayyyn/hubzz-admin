@@ -33,6 +33,20 @@
             {{ practice.surgery ? practice.surgery.code : null }}
           </p>
           <p class="flex">
+            VAT Registered
+          </p>
+          <p class="flex text-white text-sm p-2 font-semibold"> 
+            {{ practice.vat_registered === true ? 'Yes' : 'No' }}
+          </p>
+          <p class="flex font-bold">
+            Sage reference
+          </p>
+          <p
+            class="flex text-white text-sm md:px-2 mb-2"
+          >
+            {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
+          </p>
+          <p class="flex">
             Address
           </p>
           <p class="flex flex-col text-white text-sm p-2 font-semibold">
@@ -59,7 +73,7 @@
             Latest Billing Issued at
           </p>
           <p class="flex text-white text-sm p-2 font-semibold">
-            {{ latestInvoice && latestInvoice.date_created ? $moment(latestInvoice.date_created, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY, h:mm:ss a') : 'N/A' }}
+            {{ latestInvoice && latestInvoice.date_created_in_gb_formatted ? latestInvoice.date_created_in_gb_formatted : 'N/A' }}
           </p>
         </div>
       </div>

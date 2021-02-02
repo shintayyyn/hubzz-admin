@@ -1,277 +1,393 @@
 <template>
-  <div>
+  <div ref="modalContainer">
+    <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
     <div class="flex items-center px-2 py-2">
       <div class="relative w-full">
-        <div class="flex items-center w-full">
-          <AppDate
-            v-model="invoiceableDateStart"
-            class="md:mx-2 text-white"
-            :name="'practice_invoiceable_date_start'"
-            :label="'From'"
-          />
-          <AppDate
-            v-model="invoiceableDateEnd"
-            class="md:mx-2 text-white"
-            :name="'practice_invoiceable_date_end'"
-            :label="'To'"
-            :isAfterDate="invoiceableDateStart"
-          />
-          
-          <AppButton
-            class="whitespace-no-wrap"
-            :disabled="invoiceableDateStart && invoiceableDateEnd ? false : true"
-            :label="'Search for Practices'"
-            :icon="'search'"
-            @click="getBillablePractices()"
-          />
-          <AppButton
-            class="mx-2"
-            :disabled="practiceParams.practice_invoiceable_date_start 
-              && practiceParams.practice_invoiceable_date_end
-              && chosenPractices.length > 0  
-              ? false : true"
-            :label="'Generate HUBZZ Invoices'"
-            :icon="'add-rectangle'"
-            @click="processBulkBilling()"
-          />
-          <div class="text-white">
-            <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-            <label for="completed">Include Completed Invoices</label>
+        <div class="flex flex-col text-white">
+          <!-- Upper Filter (Job parts, Required fields) -->
+          <div class="flex lg:flex-row flex-col items-center w-full">
+            <!-- Job part filters -->
+            <div class="flex flex-col p-3">
+              <div class="text-lg text-white font-semibold">
+                Filter Job Parts
+              </div>
+              <div class="flex flex-row items-center">
+                <AppDate
+                  v-model="invoiceableDateEnd"
+                  class="md:mx-2 text-white"
+                  :name="'practice_invoiceable_date_end'"
+                  :label="'Filter from Beginning Until'"
+                  :isBefore="true"
+                />
+                <div class="flex flex-col mx-4 text-sm md:text-base">
+                  <div class="w-full text-white">
+                    <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
+                    <label for="disputed">Include Disputed Invoices</label>
+                  </div>
+                  <div class="w-full text-white">
+                    <input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
+                    <label for="cancelled">Include Cancelled Invoices</label>
+                  </div>
+                  <div class="w-full text-white">
+                    <input id="completed" v-model="showCompleted" type="checkbox" value="true">
+                    <label for="completed">Include Completed Invoices</label>
+                  </div>
+                  <div class="w-full text-white">
+                    <input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
+                    <label for="invoiced">Include Invoiced Invoices</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Required Fields -->
+            <div class="text-white p-3 rounded-lg border-solid border-2 border-gray-200">
+              <div class="text-lg font-semibold">
+                Billing Period (Required Fields)
+              </div>
+              <div class="flex">
+                <AppDate
+                  v-model="billing_period_date_start"
+                  class="md:mx-2 text-white"
+                  :name="'billing_period_date_start'"
+                  :label="'Billing Date From (Required)'"
+                  :error="formError.find(item => item.field === 'billing_period_date_start')"
+                />
+                <AppDate
+                  v-model="billing_period_date_end"
+                  class="md:mx-2 p-2 text-white"
+                  :name="'billing_period_date_end'"
+                  :label="'Billing Date To (Required)'"
+                  :isAfterDate="billing_period_date_start"
+                  :error="formError.find(item => item.field === 'billing_period_date_end')"
+                />
+                <AppDate
+                  v-model="due_date"
+                  class="md:mx-2 text-white"
+                  :name="'due_date'"
+                  :label="'Due Date(Required)'"
+                  :isAfter="true"
+                  :error="formError.find(item => item.field === 'due_date')"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div
-          v-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount > 0" 
-          class="flex text-white"
-        >
-          <div class="w-full">
-            <input
-              v-model="search"
-              class="rounded-lg border-2 border-transparent text-sm text-white p-2 w-1/4 focus:border-sunglow focus:outline-none bg-waterloo"
-              placeholder="Filter Invoiceable Practices by Name"
-            >
-            <button
-              v-if="search"
-              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-              @click="(search = ''), searchSubmit()"
-            >
-              <svgicon
-                name="times-solid"
-                height="12"
-                width="12"
-                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+          <!-- Lower Filter (Practice filters) -->
+          <div class="flex flex-wrap justify-start items-center w-full p-3">
+            <div class="md:px-1 w-full mb-4">
+              <label class="text-md md:text-lg font-bold">Filter Practices</label>
+            </div>
+            <div class="md:px-1 w-full mb-4">
+              <AppInput 
+                v-model="search"
+                :type="'text'"
+                :label="'Search by Practice Name'"
+                :placeholder="'Practice Name'"
               />
-            </button>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="orderAlphabticalAsc" v-model="orderAlphabeticalAsc" type="checkbox" value="true">
+              <label for="orderAlphabticalAsc">Sort Practice Alphabetically ↑</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
+              <label for="standAloneOnly">Show Stand Alone Practices Only</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input
+                id="independentSpokesOnly"
+                v-model="showIndependentSpokesOnly"
+                type="checkbox"
+                value="true"
+              >
+              <label for="independentSpokesOnly">Show Billable Spokes Only</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input
+                id="dependentSpokesOnly"
+                v-model="showDependentSpokesOnly"
+                type="checkbox"
+                value="true"
+              >
+              <label for="dependentSpokesOnly">Show Dependent Spokes(grouped by Hubs)</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input
+                id="orderAlphabeticalDesc"
+                v-model="orderAlphabeticalDesc"
+                type="checkbox"
+                value="true"
+              >
+              <label for="orderAlphabeticalDesc">Sort Practice Alphabetically ↓</label>
+            </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+              <input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
+              <label for="healthBoardsOnly">Show Health Boards Only</label>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- :routerLink="`/billings`" -->
-    <AppTable
-      v-if="itemCount > 0"
-      :total="itemCount"
-      :items="allBillablePractices"
-      :currentPage="currentPage"
-      :perPage="practiceParams.limit"
-      :columns="columns"
-      :loading="loadingBillablePractices"
-      :orderBy="practiceParams.order_by"
-      :customWidth="200"
-      @pagechanged="pagechanged"
-      @checkClicked="toggleCheck"
-      @sorted="sorted"
-    >
-      <template v-slot:checker="slotProps">
-        <input 
-          :id="slotProps.item" 
-          v-model="chosenPractices" 
-          type="checkbox" 
-          :value="slotProps.item"
-        >
-        <label :for="slotProps.item" />
-      </template>
 
-      <template v-slot:disputed_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="slotProps.item.practice_invoice_item_disputed_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-        >
-          {{ slotProps.item.practice_invoice_item_disputed_count > 0 ? "Yes, " + slotProps.item.practice_invoice_item_disputed_count : "None" }}
-        </div>
-      </template>
-
-      <template v-slot:status_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="
-            `${
-              slotProps.item.status === 'Active'
-                ? 'bg-green-500'
-                : 'bg-gray-500 text-gray-700'
-            }`
-          "
-        >
-          {{ slotProps.item.status }}
-        </div>
-      </template>
-
-      <template v-slot:type_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="typeStyle(slotProps.item.type)"
-        >
-          {{ slotProps.item.type }}
-        </div>
-      </template>
-
-      <template v-slot:hub_type_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="hubTypeStyle(slotProps.item.hub_type)"
-        >
-          {{ slotProps.item.hub_type }}
-        </div>
-      </template>
-    </AppTable>
-    <template v-else>
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB PART PICKER STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
+    <div v-if="itemCount === 0">
+      <div class="mt-10 w-full text-center text-white">
+        No Billable Practices Found.
+      </div>
+    </div>
+    <div v-else class="border-b-2 border-white mt-2">
       <div
-        v-if="!practiceParams.practice_invoiceable_date_start && !practiceParams.practice_invoiceable_date_end"
-        class="mt-2 w-full text-center text-white"
+        style="min-width: 768px; max-width: 1200px" 
+        class="hidden md:flex justify-around text-white font-semibold w-full px-4"
       >
-        Input Job Part Approval / Disputed Dates to see Billable Practices
-      </div>
-      <div 
-        v-else-if="practiceParams.practice_invoiceable_date_start && practiceParams.practice_invoiceable_date_end && itemCount === 0 "
-        class="mt-2 w-full text-center text-white">
-        {{ searchMessage }}
-      </div>
-    </template>
+        <div class="flex flex-row w-full pb-3 text-sm justify-around">
+          <!-- ORIGINAL -->
+          <!-- <div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 100px; max-width: 250px;" 
+					>
+						Practice
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 100px;"  
+					>
+						Check
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
+					>
+						Job Part Number
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
+					>
+						Approved at / Completed At
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 175px;"  
+					>
+						Total
+					</div>
+					<div
+						class="text-center"
+						style="flex: 1 0 0; min-width: 90px; max-width: 220px;"  
+					>
+						Status
+					</div> -->
+          <!-- ORIGINAL ENDS HERE -->
 
-    <!-- SESSIONS MODAL -->
-    <transition name="fade" mode="out-in">
-      <div v-if="showSessionsModal == true" class="sessions-modal h-full flex flex-col border-l-4 border-r-4 border-sunglow shadow-lg overflow-hidden">
-        <div class="m-4 border-b-4 border-double border-white">
-          <div 
-            v-for="(item, index) in chosenPracticesFinalization"
-            :key="`item-${index}`"
-            class="text-white"
+          <!-- FOR QA TESTING ONLY -->
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 100px; max-width: 200px;" 
           >
-            <div class="flex flex-row m-2">
+            Practice
+          </div>
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 90px; max-width: 100px;"  
+          >
+            Check
+          </div>
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 90px; max-width: 150px;"  
+          >
+            Job Part Number
+          </div>
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 90px; max-width: 170px;"  
+          >
+            Approved at / Completed At
+          </div>
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 90px; max-width: 120px;"  
+          >
+            Total
+          </div>
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 90px; max-width: 120px;"  
+          >
+            Status
+          </div>
+          <div
+            class="text-center"
+            style="flex: 1 0 0; min-width: 90px; max-width: 150px;"  
+          >
+            With Dispute
+          </div>
+          <!-- FOR QA TESTING COLUMNS ENDS HERE -->
+        </div>
+      </div>
+
+      <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
+        <!-- BODY -->
+        <div class="px-2 overflow-x-hidden">
+          <AppTable
+            :total="itemCount"
+            :items="allBillablePractices"
+            :currentPage="currentPage"
+            :perPage="practiceParams.limit"
+            :columns="practiceColumns"
+            :orderBy="practiceParams.order_by"
+            :disabledHeadings="true"
+            :disabledPagination="true"
+            :itemsOnTop="true"
+            :customItemsWidth="'cursor-default'"
+            @pagechanged="pagechanged"
+            @checkClicked="toggleCheckPracticeCheckAll"
+            @sorted="sorted"
+          >
+            <template v-slot:checker="slotProps">
+              <div class="flex flex-col items-center justify-between m-1">
+                <div class="text-left">
+                  {{ slotProps.item.name }}
+                </div>
+                <div
+                  class="m-1 rounded-full text-center px-4 py-1 w-32"
+                  :class="typeStyle(slotProps.item.type)"
+                >
+                  {{ slotProps.item.type }}
+                </div>
+                <div
+                  v-if="slotProps.item.type === 'Spoke' && slotProps.item.parent_practice"
+                  class="text-blue-200 m-1"
+                >
+                  {{ slotProps.item.parent_practice.name }} (HUB)
+                </div>
+                <div class="m-1">
+                  <input
+                    :id="slotProps.item"
+                    v-model="chosenPractices"
+                    type="checkbox"
+                    :value="slotProps.item"
+                  >
+                  <label :for="slotProps.item">Select All</label>
+                </div>
+                <div>
+                  Picked {{ chosenPracticeJobParts.filter(item => item.practice_id === slotProps.item.id).length }} of {{ slotProps.item.practice_invoiceable_job_parts.length }}
+                </div>
+              </div>
+            </template>
+
+            <template v-slot:invoiceable_job_parts="slotProps">
               <div
-                class="text-sm mt-2 m-2"
-              >{{ item.name }}</div>
-
-              <!-- <div>
-                <AppButton
-                  class="text-white"
-                  :background="'red'"
-                  :disabled="chosenPracticeJobParts && chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === item.id).length < item.practice_invoiceable_approved_filtered_job_parts.length ? false : true"
-                  :label="'Remove'"
-                  :icon="'garbage'"
-                  @click="toggleCheckChosenPractices(item)"
-                />
-              </div> -->
-
-              <!-- <div @click="toggleCheckChosenPractices(item)">
-                <input
-                  :id="item" 
-                  v-model="chosenPracticesFinalization" 
-                  type="checkbox" 
-                  :value="item"
+                class="md:justify-center md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden"
+              >
+                <!-- <div class="w-full"> -->
+                <AppTable
+                  :total="slotProps.item.practice_invoiceable_job_parts.length"
+                  :items="slotProps.item.practice_invoiceable_job_parts"
+                  :columns="jobPartsColumns"
+                  :disabledPagination="true"
+                  :disabledHeadings="true"
+                  :customWidth="'w-full overflow-x-hidden'"
+                  :customItemsWidth="'w-full md:w-8/10 cursor-default'"
+                  @checkClicked="toggleCheckJobParts"
+                  @sorted="sorted"
                 >
-                <label
-                  :for="item"
-                  class="text-sm pl-1"
-                >{{ item.name }}</label>
-              </div> -->
-            </div>
-            <AppTable
-              :nestedItem="item"
-              :total="item.job_parts_for_invoicing.length"
-              :items="item.practice_invoiceable_approved_filtered_job_parts_sliced"
-              :currentPage="item.current_page"
-              :perPage="10"
-              :columns="jobPartsColumns"
-              :customWidth="200"
-              @checkClicked="toggleCheckJobParts"
-              @pagechanged="pageChangedJobPart"
-              @sorted="sorted"
-            >
-              <template v-slot:checker="slotProps">
-                <input 
-                  :id="slotProps.item" 
-                  v-model="chosenPracticeJobParts" 
-                  type="checkbox" 
-                  :value="slotProps.item" 
-                >
-                <label :for="slotProps.item" />
-              </template>
-              <template v-slot:invoice_status_slot="slotProps">
-                <div
-                  class="rounded-full text-center px-4 py-1 w-32"
-                  :class="invoiceStatusStyle(slotProps.item.invoice_status)"
-                >
-                  {{ slotProps.item.invoice_status }}
-                </div>
-              </template>
-              <template v-slot:status_slot="slotProps">
-                <div
-                  class="rounded-full text-center px-4 py-1 w-32"
-                  :class="invoiceStatusStyle(slotProps.item.status)"
-                >
-                  {{ slotProps.item.status }}
-                </div>
-              </template>
-            </AppTable>
-          </div>
+                  <template v-slot:checker="slotProps">
+                    <input
+                      :id="slotProps.item"
+                      v-model="chosenPracticeJobParts"
+                      type="checkbox"
+                      :value="slotProps.item"
+                    >
+                    <label :for="slotProps.item" />
+                  </template>
+                  <template v-slot:approved_completed_at="slotProps">
+                    <div>{{ slotProps.item.approved_at_in_gb_formatted ? slotProps.item.approved_at_in_gb_formatted : slotProps.item.completed_at_in_gb_formatted }}</div>
+                  </template>
+                  <template v-slot:status_slot="slotProps">
+                    <div
+                      :class="statusStyle(slotProps.item.invoice_status === 'To Be Invoiced'
+                        ? slotProps.item.status === 'Cancelled'
+                          ? slotProps.item.status 
+                          : slotProps.item.invoice_status  
+                        : slotProps.item.invoice_status === 'Disputed'
+                          ? slotProps.item.invoice_status 
+                          : slotProps.item.status )"
+                    >
+                      {{ slotProps.item.invoice_status === 'To Be Invoiced'
+                        ? slotProps.item.status === 'Cancelled'
+                          ? slotProps.item.status
+                          : slotProps.item.invoice_status
+                        : slotProps.item.invoice_status === 'Disputed'
+                          ? slotProps.item.invoice_status
+                          : slotProps.item.status }}
+                    </div>
+                  </template>
+                  <template v-slot:job_part_items_disputed_at_slot="slotProps">
+                    <div>{{ slotProps.item.job_part_items_disputed_at ? slotProps.item.job_part_items_disputed_at : 'N/A' }}</div>
+                  </template>
+                </AppTable>
+                <!-- </div> -->
+              </div>
+            </template>
+          </AppTable>
         </div>
-        <div class="m-4">
-          <div class="m-2 text-white">
-            Pagination for Chosen Practices
-          </div>
-          <AppPagination
-            :total="chosenPractices.length"
-            :totalPages="Math.ceil(chosenPractices.length / practicesFinalizationPerPage)"
-            :currentPage="practicesFinalizationPage"
-            :perPage="practicesFinalizationPerPage"
-            @pagechanged="pageChangedPracticesFinalization"
-          />
+      </div>
+      <AppPagination
+        :total="itemCount"
+        :totalPages="totalPages"
+        :currentPage="currentPage"
+        :perPage="practiceParams.limit"
+        @pagechanged="pagechanged"
+      />
+    </div>
+    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  JOB PART PICKER ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <div class="flex flex-row justify-end mt-4">
+      <div class="flex flex-col">
+        <div 
+          v-if="!billing_period_date_start 
+            || !billing_period_date_end
+            || !due_date
+            || chosenPracticeJobParts.length === 0"
+        >
+          <span class="p-2 bg-red-200 mb-2 py-1 border border-red-400 text-red-600 rounded flex items-center text-sm">
+            <svgicon name="exclamation-mark" class="w-4 h-4 mx-2 fill-current" />
+            <span>
+              Please
+            </span>
+            <span v-if="chosenPracticeJobParts.length === 0" class="ml-1">
+              Choose Job Parts, 
+            </span>
+            <span v-if="!billing_period_date_start || !billing_period_date_end" class="ml-1">
+              Input Billing Date From / To, 
+            </span>
+            <span v-if="!due_date" class="ml-1">
+              Input Due Date,
+            </span>
+            <span class="ml-1">
+              to enable Generate HUBZZ Invoices 
+            </span>
+            <!-- Please Choose Job Parts, Input Billing Date From / To, and Due Date to enable Generate HUBZZ Invoices -->
+          </span>
         </div>
-        
-        <transition name="drop" mode="out-in">
-          <AppDate 
-            v-model="dueDate" 
-            class="m-4 text-white" 
-            :name="'due_date'" 
-            :label="'Due Date'" 
-            is-after 
-          />
-        </transition>
-        <div class="flex flex-col w-full text-white px-8 justify-between">
-          <div class="flex flex-row mb-4">
-            <div class="p-2 px-4">
-              <AppButton
-                class="text-white"
-                :background="'green'"
-                :disabled="chosenPracticeJobParts.length < 1 ? true : false"
-                :label="'Confirm'"
-                @click="createBulkBillingChecked()"
-              />
-            </div>
-            <div
-              class="p-2 px-4"
-            >
-              <AppButton
-                class="text-white"
-                :background="'red'"
-                :label="'Cancel'"
-                @click="clearInvoiceableJobParts()"
-              />
-            </div>
+        <div>
+          <div class="flex flex-row justify-end">
+            <AppButton class="mx-2" :label="'Clear Selection'" :icon="'add-rectangle'" @click="reset()" />
+            <AppButton
+              class="mx-2"
+              :label="'Generate HUBZZ Invoices'"
+              :icon="'add-rectangle'"
+              :disabled="billing_period_date_start 
+                && billing_period_date_end
+                && chosenPracticeJobParts.length > 0
+                && due_date  
+                ? false : true"
+              @click="createBulkBillingChecked()"
+            />
           </div>
         </div>
       </div>
-    </transition>
-    <!-- SESSIONS MODAL ENDS HERE -->
+    </div>
 
     <div
       v-if="
@@ -294,159 +410,243 @@ import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
+import AppLoading from "@/components/Base/AppLoading"
 import AppPagination from "@/components/Base/AppPagination"
+import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
-    AppDate,
-    AppButton,
-    AppPagination,
-  },
-  
+		AppDate,
+		AppButton,
+		AppLoading,
+		AppPagination,
+		AppInput,
+	},
+
 	data () {
 		return {
-      searchMessage: "",
-      showSessionsModal: false,
+			searchMessage: "",
+			showSessionsModal: false,
+			formError: [],
 
 			// for app table
 			currentPage: 1,
 			search: "",
-      chosenPractices:[],
-      dueDate: '',
 
-      // for bulk billing processing
-      showCompleted: false,
-      invoiceableDateStart: "",
-      invoiceableDateEnd: "",
-      chosenPracticeJobParts: [],
+			// for bulk billing processing
+			showCompleted: false,
+			showDisputed: false,
+			showCancelled: false,
+			showInvoiced: false,
+			// query filters
+			invoiceableDateEnd: "",
+			orderAlphabeticalAsc: false,
+			orderAlphabeticalDesc: false,
+			showIndependentSpokesOnly: false,
+			showDependentSpokesOnly: false,
+			showStandAloneOnly: false,
+			showHealthBoardsOnly: false,
 
-      chosenPracticesFinalization: [],
-      practicesFinalizationPage: 1,
-      practicesFinalizationPerPage: 10,
+			// form date start, end, due date
+			billing_period_date_start: "",
+			billing_period_date_end: "",
+			due_date: "",
 
-      practicesFilteredJobPartsPerPage: 10,
+			chosenPractices: [],
+			chosenPracticeJobParts: [],
+
+			// tax rate
+			practiceTaxRate: 0,
+			practiceTaxRateFormatted: 0,
 
 			practiceParams: {
 				id: [],
-				limit: 10,
+				limit: 20,
 				offset: 0,
 				order_by: ["created_at:desc"],
-				status: ["Active", "Dormant", "Suspended"],
-        verified: true,
-        practice_invoiceable_date_start: null,
-        practice_invoiceable_date_end: null,
-        practice_invoiceable: true,
-      },
-      
+				status: ["Active", "Dormant", "Account Suspension"],
+				type: [],
+				hub_type: [],
+				billable_spoke: null,
+				verified: true,
+				practice_invoiceable_date_start: null,
+				practice_invoiceable_date_end: null,
+				practice_invoiceable_status: ['Approved'],
+				practice_invoiceable: true
+			},
+
 			loading: false,
-			columns: [
+			practiceColumns: [
+				// ===========ORIGINAL COLUMNS===========
+				// {
+				// 	name: 'Practice',
+				// 	dataIndex: 'checker',
+				// 	class: 'flex-1 mt-4 items-center',
+				// 	flex: '1 0 0',
+				// 	slotName: 'checker',
+				// 	eventName: 'checkClicked',
+				// 	minWidth: '100px',
+				// 	maxWidth: '250px',
+				// },
+				// {
+				// 	name: 'Job Parts',
+				// 	dataIndex: 'invoiceable_job_parts',
+				// 	class: 'flex-initial',
+				// 	slotName: 'invoiceable_job_parts',
+				// 	flex: '1 0 0',
+				// 	minWidth: '100px',
+				// 	maxWidth: '1000px'
+				// },
+				// ===========ORIGINAL COLUMNS ENDS HERE===========
+
+				// ===========FOR QA TESTING ONLY===========
 				{
-					name: "Check",
-					dataIndex: "checker",
-					class: "text-center",
-					slotName: "checker",
-					eventName: "checkClicked"
+					name: 'Practice',
+					dataIndex: 'checker',
+					class: 'flex-1 mt-4 items-center',
+					flex: '1 0 0',
+					slotName: 'checker',
+					eventName: 'checkClicked',
+					minWidth: '100px',
+					maxWidth: '200px',
 				},
 				{
-					name: "Practice/Surgery",
-					dataIndex: "name",
-					sortable: true
-				},
-				{
-					name: "Expires",
-					dataIndex: "actived_until",
-					class: "text-center localDate",
-					sortable: true
-        },
-        {
-          name: "Has Disputed",
-          dataIndex: "practice_invoice_item_disputed_count",
-          slotName: "disputed_slot",
-          class: "text-center",
-          sortable:false,
-        },
-				{
-					name: "Status",
-					slot: true,
-					dataIndex: "status",
-					class: "text-center",
-					slotName: "status_slot",
-					sortable: true
-				},
-				{
-					name: "Type",
-					slot: true,
-					dataIndex: "type",
-					class: "text-center",
-					slotName: "type_slot",
-					sortable: true
-				},
-				{
-					name: "Hub Type",
-					slot: true,
-					dataIndex: "hub_type",
-					slotName: "hub_type_slot",
-					class: "text-center"
+					name: 'Job Parts',
+					dataIndex: 'invoiceable_job_parts',
+					class: 'flex-initial',
+					slotName: 'invoiceable_job_parts',
+					flex: '1 0 0',
+					minWidth: '100px',
+					maxWidth: '1000px'
 				}
-      ],
-      jobPartsColumns: [
+				// ===========FOR QA TESTING ONLY ENDS HERE===========
+			],
+			jobPartsColumns: [
+				// ===========ORIGINAL COLUMNS===========
+				// {
+				// 	name: "Check",
+				// 	dataIndex: "checker",
+				// 	class: "flex items-center justify-center",
+				// 	slotName: "checker",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '100px',
+				// 	eventName: "checkClicked"
+				// },
+				// {
+				// 	name: "Job Part Number",
+				// 	dataIndex: "job_part_number",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	class: "flex items-center justify-center",
+				// 	sortable: false
+				// },
+				// {
+				// 	name: "Approved At / Completed At",
+				// 	slot: true,
+				// 	dataIndex: "approved_at",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	class: "flex items-center justify-center localDate",
+				// 	slotName: "approved_completed_at"
+				// },
+				// {
+				// 	name: "Total",
+				// 	dataIndex: "total",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	class: "flex items-center justify-center currency",
+				// 	sortable: false
+				// },
+				// {
+				// 	name: "Status",
+				// 	slot: true,
+				// 	dataIndex: "status",
+				// 	flex: '1 0 0',
+				// 	minWidth: '90px',
+				// 	maxWidth: '200px',
+				// 	slotName: "status_slot",
+				// 	class: "flex items-center justify-center",
+				// 	sortable: true
+				// },
+				// ===========ORIGINAL COLUMNS ENDS HERE===========
+
+				// ===========FOR QA TESTING ONLY===========
 				{
 					name: "Check",
 					dataIndex: "checker",
-					class: "text-center",
+					class: "flex items-center justify-center",
 					slotName: "checker",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '100px',
 					eventName: "checkClicked"
-        },
+				},
 				{
 					name: "Job Part Number",
 					dataIndex: "job_part_number",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '200px',
+					class: "flex items-center justify-center",
 					sortable: false
 				},
 				{
-          name: "Date Start",
-          dataIndex: "datetime_start_formatted",
-					class: "text-center",
-					sortable: false
-        },
+					name: "Approved At / Completed At",
+					slot: true,
+					dataIndex: "approved_at",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '200px',
+					class: "flex items-center justify-center localDate",
+					slotName: "approved_completed_at"
+				},
 				{
-          name: "Date End",
-          dataIndex: "datetime_end_formatted",
-					class: "text-center",
+					name: "Total",
+					dataIndex: "total",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '180px',
+					class: "flex items-center justify-center currency",
 					sortable: false
-        },
-        {
-          name: "Total",
-          dataIndex: "total",
-					class: "text-center currency",
-					sortable: false
-        },
-        // {
-				// 	name: "Invoice Status",
-				// 	slot: true,
-				// 	dataIndex: "invoice_status",
-				// 	class: "text-center",
-				// 	slotName: "invoice_status_slot",
-				// 	sortable: true
-				// },
-        {
+				},
+				{
 					name: "Status",
 					slot: true,
 					dataIndex: "status",
-					class: "text-center",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '150px',
 					slotName: "status_slot",
+					class: "flex items-center justify-center",
 					sortable: true
-        },
+				},
+				{
+					name: "With Disputes",
+					slot: true,
+					dataIndex: "job_part_items_disputed_at",
+					flex: '1 0 0',
+					minWidth: '90px',
+					maxWidth: '180px',
+					slotName: "job_part_items_disputed_at_slot",
+					class: "flex items-center justify-center",
+					sortable: true
+				},
+				// ===========FOR QA TESTING COLUMNS ENDS HERE===========
 			]
 		}
-  },
-  
+	},
+
 	computed: {
-    loadingBillablePractices () {
-      return this.$store.state.billings.loading_billable_practices
-    },
-    allBillablePractices () {
-      return this.$store.state.billings.billable_practices
-    },
+		loadingBillablePractices () {
+			return this.$store.state.billings.loading_billable_practices
+		},
+		allBillablePractices () {
+			return this.$store.state.billings.billable_practices
+		},
 		itemCount () {
 			return this.$store.state.billings.billable_practices_count
 		},
@@ -462,195 +662,354 @@ export default {
 	},
 
 	watch: {
-    invoiceableDateStart: function (value) {
-      if (value > this.invoiceableDateEnd) { 
-        this.invoiceableDateEnd = ""
-      }
-      this.practiceParams.practice_invoiceable_date_start = value
-    },
-    invoiceableDateEnd: function (value) {
-      this.practiceParams.practice_invoiceable_date_end = value
-    },
+		billing_period_date_start: function (value) {
+			if(value !== null) {
+				let billing_period_date_start_index = this.formError.findIndex(
+					item => item.field === "billing_period_date_start"
+				)
+				let errors = this.formError.filter(
+					item => ["billing_period_date_start"].includes(item.field)
+				)
+				this.formError.splice(billing_period_date_start_index, errors.length)
+			}
+		},
+		billing_period_date_end: function (value) {
+			if(value !== null) {
+				let billing_period_date_end_index = this.formError.findIndex(
+					item => item.field === "billing_period_date_end"
+				)
+				let errors = this.formError.filter(
+					item => ["billing_period_date_end"].includes(item.field)
+				)
+				this.formError.splice(billing_period_date_end_index, errors.length)
+			}
+		},
+		due_date: function (value) {
+			if(value !== null) {
+				let due_date_index = this.formError.findIndex(
+					item => item.field === "due_date"
+				)
+				let errors = this.formError.filter(
+					item => ["due_date"].includes(item.field)
+				)
+				this.formError.splice(due_date_index, errors.length)
+			}
+		},
+		invoiceableDateStart: function (value) {
+			if (value > this.invoiceableDateEnd) {
+				this.invoiceableDateEnd = ""
+			}
+			this.practiceParams.practice_invoiceable_date_start = value
+		},
+		invoiceableDateEnd: function (value) {
+			this.practiceParams.practice_invoiceable_date_end = value
+			this.getBillablePractices()
+		},
+
 		search () {
 			this.searchSubmit()
 		},
 
 		$route () {
-			this.getPracticesForBulk()
+			this.getBillablePractices()
+		},
+
+		orderAlphabeticalAsc: function (value) {
+			if (value === true) {
+				this.practiceParams.order_by = ["practice_name:asc"]
+				this.orderAlphabeticalDesc = false
+			} else {
+				this.practiceParams.order_by = ["created_at:desc"]
+			}
+
+			this.getBillablePractices()
+		},
+
+		orderAlphabeticalDesc: function (value) {
+			if (value === true) {
+				this.practiceParams.order_by = ["practice_name:desc"]
+				this.orderAlphabeticalAsc = false
+			} else {
+				this.practiceParams.order_by = ["created_at:desc"]
+			}
+
+			this.getBillablePractices()
+		},
+
+		showIndependentSpokesOnly: function (value) {
+			if (value === true) {
+				this.practiceParams.billable_spoke = true
+			} else {
+				this.practiceParams.billable_spoke = null
+			}
+
+			this.getBillablePractices()
+		},
+
+		showDependentSpokesOnly: function (value) {
+			if (value === true) {
+				this.practiceParams.billable_spoke = false
+			} else {
+				this.practiceParams.billable_spoke = null
+			}
+
+			this.getBillablePractices()
+		},
+
+		showStandAloneOnly: function (value) {
+			if (value === true) {
+				this.practiceParams.type.push("Stand Alone")
+			} else {
+				const index = this.practiceParams.type.findIndex(type => {
+					return type === "Stand Alone"
+				})
+				if (index > -1) {
+					this.practiceParams.type.splice(index, 1)
+				}
+			}
+
+			this.getBillablePractices()
+		},
+
+		showHealthBoardsOnly: function (value) {
+			if (value === true) {
+				this.practiceParams.hub_type.push("Type 2")
+			} else {
+				const index = this.practiceParams.hub_type.findIndex(hub_type => {
+					return hub_type === "Type 2"
+				})
+				if (index > -1) {
+					this.practiceParams.hub_type.splice(index, 1)
+				}
+			}
+			this.getBillablePractices()
+		},
+
+		showDisputed (value) {
+			console.log('showDisputed', value)
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Disputed'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Disputed')
+				this.getBillablePractices()
+			}
+			
+			
+		},
+
+		showCancelled (value) {
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Cancelled'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Cancelled')
+				this.getBillablePractices()
+			}
+		},
+
+		showCompleted (value) {
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Completed'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Completed')
+				this.getBillablePractices()
+			}
+		},
+
+		showInvoiced (value) {
+			if (value === true) {
+				this.practiceParams.practice_invoiceable_status = [
+					...this.practiceParams.practice_invoiceable_status,
+					'Invoiced'
+				]
+				this.getBillablePractices()
+			} else if (value === false) {
+				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Invoiced')
+				this.getBillablePractices()
+			}
 		}
+	},
+
+	async asyncData ({ store, error }) {
+    try {
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('Create Hubzz Invoices') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+
+    } catch(err) {
+      error({ statusCode: 404 })
+      store.commit("SET_NOTIFICATION", {
+        enabled: true,
+        status: "danger",
+        text: "Something went wrong!"
+      })
+    }
   },
-  created () {
-    console.log('store set 0')
-    this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
-    this.$store.commit("practices/CLEAR_PRACTICES")
-    this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
-    this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
-  },
+
+	created () {
+		console.log("store set 0")
+		this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
+			console.log('tax rates',res.data.tax_rates )
+			this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
+			this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
+		})
+		this.$store.commit("practices/CLEAR_PRACTICES_COUNT")
+		this.$store.commit("practices/CLEAR_PRACTICES")
+		this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+		this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
+		this.getBillablePractices()
+	},
 	methods: {
-		async getBillablePractices () {
-      console.log('get billable practices start')
-			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
-			let { page = 1, search = "", order_by = [] } = this.$route.query
-			page = parseInt(page)
-			const createdRoute = this.$route.query
-			const limit = 10
-			const offset = page * limit - limit
-			const status = ["Active", "Dormant", "Suspended"]
-      // const id = this.practiceParams.id
-      const practice_invoiceable_date_start = this.practiceParams.practice_invoiceable_date_start
-      const practice_invoiceable_date_end = this.practiceParams.practice_invoiceable_date_end
-      const practice_invoiceable = this.practiceParams.practice_invoiceable
-			order_by =
-				createdRoute && createdRoute.order_by
-					? createdRoute.order_by
-					: "created_at:desc"
-			const params = {
-        search, 
-        limit, 
-        offset, 
-        order_by, 
-        status, 
-        practice_invoiceable_date_start, 
-        practice_invoiceable_date_end, 
-        practice_invoiceable 
-      }
-      console.log('params', params)
-
-			let response = await this.$axios.$get(`/api/v1/admin/practices/count`, {
-				params
+		toggleCheckPracticeCheckAll (item) {
+			const index = this.chosenPractices.findIndex(practice => {
+				return practice.id === item.id
 			})
-      const itemCount = response.data.count
 
-      if (itemCount > 0) {
-        this.searchMessage = ""
-      } else {
-        this.searchMessage = "No practice to invoice found"
-      }
+			if (index > -1) {
+				this.chosenPractices.splice(index, 1)
+				this.removeAll(item)
+			} else {
+				this.chosenPractices.push(item)
+				this.addAll(item.practice_invoiceable_job_parts)
+			}
+		},
 
-			await this.$store.commit("billings/SET_BILLABLE_PRACTICES_COUNT", itemCount)
+		removeAll (practice) {
+			this.chosenPracticeJobParts = this.chosenPracticeJobParts.filter(
+				jobPart => jobPart.practice_id !== practice.id
+			)
+			console.log("chosenJobParts", this.chosenPracticeJobParts)
+		},
+		
+		addAll (jobParts) {
+			jobParts.forEach(item => {
+				const index = this.chosenPracticeJobParts.findIndex(jobPart => {
+					return jobPart.id === item.id
+				})
 
-			response = await this.$axios.$get(`/api/v1/admin/practices`, { params })
-			const practices = response.data.practices
-			await this.$store.commit("billings/SET_BILLABLE_PRACTICES", practices)
-			await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
-    },
+				if (!(index > -1)) {
+					this.chosenPracticeJobParts.push(item)
+				}
+			})
 
-    async processBulkBilling () {
-      Promise.all([
-        this.chosenPracticesFinalization =  this.chosenPractices
-      ]).then(() => { 
-        this.chosenPracticesFinalization = this.chosenPracticesFinalization.map( practice => {
-          // Create a new variable
-          let job_parts_for_invoicing = practice.practice_invoiceable_approved_filtered_job_parts
-          job_parts_for_invoicing.forEach(jobPart => {
-            this.chosenPracticeJobParts.push(jobPart)
-          })
-          if (this.showCompleted) {
-            const completed_job_parts_for_invoicing = practice.practice_invoiceable_invoiced_filtered_job_parts
-            completed_job_parts_for_invoicing.forEach(jobPart => {
-              this.chosenPracticeJobParts.push(jobPart)
-            })
-            job_parts_for_invoicing = [
-              ...job_parts_for_invoicing,
-              ...completed_job_parts_for_invoicing,
-            ]
-          } 
-          const practice_invoiceable_approved_filtered_job_parts_sliced = job_parts_for_invoicing.slice(
-            (1 - 1)*this.practicesFilteredJobPartsPerPage,
-            1 * this.practicesFilteredJobPartsPerPage
-          )
-          
-          console.log('sliced',practice_invoiceable_approved_filtered_job_parts_sliced )
-          return {
-            ...practice,
-            job_parts_for_invoicing,
-            practice_invoiceable_approved_filtered_job_parts_sliced,
-            current_page: 1,
-          }
-        })
-      }).finally(() => {
-        console.log('processed', this.chosenPracticesFinalization)
-        console.log('chosen practice job parts', this.chosenPracticeJobParts)
-        this.showSessionsModal = true
-      })
-    },
+			console.log("chosenJobParts", this.chosenPracticeJobParts)
+		},
 
-    async createBulkBillingChecked () {
-      await this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", true)
-      console.log('chosenPractices', this.chosenPractices)
-      let practiceInvoiceDatas = await this.chosenPractices.map((practice) => {
-        const chosenJobParts = this.chosenPracticeJobParts.filter(jobPart => jobPart.practice_id === practice.id)
-        console.log('chosenjobparts', chosenJobParts)
+		async createBulkBillingChecked () {
+			await this.$store.commit(
+				"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
+				true
+			)
 
-        const items = chosenJobParts.map((jobPart) => {
-          return {
-            type: 'Job Part - Invoiced',
-            job_part_id: jobPart.id,
-            description:
-              "Job Number " +
-              jobPart.job_part_number +
-              " for £" +
-              jobPart.practice_rate +
-              " from " +
-              this.$moment(jobPart.date_start).format('DD/MM/YYYY') +
-              " to " +
-              this.$moment(jobPart.date_end).format('DD/MM/YYYY'),
-            total: jobPart.total,
-          }
-        })
+			let chosenPracticeIds = await this.chosenPracticeJobParts.map(item => {
+				return item.practice_id
+			})
+			chosenPracticeIds = [...new Set(chosenPracticeIds)]
 
-        const total_amount = items.reduce((total_amount, item) => total_amount + item.total, 0)
+			let practiceInvoiceDatas = await chosenPracticeIds.map(practiceId => {
+				const chosenJobParts = this.chosenPracticeJobParts.filter(
+					jobPart => jobPart.practice_id === practiceId
+				)
+				console.log("chosenjobparts", chosenJobParts)
 
-        return {
-          practice_id: practice.id,
-          items,
-          date_start: this.practiceParams.practice_invoiceable_date_start,
-          date_end: this.practiceParams.practice_invoiceable_date_end,
-          total_amount,
-          due_date: this.dueDate
-        }
-      })
+				const items = chosenJobParts.map(jobPart => {
+					return {
+						type: "Job Part - Invoiced",
+						job_part_id: jobPart.id,
+						description:
+							jobPart.job_part_number +
+							" for £" +
+							jobPart.practice_rate +
+							" from " +
+							this.$moment(jobPart.date_start).format("DD/MM/YYYY") +
+							" to " +
+							this.$moment(jobPart.date_end).format("DD/MM/YYYY"),
+						total: jobPart.total
+					}
+				})
 
-      practiceInvoiceDatas = await practiceInvoiceDatas.filter(practice => practice.items.length > 0)
-      console.log('practiceInvoiceDatas', practiceInvoiceDatas)
+				// const vatRegistered = chosenJobParts.filter(item => item.practice_vat_registered === true).length > 0 ? true : false
 
-      await this.$axios.post(`/api/v1/admin/practice-invoices/create-bulk`, {
-        practice_invoice_datas: practiceInvoiceDatas,
-      })
-      .then(res => {
-        console.log('res',res)
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Success"
-        })
-        this.practiceParams.practice_invoiceable_date_start =  null
-        this.practiceParams.practice_invoiceable_date_end = null
-        this.invoiceableDateStart = null
-        this.invoiceableDateEnd = null
-        this.search = ""
-        this.chosenPractices = []
-        this.chosenPracticeJobParts = []
-        this.dueDate = ''
-        this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
-        this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
-        
-      })
-      .catch(err => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: err.response.data.message
-        })
-      })
-      .finally(() => {
-        this.showSessionsModal = false
-        this.$store.commit("billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES", false)
-      })
+				const untaxed_total_amount = items.reduce((total_amount, item) => total_amount + item.total,0)
 
-      
-      
-    },
+				const tax_amount = untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted) 
+
+				const total_amount = untaxed_total_amount + tax_amount
+
+				console.log('practice id', practiceId)
+				console.log('untaxed', untaxed_total_amount)
+				console.log('tax amount', tax_amount)
+				console.log('taxed', total_amount)
+
+				return {
+					practice_id: practiceId,
+					items,
+					date_start: this.billing_period_date_start,
+					date_end: this.billing_period_date_end,
+					total_amount,
+					tax_amount,
+					due_date: this.due_date
+				}
+			})
+
+			practiceInvoiceDatas = await practiceInvoiceDatas.filter(
+				practice => practice.items.length > 0
+			)
+			console.log("practiceInvoiceDatas", practiceInvoiceDatas)
+
+			await this.$axios
+				.post(`/api/v1/admin/practice-invoices/create-bulk`, {
+					practice_invoice_datas: practiceInvoiceDatas
+				})
+				.then(res => {
+					console.log("res", res)
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Invoices Successfully Generated"
+					})
+					this.reset()
+				})
+				.catch(err => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: err.response.data.message
+					})
+					this.$store.commit(
+						"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
+						false
+					)
+				})
+				.finally(() => {
+					this.$store.commit(
+						"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
+						false
+					)
+				})	
+			
+			// this.$store.commit(
+			// 	"billings/TOGGLE_LOADING_FOR_BILLABLE_PRACTICES",
+			// 	false
+			// )
+		},
 
 		goToPage (page) {
 			if (page < 1) {
@@ -678,7 +1037,7 @@ export default {
 		},
 
 		searchSubmit: debounce(function (page, order_by) {
-      this.chosenPractices = []
+			this.chosenPractices = []
 			let search = this.search
 
 			let query = {
@@ -719,78 +1078,92 @@ export default {
 				this.loading = true
 			}
 
-			this.getPracticesForBulk()
+			this.getBillablePractices()
 
 			this.$router.push({ query })
-    }, 500),
-    
-    toggleCheck (item) {
+		}, 500),
+
+		toggleCheckChosenPractices (item) {
 			const index = this.chosenPractices.findIndex(practice => {
 				return practice.id === item.id
 			})
-
 			if (index > -1) {
 				this.chosenPractices.splice(index, 1)
 			} else {
 				this.chosenPractices.push(item)
-      }
-    },
+			}
+		},
 
-    toggleCheckChosenPractices (item) {
-      const index = this.chosenPracticesFinalization.findIndex(practice => {
-        return practice.id === item.id
-      })
+		toggleCheckJobParts (item) {
+			const index = this.chosenPracticeJobParts.findIndex(jobPart => {
+				return jobPart.id === item.id
+			})
 
-      if (index > -1) {
-        this.chosenPracticesFinalization.splice(index, 1)
-      }
+			if (index > -1) {
+				this.chosenPracticeJobParts.splice(index, 1)
+			} else {
+				this.chosenPracticeJobParts.push(item)
+			}
 
-    },
+			console.log("chosen job parts checker", this.chosenPracticeJobParts)
+		},
 
-    toggleCheckJobParts (item) {
-      const index = this.chosenPracticeJobParts.findIndex(jobPart => {
-        return jobPart.id === item.id
-      })
-      
-      if (index > -1) {
-        this.chosenPracticeJobParts.splice(index, 1)
-      } else {
-        this.chosenPracticeJobParts.push(item)
-      }
-
-      console.log('chosen job parts checker', this.chosenPracticeJobParts)
-    },
-
-		getPracticesForBulk () {
-      console.log('params get billable practices', this.practiceParams)
-			this.$store
+		async getBillablePractices () {
+			console.log("params get billable practices", this.practiceParams)
+			await this.$store
 				.dispatch("billings/fetchBillablePractices", {
+					has_sage_ref: true,
 					id: this.practiceParams.id,
 					limit: this.practiceParams.limit,
 					search: this.search,
 					order_by: this.practiceParams.order_by,
 					offset: this.practiceParams.offset,
-          status: this.practiceParams.status,
-          practice_invoiceable_date_start: this.practiceParams.practice_invoiceable_date_start, 
-          practice_invoiceable_date_end: this.practiceParams.practice_invoiceable_date_end, 
-          practice_invoiceable: this.practiceParams.practice_invoiceable,
+					status: this.practiceParams.status,
+					type: this.practiceParams.type,
+					hub_type: this.practiceParams.hub_type,
+					billable_spoke: this.practiceParams.billable_spoke,
+					practice_invoiceable_date_start: this.practiceParams
+						.practice_invoiceable_date_start,
+					practice_invoiceable_date_end: this.practiceParams
+						.practice_invoiceable_date_end,
+					practice_invoiceable: this.practiceParams.practice_invoiceable,
+					practice_invoiceable_status: this.practiceParams.practice_invoiceable_status,
+					show_completed: this.showCompleted,
+					show_disputed: this.showDisputed,
 					verified: this.verified,
 					countOnly: true
 				})
 				.then(() => {
-					this.$store.dispatch("billings/fetchBillablePractices", {
-						id: this.practiceParams.id,
-						limit: this.practiceParams.limit,
-						search: this.search,
-						order_by: this.practiceParams.order_by,
-						offset: this.practiceParams.offset,
-            status: this.practiceParams.status,
-            practice_invoiceable_date_start: this.practiceParams.practice_invoiceable_date_start, 
-            practice_invoiceable_date_end: this.practiceParams.practice_invoiceable_date_end, 
-            practice_invoiceable: this.practiceParams.practice_invoiceable,
-						verified: this.verified
-					})
+					this.$store
+						.dispatch("billings/fetchBillablePractices", {
+							has_sage_ref: true,
+							id: this.practiceParams.id,
+							limit: this.practiceParams.limit,
+							search: this.search,
+							order_by: this.practiceParams.order_by,
+							offset: this.practiceParams.offset,
+							status: this.practiceParams.status,
+							type: this.practiceParams.type,
+							hub_type: this.practiceParams.hub_type,
+							billable_spoke: this.practiceParams.billable_spoke,
+							practice_invoiceable_date_start: this.practiceParams
+								.practice_invoiceable_date_start,
+							practice_invoiceable_date_end: this.practiceParams
+								.practice_invoiceable_date_end,
+							practice_invoiceable: this.practiceParams.practice_invoiceable,
+							practice_invoiceable_status: this.practiceParams.practice_invoiceable_status,
+							show_completed: this.showCompleted,
+							show_disputed: this.showDisputed,
+							show_invoiced: this.showInvoiced,
+							show_cancelled: this.showCancelled,
+							verified: this.verified
+						})
+						.then(() => {
+							console.log("billable practices", this.allBillablePractices)
+						})
 				})
+
+
 		},
 
 		sortData: function (toSortBy) {
@@ -824,82 +1197,58 @@ export default {
 			}
 		},
 
-		statusStyle (status) {
-			switch (status) {
-				case "Active":
-					return "bg-green text-white lg:px-10 sm:px-2"
-				case "Inactive":
-					return "bg-yellow text-black lg:px-10 sm:px-2"
-				case "Deactivated":
-					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Suspended":
-					return "bg-red text-white lg:px-8 sm:px-2"
-				case "Dormant":
-					return "bg-green-darker text-white lg:px-8 sm:px-2"
-				default:
-					return
-			}
-    },
+		// statusStyle (status) {
+		// 	switch (status) {
+		// 		case "Active":
+		// 			return "bg-green text-white lg:px-10 sm:px-2"
+		// 		case "Inactive":
+		// 			return "bg-yellow text-black lg:px-10 sm:px-2"
+		// 		case "Deactivated":
+		// 			return "bg-gray text-black lg:px-10 sm:px-2"
+		// 		case "Account Suspension":
+		// 			return "bg-red text-white lg:px-8 sm:px-2"
+		// 		case "Dormant":
+		// 			return "bg-green-darker text-white lg:px-8 sm:px-2"
+		// 		default:
+		// 			return
+		// 	}
+		// },
 
-    pagechanged (page) {
+		pagechanged (page) {
 			this.practiceParams.offset = this.practiceParams.limit * (page - 1)
 			this.currentPage = page
-			this.getPracticesForBulk()
-    },
-    
-    async pageChangedPracticesFinalization (page) {
-      this.practicesFinalizationPage = page
-      this.chosenPracticesFinalization = await this.chosenPractices.slice(
-        (page - 1)*this.practicesFinalizationPerPage,
-         page * this.practicesFinalizationPerPage
-      )
-      this.chosenPracticesFinalization = await this.chosenPracticesFinalization.map(practice => {
-        const practice_invoiceable_approved_filtered_job_parts_sliced = practice.practice_invoiceable_approved_filtered_job_parts.slice(
-          (1 - 1)*this.practicesFilteredJobPartsPerPage,
-          1 * this.practicesFilteredJobPartsPerPage
-        )
-        console.log('inside original chosen practice', practice)
-        return {
-          ...practice,
-          practice_invoiceable_approved_filtered_job_parts_sliced,
-          current_page: 1,
-        }
-      })
-    },
+			this.getBillablePractices()
+		},
 
-    async pageChangedJobPart (page, practiceItem) {
-      const originalPractice = this.chosenPracticesFinalization.find(item => item.id === practiceItem.id)
-      Promise.all([
-        practiceItem.current_page = page,
-        practiceItem.practice_invoiceable_approved_filtered_job_parts_sliced = 
-          originalPractice.job_parts_for_invoicing.slice(
-            (page - 1)*this.practicesFilteredJobPartsPerPage,
-            page * this.practicesFilteredJobPartsPerPage
-          ),
-      ]).then(()=>{
-        const index = this.chosenPracticesFinalization.findIndex(item => item.id === practiceItem.id)
-        this.chosenPracticesFinalization[index] = practiceItem
-      })
-    },
+		reset () {
+			this.invoiceableDateEnd = null
+			this.practiceParams.practice_invoiceable_date_start = null
+			this.practiceParams.practice_invoiceable_date_end = null;
+			(this.practiceParams.type = []),
+				(this.practiceParams.hub_type = []),
+				(this.practiceParams.billable_spoke = null),
+				(this.practiceParams.verified = true),
+				(this.billing_period_date_start = null)
+			this.billing_period_date_end = null
+			this.search = ""
+			this.chosenPracticeJobParts = []
+			this.due_date = ""
+			this.showCompleted = false
+			this.showDisputed = false
+			this.showIndependentSpokesOnly = false
+			this.showDependentSpokesOnly = false
+			this.showStandAloneOnly = false
+			this.showHealthBoardsOnly = false
+			this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
+			this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
+			this.getBillablePractices()
+		},
 
-    reset () {
-      this.practiceParams.practice_invoiceable_date_start =  null
-      this.practiceParams.practice_invoiceable_date_end = null
-      this.invoiceableDateStart = null
-      this.invoiceableDateEnd = null
-      this.search = ""
-      this.chosenPractices = []
-      this.chosenPracticeJobParts = []
-      this.dueDate = ''
-      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES_COUNT")
-      this.$store.commit("billings/CLEAR_BILLABLE_PRACTICES")
-    },
-    
-    clearInvoiceableJobParts () {
-      this.chosenPracticeJobParts = []
-      this.chosenPracticesFinalization = []
-      this.showSessionsModal = false
-    },
+		clearInvoiceableJobParts () {
+			this.chosenPracticeJobParts = []
+			this.chosenPracticesFinalization = []
+			this.showSessionsModal = false
+		},
 
 		sorted (order_by) {
 			// go back to page 1
@@ -907,26 +1256,28 @@ export default {
 			// let query = {
 			// 	...this.$router.query,
 			// 	order_by
-      // }
-      console.log('order_by', order_by)
+			// }
+			console.log("order_by", order_by)
 			this.practiceParams.order_by = order_by
-			this.getPracticesForBulk()
-    },
+			this.getBillablePractices()
+		},
 
-    invoiceStatusStyle (status) {
+		statusStyle (status) {
 			switch (status) {
+				case "Updated":
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-orange-500 text-white"
 				case "Disputed":
-					return "bg-red-500 text-white "
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-500 text-white"
 				case "Invoiced":
-          return "bg-blue-500 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-teal-500 text-white"
 				case "To Be Invoiced":
-					return "bg-indigo-600 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-indigo-600 text-white"
 				case "Completed":
-					return "bg-green-600 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-green-600 text-white"
 				case "Approved":
-          return "bg-blue-600 text-white"
-        case "Cancelled":
-					return "bg-red-600 text-white"
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-blue-600 text-white"
+				case "Cancelled":
+					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-600 text-white"
 				default:
 					return
 			}

@@ -2,7 +2,8 @@
   <div ref="modalContainer" class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg">
     <div class="flex items-center text-sm text-white py-2">
       <nuxt-link 
-        :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`, query: $route.query}">
+        :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`, query: $route.query}"
+      >
         <svgicon
           name="arrow-left-solid"
           height="40"
@@ -12,39 +13,54 @@
       </nuxt-link>
     </div>
     <section class="max-w-lg">
-      <div class="flex flex-col md:flex-row justify-between md:items-center text-white">
-        <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
-          <AppDate
-            v-model="approvedAtDateStart"
-            class="w-full md:w-1/2 md:mx-2"
-            :name="'approved_at_date_start'"
-            :label="'From'"
-          />
-          <AppDate
-            v-model="approvedAtDateEnd"
-            class="w-full md:w-1/2 md:mx-2"
-            :name="'approved_at_date_end'"
-            :label="'To'"
-            :isAfterDate="approvedAtDateStart"
-          />
-          <div class="w-full flex flex-col justify-center items-start">
-            <AppButton
-              class="whitespace-no-wrap"
-              :disabled="approvedAtDateStart && approvedAtDateEnd ? false : true"
-              :label="'Search for Invoices'"
-              :icon="'search'"
-              @click="chooseJobPartsModal = true"
+      <div class="flex lg:flex-row flex-col justify-center">
+        <div class="flex flex-col justify-between md:items-center text-white">
+          <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
+            <AppDate
+              v-model="approvedAtDateStart"
+              class="w-full md:w-1/2 md:mx-2"
+              :name="'approved_at_date_start'"
+              :label="'From'"
             />
-
-            <div class="flex flex-col md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+            <AppDate
+              v-model="approvedAtDateEnd"
+              class="w-full md:w-1/2 md:mx-2"
+              :name="'approved_at_date_end'"
+              :label="'To'"
+              :isAfterDate="approvedAtDateStart"
+            />
+          </div>
+          
+          <div class="flex flex-row md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+            <div class="m-1">
               <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
-              <label for="disputed">Show Disputed Invoices</label>
+              <label for="disputed">Include Disputed Invoices</label>
+            </div>
+            <div class="m-1">
               <input id="completed" v-model="showCompleted" type="checkbox" value="true">
-              <label for="completed">Show Completed Invoices</label>
+              <label for="completed">Include Completed Invoices</label>
+            </div>
+            <div class="m-1">
+              <input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
+              <label for="cancelled">Include Cancelled Invoices</label>
+            </div>
+            <div class="m-1">
+              <input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
+              <label for="invoiced">Include Invoiced Invoices</label>
             </div>
           </div>
         </div>
+        <div class="pt-12">
+          <AppButton
+            class="whitespace-no-wrap"
+            :disabled="approvedAtDateStart && approvedAtDateEnd ? false : true"
+            :label="'Search for Invoices'"
+            :icon="'search'"
+            @click="chooseJobPartsModal = true"
+          />
+        </div>
       </div>
+      
       <!-- v-if="invoiceItems.length > 0 || disputedItems.length > 0"  -->
       <HubzzInvoice
         :forViewing="false"
@@ -52,12 +68,8 @@
         :invoiceItems="invoiceItems"
         :disputedItems="disputedItems"
         @formError="scrollToTop"
+        @goBack="goBack"
       />
-      <!-- :dateStart="date_start"
-      :dateEnd="date_end"-->
-
-      <!-- :filterDateStart="toFilter.approved_at_date_start"
-      :filterDateEnd="toFilter.approved_at_date_end"-->
       <div
         v-if="chooseJobPartsModal == true"
         class="issue-hubzz-invoice-shield"
@@ -73,6 +85,8 @@
           :filter="toFilter"
           :showDisputed="showDisputed"
           :showCompleted="showCompleted"
+          :showCancelled="showCancelled"
+          :showInvoiced="showInvoiced"
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"
         />
@@ -104,13 +118,14 @@ export default {
 			chooseJobPartsModal: false,
       showDisputed: false,
       showCompleted: false,
+      showCancelled: false,
+      showInvoiced: false,
 			approvedAtDateStart: "",
       approvedAtDateEnd: "",
 			toFilter: {
 				job_practice_id: this.$route.params.id,
 				practice_billable_date_start: null,
 				practice_billable_date_end: null,
-				practice_invoiceable_status: 'Approved',
 			},
 
 			practice: "",
@@ -122,7 +137,6 @@ export default {
   
   watch: {
     approvedAtDateStart: function (value) {
-      console.log('value', value)
       if (value > this.approvedAtDateEnd) { 
         this.approvedAtDateEnd = ""
       }
@@ -130,42 +144,31 @@ export default {
     },
     approvedAtDateEnd: function (value) {
       this.toFilter.practice_billable_date_end = value
-      console.log('value datend', value)
     }
   },
 
-	async asyncData ({ app, route }) {
+	async asyncData ({ app, route, error }) {
 		try {
-			let response = await app.$axios.$get(
+      let response = await app.$axios.$get(
 				`/api/v1/admin/practices/${route.params.id}`
 			)
-			const practice = response.data.practice
+      const practice = response.data.practice
+      
+      if (practice.sage_ref === null) {
+        error({
+          statusCode: 403,
+          message: 'That function is not available on this practice.',
+        })
+
+        return
+      }
+			
 			return {
 				practice
 			}
 		} catch (err) {
 			console.log("get practice error", err)
 		}
-	},
-
-	created () {
-		// if (this.showDisputed) {
-		// 	this.toFilter.status = ""
-		// 	this.toFilter.invoice_status = ["Disputed", "Invoiced"]
-		// 	this.toFilter.locum_invoiceable = null
-    // } else if (this.showCompleted) {
-    //   this.toFilter.status = ["Completed"]
-		// 	this.toFilter.locum_invoiceable = null
-    // } else if (this.showDisputed && this.showCompleted) {
-    //   this.toFilter.status = ["Completed", "Approved"]
-    //   this.toFilter.invoice_status = ["Disputed", "Invoiced"]
-    //   this.toFilter.invoice_status = null
-		// 	this.toFilter.locum_invoiceable = null
-    // } else {
-		// 	this.toFilter.status = ["Approved"]
-		// 	this.toFilter.invoice_status = null
-		// 	this.toFilter.locum_invoiceable = true
-		// }
 	},
 	methods: {
 		scrollToTop () {
@@ -179,10 +182,8 @@ export default {
       this.invoiceItems = []
 
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        console.log("chosenJobPart", chosenJobParts[i])
         const roundedHours = Math.floor((chosenJobParts[i].final_hours)/60)
         const minutes = Math.round(((chosenJobParts[i].final_hours/60) - roundedHours) * 60)
-        console.log("minutes "+minutes)
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
           job_part_id: chosenJobParts[i].id,
@@ -203,16 +204,18 @@ export default {
 					total: parseFloat(
 						(chosenJobParts[i].final_hours/60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
 					).toFixed(2)
-				}
+        }
 
-				if (chosenJobParts[i].invoice_status === "Invoiced") {
+				if (chosenJobParts[i].invoice_status === "Invoiced" || chosenJobParts[i].invoice_status === "Approved" || chosenJobParts[i].invoice_status === "To Be Invoiced") {
           newItem.id = this.invoiceItems.length + 1
 					this.invoiceItems.push(newItem)
         } 
         if (chosenJobParts[i].invoice_status === "Disputed") {
           newItem.id = this.disputedItems.length + 1
 					this.disputedItems.push(newItem)
-				}
+        }
+        
+        
       }
 		},
 
@@ -220,9 +223,8 @@ export default {
 			const query = {
 				...this.$route.query
       }
-      console.log('go back params id',this.$route.params.id)
 			await this.$router.push({
-				path: `/billings/${this.$route.params.id}/hubzz-invoices`,
+				path: `/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`,
 				query
 			})
 		}

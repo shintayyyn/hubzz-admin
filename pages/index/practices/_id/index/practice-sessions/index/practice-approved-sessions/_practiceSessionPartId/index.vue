@@ -5,9 +5,11 @@
         <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </nuxt-link>
     </div>
-    <PracticeSessionModal :job_part="job_part" :job="job_part.job" />
+
+    <PracticeSessionModal :jobPart="job_part" :job="job_part ? job_part.job : null" />
   </div>
 </template>
+
 <script>
 import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
 export default {

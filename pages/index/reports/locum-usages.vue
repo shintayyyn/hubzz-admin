@@ -18,22 +18,51 @@
       <div
         class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
       >
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="locumNameIncludes"
-            placeholder="Search Locum Name"
-            type="text"
-            label="Locum Name"
-          />
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="practiceNameIncludes"
+              placeholder="Search Practice Name"
+              type="text"
+              label="Practice Name"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="locumNameIncludes"
+              placeholder="Search Locum Name"
+              type="text"
+              label="Locum Name"
+            />
+          </div>
+
+          <div class="mt-1 md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="areaPostCode"
+              placeholder="Search Area Post Code"
+              type="text"
+              label="Area Postcode"
+            />
+          </div>
         </div>
 
-        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-          <AppInput
-            v-model="areaPostCode"
-            placeholder="Search Area Post Code"
-            type="text"
-            label="Area Postcode"
-          />
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="dateStart"
+              label="Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
+
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppDate
+              v-model="dateEnd"
+              label="Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
         </div>
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
@@ -56,13 +85,15 @@
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
+
         <div>
           <label class="text-white">Page: </label>
+
           <select v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
@@ -74,42 +105,50 @@
       <ReportTable
         :limit="limit"
         :items="locumUsages"
-        :getItemKey="(item) => `${item.locum_user_id}-${item.practice_id}`"
+        :getItemKey="item => `${item.locum_user_id}-${item.practice_id}`"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination
-        :count="count" 
-        :pages="pages" 
-        :page="activePage"
-        @page="setPage" 
-      />
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-white w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderByProcessed }}
+            </div>
+          </div>
+        </div>
+        <ReportPagination
+          :count="count" 
+          :pages="pages" 
+          :page="activePage"
+          @page="setPage" 
+        />
+      </div>
 
       <div
+        v-if="authAdminPermissions.includes('Generate Reports')"
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || locumUsages.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="locumUsages.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
             <span>Download CSV</span>
           </button>
         </div>
-      </div>
-
-
-      <div v-if="true" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
     </div>
   </div>
@@ -120,12 +159,14 @@
   import ReportPagination from '@/components/Reports/ReportPagination'
   import AppInput from '@/components/Base/AppInput'
   import AppButton from '@/components/Base/AppButton'
+  import AppDate from '@/components/Base/AppDate'
   export default {
     components: {
       ReportTable,
       ReportPagination,
       AppInput,
       AppButton,
+      AppDate,
     },
 
     data () {
@@ -135,6 +176,7 @@
         downloading: false,
         locumUsages: [],
         orderBy: [],
+        orderByProcessed: '',
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -161,12 +203,24 @@
         ],
         activePage: 1,
 
+        practiceNameIncludes: '',
         locumNameIncludes: '',
         areaPostCode: '',
+        dateStart: '',
+        dateEnd: '',
       }
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.locumUsages.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
       offset () {
         return this.activePage * this.limit - this.limit
       },
@@ -186,7 +240,7 @@
             title: 'Locum',
             key: 'locum_user_name',
             sort_key: 'locum_user_name',
-            column: (item) => item.locum_user_name,
+            column: item => item.locum_user_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -195,7 +249,7 @@
             title: 'Practice',
             key: 'practice_name',
             sort_key: 'practice_name',
-            column: (item) => item.practice_name,
+            column: item => item.practice_name,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -204,7 +258,7 @@
             title: 'Total Hours Assigned/Completed or Approved',
             key: 'completed_terminated_job_part_total_hours',
             sort_key: 'completed_terminated_job_part_total_hours',
-            column: (item) => (parseFloat(item.completed_terminated_job_part_total_hours)/60).toFixed(2) + ' Hours',
+            column: item => (parseFloat(item.completed_terminated_job_part_total_hours)/60).toFixed(2),
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -213,7 +267,7 @@
             title: 'Min Rate per Hour',
             key: 'min_rate_per_hour',
             sort_key: 'min_rate_per_hour',
-            column: (item) => item.min_rate_per_hour,
+            column: item => `£ ${item.min_rate_per_hour}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -222,7 +276,7 @@
             title: 'Min Rate per Half Day Session',
             key: 'min_rate_per_half_day_session',
             sort_key: 'min_rate_per_half_day_session',
-            column: (item) => item.min_rate_per_half_day_session,
+            column: item => `£ ${item.min_rate_per_half_day_session}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -231,25 +285,34 @@
             title: 'Min Rate per Whole Day Session',
             key: 'min_rate_per_whole_day_session',
             sort_key: 'min_rate_per_whole_day_session',
-            column: (item) => item.min_rate_per_whole_day_session,
+            column: item => `£ ${item.min_rate_per_whole_day_session}`,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
-            title: 'Marked as Favourite',
+            title: 'Locum is Marked as Favourite by Practice',
             key: 'locum_is_favorite_of_practice',
             sort_key: 'locum_is_favorite_of_practice',
-            column: (item) => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
+            column: item => item.locum_is_favorite_of_practice ? 'Yes' : 'No',
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Practice is Marked as Favourite of Locum',
+            key: 'practice_is_favorite_of_locum',
+            sort_key: 'practice_is_favorite_of_locum',
+            column: item => item.practice_is_favorite_of_locum ? 'Yes' : 'No',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
           {
             title: 'Area',
-            key: 'locum_postcode',
-            sort_key: 'locum_postcode',
-            column: (item) => item.locum_postcode,
+            key: 'postcode',
+            sort_key: 'postcode',
+            column: item => item.postcode,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -263,7 +326,16 @@
     },
 
     watch: {
-      orderBy () {
+      orderBy (value) {
+        let replaced = ''
+        if(value.length > 0) {
+          replaced = value[0].replace(/_/g, ' ')
+          replaced = replaced.replace(/:/g, ' - ')
+          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          replaced = replaced.replace('Desc', 'Descending')
+          replaced = replaced.replace('Asc', 'Ascending')
+        } 
+        this.orderByProcessed = replaced
         this.getPracticeLocums()
       },
 
@@ -279,15 +351,20 @@
 
     mounted () {      
       const {
+        practice_name_includes: practiceNameIncludes,
         locum_name_includes: locumNameIncludes,
-        area: areaPostCode,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
+        date_start: dateStart,
+        date_end: dateEnd,
         page,
       } = this.$route.query
 
+      this.practiceNameIncludes = practiceNameIncludes ? practiceNameIncludes : ''
       this.locumNameIncludes = locumNameIncludes ? locumNameIncludes : ''
       this.areaPostCode = areaPostCode ? areaPostCode : ''
-
+      this.dateStart = dateStart ? dateStart : ''
+      this.dateEnd = dateEnd ? dateEnd : ''
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
 
@@ -296,8 +373,11 @@
 
     methods: {
       filterReset () {
+        this.practiceNameIncludes = ''
         this.locumNameIncludes = ''
         this.areaPostCode = ''
+        this.dateStart = ''
+        this.dateEnd = ''
 
         this.filterSearch()
       },
@@ -307,8 +387,11 @@
 
         const query = {
           ...this.$route.query,
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          area: this.areaPostCode ? this.areaPostCode : undefined,
+          area_includes: this.areaPostCode ? this.areaPostCode : undefined,
+          date_start: this.dateStart ? this.dateStart : undefined,
+          date_end: this.dateEnd ? this.dateEnd : undefined,
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -362,8 +445,11 @@
         this.locumUsages = []
 
          const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          date_start: this.dateStart ? this.dateStart : '',
+          date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
         }
 
         Promise.all([
@@ -402,8 +488,11 @@
       downloadCsv () {
         this.downloading = true
         const params = {
+          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          date_start: this.dateStart ? this.dateStart : '',
+          date_end: this.dateEnd ? this.dateEnd : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

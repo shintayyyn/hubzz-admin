@@ -50,7 +50,9 @@
               required
               @blur="CheckEmptyField(toPostUser.last_name, 'last_name')"
             />
-            <AppInput 
+
+            <AppInput
+              v-if="false"
               v-model="toPostUser.suffix"
               :type="'text'"
               :label="'Suffix'"
@@ -149,7 +151,7 @@
               :label="'Post Code'"
               :items="postCodes"
             /> -->
-              <AppPostCode
+              <AppSuggestSelect
                 v-model="toPostUser.postcode"
                 :url-index="'/api/v1/postcode-coordinates'"
                 :name="'postcode'"
@@ -209,10 +211,11 @@
               />
               <AppInput 
                 v-model="toPostUser.sort_code"
-                :type="'text'"
+                :type="'numberDash'"
                 :label="'Sort Code'"
                 :placeholder="'Sort Code'"
                 :error="formError.find(item => item.field === 'sort_code')"
+                :limit="8"
                 required
                 @blur="CheckEmptyField(toPostUser.sort_code, 'sort_code')"
               />
@@ -222,6 +225,7 @@
                 :label="'Account Number'"
                 :placeholder="'Account Number'"
                 :error="formError.find(item => item.field === 'account_number')"
+                :limit="8"
                 required
                 @blur="CheckEmptyField(toPostUser.account_number, 'account_number')"
               />
@@ -343,7 +347,10 @@
             />
             <!-- ADMIN ROLES ; IF ADMIN IS BEING CREATED ENDS HERE -->
 
-            <AppButton :label="'Create'" @click="checkForm(toPostUser, toPostUser.surgery_id)" />
+            <AppButton 
+              :label="'Create'" 
+              @click="checkForm(toPostUser, toPostUser.surgery_id)" 
+            />
           </div>
         </div>
       </div>
@@ -356,7 +363,7 @@
   import debounce from "lodash.debounce"
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
-  import AppPostCode from "@/components/Base/AppPostCode"
+  import AppSuggestSelect from "@/components/Base/AppSuggestSelect"
   import AppDate from "@/components/Base/AppDate"
   import AppFormError from "@/components/Base/AppFormError"
 
@@ -365,7 +372,7 @@
       AppDate,
       AppInput,
       AppButton,
-      AppPostCode,
+      AppSuggestSelect,
       AppFormError,
     },
     
@@ -460,6 +467,17 @@
     },
 
     watch: {
+      "toPostUser.sort_code" (value) {
+        let final = ''
+        if (value && value.length > 0) {
+          let digit = value.split('-').join('')
+
+          final = digit.match(/.{1,2}/g).join('-')
+          this.toPostUser.sort_code = final
+        } else {
+          return ''
+        }
+      },
       "toPostUser.username" () {
         const index = this.formError.findIndex(formError => formError.field === 'username')
 
@@ -544,7 +562,7 @@
             this.formError.push(error)
           }
         } else {
-          let confirm_index = this.formError.findIndex(
+            let confirm_index = this.formError.findIndex(
               item => item.field === "password_confirmation"
             )
             let password_index = this.formError.findIndex(
@@ -684,33 +702,12 @@
         })
       },
 
-      getPracticeUsers () {
-        this.$store.dispatch("practices/fetchPractices", {
-          countOnly: true,
-          limit: 5,
-          practice_id: this.practice ? this.practice.id : ""
-        })
-        this.$store.dispatch("practices/fetchPracticeUsers", {
-          limit: 5,
-          practice_id: this.practice ? this.practice.id : "",
-          order_by: "created_at:desc"
-        })
-      },
-
       getAdminUsers () {
         this.$store.dispatch("adminusers/fetchAdminUsersCount", {})
         this.$store.dispatch("adminusers/fetchAdminUsers", {
           limit: 10
         })
         this.$store.commit("adminusers/ADD_ADMIN_USER", this.toPostUser)
-      },
-
-      updatePracticeUsersPageCount () {
-        let payload = {
-          userCount: this.userCount,
-          perPage: 5
-        }
-        this.$store.commit("practices/UPDATE_PRACTICE_USERS_PAGE_COUNT", payload)
       },
 
       errorMessage (field) {
@@ -799,7 +796,8 @@
 
           console.log('formError', this.formError)
 
-          this.$nextTick(() => {
+          this.$nextTick(() => { // here
+            console.log(this.$refs.modalContainer)
             this.$refs.modalContainer.scrollTop = 0
           })
 
@@ -888,7 +886,7 @@
           let message = null
 
           if (err.response) {
-            if (err.response.status === 400 || err.response.data.error_messages) {
+            if (err.response.status === 400 && err.response.data.error_messages) {
               this.formError = err.response.data.error_messages
             } else {
               message = err.response.data.message
@@ -920,7 +918,7 @@
       async createPractice (data) {
         await this.$axios.post(`/api/v1/admin/practices`, data)
 
-        this.$router.push('/practices/pending-practices')
+        this.$router.push('/practices')
         
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
@@ -936,21 +934,19 @@
       },
 
       async createPracticeUser (data) {
-        await this.$axios.post(`/api/v1/admin/practice-users`, data)
+        const response = await this.$axios.post(`/api/v1/admin/practice-users`, data)
+
+        const practiceUser = response.data.data.user
+
+        this.$emit('userCreated', practiceUser)
+
+        this.$emit('close')
 
         this.$store.commit('SET_NOTIFICATION', {
           enabled: true,
           status: 'success',
           text: 'Added new user.',
         })
-
-        this.$emit('userCreated')
-
-        this.$emit('close')
-
-        await this.getPracticeUsers()
-
-        await this.updatePracticeUsersPageCount()
       },
 
       async createAdminUser (data) {

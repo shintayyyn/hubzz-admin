@@ -1,5 +1,5 @@
 <template>
-	<div class="role-modal">
+	<div ref="modalContainer" class="role-modal">
 		<div class="p-4 md:p-6 text-white">
 			<div class="pb-4">
 				<svgicon
@@ -59,63 +59,105 @@
 			</div>
 			<!-- SHOW ROLE PERMISSIONS -->
 			<div class="my-2 md:my-4" v-if="editingPermissions == false">
-				<div class="flex flex-wrap overflow-hidden">
+				<div class="masorny-container three overflow-hidden">
 					<div
-						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						class="item pb-3 md:pt-1"
 						v-if="rolePermissions.find(permission => permission.category === 'Locum')"
 					>
 						<div class="text-lg font-semibold">Locum Management</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
 							:key="`permission-${index}`"
-							class="px-2"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
 						>{{ permission.category === "Locum" ? permission.name : null }}</div>
 					</div>
 					<div
-						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						class="item pb-3 md:pt-1"
 						v-if="rolePermissions.find(permission => permission.category === 'Practice')"
 					>
 						<div class="text-lg font-semibold">Practice Management</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
 							:key="`permission-${index}`"
-							class="px-2"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
 						>{{ permission.category === "Practice" ? permission.name : null }}</div>
 					</div>
 					<div
-						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						class="item pb-3 md:pt-1"
 						v-if="rolePermissions.find(permission => permission.category === 'Billing')"
 					>
 						<div class="text-lg font-semibold">Billing and Reports Management</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
 							:key="`permission-${index}`"
-							class="px-2"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
 						>{{ permission.category === "Billing" ? permission.name : null }}</div>
 					</div>
 					<div
-						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
-						v-if="rolePermissions.find(permission => permission.category === 'Misc')"
+						class="item pb-3 md:pt-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Miscellaneous')"
 					>
 						<div class="text-lg font-semibold">Miscellaneous</div>
 						<div
 							v-for="(permission, index) in rolePermissions"
 							:key="`permission-${index}`"
-							class="px-2"
-						>{{ permission.category === "Misc" ? permission.name : null }}</div>
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+						>{{ permission.category === "Miscellaneous" ? permission.name : null }}</div>
 					</div>
 					<div
-						class="w-full md:w-1/2 xl:w-1/5 overflow-hidden pb-3 md:p-1"
+						class="item pb-3 md:pt-1"
 						v-if="rolePermissions.find(permission => permission.category === 'User')"
 					>
 						<div class="text-lg font-semibold">User Management</div>
-						<div v-for="(permission, index) in rolePermissions" :key="`permission-${index}`" class="px-2">
-							{{
-							permission.category === "User"
-							? permission.name
-							: null
-							}}
-						</div>
+						<div
+							v-for="(permission, index) in rolePermissions"
+							:key="`permission-${index}`"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+						>{{permission.category === "User" ? permission.name: null}}</div>
+					</div>
+					<div
+						class="item pb-3 md:pt-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Change Email Requests')"
+					>
+						<div class="text-lg font-semibold">Change Email Requests Management</div>
+						<div
+							v-for="(permission, index) in rolePermissions"
+							:key="`permission-${index}`"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+						>{{permission.category === "Change Email Requests" ? permission.name: null}}</div>
+					</div>
+					<div
+						class="item pb-3 md:pt-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Reports')"
+					>
+						<div class="text-lg font-semibold">Reports Management</div>
+						<div
+							v-for="(permission, index) in rolePermissions"
+							:key="`permission-${index}`"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+						>{{ permission.category === "Reports"? permission.name: null}}</div>
+					</div>
+					<div
+						class="item pb-3 md:pt-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Standard Terms')"
+					>
+						<div class="text-lg font-semibold">Standard Terms Management</div>
+						<div
+							v-for="(permission, index) in rolePermissions"
+							:key="`permission-${index}`"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+						>{{permission.category === "Standard Terms"? permission.name: null}}</div>
+					</div>
+					<div
+						class="item pb-3 md:pt-1"
+						v-if="rolePermissions.find(permission => permission.category === 'Referral Lottery')"
+					>
+						<div class="text-lg font-semibold">Referral Lottery Management</div>
+						<div
+							v-for="(permission, index) in rolePermissions"
+							:key="`permission-${index}`"
+							:class="permission.name.includes('View') ? 'text-sm mx-2' : 'text-sm mx-6'"
+						>{{permission.category === "Referral Lottery"? permission.name: null}}</div>
 					</div>
 				</div>
 			</div>
@@ -183,8 +225,8 @@
 						</div>
 					</div>
 				</div>-->
-				<div class="flex flex-wrap justify-start">
-					<div class="w-full md:w-1/2 p-2" v-for="(role, index) in permissions" :key="index">
+				<div class="masorny-container three">
+					<div class="item p-2" v-for="(role, index) in permissions" :key="index">
 						<div class="flex flex-col">
 							<div class="w-full flex flex-row items-center pb-1">
 								<input
@@ -201,6 +243,8 @@
 							</div>
 
 							<div v-for="(item, index) in hierarchyPermissions" :key="index">
+								<!-- {{item.category}}
+								{{item.permissions}}-->
 								<template v-if="role.category === item.category">
 									<div class="w-full p-2">
 										<div class="flex flex-col w-full">
@@ -215,12 +259,12 @@
 														type="checkbox"
 														:id="permission.id"
 														:checked="permission.done"
-														@change="onChangeCategory(index, item.permissions, $event.target.checked)"
+														@change="onChangeCategory(index, item.permissions, $event.target.checked, permission.name)"
 													/>
 													<label
 														:for="permission.id"
 														class="text-sm pl-1"
-														:class="index === 0  ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
+														:class="permission.name.includes('View') ? '' : item.permissions.length > 1 ? 'ml-8' : ''"
 													>{{permission.name}}</label>
 												</div>
 											</div>
@@ -249,7 +293,7 @@ export default {
 			rolePermissions: [],
 			allPermissions: [],
 			editingPermissions: false,
-
+			motherPermissions: ["View Locums", "View Practices", ""],
 			permissions: [],
 			hierarchyPermissions: [],
 
@@ -428,10 +472,12 @@ export default {
 					}
 				});
 			});
+
 			this.setHierarchy(subCategories);
 		},
-		setHierarchy(subCategories) {
-			this.permissions.forEach(item => {
+		async setHierarchy(subCategories) {
+			console.log("set hierarchy subcategories", subCategories);
+			await this.permissions.forEach(item => {
 				item.permissions.forEach(permission => {
 					let findSub = subCategories.find(
 						sub =>
@@ -441,10 +487,11 @@ export default {
 					findSub.permissions.push(permission);
 				});
 			});
-			this.hierarchyPermissions = subCategories;
+
+			this.hierarchyPermissions = await subCategories;
 		},
-		onChangeCategory(index, permissions, e) {
-			if (index === 0) {
+		onChangeCategory(index, permissions, e, permission) {
+			if (permission.includes("View") || index === 0) {
 				permissions.forEach(item => {
 					item.done = e;
 				});
@@ -458,15 +505,16 @@ export default {
 			}
 		},
 		isChecked(permissions, category) {
-			let checkedPermissions = []
-			checkedPermissions = permissions.filter( item => item.done === true)
-			if(checkedPermissions.length > 0) {
-				return true
-			} else {
-				return false
-			}
 			// console.log('hierarchy permissions', this.hierarchyPermissions)
-			// // return !permissions.map(item => item.done).includes(false);
+			let checkedPermissions = [];
+			checkedPermissions = permissions.filter(item => item.done === true);
+			if (checkedPermissions.length > 0) {
+				return true;
+			} else {
+				return false;
+			}
+
+			// return !permissions.map(item => item.done).includes(false);
 			// let parents = [];
 			// let filter = this.hierarchyPermissions.filter(
 			// 	item => item.category === category
@@ -483,6 +531,7 @@ export default {
 		},
 
 		save() {
+			this.formError = [];
 			let ids = [];
 			this.permissions.forEach(item => {
 				item.permissions.forEach(permission => {
@@ -492,23 +541,36 @@ export default {
 				});
 			});
 			this.form.permission_id = ids;
-			this.$axios
-				.$put(
-					`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,
-					this.form
-				)
-				.then(res => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Role Updated Successfully"
+			this.Validate(this.form);
+			if (!this.formError.length) {
+				this.$axios
+					.$put(
+						`/api/v1/admin/admin-roles/${this.$route.params.roleId}`,
+						this.form
+					)
+					.then(res => {
+						this.$store.commit("SET_NOTIFICATION", {
+							enabled: true,
+							status: "success",
+							text: "Role Updated Successfully"
+						});
+						this.getRoles(res.data.role);
+						// this.$emit("updateRole", res.data.role);
+						// this.role.name = res.data.role.name;
+						// this.role.description = res.data.role.description;
+						this.editingPermissions = false;
 					});
-					this.getRoles(res.data.role);
-					// this.$emit("updateRole", res.data.role);
-					// this.role.name = res.data.role.name;
-					// this.role.description = res.data.role.description;
-					this.editingPermissions = false;
+			} else {
+				console.log("form error", this.formError);
+				this.$nextTick(() => {
+					this.$refs.modalContainer.scrollTop = 0;
 				});
+				// this.$store.commit("SET_NOTIFICATION", {
+				// 	enabled: true,
+				// 	status: "danger",
+				// 	text: "Something went wrong!"
+				// });
+			}
 		}
 	}
 };

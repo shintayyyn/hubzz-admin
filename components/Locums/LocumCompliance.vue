@@ -21,58 +21,218 @@
         </div>
       </div>
     </div>
-    <!--GMC / NMC NUMBER-->
-    <div 
-      v-for="(item, index) in referenceCompDocs" :key="`item-${index}`"
-      class="flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center mx-4 md:mx-8 px-4 py-4 text-sm text-white shadow-lg rounded-lg bg-waterloo mt-3"
+
+    <input
+      ref="inputFile"
+      type="file"
+      class="hidden"
+      @input="fileChangedHandler"
+      @click.stop
     >
-      <div class="flex flex-col sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-        <span :class="item && item.compliance_document_name ? 'truncate' : 'break-word'">{{ item ? item.compliance_document_name : null }}</span>
-      </div>
-      <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-        <span :class="item && item.reference ? 'truncate' : 'break-word'">{{ item ? item.reference : null }}</span>
-      </div>
-      <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-        <span v-if="item.status === 'Rejected'" class="break-word">
-          Reason for Rejection: {{ item && item.note ? item.note : null }}
-        </span>
-      </div>
 
-      <div class="flex flex-col md:justify-center md:items-center sm:w-1/2 md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
-        <div
-          v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" 
-          class="flex justify-end mt-2 sm:m-0"
+    <input
+      ref="newInputFile"
+      type="file"
+      class="hidden"
+      @input="newFileChangedHandler"
+      @click.stop
+    >
+
+    <!--GMC / NMC NUMBER-->
+    <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
+      <div v-for="(item, index) in referenceCompDocs" :key="`item-${index}`">
+        <nuxt-link 
+          :event="item.file == null ? disabled :'click'" 
+          :class="item.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+          :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
+          class="
+            flex flex-col md:items-center md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
+            text-white no-underline shadow-lg bg-waterloo
+          "
+          draggable="false"
         >
-          <button
-            class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
-            :class="`${item.status === 'Verified' ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
-            @click.prevent="item.status === 'Verified' ? null : toUpdateReferenceNums(item.id,'Approved')"
-          >
-            {{ item.status == 'Verified' ? 'Verified' : 'Verify' }}
-          </button>
-          <button
-            class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
-            :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'}`"
-            @click.prevent="item.status === 'Rejected' ? null : toRejectReferenceNums(item.id)"
-          >
-            {{ item.status == 'Rejected' ? 'Rejected' : 'Reject' }}
-          </button>
-        </div>
-        <div v-else>
-          <div
-            class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
-            :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
-          >
-            {{ item.status }}
+          <div class="flex flex-col md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+            <span :class="item && item.compliance_document_name ? 'truncate' : 'break-word'">
+              {{ item ? item.compliance_document_name : null }}
+            </span>
           </div>
+
+          <div class="flex flex-col md:justify-center md:items-center md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+            <span :class="item && item.reference ? 'truncate' : 'break-word'">{{ item ? item.reference : null }}</span>
+          </div>
+
+          <div v-if="item.status === 'Rejected'" class="flex flex-col md:justify-center md:items-center md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+            <span class="break-word">
+              Reason for Rejection: {{ item && item.note ? item.note : null }}
+            </span>
+          </div>
+
+          <div class="flex-1 flex flex-col md:flex-row md:justify-end md:items-center md:w-1/4 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+            <div
+              v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
+              class="flex flex-wrap md:justify-end mt-2 sm:m-0"
+            >
+              <button
+                v-if="item.file"
+                class="
+                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  rounded-full focus:outline-none
+                  bg-transparent px-2
+                "
+                @click.prevent="locumComplianceDocumentId = item.id, $refs.inputFile.click()"
+              >
+                {{ updatingFile && locumComplianceDocumentId === item.id ? 'Updating File...' : 'Update File' }}
+              </button>
+              
+              <button
+                v-if="!item.file"
+                class="
+                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  rounded-full focus:outline-none
+                  bg-transparent px-2
+                "
+                @click.prevent="locumComplianceDocumentId = item.id, $refs.inputFile.click()"
+              >
+                {{ updatingFile && locumComplianceDocumentId === item.id ? 'Uploading File...' : 'Upload File' }}
+              </button>
+
+              <button
+                v-if="item.status === 'Verified'"
+                class="
+                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  rounded-full focus:outline-none
+                  bg-green-500 border-green-500 text-white px-4 text-center cursor-default
+                "
+                @click.prevent
+              >
+                Verified
+              </button>
+
+              <button
+                v-if="item.status !== 'Verified'"
+                class="
+                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  rounded-full focus:outline-none
+                  bg-transparent px-2 hover:bg-green-500 hover:border-green-600
+                "
+                @click.prevent="toUpdateReferenceNums(item.id, 'Approved')"
+              >
+                Verify
+              </button>
+
+              <button
+                class="
+                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white focus:bg-red-600
+                  rounded-full focus:outline-none
+                "
+                :class="[
+                  item.status === 'Rejected'
+                    ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default'
+                    : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'
+                ]"
+                @click.prevent="item.status === 'Rejected' ? null : locumReferenceComplianceDocumentIdToRejectId = item.id"
+              >
+                {{ item.status == 'Rejected' ? 'Rejected' : 'Reject' }}
+              </button>
+            </div>
+
+            <div
+              v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
+            >
+              <div
+                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
+                :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
+              >
+                {{ item.status }}
+              </div>
+            </div>
+          </div>
+        </nuxt-link>
+
+        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
+          <nuxt-link
+            v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
+            :event="childItem.file == null ? disabled :'click'" 
+            :class="childItem.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+            :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
+            class="
+              flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
+              text-white no-underline shadow-lg bg-waterloo items-center
+            "
+            draggable="false"
+          >
+            <div class="flex flex-col md:w-1/2 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+              <span :class="childItem && childItem.compliance_document_name ? 'truncate' : 'break-word'">
+                {{ childItem ? childItem.compliance_document_name : null }}
+              </span>
+            </div>
+
+            <div class="flex flex-col md:flex-row md:justify-end md:items-center md:w-1/2 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+              <div
+                v-if="authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number')" 
+                class="flex flex-wrap md:justify-end mt-2 sm:m-0"
+              >
+                <button
+                  v-if="childItem.file"
+                  class="
+                    w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                    rounded-full focus:outline-none
+                    bg-transparent px-2
+                  "
+                  @click.prevent="locumComplianceDocumentId = childItem.id, $refs.inputFile.click()"
+                >
+                  {{ updatingFile && locumComplianceDocumentId === childItem.id ? 'Updating File...' : 'Update File' }}
+                </button>
+
+                <button
+                  v-if="!childItem.file"
+                  class="
+                    w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                    rounded-full focus:outline-none
+                    bg-transparent px-2
+                  "
+                  @click.prevent="complianceDocumentId = childItem.compliance_document_id, $refs.newInputFile.click()"
+                >
+                  {{ uploadingFile && complianceDocumentId === childItem.compliance_document_id ? 'Uploading File...' : 'Upload File' }}
+                </button>
+              </div>
+
+              <div
+                v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
+              >
+                <div
+                  class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
+                  :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
+                >
+                  {{ item.status }}
+                </div>
+              </div>
+            </div>
+          </nuxt-link>
         </div>
       </div>
+    </div>
+    <!--GMC / NMC NUMBER ENDS HERE-->
 
-      <div v-if="rejectGmcNmc === true" class="note-modal">
-        <div class="flex flex-col w-full p-4">
-          <p class="mb-2">
-            Reason for Rejection
-          </p>
+    <div v-if="locumReferenceComplianceDocumentIdToRejectId" class="note-modal text-sm text-white">
+      <div class="flex flex-col w-full p-4">
+        <p v-if="false" class="mb-2">
+          Reason for Rejection
+        </p>
+
+        <AppInput
+          v-model="selectedComplianceDocumentRejectReasonValue"
+          class="w-full mr-2"
+          :type="'select'"
+          :name="'complianceNote'"
+          :placeholder="'Select...'"
+          :items="complianceDocumentRejectReasonSeletionList"
+          :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formErrors.find(item => item.field === 'note')"
+          :label="'Reason for Rejection'"
+          required
+        />
+
+        <template v-if="selectedComplianceDocumentRejectReasonValue === ''">
           <div class="border rounded-lg p-2 h-full w-full">
             <textarea
               v-model="notes" 
@@ -82,26 +242,38 @@
               maxlength="255"
             />
           </div>
+
           <p class="text-sm text-right">
             {{ notes.length }}/255
           </p>
-          <div class="flex justify-end mt-2">
-            <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none" @click.prevent="toUpdateReferenceNums(referenceCompDocId, 'Rejected', notes)">
-              <span>Confirm</span>
-            </button>
-            <button class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none" @click.prevent="rejectGmcNmc = false">
-              <span>Cancel</span>
-            </button>
+
+          <div v-if="formErrors.find(item => item.field === 'note')" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
+            {{ formErrors.find(item => item.field === 'note').message }}
           </div>
+        </template>
+
+        <div class="flex justify-end mt-2">
+          <button
+            class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+            @click.prevent="toUpdateReferenceNums(locumReferenceComplianceDocumentIdToRejectId, 'Rejected', notes)"
+          >
+            <span>Confirm</span>
+          </button>
+          <button
+            class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none"
+            @click.prevent="locumReferenceComplianceDocumentIdToRejectId = null"
+          >
+            <span>Cancel</span>
+          </button>
         </div>
       </div>
     </div>
-    <!--GMC / NMC NUMBER ENDS HERE-->
 
     <!-- MANDATORY -->
     <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">
       Mandatory
     </p>
+
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <!-- HEADER --> 
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -159,26 +331,18 @@
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-            <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
+            <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
             </span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-            <span class="break-all">
-              {{ item && item.expired_at 
-                ? $moment(item.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
-                : null }}
-            </span>
+            <span class="break-all">{{ item.expired_at_in_gb_formatted }}</span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-            <span class="break-all">
-              {{ (item && item.expired_at) && item.status !== "Expired" 
-                ? $moment(item.expired_at).diff($moment(), 'days')  
-                : null }}
-            </span>
+            <span class="break-all">{{ item.days_to_expire }}</span>
           </div>
 
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -225,26 +389,18 @@
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-              <span>{{ childItem && childItem.file ? childItem.uploaded_at_formatted : null }}
+              <span>{{ childItem && childItem.file ? childItem.uploaded_at_in_gb_formatted : null }}
               </span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-              <span class="break-all">
-                {{ childItem && childItem.expired_at 
-                  ? $moment(childItem.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
-                  : null }}
-              </span>
+              <span class="break-all">{{ childItem.expired_at_in_gb_formatted }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-              <span class="break-all">
-                {{ childItem && childItem.expired_at 
-                  ? $moment(childItem.expired_at).diff($moment(), 'days')  
-                  : null }}
-              </span>
+              <span class="break-all">{{ childItem.days_to_expire }}</span>
             </div>
 
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
@@ -273,6 +429,7 @@
     <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">
       Optional
     </p>
+
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <!-- HEADER --> 
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -328,26 +485,18 @@
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-          <span>{{ item && item.file ? item.uploaded_at_formatted : null }}
+          <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
           </span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
-          <span class="break-all">
-            {{ item && item.expired_at 
-              ? $moment(item.expired_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a')
-              : null }}
-          </span>
+          <span class="break-all">{{ item.expired_at_in_gb_formatted }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
-          <span class="break-all">
-            {{ item && item.expired_at 
-              ? $moment(item.expired_at).diff($moment(), 'days')  
-              : null }}
-          </span>
+          <span class="break-all">{{ item.days_to_expire }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -368,11 +517,13 @@
     <p class=" text-sm text-white px-4 md:px-8 md:pt-8 font-semibold">
       Mandatory Trainings
     </p>
+
     <div v-if="locumMandatoryTrainings.length === 0" class="mb-8">
       <div class="w-full text-white font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8">
         This locum has not uploaded any Mandatory Training Documents.
       </div>
     </div>
+
     <!-- TABLE RESPONSIVE MANDATORY TRAININGS-->
     <div v-if="locumMandatoryTrainings.length > 0" class="w-full overflow-x-auto p-4 md:px-8 md:py-2"> 
       <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
@@ -412,7 +563,7 @@
           : document.practiceSpecificDoc.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYYY, h:mm:ss a'):null }} -->
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
-          <span class="break-all">{{ item.file ? $moment(item.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a'): null }}</span>
+          <span class="break-all">{{ item.uploaded_at_in_gb_formatted }}</span>
         </div>
 
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
@@ -422,7 +573,7 @@
             :class="statusStyle(item && item.file ? 'Present' : 'Empty')"
           >
             <span>
-              {{ item && item.file ? 'Present' : 'Empty' }}
+              {{ item && item.file ? 'Uploaded' : 'Not Uploaded' }}
             </span>
           </div>
         </div>
@@ -430,20 +581,33 @@
       <!-- END BODY -->
     </div>
     
-    <div v-if="rejectGmcNmc" class="shield" @click="rejectGmcNmc=false" />
+    <div
+      v-if="locumReferenceComplianceDocumentIdToRejectId"
+      class="shield"
+      @click="locumReferenceComplianceDocumentIdToRejectId = null"
+    />
+
     <nuxt-child />
   </div>
 </template>
+
 <script>
+import AppInput from "@/components/Base/AppInput"
+
 export default {
-    props: {
-      user: {
-        type: Object,
-        default: () => null,
-      }
-    },
-    data () {
-      return {
+  components: {
+    AppInput,
+  },
+
+  props: {
+    user: {
+      type: Object,
+      default: () => null,
+    }
+  },
+
+  data () {
+    return {
       locumUser: {
         locum_detail: {
           gmc_or_nmc_number:'',
@@ -451,8 +615,7 @@ export default {
         }
       },
       referenceCompDocs: null,
-      referenceCompDocId: null,
-      rejectGmcNmc: false,
+      
       rejectMplNpl: false,
 
       professionCategoryId: null,
@@ -465,142 +628,429 @@ export default {
       disabled: 'true',
       query: null,
       
-      notes:''
+      locumReferenceComplianceDocumentIdToRejectId: null,
+      selectedComplianceDocumentRejectReasonValue: null,
+      notes:'',
+      formErrors: [],
+      locumComplianceDocumentId: null,
+      complianceDocumentId: null,
+      updatingFile: false,
+      uploadingFile: false,
+    }
+  },
+
+  computed: {
+    mandatoryComplianceDocuments () {
+      return this.$store.state.locums.mandatoryComplianceDocuments
+    },
+
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
+    },
+
+    complianceDocumentRejectReasonSeletionList () {
+      if (!this.locumReferenceComplianceDocumentIdToRejectId) {
+        return []
+      }
+
+      const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs
+        .find(({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId)
+
+      return locumReferenceComplianceDocumentIdToReject
+        ? (locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons || [])
+          .map(({ reject_reason: rejectReason }) => ({
+            label: rejectReason,
+            value: rejectReason,
+          })).concat([{
+            label: 'Other',
+            value: '',
+          }])
+        : []
+    },
+  },
+  
+  watch: {
+    selectedComplianceDocumentRejectReasonValue (newVal, oldVal) {
+      if (!newVal && oldVal) {
+        this.notes = ''
+      }
+
+      this.formErrors = []
+    },
+
+    locumReferenceComplianceDocumentIdToRejectId () {
+      if (!this.locumReferenceComplianceDocumentIdToRejectId) {
+        this.selectedComplianceDocumentRejectReasonValue = ''
+        this.notes = ''
+        return
+      }
+
+      const locumReferenceComplianceDocumentIdToReject = this.referenceCompDocs
+        .find(({ id }) => id === this.locumReferenceComplianceDocumentIdToRejectId)
+
+      if (locumReferenceComplianceDocumentIdToReject) {
+        const selectedComplianceDocumentRejectReason = locumReferenceComplianceDocumentIdToReject.compliance_document_reject_reasons
+          .find(({ reject_reason: rejectReason }) => rejectReason === locumReferenceComplianceDocumentIdToReject.note)
+
+        this.selectedComplianceDocumentRejectReasonValue = selectedComplianceDocumentRejectReason
+          ? selectedComplianceDocumentRejectReason.reject_reason
+          : locumReferenceComplianceDocumentIdToReject.note
+            ? ''
+            : null
       }
     },
-    computed:{
-      mandatoryComplianceDocuments () {
-        return this.$store.state.locums.mandatoryComplianceDocuments
-      },
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
+    notes () {
+      this.formErrors = []
+
+      if (!(this.selectedComplianceDocumentRejectReasonValue || this.notes)) {
+        this.formErrors = [
+          {
+            field: 'note',
+            message: 'Note is required.',
+            validation: 'required',
+          },
+        ]
+      }
     },
-    async created () {
-      // let route = this.$route.params.id
-      // await this.getData()
-      this.query = {
+  },
+
+  async created () {
+    // let route = this.$route.params.id
+    // await this.getData()
+    this.query = {
+      ...this.$route.query
+    }
+    await this.getCompliances()
+  },
+
+  methods:{
+    fileChangedHandler () {
+      console.log('fileChangedHandler')
+
+      const inputFile = this.$refs.inputFile
+
+      if (!inputFile) {
+        return
+      }
+
+      if (inputFile.files.length === 0) {
+        return
+      }
+
+      if (!this.locumComplianceDocumentId) {
+        return
+      }
+      
+      // vnd.openxmlformats-officedocument.wordprocessingml.document - docx type
+      const types = [
+        'pdf',
+        'jpeg',
+        'msword',
+        'tiff',
+        'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'vnd.openxmlformats-officedocument.wordprocessingml.template',
+        'vnd.ms-word.document.macroEnabled.12',
+        'vnd.ms-word.template.macroEnabled.12',
+      ]
+
+      const file = inputFile.files[0]
+
+      const fileType = file.type.split('/')[1]
+
+      if (!types.includes(fileType)) {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'alert',
+          text: 'Invalid File Format',
+        })
+
+        return
+      }
+
+      const formData = new FormData()
+
+      formData.append('file', file)
+
+      this.updatingFile = true
+      this.$axios
+        .put(`/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocumentId}/update-file`, formData)
+        .then(() => {
+          return this.getCompliances()
+        })
+        .catch((err) => {
+          console.log('err', err.response || err)
+
+          let message = null
+
+          if (err.response) {
+            message = err.response.data.message
+          } else if (err.request) {
+            message = 'Something went wrong!'
+          } else {
+            message = err.message
+          }
+
+          if (message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: message,
+            })
+          }
+        })
+        .finally(() => {
+          this.updatingFile = false
+          this.locumComplianceDocumentId = null
+        })
+    },
+
+    newFileChangedHandler () {
+      console.log('newFileChangedHandler')
+
+      const newInputFile = this.$refs.newInputFile
+
+      if (!newInputFile) {
+        return
+      }
+
+      if (!this.user) {
+        return
+      }
+
+      if (newInputFile.files.length === 0) {
+        return
+      }
+
+      if (!this.complianceDocumentId) {
+        return
+      }
+      
+      // vnd.openxmlformats-officedocument.wordprocessingml.document - docx type
+      const types = [
+        'pdf',
+        'jpeg',
+        'msword',
+        'tiff',
+        'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'vnd.openxmlformats-officedocument.wordprocessingml.template',
+        'vnd.ms-word.document.macroEnabled.12',
+        'vnd.ms-word.template.macroEnabled.12',
+      ]
+
+      const file = newInputFile.files[0]
+
+      const fileType = file.type.split('/')[1]
+
+      if (!types.includes(fileType)) {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'alert',
+          text: 'Invalid File Format',
+        })
+
+        return
+      }
+
+      const formData = new FormData()
+
+      formData.append('user_id', this.user.id)
+
+      formData.append('compliance_document_id', this.complianceDocumentId)
+
+      formData.append('file', file)
+
+      this.uploadingFile = true
+      this.$axios
+        .post(`/api/v1/admin/locum-compliance-documents`, formData)
+        .then(() => {
+          return this.getCompliances()
+        })
+        .catch((err) => {
+          console.log('err', err.response || err)
+
+          let message = null
+
+          if (err.response) {
+            message = err.response.data.message
+          } else if (err.request) {
+            message = 'Something went wrong!'
+          } else {
+            message = err.message
+          }
+
+          if (message) {
+            this.$store.commit('SET_NOTIFICATION', {
+              enabled: true,
+              status: 'danger',
+              text: message,
+            })
+          }
+        })
+        .finally(() => {
+          this.uploadingFile = false
+          this.complianceDocumentId = null
+        })
+    },
+
+    getQuery (){
+      const query = {
         ...this.$route.query
       }
-      await this.getCompliances()
+      const offset = parseInt(query.page)*10 - 10 
+      return offset
     },
-    methods:{
-      getQuery (){
-        const query = {
-          ...this.$route.query
+    
+    async getData (){
+      try{
+        // this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
+
+        // this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
+
+        // const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
+        //   this.professionCategory = res.data.profession_category
+        // })
+
+        // const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
+        //   const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
+        //     return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
+        //   })
+        //   return{ 
+        //     mandatoryComplianceDocument,
+        //     locumMandatoryComplianceDocument
+        //   }
+        // })
+        // this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
+        //   const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
+        //     return complianceDocument.compliance_document.id === optionalComplianceDocument.id
+        //   })
+        //   return{
+        //     optionalComplianceDocument,
+        //     locumOptionalComplianceDocument
+        //   }
+        // })
+
+        // const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
+
+        // await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
+        // await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
+      }catch(err){
+
+        // this.$store.commit('SET_NOTIFICATION',{ 
+        //   enabled: true, 
+        //   status:'danger', 
+        //   text:err.response.data.message
+        // })
+        console.log("get data error!!", err)
+      }
+    },
+
+    async getCompliances (){
+      try {
+        this.$emit('loadingCompliances', true)
+        await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
+          this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
+          this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
+          this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
+          this.locumMandatoryTrainings = res.data.user.locum_mandatory_trainings
+        })
+        this.$emit('loadingCompliances', false)
+      } catch (err) {
+        console.log('err', err.response || err)
+        this.$store.commit('SET_NOTIFICATION',{ 
+          enabled: true, 
+          status:'danger', 
+          text:err.response.data.message
+        })
+        this.$emit('loadingCompliances', false)
+      }
+    },
+
+    async toUpdateReferenceNums (id, status, note) {
+      if (status === 'Rejected' && !(this.selectedComplianceDocumentRejectReasonValue || note)) {
+        this.formErrors = [
+          {
+            field: 'note',
+            message: 'Note is required.',
+            validation: 'required',
+          },
+        ]
+
+        return
+      }
+
+      this.$emit('loadingCompliances', true)
+      try {
+        const res = await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
+          status: status,
+          note: this.selectedComplianceDocumentRejectReasonValue || note,
+        })
+
+        this.$emit('complianceUpdated')
+
+        this.locumReferenceComplianceDocumentIdToRejectId = null
+
+        this.getCompliances()
+
+        this.$store.commit('SET_NOTIFICATION',{ 
+          enabled: true, 
+          status: 'success', 
+          text: res.message,
+        })
+
+        this.$emit('loadingCompliances', false)
+      } catch (err) {
+        console.log('err', err.response || err)
+
+        let message = null
+
+        if (err.response) {
+          if (err.response.status === 400 && err.response.data.error_messages) {
+            this.formErrors = err.response.data.error_messages
+          } else {
+            message = err.response.data.message
+          }
+
+          if (status === 'Approved') {
+            message = err.response.data.message
+          }
+        } else if (err.request) {
+          message = 'Something went wrong!'
+        } else {
+          message = err.message
         }
-        const offset = parseInt(query.page)*10 - 10 
-        return offset
-      },
-      async getData (){
-        try{
-          // this.professionCategoryId = this.user.locum_detail.profession.profession_category.id
 
-          // this.locumMandatoryTrainings = this.user.locum_detail.mandatory_trainings
-
-          // const proCat = await this.$axios.$get(`/api/v1/admin/profession-categories/${this.professionCategoryId}`).then(res =>{
-          //   this.professionCategory = res.data.profession_category
-          // })
-
-          // const mandatoryComplianceDocuments = await this.professionCategory.mandatory_compliance_documents.map((mandatoryComplianceDocument)=>{
-          //   const locumMandatoryComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-          //     return complianceDocument.compliance_document.id === mandatoryComplianceDocument.id
-          //   })
-          //   return{ 
-          //     mandatoryComplianceDocument,
-          //     locumMandatoryComplianceDocument
-          //   }
-          // })
-          // this.optionalComplianceDocuments = await this.professionCategory.optional_compliance_documents.map((optionalComplianceDocument)=>{
-          //   const locumOptionalComplianceDocument = this.user.locum_detail.compliance_documents.find((complianceDocument) => {
-          //     return complianceDocument.compliance_document.id === optionalComplianceDocument.id
-          //   })
-          //   return{
-          //     optionalComplianceDocument,
-          //     locumOptionalComplianceDocument
-          //   }
-          // })
-
-          // const allLocumComplianceDocuments = await this.user.locum_detail.compliance_documents //====> USE THIS FOR LATER AS REPLACEMENT FOR STATE
-
-          // await this.$store.commit('locums/SET_MANDATORY_DOCS', mandatoryComplianceDocuments)
-          // await this.$store.commit('locums/SET_LOCUM_COMP_DOCS', allLocumComplianceDocuments)
-        }catch(err){
-
-          // this.$store.commit('SET_NOTIFICATION',{ 
-          //   enabled: true, 
-          //   status:'danger', 
-          //   text:err.response.data.message
-          // })
-          console.log("get data error!!", err)
-        }
-      },
-
-      async getCompliances (){
-        try {
-          await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
-            this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
-            this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
-            this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
+        if (message) {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: message,
           })
-          this.locumMandatoryTrainings = await this.user.locum_detail.mandatory_trainings
-        } catch (err) {
-          console.log('err', err)
-          this.$store.commit('SET_NOTIFICATION',{ 
-            enabled: true, 
-            status:'danger', 
-            text:err.response.data.message
-          })
         }
-      },
-      toRejectReferenceNums (id) {
-        this.referenceCompDocId = id
-        this.rejectGmcNmc = true
-      },
-      async toUpdateReferenceNums (id, status, note) {
-        try {
-          await this.$axios.$put(`/api/v1/admin/locum-compliance-documents/${id}/update-status`,{
-            status: status,
-            note: note,
-          }).then(res => {
-            this.$emit('complianceUpdated')
-            this.rejectGmcNmc = false
-            this.getCompliances()
-            this.$store.commit('SET_NOTIFICATION',{ 
-              enabled: true, 
-              status: 'success', 
-              text: res.message 
-            })
-          })
-        } catch (err) {
-             this.$store.commit('SET_NOTIFICATION',{ 
-              enabled: true, 
-              status: 'success', 
-              text: err.message
-            })
-        }
-      },
 
-      statusStyle (status){
-        switch(status){
-          case 'Approved':
-            return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
-          case 'Expiring':
-            return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-          case 'Expired':
-            return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
-          case 'Rejected':
-            return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
-          case 'Pending':
-            return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-          case 'Present':
-            return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
-          case 'Empty':
-            return 'border-white text-white lg:px-8 sm:px-4'
-          default:
-            return ''
-        }
-      },
+        this.$emit('loadingCompliances', false)
+      }
+    },
+
+    statusStyle (status){
+      switch(status){
+        case 'Approved':
+          return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
+        case 'Expiring':
+          return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+        case 'Expired':
+          return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
+        case 'Rejected':
+          return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
+        case 'Pending':
+          return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+        case 'Present':
+          return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+        case 'Empty':
+          return 'border-white text-white lg:px-8 sm:px-4'
+        default:
+          return ''
+      }
+    },
   }
 }
 </script>

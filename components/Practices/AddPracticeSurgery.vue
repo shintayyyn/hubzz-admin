@@ -28,7 +28,7 @@
                     : 'Search for Hub by Name, etc....'
                 "
                 @keyup.enter="searchSubmit()"
-              />
+              >
               <button
                 v-if="search"
                 class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
@@ -47,7 +47,9 @@
             <div
               v-if="total === 0 && search"
               class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500"
-            >No results found.</div>
+            >
+              No results found.
+            </div>
             <span
               v-if="search && total !== 0"
               class="py-2 md:px-2 text-sm whitespace-no-wrap"
@@ -62,7 +64,9 @@
           <!-- BODY -->
           <template v-if="!practice">
             <!--IF NEW PRACTICE IS BEING CREATED-->
-            <p v-if="!surgeries.length" class="text-gray-500 py-2 -mx-2">No Surgeries Found</p>
+            <p v-if="!surgeries.length" class="text-gray-500 py-2 -mx-2">
+              No Surgeries Found
+            </p>
             <transition-group name="slide" tag="p">
               <div
                 v-for="(surgery, index) in surgeries"
@@ -94,9 +98,7 @@
                         :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '"
                       >CCG</span>
                       <span class="w-full px-2">
-                        {{
-                        surgery.clinical_commissioning_group.name
-                        }}
+                        {{ surgery.clinical_commissioning_group.name }}
                       </span>
                     </div>
                     <div class="flex items-center my-1">
@@ -114,7 +116,9 @@
 
           <template v-if="practice && practice.type == 'Hub'">
             <!--IF PRACTICE IS A HUB-->
-            <p v-if="!practiceSpokes.length" class="text-gray-500 py-2 -mx-2">No Spoke Found</p>
+            <p v-if="!practiceSpokes.length" class="text-gray-500 py-2 -mx-2">
+              No Spoke Found
+            </p>
             <transition-group name="slide" tag="p">
               <div
                 v-for="(spoke, index) in practiceSpokes"
@@ -202,10 +206,10 @@
 </template>
 
 <script>
-import debounce from "lodash.debounce";
-import AppPagination from "@/components/Base/AppPagination";
-import CreateUser from "@/components/UserManagement/CreateUser";
-import SetSpokePermissions from "@/components/Practices/SetSpokePermissions";
+import debounce from "lodash.debounce"
+import AppPagination from "@/components/Base/AppPagination"
+import CreateUser from "@/components/UserManagement/CreateUser"
+import SetSpokePermissions from "@/components/Practices/SetSpokePermissions"
 
 export default {
   components: {
@@ -228,7 +232,7 @@ export default {
     }
   },
 
-  data() {
+  data () {
     return {
       surgeries: [],
       surgery: null,
@@ -250,259 +254,259 @@ export default {
       registeredPractice: [],
 
       toggleRegisteredPractice: false
-    };
-  },
-
-  watch: {
-    $route() {
-      this.currentPage = parseInt(this.$route.query.add_practice_page) || 1;
-
-      this.getData();
-    },
-
-    search() {
-      this.searchSubmit();
     }
   },
 
-  beforeDestroy() {
+  watch: {
+    $route () {
+      this.currentPage = parseInt(this.$route.query.add_practice_page) || 1
+
+      this.getData()
+    },
+
+    search () {
+      this.searchSubmit()
+    }
+  },
+
+  beforeDestroy () {
     let query = {
       ...this.$route.query
-    };
+    }
 
-    delete query.add_practice_page;
+    delete query.add_practice_page
 
     this.$router.push({
       query
-    });
+    })
   },
 
-  created() {
-    this.getData();
+  created () {
+    this.getData()
   },
 
   methods: {
-    goBack() {
+    goBack () {
       if (this.practice) {
         this.$router.push(
           `/practices/${this.$route.params.id}/practice-surgeries`
-        );
+        )
       } else {
-        this.$router.push(`/practices`);
+        this.$router.push(`/practices`)
       }
     },
 
-    getPractices() {
+    getPractices () {
       this.$store.dispatch("practices/fetchPractices", {
         limit: 10,
         order_by: "created_at:desc"
-      });
+      })
     },
 
-    getPracticeHub(practiceId) {
+    getPracticeHub (practiceId) {
       this.$store.dispatch("practices/fetchHub", {
         practice_id: practiceId
-      });
+      })
     },
 
-    getPracticeParent(parentId) {
+    getPracticeParent (parentId) {
       this.$store.dispatch("practices/fetchPracticeParent", {
         practice_parent_id: parentId
-      });
+      })
     },
 
-    getPracticeSpokesCount(practiceId) {
+    getPracticeSpokesCount (practiceId) {
       this.$store.dispatch("practices/fetchSpokes", {
         countOnly: true,
         practice_id: practiceId
-      });
+      })
     },
 
-    getPracticeSpokes(practiceId) {
+    getPracticeSpokes (practiceId) {
       this.$store.dispatch("practices/fetchSpokes", {
         practice_id: practiceId
-      });
+      })
     },
 
-    updatePracticeSpokesPageCount() {
+    updatePracticeSpokesPageCount () {
       let payload = {
         spokesCount: this.spokesCount,
         perPage: 5
-      };
+      }
 
       this.$store.commit(
         "practices/UPDATE_PRACTICE_SPOKES_PAGE_COUNT",
         payload
-      );
+      )
     },
 
-    async getData() {
-      this.loading = true;
+    async getData () {
+      this.loading = true
 
-      const limit = this.perPage;
+      const limit = this.perPage
 
       let offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
 
       const params = {
         limit,
         offset
-      };
+      }
 
       if (this.search) {
-        params.search = this.search;
+        params.search = this.search
       }
 
       if (this.practice && this.practice.type === "Hub") {
         this.practiceSurgeries = await this.$axios
           .get(`/api/v1/admin/practices/${this.practice.id}/practice-surgeries`)
-          .then(response => response.data.data.practice_surgeries);
+          .then(response => response.data.data.practice_surgeries)
 
-        params.status = "Active";
+        params.status = ["Active", "Dormant"]
 
-        params.type = ["Stand Alone", "Spoke"];
+        params.type = ["Stand Alone", "Spoke"]
 
-        params.has_parent = false;
+        params.has_parent = false
 
         this.total = await this.$axios
           .get(`/api/v1/admin/practices/count`, { params })
-          .then(response => response.data.data.count);
+          .then(response => response.data.data.count)
 
-        this.perPage = 10;
+        this.perPage = 10
 
-        this.totalPages = Math.ceil(this.total / this.perPage);
+        this.totalPages = Math.ceil(this.total / this.perPage)
 
-        this.getOrphanSpokes(params);
+        this.getOrphanSpokes(params)
       } else if (!this.practice) {
         this.total = await this.$axios
           .get(`/api/v1/admin/surgeries/count`, { params })
-          .then(response => response.data.data.count);
+          .then(response => response.data.data.count)
 
-        this.perPage = 10;
+        this.perPage = 10
 
-        this.totalPages = Math.ceil(this.total / this.perPage);
+        this.totalPages = Math.ceil(this.total / this.perPage)
 
-        this.getAllSurgeries();
+        this.getAllSurgeries()
       }
     },
 
-    async getAllSurgeries() {
-      const limit = this.perPage;
+    async getAllSurgeries () {
+      const limit = this.perPage
 
-      let offset = 0;
+      let offset = 0
 
       offset =
-        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1);
+        this.perPage * (parseInt(this.$route.query.add_practice_page) - 1)
 
       const params = {
         limit,
-        offset
-      };
+        offset,
+      }
 
       if (this.search) {
-        params.search = this.search;
-        params.offset = 0;
+        params.search = this.search
       }
 
       const response = await this.$axios.get(`/api/v1/admin/surgeries`, {
         params
-      });
+      })
 
-      this.surgeries = response.data.data.surgeries;
+      this.surgeries = response.data.data.surgeries
 
-      this.loading = false;
+      this.loading = false
     },
 
-    async getOrphanSpokes(params) {
+    async getOrphanSpokes (params) {
       if (this.search) {
-        params.search = this.search;
-        params.offset = 0;
+        params.search = this.search
       }
 
-      this.practiceSpokes = [];
+      this.practiceSpokes = []
 
       let response = await this.$axios.$get(
         `/api/v1/admin/practices/${this.$route.params.id}/spoke-invitations`
-      );
+      )
 
       await this.$axios
         .$get(`/api/v1/admin/practices/`, { params })
         .then(res => {
-          let invited = "";
+          let invited = ""
           res.data.practices.forEach(spoke => {
             invited = response.data.spokes.find(
               invitation => invitation.id === spoke.id
-            );
+            )
             if (invited) {
               this.practiceSpokes.push({
                 ...spoke,
                 invited: true
-              });
+              })
             } else {
               this.practiceSpokes.push({
                 ...spoke,
                 invited: false
-              });
+              })
             }
-          });
-        });
+          })
+        })
 
-      this.loading = false;
+      this.loading = false
     },
 
-    async newChildSpoke(practiceId, invited) {
+    async newChildSpoke (practiceId, invited) {
       if (invited) {
         this.$store.commit("SET_NOTIFICATION", {
           enabled: true,
           status: "danger",
           text: "This Spoke already sent an invitation."
-        });
+        })
       } else {
-        this.practiceSpokeId = practiceId;
-        this.setSpokePermissionModal = true;
+        this.practiceSpokeId = practiceId
+        this.setSpokePermissionModal = true
       }
     },
 
-    async show(id) {
-      const response = await this.$axios.get(`/api/v1/admin/surgeries/${id}`);
+    async show (id) {
+      const response = await this.$axios.get(`/api/v1/admin/surgeries/${id}`)
 
-      this.surgery = response.data.data.surgery;
+      this.surgery = response.data.data.surgery
 
-      this.createPracticeModal = true;
+      this.createPracticeModal = true
     },
 
-    shieldClickaway() {
-      this.createPracticeModal = false;
-      this.setSpokePermissionModal = false;
+    shieldClickaway () {
+      this.createPracticeModal = false
+      this.setSpokePermissionModal = false
     },
 
-    searchSubmit: debounce(async function() {
+    searchSubmit: debounce(async function () {
       const query = {
         ...this.$route.query
-      };
+      }
 
       if (this.search) {
-        query.search = this.search;
+        query.search = this.search
       }
 
-      this.getData();
+      this.pagechanged(0)
+
+      this.getData()
     }, 500),
 
-    pagechanged(page) {
+    pagechanged (page) {
       const query = {
         ...this.$route.query
-      };
-
-      if (page && page > 1) {
-        query.add_practice_page = page;
-      } else {
-        delete query.add_practice_page;
       }
 
-      this.$router.replace({ query });
+      if (page && page > 1) {
+        query.add_practice_page = page
+      } else {
+        delete query.add_practice_page
+      }
+
+      this.$router.replace({ query })
     }
   }
-};
+}
 </script>
 
 <style>
@@ -523,27 +527,4 @@ export default {
   z-index: 511;
 }
 
-/* .practice-user-modal,
-  .practice-user-modal-small {
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin-right: 0%;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    border-left: solid 2px #ffc72c;
-    transition: all 0.3s ease-in-out;
-    background-color: #505561;
-    z-index: 512;
-  }
-
-  @media screen and (min-width: 1200px) {
-    .practice-user-modal {
-      width: 70%;
-    }
-    .practice-user-modal-small {
-      width: 60%;
-    }
-  } */
 </style>

@@ -15,14 +15,18 @@ export default {
   },
   data (){
     return{
-        racticeDoc:null,
+      practiceDoc:null,
     }
   },
   computed:{
     practice (){
       return this.$store.state.practices.practice
-    }
+    },
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
+    },
   },
+  
   async asyncData ({ app, store, route, error }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/practice-documents/${route.params.pracDocId}`)

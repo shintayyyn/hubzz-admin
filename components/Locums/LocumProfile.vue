@@ -112,25 +112,40 @@
               {{ user.address_detail ? user.address_detail.address.line_3 : 'N/A' }}
             </p>
 
-            <p class="mt-2">
-              GMC / NMC Number
-            </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.gmc_or_nmc_number && 'opacity-75'"
+            <div
+              v-for="referenceLocumComplianceDocument in user.reference_locum_compliance_documents"
+              :key="referenceLocumComplianceDocument.compliance_document_id"
             >
-              {{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}
-            </p>
+              <p class="mt-2">
+                {{ referenceLocumComplianceDocument.compliance_document_name }}
+              </p>
+              
+              <p class="font-bold pl-2" :class="!referenceLocumComplianceDocument.reference && 'opacity-75'">
+                {{ referenceLocumComplianceDocument.reference ? referenceLocumComplianceDocument.reference : 'N/A' }}
+              </p>
+            </div>
 
-            <p class="mt-2">
-              MPL / NPL Number
-            </p>
-            <p
-              class="font-bold pl-2"
-              :class="!locumDetails.mpl_or_npl_number && 'opacity-75'"
-            >
-              {{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}
-            </p>
+            <template v-if="false">
+              <p class="mt-2">
+                GMC / NMC Number
+              </p>
+              <p
+                class="font-bold pl-2"
+                :class="!locumDetails.gmc_or_nmc_number && 'opacity-75'"
+              >
+                {{ locumDetails.gmc_or_nmc_number ? locumDetails.gmc_or_nmc_number.number : 'N/A' }}
+              </p>
+
+              <p class="mt-2">
+                MPL / NPL Number
+              </p>
+              <p
+                class="font-bold pl-2"
+                :class="!locumDetails.mpl_or_npl_number && 'opacity-75'"
+              >
+                {{ locumDetails.mpl_or_npl_number ? locumDetails.mpl_or_npl_number.number : 'N/A' }}
+              </p>
+            </template>
 
             <p class="mt-2">
               NHS Smart Card ID Number
@@ -197,6 +212,7 @@
             </p>
           </div>
         </div>
+
         <!--COLUMN 2-->
         <div class="flex flex-col order-3 md:order-2 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6">
@@ -250,7 +266,8 @@
               >
                 <a
                   v-if="userComplianceDoc.file"
-                  class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+                  class="text-gray-300 flex items-center"
+                  :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
                   @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
                 >
@@ -277,6 +294,7 @@
                 <a
                   v-if="userMandatoryTraining.file"
                   class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+                  :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
                   @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
                 >
@@ -289,6 +307,7 @@
             </div>
           </div>
         </div>
+
         <!--COLUMN 3-->
         <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6 border-b text-center pb-3">
@@ -334,7 +353,7 @@
             />
           </div>
 
-          <div v-if="authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
+          <div v-if="user.status !== 'Deactivated' && user.first_actived_at && authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
             <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
             <span
               class="tool inline-block"
@@ -398,7 +417,6 @@
 
         locumDetails: "",
 
-        locumStatusChoices: [],
         selectedStatus: "",
         profileTab: true,
         jobTab: false,
@@ -417,18 +435,116 @@
       authAdminPermissions () {
         return this.$store.getters["permissions"]
       },
+
+      locumStatusChoices () {
+        if (!this.user || this.user.status === 'Deactivated') {
+          return []
+        }
+
+        if (this.user.status === 'Active' || this.user.status === 'Dormant') {
+          const locumStatusChoices = [
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+            {
+              label: 'Bogus',
+              value: 'Bogus',
+            },
+            {
+              label: 'Account Suspension',
+              value: 'Account Suspension',
+            },
+          ]
+          return locumStatusChoices
+        }
+
+        if (
+          this.user.status === 'Compliance Suspension' 
+          && (this.user.compliance_status === 'Compliant' || this.user.compliance_status === 'Expiring')
+        ) {
+          const locumStatusChoices = [
+            {
+              label: 'Active',
+              value: 'Active',
+            },
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+            {
+              label: 'Bogus',
+              value: 'Bogus',
+            },
+            {
+              label: 'Account Suspension',
+              value: 'Account Suspension',
+            },
+          ]
+
+          return locumStatusChoices
+        }
+        
+        if (
+          this.user.status === 'Compliance Suspension' 
+          && (this.user.compliance_status !== 'Compliant' || this.user.compliance_status !== 'Expiring')
+        ) {
+          const locumStatusChoices = [
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+            {
+              label: 'Bogus',
+              value: 'Bogus',
+            },
+            {
+              label: 'Account Suspension',
+              value: 'Account Suspension',
+            },
+          ]
+
+          return locumStatusChoices
+        }
+
+        if (this.user.status === 'Bogus') {
+          const locumStatusChoices = [
+            {
+              label: 'Active',
+              value: 'Active',
+            },
+            {
+              label: 'Inactive',
+              value: 'Inactive',
+            },
+          ]
+
+          return locumStatusChoices
+        }
+
+        const locumStatusChoices = [
+          {
+            label: 'Active',
+            value: 'Active',
+          },
+          {
+            label: 'Bogus',
+            value: 'Bogus',
+          },
+        ]
+        return locumStatusChoices
+      },
+      
+    },
+
+    watch: {
+      locumStatusChoices () {
+        this.selectedStatus = ''
+      },
     },
 
     created () {
       console.log("locum", this.user)
-      if (this.user.first_actived_at) {
-        this.locumStatusChoices = [
-          { label: "Active", value: "Active" },
-          { label: "Inactive", value: "Inactive" }
-        ]
-      } else {
-        this.locumStatusChoices = [{ label: "Inactive" }]
-      }
       this.locumDetails = this.user.locum_detail
       this.userComplianceDocuments = this.user.locum_detail.compliance_documents
       this.qualifications = this.user.locum_detail.qualifications
@@ -444,20 +560,25 @@
         const offset = parseInt(query.page) * 10 - 10
         return offset
       },
+      
       downloadItem (imgUrl, imgFilename) {
-        const axios = require("axios")
-        axios({
-          url: imgUrl,
-          method: "GET",
-          responseType: "blob" // important
-        }).then(response => {
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement("a")
-          link.href = url
-          link.setAttribute("download", imgFilename)
-          document.body.appendChild(link)
-          link.click()
-        })
+        if(this.authAdminPermissions.includes('Download Locum Compliance Documents')) {
+          const axios = require("axios")
+          axios({
+            url: imgUrl,
+            method: "GET",
+            responseType: "blob" // important
+          }).then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement("a")
+            link.href = url
+            link.setAttribute("download", imgFilename)
+            document.body.appendChild(link)
+            link.click()
+          })
+        } else {
+          console.log('You are not permitted to perform such action')
+        }
       },
 
       async toDeactivateLocum () {
@@ -474,6 +595,8 @@
               status: "success",
               text: "Locum Successfully Deactivated"
             })
+
+            this.$emit('updateLocumUsers')
           })
           .catch(err => {
             this.$store.commit("SET_NOTIFICATION", {
@@ -487,28 +610,42 @@
 
       async changeLocumUserStatus (locumID, status) {
         try {
+          if (status === 'Deactivate') {
+            this.confirm = true
+            return
+          }
+
+          this.$emit('setViewLocumUserLoading', true)
+
           console.log("locum details", status)
 
-          const response = await this.$axios.put(`/api/v1/admin/locum-users/${locumID}/status`, {
+          await this.$axios.$put(`/api/v1/admin/locum-users/${locumID}/status`, {
             status,
+          }).then(res => {
+            console.log('res', res)
+            if (res.data.user.compliance_status !== 'Compliant'
+            && res.data.user.compliance_status !== 'Expiring'  
+            && status === 'Active') {
+              this.$store.commit("SET_NOTIFICATION", {
+                enabled: true,
+                status: "alert",
+                text: "Unsuccessfully Changed Locum status. Locum is Not Compliant.",
+              })
+            } else {
+              this.$store.commit("SET_NOTIFICATION", {
+                enabled: true,
+                status: "success",
+                text: res.data.message || "Saved",
+              })
+            }
+            console.log("res", res.data.user)
+
+            this.$emit('setViewLocumUser', res.data.user)
+
+            this.$emit('setViewLocumUserLoading', false)
           })
 
-          console.log("response", response.data.data.user)
-          this.$emit('updateLocumUsers')
-          if (this.user.compliance_status !== "Compliant" || status !== 'Bogus') {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "alert",
-              text:
-                "You cannot make a Locum 'Active' if the Locum is not Compliant"
-            })
-          } else {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Saved"
-            })
-          }
+          
         } catch (err) {
           console.log("index practices index put status err", err)
           this.$store.commit("SET_NOTIFICATION", {
@@ -516,8 +653,11 @@
             status: "danger",
             text: err.response.data.message
           })
+
+          this.$emit('setViewLocumUserLoading', false)
         }
       },
+
       statusStyle (status) {
 				switch (status) {
 					case 'Active':
@@ -526,7 +666,9 @@
 						return 'bg-gray-500 text-gray-700'
 					case 'Deactivated':
 						return 'bg-red-800 text-red-400'
-					case 'Suspended':
+					case 'Account Suspension':
+						return 'bg-red-600 text-white'
+					case 'Compliance Suspension':
 						return 'bg-red-600 text-white'
 					case 'Dormant':
 						return 'bg-orange-500 text-white'

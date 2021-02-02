@@ -82,53 +82,43 @@
               <strong class="block md:hidden text-sm uppercase">Job Number</strong>
               <span class="break-words">{{ item.job_part_number }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span class="break-words">{{ item.job.platform_job.practice.surgery.name }}</span>
+              <span>{{ item.practice_name }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Title</strong>
               <span
-                :class="item.job.title && item.job.title.split(' ') && item.job.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
-              >{{ item.job.title ? item.job.title : '(none)' }}</span>
+                :class="item.title && item.title.split(' ') && item.title.split(' ').length > 1 ? 'double-truncate' : 'block truncate'"
+              >{{ item.title ? item.title : '(none)' }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span class="break-words">{{ $moment(item.date_start,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span>{{ item.datetime_start_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span class="break-words">{{ $moment(item.date_end,'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}</span>
+              <span>{{ item.datetime_end_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Completed At</strong>
-              <span
-                class
-              >{{ $moment(item.completed_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <span>{{ item.completed_at_in_gb_formatted }}</span>
             </div>
-            <div
-              class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center"
-            >
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
               <strong class="block md:hidden text-sm uppercase">Approved At</strong>
-              <span
-                class
-              >{{ $moment(item.approved_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY, h:mm:ss a') }}</span>
+              <span>{{ item.approved_at_in_gb_formatted }}</span>
             </div>
           </nuxt-link>
         </div>
       </div>
 
-      <div class>
+      <div>
         <AppPagination
           :total="total"
           :total-pages="totalPages"
@@ -218,10 +208,12 @@ export default {
 		}
 		this.currentPage = parseInt(query.job_parts_page)
 		let params = {
-			// viewing_practice_id : this.practiceSurgery ? this.practiceSurgery.child_practice_id : this.practice.id,
-			job_practice_id: this.practiceSurgery
-				? this.practiceSurgery.child_practice_id
-				: this.practice.id,
+      practice_id: this.$route.name.includes("practice-surgeries")
+        ? null
+        : this.$route.params.id,
+      practice_surgery_id: this.$route.name.includes("practice-surgeries")
+        ? this.$route.params.practiceSurgeryId
+        : null,
 			status: "Approved"
 		}
 		Promise.all([
@@ -255,9 +247,12 @@ export default {
 
 			const responseCount = await this.$axios.$get(`/api/v1/admin/job-parts/count`, {
 				params: {
-					job_practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Approved",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -270,9 +265,12 @@ export default {
 
 			const response = await this.$axios.$get(`/api/v1/admin/job-parts`, {
 				params: {
-					job_practice_id: this.practiceSurgery
-						? this.practiceSurgery.child_practice_id
-						: this.practice.id,
+          practice_id: this.$route.name.includes("practice-surgeries")
+            ? null
+            : this.$route.params.id,
+          practice_surgery_id: this.$route.name.includes("practice-surgeries")
+            ? this.$route.params.practiceSurgeryId
+            : null,
 					status: "Approved",
 					job_part_number_includes: this.job_number,
 					job_title_includes: this.job_title,
@@ -302,11 +300,11 @@ export default {
 		checkRoute (itemId) {
 			if (this.$route.name.includes("practice-surgeries")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/surgery-sessions/surgery-approved-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-approved-sessions/${itemId}`
 				}
 			} else if (this.$route.name.includes("practice-sessions")) {
 				return {
-					path: `/practices/${this.practice.id}/practice-sessions/practice-approved-sessions/${itemId}`
+					path: `/practices/${this.$route.params.id}/practice-sessions/practice-approved-sessions/${itemId}`
 				}
 			}
 		},
@@ -316,9 +314,12 @@ export default {
 			let params = {
 				status: "Approved",
 				order_by: orderBy ? orderBy : this.$route.query.order_by,
-				job_practice_id: this.practiceSurgery
-					? this.practiceSurgery.child_practice_id
-					: this.practice.id,
+        practice_id: this.$route.name.includes("practice-surgeries")
+          ? null
+          : this.$route.params.id,
+        practice_surgery_id: this.$route.name.includes("practice-surgeries")
+          ? this.$route.params.practiceSurgeryId
+          : null,
 				limit: this.perPage,
 				offset: offset,
 				job_part_number_includes: this.job_number,

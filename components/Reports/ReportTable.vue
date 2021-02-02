@@ -30,10 +30,13 @@
             index !== item.length - 1 ? 'border-dotted border-b border-gray-800' : '',
           ]"
         >
-          <span class="whitespace-no-wrap p-2">&nbsp;{{ columnDetail.column(item, index) }}</span>
+          <template v-if="columnDetail.slotName">
+            <slot :name="columnDetail.slotName" :item="item" />
+          </template>
+          <span v-else class="whitespace-no-wrap p-2">&nbsp;{{ columnDetail.column(item, index) }}</span>
         </div>
         <div v-if="loading && items.length === 0">
-          <div v-for="(item, index) in limit"  :key="`limit_${index}`" class="flex bg-white">
+          <div v-for="(item, index) in limit" :key="`limit_${index}`" class="flex bg-white">
             <span class="whitespace-no-wrap p-2">&nbsp;</span>
           </div>
         </div>
@@ -100,6 +103,9 @@
           return {
             flexGrow: columnDetail.flexGrow,
             flexShrink: columnDetail.flexShrink,
+            flexBasis: columnDetail.flexBasis,
+            minWidth: columnDetail.minWidth,
+            maxWidth: columnDetail.maxWidth,
           }
         }
       },

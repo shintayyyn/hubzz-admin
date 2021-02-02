@@ -1,9 +1,12 @@
 <template>
   <div class="mt-5">
+    <AppLoading :loading="loadingCompliances" :message="'Loading compliances'" />
+    
     <LocumCompliance 
       v-if="locumUser"
       :user="locumUser"
-      @complianceUpdated="$emit('updateLocumUsers')"
+      @complianceUpdated="complianceUpdatedHandler"
+      @loadingCompliances="(_loadingCompliances) => loadingCompliances = _loadingCompliances"
     />
 
     <nuxt-child :locumUser="locumUser" />
@@ -11,10 +14,12 @@
 </template>
 
 <script>
+  import AppLoading from "@/components/Base/AppLoading"
   import LocumCompliance from "@/components/Locums/LocumCompliance"
 
   export default {
     components: {
+      AppLoading,
       LocumCompliance,
     },
 
@@ -23,6 +28,30 @@
         type: Object,
         default: () => null,
       }
+    },
+
+    data () {
+      return {
+        loadingCompliances: false,
+      }
+    },
+
+    async asyncData ({ store, error }) {
+      const authAdminPermissions = store.getters["permissions"]
+
+      if (authAdminPermissions.includes('View Locum Compliance Detail') === false) {
+        error({
+          statusCode: 403,
+          message: 'You are not authorized to view this page.',
+        })
+        return
+      }
+    },
+
+    methods: {
+      complianceUpdatedHandler () {
+        this.$emit('updateLocumUsers')
+      },
     },
     
   }

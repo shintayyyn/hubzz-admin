@@ -1,121 +1,148 @@
 <template>
   <div class="spoke-modal p-4 md:p-8 shadow-lg">
-    <div class="cursor-pointer mb-4" @click="goBack()">
-      <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
-    </div>
+    <nuxt-link class="block cursor-pointer mb-4" :to="{ path:`/practices/${$route.params.id}/practice-surgeries`, query: $route.query }">
+      <svgicon
+        name="arrow-left-solid"
+        height="32"
+        width="32"
+        class="text-white hover:text-sunglow fill-current"
+      />
+    </nuxt-link>
+
+    <AppLoading :loading="loadingPracticeSurgery" spinner />
+
     <div class="flex justify-start overflow-x-auto">
       <nuxt-link
-        :to="getRoute()" 
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}`, query: $route.query }" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path == `/practices/${practice.id}/practice-surgeries/${practiceSurgery.id}` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        :class="
+          $route.name === 'index-practices-id-index-practice-surgeries-practiceSurgeryId-index'
+            ? 'bg-waterloo hover:bg-gray-500'
+            : 'hover:bg-waterloo'
+        "
       >
         Spoke Profile
       </nuxt-link>
+
       <nuxt-link
-        :to="getRoute('surgery-sessions')"
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-sessions`, query: $route.query }" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path.includes(`surgery-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >
         Spoke Sessions
       </nuxt-link>
-      <nuxt-link
-        :to="getRoute('surgery-billing')"
+
+      <!-- <nuxt-link
+        :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-billing`, query: $route.query }" 
         class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
         :class="$route.path.includes(`surgery-billing`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
       >
         Spoke Billings
-      </nuxt-link>
+      </nuxt-link> -->
     </div>
-    <nuxt-child />
+
+    <nuxt-child
+      :practice="practice"
+      :practiceSurgery="practiceSurgery"
+      :loadingPracticeSurgery="loadingPracticeSurgery"
+      @practiceSurgeryDeleted="(practiceSurgeryId) => $emit('practiceSurgeryDeleted', practiceSurgeryId)"
+      @practiceSurgeryUpdated="practiceSurgeryUpdatedHandler"
+    />
   </div>
 </template>
+
 <script>
+import AppLoading from '@/components/Base/AppLoading'
+
 export default {
-  components:{
+
+  components: {
+    AppLoading,
   },
+
+  props: {
+    practice: {
+      type: Object,
+      default: () => null,
+    },
+  },
+
   data (){
     return{
-      practice: '',
-      practiceSurgery: '',
-      practiceSurgeries: '',
+      loadingPracticeSurgery: false,
+      practiceSurgery: null,
     }
   },
-  computed:{
-    getRoute (tab){
-      console.log(tab)
-      return(tab) => {
-        if(!tab){
-          tab = ''
-        }
-        const query = {
-          ...this.$route.query,
-        }
-        delete query.order_by
-        return{
-          path: tab ? `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}/${tab}` : `/practices/${this.practice.id}/practice-surgeries/${this.practiceSurgery.id}` ,
-          query
-        }
-      }
-    }
-  },
-  async asyncData ({ app, route }){
-    try {
-      let response = await app.$axios.$get(`/api/v1/admin/practices/${route.params.id}`)
-      const practice = response.data.practice
-      response = await app.$axios.$get(`/api/v1/admin/practices/${practice.id}/practice-surgeries/${route.params.practiceSurgeryId}`)
-      const practiceSurgery = response.data.practice_surgery
 
-      return{
-        practice,
-        practiceSurgery
+  mounted () {
+    this.setPracticeSurgery()
+  },
+
+  methods: {
+    practiceSurgeryUpdatedHandler (practiceSurgery) {
+      if (practiceSurgery) {
+        this.practiceSurgery = practiceSurgery
+        return
       }
-    } catch(err){
-      throw err
+
+      this.setPracticeSurgery()
+    },
+
+    setPracticeSurgery () {
+      const {
+        id: practiceId,
+        practiceSurgeryId,
+      } = this.$route.params
+
+      this.loadingPracticeSurgery = true
+      this.$axios.get(`/api/v1/admin/practices/${practiceId}/practice-surgeries/${practiceSurgeryId}`).then((response) => {
+        this.practiceSurgery = response.data.data.practice_surgery
+      }).catch((err) => {
+        console.log('err', err.response || err)
+        this.$nuxt.error(err)
+      }).finally(() => {
+        this.loadingPracticeSurgery = false
+      })
     }
   },
-  methods:{
-    goBack (){
-      const query = {
-        ...this.$route.query
-      }
-      console.log('route', this.$route)
-      this.$router.push({path:`/practices/${this.$route.params.id}/practice-surgeries`,query})
-    },
-  }
 }
 </script>
+
 <style>
-.card {
-  min-width: 100px;
-  height: 250px;
-  box-sizing: content-box;
-}
-.spoke-shield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  opacity: 0.5;
-  z-index: 511;
-}
-.spoke-modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  margin-right: 0%;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  border-left: solid 2px #FFC72C;
-  transition: all 0.3s ease-in-out;
-  background-color:#505561;
-  z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-  .spoke-modal {
-    width: 70%;
+  .card {
+    min-width: 100px;
+    height: 250px;
+    box-sizing: content-box;
   }
-}
+
+  .spoke-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    opacity: 0.5;
+    z-index: 511;
+  }
+
+  .spoke-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #FFC72C;
+    transition: all 0.3s ease-in-out;
+    background-color:#505561;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    .spoke-modal {
+      width: 70%;
+    }
+  }
 </style>

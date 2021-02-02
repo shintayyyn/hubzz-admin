@@ -2,11 +2,13 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
-      <div
-        class="relative flex flex-col overflow-x-auto w-full px-2 mt-4"
+      <div 
+        class="relative flex flex-col mt-4"
+        :class="customWidth ? customWidth : 'w-full overflow-x-auto'" 
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
-        <div class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
+        <!-- HEADER -->
+        <div v-if="disabledHeadings === false" class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
           <div
             v-for="(column, index) in columns"
             :key="`${column}-${index}`"
@@ -17,9 +19,15 @@
                 'justify-center',
               column.sortable && 'cursor-pointer'
             ]"
+            :style="[
+              column.flex ? { flex: column.flex } : {},
+              column.minWidth ? { minWidth: column.minWidth } : {},
+              column.maxWidth ? { maxWidth: column.maxWidth } : {},
+            ]"
             @click="column.sortable && sort(column.sortIndex || column.dataIndex)"
           >
             <span class="pr-1">{{ column.name }}</span>
+
             <svgicon
               v-if="column.sortable"
               :name="sortIcon(column.dataIndex)"
@@ -29,8 +37,15 @@
             />
           </div>
         </div>
-        <div v-for="item in items" :key="item.id" class="row py-2">
+        <!-- HEADER ENDS HERE -->
+        <!-- RECORDS START HERE -->
+        <div 
+          v-for="item in items" 
+          :key="item.id" 
+          class="row py-2"
+        >
           <nuxt-link
+            :class="addClass"
             :to="routerLink && {}.toString.call(routerLink) === '[object Function]'
               ? routerLink(item)
               : {
@@ -42,14 +57,19 @@
             :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
           >
             <div
-              class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
-              :class="routerLink ? 'transition-hover hover:bg-waterloo-dark' : 'cursor-default'"
+              class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
+              :class="recordClass()"
             >
               <div
                 v-for="(column, index) in columns"
                 :key="index"
                 class="flex-1 px-2"
                 :class="column.class"
+                :style="[
+                  column.flex ? { flex: column.flex } : {},
+                  column.minWidth ? { minWidth: column.minWidth } : {},
+                  column.maxWidth ? { maxWidth: column.maxWidth } : {},
+                ]"
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
                   <div
@@ -65,14 +85,18 @@
                     <div v-if="column.slotName == 'checker'" @click.prevent.stop="$emit(column.eventName, item)">
                       <slot :name="column.slotName" :item="item" />
                     </div>
+
                     <slot v-else :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
                   </template>
+
                   <template v-else-if="column.dataIndex === 'actions'">
                     <slot name="actions" :item="item" @click="$emit('click', item)" />
                   </template>
+
                   <template v-else-if="column.dataIndex === 'actions-button'">
                     <slot name="actions-button" :item="item" />
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -82,6 +106,7 @@
                   >
                     {{ dataCell(item, column) | localDate }}
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -91,6 +116,7 @@
                   >
                     {{ dataCell(item, column) | currency }}
                   </template>
+
                   <template
                     v-else-if="
                       column.class &&
@@ -100,8 +126,9 @@
                   >
                     {{ dataCell(item, column) | fileSize }}
                   </template>
+                  
                   <template v-else>
-                    {{ dataCell(item, column) }}
+                    <span class="break-words">{{ dataCell(item, column) }}</span>
                   </template>
                 </template>
               </div>
@@ -110,7 +137,8 @@
         </div>
       </div>
     </div>
-    <div v-if="total > 0" class="bottom-0 w-full">
+
+    <div v-if="total > 0 && disabledPagination === false" class="bottom-0 w-full">
       <AppPagination
         :total="total"
         :total-pages="totalPages"
@@ -127,12 +155,25 @@
 <script>
   import AppPagination from "@/components/Base/AppPagination"
   import AppLoading from "@/components/Base/AppLoading"
+  
   export default {
     components: {
       AppLoading,
       AppPagination
     },
     props: {
+      itemsOnTop: {
+        type: Boolean,
+        default: false,
+      },
+      disabledHeadings: {
+        type: Boolean,
+        default: false,
+      },
+      disabledPagination: {
+        type: Boolean,
+        default: false
+      },
       nestedItem: {
         type: Object,
         default: null,
@@ -175,13 +216,21 @@
         type: String,
         default: null
       },
+      customItemsWidth: {
+        type: String,
+        default: null,
+      },
       customWidth: {
-        type: Number,
+        type: [String, Number],
         default: null
       },
       minHeight: {
         type: String,
         default: null
+      },
+      addClass: {
+        type: String,
+        default: ''
       }
     },
     data () {
@@ -200,6 +249,19 @@
       // this.totalPages = Math.ceil(this.total / this.perPage);
     },
     methods: {
+      recordClass () {
+        if(this.routerLink && this.itemsOnTop === true) {
+          return "transition-hover hover:bg-waterloo-dark items-start".concat(this.customItemsWidth ? this.customItemsWidth : '') 
+        } else if (this.routerLink && this.itemsOnTop === false) {
+          return "transition-hover hover:bg-waterloo-dark items-start md:items-center".concat(this.customItemsWidth ? this.customItemsWidth : '')
+        } else if (this.routerLink && this.itemsOnTop === true) {
+          return "cursor-default items-start ".concat(this.customItemsWidth ? this.customItemsWidth : '')
+        } else if (this.routerLink && this.itemsOnTop === false) {
+          return "cursor-default items-start md:items-center ".concat(this.customItemsWidth ? this.customItemsWidth : '')
+        } else {
+          return this.customItemsWidth ? this.customItemsWidth : ''
+        }
+      },
       sort (dataIndex) {
         if (!this.params.some(item => item.includes(`${dataIndex}`))) {
           this.params = []

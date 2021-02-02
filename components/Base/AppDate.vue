@@ -396,14 +396,15 @@ export default {
 			}
 		},
 		getYearLists () {
-			let yearsBefore = []
-			for (let i = 0; i <= 10; i++) {
-				this.yearLists.push(
-					this.$moment(this.selectedYear, "YYYY")
-						.add(i, "years")
-						.format("YYYY")
-				)
-			}
+      if (!this.isBefore) {
+        for (let i = 0; i <= 10; i++) {
+          this.yearLists.push(
+            this.$moment(this.selectedYear, "YYYY")
+              .add(i, "years")
+              .format("YYYY")
+          )
+        }
+      }
 			if (!this.isAfter) {
 				for (let i = 0; i <= 2; i++) {
 					let year = this.$moment(this.selectedYear, "YYYY")

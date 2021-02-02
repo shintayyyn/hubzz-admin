@@ -38,7 +38,7 @@
               </button>
             </div>
             <div
-              v-if="authAdminPermissions.includes('Edit Practice User')"
+              v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User')"
               class="my-1 px-1 overflow-hidden"
             >
               <button
@@ -52,7 +52,7 @@
           </div>
 
           <div
-            v-if="authAdminPermissions.includes('Edit Practice User') && tab1"
+            v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
             class="my-1 px-1 overflow-hidden"
           >
             <button
@@ -123,6 +123,7 @@
           />
 
           <AppInput
+            v-if="false"
             v-model="toPutPracticeUser.suffix"
             :type="'text'"
             :name="'suffix'"
@@ -227,30 +228,35 @@
           >
             {{ practiceUser.last_name ? practiceUser.last_name : 'N/A' }}
           </div>
-          <div class="flex py-2">
-            Suffix
-          </div>
-          <div
-            class="flex px-2 text-white"
-          >
-            {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
-          </div>
+
+          <template v-if="false">
+            <div class="flex py-2">
+              Suffix
+            </div>
+
+            <div class="flex px-2 text-white">
+              {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
+            </div>
+          </template>
+
           <div class="flex py-2">
             Role
           </div>
+
           <div
             class="flex px-2 text-white"
           >
-            {{ practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
+            {{ practiceUser.practice_detail && practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
           </div>
 
           <div class="flex py-2">
             Practice User Role
           </div>
+          
           <div
             class="flex px-2 text-white"
           >
-            {{ practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
+            {{ practiceUser.practice_detail && practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
           </div>
 
           <div class="flex py-2">
@@ -260,7 +266,12 @@
             {{ practiceUser.status ? practiceUser.status : 'N/A' }}
           </div>
 
-          <div class="flex my-2">
+          <div 
+            v-if="practiceUser 
+              && practiceUser.status !== 'Deactivated' 
+              && authAdminPermissions.includes('Delete Practice User')" 
+            class="flex my-2"
+          >
             <AppButton
               :label="'Deactivate this Practice User'"
               :background="'red'"
@@ -466,7 +477,9 @@
         last_name: this.practiceUser.last_name,
         suffix: this.practiceUser.suffix,
         practice_role: this.practiceUser.practice_detail.practice_role,
-        practice_user_role_id: this.practiceUser.practice_detail.role.id,
+        practice_user_role_id: this.practiceUser.practice_detail.role
+          ? this.practiceUser.practice_detail.role.id
+          : '',
         status: this.practiceUser.status,
       }
 
@@ -541,7 +554,7 @@
           let message = null
 
           if (err.response) {
-            if (err.response.status === 400 || err.response.data.error_messages) {
+            if (err.response.status === 400 && err.response.data.error_messages) {
               this.formError = err.response.data.error_messages
             } else {
               message = err.response.data.message
@@ -587,14 +600,21 @@
 
       async toDeactivate () {
         await this.$axios
-          .$put(
+          .put(
             `/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`
           )
-          .then(() => {
+          .then((response) => {
+            const practiceUser = response.data.data.user
+
+            this.$emit('setPracticeUser', practiceUser)
+
             this.confirm = false
-            this.$router.push(
-              `/practices/${this.$route.params.id}/practice-users`
-            )
+
+            this.$router.push({
+              path:`/practices/${this.practice.id}/practice-users`,
+              query: this.$route.query,
+            })
+
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "success",

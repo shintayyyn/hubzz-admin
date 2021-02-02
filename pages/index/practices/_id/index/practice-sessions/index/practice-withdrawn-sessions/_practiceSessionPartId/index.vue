@@ -2,10 +2,11 @@
   <div class="job-modal shadow-lg">
     <div class="mt-6 mx-4 md:mx-8 my-2">
       <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-withdrawn-sessions`}" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
+        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
       </nuxt-link>
     </div>
-    <PracticeSessionModal :job_part="job_part"/>
+    
+    <PracticeSessionModal :jobPart="job_part" :job="job_part ? job_part.job : null" />
   </div>
 </template>
 <script>
@@ -14,17 +15,16 @@ export default {
   components:{
     PracticeSessionModal
   },  
-  data(){
+  data (){
     return{
       job_part:'',
       practiceId:''
     }
   },
-  async asyncData({ app, store, route, error }){
+  async asyncData ({ app, store, route, error }){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/job-parts/${route.params.practiceSessionPartId}`)
       const job_part = response.data.job_part
-      console.log('job', job_part)
       const practiceId = route.params.id
       return{
         job_part,

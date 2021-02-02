@@ -37,6 +37,30 @@
               label="Area Postcode"
             />
           </div>
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="status"
+              class="w-full mr-2"
+              :type="'select'"
+              :name="'status'"
+              :placeholder="'Filter by Status'"
+              :items="[
+                {label: 'Live', value: 'Live'},
+                {label: 'Updated', value: 'Updated'}, 
+                {label: 'Applied', value: 'Applied'},
+                {label: 'Allocated', value: 'Allocated'},
+                {label: 'Ongoing', value: 'Ongoing'},
+                {label: 'Completed', value: 'Completed'},
+                {label: 'Approved', value: 'Approved'},
+                {label: 'Withdrawn', value: 'Withdrawn'},
+                {label: 'Cancelled', value: 'Cancelled'},
+                {label: 'Rejected', value: 'Rejected'},
+                {label: 'Pending', value: 'Pending'},
+                {label: 'Unfilled', value: 'Unfilled'},
+              ]"
+              :label="'Status'"
+            />
+          </div>
         </div>
         
         <div class="flex flex-row w-full">
@@ -56,6 +80,25 @@
             />
           </div>
         </div>
+        <div class="flex flex-row w-full">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="minRate"
+              placeholder="0.00"
+              type="number"
+              label="Min Rate"
+            />
+          </div>          
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+            <AppInput
+              v-model="maxRate"
+              placeholder="0.00"
+              type="number"
+              label="Max Rate"
+            />
+          </div>
+        </div>
+        
 
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <AppButton
@@ -102,34 +145,43 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <ReportPagination
-        :count="count" 
-        :pages="pages" 
-        :page="activePage"
-        @page="setPage" 
-      />
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-white w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ activePage }} / {{ pages }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Order By: {{ orderByProcessed }}
+            </div>
+          </div>
+        </div>
+        <ReportPagination
+          :count="count" 
+          :pages="pages" 
+          :page="activePage"
+          @page="setPage" 
+        />
+      </div>
 
       <div
+        v-if="authAdminPermissions.includes('Generate Reports')"
         class="flex-wrap justify-start items-center w-full p-3 flex my-2"
       >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
-            :disabled="downloading"
-            class="bg-sunglow hover:bg-sunglow-dark px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :disabled="downloading || jobParts.length === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="jobParts.length === 0 ? 'bg-gray-500' : 'bg-sunglow hover:bg-sunglow-dark'"
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
             <span>Download CSV</span>
           </button>
         </div>
-      </div>
-
-      <div v-if="false" class="text-white"> 
-        <span>Count: {{ count }}</span>
-        <br>
-        <span>Order By: {{ orderBy.join(',') }}</span>
-        <br>
-        <span>Page {{ activePage }} of {{ pages }} pages</span>
       </div>
     </div>
   </div>
@@ -153,9 +205,11 @@
     data () {
       return {
         loading: false,
+        downloading: false,
         count: 0,
         jobParts: [],
         orderBy: [],
+        orderByProcessed: '',
         orderBys: [
           {
             title: 'Practice Name (Ascending)',
@@ -186,10 +240,23 @@
         dateStart: '',
         dateEnd: '',
         areaPostCode: '',
+        status: '',
+        minRate: '',
+        maxRate: '',
       }
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+      itemCountInfo () {
+        const firstItem = Math.min((this.limit * this.activePage) - this.limit + 1, this.count)
+        const lastItem = Math.min((this.limit * this.activePage) - this.limit + (this.loading ? this.limit : this.jobParts.length), this.count)
+        
+        return `Showing ${firstItem} to ${lastItem} of ${this.count} items`
+      },
+
       offset () {
         return this.activePage * this.limit - this.limit
       },
@@ -201,7 +268,7 @@
             key: 'index',
             sort_key: null,
             column: (item, index) => this.offset + index + 1,
-            justify: 'end',
+            justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
           },
@@ -210,6 +277,15 @@
             key: 'practice_name',
             sort_key: 'practice_name',
             column: (item) => item.practice_name,
+            justify: 'start',
+            flexGrow: 1,
+            flexShrink: 0,
+          },
+          {
+            title: 'Job Part Number',
+            key: 'job_part_number',
+            sort_key: 'job_part_number',
+            column: (item) => item.job_part_number,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -228,7 +304,7 @@
             key: 'date_start',
             sort_key: 'date_start',
             column: (item) => item.date_start ? this.$moment(item.date_start, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -237,7 +313,7 @@
             key: 'date_end',
             sort_key: 'date_end',
             column: (item) => item.date_end ? this.$moment(item.date_end, 'YYYY-MM-DD').format('DD/MM/YYYY') : null,
-            justify: 'center',
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -245,8 +321,8 @@
             title: 'Total Hours',
             key: 'final_hours',
             sort_key: 'final_hours',
-            column: (item) => parseFloat(item.final_hours / 60).toFixed(2) + ' Hours' ,
-            justify: 'end',
+            column: (item) => `${item.job_part_total_final_hours.toFixed(2)}`,
+            justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
           },
@@ -260,10 +336,10 @@
             flexShrink: 0,
           },
           {
-            title: 'Rate',
-            key: 'rate',
+            title: 'Rates',
+            key: 'rates',
             sort_key: 'rate',
-            column: (item) => item.rate,
+            column: (item) => item.job_part_rate_ranged_formatted,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -272,7 +348,7 @@
             title: 'Rate Type',
             key: 'rate_type_name',
             sort_key: 'rate_type_name',
-            column: (item) => item.rate_type_name,
+            column: (item) => item.job_part_rate_type_names_formatted,
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -295,7 +371,16 @@
     },
 
     watch: {
-      orderBy () {
+      orderBy (value) {
+        let replaced = ''
+        if(value.length > 0) {
+          replaced = value[0].replace(/_/g, ' ')
+          replaced = replaced.replace(/:/g, ' - ')
+          replaced = replaced.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
+          replaced = replaced.replace('Desc', 'Descending')
+          replaced = replaced.replace('Asc', 'Ascending')
+        } 
+        this.orderByProcessed = replaced
         this.getJobParts()
       },
 
@@ -314,8 +399,11 @@
         practice_name_includes: practiceNameIncludes,
         date_start: dateStart,
         date_end: dateEnd,
-        area: areaPostCode,
+        area_includes: areaPostCode,
         order_by: orderBy = [],
+        status,
+        min_rate: minRate,
+        max_rate: maxRate,
         page,
       } = this.$route.query
 
@@ -323,6 +411,9 @@
       this.areaPostCode = areaPostCode ? areaPostCode : ''
       this.dateStart = dateStart ? dateStart : ''
       this.dateEnd = dateEnd ? dateEnd : ''
+      this.status = status ? status : ''
+      this.minRate = minRate ? minRate : ''
+      this.maxRate = maxRate ? maxRate : ''
 
       this.orderBy = orderBy
       this.activePage = page ? Number.parseInt(page) : 1
@@ -336,6 +427,9 @@
         this.areaPostCode = ''
         this.dateStart = ''
         this.dateEnd = ''
+        this.status = ''
+        this.minRate = ''
+        this.maxRate = ''
 
         this.filterSearch()
       },
@@ -349,6 +443,9 @@
           areaPostCode: this.areaPostCode ? this.areaPostCode : '',
           dateStart: this.dateStart ? this.dateStart : '',
           dateEnd: this.dateEnd ? this.dateEnd : '',
+          status: this.status ? this.status : '',
+          minRate: this.minRate ? this.minRate : '',
+          maxRate: this.maxRate ? this.maxRate : '',
           order_by: this.orderBy ? this.orderBy : undefined,
           page: undefined,
         }
@@ -405,7 +502,10 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
+          status: this.status ? this.status : '',
+          min_rate: this.minRate ? this.minRate : '',
+          max_rate: this.maxRate ? this.maxRate : '',
         }
         Promise.all([
           this.$axios.get('/api/v1/admin/reports/job-parts/count', {
@@ -446,7 +546,10 @@
           practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
           date_start: this.dateStart ? this.dateStart : '',
           date_end: this.dateEnd ? this.dateEnd : '',
-          area: this.areaPostCode ? this.areaPostCode : '',
+          area_includes: this.areaPostCode ? this.areaPostCode : '',
+          min_rate: this.minRate ? this.minRate : '',
+          max_rate: this.maxRate ? this.maxRate : '',
+          status: this.status ? this.status : '',
           order_by: this.orderBy,
           limit: 999,
           offset: 0,

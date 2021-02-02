@@ -8,5 +8,5 @@ export default () => ({
     locumDocAlert:[],
     locumDocArchive:[],
     //---------------Notifications-----------
-    locumComplianceNotifications: [],
+    locumNotifications: [],
 })

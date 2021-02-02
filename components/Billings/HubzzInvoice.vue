@@ -1,16 +1,17 @@
 <template>
   <div class="text-black">
+    <AppLoading :loading="loading" spinner :message="'Processing'" />
     <!-- HEADER -->
     <div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
       <AppButton
-        v-if="forViewing == true"
+        v-if="forViewing == true && authAdminPermissions.includes('Export Hubzz Invoices')"
         class="mr-2"
         :label="'Export As PDF'"
         :icon="'cloud-download'"
         @click="toPDF()"
       />
       <AppButton
-        v-if="forViewing == true && practiceInvoice"
+        v-if="forViewing == true && practiceInvoice && authAdminPermissions.includes('Export Sage Csv')"
         class="mr-2"
         :label="'Export as Sage.csv'"
         :icon="'cloud-download'"
@@ -21,29 +22,8 @@
         v-if="practice && practiceInvoice && practiceInvoice.exported_at"
         class="text-white m-2"
       >
-        *This Invoice has already been exported on {{ $moment(practiceInvoice.exported_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').utc().format('DD/MM/YYYY, h:mm:ss a') }}
+        *This Invoice has already been exported on {{ practiceInvoice.exported_at_in_gb_formatted }}
       </div>
-      <!-- <AppButton
-        v-if="forViewing == true" 
-				class="mr-2"
-				:label="'Test Multiple Page'"
-				:icon="'cloud-download'"
-				@click="testMultiplePage()"
-			/>-->
-
-      <!-- <AppButton
-        v-if="forViewing == false"
-        class="m-2" 
-        :label="'Save as Draft'" 
-        :icon="'save-icon'"
-			/>-->
-      <!-- <AppButton
-        v-if="forViewing == false"
-        class="m-2" 
-        :label="'Clear Entries'" 
-        :icon="'save-icon'"
-        @click="clearEntries()"
-			/>-->
     </div>
     <div
       v-if="practice && practiceInvoice && practice.direct_debit === false"
@@ -84,7 +64,7 @@
 
     <!-- BODY -->
     <!-- FIRST PAGE -->
-    <AppLoading :loading="loading" spinner :message="'Exporting to PDF'" />
+    
     <div
       id="toPrint"
       class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
@@ -115,9 +95,13 @@
                 :class="doNotShow ? 'md:w-full' : 'w-full'"
               >
                 <div class="">
-                  <div class="text-base py-1">To: Accounts Department</div>
+                  <div class="text-base py-1">
+                    To: Accounts Department
+                  </div>
                   <div class="w-full">
-                    <p class="font-bold text-lg mb-2">{{ practice.surgery.name }}</p>
+                    <p class="font-bold text-lg mb-2">
+                      {{ practice.surgery.name }}
+                    </p>
                     <div class="text-xs sm:text-sm">
                       <p>{{ practice.surgery.address.line_1 }}</p>
                       <p>{{ practice.surgery.address.line_2 }}</p>
@@ -128,8 +112,8 @@
                       <div>For the period</div>
                       <div>
                         <span>
-                          {{ dateStart ? $moment(dateStart).format('DD/MM/YYYY') : $moment(toPostPracticeInvoice.date_start).format('DD/MM/YYYY') }} to
-                          {{ dateEnd ? $moment(dateEnd).format('DD/MM/YYYY') : $moment(toPostPracticeInvoice.date_end).format('DD/MM/YYYY') }}
+                          {{ dateStart ? $moment(dateStart).format('DD/MM/YYYY') : $moment(forPeriodDateStart).format('DD/MM/YYYY') }} to
+                          {{ dateEnd ? $moment(dateEnd).format('DD/MM/YYYY') : $moment(forPeriodDateEnd).format('DD/MM/YYYY') }}
                         </span>
                       </div>
                     </div>
@@ -212,22 +196,15 @@
               </div>
               <!-- TOTAL HOURS -->
               <div v-if="forViewing == false" class="w-1/6 text-sm">
-                <!-- <textarea
-                  v-if="doNotShow"
-                  v-model="item.description"
-                  rows="2"
-                  class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
-                  placeholder="Enter Description"
-                /> -->
                 <p
                   class="w-full text-left px-2 py-1"
                 >
-                  {{ item.total_hours ? item.total_hours + " Hours " : "N/A" }}
+                  {{ item.total_hours | currency }} Hours
                 </p>
               </div>
               <div v-else class="max-w px-2 py-1 w-1/6">
                 <div v-if="!byLocum">
-                  {{ item.total_hours ? item.total_hours.toFixed(2) + " Hours " : "N/A" }}
+                  {{ item.total_hours | currency }} Hours 
                 </div>
               </div>
               <!-- AMOUNT TOTAL -->
@@ -244,8 +221,8 @@
                     placeholder="Enter Total"
                   >
                 </template>
-                <div v-else class="max-w px-2 py-1 text-right text-black">
-                  {{ item.total }}
+                <div v-else class="max-w px-2 py-1 text-right text-black ">
+                  {{ item.total | currency }}
                 </div>
               </div>
               <template v-if="forViewing == false">
@@ -278,14 +255,6 @@
                   <strong>£ Amount</strong>
                 </div>
               </div>
-              <!-- <div v-if="forViewing == false">
-								<div class="mr-2" v-if="doNotShow">
-									<span
-										@click="addInvoiceItem()"
-										class="bg-gray-900 hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
-									>+</span>
-								</div>
-							</div>-->
             </div>
           </div>
           <div
@@ -296,7 +265,8 @@
             :style="`min-width: ${doNotShow ? '733px' : ''}`"
           >
             <div class="flex w-full justify-center border-b border-gray-500 py-1">
-              <div v-if="forViewing == false" class="w-2/3 text-sm mx-1">
+              <!-- Description -->
+              <div v-if="forViewing == false" class="w-4/6 text-sm mx-1">
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -314,7 +284,21 @@
               <div v-else class="w-full max-w px-2 py-1">
                 {{ item.description }}
               </div>
-              <div class="w-1/3 text-sm mx-1">
+              <!-- TOTAL HOURS -->
+              <div v-if="forViewing == false" class="w-1/6 text-sm">
+                <p
+                  class="w-full text-left px-2 py-1"
+                >
+                  {{ item.total_hours | currency }} Hours
+                </p>
+              </div>
+              <div v-else class="max-w px-2 py-1 w-1/6">
+                <div v-if="!byLocum">
+                  {{ item.total_hours | currency }} Hours
+                </div>
+              </div>
+              <!-- Amount -->
+              <div class="w-1/6 text-sm mx-1">
                 <template v-if="forViewing == false">
                   <input
                     v-if="doNotShow"
@@ -328,7 +312,7 @@
                   >
                 </template>
                 <p v-else class="px-2 py-1 text-right text-black">
-                  {{ item.total }}  
+                  {{ item.total | currency }}  
                 </p>
               </div>
               <template v-if="forViewing == false">
@@ -413,7 +397,7 @@
                     >
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
-                    {{ item.total }}
+                    {{ item.total | currency }}
                   </p>
                 </div>
                 <template v-if="forViewing == false">
@@ -510,7 +494,7 @@
                     >
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
-                    {{ '- '+item.total }}
+                    - {{ item.total | currency }}
                   </p>
                 </div>
                 <template v-if="forViewing == false">
@@ -545,76 +529,32 @@
               Total
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              {{ forViewing === true ? "£ " + practiceInvoice.total_amount.toFixed(2) : "£ " + amountTotal }}
+              £ {{ forViewing === true ? practiceInvoice.untaxed_total_amount : untaxedAmountTotal | currency }}
             </div>
           </div>
+          <div class="flex flex-row justify-between w-full">
+            <div class="my-1 px-1 font-bold">
+              VAT Amount
+            </div>
+            <div class="my-1 px-1 text-right text-lg font-semibold">
+              £ {{ forViewing === true ? practiceInvoice.tax_amount : taxAmount | currency }}
+            </div>
+          </div>
+          <div class="flex flex-row justify-between w-full">
+            <div class="my-1 px-1 font-bold">
+              Total (with added VAT)
+            </div>
+            <div class="my-1 px-1 text-right text-lg font-semibold">
+              £ {{ forViewing === true ? practiceInvoice.total_amount : taxedAmountTotal | currency }}
+            </div>
+          </div>
+          
           <div class="flex flex-row justify-between w-full">
             <span class="my-1 px-1 font-bold">
               Total Hours
             </span>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              {{ totalHoursSum + ' Hours' }}
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <div class="flex flex-col">
-            <div
-              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
-              :ref="'items-sub-total'"
-              class="flex justify-between md:m-2 text-lg px-3 pt-3"
-            >
-              <span class="w-3/4 font-bold">Subtotal</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right">
-                  £
-                </div>
-                <div class="w-full text-right">
-                  {{ subTotal | currency }}
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
-              :ref="'items-ni-total'"
-              class="flex justify-between md:mx-2 text-lg px-3"
-            >
-              <span class="w-3/4 pl-2 text-sm">NI amount</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right text-sm">
-                  £
-                </div>
-                <div class="w-full text-right text-sm">
-                  {{ locumInvoice.ni_amount | currency }}
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="locumInvoice && locumInvoice.ir35 && locumInvoice.paid"
-              :ref="'items-paye-total'"
-              class="flex justify-between md:mx-2 text-lg px-3"
-            >
-              <span class="w-3/4 pl-2 text-sm">PAYE amount</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right text-sm">
-                  £
-                </div>
-                <div class="w-full text-right text-sm">
-                  {{ locumInvoice.paye_amount | currency }}
-                </div>
-              </div>
-            </div>
-            <!-- ITEMS TOTAL -->
-            <div :ref="'items-total'" class="flex justify-between md:m-2 text-lg px-3 py-2">
-              <span class="w-3/4 font-bold">Total</span>
-              <div class="w-1/4 flex justify-between">
-                <div class="w-full text-right">
-                  £
-                </div>
-                <div class="w-full text-right">
-                  {{ totalAmount | currency }}
-                </div>
-              </div>
+              {{ totalHoursSum > 0 ? `${totalHoursSum}` : 'N/A' }} Hours
             </div>
           </div>
         </div>
@@ -639,6 +579,7 @@
           <br>Bank: {{ locumInvoice && locumInvoice.payroll_bank_name ? locumInvoice.payroll_bank_name : 'N/A' }}
           <br>Sort code: {{ locumInvoice && locumInvoice.payroll_sort_code ? locumInvoice.payroll_sort_code : 'N/A' }}
           <br>Account number: {{ locumInvoice && locumInvoice.payroll_account_number ? locumInvoice.payroll_account_number : 'N/A' }}
+          <br>Payroll reference number: {{ locumInvoice && locumInvoice.payroll_reference_number ? locumInvoice.payroll_reference_number : 'N/A' }}
           <br>
         </div>
         <div v-else class="border-2 border-gray-300 rounded-lg p-2 text-sm">
@@ -656,6 +597,7 @@
     <div class="m-4">
       <AppButton
         v-if="forViewing == false"
+        :disabled="saveAsDisabled ? true : false"
         :label="'Save as Final'"
         :icon="'save-icon'"
         @click="createInvoice()"
@@ -689,6 +631,7 @@ export default {
 	],
 	data () {
 		return {
+      saveAsDisabled: false,
       forPeriodDateStart: "",
       forPeriodDateEnd: "",
 			toPostPracticeInvoice: {
@@ -697,6 +640,7 @@ export default {
 				date_end: "",
 				items: [],
         total_amount: "",
+        tax_amount: "",
         due_date: "",
       },
       form: {
@@ -721,15 +665,23 @@ export default {
 			doNotShow: true,
 			practices: [],
 			chosenPractice: [],
-			loading: false,
+      loading: false,
+      
+      // tax rate
+			practiceTaxRate: 0,
+			practiceTaxRateFormatted: 0,
 
 			maxChars: 100
 		}
 	},
 
 	computed: {
-		amountTotal: function () {
-			let grossSum = 0
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+
+    untaxedAmountTotal () {
+      let grossSum = 0
 			let invoiceItemTotal = 0
 			let disputedItemTotal = 0
 			let debitTotal = 0
@@ -742,14 +694,14 @@ export default {
 				)
 				invoiceItemTotal = invoiceItems.reduce(reducer)
 			}
-			// console.log("invoice items", this.invoiceItems);
+
 			if (this.disputedItems && this.disputedItems.length > 0) {
 				let disputedItems = this.disputedItems.map(disputedItem =>
 					parseFloat(disputedItem.total ? disputedItem.total : 0)
 				)
 				disputedItemTotal = disputedItems.reduce(reducer)
 			}
-			// console.log("disputed items", this.disputedItems);
+
 			grossSum = parseFloat(invoiceItemTotal + disputedItemTotal)
 
 			if (this.createdDebitItems && this.createdDebitItems.length > 0) {
@@ -758,18 +710,29 @@ export default {
 				)
 				debitTotal = createdDebitItems.reduce(reducer)
 			}
-			// console.log("debit items", this.createdDebitItems);
+
 			if (this.createdCreditItems && this.createdCreditItems.length > 0) {
 				let createdCreditItems = this.createdCreditItems.map(creditItem =>
 					parseFloat(creditItem.total ? creditItem.total : 0)
 				)
 				creditTotal = createdCreditItems.reduce(reducer)
 			}
-			// console.log("credit items", this.createdCreditItems);
-      const netSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
-      
-			return netSum
+
+      const untaxedNetSum = parseFloat(grossSum + debitTotal - creditTotal).toFixed(2)
+
+      return untaxedNetSum
     },
+
+    taxAmount () {
+      const tax_amount = parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted)
+      return tax_amount
+    },
+
+		taxedAmountTotal: function () {
+      const total_amount = parseFloat(this.untaxedAmountTotal) + parseFloat(this.taxAmount)
+			return total_amount
+    },
+    
     totalHoursSum: function () {
       let totalHours = 0
       const reducer = (accumulator, currentValue) => accumulator + currentValue
@@ -777,8 +740,16 @@ export default {
         let invoiceItemHours = this.invoiceItems.map(invoiceItem => 
           parseFloat(invoiceItem.total_hours ? invoiceItem.total_hours : 0)
         )
-        totalHours = invoiceItemHours.reduce(reducer)
+        totalHours = totalHours + invoiceItemHours.reduce(reducer)
       }
+
+      if (this.disputedItems && this.disputedItems.length > 0) {
+        let disputedItemHours = this.disputedItems.map(disputedItem => 
+          parseFloat(disputedItem.total_hours ? disputedItem.total_hours : 0)
+        )
+        totalHours = totalHours + disputedItemHours.reduce(reducer)
+      }
+      
       return totalHours.toFixed(2)
     },
     subTotal () {
@@ -861,21 +832,15 @@ export default {
   
 	created () {
     console.log('locumInvoice', this.locumInvoice)
-		// if (this.invoiceItems) {
-		//   this.createdInvoiceItems = this.invoiceItems
-		// }
-		// if (this.disputeditems) {
-		//   this.createdDisputedItems = this.createdDisputedItems
-		// }ff
-		// if (this.locumInvoice) {
-		// 	console.log("locum invoice", this.locumInvoice);
-		// }
-		// if (this.practiceInvoice) {
-		// 	console.log("practice invoice", this.practiceInvoice);
-    // }
     console.log('practice invoice', this.practiceInvoice)
     console.log("practice", this.practice)
     console.log("invoice items", this.invoiceItems)
+    console.log("disputed items", this.disputedItems)
+    this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
+      console.log('tax rates',res.data.tax_rates )
+      this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
+      this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
+    })
 
     if(this.locumInvoice) {
       this.setInitialState()
@@ -890,16 +855,6 @@ export default {
 	},
 
 	methods: {
-		async testHtml () {
-			window.open(
-				`${process.env.API_URL}/practice-invoices/${this.practiceInvoice.id}/html`
-			)
-		},
-
-		async testMultiplePage () {
-			window.open(`${process.env.API_URL}/practice-invoices/test/pdf`)
-    },
-    
 		toPDF () {
 			if (this.locumInvoice) {
 				window.open(
@@ -923,7 +878,6 @@ export default {
 			if (this.practiceInvoice) {
         this.$axios.put(`/api/v1/admin/practice-invoices/export-invoices`, {
           id: this.practiceInvoice.id,
-          exported_at: this.$moment().format("YYYY-MM-DD HH:mm:ss"),
         })
 				window.open(
 					`${process.env.API_URL}/api/v1/admin/practice-invoices/${
@@ -997,39 +951,57 @@ export default {
 		},
 
 		async createInvoice () {
+      this.saveAsDisabled = true
+      this.createdDebitItems = await this.createdDebitItems.filter(disputedItem => disputedItem.total !== 0)
+      this.createdCreditItems = await this.createdCreditItems.filter(creditItem => creditItem.total !== 0)
+      this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
+				this.disputedItems,
+				this.createdDebitItems,
+				this.createdCreditItems
+			)
+      
+			this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
+      this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+      
 			this.toPostPracticeInvoice.practice_id = (await this.practice.id)
 				? this.practice.id
-				: null
-			// this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
-			// this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+        : null
+        
 			this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
 				this.disputedItems,
 				this.createdDebitItems,
 				this.createdCreditItems
 			)
-			this.toPostPracticeInvoice.total_amount = await this.amountTotal
+      this.toPostPracticeInvoice.total_amount = this.practice.vat_registered === true ? await this.taxedAmountTotal : await this.untaxedAmountTotal
+      this.toPostPracticeInvoice.tax_amount = await this.taxAmount
       this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
+
+      console.log(this.toPostPracticeInvoice)
 
 			if (this.toPostPracticeInvoice.items.length > 0) {
 				await this.$axios
 					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 					.then(() => {
+            this.$emit("goBack")
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "success",
 							text: "Invoice Posted"
-						})
-						this.$router.go(-1)
+            })
 					})
 					.catch(err => {
+            console.log('err', err)
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",
 							text: err.response.data.message
-						})
+            })
+  
+            this.saveAsDisabled = false
 					})
 			} else {
+        this.saveAsDisabled = false
 				this.$emit("formError")
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,
@@ -1040,6 +1012,7 @@ export default {
     },
     
     setInitialState () {
+      this.saveAsDisabled = false
       if (this.locumInvoice) {
         this.form.locum_invoice_id = this.locumInvoice.id
         this.form.date_start = this.locumInvoice.date_start

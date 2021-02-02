@@ -63,6 +63,7 @@ a {
 	text-decoration: none;
 	color: black;
 }
+
 button:focus {
 	outline: none;
 }
@@ -89,6 +90,10 @@ table tbody td {
 	-ms-word-break: break-all;
 	word-break: break-all;
 	word-break: break-word;
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
 }
 
 @keyframes dots {
@@ -225,6 +230,19 @@ table tbody td {
 		background: #7b8396;
 	}
 }
+
+/* ==========TOGGLE====== */
+.drop-down-enter-active,
+.drop-down-leave-active {
+	transition: all 0.5s;
+}
+
+.drop-down-enter,
+.drop-down-leave-active {
+	transform: translateY(-5px);
+	opacity: 0;
+}
+
 /*===========TOOLTIP=========*/
 .tool {
 	cursor: help;
@@ -390,6 +408,15 @@ table tbody td {
 	transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
 }
 
+.masorny-container {
+	column-count: 1;
+	column-gap: 0;
+}
+
+.masorny-container .item {
+	break-inside: avoid;
+}
+
 /* @media (max-width: 760px) {
 	.tool-left::after {
 		font-size: 0.75em;
@@ -414,6 +441,14 @@ table tbody td {
 	}
 }
 @media (min-width: 768px) {
+	.masorny-container.two {
+		column-count: 2;
+		column-gap: 0;
+	}
+	.masorny-container.three {
+		column-count: 2;
+		column-gap: 0;
+	}
 	.tool-left::before {
 		bottom: 0;
 		border-width: 0.75em 1em;
@@ -429,6 +464,10 @@ table tbody td {
 	}
 }
 @media (min-width: 1200px) {
+	.masorny-container.three {
+		column-count: 3;
+		column-gap: 0;
+	}
 	.tool::after {
 		width: 14em;
 		margin-left: -10em;

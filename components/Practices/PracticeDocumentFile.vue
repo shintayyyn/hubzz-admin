@@ -14,6 +14,7 @@
       </nuxt-link>
 
       <div
+        v-if="authAdminPermissions.includes('Download Practice Documents')"
         class="hover:text-black hover:bg-yellow-500 rounded-lg inline-flex py-2 px-4 cursor-pointer"
       >
         <a
@@ -57,13 +58,7 @@
               File last uploaded
             </p>
             <p>
-              {{
-                practiceDoc.file
-                  ? $moment(practiceDoc.file.created_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format(
-                    "DD/MM/YYYY HH:mm:ss"
-                  )
-                  : null
-              }}
+              {{ practiceDoc && practiceDoc.last_uploaded_at_in_gb_formatted ? practiceDoc.last_uploaded_at_in_gb_formatted : null }}
             </p>
           </div>
         </div>
@@ -71,8 +66,9 @@
           <p class="font-bold pb-2">
             File
           </p>
-          <div class="w-full">
+          <div>
             <embed
+              v-if="authAdminPermissions.includes('Download Practice Documents') === true"
               class="object-contain w-full"
               :class="
                 practiceDoc.file.type == 'image'
@@ -90,6 +86,17 @@
                   : practiceDoc.file.url
               "
             >
+            <embed
+            
+              v-if=" !loadingFile && authAdminPermissions.includes('Download Practice Documents') === false"
+              class="object-contain w-full"
+              :class="
+                practiceDoc.file.type == 'image'
+                  ? 'image object-left-top'
+                  : 'object-top document h-full'
+              "
+              :src="disabledFileUrl"
+            > 
           </div>
         </div>
       </div>
@@ -109,8 +116,62 @@
     data () {
       return {
         practice: null,
-        query: null
+        query: null,
+        fileUrl:null,
+        disabledFileUrl: null,
+        loadingFile: false,
       }
+    },
+
+    async mounted () {
+      if (this.authAdminPermissions.includes('Download Practice Documents') === false) {
+        window.addEventListener('contextmenu', function (e) {
+          e.preventDefault()
+        }, false)
+      }
+
+      const {
+          url: fileUrl,
+          type,
+          subtype,
+        } = this.getFileUrl(this.practiceDoc.file)
+        this.loadingFile = true
+        await this.$axios.get(fileUrl, {
+          responseType: 'blob',
+        }).then((response) => {
+          this.fileUrl = window.URL.createObjectURL(new Blob([response.data], {
+            type: `${type}/${subtype}`,
+          }))
+
+          this.disabledFileUrl = `${this.fileUrl}#toolbar=0`
+
+          console.log('fileUrl', `${this.fileUrl}#toolbar=0`)
+          console.log('fileUrl', this.disabledFileUrl)
+          this.loadingFile = false
+
+          // const fileReader = new window.FileReader()
+          // fileReader.onload = function () {
+          //   this.fileUrl = fileReader.result
+          // }
+          // fileReader.readAsDataURL(response.data)
+        }).catch((err) => {
+          console.log('err', err.response || err)
+          let message = 'Something went wrong!'
+          if (err.response && err.response.data && err.response.data.message) {
+            message = err.response.data.message
+          }
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: message,
+          })
+        })
+    },
+
+    computed:{
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
     },
 
     created () {
@@ -145,6 +206,66 @@
             text: err.response.data.message
           })
         })
+      },
+
+      getFileUrl (file) {
+        console.log('getFileUrl', file)
+
+        const {
+          url,
+          type,
+          subtype,
+        } = file
+
+        if (
+          type === 'application'
+        ) {
+          if (
+            subtype === 'tiff' ||
+            subtype === 'msword' ||
+            subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+            subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template' ||
+            subtype === 'vnd.ms-word.document.macroEnabled.12' ||
+            subtype === 'vnd.ms-word.template.macroEnabled.12'
+          ) {
+            return {
+              url: `${process.env.API_URL}/docs-to-pdf?url=${url}`,
+              type: 'application',
+              subtype: 'pdf',
+            } 
+          }
+
+          return {
+            url,
+            type,
+            subtype,
+          }
+        }
+
+        if (
+          type === 'image'
+        ) {
+          if (subtype === 'tiff') {
+          //   return this.convertDoc(url)
+            return {
+              url: `${process.env.API_URL}/image-to-jpeg?url=${url}`,
+              type: 'image',
+              subtype: 'jpeg',
+            } 
+          }
+
+          return {
+            url,
+            type,
+            subtype,
+          }
+        }
+
+        return {
+          url,
+          type,
+          subtype,
+        }
       },
 
       convertDoc (document) {

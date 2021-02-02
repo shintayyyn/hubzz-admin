@@ -172,7 +172,7 @@
           />
         </div>
         <div
-          v-if="tabStatus !== 'Approved'"
+          v-if="tabStatus !== 'Approved' && tabStatus !== 'Allocated' && tabStatus !== 'Ongoing' && locumTabStatus !== 'Allocated' && locumTabStatus !== 'Ongoing' "
           class="align-middle px-2 text-center w-1/6 cursor-pointer"
           @click="sortBy('job_date_created',currentPage,search)"
         >
@@ -195,6 +195,37 @@
           />
           <svgicon
             v-if="sortType==false && sortedBy=='job_date_created'"
+            class="inline align-baseline"
+            name="sort-descend"
+            height="12"
+            width="12"
+            color="white"
+          />
+        </div>
+        <div
+          v-if="tabStatus === 'Allocated' || tabStatus === 'Ongoing' || locumTabStatus === 'Allocated' || locumTabStatus === 'Ongoing'"
+          class="align-middle px-2 text-center w-1/6 cursor-pointer"
+          @click="sortBy('job_appointed_at',currentPage,search)"
+        >
+          Allocated At
+          <svgicon
+            v-if="sortedBy!='job_appointed_at'"
+            class="inline align-baseline"
+            name="sort"
+            height="12"
+            width="12"
+            color="white black"
+          />
+          <svgicon
+            v-if="sortType==true && sortedBy=='job_appointed_at'"
+            class="inline align-baseline"
+            name="sort-ascend"
+            height="12"
+            width="12"
+            color="white"
+          />
+          <svgicon
+            v-if="sortType==false && sortedBy=='job_appointed_at'"
             class="inline align-baseline"
             name="sort-descend"
             height="12"
@@ -329,8 +360,11 @@
         <div
           v-if="tabStatus == 'Completed'"
           class="align-middle px-2 text-center w-64"
-          @click="sortBy('job_date_created',currentPage,search)"
-        >Invoice Status</div>
+        >Locum Invoice Status</div>
+        <div
+          v-if="tabStatus == 'Completed' && !locumUser"
+          class="align-middle px-2 text-center w-64"
+        >Invoiced by HUBZZ?</div>
       </div>
     </div>
   </div>
@@ -411,7 +445,6 @@ export default {
     },
 
     async sortBy(sortedBy, job_page, search) {
-      console.log("qa alvin", sortedBy);
       await this.$store.commit("jobs/TOGGLE_LOADING", true);
 
       if (this.sortedBy == sortedBy && this.sortType == true) {
@@ -488,16 +521,12 @@ export default {
         )
         .then(async res => {
           if (this.practice) {
-            console.log("jobs", res.data.jobs);
-            console.log("job parts", res.data.job_parts);
             await this.$store.commit(
               `jobs/SET_PRACTICE_${this.tabStatus.toUpperCase()}_SESSIONS`,
               this.isJobParts === true ? res.data.job_parts : res.data.jobs
             );
             await this.$store.commit("jobs/TOGGLE_LOADING", false);
           } else if (this.locumUser) {
-            console.log("jobs", res.data.jobs);
-            console.log("job parts", res.data.job_parts);
             await this.$store.commit(
               `jobs/SET_LOCUM_${this.locumTabStatus.toUpperCase()}_JOBS`,
               this.isJobParts === true ? res.data.job_parts : res.data.jobs

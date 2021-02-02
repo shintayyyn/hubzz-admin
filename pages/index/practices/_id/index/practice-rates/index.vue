@@ -39,14 +39,14 @@
           <div class="flex items-center justify-between py-1">
             GP Rate (Per Hour)
           </div>
-
+          <!--  @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')" -->
           <input
             v-model.number="toPutPracticeRate.gp_rate"
             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('gp_rate') && 'border-red-800'"
             step="any"
             aria-label
-            @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')"
+           
             @keypress="keyPressHandler"
           >
           <div
@@ -59,13 +59,13 @@
           <div class="flex items-center justify-between py-1">
             Others Rate (Per Hour)
           </div>
+          <!-- @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')" -->
           <input
             v-model.number="toPutPracticeRate.others_rate"
             class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('others_rate') && 'border-red-800'"
             step="any"
             aria-label="newtext"
-            @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')"
             @keypress="keyPressHandler"
           >
           <div
@@ -78,7 +78,7 @@
           <button
             :disabled="loading"
             class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
-            @click.prevent="checkForm()"
+            @click.prevent="updatePracticeRates()"
           >
             Save Changes
           </button>
@@ -101,9 +101,15 @@ export default {
 		mode: "out-in"
 	},
 
+  props: {
+    practice: {
+      type: Object,
+      default: () => null,
+    },
+  },
+
 	data () {
 		return {
-			practice: null,
 			editing: false,
 			loading: false,
 			specificPractice: null,
@@ -183,33 +189,15 @@ export default {
 		}
 	},
 
-	async asyncData ({ app, store, route }) {
-		try {
-			let response = await app.$axios.get(
-				`/api/v1/admin/practices/${route.params.id}`
-			)
+	async asyncData ({ store, error }) {
+		const authAdminPermissions = store.getters["permissions"]
 
-			const practice = response.data.data.practice
-
-			store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-
-			return {
-				practice
-			}
-		} catch (err) {
-			console.log("err", err.response || err)
-
-			let message = "Something went wrong!"
-
-			if (err.response && err.response.data && err.response.data.message) {
-				message = err.response.data.message
-			}
-
-			store.commit("SET_NOTIFICATION", {
-				enabled: true,
-				status: "danger",
-				text: message
+		if (authAdminPermissions.includes('View Practice Rates') === false) {
+			error({
+				statusCode: 403,
+				message: 'You are not authorized to view this page.',
 			})
+			return
 		}
 	},
 
@@ -265,12 +253,6 @@ export default {
 			return offset
 		},
 
-		getPractices () {
-			this.$store.dispatch("practices/fetchSpecificPractice", {
-				id: this.$route.params.id
-			})
-		},
-
 		errorMessage (field, message) {
 			const error = this.formError.find(
 				error => error.field === field.toString()
@@ -283,59 +265,65 @@ export default {
 			return
 		},
 
-		checkForm: function () {
-			this.formError = []
+		// checkForm: function () {
+		// 	this.formError = []
 
-			this.Validate(this.toPutPracticeRate)
+		// 	this.Validate(this.toPutPracticeRate)
 
-			if (this.formError.length === 0) {
-				this.toPutPracticeRateInfo(this.practice.id)
-			}
-		},
 
-		toPutPracticeRateInfo (practiceId) {
+		// 	if (this.formError.length === 0) {
+		// 		this.updatePracticeRates(this.practice.id)
+		// 	}
+		// },
+
+		async updatePracticeRates () {
 			this.loading = true
-			this.$axios
-				.put(`/api/v1/admin/practices/${practiceId}/rates`, {
-					gp_rate: this.toPutPracticeRate.gp_rate,
-					others_rate: this.toPutPracticeRate.others_rate
-				})
-				.then(() => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Saved"
-					})
 
-					return this.$axios.get(`/api/v1/admin/practices/${practiceId}`)
-				})
-				.then(response => {
-					const practice = response.data.data.practice
+			if (this.toPutPracticeRate.gp_rate === 0 
+				|| this.toPutPracticeRate.gp_rate === null 
+				|| this.toPutPracticeRate.gp_rate === '') {
+				this.toPutPracticeRate === 0.00
+			}
+			if (this.toPutPracticeRate.others_rate === 0 
+				|| this.toPutPracticeRate.others_rate === null 
+				|| this.toPutPracticeRate.others_rate === '') {
+				this.toPutPracticeRate === 0.00
+			}
 
-					this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
+			await this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}/rates`, {
+        gp_rate: this.toPutPracticeRate.gp_rate,
+        others_rate: this.toPutPracticeRate.others_rate
+      }).then((response) => {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Saved"
+        })
 
-					this.practice = practice
+				const practice = response.data.data.practice
+				
+				console.log('response', response.data.data.practice)
+        
+        this.$emit('practiceUpdated', practice)
 
-					this.editing = false
-				})
-				.catch(err => {
-					console.log("err", err.response || err)
+        this.editing = false
+      }).catch(err => {
+        console.log("err", err.response || err)
 
-					let message = "Something went wrong!"
+        let message = "Something went wrong!"
 
-					if (err.response && err.response.data && err.response.data.message) {
-						message = err.response.data.message
-					}
+        if (err.response && err.response.data && err.response.data.message) {
+          message = err.response.data.message
+        }
 
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: message
-					})
-				})
-				.finally(() => {
-					this.loading = false
-				})
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: message
+        })
+      }).finally(() => {
+        this.loading = false
+      })
 		},
 
 		setRate () {

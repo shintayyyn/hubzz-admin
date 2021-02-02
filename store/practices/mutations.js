@@ -2,20 +2,7 @@ export default {
     TOGGLE_LOADING (state, payload) {
         state.loading_practices = payload
     },
-    ADD_PRACTICE_NOTIFICATION (state, payload) {
-        let index = state.practiceNotifications.findIndex(practiceNotif => practiceNotif.payload.id === payload.payload.id)
-        if (index < 0) {
-            state.practiceNotifications.unshift(payload)
-        } else if (index >= 0) {
-            state.practiceNotifications.splice(index, 1, payload)
-        }
-    },
-    REMOVE_PRACTICE_NOTIFICATION (state, payload) {
-        state.practiceNotifications = state.practiceNotifications.filter(practiceNotif => practiceNotif.payload.id !== payload)
-    },
-    CLEAR_PRACTICE_NOTIFICATIONS (state) {
-        state.practiceNotifications = []
-    },
+
     //------------PRACTICES--------------------------
     SET_PRACTICES (state, payload) {
         state.allPractices = payload
@@ -31,6 +18,9 @@ export default {
     },
     CLEAR_PRACTICES_COUNT (state) {
       state.itemCount = 0
+    },
+    CLEAR_SPECIFIC_PRACTICE (state) {
+        state.practice = null
     },
     ADD_PRACTICE (state, payload) {
         state.allPractices.unshift(payload)
@@ -84,29 +74,12 @@ export default {
     SET_PRACTICE_USERS (state, payload) {
         state.practiceUsers = payload
     },
-    ADD_PRACTICE_USER (state, payload) {
-        let index = state.practiceUsers.findIndex(practiceUser =>
-            practiceUser.practice_detail.practice.id === payload.user.practice_detail.practice.id)
-        if (index >= 0) {
-            state.practiceUsers.unshift(payload.user)
-            state.practiceUsersCount = state.practiceUsersCount + 1
-            if  (state.practiceUsersCount > 5) {
-                state.practiceUsers.pop()
-            }
-        }
-    },
-    SET_PRACTICE_USERS_PAGE_COUNT (state, payload) {
-        state.practiceUsersPageCount = payload
-    },
+
     UPDATE_PRACTICE_USER (state, payload) {
         let index = state.practiceUsers.findIndex(practiceUser => practiceUser.id === payload.user.id)
         if (index >= 0) {
             state.practiceUsers.splice(index, 1, payload.user)
         }
-    },
-    UPDATE_PRACTICE_USERS_PAGE_COUNT (state, payload) {
-        let pageCount = Math.ceil((payload.userCount + 1) / payload.perPage)
-        state.practiceUsersPageCount = pageCount
     },
 
     //---------------PRACTICE DOCUMENTS-------------------

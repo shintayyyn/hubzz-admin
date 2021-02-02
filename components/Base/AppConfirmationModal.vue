@@ -8,13 +8,13 @@
 				>
 					<div class="flex justify-center">
 						<svgicon class="mr-1" :name="status" height="20" width="20" v-if="status" />
-						<div class="text-sm md:text-base font-bold">{{label}}</div>
+						<div class="text-sm text-black md:text-base font-bold">{{label}}</div>
 					</div>
 					<div class="flex justify-center">
-						<div class="text-sm md:text-base font-bold">{{label2}}</div>
+						<div class="text-sm text-black md:text-base font-bold">{{label2}}</div>
 					</div>
 					<div class="flex justify-center">
-						<div class="text-sm md:text-base font-bold">{{label3}}</div>
+						<div class="text-sm text-black md:text-base font-bold">{{label3}}</div>
 					</div>
 					<div class="flex justify-center" v-if="loading">
 						<svgicon v-if="loading" name="loader" width="60" height="60" />

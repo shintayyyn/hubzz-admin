@@ -11,6 +11,7 @@
       </div>
 
       <button
+        v-if="authAdminPermissions.includes('Download Locum Compliance Documents')"
         :disabled="downloading"
         class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
@@ -27,128 +28,230 @@
             <p class="font-bold text-base">
               Title
             </p>
-            <p
-              class="text-white"
-            >
-              {{ locumComplianceDocument.compliance_document ? locumComplianceDocument.compliance_document.name: null }}
+            <p class="text-white">
+              {{ locumComplianceDocument.compliance_document
+                && locumComplianceDocument.compliance_document.name
+                ? locumComplianceDocument.compliance_document.name
+                : "N/A" }}
             </p>
           </div>
+
+          <div 
+            v-if="locumComplianceDocument.compliance_document_name === 'Passport'"
+            class="leading-tight pb-4"
+          >
+            <p class="font-bold text-base">
+              Country
+            </p>
+            <p class="text-white">
+              {{ locumComplianceDocument.country_name
+                && locumComplianceDocument.country_name
+                ? locumComplianceDocument.country_name
+                : "N/A" }}
+            </p>
+          </div>
+
+          
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               Locum
             </p>
             <p class="text-white">
-              {{ user.personal_detail ? user.personal_detail.name: null }}
+              {{ user.personal_detail
+                && user.personal_detail.name
+                ? user.personal_detail.name
+                : "N/A"
+              }}
             </p>
           </div>
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               File last uploaded
             </p>
-            <p
-              class="text-white"
-            >
-              {{ locumComplianceDocument.file ? $moment(locumComplianceDocument.file.created_at).utc().format('DD/MM/YYYY | HH:mm') : null }}
+            <p class="text-white">
+              {{ locumComplianceDocument
+                && locumComplianceDocument.uploaded_at_in_gb_formatted
+                ? locumComplianceDocument.uploaded_at_in_gb_formatted
+                : "N/A" }}
             </p>
           </div>
+
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               Mobile phone number
             </p>
             <p class="text-white">
-              {{ user.contact_detail ? user.contact_detail.mobile_number : null }}
+              {{ user.contact_detail
+                && user.contact_detail.mobile_number
+                ? user.contact_detail.mobile_number
+                : "N/A" }}
             </p>
           </div>
 
-          <div v-if="locumComplianceDocument && locumComplianceDocument.has_reference && locumComplianceDocument.reference" class="leading-tight pb-4">
-            <p class="font-bold text-base">
-              Reference
-            </p>
-            <p class="text-white">
-              {{ locumComplianceDocument.reference }}
-            </p>
-          </div>
-
-          <div
-            v-if="(locumComplianceDocument.type === 'Mandatory' || locumComplianceDocument.type !== 'Optional') && !locumComplianceDocument.mandatory_training"
-            class="w-full"
+          <template
+            v-if="
+              locumComplianceDocument
+                && locumComplianceDocument.compliance_document
+                && locumComplianceDocument.compliance_document.compliance_document_type
+                && locumComplianceDocument.compliance_document.compliance_document_type.name !== 'Reference'
+                && locumComplianceDocument.compliance_document.compliance_document_type.name !== 'MPL'
+            "
           >
-            <div class="leading-tight pb-4">
-              <p class="font-bold">
-                Expired At
-              </p>
-              <p
-                :class="locumComplianceDocument && locumComplianceDocument.expired_at ? 'text-white' : 'text-gray-400'"
-              >
-                {{ locumComplianceDocument && locumComplianceDocument.expired_at ? $moment(locumComplianceDocument.expired_at).utc().format('DD/MM/YYYY | HH:mm') : 'No expiration date set.' }}
-              </p>
-            </div>
-            <div v-if="locumComplianceDocument.status == 'Rejected'" class="pb-2 mb-2">
-              <p class="font-bold">
-                Note
-              </p>
-              <p
-                class="text-white break-words"
-              >
-                {{ locumComplianceDocument && locumComplianceDocument.note ? locumComplianceDocument.note : 'N/A' }}
-              </p>
-            </div>
-            <!-- UPDATE COMPLIANCE FILE STATUS -->
-            <div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
-              <!-- CHANGE STATUS  -->
-              <div>
-                <AppInput
-                  v-model="toPutLocumDetailCompliance.status"
-                  class="w-full mr-2"
-                  :type="'select'"
-                  :name="'status'"
-                  :placeholder="'Select...'"
-                  :items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
-                  :error="formError.find(item => item.field === 'status')"
-                  :label="'Status'"
-                  required
-                  @change="setStatusData($event)"
+            <div
+              v-if="
+                locumComplianceDocument
+                  && locumComplianceDocument.has_reference
+                  && locumComplianceDocument.reference
+              "
+              class="leading-tight pb-4"
+            >
+              <div class="flex flex-row my-1">
+                <svgicon
+                  name="success-checkmark"
+                  height="28"
+                  width="28"
+                  class="text-green-400 hover:text-sunglow fill-current"
                 />
+                <p class="font-bold text-sm m-1">
+                  HUBZZ is permitted to do update checks
+                </p>
               </div>
-							
-              <!-- PUT NOTES IF REJECTING -->
-              <div v-if="notesAreVisible" class="w-full">
-                <AppInput
-                  v-model="toPutLocumDetailCompliance.note"
-                  :name="'complianceNote'"
-                  :placeholder="'Type Here'"
-                  :type="'textarea'"
-                  :label="'Reason for Rejection'"
-                  :rows="2"
-                  :class="'font-normal'"
-                  :error="formError.find(item => item.field === 'note')"
-                  required
-                />
+              
+              <p class="font-bold text-base">
+                Reference
+              </p>
+              <p class="text-white">
+                {{ locumComplianceDocument.reference }}
+              </p>
+            </div>
+
+            <div
+              v-if="
+                (locumComplianceDocument.type === 'Mandatory' || locumComplianceDocument.type !== 'Optional')
+                  && !locumComplianceDocument.mandatory_training
+              "
+              class="w-full"
+            >
+              <div class="leading-tight pb-4">
+                <p class="font-bold">
+                  Expired At
+                </p>
+                <p
+                  :class="locumComplianceDocument && locumComplianceDocument.expired_at ? 'text-white' : 'text-gray-400'"
+                >
+                  {{
+                    locumComplianceDocument
+                      && locumComplianceDocument.expired_at
+                      ? $moment(locumComplianceDocument.expired_at).utc().format('DD/MM/YYYY | HH:mm')
+                      : 'No expiration date set.'
+                  }}
+                </p>
+              </div>
+              <div v-if="locumComplianceDocument.status == 'Rejected'" class="pb-2 mb-2">
+                <p class="font-bold">
+                  Note
+                </p>
+                <p
+                  class="text-white break-words"
+                >
+                  {{ locumComplianceDocument && locumComplianceDocument.note ? locumComplianceDocument.note : 'N/A' }}
+                </p>
               </div>
 
-              <!-- PICK EXPIRATION DATE -->
-              <div v-else class="pb-4">
-                <AppDate
-                  v-model="toPutLocumDetailCompliance.expired_at"
-                  :name="'expired_at'"
-                  :label="'Change Expiration Date'"
-                  :error="formError.find(item => item.field === 'expired_at')"
-                  required
-                />
-              </div>
+              <!-- UPDATE COMPLIANCE FILE STATUS -->
+              <div v-if="authAdminPermissions.includes('Approve/Deny Compliance Documents')">
+                <!-- CHANGE STATUS  -->
+                <div>
+                  <AppInput
+                    v-model="toPutLocumDetailCompliance.status"
+                    class="w-full mr-2"
+                    :type="'select'"
+                    :name="'status'"
+                    :placeholder="'Select...'"
+                    :items="[{label: 'Approve', value: 'Approved'}, {label: 'Reject', value: 'Rejected'}]"
+                    :error="formError.find(item => item.field === 'status')"
+                    :label="'Status'"
+                    required
+                    @change="setStatusData($event)"
+                  />
+                </div>
 
-              <!-- CONFIRM BUTTON -->
-              <div class="flex">
-                <AppButton class="mr-2" :label="'Save'" @click="publish()" />
-                <AppButton
-                  v-if="['Expiring', 'Expired'].includes(locumComplianceDocument.status)"
-                  class="mr-2"
-                  :label="'Notify Locum'"
-                  @click="emailModal=true"
-                />
+                <!-- PUT NOTES IF REJECTING -->
+                <div
+                  v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status === 'Rejected'"
+                  class="w-full"
+                >
+                  <AppInput
+                    v-model="selectedComplianceDocumentRejectReasonValue"
+                    class="w-full mr-2"
+                    :type="'select'"
+                    :name="'complianceNote'"
+                    :placeholder="'Select...'"
+                    :items="complianceDocumentRejectReasonSeletionList"
+                    :error="selectedComplianceDocumentRejectReasonValue === '' ? null : formError.find(item => item.field === 'note')"
+                    :label="'Reason for Rejection'"
+                    required
+                  />
+
+                  <AppInput
+                    v-if="selectedComplianceDocumentRejectReasonValue === ''"
+                    v-model="toPutLocumDetailCompliance.note"
+                    :name="'complianceNote'"
+                    :placeholder="'Type Here'"
+                    :type="'textarea'"
+                    :rows="2"
+                    :class="'font-normal'"
+                    :error="formError.find(item => item.field === 'note')"
+                  />
+                </div>
+                
+
+                <!-- PICK EXPIRATION DATE -->
+                <div
+                  v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'"
+                  class="pb-4"
+                >
+                  <!-- IF NOT APPLICABLE -->
+                  <div v-if="locumComplianceDocument.compliance_document_type_name === 'Passport' 
+                    && (locumComplianceDocument.country_name === 'United Kingdom' || locumComplianceDocument.name === 'Ireland')"
+                  >
+                    <input
+                      id="notApplicable" 
+                      v-model="expiration_not_applicable" 
+                      type="checkbox" 
+                      name="notApplicable" 
+                      :value="true"
+                    >
+                    <label for="notApplicable">Expiration Not Applicable (British Passport Only)</label>
+                  </div>
+                  
+
+                  <AppDate
+                    v-model="toPutLocumDetailCompliance.expired_at"
+                    :disabled="expiration_not_applicable === false ? false : true"
+                    :isDisabled="expiration_not_applicable === false ? false : true"
+                    :name="'expired_at'"
+                    :label="'Change Expiration Date'"
+                    :error="formError.find(item => item.field === 'expired_at')"
+                    :required="expiration_not_applicable === false ? true : false"
+                  />
+                </div>
+
+                <!-- CONFIRM BUTTON -->
+                <div class="flex">
+                  <AppButton class="mr-2" :label="'Save'" @click="publish()" />
+                  <AppButton
+                    v-if="['Expiring', 'Expired'].includes(locumComplianceDocument.status)"
+                    class="mr-2"
+                    :label="'Notify Locum'"
+                    @click="emailModal=true"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          </template>
         </div>
 
         <div class="flex flex-col text-gray-400 md:m-2 md:w-2/3 lg:w-2/3">
@@ -162,14 +265,20 @@
             <template v-if="!loadingFile && fileUrl">
               <img
                 v-if="locumComplianceDocument.file.type === 'image'"
-                :src="fileUrl" 
+                :src="fileUrl"
                 class="object-contain object-left-top"
               >
               <embed
-                v-if="locumComplianceDocument.file.type !== 'image'"
+                v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === true"
                 :src="fileUrl"
                 class="object-contain object-left-top w-full document h-full"
-              > 
+              >
+              <!-- <iframe id="myframe" :src="disabledFileUrl"/> -->
+              <embed
+                v-if="locumComplianceDocument.file.type !== 'image' && authAdminPermissions.includes('Download Locum Compliance Documents') === false"
+                :src="disabledFileUrl"
+                class="object-contain object-left-top w-full document h-full"
+              >
             </template>
           </div>
         </div>
@@ -208,393 +317,546 @@
 </template>
 
 <script>
-  import AppDate from "@/components/Base/AppDate"
-  import AppInput from "@/components/Base/AppInput"
-  import AppButton from "@/components/Base/AppButton"
+import AppDate from "@/components/Base/AppDate"
+import AppInput from "@/components/Base/AppInput"
+import AppButton from "@/components/Base/AppButton"
 
-  export default {
-    components: {
-      AppDate,
-      AppInput,
-      AppButton
+export default {
+  components: {
+    AppDate,
+    AppInput,
+    AppButton
+  },
+
+  props: {
+    user: {
+      type: Object,
+      required: true
     },
+    locumComplianceDocument: {
+      type: Object,
+      required: true
+    }
+  },
 
-    props: {
-      user: {
-        type: Object,
-        required: true,
+  data () {
+    return {
+      expiration_not_applicable: false,
+      loadingFile: false,
+      fileUrl: null,
+      disabledFileUrl: null,
+
+      myframe: null,
+      downloading: false,
+
+      toPutLocumDetailCompliance: {
+        expired_at: null,
+        status: "",
+        note: ""
       },
-      locumComplianceDocument: {
-        type: Object,
-        required: true,
-      },
-    },
-
-    data () {
-      return {
-        loadingFile: false,
-        fileUrl: null,
-
-        downloading: false,
-
-        toPutLocumDetailCompliance: {
-          expired_at: null,
-          status: "",
-          note: ""
-        },
-        emailContent: "",
-        notesAreVisible: false,
-        formError: [],
-        emailModal: false,
-        editorOption: {
-          placeholder: "Type your message here",
-          modules: {
-            toolbar: [
-              ["bold", "italic", "underline", "strike"],
-              ["blockquote", "code-block"],
-              [{ header: 1 }, { header: 2 }],
-              [{ list: "ordered" }, { list: "bullet" }],
-              [{ script: "sub" }, { script: "super" }],
-              [{ indent: "-1" }, { indent: "+1" }],
-              [{ direction: "rtl" }],
-              [{ size: ["small", false, "large", "huge"] }],
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
-              [{ font: [] }],
-              [{ color: [] }, { background: [] }],
-              [{ align: [] }],
-              ["clean"],
-              ["link"]
-            ]
-          }
+      emailContent: "",
+      formError: [],
+      emailModal: false,
+      editorOption: {
+        placeholder: "Type your message here",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"],
+            ["blockquote", "code-block"],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ script: "sub" }, { script: "super" }],
+            [{ indent: "-1" }, { indent: "+1" }],
+            [{ direction: "rtl" }],
+            [{ size: ["small", false, "large", "huge"] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ font: [] }],
+            [{ color: [] }, { background: [] }],
+            [{ align: [] }],
+            ["clean"],
+            ["link"]
+          ]
         }
-      }
-    },
-
-    computed: {
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
       },
+      selectedComplianceDocumentRejectReasonValue: null
+    }
+  },
+
+  computed: {
+    authAdminPermissions () {
+      return this.$store.getters["permissions"]
     },
 
-    created () {
-      this.toPutLocumDetailCompliance.expired_at = this.locumComplianceDocument.expired_at
-      this.toPutLocumDetailCompliance.status = this.locumComplianceDocument.status
-      this.toPutLocumDetailCompliance.note = this.locumComplianceDocument.note
-      console.log("to put locum compliance", this.toPutLocumDetailCompliance)
-      if (this.locumComplianceDocument.status === "Expiring") {
-        this.toPutLocumDetailCompliance.status = "Approved"
-      }
-      if (this.locumComplianceDocument.status === "Expired") {
-        this.toPutLocumDetailCompliance.status = "Rejected"
-      }
-      if (this.locumComplianceDocument.status === "Pending") {
-        this.toPutLocumDetailCompliance.status = null
-      }
+    complianceDocumentRejectReasonSeletionList () {
+      return this.locumComplianceDocument
+        ? [
+            ...(this.locumComplianceDocument
+              .compliance_document_reject_reasons || []),
+            ...(this.locumComplianceDocument.parent_compliance_document
+              ? this.locumComplianceDocument.parent_compliance_document
+                  .compliance_document_reject_reasons || []
+              : [])
+          ]
+            .map(({ reject_reason: rejectReason }) => ({
+              label: rejectReason,
+              value: rejectReason
+            }))
+            .concat([
+              {
+                label: "Other",
+                value: ""
+              }
+            ])
+        : []
+    }
+  },
 
-      this.setStatusData(this.toPutLocumDetailCompliance.status)
+  watch: {
+    selectedComplianceDocumentRejectReasonValue (newVal, oldVal) {
+      if (!newVal && oldVal) {
+        this.toPutLocumDetailCompliance.note = ""
+      }
     },
 
-    mounted () {
-      if (this.locumComplianceDocument && this.locumComplianceDocument.file) {
-        this.loadingFile = true
-        const {
-          url: fileUrl,
-          type,
-          subtype,
-        } = this.getFileUrl(this.locumComplianceDocument.file)
+    expiration_not_applicable (value) {
+      if (value === true) {
+        this.toPutLocumDetailCompliance.expired_at = null
+      } else {
+        this.toPutLocumDetailCompliance.expired_at = 
+          this.toPutLocumDetailCompliance.expired_at 
+            ? this.toPutLocumDetailCompliance.expired_at 
+            : this.locumComplianceDocument.expired_at
+      }
+    }
+  },
 
-        console.log('qweqwe', this.locumComplianceDocument.file, {
-          url: fileUrl,
-          type,
-          subtype,
+  created () {
+    if (this.locumComplianceDocument.expired_at === null && this.locumComplianceDocument.status === 'Approved') {
+      this.expiration_not_applicable = true
+    } else {
+      this.expiration_not_applicable = false
+    }
+    
+    this.toPutLocumDetailCompliance.expired_at = this.locumComplianceDocument.expired_at
+    this.toPutLocumDetailCompliance.status = this.locumComplianceDocument.status
+    this.toPutLocumDetailCompliance.note = this.locumComplianceDocument.note
+
+    if (this.locumComplianceDocument.status === "Expiring") {
+      this.toPutLocumDetailCompliance.status = "Approved"
+    }
+    if (this.locumComplianceDocument.status === "Expired") {
+      this.toPutLocumDetailCompliance.status = "Rejected"
+    }
+    if (this.locumComplianceDocument.status === "Pending") {
+      this.toPutLocumDetailCompliance.status = null
+    }
+
+    this.setStatusData(this.toPutLocumDetailCompliance.status)
+  },
+
+  mounted () {
+    if (
+      this.authAdminPermissions.includes(
+        "Download Locum Compliance Documents"
+      ) === false
+    ) {
+      window.addEventListener(
+        "contextmenu",
+        function (e) {
+          e.preventDefault()
+        },
+        false
+      )
+    }
+
+    if (this.locumComplianceDocument) {
+      const complianceDocumentRejectReasonSeletionList = [
+        ...(this.locumComplianceDocument.compliance_document_reject_reasons ||
+          []),
+        ...(this.locumComplianceDocument.parent_compliance_document
+          ? this.locumComplianceDocument.parent_compliance_document
+              .compliance_document_reject_reasons || []
+          : [])
+      ]
+        .map(({ reject_reason: rejectReason }) => ({
+          label: rejectReason,
+          value: rejectReason
+        }))
+        .concat([
+          {
+            label: "Other",
+            value: ""
+          }
+        ])
+
+      const selectedComplianceDocumentRejectReason = complianceDocumentRejectReasonSeletionList.find(
+        ({ value }) => value === this.locumComplianceDocument.note
+      )
+
+      this.selectedComplianceDocumentRejectReasonValue = selectedComplianceDocumentRejectReason
+        ? selectedComplianceDocumentRejectReason.value
+        : this.locumComplianceDocument.note
+        ? ""
+        : null
+    }
+
+    if (this.locumComplianceDocument && this.locumComplianceDocument.file) {
+      this.loadingFile = true
+      const { url: fileUrl, type, subtype } = this.getFileUrl(
+        this.locumComplianceDocument.file
+      )
+
+      console.log("qweqwe", this.locumComplianceDocument.file, {
+        url: fileUrl,
+        type,
+        subtype
+      })
+
+      this.$axios
+        .get(fileUrl, {
+          responseType: "blob"
         })
+        .then(response => {
+          this.fileUrl = window.URL.createObjectURL(
+            new Blob([response.data], {
+              type: `${type}/${subtype}`
+            })
+          )
 
-        this.$axios.get(fileUrl, {
-          responseType: 'blob',
-        }).then((response) => {
-          this.fileUrl = window.URL.createObjectURL(new Blob([response.data], {
-            type: `${type}/${subtype}`,
-          }))
+          this.disabledFileUrl = `${this.fileUrl}#toolbar=0`
+
+          console.log("fileUrl", `${this.fileUrl}#toolbar=0`)
 
           // const fileReader = new window.FileReader()
           // fileReader.onload = function () {
           //   this.fileUrl = fileReader.result
           // }
           // fileReader.readAsDataURL(response.data)
-        }).catch((err) => {
-          console.log('err', err.response || err)
-          let message = 'Something went wrong!'
+        })
+        .catch(err => {
+          console.log("err", err.response || err)
+          let message = "Something went wrong!"
           if (err.response && err.response.data && err.response.data.message) {
             message = err.response.data.message
           }
-          this.$store.commit('SET_NOTIFICATION', {
+          this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
-            status: 'danger',
-            text: message,
+            status: "danger",
+            text: message
           })
-        }).finally(() => {
+        })
+        .finally(() => {
           this.loadingFile = false
         })
+    }
+  },
+
+  methods: {
+    onEditorBlur (editor) {
+      console.log("editor blur!", editor)
+    },
+
+    onEditorFocus (editor) {
+      console.log("editor focus!", editor)
+    },
+
+    onEditorReady (editor) {
+      console.log("editor ready!", editor)
+    },
+
+    publish () {
+      this.formError = []
+
+      this.toPutLocumDetailCompliance.note =
+        this.selectedComplianceDocumentRejectReasonValue ||
+        this.toPutLocumDetailCompliance.note
+
+      console.log(
+        "toPutLocumDetailCompliance",
+        this.toPutLocumDetailCompliance
+      )
+
+      let notRequired = []
+
+      if (this.toPutLocumDetailCompliance.status === "Approved") {
+        // notRequired.push("status");
+        this.toPutLocumDetailCompliance.note = ""
+        notRequired.push("note")
+        if (this.locumComplianceDocument.compliance_document_name && this.expiration_not_applicable === true) {
+          notRequired.push("expired_at")
+        }
+      }
+
+      if (this.toPutLocumDetailCompliance.status === "Rejected") {
+        // notRequired.push("note");
+        this.toPutLocumDetailCompliance.expired_at = null
+        notRequired.push("expired_at")
+      }
+
+      this.Validate(this.toPutLocumDetailCompliance, notRequired)
+      console.log(this.toPutLocumDetailCompliance)
+      console.log("errors", this.formError)
+      if (!this.formError.length) {
+        this.toPutLocumDetailComplianceDocs()
       }
     },
 
-    methods: {
-      onEditorBlur (editor) {
-        console.log("editor blur!", editor)
-      },
+    setStatusData (incomingStatus) {
+      this.toPutLocumDetailCompliance.status = incomingStatus
+    },
 
-      onEditorFocus (editor) {
-        console.log("editor focus!", editor)
-      },
-
-      onEditorReady (editor) {
-        console.log("editor ready!", editor)
-      },
-
-      publish () {
-        this.formError = []
-
-        console.log(
-          "toPutLocumDetailCompliance",
-          this.toPutLocumDetailCompliance
+    downloadItem (fileUrl, fileFilename) {
+      if (
+        this.authAdminPermissions.includes(
+          "Download Locum Compliance Documents"
         )
-
-        let notRequired = []
-
-        if (this.toPutLocumDetailCompliance.status === "Approved") {
-          // notRequired.push("status");
-          this.toPutLocumDetailCompliance.note = ""
-          notRequired.push("note")
-        }
-
-        if (this.toPutLocumDetailCompliance.status === "Rejected") {
-          // notRequired.push("note");
-          this.toPutLocumDetailCompliance.expired_at = null
-          notRequired.push("expired_at")
-        }
-
-        this.Validate(this.toPutLocumDetailCompliance, notRequired)
-        console.log(this.toPutLocumDetailCompliance)
-        console.log("errors", this.formError)
-        if (!this.formError.length) {
-          this.toPutLocumDetailComplianceDocs()
-        }
-      },
-
-      setStatusData (incomingStatus) {
-        this.toPutLocumDetailCompliance.status = incomingStatus
-        if (incomingStatus === "Rejected") {
-          this.notesAreVisible = true
-        } else {
-          this.notesAreVisible = false
-        }
-      },
-
-      downloadItem (fileUrl, fileFilename) {
-        const axios = require('axios')
+      ) {
+        const axios = require("axios")
         this.downloading = true
-        axios.get(fileUrl, {
-          responseType: 'blob',
-        }).then(response => {
-          const url = window.URL.createObjectURL(new Blob([response.data]))
-          const link = document.createElement('a')
-          link.setAttribute('href', url)
-          link.setAttribute('download', fileFilename)
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }).catch(err => {
-          console.log('download file error', err)
-          this.$store.commit('SET_NOTIFICATION', {
-            enabled: true,
-            status: 'danger',
-            text: err.response.data.message
+        axios
+          .get(fileUrl, {
+            responseType: "blob"
           })
-        }).finally(() => {
-          this.downloading = false
-        })
-      },
+          .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement("a")
+            link.setAttribute("href", url)
+            link.setAttribute("download", fileFilename)
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+          })
+          .catch(err => {
+            console.log("download file error", err)
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "danger",
+              text: err.response.data.message
+            })
+          })
+          .finally(() => {
+            this.downloading = false
+          })
+      } else {
+        console.log("You are not allowed to perform such action.")
+      }
+    },
 
-      getFileUrl (file) {
-        console.log('getFileUrl', file)
+    getFileUrl (file) {
+      console.log("getFileUrl", file)
 
-        const {
-          url,
-          type,
-          subtype,
-        } = file
+      const { url, type, subtype } = file
 
+      if (type === "application") {
         if (
-          type === 'application'
+          subtype === "msword" ||
+          subtype ===
+            "vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+          subtype ===
+            "vnd.openxmlformats-officedocument.wordprocessingml.template" ||
+          subtype === "vnd.ms-word.document.macroEnabled.12" ||
+          subtype === "vnd.ms-word.template.macroEnabled.12"
         ) {
-          if (
-            subtype === 'msword'
-            || subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.document'
-            || subtype === 'vnd.openxmlformats-officedocument.wordprocessingml.template'
-            || subtype === 'vnd.ms-word.document.macroEnabled.12'
-            || subtype === 'vnd.ms-word.template.macroEnabled.12'
-          ) {
           //   return this.convertDoc(url)
-            return {
-              url: `${process.env.API_URL}/docs-to-pdf?url=${url}`,
-              type: 'application',
-              subtype: 'pdf',
-            } 
-          }
-
           return {
-            url,
-            type,
-            subtype,
-          }
-        }
-
-        if (
-          type === 'image'
-        ) {
-          if (subtype === 'tiff') {
-          //   return this.convertDoc(url)
-            return {
-              url: `${process.env.API_URL}/image-to-jpeg?url=${url}`,
-              type: 'image',
-              subtype: 'jpeg',
-            } 
-          }
-
-          return {
-            url,
-            type,
-            subtype,
+            url: `${process.env.API_URL}/docs-to-pdf?url=${url}`,
+            type: "application",
+            subtype: "pdf"
           }
         }
 
         return {
           url,
           type,
-          subtype,
+          subtype
         }
-      },
+      }
 
-      convertDoc (document) {
-        return `https://docs.google.com/gview?url=${document}&embedded=true`
-      },
-
-      getQuery () {
-        const query = {
-          ...this.$route.query
+      if (type === "image") {
+        if (subtype === "tiff") {
+          //   return this.convertDoc(url)
+          return {
+            url: `${process.env.API_URL}/image-to-jpeg?url=${url}`,
+            type: "image",
+            subtype: "jpeg"
+          }
         }
-        const offset = parseInt(query.page) * 10 - 10
-        return offset
-      },
 
-      sendEmail (id, body) {
-        this.$axios.post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
-          body,
-        }).then(res => {
-          this.$store.commit('SET_NOTIFICATION', {
+        return {
+          url,
+          type,
+          subtype
+        }
+      }
+
+      return {
+        url,
+        type,
+        subtype
+      }
+    },
+
+    convertDoc (document) {
+      return `https://docs.google.com/gview?url=${document}&embedded=true`
+    },
+
+    getQuery () {
+      const query = {
+        ...this.$route.query
+      }
+      const offset = parseInt(query.page) * 10 - 10
+      return offset
+    },
+
+    sendEmail (id, body) {
+      this.$axios
+        .post(`/api/v1/admin/locum-compliance-documents/${id}/send-email`, {
+          body
+        })
+        .then(res => {
+          this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
-            status: 'success',
+            status: "success",
             text: res.data.message
           })
           setTimeout(() => {
             this.emailModal = false
           }, 200)
         })
-      },
+    },
 
-      async toPutLocumDetailComplianceDocs () {
-        console.log(this.toPutLocumDetailCompliance)
-        try {
-          if (this.toPutLocumDetailCompliance.status === "Rejected") {
-            if (this.toPutLocumDetailCompliance.note) {
-              await this.$axios.put(`/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocument.id}/update-status`, {
+    async toPutLocumDetailComplianceDocs () {
+      console.log(this.toPutLocumDetailCompliance)
+      try {
+        if (this.toPutLocumDetailCompliance.status === "Rejected") {
+          if (this.toPutLocumDetailCompliance.note) {
+            await this.$axios.put(
+              `/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocument.id}/update-status`,
+              {
                 status: this.toPutLocumDetailCompliance.status,
                 expired_at: this.toPutLocumDetailCompliance.expired_at,
-                note: this.toPutLocumDetailCompliance.note,
-              })
+                note: this.toPutLocumDetailCompliance.note
+              }
+            )
 
-              // await this.getLocums();
-              this.$emit('complianceUpdated')
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "success",
-                text: "Saved"
-              })
-            } else if (this.toPutLocumDetailCompliance.note === "") {
-              this.$store.commit("SET_NOTIFICATION", {
-                enabled: true,
-                status: "danger",
-                text: "Notes are required"
-              })
-            }
-          } else if (
-            this.toPutLocumDetailCompliance.status === "Approved"
-            || this.toPutLocumDetailCompliance.status === "Expired"
-            || this.toPutLocumDetailCompliance.status === ""
-          ) {
-            await this.$axios.put(`/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocument.id}/update-status`, {
-              status: this.toPutLocumDetailCompliance.status,
-              expired_at: this.toPutLocumDetailCompliance.expired_at,
-            })
-
-            this.$emit('complianceUpdated')
             // await this.getLocums();
+            this.$emit("complianceUpdated")
             this.$store.commit("SET_NOTIFICATION", {
               enabled: true,
               status: "success",
               text: "Saved"
             })
+          } else if (this.toPutLocumDetailCompliance.note === "") {
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "danger",
+              text: "Notes are required"
+            })
           }
+        } else if (
+          this.toPutLocumDetailCompliance.status === "Approved" ||
+          this.toPutLocumDetailCompliance.status === "Expired" ||
+          this.toPutLocumDetailCompliance.status === ""
+        ) {
+          await this.$axios.put(
+            `/api/v1/admin/locum-compliance-documents/${this.locumComplianceDocument.id}/update-status`,
+            {
+              status: this.toPutLocumDetailCompliance.status,
+              expired_at: this.toPutLocumDetailCompliance.expired_at
+            }
+          )
 
-          this.goBack()
-        } catch (err) {
-          console.log("compliance file verification error", err)
+          this.$emit("complianceUpdated")
+          // await this.getLocums();
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
-            status: "danger",
-            text: err.response.data.message
+            status: "success",
+            text: "Saved"
           })
         }
-      },
 
-      goBack () {
-        const query = {
-          ...this.$route.query
-        }
-
-        if (query.job_status) {
-          delete query.job_status
-        }
-
-        this.$router.push({
-          path: `/locums/${this.user.id}/locum-compliance`,
-          query
+        this.goBack()
+      } catch (err) {
+        console.log("compliance file verification error", err)
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: err.response.data.message
         })
-      },
-
+      }
     },
+
+    goBack () {
+      const query = {
+        ...this.$route.query
+      }
+
+      if (query.job_status) {
+        delete query.job_status
+      }
+
+      this.$router.push({
+        path: `/locums/${this.user.id}/locum-compliance`,
+        query
+      })
+    }
   }
+}
 </script>
 
 <style>
+.document {
+  width: 100%;
+  min-height: 50vh;
+}
+
+.image {
+  min-height: 100%;
+  max-height: 100%;
+}
+
+.shield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #333;
+  opacity: 0.5;
+  z-index: 511;
+}
+
+.confirm-termination-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 25px;
+  width: 800px;
+  max-width: 95%;
+  /* max-height: 80%; */
+  min-height: 50%;
+  overflow: auto;
+  transition: all 0.3s ease-in-out;
+  background-color: #505561;
+  z-index: 512;
+}
+
+@media screen and (min-width: 768px) {
   .document {
-    width: 100%;
-    min-height: 50vh;
+    min-height: 70vh;
   }
 
   .image {
-    min-height: 100%;
-    max-height: 100%;
+    min-height: 60vh;
+    max-height: 60vh;
   }
+}
 
-  @media screen and (min-width: 768px) {
-    .document {
-      min-height: 70vh;
-    }
-
-    .image {
-      min-height: 60vh;
-      max-height: 60vh;
-    }
+@media screen and (min-width: 1200px) {
+  .confirm-termination-modal {
+    max-height: 50%;
+    min-height: 50%;
   }
+}
 </style>

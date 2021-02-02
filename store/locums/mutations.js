@@ -8,21 +8,6 @@ export default {
 	SET_LOCUM_COMP_DOCS (state, payload) {
 		state.locumCompDocs = payload
 	},
-	UPDATE_LOCUM_USER (state, payload) {
-		let index = state.locumUsers.findIndex(
-			locumUser => locumUser.id === payload.id
-		)
-		if (index >= 0) {
-			state.locumUsers.splice(index, 1, payload)
-			const updatedLocumUser = state.locumUsers.find(
-				locumUser => locumUser.id === payload.id
-			)
-
-			if (state.locumUser.id === updatedLocumUser.id) {
-				state.locumUser = updatedLocumUser
-			}
-		}
-	},
 	UPDATE_LOCUM_DOCUMENT (state, payload) {
 		let index = state.mandatoryComplianceDocuments.findIndex(
 			mandatoryCompDoc =>
@@ -59,19 +44,5 @@ export default {
 	},
 	SET_LOCUM_DOC_ALERT (state, payload) {
 		state.locumDocAlert = payload
-	},
-	ADD_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state, payload) {
-		let index = state.locumComplianceNotifications.findIndex(locumCompDocNotif =>  locumCompDocNotif.id === payload.locumDetailComplianceDocument.id)
-		if (index < 0) {
-			state.locumComplianceNotifications.unshift(payload)
-		} else if (index >= 0) {
-			state.locumComplianceNotifications.splice(index, 1, payload)
-		}
-	},
-	REMOVE_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state, payload) {
-		state.locumComplianceNotifications = state.locumComplianceNotifications.filter(locumCompDocNotif => locumCompDocNotif.locumDetailComplianceDocument.id !==payload)
-	},
-	CLEAR_LOCUM_COMPLIANCE_DOCUMENT_NOTIFICATION (state) {
-		state.locumComplianceNotifications = []
-	},
+  },
 }

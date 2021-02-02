@@ -1,6 +1,9 @@
 <template>
   <div class="edit-practice-user-modal shadow-lg">   
-    <EditPracticeUser :practiceUser="practiceUser" @setPracticeUser="setPracticeUser" />
+    <EditPracticeUser
+      :practiceUser="practiceUser"
+      @setPracticeUser="setPracticeUser"
+    />
   </div>
 </template>
 
@@ -44,6 +47,7 @@
 
       setPracticeUser (practiceUser) {
         this.practiceUser = practiceUser
+        this.$emit('practiceUpdated')
       },
 
     },

@@ -26,7 +26,13 @@
           @click="display"
         />
         <div class="mx-1" />
-        <AppButton :label="'Initiate Draw'" class="mx-1" :disabled="!canInitiateDraw" @click="draw_modal = true" />
+        <AppButton
+          v-if="authAdminPermissions.includes('Referral Lottery Processes')"
+          :label="'Initiate Draw'" 
+          class="mx-1" 
+          :disabled="!canInitiateDraw" 
+          @click="draw_modal = true" 
+        />
       </div>
     </template>
 
@@ -194,6 +200,9 @@
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
 
       canInitiateDraw () {
         return this.currentDateStart && this.currentDateEnd && !this.loading && !this.initialLoading && this.users.length > 0
@@ -263,9 +272,9 @@
         let routeQuery = this.$route.query.status ? this.$route.query.status.toLowerCase() : 'entries'
 
         if (routeQuery === 'entries' && this.users.length === 0) {
-          return `No Raffle ${routeQuery} Found`
+          return `No Prize Draw ${routeQuery} Found`
         } else if (routeQuery === 'winners' && this.raffles.length === 0) {
-          return `No Raffle ${routeQuery} Found`
+          return `No Prize Draw ${routeQuery} Found`
         }
 
         return ''

@@ -287,8 +287,7 @@ export default{
       }
     },
 
-    async fetchJobParts({ commit }, payload) {
-      console.log('payload', payload)
+    async fetchJobParts ({ commit }, payload) {
       commit('TOGGLE_LOADING', true)
       const response = await jobsApi.fetchJobParts(this.$axios, payload)
       commit('TOGGLE_LOADING', false)

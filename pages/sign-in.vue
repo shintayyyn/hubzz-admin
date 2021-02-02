@@ -1,5 +1,6 @@
 <template>
   <div class="relative w-full flex justify-center md:h-full md:items-center px-4 md:px-0 py-12 md:py-0">
+    <AppNotification />
     <div
       class="w-full md:w-2/3 lg:w-4/5 xl:w-1/2 flex flex-col items-start p-4 md:px-10 md:py-6 sm:mx-12 md:mx-0 rounded-lg shadow-lg text-white"
       style="background-color: #55565A;"
@@ -45,6 +46,7 @@
   import debounce from "lodash.debounce"
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
+  import AppNotification from "@/components/AppNotification"
 
   export default {
     layout: 'auth',
@@ -52,6 +54,7 @@
     components: {
       AppInput,
       AppButton,
+      AppNotification,
     },
 
     data () {
@@ -110,7 +113,7 @@
           return
         }
       } catch (err) {
-        console.log('sign-in asyncData err', err)
+        console.log('sign-in err', err)
       }
     },
 
@@ -166,7 +169,7 @@
           let message = null
 
           if (err.response) {
-            if (err.response.status === 400 || err.response.data.error_messages) {
+            if (err.response.status === 400 && err.response.data.error_messages) {
               this.formErrors = err.response.data.error_messages
             } else {
               message = err.response.data.message
@@ -181,7 +184,7 @@
             this.$store.commit('SET_NOTIFICATION', {
               enabled: true,
               status: 'danger',
-              text: [`${message}`],
+              text: message,
             })
           }
 

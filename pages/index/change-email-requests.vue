@@ -1,11 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
     <AppLoading :loading="loading" spinner />
-
-    <div class="text-lg md:text-2xl text-white">
-      <span>Change Email Requests</span>
-    </div>
-
     <div v-if="false" class="mt-2">
       <div class="flex justify-start overflow-x-auto">
         <nuxt-link
@@ -75,50 +70,11 @@
         <div class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0">
           <label class="text-sm text-white md:pr-2">Sort by</label>
           <select
-            v-model="orderByValue"
+            v-model="selectedOrderByValue"
             class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
           >
-            <option value="id:asc">
-              ID (asc)
-            </option>
-            <option value="id:desc">
-              ID (desc)
-            </option>
-            <option value="new_email:asc">
-              New E-Mail Address (asc)
-            </option>
-            <option value="new_email:desc">
-              New E-Mail Address (desc)
-            </option>
-            <option value="user_count:asc">
-              User Count (asc)
-            </option>
-            <option value="user_count:desc">
-              User Count (desc)
-            </option>
-            <option value="requested_at_formatted:asc">
-              Requested At (asc)
-            </option>
-            <option value="requested_at_formatted:desc">
-              Requested At (desc)
-            </option>
-            <option value="status:asc">
-              Status (asc)
-            </option>
-            <option value="status:desc">
-              Status (desc)
-            </option>
-            <option value="accepted_at:asc">
-              Accepted At (asc)
-            </option>
-            <option value="accepted_at:desc">
-              Accepted At (desc)
-            </option>
-            <option value="rejected:asc">
-              Rejected At (asc)
-            </option>
-            <option value="rejected:desc">
-              Rejected At (desc)
+            <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
+              {{ orderByValue.displayLabel }}
             </option>
           </select>
         </div>
@@ -148,7 +104,7 @@
       </template>
     </AppTable>
 
-    <div v-if="count === 0" class="mt-2 w-full text-center text-white">
+    <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
       <span>No change email requests.</span>
     </div>
 
@@ -156,6 +112,7 @@
       v-if="$route.name !== 'index-change-email-requests'"
       class="bg-shield z-511 fixed inset-0 opacity-50"
       :to="{ name: 'index-change-email-requests' }"
+      draggable="false"
     />
 
     <nuxt-child
@@ -187,28 +144,24 @@
         search: '',
         filterStatus: null,
         sort: null,
-        orderBy: [],
+        orderBy: [
+          'requested_at_formatted:desc',
+        ],
         count: 0,
         changeEmailRequests: [],
       }
     },
 
     computed: {
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
       pages () {
         return Math.max(Math.ceil(this.count / this.limit), 1)
       },
 
       offset () {
         return Math.max(this.page * this.limit - this.limit, 0)
-      },
-
-      orderByValue: {
-        get () {
-          return this.orderBy.length > 0 ? this.orderBy[0] : null
-        },
-        set (orderBy) {
-          this.orderBy = [orderBy]
-        },
       },
 
       columns () {
@@ -219,30 +172,6 @@
             class: "text-center",
             sortable: true
           },
-          // {
-          //   name: "Memorable Word Category",
-          //   dataIndex: "memorable_word_category_name",
-          //   class: "text-center",
-          //   sortable: true
-          // },
-          // {
-          //   name: "Memorable Word",
-          //   dataIndex: "memorable_word",
-          //   class: "text-center",
-          //   sortable: true
-          // },
-          // {
-          //   name: "Memorable Date",
-          //   dataIndex: "memorable_date_formatted",
-          //   class: "text-center",
-          //   sortable: true
-          // },
-          // {
-          //   name: "Memorable Number",
-          //   dataIndex: "memorable_number",
-          //   class: "text-center",
-          //   sortable: true
-          // },
           {
             name: "New E-Mail Address",
             dataIndex: "new_email",
@@ -271,17 +200,50 @@
           },
           {
             name: "Accepted At",
-            dataIndex: "accepted_at_formatted",
+            dataIndex: "accepted_at_in_gb_formatted",
             class: "text-center",
             sortable: true,
           },
           {
             name: "Rejected At",
-            dataIndex: "rejected_at_formatted",
+            dataIndex: "rejected_at_in_gb_formatted",
             class: "text-center",
             sortable: true,
           },
         ]
+      },
+
+      orderByValues () {
+        return this.columns.reduce((orderByValues, column) => {
+          const {
+            name,
+            dataIndex,
+            sortable,
+          } = column
+
+          if (sortable) {
+            orderByValues.push({
+              displayLabel: `${name} (asc)`,
+              value: `${dataIndex}:asc`,
+            })
+
+            orderByValues.push({
+              displayLabel: `${name} (desc)`,
+              value: `${dataIndex}:desc`,
+            })
+          }
+
+          return orderByValues
+        }, [])
+      },
+
+      selectedOrderByValue: {
+        get () {
+          return this.orderBy.length > 0 ? this.orderBy[0] : null
+        },
+        set (orderBy) {
+          this.orderBy = [orderBy]
+        },
       },
 
       changeEmailRequestStatusColorClass () {
@@ -307,8 +269,37 @@
       },
     },
 
+    async asyncData ({ store, error }) {
+      try {
+        const authAdminPermissions = store.getters["permissions"]
+
+        if (authAdminPermissions.includes('View Change Email Requests') === false) {
+          error({
+            statusCode: 403,
+            message: 'You are not authorized to view this page.',
+          })
+          return
+        }
+
+      } catch(err) {
+        error({ statusCode: 404 })
+        store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Something went wrong!"
+        })
+        console.log("get parent practice error!!", err)
+      }
+    },
+
     mounted () {
-      this.searchSubmit()
+      this.loading = true
+      this.getChangeEmailRequests().catch((err) => {
+        console.log('err', err)
+      }).finally(() => {
+        this.loading = false
+      })
+      
       this.$store.dispatch('pendingChangeEmailRequestIds')
       this.$socket.on('Admin Notification Change Email Request Pending', this.getChangeEmailRequests)
       this.$socket.on('Admin Notification Change Email Request Rejected', this.changeEmailRequestUpdated)

@@ -105,22 +105,6 @@
 export default {
 	transition: "subpage",
 
-	// async asyncData({ app, route }) {
-	//   try {
-	//     let response = await app.$axios.$get(
-	//       `/api/v1/qualifications/${route.params.id}`
-	//     );
-
-	//     const qualification = response.data.qualification;
-
-	//     return {
-	//       qualification
-	//     };
-	//   } catch (err) {
-	//     console.log("index qualifications index _id index asyncData err", err);
-	//   }
-	// },
-
 	data () {
 		return {
 			qualification: null,

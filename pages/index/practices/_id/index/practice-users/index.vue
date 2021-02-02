@@ -7,10 +7,11 @@
         class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="
           $route.path == `/practices/${practice.id}/practice-users`
-          ? 'bg-sunglow hover:bg-sunglow-dark'  :  
-          'hover:bg-waterloo text-white'
+            ? 'bg-sunglow hover:bg-sunglow-dark' :  
+              'hover:bg-waterloo text-white'
         "
-        >Users
+      >
+        Users
       </nuxt-link>
       
       <nuxt-link
@@ -19,13 +20,17 @@
         class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
         :class="
           $route.path.includes(`/user-roles`)
-          ? 'bg-sunglow hover:bg-sunglow-dark'  :  
-          'hover:bg-waterloo text-white'
+            ? 'bg-sunglow hover:bg-sunglow-dark' :  
+              'hover:bg-waterloo text-white'
         "
-        >Roles
+      >
+        Roles
       </nuxt-link>
     </div>
-    <nuxt-child/>
+
+    <nuxt-child
+      @practiceUpdated="() => $emit('practiceUpdated')"
+    />
   </div>
 </template>
 <script>
@@ -43,7 +48,7 @@ export default {
     practice (){
       return this.$store.state.practices.practice
     },
-    getRoute (tab) {
+    getRoute () {
       return(tab) => {
         if(!tab){
           tab = ''
