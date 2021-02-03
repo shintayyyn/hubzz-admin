@@ -258,6 +258,7 @@
             params: {
               seen: false,
               id_and_notification_type_only: true,
+              limit: 999999,
             },
           }).then(res => {
             this.unseenNotifications = res.data.data.notifications
