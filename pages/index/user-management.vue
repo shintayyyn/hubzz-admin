@@ -1,26 +1,18 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-auto">
-		<div class="flex justify-start px-2 md:px-4">
+	<div class="flex-1 flex-col py-2 px-2">
+		<div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
 			<nuxt-link
 				v-if="authAdminPermissions.includes('View Admin Accounts')"
 				:to="getRoute()"
-				class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-				:class="
-					$route.path == `/user-management`
-					? 'bg-sunglow hover:bg-sunglow-dark'  :  
-					'hover:bg-waterloo text-white'
-				"
+				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+				:class="$route.path == `/user-management` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
 			>Users</nuxt-link>
 
 			<nuxt-link
 				v-if="authAdminPermissions.includes('View Roles')"
 				:to="getRoute('roles-and-permissions')"
-				class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-				:class="
-					$route.path.includes(`/user-management/roles-and-permissions`)
-					? 'bg-sunglow hover:bg-sunglow-dark'  :  
-					'hover:bg-waterloo text-white'
-				"
+				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+				:class="$route.path.includes(`/user-management/roles-and-permissions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
 			>Roles and Permissions</nuxt-link>
 		</div>
 		<div

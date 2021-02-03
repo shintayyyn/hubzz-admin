@@ -3,36 +3,36 @@
     <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
     <div class="flex items-center px-2 py-2">
       <div class="relative w-full">
-        <div class="flex flex-col text-white">
+        <div class="flex flex-col">
           <!-- Upper Filter (Job parts, Required fields) -->
           <div class="flex lg:flex-row flex-col items-center w-full">
             <!-- Job part filters -->
             <div class="flex flex-col p-3">
-              <div class="text-lg text-white font-semibold">
+              <div class="text-lg font-semibold">
                 Filter Job Parts
               </div>
               <div class="flex flex-row items-center">
                 <AppDate
                   v-model="invoiceableDateEnd"
-                  class="md:mx-2 text-white"
+                  class="md:mx-2"
                   :name="'practice_invoiceable_date_end'"
                   :label="'Filter from Beginning Until'"
                   :isBefore="true"
                 />
                 <div class="flex flex-col mx-4 text-sm md:text-base">
-                  <div class="w-full text-white">
+                  <div class="w-full">
                     <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
                     <label for="disputed">Include Disputed Invoices</label>
                   </div>
-                  <div class="w-full text-white">
+                  <div class="w-full">
                     <input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
                     <label for="cancelled">Include Cancelled Invoices</label>
                   </div>
-                  <div class="w-full text-white">
+                  <div class="w-full">
                     <input id="completed" v-model="showCompleted" type="checkbox" value="true">
                     <label for="completed">Include Completed Invoices</label>
                   </div>
-                  <div class="w-full text-white">
+                  <div class="w-full">
                     <input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
                     <label for="invoiced">Include Invoiced Invoices</label>
                   </div>
@@ -40,21 +40,21 @@
               </div>
             </div>
             <!-- Required Fields -->
-            <div class="text-white p-3 rounded-lg border-solid border-2 border-gray-200">
+            <div class="p-3 rounded-lg border-solid border-2 border-gray-200">
               <div class="text-lg font-semibold">
                 Billing Period (Required Fields)
               </div>
               <div class="flex">
                 <AppDate
                   v-model="billing_period_date_start"
-                  class="md:mx-2 text-white"
+                  class="md:mx-2"
                   :name="'billing_period_date_start'"
                   :label="'Billing Date From (Required)'"
                   :error="formError.find(item => item.field === 'billing_period_date_start')"
                 />
                 <AppDate
                   v-model="billing_period_date_end"
-                  class="md:mx-2 p-2 text-white"
+                  class="md:mx-2 p-2"
                   :name="'billing_period_date_end'"
                   :label="'Billing Date To (Required)'"
                   :isAfterDate="billing_period_date_start"
@@ -62,7 +62,7 @@
                 />
                 <AppDate
                   v-model="due_date"
-                  class="md:mx-2 text-white"
+                  class="md:mx-2"
                   :name="'due_date'"
                   :label="'Due Date(Required)'"
                   :isAfter="true"
@@ -84,15 +84,15 @@
                 :placeholder="'Practice Name'"
               />
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
               <input id="orderAlphabticalAsc" v-model="orderAlphabeticalAsc" type="checkbox" value="true">
               <label for="orderAlphabticalAsc">Sort Practice Alphabetically ↑</label>
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
               <input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
               <label for="standAloneOnly">Show Stand Alone Practices Only</label>
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
               <input
                 id="independentSpokesOnly"
                 v-model="showIndependentSpokesOnly"
@@ -101,7 +101,7 @@
               >
               <label for="independentSpokesOnly">Show Billable Spokes Only</label>
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
               <input
                 id="dependentSpokesOnly"
                 v-model="showDependentSpokesOnly"
@@ -110,7 +110,7 @@
               >
               <label for="dependentSpokesOnly">Show Dependent Spokes(grouped by Hubs)</label>
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
               <input
                 id="orderAlphabeticalDesc"
                 v-model="orderAlphabeticalDesc"
@@ -119,7 +119,7 @@
               >
               <label for="orderAlphabeticalDesc">Sort Practice Alphabetically ↓</label>
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3 text-white">
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
               <input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
               <label for="healthBoardsOnly">Show Health Boards Only</label>
             </div>
@@ -130,14 +130,14 @@
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB PART PICKER STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
     <div v-if="itemCount === 0">
-      <div class="mt-10 w-full text-center text-white">
+      <div class="mt-10 w-full text-center">
         No Billable Practices Found.
       </div>
     </div>
     <div v-else class="border-b-2 border-white mt-2">
       <div
         style="min-width: 768px; max-width: 1200px" 
-        class="hidden md:flex justify-around text-white font-semibold w-full px-4"
+        class="hidden md:flex justify-around font-semibold w-full px-4"
       >
         <div class="flex flex-row w-full pb-3 text-sm justify-around">
           <!-- ORIGINAL -->
@@ -226,7 +226,7 @@
         </div>
       </div>
 
-      <div class="w-full h-160 overflow-y-auto bg-charade rounded-lg">
+      <div class="w-full h-160 overflow-y-auto rounded-lg">
         <!-- BODY -->
         <div class="px-2 overflow-x-hidden">
           <AppTable
@@ -245,7 +245,7 @@
             @sorted="sorted"
           >
             <template v-slot:checker="slotProps">
-              <div class="flex flex-col items-center justify-between m-1">
+              <div class="flex flex-col items-center bg-gray-300 rounded-lg justify-between m-1">
                 <div class="text-left">
                   {{ slotProps.item.name }}
                 </div>
@@ -408,6 +408,7 @@
 <script>
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
+import AppTableNew from '@/components/Base/AppTableNew'
 import AppDate from "@/components/Base/AppDate"
 import AppButton from "@/components/Base/AppButton"
 import AppLoading from "@/components/Base/AppLoading"
@@ -416,6 +417,7 @@ import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
 		AppTable,
+		AppTableNew,
 		AppDate,
 		AppButton,
 		AppLoading,

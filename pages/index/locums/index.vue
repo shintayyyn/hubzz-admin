@@ -3,134 +3,81 @@
     v-if="authAdminPermissions.includes('View Locums') 
       || authAdminPermissions.includes('View Locum Jobs')
       || authAdminPermissions.includes('View Locum Compliance Detail')"
-    class="flex-1 flex flex-col md:px-6 overflow-y-auto"
+    class="flex-1 flex flex-col md:px-2 overflow-y-auto"
   >
     <div class="flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex py-2">
-        <div class="relative">
-          <input
-            v-model="search"
-            style="width: 280px;"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Locum by Name"
-            @keyup.enter="searchSubmit"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div>
-      </div>
-
       <div class="flex flex-col w-full justify-end">
-        <div
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Status</label>
-          <select
-            id="grid-state"
-            v-model="filterStatus"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+        <div class="w-full">
+          <div class="flex justify-between">
+            <div class="flex">
+              <div class="w-full">
+                <AppInputSmall
+                  v-model="search"
+                  :type="'text'"
+                  :name="'search'"
+                  :button="true"
+                  :buttonLabel="'Search'"
+                  :placeholder="'Search Locum by Name'"
+                  @click="searchSubmit()"
+                />
+              </div>
+              <div class="m-3">
+                <button
+                  class="px-6 py-1 border-2 border-gray-400 rounded-lg font-bold text-gray-600"
+                  @click="filterModal = !filterModal"
+                >
+                  Filters
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div
+            class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg my-2"
+            :class="filterModal ? 'flex' : 'hidden'"
           >
-            <option :value="null">
-              All
-            </option>
-            <option>Active</option>
-            <option>Dormant</option>
-            <option>Inactive</option>
-            <option>Bogus</option>
-            <option>Deactivated</option>
-            <option>Account Suspension</option>
-            <option>Compliance Suspension</option>
-          </select>
-        </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+              <AppInput
+                v-model="filterStatus"
+                :type="'select'"
+                :name="'locum_status'"
+                :label="'Locum Status'"
+                :placeholder="'Select...'"
+                :items="locumStatuses"
+              />
+            </div>
 
-        <div
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
-          <select
-            id="grid-state"
-            v-model="filterCompliances"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Empty</option>
-            <option>Incomplete</option>
-            <option>Pending</option>
-            <option>Expiring</option>
-            <option>Expired</option>
-            <option>Rejected</option>
-            <option>Compliant</option>
-          </select>
-        </div>
+            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+              <AppInput
+                v-model="filterCompliances"
+                :type="'select'"
+                :name="'compliance_status'"
+                :label="'Compliance Status'"
+                :placeholder="'Select...'"
+                :items="complianceStatuses"
+              />
+            </div>
 
-        <div
-          class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
-        >
-          <label class="text-sm text-white md:pr-2">Sort by</label>
-          <select
-            v-model="orderByValue"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option value="id">
-              ID (asc)
-            </option>
-            <option value="id:desc">
-              ID (desc)
-            </option>
-            <option value="name">
-              Name (asc)
-            </option>
-            <option value="name:desc">
-              Name (desc)
-            </option>
-            <option value="email">
-              E-Mail Address (asc)
-            </option>
-            <option value="email:desc">
-              E-Mail Address (desc)
-            </option>
-            <option value="profession">
-              Profession (asc)
-            </option>
-            <option value="profession:desc">
-              Profession (desc)
-            </option>
-            <option value="created_at">
-              Date Signed-up (asc)
-            </option>
-            <option value="created_at:desc">
-              Date Signed-up (desc)
-            </option>
-            <option value="status">
-              Status (asc)
-            </option>
-            <option value="status:desc">
-              Status (desc)
-            </option>
-            <option value="compliance_status">
-              Compliance Status (asc)
-            </option>
-            <option value="compliance_status:desc">
-              Compliance Status (desc)
-            </option>
-          </select>
+            <div class="md:px-1 flex flex-wrap w-full justify-end">
+              <AppButton
+                label="Reset"
+                :in-style="'padding:5px 14px;margin-bottom:5px'"
+                @click="filterReset"
+              />
+
+              <AppButton
+                class="mx-2"
+                label="Submit"
+                :in-style="'padding:5px 14px;margin-bottom:5px'"
+                @click="getJobs(params)"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <AppTable
+    <AppTableNew
       v-if="count !== 0"
       :total="count"
       :items="locumUsers"
@@ -167,7 +114,7 @@
           {{ registrationType(slotProps.item.referrer_domain) }}
         </div>
       </template>
-    </AppTable>
+    </AppTableNew>
 
     <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
       <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
@@ -182,12 +129,19 @@
 
 <script>
 	import debounce from 'lodash.debounce'
-	import AppTable from '@/components/Base/AppTable'
-
+  import AppTable from '@/components/Base/AppTable'
+  import AppTableNew from '@/components/Base/AppTableNew'
+  import AppInputSmall from '@/components/Base/AppInputSmall'
+  import AppInput from '@/components/Base/AppInput'
+  import AppButton from '@/components/Base/AppButton'
 	export default {
 
 		components: {
-			AppTable
+      AppTable,
+      AppTableNew,
+      AppInputSmall,
+      AppInput,
+      AppButton,
 		},
 
 		data () {
@@ -203,6 +157,78 @@
         ],
         count: 0,
         locumUsers: [],
+
+        locumStatuses: [
+          {
+            label: "All",
+            value: null,
+          },
+          {
+            label: "Active",
+            value: "Active",
+          },
+          {
+            label: "Dormant",
+            value: "Dormant",
+          },
+          {
+            label: "Inactive",
+            value: "Inactive",
+          },
+          {
+            label: "Bogus",
+            value: "Bogus",
+          },
+          {
+            label: "Deactivated",
+            value: "Deactivated",
+          },
+          {
+            label: "Account Suspension",
+            value: "Account Suspension",
+          },
+          {
+            label: "Compliance Suspension",
+            value: "Compliance Suspension",
+          },
+        ],
+
+        complianceStatuses: [
+          {
+            label: "All",
+            value: null,
+          },
+          {
+            label: "Empty",
+            value: "Empty",
+          },
+          {
+            label: "Incomplete",
+            value: "Incomplete",
+          },
+          {
+            label: "Pending",
+            value: "Pending",
+          },
+          {
+            label: "Expiring",
+            value: "Expiring",
+          },
+          {
+            label: "Expired",
+            value: "Expired",
+          },
+          {
+            label: "Rejected",
+            value: "Rejected",
+          },
+          {
+            label: "Compliant",
+            value: "Compliant",
+          },
+        ],
+
+        filterModal: false,
 			}
 		},
 
@@ -406,7 +432,15 @@
 			searchSubmit: debounce(function () {
 				this.currentPage = 1
         this.getAllLocumUsers()
-			}, 500),
+      }, 500),
+      
+      filterReset () {
+        this.search = null
+        this.filterStatus = null
+        this.filterCompliances = null
+
+        this.getAllLocumUsers()
+      },
     
       pageChangedHandler (page) {
         this.currentPage = page

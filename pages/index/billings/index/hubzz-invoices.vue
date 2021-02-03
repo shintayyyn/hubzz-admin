@@ -1,141 +1,42 @@
 <template>
   <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
     <div class="flex flex-col md:flex-row justify-start w-full m-3">
-      <div class="flex-1 text-white">
+      <div class="flex-1 text-white mr-2">
         <!-- <input
           v-model="search"
           class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
           placeholder="Filter by Practice Name or Invoice Number"
         > -->
-        <AppInput 
+        <AppInputSmall
           v-model="search"
           :type="'text'"
-          :label="'Search by Practice Name'"
-          :placeholder="'Practice Name'"
+          :name="'search'"
+          :button="true"
+          :buttonLabel="'Search'"
+          :placeholder="'Search Practice by Name'"
+          @click="searchSubmit()"
         />
       </div>
-      <div class="flex m-3 text-white">
+      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
         <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true">
         <label for="showUnpaidInvoiceOnly">Show Unpaid Invoices Only</label>
       </div>
-      <div class="flex m-3 text-white">
+      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
         <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
         <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
       </div>
-      <div class="flex m-3 text-white">
+      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
         <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
         <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
       </div>
-      <div class="flex m-3 text-white">
+      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
         <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
         <label for="showCsvExportOnly">Show CSV Exported Only</label>
       </div>
     </div>
+    
     <div class="m-2 border-b-2 border-white">
-      <div class="hidden md:flex pb-1 items-center text-sm text-white justify-around font-semibold">
-        <div 
-          v-if="authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')"
-          class="align-middle  text-center w-1/10"
-        >
-          Check
-        </div>
-        <div 
-          class="align-middle  text-center w-1/10"
-          @click="sorted('surgery_name')"
-        >
-          Invoice Number
-          <svgicon
-            v-if="!params.order_by.includes('surgery_name')"
-            class="inline align-baseline"
-            :name="sortIcon('surgery_name')"
-            height="12"
-            width="12"
-            color="white black"
-          />
-        </div>
-        <div 
-          class="align-middle text-center w-1/10"
-          @click="sorted('practice_name')"
-        >
-          Practice Name
-          <svgicon
-            v-if="!params.order_by.includes('practice_name')"
-            class="inline align-baseline"
-            :name="sortIcon('practice_name')"
-            height="12"
-            width="12"
-            color="white black"
-          />
-        </div>
-        
-        <div class="align-middle px-16 text-center w-1/10">
-          Period
-        </div>
-        <div 
-          class="align-middle pl-11 text-center w-1/10"
-          @click="sorted('issued_at')"
-        >
-          Issued At
-          <svgicon
-            v-if="!params.order_by.includes('issued_at')"
-            class="inline align-baseline"
-            :name="sortIcon('issued_at')"
-            height="12"
-            width="12"
-            color="white black"
-          />
-        </div>
-        <div class="align-middle pl-12 text-center w-1/10">
-          £ Amount
-        </div>
-        <div class="align-middle text-center w-1/10">
-          Due Date
-        </div>
-        <div 
-          class="align-middle  text-center w-1/10"
-          @click="sorted('paid_at')"
-        >
-          Payment Status
-          <svgicon
-            v-if="!params.order_by.includes('paid_at')"
-            class="inline align-baseline"
-            :name="sortIcon('paid_at')"
-            height="12"
-            width="12"
-            color="white black"
-          />
-        </div>
-        <div
-          class="align-middle text-center w-1/10"
-          @click="sorted('exported_at')"
-        >
-          Exported?
-          <svgicon
-            v-if="!params.order_by.includes('exported_at')"
-            class="inline align-baseline"
-            :name="sortIcon('exported_at')"
-            height="12"
-            width="12"
-            color="white black"
-          />
-        </div>
-        <div
-          v-if="authAdminPermissions.includes('Update Hubzz Invoices & Other Processes')"
-          class="align-middle text-center w-1/10"
-          @click="sorted('paid')"
-        >
-          Actions
-          <svgicon
-            v-if="!params.order_by.includes('paid')"
-            class="inline align-baseline"
-            :name="sortIcon('paid')"
-            height="12"
-            width="12"
-            color="white black"
-          />
-        </div>
-      </div>
-      <AppTable
+      <AppTableNew
         v-if="hubzzInvoices.length > 0"
         :total="hubzzInvoicesCount"
         :items="hubzzInvoices"
@@ -260,7 +161,7 @@
             </div> -->
           </div>
         </template>
-      </AppTable>
+      </AppTableNew>
       <template v-else>
         <div class="m-2 w-full text-center text-white">
           There are no Invoices for HUBZZ
@@ -474,6 +375,8 @@
 <script>
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
+import AppTableNew from '@/components/Base/AppTableNew'
+import AppInputSmall from '@/components/Base/AppInputSmall'
 import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 import debounce from "lodash.debounce"
@@ -481,7 +384,9 @@ import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
     AppInput,
-		AppButton,
+    AppButton,
+    AppTableNew,
+    AppInputSmall,
 		AppTable,
 		AppDateToggled,
 		AppConfirm

@@ -29,7 +29,7 @@
         />
       </template>
     </div>
-    <div v-if="adminUsers.length > 0 && authAdminPermissions.includes('View Admin Accounts')" class="w-full px-4 md:px-6 py-2">
+    <!-- <div v-if="adminUsers.length > 0 && authAdminPermissions.includes('View Admin Accounts')" class="w-full px-4 md:px-6 py-2">
       <div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
         <div v-if="deleteAdminUser == true" class="align-middle w-10" />
         <div class="align-middle px-2 w-1/3">
@@ -130,7 +130,21 @@
     />
     <p v-if="total === 0" class="px-6 py-2 text-white">
       No admin users.
-    </p>
+    </p> -->
+
+    <AppTableNew
+      v-if="total !== 0"
+      :total="itemCount"
+      :items="adminUsers"
+      :currentPage="currentPage"
+      :perPage="limit"
+      :columns="columns"
+      :loading="loading"
+      :routerLink="`/user-management`"
+      :orderBy="orderBy"
+      @pagechanged="pageChangedHandler"
+      @sorted="(_orderBy) => orderBy = _orderBy"
+    />
 
     <div v-if="modal" class="new-user-shield" @click="modal = false" />
     <transition name="slide" mode="out-in">
@@ -153,12 +167,14 @@ import CreateUser from "@/components/UserManagement/CreateUser"
 import AppConfirm from "@/components/Base/AppConfirm"
 import AppPagination from "@/components/Base/AppPagination"
 import AppButton from "@/components/Base/AppButton"
+import AppTableNew from '@/components/Base/AppTableNew'
 export default {
 	components: {
 		CreateUser,
 		AppConfirm,
 		AppPagination,
-		AppButton
+		AppButton,
+		AppTableNew,
 	},
 	data () {
 		return {
@@ -192,7 +208,7 @@ export default {
 				{
 					name: "Name",
 					slot: true,
-					slotName: "name",
+					slotName: "personal_detail.name",
 					dataIndex: "",
 					class: "text-center"
 				},

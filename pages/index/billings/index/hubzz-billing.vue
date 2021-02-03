@@ -1,27 +1,33 @@
 <template>
   <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
-    <div
-      v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
-      class="px-2 flex justify-start items-center flex-wrap"
-    >
-      <AppButton
-        class="mr-2"
-        :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
-        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
-        @click="goToTab()"
-      />
-    </div>
+		<div class="flex flex-row justify-start">
+			<div
+				v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
+				class="flex justify-start items-center flex-wrap"
+			>
+				<AppButton
+					class="mr-2 mt-1 font-bold"
+					:label="$route.name.includes('bulk-billings') ? '+ Bill Individually' : ' + Bill by Bulk'"
+					:customTheme="'bg-info text-white'"
+					@click="goToTab()"
+				/>
+			</div>
 
-    <div v-if="!$route.path.includes('bulk-billing')" class="text-white w-full md:w-1/2 p-2">
-      <AppInput 
-        v-model="search"
-        :type="'text'"
-        :label="'Search by Practice Name'"
-        :placeholder="'Practice Name'"
-      />
-    </div>
+			<div v-if="!$route.path.includes('bulk-billing')" class="w-full text-white w-full md:w-1/2">
+				<AppInputSmall
+					v-model="search"
+					:type="'text'"
+					:name="'search'"
+					:button="true"
+					:buttonLabel="'Search'"
+					:placeholder="'Search by Name'"
+					@click="searchSubmit()"
+				/>
+			</div>
+		</div>
+    
 
-    <AppTable
+    <AppTableNew
       v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
       :total="itemCount"
       :items="getAllPractices"
@@ -72,7 +78,7 @@
           {{ slotProps.item.hub_type }}
         </div>
       </template>
-    </AppTable>
+    </AppTableNew>
     <div 
       v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
       class="mt-2 w-full text-center text-white"
@@ -94,12 +100,16 @@
 <script>
 import debounce from "lodash.debounce"
 import AppTable from "@/components/Base/AppTable"
+import AppTableNew from '@/components/Base/AppTableNew'
+import AppInputSmall from '@/components/Base/AppInputSmall'
 import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
     AppTable,
 		AppButton,
+		AppTableNew,
+		AppInputSmall,
 		AppInput,
 	},
 	data () {
