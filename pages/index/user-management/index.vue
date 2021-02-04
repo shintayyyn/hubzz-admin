@@ -142,9 +142,24 @@
       :loading="loading"
       :routerLink="`/user-management`"
       :orderBy="orderBy"
-      @pagechanged="pageChangedHandler"
-      @sorted="(_orderBy) => orderBy = _orderBy"
-    />
+      @pagechanged="pagechanged"
+    >
+			<template v-slot:delete="slotProps">
+        <div
+          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+        >{{slotProps.item.id}}
+					<AppButton
+						v-if="authAdminPermissions.includes('Delete Admin Account')"
+						:label="'Delete'"
+						:icon="'delete-user'"
+						:iconSize="'16'"
+						class="my-1 mr-2"
+						@click="toDeleteAdminUser(slotProps.item.id)"
+					/>
+          <span v-else class="text-sm text-gray-500">You</span>
+        </div>
+      </template>
+		</AppTableNew>
 
     <div v-if="modal" class="new-user-shield" @click="modal = false" />
     <transition name="slide" mode="out-in">
@@ -178,7 +193,8 @@ export default {
 	},
 	data () {
 		return {
-			itemsPerPage: 10,
+			loading: false, 
+			limit: 10,
 			currentPage: 1,
 			params: {},
 			search: "",
@@ -192,14 +208,8 @@ export default {
 			adminId: "",
 			deleteAdminUser: false,
 			showConfirmCancelModal: false,
-			columns: [
-				{
-					name: "",
-					slot: true,
-					slotName: "delete",
-					dataIndex: "",
-					class: "text-center"
-				},
+			columns: [],
+			defaultColumns: [
 				{
 					name: "E-mail",
 					dataIndex: "email",
@@ -207,13 +217,11 @@ export default {
 				},
 				{
 					name: "Name",
-					slot: true,
-					slotName: "personal_detail.name",
-					dataIndex: "",
+					dataIndex: "personal_detail.name",
 					class: "text-center"
 				},
 				{
-					name: "Role",
+					name: "Role/s",
 					dataIndex: "admin_detail.role.name",
 					class: "text-center"
 				}
@@ -242,6 +250,27 @@ export default {
 		total () {
 			return this.adminUsers.length
 		}
+	},
+	watch: {
+		deleteAdminUser (value) {
+			console.log('banana', value)
+			if(value === true) {
+				this.columns = [
+					{
+						name: "Delete",
+						slot: true,
+						slotName: "delete",
+						dataIndex: "",
+						class: "text-center"
+					},
+					...this.defaultColumns,
+				]
+			} else {
+				this.columns = [
+					...this.defaultColumns,
+				]
+			}
+		},
 	},
 	async asyncData ({ app, store, route }) {
 		try {
@@ -289,6 +318,11 @@ export default {
 			})
 			console.log("get users error", err)
 		}
+	},
+	created () {
+		this.columns = [
+			...this.defaultColumns,
+		]
 	},
 	watchQuery: ["page", "search"],
 	methods: {

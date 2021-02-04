@@ -17,7 +17,7 @@
               class="text-sm"
               :label="'Create Job'"
               :icon="'add-rectangle'"
-              :nuxtLink="{ name: 'index-test-script-job-scripts-create-job-seed', query: $route.query }"
+              @click="$router.push(`/test-script/job-scripts/create-job-seed`)"
             />
           </div>
         </div>

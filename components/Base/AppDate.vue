@@ -1,9 +1,9 @@
 <template>
-  <div v-on-clickaway="toggledOff" class="flex flex-col py-2 mb-2 md:mb-4 leading-normal">
-    <div class="relative flex flex-row flex-no-wrap justify-between">
+  <div v-on-clickaway="toggledOff" class="flex flex-row py-2 leading-normal">
+    <div v-if="label || required" class="relative flex flex-row flex-no-wrap justify-between">
       <label :for="name" class="text-xs sm:text-sm py-1 font-bold">
         {{ label }}
-        <span v-if="required" class="text-red-500">*</span>
+        <!-- <span v-if="required" class="text-red-500">*</span> -->
       </label>
       <!-- <div
 				class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
@@ -15,9 +15,9 @@
         <input
           :value="value && $moment(value).format('DD/MM/YYYY')"
           type="input"
-          :placeholder="'DD/MM/YYYY'"
-          class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
-          :class="{ inClass, 'border-red-500': error}"
+          :placeholder="customPlaceHolder ? customPlaceHolder :'DD/MM/YYYY'"
+          class="border-b-2 focus:border-yellow-400 focus:outline-none py-1 font-bold sm:text-sm w-full text-center"
+          :class="{ inClass, 'bg-orange-300' : required, 'border-red-500': error, }"
           :style="inStyle"
           :format="format"
           :disabled="disabled"
@@ -36,9 +36,9 @@
     </div>
     <transition name="fade">
       <div v-if="modal" class="relative md:static z-10 flex justify-start">
-        <div class="absolute rounded-b-lg calendar bg-waterloo shadow-md">
+        <div class="absolute rounded-b-lg calendar bg-white shadow-md">
           <div
-            class="p-2 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
+            class="p-1 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
           >
             <div class="m-1 w-1/2 flex flex-no-wrap">
               <select
@@ -305,6 +305,7 @@ let months = [
 export default {
 	mixins: [clickaway],
 	props: {
+    customPlaceHolder: String,
 		value: String,
 		name: String,
 		label: String,
@@ -324,7 +325,7 @@ export default {
       default: null
     },
 		disabled: Boolean,
-		required: Boolean
+    required: Boolean,
 	},
 	data () {
 		return {

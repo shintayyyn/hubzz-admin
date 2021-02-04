@@ -1,128 +1,140 @@
 <template>
   <div ref="modalContainer">
     <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
-    <div class="flex items-center px-2 py-2">
+    <div class="flex items-center px-2">
       <div class="relative w-full">
+				<div
+					v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
+					class="flex justify-start items-center flex-wrap"
+				>
+					<AppButton
+						class="mr-2 mt-1 font-bold"
+						:label="$route.name.includes('bulk-billings') ? '+ Bill Individually' : ' + Bill by Bulk'"
+						:customTheme="'bg-info text-white'"
+						@click="goToTab()"
+					/>
+					<!-- Required Fields -->
+					<div class="flex rounded-lg border-solid border-2 border-gray-200">
+						<div class="text-sm font-semibold mt-4 mx-2">
+							<span>
+								Billing Period	
+							</span>  
+							<span class="text-red-500">
+								*
+							</span>
+						</div>
+						<AppDate
+							v-model="billing_period_date_start"
+							class="md:mx-2"
+							required
+							removeRequiredSymbol
+							:name="'billing_period_date_start'"
+							:customPlaceHolder="'Start Date'"
+							:error="formError.find(item => item.field === 'billing_period_date_start')"
+						/>
+						<AppDate
+							v-model="billing_period_date_end"
+							class="md:mx-2 p-2"
+							required
+							removeRequiredSymbol
+							:name="'billing_period_date_end'"
+							:customPlaceHolder="'End Date'"
+							:isAfterDate="billing_period_date_start"
+							:error="formError.find(item => item.field === 'billing_period_date_end')"
+						/>
+						<AppDate
+							v-model="due_date"
+							class="md:mx-2"
+							required
+							removeRequiredSymbol
+							:name="'due_date'"
+							:customPlaceHolder="'Due Date'"
+							:isAfter="true"
+							:error="formError.find(item => item.field === 'due_date')"
+						/>
+					</div>
+				</div>
         <div class="flex flex-col">
           <!-- Upper Filter (Job parts, Required fields) -->
           <div class="flex lg:flex-row flex-col items-center w-full">
             <!-- Job part filters -->
             <div class="flex flex-col p-3">
-              <div class="text-lg font-semibold">
-                Filter Job Parts
-              </div>
               <div class="flex flex-row items-center">
                 <AppDate
                   v-model="invoiceableDateEnd"
                   class="md:mx-2"
                   :name="'practice_invoiceable_date_end'"
-                  :label="'Filter from Beginning Until'"
+                  :label="'Latest Job Part Date'"
                   :isBefore="true"
                 />
-                <div class="flex flex-col mx-4 text-sm md:text-base">
-                  <div class="w-full">
+                <div class="flex flex-col lg:flex-row mx-4 text-xs md:text-sm">
+                  <div class="mx-1">
                     <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
                     <label for="disputed">Include Disputed Invoices</label>
                   </div>
-                  <div class="w-full">
+                  <div class="mx-1">
                     <input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
                     <label for="cancelled">Include Cancelled Invoices</label>
                   </div>
-                  <div class="w-full">
+                  <div class="mx-1">
                     <input id="completed" v-model="showCompleted" type="checkbox" value="true">
                     <label for="completed">Include Completed Invoices</label>
                   </div>
-                  <div class="w-full">
+                  <div class="mx-1">
                     <input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
                     <label for="invoiced">Include Invoiced Invoices</label>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- Required Fields -->
-            <div class="p-3 rounded-lg border-solid border-2 border-gray-200">
-              <div class="text-lg font-semibold">
-                Billing Period (Required Fields)
-              </div>
-              <div class="flex">
-                <AppDate
-                  v-model="billing_period_date_start"
-                  class="md:mx-2"
-                  :name="'billing_period_date_start'"
-                  :label="'Billing Date From (Required)'"
-                  :error="formError.find(item => item.field === 'billing_period_date_start')"
-                />
-                <AppDate
-                  v-model="billing_period_date_end"
-                  class="md:mx-2 p-2"
-                  :name="'billing_period_date_end'"
-                  :label="'Billing Date To (Required)'"
-                  :isAfterDate="billing_period_date_start"
-                  :error="formError.find(item => item.field === 'billing_period_date_end')"
-                />
-                <AppDate
-                  v-model="due_date"
-                  class="md:mx-2"
-                  :name="'due_date'"
-                  :label="'Due Date(Required)'"
-                  :isAfter="true"
-                  :error="formError.find(item => item.field === 'due_date')"
-                />
-              </div>
-            </div>
           </div>
           <!-- Lower Filter (Practice filters) -->
-          <div class="flex flex-wrap justify-start items-center w-full p-3">
-            <div class="md:px-1 w-full mb-4">
-              <label class="text-md md:text-lg font-bold">Filter Practices</label>
-            </div>
-            <div class="md:px-1 w-full mb-4">
-              <AppInput 
+          <div class="flex lg:flex-row flex-col justify-start items-center w-full">
+            <div class="md:px-1 mb-4">
+              <AppInputSmall 
                 v-model="search"
                 :type="'text'"
-                :label="'Search by Practice Name'"
+								:button="true"
+								:buttonLabel="'Search'"
                 :placeholder="'Practice Name'"
+								@click="search"
               />
             </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <input id="orderAlphabticalAsc" v-model="orderAlphabeticalAsc" type="checkbox" value="true">
-              <label for="orderAlphabticalAsc">Sort Practice Alphabetically ↑</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
-              <label for="standAloneOnly">Show Stand Alone Practices Only</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <input
-                id="independentSpokesOnly"
-                v-model="showIndependentSpokesOnly"
-                type="checkbox"
-                value="true"
-              >
-              <label for="independentSpokesOnly">Show Billable Spokes Only</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <input
-                id="dependentSpokesOnly"
-                v-model="showDependentSpokesOnly"
-                type="checkbox"
-                value="true"
-              >
-              <label for="dependentSpokesOnly">Show Dependent Spokes(grouped by Hubs)</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <input
-                id="orderAlphabeticalDesc"
-                v-model="orderAlphabeticalDesc"
-                type="checkbox"
-                value="true"
-              >
-              <label for="orderAlphabeticalDesc">Sort Practice Alphabetically ↓</label>
-            </div>
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
-              <label for="healthBoardsOnly">Show Health Boards Only</label>
-            </div>
+						<div>
+							<AppButton
+								class="mx-3 mt-1 font-bold"
+								:label="alphabeticalOrder ? 'Sort Practice Name Z-A' : 'Sort Practice Name A-Z'"
+								@click="alphabeticalOrder = !alphabeticalOrder"
+							/>
+						</div>
+						<div class="flex flex-col lg:flex-row mx-4 text-xs md:text-sm">
+							<div>
+								<input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
+								<label for="standAloneOnly">Show Stand Alone Practices Only</label>
+							</div>
+							<div>
+								<input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
+								<label for="healthBoardsOnly">Show Hub II Only</label>
+							</div>
+							<div>
+								<input
+									id="independentSpokesOnly"
+									v-model="showIndependentSpokesOnly"
+									type="checkbox"
+									value="true"
+								>
+								<label for="independentSpokesOnly">Show Billable Spokes Only</label>
+							</div>
+							<div>
+								<input
+									id="dependentSpokesOnly"
+									v-model="showDependentSpokesOnly"
+									type="checkbox"
+									value="true"
+								>
+								<label for="dependentSpokesOnly">Show Spokes (grouped by Hub)</label>
+							</div>
+						</div>
           </div>
         </div>
       </div>
@@ -414,6 +426,7 @@ import AppButton from "@/components/Base/AppButton"
 import AppLoading from "@/components/Base/AppLoading"
 import AppPagination from "@/components/Base/AppPagination"
 import AppInput from "@/components/Base/AppInput"
+import AppInputSmall from "@/components/Base/AppInputSmall"
 export default {
 	components: {
 		AppTable,
@@ -423,6 +436,7 @@ export default {
 		AppLoading,
 		AppPagination,
 		AppInput,
+		AppInputSmall,
 	},
 
 	data () {
@@ -442,6 +456,9 @@ export default {
 			showInvoiced: false,
 			// query filters
 			invoiceableDateEnd: "",
+
+			alphabeticalOrder: false,
+
 			orderAlphabeticalAsc: false,
 			orderAlphabeticalDesc: false,
 			showIndependentSpokesOnly: false,
@@ -643,6 +660,9 @@ export default {
 	},
 
 	computed: {
+		authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
 		loadingBillablePractices () {
 			return this.$store.state.billings.loading_billable_practices
 		},
@@ -713,6 +733,15 @@ export default {
 		},
 
 		$route () {
+			this.getBillablePractices()
+		},
+
+		alphabeticalOrder: function (value) {
+			if (value === true) {
+				this.practiceParams.order_by = ["practice_name:asc"]
+			} else {
+				this.practiceParams.order_by = ["created_at:desc"]
+			}
 			this.getBillablePractices()
 		},
 
@@ -1282,6 +1311,15 @@ export default {
 					return "rounded-full text-center px-4 py-1 w-full lg:w-32 bg-red-600 text-white"
 				default:
 					return
+			}
+		},
+
+		goToTab () {
+			console.log('route', this.$route.name)
+			if (this.$route.name.includes('bulk-billings')) {
+				this.$router.push(`/billings/hubzz-billing`)
+			} else {
+				this.$router.push(`/billings/hubzz-billing/bulk-billings`)
 			}
 		}
 	}

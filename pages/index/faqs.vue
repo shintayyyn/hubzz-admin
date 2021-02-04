@@ -10,7 +10,7 @@
     </transition>
     <div v-if="confirm" class="shield" @click="confirm = false" />
     <div class="px-4 md:px-6">
-      <div class="rounded-lg text-white bg-charade shadow-lg py-3 md:py-5">
+      <div class="rounded-lg shadow-lg bg-gray-200 py-3 md:py-5">
         <div class="w-full inline-flex flex-wrap justify-between font-bold mb-2 px-3 md:px-5">
           <div class="flex items-center mr-2">
             Locum
@@ -32,7 +32,7 @@
               :icon="deleteLocumFaq ? 'circle-check' : 'garbage'"
               :iconSize="'18'"
               :background="deleteLocumFaq ? 'green' : 'red'"
-              class="text-white ml-2 text-sm"
+              class="text-gray-800 ml-2 text-sm"
               @click="deleteLocumFaq = !deleteLocumFaq"
             />
           </div>
@@ -52,7 +52,7 @@
                 width="16"
                 height="16"
                 class="fill-current hover:text-sunglow"
-                :class="draggedId===item.id ? 'text-sunglow' : hoveredId===item.id ? 'text-waterloo' : 'text-white'"
+                :class="draggedId===item.id ? 'text-sunglow' : hoveredId===item.id ? 'text-waterloo' : 'text-gray-800'"
               />
             </span>
             <nuxt-link
@@ -64,7 +64,7 @@
                 name="edit"
                 width="21"
                 height="21"
-                class="fill-current text-white hover:text-sunglow"
+                class="fill-current text-gray-800 hover:text-sunglow"
               />
             </nuxt-link>
             <div
@@ -82,7 +82,7 @@
             <div class="w-full my-1">
               <div
                 class="flex transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
-                :class="[hoveredId===item.id ? 'bg-waterloo' : 'bg-trout', draggedId === item.id ? 'hover:bg-waterloo-darker text-waterloo' : 'hover:bg-waterloo-dark']"
+                :class="[hoveredId===item.id ? 'bg-gray-300' : 'bg-gray-400', draggedId === item.id ? 'hover:bg-gray-300 text-gray-400' : 'hover:bg-gray-400']"
                 @click="toggleFaqOn(item)"
                 @drop="onDrop($event,locumFaqs.findIndex(element => element.id === item.id), item.domain)"
                 @dragover.prevent
@@ -134,7 +134,7 @@
               :icon="deletePracticeFaq ? 'circle-check' : 'garbage'"
               :iconSize="'18'"
               :background="deletePracticeFaq ? 'green' : 'red'"
-              class="text-white ml-2 text-sm"
+              class="text-gray-800 ml-2 text-sm"
               @click="deletePracticeFaq = !deletePracticeFaq"
             />
           </div>
@@ -154,7 +154,7 @@
                 width="16"
                 height="16"
                 class="fill-current hover:text-sunglow"
-                :class="draggedId===item.id ? 'text-sunglow' : hoveredId===item.id ? 'text-waterloo' : 'text-white'"
+                :class="draggedId===item.id ? 'text-sunglow' : hoveredId===item.id ? 'text-waterloo' : 'text-gray-800'"
               />
             </span>
             <nuxt-link
@@ -166,7 +166,7 @@
                 name="edit"
                 width="21"
                 height="21"
-                class="fill-current text-white hover:text-sunglow"
+                class="fill-current text-gray-800 hover:text-sunglow"
               />
             </nuxt-link>
             <div
@@ -184,7 +184,7 @@
             <div class="w-full my-1">
               <div
                 class="flex transition-hover transition-hover py-2 px-4 md:py-4 flex justify-between items-center cursor-pointer"
-                :class="[hoveredId===item.id ? 'bg-waterloo' : 'bg-trout', draggedId === item.id ? 'hover:bg-waterloo-darker text-waterloo' : 'hover:bg-waterloo-dark']"
+                :class="[hoveredId===item.id ? 'bg-waterloo' : 'bg-gray-400', draggedId === item.id ? 'hover:bg-gray-300 text-gray-400' : 'hover:bg-gray-400']"
                 @click="toggleFaqOn(item)"
                 @drop="onDrop($event,practiceFaqs.findIndex(element => element.id === item.id), item.domain)"
                 @dragover.prevent
@@ -197,7 +197,6 @@
                     height="15"
                     width="15"
                     :class="item.toggled ? 'rotate' : 'arrow'"
-                    color="white white"
                   />
                 </div>
               </div>

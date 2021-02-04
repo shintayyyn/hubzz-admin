@@ -1,18 +1,18 @@
 <template>
-	<div class="flex-1 flex flex-col overflow-hidden py-2" ref="wrapper">
+	<div class="flex-1 flex-col py-2 px-2" ref="wrapper">
 		<div class="px-4 md:px-6">
-			<div class="flex justify-start overflow-x-auto">
+			<div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
 				<div
 					style="font-family:Nunito"
 					@click.prevent="goTo('termsAndConditions')"
-					class="mr-5 p-3 text-sm font-bold cursor-pointer whitespace-no-wrap"
-					:class="$route.query.active_tab === 'termsAndConditions' ? 'border rounded-lg text-black border-sunglow bg-sunglow' : 'text-white'"
+					class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+					:class="$route.query.active_tab === 'termsAndConditions' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
 				>Terms & Conditions</div>
 				<div
 					style="font-family:Nunito"
 					@click.prevent="goTo('privacyPolicy')"
-					class="mr-5 p-3 text-sm font-bold cursor-pointer whitespace-no-wrap"
-					:class="$route.query.active_tab === 'privacyPolicy' ? 'border rounded-lg text-black border-sunglow bg-sunglow' : 'text-white'"
+					class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+					:class="$route.query.active_tab === 'privacyPolicy' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
 				>Privacy Policy</div>
 			</div>
 		</div>

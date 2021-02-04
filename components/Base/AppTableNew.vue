@@ -69,7 +69,11 @@
                 </template>
                 <template v-else>
                   <template v-if="column.slotName">
-                    <slot :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
+                    <div v-if="column.slotName == 'checker'" @click.prevent.stop="$emit(column.eventName, item)">
+                      <slot :name="column.slotName" :item="item" />
+                    </div>
+
+                    <slot v-else :name="column.slotName" :item="item" @click="$emit(column.eventName, item)" />
                   </template>
                   <template v-if="column.dataIndex === 'actions'">
                     <template v-if="column.class.includes('dropdown')">

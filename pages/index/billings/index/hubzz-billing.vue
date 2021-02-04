@@ -2,7 +2,7 @@
   <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
 		<div class="flex flex-row justify-start">
 			<div
-				v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
+				v-if="authAdminPermissions.includes('Create Hubzz Invoices') && !$route.path.includes('bulk-billing')" 
 				class="flex justify-start items-center flex-wrap"
 			>
 				<AppButton
