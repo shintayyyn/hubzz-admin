@@ -28,7 +28,7 @@ body{
   background-image:"~/assets/images/hubbz-bg.png"
 }
 .error-container {
-  color:white;
+  color:black;
   position: absolute;
   top: 0px;
   left: 0;

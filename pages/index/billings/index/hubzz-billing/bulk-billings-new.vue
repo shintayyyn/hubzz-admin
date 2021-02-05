@@ -152,46 +152,6 @@
         class="hidden md:flex justify-around font-semibold w-full px-4"
       >
         <div class="flex flex-row w-full pb-3 text-sm justify-around">
-          <!-- ORIGINAL -->
-          <!-- <div
-						class="text-center"
-						style="flex: 1 0 0; min-width: 100px; max-width: 250px;" 
-					>
-						Practice
-					</div>
-					<div
-						class="text-center"
-						style="flex: 1 0 0; min-width: 90px; max-width: 100px;"  
-					>
-						Check
-					</div>
-					<div
-						class="text-center"
-						style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
-					>
-						Job Part Number
-					</div>
-					<div
-						class="text-center"
-						style="flex: 1 0 0; min-width: 90px; max-width: 200px;"  
-					>
-						Approved at / Completed At
-					</div>
-					<div
-						class="text-center"
-						style="flex: 1 0 0; min-width: 90px; max-width: 175px;"  
-					>
-						Total
-					</div>
-					<div
-						class="text-center"
-						style="flex: 1 0 0; min-width: 90px; max-width: 220px;"  
-					>
-						Status
-					</div> -->
-          <!-- ORIGINAL ENDS HERE -->
-
-          <!-- FOR QA TESTING ONLY -->
           <div
             class="text-center"
             style="flex: 1 0 0; min-width: 100px; max-width: 200px;" 
@@ -234,115 +194,87 @@
           >
             With Dispute
           </div>
-          <!-- FOR QA TESTING COLUMNS ENDS HERE -->
         </div>
       </div>
 
       <div class="w-full h-160 overflow-y-auto rounded-lg">
-        <!-- BODY -->
-        <div class="px-2 overflow-x-hidden">
-          <AppTable
-            :total="itemCount"
-            :items="allBillablePractices"
-            :currentPage="currentPage"
-            :perPage="practiceParams.limit"
-            :columns="practiceColumns"
-            :orderBy="practiceParams.order_by"
-            :disabledHeadings="true"
-            :disabledPagination="true"
-            :itemsOnTop="true"
-            :customItemsWidth="'cursor-default'"
-            @pagechanged="pagechanged"
-            @checkClicked="toggleCheckPracticeCheckAll"
-            @sorted="sorted"
-          >
-            <template v-slot:checker="slotProps">
-              <div class="flex flex-col items-center bg-gray-300 rounded-lg justify-between m-1">
-                <div class="text-left">
-                  {{ slotProps.item.name }}
+        <div
+          v-for="(billablePractice, index) in allBillablePractices" :key="`billablePractice-${index}`" class="flex-1 flex-row"
+        > 
+        <div class="flex flex-row">
+          <div>
+            {{billablePractice.name}}
+          </div>
+          <div>
+            <!-- <div 
+              v-for="(invoiceableJobPart, index) in billablePractice.practice_invoiceable_job_parts" 
+              :key="`invoiceableJobPart-${index}`" 
+              class="flex flex-col w-full"
+              :class="['hover:bg-gray-400',index % 2 === 0 ? 'bg-gray-300':'bg-white']">
+              <div class="flex flex-row">
+                <div class="p-2 mx-2">
+                  {{invoiceableJobPart.job_part_number}}
                 </div>
-                <div
-                  class="m-1 rounded-full text-center px-4 py-1 w-32"
-                  :class="typeStyle(slotProps.item.type)"
-                >
-                  {{ slotProps.item.type }}
+                <div class="p-2 mx-2">
+                  {{invoiceableJobPart.approved_at}}
                 </div>
-                <div
-                  v-if="slotProps.item.type === 'Spoke' && slotProps.item.parent_practice"
-                  class="text-blue-200 m-1"
-                >
-                  {{ slotProps.item.parent_practice.name }} (HUB)
+                <div class="p-2 mx-2">
+                  {{invoiceableJobPart.total}}
                 </div>
-                <div class="m-1">
-                  <input
-                    :id="slotProps.item"
-                    v-model="chosenPractices"
-                    type="checkbox"
-                    :value="slotProps.item"
-                  >
-                  <label :for="slotProps.item">Select All</label>
-                </div>
-                <div>
-                  Picked {{ chosenPracticeJobParts.filter(item => item.practice_id === slotProps.item.id).length }} of {{ slotProps.item.practice_invoiceable_job_parts.length }}
+                <div class="p-2 mx-2">
+                  {{invoiceableJobPart.status}}
                 </div>
               </div>
-            </template>
+            </div> -->
 
-            <template v-slot:invoiceable_job_parts="slotProps">
-              <div
-                class="md:justify-center md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden"
-              >
-                <!-- <div class="w-full"> -->
-                <AppTableNew
-                  :total="slotProps.item.practice_invoiceable_job_parts.length"
-                  :items="slotProps.item.practice_invoiceable_job_parts"
+            <AppTableNew
+                  :total="billablePractice.practice_invoiceable_job_parts.length"
+                  :items="billablePractice.practice_invoiceable_job_parts"
                   :columns="jobPartsColumns"
                   :disabledPagination="true"
                   :disabledHeadings="true"
-                  :customWidth="'w-full overflow-x-hidden'"
-                  :customItemsWidth="'w-full md:w-8/10 cursor-default'"
                   @checkClicked="toggleCheckJobParts"
                   @sorted="sorted"
                 >
-                  <template v-slot:checker="slotProps">
+                  <template v-slot:checker="billablePractice">
                     <input
-                      :id="slotProps.item"
+                      :id="billablePractice"
                       v-model="chosenPracticeJobParts"
                       type="checkbox"
-                      :value="slotProps.item"
+                      :value="billablePractice"
                     >
-                    <label :for="slotProps.item" />
+                    <label :for="billablePractice" />
                   </template>
-                  <template v-slot:approved_completed_at="slotProps">
-                    <div>{{ slotProps.item.approved_at_in_gb_formatted ? slotProps.item.approved_at_in_gb_formatted : slotProps.item.completed_at_in_gb_formatted }}</div>
+                  <template v-slot:approved_completed_at="billablePractice">
+                    <div>{{ billablePractice.approved_at_in_gb_formatted ? billablePractice.approved_at_in_gb_formatted : billablePractice.completed_at_in_gb_formatted }}</div>
                   </template>
-                  <template v-slot:status_slot="slotProps">
+                  <template v-slot:status_slot="billablePractice">
                     <div
-                      :class="statusStyle(slotProps.item.invoice_status === 'To Be Invoiced'
-                        ? slotProps.item.status === 'Cancelled'
-                          ? slotProps.item.status 
-                          : slotProps.item.invoice_status  
-                        : slotProps.item.invoice_status === 'Disputed'
-                          ? slotProps.item.invoice_status 
-                          : slotProps.item.status )"
+                      :class="statusStyle(billablePractice.invoice_status === 'To Be Invoiced'
+                        ? billablePractice.status === 'Cancelled'
+                          ? billablePractice.status 
+                          : billablePractice.invoice_status  
+                        : billablePractice.invoice_status === 'Disputed'
+                          ? billablePractice.invoice_status 
+                          : billablePractice.status )"
                     >
-                      {{ slotProps.item.invoice_status === 'To Be Invoiced'
-                        ? slotProps.item.status === 'Cancelled'
-                          ? slotProps.item.status
-                          : slotProps.item.invoice_status
-                        : slotProps.item.invoice_status === 'Disputed'
-                          ? slotProps.item.invoice_status
-                          : slotProps.item.status }}
+                      {{ billablePractice.invoice_status === 'To Be Invoiced'
+                        ? billablePractice.status === 'Cancelled'
+                          ? billablePractice.status
+                          : billablePractice.invoice_status
+                        : billablePractice.invoice_status === 'Disputed'
+                          ? billablePractice.invoice_status
+                          : billablePractice.status }}
                     </div>
                   </template>
-                  <template v-slot:job_part_items_disputed_at_slot="slotProps">
-                    <div>{{ slotProps.item.job_part_items_disputed_at ? slotProps.item.job_part_items_disputed_at : 'N/A' }}</div>
+                  <template v-slot:job_part_items_disputed_at_slot="billablePractice">
+                    <div>{{ billablePractice.job_part_items_disputed_at ? billablePractice.job_part_items_disputed_at : 'N/A' }}</div>
                   </template>
                 </AppTableNew>
-                <!-- </div> -->
-              </div>
-            </template>
-          </AppTable>
+          </div>
+          
+        </div>
+
         </div>
       </div>
       <AppPagination
@@ -642,7 +574,7 @@ export default {
 					maxWidth: '150px',
 					slotName: "status_slot",
 					class: "flex items-center justify-center",
-					sortable: true
+					sortable: false
 				},
 				{
 					name: "With Disputes",
@@ -653,7 +585,7 @@ export default {
 					maxWidth: '180px',
 					slotName: "job_part_items_disputed_at_slot",
 					class: "flex items-center justify-center",
-					sortable: true
+					sortable: false
 				},
 				// ===========FOR QA TESTING COLUMNS ENDS HERE===========
 			]
@@ -818,6 +750,7 @@ export default {
 		},
 
 		showDisputed (value) {
+			console.log('showDisputed', value)
 			if (value === true) {
 				this.practiceParams.practice_invoiceable_status = [
 					...this.practiceParams.practice_invoiceable_status,
@@ -895,7 +828,9 @@ export default {
   },
 
 	created () {
+		console.log("store set 0")
 		this.$axios.$get(`/api/v1/admin/tax-rates`).then(res => {
+			console.log('tax rates',res.data.tax_rates )
 			this.practiceTaxRate = res.data.tax_rates.practice_tax_rate
 			this.practiceTaxRateFormatted = res.data.tax_rates.practice_tax_rate_formatted
 		})
@@ -924,6 +859,7 @@ export default {
 			this.chosenPracticeJobParts = this.chosenPracticeJobParts.filter(
 				jobPart => jobPart.practice_id !== practice.id
 			)
+			console.log("chosenJobParts", this.chosenPracticeJobParts)
 		},
 		
 		addAll (jobParts) {
@@ -936,6 +872,8 @@ export default {
 					this.chosenPracticeJobParts.push(item)
 				}
 			})
+
+			console.log("chosenJobParts", this.chosenPracticeJobParts)
 		},
 
 		async createBulkBillingChecked () {
@@ -953,6 +891,7 @@ export default {
 				const chosenJobParts = this.chosenPracticeJobParts.filter(
 					jobPart => jobPart.practice_id === practiceId
 				)
+				console.log("chosenjobparts", chosenJobParts)
 
 				const items = chosenJobParts.map(jobPart => {
 					return {
@@ -978,6 +917,11 @@ export default {
 
 				const total_amount = untaxed_total_amount + tax_amount
 
+				console.log('practice id', practiceId)
+				console.log('untaxed', untaxed_total_amount)
+				console.log('tax amount', tax_amount)
+				console.log('taxed', total_amount)
+
 				return {
 					practice_id: practiceId,
 					items,
@@ -992,12 +936,14 @@ export default {
 			practiceInvoiceDatas = await practiceInvoiceDatas.filter(
 				practice => practice.items.length > 0
 			)
+			console.log("practiceInvoiceDatas", practiceInvoiceDatas)
 
 			await this.$axios
 				.post(`/api/v1/admin/practice-invoices/create-bulk`, {
 					practice_invoice_datas: practiceInvoiceDatas
 				})
 				.then(res => {
+					console.log("res", res)
 					this.$store.commit("SET_NOTIFICATION", {
 						enabled: true,
 						status: "success",
@@ -1122,9 +1068,12 @@ export default {
 			} else {
 				this.chosenPracticeJobParts.push(item)
 			}
+
+			console.log("chosen job parts checker", this.chosenPracticeJobParts)
 		},
 
 		async getBillablePractices () {
+			console.log("params get billable practices", this.practiceParams)
 			await this.$store
 				.dispatch("billings/fetchBillablePractices", {
 					has_sage_ref: true,
@@ -1172,6 +1121,9 @@ export default {
 							show_invoiced: this.showInvoiced,
 							show_cancelled: this.showCancelled,
 							verified: this.verified
+						})
+						.then(() => {
+							console.log("billable practices", this.allBillablePractices)
 						})
 				})
 
@@ -1269,6 +1221,7 @@ export default {
 			// 	...this.$router.query,
 			// 	order_by
 			// }
+			console.log("order_by", order_by)
 			this.practiceParams.order_by = order_by
 			this.getBillablePractices()
 		},
@@ -1295,6 +1248,7 @@ export default {
 		},
 
 		goToTab () {
+			console.log('route', this.$route.name)
 			if (this.$route.name.includes('bulk-billings')) {
 				this.$router.push(`/billings/hubzz-billing`)
 			} else {
@@ -1305,7 +1259,10 @@ export default {
 }
 </script>
 
-<style>
+<style >
+.row {
+  min-width: 1200px;
+}
 .md\:table-cell:first-child {
 	border-top-left-radius: 10px;
 	border-bottom-left-radius: 10px;

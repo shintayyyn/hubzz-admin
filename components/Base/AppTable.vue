@@ -295,6 +295,7 @@
       },
 
       sortIcon (dataIndex) {
+        console.log('this.params',this.params)
         return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
           ? 'sort-ascend'
           : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)

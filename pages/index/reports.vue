@@ -21,7 +21,7 @@
       </nuxt-link>
     </div> -->
 
-    <div class="text-sm md:text-xl text-white">
+    <div class="text-sm md:text-xl text-gray-800">
       HQ Analytics
     </div>
 
@@ -30,9 +30,9 @@
         v-for="hqAnalyticsReport in hqAnalyticsReports"
         :key="`hqAnalyticsReports-${hqAnalyticsReport.title}`"
         :to="hqAnalyticsReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-lg hover:bg-gray-400 transition-hover my-2"
       >
-        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
+        <div class="flex flex-no-wrap items-center text-sm w-full">
           <span class="px-2 whitespace-no-wrap font-semibold">{{ hqAnalyticsReport.title }}</span>
           <span class="px-2 w-full leading-tight flex items-center">{{ hqAnalyticsReport.subtitle }}</span>
           <div class="flex items-center px-1 md:px-0">

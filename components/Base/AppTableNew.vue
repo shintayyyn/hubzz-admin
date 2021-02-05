@@ -8,6 +8,7 @@
         :style="`min-height: ${minHeight ? minHeight : '60vh'}`"
       >
         <div
+          v-if="disabledHeadings === false"
           :style="`min-width: ${customWidth}px`"
           class="row flex justify-start font-bold leading-none text-xs py-2 border-l border-r border-t"
         >
@@ -147,7 +148,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!loading && total > perPage" class="w-full">
+    <div v-if="!loading && total > perPage && total > 0 && disabledPagination === false" class="w-full">
       <AppPagination
         :total="total"
         :totalPages="totalPages"
@@ -210,6 +211,14 @@ export default {
     minHeight: {
       type: String,
     },
+    disabledHeadings: {
+      type: Boolean,
+      default: false,
+    },
+    disabledPagination: {
+      type: Boolean,
+      default: false
+    },
   },
   data () {
     return {
@@ -248,20 +257,19 @@ export default {
     pagechanged (e) {
       this.$emit("pagechanged", e)
     },
+    checkClicked (item) {
+        this.$emit("toggleCheck", item)
+      },
     limitchanged (limit) {
       this.$emit("limitchanged", limit)
     },
     sortIcon (dataIndex) {
-      if (!this.params.some(item => item.includes(dataIndex))) {
-        return "sort"
-      } else {
-        let index = this.params.findIndex(item => item === `${dataIndex}:desc`)
-        if (index >= 0) {
-          return "sort-descend"
-        } else {
-          return "sort-ascend"
-        }
-      }
+      console.log('this.params',this.params)
+      return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
+        ? 'sort-ascend'
+        : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
+          ? 'sort-descend'
+          : 'sort'
     },
     dataCell (item, column) {
       var dataIndexArr = column.dataIndex.split(".")

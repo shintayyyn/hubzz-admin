@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col default">
+  <div>
     <AppSideBar
       :unseenLocumNotificationsCount="unseenLocumNotificationsCount"
       :unseenPracticeNotificationsCount="unseenPracticeNotificationsCount"
@@ -10,12 +10,6 @@
       <SignOut v-if="showLogoutModal" @modal="(value) => showLogoutModal = value" @logout="logout" />
     </transition>
     
-    <div v-if="showLogoutModal" class="signout-shield" @click="showLogoutModal = false" />
-
-    <div v-if="sessionExpiring" class="signout-shield" />
-
-    <div v-if="$store.state.toggled_sidebar" class="sidebar-shield" @click="closeSideBar" />
-
     <transition name="drop" mode="out-in">
       <SessionExpiring @logout="logout" />
     </transition>
@@ -40,6 +34,12 @@
 
       <nuxt class="overflow-y-auto" />
     </div>
+
+    <div v-if="$store.state.toggled_sidebar" class="signout-shield" @click="closeSideBar" />
+    
+    <div v-if="showLogoutModal" class="signout-shield" @click="showLogoutModal = false" />
+
+    <div v-if="sessionExpiring" class="signout-shield" />
   </div>
 </template>
 

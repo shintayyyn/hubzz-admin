@@ -1,9 +1,9 @@
 <template>
   <section class="header">
-    <div class="flex justify-end items-center text-sm text-white px-4 md:px-6">
-      <!-- <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
+    <div class="flex justify-between lg:justify-end items-center text-sm text-white px-4 md:px-6">
+      <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
         <img src="~/assets/images/hbg.png">
-      </button> -->
+      </button>
 
       <!-- <div class="flex flex-row py-2 cursor-pointer text-gray-500">
         <div class="m-2 mt-3 text-xl md:text-4xl">
