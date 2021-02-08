@@ -481,8 +481,6 @@ export default {
       this.filter.post_code = '',
       this.filter.proximity = '',
     ]).then(() => {
-      console.log('this.filter.registered_at_date_starct', this.filter.registered_at_date_start)
-      console.log('this.filter.registered_at_date_end', this.filter.registered_at_date_end)
       this.getEverything()
     })
   },
