@@ -474,8 +474,8 @@ export default {
 
   created () {
     Promise.all([
-      this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DD'),
-      this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DD'),
+      this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DDTHH:mm:ss'),
+      this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DDTHH:mm:ss'),
       this.filter.post_code = '',
       this.filter.proximity = '',
     ]).then(() => {
@@ -533,8 +533,8 @@ export default {
 
     async filterReset () {
       Promise.all([
-        this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DD'),
-        this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DD'),
+        this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DDTHH:mm:ss'),
+        this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DDTHH:mm:ss'),
         this.filter.post_code = '',
         this.filter.proximity = '',
       ]).then(() => {
