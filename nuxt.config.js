@@ -152,7 +152,9 @@ export default {
 				autoprefixer: {},
 			},
     },
-    extractCSS: true,
+    extractCSS: {
+			ignoreOrder: true
+		},
     optimization: {
       splitChunks: {
         cacheGroups: {

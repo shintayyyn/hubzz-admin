@@ -86,7 +86,7 @@ export default {
       ]
     };
   },
-  async asyncData({ app, store, route, error }) {
+  async asyncData ({ app, store, route, error }) {
     try {
       const authAdminPermissions = store.getters["permissions"]
       if (authAdminPermissions.includes('View Surgery Management') === false) {

@@ -363,7 +363,6 @@ export default {
 		},
 
 		onDrop (evt, position, domain) {
-			// Position is yung pupuntahan ng dinrag
 			const itemID = evt.dataTransfer.getData("itemID")
 			
 			if (domain !== this.dragging) {

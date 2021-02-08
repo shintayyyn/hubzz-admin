@@ -835,16 +835,13 @@ export default {
 		},
 
 		practice_rate () {
+			console.log('practice rate', this.selectedPractice)
 			const profession = this.professions_categories.find(
 				profession => profession.id.toString() === this.form.role.toString()
 			)
 
 			const practiceRates =
-				this.$auth.user &&
-				this.$auth.user.practice_detail &&
-				this.$auth.user.practice_detail.practice
-					? this.$auth.user.practice_detail.practice.practice_rates
-					: []
+				this.selectedPractice && this.selectedPractice.practice_rates ? this.selectedPractice.practice_rates : []
 
 			const practiceRate = practiceRates.find(
 				item => item.type === profession.profession_category_name

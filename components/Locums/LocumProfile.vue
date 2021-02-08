@@ -380,6 +380,18 @@
               <AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
             </div>
           </div>
+
+          <!-- HUBZZ PRACTICE NOTES -->
+          <div class="">
+            <AppInput
+              v-model="hubzzLocumNotes"
+              :type="'textarea'"
+              :name="'hubzz_locum_notes'"
+              :label="'Notes'"
+              :resize="false"
+            />
+            <AppButton :label="'Save Notes'" class="mx-1" @click="toPutHubzzLocumNotes" />
+          </div>
         </div>
       </div>
     </div>
@@ -427,7 +439,9 @@
         clinicalSystems: [],
         spokenLanguages: [],
         specificLocumCompDocs: [],
-        userMandatoryTrainings: []
+        userMandatoryTrainings: [],
+
+        hubzzLocumNotes: '',
       }
     },
     
@@ -550,6 +564,7 @@
       this.qualifications = this.user.locum_detail.qualifications
       this.clinicalSystems = this.user.locum_detail.clinical_systems
       this.spokenLanguages = this.user.locum_detail.spoken_languages
+      this.hubzzLocumNotes = this.user.hubzz_locum_notes
     },
 
     methods: {
@@ -675,6 +690,33 @@
 					default:
 						return
         }
+      },
+
+      async toPutHubzzLocumNotes () {
+        try { 
+          await this.$axios.$put(`/api/v1/admin/locum-users/${this.$route.params.id}/hubzz-locum-notes`,{
+            hubzz_locum_notes: this.hubzzLocumNotes,
+          })
+          .then(res => {
+            this.hubzzLocumNotes = res.data.user.hubzz_locum_notes
+
+            this.$emit('setViewLocumUser', res.data.user)
+
+            this.$store.commit("SET_NOTIFICATION", {
+              enabled: true,
+              status: "success",
+              text: res.data.message || "Saved",
+            })
+          })
+        } catch (err) {
+          console.log("err", err)
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        }
+        
       }
     }
   }

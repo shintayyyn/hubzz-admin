@@ -513,7 +513,6 @@ export default {
 			this.getDaysInMonth(this.selectedMonth.toString(), value);
 		},
 		startDate(value) {
-			console.log(value);
 			if (value) {
 				this.selectedMonth = this.$moment(value, this.format).format("M");
 				this.selectedYear = this.$moment(value, this.format).format("YYYY");

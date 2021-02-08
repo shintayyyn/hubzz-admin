@@ -146,7 +146,7 @@
               </div>
 
               <div class="px-4">
-                <div class="flex items-end text-sm pb-2 font-bold text-white">
+                <div class="flex items-end text-sm pb-2 font-bold text-gray-700">
                   <p class="px-2" :class="type === 'create' ? 'w-2/12' : 'w-1/12'">
                     Date
                   </p>
@@ -1215,6 +1215,16 @@ export default {
       type: String,
       default: null,
     },
+
+    locum_vat_registered: {
+      type: Boolean,
+      default: false,
+    },
+
+    tax_rates: {
+      type: Object,
+      default: () => null,
+    },
     
     rate_lists: {
       type: Array,
@@ -1467,13 +1477,9 @@ export default {
       return this.filteredSchedule
         .reduce((scheduleTotal, sched) => {
           const shiftTotal = sched.shifts.reduce((shiftTotal, shift) => {
-            const time_start = ["complete", "terminate",].includes(this.type)
-              ? shift.final_time_start
-              : shift.time_start
+            const time_start = shift.time_start
 
-            const time_end = ["complete", "terminate",].includes(this.type)
-              ? shift.final_time_end
-              : shift.time_end
+            const time_end = shift.time_end
 
             const total_hours = this.totalHours(
               time_start,
@@ -2038,6 +2044,8 @@ export default {
           "getSchedule",
           this.schedules,
           this.getJobGrossRate(this.schedules, true),
+          this.getJobTaxRate(this.schedules, true),
+          this.getJobTaxedGrossRate(this.schedules, true),
           this.getTotalHours(this.schedules, true),
           this.getDeductions(this.schedules),
           this.getTotalLates(this.schedules),
@@ -2358,12 +2366,7 @@ export default {
     },
 
     getTotalLates (schedule) {
-      // let lateHours = [];
-      // let lateMinutes = [];
-      // let late_hour = 0;
-      // let late_minute = 0;
       let late_in_minutes = []
-      // console.log(schedule);
       schedule.forEach(sched => {
         sched.shifts.forEach(shift => {
           const originalTimeStart = shift.orig_time_start || shift.time_start
@@ -2376,7 +2379,6 @@ export default {
           late_in_minutes.push(lateInMinutes)
         })
       })
-      console.log("late_in_minutes", late_in_minutes)
 
       let hour
         = late_in_minutes.reduce((a, b) => a + b, 0) / 60 > 0
@@ -2384,9 +2386,6 @@ export default {
           : 0
           
       let minute = late_in_minutes.reduce((a, b) => a + b, 0) % 60
-
-      console.log("hour", hour)
-      console.log("minute", minute)
 
       let total_late_hours = `${
         hour > 0 ? (hour > 9 ? `${hour}h` : `0${hour > -1 ? hour : 0}h`) : ""
@@ -2583,10 +2582,25 @@ export default {
 
       const qwe = rate.toFixed(2)
 
-      // console.log("schedules", JSON.stringify(schedules, null, 2));
-      // console.log("qwe", qwe);
-
       return qwe
+    },
+
+    getJobTaxRate (schedules, final) {
+      const grossRate = this.getJobGrossRate(schedules, final)
+      const locum_tax_rate
+        = this.tax_rates && this.tax_rates.locum_tax_rate_formatted
+          ? this.tax_rates.locum_tax_rate_formatted
+          : 0
+      const taxAmount = parseFloat(grossRate) * parseFloat(locum_tax_rate)
+
+      return taxAmount.toFixed(2)
+    },
+
+    getJobTaxedGrossRate (schedules, final) {
+      const grossRate = this.getJobGrossRate(schedules, final)
+      const taxRate = this.getJobTaxRate(schedules, final)
+      const taxedGrossRate = parseFloat(grossRate) + parseFloat(taxRate)
+      return taxedGrossRate.toFixed(2)
     },
 
     getTotalHours (schedule, final) {
@@ -2727,7 +2741,6 @@ export default {
     },
 
     addShift (shifts, index) {
-      console.log('shifts')
       let rowError = []
 
       if (shifts.length) {
