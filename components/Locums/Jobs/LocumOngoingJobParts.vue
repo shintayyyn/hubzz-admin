@@ -58,71 +58,19 @@
         </div>
       </div>
       <div v-else>
-        <AppJobHeaderSort
-          :locumUser="user"
-          :locumTabStatus="'Ongoing'"
-          :currentPage="currentPage"
-          :isJobParts="true"
-        />
-        <div class="w-full overflow-x-auto">
-          <!-- HEADER -->
-          <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
-              <div class="w-1/6">Job Number</div> 
-              <div class="w-1/6">Practice / Surgery</div>
-              <div class="w-1/6">Title</div>
-              <div class="w-1/6">From</div>
-              <div class="w-1/6">To</div>
-              <div class="w-1/6">Created</div>
-					</div>-->
-          <!-- BODY -->
-          <div
-            v-for="(item, index) in locumOngoingJobParts"
-            :key="`item-${index}`"
-            class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
-            @click="$router.push(`/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs/${item.id}`)"
-          >
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
-              <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span>{{ item.job_part_number }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span>{{ item.practice_name }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Title</strong>
-              <span>{{ item.title ? item.title : '(none)' }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span>{{ item.datetime_start_in_gb_formatted }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span>{{ item.datetime_end_in_gb_formatted }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Allocated At</strong>
-              <span>{{ item.appointed_at_in_gb_formatted }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <AppPagination
+        <AppTableNew
+          v-if="total !== 0"
           :total="total"
-          :totalPages="totalPages"
+          :items="locumOngoingJobParts"
           :currentPage="currentPage"
           :perPage="perPage"
+          :columns="columns"
+          :routerLink="`/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs`"
+          :orderBy="orderBy"
           @pagechanged="pagechanged"
+          @sorted="(_orderBy) => orderBy = _orderBy"
         />
       </div>
-
       <div v-if="modal" class="job-shield" />
       <transition name="slide" mode="out-in">
         <div v-if="modal" class="job-modal shadow-lg">
@@ -134,18 +82,16 @@
 </template>
 
 <script>
-  import AppPagination from "@/components/Base/AppPagination"
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
   import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
-  import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
+  import AppTableNew from "@/components/Base/AppTableNew"
   export default {
     components: {
-      AppPagination,
       AppInput,
       AppButton,
       LocumDetailJobModal,
-      AppJobHeaderSort
+      AppTableNew,
     },
 
     props: {
@@ -168,7 +114,10 @@
         currentPage: 1,
         perPage: 0,
         ascendDescend: 0,
-        modal: false
+        modal: false,
+        orderBy: [
+          'created_at_in_gb_formatted:desc',
+        ],
       }
     },
     computed: {
@@ -177,7 +126,65 @@
       },
       locumOngoingJobParts () {
         return this.$store.state.jobs.locum_ongoing_jobs
-      }
+      },
+      columns () {
+        return [
+					{
+						name: 'Job Number',
+						dataIndex: 'job_part_number',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '140px',
+					},
+					{
+						name: 'Practice',
+						dataIndex: 'practice_name',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
+					},
+					{
+						name: 'Title',
+						dataIndex: 'title',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
+					},
+					{
+						name: 'From',
+						dataIndex: 'datetime_start_in_gb_formatted',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '550px',
+					},
+					{
+						name: 'To',
+						dataIndex: 'datetime_end_in_gb_formatted',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+					},
+					{
+						name: 'Allocated At',
+						dataIndex: 'appointed_at_in_gb_formatted',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+					},
+				]
+      },
     },
     watch: {
       $route (to) {

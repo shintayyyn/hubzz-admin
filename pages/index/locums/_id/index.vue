@@ -1,24 +1,13 @@
 <template>
-  <div class="locum-modal shadow-lg">
-    <div class="px-4 md:px-8">
-      <div class="py-4">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          widht="32"
-          class="text-white hover:text-sunglow fill-current cursor-pointer"
-          @click="$router.push('/locums')"
-        />
-      </div>
-
+  <section>
+    <div>
       <AppLoading :loading="loading" spinner />
-
-      <div class="flex flex-row flex-wrap justify-start">
+      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
         <nuxt-link
           v-if="authAdminPermissions.includes('View Locums')"
           :to="{ name: 'index-locums-id-index', params: { id: $route.params.id } }"
-          class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
-          :class="$route.name === 'index-locums-id-index' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.name === 'index-locums-id-index' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
           Profile
         </nuxt-link>
@@ -26,8 +15,8 @@
         <nuxt-link
           v-if="authAdminPermissions.includes('View Locum Jobs')"
           :to="{ name: 'index-locums-id-index-locum-jobs-index', params: { id: $route.params.id } }"
-          class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
-          :class="$route.path.includes(`/locums/${$route.params.id}/locum-jobs`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.path.includes(`/locums/${$route.params.id}/locum-jobs`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
           Jobs
         </nuxt-link>
@@ -35,29 +24,12 @@
         <nuxt-link
           v-if="locumUser && locumUser.status !== 'Deactivated' && authAdminPermissions.includes('View Locum Compliance Detail')"
           :to="{ name: 'index-locums-id-index-locum-compliance', params: { id: $route.params.id } }"
-          class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg transition-hover"
-          :class="$route.name === 'index-locums-id-index-locum-compliance' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.name === 'index-locums-id-index-locum-compliance' || $route.name === 'index-locums-id-index-locum-compliance-docId'? 'border-b-4 border-yellow-500' : 'text-gray-600'"
         >
           Compliance
         </nuxt-link>
       </div>
-
-      <div 
-        v-if="$route.name.includes('locumJobPartId')" 
-        class="locum-shield" @click="$router.go(-1)"
-      />
-
-      <div
-        v-if="$route.name.includes('index-locum-compliance-docId')"
-        class="locum-shield"
-        @click="$router.go(-1)"
-      />
-      
-      <div
-        v-if="$route.name.includes('locumJobId') || $route.name === 'index-locums-id-index-locum-compliance-mandatory-training-docId'"
-        class="locum-shield"
-        @click="$router.go(-1)"
-      />
     </div>
 
     <nuxt-child
@@ -66,7 +38,7 @@
       @setViewLocumUser="setViewLocumUserHandler"
       @setViewLocumUserLoading="(_loading) => loading = _loading"
     />
-  </div>
+  </section>
 </template>
 
 <script>

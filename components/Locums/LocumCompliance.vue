@@ -1,22 +1,22 @@
 <template>
   <div>
     <div
-      class="mx-4 md:mx-8 flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
+      class="mx-4 md:mx-8 flex no-underline shadow-lg rounded-lg  mt-4 shadow"
       style="position:relative;"
     >
       <div class="w-4/5 overflow-hidden text-sm m-4">
-        <div class="text-gray-400">
+        <div>
           <p class="m-2">
-            Name <span class="m-2 text-white">{{ user.personal_detail ? user.personal_detail.name : null }}</span>
+            Name <span class="m-2 ">{{ user.personal_detail ? user.personal_detail.name : null }}</span>
           </p>
           <p class="m-2">
-            Email address <span class="m-2 text-white">{{ user ? user.email : null }}</span>
+            Email address <span class="m-2 ">{{ user ? user.email : null }}</span>
           </p>
           <p class="m-2">
-            Mobile phone number <span class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</span> 
+            Mobile phone number <span class="m-2 ">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</span> 
           </p>
           <p class="m-2">
-            Home phone number <span class="m-2 text-white">{{ user.contact_detail ? user.contact_detail.home_number : null }}</span>
+            Home phone number <span class="m-2 ">{{ user.contact_detail ? user.contact_detail.home_number : null }}</span>
           </p>
         </div>
       </div>
@@ -43,11 +43,11 @@
       <div v-for="(item, index) in referenceCompDocs" :key="`item-${index}`">
         <nuxt-link 
           :event="item.file == null ? disabled :'click'" 
-          :class="item.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+          :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
           :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
           class="
             flex flex-col md:items-center md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
-            text-white no-underline shadow-lg bg-waterloo
+             no-underline shadow-lg 
           "
           draggable="false"
         >
@@ -75,7 +75,7 @@
               <button
                 v-if="item.file"
                 class="
-                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500
                   rounded-full focus:outline-none
                   bg-transparent px-2
                 "
@@ -87,7 +87,7 @@
               <button
                 v-if="!item.file"
                 class="
-                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500
                   rounded-full focus:outline-none
                   bg-transparent px-2
                 "
@@ -99,7 +99,7 @@
               <button
                 v-if="item.status === 'Verified'"
                 class="
-                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500
                   rounded-full focus:outline-none
                   bg-green-500 border-green-500 text-white px-4 text-center cursor-default
                 "
@@ -111,7 +111,7 @@
               <button
                 v-if="item.status !== 'Verified'"
                 class="
-                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                  w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500
                   rounded-full focus:outline-none
                   bg-transparent px-2 hover:bg-green-500 hover:border-green-600
                 "
@@ -122,12 +122,12 @@
 
               <button
                 class="
-                  w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white focus:bg-red-600
+                  w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500 focus:bg-red-600
                   rounded-full focus:outline-none
                 "
                 :class="[
                   item.status === 'Rejected'
-                    ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default'
+                    ? 'bg-red-600 border-red-600 text-white x-4 text-center cursor-default'
                     : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'
                 ]"
                 @click.prevent="item.status === 'Rejected' ? null : locumReferenceComplianceDocumentIdToRejectId = item.id"
@@ -140,7 +140,7 @@
               v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
             >
               <div
-                class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
+                class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-gray-500 focus:bg-red-600 rounded-full focus:outline-none   px-4 text-center cursor-default"
                 :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
               >
                 {{ item.status }}
@@ -153,11 +153,11 @@
           <nuxt-link
             v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
             :event="childItem.file == null ? disabled :'click'" 
-            :class="childItem.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+            :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
             :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
             class="
               flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
-              text-white no-underline shadow-lg bg-waterloo items-center
+               no-underline shadow-lg  items-center
             "
             draggable="false"
           >
@@ -175,7 +175,7 @@
                 <button
                   v-if="childItem.file"
                   class="
-                    w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                    w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500
                     rounded-full focus:outline-none
                     bg-transparent px-2
                   "
@@ -187,7 +187,7 @@
                 <button
                   v-if="!childItem.file"
                   class="
-                    w-1/2 sm:w-auto text-white text-sm my-1 mr-2 py-2 px-4 border border-white
+                    w-1/2 sm:w-auto  text-sm my-1 mr-2 py-2 px-4 border border-gray-500
                     rounded-full focus:outline-none
                     bg-transparent px-2
                   "
@@ -201,7 +201,7 @@
                 v-if="!authAdminPermissions.includes('Verify/Reject GMC/NMC/MPL/NPL Number') && item.id" 
               >
                 <div
-                  class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none  text-white px-4 text-center cursor-default"
+                  class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-gray-500 focus:bg-red-600 rounded-full focus:outline-none   px-4 text-center cursor-default"
                   :class="`${item.status === 'Rejected' ? 'bg-red-600 border-red-600' : 'bg-green-600 border-green-600'}`"
                 >
                   {{ item.status }}
@@ -214,7 +214,7 @@
     </div>
     <!--GMC / NMC NUMBER ENDS HERE-->
 
-    <div v-if="locumReferenceComplianceDocumentIdToRejectId" class="note-modal text-sm text-white">
+    <div v-if="locumReferenceComplianceDocumentIdToRejectId" class="note-modal text-sm ">
       <div class="flex flex-col w-full p-4">
         <p v-if="false" class="mb-2">
           Reason for Rejection
@@ -236,7 +236,7 @@
           <div class="border rounded-lg p-2 h-full w-full">
             <textarea
               v-model="notes" 
-              class="flex-1 bg-transparent overflow-auto resize-none text-white focus:outline-none w-full"
+              class="flex-1 bg-transparent overflow-auto resize-none  focus:outline-none w-full"
               rows="4" 
               name="complianceNote"
               maxlength="255"
@@ -254,13 +254,13 @@
 
         <div class="flex justify-end mt-2">
           <button
-            class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
+            class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg  bg-blue-500 hover:bg-blue-600 focus:outline-none"
             @click.prevent="toUpdateReferenceNums(locumReferenceComplianceDocumentIdToRejectId, 'Rejected', notes)"
           >
             <span>Confirm</span>
           </button>
           <button
-            class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg text-white bg-gray-500 hover:bg-gray-600 focus:outline-none"
+            class="my-1 mx-1 py-2 px-8 rounded-full rounded-lg  bg-gray-500 hover:bg-gray-600 focus:outline-none"
             @click.prevent="locumReferenceComplianceDocumentIdToRejectId = null"
           >
             <span>Cancel</span>
@@ -270,13 +270,13 @@
     </div>
 
     <!-- MANDATORY -->
-    <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">
+    <p class="text-sm  px-4 md:px-8 pt-8 font-semibold">
       Mandatory
     </p>
 
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <!-- HEADER --> 
-      <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+      <div class="hidden md:flex items-center  justify-around font-semibold"> 
         <div class="align-middle pl-6 pr-2 w-1/6">
           Title
         </div> 
@@ -303,9 +303,9 @@
       >
         <nuxt-link
           :event="item.file == null ? disabled :'click'" 
-          :class="item.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+          :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
           :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
+          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
           draggable="false"
         >
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
@@ -348,7 +348,7 @@
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
             <strong class="block md:hidden">Status</strong>
             <div
-              class="text-center text-black text-sm py-2 border border-white rounded-full"
+              class="text-center text-black text-sm py-2 border border-gray-500 rounded-full"
               :class="statusStyle(item && item.status ? item.status:null)"
             >
               <span>
@@ -361,9 +361,9 @@
           <nuxt-link
             v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
             :event="childItem.file == null ? disabled :'click'" 
-            :class="childItem.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+            :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
             :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
-            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
+            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
             draggable="false"
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
@@ -406,13 +406,13 @@
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
               <strong class="block md:hidden">Status</strong>
               <div v-if="childItem.file == null"
-                   class="text-center text-white text-sm py-2 px-8 sm:mx-2 border border-white bg-transparent rounded-full"
+                   class="text-center  text-sm py-2 px-8 sm:mx-2 border border-gray-500 bg-transparent rounded-full"
               >
                 <span>Empty</span>
               </div>
               <div
                 v-else
-                class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
+                class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
                 :class="statusStyle(childItem && childItem.status ? childItem.status:null)"
               >
                 <span>
@@ -426,13 +426,13 @@
     </div>
 
     <!-- OPTIONAL -->
-    <p class="text-sm text-white px-4 md:px-8 pt-8 font-semibold">
+    <p class="text-sm  px-4 md:px-8 pt-8 font-semibold">
       Optional
     </p>
 
     <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
       <!-- HEADER --> 
-      <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+      <div class="hidden md:flex items-center  justify-around font-semibold"> 
         <div class="align-middle pl-6 pr-2 w-1/6">
           Title
         </div> 
@@ -457,9 +457,9 @@
       <nuxt-link
         v-for="(item, index) in optionalCompDocs" :key="`item-${index}`"
         :event="item.file == null ? disabled :'click'" 
-        :class="item.file == null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+        :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
         :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
+        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
         draggable="false"
       >
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
@@ -502,7 +502,7 @@
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Status</strong>
           <div
-            class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
+            class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
             :class="statusStyle(item && item.file ? 'Present' : 'Empty')"
           >
             <span>
@@ -514,19 +514,19 @@
     </div>
     
     <!-- MANDATORY TRAININGS -->
-    <p class=" text-sm text-white px-4 md:px-8 md:pt-8 font-semibold">
+    <p class=" text-sm  px-4 md:px-8 md:pt-8 font-semibold">
       Mandatory Trainings
     </p>
 
     <div v-if="locumMandatoryTrainings.length === 0" class="mb-8">
-      <div class="w-full text-white font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8">
+      <div class="w-full  font-bold text-gray-500 text-sm leading-tight py-2 px-4 md:px-8">
         This locum has not uploaded any Mandatory Training Documents.
       </div>
     </div>
 
     <!-- TABLE RESPONSIVE MANDATORY TRAININGS-->
     <div v-if="locumMandatoryTrainings.length > 0" class="w-full overflow-x-auto p-4 md:px-8 md:py-2"> 
-      <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
+      <div class="hidden md:flex items-center  justify-around font-semibold"> 
         <div class="align-middle pl-6 pr-2 text-left w-1/4">
           Title
         </div> 
@@ -543,8 +543,8 @@
         v-for="(item, index) in locumMandatoryTrainings" :key="`item-${index}`"
         :event="item.file==null ? disabled :'click'"
         :to="{path:`/locums/${user.id}/locum-compliance/mandatory-training/${item ? item.id : null }`, query: $route.query}"
-        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
-        :class="item.file==null ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
+        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
+        :class="item.file==null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
         draggable="false"
       >
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pl-6 py-2 align-middle">
@@ -569,7 +569,7 @@
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/4 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
           <strong class="block md:hidden">Status</strong>
           <div
-            class="text-center text-black text-sm py-2 sm:mx-2 border border-white rounded-full"
+            class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
             :class="statusStyle(item && item.file ? 'Present' : 'Empty')"
           >
             <span>
@@ -1036,7 +1036,7 @@ export default {
         case 'Approved':
           return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
         case 'Expiring':
-          return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
+          return 'bg-yellow-500 border-yellow-500 text-white text-black lg:px-8 sm:px-4'
         case 'Expired':
           return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
         case 'Rejected':
@@ -1046,7 +1046,7 @@ export default {
         case 'Present':
           return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
         case 'Empty':
-          return 'border-white text-white lg:px-8 sm:px-4'
+          return 'border-gray-500  lg:px-8 sm:px-4'
         default:
           return ''
       }

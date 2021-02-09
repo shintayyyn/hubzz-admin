@@ -10,7 +10,7 @@
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="job_number"
-            class="text-white"
+            class=""
             :type="'text'"
             :name="'job_number'"
             :label="'Job number'"
@@ -19,7 +19,7 @@
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="job_title"
-            class="text-white"
+            class=""
             :type="'text'"
             :name="'job_title'"
             :label="'Job title'"
@@ -31,94 +31,46 @@
           :label="'Clear'"
           class="mx-1"
           :background="'transparent'"
-          :class="'border text-white hover:bg-gray-700 hover:border-none'"
+          :class="'border  hover:bg-gray-700 hover:border-none'"
           @click="clearFilters"
         />
         <AppButton
           :label="'Search'"
           class="mx-1"
           :background="'transparent'"
-          :class="'border text-white hover:bg-gray-700 hover:border-none'"
+          :class="'border  hover:bg-gray-700 hover:border-none'"
           @click="filterJobParts"
         />
       </div>
       <div v-if="allocatedJobs.length === 0">
         <div v-if="isFiltered"
-             class="mt-10 text-white w-full text-center"
+             class="mt-10  w-full text-center"
              style="font-family: Nunito"
         >
           Job Not Found.
         </div>
         <div
           v-else-if="!isFiltered"
-          class="mt-10 text-white w-full text-center"
+          class="mt-10  w-full text-center"
           style="font-family: Nunito"
         >
           This locum is not yet hired to any job.
         </div>
       </div>
       <div v-else>
-        <AppJobHeaderSort :locumUser="user" :locumTabStatus="'Allocated'" :currentPage="currentPage" />
-        <div class="w-full overflow-x-auto">
-          <!-- HEADER -->
-          <!-- <div class="w-full hidden md:flex text-sm lg:text-base font-bold mt-4 mb-2"> 
-                <div class="w-1/6">Job Number</div> 
-                <div class="w-1/6">Practice / Surgery</div>
-                <div class="w-1/6">Title</div>
-                <div class="w-1/6">From</div>
-                <div class="w-1/6">To</div>
-                <div class="w-1/6">Created</div>
-					</div>-->
-          <!-- BODY -->
-          <div
-            v-for="(item, index) in allocatedJobs"
-            :key="`item-${index}`"
-            class="flex flex-col cursor-pointer md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light"
-            @click="$router.push(`/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs/${item.id}`)"
-          >
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle">
-              <strong class="block md:hidden text-sm uppercase">Job Number</strong>
-              <span>{{ item.job_number }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Practice / Surgery</strong>
-              <span>{{ item.practice_name }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Title</strong>
-              <span>{{ item.title ? item.title : '(none)' }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">From</strong>
-              <span>{{ item.datetime_start_in_gb_formatted }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">To</strong>
-              <span>{{ item.datetime_end_in_gb_formatted }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Allocated At</strong>
-              <span>{{ item.appointed_at_in_gb_formatted }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--PAGINATION-->
-      <div>
-        <AppPagination
+        <AppTableNew
+          v-if="total !== 0"
           :total="total"
-          :totalPages="totalPages"
+          :items="allocatedJobs"
           :currentPage="currentPage"
           :perPage="perPage"
+          :columns="columns"
+          :routerLink="`/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs`"
+          :orderBy="orderBy"
           @pagechanged="pagechanged"
+          @sorted="(_orderBy) => orderBy = _orderBy"
         />
       </div>
-      <!--PAGINATION ENDS HERE-->
 
       <div v-if="modal" class="job-shield" />
       <transition name="slide" mode="out-in">
@@ -131,19 +83,16 @@
 </template>
 
 <script>
-  import AppPagination from "@/components/Base/AppPagination"
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
   import LocumDetailJobModal from "@/components/Locums/Jobs/LocumDetailJobModal"
-  import AppJobHeaderSort from "@/components/Base/AppJobHeaderSort"
-
+  import AppTableNew from '@/components/Base/AppTableNew'
   export default {
     components: {
-      AppPagination,
       AppInput,
       AppButton,
       LocumDetailJobModal,
-      AppJobHeaderSort
+      AppTableNew
     },
 
     props: {
@@ -165,8 +114,10 @@
         totalPages: 0,
         currentPage: 1,
         perPage: 0,
-        ascendDescend: 0,
-        modal: false
+        modal: false,
+        orderBy: [
+          'created_at_in_gb_formatted:desc',
+        ],
       }
     },
 
@@ -176,14 +127,76 @@
       },
       allocatedJobs () {
         return this.$store.state.jobs.locum_allocated_jobs
-      }
+      },
+      columns () {
+        return [
+					{
+						name: 'Job Number',
+						dataIndex: 'job_number',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '140px',
+					},
+					{
+						name: 'Practice',
+						dataIndex: 'practice_name',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
+					},
+					{
+						name: 'Title',
+						dataIndex: 'title',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '120px',
+            maxWidth: '550px',
+					},
+					{
+						name: 'From',
+						dataIndex: 'datetime_start_in_gb_formatted',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '550px',
+					},
+					{
+						name: 'To',
+						dataIndex: 'datetime_end_in_gb_formatted',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+					},
+					{
+						name: 'Allocated At',
+						dataIndex: 'appointed_at_in_gb_formatted',
+						class: 'md:text-center',
+						sortable: true,
+            flex: '1 0 0',
+            minWidth: '100px',
+            maxWidth: '170px',
+					},
+				]
+      },
     },
 
     watch: {
       $route (to) {
         this.currentPage = parseInt(to.query.job_page)
         this.getAllocatedJobs()
-      }
+      },
+      orderBy () {
+        this.currentPage = 1
+        this.getAllocatedJobs()
+      },
     },
 
     beforeDestroy () {
@@ -246,7 +259,7 @@
             title_includes: this.job_title,
             offset: 0,
             limit: this.perPage,
-            order_by: "date_created:desc",
+            order_by: this.orderBy,
           }
         })
         this.$store.commit("jobs/SET_LOCUM_ALLOCATED_JOBS", response.data.jobs)
@@ -255,24 +268,19 @@
       },
       async filterJobParts () {
         this.currentPage = 1
-        // this.offset = 0
-        // this.limit = 5
-        // this.initialLoading = true
         this.isFiltered = true
         await this.getJobPartsPromiseAll()
-        // this.initialLoading = false
-        // this.filterModal = false
       },
       clearFilters () {
         this.job_number = null
         this.job_title = null
       },
-      getAllocatedJobs (orderBy) {
+      getAllocatedJobs () {
         let offset = this.perPage * (parseInt(this.$route.query.job_page) - 1)
         let params = {
           viewing_locum_user_id: this.$route.params.id,
           locum_status: "Allocated",
-          order_by: orderBy ? orderBy : this.$route.query.order_by,
+          order_by: this.orderBy ? this.orderBy : this.$route.query.order_by,
           limit: this.perPage,
           offset: offset,
           type: "Platform",

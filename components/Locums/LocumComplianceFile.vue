@@ -1,19 +1,10 @@
 <template>
-  <section class="absolute page-overlap flex-1 flex flex-col self-end bg-trout w-full max-w-2xl">
-    <header class="flex items-center text-sm text-white py-6 px-4 md:px-8">
-      <div class="cursor-pointer" @click="goBack()">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="text-white hover:text-sunglow fill-current"
-        />
-      </div>
-
+  <section class="absolute page-overlap flex-1 flex flex-col self-end w-full max-w-2xl">
+    <header class="flex items-center text-sm md:px-4">
       <button
         v-if="authAdminPermissions.includes('Download Locum Compliance Documents')"
         :disabled="downloading"
-        class="inline-flex items-center cursor-pointer text-white hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
+        class="inline-flex items-center cursor-pointer  hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
       >
         <svgicon name="cloud-download" width="21" height="21" class="fill-current" />
@@ -21,14 +12,14 @@
       </button>
     </header>
 
-    <main class="shadow-lg rounded-lg bg-waterloo mx-4 md:mx-12 mb-6 p-4">
+    <main class="shadow-lg rounded-lg md:mx-6 mb-6 p-4">
       <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
-        <div class="text-gray-300 m-2 md:w-1/3 lg:w-1/3">
+        <div class="m-2 md:w-1/3 lg:w-1/3">
           <div class="leading-tight pb-4">
             <p class="font-bold text-base">
               Title
             </p>
-            <p class="text-white">
+            <p class="">
               {{ locumComplianceDocument.compliance_document
                 && locumComplianceDocument.compliance_document.name
                 ? locumComplianceDocument.compliance_document.name
@@ -43,7 +34,7 @@
             <p class="font-bold text-base">
               Country
             </p>
-            <p class="text-white">
+            <p class="">
               {{ locumComplianceDocument.country_name
                 && locumComplianceDocument.country_name
                 ? locumComplianceDocument.country_name
@@ -57,7 +48,7 @@
             <p class="font-bold text-base">
               Locum
             </p>
-            <p class="text-white">
+            <p class="">
               {{ user.personal_detail
                 && user.personal_detail.name
                 ? user.personal_detail.name
@@ -70,7 +61,7 @@
             <p class="font-bold text-base">
               File last uploaded
             </p>
-            <p class="text-white">
+            <p class="">
               {{ locumComplianceDocument
                 && locumComplianceDocument.uploaded_at_in_gb_formatted
                 ? locumComplianceDocument.uploaded_at_in_gb_formatted
@@ -82,7 +73,7 @@
             <p class="font-bold text-base">
               Mobile phone number
             </p>
-            <p class="text-white">
+            <p class="">
               {{ user.contact_detail
                 && user.contact_detail.mobile_number
                 ? user.contact_detail.mobile_number
@@ -122,7 +113,7 @@
               <p class="font-bold text-base">
                 Reference
               </p>
-              <p class="text-white">
+              <p class="">
                 {{ locumComplianceDocument.reference }}
               </p>
             </div>
@@ -139,7 +130,7 @@
                   Expired At
                 </p>
                 <p
-                  :class="locumComplianceDocument && locumComplianceDocument.expired_at ? 'text-white' : 'text-gray-400'"
+                  :class="locumComplianceDocument && locumComplianceDocument.expired_at ? '' : 'text-gray-400'"
                 >
                   {{
                     locumComplianceDocument
@@ -154,7 +145,7 @@
                   Note
                 </p>
                 <p
-                  class="text-white break-words"
+                  class=" break-words"
                 >
                   {{ locumComplianceDocument && locumComplianceDocument.note ? locumComplianceDocument.note : 'N/A' }}
                 </p>

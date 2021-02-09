@@ -6,7 +6,7 @@
       </button>
 
       <div class="flex flex-row py-1 cursor-pointer text-gray-500">
-        <div class="m-1 text-lg md:text-xl">
+        <div class="m-1 text-md md:text-md">
           <AppBreadcrumbs />
         </div>
       </div>

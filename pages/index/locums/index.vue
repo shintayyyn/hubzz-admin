@@ -1,135 +1,136 @@
 <template>
-  <div 
-    v-if="authAdminPermissions.includes('View Locums') 
-      || authAdminPermissions.includes('View Locum Jobs')
-      || authAdminPermissions.includes('View Locum Compliance Detail')"
-    class="flex-1 flex flex-col md:px-2 overflow-y-auto"
-  >
-    <div class="flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex flex-col w-full justify-end">
-        <div class="w-full">
-          <div class="flex justify-between">
-            <div class="flex">
-              <div class="w-full">
-                <AppInputSmall
-                  v-model="search"
-                  :type="'text'"
-                  :name="'search'"
-                  :button="true"
-                  :buttonLabel="'Search'"
-                  :placeholder="'Search Locum by Name'"
-                  @click="searchSubmit()"
+  <section class="flex-1 flex flex-col md:px-2 overflow-y-auto">
+    <template 
+      v-if="(authAdminPermissions.includes('View Locums') 
+        || authAdminPermissions.includes('View Locum Jobs')
+        || authAdminPermissions.includes('View Locum Compliance Detail'))
+        && $route.name === 'index-locums'
+      "  
+    >
+      <div class="flex flex-col md:flex-row justify-between md:items-center">
+        <div class="flex flex-col w-full justify-end">
+          <div class="w-full">
+            <div class="flex justify-between">
+              <div class="flex">
+                <div class="w-full">
+                  <AppInputSmall
+                    v-model="search"
+                    :type="'text'"
+                    :name="'search'"
+                    :button="true"
+                    :buttonLabel="'Search'"
+                    :placeholder="'Search Locum by Name'"
+                    @click="searchSubmit()"
+                  />
+                </div>
+                <div class="m-3">
+                  <button
+                    class="px-6 py-1 border-2 border-gray-400 rounded-lg font-bold text-gray-600"
+                    @click="filterModal = !filterModal"
+                  >
+                    Filters
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div
+              class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg my-2"
+              :class="filterModal ? 'flex' : 'hidden'"
+            >
+              <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+                <AppInput
+                  v-model="filterStatus"
+                  :type="'select'"
+                  :name="'locum_status'"
+                  :label="'Locum Status'"
+                  :placeholder="'Select...'"
+                  :items="locumStatuses"
                 />
               </div>
-              <div class="m-3">
-                <button
-                  class="px-6 py-1 border-2 border-gray-400 rounded-lg font-bold text-gray-600"
-                  @click="filterModal = !filterModal"
-                >
-                  Filters
-                </button>
+
+              <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+                <AppInput
+                  v-model="filterCompliances"
+                  :type="'select'"
+                  :name="'compliance_status'"
+                  :label="'Compliance Status'"
+                  :placeholder="'Select...'"
+                  :items="complianceStatuses"
+                />
               </div>
-            </div>
-          </div>
-          
-          <div
-            class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg my-2"
-            :class="filterModal ? 'flex' : 'hidden'"
-          >
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <AppInput
-                v-model="filterStatus"
-                :type="'select'"
-                :name="'locum_status'"
-                :label="'Locum Status'"
-                :placeholder="'Select...'"
-                :items="locumStatuses"
-              />
-            </div>
 
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <AppInput
-                v-model="filterCompliances"
-                :type="'select'"
-                :name="'compliance_status'"
-                :label="'Compliance Status'"
-                :placeholder="'Select...'"
-                :items="complianceStatuses"
-              />
-            </div>
+              <div class="md:px-1 flex flex-wrap w-full justify-end">
+                <AppButton
+                  label="Reset"
+                  :in-style="'padding:5px 14px;margin-bottom:5px'"
+                  @click="filterReset"
+                />
 
-            <div class="md:px-1 flex flex-wrap w-full justify-end">
-              <AppButton
-                label="Reset"
-                :in-style="'padding:5px 14px;margin-bottom:5px'"
-                @click="filterReset"
-              />
-
-              <AppButton
-                class="mx-2"
-                label="Submit"
-                :in-style="'padding:5px 14px;margin-bottom:5px'"
-                @click="getJobs(params)"
-              />
+                <AppButton
+                  class="mx-2"
+                  label="Submit"
+                  :in-style="'padding:5px 14px;margin-bottom:5px'"
+                  @click="getJobs(params)"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <AppTableNew
-      v-if="count !== 0"
-      :total="count"
-      :items="locumUsers"
-      :currentPage="currentPage"
-      :perPage="limit"
-      :columns="columns"
-      :loading="loading"
-      :routerLink="`/locums`"
-      :orderBy="orderBy"
-      @pagechanged="pageChangedHandler"
-      @sorted="(_orderBy) => orderBy = _orderBy"
-    >
-      <template v-slot:status_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-          :class="statusStyle(slotProps.item.status)"
-        >
-          {{ slotProps.item.status }}
-        </div>
-      </template>
-      <template v-slot:compliance_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-          :class="complianceStatusStyle(slotProps.item.compliance_status)"
-        >
-          {{ slotProps.item.compliance_status }}
-        </div>
-      </template>
+      <AppTableNew
+        v-if="count !== 0"
+        :total="count"
+        :items="locumUsers"
+        :currentPage="currentPage"
+        :perPage="limit"
+        :columns="columns"
+        :loading="loading"
+        :routerLink="`/locums`"
+        :orderBy="orderBy"
+        @pagechanged="pageChangedHandler"
+        @sorted="(_orderBy) => orderBy = _orderBy"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            :class="statusStyle(slotProps.item.status)"
+          >
+            {{ slotProps.item.status }}
+          </div>
+        </template>
+        <template v-slot:compliance_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            :class="complianceStatusStyle(slotProps.item.compliance_status)"
+          >
+            {{ slotProps.item.compliance_status }}
+          </div>
+        </template>
 
-      <template v-slot:registration_type_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-        >
-          {{ registrationType(slotProps.item.referrer_domain) }}
-        </div>
-      </template>
-    </AppTableNew>
+        <template v-slot:registration_type_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+          >
+            {{ registrationType(slotProps.item.referrer_domain) }}
+          </div>
+        </template>
+      </AppTableNew>
 
-    <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
-      <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
-    </div>
-
+      <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
+        <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
+      </div>
+    </template>
     <nuxt-child
       @updateLocumUsers="getAllLocumUsers"
       @locumUserUpdated="locumUserUpdatedHandler"
     />
-  </div>
+  </section>
 </template>
 
 <script>
 	import debounce from 'lodash.debounce'
-  import AppTable from '@/components/Base/AppTable'
   import AppTableNew from '@/components/Base/AppTableNew'
   import AppInputSmall from '@/components/Base/AppInputSmall'
   import AppInput from '@/components/Base/AppInput'
@@ -137,7 +138,6 @@
 	export default {
 
 		components: {
-      AppTable,
       AppTableNew,
       AppInputSmall,
       AppInput,

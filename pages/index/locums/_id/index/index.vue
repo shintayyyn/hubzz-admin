@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="mt-5">
+  <section>
+    <template>
       <transition name="fade" mode="out-in">
         <LocumProfile
           v-if="locumUser && authAdminPermissions.includes('View Locums')"
@@ -10,16 +10,10 @@
           @setViewLocumUserLoading="(loading) => $emit('setViewLocumUserLoading', loading)"
         />
       </transition>
-    </div>
+    </template>
 
     <nuxt-child />
-
-    <div
-      v-if="$route.name.includes('docId')"
-      class="locum-shield"
-      @click="$router.go(-1)"
-    />
-  </div>
+  </section>
 </template>
 
 <script>
