@@ -264,7 +264,6 @@ export default {
       this.$emit("limitchanged", limit)
     },
     sortIcon (dataIndex) {
-      console.log('this.params',this.params)
       return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
         ? 'sort-ascend'
         : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
@@ -359,7 +358,6 @@ export default {
           let lineHeight = parseInt(el.style.lineHeight)
           let lines = colHeight / lineHeight
           if (lines && lines > 1) {
-          console.log(index, " lines: ", lines)
             return `font-size: ${(12-lines)}px;`
           }
         }

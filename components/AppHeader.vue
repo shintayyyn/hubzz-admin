@@ -1,15 +1,15 @@
 <template>
   <section class="header">
-    <div class="flex justify-between lg:justify-end items-center text-sm text-white px-4 md:px-6">
+    <div class="flex justify-between md:justify-between items-center text-sm text-white px-4 md:px-6">
       <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
         <img src="~/assets/images/hbg.png">
       </button>
 
-      <!-- <div class="flex flex-row py-2 cursor-pointer text-gray-500">
-        <div class="m-2 mt-3 text-xl md:text-4xl">
-          {{ headerName }}
+      <div class="flex flex-row py-1 cursor-pointer text-gray-500">
+        <div class="m-1 text-lg md:text-xl">
+          <AppBreadcrumbs />
         </div>
-      </div> -->
+      </div>
 
       <div class="flex">
         <div class="m-2 sm:relative">
@@ -89,10 +89,11 @@
 <script>
 import { mixin as clickaway } from "vue-clickaway"
 import AppButton from "@/components/Base/AppButton"
-
+import AppBreadcrumbs from "@/components/Base/AppBreadcrumbs"
 export default {
   components: {
     AppButton,
+		AppBreadcrumbs,
   },
   mixins: [clickaway],
   

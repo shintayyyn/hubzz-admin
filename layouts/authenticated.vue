@@ -35,7 +35,7 @@
       <nuxt class="overflow-y-auto" />
     </div>
 
-    <div v-if="$store.state.toggled_sidebar" class="signout-shield" @click="closeSideBar" />
+    <!-- <div v-if="$store.state.toggled_sidebar" class="signout-shield" @click="closeSideBar" /> -->
     
     <div v-if="showLogoutModal" class="signout-shield" @click="showLogoutModal = false" />
 
