@@ -2,15 +2,15 @@
   <div>
     <div class="mt-5">
       <div v-if="practiceHub">
-        <form class="flex flex-col bg-waterloo p-2 md:px-4 shadow rounded-lg sm:w-full lg:w-2/3">
+        <form class="flex flex-col p-2 md:px-4 shadow rounded-lg sm:w-full lg:w-2/3">
           <div class="flex flex-wrap">
             <div class="w-1/2">
-              <div class="text-gray-300 text-sm p-2">
+              <div class="text-gray-800 text-sm p-2">
                 <p class="flex">
                   Practice Name
                 </p>
                 <p
-                  class="flex items-center text-white text-sm p-2 font-semibold"
+                  class="flex items-center  text-sm p-2 font-semibold"
                 >
                   {{ practiceHub ? practiceHub.name : null }}
                 </p>
@@ -18,14 +18,14 @@
                   Practice Code
                 </p>
                 <p
-                  class="flex text-white text-sm p-2 font-semibold"
+                  class="flex  text-sm p-2 font-semibold"
                 >
                   {{ practiceHub ? practiceHub.code : null }}
                 </p>
                 <p class="flex">
                   Address
                 </p>
-                <p class="flex text-white text-sm p-2 font-semibold">
+                <p class="flex  text-sm p-2 font-semibold">
                   {{ practiceHub.address_line_1 ? practiceHub.address_line_1 : null }}
                   <br>
                   {{ practiceHub.address_line_2 ? practiceHub.address_line_2 : null }}
@@ -37,22 +37,22 @@
                   CCG
                 </p>
                 <p
-                  class="flex text-white text-sm p-2 font-semibold"
+                  class="flex  text-sm p-2 font-semibold"
                 >
                   {{ practiceHub.clinical_commissioning_group_name ? practiceHub.clinical_commissioning_group_name:null }}
                 </p>
               </div>
             </div>
             <!-- SPOKE PERMISSIONS - PERMISSIONS OF THE SPOKE BEING VIEWED. -->
-            <div class="w-1/2 text-white my-2">
+            <div class="w-1/2  my-2">
               <div class="flex flex-row items-center">
-                <div class="text-lg text-white font-semibold">
+                <div class="text-lg  font-semibold">
                   Spoke Permissions
                 </div>
                 <!-- <div
                   @click="edit()"
                   class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
-                  :class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
+                  :class="`${editPermissions == false ? 'text-black bg-yellow-500 hover:bg-yellow-400' : ' bg-red-600 hover:bg-red-700'}`"
                 >{{editPermissions == false ? 'Edit' : 'Cancel Editing'}}</div>-->
               </div>
 
@@ -63,7 +63,7 @@
                       <svgicon
                         :name="practice.allow_surgery_create_sessions === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practice.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_create_sessions ? 'bg-green-500' : ' bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -142,7 +142,7 @@
                       <svgicon
                         :name="practice.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practice.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_create_permanent_jobs ? 'bg-green-500' : ' bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -155,7 +155,7 @@
                       <svgicon
                         :name="practice.allow_surgery_bill_locum === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practice.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_bill_locum ? 'bg-green-500' : ' bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -168,7 +168,7 @@
                       <svgicon
                         :name="practice.allow_surgery_bill_hubzz === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practice.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.allow_surgery_bill_hubzz ? 'bg-green-500' : ' bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -181,7 +181,7 @@
                       <svgicon
                         :name="practice.share_banks_to_other_surgeries === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practice.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.share_banks_to_other_surgeries ? 'bg-green-500' : ' bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -193,7 +193,7 @@
                       <svgicon
                         :name="practice.share_my_banks === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
-                        :class="practice.share_my_banks ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                        :class="practice.share_my_banks ? 'bg-green-500' : ' bg-red-500 p-1'"
                       />
                     </span>
                     <p class="font-semibold">
@@ -207,12 +207,12 @@
         </form>
 
         <!-- <div
-          class="w-full sm:w-1/4 p-2 mt-4 text-white rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
+          class="w-full sm:w-1/4 p-2 mt-4  rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
           @click="confirm=true"
         >Terminate this spoke from Hub</div> -->
         <AppButton
           v-if="authAdminPermissions.includes('Terminate Spoke')"
-          class="text-white mt-4"
+          class=" mt-4"
           :background="'red'"
           :label="'Terminate this spoke from Hub'"
           @click="confirm=true"
@@ -233,14 +233,14 @@
           <template v-slot:actions="slotProps">
             <div v-if="!slotProps.item.invitation_rejected && authAdminPermissions.includes('Terminate Spoke')" class="flex justify-center">
               <AppButton
-                class="text-white ml-2"
+                class=" ml-2"
                 :background="'green'"
                 :label="'Accept'"
                 @click="toAcceptInvitation(slotProps.item.id)"
               />
 
               <AppButton
-                class="text-white ml-2"
+                class=" ml-2"
                 :background="'red'"
                 :label="'Reject'"
                 @click="toRejectInvitation(slotProps.item.id)"
@@ -258,7 +258,7 @@
 
       <div v-else>
         <form
-          class="flex flex-col bg-waterloo py-2 px-4 text-white text-sm shadow rounded-lg sm:w-full lg:w-2/3"
+          class="flex flex-col bg-waterloo py-2 px-4  text-sm shadow rounded-lg sm:w-full lg:w-2/3"
         >
           <div class="m-4">
             <div class="inline-flex text-lg">

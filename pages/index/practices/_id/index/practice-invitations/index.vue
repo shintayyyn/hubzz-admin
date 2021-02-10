@@ -16,18 +16,18 @@
         <template v-slot:actions="slotProps">
           <div class="flex justify-center">
             <div
-              class="text-white ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 cursor-pointer"
+              class=" ml-2 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 cursor-pointer"
               @click="$router.push(`/practices/${$route.params.id}/practice-invitations/${slotProps.item.id}`)"
             >Accept</div>
             <div
-              class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer"
+              class=" ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer"
               @click="toggleRejectModal(slotProps.item.id)"
             >Reject</div>
           </div>
         </template>
       </AppTable>
       <div
-        class="text-center text-white text-lg font-bold"
+        class="text-center  text-lg font-bold"
         v-if="spokes.length === 0"
       >No invitations from spokes.</div>
     </template>
@@ -35,7 +35,7 @@
     <template v-if="practice && practice.type === 'Spoke'">
       <div
         v-if="practice.hub_practice"
-        class="flex flex-col mx-4 bg-gray-600 rounded-lg p-4 max-w-sm text-white"
+        class="flex flex-col mx-4 bg-gray-600 rounded-lg p-4 max-w-sm "
       >
         <div class="font-bold text-xl mb-4">Practice Hub</div>
         <div>Practice Name</div>
@@ -85,17 +85,17 @@
           class="font-bold text-lg mb-2"
         >{{practice.hub_practice.email ? practice.hub_practice.email : 'N/A'}}</div>
         <div
-          class="text-white mt-4 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer text-center md:w-48"
+          class=" mt-4 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer text-center md:w-48"
           @click="toggle_cancel_modal = true"
         >Cancel Invitation</div>
         <div class="my-2"></div>
         <div
-          class="text-white mb-4 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 cursor-pointer text-center md:w-48"
+          class=" mb-4 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 cursor-pointer text-center md:w-48"
           @click="$router.push(`/practices/${$route.params.id}/practice-invitations/${practice.hub_practice_id}`)"
         >Accept Invitation</div>
       </div>
       <div
-        class="text-center text-white text-lg font-bold"
+        class="text-center  text-lg font-bold"
         v-if="!practice.hub_practice"
       >This practice did not invite any Hub.</div>
     </template>

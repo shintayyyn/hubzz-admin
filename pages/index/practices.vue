@@ -1,35 +1,32 @@
 <template>
-  <div class="flex-1 flex-col px-2">
-    <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
-      <nuxt-link
-        v-if="authAdminPermissions.includes('View Practices')
-          || authAdminPermissions.includes('View Surgery Management') 
-          || authAdminPermissions.includes('View Practice Sessions')
-          || authAdminPermissions.includes('View Practice Users')
-          || authAdminPermissions.includes('View Practice Documents')
-          || authAdminPermissions.includes('View Practice Rates')"
-        :to="`/practices`" 
-        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-        :class="$route.name ===`index-practices` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-      >
-        Practices
-      </nuxt-link>
-      <nuxt-link
-        v-if="authAdminPermissions.includes('View Reports')"
-        :to="`/practices/practice-compliance-reports`"
-        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-        :class="$route.name.includes(`practice-compliance-reports`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-      >
-        Practice Compliance Reports
-      </nuxt-link>
-    </div>
-    <nuxt-link
-      v-if="$route.name.includes(`index-practices-id`) || $route.name.includes(`index-practices-add-practice`)"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/practices"
-    />
+  <section class="flex-1 flex-col py-2 px-2">
+    <template v-if="$route.name === 'index-practices'">
+      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+        <nuxt-link
+          v-if="authAdminPermissions.includes('View Practices')
+            || authAdminPermissions.includes('View Surgery Management') 
+            || authAdminPermissions.includes('View Practice Sessions')
+            || authAdminPermissions.includes('View Practice Users')
+            || authAdminPermissions.includes('View Practice Documents')
+            || authAdminPermissions.includes('View Practice Rates')"
+          :to="`/practices`" 
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.name ===`index-practices` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Practices
+        </nuxt-link>
+        <nuxt-link
+          v-if="authAdminPermissions.includes('View Reports')"
+          :to="`/practices/practice-compliance-reports`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.name.includes(`practice-compliance-reports`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Practice Compliance Reports
+        </nuxt-link>
+      </div>
+    </template>
     <nuxt-child />
-  </div>
+  </section>
 </template>
 <script>
 export default {

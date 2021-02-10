@@ -26,7 +26,7 @@
       </div>
 
       <template v-if="practiceChildren.length > 0">
-        <AppTable
+        <AppTableNew
           :total="total"
           :items="practiceChildren"
           :current-page="currentPage"
@@ -57,7 +57,7 @@
               </div>
             </div>
           </template>
-        </AppTable>
+        </AppTableNew>
       </template>
 
       <div v-else>
@@ -88,7 +88,7 @@
 
 <script>
 import AddPracticeSurgery from "@/components/Practices/AddPracticeSurgery"
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 import AppButton from "@/components/Base/AppButton"
 
 export default {
@@ -101,7 +101,7 @@ export default {
 
   components: {
     AddPracticeSurgery,
-    AppTable,
+    AppTableNew,
     AppButton
   },
 

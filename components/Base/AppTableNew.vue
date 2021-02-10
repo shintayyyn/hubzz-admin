@@ -3,7 +3,6 @@
     <div class="relative">
       <AppLoading :loading="loading" spinner />
       <div
-        v-if="!loading"
         class="relative flex flex-col overflow-x-auto w-full mt-4"
         :style="`min-height: ${minHeight ? minHeight : '60vh'}`"
       >

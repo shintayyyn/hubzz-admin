@@ -2,18 +2,15 @@
   <div class="mt-5">
     <div class="">
       <LocumJobsTabs v-if="locumUser" :user="locumUser" />
-      <AppLoading :loading="loadingJobs" :message="'Loading Jobs'" />
       <nuxt-child />
     </div>
   </div>
 </template>
 
 <script>
-  import AppLoading from "@/components/Base/AppLoading"
   import LocumJobsTabs from "@/components/Locums/LocumJobsTabs"
   export default {
     components: {
-      AppLoading,
       LocumJobsTabs,
     },
 

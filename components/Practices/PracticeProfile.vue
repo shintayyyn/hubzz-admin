@@ -11,12 +11,12 @@
 
     <div class="flex flex-col lg:flex-row">
       <form
-        class="order-2 lg:order-1 flex flex-col bg-waterloo p-4 my-1 lg:my-0 shadow rounded-lg"
+        class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 shadow rounded-lg"
         :class="practice.status === 'Inactive' ? 'w-full lg:w-4/6' : 'max-w-5xl' "
       >
         <div class="flex flex-wrap">
           <!-- VIEW PRIMARY INFORMATION -->
-          <div class="w-full md:w-1/2 text-gray-300 text-sm">
+          <div class="w-full md:w-1/2 text-gray-800 text-sm">
             <p class="flex font-bold">
               Practice ID
             </p>
@@ -27,7 +27,7 @@
             <p class="flex font-bold">
               Practice Name
             </p>
-            <p class="flex flex-wrap items-center text-white text-sm mb-2 md:px-2">
+            <p class="flex flex-wrap items-center  text-sm mb-2 md:px-2">
               <span class="mr-2">{{ practice.name }}</span>
               <span
                 class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
@@ -43,21 +43,21 @@
             <p class="flex font-bold">
               Practice Code
             </p>
-            <p class="flex text-white text-sm md:px-2 mb-2">
+            <p class="flex  text-sm md:px-2 mb-2">
               {{ practice.code }}
             </p>
 
             <p class="flex font-bold">
               Post Code
             </p>
-            <p class="flex text-white text-sm md:px-2 mb-2">
+            <p class="flex  text-sm md:px-2 mb-2">
               {{ practice.postcode }}
             </p>
 
             <p class="flex font-bold">
               Address
             </p>
-            <p class="flex flex-col text-white text-sm md:px-2 mb-2">
+            <p class="flex flex-col  text-sm md:px-2 mb-2">
               <span v-if="practice.address_line_1">{{ practice.address_line_1 }}</span>
               <span v-if="practice.address_line_2">{{ practice.address_line_2 }}</span>
               <span v-if="practice.address_line_3">{{ practice.address_line_3 }}</span>
@@ -69,7 +69,7 @@
               CCG
             </p>
             <p
-              class="flex text-white text-sm md:px-2 mb-2"
+              class="flex  text-sm md:px-2 mb-2"
             >
               {{ practice.clinical_commissioning_group_name }}
             </p>
@@ -92,7 +92,7 @@
             </div>
 
             <div v-if="practice.practice_types && practice.practice_types.length === 0">
-              <p class="flex text-white text-sm md:px-2 mb-2">
+              <p class="flex  text-sm md:px-2 mb-2">
                 Not set
               </p>
             </div>
@@ -128,7 +128,7 @@
                       })
                   "
                   :key="referenceComplianceDocument.id"
-                  class="text-white text-sm m-1 mb-2"
+                  class=" text-sm m-1 mb-2"
                 >
                   <span>{{ referenceComplianceDocument.name }}</span>
                 </div>
@@ -148,7 +148,7 @@
                                 === professionComplianceCategory.id
                           })
                     "
-                    class="text-white text-sm m-1 mb-2"
+                    class=" text-sm m-1 mb-2"
                   >
                     <span>{{ mandatoryComplianceDocument.name }}</span>
                   </div>
@@ -167,7 +167,7 @@
                     <div
                       v-for="childComplianceDocument in mandatoryComplianceDocument.child_compliance_documents"
                       :key="childComplianceDocument.id"
-                      class="text-white text-sm m-1 mb-2"
+                      class=" text-sm m-1 mb-2"
                     >
                       <span>{{ childComplianceDocument.name }}</span>
                     </div>
@@ -189,7 +189,7 @@
                                 === professionComplianceCategory.id
                           })
                     "
-                    class="text-white text-sm m-1 mb-2"
+                    class=" text-sm m-1 mb-2"
                   >
                     <span>{{ optionalComplianceDocument.name }}</span>
                   </div>
@@ -208,7 +208,7 @@
                     <div
                       v-for="childComplianceDocument in optionalComplianceDocument.child_compliance_documents"
                       :key="childComplianceDocument.id"
-                      class="text-white text-sm m-1 mb-2"
+                      class=" text-sm m-1 mb-2"
                     >
                       <span>{{ childComplianceDocument.name }}</span>
                     </div>
@@ -225,7 +225,7 @@
               <div
                 v-for="mandatoryTraining in practice.mandatory_trainings"
                 :key="mandatoryTraining.id"
-                class="text-white text-sm m-1 mb-2"
+                class=" text-sm m-1 mb-2"
               >
                 <span>{{ mandatoryTraining.name }}</span>
               </div>
@@ -237,24 +237,24 @@
                   && practice.practice_profession_compliance_category_compliance_documents.length === 0
               "
             >
-              <p class="flex text-white md:text-base py-2 font-bold leading-tight">
+              <p class="flex  md:text-base py-2 font-bold leading-tight">
                 <span>Compliance Documents is not yet set up by the Practice Hub.</span>
               </p>
             </div>
           </div>
 
           <!-- VIEW / EDIT OTHER INFORMATION / PRACTICE TYPE -->
-          <div v-if="practice.status !== 'Deactivated'" class="w-full text-sm text-white md:w-1/2">
+          <div v-if="practice.status !== 'Deactivated'" class="w-full text-sm  md:w-1/2">
             <div class="flex flex-wrap justify-between items-center">
               <span class="text-lg mr-2 font-bold">Invoicing Details</span>
             </div>
 
             <div>
-              <p class="flex text-gray-300 font-bold">
+              <p class="flex text-gray-800 font-bold">
                 VAT Registered
               </p>
 
-              <p class="flex text-white text-sm md:px-2 mb-2">
+              <p class="flex  text-sm md:px-2 mb-2">
                 {{ practice.vat_registered ? 'Yes' : 'No' }}
               </p>
 
@@ -264,7 +264,7 @@
                 </p>
 
                 <p
-                  class="flex text-white text-sm md:px-2 mb-2"
+                  class="flex  text-sm md:px-2 mb-2"
                 >
                   {{ practice.vat_number ? practice.vat_number : 'N/A' }}
                 </p>
@@ -274,18 +274,18 @@
                 </p>
 
                 <p
-                  class="flex text-white text-sm md:px-2 mb-2"
+                  class="flex  text-sm md:px-2 mb-2"
                 >
                   {{ practice.tax_year_end_date ? $moment(practice.tax_year_end_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
                 </p>
               </template>
 
-              <p class="flex text-gray-300 font-bold">
+              <p class="flex text-gray-800 font-bold">
                 Bank Details
               </p>
 
               <div class="ml-2">
-                <p class="flex text-gray-300 font-bold">
+                <p class="flex text-gray-800 font-bold">
                   Account name
                 </p>
 
@@ -295,7 +295,7 @@
                   {{ practice && practice.account_name ? practice.account_name : 'N/A' }}
                 </p>
 
-                <p class="flex text-gray-300 font-bold">
+                <p class="flex text-gray-800 font-bold">
                   Bank name
                 </p>
 
@@ -305,7 +305,7 @@
                   {{ practice && practice.bank_name ? practice.bank_name : 'N/A' }}
                 </p>
 
-                <p class="flex text-gray-300 font-bold">
+                <p class="flex text-gray-800 font-bold">
                   Sort code
                 </p>
 
@@ -315,7 +315,7 @@
                   {{ practice && practice.sort_code ? practice.sort_code : 'N/A' }}
                 </p>
 
-                <p class="flex text-gray-300 font-bold">
+                <p class="flex text-gray-800 font-bold">
                   Account number
                 </p>
 
@@ -343,12 +343,12 @@
                   Sage reference
                 </p>
                 <p
-                  class="flex text-white text-sm md:px-2 mb-2"
+                  class="flex  text-sm md:px-2 mb-2"
                 >
                   {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
                 </p>
               </template>
-              <p class="flex text-gray-300 font-bold">
+              <p class="flex text-gray-800 font-bold">
                 Phone Number
               </p>
               <p
@@ -356,7 +356,7 @@
               >
                 {{ practice && practice.phone_number ? practice.phone_number : 'N/A' }}
               </p>
-              <p class="flex text-gray-300 font-bold">
+              <p class="flex text-gray-800 font-bold">
                 Full name to report to
               </p>
               <p
@@ -365,7 +365,7 @@
                 {{ practice && practice.report_to ? practice.report_to : 'N/A' }}
               </p>
               <p
-                class="flex text-gray-300 font-bold"
+                class="flex text-gray-800 font-bold"
               >
                 Extra information (Parking restrictions, transport links, etc.)
               </p>
@@ -375,9 +375,9 @@
                 {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
               </p>
               <!-- <div class="flex items-center mb-2">
-                <span class="text-gray-300 mr-2 font-bold">Status:</span>
+                <span class="text-gray-800 mr-2 font-bold">Status:</span>
                 <span
-                  class="text-white px-4 py-1 rounded-lg"
+                  class=" px-4 py-1 rounded-lg"
                   :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
                 >{{ practice.status }}</span>
                 <span
@@ -395,7 +395,7 @@
                 </span>
 							</div>-->
               <!-- <template v-if="practice.status === 'Active'">
-                <p class="text-gray-300 font-bold">
+                <p class="text-gray-800 font-bold">
                   Active Until
                 </p>
                 <p
@@ -407,7 +407,7 @@
               <div class="flex flex-col item-center">
                 <div class="w-full sm:w-1/2 m-2">
                   <AppButton
-                    :inClass="'text-white'"
+                    :inClass="''"
                     :label="'Deactivate this Practice'"
                     :background="'charade'"
                     :disabled="authAdminPermissions.includes('Edit Practice Other Information') === false"
@@ -489,15 +489,15 @@
             </div>
             <div v-if="!toEditPracticeStatus" class="flex flex-col mb-2">
               <div class="flex flex-row m-2">
-                <span class="text-gray-300 mr-2 font-bold">Status:</span>
+                <span class="text-gray-800 mr-2 font-bold">Status:</span>
                 <span
-                  class="text-white px-4 py-1 rounded-lg"
+                  class=" px-4 py-1 rounded-lg"
                   :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
                 >{{ practice.status }}</span>
               </div>
               <div class="m-2">
                 <template v-if="practice.status === 'Active'">
-                  <p class="text-gray-300 font-bold">
+                  <p class="text-gray-800 font-bold">
                     Active Until
                   </p>
                   <p
@@ -612,7 +612,7 @@
       <!-- TOOLTIPS FOR VERIFICATION -->
       <div
         v-if="practice.status === 'Inactive' || practice.sage_ref === null"
-        class="order-1 lg:order-2 bg-waterloo rounded-lg px-2 py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6 text-white text-sm"
+        class="order-1 lg:order-2  rounded-lg px-2 py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6  text-sm"
       >
         <div v-if="practice.status === 'Inactive'">
           <!-- Title -->
@@ -1063,13 +1063,13 @@ export default {
 		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
-					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
+					return "bg-indigo-500  lg:px-4 sm:px-2"
 				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2"
+					return "bg-red-500  lg:px-8 sm:px-2"
 				case "Spoke":
-					return "bg-blue-500 text-white lg:px-8 sm:px-2"
+					return "bg-blue-500  lg:px-8 sm:px-2"
 				case "Type 2":
-					return "bg-purple-500 text-white lg:px-8 sm:px-2"
+					return "bg-purple-500  lg:px-8 sm:px-2"
 				default:
 			}
 		},

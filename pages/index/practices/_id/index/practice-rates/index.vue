@@ -2,10 +2,10 @@
   <div class="mt-5">
     <div class="flex flex-col rounded-lg">
       <div
-        class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg"
+        class="w-full flex  text-sm  p-2 shadow rounded-lg"
         style="max-width: 600px"
       >
-        <div v-if="!editing" class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2">
+        <div v-if="!editing" class="relative w-full overflow-hidden  text-sm px-2 md:p-2">
           <button
             v-if="authAdminPermissions.includes('Create New or Edit Practice Rates')"
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
@@ -18,7 +18,7 @@
             GP Rate (Per Hour)
           </div>
           <div
-            class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
+            class=" text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
           >
             {{ gpRate }}
           </div>
@@ -26,7 +26,7 @@
             Others Rate (Per Hour)
           </div>
           <div
-            class="text-white text-lg font-semibold mx-3 leading-tight focus:outline-none"
+            class=" text-lg font-semibold mx-3 leading-tight focus:outline-none"
           >
             {{ othersRate }}
           </div>
@@ -34,7 +34,7 @@
 
         <div
           v-if="editing && authAdminPermissions.includes('Create New or Edit Practice Rates')"
-          class="w-full overflow-hidden text-gray-300 text-sm p-2"
+          class="w-full overflow-hidden  text-sm p-2"
         >
           <div class="flex items-center justify-between py-1">
             GP Rate (Per Hour)
@@ -42,7 +42,7 @@
           <!--  @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')" -->
           <input
             v-model.number="toPutPracticeRate.gp_rate"
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            class="appearance-none bg-transparent border-b w-full  mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('gp_rate') && 'border-red-800'"
             step="any"
             aria-label
@@ -62,7 +62,7 @@
           <!-- @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')" -->
           <input
             v-model.number="toPutPracticeRate.others_rate"
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
+            class="appearance-none bg-transparent border-b w-full  mr-3 py-3 px-2 leading-tight focus:outline-none"
             :class="errorMessage('others_rate') && 'border-red-800'"
             step="any"
             aria-label="newtext"

@@ -1,170 +1,132 @@
 <template>
-  <div class="practice-modal p-4 md:p-8 shadow-lg">
-    <nuxt-link class="block mb-4" :to="{ name: 'index-practices', query: $route.query }">
-      <svgicon
-        name="arrow-left-solid"
-        height="32"
-        width="32"
-        class="cursor-pointer text-white hover:text-sunglow fill-current"
-      />
-    </nuxt-link>
-    <AppLoading :loading="loading" spinner />
-    <div class="flex justify-start overflow-x-auto">
-      <nuxt-link
-        v-if="practicePermissions.includes('View Practices')"
-        :to="`/practices/${$route.params.id}`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="
-          $route.name === 'index-practices-id-index'
-            ? 'bg-sunglow hover:bg-sunglow-dark'
-            : 'hover:bg-waterloo text-white'
-        "
-      >
-        Practice
-      </nuxt-link>
+  <section>
+    <div>
+      <AppLoading :loading="loading" spinner />
+      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+        <nuxt-link
+          v-if="practicePermissions.includes('View Practices')"
+          :to="`/practices/${$route.params.id}`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="
+            $route.name === 'index-practices-id-index'
+              ? 'border-b-4 border-yellow-500' : 'text-gray-600'
+          "
+        >
+          Practice
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.type === 'Hub'
-            && practice.status !== 'Inactive'
-            && practice.status !== 'Bogus'
-            && practice.status !== 'Deactivated'
-            && practicePermissions.includes('View Surgery Management')
-        "
-        :to="`/practices/${$route.params.id}/practice-surgeries`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="
-          $route.path.includes(`/practices/${$route.params.id}/practice-surgeries`)
-            ? 'bg-sunglow hover:bg-sunglow-dark'
-            : 'hover:bg-waterloo text-white'
-        "
-      >
-        Surgery Management
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.type === 'Hub'
+              && practice.status !== 'Inactive'
+              && practice.status !== 'Bogus'
+              && practice.status !== 'Deactivated'
+              && practicePermissions.includes('View Surgery Management')
+          "
+          :to="`/practices/${$route.params.id}/practice-surgeries`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="
+            $route.path.includes(`/practices/${$route.params.id}/practice-surgeries`)
+              ? 'border-b-4 border-yellow-500' : 'text-gray-600'
+          "
+        >
+          Surgery Management
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.type === 'Spoke' 
-            && (practice.status !== 'Inactive' 
-            && practice.status !== 'Bogus' 
-            && practice.status !== 'Deactivated')
-            && practicePermissions.includes('View Surgery Management')
-        "
-        :to="`/practices/${$route.params.id}/practice-hub`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="$route.path == `/practices/${$route.params.id}/practice-hub`? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-      >
-        Hub
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.type === 'Spoke' 
+              && (practice.status !== 'Inactive' 
+              && practice.status !== 'Bogus' 
+              && practice.status !== 'Deactivated')
+              && practicePermissions.includes('View Surgery Management')
+          "
+          :to="`/practices/${$route.params.id}/practice-hub`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.path == `/practices/${$route.params.id}/practice-hub`? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Hub
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.status !== 'Inactive' 
-            && practice.status !== 'Bogus' 
-            && practice.status !== 'Deactivated'
-            && practicePermissions.includes('View Surgery Management')
-        "
-        :to="`/practices/${$route.params.id}/practice-invitations`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="$route.name.includes('index-practices-id-index-practice-invitations-index') ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-      >
-        {{ `Invitation${practice.type === 'Hub' ? 's' : ''}` }}
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.status !== 'Inactive' 
+              && practice.status !== 'Bogus' 
+              && practice.status !== 'Deactivated'
+              && practicePermissions.includes('View Surgery Management')
+          "
+          :to="`/practices/${$route.params.id}/practice-invitations`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.name.includes('index-practices-id-index-practice-invitations-index') ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          {{ `Invitation${practice.type === 'Hub' ? 's' : ''}` }}
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.status !== 'Inactive' 
-            && practice.status !== 'Bogus'
-            && practicePermissions.includes('View Practice Sessions')
-        "
-        :to="`/practices/${$route.params.id}/practice-sessions`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="$route.path.includes(`/practices/${$route.params.id}/practice-sessions`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-      >
-        Sessions
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.status !== 'Inactive' 
+              && practice.status !== 'Bogus'
+              && practicePermissions.includes('View Practice Sessions')
+          "
+          :to="`/practices/${$route.params.id}/practice-sessions`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.path.includes(`/practices/${$route.params.id}/practice-sessions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Sessions
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.status !== 'Deactivated'
-            && practicePermissions.includes('View Practice Users')
-        "
-        :to="`/practices/${$route.params.id}/practice-users`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="$route.path.includes(`/practices/${$route.params.id}/practice-users`) ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-      >
-        Users
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.status !== 'Deactivated'
+              && practicePermissions.includes('View Practice Users')
+          "
+          :to="`/practices/${$route.params.id}/practice-users`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.path.includes(`/practices/${$route.params.id}/practice-users`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Users
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.status !== 'Bogus' 
-            && practice.status !== 'Deactivated'
-            && practicePermissions.includes('View Practice Documents')
-        "
-        :to="`/practices/${$route.params.id}/practice-documents` "
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="$route.path == `/practices/${$route.params.id}/practice-documents` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-      >
-        Documents
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.status !== 'Bogus' 
+              && practice.status !== 'Deactivated'
+              && practicePermissions.includes('View Practice Documents')
+          "
+          :to="`/practices/${$route.params.id}/practice-documents` "
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.path == `/practices/${$route.params.id}/practice-documents` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Documents
+        </nuxt-link>
 
-      <nuxt-link
-        v-if="
-          practice 
-            && practice.status !== 'Bogus' 
-            && practice.status !== 'Deactivated'
-            && practicePermissions.includes('View Practice Rates')
-        "
-        :to="`/practices/${$route.params.id}/practice-rates`"
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="$route.path == `/practices/${$route.params.id}/practice-rates` ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-      >
-        Rates
-      </nuxt-link>
+        <nuxt-link
+          v-if="
+            practice 
+              && practice.status !== 'Bogus' 
+              && practice.status !== 'Deactivated'
+              && practicePermissions.includes('View Practice Rates')
+          "
+          :to="`/practices/${$route.params.id}/practice-rates`"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="$route.path == `/practices/${$route.params.id}/practice-rates` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        >
+          Rates
+        </nuxt-link>
+      </div>
     </div>
-
-    <div
-      v-if="
-        $route.name.includes('pracUserId')
-          || $route.name.includes('pracDocId')
-          || $route.name.includes('invitationId')
-          || $route.name.includes('practiceSessionId')
-          || $route.name.includes('roleId')
-      "
-      class="practice-shield"
-      @click="$router.go(-1)"
-    />
-
-    <div
-      v-if="$route.name.includes('practiceSurgeryId')"
-      class="practice-shield"
-      @click="$router.push(`/practices/${$route.params.id}/practice-surgeries`)"
-    />
-
-    <div
-      v-if="$route.name.includes('practiceSessionPartId')"
-      class="practice-shield"
-      @click="$router.go(-1)"
-    />
-
-    <div
-      v-if="$route.name.includes('add-spoke')"
-      class="practice-shield" @click="$router.go(-1)"
-    />
-
     <nuxt-child
       :practice="practice"
       :professionComplianceCategories="professionComplianceCategories"
       @practiceUpdated="practiceUpdatedHandler"
     />
-  </div>
+  </section>
 </template>
 
 <script>

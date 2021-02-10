@@ -1,14 +1,13 @@
 <template>
   <div class="mt-5">
     <!-- tabs here -->
-    <div class="flex justify-start overflow-x-auto">
+    <div class="flex flex-row overflow-x-auto border-b border-gray-500 mb-4 p-1">
       <nuxt-link
         :to="getRoute()"
-        class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
         :class="
           $route.path == `/practices/${practice.id}/practice-users`
-            ? 'bg-sunglow hover:bg-sunglow-dark' :  
-              'hover:bg-waterloo text-white'
+            ? 'border-b-4 border-gray-500' : 'text-gray-600'
         "
       >
         Users
@@ -17,11 +16,10 @@
       <nuxt-link
         v-if="practice.status !== 'Deactivated'"
         :to="getRoute('user-roles')"
-        class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
         :class="
           $route.path.includes(`/user-roles`)
-            ? 'bg-sunglow hover:bg-sunglow-dark' :  
-              'hover:bg-waterloo text-white'
+            ? 'border-b-4 border-gray-500' : 'text-gray-600'
         "
       >
         Roles
