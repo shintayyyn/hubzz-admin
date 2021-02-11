@@ -1,19 +1,19 @@
 <template>
   <div ref="modalContainer" :class="getStyle(registeeType)">
-    <div class="flex flex-col p-4 md:p-8">
+    <div class="flex flex-col px-4 shadow-lg">
       <!-- class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8" -->
-      <div v-if="registeeType !== 'customSurgery'" class="flex justify-between text-sm text-white">
+      <div v-if="registeeType !== 'customSurgery'" class="flex justify-between text-sm mt-4 mx-2">
         <div class="cursor-pointer" @click="$emit('close')">
           <svgicon
             name="arrow-left-solid"
             height="32"
             width="32"
-            class="text-white hover:text-sunglow fill-current"
+            class="hover:text-sunglow fill-current"
           />
         </div>
       </div>
       <div class="py-4">
-        <div class="text-white">
+        <div class="">
           <div class="text-lg font-bold">
             {{ registeeType == 'customSurgery' ? 'Create Custom Practice' : 'Create User' }}
           </div>
@@ -22,8 +22,8 @@
           </div>
         </div>
 
-        <div class="flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
-          <div class="w-full text-gray-300 text-sm p-2">
+        <div class="flex my-4 py-2 px-3 shadow rounded-lg text-sm max-w-lg">
+          <div class="w-full text-sm p-2">
             <AppFormError v-if="formError.length > 0 && showFormError == true" class="w-full mb-4" :formError="formError" />
             <!-- USER PERSONAL DETAILS -->
             <AppInput 
@@ -992,7 +992,7 @@
     overflow: auto;
     border-left: solid 2px #ffc72c;
     transition: all 0.3s ease-in-out;
-    background-color: #505561;
+    background-color: white;
     z-index: 512;
   }
 
@@ -1008,7 +1008,7 @@
     overflow: auto;
     border-left: solid 2px #ffc72c;
     transition: all 0.3s ease-in-out;
-    background-color: #505561;
+    background-color: white;
     z-index: 512;
   }
 

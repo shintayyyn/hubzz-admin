@@ -1,28 +1,17 @@
 <template>
-  <div ref="modalContainer" class="practice-modal shadow-lg">
-    <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
-      <nuxt-link :to="{ name: 'index-practices', query: $route.query }" class="cursor-pointer">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="text-white hover:text-sunglow fill-current"
-        />
-      </nuxt-link>
-    </div>
-    
-    <div class="flex justify-start overflow-x-auto mx-6">
+  <div ref="modalContainer">    
+    <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 p-1">
       <div
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="customSurgery === false ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="customSurgery === false ? 'border-b-4 border-gray-500' : 'text-gray-600'"
         @click="customSurgery = false"
       >
         Practice with Existing Surgery
       </div>
 
       <div
-        class="px-4 py-3 mr-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-        :class="customSurgery === true? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="customSurgery === true? 'border-b-4 border-gray-500' : 'text-gray-600'"
         @click="customSurgery = true"
       >
         Practice with Custom Surgery

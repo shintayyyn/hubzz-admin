@@ -48,7 +48,7 @@
           class="text-sm"
           :label="'Create New Practice'"
           :icon="'add-rectangle'"
-          :nuxtLink="{ name: 'index-practices-add-practice', query: $route.query }"
+          @click="$router.push('/practices/add-practice')"
         />
       </div>
     </div>

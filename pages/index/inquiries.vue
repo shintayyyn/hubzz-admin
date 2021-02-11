@@ -1,82 +1,81 @@
 <template>
-  <div class="flex-1 flex flex-col px-4 mx-1 md:mx-2 overflow-auto">
-    <div class="flex">
-      <!-- <div class="relative">
-				<input
-					class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-					placeholder="Search Locum by Name"
-					v-model="search"
-					@keyup.enter="searchSubmit"
-				/>
-				<button
-					v-if="search"
-					class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-					@click="(search = ''), searchSubmit()"
+	<section>
+		<template v-if="$route.name === 'index-inquiries'">
+			<div class="flex-1 flex flex-col px-4 mx-1 md:mx-2 overflow-auto">
+				<div class="flex">
+					<!-- <div class="relative">
+						<input
+							class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+							placeholder="Search Locum by Name"
+							v-model="search"
+							@keyup.enter="searchSubmit"
+						/>
+						<button
+							v-if="search"
+							class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+							@click="(search = ''), searchSubmit()"
+						>
+							<svgicon
+								name="times-solid"
+								height="12"
+								width="12"
+								class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+							/>
+						</button>
+					</div>-->
+					<!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
+				</div>
+
+				<AppTableNew
+					v-if="itemCount > 0"
+					:total="itemCount"
+					:items="emails"
+					:currentPage="currentPage"
+					:perPage="params.limit"
+					:columns="columns"
+					:loading="loadingSupportEmail"
+					:routerLink="`/inquiries`"
+					:customWidth="400"
+					:loadingMessage="'Loading Inquiries'"
+					@pagechanged="pagechanged"
 				>
-					<svgicon
-						name="times-solid"
-						height="12"
-						width="12"
-						class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-					/>
-				</button>
-			</div>-->
-      <!-- <button class="rounded-lg text-sm text-white p-2 mx-2 hover:text-black hover:bg-yellow-500 focus:outline-none" @click="searchSubmit(currentPage,order_by,filterCompliances)">Go</button> -->
-    </div>
+					<template v-slot:acknowledged="slotProps">
+						<div
+							:class="
+								!slotProps.item.acknowledged_at_in_gb_formatted &&
+									'mx-auto px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
+							"
+						>
+							<template v-if="slotProps.item.acknowledged_at_in_gb_formatted">
+								{{ slotProps.item.acknowledged_at_in_gb_formatted }}
+							</template>
 
-    <AppTable
-      v-if="itemCount > 0"
-      :total="itemCount"
-      :items="emails"
-      :currentPage="currentPage"
-      :perPage="params.limit"
-      :columns="columns"
-      :loading="loadingSupportEmail"
-      :routerLink="`/inquiries`"
-      :customWidth="400"
-      :loadingMessage="'Loading Inquiries'"
-      @pagechanged="pagechanged"
-    >
-      <template v-slot:acknowledged="slotProps">
-        <div
-          :class="
-            !slotProps.item.acknowledged_at_in_gb_formatted &&
-              'mx-auto px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
-          "
-        >
-          <template v-if="slotProps.item.acknowledged_at_in_gb_formatted">
-            {{ slotProps.item.acknowledged_at_in_gb_formatted }}
-          </template>
+							<template v-else>
+								Pending
+							</template>
+						</div>
+					</template>
+				</AppTableNew>
 
-          <template v-else>
-            Pending
-          </template>
-        </div>
-      </template>
-    </AppTable>
+				<template v-else>
+					<div class="mt-2 w-full text-center text-white">
+						There are no inquiries messages.
+					</div>
+				</template>
 
-    <template v-else>
-      <div class="mt-2 w-full text-center text-white">
-        There are no inquiries messages.
-      </div>
-    </template>
-
-    <div
-      v-if="$route.name.includes('index-inquiries-id')"
-      class="support-shield"
-      @click="$router.go(-1)"
-    />
-
-    <nuxt-child />
-  </div>
+				
+			</div>
+		</template>
+		<nuxt-child />
+	</section>
 </template>
 
 <script>
 import debounce from "lodash.debounce"
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 export default {
 	components: {
-		AppTable
+		AppTableNew
 	},
 
 	data () {
@@ -86,7 +85,7 @@ export default {
 			currentPage: 1,
 
 			params: {
-				limit: 10,
+				limit: 15,
 				offset: 0,
 				order_by: ["created_at:desc"]
 			},
@@ -155,7 +154,7 @@ export default {
 			let { page = 1, search = "", order_by = [] } = route.query
 			page = parseInt(page)
 			const createdRoute = route.query
-			const limit = 10
+			const limit = 15
 			const offset = page * limit - limit
 			order_by =
 				createdRoute && createdRoute.order_by

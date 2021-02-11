@@ -106,7 +106,7 @@
             <template v-if=" type === 'password' ">
               <div class="relative w-full mb-4">
                 <input
-                  class="w-full bg-transparent text-white py-2 outline-none border-b-2 pr-6"
+                  class="w-full bg-transparent py-2 outline-none border-b-2 pr-6"
                   :value="value"
                   :type="togglePassword()"
                   :placeholder="placeholder"
@@ -118,8 +118,8 @@
                   @focus="showPasswordFocus = true"
                 >
                 <button class="absolute right-0 h-full" :class="error && '-mt-2'" tabindex="-1" @click="passwordToggle = !passwordToggle">
-                  <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current" />
-                  <svgicon v-else name="hide-eye" width="20" height="20" class="text-white hover:text-gray-500 fill-current" />
+                  <svgicon v-if="togglePassword() === 'password'" name="eye" width="20" height="20" class="hover:text-gray-500 fill-current" />
+                  <svgicon v-else name="hide-eye" width="20" height="20" class="hover:text-gray-500 fill-current" />
                 </button>
                 
                 <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
@@ -323,7 +323,7 @@
             :value="value"
             :type="type"
             :placeholder="placeholder"
-            class="appearance-none w-full rounded-lg border-2 border-transparent focus:border-sunglow text-sm text-white p-2 bg-waterloo focus:outline-none transition-hover"
+            class="appearance-none w-full rounded-lg border-2 border-transparent focus:border-sunglow text-sm p-2 bg-waterloo focus:outline-none transition-hover"
             :class="[error ? 'border-red-600' : '', inClass]"
             :style="inStyle"
             @input="$emit('input', $event.target.value)"

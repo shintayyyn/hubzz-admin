@@ -73,7 +73,7 @@
       </div>
     </div>
 
-    <AppTable
+    <AppTableNew
       class="qweqweqwe"
       :total="count"
       :items="complianceDocumentRejectReasons"
@@ -116,13 +116,13 @@
 import debounce from "lodash.debounce"
 
 import AppLoading from '@/components/Base/AppLoading'
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 
 export default {
 
   components: {
     AppLoading,
-    AppTable,
+    AppTableNew,
   },
 
   data () {

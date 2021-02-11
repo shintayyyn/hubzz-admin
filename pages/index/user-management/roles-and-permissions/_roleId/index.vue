@@ -1,15 +1,6 @@
 <template>
-	<div ref="modalContainer" class="role-modal">
-		<div class="p-4 md:p-6 text-white">
-			<div class="pb-4">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					widht="32"
-					class="cursor-pointer text-white hover:text-sunglow fill-current"
-					@click="goBack()"
-				/>
-			</div>
+	<div ref="modalContainer">
+		<div class="p-4 md:p-6">
 			<div class="flex flex-row items-start justify-between flex-wrap">
 				<div class="flex items-center justify-between w-full leading-tight">
 					<div class="text-2xl md:text-4xl font-bold md:font-normal">{{ role.name }}</div>

@@ -1,43 +1,32 @@
 <template>
-	<div class="admin-user-modal p-4 md:p-8 shadow-lg text-white flex flex-col">
-		<div @click="goBack()" class="cursor-pointer">
-			<svgicon
-				name="arrow-left-solid"
-				height="32"
-				widht="32"
-				class="text-white hover:text-sunglow fill-current"
-			/>
-		</div>
-		<div class="my-4">
+	<div class="flex flex-col">
+		<div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
 			<nuxt-link
 				:to="`/user-management/${$route.params.id}`"
-				class="rounded-lg font-bold"
+				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
 				:class="
 					$route.path == `/user-management/${$route.params.id}`
-						? 'bg-sunglow hover:bg-sunglow-dark px-4 py-2'
-						: 'px-4 py-2 text-white hover:bg-waterloo'
+						? 'border-b-4 border-gray-500' : 'text-gray-600'
 				"
 				>User Info</nuxt-link
 			>
 			<nuxt-link
 				v-if="authAdminPermissions.includes('Edit Admin Account')"
 				:to="`/user-management/${$route.params.id}/edit`"
-				class="rounded-lg font-bold"
+				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
 				:class="
 					$route.path == `/user-management/${$route.params.id}/edit`
-						? 'bg-sunglow hover:bg-sunglow-dark px-4 py-2'
-						: 'px-4 py-2 text-white hover:bg-waterloo'
+						? 'border-b-4 border-gray-500' : 'text-gray-600'
 				"
 				>Edit Info</nuxt-link
 			>
 			<nuxt-link
 				v-if="authAdminPermissions.includes('Edit Admin Account')"
 				:to="`/user-management/${$route.params.id}/change-password`"
-				class="rounded-lg font-bold"
+				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
 				:class="
 					$route.path == `/user-management/${$route.params.id}/change-password`
-						? 'bg-sunglow hover:bg-sunglow-dark px-4 py-2'
-						: 'px-4 py-2 text-white hover:bg-waterloo'
+						? 'border-b-4 border-gray-500' : 'text-gray-600'
 				"
 				>Change Password</nuxt-link
 			>

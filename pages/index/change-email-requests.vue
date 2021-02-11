@@ -81,7 +81,7 @@
       </div>
     </div>
 
-    <AppTable
+    <AppTableNew
       :total="count"
       :items="changeEmailRequests"
       :currentPage="page"
@@ -102,7 +102,7 @@
           <span>{{ slotProps.item.status }}</span>
         </div>
       </template>
-    </AppTable>
+    </AppTableNew>
 
     <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
       <span>No change email requests.</span>
@@ -127,13 +127,13 @@
   import debounce from "lodash.debounce"
 
   import AppLoading from '@/components/Base/AppLoading'
-  import AppTable from "@/components/Base/AppTable"
+  import AppTableNew from "@/components/Base/AppTableNew"
 
   export default {
 
     components: {
       AppLoading,
-      AppTable,
+      AppTableNew,
     },
 
     data () {

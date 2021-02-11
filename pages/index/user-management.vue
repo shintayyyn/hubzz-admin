@@ -1,27 +1,24 @@
 <template>
-	<div class="flex-1 flex-col py-2 px-2">
-		<div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
-			<nuxt-link
-				v-if="authAdminPermissions.includes('View Admin Accounts')"
-				:to="getRoute()"
-				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-				:class="$route.path == `/user-management` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-			>Users</nuxt-link>
+	<section class="flex-1 flex-col py-2 px-2">
+		<template>
+			<div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+				<nuxt-link
+					v-if="authAdminPermissions.includes('View Admin Accounts')"
+					:to="getRoute()"
+					class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+					:class="$route.path == `/user-management` ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+				>Users</nuxt-link>
 
-			<nuxt-link
-				v-if="authAdminPermissions.includes('View Roles')"
-				:to="getRoute('roles-and-permissions')"
-				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-				:class="$route.path.includes(`/user-management/roles-and-permissions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
-			>Roles and Permissions</nuxt-link>
-		</div>
-		<div
-			class="admin-shield"
-			v-if="$route.name.includes('index-user-management-id') || $route.name.includes('roleId') || $route.name.includes('create')"
-			@click="$router.go(-1)"
-		/>
+				<nuxt-link
+					v-if="authAdminPermissions.includes('View Roles')"
+					:to="getRoute('roles-and-permissions')"
+					class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+					:class="$route.path.includes(`/user-management/roles-and-permissions`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+				>Roles and Permissions</nuxt-link>
+			</div>
+		</template>
 		<nuxt-child />
-	</div>
+	</section>
 </template>
 <script>
 export default {
