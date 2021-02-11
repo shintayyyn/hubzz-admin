@@ -1,14 +1,11 @@
 <template>
   <div class="flex-1 flex-col py-2 px-2">
-    <!-- <div class="px-2 text-2xl md:text-4xl text-white">
-      Billing
-    </div> -->
     <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
       <nuxt-link
         v-if="authAdminPermissions.includes('View Hubzz Invoices')"
         :to="`/billings/hubzz-billing`" 
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-        :class="$route.path.includes(`hubzz-billing`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        :class="$route.name.includes(`index-hubzz-billing`) ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
       >
         HUBZZ Billing
       </nuxt-link>
@@ -16,7 +13,7 @@
         v-if="authAdminPermissions.includes('View Hubzz Invoices')"
         :to="`/billings/hubzz-invoices`"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-        :class="$route.path.includes(`hubzz-invoices`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        :class="$route.name.includes(`index-hubzz-invoices`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
       >
         HUBZZ Invoices
       </nuxt-link>
@@ -24,7 +21,7 @@
         v-if="authAdminPermissions.includes('View Hubzz Invoices')"
         :to="`/billings/tax-rates`"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-        :class="$route.path.includes(`tax-rates`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        :class="$route.name.includes(`index-tax-rates`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
       >
         Tax Rates
       </nuxt-link>
@@ -32,19 +29,13 @@
         v-if="authAdminPermissions.includes('View Reports')"
         :to="`/billings/hubzz-pricing-reports`"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
-        :class="$route.path.includes(`hubzz-pricing-reports`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+        :class="$route.name.includes(`index-hubzz-pricing-reports`)? 'border-b-4 border-yellow-500' : 'text-gray-600'"
       >
         Pricing Reports
       </nuxt-link>
     </div>
    
     <nuxt-child />
-
-    <div
-      v-if="$route.name.includes('index-billings-index-hubzz-invoices-hubzzInvoiceId') || $route.name.includes('index-billings-index-hubzz-billing-id-index')"
-      class="shield"
-      @click="redirect()"
-    />
   </div>
 </template>
 
@@ -55,6 +46,20 @@ export default {
 			return this.$store.getters["permissions"]
     },
   },
+  watch: {
+    $route (value) {
+      if (value.name === 'index-billings-index') {
+        if (this.authAdminPermissions.includes('View Reports')
+          && this.authAdminPermissions.includes('View Hubzz Invoices') === false
+        ) {
+          this.$router.push(`/billings/hubzz-pricing-reports`)
+        } else {
+          this.$router.push(`/billings/hubzz-billing`)
+        }
+      }
+    }
+  },
+
   async asyncData ({ store, error }) {
     try {
       const authAdminPermissions = store.getters["permissions"]

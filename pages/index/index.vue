@@ -70,7 +70,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Locum Registrations</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold">
@@ -108,7 +108,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Practice Registrations</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between my-1 font-bold">
@@ -155,7 +155,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Referrers with Successful Referrals</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div v-if="authAdminPermissions.includes('View Locums')" class="flex justify-between my-1 text-sm text-gray-700">
@@ -185,7 +185,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Billing</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between my-1 font-bold">
@@ -242,7 +242,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Locums</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold">
@@ -286,7 +286,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Practices</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold">
@@ -323,7 +323,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Jobs</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold my-1">
@@ -368,7 +368,7 @@
             <div class="flex flex-row text-xs text-gray-800">
               <div>Job Disputes</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between my-1 font-bold">

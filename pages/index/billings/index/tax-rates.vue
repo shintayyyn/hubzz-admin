@@ -2,12 +2,12 @@
   <section>
     <div class="flex flex-col rounded-lg">
       <div
-        class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg relative"
+        class="w-full flex  text-sm p-2 shadow rounded-lg relative"
         style="max-width: 600px"
       >
         <div
           v-if="toEdit == false && authAdminPermissions.includes('Create New or Edit Practice Rates')"
-          class="relative w-full class overflow-hidden text-gray-300 text-sm px-2 md:p-2"
+          class="relative w-full class overflow-hidden  text-sm px-2 md:p-2"
         >
           <div
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
@@ -23,7 +23,7 @@
               Practice Tax Rate
             </div>
             <div
-              class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
+              class=" text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
             >
               {{ `${toPutTaxRates.practice_tax_rate}%` }} 
             </div>
@@ -33,7 +33,7 @@
               Locum Tax Rate
             </div>
             <div
-              class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
+              class=" text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
             >
               {{ `${toPutTaxRates.locum_tax_rate}%` }} 
             </div>
@@ -41,7 +41,7 @@
         </div>
         <div
           v-if="toEdit == true && authAdminPermissions.includes('Create New or Edit Practice Rates')"
-          class="w-full overflow-hidden text-gray-300 text-sm p-2"
+          class="w-full overflow-hidden  text-sm p-2"
         >
           <AppInput 
             v-model="toPutTaxRates.practice_tax_rate"

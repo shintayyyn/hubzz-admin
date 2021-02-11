@@ -31,29 +31,27 @@ export default {
     crumbs () {
       const routeMatched = this.$route.path.split("/")
       routeMatched.shift()
-      console.log('routeMatched', routeMatched)
+      
+      let to = ''
+      let toArray = []
+      routeMatched.forEach((item) => {
+        to = `${to}/${item}`
+        toArray.push(to)
+      })
+
       let breadcrumbs = routeMatched.reduce((breadcrumbArray, path, index) => {
         let text = this.$route.matched[index].meta.breadCrumb || path
         text = text.replace(/-/g, ' ')
         text = text.replace(/(^\w{1})|(\s{1}\w{1})/g, word => word.toUpperCase())
-        let to = ''
-
-        routeMatched.forEach((item) => {
-          to = `${to}/${item}`
-        })
-
-        console.log('to', to)
+        
         breadcrumbArray.push({
           path: path,
-          to: breadcrumbArray[index - 1]
-            ? "/" + breadcrumbArray[index - 1].path + "/" + path
-            : "/" + path,
+          to: toArray[index],
           text,
         })
-        console.log('breadcrumbArray', breadcrumbArray[index - 1])
         return breadcrumbArray
       }, [])
-      console.log('routematched', routeMatched)
+
       return breadcrumbs
     }
   },

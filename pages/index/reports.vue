@@ -1,76 +1,30 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-4 md:px-6 mx-1">
-    <!-- <div class="text-sm md:text-xl text-white">
-      Compliance Reports
-    </div>
+  <section class="flex-1 flex flex-col py-2 px-4 md:px-6 mx-1">
+    <template v-if="$route.name === 'index-reports'">
+      <div class="text-sm md:text-xl text-gray-800">
+        HQ Analytics
+      </div>
 
-    <div class="flex flex-col">
-      <nuxt-link
-        v-for="complianceReport in complianceReports"
-        :key="`complianceReports-${complianceReport.title}`"
-        :to="complianceReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
-      >
-        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
-          <span class="px-2 whitespace-no-wrap font-semibold">{{ complianceReport.title }}</span>
-          <span class="px-2 w-full leading-tight flex items-center">{{ complianceReport.subtitle }}</span>
-          <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
+      <div class="flex flex-col">
+        <nuxt-link
+          v-for="hqAnalyticsReport in hqAnalyticsReports"
+          :key="`hqAnalyticsReports-${hqAnalyticsReport.title}`"
+          :to="hqAnalyticsReport.url"
+          class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-lg hover:bg-gray-400 transition-hover my-2"
+        >
+          <div class="flex flex-no-wrap items-center text-sm w-full">
+            <span class="px-2 whitespace-no-wrap font-semibold">{{ hqAnalyticsReport.title }}</span>
+            <span class="px-2 w-full leading-tight flex items-center">{{ hqAnalyticsReport.subtitle }}</span>
+            <div class="flex items-center px-1 md:px-0">
+              <svgicon name="arrow-right" width="21" height="21" color="white" />
+            </div>
           </div>
-        </div>
-      </nuxt-link>
-    </div> -->
-
-    <div class="text-sm md:text-xl text-gray-800">
-      HQ Analytics
-    </div>
-
-    <div class="flex flex-col">
-      <nuxt-link
-        v-for="hqAnalyticsReport in hqAnalyticsReports"
-        :key="`hqAnalyticsReports-${hqAnalyticsReport.title}`"
-        :to="hqAnalyticsReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-lg hover:bg-gray-400 transition-hover my-2"
-      >
-        <div class="flex flex-no-wrap items-center text-sm w-full">
-          <span class="px-2 whitespace-no-wrap font-semibold">{{ hqAnalyticsReport.title }}</span>
-          <span class="px-2 w-full leading-tight flex items-center">{{ hqAnalyticsReport.subtitle }}</span>
-          <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
-          </div>
-        </div>
-      </nuxt-link>
-    </div>
-
-    <!-- <div class="text-sm md:text-xl text-white">
-      Pricing Reports
-    </div>
-
-    <div class="flex flex-col">
-      <nuxt-link
-        v-for="pricingReport in pricingReports"
-        :key="`pricingReports-${pricingReport.title}`"
-        :to="pricingReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg bg-waterloo hover:bg-waterloo-light transition-hover my-2"
-      >
-        <div class="flex flex-no-wrap items-center text-sm text-white w-full">
-          <span class="px-2 whitespace-no-wrap font-semibold">{{ pricingReport.title }}</span>
-          <span class="px-2 w-full leading-tight flex items-center">{{ pricingReport.subtitle }}</span>
-          <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
-          </div>
-        </div>
-      </nuxt-link>
-    </div> -->
-
-    <nuxt-link
-      v-if="$route.name !== 'index-reports'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      to="/reports"
-    />
-
+        </nuxt-link>
+      </div>
+    </template>
+    
     <nuxt-child />
-  </div>
+  </section>
 </template>
 
 <script>

@@ -5,7 +5,7 @@
         <form class="flex flex-col p-2 md:px-4 shadow rounded-lg sm:w-full lg:w-2/3">
           <div class="flex flex-wrap">
             <div class="w-1/2">
-              <div class="text-gray-800 text-sm p-2">
+              <div class=" text-sm p-2">
                 <p class="flex">
                   Practice Name
                 </p>
@@ -61,6 +61,7 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
+                        color="white"
                         :name="practice.allow_surgery_create_sessions === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
                         :class="practice.allow_surgery_create_sessions ? 'bg-green-500' : ' bg-red-500 p-1'"
@@ -73,7 +74,7 @@
                   </div>
                   <div
                     v-if="practice.allow_surgery_create_sessions === true"
-                    class="bg-waterloo-dark p-2 rounded-lg mb-2"
+                    class="bg-gray-300 p-2 rounded-lg mb-2"
                   >
                     <p
                       class="font-semibold pt-2"
@@ -140,6 +141,7 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
+                        color="white"
                         :name="practice.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
                         :class="practice.allow_surgery_create_permanent_jobs ? 'bg-green-500' : ' bg-red-500 p-1'"
@@ -153,6 +155,7 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
+                        color="white"
                         :name="practice.allow_surgery_bill_locum === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
                         :class="practice.allow_surgery_bill_locum ? 'bg-green-500' : ' bg-red-500 p-1'"
@@ -166,6 +169,7 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
+                        color="white"
                         :name="practice.allow_surgery_bill_hubzz === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
                         :class="practice.allow_surgery_bill_hubzz ? 'bg-green-500' : ' bg-red-500 p-1'"
@@ -179,6 +183,7 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
+                        color="white"
                         :name="practice.share_banks_to_other_surgeries === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
                         :class="practice.share_banks_to_other_surgeries ? 'bg-green-500' : ' bg-red-500 p-1'"
@@ -191,6 +196,7 @@
                   <div class="flex items-center pb-2">
                     <span class="mr-2">
                       <svgicon
+                        color="white"
                         :name="practice.share_my_banks === true ? 'circle-check' : 'times-solid'"
                         class="fill-current w-5 h-5 rounded-full"
                         :class="practice.share_my_banks ? 'bg-green-500' : ' bg-red-500 p-1'"

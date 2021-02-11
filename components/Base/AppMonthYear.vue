@@ -4,7 +4,7 @@
       <label :for="name" class="text-xs sm:text-sm py-1 font-bold">{{ label }}</label>
       <div
         v-if="error"
-        class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm text-white rounded"
+        class="absolute right-0 bg-red-500 p-1 text-xs sm:text-sm  rounded"
       >
         {{ error.message }}
       </div>
@@ -26,7 +26,7 @@
         <transition name="drop-down">
           <div
             v-if="error"
-            class="text-red-500 py-1 text-xs text-white"
+            class="text-red-500 py-1 text-xs "
           >
             {{ error.message.charAt(0).toUpperCase() + error.message.slice(1).replace(/_/g, " ") }}
           </div>
@@ -35,7 +35,7 @@
     </div>
     <transition name="fade">
       <div class="md:static z-10 flex justify-center">
-        <div class="rounded-b-lg calendar bg-waterloo shadow-md">
+        <div class="rounded-b-lg calendar shadow-md">
           <div
             class="p-2 flex flex-row flex-no-wrap justify-center items-center border-b-2 border-yellow-500"
           >

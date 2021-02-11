@@ -1,19 +1,13 @@
 <template>
-  <div class="report-modal p-4 md:p-8 shadow-lg">
-    <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/reports" class="text-white hover:text-sunglow p-1">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
+  <div>
+    <div class="page-overlap flex-1 flex flex-col self-end">
       <div
-        class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+        class="flex-wrap justify-start items-start w-full shadow-lg p-3 rounded-lg flex my-2"
       >
-        <div class="flex flex-row w-full text-white">
+        <div class="flex flex-row w-full ">
           <div class="md:px-1 w-full lg:w-1/3 md:w-1/3">
             <div>
-              <label for="start" class="text-white">Filter until Month/Year of Invoice Approval:</label>
+              <label for="start" class="">Filter until Month/Year of Invoice Approval:</label>
             </div>
             <div>
               <!-- <input 
@@ -48,17 +42,17 @@
         </div>
       </div>
       
-      <div class="text-lg md:text-2xl text-white">
+      <div class="text-lg md:text-2xl ">
         Practice Disputes
       </div>
   
-      <div class="text-sm md:text-lg text-white">
+      <div class="text-sm md:text-lg ">
         Rep-032
       </div>
 
       <div v-if="false">
         <div>
-          <label class="text-white">Limit: </label>
+          <label class="">Limit: </label>
           <select v-model="limit">
             <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
               {{ limit }}
@@ -66,7 +60,7 @@
           </select>
         </div>
         <div>
-          <label class="text-white">Page: </label>
+          <label class="">Page: </label>
           <select v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
@@ -121,7 +115,7 @@
         </div>
       </div>
 
-      <div v-if="true" class="text-white"> 
+      <div v-if="true" class=""> 
         <span>Count: {{ count }}</span>
         <br>
         <span>Order By: {{ orderBy.join(',') }}</span>

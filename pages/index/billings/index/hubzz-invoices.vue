@@ -1,375 +1,372 @@
 <template>
-  <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
-    <div class="flex flex-col md:flex-row justify-start w-full m-3">
-      <div class="flex-1 text-white mr-2">
-        <!-- <input
-          v-model="search"
-          class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
-          placeholder="Filter by Practice Name or Invoice Number"
-        > -->
-        <AppInputSmall
-          v-model="search"
-          :type="'text'"
-          :name="'search'"
-          :button="true"
-          :buttonLabel="'Search'"
-          :placeholder="'Search Practice by Name'"
-          @click="searchSubmit()"
-        />
-      </div>
-      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-        <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true">
-        <label for="showUnpaidInvoiceOnly">Show Unpaid Invoices Only</label>
-      </div>
-      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-        <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
-        <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
-      </div>
-      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-        <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
-        <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
-      </div>
-      <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
-        <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
-        <label for="showCsvExportOnly">Show CSV Exported Only</label>
-      </div>
-    </div>
-    
-    <div class="m-2 border-b-2 border-white">
-      <AppTableNew
-        v-if="hubzzInvoices.length > 0"
-        :total="hubzzInvoicesCount"
-        :items="hubzzInvoices"
-        :current-page="currentPage"
-        :perPage="params.limit"
-        :columns="columns"
-        :loading="loadingHubzzInvoices"
-        :router-link="`/billings/hubzz-invoices`"
-        :order-by="params.order_by"
-        :disabledHeadings="true"
-        @checkClicked="toggleCheck"
-        @pagechanged="pagechanged"
-        @sorted="sorted"
-      >
-        <template v-slot:checker="slotProps">
-          <input 
-            v-if="slotProps.item.sage_ref"
-            :id="slotProps.item" 
-            v-model="chosenInvoices" 
-            type="checkbox" 
-            :value="slotProps.item" 
-          >
-          <label :for="slotProps.item" />
-        </template>
-        <template v-slot:issuedAt="slotProps">
-          <div>
-            {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? slotProps.item.date_created_in_gb_formatted_relative : $moment(slotProps.item.date_created_in_gb).format('DD/MM/YYYY') }}
-          </div>
-        </template>
-        <template v-slot:practiceName="slotProps">
-          <div>
-            {{ slotProps.item.practice.name }}
-          </div>
-        </template>
-        <template v-slot:total_amount_slot="slotProps">
-          <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
-        </template>
-
-        <template v-slot:period="slotProps">
-          <div>
-            {{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
-              ' - ' +
-              $moment(slotProps.item.date_end).format('DD/MM/YYYY') }}
-          </div>
-        </template>
-
-        <template v-slot:issued_at="slotProps">
-          <div>{{ $moment(slotProps.item.issued_at).format('DD/MM/YYYY') }}</div>
-        </template>
-
-        <template v-slot:due_date="slotProps">
-          <div>{{ $moment(slotProps.item.due_date).format('DD/MM/YYYY') }}</div>
-        </template>
-
-        <template v-slot:exported_at="slotProps">
-          <div
-            v-if="slotProps.item.sage_ref"
-            :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'"
-          >
-            <span class="font-bold">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
-          </div>
-          <div v-else>
-            <span class="font-bold text-lg text-white">No Sage Reference</span>
-          </div>
-        </template>
-
-        <template v-slot:payment_status="slotProps">
-          <div class="flex flex-col">
-            <div
-              v-if="slotProps.item.unpaid_at" 
-              class="px-2"
-            >
-              {{ slotProps.item.unpaid_at ? `Marked Invalid at  ${slotProps.item.unpaid_at_in_gb_formatted }`: null }}
-            </div>
-            <div 
-              v-else-if="slotProps.item.paid_at"
-              class="flex items-center justify-center"
-            >
-              {{ slotProps.item.paid_at ? `Paid at ${slotProps.item.paid_at_in_gb_formatted}` : null }}
-            </div>
-            <div 
-              v-else
-              class="text-gray-400"
-            >
-              Payment not settled
-            </div>
-          </div>
-        </template>
-
-        <template v-slot:actions="slotProps">
-          <div class="flex justify-center">
-            <div class="flex items-center justify-center">
-              <AppButton
-                :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
-                :background="'green'"
-                class="text-white mr-2"
-                :disabled="slotProps.item.sage_ref && !slotProps.item.paid_at ? false : true"
-                @click="toShowPaidModal(slotProps.item.id)"
-              />
-              <!-- <span
-                v-if="!slotProps.item.sage_ref"
-                class="tool-left text-sm mr-2"
-                data-tip="Sage Reference is not yet added on Practice Profile."
-                tabindex="1"
-              >
-                <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
-              </span> -->
-            </div>
-            <!-- <div
-              v-else
-              class="px-2"
-            >
-              {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
-            </div> -->
-
-            <!-- <div>
-              <AppButton
-                :label="'View'"
-                class="mr-2"
-                @click="viewInvoice(slotProps.item.id)"
-              />
-            </div> -->
-          </div>
-        </template>
-      </AppTableNew>
-      <template v-else>
-        <div class="m-2 w-full text-center text-white">
-          There are no Invoices for HUBZZ
-        </div>
-      </template>
-    </div>
-    
-    <div 
-      v-if="authAdminPermissions.includes('Export Sage Csv')"
-      class="flex flex-row justify-end"
-    >
-      <AppButton
-        class="mx-2"
-        :label="'Clear Selection'"
-        :icon="'add-rectangle'"
-        @click="reset()"
-      />
-      <AppButton
-        class="mr-2"
-        :label="'Create SAGE.csv'"
-        :icon="'circle-check'"
-        :disabled="chosenInvoices.length == 0"
-        @click="confirmSage()"
-      />
-    </div>
-
-    <!--SETTLE PAYMENT MODAL -->
-    <transition name="fade" mode="out-in">
-      <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border- -4 border-sunglow shadow-lg overflow-hidden">
-        <!-- TO PAID CONFIRM CANCEL -->
-        <transition name="drop" mode="out-in">
-          <AppConfirm
-            v-if="confirm"
-            :in-style="'top:35%'"
-            :in-class="'rounded-lg'"
-            :message="paidAt ? 'Are you sure you want to mark this bill as paid? This action cannot be reversed.' : 'Are you sure you want to mark this bill as invalid?'"
-            @cancel="confirm = false"
-            @confirm="settlePayment()"
+  <section v-if="authAdminPermissions.includes('View Hubzz Invoices')">
+    <template v-if="$route.name === 'index-billings-index-hubzz-invoices'">
+      <div class="flex flex-col md:flex-row justify-start w-full m-3">
+        <div class="flex-1 text-white mr-2">
+          <!-- <input
+            v-model="search"
+            class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
+            placeholder="Filter by Practice Name or Invoice Number"
+          > -->
+          <AppInputSmall
+            v-model="search"
+            :type="'text'"
+            :name="'search'"
+            :button="true"
+            :buttonLabel="'Search'"
+            :placeholder="'Search Practice by Name'"
+            @click="searchSubmit()"
           />
-        </transition>
-        <!-- SHIELD FOR CONFIRM CANCEL -->
-        <div v-if="confirm == true" class="shield" @click="confirm = false" />
-
-        <div class="flex items-center text-sm text-white m-4">
-          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="closeModals()">
-            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
-          </div>
         </div>
-        <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
-
-        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS -->
-        <div
-          v-if="paymentModal === false && modalPaidUnpaid === true" 
-          class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white"
+        <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
+          <input id="showUnpaidInvoiceOnly" v-model="showUnpaidInvoiceOnly" type="checkbox" value="true">
+          <label for="showUnpaidInvoiceOnly">Show Unpaid Invoices Only</label>
+        </div>
+        <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
+          <input id="showExportableInvoicesOnly" v-model="showExportableInvoicesOnly" type="checkbox" value="true">
+          <label for="showExportableInvoicesOnly">Show Exportable Invoices Only</label>
+        </div>
+        <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
+          <input id="showPaidInvoiceOnly" v-model="showPaidInvoiceOnly" type="checkbox" value="true">
+          <label for="showPaidInvoiceOnly">Show Paid Invoices Only</label>
+        </div>
+        <div class="flex m-2 sm:mt-4 text-sm text-gray-700">
+          <input id="showCsvExportOnly" v-model="showCsvExportOnly" type="checkbox" value="true">
+          <label for="showCsvExportOnly">Show CSV Exported Only</label>
+        </div>
+      </div>
+      
+      <div class="m-2 border-b-2 border-white">
+        <AppTableNew
+          v-if="hubzzInvoices.length > 0"
+          :total="hubzzInvoicesCount"
+          :items="hubzzInvoices"
+          :current-page="currentPage"
+          :perPage="params.limit"
+          :columns="columns"
+          :loading="loadingHubzzInvoices"
+          :router-link="`/billings/hubzz-invoices`"
+          :order-by="params.order_by"
+          @checkClicked="toggleCheck"
+          @pagechanged="pagechanged"
+          @sorted="sorted"
         >
-          <div class="p-4 mt-2 border-b">
-            <div 
-              class="rounded-lg m-2 my-6 p-8 bg-green-500 hover:bg-green-600 cursor-pointer"
-              @click="toShowPaymentModal()"
+          <template v-slot:checker="slotProps">
+            <input 
+              v-if="slotProps.item.sage_ref"
+              :id="slotProps.item" 
+              v-model="chosenInvoices" 
+              type="checkbox" 
+              :value="slotProps.item" 
             >
-              Mark Invoice as Paid
-            </div>
-          </div>
-          <div class="p-4">
-            <div 
-              class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="toShowUnpaidModal()"
-            >
-              Mark Payment as Invalid
-            </div>
-          </div>
-        </div>
-        <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE -->
-        
-        <!-- MARKING AS PAID MODAL WITH DATEPICKER -->
-        <div class="flex flex-col w-full text-white px-8 justify-between">
-          <div v-if="paymentModal === true && modalPaidUnpaid === false">
-            <div class="justify-center">
-              <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
-            </div>
-            <div class="flex flex-row mb-4">
-              <AppButton
-                :label="'Confirm'"
-                :background="'green'"
-                class="text-white mr-2"
-                :disabled="paidAt ? false : true"
-                @click="confirm = true"
-              />
-              <AppButton
-                :label="'Cancel'"
-                :background="'red'"
-                class="text-white mr-2"
-                @click="cancelPaymentModal()"
-              />
-            </div>
-          </div>
-        </div>
-        <!-- MARKING AS PAID MODAL WITH DATEPICKER ENDS HERE -->
-
-        <!-- MARKING AS UNPAID MODAL WITH TEXTFIELD -->
-        <div class="flex flex-col w-full text-white px-8 justify-between">
-          <div v-if="unpaidModal === true && modalPaidUnpaid === false">
-            <div class="justify-center">
-              <AppInput
-                v-model="unpaidReason"
-                :type="'textarea'"
-                :name="'unpaidReason'"
-                :label="'Mark as Unpaid Reason (Optional)'"
-                :resize="false"
-                :rows="2"
-              />
-            </div>
-            <div class="flex flex-row mb-4">
-              <AppButton
-                :label="'Confirm'"
-                :background="'green'"
-                class="text-white mr-2"
-                @click="confirm = true"
-              />
-              <AppButton
-                :label="'Cancel'"
-                :background="'red'"
-                class="text-white mr-2"
-                @click="cancelPaymentModal()"
-              />
-            </div>
-          </div>
-        </div>
-        <!-- MARKING AS UNPAID MODAL WITH TEXTFIELD ENDS HERE -->
-      </div>
-    </transition>
-    <!-- SETTLE PAYMENT MODAL ENDS HERE -->
-
-    <!-- SAGE CSV EXPORT MODAL -->
-    <transition name="fade" mode="out-in">
-      <div v-if="exportedModal == true" class="mark-paid-modal overflow-hidden">
-        <transition name="drop" mode="out-in">
-          <AppConfirm
-            v-if="confirm"
-            :in-style="'top:35%'"
-            :in-class="'rounded-lg'"
-            :message="'Are you sure you want to continue?'"
-            @cancel="confirm = false"
-            @confirm="markExported(chosenInvoices.map(invoice => invoice.id))"
-          />
-        </transition>
-        <!-- TO EXPORT CONFIRM CANCEL -->
-        <div v-if="confirm == true" class="shield" @click="confirm = false" />
-        <div class="flex items-center text-sm text-white m-4">
-          <div class="text-white hover:text-sunglow p-1 ml-auto" @click="exportedModal = false">
-            <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
-          </div>
-        </div>
-
-        <div class="flex flex-col w-full text-white px-8 justify-between">
-          <div class="justify-center">
+            <label :for="slotProps.item" />
+          </template>
+          <template v-slot:issuedAt="slotProps">
             <div>
-              The following invoices have already been Exported on the following dates:
+              {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? slotProps.item.date_created_in_gb_formatted_relative : $moment(slotProps.item.date_created_in_gb).format('DD/MM/YYYY') }}
             </div>
-            <div v-for="(item, index) in exportedChosenInvoices"
-                 :key="`item-${index}`"
-                 class="text-white"
+          </template>
+          <template v-slot:practiceName="slotProps">
+            <div>
+              {{ slotProps.item.practice.name }}
+            </div>
+          </template>
+          <template v-slot:total_amount_slot="slotProps">
+            <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
+          </template>
+
+          <template v-slot:period="slotProps">
+            <div>
+              {{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
+                ' - ' +
+                $moment(slotProps.item.date_end).format('DD/MM/YYYY') }}
+            </div>
+          </template>
+
+          <template v-slot:issued_at="slotProps">
+            <div>{{ $moment(slotProps.item.issued_at).format('DD/MM/YYYY') }}</div>
+          </template>
+
+          <template v-slot:due_date="slotProps">
+            <div>{{ $moment(slotProps.item.due_date).format('DD/MM/YYYY') }}</div>
+          </template>
+
+          <template v-slot:exported_at="slotProps">
+            <div
+              v-if="slotProps.item.sage_ref"
+              :class="slotProps.item.exported_at ? 'text-white-400' : 'text-white-400'"
             >
-              <div class="flex flex-row m-2">
-                <div class="mx-2">
-                  {{ 'ID: '+ item.id }}
-                </div>
-                <div class="mx-2">
-                  {{ 'Invoice Number: ' + item.invoice_number }}
-                </div>
-                <div class="mx-2">
-                  {{ 'Exported At: ' + item.exported_at_in_gb_formatted }}
-                </div>
+              <span class="font-bold">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
+            </div>
+            <div v-else>
+              <span class="font-bold text-lg text-white">No Sage Reference</span>
+            </div>
+          </template>
+
+          <template v-slot:payment_status="slotProps">
+            <div class="flex flex-col">
+              <div
+                v-if="slotProps.item.unpaid_at" 
+                class="px-2"
+              >
+                {{ slotProps.item.unpaid_at ? `Marked Invalid at  ${slotProps.item.unpaid_at_in_gb_formatted }`: null }}
+              </div>
+              <div 
+                v-else-if="slotProps.item.paid_at"
+                class="flex items-center justify-center"
+              >
+                {{ slotProps.item.paid_at ? `Paid at ${slotProps.item.paid_at_in_gb_formatted}` : null }}
+              </div>
+              <div 
+                v-else
+                class="text-gray-700"
+              >
+                Payment not settled
               </div>
             </div>
-            <div>
-              Are you sure you'd like to export SAGE.csv with exported invoices?
-            </div>
-          </div>
-          <div class="flex flex-row mb-4">
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
-              @click="confirm = true"
-            >
-              Confirm
-            </div>
-            <div
-              class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
-              @click="exportedModal = false"
-            >
-              Cancel
-            </div>
-          </div>
-        </div>
-        <!-- TO EXPORT CONFIRM CANCEL ENDS HERE -->
-      </div>
-    </transition>
-    <!-- SAGE CSV EXPORT MODAL ENDS HERE -->
+          </template>
 
-    <div 
-      v-if="$route.path.includes('hubzzInvoiceId') 
-        || showPaidModal === true 
-        || exportedModal === true" 
-      class="billing-shield" 
-      @click="closeModals()"
-    />
+          <template v-slot:actions="slotProps">
+            <div class="flex justify-center">
+              <div class="flex items-center justify-center">
+                <AppButton
+                  :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
+                  :background="'green'"
+                  class="text-white mr-2"
+                  :disabled="slotProps.item.sage_ref && !slotProps.item.paid_at ? false : true"
+                  @click="toShowPaidModal(slotProps.item.id)"
+                />
+                <!-- <span
+                  v-if="!slotProps.item.sage_ref"
+                  class="tool-left text-sm mr-2"
+                  data-tip="Sage Reference is not yet added on Practice Profile."
+                  tabindex="1"
+                >
+                  <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
+                </span> -->
+              </div>
+              <!-- <div
+                v-else
+                class="px-2"
+              >
+                {{ slotProps.item.paid_at ? $moment(slotProps.item.paid_at).format('DD/MM/YYYY') : "Not yet paid" }}
+              </div> -->
+
+              <!-- <div>
+                <AppButton
+                  :label="'View'"
+                  class="mr-2"
+                  @click="viewInvoice(slotProps.item.id)"
+                />
+              </div> -->
+            </div>
+          </template>
+        </AppTableNew>
+        <template v-else>
+          <div class="m-2 w-full text-center text-white">
+            There are no Invoices for HUBZZ
+          </div>
+        </template>
+      </div>
+      
+      <div 
+        v-if="authAdminPermissions.includes('Export Sage Csv')"
+        class="flex flex-row justify-end"
+      >
+        <AppButton
+          class="mx-2"
+          :label="'Clear Selection'"
+          :icon="'add-rectangle'"
+          @click="reset()"
+        />
+        <AppButton
+          class="mr-2"
+          :label="'Create SAGE.csv'"
+          :icon="'circle-check'"
+          :disabled="chosenInvoices.length == 0"
+          @click="confirmSage()"
+        />
+      </div>
+
+      <!--SETTLE PAYMENT MODAL -->
+      <transition name="fade" mode="out-in">
+        <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border-sunglow shadow-lg overflow-hidden">
+          <!-- TO PAID CONFIRM CANCEL -->
+          <transition name="drop" mode="out-in">
+            <AppConfirm
+              v-if="confirm"
+              :in-style="'top:35%'"
+              :message="paidAt ? 'Are you sure you want to mark this bill as paid? This action cannot be reversed.' : 'Are you sure you want to mark this bill as invalid?'"
+              @cancel="confirm = false"
+              @confirm="settlePayment()"
+            />
+          </transition>
+          <!-- SHIELD FOR CONFIRM CANCEL -->
+          <div v-if="confirm == true" class="shield" @click="confirm = false" />
+
+          <div class="flex items-center text-sm m-4">
+            <div class="hover:text-sunglow p-1 ml-auto" @click="closeModals()">
+              <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
+            </div>
+          </div>
+          <!-- TO PAID CONFIRM CANCEL ENDS HERE -->
+
+          <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS -->
+          <div
+            v-if="paymentModal === false && modalPaidUnpaid === true" 
+            class="flex flex-col text-center text-lg font-semibold h-full mt-6 text-white"
+          >
+            <div class="p-4 mt-2 border-b">
+              <div 
+                class="rounded-lg m-2 my-6 p-8 bg-green-500 hover:bg-green-600 cursor-pointer"
+                @click="toShowPaymentModal()"
+              >
+                Mark Invoice as Paid
+              </div>
+            </div>
+            <div class="p-4">
+              <div 
+                class="rounded-lg m-2 my-6 p-8 bg-red-500 hover:bg-red-600 cursor-pointer"
+                @click="toShowUnpaidModal()"
+              >
+                Mark Payment as Invalid
+              </div>
+            </div>
+          </div>
+          <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE -->
+          
+          <!-- MARKING AS PAID MODAL WITH DATEPICKER -->
+          <div class="flex flex-col w-full px-8 justify-between">
+            <div v-if="paymentModal === true && modalPaidUnpaid === false">
+              <div class="justify-center">
+                <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
+              </div>
+              <div class="flex flex-row mb-4">
+                <AppButton
+                  :label="'Confirm'"
+                  :background="'green'"
+                  class="mr-2"
+                  :disabled="paidAt ? false : true"
+                  @click="confirm = true"
+                />
+                <AppButton
+                  :label="'Cancel'"
+                  :background="'red'"
+                  class="mr-2"
+                  @click="cancelPaymentModal()"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- MARKING AS PAID MODAL WITH DATEPICKER ENDS HERE -->
+
+          <!-- MARKING AS UNPAID MODAL WITH TEXTFIELD -->
+          <div class="flex flex-col w-full px-8 justify-between">
+            <div v-if="unpaidModal === true && modalPaidUnpaid === false">
+              <div class="justify-center">
+                <AppInput
+                  v-model="unpaidReason"
+                  :type="'textarea'"
+                  :name="'unpaidReason'"
+                  :label="'Mark as Unpaid Reason (Optional)'"
+                  :resize="false"
+                  :rows="2"
+                />
+              </div>
+              <div class="flex flex-row mb-4">
+                <AppButton
+                  :label="'Confirm'"
+                  :background="'green'"
+                  class="mr-2"
+                  @click="confirm = true"
+                />
+                <AppButton
+                  :label="'Cancel'"
+                  :background="'red'"
+                  class="mr-2"
+                  @click="cancelPaymentModal()"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- MARKING AS UNPAID MODAL WITH TEXTFIELD ENDS HERE -->
+        </div>
+      </transition>
+      <!-- SETTLE PAYMENT MODAL ENDS HERE -->
+
+      <!-- SAGE CSV EXPORT MODAL -->
+      <transition name="fade" mode="out-in">
+        <div v-if="exportedModal == true" class="mark-paid-modal overflow-hidden">
+          <transition name="drop" mode="out-in">
+            <AppConfirm
+              v-if="confirm"
+              :in-style="'top:35%'"
+              :message="'Are you sure you want to continue?'"
+              @cancel="confirm = false"
+              @confirm="markExported(chosenInvoices.map(invoice => invoice.id))"
+            />
+          </transition>
+          <!-- TO EXPORT CONFIRM CANCEL -->
+          <div v-if="confirm == true" class="shield" @click="confirm = false" />
+          <div class="flex items-center text-sm m-4">
+            <div class="hover:text-sunglow p-1 ml-auto" @click="exportedModal = false">
+              <svgicon name="times-solid" height="24" width="24" class="fill-current cursor-pointer" />
+            </div>
+          </div>
+
+          <div class="flex flex-col w-full px-8 justify-between">
+            <div class="justify-center">
+              <div>
+                The following invoices have already been Exported on the following dates:
+              </div>
+              <div v-for="(item, index) in exportedChosenInvoices" :key="`item-${index}`">
+                <div class="flex flex-row m-2">
+                  <div class="mx-2">
+                    {{ 'ID: '+ item.id }}
+                  </div>
+                  <div class="mx-2">
+                    {{ 'Invoice Number: ' + item.invoice_number }}
+                  </div>
+                  <div class="mx-2">
+                    {{ 'Exported At: ' + item.exported_at_in_gb_formatted }}
+                  </div>
+                </div>
+              </div>
+              <div>
+                Are you sure you'd like to export SAGE.csv with exported invoices?
+              </div>
+            </div>
+            <div class="flex flex-row mb-4">
+              <div
+                class="p-2 px-4 my-2 mr-2 rounded-lg bg-green-500 hover:bg-green-600 cursor-pointer"
+                @click="confirm = true"
+              >
+                Confirm
+              </div>
+              <div
+                class="p-2 px-4 my-2 mr-2 rounded-lg bg-red-500 hover:bg-red-600 cursor-pointer"
+                @click="exportedModal = false"
+              >
+                Cancel
+              </div>
+            </div>
+          </div>
+          <!-- TO EXPORT CONFIRM CANCEL ENDS HERE -->
+        </div>
+      </transition>
+      <!-- SAGE CSV EXPORT MODAL ENDS HERE -->
+
+      <div 
+        v-if="$route.path.includes('hubzzInvoiceId') 
+          || showPaidModal === true 
+          || exportedModal === true" 
+        class="billing-shield" 
+        @click="closeModals()"
+      />
+    </template>
+    
     <nuxt-child />
-  </div>
+  </section>
 </template>
 
 <script>
@@ -945,13 +942,12 @@ export default {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 25px;
   width: 500px;
 	max-width: 95%;
 	max-height: 70%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	background-color: #e9e9e9;
 	z-index: 512;
 }
 @media screen and (min-width: 768px) {

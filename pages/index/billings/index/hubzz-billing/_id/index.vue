@@ -1,114 +1,99 @@
 <template>
-  <div class="billing-modal p-4 md:p-8 shadow-lg">
-    <!-- HEADER -->
-    <div class="flex items-center text-sm text-white py-2">
-      <div class="text-white hover:text-sunglow p-1" @click="goBack()">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-      </div>
-    </div>
-    <!-- HEADER ENDS HERE -->
-    <div class="p-3 text-gray-300 w-full rounded-lg text-sm bg-waterloo">
-      <div class="flex flex-wrap overflow-hidden">
-        <div class="w-1/2 overflow-hidden">
-          <p class="flex">
-            Practice Name
-          </p>
-          <p class="flex flex-wrap items-center text-white text-sm p-2 font-semibold">
-            <span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
-            <span
-              class="py-2 px-4 text-sm text-white rounded-lg shadow font-extrabold"
-              :class="practiceTypeStyle(practice.type)"
-            >{{ practice.type }}</span>
-            <span
-              v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
-              class="py-2 px-4 mx-1 text-sm text-white rounded-lg shadow font-extrabold"
-              :class="practiceTypeStyle(practice.hub_type)"
-            >{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
-          </p>
+  <section class="shadow-lg">
+    <template v-if="$route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices'">
+      <div class="p-3 w-full text-sm shadow-lg">
+        <div class="flex flex-wrap overflow-hidden">
+          <div class="w-1/2 overflow-hidden">
+            <p class="flex">
+              Practice Name
+            </p>
+            <p class="flex flex-wrap items-center  text-sm p-2 font-semibold">
+              <span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
+              <span
+                class="py-2 px-4 text-sm  rounded-lg shadow font-extrabold"
+                :class="practiceTypeStyle(practice.type)"
+              >{{ practice.type }}</span>
+              <span
+                v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+                class="py-2 px-4 mx-1 text-sm  rounded-lg shadow font-extrabold"
+                :class="practiceTypeStyle(practice.hub_type)"
+              >{{ practice.hub_type == "Type 2" ? "Health Board" : null }}</span>
+            </p>
 
-          <p class="flex">
-            Practice Code
-          </p>
-          <p class="flex text-white text-sm p-2 font-semibold"> 
-            {{ practice.surgery ? practice.surgery.code : null }}
-          </p>
-          <p class="flex">
-            VAT Registered
-          </p>
-          <p class="flex text-white text-sm p-2 font-semibold"> 
-            {{ practice.vat_registered === true ? 'Yes' : 'No' }}
-          </p>
-          <p class="flex font-bold">
-            Sage reference
-          </p>
-          <p
-            class="flex text-white text-sm md:px-2 mb-2"
-          >
-            {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
-          </p>
-          <p class="flex">
-            Address
-          </p>
-          <p class="flex flex-col text-white text-sm p-2 font-semibold">
-            <span
-              v-if="practice.surgery.address && practice.surgery.address.line_1"
-            >{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
-            <span
-              v-if="practice.surgery.address && practice.surgery.address.line_2"
-            >{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
-            <span
-              v-if="practice.surgery.address && practice.surgery.address.line_3"
-            >{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
-          </p>
-        </div>
+            <p class="flex">
+              Practice Code
+            </p>
+            <p class="flex  text-sm p-2 font-semibold"> 
+              {{ practice.surgery ? practice.surgery.code : null }}
+            </p>
+            <p class="flex">
+              VAT Registered
+            </p>
+            <p class="flex  text-sm p-2 font-semibold"> 
+              {{ practice.vat_registered === true ? 'Yes' : 'No' }}
+            </p>
+            <p class="flex font-bold">
+              Sage reference
+            </p>
+            <p
+              class="flex  text-sm md:px-2 mb-2"
+            >
+              {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
+            </p>
+            <p class="flex">
+              Address
+            </p>
+            <p class="flex flex-col  text-sm p-2 font-semibold">
+              <span
+                v-if="practice.surgery.address && practice.surgery.address.line_1"
+              >{{ practice.surgery.address ? practice.surgery.address.line_1 : null }}</span>
+              <span
+                v-if="practice.surgery.address && practice.surgery.address.line_2"
+              >{{ practice.surgery.address ? practice.surgery.address.line_2 : null }}</span>
+              <span
+                v-if="practice.surgery.address && practice.surgery.address.line_3"
+              >{{ practice.surgery.address ? practice.surgery.address.line_3 : null }}</span>
+            </p>
+          </div>
 
-        <div class="w-1/2 overflow-hidden">
-          <p class="flex">
-            Outstanding Balance
-          </p>
-          <p class="flex text-white text-sm p-2 font-semibold">
-            {{ outstandingBalance ? '£ ' + outstandingBalance : 'N/A' }}
-          </p>
-          <p class="flex">
-            Latest Billing Issued at
-          </p>
-          <p class="flex text-white text-sm p-2 font-semibold">
-            {{ latestInvoice && latestInvoice.date_created_in_gb_formatted ? latestInvoice.date_created_in_gb_formatted : 'N/A' }}
-          </p>
+          <div class="w-1/2 overflow-hidden">
+            <p class="flex">
+              Outstanding Balance
+            </p>
+            <p class="flex  text-sm p-2 font-semibold">
+              {{ outstandingBalance ? '£ ' + outstandingBalance : 'N/A' }}
+            </p>
+            <p class="flex">
+              Latest Billing Issued at
+            </p>
+            <p class="flex  text-sm p-2 font-semibold">
+              {{ latestInvoice && latestInvoice.date_created_in_gb_formatted ? latestInvoice.date_created_in_gb_formatted : 'N/A' }}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex overflow-x-auto my-2">
-      <div class="inline-flex justify-start">
+      <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
         <nuxt-link
           :to="getRoute('practice-hubzz-invoices')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          class="p-3 text-sm font-bold cursor-pointer whitespace-no-wrap mx-1"
           :class="$route.path.includes(`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`)
-            ? 'bg-waterloo hover:bg-gray-500'
-            : 'hover:bg-waterloo'"
+            ? 'border-b-4 border-gray-500' : 'text-gray-600'"
         >
           HUBZZ Invoices
         </nuxt-link>
         <nuxt-link
           :to="getRoute('invoices-by-locums')"
-          class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+          class="p-3 text-sm font-bold cursor-pointer whitespace-no-wrap mx-1"
           :class="$route.path == `/billings/hubzz-billing/${$route.params.id}/invoices-by-locums`
-            ? 'bg-waterloo hover:bg-gray-500'
-            : 'hover:bg-waterloo'"
+            ? 'border-b-4 border-gray-500' : 'text-gray-600'"
         >
           Invoices by Locums
         </nuxt-link>
       </div>
-    </div>
-    <div
-      v-if="$route.name.includes('issue-hubzz-invoice') ||
-        $route.name.includes('hubzzInvoiceId') ||
-        $route.name.includes('locumInvoiceId')"
-      class="billing-shield"
-      @click="$router.go(-1)"
-    />
+    </template>
+    
     <nuxt-child />
-  </div>
+  </section>
 </template>
 <script>
 export default {
@@ -174,13 +159,13 @@ export default {
 		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
-					return "bg-indigo-500 text-white lg:px-4 sm:px-2"
+					return "bg-indigo-500  lg:px-4 sm:px-2"
 				case "Hub":
-					return "bg-red-500 text-white lg:px-8 sm:px-2"
+					return "bg-red-500  lg:px-8 sm:px-2"
 				case "Spoke":
-					return "bg-blue-500 text-white lg:px-8 sm:px-2"
+					return "bg-blue-500  lg:px-8 sm:px-2"
 				case "Type 2":
-					return "bg-purple-500 text-white lg:px-8 sm:px-2"
+					return "bg-purple-500  lg:px-8 sm:px-2"
 				default:
 					return
 			}

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full overflow-hidden">
-		<AppTable
+		<AppTableNew
 			v-if="practiceInvoicesCount > 0"
 			:total="practiceInvoicesCount"
 			:items="practiceInvoices"
@@ -29,7 +29,7 @@
 					{{ slotProps.item.hub_type }}
 				</div>
 			</template>-->
-		</AppTable>
+		</AppTableNew>
 		<template v-else>
       <div class="m-2 w-full text-center text-white">
         There are no Locum Invoices
@@ -44,9 +44,11 @@
 </template>
 <script>
 import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 export default {
 	components: {
-		AppTable
+		AppTable,
+		AppTableNew
 	},
 	data () {
 		return {
