@@ -41,22 +41,23 @@
       :routerLink="`/user-management`"
       @pagechanged="pagechanged"
     >
-			<template v-slot:delete="slotProps">
+      <template v-slot:delete="slotProps">
         <div
           class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-        >{{slotProps.item.id}}
-					<AppButton
-						v-if="authAdminPermissions.includes('Delete Admin Account')"
-						:label="'Delete'"
-						:icon="'delete-user'"
-						:iconSize="'16'"
-						class="my-1 mr-2"
-						@click="toDeleteAdminUser(slotProps.item.id)"
-					/>
+        >
+          {{ slotProps.item.id }}
+          <AppButton
+            v-if="authAdminPermissions.includes('Delete Admin Account')"
+            :label="'Delete'"
+            :icon="'delete-user'"
+            :iconSize="'16'"
+            class="my-1 mr-2"
+            @click="toDeleteAdminUser(slotProps.item.id)"
+          />
           <span v-else class="text-sm text-gray-500">You</span>
         </div>
       </template>
-		</AppTableNew>
+    </AppTableNew>
 
     <div v-if="modal" class="new-user-shield" @click="modal = false" />
     <transition name="slide" mode="out-in">
@@ -70,14 +71,12 @@
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser"
 import AppConfirm from "@/components/Base/AppConfirm"
-import AppPagination from "@/components/Base/AppPagination"
 import AppButton from "@/components/Base/AppButton"
 import AppTableNew from '@/components/Base/AppTableNew'
 export default {
 	components: {
 		CreateUser,
 		AppConfirm,
-		AppPagination,
 		AppButton,
 		AppTableNew,
 	},

@@ -1,108 +1,104 @@
 <template>
   <section v-if="authAdminPermissions.includes('View Hubzz Invoices')">
-		<template v-if="$route.name === 'index-billings-index-hubzz-billing'">
-			<div class="flex flex-row justify-start">
-				<div
-					v-if="authAdminPermissions.includes('Create Hubzz Invoices') && !$route.path.includes('bulk-billing')" 
-					class="flex justify-start items-center flex-wrap"
-				>
-					<AppButton
-						class="mr-2 mt-1 font-bold"
-						:label="$route.name.includes('bulk-billings') ? '+ Bill Individually' : ' + Bill by Bulk'"
-						:customTheme="'bg-info text-white'"
-						@click="goToTab()"
-					/>
-				</div>
+    <template v-if="$route.name === 'index-billings-index-hubzz-billing'">
+      <div class="flex flex-row justify-start">
+        <div
+          v-if="authAdminPermissions.includes('Create Hubzz Invoices') && !$route.path.includes('bulk-billing')" 
+          class="flex justify-start items-center flex-wrap"
+        >
+          <AppButton
+            class="mr-2 mt-1 font-bold"
+            :label="$route.name.includes('bulk-billings') ? '+ Bill Individually' : ' + Bill by Bulk'"
+            :customTheme="'bg-info text-white'"
+            @click="goToTab()"
+          />
+        </div>
 
-				<div v-if="!$route.path.includes('bulk-billing')" class="w-full text-white w-full md:w-1/2">
-					<AppInputSmall
-						v-model="search"
-						:type="'text'"
-						:name="'search'"
-						:button="true"
-						:buttonLabel="'Search'"
-						:placeholder="'Search by Name'"
-						@click="searchSubmit()"
-					/>
-				</div>
-			</div>
-			<AppTableNew
-				v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
-				:total="itemCount"
-				:items="getAllPractices"
-				:currentPage="currentPage"
-				:perPage="params.limit"
-				:columns="columns"
-				:loading="loadingPractices"
-				:routerLink="`/billings/hubzz-billing`"
-				:orderBy="params.order_by"
-				@pagechanged="pagechanged"
-				@sorted="sorted"
-			>
-				<template v-slot:status_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-						:class="
-							`${
-								slotProps.item.status === 'Active'
-									? 'bg-green-500'
-									: 'bg-gray-500 text-gray-700'
-							}`
-						"
-					>
-						{{ slotProps.item.status }}
-					</div>
-				</template>
-				<template v-slot:disputed_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-						:class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-					>
-						{{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
-					</div>
-				</template>
-				<template v-slot:type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-						:class="typeStyle(slotProps.item.type)"
-					>
-						{{ slotProps.item.type }}
-					</div>
-				</template>
-				<template v-slot:hub_type_slot="slotProps">
-					<div
-						class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-						:class="hubTypeStyle(slotProps.item.hub_type)"
-					>
-						{{ slotProps.item.hub_type }}
-					</div>
-				</template>
-			</AppTableNew>
-			<div 
-				v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
-				class="mt-2 w-full text-center text-white"
-			>
-				There are no verified Practices billable.
-			</div>
-		</template>
+        <div v-if="!$route.path.includes('bulk-billing')" class="w-full text-white w-full md:w-1/2">
+          <AppInputSmall
+            v-model="search"
+            :type="'text'"
+            :name="'search'"
+            :button="true"
+            :buttonLabel="'Search'"
+            :placeholder="'Search by Name'"
+            @click="searchSubmit()"
+          />
+        </div>
+      </div>
+      <AppTableNew
+        v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
+        :total="itemCount"
+        :items="getAllPractices"
+        :currentPage="currentPage"
+        :perPage="params.limit"
+        :columns="columns"
+        :loading="loadingPractices"
+        :routerLink="`/billings/hubzz-billing`"
+        :orderBy="params.order_by"
+        @pagechanged="pagechanged"
+        @sorted="sorted"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            :class="
+              `${
+                slotProps.item.status === 'Active'
+                  ? 'bg-green-500'
+                  : 'bg-gray-500 text-gray-700'
+              }`
+            "
+          >
+            {{ slotProps.item.status }}
+          </div>
+        </template>
+        <template v-slot:disputed_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
+          >
+            {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
+          </div>
+        </template>
+        <template v-slot:type_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            :class="typeStyle(slotProps.item.type)"
+          >
+            {{ slotProps.item.type }}
+          </div>
+        </template>
+        <template v-slot:hub_type_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            :class="hubTypeStyle(slotProps.item.hub_type)"
+          >
+            {{ slotProps.item.hub_type }}
+          </div>
+        </template>
+      </AppTableNew>
+      <div 
+        v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
+        class="mt-2 w-full text-center text-white"
+      >
+        There are no verified Practices billable.
+      </div>
+    </template>
 		
     <nuxt-child />
   </section>
 </template>
 <script>
 import debounce from "lodash.debounce"
-import AppTable from "@/components/Base/AppTable"
 import AppTableNew from '@/components/Base/AppTableNew'
 import AppInputSmall from '@/components/Base/AppInputSmall'
 import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
-    AppTable,
 		AppButton,
 		AppTableNew,
 		AppInputSmall,
-		AppInput,
 	},
 	data () {
 		return {
