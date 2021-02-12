@@ -54,7 +54,7 @@
         class="mt-10  w-full text-center"
         style="font-family: Nunito"
       >
-        {{ `No ${status[0]} ${jobDenom} found.`}}
+        {{ `No ${status[0]} ${jobDenom} found.` }}
       </div>
     </div>
     <div v-else>
@@ -202,42 +202,42 @@
             count = this.$store.state.jobs.practice_available_sessions_count
             break
           case 'Applied':
-            if (this.locum) {
+            if (this.locumUser) {
               count =  this.$store.state.jobs.locum_applied_jobs_count
             } else if (this.practice) {
               count =  this.$store.state.jobs.practice_applied_sessions
             }
             break
           case 'Ongoing':
-            if (this.locum) {
+            if (this.locumUser) {
               count =  this.$store.state.jobs.locum_ongoing_jobs_count
             } else if (this.practice) {
               count =  this.$store.state.jobs.practice_ongoing_sessions_count
             }
             break
           case 'Completed':
-            if (this.locum) {
+            if (this.locumUser) {
               count =  this.$store.state.jobs.locum_completed_jobs_count
             } else if (this.practice) {
               count =  this.$store.state.jobs.practice_completed_sessions_count
             }
             break
           case 'Cancelled':
-            if (this.locum) {
+            if (this.locumUser) {
               count =  this.$store.state.jobs.locum_cancelled_jobs_count
             } else if (this.practice) {
               count =  this.$store.state.jobs.practice_cancelled_sessions_count
             }
             break
           case 'Approved':
-            if (this.locum) {
+            if (this.locumUser) {
               count =  this.$store.state.jobs.locum_approved_jobs_count
             } else if (this.practice) {
               count =  this.$store.state.jobs.practice_approved_sessions_count
             }
             break
           case 'Withdrawn':
-            if (this.locum) {
+            if (this.locumUser) {
               count =  this.$store.state.jobs.practice_withdrawn_sessions_count
             } else if (this.practice) {
               count =  this.$store.state.jobs.locum_withdrawn_jobs_count
@@ -269,45 +269,45 @@
             records = this.$store.state.jobs.practice_unfilled_sessions
             break
           case 'Live':
-            records = this.$store.state.jobs.practice_available_sessions_count
+            records = this.$store.state.jobs.practice_available_sessions
             break
           case 'Applied':
-            if (this.locum) {
+            if (this.locumUser) {
               records = this.$store.state.jobs.locum_applied_jobs
             } else if (this.practice) {
               records = this.$store.state.jobs.practice_applied_sessions
             }
             break
           case 'Ongoing':
-            if (this.locum) {
+            if (this.locumUser) {
               records = this.$store.state.jobs.locum_ongoing_jobs
             } else if (this.practice) {
               records = this.$store.state.jobs.practice_ongoing_sessions
             }
             break
           case 'Completed':
-            if (this.locum) {
+            if (this.locumUser) {
               records = this.$store.state.jobs.locum_completed_jobs
             } else if (this.practice) {
               records = this.$store.state.jobs.practice_completed_sessions
             }
             break
           case 'Cancelled':
-            if (this.locum) {
+            if (this.locumUser) {
               records = this.$store.state.jobs.locum_cancelled_jobs
             } else if (this.practice) {
               records = this.$store.state.jobs.practice_cancelled_sessions
             }
             break
           case 'Approved':
-            if (this.locum) {
+            if (this.locumUser) {
               records = this.$store.state.jobs.locum_approved_jobs
             } else if (this.practice) {
               records = this.$store.state.jobs.practice_approved_sessions
             }
             break
           case 'Withdrawn':
-            if (this.locum) {
+            if (this.locumUser) {
               records = this.$store.state.jobs.practice_withdrawn_sessions
             } else if (this.practice) {
               records = this.$store.state.jobs.locum_withdrawn_jobs
@@ -580,8 +580,8 @@
           ] = responses
 
           console.log('status', this.status[0])
+          console.log('banana', count, jobs)
           const status = this.status[0]
-
           switch(status) {
               case 'Allocated':
                 this.$store.commit("jobs/SET_LOCUM_ALLOCATED_JOBS_COUNT", count)
@@ -604,7 +604,7 @@
                 this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS", jobs)
                 break
               case 'Ongoing':
-                if (this.locum) {
+                if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", jobs)
                 } else if (this.practice) {
@@ -614,7 +614,7 @@
                 }
                 break
               case 'Applied':
-                if (this.locum) {
+                if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS", jobs)
                 } else if (this.practice) {
@@ -623,7 +623,7 @@
                 }
                 break
               case 'Cancelled':
-                if (this.locum) {
+                if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", jobs)
                 } else if (this.practice) {
@@ -632,7 +632,7 @@
                 }
                 break
               case 'Withdrawn':
-                if (this.locum) {
+                if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS", jobs)
                 } else if (this.practice) {
@@ -641,7 +641,7 @@
                 }
                 break
               case 'Completed':
-                if (this.locum) {
+                if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS", jobs)
                 } else if (this.practice) {
@@ -650,7 +650,7 @@
                 }
                 break
               case 'Approved':
-                if (this.locum) {
+                if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS", jobs)
                 } else if (this.practice) {
