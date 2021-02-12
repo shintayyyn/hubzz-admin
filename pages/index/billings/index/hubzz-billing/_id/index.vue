@@ -150,10 +150,11 @@ export default {
 		}
 	},
 	created () {
-    console.log('routename', this.$route.name)
-    if(this.$route.name === 'index-billings-index-hubzz-billing-id-index') {
-      this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`)
-    }
+    this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`)
+    // console.log('routename', this.$route.name)
+    // if(this.$route.name === 'index-billings-index-hubzz-billing-id-index') {
+    //   this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices`)
+    // }
 	},
 	methods: {
 		practiceTypeStyle (type) {

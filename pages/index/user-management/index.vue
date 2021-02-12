@@ -39,7 +39,6 @@
       :columns="columns"
       :loading="loading"
       :routerLink="`/user-management`"
-      :orderBy="orderBy"
       @pagechanged="pagechanged"
     >
 			<template v-slot:delete="slotProps">
