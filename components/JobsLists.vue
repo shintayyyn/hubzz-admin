@@ -579,8 +579,6 @@
             jobs,
           ] = responses
 
-          console.log('status', this.status[0])
-          console.log('banana', count, jobs)
           const status = this.status[0]
           switch(status) {
               case 'Allocated':
