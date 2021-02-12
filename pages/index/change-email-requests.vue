@@ -1,126 +1,120 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <AppLoading :loading="loading" spinner />
-    <div v-if="false" class="mt-2">
-      <div class="flex justify-start overflow-x-auto">
-        <nuxt-link
-          to="/locum-change-email-requests"
-          style="font-family:Nunito"
-          class="mr-5 p-3 text-sm font-bold cursor-pointer whitespace-no-wrap"
-          :class="true ? 'border rounded-lg text-black border-sunglow bg-sunglow' : 'text-white'"
-        >
-          <span>Locum</span>
-        </nuxt-link>
-        <nuxt-link
-          v-if="false"
-          to="/practice-change-email-requests"
-          style="font-family:Nunito"
-          class="mr-5 p-3 text-sm font-bold cursor-pointer whitespace-no-wrap"
-          :class="false ? 'border rounded-lg text-black border-sunglow bg-sunglow' : 'text-white'"
-        >
-          <span>Practice</span>
-        </nuxt-link>
-      </div>
-    </div>
-
-    <div class="mt-2 flex flex-col md:flex-row justify-between md:items-center">
-      <div v-if="false" class="flex py-2">
-        <div class="relative">
-          <input
-            v-model="search"
-            style="width: 250px;"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Locum by Name or E-Mail"
-            @keyup.enter="searchSubmit"
+  <section class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+    <template v-if="$route.name === 'index-change-email-requests'">
+      <div v-if="false" class="mt-2">
+        <div class="flex justify-start overflow-x-auto">
+          <nuxt-link
+            to="/locum-change-email-requests"
+            style="font-family:Nunito"
+            class="mr-5 p-3 text-sm font-bold cursor-pointer whitespace-no-wrap"
+            :class="true ? 'border rounded-lg text-black border-sunglow bg-sunglow' : 'text-white'"
           >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
+            <span>Locum</span>
+          </nuxt-link>
+          <nuxt-link
+            v-if="false"
+            to="/practice-change-email-requests"
+            style="font-family:Nunito"
+            class="mr-5 p-3 text-sm font-bold cursor-pointer whitespace-no-wrap"
+            :class="false ? 'border rounded-lg text-black border-sunglow bg-sunglow' : 'text-white'"
           >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
+            <span>Practice</span>
+          </nuxt-link>
         </div>
       </div>
 
-      <div class="flex flex-col w-full justify-end">
-        <div
-          v-if="false"
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Status</label>
-          <select
-            v-model="filterStatus"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Pending</option>
-            <option>Accepted</option>
-            <option>Rejected</option>
-          </select>
+      <div class="mt-2 flex flex-col md:flex-row justify-between md:items-center">
+        <div v-if="false" class="flex py-2">
+          <div class="relative">
+            <input
+              v-model="search"
+              style="width: 250px;"
+              class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+              placeholder="Search Locum by Name or E-Mail"
+              @keyup.enter="searchSubmit"
+            >
+            <button
+              v-if="search"
+              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+              @click="(search = ''), searchSubmit()"
+            >
+              <svgicon
+                name="times-solid"
+                height="12"
+                width="12"
+                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+              />
+            </button>
+          </div>
         </div>
 
-        <div class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0">
-          <label class="text-sm text-white md:pr-2">Sort by</label>
-          <select
-            v-model="selectedOrderByValue"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+        <div class="flex flex-col w-full justify-end">
+          <div
+            v-if="false"
+            class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
           >
-            <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
-              {{ orderByValue.displayLabel }}
-            </option>
-          </select>
+            <label class="text-sm text-white md:pr-2">Filter by Status</label>
+            <select
+              v-model="filterStatus"
+              class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+            >
+              <option :value="null">
+                All
+              </option>
+              <option>Pending</option>
+              <option>Accepted</option>
+              <option>Rejected</option>
+            </select>
+          </div>
+
+          <div class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0">
+            <label class="text-sm text-white md:pr-2">Sort by</label>
+            <select
+              v-model="selectedOrderByValue"
+              class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+            >
+              <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
+                {{ orderByValue.displayLabel }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
 
-    <AppTableNew
-      :total="count"
-      :items="changeEmailRequests"
-      :currentPage="page"
-      :perPage="limit"
-      :columns="columns"
-      :loading="loading"
-      :routerLink="changeEmailRequest => ({ name: 'index-change-email-requests-id-index-index', params: { id: changeEmailRequest.id } })"
-      :orderBy="orderBy"
-      @pagechanged="(_page) => page = _page"
-      @limitchanged="(_limit) => limit = _limit"
-      @sorted="(_orderBy) => orderBy = _orderBy"
-    >
-      <template v-slot:status_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-          :class="changeEmailRequestStatusColorClass[slotProps.item.status]"
-        >
-          <span>{{ slotProps.item.status }}</span>
-        </div>
-      </template>
-    </AppTableNew>
+      <AppTableNew
+        :total="count"
+        :items="changeEmailRequests"
+        :currentPage="page"
+        :perPage="limit"
+        :columns="columns"
+        :loading="loading"
+        :routerLink="changeEmailRequest => ({ name: 'index-change-email-requests-id-index-index', params: { id: changeEmailRequest.id } })"
+        :orderBy="orderBy"
+        @pagechanged="(_page) => page = _page"
+        @limitchanged="(_limit) => limit = _limit"
+        @sorted="(_orderBy) => orderBy = _orderBy"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            :class="changeEmailRequestStatusColorClass[slotProps.item.status]"
+          >
+            <span>{{ slotProps.item.status }}</span>
+          </div>
+        </template>
+      </AppTableNew>
 
-    <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
-      <span>No change email requests.</span>
-    </div>
-
-    <nuxt-link
-      v-if="$route.name !== 'index-change-email-requests'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-change-email-requests' }"
-      draggable="false"
-    />
-
+      <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
+        <span>No change email requests.</span>
+      </div>
+    </template>
+    
     <nuxt-child
       :changeEmailRequests="changeEmailRequests"
       :changeEmailRequestStatusColorClass="changeEmailRequestStatusColorClass"
       @changeEmailRequests="(_changeEmailRequests) => changeEmailRequests = _changeEmailRequests"
     />
-  </div>
+  </section>
 </template>
 
 <script>

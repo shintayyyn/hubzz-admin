@@ -181,56 +181,142 @@
     computed: {
       total () {
         const status = this.status[0]
+        let count = 0
         switch (status) {
           case 'Allocated':
-            return this.$store.state.jobs.locum_allocated_jobs_count
-          case 'Available':
-            return this.$store.state.jobs.locum_available_jobs_count
-          case 'Applied':
-            return this.$store.state.jobs.locum_applied_jobs_count
+            count =  this.$store.state.jobs.locum_allocated_jobs_count
+            break
           case 'Unsuccessful':
-            return this.$store.state.jobs.locum_unsuccessful_jobs_count
+            count =  this.$store.state.jobs.locum_allocated_jobs_count
+            break
+          case 'Available':
+            count =  this.$store.state.jobs.locum_available_jobs_count
+            break
+          case 'Pending':
+            count = this.$store.state.jobs.practice_pending_sessions_count
+            break
+          case 'Unfilled':
+            count = this.$store.state.jobs.practice_unfilled_sessions_count
+            break
+          case 'Live':
+            count = this.$store.state.jobs.practice_available_sessions_count
+            break
+          case 'Applied':
+            if (this.locum) {
+              count =  this.$store.state.jobs.locum_applied_jobs_count
+            } else if (this.practice) {
+              count =  this.$store.state.jobs.practice_applied_sessions
+            }
+            break
           case 'Ongoing':
-            return this.$store.state.jobs.locum_ongoing_jobs_count
+            if (this.locum) {
+              count =  this.$store.state.jobs.locum_ongoing_jobs_count
+            } else if (this.practice) {
+              count =  this.$store.state.jobs.practice_ongoing_sessions_count
+            }
+            break
           case 'Completed':
-            return this.$store.state.jobs.locum_completed_jobs_count
+            if (this.locum) {
+              count =  this.$store.state.jobs.locum_completed_jobs_count
+            } else if (this.practice) {
+              count =  this.$store.state.jobs.practice_completed_sessions_count
+            }
+            break
           case 'Cancelled':
-            return this.$store.state.jobs.locum_cancelled_jobs_count
+            if (this.locum) {
+              count =  this.$store.state.jobs.locum_cancelled_jobs_count
+            } else if (this.practice) {
+              count =  this.$store.state.jobs.practice_cancelled_sessions_count
+            }
+            break
           case 'Approved':
-            return this.$store.state.jobs.locum_approved_jobs_count
+            if (this.locum) {
+              count =  this.$store.state.jobs.locum_approved_jobs_count
+            } else if (this.practice) {
+              count =  this.$store.state.jobs.practice_approved_sessions_count
+            }
+            break
           case 'Withdrawn':
-            return this.$store.state.jobs.locum_withdrawn_jobs_count  
+            if (this.locum) {
+              count =  this.$store.state.jobs.practice_withdrawn_sessions_count
+            } else if (this.practice) {
+              count =  this.$store.state.jobs.locum_withdrawn_jobs_count
+            }
+            break
           default:
-            return 0
+            count = 0
         }
-        
+        return count
       },
 
       items () {
         const status = this.status[0]
+        let records = []
         switch (status) {
           case 'Allocated':
-            console.log()
-            return this.$store.state.jobs.locum_allocated_jobs
-          case 'Available':
-            return this.$store.state.jobs.locum_available_jobs
-          case 'Applied':
-            return this.$store.state.jobs.locum_applied_jobs
+            records = this.$store.state.jobs.locum_allocated_jobs
+            break
           case 'Unsuccessful':
-            return this.$store.state.jobs.locum_unsuccessful_jobs
+            records = this.$store.state.jobs.locum_allocated_jobs
+            break
+          case 'Pending':
+            records = this.$store.state.jobs.locum_unsuccessful_jobs
+            break
+          case 'Available':
+            records = this.$store.state.jobs.locum_available_jobs
+            break
+          case 'Unfilled':
+            records = this.$store.state.jobs.practice_unfilled_sessions
+            break
+          case 'Live':
+            records = this.$store.state.jobs.practice_available_sessions_count
+            break
+          case 'Applied':
+            if (this.locum) {
+              records = this.$store.state.jobs.locum_applied_jobs
+            } else if (this.practice) {
+              records = this.$store.state.jobs.practice_applied_sessions
+            }
+            break
           case 'Ongoing':
-            return this.$store.state.jobs.locum_ongoing_jobs
+            if (this.locum) {
+              records = this.$store.state.jobs.locum_ongoing_jobs
+            } else if (this.practice) {
+              records = this.$store.state.jobs.practice_ongoing_sessions
+            }
+            break
           case 'Completed':
-            return this.$store.state.jobs.locum_completed_jobs
+            if (this.locum) {
+              records = this.$store.state.jobs.locum_completed_jobs
+            } else if (this.practice) {
+              records = this.$store.state.jobs.practice_completed_sessions
+            }
+            break
           case 'Cancelled':
-            return this.$store.state.jobs.locum_cancelled_jobs
+            if (this.locum) {
+              records = this.$store.state.jobs.locum_cancelled_jobs
+            } else if (this.practice) {
+              records = this.$store.state.jobs.practice_cancelled_sessions
+            }
+            break
           case 'Approved':
-            return this.$store.state.jobs.locum_approved_jobs
+            if (this.locum) {
+              records = this.$store.state.jobs.locum_approved_jobs
+            } else if (this.practice) {
+              records = this.$store.state.jobs.practice_approved_sessions
+            }
+            break
           case 'Withdrawn':
-            return this.$store.state.jobs.locum_withdrawn_jobs  
+            if (this.locum) {
+              records = this.$store.state.jobs.practice_withdrawn_sessions
+            } else if (this.practice) {
+              records = this.$store.state.jobs.locum_withdrawn_jobs
+            }
+            break
           default:
-            return 0
+            records = []
         }
+        return records
       },
       
       columns () {
@@ -438,12 +524,18 @@
           filters.viewing_locum_user_id = this.$route.params.id
           filters.locum_status = this.status
           filters.type = "Platform"
-          filters.title_includes = this.job_title
-          if (this.jobDenom === 'Jobs') {
-            filters.job_number_includes = this.job_number
-          } else {
-            filters.job_part_number_includes = this.job_number
-          }
+          
+        }
+        if (this.practice) {
+          filters.practice_id = this.$route.name.includes("practice-surgeries") ? null : this.$route.params.id,
+          filters.practice_surgery_id = this.$route.name.includes("practice-surgeries") ? this.$route.params.practiceSurgeryId : null,
+          filters.status = this.status
+        }
+        filters.title_includes = this.job_title
+        if (this.jobDenom === 'Jobs') {
+          filters.job_number_includes = this.job_number
+        } else {
+          filters.job_part_number_includes = this.job_number
         }
         if (this.jobDenom === 'Jobs') {
           promises.push(
@@ -490,48 +582,85 @@
           console.log('status', this.status[0])
           const status = this.status[0]
 
-          if (this.locumUser) {
-            switch(status) {
-              case 'Allocated': 
+          switch(status) {
+              case 'Allocated':
                 this.$store.commit("jobs/SET_LOCUM_ALLOCATED_JOBS_COUNT", count)
                 this.$store.commit("jobs/SET_LOCUM_ALLOCATED_JOBS", jobs)
-                break
-              case 'Ongoing':
-                this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", jobs)
-                break
-              case 'Available':
-                this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS", jobs)
-                break
-              case 'Applied':
-                this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS", jobs)
-                break
-              case 'Cancelled':
-                this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", jobs)
                 break
               case 'Unsuccessful':
                 this.$store.commit("jobs/SET_LOCUM_UNSUCCESSFUL_JOBS_COUNT", count)
                 this.$store.commit("jobs/SET_LOCUM_UNSUCCESSFUL_JOBS", jobs)
                 break
+              case 'Pending':
+                this.$store.commit("jobs/SET_PRACTICE_PENDING_SESSIONS_COUNT", count)
+                this.$store.commit("jobs/SET_PRACTICE_PENDING_SESSIONS", jobs)
+                break
+              case 'Unfilled':
+                this.$store.commit("jobs/SET_PRACTICE_UNFILLED_SESSIONS_COUNT", count)
+                this.$store.commit("jobs/SET_PRACTICE_UNFILLED_SESSIONS", jobs)
+                break
+              case 'Available':
+                this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS_COUNT", count)
+                this.$store.commit("jobs/SET_LOCUM_AVAILABLE_JOBS", jobs)
+                break
+              case 'Ongoing':
+                if (this.locum) {
+                  this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS_COUNT", count)
+                  this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", jobs)
+                } else if (this.practice) {
+                  this.$store.commit("jobs/SET_PRACTICE_ONGOING_SESSIONS_COUNT", count)
+                  this.$store.commit("jobs/SET_PRACTICE_ONGOING_SESSIONS", jobs)
+                  
+                }
+                break
+              case 'Applied':
+                if (this.locum) {
+                  this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS_COUNT", count)
+                  this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS", jobs)
+                } else if (this.practice) {
+                  this.$store.commit("jobs/SET_PRACTICE_APPLIED_SESSIONS_COUNT", count)
+                  this.$store.commit("jobs/SET_PRACTICE_APPLIED_SESSIONS", jobs)
+                }
+                break
+              case 'Cancelled':
+                if (this.locum) {
+                  this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS_COUNT", count)
+                  this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", jobs)
+                } else if (this.practice) {
+                  this.$store.commit("jobs/SET_PRACTICE_CANCELLED_SESSIONS_COUNT", count)
+                  this.$store.commit("jobs/SET_PRACTICE_CANCELLED_SESSIONS", jobs)
+                }
+                break
               case 'Withdrawn':
-                this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS", jobs)
+                if (this.locum) {
+                  this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS_COUNT", count)
+                  this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS", jobs)
+                } else if (this.practice) {
+                  this.$store.commit("jobs/SET_PRACTICE_WITHDRAWN_SESSIONS_COUNT", count)
+                  this.$store.commit("jobs/SET_PRACTICE_WITHDRAWN_SESSIONS", jobs)
+                }
                 break
               case 'Completed':
-                this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS", jobs)
+                if (this.locum) {
+                  this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS_COUNT", count)
+                  this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS", jobs)
+                } else if (this.practice) {
+                  this.$store.commit("jobs/SET_PRACTICE_COMPLETED_SESSIONS_COUNT", count)
+                  this.$store.commit("jobs/SET_PRACTICE_COMPLETED_SESSIONS", jobs)
+                }
                 break
               case 'Approved':
-                this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS_COUNT", count)
-                this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS", jobs)
+                if (this.locum) {
+                  this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS_COUNT", count)
+                  this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS", jobs)
+                } else if (this.practice) {
+                  this.$store.commit("jobs/SET_PRACTICE_APPROVED_SESSIONS_COUNT", count)
+                  this.$store.commit("jobs/SET_PRACTICE_APPROVED_SESSIONS", jobs)
+                }
                 break
               default:
                 break
             }
-          }
           this.loading = false
         })
       },

@@ -1,12 +1,6 @@
 <template>
-  <div class="job-modal shadow-lg">
-    <div class="mt-6 mx-4 md:mx-8 my-2">
-      <nuxt-link :to="{ path: `/practices/${practiceId}/practice-sessions/practice-allocated-sessions`}" class="cursor-pointer">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current" />
-      </nuxt-link>
-    </div>
-
-    <PracticeSessionModal :jobPart="job_part" :job="job_part ? job_part.job : null" />
+  <div class="shadow-lg">
+    <PracticeSessionModal :job_part="job_part" />
   </div>
 </template>
 

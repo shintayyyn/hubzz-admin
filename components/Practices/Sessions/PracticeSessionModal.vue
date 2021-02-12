@@ -3,7 +3,7 @@
     <!-- BODY -->
     <div class="w-full overflow-auto">
       <div class="flex flex-wrap font-semibold items-center md:m-2">
-        <div class="text-2xl text-white font-semibold mr-4">
+        <div class="text-2xl font-semibold mr-4">
           {{ job ? job.title : modalJobPart.job.title }}
         </div>
 
@@ -16,13 +16,13 @@
             {{ modalJobPart && modalJobPart.terminated ? 'Terminated' : null }}
           </div>
 
-          <div class="mx-2 text-black p-2 text-white rounded" :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'">
+          <div class="mx-2 text-black p-2 rounded" :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'">
             {{ job ? job.type : modalJobPart.job.type }}
           </div>
         </div>
       </div>
 
-      <div class="text-white mt-2 md:mx-2">
+      <div class="mt-2 md:mx-2">
         Date Posted: {{ job ? job.date_created_in_gb_formatted : null }}
       </div>
 
@@ -33,16 +33,16 @@
           <!-- JOB DETAILS -->
           <div
             v-if="job"
-            class="flex flex-col text-white overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow p-4"
+            class="flex flex-col overflow-hidden text-sm no-underline shadow-md rounded-lg shadow p-4"
           >
             <div class="flex flex-wrap">
               <div class="md:w-1/2 overflow-hidden">
-                <div class="text-gray-200">
+                <div class="">
                   <p class="font-semibold">
                     Job Number
                   </p>
 
-                  <p class="text-white pb-2">
+                  <p class="pb-2">
                     {{ job.job_number }}
                   </p>
 
@@ -50,7 +50,7 @@
                     Job Gross Rate
                   </p>
 
-                  <p class="text-white pb-2 no-underline">
+                  <p class="pb-2 no-underline">
                     £ {{ job.job_gross_rate_formatted }}
                   </p>
 
@@ -58,7 +58,7 @@
                     Job Hubzz Fee
                   </p>
 
-                  <p class="text-white pb-2 no-underline">
+                  <p class="pb-2 no-underline">
                     £ {{ job.job_hubzz_fee_formatted }}
                   </p>
 
@@ -66,7 +66,7 @@
                     Total Hours
                   </p>
 
-                  <p class="text-white pb-2">
+                  <p class="pb-2">
                     {{ job.total_hours | hoursMinutes }}
                   </p>
 
@@ -74,7 +74,7 @@
                     Job Description
                   </p>
                   <p
-                    class="text-white pb-2 break-words"
+                    class="pb-2 break-words"
                   >
                     {{ job.description ? job.description : '(none)' }}
                   </p>
@@ -82,7 +82,7 @@
                     Extra Information
                   </p>
                   <p
-                    class="text-white pb-2"
+                    class="pb-2"
                   >
                     {{ job.platform_job && job.platform_job.extra_information ? job.platform_job.extra_information : '(none)' }}
                   </p>
@@ -310,10 +310,10 @@
           <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
           <div v-if="locumUser" class="w-full overflow-hidden flex">
             <div
-              class="flex px-2 my-4 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white"
+              class="flex px-2 my-4 text-sm no-underline shadow-md rounded-lg  shadow "
             >
               <div class="flex flex-wrap overflow-hidden pb-4">
-                <div class="w-full text-white mx-2">
+                <div class="w-full mx-2">
                   <div class="flex flex-wrap w-full border-b">
                     <div class="flex items-center my-4 w-1/3">
                       <embed
@@ -355,7 +355,7 @@
                       Biography
                     </p>
                     <p
-                      class="m-2 text-white"
+                      class="m-2 "
                     >
                       {{ locumUser.locum_detail ? locumUser.locum_detail.short_biography : null }}
                     </p>
@@ -363,7 +363,7 @@
                       Special Requirements
                     </p>
                     <p
-                      class="m-2 text-white"
+                      class="m-2 "
                     >
                       {{ locumUser.locum_detail ? locumUser.locum_detail.special_requirements : null }}
                     </p>
@@ -373,7 +373,7 @@
                     <p
                       v-for="locumRates in locumUser.locum_detail.rates"
                       :key="locumRates.id + '-name1'"
-                      class="m-2 text-white"
+                      class="m-2 "
                     >
                       {{ locumRates.rate_type.name }}: £ {{ locumRates.min }}
                     </p>
@@ -382,17 +382,17 @@
                       Postal Address
                     </p>
                     <p
-                      class="ml-2 text-white"
+                      class="ml-2 "
                     >
                       {{ locumUser.address_detail ? locumUser.address_detail.address.line_1 : null }}
                     </p>
                     <p
-                      class="ml-2 mt-1 text-white"
+                      class="ml-2 mt-1 "
                     >
                       {{ locumUser.address_detail ? locumUser.address_detail.address.line_2 : null }}
                     </p>
                     <p
-                      class="ml-2 mt-1 text-white"
+                      class="ml-2 mt-1 "
                     >
                       {{ locumUser.address_detail ? locumUser.address_detail.address.line_3 : null }}
                     </p>
@@ -400,7 +400,7 @@
                       GMC / NMC Number
                     </p>
                     <p
-                      class="m-2 text-white"
+                      class="m-2 "
                     >
                       {{ locumUser.locum_detail.gmc_or_nmc_number ? locumUser.locum_detail.gmc_or_nmc_number.number : null }}
                     </p>
@@ -408,7 +408,7 @@
                       MPL / NPL Number
                     </p>
                     <p
-                      class="m-2 text-white"
+                      class="m-2 "
                     >
                       {{ locumUser.locum_detail.mpl_or_npl_number ? locumUser.locum_detail.mpl_or_npl_number.number : null }}
                     </p>
@@ -418,7 +418,7 @@
                       Profession
                     </p>
                     <p
-                      class="m-2 text-white"
+                      class="m-2 "
                     >
                       {{ locumUser.locum_detail.profession ? locumUser.locum_detail.profession.name : null }}
                     </p>
@@ -469,7 +469,7 @@
                       class
                     >
                       <a
-                        class="m-2 text-white flex items-center"
+                        class="m-2 flex items-center"
                         :href="specificComplianceDoc.file ? specificComplianceDoc.file.url:null"
                       >
                         <svgicon name="cloud-download" width="21" height="21" color="white" />
@@ -485,10 +485,10 @@
                       <div
                         v-for="(specificMandatoryDoc, index) in locumUser.locum_detail.mandatory_trainings"
                         :key="`${index}-${specificMandatoryDoc.id}-`"
-                        class="text-white"
+                        class=""
                       >
                         <a
-                          class="m-2 text-white flex items-center"
+                          class="m-2 flex items-center"
                           :href="specificMandatoryDoc.file ? specificMandatoryDoc.file.url:null"
                         >
                           <svgicon name="cloud-download" width="21" height="21" color="white" />
@@ -513,10 +513,10 @@
           <div class="flex flex-col">
             <!-- JOB PARTS -->
             <div v-if="jobParts.length > 0" class="w-full flex flex-col">
-              <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">
+              <div class="mt-2 md:my-0 md:mx-2 font-semibold">
                 Job Parts
               </div>
-              <div class="flex flex-col md:m-2 text-white">
+              <div class="flex flex-col md:m-2 ">
                 <div class="overflow-x-auto">
                   <div class="jobpart">
                     <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
@@ -537,8 +537,8 @@
                     <div
                       v-for="(item, index) in jobParts"
                       :key="`item-${index}`"
-                      class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
-                      :class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', modalJobPart && item.id == modalJobPart.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
+                      class="w-full flex flex-col md:flex-row rounded-lg my-2 shadow-md py-3 md:text-center transition-hover"
+                      :class="[unclickableJobPart() ? '' : 'hover:bg-gray-300 cursor-pointer', modalJobPart && item.id == modalJobPart.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
                       @click.prevent="show(item.id)"
                     >
                       <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
@@ -595,7 +595,7 @@
             <div v-if="locumUser && jobPart" class="w-full overflow-hidden flex flex-col">
               <div
                 v-if="modalJobPart.status === 'Cancelled'"
-                class="flex flex-col text-white bg-waterloo rounded-lg leading-tight m-2"
+                class="flex flex-col  rounded-lg leading-tight m-2 shadow-md"
               >
                 <div class="m-4">
                   <div
@@ -650,11 +650,11 @@
               </div>
               <div
                 v-if="jobPart.status === 'Withdrawn'"
-                class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow md:ml-2 mb-2"
+                class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-md rounded-lg md:ml-2 mb-2"
               >
                 <AppLoading :loading="loading" spinner />
                 <!-- INFOS LEFT -->
-                <div class="sm:w-1/2 w-full mt-4 md:m-4 overflow-hidden text-white">
+                <div class="sm:w-1/2 w-full mt-4 md:m-4 overflow-hidden ">
                   <div class="leading-tight pb-4">
                     <p class="font-bold text-sm sm:text-md">
                       Reason for Withdrawal
@@ -678,19 +678,19 @@
                 </div>
               </div>
               <div
-                class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow md:ml-2"
+                class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-md rounded-lg  shadow md:ml-2"
               >
                 <AppLoading :loading="loading" spinner />
                 <!-- INFOS LEFT -->
                 <div class="sm:w-1/2 w-full mt-4 md:my-4 overflow-hidden">
-                  <div class="mx-4 md:m-4 text-gray text-white">
+                  <div class="mx-4 md:m-4 text-gray ">
                     <!-- STATUS -->
                     <div v-if="modalJobPart && modalJobPart.status === 'Completed'">
                       <p class="font-semibold">
                         Completed At
                       </p>
                       <p
-                        class="text-white"
+                        class=""
                       >
                         {{ modalJobPart.completed_at_in_gb_formatted }}
                       </p>
@@ -700,7 +700,7 @@
                         Approved At
                       </p>
                       <p
-                        class="text-white"
+                        class=""
                       >
                         {{ modalJobPart.approved_at_in_gb_formatted }}
                       </p>
@@ -712,7 +712,7 @@
                         {{ `${modalJobPart.status} At` }}
                       </p>
                       <p
-                        class="text-white"
+                        class=""
                       >
                         {{ modalJobPart.cancelled_at_in_gb_formatted }}
                       </p>
@@ -723,7 +723,7 @@
                       Job Part Number
                     </p>
 
-                    <p class="text-white">
+                    <p class="">
                       {{ modalJobPart.job_part_number }}
                     </p>
 
@@ -731,7 +731,7 @@
                       Job Part
                     </p>
 
-                    <p class="text-white">
+                    <p class="">
                       {{ modalJobPart.part }} of {{ modalJobPart.parts }}
                     </p>
 
@@ -739,7 +739,7 @@
                       Job Part Gross Rate
                     </p>
 
-                    <p class="text-white pb-2 no-underline">
+                    <p class="pb-2 no-underline">
                       £ {{ modalJobPart.job_part_gross_rate_formatted }}
                     </p>
 
@@ -747,7 +747,7 @@
                       Job Part Hubzz Fee
                     </p>
 
-                    <p class="text-white pb-2 no-underline">
+                    <p class="pb-2 no-underline">
                       £ {{ modalJobPart.job_part_hubzz_fee_formatted }}
                     </p>
 
@@ -755,7 +755,7 @@
                       Total Original Hours
                     </p>
 
-                    <p class="text-white">
+                    <p class="">
                       {{ modalJobPart ? modalJobPart.job_part_total_original_hours_in_minutes_formatted : null }}
                     </p>
 
@@ -764,14 +764,14 @@
                         Total Final Hours
                       </p>
 
-                      <p class="text-white">
+                      <p class="">
                         {{ modalJobPart ? modalJobPart.job_part_total_final_hours_in_minutes_formatted : null }}
                       </p>
                     </template>
                   </div>
                 </div>
                 <!-- INFOS RIGHT -->
-                <div class="text-white sm:w-1/2 w-full my-4 overflow-hidden">
+                <div class="sm:w-1/2 w-full my-4 overflow-hidden">
                   <div class="mx-4 md:m-4">
                     <p class="font-semibold">
                       Job Part Duration
@@ -811,10 +811,10 @@
             
             <div
               v-if="job && job.platform_job || job && job.private_job"
-              class="p-4 my-4 md:mt-0 lg:m-2 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow text-white"
+              class="p-4 my-4 md:mt-0 lg:m-2 text-sm no-underline shadow-md rounded-lg shadow"
             >
               <div v-if="job && job.platform_job" class="w-full overflow-hidden">
-                <div class="text-white pb-2">
+                <div class="pb-2">
                   <p class="font-semibold">
                     Practice
                     <br>
@@ -842,7 +842,7 @@
                 </div>
               </div>
               <div v-if="job && job.private_job" class="w-full overflow-hidden">
-                <div class="text-white pb-2">
+                <div class="pb-2">
                   <p class="font-semibold">
                     Practice
                     <br>
@@ -879,7 +879,7 @@
     <div v-if="modal" class="job-part-shield" @click="modal=false" />
 
     <transition name="slide" mode="out-in">
-      <div v-if="modal" class="job-part-modal shadow-lg">
+      <div v-if="modal" class="job-part-modal shadow-md">
         <JobPartModal
           :jobPartId="jobPartId"
           :specificJobPart="specificJobPart"

@@ -11,7 +11,7 @@
 
     <div class="flex flex-col lg:flex-row">
       <form
-        class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 shadow rounded-lg"
+        class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 shadow-lg rounded-lg"
         :class="practice.status === 'Inactive' ? 'w-full lg:w-4/6' : 'max-w-5xl' "
       >
         <div class="flex flex-wrap">

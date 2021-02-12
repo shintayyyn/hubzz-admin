@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-5">
-    <div class="flex flex-col rounded-lg">
+  <section class="mt-5">
+    <template v-if="$route.name === 'index-practices-id-index-practice-surgeries'" class="flex flex-col rounded-lg">
       <div class="flex overflow-hidden">
         <div class="flex overflow-x-auto mb-2">
           <div 
@@ -77,13 +77,13 @@
           />
         </div>
       </transition>
-    </div>
+    </template>
 
     <nuxt-child
       :practice="practice"
       @practiceSurgeryDeleted="practiceSurgeryDeletedHandler"
     />
-  </div>
+  </section>
 </template>
 
 <script>

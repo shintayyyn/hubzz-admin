@@ -1,67 +1,56 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-10/12 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-test-script' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
+  <section style="transition: all 0.3s ease-in-out;">
+    <template v-if="$route.name === 'index-test-script-locum-dormant-status-index'">
+      <div class="flex-1 flex flex-col self-end">
+        <div class="py-4">
+          <div class="mx-2 md:mx-4 ">
+            <div class="text-lg font-bold">
+              Active and Dormant Locums
+            </div>
+          </div>
 
-      <div class="py-4">
-        <div class="mx-2 md:mx-4 text-white">
-          <div class="text-lg font-bold">
-            Active and Dormant Locums
+          <AppTableNew
+            v-if="count !== 0"
+            :total="count"
+            :items="locumUsers"
+            :currentPage="currentPage"
+            :perPage="limit"
+            :columns="columns"
+            :loading="loading"
+            :routerLink="routerLink"
+            :orderBy="orderBy"
+            @pagechanged="pageChangedHandler"
+            @sorted="(_orderBy) => orderBy = _orderBy"
+          >
+            <template v-slot:status_slot="slotProps">
+              <div
+                class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+                :class="statusStyle(slotProps.item.status)"
+              >
+                {{ slotProps.item.status }}
+              </div>
+            </template>
+          </AppTableNew>
+
+          <div v-if="count === 0 && !loading" class="mt-2 w-full text-center ">
+            <span>{{ 'No locums.' }}</span>
           </div>
         </div>
-
-        <AppTable
-          v-if="count !== 0"
-          :total="count"
-          :items="locumUsers"
-          :currentPage="currentPage"
-          :perPage="limit"
-          :columns="columns"
-          :loading="loading"
-          :routerLink="routerLink"
-          :orderBy="orderBy"
-          @pagechanged="pageChangedHandler"
-          @sorted="(_orderBy) => orderBy = _orderBy"
-        >
-          <template v-slot:status_slot="slotProps">
-            <div
-              class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-              :class="statusStyle(slotProps.item.status)"
-            >
-              {{ slotProps.item.status }}
-            </div>
-          </template>
-        </AppTable>
-
-        <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
-          <span>{{ 'No locums.' }}</span>
-        </div>
       </div>
-    </div>
-
-    <nuxt-link
-      v-if="$route.name !== 'index-test-script-locum-dormant-status-index'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-test-script-locum-dormant-status-index' }"
-      draggable="false"
-    />
-
+    </template>
+  
     <nuxt-child @refreshLocumUserTable="getLocumUsers" />
-  </div>
+  </section>
 </template>
 
 <script>
   import debounce from 'lodash.debounce'
   
-  import AppTable from '@/components/Base/AppTable'
+  import AppTableNew from '@/components/Base/AppTableNew'
 
   export default {
     components: {
-      AppTable,
+      AppTableNew,
     },
 
     data () {
@@ -258,19 +247,19 @@
 			statusStyle (status) {
 				switch (status) {
 					case 'Active':
-						return 'bg-green-500 text-white'
+						return 'bg-green-500 '
 					case 'Inactive':
 						return 'bg-gray-500 text-gray-700'
 					case 'Deactivated':
 						return 'bg-red-800 text-red-400'
 					case 'Account Suspension':
-						return 'bg-red-600 text-white'
+						return 'bg-red-600 '
 					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
+						return 'bg-red-600 '
 					case 'Dormant':
-            return 'bg-orange-500 text-white'
+            return 'bg-orange-500 '
           case 'Bogus':
-						return 'bg-gray-700 text-white'
+						return 'bg-gray-700 '
 					default:
 						return
 				}

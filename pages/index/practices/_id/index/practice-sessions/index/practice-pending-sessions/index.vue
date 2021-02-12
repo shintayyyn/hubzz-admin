@@ -1,15 +1,19 @@
 <template>
   <div>
-    <PracticePendingSessions :practice="practice" />
+    <JobsLists
+      :practice="practice"
+      :status="['Ongoing']"
+      :jobDenom="'Jobs'"
+    />
   </div>
 </template>
 
 <script>
-import PracticePendingSessions from '@/components/Practices/Sessions/PracticePendingSessions'
+import JobsLists from '@/components/JobsLists'
 
 export default {
   components:{
-      PracticePendingSessions
+    JobsLists
   },
 
   props: {

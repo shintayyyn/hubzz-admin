@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="mt-2 md:my-0 md:mx-2 text-white font-semibold">
+    <div class="mt-2 md:my-0 md:mx-2 font-semibold">
       Schedules
     </div>
 
-    <div class="w-full flex flex-col m-2 mb-4 bg-waterloo">
+    <div class="w-full flex flex-col m-2 mb-4 ">
       <div class="text-xs sm:text-sm overflow-y-auto" style="max-height:205px;">
         <div style="position:sticky;top:0" class="flex">
           <p
@@ -65,7 +65,7 @@
           </template>
         </div>
 
-        <div class="text-white">
+        <div>
           <div v-for="(sched, index) in schedules" :key="index" class="flex px-1 pt-1 pb-2">
             <p
               class="flex-1"

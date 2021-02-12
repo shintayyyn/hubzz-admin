@@ -1,8 +1,8 @@
 <template>
-  <div class="mt-5">
+  <div class="m-5">
     <div class="flex flex-col rounded-lg">
       <div
-        class="w-full flex  text-sm  p-2 shadow rounded-lg"
+        class="w-full flex  text-sm  p-2 shadow-lg rounded-lg"
         style="max-width: 600px"
       >
         <div v-if="!editing" class="relative w-full overflow-hidden  text-sm px-2 md:p-2">

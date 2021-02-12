@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <section>
+    <section v-if="$route.name === 'index-test-script'">
       <div>
         <div class="relative flex flex-col mt-4 w-full overflow-x-auto">
           <div class="row py-2">
@@ -35,14 +35,6 @@
         </div>
       </div>
     </section>
-
-    <nuxt-link
-      v-if="$route.name !== 'index-test-script'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-test-script' }"
-      draggable="false"
-    />
-
     <nuxt-child />
   </div>
 </template>

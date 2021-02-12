@@ -1,12 +1,12 @@
 <template>
-  <div class="max-w-xl bg-waterloo rounded-lg text-white my-4 mx-1">
+  <div class="max-w-xl rounded-lg shadow-lg my-4 mx-1">
     <div class="p-4 md:p-8">
       <div class="flex flex-row items-center mb-4">
         <div class="leading-loose font-bold text-md sm:text-lg">
           {{ practiceSurgery && practiceSurgery.child_practice.surgery.name ? practiceSurgery.child_practice.surgery.name : null }}
         </div>
         
-        <div class="mx-2 text-sm sm:text-sm p-2 text-white-700 font-bold bg-blue-400 rounded-lg">
+        <div class="mx-2 text-sm sm:text-sm p-2 -700 font-bold bg-blue-400 rounded-lg">
           {{ practiceSurgery && practiceSurgery.child_practice.surgery.code ? practiceSurgery.child_practice.surgery.code : null }}
         </div>
       </div>
@@ -14,14 +14,14 @@
       <div class="flex flex-col">
         <!--------------Spoke Permissions-------------->
         <div class="flex flex-row items-center">
-          <div class="text-lg text-white font-semibold">
+          <div class="text-lg  font-semibold">
             Spoke Permissions
           </div>
 
           <div
             v-if="authAdminPermissions.includes('Edit Spoke Permissions')"
             class="text-sm font-semibold px-3 py-1 mx-2 rounded-lg cursor-pointer"
-            :class="`${!editPermissions ? 'text-black bg-yellow-500 hover:bg-yellow-400' : 'text-white bg-red-600 hover:bg-red-700'}`"
+            :class="`${!editPermissions ? 'text-black bg-yellow-500 hover:bg-yellow-400' : ' bg-red-600 hover:bg-red-700'}`"
             @click="editPermissions = !editPermissions"
           >
             {{ editPermissions ? 'Cancel Editing' : 'Edit' }}
@@ -31,11 +31,11 @@
         <div v-if="practiceSurgery && !editPermissions" class="mt-2 mb-4 mx-2">
           <div>
             <div class="flex items-center pb-2">
-              <span class="mr-2">
+              <span class="mr-2 text-white">
                 <svgicon
                   :name="practiceSurgery.allow_surgery_create_sessions ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practiceSurgery.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_create_sessions ? ' bg-green-500' : ' bg-red-500 p-1'"
                 />
               </span>
 
@@ -103,11 +103,11 @@
             </div>
 
             <div class="flex items-center pb-2">
-              <span class="mr-2">
+              <span class="mr-2 text-white">
                 <svgicon
                   :name="practiceSurgery.allow_surgery_create_permanent_jobs ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practiceSurgery.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_create_permanent_jobs ? 'bg-green-500' : ' bg-red-500 p-1'"
                 />
               </span>
 
@@ -117,11 +117,11 @@
             </div>
 
             <div class="flex items-center pb-2">
-              <span class="mr-2">
+              <span class="mr-2 text-white">
                 <svgicon
                   :name="practiceSurgery.allow_surgery_bill_locum ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practiceSurgery.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_bill_locum ? 'bg-green-500' : ' bg-red-500 p-1'"
                 />
               </span>
 
@@ -131,11 +131,11 @@
             </div>
 
             <div class="flex items-center pb-2">
-              <span class="mr-2">
+              <span class="mr-2 text-white">
                 <svgicon
                   :name="practiceSurgery.allow_surgery_bill_hubzz ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practiceSurgery.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.allow_surgery_bill_hubzz ? 'bg-green-500' : ' bg-red-500 p-1'"
                 />
               </span>
 
@@ -145,11 +145,11 @@
             </div>
 
             <div class="flex items-center pb-2">
-              <span class="mr-2">
+              <span class="mr-2 text-white">
                 <svgicon
                   :name="practiceSurgery.share_banks_to_other_surgeries ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practiceSurgery.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.share_banks_to_other_surgeries ? 'bg-green-500' : ' bg-red-500 p-1'"
                 />
               </span>
 
@@ -159,11 +159,11 @@
             </div>
 
             <div class="flex items-center pb-2">
-              <span class="mr-2">
+              <span class="mr-2 text-white">
                 <svgicon
                   :name="practiceSurgery.share_my_banks ? 'circle-check' : 'times-solid'"
                   class="fill-current w-5 h-5 rounded-full"
-                  :class="practiceSurgery.share_my_banks ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                  :class="practiceSurgery.share_my_banks ? 'bg-green-500' : ' bg-red-500 p-1'"
                 />
               </span>
 
@@ -175,7 +175,7 @@
         </div>
 
         <!--------------EDIT PERMISSIONS------------------>
-        <div v-if="editPermissions" class="bg-waterloo-dark rounded-lg shadow-md p-2 my-4">
+        <div v-if="editPermissions" class="rounded-lg shadow-md p-2 my-4">
           <div class="flex flex-col flex-wrap justify-between">
             <div class="w-full p-1">
               <AppInput
@@ -312,7 +312,7 @@
 
       <div
         v-if="!editPermissions && authAdminPermissions.includes('Terminate Spoke')"
-        class="w-full sm:w-1/4 p-2 rounded-lg bg-red-700 hover:bg-red-800 text-center cursor-pointer"
+        class="w-full sm:w-1/4 p-2 rounded-lg bg-red-600 hover:bg-red-800 text-white text-center cursor-pointer"
         @click="terminate = true"
       >
         Terminate this Spoke

@@ -1,5 +1,5 @@
 <template>
-  <div ref="modalContainer" class="modal shadow-lg">
+  <div ref="modalContainer">
     <div class="flex-1 flex flex-col self-end text-white m-6">
       <div class="flex justify-between text-sm text-white my-2">
         <nuxt-link :to="{ name: 'index-test-script-job-scripts' }" class="text-white hover:text-sunglow p-1" draggable="false">

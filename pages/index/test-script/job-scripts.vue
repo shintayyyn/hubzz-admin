@@ -1,14 +1,8 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-10.5/12 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-test-script' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
+  <div style="transition: all 0.3s ease-in-out;">
+    <div class="flex-1 flex flex-col self-end">
       <div class="py-4">
-        <div class="flex justify-between mx-2 md:mx-4 text-white">
+        <div class="flex justify-between mx-2 md:mx-4 ">
           <div class="text-lg font-bold">
             Jobs
           </div>
@@ -22,8 +16,7 @@
           </div>
         </div>
 
-        <AppTable
-          v-if="count !== 0"
+        <AppTableNew
           :total="count"
           :items="jobs"
           :currentPage="currentPage"
@@ -43,19 +36,13 @@
               {{ slotProps.item.status }}
             </div>
           </template>
-        </AppTable>
+        </AppTableNew>
 
-        <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
+        <div v-if="count === 0 && !loading" class="mt-2 w-full text-center ">
           <span>{{ 'No jobs.' }}</span>
         </div>
       </div>
     </div>
-    <nuxt-link
-      v-if="$route.name !== 'index-test-script-job-scripts'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-test-script-job-scripts' }"
-      draggable="false"
-    />
     <nuxt-child />
   </div>
 </template>
@@ -63,12 +50,12 @@
 <script>
   import debounce from 'lodash.debounce'
   
-  import AppTable from '@/components/Base/AppTable'
+  import AppTableNew from '@/components/Base/AppTableNew'
   import AppButton from '@/components/Base/AppButton'
 
   export default {
     components: {
-      AppTable,
+      AppTableNew,
       AppButton,
     },
 
@@ -237,19 +224,19 @@
 			statusStyle (status) {
 				switch (status) {
 					case 'Active':
-						return 'bg-green-500 text-white'
+						return 'bg-green-500 '
 					case 'Inactive':
 						return 'bg-gray-500 text-gray-700'
 					case 'Deactivated':
 						return 'bg-red-800 text-red-400'
 					case 'Account Suspension':
-						return 'bg-red-600 text-white'
+						return 'bg-red-600 '
 					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
+						return 'bg-red-600 '
 					case 'Dormant':
-            return 'bg-orange-500 text-white'
+            return 'bg-orange-500 '
           case 'Bogus':
-						return 'bg-gray-700 text-white'
+						return 'bg-gray-700 '
 					default:
 						return
 				}
