@@ -44,7 +44,7 @@
               </p>
             </div>
 
-            <div v-if="practiceSurgery.allow_surgery_create_sessions" class="bg-waterloo-dark p-2 rounded-lg mb-2">
+            <div v-if="practiceSurgery.allow_surgery_create_sessions" class="bg-gray-300 p-2 rounded-lg mb-2">
               <p class="font-semibold pt-2">
                 Rate Limits(Only effective when allowed to create jobs)
               </p>
@@ -190,7 +190,7 @@
             </div>
             <!-- SET MAX RATES ;  NOT REQUIRED -->
 
-            <div v-if="allowSurgeryCreateSessions === 'true'" class="p-2 mx-2 bg-waterloo rounded-lg">
+            <div v-if="allowSurgeryCreateSessions === 'true'" class="p-2 mx-2 bg-gray-300 rounded-lg">
               <div class="w-full p-1">
                 <AppInput
                   v-model="maxHourlyRateLimit"

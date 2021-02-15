@@ -103,6 +103,10 @@
         type: Object,
         default: () => null,
       },
+      practiceSurgery: {
+        type: Object,
+        default: () => null
+      },
       status: {
         type: Array,
         required: true,
@@ -112,6 +116,7 @@
         default: 'Jobs',
         required:true,
       },
+      
     },
 
     data () {
@@ -204,42 +209,42 @@
           case 'Applied':
             if (this.locumUser) {
               count =  this.$store.state.jobs.locum_applied_jobs_count
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.practice_applied_sessions
             }
             break
           case 'Ongoing':
             if (this.locumUser) {
               count =  this.$store.state.jobs.locum_ongoing_jobs_count
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.practice_ongoing_sessions_count
             }
             break
           case 'Completed':
             if (this.locumUser) {
               count =  this.$store.state.jobs.locum_completed_jobs_count
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.practice_completed_sessions_count
             }
             break
           case 'Cancelled':
             if (this.locumUser) {
               count =  this.$store.state.jobs.locum_cancelled_jobs_count
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.practice_cancelled_sessions_count
             }
             break
           case 'Approved':
             if (this.locumUser) {
               count =  this.$store.state.jobs.locum_approved_jobs_count
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.practice_approved_sessions_count
             }
             break
           case 'Withdrawn':
             if (this.locumUser) {
               count =  this.$store.state.jobs.practice_withdrawn_sessions_count
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               count =  this.$store.state.jobs.locum_withdrawn_jobs_count
             }
             break
@@ -274,42 +279,42 @@
           case 'Applied':
             if (this.locumUser) {
               records = this.$store.state.jobs.locum_applied_jobs
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.practice_applied_sessions
             }
             break
           case 'Ongoing':
             if (this.locumUser) {
               records = this.$store.state.jobs.locum_ongoing_jobs
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.practice_ongoing_sessions
             }
             break
           case 'Completed':
             if (this.locumUser) {
               records = this.$store.state.jobs.locum_completed_jobs
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.practice_completed_sessions
             }
             break
           case 'Cancelled':
             if (this.locumUser) {
               records = this.$store.state.jobs.locum_cancelled_jobs
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.practice_cancelled_sessions
             }
             break
           case 'Approved':
             if (this.locumUser) {
               records = this.$store.state.jobs.locum_approved_jobs
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.practice_approved_sessions
             }
             break
           case 'Withdrawn':
             if (this.locumUser) {
               records = this.$store.state.jobs.practice_withdrawn_sessions
-            } else if (this.practice) {
+            } else if (this.practice || this.practiceSurgery) {
               records = this.$store.state.jobs.locum_withdrawn_jobs
             }
             break
@@ -476,6 +481,8 @@
           route = `/locums/${this.$route.params.id}/locum-jobs/locum-${this.status[0].replace(/^(.)|\s+(.)/g, c => c.toLowerCase())}-jobs`
         } else if (this.practice) {
           route = `/practices/${this.$route.params.id}/practice-sessions/practice-${this.status[0].replace(/^(.)|\s+(.)/g, c => c.toLowerCase())}-sessions`
+        } else if (this.practiceSurgery) {
+          route =  `/practices/${this.$route.params.id}/practice-surgeries/${this.$route.params.practiceSurgeryId}/surgery-sessions/surgery-${this.status[0].replace(/^(.)|\s+(.)/g, c => c.toLowerCase())}-sessions`
         }
         return route
       },
@@ -526,7 +533,7 @@
           filters.type = "Platform"
           
         }
-        if (this.practice) {
+        if (this.practice || this.practiceSurgery) {
           filters.practice_id = this.$route.name.includes("practice-surgeries") ? null : this.$route.params.id,
           filters.practice_surgery_id = this.$route.name.includes("practice-surgeries") ? this.$route.params.practiceSurgeryId : null,
           filters.status = this.status
@@ -537,6 +544,9 @@
         } else {
           filters.job_part_number_includes = this.job_number
         }
+
+        console.log('filters', filters)
+        console.log('practiceSurgery', this.practiceSurgery)
         if (this.jobDenom === 'Jobs') {
           promises.push(
             this.$axios.$get(`/api/v1/admin/jobs/count`, {
@@ -605,7 +615,7 @@
                 if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_ONGOING_JOBS", jobs)
-                } else if (this.practice) {
+                } else if (this.practice || this.practiceSurgery) {
                   this.$store.commit("jobs/SET_PRACTICE_ONGOING_SESSIONS_COUNT", count)
                   this.$store.commit("jobs/SET_PRACTICE_ONGOING_SESSIONS", jobs)
                   
@@ -615,7 +625,7 @@
                 if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_APPLIED_JOBS", jobs)
-                } else if (this.practice) {
+                } else if (this.practice || this.practiceSurgery) {
                   this.$store.commit("jobs/SET_PRACTICE_APPLIED_SESSIONS_COUNT", count)
                   this.$store.commit("jobs/SET_PRACTICE_APPLIED_SESSIONS", jobs)
                 }
@@ -624,7 +634,7 @@
                 if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_CANCELLED_JOBS", jobs)
-                } else if (this.practice) {
+                } else if (this.practice || this.practiceSurgery) {
                   this.$store.commit("jobs/SET_PRACTICE_CANCELLED_SESSIONS_COUNT", count)
                   this.$store.commit("jobs/SET_PRACTICE_CANCELLED_SESSIONS", jobs)
                 }
@@ -633,7 +643,7 @@
                 if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_WITHDRAWN_JOBS", jobs)
-                } else if (this.practice) {
+                } else if (this.practice || this.practiceSurgery) {
                   this.$store.commit("jobs/SET_PRACTICE_WITHDRAWN_SESSIONS_COUNT", count)
                   this.$store.commit("jobs/SET_PRACTICE_WITHDRAWN_SESSIONS", jobs)
                 }
@@ -642,7 +652,7 @@
                 if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_COMPLETED_JOBS", jobs)
-                } else if (this.practice) {
+                } else if (this.practice || this.practiceSurgery) {
                   this.$store.commit("jobs/SET_PRACTICE_COMPLETED_SESSIONS_COUNT", count)
                   this.$store.commit("jobs/SET_PRACTICE_COMPLETED_SESSIONS", jobs)
                 }
@@ -651,7 +661,8 @@
                 if (this.locumUser) {
                   this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS_COUNT", count)
                   this.$store.commit("jobs/SET_LOCUM_APPROVED_JOBS", jobs)
-                } else if (this.practice) {
+                } else if (this.practice || this.practiceSurgery) {
+                  console.log('bat ayaw')
                   this.$store.commit("jobs/SET_PRACTICE_APPROVED_SESSIONS_COUNT", count)
                   this.$store.commit("jobs/SET_PRACTICE_APPROVED_SESSIONS", jobs)
                 }

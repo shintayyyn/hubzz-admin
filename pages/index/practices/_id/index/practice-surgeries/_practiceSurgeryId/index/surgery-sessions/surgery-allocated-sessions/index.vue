@@ -1,15 +1,18 @@
 <template>
   <div>
-    <PracticeAllocatedSessions :practice="practice" :practiceSurgery="practiceSurgery" />
+    <JobsLists
+      :practiceSurgery="practiceSurgery"
+      :status="['Allocated']"
+      :jobDenom="'Job Parts'"
+    />
   </div>
 </template>
 
 <script>
-import PracticeAllocatedSessions from '@/components/Practices/Sessions/PracticeAllocatedSessions'
-
+import JobsLists from '@/components/JobsLists'
 export default {
   components:{
-    PracticeAllocatedSessions
+    JobsLists,
   },
 
   props: {
