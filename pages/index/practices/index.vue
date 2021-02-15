@@ -128,7 +128,7 @@
                 class="mx-2"
                 label="Submit"
                 :in-style="'padding:5px 14px;margin-bottom:5px'"
-                @click="getJobs(params)"
+                @click="getPractices(params)"
               />
             </div>
           </div>
@@ -180,7 +180,7 @@
         </template>
       </AppTableNew>
 
-      <div v-if="!loadingPractices && practices.length === 0" class="mt-2 w-full text-center text-white">
+      <div v-if="!loadingPractices && practices.length === 0" class="mt-2 w-full text-center">
         <span v-if="hasFilter">No practices found.</span>
         <span v-if="!hasFilter">There are no {{ practiceTab.toLowerCase() }} practices.</span>
       </div>
@@ -554,20 +554,20 @@ export default {
 			this.getPractices()
     },
 
-    filterPracticeStatus () {
-      this.currentPage = 1
-			this.getPractices()
-    },
+    // filterPracticeStatus () {
+    //   this.currentPage = 1
+		// 	this.getPractices()
+    // },
 
-    filterPracticeType () {
-      this.currentPage = 1
-			this.getPractices()
-    },
+    // filterPracticeType () {
+    //   this.currentPage = 1
+		// 	this.getPractices()
+    // },
 
-    filterPracticeHubType () {
-      this.currentPage = 1
-			this.getPractices()
-    },
+    // filterPracticeHubType () {
+    //   this.currentPage = 1
+		// 	this.getPractices()
+    // },
 
 		search () {
 			this.searchSubmit()

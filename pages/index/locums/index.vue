@@ -71,7 +71,7 @@
                   class="mx-2"
                   label="Submit"
                   :in-style="'padding:5px 14px;margin-bottom:5px'"
-                  @click="getJobs(params)"
+                  @click="getAllLocumUsers(params)"
                 />
               </div>
             </div>
@@ -118,7 +118,7 @@
         </template>
       </AppTableNew>
 
-      <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
+      <div v-if="count === 0 && !loading" class="mt-2 w-full text-center">
         <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
       </div>
     </template>
@@ -352,15 +352,15 @@
 		},
 
 		watch: {
-			filterStatus () {
-				this.currentPage = 1
-        this.getAllLocumUsers()
-			},
+			// filterStatus () {
+			// 	this.currentPage = 1
+      //   this.getAllLocumUsers()
+			// },
 
-			filterCompliances () {
-				this.currentPage = 1
-        this.getAllLocumUsers()
-			},
+			// filterCompliances () {
+			// 	this.currentPage = 1
+      //   this.getAllLocumUsers()
+			// },
 
 			search () {
 				this.searchSubmit()
@@ -386,6 +386,7 @@
 
 		methods: {
 			getAllLocumUsers () {
+        this.currentPage = 1
         const filters = {}
 
         if (this.search) {

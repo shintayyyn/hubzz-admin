@@ -1,16 +1,11 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <div class="">
-      <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
-    </div>
-
-    <div v-if="$route.name !== 'index-standard-terms'" class="fixed inset-0 bg-shield opacity-50 z-511" @click="$router.push('/standard-terms')" />
-
-    <div>
+    <div v-if="$route.name === 'index-standard-terms'">
+      <div class="">
+        <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
+      </div>
       <section>
         <div>
-          <AppLoading :loading="loading" message="Loading" spinner />
-
           <!-- TABLE -->
           <div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
             <!-- TABLE HEADER -->
@@ -30,9 +25,8 @@
             <!-- TABLE BODY -->
             <div class="row py-2">
               <div class="relative">
-                <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
-
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover">
+                  <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Filename</span>
                     <span>{{ standardTerms ? standardTerms.filename : null }}</span>
