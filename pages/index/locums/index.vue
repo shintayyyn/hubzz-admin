@@ -1,5 +1,5 @@
 <template>
-  <section class="flex-1 flex flex-col md:px-2 overflow-y-auto">
+  <section class="flex-1 flex flex-col overflow-y-auto">
     <template 
       v-if="(authAdminPermissions.includes('View Locums') 
         || authAdminPermissions.includes('View Locum Jobs')
@@ -89,12 +89,13 @@
         :loading="loading"
         :routerLink="`/locums`"
         :orderBy="orderBy"
+        :min-height="'55vh'"
         @pagechanged="pageChangedHandler"
         @sorted="(_orderBy) => orderBy = _orderBy"
       >
         <template v-slot:status_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
             :class="statusStyle(slotProps.item.status)"
           >
             {{ slotProps.item.status }}
@@ -102,7 +103,7 @@
         </template>
         <template v-slot:compliance_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
             :class="complianceStatusStyle(slotProps.item.compliance_status)"
           >
             {{ slotProps.item.compliance_status }}
@@ -111,7 +112,7 @@
 
         <template v-slot:registration_type_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
           >
             {{ registrationType(slotProps.item.referrer_domain) }}
           </div>
@@ -151,7 +152,7 @@
 				filterStatus: null,
 				filterCompliances: null,
 				search: '',
-        limit: 10,
+        limit: 15,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
@@ -386,7 +387,6 @@
 
 		methods: {
 			getAllLocumUsers () {
-        this.currentPage = 1
         const filters = {}
 
         if (this.search) {
@@ -444,6 +444,7 @@
       },
     
       pageChangedHandler (page) {
+        console.log('banana', page)
         this.currentPage = page
         this.getAllLocumUsers()
       },

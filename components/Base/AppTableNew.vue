@@ -58,7 +58,7 @@
                     column.class.includes('text-center') &&
                     'text-center'
                 "
-                :style="`${column.width ? `min-width: ${column.width}px; max-width: ${column.width}px` : ``}; ${column.dataIndex === 'actions' ? '' : countLines(index, column.width, rowIndex)}`"
+                :style="`${column.width ? `min-width: ${column.width}px; max-width: ${column.width}px` : ``}; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : '' }`"
                 :ref="`col${index}`"
                 style="line-height:20px; "
               >
@@ -147,7 +147,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!loading && total > perPage && total > 0 && disabledPagination === false" class="w-full">
+    <div v-if="!loading && total > perPage" class="w-full">
       <AppPagination
         :total="total"
         :totalPages="totalPages"
@@ -205,10 +205,19 @@ export default {
       type: String,
     },
     customWidth: {
-      type: Number,
+      type: [String, Number],
+      default: null
+    },
+    customItemsWidth: {
+      type: String,
+      default: null,
     },
     minHeight: {
       type: String,
+    },
+    noTextResize: {
+      type: Boolean,
+      default: false
     },
     disabledHeadings: {
       type: Boolean,
@@ -253,12 +262,12 @@ export default {
       }
       this.$emit("sorted", this.params)
     },
+    checkClicked (item) {
+      this.$emit("toggleCheck", item)
+    },
     pagechanged (e) {
       this.$emit("pagechanged", e)
     },
-    checkClicked (item) {
-        this.$emit("toggleCheck", item)
-      },
     limitchanged (limit) {
       this.$emit("limitchanged", limit)
     },
@@ -349,6 +358,7 @@ export default {
       return str
     },
     countLines(index, width, rowIndex) {
+      if (this.noTextResize) return
       let el = null
       if (this.$refs[`col${index}`]) {
         el = this.$refs[`col${index}`].find((item, ind) => ind === rowIndex)
@@ -357,7 +367,7 @@ export default {
           let lineHeight = parseInt(el.style.lineHeight)
           let lines = colHeight / lineHeight
           if (lines && lines > 1) {
-            return `font-size: ${(12-lines)}px;`
+            return `font-size: ${(12-lines)}px; line-height: ${(12-lines)+4}px;`
           }
         }
       }

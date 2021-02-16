@@ -529,6 +529,7 @@ export default {
 					eventName: 'checkClicked',
 					minWidth: '100px',
 					maxWidth: '200px',
+					sortable: false
 				},
 				{
 					name: 'Job Parts',
@@ -537,7 +538,8 @@ export default {
 					slotName: 'invoiceable_job_parts',
 					flex: '1 0 0',
 					minWidth: '100px',
-					maxWidth: '1000px'
+					maxWidth: '1000px',
+					sortable: false
 				}
 				// ===========FOR QA TESTING ONLY ENDS HERE===========
 			],
@@ -603,7 +605,8 @@ export default {
 					flex: '1 0 0',
 					minWidth: '90px',
 					maxWidth: '100px',
-					eventName: "checkClicked"
+					eventName: "checkClicked",
+					sortable: false
 				},
 				{
 					name: "Job Part Number",
@@ -622,7 +625,8 @@ export default {
 					minWidth: '90px',
 					maxWidth: '200px',
 					class: "flex items-center justify-center localDate",
-					slotName: "approved_completed_at"
+					slotName: "approved_completed_at",
+					sortable: true
 				},
 				{
 					name: "Total",
@@ -642,7 +646,7 @@ export default {
 					maxWidth: '150px',
 					slotName: "status_slot",
 					class: "flex items-center justify-center",
-					sortable: true
+					sortable: true,
 				},
 				{
 					name: "With Disputes",
@@ -653,7 +657,7 @@ export default {
 					maxWidth: '180px',
 					slotName: "job_part_items_disputed_at_slot",
 					class: "flex items-center justify-center",
-					sortable: true
+					sortable: true,
 				},
 				// ===========FOR QA TESTING COLUMNS ENDS HERE===========
 			]

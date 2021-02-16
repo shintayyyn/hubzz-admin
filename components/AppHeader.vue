@@ -1,6 +1,6 @@
 <template>
   <section class="header">
-    <div class="flex justify-between md:justify-between items-center text-sm text-white px-4 md:px-6">
+    <div class="flex justify-between md:justify-between items-center text-sm text-white px-4 md:px-6 border border-b">
       <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
         <img src="~/assets/images/hbg.png">
       </button>

@@ -43,7 +43,7 @@
           <input
             v-model.number="toPutPracticeRate.gp_rate"
             class="appearance-none bg-transparent border-b w-full  mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('gp_rate') && 'border-red-800'"
+            :class="errorMessage('gp_rate') && 'border-red-600'"
             step="any"
             aria-label
            
@@ -51,7 +51,7 @@
           >
           <div
             v-if="formError.filter(item => item.field === 'gp_rate')"
-            class="text-red-800 text-xs capitalize pt-1"
+            class="text-red-600 text-xs capitalize pt-1"
           >
             {{ errorMessage("gp_rate") }}
           </div>
@@ -63,14 +63,14 @@
           <input
             v-model.number="toPutPracticeRate.others_rate"
             class="appearance-none bg-transparent border-b w-full  mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('others_rate') && 'border-red-800'"
+            :class="errorMessage('others_rate') && 'border-red-600'"
             step="any"
             aria-label="newtext"
             @keypress="keyPressHandler"
           >
           <div
             v-if="formError.filter(item => item.field === 'others_rate')"
-            class="text-red-800 text-xs capitalize pt-1"
+            class="text-red-600 text-xs capitalize pt-1"
           >
             {{ errorMessage("others_rate") }}
           </div>
@@ -154,7 +154,9 @@ export default {
 			const index = this.formError.findIndex(
 				error =>
 					error.field === "gp_rate" &&
-					error.message === "Please input a numerical info for GP"
+					error.message === "Please input a numerical info for GP" || 
+					(error.field === "gp_rate" &&
+					error.message === "Value should be greater than 0")
 			)
 
 			if (index > -1) {
@@ -167,13 +169,22 @@ export default {
 					message: "Please input a numerical info for GP"
 				})
 			}
+
+			if (value <= 0) {
+				this.formError.push({
+					field: "gp_rate",
+					message: "Value should be greater than 0"
+				})
+			}
 		},
 
 		"toPutPracticeRate.others_rate" (value) {
 			const index = this.formError.findIndex(
 				error =>
-					error.field === "others_rate" &&
-					error.message === "Please input a numerical info for Others"
+					(error.field === "others_rate" &&
+					error.message === "Please input a numerical info for Others") || 
+					(error.field === "others_rate" &&
+					error.message === "Value should be greater than 0")
 			)
 
 			if (index > -1) {
@@ -184,6 +195,13 @@ export default {
 				this.formError.push({
 					field: "others_rate",
 					message: "Please input a numerical info for Others"
+				})
+			}
+
+			if (value <= 0) {
+				this.formError.push({
+					field: "others_rate",
+					message: "Value should be greater than 0"
 				})
 			}
 		}
@@ -279,51 +297,60 @@ export default {
 		async updatePracticeRates () {
 			this.loading = true
 
-			if (this.toPutPracticeRate.gp_rate === 0 
-				|| this.toPutPracticeRate.gp_rate === null 
-				|| this.toPutPracticeRate.gp_rate === '') {
-				this.toPutPracticeRate === 0.00
+			// if (this.toPutPracticeRate.gp_rate === 0 
+			// 	|| this.toPutPracticeRate.gp_rate === null 
+			// 	|| this.toPutPracticeRate.gp_rate === '') {
+			// 	this.toPutPracticeRate === 0.00
+			// }
+			// if (this.toPutPracticeRate.others_rate === 0 
+			// 	|| this.toPutPracticeRate.others_rate === null 
+			// 	|| this.toPutPracticeRate.others_rate === '') {
+			// 	this.toPutPracticeRate === 0.00
+			// }
+
+			if (this.formError.length === 0) {
+				await this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}/rates`, {
+					gp_rate: this.toPutPracticeRate.gp_rate,
+					others_rate: this.toPutPracticeRate.others_rate
+				}).then((response) => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Saved"
+					})
+
+					const practice = response.data.data.practice
+					
+					console.log('response', response.data.data.practice)
+					
+					this.$emit('practiceUpdated', practice)
+
+					this.editing = false
+				}).catch(err => {
+					console.log("err", err.response || err)
+
+					let message = "Something went wrong!"
+
+					if (err.response && err.response.data && err.response.data.message) {
+						message = err.response.data.message
+					}
+
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: message
+					})
+				}).finally(() => {
+					this.loading = false
+				})
+			} else {
+				this.loading = false
+				this.$store.commit("SET_NOTIFICATION", {
+					enabled: true,
+					status: "danger",
+					text: this.formError[0].message
+				})
 			}
-			if (this.toPutPracticeRate.others_rate === 0 
-				|| this.toPutPracticeRate.others_rate === null 
-				|| this.toPutPracticeRate.others_rate === '') {
-				this.toPutPracticeRate === 0.00
-			}
-
-			await this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}/rates`, {
-        gp_rate: this.toPutPracticeRate.gp_rate,
-        others_rate: this.toPutPracticeRate.others_rate
-      }).then((response) => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Saved"
-        })
-
-				const practice = response.data.data.practice
-				
-				console.log('response', response.data.data.practice)
-        
-        this.$emit('practiceUpdated', practice)
-
-        this.editing = false
-      }).catch(err => {
-        console.log("err", err.response || err)
-
-        let message = "Something went wrong!"
-
-        if (err.response && err.response.data && err.response.data.message) {
-          message = err.response.data.message
-        }
-
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: message
-        })
-      }).finally(() => {
-        this.loading = false
-      })
 		},
 
 		setRate () {

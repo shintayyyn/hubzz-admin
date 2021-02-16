@@ -173,7 +173,7 @@
 
         <template v-slot:registration_type_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
           >
             {{ registrationType(slotProps.item.referrer_domain) }}
           </div>
@@ -225,13 +225,13 @@ export default {
       orderBy: [
         'created_at_in_gb_formatted:desc',
       ],
-      limit: 10,
+      limit: 15,
       search: '',
       filterPracticeStatus: null,
       filterPracticeType: null,
       filterPracticeHubType: null,
 			params: {
-				limit: 10,
+				limit: 15,
 				offset: 0,
 				order_by: ["created_at:desc"]
       },

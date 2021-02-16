@@ -106,7 +106,7 @@ export default {
 			currentPage: 1,
       search: "",
 			params: {
-				limit: 10,
+				limit: 15,
 				offset: 0,
         order_by: ["created_at:desc"],
         status: ["Active","Dormant","Account Suspension"],
@@ -204,7 +204,7 @@ export default {
 			let { page = 1, search = "", order_by = [] } = route.query
 			page = parseInt(page)
 			const createdRoute = route.query
-			const limit = 10
+			const limit = 15
       const offset = page * limit - limit
 			const status = ["Active","Dormant","Account Suspension"]
 			// const has_sage_ref = true

@@ -260,9 +260,9 @@ module.exports = {
 		},
 
 		borderColor: theme => ({
-			default: theme("colors.gray-light"),
-			...theme("colors")
-		}),
+      ...theme('colors'),
+      default: theme('colors.gray.300', 'currentColor'),
+    }),
 
 		borderRadius: {
 			none: "0",
