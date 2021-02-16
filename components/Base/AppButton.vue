@@ -1,11 +1,11 @@
 <template>
   <button
     :disabled="disabled"
-    class="default-btn rounded-md px-2 py-1 focus:outline-none transition-hover text-sm "
+    class="default-btn rounded-md px-2 focus:outline-none transition-hover text-sm "
     :class="[
       disabled ? 'disabled-button' : '',
       inClass,
-      customTheme ? customTheme : 'button bg-sunglow hover:bg-sunglow-dark',
+      customTheme ? customTheme : 'button bg-sunglow hover:bg-sunglow-dark py-1',
       badge && icon ? 'flex items-center justify-between' : '',
       icon ? 'flex items-center' : ''
     ]"

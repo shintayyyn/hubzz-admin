@@ -3,7 +3,7 @@
     <div class="relative">
       <AppLoading :loading="loading" spinner />
       <div
-        class="relative flex flex-col overflow-x-auto w-full mt-4"
+        class="relative flex flex-col overflow-x-auto w-full"
         :style="`min-height: ${minHeight ? minHeight : '60vh'}`"
       >
         <div
@@ -147,7 +147,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!loading && total > perPage" class="w-full">
+    <div v-if="!loading && total > perPage && disabledPagination === false" class="w-full">
       <AppPagination
         :total="total"
         :totalPages="totalPages"

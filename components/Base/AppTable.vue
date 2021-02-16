@@ -57,7 +57,7 @@
             :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
           >
             <div
-              class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 bg-white border-l-8 border-sunglow md:border-none"
+              class="flex flex-col md:flex-row justify-start shadow-md rounded-lg bg-white border-l-8 border-sunglow md:border-none"
               :class="recordClass()"
             >
               <div

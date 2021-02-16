@@ -54,8 +54,8 @@
     </div>
 
     <div class="flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex flex-col w-full justify-end">
-        <div class="w-full">
+      <div class="flex flex-col w-full justify-start">
+        <div>
           <div class="flex justify-between">
             <div class="flex">
               <div class="w-full">
@@ -69,68 +69,64 @@
                   @click="searchSubmit()"
                 />
               </div>
-              <div class="m-3">
-                <button
-                  class="px-6 py-1 border-2 border-gray-400 rounded-lg font-bold text-gray-600"
+              <div class="mx-1 my-2">
+                <AppButton
+                  label="Filters"
+                  :icon="filterModal ? 'sort-descend' : ''"
+                  :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
                   @click="filterModal = !filterModal"
-                >
-                  Filters
-                </button>
+                />
+              </div>
+              <div v-if="filterModal" class="mx-1 my-2">
+                <AppButton
+                  label="Apply"
+                  :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
+                  @click="getPractices(params)"
+                />
+              </div>
+
+              <div v-if="filterModal" class="mx-1 my-2">
+                <AppButton
+                  label="Clear"
+                  :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
+                  @click="filterReset"
+                />
               </div>
             </div>
           </div>
-          
-          <div
-            class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg my-2"
-            :class="filterModal ? 'flex' : 'hidden'"
-          >
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <AppInput
-                v-model="filterPracticeStatus"
-                :type="'select'"
-                :name="'practice_status'"
-                :label="'Practice Status'"
-                :placeholder="'Select...'"
-                :items="practiceStatuses"
-              />
-            </div>
+        </div>
+        <div
+          class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg "
+          :class="filterModal ? 'flex' : 'hidden'"
+        >
+          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <AppInputSmall
+              v-model="filterPracticeStatus"
+              :type="'select'"
+              :name="'practice_status'"
+              :placeholder="'Practice Status'"
+              :items="practiceStatuses"
+            />
+          </div>
 
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <AppInput
-                v-model="filterPracticeType"
-                :type="'select'"
-                :name="'practice_type'"
-                :label="'Practice Type'"
-                :placeholder="'Select...'"
-                :items="practiceType"
-              />
-            </div>
+          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <AppInputSmall
+              v-model="filterPracticeType"
+              :type="'select'"
+              :name="'practice_type'"
+              :placeholder="'Practice Type'"
+              :items="practiceType"
+            />
+          </div>
 
-            <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-              <AppInput
-                v-model="filterPracticeHubType"
-                :type="'select'"
-                :name="'hub_type'"
-                :label="'Hub Type'"
-                :placeholder="'Select...'"
-                :items="hubType"
-              />
-            </div>
-
-            <div class="md:px-1 flex flex-wrap w-full justify-end">
-              <AppButton
-                label="Reset"
-                :in-style="'padding:5px 14px;margin-bottom:5px'"
-                @click="filterReset"
-              />
-
-              <AppButton
-                class="mx-2"
-                label="Submit"
-                :in-style="'padding:5px 14px;margin-bottom:5px'"
-                @click="getPractices(params)"
-              />
-            </div>
+          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <AppInputSmall
+              v-model="filterPracticeHubType"
+              :type="'select'"
+              :name="'hub_type'"
+              :placeholder="'Hub Type'"
+              :items="hubType"
+            />
           </div>
         </div>
       </div>
@@ -152,21 +148,21 @@
       >
         <template v-slot:status_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-            :class="slotProps.item.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'"
+            class="text-xs"
+            :class="slotProps.item.status === 'Active' ? 'text-green-500' : 'text-gray-700'"
           >
             {{ slotProps.item.status }}
           </div>
         </template>
 
         <template v-slot:type_slot="slotProps">
-          <div class="px-4 py-1 rounded-full text-center w-32 mx-auto" :class="typeStyle(slotProps.item.type)">
+          <div class="text-xs" :class="typeStyle(slotProps.item.type)">
             {{ slotProps.item.type }}
           </div>
         </template>
 
         <template v-slot:hub_type_slot="slotProps">
-          <div class="px-4 py-1 rounded-full text-center w-32 mx-auto" :class="hubTypeStyle(slotProps.item.hub_type)">
+          <div class="text-xs" :class="hubTypeStyle(slotProps.item.hub_type)">
             {{ slotProps.item.hub_type }}
           </div>
         </template>
@@ -239,10 +235,6 @@ export default {
 
       practiceStatuses: [
         {
-          label: "All",
-          value: null,
-        },
-        {
           label: "Active",
           value: "Active",
         },
@@ -261,10 +253,6 @@ export default {
       ],
       practiceType: [
         {
-          label: "All",
-          value: null,
-        },
-        {
           label: "Hub",
           value: "Hub",
         },
@@ -278,10 +266,6 @@ export default {
         },
       ],
       hubType: [
-        {
-          label: "All",
-          value: null,
-        },
         {
           label: "Type 1",
           value: "Type 1",
@@ -662,11 +646,11 @@ export default {
 		typeStyle (type) {
 			switch (type) {
 				case "Hub":
-					return "bg-red-500 text-white px-4 py-1"
+					return "text-red-500"
 				case "Spoke":
-					return "bg-blue-500 text-white px-4 py-1"
+					return "text-blue-500"
 				case "Stand Alone":
-					return "bg-indigo-600 text-white px-6 md:px-5 py-1"
+					return "text-indigo-600"
 				default:
 					return
 			}
@@ -675,9 +659,9 @@ export default {
 		hubTypeStyle (hubType) {
 			switch (hubType) {
 				case "Type 1":
-					return "bg-red-500 text-white px-4 py-1"
+					return "text-red-500"
 				case "Type 2":
-					return "bg-purple-500 text-white px-4 py-1"
+					return "text-purple-500"
 				default:
 					return ""
 			}

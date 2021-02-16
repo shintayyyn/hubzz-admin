@@ -8,8 +8,8 @@
       "  
     >
       <div class="flex flex-col md:flex-row justify-between md:items-center">
-        <div class="flex flex-col w-full justify-end">
-          <div class="w-full">
+        <div class="flex flex-col w-full justify-start">
+          <div>
             <div class="flex justify-between">
               <div class="flex">
                 <div class="w-full">
@@ -19,61 +19,58 @@
                     :name="'search'"
                     :button="true"
                     :buttonLabel="'Search'"
-                    :placeholder="'Search Locum by Name'"
+                    :placeholder="'Search Practice by Name'"
                     @click="searchSubmit()"
                   />
                 </div>
-                <div class="m-3">
-                  <button
-                    class="px-6 py-1 border-2 border-gray-400 rounded-lg font-bold text-gray-600"
+                <div class="mx-1 my-2">
+                  <AppButton
+                    label="Filters"
+                    :icon="filterModal ? 'sort-descend' : ''"
+                    :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
                     @click="filterModal = !filterModal"
-                  >
-                    Filters
-                  </button>
+                  />
+                </div>
+                <div v-if="filterModal" class="mx-1 my-2">
+                  <AppButton
+                    label="Apply"
+                    :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
+                    @click="getAllLocumUsers(params)"
+                  />
+                </div>
+
+                <div v-if="filterModal" class="mx-1 my-2">
+                  <AppButton
+                    label="Clear"
+                    :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
+                    @click="filterReset"
+                  />
                 </div>
               </div>
             </div>
-            
-            <div
-              class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg my-2"
-              :class="filterModal ? 'flex' : 'hidden'"
-            >
-              <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-                <AppInput
-                  v-model="filterStatus"
-                  :type="'select'"
-                  :name="'locum_status'"
-                  :label="'Locum Status'"
-                  :placeholder="'Select...'"
-                  :items="locumStatuses"
-                />
-              </div>
+          </div>
+          <div
+            class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg "
+            :class="filterModal ? 'flex' : 'hidden'"
+          >
+            <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+              <AppInputSmall
+                v-model="filterStatus"
+                :type="'select'"
+                :name="'locum_status'"
+                :placeholder="'Locum Status'"
+                :items="locumStatuses"
+              />
+            </div>
 
-              <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-                <AppInput
-                  v-model="filterCompliances"
-                  :type="'select'"
-                  :name="'compliance_status'"
-                  :label="'Compliance Status'"
-                  :placeholder="'Select...'"
-                  :items="complianceStatuses"
-                />
-              </div>
-
-              <div class="md:px-1 flex flex-wrap w-full justify-end">
-                <AppButton
-                  label="Reset"
-                  :in-style="'padding:5px 14px;margin-bottom:5px'"
-                  @click="filterReset"
-                />
-
-                <AppButton
-                  class="mx-2"
-                  label="Submit"
-                  :in-style="'padding:5px 14px;margin-bottom:5px'"
-                  @click="getAllLocumUsers(params)"
-                />
-              </div>
+            <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+              <AppInputSmall
+                v-model="filterCompliances"
+                :type="'select'"
+                :name="'compliance_status'"
+                :placeholder="'Compliance Status'"
+                :items="practiceType"
+              />
             </div>
           </div>
         </div>
@@ -95,7 +92,7 @@
       >
         <template v-slot:status_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
+            class="text-center text-xs"
             :class="statusStyle(slotProps.item.status)"
           >
             {{ slotProps.item.status }}
@@ -103,7 +100,7 @@
         </template>
         <template v-slot:compliance_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
+            class="text-center text-xs"
             :class="complianceStatusStyle(slotProps.item.compliance_status)"
           >
             {{ slotProps.item.compliance_status }}
@@ -112,7 +109,7 @@
 
         <template v-slot:registration_type_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
+            class="text-center text-xs"
           >
             {{ registrationType(slotProps.item.referrer_domain) }}
           </div>
@@ -460,19 +457,19 @@
 			statusStyle (status) {
 				switch (status) {
 					case 'Active':
-						return 'bg-green-500 text-white'
+						return 'text-green-700'
 					case 'Inactive':
-						return 'bg-gray-500 text-gray-700'
+						return 'text-gray-700'
 					case 'Deactivated':
-						return 'bg-red-800 text-red-400'
+						return 'text-black'
 					case 'Account Suspension':
-						return 'bg-red-600 text-white'
+						return 'text-red-600'
 					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
+						return 'text-red-600'
 					case 'Dormant':
-            return 'bg-orange-500 text-white'
+            return 'text-gray-500'
           case 'Bogus':
-						return 'bg-gray-700 text-white'
+						return 'text-gray-600'
 					default:
 						return
 				}
@@ -481,19 +478,19 @@
 			complianceStatusStyle (status) {
 				switch (status) {
 					case 'Empty':
-						return 'border border-white text-white'
+						return 'text-gray-400'
 					case 'Incomplete':
-						return 'bg-orange-600 text-white'
+						return 'text-orange-600'
 					case 'Pending':
-						return 'bg-yellow-500 text-yellow-800'
+						return 'text-yellow-800'
 					case 'Expiring':
-						return 'bg-red-400 text-white'
+						return ' text-red-400'
 					case 'Expired':
-						return 'bg-red-800 text-red-400'
+						return 'text-red-500'
 					case 'Rejected':
-						return 'bg-red-600 text-white'
+						return 'text-orange-700'
 					case 'Compliant':
-						return 'bg-green-500 text-white'
+						return 'text-green-700'
 					default:
 						return
 				}

@@ -3,7 +3,7 @@
     <template
       v-if="['text','time','email', 'password', 'select', 'textarea', 'multi-checkbox', 'number', 'numberDash'].includes(type)"
     >
-      <div class="flex flex-col" :class="wrapperClass ? wrapperClass : 'py-2'">
+      <div class="flex flex-col" :class="wrapperClass ? wrapperClass : 'py-1'">
         <div
           v-if="label || info"
           class="relative flex flex-wrap leading-none"
@@ -148,6 +148,7 @@
 
         <template v-else>
           <div class="flex flex-row justify-start mt-1">
+            <!-- text, etc -->
             <template v-if="['text','time','email', 'number', 'numberDash'].includes(type)">
               <div class="flex flex-col w-full">
                 <div class="flex items-center justify-start">
@@ -162,8 +163,8 @@
                     :value="value"
                     :type="type"
                     :placeholder="placeholder"
-                    class="border-l-2 border-t-2 border-b-2 border-gray-500 focus:border-gray-600 focus:outline-none p-1 font-bold text-xs sm:text-sm w-full shadow-none"
-                    :class="[error ? 'border-red-500' : '', button ? 'rounded-l-lg px-2':'rounded-lg' ,inClass]"
+                    class="border-l-2 border-t-2 border-b-2 border-gray-500 focus:border-gray-600 focus:outline-none font-bold text-xs sm:text-sm w-full shadow-none"
+                    :class="[error ? 'border-red-500' : '', button ? 'rounded-l px-2':'rounded' ,inClass]"
                     :style="inStyle"
                     :checked="value"
                     :readonly="disabled"
@@ -180,7 +181,7 @@
                   >
                   <button
                     v-if="button" 
-                    class="bg-gray-500 px-2 py-1 border-gray-500 rounded-r-lg border-r-2 border-t-2 border-b-2 text-xs sm:text-sm text-white font-bold hover:bg-gray-600 transition-hover"
+                    class="bg-gray-500 px-2 border-gray-500 rounded-r border-r-2 border-t-2 border-b-2 text-xs sm:text-sm text-white font-bold hover:bg-gray-600 transition-hover"
                     @click.prevent="$emit('click')"
                   >
                     {{ buttonLabel ? buttonLabel : 'Button' }}
@@ -198,6 +199,7 @@
               </div>
             </template>
 
+            <!-- password -->
             <template v-if=" type === 'password' ">
               <div class="relative w-full mb-4">
                 <div class="relative">
@@ -238,13 +240,14 @@
               </div>
             </template>
 
+            <!-- select -->
             <template v-if="type === 'select'">
               <div :class="['w-full relative', inClass]">
-                <div class="w-full customized-select flex items-center">
+                <div class="w-full mt-8 flex items-center">
                   <select
                     ref="inputSelect"
                     :value="value"
-                    class="absolute bottom-0 border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                    class="absolute bottom-0 border-2 focus:border-yellow-400 focus:outline-none font-bold text-sm w-full rounded"
                     :class="[
                       (error && !disabled) ? 'border-red-500' : inClass,
                       disabled ? 'border-gray-400 text-gray-500 cursor-not-allowed' : 'cursor-pointer',
@@ -269,7 +272,7 @@
                       {{ item.label }}
                     </option>
                   </select>
-                  <span
+                  <!-- <span
                     class="absolute right-0 h-full flex items-center"
                     :class="[disabled ? 'text-gray-500' : '', wrapperClass ? '' : '-mt-1']"
                   >
@@ -278,7 +281,7 @@
                       class="h-full w-10 p-2 mt-2 fill-current"
                       style="transform: rotate(180deg)"
                     />
-                  </span>
+                  </span> -->
                 </div>
                 <transition name="drop-down">
                   <div
