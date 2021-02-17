@@ -50,7 +50,7 @@
 			</div>
 			<!-- SHOW ROLE PERMISSIONS -->
 			<div class="my-2 md:my-4" v-if="editingPermissions == false">
-				<div class="masorny-container three overflow-hidden">
+				<div class="masonry-container three overflow-hidden">
 					<div
 						class="item pb-3 md:pt-1"
 						v-if="rolePermissions.find(permission => permission.category === 'Locum')"
@@ -216,7 +216,7 @@
 						</div>
 					</div>
 				</div>-->
-				<div class="masorny-container three">
+				<div class="masonry-container three">
 					<div class="item p-2" v-for="(role, index) in permissions" :key="index">
 						<div class="flex flex-col">
 							<div class="w-full flex flex-row items-center pb-1">

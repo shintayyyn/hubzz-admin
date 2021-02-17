@@ -1,5 +1,5 @@
 <template>
-  <div ref="modalContainer">
+  <section ref="modalContainer">
     <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
     <div class="flex items-center px-2">
       <div class="relative w-full">
@@ -89,8 +89,8 @@
             </div>
           </div>
           <!-- Lower Filter (Practice filters) -->
-          <div class="flex lg:flex-row flex-col justify-start items-center w-full">
-            <div class="md:px-1 mb-4">
+          <div class="flex w-full">
+            <div class="w-1/4 md:px-1 mb-4">
               <AppInputSmall 
                 v-model="search"
                 :type="'text'"
@@ -103,11 +103,12 @@
 						<div>
 							<AppButton
 								class="mx-3 mt-1 font-bold"
+								:customTheme="'border-2 rounded'"
 								:label="alphabeticalOrder ? 'Sort Practice Name Z-A' : 'Sort Practice Name A-Z'"
 								@click="alphabeticalOrder = !alphabeticalOrder"
 							/>
 						</div>
-						<div class="flex flex-col lg:flex-row mx-4 text-xs md:text-sm">
+						<div class="flex mx-4 text-xs md:text-sm">
 							<div>
 								<input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
 								<label for="standAloneOnly">Show Stand Alone Practices Only</label>
@@ -148,7 +149,6 @@
     </div>
     <div v-else class="border-b-2 border-white mt-2">
       <div
-        style="min-width: 768px; max-width: 1200px" 
         class="hidden md:flex justify-around font-semibold w-full px-4"
       >
         <div class="flex flex-row w-full pb-3 text-sm justify-around">
@@ -238,8 +238,8 @@
         </div>
       </div>
 
-      <div class="w-full h-160 overflow-y-auto rounded-lg">
-        <!-- BODY -->
+			<!-- OLD -->
+      <!-- <div class="w-full h-160 overflow-y-auto rounded-lg">
         <div class="px-2 overflow-x-hidden">
           <AppTable
             :total="itemCount"
@@ -292,7 +292,6 @@
               <div
                 class="md:justify-center md:w-full px-1 xl:px-2 align-middle md:text-center overflow-x-hidden"
               >
-                <!-- <div class="w-full"> -->
                 <AppTableNew
                   :total="slotProps.item.practice_invoiceable_job_parts.length"
                   :items="slotProps.item.practice_invoiceable_job_parts"
@@ -339,12 +338,99 @@
                     <div>{{ slotProps.item.job_part_items_disputed_at ? slotProps.item.job_part_items_disputed_at : 'N/A' }}</div>
                   </template>
                 </AppTableNew>
-                <!-- </div> -->
               </div>
             </template>
           </AppTable>
         </div>
-      </div>
+      </div> -->
+			
+			<!-- New -->
+			<div v-for="item in allBillablePractices" :key="item.id" >
+				<div class="flex flex-row m-2 ">
+					<div class="w-1/5 rounded-l-lg flex flex-col items-center bg-gray-300 justify-between">
+						<div>
+							<div class="text-left">
+								{{ item.name }}
+							</div>
+							<div
+								class="m-1 rounded-full text-center px-4 py-1 w-32"
+								:class="typeStyle(item.type)"
+							>
+								{{ item.type }}
+							</div>
+							<div
+								v-if="item.type === 'Spoke' && item.parent_practice"
+								class="text-blue-400 m-1"
+							>
+								{{ item.parent_practice.name }} (HUB)
+							</div>
+							<div class="m-1">
+								<input
+									:id="item.id"
+									v-model="chosenPractices"
+									type="checkbox"
+									:value="item"
+									@click="toggleCheckPracticeCheckAll(item)"
+								>
+								<label :for="item.id">Select All</label>
+							</div>
+							<div>
+								Picked {{ chosenPracticeJobParts.filter(item => item.practice_id === item.id).length }} of {{ item.practice_invoiceable_job_parts.length }}
+							</div>
+						</div>
+					</div>
+					<div class="w-4/5">
+						<AppTableNew
+							:total="item.practice_invoiceable_job_parts.length"
+							:items="item.practice_invoiceable_job_parts"
+							:columns="jobPartsColumns"
+							:disabledPagination="true"
+							:disabledHeadings="true"
+							:customWidth="'w-full overflow-x-hidden'"
+							:customItemsWidth="'w-full md:w-8/10 cursor-default'"
+							@checkClicked="toggleCheckJobParts"
+							@sorted="sorted"
+						>
+							<template v-slot:checker="slotProps">
+								<input
+									:id="slotProps.item"
+									v-model="chosenPracticeJobParts"
+									type="checkbox"
+									:value="slotProps.item"
+								>
+								<label :for="slotProps.item" />
+							</template>
+							<template v-slot:approved_completed_at="slotProps">
+								<div>{{ slotProps.item.approved_at_in_gb_formatted ? slotProps.item.approved_at_in_gb_formatted : slotProps.item.completed_at_in_gb_formatted }}</div>
+							</template>
+							<template v-slot:status_slot="slotProps">
+								<div
+									:class="statusStyle(slotProps.item.invoice_status === 'To Be Invoiced'
+										? slotProps.item.status === 'Cancelled'
+											? slotProps.item.status 
+											: slotProps.item.invoice_status  
+										: slotProps.item.invoice_status === 'Disputed'
+											? slotProps.item.invoice_status 
+											: slotProps.item.status )"
+								>
+									{{ slotProps.item.invoice_status === 'To Be Invoiced'
+										? slotProps.item.status === 'Cancelled'
+											? slotProps.item.status
+											: slotProps.item.invoice_status
+										: slotProps.item.invoice_status === 'Disputed'
+											? slotProps.item.invoice_status
+											: slotProps.item.status }}
+								</div>
+							</template>
+							<template v-slot:job_part_items_disputed_at_slot="slotProps">
+								<div>{{ slotProps.item.job_part_items_disputed_at ? slotProps.item.job_part_items_disputed_at : 'N/A' }}</div>
+							</template>
+						</AppTableNew>
+					</div>
+				</div>
+			</div>
+
+			
       <AppPagination
         :total="itemCount"
         :totalPages="totalPages"
@@ -355,7 +441,7 @@
     </div>
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  JOB PART PICKER ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     
-		<div class="flex flex-row justify-end mt-4">
+    <div class="flex flex-row justify-end mt-4">
       <div class="flex flex-col">
         <div 
           v-if="!billing_period_date_start 
@@ -401,22 +487,7 @@
         </div>
       </div>
     </div>
-
-    <div
-      v-if="
-        $route.name.includes('index-billings-id') ||
-          $route.name.includes('index-billings-addinvoice')
-      "
-      class="billing-shield"
-      @click="$router.push(`/billings`)"
-    />
-    <div
-      v-if="showSessionsModal === true"
-      class="billing-shield"
-      @click="clearInvoiceableJobParts()"
-    />
-    <nuxt-child />
-  </div>
+  </section>
 </template>
 <script>
 import debounce from "lodash.debounce"
@@ -873,6 +944,14 @@ export default {
 				this.practiceParams.practice_invoiceable_status = this.practiceParams.practice_invoiceable_status.filter(item => item !== 'Invoiced')
 				this.getBillablePractices()
 			}
+		},
+
+		chosenPractices (value) {
+			console.log('chosenPractices', value)
+		},
+
+		chosenPracticeJobParts (value) {
+			console.log('chosenPracticeJobParts', value)
 		}
 	},
 
@@ -911,6 +990,7 @@ export default {
 	},
 	methods: {
 		toggleCheckPracticeCheckAll (item) {
+			console.log('chosenPractices', this.chosenPractices)
 			const index = this.chosenPractices.findIndex(practice => {
 				return practice.id === item.id
 			})

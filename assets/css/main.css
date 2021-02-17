@@ -189,6 +189,16 @@ a {
 	}
 } */
 
+
+.masonry-container {
+	column-count: 1;
+	column-gap: 0;
+}
+
+.masonry-container .item {
+	break-inside: avoid;
+}
+
 table {
 	width: 100%;
 	min-width: 0;
@@ -435,6 +445,14 @@ table thead th {
 
 /* scrollbar */
 @media screen and (min-width: 768px) {
+	.masonry-container.two {
+		column-count: 2;
+		column-gap: 0;
+	}
+	.masonry-container.three {
+		column-count: 2;
+		column-gap: 0;
+	}
 	/* width */
 	::-webkit-scrollbar {
 		width: 8px;
@@ -659,6 +677,11 @@ input::placeholder, textarea::placeholder {
 }
 
 @media screen and (min-width: 1200px) {
+	.masonry-container.three {
+		column-count: 3;
+		column-gap: 0;
+	}
+	
   .report-modal {
     width: 80%;
   }
