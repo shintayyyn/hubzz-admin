@@ -1,20 +1,9 @@
 <template>
-  <div class="support-modal p-4 md:p-8 shadow-lg">
+  <div class="p-4 md:p-8 shadow-lg">
     <transition name="fade" mode="out-in">
       <div>
-        <div class="flex justify-between text-sm text-white">
-          <div class="text-white mb-3 cursor-pointer" @click="goBack()">
-            <svgicon
-              name="arrow-left-solid"
-              height="32"
-              width="32"
-              class="text-white hover:text-sunglow fill-current"
-            />
-          </div>
-        </div>
-
         <div class="flex flex-wrap overflow-hidden border-b border-sunglow">
-          <div class="flex-col text-white w-full mb-2 m-2 pb-3 text-sm md:text-base">
+          <div class="flex-col w-full mb-2 m-2 pb-3 text-sm md:text-base">
             <div class="flex justify-between my-1">
               <div>
                 <span class="w-24 pr-3">Date Sent:</span>
@@ -33,7 +22,7 @@
                 :label="'Acknowledge'"
                 @click="acknowledgeInquiry()"
               />
-              <div v-else class="-my-1 text-white font-semibold">
+              <div v-else class="-my-1 font-semibold">
                 <div class="flex p-2 m-2 bg-green-500 rounded-lg">
                   <div class="flex mr-2">
                     <svgicon name="circle-check" width="23" height="23" color="white" />
@@ -66,7 +55,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col rounded-lg bg-waterloo text-white py-2 px-4 w-full h-full break-words my-2 md:mx-2">
+        <div class="flex flex-col rounded-lg py-2 px-4 w-full h-full break-words my-2 md:mx-2 shadow-lg">
           <span class="message whitespace-pre-line">
             {{ email.message }}
           </span>

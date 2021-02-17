@@ -1,23 +1,17 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-compliance-document-reject-reasons' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
+  <div style="transition: all 0.3s ease-in-out;">
+    <div class="flex-1 flex flex-col self-end">
       <AppLoading :loading="loadingComplianceDocuments" spinner />
 
       <div class="py-4">
-        <div class="mx-2 md:mx-4 text-white">
+        <div class="mx-2 md:mx-4 ">
           <div class="text-lg font-bold">
             Create Compliance Document Reject Reason
           </div>
         </div>
 
-        <div class="mx-2 md:mx-4 flex text-white my-4 py-2 px-3 bg-waterloo-dark shadow rounded-lg text-sm max-w-lg">
-          <div class="w-full text-gray-300 text-sm p-2">
+        <div class="mx-2 md:mx-4 flex  my-4 py-2 px-3 shadow rounded-lg text-sm max-w-lg">
+          <div class="w-full  text-sm p-2">
             <AppInput 
               v-model="complianceDocumentId"
               type="select"

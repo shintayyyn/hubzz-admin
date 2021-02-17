@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mt-5">
+    <div class="m-5">
       <transition name="fade" mode="out-in">
         <PracticeProfile
           v-if="practice"

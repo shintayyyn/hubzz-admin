@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col bg-trout">
+  <div>
     <AppSideBar
       :unseenLocumNotificationsCount="unseenLocumNotificationsCount"
       :unseenPracticeNotificationsCount="unseenPracticeNotificationsCount"
@@ -10,12 +10,6 @@
       <SignOut v-if="showLogoutModal" @modal="(value) => showLogoutModal = value" @logout="logout" />
     </transition>
     
-    <div v-if="showLogoutModal" class="signout-shield" @click="showLogoutModal = false" />
-
-    <div v-if="sessionExpiring" class="signout-shield" />
-
-    <div v-if="$store.state.toggled_sidebar" class="sidebar-shield" @click="closeSideBar" />
-
     <transition name="drop" mode="out-in">
       <SessionExpiring @logout="logout" />
     </transition>
@@ -29,7 +23,7 @@
       @closePopUpNotification="closePopUpNotification"
     />
     
-    <div class="content h-screen flex flex-col justify-between">
+    <div class="content h-screen flex flex-col">
       <AppHeader
         :unseenNotificationsCount="unseenNotificationsCount"
         :notifications="sortedNotifications"
@@ -37,9 +31,16 @@
         @seenAllNotifications="seenAllNotifications"
         @goToNotification="goToNotification"
       />
-
-      <nuxt class="overflow-y-auto" />
+      <div class="overflow-y-auto">
+        <nuxt />
+      </div>
     </div>
+
+    <!-- <div v-if="$store.state.toggled_sidebar" class="signout-shield" @click="closeSideBar" /> -->
+    
+    <div v-if="showLogoutModal" class="signout-shield" @click="showLogoutModal = false" />
+
+    <div v-if="sessionExpiring" class="signout-shield" />
   </div>
 </template>
 
@@ -352,6 +353,9 @@
 </script>
 
 <style>
+  .default {
+    background-color: white
+  }
 	.content {
 		margin-left: 0;
 		min-height: 100vh;

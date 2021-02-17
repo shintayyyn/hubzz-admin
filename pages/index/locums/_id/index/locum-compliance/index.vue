@@ -1,16 +1,17 @@
 <template>
-  <div class="mt-5">
-    <AppLoading :loading="loadingCompliances" :message="'Loading compliances'" />
+  <section class="mt-5">
+    <template v-if="$route.name === 'index-locums-id-index-locum-compliance'">
+      <AppLoading :loading="loadingCompliances" :message="'Loading compliances'" />
     
-    <LocumCompliance 
-      v-if="locumUser"
-      :user="locumUser"
-      @complianceUpdated="complianceUpdatedHandler"
-      @loadingCompliances="(_loadingCompliances) => loadingCompliances = _loadingCompliances"
-    />
-
+      <LocumCompliance 
+        v-if="locumUser"
+        :user="locumUser"
+        @complianceUpdated="complianceUpdatedHandler"
+        @loadingCompliances="(_loadingCompliances) => loadingCompliances = _loadingCompliances"
+      />
+    </template>
     <nuxt-child :locumUser="locumUser" />
-  </div>
+  </section>
 </template>
 
 <script>

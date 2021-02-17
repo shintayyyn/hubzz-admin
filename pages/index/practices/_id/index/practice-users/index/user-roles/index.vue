@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppTable
+    <AppTableNew
       v-if="total > 0"
       :total="total"
       :items="practice_roles"
@@ -13,10 +13,10 @@
   </div>
 </template>
 <script>
-import AppTable from '@/components/Base/AppTable'
+import AppTableNew from '@/components/Base/AppTableNew'
 export default {
   components:{
-    AppTable
+    AppTableNew
   },
   data (){
     return{

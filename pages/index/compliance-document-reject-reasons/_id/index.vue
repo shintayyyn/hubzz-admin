@@ -1,15 +1,6 @@
 <template>
-  <div
-    class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg"
-    style="transition: all 0.3s ease-in-out;"
-  >
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-compliance-document-reject-reasons' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
+  <div style="transition: all 0.3s ease-in-out;">
+    <div class="flex-1 flex flex-col self-end">
       <AppLoading :loading="loading" spinner />
 
       <AppConfirm
@@ -20,7 +11,7 @@
       />
 
       <div class="py-4">
-        <div class="mx-2 md:mx-4 text-white">
+        <div class="mx-2 md:mx-4 ">
           <div class="text-lg font-bold">
             View Compliance Document Reject Reason
           </div>
@@ -29,39 +20,39 @@
 
       <div v-if="!loading && complianceDocumentRejectReason">
         <div
-          class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg bg-waterloo shadow"
+          class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg shadow"
           style="position:relative;"
         >
           <div class="w-4/5 overflow-hidden text-sm m-4">
-            <div class="text-gray-400">
+            <div>
               <p class="m-2">
                 <span>ID</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason.id }}</span>
+                <span class="m-2 ">{{ complianceDocumentRejectReason.id }}</span>
               </p>
 
               <p class="m-2">
                 <span>Compliance Document</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason.compliance_document_name }}</span>
+                <span class="m-2 ">{{ complianceDocumentRejectReason.compliance_document_name }}</span>
               </p>
 
               <p class="m-2">
                 <span>Reject Reason</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason.reject_reason }}</span>
+                <span class="m-2 ">{{ complianceDocumentRejectReason.reject_reason }}</span>
               </p>
 
               <p v-if="false" class="m-2">
                 <span>Created At</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason.created_at_formatted || 'N/A' }}</span>
+                <span class="m-2 ">{{ complianceDocumentRejectReason.created_at_formatted || 'N/A' }}</span>
               </p>
 
               <p v-if="false" class="m-2">
                 <span>Updated At</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason.updated_at_formatted || 'N/A' }}</span>
+                <span class="m-2 ">{{ complianceDocumentRejectReason.updated_at_formatted || 'N/A' }}</span>
               </p>
 
               <p v-if="complianceDocumentRejectReason.deleted_at_formatted" class="m-2">
                 <span>Deleted At</span>
-                <span class="m-2 text-white">{{ complianceDocumentRejectReason.deleted_at_formatted }}</span>
+                <span class="m-2 ">{{ complianceDocumentRejectReason.deleted_at_formatted }}</span>
               </p>
             </div>
 
@@ -70,9 +61,9 @@
                 v-if="authAdminPermissions.includes('Edit Compliance Document Reject Reasons')"
                 class="mt-2"
                 background="blue"
-                inClass="text-white"
+                inClass=""
                 :label="'Edit'"
-                :nuxtLink="{ name: 'index-compliance-document-reject-reasons-id-edit', params: $route.params }"
+                @click="$router.push(`/compliance-document-reject-reasons/${$route.params.id}/edit`)"
                 :draggable="false"
               />
 
@@ -80,7 +71,7 @@
                 v-if="authAdminPermissions.includes('Delete Compliance Document Reject Reasons')"
                 class="ml-2 mt-2"
                 background="red"
-                inClass="text-white"
+                inClass=""
                 :label="deletingComplianceDocumentRejectReason ? 'Deleting...' : 'Delete'"
                 @click="showDeleteModal = true"
               />

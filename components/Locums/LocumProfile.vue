@@ -1,5 +1,5 @@
 <template>
-  <div class="flex xs:flex-col my-3 text-sm no-underline shadow-lg rounded-lg bg-waterloo shadow mx-4 md:mx-8">
+  <div class="flex xs:flex-col text-sm no-underline">
     <transition name="drop" mode="out-in">
       <AppConfirm
         v-if="confirm"
@@ -27,7 +27,7 @@
     </transition>
 
     <div class="inline-flex">
-      <div class="w-full flex flex-wrap overflow-hidden text-gray-300 py-4 md:py-0">
+      <div class="w-full flex flex-wrap overflow-hidden -300 py-4 md:py-0">
         <!--COLUMN 1-->
         <div class="flex flex-col order-2 md:order-1 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6">
@@ -266,7 +266,7 @@
               >
                 <a
                   v-if="userComplianceDoc.file"
-                  class="text-gray-300 flex items-center"
+                  class="-300 flex items-center"
                   :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
                   @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
@@ -293,7 +293,7 @@
               >
                 <a
                   v-if="userMandatoryTraining.file"
-                  class="text-gray-300 flex items-center cursor-pointer hover:text-yellow-500"
+                  class="-300 flex items-center cursor-pointer hover:text-yellow-500"
                   :class="authAdminPermissions.includes('Download Locum Compliance Documents') ? 'cursor-pointer hover:text-yellow-500' : ''"
                   title="Click to download"
                   @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
@@ -320,7 +320,7 @@
               class="w-48 rounded-full mx-auto"
               src="~/assets/images/default-user-image.png"
             >
-            <p class="m-2 text-gray">
+            <p class="m-2 ">
               Sign-up verified by email
             </p>
             <p
@@ -328,7 +328,7 @@
             >
               {{ user.is_email_verified ? "Account is E-Mail Verified":"Account is not E-Mail Verified" }}
             </p>
-            <!-- <p class="m-2 text-gray">Active at </p> -->
+            <!-- <p class="m-2 ">Active at </p> -->
             <div class="my-4">
               <span class="m-2">Account is</span>
               <span class="rounded p-1 px-3" :class="statusStyle(user.status)">{{ user.status }}</span>
@@ -338,7 +338,7 @@
               v-if="user.status !== 'Bogus' && user.status !== 'Active' && user.status !== 'Dormant' && !user.first_actived_at"
               :label="'Mark as Bogus'"
               class="mx-auto"
-              :inClass="'mt-2 bg-red-700 hover:bg-red-800 text-white'"
+              :inClass="'mt-2 bg-red-700 hover:bg-red-800 '"
               :background="''"
               @click="confirmBogus = true"
             /> -->
@@ -347,7 +347,7 @@
               v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Deactivate Locum')"
               :label="'Deactivate this Account'"
               class="mx-auto"
-              :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+              :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
               :background="''"
               @click="confirm = true"
             />
@@ -676,17 +676,17 @@
       statusStyle (status) {
 				switch (status) {
 					case 'Active':
-						return 'bg-green-500 text-white'
+						return 'bg-green-500 '
 					case 'Inactive':
-						return 'bg-gray-500 text-gray-700'
+						return 'bg-gray-500 -700'
 					case 'Deactivated':
 						return 'bg-red-800 text-red-400'
 					case 'Account Suspension':
-						return 'bg-red-600 text-white'
+						return 'bg-red-600 '
 					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
+						return 'bg-red-600 '
 					case 'Dormant':
-						return 'bg-orange-500 text-white'
+						return 'bg-orange-500 '
 					default:
 						return
         }

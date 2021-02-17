@@ -7,12 +7,12 @@
             name="arrow-left-solid"
             height="32"
             width="32"
-            class="fill-current cursor-pointer text-white hover:text-sunglow"
+            class="fill-current cursor-pointer text-black hover:text-sunglow"
             @click="$emit('close')"
           />
         </div>
         <template v-if="jobPartCount > 0">
-          <AppTable
+          <AppTableNew
             :router-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`"
             :total="jobPartCount"
             :items="jobParts"
@@ -53,7 +53,7 @@
                 {{ slotProps.item.status }}
               </div>
             </template>
-          </AppTable>
+          </AppTableNew>
           <AppButton 
             :label="'Confirm'"
             :disabled="(chosenJobParts.length) < 1 ? true : false " 
@@ -80,12 +80,12 @@
   </div>
 </template>
 <script>
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 import AppButton from "@/components/Base/AppButton"
 export default {
 	components: {
 		AppButton,
-		AppTable
+		AppTableNew
 	},
 	props: {
 		filter: {

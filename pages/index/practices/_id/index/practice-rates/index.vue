@@ -1,11 +1,11 @@
 <template>
-  <div class="mt-5">
+  <div class="m-5">
     <div class="flex flex-col rounded-lg">
       <div
-        class="w-full flex text-white text-sm bg-waterloo p-2 shadow rounded-lg"
+        class="w-full flex  text-sm  p-2 shadow-lg rounded-lg"
         style="max-width: 600px"
       >
-        <div v-if="!editing" class="relative w-full overflow-hidden text-gray-300 text-sm px-2 md:p-2">
+        <div v-if="!editing" class="relative w-full overflow-hidden  text-sm px-2 md:p-2">
           <button
             v-if="authAdminPermissions.includes('Create New or Edit Practice Rates')"
             class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
@@ -18,7 +18,7 @@
             GP Rate (Per Hour)
           </div>
           <div
-            class="text-white text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
+            class=" text-lg font-semibold mx-3 mb-2 leading-tight focus:outline-none"
           >
             {{ gpRate }}
           </div>
@@ -26,7 +26,7 @@
             Others Rate (Per Hour)
           </div>
           <div
-            class="text-white text-lg font-semibold mx-3 leading-tight focus:outline-none"
+            class=" text-lg font-semibold mx-3 leading-tight focus:outline-none"
           >
             {{ othersRate }}
           </div>
@@ -34,7 +34,7 @@
 
         <div
           v-if="editing && authAdminPermissions.includes('Create New or Edit Practice Rates')"
-          class="w-full overflow-hidden text-gray-300 text-sm p-2"
+          class="w-full overflow-hidden  text-sm p-2"
         >
           <div class="flex items-center justify-between py-1">
             GP Rate (Per Hour)
@@ -42,8 +42,8 @@
           <!--  @blur="CheckEmptyField(toPutPracticeRate.gp_rate, 'gp_rate')" -->
           <input
             v-model.number="toPutPracticeRate.gp_rate"
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('gp_rate') && 'border-red-800'"
+            class="appearance-none bg-transparent border-b w-full  mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('gp_rate') && 'border-red-600'"
             step="any"
             aria-label
            
@@ -51,7 +51,7 @@
           >
           <div
             v-if="formError.filter(item => item.field === 'gp_rate')"
-            class="text-red-800 text-xs capitalize pt-1"
+            class="text-red-600 text-xs capitalize pt-1"
           >
             {{ errorMessage("gp_rate") }}
           </div>
@@ -62,15 +62,15 @@
           <!-- @blur="CheckEmptyField(toPutPracticeRate.others_rate, 'others_rate')" -->
           <input
             v-model.number="toPutPracticeRate.others_rate"
-            class="appearance-none bg-transparent border-b w-full text-white mr-3 py-3 px-2 leading-tight focus:outline-none"
-            :class="errorMessage('others_rate') && 'border-red-800'"
+            class="appearance-none bg-transparent border-b w-full  mr-3 py-3 px-2 leading-tight focus:outline-none"
+            :class="errorMessage('others_rate') && 'border-red-600'"
             step="any"
             aria-label="newtext"
             @keypress="keyPressHandler"
           >
           <div
             v-if="formError.filter(item => item.field === 'others_rate')"
-            class="text-red-800 text-xs capitalize pt-1"
+            class="text-red-600 text-xs capitalize pt-1"
           >
             {{ errorMessage("others_rate") }}
           </div>
@@ -154,7 +154,9 @@ export default {
 			const index = this.formError.findIndex(
 				error =>
 					error.field === "gp_rate" &&
-					error.message === "Please input a numerical info for GP"
+					error.message === "Please input a numerical info for GP" || 
+					(error.field === "gp_rate" &&
+					error.message === "Value should be greater than 0")
 			)
 
 			if (index > -1) {
@@ -167,13 +169,22 @@ export default {
 					message: "Please input a numerical info for GP"
 				})
 			}
+
+			if (value <= 0) {
+				this.formError.push({
+					field: "gp_rate",
+					message: "Value should be greater than 0"
+				})
+			}
 		},
 
 		"toPutPracticeRate.others_rate" (value) {
 			const index = this.formError.findIndex(
 				error =>
-					error.field === "others_rate" &&
-					error.message === "Please input a numerical info for Others"
+					(error.field === "others_rate" &&
+					error.message === "Please input a numerical info for Others") || 
+					(error.field === "others_rate" &&
+					error.message === "Value should be greater than 0")
 			)
 
 			if (index > -1) {
@@ -184,6 +195,13 @@ export default {
 				this.formError.push({
 					field: "others_rate",
 					message: "Please input a numerical info for Others"
+				})
+			}
+
+			if (value <= 0) {
+				this.formError.push({
+					field: "others_rate",
+					message: "Value should be greater than 0"
 				})
 			}
 		}
@@ -279,51 +297,60 @@ export default {
 		async updatePracticeRates () {
 			this.loading = true
 
-			if (this.toPutPracticeRate.gp_rate === 0 
-				|| this.toPutPracticeRate.gp_rate === null 
-				|| this.toPutPracticeRate.gp_rate === '') {
-				this.toPutPracticeRate === 0.00
+			// if (this.toPutPracticeRate.gp_rate === 0 
+			// 	|| this.toPutPracticeRate.gp_rate === null 
+			// 	|| this.toPutPracticeRate.gp_rate === '') {
+			// 	this.toPutPracticeRate === 0.00
+			// }
+			// if (this.toPutPracticeRate.others_rate === 0 
+			// 	|| this.toPutPracticeRate.others_rate === null 
+			// 	|| this.toPutPracticeRate.others_rate === '') {
+			// 	this.toPutPracticeRate === 0.00
+			// }
+
+			if (this.formError.length === 0) {
+				await this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}/rates`, {
+					gp_rate: this.toPutPracticeRate.gp_rate,
+					others_rate: this.toPutPracticeRate.others_rate
+				}).then((response) => {
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "success",
+						text: "Saved"
+					})
+
+					const practice = response.data.data.practice
+					
+					console.log('response', response.data.data.practice)
+					
+					this.$emit('practiceUpdated', practice)
+
+					this.editing = false
+				}).catch(err => {
+					console.log("err", err.response || err)
+
+					let message = "Something went wrong!"
+
+					if (err.response && err.response.data && err.response.data.message) {
+						message = err.response.data.message
+					}
+
+					this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: message
+					})
+				}).finally(() => {
+					this.loading = false
+				})
+			} else {
+				this.loading = false
+				this.$store.commit("SET_NOTIFICATION", {
+					enabled: true,
+					status: "danger",
+					text: this.formError[0].message
+				})
 			}
-			if (this.toPutPracticeRate.others_rate === 0 
-				|| this.toPutPracticeRate.others_rate === null 
-				|| this.toPutPracticeRate.others_rate === '') {
-				this.toPutPracticeRate === 0.00
-			}
-
-			await this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}/rates`, {
-        gp_rate: this.toPutPracticeRate.gp_rate,
-        others_rate: this.toPutPracticeRate.others_rate
-      }).then((response) => {
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "success",
-          text: "Saved"
-        })
-
-				const practice = response.data.data.practice
-				
-				console.log('response', response.data.data.practice)
-        
-        this.$emit('practiceUpdated', practice)
-
-        this.editing = false
-      }).catch(err => {
-        console.log("err", err.response || err)
-
-        let message = "Something went wrong!"
-
-        if (err.response && err.response.data && err.response.data.message) {
-          message = err.response.data.message
-        }
-
-        this.$store.commit("SET_NOTIFICATION", {
-          enabled: true,
-          status: "danger",
-          text: message
-        })
-      }).finally(() => {
-        this.loading = false
-      })
 		},
 
 		setRate () {

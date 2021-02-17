@@ -1,13 +1,17 @@
 <template>
   <div>
-    <LocumCompletedJobs :user="user" />
+    <JobsLists 
+      :locumUser="user"
+      :status="['Completed', 'Terminated']"
+      :jobDenom="'Job Parts'"
+    />
   </div>
 </template>
 <script>
-import LocumCompletedJobs from '@/components/Locums/Jobs/LocumCompletedJobs'
+import JobsLists from '@/components/JobsLists'
 export default {
   components:{
-    LocumCompletedJobs
+    JobsLists
   },
   computed:{
     user (){

@@ -1,11 +1,6 @@
 <template>
-  <div ref="modalContainer" class="modal shadow-lg">
-    <div class="flex-1 flex flex-col self-end text-white m-6">
-      <div class="flex justify-between text-sm text-white my-2">
-        <nuxt-link :to="{ name: 'index-test-script-job-scripts' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
+  <div ref="modalContainer">
+    <div class="flex-1 flex flex-col self-end">
       <div class="text-xl font-bold w-full border-b-2 my-4">
         Create a new job
       </div>
@@ -25,22 +20,22 @@
         </div>
       </div>
 
-      <div v-if="showCriteriaInputs" class="font-bold text-xl">
+      <div v-if="showCriteriaInputs" class="font-bold">
         2. Job Status
         <div class="flex flex-row">
-          <div class="mx-3 text-lg">
+          <div class="mx-3">
             <input id="live" v-model="jobStatus" type="radio" value="Live">
             <label for="live">Live</label>
           </div>
-          <div class="mx-3 text-lg">
+          <div class="mx-3">
             <input id="applied" v-model="jobStatus" type="radio" value="Applied">
             <label for="applied">Applied</label>
           </div>
-          <div class="mx-3 text-lg">
+          <div class="mx-3">
             <input id="allocated" v-model="jobStatus" type="radio" value="Allocated">
             <label for="allocated">Allocated</label>
           </div>
-          <div class="mx-3 text-lg">
+          <div class="mx-3">
             <input id="ongoing" v-model="jobStatus" type="radio" value="Ongoing">
             <label for="ongoing">Ongoing</label>
           </div>
@@ -489,7 +484,7 @@
       <transition name="fade">
         <div
           v-if="toPublish"
-          class="job-notification-modal p-4 rounded font-bold text-white"
+          class="job-notification-modal p-4 rounded font-bold "
         >
           <p
             class="text-center pb-2 mb-4 border-b-2 border-gray-600 text-lg font-bold"
@@ -1805,19 +1800,19 @@ export default {
 		statusStyle (status) {
 			switch (status) {
 				case 'Active':
-					return 'bg-green-500 text-white'
+					return 'bg-green-500 '
 				case 'Inactive':
 					return 'bg-gray-500 text-gray-700'
 				case 'Deactivated':
 					return 'bg-red-800 text-red-400'
 				case 'Account Suspension':
-					return 'bg-red-600 text-white'
+					return 'bg-red-600 '
 				case 'Compliance Suspension':
-					return 'bg-red-600 text-white'
+					return 'bg-red-600 '
 				case 'Dormant':
-					return 'bg-orange-500 text-white'
+					return 'bg-orange-500 '
 				case 'Bogus':
-					return 'bg-gray-700 text-white'
+					return 'bg-gray-700 '
 				default:
 					return
 			}
@@ -1826,19 +1821,19 @@ export default {
 		complianceStatusStyle (status) {
 			switch (status) {
 				case 'Empty':
-					return 'border border-white text-white'
+					return 'border border-white '
 				case 'Incomplete':
-					return 'bg-orange-600 text-white'
+					return 'bg-orange-600 '
 				case 'Pending':
 					return 'bg-yellow-500 text-yellow-800'
 				case 'Expiring':
-					return 'bg-red-400 text-white'
+					return 'bg-red-400 '
 				case 'Expired':
 					return 'bg-red-800 text-red-400'
 				case 'Rejected':
-					return 'bg-red-600 text-white'
+					return 'bg-red-600 '
 				case 'Compliant':
-					return 'bg-green-500 text-white'
+					return 'bg-green-500 '
 				default:
 					return
 			}

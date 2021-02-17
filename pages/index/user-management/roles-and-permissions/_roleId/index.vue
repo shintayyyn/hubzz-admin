@@ -1,15 +1,6 @@
 <template>
-	<div ref="modalContainer" class="role-modal">
-		<div class="p-4 md:p-6 text-white">
-			<div class="pb-4">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					widht="32"
-					class="cursor-pointer text-white hover:text-sunglow fill-current"
-					@click="goBack()"
-				/>
-			</div>
+	<div ref="modalContainer">
+		<div class="p-4 md:p-6">
 			<div class="flex flex-row items-start justify-between flex-wrap">
 				<div class="flex items-center justify-between w-full leading-tight">
 					<div class="text-2xl md:text-4xl font-bold md:font-normal">{{ role.name }}</div>
@@ -59,7 +50,7 @@
 			</div>
 			<!-- SHOW ROLE PERMISSIONS -->
 			<div class="my-2 md:my-4" v-if="editingPermissions == false">
-				<div class="masorny-container three overflow-hidden">
+				<div class="masonry-container three overflow-hidden">
 					<div
 						class="item pb-3 md:pt-1"
 						v-if="rolePermissions.find(permission => permission.category === 'Locum')"
@@ -225,7 +216,7 @@
 						</div>
 					</div>
 				</div>-->
-				<div class="masorny-container three">
+				<div class="masonry-container three">
 					<div class="item p-2" v-for="(role, index) in permissions" :key="index">
 						<div class="flex flex-col">
 							<div class="w-full flex flex-row items-center pb-1">

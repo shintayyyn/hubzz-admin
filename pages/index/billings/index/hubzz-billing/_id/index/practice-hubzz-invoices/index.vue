@@ -1,15 +1,16 @@
 <template>
   <div class="w-full overflow-hidden">
-    <div class="flex flex-row mx-2 float-right">
+    <div class="flex justify-end mx-4">
       <AppButton
         v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
-        class="my-2 text-sm"
+        class="text-sm"
         :disabled="!practice.sage_ref ? true : false"
         :label="'Issue HUBZZ Invoice'"
-        @click="issueHubzzInvoice()"
+        @click="issueHubzzInvoice"
       />
     </div>
-    <AppTable
+    
+    <AppTableNew
       v-if="hubzzInvoicesCount> 0"
       :total="hubzzInvoicesCount"
       :items="hubzzInvoices"
@@ -90,7 +91,7 @@
           </span>
         </div>
       </template>
-    </AppTable>
+    </AppTableNew>
 
     <template v-else>
       <div class="m-2 w-full text-center text-white">
@@ -200,12 +201,11 @@
         </div>
       </div>
     </transition>
-
-    <div v-if="showPaidModal == true" class="billing-shield" @click="closeModals()" />
   </div>
 </template>
 <script>
 import AppButton from "@/components/Base/AppButton"
+import AppTableNew from "@/components/Base/AppTableNew"
 import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 // import AppDate from "@/components/Base/AppDate"
@@ -215,6 +215,7 @@ export default {
 	components: {
 		AppButton,
 		AppTable,
+    AppTableNew,
 		AppDateToggled,
 		// AppDate,
     AppConfirm,
@@ -387,6 +388,7 @@ export default {
   
 	methods: {
     issueHubzzInvoice () {
+      console.log('banana')
       this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`)
     },
 

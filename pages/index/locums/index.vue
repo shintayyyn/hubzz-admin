@@ -1,193 +1,145 @@
 <template>
-  <div 
-    v-if="authAdminPermissions.includes('View Locums') 
-      || authAdminPermissions.includes('View Locum Jobs')
-      || authAdminPermissions.includes('View Locum Compliance Detail')"
-    class="flex-1 flex flex-col md:px-6 overflow-y-auto"
-  >
-    <div class="flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex py-2">
-        <div class="relative">
-          <input
-            v-model="search"
-            style="width: 280px;"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Locum by Name"
-            @keyup.enter="searchSubmit"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div>
-      </div>
-
-      <div class="flex flex-col w-full justify-end">
-        <div
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Status</label>
-          <select
-            id="grid-state"
-            v-model="filterStatus"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Active</option>
-            <option>Dormant</option>
-            <option>Inactive</option>
-            <option>Bogus</option>
-            <option>Deactivated</option>
-            <option>Account Suspension</option>
-            <option>Compliance Suspension</option>
-          </select>
-        </div>
-
-        <div
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Compliance Status</label>
-          <select
-            id="grid-state"
-            v-model="filterCompliances"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Empty</option>
-            <option>Incomplete</option>
-            <option>Pending</option>
-            <option>Expiring</option>
-            <option>Expired</option>
-            <option>Rejected</option>
-            <option>Compliant</option>
-          </select>
-        </div>
-
-        <div
-          class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
-        >
-          <label class="text-sm text-white md:pr-2">Sort by</label>
-          <select
-            v-model="orderByValue"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option value="id">
-              ID (asc)
-            </option>
-            <option value="id:desc">
-              ID (desc)
-            </option>
-            <option value="name">
-              Name (asc)
-            </option>
-            <option value="name:desc">
-              Name (desc)
-            </option>
-            <option value="email">
-              E-Mail Address (asc)
-            </option>
-            <option value="email:desc">
-              E-Mail Address (desc)
-            </option>
-            <option value="profession">
-              Profession (asc)
-            </option>
-            <option value="profession:desc">
-              Profession (desc)
-            </option>
-            <option value="created_at">
-              Date Signed-up (asc)
-            </option>
-            <option value="created_at:desc">
-              Date Signed-up (desc)
-            </option>
-            <option value="status">
-              Status (asc)
-            </option>
-            <option value="status:desc">
-              Status (desc)
-            </option>
-            <option value="compliance_status">
-              Compliance Status (asc)
-            </option>
-            <option value="compliance_status:desc">
-              Compliance Status (desc)
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <AppTable
-      v-if="count !== 0"
-      :total="count"
-      :items="locumUsers"
-      :currentPage="currentPage"
-      :perPage="limit"
-      :columns="columns"
-      :loading="loading"
-      :routerLink="`/locums`"
-      :orderBy="orderBy"
-      @pagechanged="pageChangedHandler"
-      @sorted="(_orderBy) => orderBy = _orderBy"
+  <section class="flex-1 flex flex-col overflow-y-auto">
+    <template 
+      v-if="(authAdminPermissions.includes('View Locums') 
+        || authAdminPermissions.includes('View Locum Jobs')
+        || authAdminPermissions.includes('View Locum Compliance Detail'))
+        && $route.name === 'index-locums'
+      "  
     >
-      <template v-slot:status_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-          :class="statusStyle(slotProps.item.status)"
-        >
-          {{ slotProps.item.status }}
-        </div>
-      </template>
-      <template v-slot:compliance_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-          :class="complianceStatusStyle(slotProps.item.compliance_status)"
-        >
-          {{ slotProps.item.compliance_status }}
-        </div>
-      </template>
+      <div class="flex flex-col md:flex-row justify-between md:items-center">
+        <div class="flex flex-col w-full justify-start">
+          <div>
+            <div class="flex justify-between">
+              <div class="flex">
+                <div class="w-full">
+                  <AppInputSmall
+                    v-model="search"
+                    :type="'text'"
+                    :name="'search'"
+                    :button="true"
+                    :buttonLabel="'Search'"
+                    :placeholder="'Search Practice by Name'"
+                    @click="searchSubmit()"
+                  />
+                </div>
+                <div class="mx-1 my-2">
+                  <AppButton
+                    label="Filters"
+                    :icon="filterModal ? 'sort-descend' : ''"
+                    :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
+                    @click="filterModal = !filterModal"
+                  />
+                </div>
+                <div v-if="filterModal" class="mx-1 my-2">
+                  <AppButton
+                    label="Apply"
+                    :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
+                    @click="getAllLocumUsers(params)"
+                  />
+                </div>
 
-      <template v-slot:registration_type_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-        >
-          {{ registrationType(slotProps.item.referrer_domain) }}
+                <div v-if="filterModal" class="mx-1 my-2">
+                  <AppButton
+                    label="Clear"
+                    :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
+                    @click="filterReset"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg "
+            :class="filterModal ? 'flex' : 'hidden'"
+          >
+            <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+              <AppInputSmall
+                v-model="filterStatus"
+                :type="'select'"
+                :name="'locum_status'"
+                :placeholder="'Locum Status'"
+                :items="locumStatuses"
+              />
+            </div>
+
+            <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+              <AppInputSmall
+                v-model="filterCompliances"
+                :type="'select'"
+                :name="'compliance_status'"
+                :placeholder="'Compliance Status'"
+                :items="practiceType"
+              />
+            </div>
+          </div>
         </div>
-      </template>
-    </AppTable>
+      </div>
 
-    <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
-      <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
-    </div>
+      <AppTableNew
+        v-if="count !== 0"
+        :total="count"
+        :items="locumUsers"
+        :currentPage="currentPage"
+        :perPage="limit"
+        :columns="columns"
+        :loading="loading"
+        :routerLink="`/locums`"
+        :orderBy="orderBy"
+        :min-height="'55vh'"
+        @pagechanged="pageChangedHandler"
+        @sorted="(_orderBy) => orderBy = _orderBy"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="text-center text-xs"
+            :class="statusStyle(slotProps.item.status)"
+          >
+            {{ slotProps.item.status }}
+          </div>
+        </template>
+        <template v-slot:compliance_slot="slotProps">
+          <div
+            class="text-center text-xs"
+            :class="complianceStatusStyle(slotProps.item.compliance_status)"
+          >
+            {{ slotProps.item.compliance_status }}
+          </div>
+        </template>
 
+        <template v-slot:registration_type_slot="slotProps">
+          <div
+            class="text-center text-xs"
+          >
+            {{ registrationType(slotProps.item.referrer_domain) }}
+          </div>
+        </template>
+      </AppTableNew>
+
+      <div v-if="count === 0 && !loading" class="mt-2 w-full text-center">
+        <span>{{ hasFilter ? 'No locums found.' : 'No registered locums.' }}</span>
+      </div>
+    </template>
     <nuxt-child
       @updateLocumUsers="getAllLocumUsers"
       @locumUserUpdated="locumUserUpdatedHandler"
     />
-  </div>
+  </section>
 </template>
 
 <script>
 	import debounce from 'lodash.debounce'
-	import AppTable from '@/components/Base/AppTable'
-
+  import AppTableNew from '@/components/Base/AppTableNew'
+  import AppInputSmall from '@/components/Base/AppInputSmall'
+  import AppInput from '@/components/Base/AppInput'
+  import AppButton from '@/components/Base/AppButton'
 	export default {
 
 		components: {
-			AppTable
+      AppTableNew,
+      AppInputSmall,
+      AppInput,
+      AppButton,
 		},
 
 		data () {
@@ -197,12 +149,84 @@
 				filterStatus: null,
 				filterCompliances: null,
 				search: '',
-        limit: 10,
+        limit: 15,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
         count: 0,
         locumUsers: [],
+
+        locumStatuses: [
+          {
+            label: "All",
+            value: null,
+          },
+          {
+            label: "Active",
+            value: "Active",
+          },
+          {
+            label: "Dormant",
+            value: "Dormant",
+          },
+          {
+            label: "Inactive",
+            value: "Inactive",
+          },
+          {
+            label: "Bogus",
+            value: "Bogus",
+          },
+          {
+            label: "Deactivated",
+            value: "Deactivated",
+          },
+          {
+            label: "Account Suspension",
+            value: "Account Suspension",
+          },
+          {
+            label: "Compliance Suspension",
+            value: "Compliance Suspension",
+          },
+        ],
+
+        complianceStatuses: [
+          {
+            label: "All",
+            value: null,
+          },
+          {
+            label: "Empty",
+            value: "Empty",
+          },
+          {
+            label: "Incomplete",
+            value: "Incomplete",
+          },
+          {
+            label: "Pending",
+            value: "Pending",
+          },
+          {
+            label: "Expiring",
+            value: "Expiring",
+          },
+          {
+            label: "Expired",
+            value: "Expired",
+          },
+          {
+            label: "Rejected",
+            value: "Rejected",
+          },
+          {
+            label: "Compliant",
+            value: "Compliant",
+          },
+        ],
+
+        filterModal: false,
 			}
 		},
 
@@ -326,15 +350,15 @@
 		},
 
 		watch: {
-			filterStatus () {
-				this.currentPage = 1
-        this.getAllLocumUsers()
-			},
+			// filterStatus () {
+			// 	this.currentPage = 1
+      //   this.getAllLocumUsers()
+			// },
 
-			filterCompliances () {
-				this.currentPage = 1
-        this.getAllLocumUsers()
-			},
+			// filterCompliances () {
+			// 	this.currentPage = 1
+      //   this.getAllLocumUsers()
+			// },
 
 			search () {
 				this.searchSubmit()
@@ -406,9 +430,18 @@
 			searchSubmit: debounce(function () {
 				this.currentPage = 1
         this.getAllLocumUsers()
-			}, 500),
+      }, 500),
+      
+      filterReset () {
+        this.search = null
+        this.filterStatus = null
+        this.filterCompliances = null
+
+        this.getAllLocumUsers()
+      },
     
       pageChangedHandler (page) {
+        console.log('banana', page)
         this.currentPage = page
         this.getAllLocumUsers()
       },
@@ -424,19 +457,19 @@
 			statusStyle (status) {
 				switch (status) {
 					case 'Active':
-						return 'bg-green-500 text-white'
+						return 'text-green-700'
 					case 'Inactive':
-						return 'bg-gray-500 text-gray-700'
+						return 'text-gray-700'
 					case 'Deactivated':
-						return 'bg-red-800 text-red-400'
+						return 'text-black'
 					case 'Account Suspension':
-						return 'bg-red-600 text-white'
+						return 'text-red-600'
 					case 'Compliance Suspension':
-						return 'bg-red-600 text-white'
+						return 'text-red-600'
 					case 'Dormant':
-            return 'bg-orange-500 text-white'
+            return 'text-gray-500'
           case 'Bogus':
-						return 'bg-gray-700 text-white'
+						return 'text-gray-600'
 					default:
 						return
 				}
@@ -445,19 +478,19 @@
 			complianceStatusStyle (status) {
 				switch (status) {
 					case 'Empty':
-						return 'border border-white text-white'
+						return 'text-gray-400'
 					case 'Incomplete':
-						return 'bg-orange-600 text-white'
+						return 'text-orange-600'
 					case 'Pending':
-						return 'bg-yellow-500 text-yellow-800'
+						return 'text-yellow-800'
 					case 'Expiring':
-						return 'bg-red-400 text-white'
+						return ' text-red-400'
 					case 'Expired':
-						return 'bg-red-800 text-red-400'
+						return 'text-red-500'
 					case 'Rejected':
-						return 'bg-red-600 text-white'
+						return 'text-orange-700'
 					case 'Compliant':
-						return 'bg-green-500 text-white'
+						return 'text-green-700'
 					default:
 						return
 				}

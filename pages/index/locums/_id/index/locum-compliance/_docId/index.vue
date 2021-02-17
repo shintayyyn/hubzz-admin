@@ -1,5 +1,5 @@
 <template>
-  <div class="compliance-modal shadow-lg">
+  <div>
     <AppLoading :loading="loading" spinner />
 
     <LocumComplianceFile

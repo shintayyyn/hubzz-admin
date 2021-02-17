@@ -1,7 +1,5 @@
 <template>
-	<div
-		class="text-white bg-waterloo my-2 p-4 shadow rounded-lg text-sm max-w-lg"
-	>
+	<div class="y-2 p-4 shadow rounded-lg text-sm max-w-lg">
 		<p class="font-semibold">E-mail Address</p>
 		<p class="mx-1 mb-2">{{ user.email }}</p>
 		<p class="font-semibold">Name</p>

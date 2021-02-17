@@ -3,128 +3,70 @@
     class="sidebar bg-charade"
     :class="{ 'toggled-left': $store.state.toggled_sidebar }"
   >
-    <div class="sidebar-nav">
-      <!-- LINKS WRAPPER -->
-      <div class="xl:mt-24">
-        <!-- CLOSE BUTTON -->
-        <div
-          class="close-button cursor-pointer text-2xl font-bold text-sunglow px-4 mt-4"
+    <!-- LINKS WRAPPER -->
+    <div class="sidebar-nav pt-8 xl:pt-10">
+      <div class="flex flex-row justify-center pb-4">
+        <div class="font-extrabold text-white text-2xl">
+          HUBZZ
+        </div>
+        
+        <button
+          class="close-button cursor-pointer focus:outline-none text-2xl font-bold text-yellow-500 px-4"
           @click="close"
         >
           X
-        </div>
-        <!-- CLOSE BUTTON ENDS HERE -->
-
-        <!-- LINKS -->
-        <div v-for="(navigationTab, index) in navigationTabs" :key="index" class="text-sm relative">
-          <span v-if="navigationTab.active" class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full" />
-
-          <nuxt-link :to="navigationTab.route">
-            <div
-              class="block font-sans no-underline p-4"
-              :class="navigationTab.active ? 'text-yellow-500' : 'text-white hover:text-gray-500'"
-              @click="close"
-            >
-              <span>{{ navigationTab.name }}</span>
-
-              <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ unseenLocumNotificationsCount }}
-              </span>
-
-              <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ unseenPracticeNotificationsCount }}
-              </span>
-
-              <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ unacknowledgedCount }}
-              </span>
-            </div>
-          </nuxt-link>
-        </div>
-        <!-- LINKS END HERE -->
-
-        <div 
-          v-if="authAdminPermissions.includes('View Change Email Requests')"
-          class="text-sm relative"
-        >
-          <span
-            v-if="$route.name.includes('index-change-email-requests')"
-            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
-          />
-          <nuxt-link :to="{ name: 'index-change-email-requests' }">
-            <div
-              class="block font-sans no-underline p-4"
-              :class="$route.name.includes('index-change-email-requests') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
-              @click="close"
-            >
-              <span>Change Email</span>
-              <br>
-              <span>Requests</span>
-              <span v-if="pendingChangeEmailRequestIds.length > 0" class="rounded-lg p-1 px-2 bg-red-700"> 
-                {{ pendingChangeEmailRequestIds.length }}
-              </span>
-            </div>
-          </nuxt-link>
-        </div>
-
-        <div
-          v-if="authAdminPermissions.includes('View Compliance Document Reject Reasons')" 
-          class="text-sm relative"
-        >
-          <span
-            v-if="$route.name.includes('index-compliance-document-reject-reasons')"
-            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
-          />
-          <nuxt-link :to="{ name: 'index-compliance-document-reject-reasons' }">
-            <div
-              class="block font-sans no-underline p-4"
-              :class="$route.name.includes('index-compliance-document-reject-reasons') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
-              @click="close"
-            >
-              <span>Compliance Document Reject Reasons</span>
-            </div>
-          </nuxt-link>
-        </div>
-
-        <div class="text-sm relative">
-          <span
-            v-if="$route.name.includes('index-test-script')"
-            class="absolute inset-y-0 left-0 border-solid bg-sunglow w-1 h-full"
-          />
-          
-          <nuxt-link :to="{ name: 'index-test-script' }">
-            <div
-              class="block font-sans no-underline p-4"
-              :class="$route.name.includes('index-test-script') ? 'text-yellow-500': 'text-white hover:text-gray-500'"
-              @click="close"
-            >
-              <span>Test Script</span>
-            </div>
-          </nuxt-link>
-        </div>
-
-        <!-- SIGN OUT -->
-        <div class="text-sm relative">
-          <span
-            v-if="`/${$route.path.split('/')[1]}` == '/sign-out'"
-            class="absolute left-0 border-solid bg-yellow-500 w-1 h-full"
-          />
-          <button
-            class="block no-underline p-4 focus:outline-none"
-            :class="
-              `/${$route.path.split('/')[1]}` == '/sign-out'
-                ? 'text-yellow-500'
-                : 'text-white hover:text-gray-400'
-            "
-            @click.prevent="signout"
-          >
-            <span class="font-sans">Sign Out</span>
-          </button>
-        </div>
-        <!-- SIGN OUT ENDS HERE -->
+        </button>
       </div>
-      <!-- LINKS WRAPPER ENDS HERE -->
+
+      <!-- LINKS -->
+      <div v-for="(navigationTab, index) in navigationTabs" :key="index" class="text-sm relative">
+        <span v-if="navigationTab.active" class="absolute ml-3 mt-4 p-1.5 h-1.5 rounded-sm bg-sunglow"/>
+
+        <nuxt-link :to="navigationTab.route">
+          <div
+            class="block no-underline pl-4 py-3 mx-4 transition-hover"
+            :class="navigationTab.active ? 'text-white font-bold' : 'text-gray-500 hover:text-white hover:font-bold'"
+            @click="close"
+          >
+            <span>{{ navigationTab.name }}</span>
+
+            <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+              {{ unseenLocumNotificationsCount }}
+            </span>
+
+            <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+              {{ unseenPracticeNotificationsCount }}
+            </span>
+
+            <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+              {{ unacknowledgedCount }}
+            </span>
+
+            <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+              {{ pendingChangeEmailRequestIds.length }}
+            </span>
+          </div>
+        </nuxt-link>
+      </div>
+      <!-- LINKS END HERE -->
+
+      <!-- SIGN OUT -->
+      <div class="text-sm relative">
+        <button
+          class="block no-underline pl-4 py-3 mx-4 transition-hover"
+          :class="
+            `/${$route.path.split('/')[1]}` == '/sign-out'
+              ? 'text-yellow-500'
+              : 'text-white hover:text-gray-400'
+          "
+          @click.prevent="signout"
+        >
+          <span class="font-sans">Sign Out</span>
+        </button>
+      </div>
+      <!-- SIGN OUT ENDS HERE -->
     </div>
+    <!-- LINKS WRAPPER ENDS HERE -->
   </div>
 </template>
 
@@ -279,6 +221,30 @@ export default {
         })
       }
 
+      if (this.authAdminPermissions.includes('View Change Email Requests')) {
+        addedLists.push({
+          name: "Change Email Requests",
+          route: "/change-email-requests",
+          active: `/${this.$route.path.split('/')[1]}` === '/change-email-requests',
+          order: 12,
+        })
+      }
+
+      if (this.authAdminPermissions.includes('View Compliance Document Reject Reasons')) {
+        addedLists.push({
+          name: "Compliance Document Reject Reasons",
+          route: "/compliance-document-reject-reasons",
+          active: `/${this.$route.path.split('/')[1]}` === '/compliance-document-reject-reasons',
+          order: 13,
+        })
+      }
+      
+      addedLists.push({
+        name: "Test Script",
+        route: "/test-script",
+        active: `/${this.$route.path.split('/')[1]}` === '/test-script',
+        order: 14,
+      })
       // =================INCLUDE BILLINGS PERMISSIONS, FAQS================
       // if(this.authAdminPermissions.includes(''))
       
@@ -404,8 +370,10 @@ export default {
     width: 200px;
     height: 100%;
     overflow: auto;
+    border-right: solid 1px#ccc;
     transition: all 0.3s ease-in-out;
-    z-index: 500;
+    background-color: rgb(2, 4, 12);
+    z-index: 55;
   }
   .toggled-left {
     margin-left: 0;

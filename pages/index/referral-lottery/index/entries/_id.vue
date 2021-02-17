@@ -1,32 +1,30 @@
 <template>
-  <div class="modal-container shadow-lg">
-    <div class="p-4 md:p-8">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/referral-lottery" class="cursor-pointer">
-          <svgicon
-            name="arrow-left-solid"
-            height="32"
-            width="32"
-            class="text-white hover:text-sunglow fill-current"
-          />
-        </nuxt-link>
-      </div>
-
-      <AppTable
-        v-if="entries.length > 0"
-        :total="count"
-        :items="entries"
-        :current-page="current_page"
-        :customItemsWidth="'cursor-default'"
-        :perPage="limit"
-        :columns="columns"
-        :loading="loading"
-        :custom-width="200"
-        :orderBy="orderBy"
-        @pagechanged="pagechanged"
-        @sorted="(sort) => orderBy = sort"
-      />
+  <div>
+    <div class="flex justify-between text-sm text-white">
+      <nuxt-link to="/referral-lottery" class="cursor-pointer">
+        <svgicon
+          name="arrow-left-solid"
+          height="32"
+          width="32"
+          class="hover:text-sunglow fill-current"
+        />
+      </nuxt-link>
     </div>
+
+    <AppTable
+      v-if="entries.length > 0"
+      :total="count"
+      :items="entries"
+      :current-page="current_page"
+      :customItemsWidth="'cursor-default'"
+      :perPage="limit"
+      :columns="columns"
+      :loading="loading"
+      :custom-width="200"
+      :orderBy="orderBy"
+      @pagechanged="pagechanged"
+      @sorted="(sort) => orderBy = sort"
+    />
   </div>
 </template>
 

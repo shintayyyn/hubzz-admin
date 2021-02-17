@@ -1,19 +1,19 @@
 <template>
   <div class="m-6">
     <!-- HEADER -->
-    <div v-if="!isNuxtChild" class="flex justify-between text-sm text-white">
+    <div v-if="!isNuxtChild" class="flex justify-between text-sm ">
       <div class="cursor-pointer" @click="$emit('close')">
         <svgicon
           name="arrow-left-solid"
           height="32"
           width="32"
-          class="text-white hover:text-sunglow fill-current"
+          class=" hover:text-sunglow fill-current"
         />
       </div>
     </div>
     <div class="flex flex-wrap font-semibold my-4">
       <div
-        class="text-2xl text-white mr-4"
+        class="text-2xl  mr-4"
       >
         {{ job_part.job && job_part.job.title ? job_part.job.title:'(none)' }}
       </div>
@@ -28,7 +28,7 @@
           {{ job_part && job_part.terminated ? 'Terminated' : null }}
         </div>
         <div
-          class="ml-2 text-black p-2 text-white rounded"
+          class="ml-2 text-black p-2  rounded"
           :class="job_part.job && job_part.job.type == 'Platform'? 'bg-red-500':'bg-blue-500'"
         >
           {{ job_part.job && job_part.job.type ? job_part.job.type : null }}
@@ -38,12 +38,12 @@
 
     <div class="flex flex-wrap">
       <div
-        class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline text-white w-full"
+        class="flex flex-col order-2 md:order-1 flex-wrap h-full text-sm no-underline  w-full"
         :class="jobParts && jobParts.length > 0 ? 'md:w-1/2' : 'max-w-xl'"
       >
         <div
           v-if="job_part.status === 'Cancelled'"
-          class="flex flex-col text-white bg-waterloo rounded-lg leading-tight my-2"
+          class="flex flex-col   rounded-lg leading-tight my-2"
         >
           <div class="m-4">
             <div
@@ -97,7 +97,7 @@
         </div>
         <div
           v-if="job_part.status === 'Withdrawn'"
-          class="shadow-lg rounded-lg bg-waterloo shadow p-4 mb-2"
+          class="shadow-lg rounded-lg  shadow p-4 mb-2"
         >
           <div class="leading-tight pb-4">
             <p class="font-bold text-sm sm:text-md">
@@ -118,48 +118,48 @@
             </p>
           </div>
         </div>
-        <div class="shadow-lg rounded-lg bg-waterloo shadow">
+        <div class="shadow-lg rounded-lg  shadow">
           <div class="flex flex-wrap">
             <!-- INFOS LEFT -->
             <div class="xl:w-1/2 w-full overflow-hidden">
-              <div v-if="isInvoice === true" class="m-4 mt-5 text-gray text-white">
+              <div v-if="isInvoice === true" class="m-4 mt-5 text-gray ">
                 <p class="font-semibold">
                   Invoice Number
                 </p>
-                <p class="text-white">
+                <p class="">
                   {{ job_part.locum_invoice_item.locum_invoice.invoice_number }}
                 </p>
                 <p class="mt-5 font-semibold">
                   Session ID
                 </p>
-                <p class="text-white">
+                <p class="">
                   {{ job_part.job_id }}
                 </p>
                 <p class="mt-5 font-semibold">
                   Locum User ID
                 </p>
-                <p class="text-white">
+                <p class="">
                   {{ job_part.locum_invoice_item.locum_invoice.locum_user_id }}
                 </p>
                 <!-- <p class="mt-5 font-semibold">
                   Invoice Amount
                 </p>
                 <p
-                  class="text-white"
+                  class=""
                 >
                   {{ "£ " + job_part.locum_invoice_item.locum_invoice.total_amount }}
                 </p> -->
                 <!-- <p class="mt-5 font-semibold">
                   Final Hours
                 </p>
-                <p class="text-white">
+                <p class="">
                   {{ job_part.locum_invoice_item.final_hours + "Hours" }}
                 </p> -->
                 <div v-if="job_part.invoice_status === 'Disputed'">
                   <p class="mt-5 font-semibold">
                     Disputed by Locum At
                   </p>
-                  <p class="text-white">
+                  <p class="">
                     {{
                       job_part.locum_invoice_item
                         && job_part.locum_invoice_item.disputed_by_locum_at
@@ -170,7 +170,7 @@
                   <p class="mt-5 font-semibold">
                     Disputed by Practice At
                   </p>
-                  <p class="text-white">
+                  <p class="">
                     {{
                       job_part.locum_invoice_item
                         && job_part.locum_invoice_item.disputed_by_practice_at
@@ -181,12 +181,12 @@
                 </div>
               </div>
               
-              <div class="m-4 mt-5 text-gray text-white">
+              <div class="m-4 mt-5 text-gray ">
                 <p class="font-semibold">
                   Job Part Number
                 </p>
 
-                <p class="text-white">
+                <p class="">
                   {{ job_part.job_part_number }}
                 </p>
 
@@ -194,7 +194,7 @@
                   Job Part
                 </p>
 
-                <p class="text-white">
+                <p class="">
                   {{ job_part.part }} of {{ job_part.parts }}
                 </p>
 
@@ -202,7 +202,7 @@
                   Job Part Gross Rate
                 </p>
 
-                <p class="text-white pb-2 no-underline">
+                <p class=" pb-2 no-underline">
                   £ {{ job_part.job_part_gross_rate_formatted }}
                 </p>
 
@@ -210,7 +210,7 @@
                   Job Part Hubzz Fee
                 </p>
 
-                <p class="text-white pb-2 no-underline">
+                <p class=" pb-2 no-underline">
                   £ {{ job_part.job_part_hubzz_fee_formatted }}
                 </p>
 
@@ -218,7 +218,7 @@
                   Total Original Hours
                 </p>
 
-                <p class="text-white">
+                <p class="">
                   {{ job_part ? job_part.job_part_total_original_hours_in_minutes_formatted : null }}
                 </p>
                 
@@ -227,7 +227,7 @@
                     Total Final Hours
                   </p>
                   
-                  <p class="text-white">
+                  <p class="">
                     {{ job_part ? job_part.job_part_total_final_hours_in_minutes_formatted : null }}
                   </p>
                 </template>
@@ -236,7 +236,7 @@
                   Job Description
                 </p>
                 <p
-                  class="text-white break-words"
+                  class=" break-words"
                 >
                   {{ job_part.job && job_part.job.description? job_part.job.description: '(none)' }}
                 </p>
@@ -246,7 +246,7 @@
                 <p
                   class="ml-2 mb-2"
                 >
-                  {{ job_part.job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                  {{ job_part.job && job_part.job.platform_job.is_another_doctor ? "Yes" : "No" }}
                 </p>
 
                 <p class="font-semibold">
@@ -316,7 +316,7 @@
               </div>
             </div>
             <!-- INFOS RIGHT -->
-            <div class="text-white xl:w-1/2 w-full overflow-hidden">
+            <div class=" xl:w-1/2 w-full overflow-hidden">
               <div class="m-4 mt-5">
                 <div v-if="job_part.status === 'Completed'">
                   <p class="mb-2 font-semibold">
@@ -324,7 +324,7 @@
                   </p>
                   <div class="pb-2 flex">
                     <span
-                      class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+                      class="text-sm  font-semibold w-3/4 pl-4 flex items-center"
                     >{{ job_part.completed_at_in_gb_formatted }}</span>
                   </div>
                 </div>
@@ -334,7 +334,7 @@
                   </p>
                   <div class="pb-2 flex">
                     <span
-                      class="text-sm text-white font-semibold w-3/4 pl-4 flex items-center"
+                      class="text-sm  font-semibold w-3/4 pl-4 flex items-center"
                     >{{ job_part.approved_at_in_gb_formatted }}</span>
                   </div>
                 </div>
@@ -384,54 +384,54 @@
                 <p class="mt-5 font-semibold">
                   Invoiced?
                 </p>
-                <p class="text-white">
+                <p class="">
                   {{ job_part.invoiced ? 'Yes': 'No' }}
                 </p>
                 <p class="mt-5 font-semibold">
                   Issued?
                 </p>
-                <p class="text-white">
+                <p class="">
                   {{ job_part.issued ? 'Yes': 'No' }}
                 </p>
                 <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="mt-5 font-semibold">
                   Other Remarks
                 </p>
-                <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="text-white">
+                <p v-if="job_part.locum_invoice_item && job_part.locum_invoice_item.remarks" class="">
                   {{ job_part.locum_invoice_item && job_part.locum_invoice_item.remarks ? job_part.locum_invoice_item.remarks : '' }}
                 </p>
                 <!--  -->
                 <!-- <template v-if="['Completed', 'Approved', 'Cancelled'].includes(job_part.status)">
                   <p class="mt-5 font-semibold">Was the Locum absent for session?</p>
                   <p
-                    class="text-white"
+                    class=""
                   >{{ job_part.absent_days > 0 || job_part.absent_days_reason !== null ? 'Yes' : 'No' }}</p>
                   <template v-if="job_part.absent_days > 0 || job_part.absent_days_reason !== null">
                     <p class="mt-5 font-semibold">Days of Absent:</p>
-                    <p class="text-white">{{ job_part.absent_days }}</p>
+                    <p class="">{{ job_part.absent_days }}</p>
                     <p class="mt-5 font-semibold">Reason of Absence:</p>
                     <p
-                      class="text-white"
+                      class=""
                     >{{ job_part.absent_days_reason ? job_part.absent_days_reason : 'None' }}</p>
                   </template>
 
                   <p class="mt-5 font-semibold">Was the Locum late for this session?</p>
                   <p
-                    class="text-white"
+                    class=""
                   >{{ job_part.late_hours > 0 || job_part.late_hours_reason !== null ? 'Yes' : 'No' }}</p>
                   <template v-if="job_part.late_hours > 0 || job_part.late_hours_reason !== null">
                     <p class="mt-5 font-semibold">Hours of Late:</p>
-                    <p class="text-white">{{ job_part.late_hours | hoursMinutes}}</p>
+                    <p class="">{{ job_part.late_hours | hoursMinutes}}</p>
                     <p class="mt-5 font-semibold">Reason of Late:</p>
                     <p
-                      class="text-white"
+                      class=""
                     >{{ job_part.late_hours_reason ? job_part.late_hours_reason : 'None' }}</p>
                   </template>
                   <p class="mt-5 font-semibold">Final Hours:</p>
                   <p
-                    class="text-white"
+                    class=""
                     v-if="job_part.final_hours > 0"
                   >{{ job_part.final_hours | hoursMinutes }}</p>
-                  <p class="text-white" v-else>{{ job_part.final_hours }}</p>
+                  <p class="" v-else>{{ job_part.final_hours }}</p>
                 </template>-->
                 <!-- <div v-if="job_part.job ? job_part.job.platform_job : null">
 							<div class="m-2 mt-5">
@@ -496,7 +496,7 @@
             v-if="job_part.job ? job_part.job.platform_job : null"
             class="w-full p-2 md:p-4 overflow-hidden"
           >
-            <div class="text-white pb-2">
+            <div class=" pb-2">
               <div class="font-semibold">
                 Practice
                 <p>{{ job_part.job ? job_part.job.platform_job.practice.surgery.name : null }}</p>
@@ -525,10 +525,10 @@
       </div>
       <div class="flex-col order-1 md:order-2 w-full md:w-1/2">
         <div v-if="jobParts.length > 0" class="py-2 md:py-0 md:mx-4 overflow-hidden w-full">
-          <div class="mx-2 text-white font-semibold">
+          <div class="mx-2  font-semibold">
             Job Parts
           </div>
-          <div class="flex flex-col text-white">
+          <div class="flex flex-col ">
             <div class="overflow-x-auto">
               <div class="jobpart">
                 <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
@@ -549,8 +549,8 @@
                 <div
                   v-for="(item, index) in jobParts"
                   :key="`item-${index}`"
-                  class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo my-2 shadow-lg py-3 md:text-center transition-hover"
-                  :class="[unclickableJobPart() ? '' : 'hover:bg-waterloo-light cursor-pointer', item.id == job_part.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
+                  class="w-full flex flex-col md:flex-row rounded-lg  my-2 shadow-lg py-3 md:text-center transition-hover"
+                  :class="[unclickableJobPart() ? '' : 'hover:-light cursor-pointer', item.id == job_part.id ? 'border-l-8 border-yellow-500 font-bold' : 'px-2']"
                   @click.prevent="show(item.id)"
                 >
                   <div class="flex flex-col md:w-1/4 p-2 md:p-0 align-middle">
@@ -584,10 +584,10 @@
 							v-for="(item, index) in specificJobPart.job.job_parts"
 							:to="`/practices/${$route.params.id}/practice-sessions/practice-${item.status.toLowerCase()}-sessions/${item.id}`"
 							:key="`item-${index}`"
-							class="w-full flex flex-col md:flex-row rounded-lg bg-waterloo hover:bg-waterloo-light my-1 md:my-2 shadow-lg cursor-pointer border-l-8 p-4"
+							class="w-full flex flex-col md:flex-row rounded-lg  hover:-light my-1 md:my-2 shadow-lg cursor-pointer border-l-8 p-4"
 							:class="item.id === specificJobPart.id ? 'border-yellow-500':'border-waterloo-light md:border-0 md:pl-6'"
 						>
-							<div class="flex flex-col text-white leading-tight">
+							<div class="flex flex-col  leading-tight">
 								<strong class="block md:hidden text-sm uppercase">Job Part Number</strong>
 								<span>{{item.job_part_number}}</span>
 								<span>{{item.status}}</span>

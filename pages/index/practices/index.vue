@@ -6,160 +6,134 @@
       || authAdminPermissions.includes('View Practice Users')
       || authAdminPermissions.includes('View Practice Documents')
       || authAdminPermissions.includes('View Practice Rates')"
-    class="flex-1 flex flex-col py-2"
+    class="flex-1 flex flex-col"
   >
-    <div class="px-1 flex justify-between items-center flex-wrap">
+    <div class="flex flex-row justify-between overflow-x-auto border-b border-gray-500 mb-4 p-1">
       <div>
-        <div class="flex justify-start -mx-2 overflow-x-auto">
-          <nuxt-link
-            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: undefined }}"
-            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-            :class="practiceTab === 'Verified' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-          >
-            Verified
-          </nuxt-link>
-          
-          <nuxt-link
-            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Pending' }}"
-            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-            :class="practiceTab === 'Pending' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-          >
-            Pending
-          </nuxt-link>
+        <nuxt-link
+          :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: undefined }}"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="practiceTab === 'Verified' ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+        >
+          Verified
+        </nuxt-link>
+        
+        <nuxt-link
+          :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Pending' }}"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="practiceTab === 'Pending' ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+        >
+          Pending
+        </nuxt-link>
 
-          <nuxt-link
-            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Bogus' }}"
-            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-            :class="practiceTab === 'Bogus' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-          >
-            Bogus
-          </nuxt-link>
+        <nuxt-link
+          :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Bogus' }}"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+          :class="practiceTab === 'Bogus' ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+        >
+          Bogus
+        </nuxt-link>
 
-          <nuxt-link
-            :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Deactivated' }}"
-            class="p-3 mx-2 text-sm font-bold cursor-pointer rounded-lg whitespace-no-wrap transition-hover"
-            :class="practiceTab === 'Deactivated' ? 'bg-sunglow hover:bg-sunglow-dark' : 'hover:bg-waterloo text-white'"
-          >
-            Deactivated
-          </nuxt-link>
-        </div>
+        <nuxt-link
+          :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Deactivated' }}"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wra"
+          :class="practiceTab === 'Deactivated' ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+        >
+          Deactivated
+        </nuxt-link>
       </div>
-
-      <div class="m-1">
+      <div>
         <AppButton
           v-if="authAdminPermissions.includes('Create New Practice') && authAdminPermissions.includes('Create New Practice User')"
           class="text-sm"
           :label="'Create New Practice'"
           :icon="'add-rectangle'"
-          :nuxtLink="{ name: 'index-practices-add-practice', query: $route.query }"
+          @click="$router.push('/practices/add-practice')"
         />
       </div>
     </div>
 
-    <div class="px-2 flex flex-col md:flex-row justify-between md:items-center">
-      <div class="flex">
-        <div class="relative">
-          <input
-            v-model="search"
-            style="width: 280px;"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Practice by Name"
-            @keyup.enter="searchSubmit"
-          >
+    <div class="flex flex-col md:flex-row justify-between md:items-center">
+      <div class="flex flex-col w-full justify-start">
+        <div>
+          <div class="flex justify-between">
+            <div class="flex">
+              <div class="w-full">
+                <AppInputSmall
+                  v-model="search"
+                  :type="'text'"
+                  :name="'search'"
+                  :button="true"
+                  :buttonLabel="'Search'"
+                  :placeholder="'Search Practice by Name'"
+                  @click="searchSubmit()"
+                />
+              </div>
+              <div class="mx-1 my-2">
+                <AppButton
+                  label="Filters"
+                  :icon="filterModal ? 'sort-descend' : ''"
+                  :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
+                  @click="filterModal = !filterModal"
+                />
+              </div>
+              <div v-if="filterModal" class="mx-1 my-2">
+                <AppButton
+                  label="Apply"
+                  :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
+                  @click="getPractices(params)"
+                />
+              </div>
 
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+              <div v-if="filterModal" class="mx-1 my-2">
+                <AppButton
+                  label="Clear"
+                  :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
+                  @click="filterReset"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg "
+          :class="filterModal ? 'flex' : 'hidden'"
+        >
+          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <AppInputSmall
+              v-model="filterPracticeStatus"
+              :type="'select'"
+              :name="'practice_status'"
+              :placeholder="'Practice Status'"
+              :items="practiceStatuses"
             />
-          </button>
-        </div>
-      </div>
+          </div>
 
-      <div class="flex flex-col w-full justify-end">
-        <div
-          v-if="practiceTab === 'Verified'"
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Status</label>
+          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <AppInputSmall
+              v-model="filterPracticeType"
+              :type="'select'"
+              :name="'practice_type'"
+              :placeholder="'Practice Type'"
+              :items="practiceType"
+            />
+          </div>
 
-          <select
-            id="grid-state"
-            v-model="filterPracticeStatus"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Active</option>
-            <option>Dormant</option>
-            <option>Inactive</option>
-            <option>Account Suspension</option>
-          </select>
-        </div>
-
-        <div
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Type</label>
-
-          <select
-            id="grid-state"
-            v-model="filterPracticeType"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Hub</option>
-            <option>Spoke</option>
-            <option>Stand Alone</option>
-          </select>
-        </div>
-
-        <div
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0 pt-2"
-        >
-          <label class="text-sm text-white md:pr-2">Filter by Hub Type</label>
-
-          <select
-            id="grid-state"
-            v-model="filterPracticeHubType"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Type 1</option>
-            <option>Type 2</option>
-          </select>
-        </div>
-        
-        <div
-          class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
-        >
-          <label class="text-sm text-white md:pr-2">Sort by</label>
-
-          <select
-            v-model="selectedOrderByValue"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
-              {{ orderByValue.displayLabel }}
-            </option>
-          </select>
+          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <AppInputSmall
+              v-model="filterPracticeHubType"
+              :type="'select'"
+              :name="'hub_type'"
+              :placeholder="'Hub Type'"
+              :items="hubType"
+            />
+          </div>
         </div>
       </div>
     </div>
 
     <div>
-      <AppTable
+      <AppTableNew
         v-if="count > 0"
         :total="count"
         :items="practices"
@@ -174,35 +148,35 @@
       >
         <template v-slot:status_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full text-center w-32 mx-auto"
-            :class="slotProps.item.status === 'Active' ? 'bg-green-500' : 'bg-gray-500 text-gray-700'"
+            class="text-xs"
+            :class="slotProps.item.status === 'Active' ? 'text-green-500' : 'text-gray-700'"
           >
             {{ slotProps.item.status }}
           </div>
         </template>
 
         <template v-slot:type_slot="slotProps">
-          <div class="px-4 py-1 rounded-full text-center w-32 mx-auto" :class="typeStyle(slotProps.item.type)">
+          <div class="text-xs" :class="typeStyle(slotProps.item.type)">
             {{ slotProps.item.type }}
           </div>
         </template>
 
         <template v-slot:hub_type_slot="slotProps">
-          <div class="px-4 py-1 rounded-full text-center w-32 mx-auto" :class="hubTypeStyle(slotProps.item.hub_type)">
+          <div class="text-xs" :class="hubTypeStyle(slotProps.item.hub_type)">
             {{ slotProps.item.hub_type }}
           </div>
         </template>
 
         <template v-slot:registration_type_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+            class="px-4 py-1 rounded-full w-32 text-center mx-auto"
           >
             {{ registrationType(slotProps.item.referrer_domain) }}
           </div>
         </template>
-      </AppTable>
+      </AppTableNew>
 
-      <div v-if="!loadingPractices && practices.length === 0" class="mt-2 w-full text-center text-white">
+      <div v-if="!loadingPractices && practices.length === 0" class="mt-2 w-full text-center">
         <span v-if="hasFilter">No practices found.</span>
         <span v-if="!hasFilter">There are no {{ practiceTab.toLowerCase() }} practices.</span>
       </div>
@@ -226,11 +200,16 @@
 import debounce from "lodash.debounce"
 import AppButton from "@/components/Base/AppButton"
 import AppTable from "@/components/Base/AppTable"
-
+import AppTableNew from '@/components/Base/AppTableNew'
+import AppInputSmall from '@/components/Base/AppInputSmall'
+import AppInput from '@/components/Base/AppInput'
 export default {
 	components: {
 		AppButton,
     AppTable,
+    AppTableNew,
+    AppInputSmall,
+    AppInput,
   },
   
 	data () {
@@ -242,17 +221,62 @@ export default {
       orderBy: [
         'created_at_in_gb_formatted:desc',
       ],
-      limit: 10,
+      limit: 15,
       search: '',
       filterPracticeStatus: null,
       filterPracticeType: null,
       filterPracticeHubType: null,
 			params: {
-				limit: 10,
+				limit: 15,
 				offset: 0,
 				order_by: ["created_at:desc"]
       },
       professionComplianceCategories: [],
+
+      practiceStatuses: [
+        {
+          label: "Active",
+          value: "Active",
+        },
+        {
+          label: "Dormant",
+          value: "Dormant",
+        },
+        {
+          label: "Inactive",
+          value: "Inactive",
+        },
+        {
+          label: "Account Suspension",
+          value: "Account Suspension",
+        },
+      ],
+      practiceType: [
+        {
+          label: "Hub",
+          value: "Hub",
+        },
+        {
+          label: "Spoke",
+          value: "Spoke",
+        },
+        {
+          label: "Stand Alone",
+          value: "Stand Alone",
+        },
+      ],
+      hubType: [
+        {
+          label: "Type 1",
+          value: "Type 1",
+        },
+        {
+          label: "Type 2",
+          value: "Type 2",
+        },
+      ],
+
+      filterModal: false,
 		}
 	},
 
@@ -514,20 +538,20 @@ export default {
 			this.getPractices()
     },
 
-    filterPracticeStatus () {
-      this.currentPage = 1
-			this.getPractices()
-    },
+    // filterPracticeStatus () {
+    //   this.currentPage = 1
+		// 	this.getPractices()
+    // },
 
-    filterPracticeType () {
-      this.currentPage = 1
-			this.getPractices()
-    },
+    // filterPracticeType () {
+    //   this.currentPage = 1
+		// 	this.getPractices()
+    // },
 
-    filterPracticeHubType () {
-      this.currentPage = 1
-			this.getPractices()
-    },
+    // filterPracticeHubType () {
+    //   this.currentPage = 1
+		// 	this.getPractices()
+    // },
 
 		search () {
 			this.searchSubmit()
@@ -591,6 +615,15 @@ export default {
       this.currentPage = 1
 			this.getPractices()
     }, 500),
+
+    filterReset () {
+      this.search = null
+      this.filterPracticeStatus = null
+      this.filterPracticeType = null
+      this.filterPracticeHubType = null
+
+      this.getPractices()
+    },
     
     pageChangedHandler (page) {
       this.currentPage = page
@@ -613,11 +646,11 @@ export default {
 		typeStyle (type) {
 			switch (type) {
 				case "Hub":
-					return "bg-red-500 text-white px-4 py-1"
+					return "text-red-500"
 				case "Spoke":
-					return "bg-blue-500 text-white px-4 py-1"
+					return "text-blue-500"
 				case "Stand Alone":
-					return "bg-indigo-600 text-white px-6 md:px-5 py-1"
+					return "text-indigo-600"
 				default:
 					return
 			}
@@ -626,9 +659,9 @@ export default {
 		hubTypeStyle (hubType) {
 			switch (hubType) {
 				case "Type 1":
-					return "bg-red-500 text-white px-4 py-1"
+					return "text-red-500"
 				case "Type 2":
-					return "bg-purple-500 text-white px-4 py-1"
+					return "text-purple-500"
 				default:
 					return ""
 			}

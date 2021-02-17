@@ -1,215 +1,203 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-4/5 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-change-email-requests' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
+  <section style="transition: all 0.3s ease-in-out;">
+    <template v-if="$route.name === 'index-change-email-requests-id-index-index'">
+      <div class="flex-1 flex flex-col self-end ">
+        <AppLoading :loading="loading" spinner />
 
-      <AppLoading :loading="loading" spinner />
+        <transition name="drop" mode="out-in">
+          <AppConfirm
+            v-if="changeEmailRequestToRejectId || changeEmailRequestToRejectUserId"
+            :message="'Are you sure you want to reject this change email request?'"
+            @cancel="changeEmailRequestToRejectId = null, changeEmailRequestToRejectUserId = null"
+            @confirm="rejectChangeEmailRequest"
+          />
+        </transition>
 
-      <transition name="drop" mode="out-in">
-        <AppConfirm
-          v-if="changeEmailRequestToRejectId || changeEmailRequestToRejectUserId"
-          :message="'Are you sure you want to reject this change email request?'"
-          @cancel="changeEmailRequestToRejectId = null, changeEmailRequestToRejectUserId = null"
-          @confirm="rejectChangeEmailRequest"
-        />
-      </transition>
+        <transition name="drop" mode="out-in">
+          <AppConfirm
+            v-if="changeEmailRequestToAcceptUserId"
+            :message="'Are you sure you want to accept this change email request?'"
+            @cancel="changeEmailRequestToAcceptUserId = null"
+            @confirm="acceptChangeEmailRequest"
+          />
+        </transition>
 
-      <transition name="drop" mode="out-in">
-        <AppConfirm
-          v-if="changeEmailRequestToAcceptUserId"
-          :message="'Are you sure you want to accept this change email request?'"
-          @cancel="changeEmailRequestToAcceptUserId = null"
-          @confirm="acceptChangeEmailRequest"
-        />
-      </transition>
-
-      <div>
-        <div
-          class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg bg-waterloo mt-4 shadow"
-          style="position:relative;"
-        >
-          <div class="w-4/5 overflow-hidden text-sm m-4">
-            <div class="text-gray-400">
-              <p class="m-2">
-                ID <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.id : null }}</span>
-              </p>
-              <p class="m-2">
-                Memorable Word Category <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.memorable_word_category_name : null }}</span>
-              </p>
-              <p class="m-2">
-                Memorable Word <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.memorable_word : null }}</span>
-              </p>
-              <p class="m-2">
-                Memorable Date <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.memorable_date_formatted : null }}</span>
-              </p>
-              <p class="m-2">
-                Memorable 6 Digit Number <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.memorable_number : null }}</span>
-              </p>
-              <p class="m-2">
-                Date Of Birth <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.date_of_birth_formatted ? changeEmailRequest.date_of_birth_formatted : '(none)' }}</span>
-              </p>
-              <p class="m-2">
-                Profession <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.profession_name ? changeEmailRequest.profession_name : '(none)' }}</span>
-              </p>
-              <p class="m-2">
-                Practice <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.practice_name ? changeEmailRequest.practice_name : '(none)' }}</span>
-              </p>
-              <p class="m-2">
-                New E-Mail Address <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.new_email : null }}</span>
-              </p>
-              <p class="m-2">
-                User Count <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.user_count : null }}</span>
-              </p>
-              <p class="m-2">
-                Requested At <span class="m-2 text-white">{{ changeEmailRequest ? changeEmailRequest.requested_at_formatted : null }}</span>
-              </p>
-              <p class="m-2">
-                <span>Status</span>
-                <span
-                  v-if="changeEmailRequest"
-                  class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
-                  :class="changeEmailRequestStatusColorClass[changeEmailRequest.status]"
-                >{{ changeEmailRequest.status }}</span>
-              </p>
-              <p class="m-2">
-                Accepted At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.accepted_at_in_gb_formatted ? changeEmailRequest.accepted_at_in_gb_formatted : 'N/A' }}</span>
-              </p>
-              <p class="m-2">
-                Rejected At <span class="m-2 text-white">{{ changeEmailRequest && changeEmailRequest.rejected_at_in_gb_formatted ? changeEmailRequest.rejected_at_in_gb_formatted : 'N/A' }}</span>
-              </p>
-              <div v-if="false && changeEmailRequest && changeEmailRequest.status === 'Pending'" class="m-2">
-                <span>Action</span>
-                <button
-                  v-if="changeEmailRequest"
-                  class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
-                  :class="`${false ? '' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'}`"
-                  @click.prevent="changeEmailRequestToRejectId = changeEmailRequest.id"
-                >
-                  Reject
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <p class="text-sm text-white px-2 md:px-4 pt-8 font-semibold">
-        Users
-      </p>
-
-      <div v-if="changeEmailRequest" class="w-full overflow-x-auto p-2 md:px-4 md:py-2">
-        <div class="hidden md:flex items-center text-white justify-around font-semibold"> 
-          <div class="align-middle pl-6 pr-2 w-1/6">
-            ID
-          </div> 
-          <div class="align-middle px-2 text-center w-1/6">
-            Domain
-          </div>
-          <div class="align-middle px-2 text-center w-1/6">
-            Username
-          </div>
-          <div class="align-middle px-2 text-center w-1/6">
-            Name
-          </div>
-          <div class="align-middle px-2 text-center w-1/6">
-            Email
-          </div>
-          <div class="align-middle px-2 text-center w-1/6">
-            Action
-          </div>
-        </div>
-
-        <div v-for="(user, index) in changeEmailRequest.users" :key="`item-${index}`">
-          <nuxt-link
-            :event="false ? '' :'click'" 
-            :class="false ? 'cursor-auto':' hover:bg-waterloo-light transition-hover ' "
-            :to="false ? $route : { name: 'index-change-email-requests-id-index-index-users-userId', params: { id: changeEmailRequest.id, userId: user.id } }"
-            class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo" 
-            draggable="false"
+        <div>
+          <div
+            class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg  mt-4 shadow"
+            style="position:relative;"
           >
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
-              <strong class="block md:hidden text-sm uppercase">ID</strong>
-              <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.id : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Domain</strong>
-              <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.domain : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Username</strong>
-              <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.username : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Name</strong>
-              <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.name : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
-              <strong class="block md:hidden text-sm uppercase">Email</strong>
-              <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.email : null }}</span>
-            </div>
-
-            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
-              <strong class="block md:hidden">Action</strong>
-
-              <div class="flex md:justify-center mt-2 sm:m-0">
-                <button
-                  v-if="user.change_email_request_status === 'Pending'"
-                  class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
-                  :class="`${false ? '' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
-                  @click.prevent="changeEmailRequestToAcceptUserId = user.id"
-                >
-                  Accept
-                </button>
-                <button
-                  v-if="user.change_email_request_status === 'Pending'"
-                  class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full hover:bg-red-600 focus:outline-none"
-                  :class="`${false ? '' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-600 '}`"
-                  @click.prevent="changeEmailRequestToRejectUserId = user.id"
-                >
-                  Reject
-                </button>
-                <button
-                  v-if="user.change_email_request_status === 'Accepted'"
-                  class="w-1/2 sm:w-auto text-white text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
-                  :class="`${true ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : ''}`"
-                >
-                  Accepted
-                </button>
-                <button
-                  v-if="user.change_email_request_status === 'Rejected'"
-                  class="w-1/2 sm:w-auto text-white text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
-                  :class="`${true ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default' : ''}`"
-                >
-                  Rejected
-                </button>
+            <div class="w-4/5 overflow-hidden text-sm m-4">
+              <div>
+                <p class="m-2">
+                  ID <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.id : null }}</span>
+                </p>
+                <p class="m-2">
+                  Memorable Word Category <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_word_category_name : null }}</span>
+                </p>
+                <p class="m-2">
+                  Memorable Word <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_word : null }}</span>
+                </p>
+                <p class="m-2">
+                  Memorable Date <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_date_formatted : null }}</span>
+                </p>
+                <p class="m-2">
+                  Memorable 6 Digit Number <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_number : null }}</span>
+                </p>
+                <p class="m-2">
+                  Date Of Birth <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.date_of_birth_formatted ? changeEmailRequest.date_of_birth_formatted : '(none)' }}</span>
+                </p>
+                <p class="m-2">
+                  Profession <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.profession_name ? changeEmailRequest.profession_name : '(none)' }}</span>
+                </p>
+                <p class="m-2">
+                  Practice <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.practice_name ? changeEmailRequest.practice_name : '(none)' }}</span>
+                </p>
+                <p class="m-2">
+                  New E-Mail Address <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.new_email : null }}</span>
+                </p>
+                <p class="m-2">
+                  User Count <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.user_count : null }}</span>
+                </p>
+                <p class="m-2">
+                  Requested At <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.requested_at_formatted : null }}</span>
+                </p>
+                <p class="m-2">
+                  <span>Status</span>
+                  <span
+                    v-if="changeEmailRequest"
+                    class="px-4 py-1 rounded-full w-32 text-center mx-auto my-1"
+                    :class="changeEmailRequestStatusColorClass[changeEmailRequest.status]"
+                  >{{ changeEmailRequest.status }}</span>
+                </p>
+                <p class="m-2">
+                  Accepted At <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.accepted_at_in_gb_formatted ? changeEmailRequest.accepted_at_in_gb_formatted : 'N/A' }}</span>
+                </p>
+                <p class="m-2">
+                  Rejected At <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.rejected_at_in_gb_formatted ? changeEmailRequest.rejected_at_in_gb_formatted : 'N/A' }}</span>
+                </p>
+                <div v-if="false && changeEmailRequest && changeEmailRequest.status === 'Pending'" class="m-2">
+                  <span>Action</span>
+                  <button
+                    v-if="changeEmailRequest"
+                    class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
+                    :class="`${false ? '' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-700'}`"
+                    @click.prevent="changeEmailRequestToRejectId = changeEmailRequest.id"
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
             </div>
-          </nuxt-link>
+          </div>
         </div>
 
-        <div v-if="changeEmailRequest && changeEmailRequest.users.length === 0" class="mt-4 w-full text-center text-white">
-          <span>No matched users.</span>
+        <p class="text-sm  px-2 md:px-4 pt-8 font-semibold">
+          Users
+        </p>
+
+        <div v-if="changeEmailRequest" class="w-full overflow-x-auto p-2 md:px-4 md:py-2">
+          <div class="hidden md:flex items-center  justify-around font-semibold"> 
+            <div class="align-middle pl-6 pr-2 w-1/6">
+              ID
+            </div> 
+            <div class="align-middle px-2 text-center w-1/6">
+              Domain
+            </div>
+            <div class="align-middle px-2 text-center w-1/6">
+              Username
+            </div>
+            <div class="align-middle px-2 text-center w-1/6">
+              Name
+            </div>
+            <div class="align-middle px-2 text-center w-1/6">
+              Email
+            </div>
+            <div class="align-middle px-2 text-center w-1/6">
+              Action
+            </div>
+          </div>
+
+          <div v-for="(user, index) in changeEmailRequest.users" :key="`item-${index}`">
+            <nuxt-link
+              :event="false ? '' :'click'" 
+              :class="false ? 'cursor-auto':' hover:-light transition-hover ' "
+              :to="false ? $route : { name: 'index-change-email-requests-id-index-index-users-userId', params: { id: changeEmailRequest.id, userId: user.id } }"
+              class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+              draggable="false"
+            >
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
+                <strong class="block md:hidden text-sm uppercase">ID</strong>
+                <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.id : null }}</span>
+              </div>
+
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+                <strong class="block md:hidden text-sm uppercase">Domain</strong>
+                <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.domain : null }}</span>
+              </div>
+
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+                <strong class="block md:hidden text-sm uppercase">Username</strong>
+                <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.username : null }}</span>
+              </div>
+
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+                <strong class="block md:hidden text-sm uppercase">Name</strong>
+                <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.name : null }}</span>
+              </div>
+
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+                <strong class="block md:hidden text-sm uppercase">Email</strong>
+                <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.email : null }}</span>
+              </div>
+
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
+                <strong class="block md:hidden">Action</strong>
+
+                <div class="flex md:justify-center mt-2 sm:m-0">
+                  <button
+                    v-if="user.change_email_request_status === 'Pending'"
+                    class="w-1/2 sm:w-auto  text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
+                    :class="`${false ? '' : 'bg-transparent px-2 hover:bg-green-500 hover:border-green-600 '}`"
+                    @click.prevent="changeEmailRequestToAcceptUserId = user.id"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    v-if="user.change_email_request_status === 'Pending'"
+                    class="w-1/2 sm:w-auto  text-sm mr-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full hover:bg-red-600 focus:outline-none"
+                    :class="`${false ? '' : 'bg-transparent px-2 hover:bg-red-600 hover:border-red-600 '}`"
+                    @click.prevent="changeEmailRequestToRejectUserId = user.id"
+                  >
+                    Reject
+                  </button>
+                  <button
+                    v-if="user.change_email_request_status === 'Accepted'"
+                    class="w-1/2 sm:w-auto  text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
+                    :class="`${true ? 'bg-green-500 border-green-500  px-4 text-center cursor-default ' : ''}`"
+                  >
+                    Accepted
+                  </button>
+                  <button
+                    v-if="user.change_email_request_status === 'Rejected'"
+                    class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
+                    :class="`${true ? 'bg-red-600 border-red-600  px-4 text-center cursor-default' : ''}`"
+                  >
+                    Rejected
+                  </button>
+                </div>
+              </div>
+            </nuxt-link>
+          </div>
+
+          <div v-if="changeEmailRequest && changeEmailRequest.users.length === 0" class="mt-4 w-full text-center ">
+            <span>No matched users.</span>
+          </div>
         </div>
       </div>
-    </div>
-
-    <nuxt-link
-      v-if="$route.name !== 'index-change-email-requests-id-index-index' || changeEmailRequestToRejectId || changeEmailRequestToAcceptUserId || changeEmailRequestToRejectUserId"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-change-email-requests-id-index-index' }"
-      draggable="false"
-    />
-
+    </template>
     <nuxt-child :changeEmailRequest="changeEmailRequest" />
-  </div>
+  </section>
 </template>
 
 <script>

@@ -1,106 +1,103 @@
 <template>
-  <div v-if="authAdminPermissions.includes('View Hubzz Invoices')">
-    <div
-      v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
-      class="px-2 flex justify-start items-center flex-wrap"
-    >
-      <AppButton
-        class="mr-2"
-        :label="$route.name.includes('bulk-billings') ? 'Create HUBZZ Billing Individually' : 'Create HUBZZ Billing by Bulk'"
-        :icon="$route.name.includes('bulk-billings') ? 'edit' : 'add-rectangle'"
-        @click="goToTab()"
-      />
-    </div>
+  <section v-if="authAdminPermissions.includes('View Hubzz Invoices')">
+    <template v-if="$route.name === 'index-billings-index-hubzz-billing'">
+      <div class="flex flex-row justify-start">
+        <div
+          v-if="authAdminPermissions.includes('Create Hubzz Invoices') && !$route.path.includes('bulk-billing')" 
+          class="flex justify-start items-center flex-wrap"
+        >
+          <AppButton
+            class="mr-2 mt-1 font-bold"
+            :label="$route.name.includes('bulk-billings') ? '+ Bill Individually' : ' + Bill by Bulk'"
+            :customTheme="'bg-info text-white'"
+            @click="goToTab()"
+          />
+        </div>
 
-    <div v-if="!$route.path.includes('bulk-billing')" class="text-white w-full md:w-1/2 p-2">
-      <AppInput 
-        v-model="search"
-        :type="'text'"
-        :label="'Search by Practice Name'"
-        :placeholder="'Practice Name'"
-      />
-    </div>
-
-    <AppTable
-      v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
-      :total="itemCount"
-      :items="getAllPractices"
-      :currentPage="currentPage"
-      :perPage="params.limit"
-      :columns="columns"
-      :loading="loadingPractices"
-      :routerLink="`/billings/hubzz-billing`"
-      :orderBy="params.order_by"
-      @pagechanged="pagechanged"
-      @sorted="sorted"
-    >
-      <template v-slot:status_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="
-            `${
-              slotProps.item.status === 'Active'
-                ? 'bg-green-500'
-                : 'bg-gray-500 text-gray-700'
-            }`
-          "
-        >
-          {{ slotProps.item.status }}
+        <div v-if="!$route.path.includes('bulk-billing')" class="w-full text-white w-full md:w-1/2">
+          <AppInputSmall
+            v-model="search"
+            :type="'text'"
+            :name="'search'"
+            :button="true"
+            :buttonLabel="'Search'"
+            :placeholder="'Search by Name'"
+            @click="searchSubmit()"
+          />
         </div>
-      </template>
-      <template v-slot:disputed_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
-        >
-          {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
-        </div>
-      </template>
-      <template v-slot:type_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="typeStyle(slotProps.item.type)"
-        >
-          {{ slotProps.item.type }}
-        </div>
-      </template>
-      <template v-slot:hub_type_slot="slotProps">
-        <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-          :class="hubTypeStyle(slotProps.item.hub_type)"
-        >
-          {{ slotProps.item.hub_type }}
-        </div>
-      </template>
-    </AppTable>
-    <div 
-      v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
-      class="mt-2 w-full text-center text-white"
-    >
-      There are no verified Practices billable.
-    </div>
-
-    <!-- <div
-      class="shield"
-      v-if="
-        $route.name.includes('index-billings-id') ||
-          $route.name.includes('index-billings-addinvoice')
-      "
-      @click="$router.push(`/billings`)"
-    /> -->
+      </div>
+      <AppTableNew
+        v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
+        :total="itemCount"
+        :items="getAllPractices"
+        :currentPage="currentPage"
+        :perPage="params.limit"
+        :columns="columns"
+        :loading="loadingPractices"
+        :routerLink="`/billings/hubzz-billing`"
+        :orderBy="params.order_by"
+        @pagechanged="pagechanged"
+        @sorted="sorted"
+      >
+        <template v-slot:status_slot="slotProps">
+          <div
+            class="text-xs"
+            :class="
+              `${
+                slotProps.item.status === 'Active'
+                  ? 'text-green-500' : 'text-gray-700'
+              }`
+            "
+          >
+            {{ slotProps.item.status }}
+          </div>
+        </template>
+        <template v-slot:disputed_slot="slotProps">
+          <div
+            class="text-xs"
+            :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'text-red-500' : ''"
+          >
+            {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
+          </div>
+        </template>
+        <template v-slot:type_slot="slotProps">
+          <div
+            class="text-xs"
+            :class="typeStyle(slotProps.item.type)"
+          >
+            {{ slotProps.item.type }}
+          </div>
+        </template>
+        <template v-slot:hub_type_slot="slotProps">
+          <div
+            class="text-xs"
+            :class="hubTypeStyle(slotProps.item.hub_type)"
+          >
+            {{ slotProps.item.hub_type }}
+          </div>
+        </template>
+      </AppTableNew>
+      <div 
+        v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
+        class="mt-2 w-full text-center text-white"
+      >
+        There are no verified Practices billable.
+      </div>
+    </template>
+		
     <nuxt-child />
-  </div>
+  </section>
 </template>
 <script>
 import debounce from "lodash.debounce"
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from '@/components/Base/AppTableNew'
+import AppInputSmall from '@/components/Base/AppInputSmall'
 import AppButton from "@/components/Base/AppButton"
-import AppInput from "@/components/Base/AppInput"
 export default {
 	components: {
-    AppTable,
 		AppButton,
-		AppInput,
+		AppTableNew,
+		AppInputSmall,
 	},
 	data () {
 		return {
@@ -108,7 +105,7 @@ export default {
 			currentPage: 1,
       search: "",
 			params: {
-				limit: 10,
+				limit: 15,
 				offset: 0,
         order_by: ["created_at:desc"],
         status: ["Active","Dormant","Account Suspension"],
@@ -206,7 +203,7 @@ export default {
 			let { page = 1, search = "", order_by = [] } = route.query
 			page = parseInt(page)
 			const createdRoute = route.query
-			const limit = 10
+			const limit = 15
       const offset = page * limit - limit
 			const status = ["Active","Dormant","Account Suspension"]
 			// const has_sage_ref = true
@@ -338,11 +335,11 @@ export default {
 		typeStyle (status) {
 			switch (status) {
 				case "Hub":
-					return "bg-red-500 text-white"
+					return "text-red-500"
 				case "Spoke":
-					return "bg-blue-500 text-white"
+					return "text-blue-500"
 				case "Stand Alone":
-					return "bg-indigo-600 text-white"
+					return "text-indigo-600"
 				default:
 					return
 			}
@@ -351,26 +348,9 @@ export default {
 		hubTypeStyle (hubType) {
 			switch (hubType) {
 				case "Type 1":
-					return "bg-red-500 text-white px-4 py-1"
+					return "text-red-500 "
 				case "Type 2":
-					return "bg-purple-500 text-white px-4 py-1"
-				default:
-					return
-			}
-		},
-
-		statusStyle (status) {
-			switch (status) {
-				case "Active":
-					return "bg-green text-white lg:px-10 sm:px-2"
-				case "Inactive":
-					return "bg-yellow text-black lg:px-10 sm:px-2"
-				case "Deactivated":
-					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Account Suspension":
-					return "bg-red text-white lg:px-8 sm:px-2"
-				case "Dormant":
-					return "bg-green-darker text-white lg:px-8 sm:px-2"
+					return "text-purple-500"
 				default:
 					return
 			}

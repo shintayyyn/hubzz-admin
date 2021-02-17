@@ -1,134 +1,137 @@
 <template>
-  <nuxt-link
-    v-if="nuxtLink"
-    :to="nuxtLink"
-    class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
-    :class="[
-      disabled && 'hover:text-gray-700 bg-gray-500',
-      background && !disabled ? getBackground(background) : '',
-      inClass
-    ]"
-    :style="inStyle"
-    :draggable="draggable"
-  >
-    <template v-if="icon">
-      <svgicon :name="icon" :width="iconSize" class="mr-2" :color="iconColor" />
-    </template>
-    <span>{{ label }}</span>
-  </nuxt-link>
-  <!-- : 'bg-sunglow hover:bg-sunglow-dark', -->
   <button
-    v-else
     :disabled="disabled"
-    class="flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover"
+    class="default-btn rounded-md px-2 focus:outline-none transition-hover text-sm "
     :class="[
-      disabled && 'text-gray-700 bg-gray-500 cursor-not-allowed',
-      background && !disabled ? getBackground(background) : '',
-      inClass
+      disabled ? 'disabled-button' : '',
+      inClass,
+      customTheme ? customTheme : 'button bg-sunglow hover:bg-sunglow-dark py-1',
+      badge && icon ? 'flex items-center justify-between' : '',
+      icon ? 'flex items-center' : ''
     ]"
     :style="inStyle"
     @click.prevent="$emit('click')"
   >
-    <template v-if="icon">
-      <svgicon :name="icon" :width="iconSize" class="mr-2 fill-current" />
-    </template>
-    <span>{{ label }}</span>
+    <p :class="icon ? 'flex items-center' : 'text-center'">
+      <svgicon
+        v-if="icon"
+        :name="icon"
+        width="14"
+        class="fill-current py-1"
+      /> <span :class="icon ? 'hidden md:block ml-2' : 'mx-2'">{{ label }}</span>
+    </p>
+
+    <span v-if="badge" class="ml-2 md:ml-6 bg-red-600 font-bold text-xs text-white px-1 h-5 flex items-center justify-center">{{ badge > 99 ? '99+' : badge }}</span>
+
+    <!-- <svgicon
+      v-if="label.includes('Filter') || label.includes('Sort')"
+      name="sort"
+      class="h-full w-3 ml-2 fill-current"
+    /> -->
   </button>
 </template>
 
 <script>
 export default {
-	props: {
-		label: {
-			type: String,
-			default: "Save",
-    },
-    
-		inClass: {
+  props: {
+    label: {
       type: String,
-      default: () => null,
+      default: "Save",
     },
-    
-		inStyle: {
-			type: String,
-      default: () => null,
+
+    icon: {
+      type: String,
     },
-    
-		disabled: {
-			type: Boolean,
-			default: false
+
+    badge: {
+      type: [String, Number,],
     },
-    
-		draggable: {
-			type: Boolean,
-			default: true
+
+    inClass: {
+      type: String,
+      default: null,
     },
-    
-		icon: {
-			type: String,
-      default: () => null,
+
+    inStyle: {
+      type: String,
+      default: null,
     },
-    
-		iconSize: {
-			type: String,
-			default: "21",
+
+    disabled: {
+      type: Boolean,
+      default: false,
     },
-    
-		iconColor: {
-			type: String,
-      default: () => null,
+
+    customTheme: {
+      type: String,
+      default: null,
     },
-    
-		nuxtLink: {
-			type: [String, Array, Object],
-      default: () => null,
-    },
-    
-		background: {
-			type: String,
-			default: "sunglow"
-		}
   },
-  
-	methods: {
-		getBackground (value) {
-			let singleBackground = [
-				"sunglow",
-				"waterloo",
-				"charade",
-				"trout",
-				"transparent",
-				"white",
-				"black"
-			]
-			if (singleBackground.includes(value)) {
-				return `bg-${value} hover:bg-${value}-dark`
-			} else {
-				return `bg-${value}-600 hover:bg-${value}-700`
-			}
-		}
-	}
 }
 </script>
-<style>
-.button {
-	color: #000;
-	background: linear-gradient(to top, #f2d024, #efde86);
-}
-.button:hover {
-	color: #000;
-	background: linear-gradient(to top, #e6c520, #f1d130);
-}
-.button:active {
-	transform: translate(2px, 2px);
-}
-.disabled-button {
-	color: #9e9e9e;
-	background: linear-gradient(to top, #ccc, #ddd);
-	cursor: not-allowed;
-}
 
-.disabled-button:hover {
-	background: linear-gradient(to top, #bbbbbb, #cccccc);
-}
+<style >
+  .button {
+    /* background: linear-gradient(to top, #f2d024, #efde86); */
+  }
+
+  .bg-warning {
+    background: #f9a423;
+  }
+  .bg-info {
+    background: #16e3c8;
+  }
+
+  .bg-info:hover,
+  .bg-info:focus {
+    background: #0fbea7;
+    /* background: linear-gradient(to top, #e6c520, #f1d130); */
+  }
+
+  .bg-warning:hover,
+  .bg-warning:focus {
+    background: #eb9a1f;
+    /* background: linear-gradient(to top, #e6c520, #f1d130); */
+  }
+
+  .button:hover,
+  .button:focus {
+    /* background: #f8f8f8; */
+    /* background: linear-gradient(to top, #e6c520, #f1d130); */
+  }
+
+  .default-btn {
+    border-radius: 6px;
+  }
+  
+   button:focus{
+     outline: none;
+   }
+  .default-btn:hover {
+    transform: translate(1px, 1px);
+  }
+
+  .default-btn:active {
+    transform: translate(2px, 2px);
+  }
+
+  .disabled-button {
+    color: #9e9e9e;
+    background: #ddd;
+    /* background: linear-gradient(to top, #ccc, #ddd); */
+    cursor: not-allowed;
+  }
+
+  .disabled-button:hover {
+    transform: translate(0, 0);
+    background: #ddd;
+    /* background: linear-gradient(to top, #ccc, #ddd); */
+  }
+
+  /* @media (min-width: 720px) {
+    .default {
+      min-width: 150px;
+    }
+  } */
 </style>
+

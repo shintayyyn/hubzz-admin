@@ -1,103 +1,97 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <AppLoading :loading="loading" spinner />
-    <div class="flex justify-end">
-      <nuxt-link
-        v-if="authAdminPermissions.includes('Create Compliance Document Reject Reasons')"
-        :to="{ name: 'index-compliance-document-reject-reasons-create' }"
-        class="
-          flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover
-          text-sm bg-sunglow hover:bg-sunglow-dark
-        "
-        draggable="false"
-      >
-        Create New Compliance Document Reject Reason
-      </nuxt-link>
-    </div>
-
-    <div class="flex flex-col md:flex-row justify-between md:items-center">
-      <div v-if="false" class="flex py-2">
-        <div class="relative">
-          <input
-            v-model="search"
-            style="width: 250px;"
-            class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-            placeholder="Search Locum by Name or E-Mail"
-            @keyup.enter="searchSubmit"
-          >
-          <button
-            v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-            @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
-        </div>
-      </div>
-
-      <div class="flex flex-col w-full justify-end">
-        <div
-          v-if="false"
-          class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
+  <section class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
+    <template v-if="$route.name === 'index-compliance-document-reject-reasons'">
+      <div class="flex justify-end">
+        <nuxt-link
+          v-if="authAdminPermissions.includes('Create Compliance Document Reject Reasons')"
+          :to="{ name: 'index-compliance-document-reject-reasons-create' }"
+          class="
+            flex items-center text-black rounded-lg py-2 px-4 font-bold focus:outline-none transition-hover
+            text-sm bg-sunglow hover:bg-sunglow-dark
+          "
+          draggable="false"
         >
-          <label class="text-sm text-white md:pr-2">Filter by Status</label>
-          <select
-            v-model="filterStatus"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
-          >
-            <option :value="null">
-              All
-            </option>
-            <option>Pending</option>
-            <option>Accepted</option>
-            <option>Rejected</option>
-          </select>
+          Create New Compliance Document Reject Reason
+        </nuxt-link>
+      </div>
+
+      <div class="flex flex-col md:flex-row justify-between md:items-center">
+        <div v-if="false" class="flex py-2">
+          <div class="relative">
+            <input
+              v-model="search"
+              style="width: 250px;"
+              class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
+              placeholder="Search Locum by Name or E-Mail"
+              @keyup.enter="searchSubmit"
+            >
+            <button
+              v-if="search"
+              class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+              @click="(search = ''), searchSubmit()"
+            >
+              <svgicon
+                name="times-solid"
+                height="12"
+                width="12"
+                class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
+              />
+            </button>
+          </div>
         </div>
 
-        <div class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0">
-          <label class="text-sm text-white md:pr-2">Sort by</label>
-          <select
-            v-model="selectedOrderByValue"
-            class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+        <div class="flex flex-col w-full justify-end">
+          <div
+            v-if="false"
+            class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
           >
-            <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
-              {{ orderByValue.displayLabel }}
-            </option>
-          </select>
+            <label class="text-sm text-white md:pr-2">Filter by Status</label>
+            <select
+              v-model="filterStatus"
+              class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+            >
+              <option :value="null">
+                All
+              </option>
+              <option>Pending</option>
+              <option>Accepted</option>
+              <option>Rejected</option>
+            </select>
+          </div>
+
+          <div class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0">
+            <label class="text-sm text-white md:pr-2">Sort by</label>
+            <select
+              v-model="selectedOrderByValue"
+              class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+            >
+              <option v-for="orderByValue in orderByValues" :key="orderByValue.value" :value="orderByValue.value">
+                {{ orderByValue.displayLabel }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
-    </div>
 
-    <AppTable
-      class="qweqweqwe"
-      :total="count"
-      :items="complianceDocumentRejectReasons"
-      :currentPage="page"
-      :perPage="limit"
-      :columns="columns"
-      :loading="loading"
-      :routerLink="routerLink"
-      :orderBy="orderBy"
-      @pagechanged="(_page) => page = _page"
-      @limitchanged="(_limit) => limit = _limit"
-      @sorted="(_orderBy) => orderBy = _orderBy"
-    />
-
-    <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
-      <span>No compliance document reject reasons.</span>
-    </div>
-
-    <nuxt-link
-      v-if="$route.name !== 'index-compliance-document-reject-reasons'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-compliance-document-reject-reasons' }"
-      draggable="false"
-    />
+      <AppTableNew
+        class="qweqweqwe"
+        :total="count"
+        :items="complianceDocumentRejectReasons"
+        :currentPage="page"
+        :perPage="limit"
+        :columns="columns"
+        :loading="loading"
+        :routerLink="routerLink"
+        :orderBy="orderBy"
+        @pagechanged="(_page) => page = _page"
+        @limitchanged="(_limit) => limit = _limit"
+        @sorted="(_orderBy) => orderBy = _orderBy"
+      />
+      <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
+        <span>No compliance document reject reasons.</span>
+      </div>
+    </template>
+    
 
     <nuxt-child
       :complianceDocuments="complianceDocuments"
@@ -109,20 +103,20 @@
       @complianceDocumentRejectReasonUpdated="complianceDocumentRejectReasonUpdated"
       @complianceDocumentRejectReasonDeleted="complianceDocumentRejectReasonDeleted"
     />
-  </div>
+  </section>
 </template>
 
 <script>
 import debounce from "lodash.debounce"
 
 import AppLoading from '@/components/Base/AppLoading'
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 
 export default {
 
   components: {
     AppLoading,
-    AppTable,
+    AppTableNew,
   },
 
   data () {

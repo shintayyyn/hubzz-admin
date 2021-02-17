@@ -7,7 +7,7 @@
       :inStyle="'padding:5px 14px;font-size:1em'"
       @click="viewAsPdf(propInvoice.id)"
     />
-    <div class="bg-white flex flex-col justify-start items-start border rounded-lg py-8 px-6 mb-4">
+    <div class="bg-white flex flex-col justify-start items-start shadow-lg  py-8 px-6 mb-4">
       <div :ref="'pdf-header'" class="flex justify-between w-full px-2">
         <div class="flex flex-wrap justify-between w-1/2">
           <div

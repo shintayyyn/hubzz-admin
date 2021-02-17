@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex flex-col overflow-auto">
-    <div class="flex px-4 md:px-8 py-2 text-sm flex-wrap">
+    <div class="flex flex-wrap">
       <AppConfirm
         v-if="confirm"
         :message="'Are you sure you want to delete this role?'"
@@ -27,7 +27,7 @@
       </template>
     </div>
     <div class="m-2">
-      <AppTable
+      <AppTableNew
         v-if="total > 0"
         :total="total"
         :items="adminRoles"
@@ -53,7 +53,7 @@
             </div>
           </div>
         </template>
-      </AppTable>
+      </AppTableNew>
     </div>
 
     <div
@@ -68,14 +68,14 @@
   </div>
 </template>
 <script>
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 import AppButton from "@/components/Base/AppButton"
 import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
 		AppButton,
 		AppConfirm,
-		AppTable
+		AppTableNew
 	},
 	data () {
 		return {

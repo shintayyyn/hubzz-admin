@@ -50,7 +50,7 @@ export default {
 .loader-message {
 	position: -webkit-sticky;
 	position: sticky;
-	color: white;
+	color: black;
 	/* top: 50%; */
 	text-align: center;
 	z-index: 50;

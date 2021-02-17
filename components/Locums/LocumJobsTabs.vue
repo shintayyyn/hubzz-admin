@@ -1,10 +1,10 @@
 <template>
-  <div class="flex overflow-x-auto py-2">
+  <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
     <!-- Ongoing job is a job of the locum that has not yet started -->
     <nuxt-link
       :to="`/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs`"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-allocated-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Allocated
     </nuxt-link>
@@ -12,47 +12,47 @@
     <!-- Ongoing job is a job of the locum that already has started -->
     <nuxt-link
       :to="`/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs`"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-ongoing-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Ongoing
     </nuxt-link>
 
     <nuxt-link
       :to="getRoute('locum-available-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-available-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-available-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Available
     </nuxt-link>
 
     <!-- <nuxt-link
       :to="getRoute('locum-matched-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-matched-jobs`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-matched-jobs`? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Matched
     </nuxt-link> -->
     <nuxt-link
       :to="getRoute('locum-applied-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-applied-jobs`? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-applied-jobs`? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Applied
     </nuxt-link>
 
     <nuxt-link
       :to="getRoute('locum-cancelled-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-cancelled-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-cancelled-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Cancelled
     </nuxt-link>
 
     <nuxt-link
       :to="getRoute('locum-unsuccessful-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-unsuccessful-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-unsuccessful-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Unsuccessful
     </nuxt-link>
@@ -60,32 +60,32 @@
     <!-- DECLINED IS NOW WITHDRAWN. STATUS STAYS THE SAME(DECLINED) -->
     <nuxt-link
       :to="getRoute('locum-withdrawn-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-withdrawn-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-withdrawn-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Withdrawn
     </nuxt-link>
 
     <nuxt-link
       :to="getRoute('locum-completed-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-completed-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-completed-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Completed
     </nuxt-link>
 
     <nuxt-link
       :to="getRoute('locum-approved-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-approved-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-approved-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Approved
     </nuxt-link>
 
     <!-- <nuxt-link
       :to="getRoute('locum-withrawn-jobs')"
-      class="mr-5 p-3 text-sm font-bold cursor-pointer text-white rounded-lg"
-      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-withrawn-jobs` ? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+      class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+      :class="$route.path === `/locums/${$route.params.id}/locum-jobs/locum-withrawn-jobs` ? 'border-b-4 border-gray-500' : 'text-gray-600'"
     >
       Withrawn
     </nuxt-link> -->

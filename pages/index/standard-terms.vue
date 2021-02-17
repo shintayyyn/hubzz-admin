@@ -1,20 +1,15 @@
 <template>
   <div class="flex-1 flex flex-col py-2 px-2 md:px-6 overflow-y-auto">
-    <div class="text-white">
-      <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
-    </div>
-
-    <div v-if="$route.name !== 'index-standard-terms'" class="fixed inset-0 bg-shield opacity-50 z-511" @click="$router.push('/standard-terms')" />
-
-    <div>
+    <div v-if="$route.name === 'index-standard-terms'">
+      <div class="">
+        <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
+      </div>
       <section>
         <div>
-          <AppLoading :loading="loading" message="Loading" spinner />
-
           <!-- TABLE -->
           <div class="flex flex-col w-full px-2 py-2 md:mt-4 overflow-x-auto">
             <!-- TABLE HEADER -->
-            <div class="row hidden md:flex justify-start leading-none text-sm text-white">
+            <div class="row hidden md:flex justify-start leading-none text-sm ">
               <div class="flex-1 flex items-center px-2 justify-center">
                 <span class="pr-1">Filename</span>
               </div>
@@ -30,9 +25,8 @@
             <!-- TABLE BODY -->
             <div class="row py-2">
               <div class="relative">
-                <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
-
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none transition-hover">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover">
+                  <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Filename</span>
                     <span>{{ standardTerms ? standardTerms.filename : null }}</span>
@@ -46,8 +40,8 @@
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Action</span>
                     <div class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center">
-                      <div v-if="standardTerms" class=" flex items-center justify-center text-white text-xs px-1 py-1 xl:py-0">
-                        <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full text-white no-underline px-6 py-2">
+                      <div v-if="standardTerms" class=" flex items-center justify-center  text-xs px-1 py-1 xl:py-0">
+                        <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full  no-underline px-6 py-2">
                           <svgicon name="folder" width="16" height="16" color="white white" />
                           <span class="pl-2">View</span>
                         </nuxt-link>
@@ -55,10 +49,10 @@
                       <div 
                         v-if="authAdminPermissions.includes('Modify Standard Terms')"
                         class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
-                        <div class="flex justify-center text-white text-sm">
+                        <div class="flex justify-center  text-sm">
                           <label>
                             <input ref="inputFile" class="hidden" type="file" @change="handleInputFileChange">
-                            <button class="cursor-pointer flex items-center text-center rounded-full text-white px-4 py-2 text-xs" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500'" @click="$refs.inputFile.click()">
+                            <button class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500'" @click="$refs.inputFile.click()">
                               <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
                               <span class="pl-2">{{ standardTerms ? 'Update' : 'Upload' }}</span>
                             </button>

@@ -1,20 +1,8 @@
 <template>
-  <div ref="modalContainer" class="issue-hubzz-invoice-modal p-4 md:p-8 shadow-lg">
-    <div class="flex items-center text-sm text-white py-2">
-      <nuxt-link 
-        :to="{path: `/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`, query: $route.query}"
-      >
-        <svgicon
-          name="arrow-left-solid"
-          height="40"
-          width="40"
-          class="fill-current text-white hover:text-sunglow p-1 cursor-pointer"
-        />
-      </nuxt-link>
-    </div>
+  <div ref="modalContainer" class="p-4 md:p-8">
     <section class="max-w-lg">
       <div class="flex lg:flex-row flex-col justify-center">
-        <div class="flex flex-col justify-between md:items-center text-white">
+        <div class="flex flex-col justify-between md:items-center ">
           <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2">
             <AppDate
               v-model="approvedAtDateStart"
@@ -31,7 +19,7 @@
             />
           </div>
           
-          <div class="flex flex-row md:justify-center p-1 md:p-2 align-middle text-white leading-none">
+          <div class="flex flex-row md:justify-center p-1 md:p-2 align-middle  leading-none">
             <div class="m-1">
               <input id="disputed" v-model="showDisputed" type="checkbox" value="true">
               <label for="disputed">Include Disputed Invoices</label>
@@ -259,15 +247,13 @@ export default {
 	overflow: auto;
 	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	background-color: white;
 	z-index: 512;
 }
 @media screen and (min-width: 1200px) {
-	.issue-hubzz-invoice-modal {
-		width: 70%;
-	}
+	
 	.choose-job-parts-modal {
-		width: 60%;
+		width: 80%;
 	}
 }
 </style>

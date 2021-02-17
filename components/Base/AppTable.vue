@@ -57,7 +57,7 @@
             :event="!routerLink || (routerId && item[routerId] === null) ? '' : 'click'"
           >
             <div
-              class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 bg-waterloo text-white border-l-8 border-sunglow md:border-none"
+              class="flex flex-col md:flex-row justify-start shadow-md rounded-lg bg-white border-l-8 border-sunglow md:border-none"
               :class="recordClass()"
             >
               <div
@@ -295,6 +295,7 @@
       },
 
       sortIcon (dataIndex) {
+        console.log('this.params',this.params)
         return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
           ? 'sort-ascend'
           : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
@@ -389,6 +390,12 @@
 </script>
 
 <style scoped>
+  .stripe-gray {
+    background-color: #f8f8f8;
+  }
+  .stripe-hover:hover {
+    background-color: #fee8c7;
+  }
   @media (min-width: 768px) {
     .row {
       min-width: 1200px;

@@ -15,7 +15,7 @@
           :value="value ? $moment(value).format('DD/MM/YYYY') : $moment().format('DD/MM/YYYY')"
           type="input"
           :placeholder="format"
-          class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
+          class="border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full text-center"
           :class="{ inClass, 'border-red-500': error}"
           :style="inStyle"
           :format="format"
@@ -35,7 +35,7 @@
     </div>
     <transition name="fade">
       <div class="md:static z-10 flex justify-center">
-        <div class="rounded-b-lg calendar bg-waterloo shadow-md">
+        <div class="rounded-b-lg calendar bg-white shadow-md">
           <div
             class="p-2 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
           >

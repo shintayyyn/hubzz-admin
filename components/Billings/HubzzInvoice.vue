@@ -2,7 +2,7 @@
   <div class="text-black">
     <AppLoading :loading="loading" spinner :message="'Processing'" />
     <!-- HEADER -->
-    <div class="flex flex-wrap overflow-hidden md:mx-1 md:pl-3 mb-1 pb-1 text-sm">
+    <div class="flex flex-wrap overflow-hidden m-4 text-sm">
       <AppButton
         v-if="forViewing == true && authAdminPermissions.includes('Export Hubzz Invoices')"
         class="mr-2"
@@ -31,13 +31,13 @@
     >
       *Assign a SAGE Reference Number to this Practice to proceed with the file export.
     </div>
-    
     <!-- HEADER ENDS HERE -->
+
     <div v-if="forViewing == false">
-      <div class="text-white font-bold text-xl mx-4">
+      <div class="font-bold text-xl mx-3">
         For the Period
       </div>
-      <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-2 text-white">
+      <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-1">
         <AppDate
           v-model="forPeriodDateStart"
           class="w-full md:w-1/2 md:mx-2"
@@ -63,11 +63,10 @@
     </div>
 
     <!-- BODY -->
-    <!-- FIRST PAGE -->
-    
+    <!-- FIRST PAGE --> 
     <div
       id="toPrint"
-      class="invoice md:mx-4 max-w-xl h-full flex flex-col justify-between bg-white"
+      class="invoice md:mx-1 max-w-xl h-full flex flex-col justify-between bg-white shadow-lg"
       :class="!doNotShow && 'display'"
     >
       <!--HQ INVOICE  -->

@@ -1,46 +1,34 @@
 <template>
-  <div class="practice-hubzz-invoice-modal">
-    <div class="items-center text-sm text-white py-2 m-6">
-      <div class="p-3 mb-2">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="fill-current text-white hover:text-sunglow cursor-pointer"
-          @click="goBack()"
-        />
-      </div>
+	<div class="items-center text-sm">
+		<div
+			v-if="practiceInvoice.paid_at_in_gb_formatted" 
+			class="mx-4 my-2 font-semibold text-lg"
+		>
+			{{ '* This invoice has been marked as paid on ' + practiceInvoice.paid_at_in_gb_formatted }}
+		</div>
+		<div
+			v-if="practiceInvoice.unpaid_at_in_gb_formatted" 
+			class="mx-4 my-2 font-semibold text-lg"
+		>
+			<div>{{ `* This invoice has been marked Invalid on ${practiceInvoice.unpaid_at_in_gb_formatted}` }}</div>
+			<div v-if="practiceInvoice.unpaid_reason">{{ `For the reason: ${practiceInvoice.unpaid_reason}` }}</div>
+		</div>
 
-      <div
-        v-if="practiceInvoice.paid_at_in_gb_formatted" 
-        class="mx-4 my-2 font-semibold text-lg"
-      >
-        {{ '* This invoice has been marked as paid on ' + practiceInvoice.paid_at_in_gb_formatted }}
-      </div>
-      <div
-        v-if="practiceInvoice.unpaid_at_in_gb_formatted" 
-        class="mx-4 my-2 font-semibold text-lg"
-      >
-        <div>{{ `* This invoice has been marked Invalid on ${practiceInvoice.unpaid_at_in_gb_formatted}` }}</div>
-        <div v-if="practiceInvoice.unpaid_reason">{{ `For the reason: ${practiceInvoice.unpaid_reason}` }}</div>
-      </div>
-
-      <div>
-        <HubzzInvoice
-          :forViewing="true"
-          :practice="practice"
-          :practiceInvoice="practiceInvoice"
-          :invoiceItems="invoiceItems"
-          :disputedItems="disputedItems"
-          :debitItems="debitItems"
-          :creditItems="creditItems"
-          :dateStart="practiceInvoice.date_start"
-          :dateEnd="practiceInvoice.date_end"
-          :byLocum="false"
-        />
-      </div>
-    </div>
-  </div>
+		<div>
+			<HubzzInvoice
+				:forViewing="true"
+				:practice="practice"
+				:practiceInvoice="practiceInvoice"
+				:invoiceItems="invoiceItems"
+				:disputedItems="disputedItems"
+				:debitItems="debitItems"
+				:creditItems="creditItems"
+				:dateStart="practiceInvoice.date_start"
+				:dateEnd="practiceInvoice.date_end"
+				:byLocum="false"
+			/>
+		</div>
+	</div>
 </template>
 <script>
 import HubzzInvoice from "@/components/Billings/HubzzInvoice"

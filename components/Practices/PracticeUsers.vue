@@ -14,7 +14,7 @@
     </div>
 
     <transition name="fade">
-      <AppTable
+      <AppTableNew
         v-if="count > 0"
         :total="count"
         :items="practiceUsers"
@@ -46,7 +46,7 @@
             @click="$router.push({ path: `/practices/${practice.id}/practice-users/${slotProps.item.id}`})"
           />
         </template> -->
-      </AppTable>
+      </AppTableNew>
 
       <template v-else>
         <div class="mt-2 w-full text-center text-white">
@@ -79,14 +79,14 @@
 <script>
   import CreateUser from "@/components/UserManagement/CreateUser"
   import AppLoading from "@/components/Base/AppLoading"
-  import AppTable from "@/components/Base/AppTable"
+  import AppTableNew from "@/components/Base/AppTableNew"
   import AppButton from "@/components/Base/AppButton"
 
   export default {
     components: {
       CreateUser,
       AppLoading,
-      AppTable,
+      AppTableNew,
       AppButton,
     },
 

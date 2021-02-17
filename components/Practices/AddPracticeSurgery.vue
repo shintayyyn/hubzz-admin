@@ -1,63 +1,35 @@
 <template>
-  <div>
+  <div class="px-4">
     <!-- HEADER -->
-    <div v-if="practice" class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
+    <div v-if="practice" class="flex justify-between text-sm py-4 md:px-8">
       <div class="cursor-pointer" @click="goBack()">
         <svgicon
           name="arrow-left-solid"
           height="32"
           width="32"
-          class="text-white hover:text-sunglow fill-current"
+          class="hover:text-sunglow fill-current"
         />
       </div>
     </div>
     <!-- HEADER -->
 
-    <div class="flex flex-col px-4 md:px-8 text-base text-white py-2" style="min-height: 70vh">
-      <div class="w-full">
-        <div class="flex justify-between items-center">
-          <div class="flex flex-no-wrap w-full md:w-auto">
-            <div class="w-full md:w-auto relative">
-              <input
-                v-model="search"
-                class="appearance-none bg-transparent border-b w-full md:w-64 text-white mr-3 mb-2 p-2 leading-tight focus:outline-none focus:border-sunglow transition-hover"
-                type="text"
-                :placeholder="
-                  !practice || (practice && practice.type == 'Hub')
-                    ? 'Search for Surgery by Name, etc....'
-                    : 'Search for Hub by Name, etc....'
-                "
-                @keyup.enter="searchSubmit()"
-              >
-              <button
-                v-if="search"
-                class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-                @click="(search = ''), searchSubmit()"
-              >
-                <svgicon
-                  name="times-solid"
-                  height="12"
-                  width="12"
-                  class="text-white hover:text-sunglow fill-current -mx-2 md:-mx-6"
-                />
-              </button>
-            </div>
-          </div>
-          <div class="flex items-center">
-            <div
-              v-if="total === 0 && search"
-              class="py-2 md:px-2 text-sm whitespace-no-wrap text-gray-500"
-            >
-              No results found.
-            </div>
-            <span
-              v-if="search && total !== 0"
-              class="py-2 md:px-2 text-sm whitespace-no-wrap"
-            >{{ total }} results found.</span>
-          </div>
-        </div>
+    <div class="flex flex-col text-base py-2" style="min-height: 70vh">
+      <div class="w-full md:w-1/2">
+        <AppInputSmall
+          v-model="search"
+          :type="'text'"
+          :name="'search'"
+          :button="true"
+          :buttonLabel="'Search'"
+          :placeholder="
+            !practice || (practice && practice.type == 'Hub')
+              ? 'Search for Surgery by Name, etc....'
+              : 'Search for Hub by Name, etc....'
+          "
+          @click="searchSubmit()"
+        />
       </div>
-
+      
       <div class="w-full overflow-y-auto px-2">
         <div>
           <!--TABLE-->
@@ -71,17 +43,17 @@
               <div
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
-                class="flex no-underline rounded-lg shadow my-2 transition-hover bg-waterloo hover:bg-waterloo-light cursor-pointer"
+                class="flex no-underline rounded-lg shadow my-2 transition-hover  hover:bg-gray-300 cursor-pointer"
                 @click="show(surgery.id)"
               >
                 <!-- :class="
                   [registeredPractice.includes(surgery.id)
-                    ? 'bg-waterloo opacity-75'
-                    : 'bg-waterloo hover:bg-waterloo-light cursor-pointer', 
+                    ? ' opacity-75'
+                    : ' hover:bg-gray-300 cursor-pointer', 
                     toggleRegisteredPractice && registeredPractice.includes(surgery.id) && 'hidden']
                 "-->
                 <div class="flex w-full">
-                  <div class="w-full text-white text-xs p-4">
+                  <div class="w-full text-xs p-4">
                     <div class="w-full flex justify-between items-center">
                       <span class="font-bold">{{ surgery.name }}</span>
                       <!-- <span
@@ -95,7 +67,7 @@
                     <div class="flex items-center my-1">
                       <span
                         class="block p-2 rounded"
-                        :class="registeredPractice.includes(surgery.id) ? 'bg-trout opacity-75' : 'bg-trout '"
+                        :class="registeredPractice.includes(surgery.id) ? 'bg-gray-500 opacity-75' : 'bg-gray-500 '"
                       >CCG</span>
                       <span class="w-full px-2">
                         {{ surgery.clinical_commissioning_group.name }}
@@ -104,7 +76,7 @@
                     <div class="flex items-center my-1">
                       <span
                         class="block p-2 rounded whitespace-no-wrap"
-                        :class="registeredPractice.includes(surgery.id)? 'bg-trout opacity-75': 'bg-trout'"
+                        :class="registeredPractice.includes(surgery.id)? 'bg-gray-500 opacity-75': 'bg-gray-500'"
                       >Practice Code</span>
                       <span class="w-full px-2">{{ surgery.code }}</span>
                     </div>
@@ -124,11 +96,11 @@
                 v-for="(spoke, index) in practiceSpokes"
                 :key="`spoke-${index}`"
                 class="flex no-underline rounded-lg shadow my-2 transition-hover"
-                :class="spoke.invited ? 'bg-waterloo opacity-75' : 'bg-waterloo hover:bg-waterloo-light cursor-pointer'"
+                :class="spoke.invited ? ' opacity-75' : ' hover:bg-gray-300 cursor-pointer'"
                 @click="newChildSpoke(spoke.id, spoke.invited)"
               >
                 <div class="flex w-full">
-                  <div class="w-full text-white text-xs p-4">
+                  <div class="w-full text-xs p-4">
                     <div class="flex justify-between">
                       <span class="font-bold">{{ spoke.surgery.name }}</span>
                       <span
@@ -141,11 +113,11 @@
                     <span class="block w-full py-1">{{ spoke.address_line_2 }}</span>
                     <span class="block w-full py-1">{{ spoke.address_line_3 }}</span>
                     <div class="flex items-center my-1">
-                      <span class="p-2 bg-trout rounded mr-2">Practice Code</span>
+                      <span class="p-2 bg-gray-500 rounded mr-2">Practice Code</span>
                       <span>{{ spoke.surgery.code }}</span>
                     </div>
                     <div class="flex items-center my-1">
-                      <span class="p-2 bg-trout rounded mr-2">CCG</span>
+                      <span class="p-2 bg-gray-500 rounded mr-2">CCG</span>
                       <span>{{ spoke.clinical_commissioning_group_name }}</span>
                     </div>
                   </div>
@@ -200,8 +172,6 @@
         />
       </div>
     </transition>
-
-    <nuxt-child />
   </div>
 </template>
 
@@ -210,12 +180,13 @@ import debounce from "lodash.debounce"
 import AppPagination from "@/components/Base/AppPagination"
 import CreateUser from "@/components/UserManagement/CreateUser"
 import SetSpokePermissions from "@/components/Practices/SetSpokePermissions"
-
+import AppInputSmall from '@/components/Base/AppInputSmall'
 export default {
   components: {
     AppPagination,
     CreateUser,
-    SetSpokePermissions
+    SetSpokePermissions,
+    AppInputSmall,
   },
   props: {
     practice: {

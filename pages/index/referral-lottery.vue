@@ -1,24 +1,20 @@
 <template>
-  <div class="flex-1 flex flex-col py-2 px-2 mx-2 md:px-6 overflow-x-hidden">
-    <div class="flex justify-start my-2">
-      <div class="relative">
-        <nuxt-link
-          to="/referral-lottery?status=entries"
-          class="md:mr-5 p-3 text-sm font-bold cursor-pointer"
-          :class="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')? 'border rounded-lg border-yellow-500 bg-yellow-500' : 'text-white'"
-        >
-          Prize Draw Entries
-        </nuxt-link>
-      </div>
-      <div class="relative">
-        <nuxt-link
-          to="/referral-lottery?status=winners"
-          class="md:mr-5 p-3 text-sm font-bold cursor-pointer"
-          :class="$route.query && $route.query.status && $route.query.status.toLowerCase() === 'winners' ? 'border rounded-lg border-yellow-500 bg-yellow-500' : 'text-white'"
-        >
-          Prize Draw Winners
-        </nuxt-link>
-      </div>
+  <div class="flex-1 flex-col py-2 px-2">
+    <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+      <nuxt-link
+        to="/referral-lottery?status=entries"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+      >
+        Prize Draw Entries
+      </nuxt-link>
+      <nuxt-link
+        to="/referral-lottery?status=winners"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="$route.query && $route.query.status && $route.query.status.toLowerCase() === 'winners' ? 'border-b-4 border-yellow-500' : 'text-gray-600'"
+      >
+        Prize Draw Winners
+      </nuxt-link>
     </div>
 
     <nuxt-child />

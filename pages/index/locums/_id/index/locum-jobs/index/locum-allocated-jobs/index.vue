@@ -1,22 +1,24 @@
 <template>
   <div>
-    <LocumAllocatedJobs :user='user'/>
+    <JobsLists 
+      :locumUser="user"
+      :status="['Allocated',]"
+      :jobDenom="'Jobs'"
+    />
   </div>
 </template>
 <script>
-import AppLoading from '@/components/Base/AppLoading'
-import LocumAllocatedJobs from '@/components/Locums/Jobs/LocumAllocatedJobs'
+import JobsLists from '@/components/JobsLists'
 export default {
   components:{
-    AppLoading,
-    LocumAllocatedJobs
+    JobsLists,
   },
   computed:{
-    user(){
+    user (){
       return this.$store.state.locums.locumUser
     },
   },
-  async asyncData({app, store, route}){
+  async asyncData ({app, store, route}){
     try{
       let response = await app.$axios.$get(`/api/v1/admin/locum-users/${route.params.id}`)
       const user = response.data.user

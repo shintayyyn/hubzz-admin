@@ -13,7 +13,7 @@
         <span>{{ error.message || 'Something Went Wrong!' }}</span>
       </h1>
 
-      <nuxt-link class="text-white underline text-sm" to="/">Go Home</nuxt-link>
+      <nuxt-link class="underline text-sm" to="/">Go Home</nuxt-link>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ body{
   background-image:"~/assets/images/hubbz-bg.png"
 }
 .error-container {
-  color:white;
+  color:black;
   position: absolute;
   top: 0px;
   left: 0;

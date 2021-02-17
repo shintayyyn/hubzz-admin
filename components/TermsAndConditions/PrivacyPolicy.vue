@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-charade rounded-lg shadow-lg p-4 md:p-8 text-white">
+	<div class="bg-gray-200 rounded-lg shadow-lg p-2 text-white">
 		<div>
 			<!-- <div class="text-base md:text-4xl font-bold md:font-normal px-2 mb-4 text-white">Privacy Policy</div> -->
 			<no-ssr

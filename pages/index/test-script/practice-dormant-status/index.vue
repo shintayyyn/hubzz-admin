@@ -1,54 +1,36 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-10/12 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-test-script' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
+  <div style="transition: all 0.3s ease-in-out;"> 
+    <section v-if="$route.name === 'index-test-script-practice-dormant-status-index'" class="flex-1 flex flex-col self-end">
       <div class="py-4">
-        <div class="mx-2 md:mx-4 text-white">
+        <div class="mx-2 md:mx-4 ">
           <div class="text-lg font-bold">
             Active and Dormant Practices
           </div>
         </div>
 
         <div class="flex flex-col md:flex-row justify-between md:items-center">
-          <div class="flex py-2">
-            <div class="relative">
-              <input
-                v-model="search"
-                style="width: 280px;"
-                class="rounded-lg border-2 border-transparent text-sm text-white p-2 pr-6 focus:border-sunglow focus:outline-none bg-waterloo"
-                placeholder="Search practice by name or code"
-                @keyup.enter="searchSubmit"
-              >
-
-              <button
-                v-if="search"
-                class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
-                @click="(search = ''), searchSubmit()"
-              >
-                <svgicon
-                  name="times-solid"
-                  height="12"
-                  width="12"
-                  class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-                />
-              </button>
-            </div>
+          <div class="w-full">
+            <AppInputSmall
+              v-model="search"
+              :type="'text'"
+              :name="'search'"
+              :button="true"
+              :buttonLabel="'Search'"
+              :placeholder="'Search Practice by Name or Code'"
+              @click="searchSubmit()"
+            />
           </div>
+          
 
           <div class="flex flex-col w-full justify-end">
             <div
               class="md:w-full relative flex flex-col md:flex-row justify-end md:items-center md:items-end md:py-2 py-0"
             >
-              <label class="text-sm text-white md:pr-2">Filter by Status</label>
+              <label class="text-sm  md:pr-2">Filter by Status</label>
               <select
                 id="grid-state"
                 v-model="filterStatus"
-                class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+                class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm  p-1 pr-6 focus:hubzz-yellow shadow-lg"
               >
                 <option :value="null">
                   All
@@ -61,10 +43,10 @@
             <div
               class="relative md:hidden flex flex-col justify-end md:flex-row md:items-center md:items-end pt-2 md:p-2 md:py-0"
             >
-              <label class="text-sm text-white md:pr-2">Sort by</label>
+              <label class="text-sm  md:pr-2">Sort by</label>
               <select
                 v-model="orderByValue"
-                class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm text-white p-1 pr-6 focus:hubzz-yellow bg-waterloo"
+                class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm  p-1 pr-6 focus:hubzz-yellow bg-waterloo"
               >
                 <option v-for="tempOrderByValue in orderByValues" :key="tempOrderByValue.value" :value="tempOrderByValue.value">
                   {{ tempOrderByValue.displayLabel }}
@@ -74,7 +56,7 @@
           </div>
         </div>
 
-        <AppTable
+        <AppTableNew
           v-if="count !== 0"
           :total="count"
           :items="practices"
@@ -95,33 +77,26 @@
               {{ slotProps.item.status }}
             </div>
           </template>
-        </AppTable>
+        </AppTableNew>
 
-        <div v-if="count === 0 && !loading" class="mt-2 w-full text-center text-white">
+        <div v-if="count === 0 && !loading" class="mt-2 w-full text-center ">
           <span>{{ 'No practices.' }}</span>
         </div>
       </div>
-    </div>
-
-    <nuxt-link
-      v-if="$route.name !== 'index-test-script-practice-dormant-status-index'"
-      class="bg-shield z-511 fixed inset-0 opacity-50"
-      :to="{ name: 'index-test-script-practice-dormant-status-index' }"
-      draggable="false"
-    />
-
+    </section>
     <nuxt-child @refreshPracticeTable="getPractices" />
   </div>
 </template>
 
 <script>
   import debounce from 'lodash.debounce'
-  
-  import AppTable from '@/components/Base/AppTable'
+  import AppTableNew from '@/components/Base/AppTableNew'
+  import AppInputSmall from '@/components/Base/AppInputSmall'
 
   export default {
     components: {
-      AppTable,
+      AppTableNew,
+      AppInputSmall,
     },
 
     data () {

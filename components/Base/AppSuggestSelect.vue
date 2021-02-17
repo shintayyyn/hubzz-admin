@@ -29,12 +29,12 @@
 		</div>
 		<transition name="fade">
 			<div class="relative z-10" v-if="showLists">
-				<div class="w-full absolute bg-trout shadow-md">
+				<div class="w-full absolute bg-white shadow-md">
 					<div
 						v-for="(item, index) in predictions"
 						:key="index"
 						class="flex flex-row flex-no-wrap justify-start p-2 text-xs border-b-2 cursor-pointer"
-						:class="{'bg-trout': activeIndex === index}"
+						:class="{'bg-white': activeIndex === index}"
 						@mouseover="activeIndex = index"
 						@click="add()"
 					>

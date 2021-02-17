@@ -1,16 +1,10 @@
 <template>
-  <div class="fixed inset-y-0 right-0 m-0 w-full h-full xl:w-9/12 z-512 overflow-auto border-l-2 border-sunglow bg-trout p-2 md:p-4 shadow-lg" style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link :to="{ name: 'index-test-script-locum-dormant-status-index' }" class="text-white hover:text-sunglow p-1" draggable="false">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-      
+  <div style="transition: all 0.3s ease-in-out;">
+    <div class="flex-1 flex flex-col self-end">
       <AppLoading :loading="loading" :message="'Loading'" />
 
       <div class="py-4">
-        <div class="mx-2 md:mx-4 text-white">
+        <div class="mx-2 md:mx-4 ">
           <div class="text-lg font-bold">
             ID: {{ $route.params.locumUserId }}
           </div>
@@ -35,7 +29,7 @@
         </div>
 
         <div class="py-4">
-          <div class="mx-2 md:mx-4 text-white flex flex-wrap items-center">
+          <div class="mx-2 md:mx-4  flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
               Override created: 
             </div>
@@ -59,7 +53,7 @@
               <AppButton
                 label="Reset"
                 class="mx-1"
-                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
                 :background="''"
                 @click="resetOverrideCreated"
               />
@@ -67,14 +61,14 @@
               <AppButton
                 label="Save"
                 class="mx-1"
-                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
                 :background="''"
                 @click="saveOverrideCreated"
               />
             </div>
           </div>
 
-          <div class="mx-2 md:mx-4 text-white flex flex-wrap items-center">
+          <div class="mx-2 md:mx-4  flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
               Override last job application date: 
             </div>
@@ -98,7 +92,7 @@
               <AppButton
                 label="Reset"
                 class="mx-1"
-                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
                 :background="''"
                 @click="resetOverrideLastJobApplicationDate"
               />
@@ -106,7 +100,7 @@
               <AppButton
                 label="Save"
                 class="mx-1"
-                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 text-white'"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
                 :background="''"
                 @click="saveOverrideLastJobApplicationDate"
               />
@@ -114,13 +108,13 @@
           </div>
         </div>
 
-        <div class="mt-8 mx-2 md:mx-4 text-white">
+        <div class="mt-8 mx-2 md:mx-4 ">
           <div class="text-lg font-bold">
             Locum User Applied in Jobs
           </div>
         </div>
 
-        <AppTable
+        <AppTableNew
           v-if="locumUserJobsCount !== 0"
           :total="locumUserJobsCount"
           :items="locumUserJobs"
@@ -135,7 +129,7 @@
           @sorted="(_locumUserJobsOrderBy) => locumUserJobsOrderBy = _locumUserJobsOrderBy"
         />
 
-        <div v-if="locumUserJobsCount === 0 && !locumUserJobsLoading" class="mt-2 w-full text-center text-white">
+        <div v-if="locumUserJobsCount === 0 && !locumUserJobsLoading" class="mt-2 w-full text-center ">
           <span>{{ 'No locumUser jobs.' }}</span>
         </div>
       </div>
@@ -147,7 +141,7 @@
   import AppLoading from '@/components/Base/AppLoading'
   import AppDate from '@/components/Base/AppDate'
   import AppTime from '@/components/Base/AppTime'
-  import AppTable from '@/components/Base/AppTable'
+  import AppTableNew from '@/components/Base/AppTableNew'
   import AppButton from '@/components/Base/AppButton'
 
   export default {
@@ -155,7 +149,7 @@
       AppLoading,
       AppDate,
       AppTime,
-      AppTable,
+      AppTableNew,
       AppButton,
     },
 

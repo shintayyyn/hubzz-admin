@@ -1,24 +1,13 @@
 <template>
-  <div class="spoke-modal p-4 md:p-8 shadow-lg">
-    <nuxt-link class="block cursor-pointer mb-4" :to="{ path:`/practices/${$route.params.id}/practice-surgeries`, query: $route.query }">
-      <svgicon
-        name="arrow-left-solid"
-        height="32"
-        width="32"
-        class="text-white hover:text-sunglow fill-current"
-      />
-    </nuxt-link>
-
+  <div>
     <AppLoading :loading="loadingPracticeSurgery" spinner />
-
-    <div class="flex justify-start overflow-x-auto">
+    <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
       <nuxt-link
         :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}`, query: $route.query }" 
-        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
         :class="
           $route.name === 'index-practices-id-index-practice-surgeries-practiceSurgeryId-index'
-            ? 'bg-waterloo hover:bg-gray-500'
-            : 'hover:bg-waterloo'
+            ? 'border-b-4 border-gray-500' : 'text-gray-600'
         "
       >
         Spoke Profile
@@ -26,16 +15,16 @@
 
       <nuxt-link
         :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-sessions`, query: $route.query }" 
-        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path.includes(`surgery-sessions`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="$route.path.includes(`surgery-sessions`)? 'border-b-4 border-gray-500' : 'text-gray-600'"
       >
         Spoke Sessions
       </nuxt-link>
 
       <!-- <nuxt-link
         :to="{ path: `/practices/${$route.params.id}/practice-surgeries/${$route.params.practiceSurgeryId}/surgery-billing`, query: $route.query }" 
-        class="p-3 text-sm font-bold cursor-pointer text-white rounded-lg whitespace-no-wrap mx-1"
-        :class="$route.path.includes(`surgery-billing`)? 'bg-waterloo hover:bg-gray-500' : 'hover:bg-waterloo'"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+        :class="$route.path.includes(`surgery-billing`)? 'border-b-4 border-gray-500' : 'text-gray-600'"
       >
         Spoke Billings
       </nuxt-link> -->

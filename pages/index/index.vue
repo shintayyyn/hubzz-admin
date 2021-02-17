@@ -1,7 +1,7 @@
 <template>
-  <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8 text-white">
-    <!-- <AppLoading :loading="loadingDashboard" :message="'Loading Dashboard'" /> -->
-    <div class="flex flex-wrap justify-between items-start w-full shadow-lg rounded flex bg-charade text-white my-2">
+  <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8">
+    <!-- Filters -->
+    <div class="flex flex-wrap justify-between items-start w-full shadow-md rounded flex bg-gray-300 my-2">
       <div class="flex flex-col lg:flex-row w-full m-4">
         <div class="md:px-1 w-full lg:w-1/4">
           <AppDate
@@ -64,36 +64,36 @@
         <!-- LOCUM REGISTRATIONS -->
         <div 
           v-if="authAdminPermissions.includes('View Locums')" 
-          class="flex-1 rounded my-2 lg:mr-2 bg-charade"
+          class="flex-1 rounded my-2 lg:mr-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Locum Registrations</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
                 Locum Sign-Ups
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ locumSignUps && locumSignUps.locum_users ? locumSignUps.locum_users : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm my-1 text-gray-300">
+            <div class="flex justify-between text-sm my-1 text-gray-700">
               <div>
                 Organic
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ locumSignUps && locumSignUps.organic_locum_users ? locumSignUps.organic_locum_users : 0 }}
               </div>
             </div>
-            <div class="flex justify-between text-sm my-1 text-gray-300">
+            <div class="flex justify-between text-sm my-1 text-gray-700">
               <div>
                 Referred by Other Locums
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ locumSignUps && locumSignUps.referred_locum_users ? locumSignUps.referred_locum_users : 0 }}
               </div>
             </div>
@@ -102,44 +102,44 @@
         <!-- PRACTICE REGISTRATIONS -->
         <div 
           v-if="authAdminPermissions.includes('View Practices')" 
-          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+          class="flex-1 rounded my-2 lg:mx-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Practice Registrations</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Practice Sign-Ups
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.practice_users ? practiceSignUps.practice_users : 0 }}
               </div>
             </div>
-            <div class="flex justify-between my-1 text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-700">
               <div>
                 Organic
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.organic_practice_registrations ? practiceSignUps.organic_practice_registrations : 0 }}
               </div>
             </div>
-            <div class="flex justify-between my-1 text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-700">
               <div>
                 Referred by Other Locums
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.referred_by_locum ? practiceSignUps.referred_by_locum : 0 }}
               </div>
             </div>
-            <div class="flex justify-between my-1 text-sm text-gray-300">
+            <div class="flex justify-between my-1 text-sm text-gray-700">
               <div>
                 Referred by Other Practices
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ practiceSignUps && practiceSignUps.referred_by_practice ? practiceSignUps.referred_by_practice : 0 }}
               </div>
             </div>
@@ -149,28 +149,28 @@
         <div 
           v-if="authAdminPermissions.includes('View Locums') 
             || authAdminPermissions.includes('View Practices')" 
-          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+          class="flex-1 rounded my-2 lg:mx-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Referrers with Successful Referrals</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
-            <div v-if="authAdminPermissions.includes('View Locums')" class="flex justify-between my-1 text-sm text-gray-300">
+            <div v-if="authAdminPermissions.includes('View Locums')" class="flex justify-between my-1 text-sm text-gray-700">
               <div>
                 Locums
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ successfulReferrals && successfulReferrals.locum_referees ? successfulReferrals.locum_referees : 0 }}
               </div>
             </div>
-            <div v-if="authAdminPermissions.includes('View Practices')" class="flex justify-between my-1 text-sm text-gray-300">
+            <div v-if="authAdminPermissions.includes('View Practices')" class="flex justify-between my-1 text-sm text-gray-700">
               <div>
                 Practices
               </div>
-              <div class="text-yellow-500 font-bold">
+              <div class="text-orange-500 font-bold">
                 {{ successfulReferrals && successfulReferrals.practice_referees ? successfulReferrals.practice_referees : 0 }}
               </div>
             </div>
@@ -179,20 +179,20 @@
         <!-- BILLING TOTALS -->
         <div 
           v-if="authAdminPermissions.includes('View Hubzz Invoices')" 
-          class="flex-1 rounded my-2 lg:ml-2 bg-charade"
+          class="flex-1 rounded my-2 lg:ml-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Billing</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Total Approved Hours
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
@@ -200,7 +200,7 @@
               <div>
                 Completed Hours
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
@@ -208,7 +208,7 @@
               <div>
                 Billed Hours
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
@@ -216,7 +216,7 @@
               <div>
                 Revenue
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 £ {{ billingTotals && billingTotals.total_revenue ? billingTotals.total_revenue : 0 | currency }}
               </div>
             </div>
@@ -224,7 +224,7 @@
               <div>
                 VAT
               </div>
-              <div class="text-gray-500">
+              <div class="text-gray-800">
                 £ {{ billingTotals && billingTotals.total_taxes ? billingTotals.total_taxes : 0 | currency }}
               </div>
             </div>
@@ -236,33 +236,33 @@
         <!-- LOCUMS IN PLATFORM -->
         <div 
           v-if="authAdminPermissions.includes('View Locums')" 
-          class="flex-1 rounded my-2 lg:mr-2 bg-charade"
+          class="flex-1 rounded my-2 lg:mr-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Locums</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
                 Active Locums
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ locumsInPlatform.active_locums }}
               </div>
             </div>
             <div 
               v-for="(locumCountsByProfession, index) in locumsInPlatform.active_locums_by_profession"
               :key="`user-${index}`"
-              class="ml-2 text-sm text-gray-300"
+              class="ml-2 text-sm text-gray-700"
             >
               <div class="flex justify-between my-1">
                 <div class="mr-4">
                   {{ locumCountsByProfession.name }}
                 </div>
-                <div class="text-yellow-500 font-bold">
+                <div class="text-orange-500 font-bold">
                   {{ locumCountsByProfession.locum_count }}
                 </div>
               </div>
@@ -271,7 +271,7 @@
               <div>
                 Inactive Locums
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ locumsInPlatform.inactive_locums }}
               </div>
             </div>
@@ -280,20 +280,20 @@
         <!-- PRACTICES IN PLATFORM -->
         <div 
           v-if="authAdminPermissions.includes('View Practices')" 
-          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+          class="flex-1 rounded my-2 lg:mx-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Practices</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold">
               <div>
                 Active Practices
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ practicesInPlatform.active_practices }}
               </div>
             </div>
@@ -306,7 +306,7 @@
                 <div>
                   {{ practiceCounts.type }}
                 </div>
-                <div class="text-yellow-500 font-bold">
+                <div class="text-orange-500 font-bold">
                   {{ practiceCounts.count }}
                 </div>
               </div>
@@ -317,20 +317,20 @@
         <div 
           v-if="authAdminPermissions.includes('View Locum Jobs') 
             || authAdminPermissions.includes('View Practice Sessions')" 
-          class="flex-1 rounded my-2 lg:mx-2 bg-charade"
+          class="flex-1 rounded my-2 lg:mx-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Jobs</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between font-bold my-1">
               <div>
                 Platform Jobs
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ jobsInPlatform.platform_jobs }}
               </div>
             </div>
@@ -343,7 +343,7 @@
                 <div>
                   {{ jobCountsByStatus.status }}
                 </div>
-                <div class="text-yellow-500 font-bold">
+                <div class="text-orange-500 font-bold">
                   {{ jobCountsByStatus.count }}
                 </div>
               </div>
@@ -352,7 +352,7 @@
               <div>
                 Private Jobs
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ jobsInPlatform.private_jobs }}
               </div>
             </div>
@@ -362,20 +362,20 @@
         <div 
           v-if="authAdminPermissions.includes('View Practice Sessions') 
             || authAdminPermissions.includes('View Locum Jobs')" 
-          class="flex-1 rounded my-2 lg:ml-2 bg-charade"
+          class="flex-1 rounded my-2 lg:ml-2 shadow-md bg-gray-300"
         >
           <div class="m-4">
-            <div class="flex flex-row text-xs text-gray-500">
+            <div class="flex flex-row text-xs text-gray-800">
               <div>Job Disputes</div>
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="white" width="30" height="30" />
+                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Disputes
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ jobDisputes.disputes_count }}
               </div>
             </div>
@@ -388,7 +388,7 @@
                 <div>
                   {{ disputesCountByStatus.status }}
                 </div>
-                <div class="text-yellow-500 font-bold">
+                <div class="text-orange-500 font-bold">
                   {{ disputesCountByStatus.count }}
                 </div>
               </div>
@@ -397,7 +397,7 @@
               <div>
                 Average Resolve Time
               </div>
-              <div class="text-yellow-500">
+              <div class="text-orange-500">
                 {{ jobDisputes.ave_resolve_time }}
               </div>
             </div>
@@ -412,14 +412,12 @@ import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
 import AppSuggestSelect from "@/components/Base/AppSuggestSelect"
-// import AppLoading from "@/components/Base/AppLoading"
 export default {
   components: {
     AppInput,
     AppButton,
     AppDate,
     AppSuggestSelect,
-    // AppLoading,
   },
   data () {
     return {

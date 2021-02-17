@@ -8,7 +8,7 @@
         @confirm="performAction()"
       />
     </transition>
-    <div class="flex flex-wrap items-center px-4 md:px-6 py-2 text-sm">
+    <div class="flex flex-wrap items-center text-sm">
       <AppButton
         v-if="authAdminPermissions.includes('Create Admin Account')"
         :label="'Create Admin Account'"
@@ -29,108 +29,35 @@
         />
       </template>
     </div>
-    <div v-if="adminUsers.length > 0 && authAdminPermissions.includes('View Admin Accounts')" class="w-full px-4 md:px-6 py-2">
-      <div class="hidden md:flex items-center text-white justify-between font-semibold px-3 py-2">
-        <div v-if="deleteAdminUser == true" class="align-middle w-10" />
-        <div class="align-middle px-2 w-1/3">
-          E-Mail
-        </div>
-        <div class="align-middle px-2 w-1/3">
-          Roles
-        </div>
-        <div class="align-middle px-2 w-1/3">
-          Name
-        </div>
-        <div class="align-middle px-2 w-1/3">
-          Created At
-        </div>
-        <div class="align-middle px-2 w-1/3">
-          Updated At
-        </div>
-      </div>
-      <div v-for="(user, index) in adminUsers" :key="`user-${index}`" class="flex">
+
+    <AppTableNew
+      v-if="total !== 0"
+      :total="itemCount"
+      :items="adminUsers"
+      :currentPage="currentPage"
+      :perPage="limit"
+      :columns="columns"
+      :loading="loading"
+      :routerLink="`/user-management`"
+      @pagechanged="pagechanged"
+    >
+      <template v-slot:delete="slotProps">
         <div
-          v-if="deleteAdminUser == true"
-          class="flex justify-center items-center w-10 align-middle text-center"
+          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
         >
-          <svgicon
-            v-if="$auth.user.id != user.id"
-            name="delete-user"
-            width="21"
-            height="21"
-            class="fill-current text-red-600 hover:text-red-500 cursor-pointer mr-1"
-            @click.prevent="toDeleteAdminUser(user.id)"
+          {{ slotProps.item.id }}
+          <AppButton
+            v-if="authAdminPermissions.includes('Delete Admin Account')"
+            :label="'Delete'"
+            :icon="'delete-user'"
+            :iconSize="'16'"
+            class="my-1 mr-2"
+            @click="toDeleteAdminUser(slotProps.item.id)"
           />
           <span v-else class="text-sm text-gray-500">You</span>
         </div>
-        <nuxt-link
-          :to="{ path: `/user-management/${user.id}`, query: $route.query }"
-          class="w-full flex flex-col md:flex-row justify-between px-2 md:px-4 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0 text-white no-underline shadow-lg bg-waterloo hover:bg-waterloo-light transition-hover"
-        >
-          <div
-            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-          >
-            <strong class="block md:hidden text-xs uppercase">E-Mail</strong>
-            <span class="break-word">{{ user && user.email ? user.email : null }}</span>
-          </div>
-
-          <div
-            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-          >
-            <strong class="block md:hidden text-xs uppercase">Job Numbers</strong>
-            <div v-if="user && user.admin_detail && user.admin_detail.roles">
-              <div
-                v-for="(role, roleIndex) in user.admin_detail.roles"
-                :key="`role-${roleIndex}`"
-                class
-              >
-                {{ role.name }}
-              </div>
-            </div>
-          </div>
-          <div
-            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-          >
-            <strong class="block md:hidden text-xs uppercase">Name</strong>
-            <span class="break-all">
-              {{
-                user && user.personal_detail
-                  ? `${user.personal_detail.first_name} ${user.personal_detail.last_name}`
-                  : null
-              }}
-            </span>
-          </div>
-          <div
-            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-          >
-            <strong class="block md:hidden text-xs uppercase">Created At</strong>
-            <span>
-              {{ user.created_at_in_gb_formatted }}
-            </span>
-          </div>
-          <div
-            class="flex flex-col md:justify-center p-1 md:p-2 align-middle leading-none text-white cursor-pointer md:w-1/3"
-          >
-            <strong class="block md:hidden text-xs uppercase">Updated At</strong>
-            <span>
-              {{ user.updated_at_in_gb_formatted }}
-            </span>
-          </div>
-        </nuxt-link>
-      </div>
-    </div>
-
-    <AppPagination
-      class="px-4 md:px-6"
-      :total="total"
-      :totalPages="totalPages"
-      :currentPage="currentPage"
-      :perPage="itemsPerPage"
-      @pagechanged="pagechanged"
-    />
-    <p v-if="total === 0" class="px-6 py-2 text-white">
-      No admin users.
-    </p>
+      </template>
+    </AppTableNew>
 
     <div v-if="modal" class="new-user-shield" @click="modal = false" />
     <transition name="slide" mode="out-in">
@@ -138,31 +65,25 @@
       <CreateUser v-if="modal" :registeeType="'admin'" @close="modal = false" />
       <!-- </div> -->
     </transition>
-
-    <div
-      v-if="showConfirmCancelModal"
-      class="new-user-shield"
-      @click="showConfirmCancelModal? (showConfirmCancelModal = false): $router.go(-1)"
-      @close="showConfirmCancelModal = false"
-    />
   </div>
 </template>
 
 <script>
 import CreateUser from "@/components/UserManagement/CreateUser"
 import AppConfirm from "@/components/Base/AppConfirm"
-import AppPagination from "@/components/Base/AppPagination"
 import AppButton from "@/components/Base/AppButton"
+import AppTableNew from '@/components/Base/AppTableNew'
 export default {
 	components: {
 		CreateUser,
 		AppConfirm,
-		AppPagination,
-		AppButton
+		AppButton,
+		AppTableNew,
 	},
 	data () {
 		return {
-			itemsPerPage: 10,
+			loading: false, 
+			limit: 10,
 			currentPage: 1,
 			params: {},
 			search: "",
@@ -176,14 +97,8 @@ export default {
 			adminId: "",
 			deleteAdminUser: false,
 			showConfirmCancelModal: false,
-			columns: [
-				{
-					name: "",
-					slot: true,
-					slotName: "delete",
-					dataIndex: "",
-					class: "text-center"
-				},
+			columns: [],
+			defaultColumns: [
 				{
 					name: "E-mail",
 					dataIndex: "email",
@@ -191,13 +106,11 @@ export default {
 				},
 				{
 					name: "Name",
-					slot: true,
-					slotName: "name",
-					dataIndex: "",
+					dataIndex: "personal_detail.name",
 					class: "text-center"
 				},
 				{
-					name: "Role",
+					name: "Role/s",
 					dataIndex: "admin_detail.role.name",
 					class: "text-center"
 				}
@@ -226,6 +139,27 @@ export default {
 		total () {
 			return this.adminUsers.length
 		}
+	},
+	watch: {
+		deleteAdminUser (value) {
+			console.log('banana', value)
+			if(value === true) {
+				this.columns = [
+					{
+						name: "Delete",
+						slot: true,
+						slotName: "delete",
+						dataIndex: "",
+						class: "text-center"
+					},
+					...this.defaultColumns,
+				]
+			} else {
+				this.columns = [
+					...this.defaultColumns,
+				]
+			}
+		},
 	},
 	async asyncData ({ app, store, route }) {
 		try {
@@ -273,6 +207,11 @@ export default {
 			})
 			console.log("get users error", err)
 		}
+	},
+	created () {
+		this.columns = [
+			...this.defaultColumns,
+		]
 	},
 	watchQuery: ["page", "search"],
 	methods: {

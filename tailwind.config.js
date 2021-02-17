@@ -260,9 +260,9 @@ module.exports = {
 		},
 
 		borderColor: theme => ({
-			default: theme("colors.gray-light"),
-			...theme("colors")
-		}),
+      ...theme('colors'),
+      default: theme('colors.gray.300', 'currentColor'),
+    }),
 
 		borderRadius: {
 			none: "0",
@@ -337,6 +337,7 @@ module.exports = {
 			auto: "auto",
 			px: "1px",
 			"1": "0.25rem",
+			'1.5': '0.375rem',
 			"2": "0.5rem",
 			"3": "0.75rem",
 			"4": "1rem",
@@ -393,6 +394,7 @@ module.exports = {
 			px: "1px",
 			"0": "0",
 			"1": "0.25rem",
+			'1.5': '0.375rem',
 			"2": "0.5rem",
 			"3": "0.75rem",
 			"4": "1rem",
@@ -427,6 +429,7 @@ module.exports = {
 			px: "1px",
 			"0": "0",
 			"1": "0.25rem",
+			"1.5": "0.375rem",
 			"2": "0.5rem",
 			"3": "0.75rem",
 			"4": "1rem",
