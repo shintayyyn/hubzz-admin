@@ -6,6 +6,7 @@
         class="relative flex flex-col overflow-x-auto w-full"
         :style="`min-height: ${minHeight ? minHeight : '60vh'}`"
       >
+        <!-- HEADER -->
         <div
           v-if="disabledHeadings === false"
           :style="`min-width: ${customWidth}px`"

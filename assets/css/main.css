@@ -3,6 +3,10 @@
 	scroll-behavior: smooth;
 }
 
+body {
+	overflow: hidden;
+}
+
 input,
 textarea,
 button,
@@ -658,8 +662,6 @@ input::placeholder, textarea::placeholder {
 	word-break: break-all;
 	word-break: break-word;
 }
-
-
 
 
 .report-modal {

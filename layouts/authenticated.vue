@@ -23,7 +23,7 @@
       @closePopUpNotification="closePopUpNotification"
     />
     
-    <div class="content h-screen flex flex-col justify-between">
+    <div class="content h-screen flex flex-col">
       <AppHeader
         :unseenNotificationsCount="unseenNotificationsCount"
         :notifications="sortedNotifications"
@@ -31,8 +31,9 @@
         @seenAllNotifications="seenAllNotifications"
         @goToNotification="goToNotification"
       />
-
-      <nuxt class="overflow-y-auto" />
+      <div class="overflow-y-auto">
+        <nuxt />
+      </div>
     </div>
 
     <!-- <div v-if="$store.state.toggled_sidebar" class="signout-shield" @click="closeSideBar" /> -->
