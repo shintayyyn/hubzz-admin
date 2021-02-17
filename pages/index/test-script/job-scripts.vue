@@ -1,6 +1,6 @@
 <template>
   <div style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end">
+    <div v-if="$route.name === 'index-test-script-job-scripts'" class="flex-1 flex flex-col self-end">
       <div class="py-4">
         <div class="flex justify-between mx-2 md:mx-4 ">
           <div class="text-lg font-bold">

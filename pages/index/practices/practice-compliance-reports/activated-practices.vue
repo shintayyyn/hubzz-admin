@@ -1,22 +1,16 @@
 <template>
-  <div class=" p-4 md:p-8 shadow-lg">
-    <div class="page-overlap flex-1 flex flex-col self-end bg-trout">
-      <div class="flex justify-between text-sm text-white">
-        <nuxt-link to="/practices/practice-compliance-reports" class="text-white hover:text-sunglow p-1">
-          <svgicon name="arrow-left-solid" height="32" width="32" class="fill-current" />
-        </nuxt-link>
-      </div>
-
-      <div class="text-lg md:text-2xl text-white">
+  <div>
+    <div class="page-overlap flex-1 flex flex-col self-end ">
+      <div class="text-lg md:text-2xl ">
         Practice Lead Time for Activation
       </div>
   
-      <div class="text-sm md:text-lg text-white">
+      <div class="text-sm md:text-lg ">
         Rep-018
       </div>
 
       <div
-        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex bg-waterloo text-white my-2"
+        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex  my-2"
       >
         <div class="flex flex-row w-full">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -99,7 +93,7 @@
 
       <div v-if="true">
         <div>
-          <label class="text-white">Limit: </label>
+          <label class="">Limit: </label>
           <select v-model="limit">
             <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
               {{ limit }}
@@ -107,7 +101,7 @@
           </select>
         </div>
         <div>
-          <label class="text-white">Page: </label>
+          <label class="">Page: </label>
           <select v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
@@ -127,7 +121,7 @@
       />
       <div class="w-full flex flex-wrap justfify-between items-center">
         <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
-          <div class="text-white w-full md:w-auto text-center md:text-left">
+          <div class=" w-full md:w-auto text-center md:text-left">
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>

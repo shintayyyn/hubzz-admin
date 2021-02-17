@@ -40,12 +40,7 @@
 					@pagechanged="pagechanged"
 				>
 					<template v-slot:acknowledged="slotProps">
-						<div
-							:class="
-								!slotProps.item.acknowledged_at_in_gb_formatted &&
-									'mx-auto px-4 py-1 rounded-full w-32 bg-orange-500 text-center'
-							"
-						>
+						<div :class="[!slotProps.item.acknowledged_at_in_gb_formatted && 'text-orange-600', 'text-xs']">
 							<template v-if="slotProps.item.acknowledged_at_in_gb_formatted">
 								{{ slotProps.item.acknowledged_at_in_gb_formatted }}
 							</template>

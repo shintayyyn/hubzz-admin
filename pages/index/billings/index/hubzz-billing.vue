@@ -41,12 +41,11 @@
       >
         <template v-slot:status_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            class="text-xs"
             :class="
               `${
                 slotProps.item.status === 'Active'
-                  ? 'bg-green-500'
-                  : 'bg-gray-500 text-gray-700'
+                  ? 'text-green-500' : 'text-gray-700'
               }`
             "
           >
@@ -55,15 +54,15 @@
         </template>
         <template v-slot:disputed_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-            :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'p-2 bg-red-500 rounded-full' : ''"
+            class="text-xs"
+            :class="slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? 'text-red-500' : ''"
           >
             {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
           </div>
         </template>
         <template v-slot:type_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            class="text-xs"
             :class="typeStyle(slotProps.item.type)"
           >
             {{ slotProps.item.type }}
@@ -71,7 +70,7 @@
         </template>
         <template v-slot:hub_type_slot="slotProps">
           <div
-            class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+            class="text-xs"
             :class="hubTypeStyle(slotProps.item.hub_type)"
           >
             {{ slotProps.item.hub_type }}
@@ -336,11 +335,11 @@ export default {
 		typeStyle (status) {
 			switch (status) {
 				case "Hub":
-					return "bg-red-500 text-white"
+					return "text-red-500"
 				case "Spoke":
-					return "bg-blue-500 text-white"
+					return "text-blue-500"
 				case "Stand Alone":
-					return "bg-indigo-600 text-white"
+					return "text-indigo-600"
 				default:
 					return
 			}
@@ -349,26 +348,9 @@ export default {
 		hubTypeStyle (hubType) {
 			switch (hubType) {
 				case "Type 1":
-					return "bg-red-500 text-white px-4 py-1"
+					return "text-red-500 "
 				case "Type 2":
-					return "bg-purple-500 text-white px-4 py-1"
-				default:
-					return
-			}
-		},
-
-		statusStyle (status) {
-			switch (status) {
-				case "Active":
-					return "bg-green text-white lg:px-10 sm:px-2"
-				case "Inactive":
-					return "bg-yellow text-black lg:px-10 sm:px-2"
-				case "Deactivated":
-					return "bg-gray text-black lg:px-10 sm:px-2"
-				case "Account Suspension":
-					return "bg-red text-white lg:px-8 sm:px-2"
-				case "Dormant":
-					return "bg-green-darker text-white lg:px-8 sm:px-2"
+					return "text-purple-500"
 				default:
 					return
 			}

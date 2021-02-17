@@ -11,7 +11,7 @@
           <span class="px-2 whitespace-no-wrap font-semibold">{{ pricingReport.title }}</span>
           <span class="px-2 w-full leading-tight flex items-center">{{ pricingReport.subtitle }}</span>
           <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
+            <svgicon name="arrow-right" width="21" height="21" color="black" />
           </div>
         </div>
       </nuxt-link>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppLoading :loading="loadingBillablePractices" :message="'Loading Billable Practices'" />
+    <AppLoading :loading="loadingBillablePractices" />
 		<div class="flex items-center px-2">
 			<div class="relative w-full">
 				<div
@@ -164,7 +164,13 @@
 		</div>
 
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB PART PICKER STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
-    <div class="border-b-2 border-white mt-2">
+    
+		<div v-if="itemCount === 0">
+			<div class="mt-10 w-full text-center">
+				No Billable Practices Found.
+			</div>
+		</div>
+		<div v-else class="border-b-2 border-white mt-2">
       <div
         class="hidden md:flex justify-around font-semibold w-full px-4"
       >
@@ -362,8 +368,8 @@
       </div> -->
 			
 			<!-- New -->
-			<div class="overflow-auto" style="max-height: 80vh">
-				<div class="" v-for="(item, index) in allBillablePractices" :key="item.id">
+			<div class="overflow-auto" style="max-height: 90vh">
+				<div v-for="item in allBillablePractices" :key="item.id">
 					<div class="flex flex-col lg:flex-row m-2">
 						<div 
 							class="w-full lg:w-1/5 rounded-l-lg flex flex-col items-center justify-center stripe-gray"
@@ -390,9 +396,10 @@
 										v-model="chosenPractices"
 										type="checkbox"
 										:value="item"
+										:disabled="true"
 										@click="toggleCheckPracticeCheckAll(item)"
 									>
-									<label :for="item.id">Select All</label>
+									<label :for="item.id">Select All (Work in progress)</label>
 								</div>
 								<div class="m-1 text-center">
 									{{ chosenPracticeJobParts.filter(item => item.practice_id === item.id).length }} / {{ item.practice_invoiceable_job_parts.length }} Selected
@@ -449,14 +456,13 @@
 					</div>
 				</div>
 			</div>
-			
-      <AppPagination
-        :total="itemCount"
-        :totalPages="totalPages"
-        :currentPage="currentPage"
-        :perPage="practiceParams.limit"
-        @pagechanged="pagechanged"
-      />
+			<AppPagination
+				:total="itemCount"
+				:totalPages="totalPages"
+				:currentPage="currentPage"
+				:perPage="practiceParams.limit"
+				@pagechanged="pagechanged"
+			/>
     </div>
     <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  JOB PART PICKER ENDS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
     
@@ -945,14 +951,6 @@ export default {
 				this.getBillablePractices()
 			}
 		},
-
-		chosenPractices (value) {
-			console.log('chosenPractices', value)
-		},
-
-		chosenPracticeJobParts (value) {
-			console.log('chosenPracticeJobParts', value)
-		}
 	},
 
 	async asyncData ({ store, error }) {
