@@ -225,37 +225,37 @@
             class="text-center"
             style="flex: 1 0 0; min-width: 70px; max-width: 120px;"  
           >
-            Check
+            Select
           </div>
           <div
             class="text-center"
             style="flex: 1 0 0; min-width: 100px; max-width: 115px;"  
           >
-            Job Part Number
+            Job Part No.
           </div>
           <div
             class="text-center"
             style="flex: 1 0 0; min-width: 90px; max-width: 170px;"  
           >
-            Approved at / Completed At
+            Approval/Completion Date
           </div>
           <div
             class="text-center"
             style="flex: 1 0 0; min-width: 90px; max-width: 120px;"  
           >
-            Total
+            Amount
           </div>
           <div
             class="text-center"
             style="flex: 1 0 0; min-width: 90px; max-width: 120px;"  
           >
-            Status
+            Invoice Status
           </div>
           <div
             class="text-center"
             style="flex: 1 0 0; min-width: 90px; max-width: 150px;"  
           >
-            With Dispute
+            Disputes
           </div>
           <!-- FOR QA TESTING COLUMNS ENDS HERE -->
         </div>
@@ -368,7 +368,7 @@
       </div> -->
 			
 			<!-- New -->
-			<div class="overflow-auto" style="max-height: 40vh">
+			<div class="overflow-auto" style="max-height: 43vh">
 				<div v-for="item in allBillablePractices" :key="item.id">
 					<div class="flex flex-col lg:flex-row m-2">
 						<div 
@@ -390,20 +390,20 @@
 								>
 									{{ item.parent_practice.name }} (HUB)
 								</div>
-								<div class="ml-6">
-									<!-- <input
+								<div class="relative m-1 text-center">
+									<input
 										:id="item.id"
 										v-model="chosenPractices"
 										type="checkbox"
 										:value="item"
 										@click="toggleCheckPracticeCheckAll(item)"
 									>
-									<label :for="item.id">Select All (Work in progress)</label> -->
-									<AppButton 
+									<label :for="item.id">Select All</label>
+									<!-- <AppButton 
 										:label="'Select All'" 
 										:icon="'add-rectangle'" 
 										@click="toggleCheckPracticeCheckAll(item)" 
-									/>
+									/> -->
 								</div>
 								<div class="m-1 text-center">
 									{{ chosenJobPartsPerPractice(item) }} / {{ item.practice_invoiceable_job_parts.length }} Selected
