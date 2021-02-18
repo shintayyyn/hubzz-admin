@@ -368,7 +368,7 @@
       </div> -->
 			
 			<!-- New -->
-			<div class="overflow-auto" style="max-height: 90vh">
+			<div class="overflow-auto" style="max-height: 40vh">
 				<div v-for="item in allBillablePractices" :key="item.id">
 					<div class="flex flex-col lg:flex-row m-2">
 						<div 
@@ -390,19 +390,23 @@
 								>
 									{{ item.parent_practice.name }} (HUB)
 								</div>
-								<div class="m-1 text-center">
-									<input
+								<div class="ml-6">
+									<!-- <input
 										:id="item.id"
 										v-model="chosenPractices"
 										type="checkbox"
 										:value="item"
-										:disabled="true"
 										@click="toggleCheckPracticeCheckAll(item)"
 									>
-									<label :for="item.id">Select All (Work in progress)</label>
+									<label :for="item.id">Select All (Work in progress)</label> -->
+									<AppButton 
+										:label="'Select All'" 
+										:icon="'add-rectangle'" 
+										@click="toggleCheckPracticeCheckAll(item)" 
+									/>
 								</div>
 								<div class="m-1 text-center">
-									{{ chosenPracticeJobParts.filter(item => item.practice_id === item.id).length }} / {{ item.practice_invoiceable_job_parts.length }} Selected
+									{{ chosenJobPartsPerPractice(item) }} / {{ item.practice_invoiceable_job_parts.length }} Selected
 								</div>
 							</div>
 						</div>
@@ -762,7 +766,7 @@ export default {
 		},
 		total () {
 			return this.allBillablePractices.length
-		}
+		},
 	},
 
 	watch: {
@@ -987,8 +991,10 @@ export default {
 		this.getBillablePractices()
 	},
 	methods: {
+		chosenJobPartsPerPractice (practice) {
+			return this.chosenPracticeJobParts.filter(item => item.practice_id === practice.id).length
+		},
 		toggleCheckPracticeCheckAll (item) {
-			console.log('chosenPractices', this.chosenPractices)
 			const index = this.chosenPractices.findIndex(practice => {
 				return practice.id === item.id
 			})
@@ -1003,12 +1009,15 @@ export default {
 		},
 
 		removeAll (practice) {
+			console.log('removing', practice.id)
 			this.chosenPracticeJobParts = this.chosenPracticeJobParts.filter(
 				jobPart => jobPart.practice_id !== practice.id
 			)
+			console.log('removing', this.chosenPracticeJobParts)
 		},
 		
 		addAll (jobParts) {
+			console.log('adding', jobParts)
 			jobParts.forEach(item => {
 				const index = this.chosenPracticeJobParts.findIndex(jobPart => {
 					return jobPart.id === item.id
