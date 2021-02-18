@@ -1065,7 +1065,7 @@ export default {
 
 				const untaxed_total_amount = items.reduce((total_amount, item) => total_amount + item.total,0)
 
-				const tax_amount = untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted) 
+				const tax_amount = Math.abs(untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted)) 
 
 				const total_amount = untaxed_total_amount + tax_amount
 
