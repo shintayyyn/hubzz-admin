@@ -1,17 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-between text-sm text-white">
-      <nuxt-link to="/referral-lottery" class="cursor-pointer">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="hover:text-sunglow fill-current"
-        />
-      </nuxt-link>
-    </div>
-
-    <AppTable
+    <AppTableNew
       v-if="entries.length > 0"
       :total="count"
       :items="entries"
@@ -29,11 +18,11 @@
 </template>
 
 <script>
-  import AppTable from "@/components/Base/AppTable"
+  import AppTableNew from "@/components/Base/AppTableNew"
 
   export default {
     components: {
-      AppTable,
+      AppTableNew,
     },
 
     props: {

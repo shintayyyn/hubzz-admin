@@ -19,7 +19,7 @@
                     :name="'search'"
                     :button="true"
                     :buttonLabel="'Search'"
-                    :placeholder="'Search Practice by Name'"
+                    :placeholder="'Search Locum by Name'"
                     @click="searchSubmit()"
                   />
                 </div>
