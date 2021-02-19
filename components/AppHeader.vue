@@ -113,7 +113,13 @@ export default {
 		return {
 			showDropdownNotifications: false,
 		}
-	},
+  },
+  
+  watch: {
+    "$route" (route) {
+      console.log("route", route)
+    }
+  },
   
 	computed: {
 		headerName () {

@@ -4,7 +4,7 @@
       <button
         v-if="authAdminPermissions.includes('Download Locum Compliance Documents')"
         :disabled="downloading"
-        class="inline-flex items-center cursor-pointer  hover:text-black hover:bg-yellow-500 rounded-lg p-2 m-1"
+        class="inline-flex items-center cursor-pointer border hover:border-none hover:text-black hover:bg-sunglow rounded-lg p-2 m-1"
         @click.prevent="downloadItem(locumComplianceDocument.file.url,locumComplianceDocument.file.filename)"
       >
         <svgicon name="cloud-download" width="21" height="21" class="fill-current" />
@@ -12,7 +12,7 @@
       </button>
     </header>
 
-    <main class="shadow-lg rounded-lg md:mx-6 mb-6 p-4">
+    <main class="border rounded-lg md:mx-4 mb-6 p-4">
       <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
         <div class="m-2 md:w-1/3 lg:w-1/3">
           <div class="leading-tight pb-4">

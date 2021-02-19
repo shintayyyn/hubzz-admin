@@ -1,11 +1,29 @@
 <template>
   <div class="overflow-x-auto xl:overflow-hidden">
-    <AppButton
-      :label="'Filter'"
-      :in-style="'padding:5px 14px;margin-bottom:5px;font-size:14px;'"
-      @click="filterModal = !filterModal"
-    />
-    <div class="flex" :class="filterModal ? 'flex' : 'hidden'">
+    <div class="flex items-center">
+      <button @click="filterModal = !filterModal" class="flex items-center justify-between text-sm p-1 border rounded mr-1">
+        <p class="mx-2">Filter</p>
+        <span class="mx-2"><svgicon name="caret-down" width="10" :style="filterModal ? 'transform: rotate(180deg)' : ''" /></span>
+      </button>
+      <transition name="fade">
+      <div class="flex items-center" v-if="filterModal">
+        <AppButton 
+          :label="'Clear'"
+          class="mx-1"
+          :class="'border  hover:bg-gray-700 hover:border-none'"
+          @click="clearFilters"
+        />
+        <AppButton 
+          :label="'Search'"
+          class="mx-1"
+          :class="'border  hover:bg-gray-700 hover:border-none'"
+          @click="filterJobParts"
+        />
+      </div>
+      </transition>
+    </div>
+    <transition name="drop-down">
+    <div v-if="filterModal" class="flex">
       <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
         <AppInput
           v-model="job_number"
@@ -25,23 +43,8 @@
         />
       </div>
     </div>
-    <div class="flex" :class="filterModal ? 'flex' : 'hidden'">
-      <AppButton
-        :label="'Clear'"
-        class="mx-1"
-        :background="'transparent'"
-        :class="'border  hover:bg-gray-700 hover:border-none'"
-        @click="clearFilters"
-      />
-      <AppButton
-        :label="'Search'"
-        class="mx-1"
-        :background="'transparent'"
-        :class="'border  hover:bg-gray-700 hover:border-none'"
-        @click="filterJobParts"
-      />
-    </div>
-    <div v-if="items.length === 0 && loading === false">
+    </transition>
+    <div class="mt-2" v-if="items.length === 0 && loading === false">
       <div 
         v-if="isFiltered"
         class="mt-10  w-full text-center"
@@ -57,7 +60,7 @@
         {{ `No ${status[0]} ${jobDenom} found.` }}
       </div>
     </div>
-    <div v-else>
+    <div class="mt-2" v-else>
       <AppTableNew
         :total="total"
         :items="items"

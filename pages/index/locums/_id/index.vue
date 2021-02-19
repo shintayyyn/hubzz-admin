@@ -2,7 +2,7 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
-      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+      <div v-if="!$route.params.locumJobPartId && !$route.params.docId" class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1">
         <nuxt-link
           v-if="authAdminPermissions.includes('View Locums')"
           :to="{ name: 'index-locums-id-index', params: { id: $route.params.id } }"
