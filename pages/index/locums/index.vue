@@ -156,10 +156,6 @@
 
         locumStatuses: [
           {
-            label: "All",
-            value: null,
-          },
-          {
             label: "Active",
             value: "Active",
           },
@@ -190,10 +186,6 @@
         ],
 
         complianceStatuses: [
-          {
-            label: "All",
-            value: null,
-          },
           {
             label: "Empty",
             value: "Empty",
