@@ -1,6 +1,13 @@
 <template>
   <section class="mt-2">
-    <template v-if="$route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices'">
+    <template 
+      v-if="
+        $route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices'
+        || $route.name === 'index-billings-index-hubzz-billing-id-index-invoices-by-locums'
+        || $route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices-hubzzInvoiceId'
+        || $route.name === 'index-billings-index-hubzz-billing-id-index-invoices-by-locums-locumInvoiceId'
+      "
+    >
       <div class="p-3 w-full text-sm border rounded-lg">
         <div class="flex flex-wrap">
           <div class="w-1/3">
@@ -79,7 +86,8 @@
         <nuxt-link
           :to="getRoute('practice-hubzz-invoices')"
           class="p-3 text-sm font-bold cursor-pointer whitespace-no-wrap mx-1"
-          :class="$route.path.includes(`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`)
+          :class="$route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices'
+            || $route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices-hubzzInvoiceId'
             ? 'border-b-4 border-gray-500' : 'text-gray-600'"
         >
           HUBZZ Invoices
@@ -87,7 +95,8 @@
         <nuxt-link
           :to="getRoute('invoices-by-locums')"
           class="p-3 text-sm font-bold cursor-pointer whitespace-no-wrap mx-1"
-          :class="$route.path == `/billings/hubzz-billing/${$route.params.id}/invoices-by-locums`
+          :class="$route.name === 'index-billings-index-hubzz-billing-id-index-invoices-by-locums' 
+            || $route.name === 'index-billings-index-hubzz-billing-id-index-invoices-by-locums-locumInvoiceId'
             ? 'border-b-4 border-gray-500' : 'text-gray-600'"
         >
           Invoices by Locums

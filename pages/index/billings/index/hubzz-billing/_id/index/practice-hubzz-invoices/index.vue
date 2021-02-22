@@ -95,7 +95,7 @@
     </AppTableNew>
 
     <template v-else>
-      <div class="m-2 w-full text-center text-white">
+      <div class="m-2 w-full text-center ">
         There are no Invoices for HUBZZ
       </div>
     </template>

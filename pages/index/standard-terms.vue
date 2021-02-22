@@ -25,7 +25,7 @@
             <!-- TABLE BODY -->
             <div class="row py-2">
               <div class="relative">
-                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow-md rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover">
                   <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Filename</span>
