@@ -12,7 +12,7 @@
 				ref="search"
 				type="text"
 				class="border-b-2 bg-transparent focus:border-yellow-400 focus:outline-none p-2 font-bold text-xs sm:text-sm w-full"
-				:class="error? 'border-red-500':''"
+				:class="[error? 'border-red-500':'', inClass]"
 				:style="inStyle"
 				@focus="toggledOn"
 				@keydown="handleKeyDownEvent"
@@ -62,6 +62,7 @@ export default {
 		dataIndex: String,
 		error: Object,
 		inStyle: String,
+		inClass: String,
 		required: {
 			type: Boolean,
 			default: false

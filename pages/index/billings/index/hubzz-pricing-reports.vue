@@ -5,7 +5,7 @@
         v-for="pricingReport in pricingReports"
         :key="`pricingReports-${pricingReport.title}`"
         :to="pricingReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-lg transition-hover my-2"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-md transition-hover my-2"
       >
         <div class="flex flex-no-wrap items-center text-sm w-full">
           <span class="px-2 whitespace-no-wrap font-semibold">{{ pricingReport.title }}</span>

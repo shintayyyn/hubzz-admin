@@ -1,6 +1,6 @@
 <template>
-  <div v-on-clickaway="toggledOff" class="flex flex-row py-2 leading-normal">
-    <div v-if="label || required" class="relative flex flex-row flex-no-wrap justify-between">
+  <div v-on-clickaway="toggledOff" class="flex flex-row items-center py-2 leading-normal">
+    <div v-if="label || required" class="relative flex flex-row flex-no-wrap justify-between pr-2">
       <label :for="name" class="text-xs sm:text-sm py-1 font-bold">
         {{ label }}
         <!-- <span v-if="required" class="text-red-500">*</span> -->
@@ -125,7 +125,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
                   }"
                   @click="select(item.fullDate)"
@@ -149,7 +149,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date, item)
                   }"
                   @click="select(item.fullDate)"
@@ -173,7 +173,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                   }"
                   @click="select(item.fullDate)"
@@ -197,7 +197,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                   }"
                   @click="select(item.fullDate)"
@@ -221,7 +221,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                   }"
                   @click="select(item.fullDate)"
@@ -245,7 +245,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                   }"
                   @click="select(item.fullDate)"
@@ -269,7 +269,7 @@
                   :class="{
                     'border-yellow-500 border-2': isSame(item.fullDate),
                     'text-gray-500': isDisabled(item.fullDate), 
-                    'cursor-pointer hover:bg-waterloo-dark': !isDisabled(item.fullDate),
+                    'cursor-pointer hover:bg-gray-400': !isDisabled(item.fullDate),
                     'bg-yellow-500 border-yellow-500 border-2': isSelectedDate(item.date)
                   }"
                   @click="select(item.fullDate)"

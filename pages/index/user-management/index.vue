@@ -8,7 +8,7 @@
         @confirm="performAction()"
       />
     </transition>
-    <div class="flex flex-wrap items-center text-sm">
+    <div class="flex flex-wrap items-center text-sm mb-4">
       <AppButton
         v-if="authAdminPermissions.includes('Create Admin Account')"
         :label="'Create Admin Account'"
@@ -20,11 +20,11 @@
       <template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
         <AppButton
           v-if="authAdminPermissions.includes('Delete Admin Account')"
-          class="my-1 text-white"
+          class="my-1"
           :label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
           :icon="deleteAdminUser ? 'circle-check' : 'garbage'"
           :iconSize="deleteAdminUser ? '21' : '16'"
-          :background="deleteAdminUser ? 'green' : 'red'"
+          :customTheme="[deleteAdminUser ? 'bg-green-500' : 'bg-red-600 text-white', 'py-1 px-2']"
           @click="deleteAdminUser = !deleteAdminUser"
         />
       </template>
@@ -142,7 +142,6 @@ export default {
 	},
 	watch: {
 		deleteAdminUser (value) {
-			console.log('banana', value)
 			if(value === true) {
 				this.columns = [
 					{

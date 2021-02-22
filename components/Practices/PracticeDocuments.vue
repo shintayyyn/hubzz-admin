@@ -25,7 +25,7 @@
     <div
       v-for="(document,index) in specificPracticeDocumentTypes"
       :key="`surgery-${index}`"
-      class="relative w-full flex flex-col md:flex-row md:items-center rounded-lg  my-2 shadow-lg p-4 md:p-0 border-l-8 border-sunglow md:border-0"
+      class="relative w-full flex flex-col md:flex-row md:items-center rounded-lg  my-2 shadow-md p-4 md:p-0 border-l-8 border-sunglow md:border-0"
     >
       <AppLoading :loading="uploading.includes(document.practiceDocType.id)" :message="'Uploading'" :spinner="false" class="rounded-lg" />
       <div class="w-full md:w-1/4 py-2 md:px-2 flex flex-col items-start md:flex-row md:items-center">
@@ -78,7 +78,7 @@
                     document.practiceSpecificDoc
                   )"
                 >
-                <span class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500 '">
+                <span class="text-white cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs" :class="document.practiceSpecificDoc ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500 '">
                   <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
                   <span class="pl-2">{{ document.practiceSpecificDoc ? 'Update' : 'Upload' }}</span>
                 </span>
@@ -89,7 +89,7 @@
           <div v-if="document.practiceSpecificDoc" class=" flex items-center justify-center  text-xs px-1 py-1 xl:py-0">
             <nuxt-link
               :to="{path:`/practices/${practice.id}/practice-documents/${document.practiceSpecificDoc ? document.practiceSpecificDoc.id: null}`,query}"
-              class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full  no-underline px-6 py-2"
+              class="text-white bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full  no-underline px-6 py-2"
             >
               <svgicon name="folder" width="16" height="16" color="white white" />
               <span class="pl-2">View</span>

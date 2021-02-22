@@ -1,6 +1,6 @@
 <template>
-  <div class="practice-document-modal"> 
-    <PracticeDocumentFile :practice-doc="practiceDoc" />   
+  <div class=""> 
+    <PracticeDocumentFile isNuxtChild :practice-doc="practiceDoc" />   
   </div>
 </template>
 <script>

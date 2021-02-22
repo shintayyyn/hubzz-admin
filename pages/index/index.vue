@@ -3,53 +3,54 @@
     <!-- Filters -->
     <div class="flex flex-wrap justify-between items-start w-full shadow-md rounded flex bg-gray-300 my-2">
       <div class="flex flex-col lg:flex-row w-full m-4">
-        <div class="md:px-1 w-full lg:w-1/4">
-          <AppDate
-            v-model="filter.registered_at_date_start"
-            label="Date Start"
-            format="YYYY-MM-DD"
-          />
-        </div>
+        <div class="flex w-5/6">
+            <div class="md:px-1 w-full lg:w-1/4">
+            <AppDate
+              v-model="filter.registered_at_date_start"
+              label="Date Start"
+              format="YYYY-MM-DD"
+            />
+          </div>
 
-        <div class="md:px-1 w-full lg:w-1/4">
-          <AppDate
-            v-model="filter.registered_at_date_end"
-            label="Date End"
-            format="YYYY-MM-DD"
-          />
+          <div class="md:px-1 w-full lg:w-1/4">
+            <AppDate
+              v-model="filter.registered_at_date_end"
+              label="Date End"
+              format="YYYY-MM-DD"
+            />
+          </div>
+          <div class="md:px-1 w-full lg:w-1/4 ">
+            <AppSuggestSelect
+              v-model="filter.post_code"
+              :url-index="'/api/v1/postcode-coordinates'"
+              :name="'postcode'"
+              :label="'Post Code'"
+              :inClass="'border-gray-600'"
+            />
+          </div>
+          <div class="md:px-1 w-full lg:w-1/4">
+            <AppInput
+              v-model="filter.proximity"
+              :disabled="!filter.post_code"
+              type="number"
+              label="Proximity"
+              :inClass="filter.post_code ? 'border-gray-600' : ''"
+            />
+          </div>
         </div>
-        <div class="md:px-1 w-full lg:w-1/4 ">
-          <AppSuggestSelect
-            v-model="filter.post_code"
-            :url-index="'/api/v1/postcode-coordinates'"
-            :name="'postcode'"
-            :label="'Post Code'"
-          />
-        </div>
-        <div class="md:px-1 w-full lg:w-1/4">
-          <AppInput
-            v-model="filter.proximity"
-            :disabled="!filter.post_code"
-            placeholder="Proximity"
-            type="number"
-            label="Proximity"
-          />
-        </div>
-        <div class="flex w-full justify-end">
-          <div class="mt-6">
+        <div class="flex w-1/6 items-center justify-end">
+          <div>
             <AppButton
-              class="mx-2"
+              class="mx-2 whitespace-nowrap"
               label="Apply Filters"
-              :in-style="'padding:5px 14px;margin-bottom:5px'"
               :disabled="loadingDashboard"
               @click="filterSearch"
             /> 
           </div>
-          <div class="mt-6">
+          <div>
             <AppButton
               label="Clear Filters"
               :background="'waterloo'"
-              :in-style="'padding:5px 14px;margin-bottom:5px'"
               :disabled="loadingDashboard"
               @click="filterReset"
             />

@@ -1,34 +1,35 @@
 <template>
-  <div class="page-overlap flex-1 flex flex-col self-end bg-trout overflow-auto text-white">
-    <div class="flex text-sm py-6 px-6">
+  <div class="page-overlap flex-1 flex flex-col self-end overflow-aut">
+    <div class="flex text-sm pt-4 pb-6 px-6">
       <nuxt-link
+        v-if="!isNuxtChild"
         :to="{ path: `/practices/${practice.id}/practice-documents`, query }"
-        class="text-white hover:text-yellow-500 p-1 mr-4"
+        class="p-1 mr-4"
       >
         <svgicon
           name="arrow-left-solid"
           height="32"
           width="32"
-          class="hover:text-yellow-500 fill-current"
+          class="fill-current"
         />
       </nuxt-link>
 
       <div
         v-if="authAdminPermissions.includes('Download Practice Documents')"
-        class="hover:text-black hover:bg-yellow-500 rounded-lg inline-flex py-2 px-4 cursor-pointer"
+        class="border hover:text-black hover:bg-sunglow rounded-lg inline-flex py-2 px-4 cursor-pointer"
       >
         <a
-          class="inline-flex items-center font-bold text-white rounded-lg"
+          class="inline-flex items-center font-bold rounded-lg"
           @click.prevent="
             downloadItem(practiceDoc.file.url, practiceDoc.file.filename)
           "
         >
-          <svgicon name="cloud-download" width="21" height="21" color="white" hover="black" />
+          <svgicon name="cloud-download" width="21" height="21" color="black" />
           <span class="ml-2">Download</span>
         </a>
       </div>
     </div>
-    <div class="shadow-lg rounded-lg bg-waterloo mx-6 mb-6 p-4">
+    <div class="border rounded-lg mx-6 mb-6 p-4">
       <div class="w-full inline-flex flex-wrap md:flex-no-wrap md:flex-row flex-col-reverse text-sm">
         <div class="md:w-1/3 mt-4 md:mt-0">
           <div class="leading-tight pb-4">
@@ -110,7 +111,11 @@
       practiceDoc: {
         type: Object,
         required: true,
-      }
+      },
+      isNuxtChild: {
+        type: Boolean,
+        default: false,
+      },
     },
 
     data () {

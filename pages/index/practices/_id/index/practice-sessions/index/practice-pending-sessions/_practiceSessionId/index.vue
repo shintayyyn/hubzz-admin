@@ -1,21 +1,21 @@
 <template>
-    <div class="shadow-lg">
-        <PracticeSessionModal :job="job"/>
-    </div>
+  <div class="">
+    <PracticeSessionModal :job="job" />
+  </div>
 </template>
 <script>
-import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import PracticeSessionModal from '@/components/Practices/PracticeSessionModal'
 export default {
     components:{
         PracticeSessionModal
     },  
-    data(){
+    data (){
         return{
             job:'',
             practiceId:''
         }
     },
-    async asyncData({ app, store, route, error }){
+    async asyncData ({ app, store, route, error }){
         try{
             let response = await app.$axios.$get(`/api/v1/admin/jobs/${route.params.practiceSessionId}`)
             const job = response.data.job

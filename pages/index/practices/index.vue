@@ -8,7 +8,7 @@
       || authAdminPermissions.includes('View Practice Rates')"
     class="flex-1 flex flex-col"
   >
-    <div class="flex flex-row justify-between overflow-x-auto border-b border-gray-500 mb-4 p-1">
+    <div class="flex flex-row justify-between items-center overflow-x-auto border-b border-gray-500 mb-1 py-2">
       <div>
         <nuxt-link
           :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: undefined }}"
@@ -72,9 +72,12 @@
               <div class="mx-1 my-2">
                 <AppButton
                   label="Filters"
-                  :icon="filterModal ? 'sort-descend' : ''"
+                  icon="caret-down"
+                  :rotate="filterModal ? 180 : ''"
                   :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
                   @click="filterModal = !filterModal"
+                  labelClass="flex-row-reverse mr-2"
+                  :iconWidth="'10'"
                 />
               </div>
               <div v-if="filterModal" class="mx-1 my-2">
@@ -96,7 +99,7 @@
           </div>
         </div>
         <div
-          class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg "
+          class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3 mb-2"
           :class="filterModal ? 'flex' : 'hidden'"
         >
           <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">

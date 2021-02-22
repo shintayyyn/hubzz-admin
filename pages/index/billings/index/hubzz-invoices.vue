@@ -1,8 +1,8 @@
 <template>
   <section v-if="authAdminPermissions.includes('View Hubzz Invoices')">
     <template v-if="$route.name === 'index-billings-index-hubzz-invoices'">
-      <div class="flex flex-col md:flex-row justify-start w-full m-3">
-        <div class="flex-1 text-white mr-2">
+      <div class="flex flex-col md:flex-row justify-start md:items-center w-full pt-2 pb-4">
+        <div class="mr-2 pt-1">
           <!-- <input
             v-model="search"
             class="rounded-lg border-2 border-transparent text-sm text-white w-1/2 md:w-full p-2 focus:border-sunglow focus:outline-none bg-waterloo"
@@ -36,7 +36,7 @@
         </div>
       </div>
       
-      <div class="m-2 border-b-2 border-white">
+      <div class="">
         <AppTableNew
           v-if="hubzzInvoices.length > 0"
           :total="hubzzInvoicesCount"
@@ -131,8 +131,8 @@
               <div class="flex items-center justify-center">
                 <AppButton
                   :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
-                  :background="'green'"
                   class="text-white mr-2"
+                  customTheme="bg-green-500 hover:bg-green-600 py-1"
                   :disabled="slotProps.item.sage_ref && !slotProps.item.paid_at ? false : true"
                   @click="toShowPaidModal(slotProps.item.id)"
                 />
@@ -403,7 +403,7 @@ export default {
         practice_id: "",
         invoice_number: "",
         // exportable: true,
-				limit: 10,
+				limit: 15,
 				offset: 0,
 				order_by: ["date_created:desc"]
       },

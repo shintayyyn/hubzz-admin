@@ -8,52 +8,53 @@
       "  
     >
       <div class="flex flex-col md:flex-row justify-between md:items-center">
-        <div class="flex flex-col w-full justify-start">
-          <div>
-            <div class="flex justify-between">
-              <div class="flex">
-                <div class="w-full">
-                  <AppInputSmall
-                    v-model="search"
-                    :type="'text'"
-                    :name="'search'"
-                    :button="true"
-                    :buttonLabel="'Search'"
-                    :placeholder="'Search Locum by Name'"
-                    @click="searchSubmit()"
-                  />
-                </div>
-                <div class="mx-1 my-2">
-                  <AppButton
-                    label="Filters"
-                    :icon="filterModal ? 'sort-descend' : ''"
-                    :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
-                    @click="filterModal = !filterModal"
-                  />
-                </div>
-                <div v-if="filterModal" class="mx-1 my-2">
-                  <AppButton
-                    label="Apply"
-                    :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
-                    @click="getAllLocumUsers(params)"
-                  />
-                </div>
+        <div class="flex flex-col w-full justify-start mb-2">
+          <div class="flex justify-between">
+            <div class="flex">
+              <div class="w-full">
+                <AppInputSmall
+                  v-model="search"
+                  :type="'text'"
+                  :name="'search'"
+                  :button="true"
+                  :buttonLabel="'Search'"
+                  :placeholder="'Search Locum by Name'"
+                  @click="searchSubmit()"
+                />
+              </div>
+              <div class="mx-1 my-2">
+                <AppButton
+                  label="Filters"
+                  icon="caret-down"
+                  :rotate="filterModal ? 180 : ''"
+                  :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
+                  @click="filterModal = !filterModal"
+                  labelClass="flex-row-reverse mr-2"
+                  iconWidth="10"
+                />
+              </div>
+              <div v-if="filterModal" class="mx-1 my-2">
+                <AppButton
+                  label="Apply"
+                  :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
+                  @click="getAllLocumUsers(params)"
+                />
+              </div>
 
-                <div v-if="filterModal" class="mx-1 my-2">
-                  <AppButton
-                    label="Clear"
-                    :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
-                    @click="filterReset"
-                  />
-                </div>
+              <div v-if="filterModal" class="mx-1 my-2">
+                <AppButton
+                  label="Clear"
+                  :customTheme="'bg-gray-400 hover:bg-gray-500 text-whtie border border-gray-400 rounded'"
+                  @click="filterReset"
+                />
               </div>
             </div>
           </div>
           <div
-            class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg "
+            class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3"
             :class="filterModal ? 'flex' : 'hidden'"
           >
-            <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <div class="text-gray-800 w-full lg:w-1/4 md:w-1/5">
               <AppInputSmall
                 v-model="filterStatus"
                 :type="'select'"
@@ -63,7 +64,7 @@
               />
             </div>
 
-            <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+            <div class="mx-2 text-gray-800 w-full lg:w-1/4 md:w-1/5">
               <AppInputSmall
                 v-model="filterCompliances"
                 :type="'select'"
@@ -431,7 +432,6 @@
       },
     
       pageChangedHandler (page) {
-        console.log('banana', page)
         this.currentPage = page
         this.getAllLocumUsers()
       },
@@ -498,9 +498,7 @@
 
         return registrationType
       }
-      
 		},
-
 	}
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5">
+  <div class="mt-5 px-2">
     <!-- tabs here -->
     <transition name="fade" mode="out-in">
       <PracticeUsers
@@ -7,7 +7,6 @@
         @practiceUpdated="() => $emit('practiceUpdated')"
       />
     </transition>
-
     <nuxt-child />
   </div>
 </template>

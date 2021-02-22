@@ -1,11 +1,10 @@
 <template>
   <div>
-
     <PracticeSessionModal :job="job" />
   </div>
 </template>
 <script>
-import PracticeSessionModal from '@/components/Practices/Sessions/PracticeSessionModal'
+import PracticeSessionModal from '@/components/Practices/PracticeSessionModal'
 export default {
   components:{
     PracticeSessionModal

@@ -1,12 +1,11 @@
 <template>
   <section class="header">
-    <div class="flex justify-between md:justify-between items-center text-sm text-white px-4 md:px-6 border border-b">
-      <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
-        <img src="~/assets/images/hbg.png">
-      </button>
-
-      <div class="flex flex-row py-1 cursor-pointer text-gray-500">
-        <div class="m-1 text-md md:text-md">
+    <div class="flex justify-between md:justify-between items-center text-sm text-white pl-4 pr-5 border border-b">
+      <div class="flex flex-row py-1 text-gray-500">
+        <button class="toggle text-white focus:outline-none cursor-pointer" @click="toggleSideBar">
+          <img src="~/assets/images/hbg.png">
+        </button>
+        <div class="ml-2 m-1 text-md md:text-md">
           <AppBreadcrumbs />
         </div>
       </div>
@@ -113,7 +112,13 @@ export default {
 		return {
 			showDropdownNotifications: false,
 		}
-	},
+  },
+  
+  watch: {
+    "$route" (route) {
+      console.log("route", route)
+    }
+  },
   
 	computed: {
 		headerName () {

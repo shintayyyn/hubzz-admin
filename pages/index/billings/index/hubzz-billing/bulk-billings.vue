@@ -5,7 +5,7 @@
 			<div class="relative w-full">
 				<div
 					v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
-					class="flex justify-start items-center flex-wrap"
+					class="flex justify-start items-center flex-wrap py-2"
 				>
 					<AppButton
 						class="mr-2 mt-1 font-bold"
@@ -14,8 +14,8 @@
 						@click="goToTab()"
 					/>
 					<!-- Required Fields -->
-					<div class="flex rounded-lg border-solid border-2 border-gray-200">
-						<div class="text-sm font-semibold mt-4 mx-2">
+					<div class="flex items-center rounded-lg border-solid border-2 px-4 border-gray-200">
+						<div class="text-sm font-semibold mx-2">
 							<span>
 								Billing Period	
 							</span>  
@@ -90,19 +90,19 @@
 									:isBefore="true"
 								/>
 								<div class="flex flex-col lg:flex-row mx-4 text-xs md:text-sm">
-									<div class="mx-1">
+									<div class="mr-4">
 										<input id="disputed" v-model="showDisputed" type="checkbox" value="true">
 										<label for="disputed">Include Disputed Invoices</label>
 									</div>
-									<div class="mx-1">
+									<div class="mr-4">
 										<input id="cancelled" v-model="showCancelled" type="checkbox" value="true">
 										<label for="cancelled">Include Cancelled Invoices</label>
 									</div>
-									<div class="mx-1">
+									<div class="mr-4">
 										<input id="completed" v-model="showCompleted" type="checkbox" value="true">
 										<label for="completed">Include Completed Invoices</label>
 									</div>
-									<div class="mx-1">
+									<div class="mr-4">
 										<input id="invoiced" v-model="showInvoiced" type="checkbox" value="true">
 										<label for="invoiced">Include Invoiced Invoices</label>
 									</div>
@@ -111,8 +111,8 @@
 						</div>
 					</div>
 					<!-- Lower Filter (Practice filters) -->
-					<div class="flex w-full">
-						<div class="w-1/4 md:px-1 mb-4">
+					<div class="flex items-center w-full">
+						<div class="md:w-3/12 md:px-1 pb-1">
 							<AppInputSmall 
 								v-model="search"
 								:type="'text'"
@@ -124,22 +124,22 @@
 						</div>
 						<div>
 							<AppButton
-								class="mx-3 mt-1 font-bold"
+								class="mx-3 font-bold"
 								:customTheme="'border-2 rounded'"
 								:label="alphabeticalOrder ? 'Sort Practice Name Z-A' : 'Sort Practice Name A-Z'"
 								@click="alphabeticalOrder = !alphabeticalOrder"
 							/>
 						</div>
 						<div class="flex mx-4 text-xs md:text-sm">
-							<div>
+							<div class="mr-4">
 								<input id="standAloneOnly" v-model="showStandAloneOnly" type="checkbox" value="true">
 								<label for="standAloneOnly">Show Stand Alone Practices Only</label>
 							</div>
-							<div>
+							<div class="mr-4">
 								<input id="healthBoardsOnly" v-model="showHealthBoardsOnly" type="checkbox" value="true">
 								<label for="healthBoardsOnly">Show Hub II Only</label>
 							</div>
-							<div>
+							<div class="mr-4">
 								<input
 									id="independentSpokesOnly"
 									v-model="showIndependentSpokesOnly"
@@ -148,7 +148,7 @@
 								>
 								<label for="independentSpokesOnly">Show Billable Spokes Only</label>
 							</div>
-							<div>
+							<div class="mr-4">
 								<input
 									id="dependentSpokesOnly"
 									v-model="showDependentSpokesOnly"
@@ -166,7 +166,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB PART PICKER STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
     
 		<div v-if="itemCount === 0">
-			<div class="mt-10 w-full text-center">
+			<div class="mt-10 w-full text-center py-8">
 				No Billable Practices Found.
 			</div>
 		</div>
@@ -372,25 +372,25 @@
 				<div v-for="item in allBillablePractices" :key="item.id">
 					<div class="flex flex-col lg:flex-row m-2">
 						<div 
-							class="w-full lg:w-1/5 rounded-l-lg flex flex-col items-center justify-center stripe-gray"
+							class="w-full lg:w-1/5 rounded-l-lg flex flex-col items-center justify-center stripe-gray p-2"
 						>
 							<div class="flex flex-col">
 								<div class="text-center">
 									{{ item.name }}
 								</div>
 								<div
-									class="m-1 rounded-full text-center px-4 py-1"
+									class="rounded-full text-center px-4 py-1"
 									:class="typeStyle(item.type)"
 								>
 									{{ item.type }}
 								</div>
 								<div
 									v-if="item.type === 'Spoke' && item.parent_practice"
-									class="text-blue-400 m-1 text-center"
+									class="text-blue-400 text-center"
 								>
 									{{ item.parent_practice.name }} (HUB)
 								</div>
-								<div class="relative m-1 text-center">
+								<div class="relative text-center">
 									<input
 										:id="item.id"
 										v-model="chosenPractices"
@@ -405,7 +405,7 @@
 										@click="toggleCheckPracticeCheckAll(item)" 
 									/> -->
 								</div>
-								<div class="m-1 text-center">
+								<div class="text-center text-sm">
 									{{ chosenJobPartsPerPractice(item) }} / {{ item.practice_invoiceable_job_parts.length }} Selected
 								</div>
 							</div>
@@ -420,6 +420,7 @@
 								:customWidth="'800'"
 								@checkClicked="toggleCheckJobParts"
 								@sorted="sorted"
+								minHeight="auto"
 							>
 								<template v-slot:checker="slotProps">
 									<input

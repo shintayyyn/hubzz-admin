@@ -1,22 +1,22 @@
 <template>
   <div>
     <div
-      class="mx-4 md:mx-8 flex no-underline shadow-lg rounded-lg  mt-4 shadow"
+      class="mx-4 md:mx-8 flex no-underline shadow-md rounded-lg mt-4 shadow"
       style="position:relative;"
     >
       <div class="w-4/5 overflow-hidden text-sm m-4">
         <div>
           <p class="m-2">
-            Name <span class="m-2 ">{{ user.personal_detail ? user.personal_detail.name : null }}</span>
+            Name: <span class="m-2">{{ user.personal_detail ? user.personal_detail.name : null }}</span>
           </p>
           <p class="m-2">
-            Email address <span class="m-2 ">{{ user ? user.email : null }}</span>
+            Email address: <span class="m-2">{{ user ? user.email : null }}</span>
           </p>
           <p class="m-2">
-            Mobile phone number <span class="m-2 ">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</span> 
+            Mobile phone number: <span class="m-2">{{ user.contact_detail ? user.contact_detail.mobile_number : null }}</span> 
           </p>
           <p class="m-2">
-            Home phone number <span class="m-2 ">{{ user.contact_detail ? user.contact_detail.home_number : null }}</span>
+            Home phone number: <span class="m-2">{{ user.contact_detail ? user.contact_detail.home_number : null }}</span>
           </p>
         </div>
       </div>
@@ -47,7 +47,7 @@
           :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
           class="
             flex flex-col md:items-center md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
-             no-underline shadow-lg 
+             no-underline shadow-md 
           "
           draggable="false"
         >
@@ -157,7 +157,7 @@
             :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
             class="
               flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0
-               no-underline shadow-lg  items-center
+               no-underline shadow-md  items-center
             "
             draggable="false"
           >
@@ -305,7 +305,7 @@
           :event="item.file == null ? disabled :'click'" 
           :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
           :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
+          class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
           draggable="false"
         >
           <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
@@ -363,7 +363,7 @@
             :event="childItem.file == null ? disabled :'click'" 
             :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
             :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
-            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
+            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
             draggable="false"
           >
             <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
@@ -459,7 +459,7 @@
         :event="item.file == null ? disabled :'click'" 
         :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
         :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
-        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
+        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
         draggable="false"
       >
         <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
@@ -543,7 +543,7 @@
         v-for="(item, index) in locumMandatoryTrainings" :key="`item-${index}`"
         :event="item.file==null ? disabled :'click'"
         :to="{path:`/locums/${user.id}/locum-compliance/mandatory-training/${item ? item.id : null }`, query: $route.query}"
-        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-lg " 
+        class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
         :class="item.file==null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
         draggable="false"
       >

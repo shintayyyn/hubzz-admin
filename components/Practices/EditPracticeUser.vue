@@ -1,5 +1,5 @@
 <template>
-  <div class="page-overlap flex-1 flex flex-col self-end mt-4">
+  <div class="page-overlap flex-1 flex flex-col self-end ">
     <transition name="drop" mode="in-out">
       <AppConfirm
         v-if="confirm"
@@ -9,42 +9,24 @@
       />
     </transition>
     <!-- TABS -->
-    <div class="flex flex-col rounded-lg px-6 max-w-lg">
+    <div class="flex flex-col rounded">
       <div class="w-full overflow-hidden">
-        <div class="flex flex-wrap justify-between -mx-1 overflow-hidden">
+        <div class="flex flex-row overflow-x-auto border-b border-gray-500 mb-2 justify-between">
           <div class="flex">
-            <div class="my-1 px-1 overflow-hidden">
-              <button
-                class="rounded-lg py-3 px-4 text-sm"
-                :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : ''"
-                @click="tab1=true,tab2=false"
-              >
-                <strong>General</strong>
-              </button>
-            </div>
-            <div
-              v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User')"
-              class="my-1 px-1 overflow-hidden"
-            >
-              <button
-                class="rounded-lg py-3 px-4 text-sm"
-                :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : ''"
-                @click="tab2=true,tab1=false"
-              >
-                <strong>Change Password</strong>
-              </button>
-            </div>
-          </div>
-
-          <div
-            v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
-            class="my-1 px-1 overflow-hidden"
-          >
             <button
-              class="rounded-lg py-3 px-4 text-sm bg-sunglow hover:bg-yellow-500 text-black"
-              @click="editProfile = !editProfile"
+              class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+              :class="tab1 === true ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+              @click="tab1=true,tab2=false"
             >
-              <strong>{{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}</strong>
+              <strong>General</strong>
+            </button>
+            <button
+              v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User')"
+              class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
+              :class="tab2 === true ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+              @click="tab2=true,tab1=false"
+            >
+              <strong>Change Password</strong>
             </button>
           </div>
         </div>
@@ -56,8 +38,19 @@
       <!-- TAB 1 -->
       <div
         v-if="tab1"
-        class="flex   m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
+        class="flex flex-col relative p-4 border rounded-lg text-sm w-full"
       >
+        <div
+          v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
+          class="absolute right-0 px-4"
+        >
+          <button
+            class="rounded-lg py-1 px-4 text-sm bg-sunglow hover:bg-sunglow-dark text-black"
+            @click="editProfile = !editProfile"
+          >
+            {{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}
+          </button>
+        </div>
         <div v-if="editProfile" class="w-full overflow-hidden  text-sm p-2">
           <AppInput
             v-model="toPutPracticeUser.username"
@@ -162,7 +155,7 @@
           />
 
           <button
-            class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
+            class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-1 px-4 text-black text-sm"
             @click.prevent="checkForm(practiceUser.id,toPutPracticeUser)"
           >
             Save Changes
@@ -173,21 +166,21 @@
           v-if="!authAdminPermissions.includes('Edit Practice User') || authAdminPermissions.includes('Edit Practice User') && !editProfile"
           class="w-full overflow-hidden text-sm p-2"
         >
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             Username
           </div>
           <div class="flex px-2 ">
             {{ practiceUser.username ? practiceUser.username : 'N/A' }}
           </div>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             E-Mail Address
           </div>
           <div class="flex px-2 ">
             {{ practiceUser.email }}
           </div>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             Title
           </div>
           <div
@@ -196,7 +189,7 @@
             {{ practiceUser.title ? practiceUser.title : 'N/A' }}
           </div>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             First Name
           </div>
           <div
@@ -205,7 +198,7 @@
             {{ practiceUser.first_name ? practiceUser.first_name : 'N/A' }}
           </div>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             Last Name
           </div>
           <div
@@ -215,7 +208,7 @@
           </div>
 
           <template v-if="false">
-            <div class="flex py-2">
+            <div class="flex py-2 font-bold">
               Suffix
             </div>
 
@@ -224,7 +217,7 @@
             </div>
           </template>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             Role
           </div>
 
@@ -234,7 +227,7 @@
             {{ practiceUser.practice_detail && practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
           </div>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             Practice User Role
           </div>
           
@@ -244,7 +237,7 @@
             {{ practiceUser.practice_detail && practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
           </div>
 
-          <div class="flex py-2">
+          <div class="flex py-2 font-bold">
             Status
           </div>
           <div class="flex px-2 ">
@@ -268,33 +261,31 @@
       </div>
 
       <!-- TAB 2 -->
-      <div v-if="tab2" class="flex  w-full">
-        <div class="flex  text-sm  m-4 py-2 px-3 shadow rounded-lg w-full">
-          <div class="overflow-hidden  text-sm p-2 w-full">
-            <AppInput
-              v-model="toChangePassword.password"
-              :type="'password'"
-              :name="'password'"
-              :label="'New Password'"
-              :error="formError.find(item => item.field === 'password')"
-              required
-              @blur="CheckEmptyField(toChangePassword.password, 'password')"
-            />
-            <AppInput
-              v-model="toChangePassword.password_confirmation"
-              :type="'password'"
-              :name="'password_confirmation'"
-              :label="'Confirm New Password'"
-              :error="formError.find(item => item.field === 'password_confirmation')"
-              required
-              @blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
-            />
-            <!-- <button
-							class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
-							@click.prevent="checkPasswordInfo(practiceUser.id,toChangePassword)"
-						>Save Changes</button>-->
-            <AppButton :label="'Save Changes'" @click="checkPasswordInfo(practiceUser.id,toChangePassword)" />
-          </div>
+      <div v-if="tab2" class="flex text-sm  border p-4 rounded-lg w-full">
+        <div class="overflow-hidden  text-sm p-2 w-full">
+          <AppInput
+            v-model="toChangePassword.password"
+            :type="'password'"
+            :name="'password'"
+            :label="'New Password'"
+            :error="formError.find(item => item.field === 'password')"
+            required
+            @blur="CheckEmptyField(toChangePassword.password, 'password')"
+          />
+          <AppInput
+            v-model="toChangePassword.password_confirmation"
+            :type="'password'"
+            :name="'password_confirmation'"
+            :label="'Confirm New Password'"
+            :error="formError.find(item => item.field === 'password_confirmation')"
+            required
+            @blur="CheckEmptyField(toChangePassword.password_confirmation, 'password_confirmation')"
+          />
+          <!-- <button
+            class="inline-flex font-semibold no-underline py-2 px-4 my-2 bg-sunglow text-sm text-black rounded-lg shadow float-left"
+            @click.prevent="checkPasswordInfo(practiceUser.id,toChangePassword)"
+          >Save Changes</button>-->
+          <AppButton :label="'Save Changes'" @click="checkPasswordInfo(practiceUser.id,toChangePassword)" />
         </div>
       </div>
     </div>

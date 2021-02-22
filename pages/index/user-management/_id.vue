@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-col">
-		<div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
+		<div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 pt-1">
 			<nuxt-link
 				:to="`/user-management/${$route.params.id}`"
 				class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"

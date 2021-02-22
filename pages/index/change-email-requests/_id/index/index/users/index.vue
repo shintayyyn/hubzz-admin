@@ -7,7 +7,6 @@
 export default {
   watch: {
     $route (value) {
-      console.log('banana')
       if (value.name === 'index-change-email-requests-id-index-index-users') {
         this.$router.push(`/change-email-requests/${this.$route.params.id}`)
       }

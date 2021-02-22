@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-5">
-    <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
+  <div class="">
+    <div v-if="!$route.params.practiceSessionPartId" class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4 pt-1">
       <nuxt-link
         v-if="practice && practice.type == 'Spoke'"
         :to="getRoute('practice-pending-sessions')"

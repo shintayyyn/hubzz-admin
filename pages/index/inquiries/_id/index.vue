@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 md:p-8 shadow-lg">
+  <div class="p-4 ">
     <transition name="fade" mode="out-in">
       <div>
         <div class="flex flex-wrap overflow-hidden border-b border-sunglow">
@@ -55,7 +55,7 @@
           </div>
         </div>
 
-        <div class="flex flex-col rounded-lg py-2 px-4 w-full h-full break-words my-2 md:mx-2 shadow-lg">
+        <div class="flex flex-col rounded-lg border my-4 p-4 pb-8 w-full h-full break-words md:mx-2">
           <span class="message whitespace-pre-line">
             {{ email.message }}
           </span>

@@ -1,7 +1,7 @@
 <template>
   <div class="px-4">
     <!-- HEADER -->
-    <div v-if="practice" class="flex justify-between text-sm py-4 md:px-8">
+    <div v-if="practice" class="flex justify-between text-sm py-4">
       <div class="cursor-pointer" @click="goBack()">
         <svgicon
           name="arrow-left-solid"
@@ -43,7 +43,7 @@
               <div
                 v-for="(surgery, index) in surgeries"
                 :key="`surgery-${index}`"
-                class="flex no-underline rounded-lg shadow my-2 transition-hover  hover:bg-gray-300 cursor-pointer"
+                class="flex no-underline rounded-lg shadow-md my-2 transition-hover  hover:bg-gray-300 cursor-pointer"
                 @click="show(surgery.id)"
               >
                 <!-- :class="
