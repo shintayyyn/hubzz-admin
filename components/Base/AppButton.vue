@@ -49,7 +49,7 @@ export default {
     },
 
     iconWidth : {
-      type: Number
+      type: String
     },
 
     badge: {

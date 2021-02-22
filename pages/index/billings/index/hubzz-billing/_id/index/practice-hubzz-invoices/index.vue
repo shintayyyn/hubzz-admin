@@ -389,7 +389,6 @@ export default {
   
 	methods: {
     issueHubzzInvoice () {
-      console.log('banana')
       this.$router.push(`/billings/hubzz-billing/${this.$route.params.id}/practice-hubzz-invoices/issue-hubzz-invoice`)
     },
 

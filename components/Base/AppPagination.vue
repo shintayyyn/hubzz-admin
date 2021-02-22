@@ -71,7 +71,7 @@
           <button
             type="button"
             class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
-            :class="activePage === 1 ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
+            :class="currentPage === 1 ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
             :disabled="loading || isInFirstPage"
             @click="onClickFirstPage"
           >
@@ -168,7 +168,7 @@
            <button
             type="button"
             class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
-            :class="activePage === pages ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
+            :class="currentPage === pages ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
             :disabled="loading || isInLastPage"
             @click="onClickLastPage"
           >

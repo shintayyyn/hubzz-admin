@@ -142,7 +142,6 @@ export default {
 	},
 	watch: {
 		deleteAdminUser (value) {
-			console.log('banana', value)
 			if(value === true) {
 				this.columns = [
 					{

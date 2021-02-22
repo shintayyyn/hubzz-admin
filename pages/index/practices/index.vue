@@ -77,7 +77,7 @@
                   :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
                   @click="filterModal = !filterModal"
                   labelClass="flex-row-reverse mr-2"
-                  iconWidth="10"
+                  :iconWidth="'10'"
                 />
               </div>
               <div v-if="filterModal" class="mx-1 my-2">

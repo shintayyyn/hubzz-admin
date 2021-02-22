@@ -432,7 +432,6 @@
       },
     
       pageChangedHandler (page) {
-        console.log('banana', page)
         this.currentPage = page
         this.getAllLocumUsers()
       },
