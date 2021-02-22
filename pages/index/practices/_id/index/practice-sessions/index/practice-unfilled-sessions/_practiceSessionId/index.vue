@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-lg">
+  <div class="">
     <PracticeSessionModal :job="job" />
   </div>
 </template>

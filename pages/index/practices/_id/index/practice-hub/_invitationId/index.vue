@@ -1,8 +1,8 @@
 <template>
-  <div class="hub-invitation-modal p-4 md:p-8 shadow-lg">
-    <nuxt-link
+  <div class="p-4">
+    <!-- <nuxt-link
       :to="{ path: `/practices/${$route.params.id}/practice-hub`, query }"
-      class="text-white hover:text-yellow-500 "
+      class="hover:text-yellow-500 "
     >
       <svgicon
         name="arrow-left-solid"
@@ -10,17 +10,17 @@
         width="32"
         class="hover:text-yellow-500 fill-current"
       />
-    </nuxt-link>
+    </nuxt-link> -->
     <div class="mt-4">
-      <form class="flex flex-col bg-waterloo p-2 md:px-4 shadow rounded-lg sm:w-full lg:w-2/3">
+      <form class="flex flex-col p-2 md:p-4 border rounded-lg">
         <div class="flex flex-wrap">
           <div class="w-1/2">
-            <div class="text-gray-300 text-sm p-2">
+            <div class="text-sm p-2">
               <p class="flex">
                 Practice Name
               </p>
               <p
-                class="flex items-center text-white text-sm p-2 font-semibold"
+                class="flex items-center text-sm p-2 font-semibold"
               >
                 {{ practiceInvitation.practice ? practiceInvitation.practice.name : null }}
               </p>
@@ -28,14 +28,14 @@
                 Practice Code
               </p>
               <p
-                class="flex text-white text-sm p-2 font-semibold"
+                class="flex text-sm p-2 font-semibold"
               >
                 {{ practiceInvitation.practice ? practiceInvitation.practice.code : null }}
               </p>
               <p class="flex">
                 Address
               </p>
-              <p class="flex text-white text-sm p-2 font-semibold">
+              <p class="flex text-sm p-2 font-semibold">
                 {{ practiceInvitation.practice.address_line_1 ? practiceInvitation.practice.address_line_1 : null }}
                 <br>
                 {{ practiceInvitation.practice.address_line_2 ? practiceInvitation.practice.address_line_2 : null }}
@@ -47,16 +47,16 @@
                 CCG
               </p>
               <p
-                class="flex text-white text-sm p-2 font-semibold"
+                class="flex text-sm p-2 font-semibold"
               >
                 {{ practiceInvitation.practice.clinical_commissioning_group_name ? practiceInvitation.practice.clinical_commissioning_group_name:null }}
               </p>
             </div>
           </div>
           <!-- SPOKE PERMISSIONS - PERMISSIONS OF THE SPOKE BEING VIEWED. -->
-          <div class="w-1/2 text-white my-2">
+          <div class="w-1/2 my-2">
             <div class="flex flex-row items-center">
-              <div class="text-lg text-white font-semibold">
+              <div class="text-lg font-semibold">
                 Spoke Permissions
               </div>
             </div>
@@ -68,7 +68,7 @@
                     <svgicon
                       :name="practiceInvitation.allow_surgery_create_sessions === true ? 'circle-check' : 'times-solid'"
                       class="fill-current w-5 h-5 rounded-full"
-                      :class="practiceInvitation.allow_surgery_create_sessions ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                      :class="practiceInvitation.allow_surgery_create_sessions ? 'bg-green-500' : 'bg-red-500 p-1'"
                     />
                   </span>
                   <p class="font-semibold">
@@ -78,7 +78,7 @@
                 </div>
                 <div
                   v-if="practiceInvitation.allow_surgery_create_sessions === true"
-                  class="bg-waterloo-dark p-2 rounded-lg mb-2"
+                  class="bg-gray-300 p-2 rounded-lg mb-2"
                 >
                   <p
                     class="font-semibold pt-2"
@@ -147,7 +147,7 @@
                     <svgicon
                       :name="practiceInvitation.allow_surgery_create_permanent_jobs === true ? 'circle-check' : 'times-solid'"
                       class="fill-current w-5 h-5 rounded-full"
-                      :class="practiceInvitation.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                      :class="practiceInvitation.allow_surgery_create_permanent_jobs ? 'bg-green-500' : 'bg-red-500 p-1'"
                     />
                   </span>
                   <p class="font-semibold">
@@ -160,7 +160,7 @@
                     <svgicon
                       :name="practiceInvitation.allow_surgery_bill_locum === true ? 'circle-check' : 'times-solid'"
                       class="fill-current w-5 h-5 rounded-full"
-                      :class="practiceInvitation.allow_surgery_bill_locum ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                      :class="practiceInvitation.allow_surgery_bill_locum ? 'bg-green-500' : 'bg-red-500 p-1'"
                     />
                   </span>
                   <p class="font-semibold">
@@ -173,7 +173,7 @@
                     <svgicon
                       :name="practiceInvitation.allow_surgery_bill_hubzz === true ? 'circle-check' : 'times-solid'"
                       class="fill-current w-5 h-5 rounded-full"
-                      :class="practiceInvitation.allow_surgery_bill_hubzz ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                      :class="practiceInvitation.allow_surgery_bill_hubzz ? 'bg-green-500' : 'bg-red-500 p-1'"
                     />
                   </span>
                   <p class="font-semibold">
@@ -186,7 +186,7 @@
                     <svgicon
                       :name="practiceInvitation.share_banks_to_other_surgeries === true ? 'circle-check' : 'times-solid'"
                       class="fill-current w-5 h-5 rounded-full"
-                      :class="practiceInvitation.share_banks_to_other_surgeries ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                      :class="practiceInvitation.share_banks_to_other_surgeries ? 'bg-green-500' : 'bg-red-500 p-1'"
                     />
                   </span>
                   <p class="font-semibold">
@@ -198,7 +198,7 @@
                     <svgicon
                       :name="practiceInvitation.share_my_banks === true ? 'circle-check' : 'times-solid'"
                       class="fill-current w-5 h-5 rounded-full"
-                      :class="practiceInvitation.share_my_banks ? 'bg-green-500' : 'text-white bg-red-500 p-1'"
+                      :class="practiceInvitation.share_my_banks ? 'bg-green-500' : 'bg-red-500 p-1'"
                     />
                   </span>
                   <p class="font-semibold">

@@ -9,7 +9,7 @@
       />
     </transition>
     <!-- TABS -->
-    <div class="flex flex-col rounded-lg max-w-lg">
+    <div class="flex flex-col rounded">
       <div class="w-full overflow-hidden">
         <div class="flex flex-row overflow-x-auto border-b border-gray-500 mb-2 justify-between">
           <div class="flex">
@@ -29,18 +29,6 @@
               <strong>Change Password</strong>
             </button>
           </div>
-
-          <div
-            v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
-            class="my-1 px-1 overflow-hidden"
-          >
-            <button
-              class="rounded-lg py-1 px-4 text-sm bg-sunglow hover:bg-yellow-500 text-black"
-              @click="editProfile = !editProfile"
-            >
-              <strong>{{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}</strong>
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -50,8 +38,19 @@
       <!-- TAB 1 -->
       <div
         v-if="tab1"
-        class="flex p-4 border rounded-lg text-sm w-full"
+        class="flex flex-col relative p-4 border rounded-lg text-sm w-full"
       >
+        <div
+          v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
+          class="absolute right-0 px-4"
+        >
+          <button
+            class="rounded-lg py-1 px-4 text-sm bg-sunglow hover:bg-sunglow-dark text-black"
+            @click="editProfile = !editProfile"
+          >
+            {{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}
+          </button>
+        </div>
         <div v-if="editProfile" class="w-full overflow-hidden  text-sm p-2">
           <AppInput
             v-model="toPutPracticeUser.username"
@@ -156,7 +155,7 @@
           />
 
           <button
-            class="bg-sunglow font-semibold hover:bg-yellow-500 rounded-lg mt-3 py-3 px-4 text-black text-sm"
+            class="bg-sunglow hover:bg-yellow-500 rounded-lg mt-3 py-1 px-4 text-black text-sm"
             @click.prevent="checkForm(practiceUser.id,toPutPracticeUser)"
           >
             Save Changes

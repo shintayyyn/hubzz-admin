@@ -166,7 +166,7 @@
     <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ JOB PART PICKER STARTS HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`` -->
     
 		<div v-if="itemCount === 0">
-			<div class="mt-10 w-full text-center">
+			<div class="mt-10 w-full text-center py-8">
 				No Billable Practices Found.
 			</div>
 		</div>

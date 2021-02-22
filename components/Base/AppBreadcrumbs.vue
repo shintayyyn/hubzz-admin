@@ -12,7 +12,7 @@
           class="fill-current"
         /> 
       </span>
-      <div class="text-gray-700" @click="$router.push(item.to)">
+      <div class="text-gray-700" :class="index !== crumbs.length-1 ? 'hover:text-blue-500 cursor-pointer' :''" @click="$router.push(item.to)">
         {{ item.text }}
       </div>
     </div>

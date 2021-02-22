@@ -10,7 +10,7 @@
     </transition>
     <div v-if="confirm" class="shield" @click="confirm = false" />
     <div class="px-4 md:px-6">
-      <div class="rounded-lg shadow-lg bg-gray-200 py-3 md:py-5">
+      <div class="rounded-lg border bg-gray-200 py-3 md:py-5">
         <div class="w-full inline-flex flex-wrap justify-between font-bold mb-2 px-3 md:px-5">
           <div class="flex items-center mr-2">
             Locum
