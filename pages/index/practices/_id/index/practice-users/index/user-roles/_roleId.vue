@@ -1,11 +1,6 @@
 <template>
-  <div class="role-modal">
-    <div class="m-4 flex justify-between text-sm text-white py-2 px-6">
-      <nuxt-link :to="{path:`/practices/${$route.params.id}/practice-users/user-roles`,query:$route.query}" class="text-white p-1">
-        <svgicon name="arrow-left-solid" height="32" width="32" class="text-white hover:text-sunglow fill-current"/>
-      </nuxt-link>
-    </div>
-    <div class="text-white m-8 md:my-4">
+  <div>
+    <div class="m-2 md:my-4">
       <div class="flex flex-wrap overflow-hidden">
         <div 
           v-if="practiceRolePermissions.find(permission => permission.category === 'Profile')"

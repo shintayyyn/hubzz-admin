@@ -18,7 +18,7 @@
       :perPage="params.limit"
       :columns="columns"
       :loading="loadingHubzzInvoices"
-      :router-link="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`"
+      :routerLink="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`"
       :order-by="params.order_by"
       @pagechanged="pagechanged"
       @sorted="sorted"

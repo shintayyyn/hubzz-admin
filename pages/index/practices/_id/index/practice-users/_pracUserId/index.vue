@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-practice-user-modal shadow-lg">   
+  <div>   
     <EditPracticeUser
       :practiceUser="practiceUser"
       @setPracticeUser="setPracticeUser"

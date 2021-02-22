@@ -19,7 +19,7 @@
                     :name="'search'"
                     :button="true"
                     :buttonLabel="'Search'"
-                    :placeholder="'Search Practice by Name'"
+                    :placeholder="'Search Locum by Name'"
                     @click="searchSubmit()"
                   />
                 </div>
@@ -69,7 +69,7 @@
                 :type="'select'"
                 :name="'compliance_status'"
                 :placeholder="'Compliance Status'"
-                :items="practiceType"
+                :items="complianceStatuses"
               />
             </div>
           </div>
@@ -131,14 +131,12 @@
 	import debounce from 'lodash.debounce'
   import AppTableNew from '@/components/Base/AppTableNew'
   import AppInputSmall from '@/components/Base/AppInputSmall'
-  import AppInput from '@/components/Base/AppInput'
   import AppButton from '@/components/Base/AppButton'
 	export default {
 
 		components: {
       AppTableNew,
       AppInputSmall,
-      AppInput,
       AppButton,
 		},
 
@@ -157,10 +155,6 @@
         locumUsers: [],
 
         locumStatuses: [
-          {
-            label: "All",
-            value: null,
-          },
           {
             label: "Active",
             value: "Active",
@@ -192,10 +186,6 @@
         ],
 
         complianceStatuses: [
-          {
-            label: "All",
-            value: null,
-          },
           {
             label: "Empty",
             value: "Empty",

@@ -615,19 +615,34 @@ export default {
 		AppButton,
 		AppDate,
 	},
-	props: [
-		"forViewing",
-		"practice",
-		"practiceInvoice",
-		"locumInvoice",
-		"invoiceItems",
-		"disputedItems",
-		"debitItems",
-		"creditItems",
-		"dateStart",
-    "dateEnd",
-		"byLocum"
-	],
+	props: {
+    forViewing: {
+      type: Boolean,
+      default: false,
+    },
+    practice: {
+      type: Object,
+      default: () => null,
+    },
+    practiceInvoice: {
+      type: Object,
+      default: () => null,
+    },
+		locumInvoice: {
+      type: Object,
+      default: () => null,
+    },
+    invoiceItems: Array,
+    disputedItems: Array,
+		debitItems: Array,
+		creditItems: Array,
+		dateStart: String,
+    dateEnd: String,
+    byLocum: {
+      type: Boolean,
+    },
+  },
+  
 	data () {
 		return {
       saveAsDisabled: false,
@@ -723,7 +738,7 @@ export default {
     },
 
     taxAmount () {
-      const tax_amount = parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted)
+      const tax_amount = Math.abs(parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted))
       return tax_amount
     },
 

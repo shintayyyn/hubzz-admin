@@ -1,5 +1,5 @@
 <template>
-  <div class="page-overlap flex-1 flex flex-col self-end bg-trout mt-4">
+  <div class="page-overlap flex-1 flex flex-col self-end mt-4">
     <transition name="drop" mode="in-out">
       <AppConfirm
         v-if="confirm"
@@ -8,21 +8,6 @@
         @confirm="toDeactivate()"
       />
     </transition>
-
-    <div class="flex justify-between text-sm text-white py-2 px-6">
-      <nuxt-link
-        :to="{path:`/practices/${practice.id}/practice-users`,query:$route.query}"
-        class="text-white p-1"
-      >
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="text-white hover:text-sunglow fill-current"
-        />
-      </nuxt-link>
-    </div>
-
     <!-- TABS -->
     <div class="flex flex-col rounded-lg px-6 max-w-lg">
       <div class="w-full overflow-hidden">
@@ -31,7 +16,7 @@
             <div class="my-1 px-1 overflow-hidden">
               <button
                 class="rounded-lg py-3 px-4 text-sm"
-                :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
+                :class="tab1 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : ''"
                 @click="tab1=true,tab2=false"
               >
                 <strong>General</strong>
@@ -43,7 +28,7 @@
             >
               <button
                 class="rounded-lg py-3 px-4 text-sm"
-                :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : 'text-white'"
+                :class="tab2 === true ? 'bg-sunglow hover:bg-yellow-500 text-black' : ''"
                 @click="tab2=true,tab1=false"
               >
                 <strong>Change Password</strong>
@@ -71,9 +56,9 @@
       <!-- TAB 1 -->
       <div
         v-if="tab1"
-        class="flex text-white bg-waterloo m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
+        class="flex   m-4 py-2 px-3 shadow rounded-lg text-sm w-full"
       >
-        <div v-if="editProfile" class="w-full overflow-hidden text-gray-300 text-sm p-2">
+        <div v-if="editProfile" class="w-full overflow-hidden  text-sm p-2">
           <AppInput
             v-model="toPutPracticeUser.username"
             :type="'text'"
@@ -160,7 +145,7 @@
 
           <p
             class="p-2"
-            :class="practiceUser.email && 'bg-waterloo-light rounded'"
+            :class="practiceUser.email && '-light rounded'"
           >
             {{ practiceUser.email_verified_at ? $moment(practiceUser.email_verified_at, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm'): 'Not yet verified' }}
           </p>
@@ -186,19 +171,19 @@
 
         <div
           v-if="!authAdminPermissions.includes('Edit Practice User') || authAdminPermissions.includes('Edit Practice User') && !editProfile"
-          class="w-full overflow-hidden text-gray-400 text-sm p-2"
+          class="w-full overflow-hidden text-sm p-2"
         >
           <div class="flex py-2">
             Username
           </div>
-          <div class="flex px-2 text-white">
+          <div class="flex px-2 ">
             {{ practiceUser.username ? practiceUser.username : 'N/A' }}
           </div>
 
           <div class="flex py-2">
             E-Mail Address
           </div>
-          <div class="flex px-2 text-white">
+          <div class="flex px-2 ">
             {{ practiceUser.email }}
           </div>
 
@@ -206,7 +191,7 @@
             Title
           </div>
           <div
-            class="flex px-2 text-white"
+            class="flex px-2 "
           >
             {{ practiceUser.title ? practiceUser.title : 'N/A' }}
           </div>
@@ -215,7 +200,7 @@
             First Name
           </div>
           <div
-            class="flex px-2 text-white"
+            class="flex px-2 "
           >
             {{ practiceUser.first_name ? practiceUser.first_name : 'N/A' }}
           </div>
@@ -224,7 +209,7 @@
             Last Name
           </div>
           <div
-            class="flex px-2 text-white"
+            class="flex px-2 "
           >
             {{ practiceUser.last_name ? practiceUser.last_name : 'N/A' }}
           </div>
@@ -234,7 +219,7 @@
               Suffix
             </div>
 
-            <div class="flex px-2 text-white">
+            <div class="flex px-2 ">
               {{ practiceUser.suffix ? practiceUser.suffix : 'N/A' }}
             </div>
           </template>
@@ -244,7 +229,7 @@
           </div>
 
           <div
-            class="flex px-2 text-white"
+            class="flex px-2 "
           >
             {{ practiceUser.practice_detail && practiceUser.practice_detail.practice_role ? practiceUser.practice_detail.practice_role : 'N/A' }}
           </div>
@@ -254,7 +239,7 @@
           </div>
           
           <div
-            class="flex px-2 text-white"
+            class="flex px-2 "
           >
             {{ practiceUser.practice_detail && practiceUser.practice_detail.role ? practiceUser.practice_detail.role.name : 'N/A' }}
           </div>
@@ -262,7 +247,7 @@
           <div class="flex py-2">
             Status
           </div>
-          <div class="flex px-2 text-white">
+          <div class="flex px-2 ">
             {{ practiceUser.status ? practiceUser.status : 'N/A' }}
           </div>
 
@@ -275,7 +260,7 @@
             <AppButton
               :label="'Deactivate this Practice User'"
               :background="'red'"
-              :class="'text-white'"
+              :class="''"
               @click="confirm = true"
             />
           </div>
@@ -283,9 +268,9 @@
       </div>
 
       <!-- TAB 2 -->
-      <div v-if="tab2" class="flex text-white w-full">
-        <div class="flex text-white text-sm bg-waterloo m-4 py-2 px-3 shadow rounded-lg w-full">
-          <div class="overflow-hidden text-gray-300 text-sm p-2 w-full">
+      <div v-if="tab2" class="flex  w-full">
+        <div class="flex  text-sm  m-4 py-2 px-3 shadow rounded-lg w-full">
+          <div class="overflow-hidden  text-sm p-2 w-full">
             <AppInput
               v-model="toChangePassword.password"
               :type="'password'"
