@@ -30,15 +30,15 @@
         <!-- JOB / JOB DETAILS -->
         <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-3/6 ':'md:w-3/5 md:my-2'}`" -->
         <div class="order-2 lg:order-1 lg:w-55p md:mr-2">
-           <!-- LOCUM DETAILS -->
-            <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-            <div v-if="locumUser && jobPart" class="w-full flex flex-col">
-              <div
-                v-if="modalJobPart.status === 'Cancelled'"
-                class="flex flex-col rounded-lg leading-tight border mb-4 p-4"
-              >
-                <div class="flex">
-                  <!-- <div
+          <!-- LOCUM DETAILS -->
+          <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
+          <div v-if="locumUser && jobPart" class="w-full flex flex-col">
+            <div
+              v-if="modalJobPart.status === 'Cancelled'"
+              class="flex flex-col rounded-lg leading-tight border mb-4 p-4"
+            >
+              <div class="flex">
+                <!-- <div
                     class="font-bold text-sm sm:text-md"
                   >
                     {{ modalJobPart.terminated ? 'Terminated' : 'Cancelled' }} At
@@ -48,195 +48,198 @@
                   >
                     {{ modalJobPart.cancelled_at_in_gb_formatted }}
                   </div> -->
-                  <div class="md:w-1/2">
-                    <div
-                      class="font-bold text-sm sm:text-md"
-                    >
-                      Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}
-                    </div>
-                    <div
-                      class="text-xs sm:text-sm"
-                    >
-                      {{ modalJobPart.job.platform_job.cancelled_reason }}
-                    </div>
+                <div class="md:w-1/2">
+                  <div
+                    class="font-bold text-sm sm:text-md"
+                  >
+                    Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}
                   </div>
-                  <div class="md:w-1/2 leading-tight">
-                    <p
-                      class="font-bold text-sm sm:text-md"
-                    >
-                      {{ modalJobPart.terminated ? 'Terminated By' : 'Cancelled By' }}
-                    </p>
-                    <div class="flex justify-start">
-                      <div class="text-xs sm:text-sm">
-                        {{
-                          modalJobPart.cancelled_by_practice === 'Hub'
-                            ? modalJobPart.parent_practice_name
-                            : modalJobPart.cancelled_by_practice === 'Spoke'
-                              ? modalJobPart.practice_name
-                              : modalJobPart.practice_name
-                        }}
-                      </div>
-                      <div v-if="modalJobPart.cancelled_by_user" class="mx-1">
-                        -
-                      </div>
-                      <div v-if="modalJobPart.cancelled_by_user" class="text-xs sm:text-sm">
-                        {{
-                          modalJobPart.cancelled_by_user.email
-                            ? modalJobPart.cancelled_by_user.email
-                            : modalJobPart.cancelled_by_user.name
-                        }}
-                      </div>
+                  <div
+                    class="text-xs sm:text-sm"
+                  >
+                    {{ modalJobPart.job.platform_job.cancelled_reason }}
+                  </div>
+                </div>
+                <div class="md:w-1/2 leading-tight">
+                  <p
+                    class="font-bold text-sm sm:text-md"
+                  >
+                    {{ modalJobPart.terminated ? 'Terminated By' : 'Cancelled By' }}
+                  </p>
+                  <div class="flex justify-start">
+                    <div class="text-xs sm:text-sm">
+                      {{
+                        modalJobPart.cancelled_by_practice === 'Hub'
+                          ? modalJobPart.parent_practice_name
+                          : modalJobPart.cancelled_by_practice === 'Spoke'
+                            ? modalJobPart.practice_name
+                            : modalJobPart.practice_name
+                      }}
+                    </div>
+                    <div v-if="modalJobPart.cancelled_by_user" class="mx-1">
+                      -
+                    </div>
+                    <div v-if="modalJobPart.cancelled_by_user" class="text-xs sm:text-sm">
+                      {{
+                        modalJobPart.cancelled_by_user.email
+                          ? modalJobPart.cancelled_by_user.email
+                          : modalJobPart.cancelled_by_user.name
+                      }}
                     </div>
                   </div>
                 </div>
               </div>
-              <div
-                v-if="jobPart.status === 'Withdrawn'"
-                class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-md rounded-lg md:ml-2 mb-2"
-              >
-                <AppLoading :loading="loading" spinner />
-                <!-- INFOS LEFT -->
-                <div class="sm:w-1/2 w-full mt-4 md:m-4 overflow-hidden ">
-                  <div class="leading-tight pb-4">
-                    <p class="font-bold text-sm sm:text-md">
-                      Reason for Withdrawal
-                    </p>
-                    <p
-                      class="text-xs sm:text-sm"
-                    >
-                      {{ jobPart.job.platform_job.declined_reason ? jobPart.job.platform_job.declined_reason : '(none)' }}
-                    </p>
-                  </div>
-                  <div class="leading-tight">
-                    <p class="font-bold text-sm sm:text-md">
-                      Date of Withdrawal
-                    </p>
-                    <p
-                      class="text-xs sm:text-sm"
-                    >
-                      {{ jobPart.job.platform_job.declined_at | localDate }}
-                    </p>
-                  </div>
+            </div>
+            <div
+              v-if="jobPart.status === 'Withdrawn'"
+              class="relative flex flex-wrap h-full overflow-hidden text-sm no-underline shadow-md rounded-lg md:ml-2 mb-2"
+            >
+              <AppLoading :loading="loading" spinner />
+              <!-- INFOS LEFT -->
+              <div class="sm:w-1/2 w-full mt-4 md:m-4 overflow-hidden ">
+                <div class="leading-tight pb-4">
+                  <p class="font-bold text-sm sm:text-md">
+                    Reason for Withdrawal
+                  </p>
+                  <p
+                    class="text-xs sm:text-sm"
+                  >
+                    {{ jobPart.job.platform_job.declined_reason ? jobPart.job.platform_job.declined_reason : '(none)' }}
+                  </p>
+                </div>
+                <div class="leading-tight">
+                  <p class="font-bold text-sm sm:text-md">
+                    Date of Withdrawal
+                  </p>
+                  <p
+                    class="text-xs sm:text-sm"
+                  >
+                    {{ jobPart.job.platform_job.declined_at | localDate }}
+                  </p>
                 </div>
               </div>
-              <div class="relative flex flex-col md:flex-row h-full text-sm no-underline border rounded-lg mb-4 p-4">
-                <AppLoading :loading="loading" spinner />
-                <!-- INFOS LEFT -->
-                <div class="md:w-1/3 w-full">
-                  <div class="text-gray ">
-                    <!-- STATUS -->
-                    <div v-if="modalJobPart && modalJobPart.status === 'Completed'">
-                      <p class="font-semibold">
-                        Completed At
-                      </p>
-                      <p
-                        class=""
-                      >
-                        {{ modalJobPart.completed_at_in_gb_formatted }}
-                      </p>
-                    </div>
-                    <div v-if="modalJobPart && modalJobPart.status === 'Approved'">
-                      <p class="font-semibold">
-                        Approved At
-                      </p>
-                      <p
-                        class=""
-                      >
-                        {{ modalJobPart.approved_at_in_gb_formatted }}
-                      </p>
-                    </div>
-                    <div v-if="modalJobPart && ['Cancelled','Terminated'].includes(modalJobPart.status)">
-                      <p class="font-semibold">{{ `${modalJobPart.status} At` }}</p>
-                      <p class="">{{ modalJobPart.cancelled_at_in_gb_formatted }}</p>
-                    </div>
-
-                    <!-- STATUS -->
-                    <p class="mt-5 font-semibold">
-                      Job Part Number
+            </div>
+            <div class="relative flex flex-col md:flex-row h-full text-sm no-underline border rounded-lg mb-4 p-4">
+              <AppLoading :loading="loading" spinner />
+              <!-- INFOS LEFT -->
+              <div class="md:w-1/3 w-full">
+                <div class="text-gray ">
+                  <!-- STATUS -->
+                  <div v-if="modalJobPart && modalJobPart.status === 'Completed'">
+                    <p class="font-semibold">
+                      Completed At
                     </p>
-
+                    <p
+                      class=""
+                    >
+                      {{ modalJobPart.completed_at_in_gb_formatted }}
+                    </p>
+                  </div>
+                  <div v-if="modalJobPart && modalJobPart.status === 'Approved'">
+                    <p class="font-semibold">
+                      Approved At
+                    </p>
+                    <p
+                      class=""
+                    >
+                      {{ modalJobPart.approved_at_in_gb_formatted }}
+                    </p>
+                  </div>
+                  <div v-if="modalJobPart && ['Cancelled','Terminated'].includes(modalJobPart.status)">
+                    <p class="font-semibold">
+                      {{ `${modalJobPart.status} At` }}
+                    </p>
                     <p class="">
-                      {{ modalJobPart.job_part_number }}
+                      {{ modalJobPart.cancelled_at_in_gb_formatted }}
                     </p>
+                  </div>
 
-                    <p class="mt-5 font-semibold">
+                  <!-- STATUS -->
+                  <p class="mt-5 font-semibold">
+                    Job Part Number
+                  </p>
+
+                  <p class="">
+                    {{ modalJobPart.job_part_number }}
+                  </p>
+
+                  <p class="mt-5 font-semibold">
                     Job Part
                   </p>
 
                   <p class="">
                     {{ modalJobPart.part }} of {{ modalJobPart.parts }}
                   </p>
-                  
-                  </div>
                 </div>
-                <div class="md:w-1/3 w-full">
-                  <p class="font-semibold">
-                    Job Part Gross Rate
-                  </p>
-                  <p class="pb-2 no-underline">
-                    £ {{ modalJobPart.job_part_gross_rate_formatted }}
-                  </p>
+              </div>
+              <div class="md:w-1/3 w-full">
+                <p class="font-semibold">
+                  Job Part Gross Rate
+                </p>
+                <p class="pb-2 no-underline">
+                  £ {{ modalJobPart.job_part_gross_rate_formatted }}
+                </p>
 
-                  <p class="mt-5 font-semibold">
-                    Job Part Hubzz Fee
-                  </p>
-                  <p class="pb-2 no-underline">
-                    £ {{ modalJobPart.job_part_hubzz_fee_formatted }}
-                  </p>
+                <p class="mt-5 font-semibold">
+                  Job Part Hubzz Fee
+                </p>
+                <p class="pb-2 no-underline">
+                  £ {{ modalJobPart.job_part_hubzz_fee_formatted }}
+                </p>
                   
-                  <p class="mt-5 font-semibold">
-                    Total Original Hours
-                  </p>
+                <p class="mt-5 font-semibold">
+                  Total Original Hours
+                </p>
 
-                  <p class="">
-                    {{ modalJobPart ? modalJobPart.job_part_total_original_hours_in_minutes_formatted : null }}
-                  </p>
-                </div>
-                <!-- INFOS RIGHT -->
-                <div class="md:w-1/3 w-full">
-                  <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
-                    <p class="font-semibold">
-                      Total Final Hours
-                    </p>
-
-                    <p class="mb-4">
-                      {{ modalJobPart ? modalJobPart.job_part_total_final_hours_in_minutes_formatted : null }}
-                    </p>
-                  </template>
+                <p class="">
+                  {{ modalJobPart ? modalJobPart.job_part_total_original_hours_in_minutes_formatted : null }}
+                </p>
+              </div>
+              <!-- INFOS RIGHT -->
+              <div class="md:w-1/3 w-full">
+                <template v-if="['Completed', 'Approved'].includes(modalJobPart.status)">
                   <p class="font-semibold">
-                    Job Part Duration
+                    Total Final Hours
                   </p>
-                  <div class="text-xs sm:text-sm">
-                    <p
-                      class="px-1"
-                    >
-                      {{ $moment(modalJobPart.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(modalJobPart.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
-                    </p>
-                    <div class="flex">
-                      <div class="px-1">
-                        <p>Days:</p>
-                        <p>Time:</p>
-                        <p>Shift:</p>
-                      </div>
-                      <div class="px-1">
-                        <p>{{ modalJobPart.days }}</p>
-                        <p>{{ modalJobPart.time_start }} - {{ modalJobPart.time_end }}</p>
-                        <p>{{ modalJobPart.job.shift ? modalJobPart.job.shift.name : null }}</p>
-                      </div>
+
+                  <p class="mb-4">
+                    {{ modalJobPart ? modalJobPart.job_part_total_final_hours_in_minutes_formatted : null }}
+                  </p>
+                </template>
+                <p class="font-semibold">
+                  Job Part Duration
+                </p>
+                <div class="text-xs sm:text-sm">
+                  <p
+                    class="px-1"
+                  >
+                    {{ $moment(modalJobPart.date_start, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }} - {{ $moment(modalJobPart.date_end, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
+                  </p>
+                  <div class="flex">
+                    <div class="px-1">
+                      <p>Days:</p>
+                      <p>Time:</p>
+                      <p>Shift:</p>
                     </div>
-                    <div class="overflow-y-auto" style="max-height: 205px;">
-                      <div
-                        v-for="(date, index) in modalJobPart.dates"
-                        :key="index"
-                        class="m-1"
-                      >
-                        {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
-                      </div>
+                    <div class="px-1">
+                      <p>{{ modalJobPart.days }}</p>
+                      <p>{{ modalJobPart.time_start }} - {{ modalJobPart.time_end }}</p>
+                      <p>{{ modalJobPart.job.shift ? modalJobPart.job.shift.name : null }}</p>
+                    </div>
+                  </div>
+                  <div class="overflow-y-auto" style="max-height: 205px;">
+                    <div
+                      v-for="(date, index) in modalJobPart.dates"
+                      :key="index"
+                      class="m-1"
+                    >
+                      {{ $moment(date, 'YYYY-MM-DD[T]').format('DD/MM/YYYY') }}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
           <!-- JOB DETAILS -->
           <div
             v-if="job"
@@ -340,68 +343,68 @@
               </div>
 
               <div class="md:w-1/3">
-               <template v-if="job.platform_job">
-                <div class="pb-2">
-                  <span>This job is</span>
-                  <span
-                    class="font-semibold"
-                  >{{ job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE" }}</span>
-                  <span>of</span>
-                  <span class="font-semibold">IR35</span>
-                </div>
-                <p class="font-semibold">
-                  Role
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ job.platform_job.profession.name }}
-                </p>
+                <template v-if="job.platform_job">
+                  <div class="pb-2">
+                    <span>This job is</span>
+                    <span
+                      class="font-semibold"
+                    >{{ job.platform_job.ir35 === true ? "INSIDE":"OUTSIDE" }}</span>
+                    <span>of</span>
+                    <span class="font-semibold">IR35</span>
+                  </div>
+                  <p class="font-semibold">
+                    Role
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.profession.name }}
+                  </p>
 
-                <p class="font-semibold">
-                  Is there another Doctor on site?
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ job.platform_job.is_another_doctor ? "Yes" : "No" }}
-                </p>
+                  <p class="font-semibold">
+                    Is there another Doctor on site?
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.is_another_doctor ? "Yes" : "No" }}
+                  </p>
 
-                <p class="font-semibold">
-                  Is nurse support available?
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ job.platform_job.is_nurse_available ? "Yes" : "No" }}
-                </p>
+                  <p class="font-semibold">
+                    Is nurse support available?
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.is_nurse_available ? "Yes" : "No" }}
+                  </p>
 
-                <p class="font-semibold">
-                  Number of Patients
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ job.platform_job.number_of_patients }}
-                </p>
+                  <p class="font-semibold">
+                    Number of Patients
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.number_of_patients }}
+                  </p>
 
-                <p class="font-semibold">
-                  Duration for Each Appointment
-                </p>
-                <p class="ml-2 mb-2">
-                  {{ job.platform_job.duration_for_each_appointment }}
-                </p>
+                  <p class="font-semibold">
+                    Duration for Each Appointment
+                  </p>
+                  <p class="ml-2 mb-2">
+                    {{ job.platform_job.duration_for_each_appointment }}
+                  </p>
 
-                <p class="font-semibold">
-                  Opportunity for Catch Up Slots
-                </p>
-                <p
-                  class="ml-2 mb-2"
-                >
-                  {{ job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
-                </p>
+                  <p class="font-semibold">
+                    Opportunity for Catch Up Slots
+                  </p>
+                  <p
+                    class="ml-2 mb-2"
+                  >
+                    {{ job.platform_job.opportunity_for_catch_up_slots ? "Yes" : "No" }}
+                  </p>
 
-                <p class="font-semibold">
-                  Only favorite locum will be notified until this date
-                </p>
-                <p
-                  class="ml-2 mb-2"
-                >
-                  {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
-                </p>
-               </template>
+                  <p class="font-semibold">
+                    Only favorite locum will be notified until this date
+                  </p>
+                  <p
+                    class="ml-2 mb-2"
+                  >
+                    {{ job.platform_job.favorite_only_until ? $moment(job.platform_job.favorite_only_until,'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]').format('DD/MM/YYYY | HH:mm') : "N/A" }}
+                  </p>
+                </template>
               </div>
 
               <div class="md:w-1/3">
@@ -412,8 +415,6 @@
                   Auto-assigns this job to the first matching applicant
                 </p>
                 <template v-if="job.platform_job">
-                  
-
                   <p class="font-semibold">
                     Sessions Requirements
                   </p>
@@ -926,7 +927,6 @@
                 </div>
               </div>
             </div>
-          
           </div>
         </div>
       </div>

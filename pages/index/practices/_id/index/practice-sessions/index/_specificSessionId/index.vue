@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import PracticeSessionModal from "@/components/Practices/Sessions/PracticeSessionModal"
+import PracticeSessionModal from "@/components/Practices/PracticeSessionModal"
 import JobPartModal from "@/components/Base/JobPartModal"
 export default {
 	components: {
