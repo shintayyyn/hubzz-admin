@@ -1,7 +1,7 @@
 <template>
   <div>
     <AppTableNew
-      v-if="total > 0"
+      v-if="practice_roles.length > 0"
       :total="total"
       :items="practice_roles"
       :currentPage="currentPage"
@@ -10,6 +10,7 @@
       :routerLink="`/practices/${$route.params.id}/practice-users/user-roles`"
       @pagechanged="pagechanged"
     />
+    <p class="text-center py-4" v-if="!practice_roles.length">No roles.</p>
   </div>
 </template>
 <script>
@@ -26,7 +27,7 @@ export default {
         limit: 10,
         offset: 0,
       },
-      total:'',
+      total: 0,
       practice_roles: [],
 
       columns: [

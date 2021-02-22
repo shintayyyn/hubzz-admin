@@ -1,7 +1,7 @@
 <template>
 	<section>
 		<template v-if="$route.name === 'index-inquiries'">
-			<div class="flex-1 flex flex-col px-4 mx-1 md:mx-2 overflow-auto">
+			<div class="flex-1 flex flex-col px-4 mt-4 mx-1 md:mx-2 overflow-auto">
 				<div class="flex">
 					<!-- <div class="relative">
 						<input

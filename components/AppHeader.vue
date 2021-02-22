@@ -1,8 +1,8 @@
 <template>
   <section class="header">
     <div class="flex justify-between md:justify-between items-center text-sm text-white pl-4 pr-5 border border-b">
-      <div class="flex flex-row py-1 cursor-pointer text-gray-500">
-        <button class="toggle text-white focus:outline-none" @click="toggleSideBar">
+      <div class="flex flex-row py-1 text-gray-500">
+        <button class="toggle text-white focus:outline-none cursor-pointer" @click="toggleSideBar">
           <img src="~/assets/images/hbg.png">
         </button>
         <div class="ml-2 m-1 text-md md:text-md">

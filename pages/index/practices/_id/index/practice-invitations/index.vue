@@ -35,7 +35,7 @@
     <template v-if="practice && practice.type === 'Spoke'">
       <div
         v-if="practice.hub_practice"
-        class="flex flex-col mx-4 bg-gray-600 rounded-lg p-4 max-w-sm "
+        class="flex flex-col mx-4 border rounded-lg p-4 max-w-sm "
       >
         <div class="font-bold text-xl mb-4">Practice Hub</div>
         <div>Practice Name</div>
@@ -84,15 +84,17 @@
         <div
           class="font-bold text-lg mb-2"
         >{{practice.hub_practice.email ? practice.hub_practice.email : 'N/A'}}</div>
-        <div
-          class=" mt-4 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer text-center md:w-48"
-          @click="toggle_cancel_modal = true"
-        >Cancel Invitation</div>
-        <div class="my-2"></div>
-        <div
-          class=" mb-4 px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 cursor-pointer text-center md:w-48"
-          @click="$router.push(`/practices/${$route.params.id}/practice-invitations/${practice.hub_practice_id}`)"
-        >Accept Invitation</div>
+        <div class="flex items-center">
+          <div
+            class="mx-1 px-4 py-1 text-white rounded-lg bg-red-600 hover:bg-red-700 cursor-pointer text-center md:w-48"
+            @click="toggle_cancel_modal = true"
+          >Cancel Invitation</div>
+          <div class="my-2"></div>
+          <div
+            class="mx-1 px-4 py-1 rounded-lg bg-sunglow hover:bg-sunglow-dark cursor-pointer text-center md:w-48"
+            @click="$router.push(`/practices/${$route.params.id}/practice-invitations/${practice.hub_practice_id}`)"
+          >Accept Invitation</div>
+        </div>
       </div>
       <div
         class="text-center  text-lg font-bold"

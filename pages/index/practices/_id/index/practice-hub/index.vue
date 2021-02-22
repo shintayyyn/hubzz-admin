@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="m-5">
+    <div class="">
       <div v-if="practiceHub">
-        <form class="flex flex-col p-2 md:px-4 border rounded-lg sm:w-full lg:w-2/3">
+        <form class="flex flex-col p-2 md:px-4 border rounded-lg mt-4">
           <div class="flex flex-wrap">
             <div class="w-1/2">
               <div class=" text-sm p-2">
@@ -224,8 +224,8 @@
           @click="confirm=true"
         />
       </div>
-      <div v-else-if="hubInvitations && hubInvitations.length > 0">
-        <AppTable
+      <div class="mt-4" v-else-if="hubInvitations && hubInvitations.length > 0">
+        <AppTableNew
           :total="hubInvitationsCount"
           :items="hubInvitations"
           :current-page="currentPage"
@@ -259,7 +259,7 @@
               </div>
             </div>
           </template>
-        </AppTable>
+        </AppTableNew>
       </div>
 
       <div v-else>
@@ -296,14 +296,14 @@
 <script>
 import AppButton from "@/components/Base/AppButton"
 import AppConfirm from "@/components/Base/AppConfirm"
-import AppTable from "@/components/Base/AppTable"
+import AppTableNew from "@/components/Base/AppTableNew"
 
 export default {
   middleware: "changedPracticeType",
   components: {
     AppButton,
     AppConfirm,
-    AppTable,
+    AppTableNew,
   },
   data () {
     return {
@@ -514,6 +514,7 @@ export default {
           `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/accept-invitation`
         )
         .then(() => {
+          this.getHubInvitations()
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",
@@ -535,6 +536,7 @@ export default {
           `/api/v1/admin/practices/${this.$route.params.id}/parent-surgery/invitations/${id}/reject-invitation`
         )
         .then(() => {
+          this.getHubInvitations()
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",

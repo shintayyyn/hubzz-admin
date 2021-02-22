@@ -16,7 +16,7 @@
             {{ modalJobPart && modalJobPart.terminated ? 'Terminated' : null }}
           </div>
 
-          <div class="mx-2 text-black p-2 rounded" :class=" job && job.type == 'Platform' ? 'bg-red-500':'bg-blue-500'">
+          <div class="mx-2 text-black p-2 rounded" :class=" job && job.type == 'Platform' ? 'bg-red-500 text-white':'bg-blue-500'">
             {{ job ? job.type : modalJobPart.job.type }}
           </div>
         </div>
@@ -32,33 +32,35 @@
         <div class="order-2 lg:order-1 lg:w-55p md:mr-2">
            <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-            <div v-if="locumUser && jobPart" class="w-full overflow-hidden flex flex-col">
+            <div v-if="locumUser && jobPart" class="w-full flex flex-col">
               <div
                 v-if="modalJobPart.status === 'Cancelled'"
-                class="flex flex-col  rounded-lg leading-tight m-2 shadow-md"
+                class="flex flex-col rounded-lg leading-tight border mb-4 p-4"
               >
-                <div class="m-4">
-                  <div
+                <div class="flex">
+                  <!-- <div
                     class="font-bold text-sm sm:text-md"
                   >
                     {{ modalJobPart.terminated ? 'Terminated' : 'Cancelled' }} At
                   </div>
                   <div
-                    class="text-xs sm:text-sm mb-8"
+                    class="text-xs sm:text-sm"
                   >
                     {{ modalJobPart.cancelled_at_in_gb_formatted }}
+                  </div> -->
+                  <div class="md:w-1/2">
+                    <div
+                      class="font-bold text-sm sm:text-md"
+                    >
+                      Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}
+                    </div>
+                    <div
+                      class="text-xs sm:text-sm"
+                    >
+                      {{ modalJobPart.job.platform_job.cancelled_reason }}
+                    </div>
                   </div>
-                  <div
-                    class="font-bold text-sm sm:text-md"
-                  >
-                    Reason for {{ modalJobPart.terminated ? 'Termination' : 'Cancellation' }}
-                  </div>
-                  <div
-                    class="text-xs sm:text-sm mb-8"
-                  >
-                    {{ modalJobPart.job.platform_job.cancelled_reason }}
-                  </div>
-                  <div class="leading-tight mt-4">
+                  <div class="md:w-1/2 leading-tight">
                     <p
                       class="font-bold text-sm sm:text-md"
                     >
@@ -143,17 +145,9 @@
                         {{ modalJobPart.approved_at_in_gb_formatted }}
                       </p>
                     </div>
-                    <div
-                      v-if="modalJobPart && ['Cancelled','Terminated'].includes(modalJobPart.status)"
-                    >
-                      <p class="mt-5 font-semibold">
-                        {{ `${modalJobPart.status} At` }}
-                      </p>
-                      <p
-                        class=""
-                      >
-                        {{ modalJobPart.cancelled_at_in_gb_formatted }}
-                      </p>
+                    <div v-if="modalJobPart && ['Cancelled','Terminated'].includes(modalJobPart.status)">
+                      <p class="font-semibold">{{ `${modalJobPart.status} At` }}</p>
+                      <p class="">{{ modalJobPart.cancelled_at_in_gb_formatted }}</p>
                     </div>
 
                     <!-- STATUS -->
@@ -537,10 +531,10 @@
           </div>
           <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2':'md:w-1/5 w-full my-2'}`" -->
           <div
-            v-if="job && job.platform_job || job && job.private_job"
+            v-if="(job && job.platform_job || job && job.private_job) && !['Unfilled'].includes(status)"
             class="p-4 my-4 text-sm no-underline border rounded-lg"
           >
-            <div v-if="job && job.platform_job" class="w-full overflow-hidden">
+            <div v-if="job && job.platform_job" class="w-full">
               <div class="pb-2">
                 <p class="font-semibold">
                   Practice
@@ -568,7 +562,7 @@
                 </GmapMap>
               </div>
             </div>
-            <div v-if="job && job.private_job" class="w-full overflow-hidden">
+            <div v-if="job && job.private_job" class="w-full">
               <div class="pb-2">
                 <p class="font-semibold">
                   Practice
@@ -610,7 +604,7 @@
               </div>
               <div class="flex flex-col md:m-2 ">
                 <div class="overflow-x-auto">
-                  <div class="jobpart">
+                  <div class="jobpart px-2">
                     <div class="hidden md:flex flex-row font-semibold mx-2 text-center">
                       <div class="w-1/4">
                         Job Part Number
@@ -668,7 +662,7 @@
 
             <!-- LOCUM DETAILS -->
             <!--  v-if="job.platform_job && job.platform_job.appointed_to_locum && locumUser" -->
-            <div v-if="locumUser" class="w-full overflow-hidden flex">
+            <div v-if="locumUser" class="w-full flex">
               <div
                 class="flex px-2 my-4 text-sm no-underline rounded-lg border "
               >
@@ -870,6 +864,69 @@
               </div>
             </div>
             <!-- :class="`${job.platform_job.appointed_to_locum && locumUser && job.job_parts.length > 0 ? 'md:w-2/6 my-2 overflow-hidden':'md:w-1/5 w-full my-2 overflow-hidden'}`" -->
+
+            <div
+              v-if="(job && job.platform_job || job && job.private_job) && ['Unfilled'].includes(status)"
+              class="p-4 my-4 text-sm no-underline border rounded-lg"
+            >
+              <div v-if="job && job.platform_job" class="w-full">
+                <div class="pb-2">
+                  <p class="font-semibold">
+                    Practice
+                    <br>
+                    {{ job.platform_job.practice.surgery.name }}
+                  </p>
+                  <p>
+                    {{ job.platform_job.practice.surgery.address.line_1 }}
+                    {{ job.platform_job.practice.surgery.address.line_2 }}
+                    {{ job.platform_job.practice.surgery.address.line_3 }}
+                  </p>
+                </div>
+
+                <div class="w-full">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLangPlatform.y,lng:latLangPlatform.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:350px"
+                  >
+                    <GmapMarker
+                      :position="google && new google.maps.LatLng(latLangPlatform.y, latLangPlatform.x)"
+                    />
+                  </GmapMap>
+                </div>
+              </div>
+              <div v-if="job && job.private_job" class="w-full">
+                <div class="pb-2">
+                  <p class="font-semibold">
+                    Practice
+                    <br>
+                    {{ job.private_job.private_practice.surgery.name }}
+                  </p>
+                  <p>
+                    {{ job.private_job.private_practice.surgery.address.line_1 }}
+                    {{ job.private_job.private_practice.surgery.address.line_2 }}
+                    {{ job.private_job.private_practice.surgery.address.line_3 }}
+                  </p>
+                </div>
+
+                <div class="w-full">
+                  <!-- google map -->
+                  <GmapMap
+                    :center="{lat:latLangPrivate.y,lng:latLangPrivate.x}"
+                    :zoom="15"
+                    map-type-id="terrain"
+                    style="width: 100%; height:250px "
+                  >
+                    <GmapMarker
+                      :position="google && new google.maps.LatLng(latLangPrivate.y, latLangPrivate.x)"
+                    />
+                  </GmapMap>
+                </div>
+              </div>
+            </div>
+          
           </div>
         </div>
       </div>

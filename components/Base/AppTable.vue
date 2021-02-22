@@ -8,7 +8,7 @@
         :style="totalPages > 1 && `min-height: ${minHeight}`"
       >
         <!-- HEADER -->
-        <div v-if="disabledHeadings === false" class="row hidden md:flex text-white justify-start font-bold leading-none text-sm">
+        <div v-if="disabledHeadings === false" class="row hidden md:flex justify-start font-bold leading-none text-sm">
           <div
             v-for="(column, index) in columns"
             :key="`${column}-${index}`"
