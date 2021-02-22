@@ -2,13 +2,13 @@
 	<transition name="fade" mode="out-in">
 		<div
 			:class="inClass"
-			class="loading-shield flex flex-col items-center justify-center shadow-md"
+			class="loading-shield flex flex-col items-center justify-center shadow-md text-gray-500"
 			v-if="loading"
 		>
 			<svgicon
 				v-if="spinner"
 				name="loader"
-				color="white"
+				class="fill-current"
 				width="60"
 				height="60"
 			/>
@@ -43,8 +43,8 @@ export default {
 	left: 0;
 	right: 0;
 	z-index: 49;
-	background-color: #2c2f38;
-	box-shadow: 10px 10px 0.1 10px #2c2f38;
+	background-color: #eee;
+	box-shadow: 10px 10px 0.1 10px #eee;
 	opacity: 0.75;
 }
 .loader-message {

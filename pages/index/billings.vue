@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex-col py-2 px-2">
-    <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+    <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1">
       <nuxt-link
         v-if="authAdminPermissions.includes('View Hubzz Invoices')"
         :to="`/billings/hubzz-billing`" 

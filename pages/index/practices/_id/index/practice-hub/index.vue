@@ -2,7 +2,7 @@
   <div>
     <div class="m-5">
       <div v-if="practiceHub">
-        <form class="flex flex-col p-2 md:px-4 shadow-lg rounded-lg sm:w-full lg:w-2/3">
+        <form class="flex flex-col p-2 md:px-4 border rounded-lg sm:w-full lg:w-2/3">
           <div class="flex flex-wrap">
             <div class="w-1/2">
               <div class=" text-sm p-2">

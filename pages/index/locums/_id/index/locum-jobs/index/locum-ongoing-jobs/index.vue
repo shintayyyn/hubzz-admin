@@ -1,6 +1,7 @@
 <template>
     <div>
         <JobsLists 
+            v-if="!$route.params.locumJobPartId"
             :locumUser="user"
             :status="['Ongoing',]"
             :jobDenom="'Job Parts'"

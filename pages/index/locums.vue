@@ -1,7 +1,7 @@
 <template>
   <section class="flex-1 flex-col py-2 px-2">
     <template v-if="$route.name === 'index-locums'">
-      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-2 pt-1">
         <nuxt-link
           v-if="authAdminPermissions.includes('View Locums')"
           :to="`/locums`" 

@@ -1,7 +1,7 @@
 <template>
-  <div class="mt-5">
+  <div class=" mt-2">
     <!-- tabs here -->
-    <div class="flex flex-row overflow-x-auto border-b border-gray-500 mb-4 p-1">
+    <div v-if="!$route.params.roleId" class="flex flex-row overflow-x-auto border-b border-gray-500 mb-2">
       <nuxt-link
         :to="getRoute()"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"

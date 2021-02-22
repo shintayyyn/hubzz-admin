@@ -2,13 +2,13 @@
   <div class="m-5">
     <div class="flex flex-col rounded-lg">
       <div
-        class="w-full flex  text-sm  p-2 shadow-lg rounded-lg"
+        class="w-full flex text-sm p-4 border rounded-lg"
         style="max-width: 600px"
       >
         <div v-if="!editing" class="relative w-full overflow-hidden  text-sm px-2 md:p-2">
           <button
             v-if="authAdminPermissions.includes('Create New or Edit Practice Rates')"
-            class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
+            class="absolute right-0 top-0 inline-flex no-underline py-1 px-6 md:m-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg float-left"
             @click="editRate"
           >
             {{ practice && practice.rates && practice.rates.length > 0 ? "Edit" : "Add" }}
@@ -77,14 +77,14 @@
 
           <button
             :disabled="loading"
-            class="inline-flex no-underline py-2 px-4 my-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
+            class="inline-flex no-underline py-1 px-4 my-2 bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg"
             @click.prevent="updatePracticeRates()"
           >
             Save Changes
           </button>
 
           <button
-            class="inline-flex no-underline py-2 px-4 m-2 font-semibold bg-gray-400 hover:bg-gray-500 text-sm rounded-lg text-black shadow float-left"
+            class="inline-flex no-underline py-1 px-4 my-2 bg-gray-400 hover:bg-gray-500 text-sm rounded-lg text-black"
             @click.prevent="cancel()"
           >
             Cancel

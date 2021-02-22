@@ -11,12 +11,11 @@
 
     <div class="flex flex-col lg:flex-row">
       <form
-        class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 shadow-lg rounded-lg"
-        :class="practice.status === 'Inactive' ? 'w-full lg:w-4/6' : 'max-w-5xl' "
+        class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 border rounded-lg w-full"
       >
         <div class="flex flex-wrap">
           <!-- VIEW PRIMARY INFORMATION -->
-          <div class="w-full md:w-1/2 text-gray-800 text-sm">
+          <div class="w-full md:w-1/3 text-gray-800 text-sm">
             <p class="flex font-bold">
               Practice ID
             </p>
@@ -85,7 +84,7 @@
               <p
                 v-for="practiceType in practice.practice_types"
                 :key="practiceType.id"
-                class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm text-black md:px-2 bg-yellow-500"
+                class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm text-black md:px-2 bg-sunglow"
               >
                 {{ practiceType.name }}
               </p>
@@ -244,259 +243,158 @@
           </div>
 
           <!-- VIEW / EDIT OTHER INFORMATION / PRACTICE TYPE -->
-          <div v-if="practice.status !== 'Deactivated'" class="w-full text-sm  md:w-1/2">
-            <div class="flex flex-wrap justify-between items-center">
-              <span class="text-lg mr-2 font-bold">Invoicing Details</span>
-            </div>
-
-            <div>
-              <p class="flex text-gray-800 font-bold">
-                VAT Registered
-              </p>
-
-              <p class="flex  text-sm md:px-2 mb-2">
-                {{ practice.vat_registered ? 'Yes' : 'No' }}
-              </p>
-
-              <template v-if="practice.vat_registered">
-                <p class="flex font-bold">
-                  Vat Number
-                </p>
-
-                <p
-                  class="flex  text-sm md:px-2 mb-2"
-                >
-                  {{ practice.vat_number ? practice.vat_number : 'N/A' }}
-                </p>
-
-                <p class="flex font-bold">
-                  Tax Year End Date
-                </p>
-
-                <p
-                  class="flex  text-sm md:px-2 mb-2"
-                >
-                  {{ practice.tax_year_end_date ? $moment(practice.tax_year_end_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
-                </p>
-              </template>
-
-              <p class="flex text-gray-800 font-bold">
-                Bank Details
-              </p>
-
-              <div class="ml-2">
-                <p class="flex text-gray-800 font-bold">
-                  Account name
-                </p>
-
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
-                  {{ practice && practice.account_name ? practice.account_name : 'N/A' }}
-                </p>
-
-                <p class="flex text-gray-800 font-bold">
-                  Bank name
-                </p>
-
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
-                  {{ practice && practice.bank_name ? practice.bank_name : 'N/A' }}
-                </p>
-
-                <p class="flex text-gray-800 font-bold">
-                  Sort code
-                </p>
-
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
-                  {{ practice && practice.sort_code ? practice.sort_code : 'N/A' }}
-                </p>
-
-                <p class="flex text-gray-800 font-bold">
-                  Account number
-                </p>
-
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
-                  {{ practice && practice.account_number ? practice.account_number : 'N/A' }}
-                </p>
+          <div v-if="practice.status !== 'Deactivated'" class="w-full flex flex-col md:flex-row text-sm  md:w-2/3">
+            <div class="md:w-1/2">
+              <div class="flex flex-wrap justify-between items-center">
+                <span class="text-lg mr-2 font-bold">Invoicing Details</span>
               </div>
-            </div>
 
-            <div class="flex flex-wrap justify-between items-center">
-              <span class="text-lg mr-2 font-bold">Other Information</span>
-              <AppButton
-                v-if="authAdminPermissions.includes('Edit Practice Other Information')"
-                :label="toEdit ? 'Cancel Editing' : 'Edit'"
-                @click="edit()"
-              />
-            </div>
+              <div>
+                <p class="flex text-gray-800 font-bold">
+                  VAT Registered
+                </p>
 
-            <!-- VIEWING OTHER INFORMATION -->
-            <div v-if="!toEdit">
-              <template v-if="practice.direct_debit">
-                <p class="flex font-bold">
-                  Sage reference
+                <p class="flex  text-sm md:px-2 mb-2">
+                  {{ practice.vat_registered ? 'Yes' : 'No' }}
                 </p>
-                <p
-                  class="flex  text-sm md:px-2 mb-2"
-                >
-                  {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
+
+                <template v-if="practice.vat_registered">
+                  <p class="flex font-bold">
+                    Vat Number
+                  </p>
+
+                  <p
+                    class="flex  text-sm md:px-2 mb-2"
+                  >
+                    {{ practice.vat_number ? practice.vat_number : 'N/A' }}
+                  </p>
+
+                  <p class="flex font-bold">
+                    Tax Year End Date
+                  </p>
+
+                  <p
+                    class="flex  text-sm md:px-2 mb-2"
+                  >
+                    {{ practice.tax_year_end_date ? $moment(practice.tax_year_end_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
+                  </p>
+                </template>
+
+                <p class="flex text-gray-800 font-bold">
+                  Bank Details
                 </p>
-              </template>
-              <p class="flex text-gray-800 font-bold">
-                Phone Number
-              </p>
-              <p
-                class="flex md:mx-2 mb-2"
-              >
-                {{ practice && practice.phone_number ? practice.phone_number : 'N/A' }}
-              </p>
-              <p class="flex text-gray-800 font-bold">
-                Full name to report to
-              </p>
-              <p
-                class="flex md:mx-2 mb-2"
-              >
-                {{ practice && practice.report_to ? practice.report_to : 'N/A' }}
-              </p>
-              <p
-                class="flex text-gray-800 font-bold"
-              >
-                Extra information (Parking restrictions, transport links, etc.)
-              </p>
-              <p
-                class="flex md:mx-2 mb-2"
-              >
-                {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
-              </p>
-              <!-- <div class="flex items-center mb-2">
-                <span class="text-gray-800 mr-2 font-bold">Status:</span>
-                <span
-                  class=" px-4 py-1 rounded-lg"
-                  :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
-                >{{ practice.status }}</span>
-                <span
-                  class="tool"
-                  data-tip="Manual status control will only work when verification requirements are already completed (Documents and Rates)."
-                  tabindex="1"
-                >
-                  <svgicon
-                    name="info"
-                    width="21"
-                    height="21"
-                    color="white transparent black"
-                    class="ml-2"
-                  />
-                </span>
-							</div>-->
-              <!-- <template v-if="practice.status === 'Active'">
-                <p class="text-gray-800 font-bold">
-                  Active Until
-                </p>
-                <p
-                  class="flex md:mx-2 mb-2"
-                >
-                  {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
-                </p>
-							</template>-->
-              <div class="flex flex-col item-center">
-                <div class="w-full sm:w-1/2 m-2">
-                  <AppButton
-                    :inClass="''"
-                    :label="'Deactivate this Practice'"
-                    :background="'charade'"
-                    :disabled="authAdminPermissions.includes('Edit Practice Other Information') === false"
-                    @click="confirm=true"
-                  />
-                  <!-- Deactivate this Practice -->
-                </div>
-                <div
-                  v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
-                  class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-red-600 hover:bg-red-700 mx-2 p-2 cursor-pointer transition-hover"
-                  @click="toMarkBogus()"
-                >
-                  Mark as Bogus
-                </div>
-                <div
-                  v-if="practice.status === 'Bogus'"
-                  class="w-full sm:w-1/2 m-2 text-base font-semibold text-center rounded-lg bg-yellow-600 hover:bg-yellow-700 mx-2 p-2 cursor-pointer transition-hover"
-                  @click="toUnmarkBogus()"
-                >
-                  Remove Bogus Status
+
+                <div class="ml-2">
+                  <p class="flex text-gray-800 font-bold">
+                    Account name
+                  </p>
+
+                  <p
+                    class="flex md:mx-2 mb-2"
+                  >
+                    {{ practice && practice.account_name ? practice.account_name : 'N/A' }}
+                  </p>
+
+                  <p class="flex text-gray-800 font-bold">
+                    Bank name
+                  </p>
+
+                  <p
+                    class="flex md:mx-2 mb-2"
+                  >
+                    {{ practice && practice.bank_name ? practice.bank_name : 'N/A' }}
+                  </p>
+
+                  <p class="flex text-gray-800 font-bold">
+                    Sort code
+                  </p>
+
+                  <p
+                    class="flex md:mx-2 mb-2"
+                  >
+                    {{ practice && practice.sort_code ? practice.sort_code : 'N/A' }}
+                  </p>
+
+                  <p class="flex text-gray-800 font-bold">
+                    Account number
+                  </p>
+
+                  <p
+                    class="flex md:mx-2 mb-2"
+                  >
+                    {{ practice && practice.account_number ? practice.account_number : 'N/A' }}
+                  </p>
                 </div>
               </div>
             </div>
-
-            <!-- EDITING OTHER INFORMATION -->
-            <div v-if="toEdit && authAdminPermissions.includes('Edit Practice Other Information')">
-              <template v-if="['true', true].includes(toPutPractice.direct_debit)">
-                <AppInput
-                  v-model="toPutPractice.sage_ref"
-                  :type="'text'"
-                  :name="'sage_ref'"
-                  :label="'Sage reference'"
+            <div class="md:w-1/2">
+              <div class="flex flex-wrap justify-between items-center">
+                <span class="text-lg mr-2 font-bold">Other Information</span>
+                <AppButton
+                  v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+                  :label="toEdit ? 'Cancel Editing' : 'Edit'"
+                  @click="edit()"
                 />
-              </template>
-              <AppInput
-                v-model="toPutPractice.phone_number"
-                :type="'text'"
-                :name="'phonenumber'"
-                :label="'Phone Number'"
-              />
-              <AppInput
-                v-model="toPutPractice.report_to"
-                :type="'text'"
-                :name="'report_to'"
-                :label="'Full name to report to'"
-              />
-              <AppInput
-                v-model="toPutPractice.extra_information"
-                :type="'textarea'"
-                :name="'practiceNote'"
-                :label="'Extra information (Parking restrictions, transport links, etc.)'"
-                :resize="false"
-                :rows="2"
-              />
-              <AppButton :label="'Save'" @click="toPutPracticeInfo" />
-            </div>
-
-            <!-- VIEW PRACTICE STATUS -->
-            <div class="flex flex-wrap justify-between items-center">
-              <div class="flex flex-row">
-                <span class="text-lg mr-2 font-bold">Practice Status</span>
-                <span
-                  class="tool"
-                  data-tip="
-                    Manual status control will only work when verification requirements are already completed (Documents and Rates).
-                    Status cannot be set to 'Active' until the Practice is Verified at least once, since the day it was created
-                  "
-                  tabindex="1"
+              </div>
+              <!-- VIEWING OTHER INFORMATION -->
+              <div v-if="!toEdit">
+                <template v-if="practice.direct_debit">
+                  <p class="flex font-bold">
+                    Sage reference
+                  </p>
+                  <p
+                    class="flex  text-sm md:px-2 mb-2"
+                  >
+                    {{ practice.sage_ref ? practice.sage_ref : 'N/A' }}
+                  </p>
+                </template>
+                <p class="flex text-gray-800 font-bold">
+                  Phone Number
+                </p>
+                <p
+                  class="flex md:mx-2 mb-2"
                 >
-                  <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
-                </span>
-              </div>
-
-              <AppButton
-                v-if="authAdminPermissions.includes('Edit Practice Other Information')"
-                :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
-                @click="editPracticeStatus()"
-              />
-            </div>
-            <div v-if="!toEditPracticeStatus" class="flex flex-col mb-2">
-              <div class="flex flex-row m-2">
-                <span class="text-gray-800 mr-2 font-bold">Status:</span>
-                <span
-                  class=" px-4 py-1 rounded-lg"
-                  :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
-                >{{ practice.status }}</span>
-              </div>
-              <div class="m-2">
-                <template v-if="practice.status === 'Active'">
+                  {{ practice && practice.phone_number ? practice.phone_number : 'N/A' }}
+                </p>
+                <p class="flex text-gray-800 font-bold">
+                  Full name to report to
+                </p>
+                <p
+                  class="flex md:mx-2 mb-2"
+                >
+                  {{ practice && practice.report_to ? practice.report_to : 'N/A' }}
+                </p>
+                <p
+                  class="flex text-gray-800 font-bold"
+                >
+                  Extra information (Parking restrictions, transport links, etc.)
+                </p>
+                <p
+                  class="flex md:mx-2 mb-2"
+                >
+                  {{ practice && practice.extra_information ? practice.extra_information : 'N/A' }}
+                </p>
+                <!-- <div class="flex items-center mb-2">
+                  <span class="text-gray-800 mr-2 font-bold">Status:</span>
+                  <span
+                    class=" px-4 py-1 rounded-lg"
+                    :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-500'"
+                  >{{ practice.status }}</span>
+                  <span
+                    class="tool"
+                    data-tip="Manual status control will only work when verification requirements are already completed (Documents and Rates)."
+                    tabindex="1"
+                  >
+                    <svgicon
+                      name="info"
+                      width="21"
+                      height="21"
+                      color="white transparent black"
+                      class="ml-2"
+                    />
+                  </span>
+                </div>-->
+                <!-- <template v-if="practice.status === 'Active'">
                   <p class="text-gray-800 font-bold">
                     Active Until
                   </p>
@@ -505,105 +403,206 @@
                   >
                     {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
                   </p>
+                </template>-->
+                <div class="flex flex-wrap items-center md:mb-2">
+                  <AppButton
+                    :inClass="''"
+                    :label="'Deactivate this Practice'"
+                    :disabled="authAdminPermissions.includes('Edit Practice Other Information') === false"
+                    @click="confirm=true"
+                  />
+                    <!-- Deactivate this Practice -->
+                  <button
+                    v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
+                    class="m-1 text-sm text-white text-center rounded-lg bg-red-600 hover:bg-red-700 px-4 py-1 cursor-pointer transition-hover"
+                    @click="toMarkBogus()"
+                  >
+                    Mark as Bogus
+                  </button>
+                  <button
+                    v-if="practice.status === 'Bogus'"
+                    class="m-1 text-sm text-white text-center rounded-lg bg-yellow-600 hover:bg-yellow-700 px-4 py-1 cursor-pointer transition-hover"
+                    @click="toUnmarkBogus()"
+                  >
+                    Remove Bogus Status
+                  </button>
+                </div>
+              </div>
+
+              <!-- EDITING OTHER INFORMATION -->
+              <div v-if="toEdit && authAdminPermissions.includes('Edit Practice Other Information')">
+                <template v-if="['true', true].includes(toPutPractice.direct_debit)">
+                  <AppInput
+                    v-model="toPutPractice.sage_ref"
+                    :type="'text'"
+                    :name="'sage_ref'"
+                    :label="'Sage reference'"
+                  />
                 </template>
-              </div>
-            </div>
-            <!-- EDITING PRACTICE STATUS -->
-            <div v-if="toEditPracticeStatus" class="flex flex-col mb-4">
-              <div class="flex">
                 <AppInput
-                  v-model="toPutPractice.status"
-                  class="w-2/3 md:w-1/2 mr-2"
+                  v-model="toPutPractice.phone_number"
+                  :type="'text'"
+                  :name="'phonenumber'"
+                  :label="'Phone Number'"
+                />
+                <AppInput
+                  v-model="toPutPractice.report_to"
+                  :type="'text'"
+                  :name="'report_to'"
+                  :label="'Full name to report to'"
+                />
+                <AppInput
+                  v-model="toPutPractice.extra_information"
+                  :type="'textarea'"
+                  :name="'practiceNote'"
+                  :label="'Extra information (Parking restrictions, transport links, etc.)'"
+                  :resize="false"
+                  :rows="2"
+                />
+                <AppButton :label="'Save'" @click="toPutPracticeInfo" />
+              </div>
+
+              <!-- VIEW PRACTICE STATUS -->
+              <div class="flex flex-wrap justify-between items-center">
+                <div class="flex flex-row">
+                  <span class="text-lg mr-2 font-bold">Practice Status</span>
+                  <span
+                    class="tool"
+                    data-tip="
+                      Manual status control will only work when verification requirements are already completed (Documents and Rates).
+                      Status cannot be set to 'Active' until the Practice is Verified at least once, since the day it was created
+                    "
+                    tabindex="1"
+                  >
+                    <svgicon name="info" width="21" height="21" color="#aaa transparent white" class="ml-2" />
+                  </span>
+                </div>
+
+                <AppButton
+                  v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+                  :label="toEditPracticeStatus ? 'Cancel Editing' : 'Edit'"
+                  @click="editPracticeStatus()"
+                />
+              </div>
+              <div v-if="!toEditPracticeStatus" class="flex flex-col mb-2">
+                <div class="flex flex-row items-center m-2">
+                  <span class="text-gray-800 mr-2 font-bold">Status:</span>
+                  <span
+                    class=" px-4 py-1 rounded-lg"
+                    :class="practice.status == 'Active' ? 'bg-green-500' : 'bg-red-600 text-white'"
+                  >{{ practice.status }}</span>
+                </div>
+                <div class="m-2">
+                  <template v-if="practice.status === 'Active'">
+                    <p class="text-gray-800 font-bold">
+                      Active Until
+                    </p>
+                    <p
+                      class="flex md:mx-2 mb-2"
+                    >
+                      {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
+                    </p>
+                  </template>
+                </div>
+              </div>
+              <!-- EDITING PRACTICE STATUS -->
+              <div v-if="toEditPracticeStatus" class="flex flex-col mb-4">
+                <div class="flex">
+                  <AppInput
+                    v-model="toPutPractice.status"
+                    class="w-2/3 md:w-1/2 mr-2"
+                    :type="'select'"
+                    :name="'status'"
+                    :label="'Status'"
+                    :placeholder="'Select...'"
+                    :items="practiceStatusChoices"
+                  />
+                </div>
+
+                <div>
+                  <AppDate
+                    v-if="toPutPractice.status === 'Active'"
+                    v-model="toPutPractice.actived_until"
+                    :name="'actived_until'"
+                    :label="'Active Until'"
+                    is-after
+                    @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
+                  />
+                </div>
+
+                <div>
+                  <AppButton :label="'Change'" @click="toPutPracticeInfo" />
+                </div>
+              </div>
+
+              <!-- VIEW PRACTICE TYPE -->
+              <div class="flex flex-wrap justify-between items-center">
+                <span class="text-lg mr-2 font-bold">Practice Type</span>
+
+                <AppButton
+                  v-if="authAdminPermissions.includes('Edit Practice Other Information')"
+                  :label="toEditPracticeType ? 'Cancel Editing' : 'Edit'"
+                  @click="editPracticeType()"
+                />
+              </div>
+
+              <div v-if="!toEditPracticeType">
+                <span>Practice Type:</span>
+
+                <span
+                  class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
+                  :class="practiceTypeStyle(practice.type)"
+                >{{ practice.type }}</span>
+
+                <span
+                  v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
+                  class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
+                  :class="practiceTypeStyle(practice.hub_type)"
+                >{{ practice.hub_type === 'Type 2' ? 'Health Board' : null }}</span>
+              </div>
+
+              <!-- EDIT PRACTICE TYPE -->
+              <div v-if="toEditPracticeType && authAdminPermissions.includes('Change Practice Type')">
+                <AppInput
+                  v-model="toPutPracticeType.type"
                   :type="'select'"
-                  :name="'status'"
-                  :label="'Status'"
+                  :name="'type'"
+                  :label="'Change Practice Type'"
                   :placeholder="'Select...'"
-                  :items="practiceStatusChoices"
+                  :items="[
+                    { label: 'Hub', value: 'Hub' },
+                    { label: 'Spoke', value: 'Spoke' },
+                    { label: 'Stand Alone', value: 'Stand Alone' }
+                  ]"
                 />
-              </div>
 
-              <div>
-                <AppDate
-                  v-if="toPutPractice.status === 'Active'"
-                  v-model="toPutPractice.actived_until"
-                  :name="'actived_until'"
-                  :label="'Active Until'"
-                  is-after
-                  @blur="CheckEmptyField(toPutPractice.actived_until,'actived_until')"
+                <AppInput
+                  v-if="toPutPracticeType.type === 'Hub'"
+                  v-model="toPutPracticeType.hub_type"
+                  :type="'select'"
+                  :name="'hub_type'"
+                  :placeholder="'Select...'"
+                  :items="[
+                    { label: 'Type 1', value: 'Type 1' },
+                    { label: 'Type 2', value: 'Type 2' },
+                  ]"
                 />
+
+                <AppButton :label="'Change'" @click="toChangePracticeType(practice.id,toPutPracticeType)" />
               </div>
 
-              <div>
-                <AppButton :label="'Change'" @click="toPutPracticeInfo" />
+              <!-- HUBZZ PRACTICE NOTES -->
+              <div class="">
+                <AppInput
+                  v-model="hubzzPracticeNotes"
+                  :type="'textarea'"
+                  :name="'hubzz_practice_notes'"
+                  :label="'Notes'"
+                  :resize="false"
+                  :rows="4"
+                />
+                <AppButton :label="'Save Notes'" class="mx-1" @click="toPutPracticeNotes" />
               </div>
-            </div>
-
-            <!-- VIEW PRACTICE TYPE -->
-            <div class="flex flex-wrap justify-between items-center">
-              <span class="text-lg mr-2 font-bold">Practice Type</span>
-
-              <AppButton
-                v-if="authAdminPermissions.includes('Edit Practice Other Information')"
-                :label="toEditPracticeType ? 'Cancel Editing' : 'Edit'"
-                @click="editPracticeType()"
-              />
-            </div>
-
-            <div v-if="!toEditPracticeType">
-              <span>Practice Type:</span>
-
-              <span
-                class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
-                :class="practiceTypeStyle(practice.type)"
-              >{{ practice.type }}</span>
-
-              <span
-                v-if="practice.type === 'Hub' && practice.hub_type === 'Type 2'"
-                class="inline-flex px-4 py-1 mr-2 mb-1 rounded-lg text-sm md:px-2"
-                :class="practiceTypeStyle(practice.hub_type)"
-              >{{ practice.hub_type === 'Type 2' ? 'Health Board' : null }}</span>
-            </div>
-
-            <!-- EDIT PRACTICE TYPE -->
-            <div v-if="toEditPracticeType && authAdminPermissions.includes('Change Practice Type')">
-              <AppInput
-                v-model="toPutPracticeType.type"
-                :type="'select'"
-                :name="'type'"
-                :label="'Change Practice Type'"
-                :placeholder="'Select...'"
-                :items="[
-                  { label: 'Hub', value: 'Hub' },
-                  { label: 'Spoke', value: 'Spoke' },
-                  { label: 'Stand Alone', value: 'Stand Alone' }
-                ]"
-              />
-
-              <AppInput
-                v-if="toPutPracticeType.type === 'Hub'"
-                v-model="toPutPracticeType.hub_type"
-                :type="'select'"
-                :name="'hub_type'"
-                :placeholder="'Select...'"
-                :items="[
-                  { label: 'Type 1', value: 'Type 1' },
-                  { label: 'Type 2', value: 'Type 2' },
-                ]"
-              />
-
-              <AppButton :label="'Change'" @click="toChangePracticeType(practice.id,toPutPracticeType)" />
-            </div>
-
-            <!-- HUBZZ PRACTICE NOTES -->
-            <div class="">
-              <AppInput
-                v-model="hubzzPracticeNotes"
-                :type="'textarea'"
-                :name="'hubzz_practice_notes'"
-                :label="'Notes'"
-                :resize="false"
-              />
-              <AppButton :label="'Save Notes'" class="mx-1" @click="toPutPracticeNotes" />
             </div>
           </div>
         </div>
@@ -612,7 +611,7 @@
       <!-- TOOLTIPS FOR VERIFICATION -->
       <div
         v-if="practice.status === 'Inactive' || practice.sage_ref === null"
-        class="order-1 lg:order-2  rounded-lg px-2 py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6  text-sm"
+        class="order-1 lg:order-2  rounded-lg px-2 lg:py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6  text-sm"
       >
         <div v-if="practice.status === 'Inactive'">
           <!-- Title -->
@@ -726,7 +725,7 @@
               </p>
               <li class="flex px-2">
                 <span
-                  class="tool flex"
+                  class="tool flex text-center"
                   data-tip="Click 'Edit' on the Other Information section in profile, then add the practice's SAGE Reference "
                   tabindex="1"
                 >
@@ -1063,13 +1062,13 @@ export default {
 		practiceTypeStyle (type) {
 			switch (type) {
 				case "Stand Alone":
-					return "bg-indigo-500  lg:px-4 sm:px-2"
+					return "bg-indigo-500 lg:px-4 sm:px-2"
 				case "Hub":
-					return "bg-red-500  lg:px-8 sm:px-2"
+					return "bg-red-500 text-white lg:px-8 sm:px-2"
 				case "Spoke":
-					return "bg-blue-500  lg:px-8 sm:px-2"
+					return "bg-blue-500 lg:px-8 sm:px-2"
 				case "Type 2":
-					return "bg-purple-500  lg:px-8 sm:px-2"
+					return "bg-purple-500 lg:px-8 sm:px-2"
 				default:
 			}
 		},

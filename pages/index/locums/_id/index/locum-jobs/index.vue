@@ -1,9 +1,7 @@
 <template>
-  <div class="mt-5">
-    <div class="">
-      <LocumJobsTabs v-if="locumUser" :user="locumUser" />
-      <nuxt-child />
-    </div>
+  <div>
+    <LocumJobsTabs v-if="locumUser && !$route.params.locumJobPartId" :user="locumUser" />
+    <nuxt-child />
   </div>
 </template>
 

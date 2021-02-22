@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-center items-center py-2 w-full">
-    <div :class="pages > 2 ? 'flex md:hidden' : 'hidden'">
+    <!-- <div :class="pages > 2 ? 'flex md:hidden' : 'hidden'">
       <div
         v-for="pageItem in pages"
         v-if="showPage(pageItem)"
@@ -19,38 +19,35 @@
           {{ pageItem }}
         </button>
       </div>
-    </div>
+    </div> -->
 
     <div class="flex items-center">
       <div v-if="pages > 2" class="m-1">
         <button
           type="button"
-          class="relative __pagination_button rounded-lg h-full p-3 flex justify-center items-center font-bold text-sm focus:outline-none"
-          :class="{
-            'text-gray-500 cursor-not-allowed': activePage === 1,
-          }"
+          class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
+          :class="activePage === 1 ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
           :disabled="loading || activePage === 1"
           @click="activePage = 1"
         >
-          <svgicon name="left-chevron" width="13" height="13" />
+          <svgicon name="left-chevron" width="12" height="12" class="fill-current"/>
         </button>
       </div>
 
       <div class="m-1">
         <button
           type="button"
-          class="relative __pagination_button rounded-lg h-full py-3 px-3 flex justify-center items-center font-bold text-sm focus:outline-none"
-          :class="{
-            'text-gray-500 cursor-not-allowed': activePage === 1,
-          }"
+          class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
+          :class="activePage === 1 ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
           :disabled="loading || activePage === 1"
           @click="activePage = activePage > 1 ? activePage - 1 : 1"
         >
-          <svgicon name="arrow-left" width="13" height="13" />
+          <svgicon name="caret-down" width="12" height="12" class="fill-current" style="transform: rotate(90deg)" />
+          <!-- <svgicon name="arrow-left" width="13" height="13" /> -->
         </button>
       </div>
 
-      <div :class="pages > 2 ? 'hidden md:flex' : 'flex'">
+      <div class="flex">
         <div
           v-for="pageItem in pages"
           v-if="showPage(pageItem)"
@@ -59,10 +56,10 @@
         >
           <button
             type="button"
-            class="rounded-lg __pagination_button py-2 px-3 md:px-4 font-bold text-xs md:text-sm focus:outline-none"
+            class="text-gray-700 hover:text-gray-800 font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
             :disabled="loading || activePage === pageItem"
             :class="{
-              'active cursor-not-allowed': activePage === pageItem,
+              'active border-b-2 border-gray-600 cursor-not-allowed': activePage === pageItem,
             }"
             @click="activePage = pageItem"
           >
@@ -74,28 +71,25 @@
       <div class="m-1">
         <button
           type="button"
-          class="relative __pagination_button rounded-lg h-full p-3 font-bold text-sm focus:outline-none"
-          :class="{
-            'text-gray-500 cursor-not-allowed': activePage === pages,
-          }"
+          class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
+          :class="activePage === pages ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
           :disabled="loading || activePage === pages"
           @click="activePage = activePage < pages ? activePage + 1 : pages"
         >
-          <svgicon name="arrow-right" width="13" height="13" />
+          <svgicon name="caret-down" width="12" height="12" class="fill-current" style="transform: rotate(-90deg)" />
+          <!-- <svgicon name="arrow-right" width="13" height="13" /> -->
         </button>
       </div>
 
       <div v-if="pages > 2" class="m-1">
         <button
           type="button"
-          class="relative __pagination_button rounded-lg h-full p-3 font-bold text-sm focus:outline-none"
-          :class="{
-            'text-gray-500 cursor-not-allowed': activePage === pages,
-          }"
+          class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
+          :class="activePage === pages ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
           :disabled="loading || activePage === pages"
           @click="activePage = pages"
         >
-          <svgicon name="right-chevron" width="13" height="13" />
+          <svgicon name="right-chevron" width="12" height="12" class="fill-current" />
         </button>
       </div>
     </div>
@@ -163,10 +157,14 @@
       color: #000;
   }
 
-  .__pagination_button.active {
+  /* .__pagination_button.active {
       background: linear-gradient(to top, #dbb013, #ecc94b);
       color: #000;
       box-shadow: 0 3px 5px #333;
+  } */
+
+  .active {
+    border-bottom: 2px solid #999999;
   }
 
   .__pagination_button.active:disabled {

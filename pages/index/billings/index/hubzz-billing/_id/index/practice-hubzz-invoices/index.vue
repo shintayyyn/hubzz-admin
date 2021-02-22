@@ -1,6 +1,6 @@
 <template>
   <div class="w-full overflow-hidden">
-    <div class="flex justify-end mx-4">
+    <div class="flex justify-end mx-4 mb-2">
       <AppButton
         v-if="authAdminPermissions.includes('Create Hubzz Invoices')" 
         class="text-sm"
@@ -22,6 +22,7 @@
       :order-by="params.order_by"
       @pagechanged="pagechanged"
       @sorted="sorted"
+      :minHeight="'45vh'"
     >
       <template v-slot:total_amount_slot="slotProps">
         <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
@@ -65,7 +66,7 @@
           </div>
           <div 
             v-else
-            class="text-gray-400"
+            class="text-gray-600"
           >
             Payment not settled
           </div>
@@ -76,8 +77,8 @@
         <div class="flex items-center justify-center">
           <AppButton
             :label="!slotProps.item.paid_at ? 'Settle Payment':'Payment is Settled'"
-            :background="'green'"
-            class="text-white mr-2"
+            class="mr-2"
+            customTheme="bg-green-500 hover:bg-green-600 text-white"
             :disabled="slotProps.item.sage_ref && slotProps.item.paid_at === null ? false : true"
             @click="toShowPaidModal(slotProps.item.id)"
           />

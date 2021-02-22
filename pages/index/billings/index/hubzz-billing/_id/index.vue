@@ -1,16 +1,16 @@
 <template>
-  <section class="shadow-lg">
+  <section class="mt-2">
     <template v-if="$route.name === 'index-billings-index-hubzz-billing-id-index-practice-hubzz-invoices'">
-      <div class="p-3 w-full text-sm shadow-lg">
-        <div class="flex flex-wrap overflow-hidden">
-          <div class="w-1/2 overflow-hidden">
+      <div class="p-3 w-full text-sm border rounded-lg">
+        <div class="flex flex-wrap">
+          <div class="w-1/3">
             <p class="flex">
               Practice Name
             </p>
             <p class="flex flex-wrap items-center  text-sm p-2 font-semibold">
               <span class="mr-2">{{ practice.surgery ? practice.surgery.name : null }}</span>
               <span
-                class="py-2 px-4 text-sm  rounded-lg shadow font-extrabold"
+                class="py-2 px-4 text-sm rounded-lg font-extrabold"
                 :class="practiceTypeStyle(practice.type)"
               >{{ practice.type }}</span>
               <span
@@ -32,6 +32,9 @@
             <p class="flex  text-sm p-2 font-semibold"> 
               {{ practice.vat_registered === true ? 'Yes' : 'No' }}
             </p>
+          </div>
+
+          <div class="w-1/3">
             <p class="flex font-bold">
               Sage reference
             </p>
@@ -56,7 +59,7 @@
             </p>
           </div>
 
-          <div class="w-1/2 overflow-hidden">
+          <div class="w-1/3">
             <p class="flex">
               Outstanding Balance
             </p>
@@ -162,7 +165,7 @@ export default {
 				case "Stand Alone":
 					return "bg-indigo-500  lg:px-4 sm:px-2"
 				case "Hub":
-					return "bg-red-500  lg:px-8 sm:px-2"
+					return "bg-red-500 text-white lg:px-8 sm:px-2"
 				case "Spoke":
 					return "bg-blue-500  lg:px-8 sm:px-2"
 				case "Type 2":

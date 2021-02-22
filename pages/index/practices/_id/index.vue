@@ -2,7 +2,7 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
-      <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+      <div v-if="!$route.params.pracUserId && !$route.params.roleId && !$route.params.pracDocId && !$route.params.practiceSessionPartId" class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1">
         <nuxt-link
           v-if="practicePermissions.includes('View Practices')"
           :to="`/practices/${$route.params.id}`"

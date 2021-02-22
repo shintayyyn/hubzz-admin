@@ -30,7 +30,7 @@
         Forgot Password?
       </nuxt-link>
 
-      <AppButton :label="loggingIn ? 'Loading...' : 'Sign-in'" class="self-center" @click="login" />
+      <AppButton :label="loggingIn ? 'Loading...' : 'Sign-in'" class="self-center text-black" @click="login" />
 
       <!-- <button
 				@click="login"
