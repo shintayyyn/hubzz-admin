@@ -49,7 +49,7 @@ a {
 .tool::before {
 	border-style: solid;
 	border-width: 1em 0.75em 0 0.75em;
-	border-color: #505561 transparent transparent transparent;
+	border-color: #ccc transparent transparent transparent;
 	bottom: 100%;
 	content: "";
 	margin-left: -0.5em;
@@ -65,10 +65,10 @@ a {
 
 /*== speech bubble ==*/
 .tool::after {
-	background: #505561;
+	background: #ccc;
 	border-radius: 0.5em;
 	bottom: 175%;
-	color: #edeff0;
+	color: #000;
 	content: attr(data-tip);
 	margin-left: -8.75em;
 	padding: 1em;
@@ -77,6 +77,8 @@ a {
 	/* width: 17.5em; */
 	font-size: 0.75em;
 	width: 16em;
+	line-height: 1.25em;
+	text-align: center;
 	/* margin-left: -13em; */
 }
 
@@ -121,7 +123,7 @@ a {
 /* .tool-left::before {
 	border-style: solid;
 	border-width: 1em 0.75em 0 0.75em;
-	border-color: #505561 transparent transparent transparent;
+	border-color: #ccc transparent transparent transparent;
 	bottom: 100%;
 	content: "";
 	margin-left: -0.5em;
@@ -133,7 +135,7 @@ a {
 .tool-left::before {
 	border-style: solid;
 	border-width: 1em 0.75em 0 0.75em;
-	border-color: #505561 transparent transparent transparent;
+	border-color: #ccc transparent transparent transparent;
 	bottom: 100%;
 	content: "";
 	margin-left: -0.5em;
@@ -149,7 +151,7 @@ a {
 
 /*== speech bubble ==*/
 /* .tool-left::after {
-	background: #505561;
+	background: #ccc;
 	border-radius: 0.5em;
 	bottom: -70%;
 	left: -392%;
@@ -165,7 +167,7 @@ a {
 } */
 
 .tool-left::after {
-	background: #505561;
+	background: #ccc;
 	border-radius: 0.5em;
 	bottom: 175%;
 	color: #edeff0;

@@ -2,14 +2,14 @@
   <div class="flex items-center py-2">
     <div 
       v-for="(item, index) in crumbs" :key="index" 
-      class="flex"
+      class="flex items-center"
       :class="item.classes"
     >
       <span v-if="index > 0 && index < crumbs.length" class="font-bold text-gray-500 mx-2">
         <svgicon
           :name="'arrow-right'"
           width="9"
-          class="fill-current mt-2"
+          class="fill-current"
         /> 
       </span>
       <div class="text-gray-700" @click="$router.push(item.to)">
@@ -52,7 +52,7 @@ export default {
         return breadcrumbArray
       }, [])
 
-      return breadcrumbs
+      return breadcrumbs.filter(items=> items.text !== '')
     }
   },
 

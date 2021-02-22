@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-lg">
+  <div class="">
     <PracticeSessionModal :jobPart="job_part" :job="job_part ? job_part.job : null" />
   </div>
 </template>

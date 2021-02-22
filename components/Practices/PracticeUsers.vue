@@ -1,16 +1,14 @@
 <template>
-  <div class="m-2">
+  <div class="">
     <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
 
-    <div class="w-full overflow-hidden">
-      <div v-if="authAdminPermissions.includes('Create New Practice User')">
-        <AppButton
-          :label="'Add User'"
-          :icon="'add-user'"
-          :disabled="practice.status === 'Deactivated'"
-          @click="modal = true"
-        />
-      </div>
+    <div class="mb-5" v-if="authAdminPermissions.includes('Create New Practice User')">
+      <AppButton
+        :label="'Add User'"
+        :icon="'add-user'"
+        :disabled="practice.status === 'Deactivated'"
+        @click="modal = true"
+      />
     </div>
 
     <transition name="fade">
@@ -26,7 +24,7 @@
         @pagechanged="pagechanged"
         @sorted="sorted"
       >
-        <template v-slot:status_slot="slotProps">
+        <!-- <template v-slot:status_slot="slotProps">
           <div
             class="px-4 py-1 rounded-full text-center w-32 mx-auto"
             :class="
@@ -37,7 +35,7 @@
           >
             {{ slotProps.item.status }}
           </div>
-        </template>
+        </template> -->
         <!-- <template v-slot:actions="slotProps">
           <AppButton
            
@@ -140,8 +138,6 @@
           {
             name: "Status",
             dataIndex: "status",
-            slot: true,
-            slotName: "status_slot",
             class: "text-center",
             sortable: true
           },

@@ -43,9 +43,9 @@
       </div>
     </div>
 
-    <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center shadow-md bg-gray-800">
+    <div v-if="loading" class="absolute inset-0 flex flex-col items-center justify-center shadow-md bg-gray-200 opacity-50">
       <svgicon name="loader" color="white" width="60" height="60" />
-      <span class="text-white text-2xl">Loading...</span>
+      <span class="text-2xl">Loading...</span>
     </div>
   </div>
 </template>

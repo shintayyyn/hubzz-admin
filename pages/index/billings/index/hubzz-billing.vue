@@ -1,7 +1,7 @@
 <template>
   <section v-if="authAdminPermissions.includes('View Hubzz Invoices')">
     <template v-if="$route.name === 'index-billings-index-hubzz-billing'">
-      <div class="flex flex-row justify-start">
+      <div class="flex flex-row justify-start mt-1 mb-2">
         <div
           v-if="authAdminPermissions.includes('Create Hubzz Invoices') && !$route.path.includes('bulk-billing')" 
           class="flex justify-start items-center flex-wrap"
@@ -14,7 +14,7 @@
           />
         </div>
 
-        <div v-if="!$route.path.includes('bulk-billing')" class="w-full text-white w-full md:w-1/2">
+        <div v-if="!$route.path.includes('bulk-billing')" class="md:w-3/12">
           <AppInputSmall
             v-model="search"
             :type="'text'"

@@ -75,7 +75,7 @@
       >
         <template v-slot:invoice_status_slot="slotProps">
           <div
-            class="py-2 px-4 rounded-lg whitespace-no-wrap text-center mx-2"
+            class="py-1 px-2 text-sm rounded-lg whitespace-no-wrap text-center mx-2"
             :class="invoiceStatusStyle(slotProps.item.invoice_status)"
           >
             {{ slotProps.item.invoice_status }}

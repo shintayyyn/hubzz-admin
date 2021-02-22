@@ -1,8 +1,8 @@
 <template>
   <div ref="modalContainer" :class="getStyle(registeeType)">
-    <div class="flex flex-col px-4 shadow-lg">
+    <div class="flex flex-col px-4">
       <!-- class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8" -->
-      <div v-if="registeeType !== 'customSurgery'" class="flex justify-between text-sm mt-4 mx-2">
+      <div v-if="registeeType !== 'customSurgery'" class="flex justify-between text-sm my-4 mx-2">
         <div class="cursor-pointer" @click="$emit('close')">
           <svgicon
             name="arrow-left-solid"
@@ -12,7 +12,7 @@
           />
         </div>
       </div>
-      <div class="py-4">
+      <div class="">
         <div class="">
           <div class="text-lg font-bold">
             {{ registeeType == 'customSurgery' ? 'Create Custom Practice' : 'Create User' }}
@@ -22,9 +22,9 @@
           </div>
         </div>
 
-        <div class="flex my-4 py-2 px-3 shadow rounded-lg text-sm max-w-lg">
-          <div class="w-full text-sm p-2">
-            <AppFormError v-if="formError.length > 0 && showFormError == true" class="w-full mb-4" :formError="formError" />
+        <div class="flex my-4 p-4 border rounded-lg text-sm max-w-lg">
+          <div class="w-full text-sm">
+            <!-- <AppFormError v-if="formError.length > 0 && showFormError == true" class="w-full mb-4" :formError="formError" /> -->
             <!-- USER PERSONAL DETAILS -->
             <AppInput 
               v-model="toPostUser.title"
@@ -296,14 +296,15 @@
             <div class="flex flex-col b rounded-lg">
               <div class="">
                 <button
-                  class="flex p-2 bg-white text-black rounded-lg" @click="generateRandomPassword()"
+                  class="flex p-2 bg-gray-600 hover:bg-gray-700 transition-hover text-white rounded-lg" @click="generateRandomPassword()"
                 >
-                  <span class="px-2 pt-1"> Generate Random Password</span> 
+                  <span class="px-2 pt-1 mr-1"> Generate Random Password</span> 
                   <svgicon
                     name="dices" 
-                    width="30" 
-                    height="30"
-                    color="black"
+                    width="28" 
+                    height="28"
+                    color="white"
+                    class="mr-2"
                   />
                 </button>
               </div>

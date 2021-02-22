@@ -47,7 +47,7 @@
               <div class="flex flex-col w-full">
                 <input
                   v-model="listLabel"
-                  class="border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm shadow-none"
+                  class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm shadow-none"
                   placeholder="Type Training Title Here"
                   type="text"
                 >
@@ -163,7 +163,7 @@
                     :value="value"
                     :type="type"
                     :placeholder="placeholder"
-                    class="border-l-2 border-t-2 border-b-2 border-gray-500 focus:border-gray-600 focus:outline-none font-bold text-xs sm:text-sm w-full shadow-none"
+                    class="bg-transparent border-l-2 border-t-2 border-b-2 border-gray-500 focus:border-gray-600 focus:outline-none font-bold text-xs sm:text-sm w-full shadow-none"
                     :class="[error ? 'border-red-500' : '', button ? 'rounded-l px-2':'rounded' ,inClass]"
                     :style="inStyle"
                     :checked="value"
@@ -204,7 +204,7 @@
               <div class="relative w-full mb-4">
                 <div class="relative">
                   <input
-                    class="border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                    class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
                     :value="value"
                     :type="togglePassword()"
                     :placeholder="placeholder"
@@ -247,7 +247,7 @@
                   <select
                     ref="inputSelect"
                     :value="value"
-                    class="absolute bottom-0 border-2 focus:border-yellow-400 focus:outline-none font-bold text-sm w-full rounded"
+                    class="bg-transparent absolute bottom-0 border-2 focus:border-yellow-400 focus:outline-none font-bold text-sm w-full rounded"
                     :class="[
                       (error && !disabled) ? 'border-red-500' : inClass,
                       disabled ? 'border-gray-400 text-gray-500 cursor-not-allowed' : 'cursor-pointer',
@@ -303,7 +303,7 @@
                   :rows="rows"
                   :value="value"
                   :placeholder="placeholder"
-                  class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
+                  class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 px-2 font-bold text-xs sm:text-sm w-full"
                   :class="[error ? 'border-red-500':'', resize ? '' : 'resize-none']"
                   :limit="limit"
                   :style="inStyle"
@@ -399,7 +399,7 @@
             :value="value"
             type="email"
             :placeholder="placeholder"
-            class="border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
+            class="bg-transparent border-b-2 focus:border-yellow-400 focus:outline-none py-4 font-bold text-xs sm:text-sm w-full"
             :class="error ? 'border-red-500':''"
             @input="$emit('input', $event.target.value)"
           >
@@ -433,7 +433,7 @@
             :value="value"
             :type="type"
             :placeholder="placeholder"
-            class="focus:outline-none pl-4 pr-6 py-3 font-bold text-xs sm:text-sm w-full rounded-lg"
+            class="bg-transparent focus:outline-none pl-4 pr-6 py-3 font-bold text-xs sm:text-sm w-full rounded-lg"
             :class="error? 'border-red-500':''"
             :style="inStyle"
             :checked="value"
@@ -722,8 +722,8 @@ export default {
 </script>
 
 <style>
-input::placeholder,
+/* input::placeholder,
 textarea::placeholder {
 	color: #8d9bad;
-}
+} */
 </style>  

@@ -32,7 +32,7 @@
             </div>
             <div
               v-if="error && (type.includes('checkbox'))"
-              class="bg-red-300 text-red-700 py-1 px-2 text-xs"
+              class="text-red-700 py-1 text-xs"
             >
               {{
                 error.message.charAt(0).toUpperCase() +
@@ -94,7 +94,7 @@
                   @keypress="type === 'number' ? isNumber($event) : type === 'numberDash' || type === 'numberText' ? isNumberDash($event) : $emit('keypress')"
                   @blur="$emit('blur')"
                 >
-                <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
+                <div v-if="error" class="text-red-700 py-1 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                       error.message.slice(1).replace(/_/g, " ")
@@ -122,7 +122,7 @@
                   <svgicon v-else name="hide-eye" width="20" height="20" class="hover:text-gray-500 fill-current" />
                 </button>
                 
-                <div v-if="error" class="bg-red-300 text-red-700 py-1 px-2 text-xs">
+                <div v-if="error" class="text-red-700 py-1 text-xs">
                   {{
                     error.message.charAt(0).toUpperCase() +
                       error.message.slice(1).replace(/_/g, " ")
@@ -180,7 +180,7 @@
                 </div>
                 <div
                   v-if="error && (type === 'select' || type.includes('checkbox'))"
-                  class="bg-red-300 text-red-700 py-1 px-2 text-xs w-full"
+                  class="text-red-700 py-1 text-xs w-full mt-2"
                 >
                   {{
                     error.message.charAt(0).toUpperCase() +
@@ -210,7 +210,7 @@
                 />
                 <div
                   v-if="error"
-                  class="bg-red-300 text-red-700 py-1 px-2 text-xs"
+                  class="text-red-700 py-1 text-xs"
                 >
                   {{
                     error.message.charAt(0).toUpperCase() +

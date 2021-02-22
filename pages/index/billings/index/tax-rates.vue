@@ -1,8 +1,8 @@
 <template>
   <section>
-    <div class="flex flex-col rounded-lg">
+    <div class="flex flex-col my-4">
       <div
-        class="w-full flex  text-sm p-2 shadow rounded-lg relative"
+        class="w-full flex  text-sm p-4 border rounded-lg relative"
         style="max-width: 600px"
       >
         <div
@@ -10,7 +10,7 @@
           class="relative w-full class overflow-hidden  text-sm px-2 md:p-2"
         >
           <div
-            class="absolute right-0 top-0 inline-flex no-underline py-2 px-4 md:m-2 font-semibold bg-sunglow hover:bg-sunglow-dark text-sm text-black rounded-lg shadow float-left"
+            class="absolute right-0 top-0 md:m-2 float-left"
           >
             <AppButton
               v-if="toEdit === false"
@@ -59,7 +59,6 @@
           />
           <div class="flex flex-row">
             <AppButton
-              class="mx-2"
               :label="'Save Changes'"
               @click="updateTaxRates()"
             />
