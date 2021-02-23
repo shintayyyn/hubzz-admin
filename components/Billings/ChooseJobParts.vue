@@ -128,41 +128,41 @@ export default {
         {
 					name: "Practice Name",
 					dataIndex: "practice_name",
-					sortable: true
+					sortable: "true"
 				},
         {
 					name: "Invoice Number",
 					dataIndex: "locum_invoice_item.locum_invoice.invoice_number",
-					sortable: true
+					sortable: "true"
 				},
 				{
 					name: "Job Part Number",
 					dataIndex: "job_part_number",
-					sortable: true
+					sortable: "true"
 				},
 				{
 					name: "Approved At",
 					dataIndex: "approved_at_in_gb_formatted",
 					class: "text-center",
-					sortable: true
+					sortable: "true"
 				},
 				{
 					name: "Completed At",
 					dataIndex: "completed_at_in_gb_formatted",
 					class: "text-center",
-					sortable: true
+					sortable: "true"
 				},
 				{
           name: "From",
           dataIndex: "datetime_start_in_gb_formatted",
 					class: "text-center",
-					sortable: true
+					sortable: "true"
 				},
 				{
           name: "To",
           dataIndex: "datetime_end_in_gb_formatted",
 					class: "text-center",
-					sortable: true
+					sortable: "true"
 				},
 				{
 					name: "Invoice Status",
@@ -170,7 +170,6 @@ export default {
 					dataIndex: "invoice_status",
 					class: "text-center",
 					slotName: "invoice_status_slot",
-					sortable: true
 				},
 				{
 					name: "Status",
@@ -178,7 +177,6 @@ export default {
 					dataIndex: "status",
 					class: "text-center",
 					slotName: "status_slot",
-					sortable: true
         },
 			]
 		}

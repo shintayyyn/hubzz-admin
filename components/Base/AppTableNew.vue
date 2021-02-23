@@ -273,11 +273,16 @@ export default {
       this.$emit("limitchanged", limit)
     },
     sortIcon (dataIndex) {
-      return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
+      if (this.params.length > 0) {
+        return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
         ? 'sort-ascend'
         : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
           ? 'sort-descend'
           : 'sort'
+      } else {
+        return ''
+      }
+      
     },
     dataCell (item, column) {
       var dataIndexArr = column.dataIndex.split(".")
