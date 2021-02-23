@@ -1,8 +1,8 @@
 <template>
   <section class="header">
-    <div class="flex justify-between md:justify-between items-center text-sm text-white pl-4 pr-5 border border-b">
+    <div class="flex justify-between md:justify-between items-center text-sm pl-4 pr-5 border border-b">
       <div class="flex flex-row py-1 text-gray-500">
-        <button class="toggle text-white focus:outline-none cursor-pointer" @click="toggleSideBar">
+        <button class="toggle focus:outline-none cursor-pointer" @click="toggleSideBar">
           <img src="~/assets/images/hbg.png">
         </button>
         <div class="ml-2 m-1 text-md md:text-md">
@@ -10,18 +10,18 @@
         </div>
       </div>
 
-      <div class="flex">
-        <div class="m-2 sm:relative">
+      <div class="flex py-1">
+        <div class="m-1 sm:relative">
           <AppButton
             icon="bell"
             :label="'Notification'"
             class="notif-btn"
-            :customTheme="'border-2 border-gray-400 text-black'"
+            :customTheme="'border-2 py-2 text-black'"
             :badge="unseenNotificationsCount"
             @click="showDropdownNotifications = !showDropdownNotifications"
           />
           <div v-if="showDropdownNotifications">
-            <div v-on-clickaway="onClickaway" class="notification-modal mx-auto sm:mx-0 overflow-hidden">
+            <div v-on-clickaway="onClickaway" class="notification-modal mx-auto sm:mx-0 overflow-hidden shadow-md">
               <div class="flex flex-row mx-4 items-center justify-between pt-4">
                 <div class>
                   <p class="text-xl font-bold tracking-normal">
@@ -30,7 +30,7 @@
                 </div>
                 <div
                   v-if="unseenNotificationsCount"
-                  class="text-white hover:text-gray-500 mt-1 cursor-pointer"
+                  class="hover:text-gray-800 mt-1 cursor-pointer"
                   @click="$emit('seenAllNotifications')"
                 >
                   Mark All as Read
@@ -45,8 +45,8 @@
                   <div
                     v-for="(item, index) in notifications"
                     :key="`item-${index}`"
-                    class="inline-block w-full p-3 mb-2 shadow-md text-white bg-waterloo hover:bg-waterloo-light transition-hover rounded-lg cursor-pointer"
-                    :class="item.seen === true ? 'text-gray-400' : 'border-2 border-orange-500'"
+                    class="inline-block w-full p-3 mb-2 shadow-md hover:bg-gray-200 transition-hover rounded-lg cursor-pointer"
+                    :class="item.seen === true ? '' : 'border-2 border-orange-500'"
                     @click="$emit('goToNotification', item)"
                   >
                     <div class="w-full flex flex-col leading-tight sm:my-1 pt-1">
@@ -54,7 +54,7 @@
                       <span>{{ item.description }}</span>
                     </div>
 
-                    <span class="text-xs text-gray-400">{{ item.created_at_in_gb_formatted }}{{ false ? ` (${item.id})` : '' }}</span>
+                    <span class="text-xs ">{{ item.created_at_in_gb_formatted }}{{ false ? ` (${item.id})` : '' }}</span>
                   </div>
                 </div>
 
@@ -64,19 +64,19 @@
               </div>
 
               <div class="flex justify-center m-4">
-                <p class="text-white hover:text-gray-500 cursor-pointer px-2" @click="$emit('loadMoreNotifs')">
+                <p class="hover:text-gray-500 cursor-pointer px-2" @click="$emit('loadMoreNotifs')">
                   Show More
                 </p>
               </div>
             </div>
           </div>
         </div>
-        <div v-if="$auth.loggedIn" class="m-2 sm:relative">
+        <div v-if="$auth.loggedIn" class="m-1 sm:relative">
           <AppButton
             icon="user"
             :label="'My Account'"
             class="notif-btn"
-            :customTheme="'border-2 border-gray-400 text-black'"
+            :customTheme="'border-2 py-2 text-black'"
             @click="$router.push('/account')"
           />
         </div>
@@ -177,7 +177,7 @@ export default {
     max-width: 95%;
     overflow: hidden;
     transition: all 0.3s ease-in-out;
-    background-color: #393c42;
+    background-color: #fff;
     z-index: 49;
   }
 

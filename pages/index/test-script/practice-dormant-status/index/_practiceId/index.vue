@@ -1,10 +1,10 @@
 <template>
   <div style="transition: all 0.3s ease-in-out;">
-    <div class="flex-1 flex flex-col self-end shadow-lg rounded-lg">      
+    <div class="flex-1 flex flex-col self-end">      
       <AppLoading :loading="loading" :message="'Loading'" />
 
       <div class="py-4">
-        <div class="mx-2 md:mx-4 ">
+        <div class="">
           <div class="text-lg font-bold">
             ID: {{ $route.params.practiceId }}
           </div>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="py-4">
-          <div class="mx-2 md:mx-4  flex flex-wrap items-center">
+          <div class=" flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
               Override created: 
             </div>
@@ -68,7 +68,7 @@
             </div>
           </div>
 
-          <div class="mx-2 md:mx-4  flex flex-wrap items-center">
+          <div class=" flex flex-wrap items-center">
             <div class="text-lg font-bold" style="width: 150px;">
               Override last job posted date: 
             </div>
@@ -108,13 +108,13 @@
           </div>
         </div>
 
-        <div class="mt-8 mx-2 md:mx-4 ">
+        <div class="mt-8 mb-2">
           <div class="text-lg font-bold">
             Practice Jobs
           </div>
         </div>
 
-        <AppTable
+        <AppTableNew
           v-if="practiceJobsCount !== 0"
           :total="practiceJobsCount"
           :items="practiceJobs"
@@ -141,7 +141,7 @@
   import AppLoading from '@/components/Base/AppLoading'
   import AppDate from '@/components/Base/AppDate'
   import AppTime from '@/components/Base/AppTime'
-  import AppTable from '@/components/Base/AppTable'
+  import AppTableNew from '@/components/Base/AppTableNew'
   import AppButton from '@/components/Base/AppButton'
 
   export default {
@@ -149,7 +149,7 @@
       AppLoading,
       AppDate,
       AppTime,
-      AppTable,
+      AppTableNew,
       AppButton,
     },
 

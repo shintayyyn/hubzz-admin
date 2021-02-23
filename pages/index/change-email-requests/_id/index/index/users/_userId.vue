@@ -3,25 +3,25 @@
     <div class="flex-1 flex flex-col self-end">
       <div>
         <div
-          class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg mt-4 shadow"
+          class="mx-2 md:mx-4 flex no-underline border rounded-lg mt-4 max-w-sm"
           style="position:relative;"
         >
           <div class="w-4/5 overflow-hidden text-sm m-4">
             <div>
               <p class="m-2">
-                ID <span class="m-2 ">{{ user ? user.id : null }}</span>
+                ID: <span class="m-2 ">{{ user ? user.id : null }}</span>
               </p>
               <p class="m-2">
-                Domain <span class="m-2 ">{{ user ? user.domain : null }}</span>
+                Domain: <span class="m-2 ">{{ user ? user.domain : null }}</span>
               </p>
               <p class="m-2">
-                Username <span class="m-2 ">{{ user ? user.username : null }}</span>
+                Username: <span class="m-2 ">{{ user ? user.username : null }}</span>
               </p>
               <p class="m-2">
-                Name <span class="m-2 ">{{ user ? user.name : null }}</span>
+                Name: <span class="m-2 ">{{ user ? user.name : null }}</span>
               </p>
               <p class="m-2">
-                Email <span class="m-2 ">{{ user ? user.email : null }}</span>
+                Email: <span class="m-2 ">{{ user ? user.email : null }}</span>
               </p>
             </div>
           </div>

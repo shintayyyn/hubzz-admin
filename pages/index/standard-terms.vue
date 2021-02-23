@@ -41,7 +41,7 @@
                     <span class="md:hidden pr-1 font-bold">Action</span>
                     <div class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center">
                       <div v-if="standardTerms" class=" flex items-center justify-center  text-xs px-1 py-1 xl:py-0">
-                        <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 flex items-center text-center rounded-full  no-underline px-6 py-2">
+                        <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 text-white flex items-center text-center rounded-full  no-underline px-6 py-2">
                           <svgicon name="folder" width="16" height="16" color="white white" />
                           <span class="pl-2">View</span>
                         </nuxt-link>
@@ -52,7 +52,7 @@
                         <div class="flex justify-center  text-sm">
                           <label>
                             <input ref="inputFile" class="hidden" type="file" @change="handleInputFileChange">
-                            <button class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-green-500'" @click="$refs.inputFile.click()">
+                            <button class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs text-white" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-600 hover:bg-gray-700'" @click="$refs.inputFile.click()">
                               <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
                               <span class="pl-2">{{ standardTerms ? 'Update' : 'Upload' }}</span>
                             </button>

@@ -15,7 +15,7 @@
         </nuxt-link>
       </div>
 
-      <div class="flex flex-col md:flex-row justify-between md:items-center">
+      <div class="flex flex-col md:flex-row justify-between md:items-center mb-2">
         <div v-if="false" class="flex py-2">
           <div class="relative">
             <input
@@ -122,7 +122,7 @@ export default {
   data () {
     return {
       loading: false,
-      limit: 10,
+      limit: 20,
       page: 1,
       search: '',
       filterStatus: null,

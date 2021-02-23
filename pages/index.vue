@@ -1,5 +1,5 @@
 <template>
-  <nuxt-child />
+  <nuxt-child class="h-full" />
 </template>
 
 <script>
