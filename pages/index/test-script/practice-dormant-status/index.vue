@@ -1,11 +1,9 @@
 <template>
   <div style="transition: all 0.3s ease-in-out;"> 
     <section v-if="$route.name === 'index-test-script-practice-dormant-status-index'" class="flex-1 flex flex-col self-end">
-      <div class="py-4">
-        <div class="mx-2 md:mx-4 ">
-          <div class="text-lg font-bold">
-            Active and Dormant Practices
-          </div>
+      <div class="py-2">
+        <div class="text-lg font-bold">
+          Active and Dormant Practices
         </div>
 
         <div class="flex flex-col md:flex-row justify-between md:items-center">
@@ -30,7 +28,7 @@
               <select
                 id="grid-state"
                 v-model="filterStatus"
-                class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm  p-1 pr-6 focus:hubzz-yellow shadow-lg"
+                class="w-full md:w-auto outline-none rounded-lg border-2 border-transparent text-sm  p-1 pr-6"
               >
                 <option :value="null">
                   All
@@ -103,7 +101,7 @@
       return {
         loading: false,
 				currentPage: 1,
-        limit: 10,
+        limit: 20,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
@@ -206,8 +204,8 @@
             dataIndex: 'status',
             class: 'md:text-center',
             sortable: true,
-            slot: true,
-            slotName: 'status_slot',
+            // slot: true,
+            // slotName: 'status_slot',
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',

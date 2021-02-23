@@ -20,39 +20,39 @@
 
       <div v-if="!loading && complianceDocumentRejectReason">
         <div
-          class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg shadow"
+          class="mx-2 md:mx-4 flex no-underline rounded-lg border max-w-md"
           style="position:relative;"
         >
-          <div class="w-4/5 overflow-hidden text-sm m-4">
+          <div class="overflow-hidden text-sm m-4">
             <div>
               <p class="m-2">
-                <span>ID</span>
-                <span class="m-2 ">{{ complianceDocumentRejectReason.id }}</span>
+                <span class="font-bold">ID:</span>
+                <span class="mx-2">{{ complianceDocumentRejectReason.id }}</span>
               </p>
 
               <p class="m-2">
-                <span>Compliance Document</span>
-                <span class="m-2 ">{{ complianceDocumentRejectReason.compliance_document_name }}</span>
+                <span class="font-bold">Compliance Document:</span>
+                <span class="mx-2">{{ complianceDocumentRejectReason.compliance_document_name }}</span>
               </p>
 
               <p class="m-2">
-                <span>Reject Reason</span>
-                <span class="m-2 ">{{ complianceDocumentRejectReason.reject_reason }}</span>
+                <span class="font-bold">Reject Reason:</span>
+                <span class="mx-2">{{ complianceDocumentRejectReason.reject_reason }}</span>
               </p>
 
               <p v-if="false" class="m-2">
-                <span>Created At</span>
-                <span class="m-2 ">{{ complianceDocumentRejectReason.created_at_formatted || 'N/A' }}</span>
+                <span class="font-bold">Created At:</span>
+                <span class="mx-2">{{ complianceDocumentRejectReason.created_at_formatted || 'N/A' }}</span>
               </p>
 
               <p v-if="false" class="m-2">
-                <span>Updated At</span>
-                <span class="m-2 ">{{ complianceDocumentRejectReason.updated_at_formatted || 'N/A' }}</span>
+                <span class="font-bold">Updated At:</span>
+                <span class="mx-2">{{ complianceDocumentRejectReason.updated_at_formatted || 'N/A' }}</span>
               </p>
 
               <p v-if="complianceDocumentRejectReason.deleted_at_formatted" class="m-2">
-                <span>Deleted At</span>
-                <span class="m-2 ">{{ complianceDocumentRejectReason.deleted_at_formatted }}</span>
+                <span class="font-bold">Deleted At:</span>
+                <span class="mx-2">{{ complianceDocumentRejectReason.deleted_at_formatted }}</span>
               </p>
             </div>
 

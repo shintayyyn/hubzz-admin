@@ -7,20 +7,20 @@
           <span v-if="required" class="text-red-500">*</span>
         </label>
 
-        <div v-if="info" class="rounded-lg bg-gray-300 text-black p-1 text-xs sm:text-sm">
+        <div v-if="info" class="rounded-lg bg-gray-300 p-1 text-xs sm:text-sm">
           {{ info }}
         </div>
       </div>
 
       <div class="relative flex flex-row flex-wrap justify-start">
-        <div v-if="defaultItem" class="rounded-lg bg-yellow-500 text-black py-2 px-3 m-1 text-xs sm:text-sm">
+        <div v-if="defaultItem" class="rounded-lg bg-sunglow py-2 px-3 m-1 text-xs sm:text-sm">
           {{ defaultItem }}
         </div>
 
         <div
           v-for="(item, index) in value"
           :key="`${item.value}-${index}`"
-          class="rounded-lg bg-yellow-500 py-2 px-3 m-1 text-xs text-black sm:text-sm flex items-center justify-between"
+          class="rounded-lg bg-sunglow py-2 px-3 m-1 text-xs sm:text-sm flex items-center justify-between"
         >
           {{ item.label }}
           <span
@@ -57,7 +57,7 @@
       <div v-show="show" class="relative flex flex-col w-full z-10">
         <div
           ref="filterSearchOptions"
-          class="absolute w-full option-list flex flex-col bg-waterloo-dark shadow-md overflow-y-auto"
+          class="absolute w-full option-list flex flex-col shadow-md bg-white overflow-y-auto"
           :class="{'slide-down': toggled}"
           @scroll="scrollHandler"
         >
@@ -67,7 +67,7 @@
               :id="`${item.label}`"
               :key="`${item.value}-${index}`"
               class="py-2 px-3 cursor-pointer text-xs sm:text-sm"
-              :class="{'bg-trout': activeIndex === index}"
+              :class="{'bg-gray-sunglow': activeIndex === index}"
               @mouseover="activeIndex = index"
               @click="add(item)"
             >

@@ -1,6 +1,6 @@
 <template>
   <div class="flex-1 flex-col py-2 px-2">
-    <div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
+    <div v-if="!$route.params.id" class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 mb-4 pt-1">
       <nuxt-link
         to="/referral-lottery?status=entries"
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
