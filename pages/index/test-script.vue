@@ -5,7 +5,7 @@
         <div class="relative flex flex-col mt-4 w-full overflow-x-auto">
           <div class="row py-2">
             <nuxt-link :to="{ name: 'index-test-script-locum-dormant-status-index' }">
-              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 shadow-sm border-l-8 border-sunglow md:border-none">
+              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 shadow mx-2 hover:bg-gray-200 border-l-8 border-sunglow md:border-none">
                 <div class="flex-1 px-2">
                   <span class="break-words">Locum Dormant Status</span>
                 </div>
@@ -15,7 +15,7 @@
 
           <div class="row py-2">
             <nuxt-link :to="{ name: 'index-test-script-practice-dormant-status-index' }">
-              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 shadow-sm border-l-8 border-sunglow md:border-none">
+              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 shadow mx-2 hover:bg-gray-200 border-l-8 border-sunglow md:border-none">
                 <div class="flex-1 px-2">
                   <span class="break-words">Practice Dormant Status</span>
                 </div>
@@ -25,7 +25,7 @@
 
           <div class="row py-2">
             <nuxt-link :to="'/test-script/job-scripts'">
-              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 shadow-sm border-l-8 border-sunglow md:border-none">
+              <div class="flex flex-col md:flex-row justify-start shadow-md rounded-lg py-3 shadow mx-2 hover:bg-gray-200 border-l-8 border-sunglow md:border-none">
                 <div class="flex-1 px-2">
                   <span class="break-words">Jobs</span>
                 </div>

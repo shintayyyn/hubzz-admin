@@ -75,7 +75,7 @@
             :disabled="loading || isInFirstPage"
             @click="onClickFirstPage"
           >
-            <svgicon name="left-chevron" width="12" height="12" class="fill-current"/>
+            <svgicon name="first-track" width="12" height="12" class="fill-current"/>
           </button>
         </div>
 
@@ -83,7 +83,8 @@
           <button 
             type="button"
             :disabled="loading || isInFirstPage"
-            :class="{ 'text-gray-500 cursor-not-allowed': isInFirstPage }"
+            class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
+            :class="isInFirstPage ? 'text-gray-900 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
             @click="onClickPreviousPage"
           >
             <svgicon name="caret-down" width="12" height="12" class="fill-current" style="transform: rotate(90deg)" />
@@ -129,7 +130,8 @@
           <button 
             type="button"
             :disabled="loading || isInLastPage"
-            :class="{ 'text-gray-500 cursor-not-allowed': isInLastPage }"
+            class="font-bold text-xs md:text-sm py-2 px-1 mx-1 focus:outline-none"
+            :class="isInLastPage ? 'text-gray-500 cursor-not-allowed' : 'hover:text-gray-800 text-gray-700'"
             @click="onClickNextPage"
           >
             <svgicon name="caret-down" width="12" height="12" class="fill-current" style="transform: rotate(-90deg)" />
@@ -172,7 +174,7 @@
             :disabled="loading || isInLastPage"
             @click="onClickLastPage"
           >
-            <svgicon name="right-chevron" width="12" height="12" class="fill-current" />
+            <svgicon name="last-track" width="12" height="12" class="fill-current" />
           </button>
         </div>
       </div>

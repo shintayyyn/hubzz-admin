@@ -1,5 +1,5 @@
 <template>
-	<div class="my-2 p-4 shadow rounded-lg text-sm max-w-lg">
+	<div class="my-2 p-4 border rounded-lg text-sm max-w-lg">
 		<AppInput
 			v-model="form.password"
 			:type="'password'"

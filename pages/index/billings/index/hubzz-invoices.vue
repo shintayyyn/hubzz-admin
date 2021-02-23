@@ -190,7 +190,7 @@
 
       <!--SETTLE PAYMENT MODAL -->
       <transition name="fade" mode="out-in">
-        <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col border-l-4 border-sunglow shadow-lg overflow-hidden">
+        <div v-if="showPaidModal == true" class="mark-paid-modal h-full flex flex-col rounded-lg shadow-lg overflow-hidden">
           <!-- TO PAID CONFIRM CANCEL -->
           <transition name="drop" mode="out-in">
             <AppConfirm

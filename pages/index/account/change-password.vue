@@ -1,9 +1,9 @@
 <template>
 	<div
-		class="relative w-full flex text-sm max-w-lg bg-waterloo my-2 py-2 px-3 shadow rounded-lg transition-hover"
+		class="relative w-full flex text-sm max-w-lg my-2 border p-4 rounded-lg transition-hover"
 	>
 		<AppLoading :loading="loading" class="rounded-lg" />
-		<div class="w-full overflow-hidden text-gray-300 text-sm p-2">
+		<div class="w-full overflow-hidden text-sm p-2">
 			<AppInput
 				v-model="form.old_password"
 				:type="'password'"

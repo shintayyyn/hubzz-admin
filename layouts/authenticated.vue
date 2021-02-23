@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <AppSideBar
       :unseenLocumNotificationsCount="unseenLocumNotificationsCount"
       :unseenPracticeNotificationsCount="unseenPracticeNotificationsCount"
@@ -31,7 +31,7 @@
         @seenAllNotifications="seenAllNotifications"
         @goToNotification="goToNotification"
       />
-      <div class="overflow-y-auto">
+      <div class="overflow-y-auto h-full">
         <nuxt />
       </div>
     </div>

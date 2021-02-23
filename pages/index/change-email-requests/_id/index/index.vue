@@ -24,43 +24,44 @@
 
         <div>
           <div
-            class="mx-2 md:mx-4 flex no-underline shadow-lg rounded-lg  mt-4 shadow"
+            class="flex flex-col md:flex-row border rounded-lg mt-4 p-4"
             style="position:relative;"
           >
-            <div class="w-4/5 overflow-hidden text-sm m-4">
-              <div>
+              <div class="w-full md:w-1/2">
                 <p class="m-2">
-                  ID <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.id : null }}</span>
+                  ID: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.id : null }}</span>
                 </p>
                 <p class="m-2">
-                  Memorable Word Category <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_word_category_name : null }}</span>
+                  Memorable Word Category: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.memorable_word_category_name : null }}</span>
                 </p>
                 <p class="m-2">
-                  Memorable Word <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_word : null }}</span>
+                  Memorable Word: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.memorable_word : null }}</span>
                 </p>
                 <p class="m-2">
-                  Memorable Date <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_date_formatted : null }}</span>
+                  Memorable Date: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.memorable_date_formatted : null }}</span>
                 </p>
                 <p class="m-2">
-                  Memorable 6 Digit Number <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.memorable_number : null }}</span>
+                  Memorable 6 Digit Number: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.memorable_number : null }}</span>
                 </p>
                 <p class="m-2">
-                  Date Of Birth <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.date_of_birth_formatted ? changeEmailRequest.date_of_birth_formatted : '(none)' }}</span>
+                  Date Of Birth: <span class="mx-2">{{ changeEmailRequest && changeEmailRequest.date_of_birth_formatted ? changeEmailRequest.date_of_birth_formatted : '(none)' }}</span>
                 </p>
                 <p class="m-2">
-                  Profession <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.profession_name ? changeEmailRequest.profession_name : '(none)' }}</span>
+                  Profession: <span class="mx-2">{{ changeEmailRequest && changeEmailRequest.profession_name ? changeEmailRequest.profession_name : '(none)' }}</span>
                 </p>
                 <p class="m-2">
-                  Practice <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.practice_name ? changeEmailRequest.practice_name : '(none)' }}</span>
+                  Practice: <span class="mx-2">{{ changeEmailRequest && changeEmailRequest.practice_name ? changeEmailRequest.practice_name : '(none)' }}</span>
+                </p>
+              </div>
+              <div class="w-full md:w-1/2">
+                <p class="m-2">
+                  New E-Mail Address: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.new_email : null }}</span>
                 </p>
                 <p class="m-2">
-                  New E-Mail Address <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.new_email : null }}</span>
+                  User Count: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.user_count : null }}</span>
                 </p>
                 <p class="m-2">
-                  User Count <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.user_count : null }}</span>
-                </p>
-                <p class="m-2">
-                  Requested At <span class="m-2 ">{{ changeEmailRequest ? changeEmailRequest.requested_at_formatted : null }}</span>
+                  Requested At: <span class="mx-2">{{ changeEmailRequest ? changeEmailRequest.requested_at_formatted : null }}</span>
                 </p>
                 <p class="m-2">
                   <span>Status</span>
@@ -71,10 +72,10 @@
                   >{{ changeEmailRequest.status }}</span>
                 </p>
                 <p class="m-2">
-                  Accepted At <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.accepted_at_in_gb_formatted ? changeEmailRequest.accepted_at_in_gb_formatted : 'N/A' }}</span>
+                  Accepted At: <span class="mx-2">{{ changeEmailRequest && changeEmailRequest.accepted_at_in_gb_formatted ? changeEmailRequest.accepted_at_in_gb_formatted : 'N/A' }}</span>
                 </p>
                 <p class="m-2">
-                  Rejected At <span class="m-2 ">{{ changeEmailRequest && changeEmailRequest.rejected_at_in_gb_formatted ? changeEmailRequest.rejected_at_in_gb_formatted : 'N/A' }}</span>
+                  Rejected At: <span class="mx-2">{{ changeEmailRequest && changeEmailRequest.rejected_at_in_gb_formatted ? changeEmailRequest.rejected_at_in_gb_formatted : 'N/A' }}</span>
                 </p>
                 <div v-if="false && changeEmailRequest && changeEmailRequest.status === 'Pending'" class="m-2">
                   <span>Action</span>
@@ -88,15 +89,14 @@
                   </button>
                 </div>
               </div>
-            </div>
           </div>
         </div>
 
-        <p class="text-sm  px-2 md:px-4 pt-8 font-semibold">
+        <p class="text-sm  pt-8 font-semibold">
           Users
         </p>
 
-        <div v-if="changeEmailRequest" class="w-full overflow-x-auto p-2 md:px-4 md:py-2">
+        <div v-if="changeEmailRequest" class="w-full overflow-x-auto p-2">
           <div class="hidden md:flex items-center  justify-around font-semibold"> 
             <div class="align-middle pl-6 pr-2 w-1/6">
               ID
@@ -123,35 +123,35 @@
               :event="false ? '' :'click'" 
               :class="false ? 'cursor-auto':' hover:-light transition-hover ' "
               :to="false ? $route : { name: 'index-change-email-requests-id-index-index-users-userId', params: { id: changeEmailRequest.id, userId: user.id } }"
-              class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+              class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow" 
               draggable="false"
             >
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 align-middle">
                 <strong class="block md:hidden text-sm uppercase">ID</strong>
                 <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.id : null }}</span>
               </div>
 
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Domain</strong>
                 <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.domain : null }}</span>
               </div>
 
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Username</strong>
                 <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.username : null }}</span>
               </div>
 
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Name</strong>
                 <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.name : null }}</span>
               </div>
 
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 align-middle md:text-center">
                 <strong class="block md:hidden text-sm uppercase">Email</strong>
                 <span :class="false ? 'truncate' : 'break-word'">{{ user && user.id ? user.email : null }}</span>
               </div>
 
-              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
+              <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 align-middle md:text-center">
                 <strong class="block md:hidden">Action</strong>
 
                 <div class="flex md:justify-center mt-2 sm:m-0">
@@ -174,14 +174,14 @@
                   <button
                     v-if="user.change_email_request_status === 'Accepted'"
                     class="w-1/2 sm:w-auto  text-sm mr-2 py-2 px-4 border border-white focus:bg-green-500 rounded-full hover:bg-green-500 focus:outline-none"
-                    :class="`${true ? 'bg-green-500 border-green-500  px-4 text-center cursor-default ' : ''}`"
+                    :class="`${true ? 'bg-green-500 border-green-500 text-white px-4 text-center cursor-default ' : ''}`"
                   >
                     Accepted
                   </button>
                   <button
                     v-if="user.change_email_request_status === 'Rejected'"
                     class="w-1/2 sm:w-auto  text-sm ml-2 py-2 px-4 border border-white focus:bg-red-600 rounded-full focus:outline-none"
-                    :class="`${true ? 'bg-red-600 border-red-600  px-4 text-center cursor-default' : ''}`"
+                    :class="`${true ? 'bg-red-600 border-red-600 text-white px-4 text-center cursor-default' : ''}`"
                   >
                     Rejected
                   </button>

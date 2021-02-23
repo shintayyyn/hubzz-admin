@@ -63,7 +63,7 @@
       return {
         loading: false,
 				currentPage: 1,
-        limit: 10,
+        limit: 20,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
@@ -125,8 +125,8 @@
 						dataIndex: 'status',
 						class: 'md:text-center',
 						sortable: true,
-						slot: true,
-						slotName: 'status_slot',
+						// slot: true,
+						// slotName: 'status_slot',
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',

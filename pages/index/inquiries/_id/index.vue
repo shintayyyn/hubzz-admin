@@ -23,7 +23,7 @@
                 @click="acknowledgeInquiry()"
               />
               <div v-else class="-my-1 font-semibold">
-                <div class="flex p-2 m-2 bg-green-500 rounded-lg">
+                <div class="flex p-2 m-2 bg-green-500 rounded-lg text-white">
                   <div class="flex mr-2">
                     <svgicon name="circle-check" width="23" height="23" color="white" />
                   </div>

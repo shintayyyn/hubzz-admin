@@ -133,7 +133,7 @@
     data () {
       return {
         loading: false,
-        limit: 10,
+        limit: 15,
         page: 1,
         search: '',
         filterStatus: null,
@@ -189,8 +189,8 @@
             dataIndex: "status",
             class: "text-center",
             sortable: true,
-						slot: true,
-						slotName: 'status_slot',
+						// slot: true,
+						// slotName: 'status_slot',
           },
           {
             name: "Accepted At",

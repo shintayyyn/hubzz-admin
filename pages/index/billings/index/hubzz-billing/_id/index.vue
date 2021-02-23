@@ -178,7 +178,7 @@ export default {
 				case "Spoke":
 					return "bg-blue-500  lg:px-8 sm:px-2"
 				case "Type 2":
-					return "bg-purple-500  lg:px-8 sm:px-2"
+					return "bg-purple-500 text-white lg:px-8 sm:px-2"
 				default:
 					return
 			}

@@ -1,5 +1,5 @@
 <template>
-	<div class="y-2 p-4 shadow rounded-lg text-sm max-w-lg">
+	<div class="my-2 p-4 border rounded-lg text-sm max-w-lg">
 		<p class="font-semibold">E-mail Address</p>
 		<p class="mx-1 mb-2">{{ user.email }}</p>
 		<p class="font-semibold">Name</p>
@@ -7,7 +7,7 @@
 		<p class="font-semibold">Role</p>
 		<div v-if="user.admin_detail.roles.length > 0">
 			<p
-				class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-yellow-500"
+				class="inline-flex m-1 rounded-lg text-sm text-black p-2 bg-sunglow"
 				v-for="adminRoles in user.admin_detail.roles"
 				:key="adminRoles.id + '-name'"
 			>
