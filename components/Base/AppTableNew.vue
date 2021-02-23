@@ -273,7 +273,7 @@ export default {
       this.$emit("limitchanged", limit)
     },
     sortIcon (dataIndex) {
-      if (this.params.length > 0) {
+      if (Array.isArray(this.params) && this.params.length > 0) {
         return this.params.some(orderBy => orderBy === dataIndex || orderBy === `${dataIndex}:asc`)
         ? 'sort-ascend'
         : this.params.some(orderBy => orderBy === `${dataIndex}:desc`)
