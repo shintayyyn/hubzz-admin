@@ -1,16 +1,16 @@
 <template>
   <div ref="modalContainer" class="add-faq-modal shadow-lg">
     <!-- <nuxt-child /> -->
-    <div class="p-4 md:p-8 text-white">
+    <div class="p-4 md:p-8 ">
       <div class="cursor-pointer" @click="goBack()">
         <svgicon
           name="arrow-left-solid"
           height="32"
           widht="32"
-          class="text-white hover:text-sunglow fill-current"
+          class=" hover:text-sunglow fill-current"
         />
       </div>
-      <div class="mt-4 text-2xl md:text-4xl text-white">
+      <div class="mt-4 text-2xl md:text-4xl ">
         Add a FAQ for {{ $route.query.domain }}s
       </div>
       <CreateFaq 
@@ -93,7 +93,7 @@ export default {
 	overflow: auto;
 	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	background-color: #fff;
 	z-index: 512;
 }
 @media screen and (min-width: 1200px) {

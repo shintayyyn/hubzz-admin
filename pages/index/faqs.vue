@@ -31,8 +31,8 @@
               :label="deleteLocumFaq ? 'Done' : 'Delete'"
               :icon="deleteLocumFaq ? 'circle-check' : 'garbage'"
               :iconSize="'18'"
-              :background="deleteLocumFaq ? 'green' : 'red'"
-              class="text-gray-800 ml-2 text-sm"
+              :customTheme="[deleteLocumFaq ? 'bg-green-500' : 'bg-red-600']"
+              class="ml-2 text-sm py-1 px-2 text-white"
               @click="deleteLocumFaq = !deleteLocumFaq"
             />
           </div>
@@ -133,8 +133,8 @@
               :label="deletePracticeFaq ? 'Done' : 'Delete'"
               :icon="deletePracticeFaq ? 'circle-check' : 'garbage'"
               :iconSize="'18'"
-              :background="deletePracticeFaq ? 'green' : 'red'"
-              class="text-gray-800 ml-2 text-sm"
+              :customTheme="[deletePracticeFaq ? 'bg-green-500' : 'bg-red-600']"
+              class="ml-2 text-sm py-1 px-2 text-white"
               @click="deletePracticeFaq = !deletePracticeFaq"
             />
           </div>

@@ -170,7 +170,7 @@ a {
 	background: #ccc;
 	border-radius: 0.5em;
 	bottom: 175%;
-	color: #edeff0;
+	color: #000000;
 	content: attr(data-tip);
 	margin-left: -8.75em;
 	padding: 1em;
