@@ -84,11 +84,11 @@
           />
           <span
             v-if="!slotProps.item.sage_ref"
-            class="tool-left text-sm mr-2"
+            class="tool-left text-sm mr-2 text-black"
             data-tip="Sage Reference is not yet added on Practice Profile."
             tabindex="1"
           >
-            <svgicon name="info" width="21" height="21" color="white transparent black" class="ml-2" />
+            <svgicon name="info" width="21" height="21" color="gray transparent white" class="ml-2" />
           </span>
         </div>
       </template>

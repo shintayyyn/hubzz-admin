@@ -11,7 +11,7 @@
       </div>
 
       <div
-        class="flex-col justify-start items-start w-full shadow-lg p-3 rounded-lg flex  my-2"
+        class="flex-col justify-start items-start w-full border p-3 rounded-lg flex  my-2"
       >
         <div class="flex flex-row w-full">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">

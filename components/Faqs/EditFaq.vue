@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="mb-6 md:mb-0">
-      <div class="text-xl my-2 text-white">
+      <div class="text-xl my-2">
         Question
       </div>
       <input
         v-model="form.question"
-        class="appearance-none block w-full bg-gray-lighter text-gray-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+        class="bg-transparent border-b-2 focus:outline-none py-3 font-bold text-xs sm:text-sm w-full focus:border-yellow-500"
         type="text"
         placeholder="Question"
         @blur="CheckEmptyField(form.question, 'question')"
@@ -19,14 +19,14 @@
       </div>
     </div>
     <!-- quill-editor -->
-    <div class="text-xl my-2 text-white">
+    <div class="text-xl my-2">
       Answer
     </div>
     <no-ssr placeholder="Loading...">
       <quill-editor
         ref="myTextEditor"
         v-model="form.answer"
-        class="bg-white"
+        class="bg-white border-b"
         :options="editorOption"
         @blur="CheckEmptyField(form.answer, 'answer')"
         @focus="onEditorFocus($event)"

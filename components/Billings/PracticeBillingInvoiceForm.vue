@@ -7,7 +7,7 @@
       :inStyle="'padding:5px 14px;font-size:1em'"
       @click="viewAsPdf(propInvoice.id)"
     />
-    <div class="bg-white flex flex-col justify-start items-start shadow-lg  py-8 px-6 mb-4">
+    <div class="bg-white flex flex-col justify-start items-start border py-8 px-6 mb-4">
       <div :ref="'pdf-header'" class="flex justify-between w-full px-2">
         <div class="flex flex-wrap justify-between w-1/2">
           <div
@@ -319,7 +319,7 @@
       <div class="flex items-center justify-end py-2">
         <label class="mx-1">Type:</label>
         <div
-          class="text-xs sm:text-sm mx-1 py-2 px-3 border-2 rounded-lg font-bold flex items-center focus:outline-none bg-yellow-500 border-yellow-500"
+          class="text-xs sm:text-sm mx-1 py-2 px-3 border-2 rounded-lg font-bold flex items-center focus:outline-none bg-sunglow border-sunglow"
         >
           Platform
         </div>
@@ -450,7 +450,7 @@
                       type="number"
                       min="0"
                       name="absent_days"
-                      class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs w-full focus:border-yellow-500"
+                      class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs w-full focus:border-sunglow"
                       @keypress="isNumber($event)"
                     >
                   </div>
@@ -461,7 +461,7 @@
                     type="number"
                     min="0"
                     name="late_hours"
-                    class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs w-full focus:border-yellow-500"
+                    class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs w-full focus:border-sunglow"
                     @keypress="isNumber($event)"
 										/>-->
                     <div class="flex">
@@ -472,7 +472,7 @@
                           min="0"
                           maxlength="8"
                           name="late_hours"
-                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-yellow-500"
+                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-sunglow"
                           @keydown="inputNumberOnly($event), handleKeyDownEvent($event, 'late_hours', 8)"
                           @blur="!form.late_hours ? form.late_hours = 0 : form.late_hours"
                         >
@@ -484,7 +484,7 @@
                           type="number"
                           min="0"
                           name="late_minutes"
-                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-yellow-500"
+                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-sunglow"
                           maxlength="2"
                           max="60"
                           @keydown="inputNumberOnly($event), handleKeyDownEvent($event, 'late_minutes', 2)"
@@ -506,7 +506,7 @@
                           min="0"
                           maxlength="8"
                           name="hours"
-                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-yellow-500"
+                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-sunglow"
                           :class="formError.find(item => item.field === 'hours') && formError.find(item => item.field === 'minutes') ? 'border-red-500' : ''"
                           @keydown="inputNumberOnly($event), handleKeyDownEvent($event, 'hours', 8)"
                           @blur="!form.hours ? form.hours = 0 : form.hours"
@@ -519,7 +519,7 @@
                           type="number"
                           min="0"
                           name="minutes"
-                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-yellow-500"
+                          class="border-b-2 focus:outline-none h-full p-2 py-3 sm:text-sm text-right text-xs focus:border-sunglow"
                           maxlength="2"
                           max="60"
                           :class="formError.find(item => item.field === 'hours') && formError.find(item => item.field === 'minutes') ? 'border-red-500' : ''"
@@ -549,7 +549,7 @@
                     v-model="form.items[0].remarks"
                     rows="3"
                     name="remarks"
-                    class="w-full text-xs sm:text-sm resize-none border-b-2 border-gray-300 focus:border-yellow-500 focus:outline-none my-2"
+                    class="w-full text-xs sm:text-sm resize-none border-b-2 border-gray-300 focus:border-sunglow focus:outline-none my-2"
                   />
                 </div>
               </div>

@@ -5,7 +5,7 @@
 			height="32"
 			widht="32"
 			@click="goBack()"
-			class="cursor-pointer text-white hover:text-sunglow fill-current"
+			class="cursor-pointer hover:text-sunglow fill-current"
 		/>
 		<EditFaq :faqs="faqs" @formError="handleError" />
 	</div>
@@ -65,7 +65,7 @@ export default {
 	overflow: auto;
 	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	background-color: #fff;
 	z-index: 512;
 }
 @media screen and (min-width: 1200px) {

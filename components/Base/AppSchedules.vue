@@ -709,7 +709,7 @@
 
                           <template v-else>
                             <div
-                              :class="shift.dispute ? 'bg-yellow-500 px-2 py-1 rounded-lg' : ''"
+                              :class="shift.dispute ? 'bg-sunglow px-2 py-1 rounded-lg' : ''"
                             >
                               {{ shift.dispute ? 'YES' : 'NO' }}
                             </div>
@@ -719,7 +719,7 @@
                         <div class="flex items-center justify-center w-2/12">
                           <button
                             v-if="shift.dispute"
-                            class="border py-1 px-4 text-xs rounded bg-yellow-500 font-bold"
+                            class="border py-1 px-4 text-xs rounded bg-sunglow font-bold"
                             @click="lateChange(shift, index, i, 'dispute')"
                           >
                             Reason
@@ -932,8 +932,8 @@
                       <!-- Add button -->
                       <div class="flex justify-start items-center mt-3 mb-4 w-1/4">
                         <button
-                          class="whitespace-no-wrap w-1/2 flex items-center justify-center border border-gray-500 hover:bg-gray-200 text-black font-bold bg-yellow-500 py-1 rounded-lg text-xs transition-hover px-4 focus:outline-none ml-1"
-                          :class="rowNotFilled(item.shifts)?'cursor-not-allowed bg-yellow-500 text-gray-500':''"
+                          class="whitespace-no-wrap w-1/2 flex items-center justify-center border border-gray-500 hover:bg-gray-200 text-black font-bold bg-sunglow py-1 rounded-lg text-xs transition-hover px-4 focus:outline-none ml-1"
+                          :class="rowNotFilled(item.shifts)?'cursor-not-allowed bg-sunglow text-gray-500':''"
                           @click="addShift(item.shifts, index, item.date)"
                         >
                           <svgicon

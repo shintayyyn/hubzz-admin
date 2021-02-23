@@ -14,7 +14,7 @@
 			<div v-if="practiceInvoice.unpaid_reason">{{ `For the reason: ${practiceInvoice.unpaid_reason}` }}</div>
 		</div>
 
-		<div>
+		<div class="mb-4">
 			<HubzzInvoice
 				:forViewing="true"
 				:practice="practice"

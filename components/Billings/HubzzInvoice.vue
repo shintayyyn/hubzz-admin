@@ -66,7 +66,7 @@
     <!-- FIRST PAGE --> 
     <div
       id="toPrint"
-      class="invoice md:mx-1 max-w-xl h-full flex flex-col justify-between bg-white shadow-md"
+      class="invoice md:mx-1 max-w-xl h-full flex flex-col justify-between bg-white border"
       :class="!doNotShow && 'display'"
     >
       <!--HQ INVOICE  -->

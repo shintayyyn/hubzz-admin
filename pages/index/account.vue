@@ -1,24 +1,22 @@
 <template>
 	<div class="flex-1 flex flex-col py-2 px-4 md:px-6 overflow-y-auto">
-		<div class="text-xl md:text-4xl text-white">Account</div>
-		<div class="my-4">
+		<!-- <div class="text-xl md:text-4xl">Account</div> -->
+		<div class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1">
 			<nuxt-link
 				:to="`/account`"
-				class="rounded-lg font-bold"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
 				:class="
 					$route.path == `/account`
-						? 'bg-sunglow hover:bg-sunglow-dark px-4 py-3'
-						: 'px-4 py-3 text-white hover:bg-waterloo'
+						? 'border-b-4 border-yellow-500' : 'text-gray-600'
 				"
 				>General</nuxt-link
 			>
 			<nuxt-link
 				:to="`/account/change-password`"
-				class="rounded-lg font-bold"
+        class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
 				:class="
 					$route.path == `/account/change-password`
-						? 'bg-sunglow hover:bg-sunglow-dark px-4 py-3'
-						: 'px-4 py-3 text-white hover:bg-waterloo'
+						? 'border-b-4 border-yellow-500' : 'text-gray-600'
 				"
 				>Change Password</nuxt-link
 			>

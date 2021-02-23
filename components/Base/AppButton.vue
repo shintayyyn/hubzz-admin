@@ -1,9 +1,35 @@
 <template>
+  <nuxt-link
+    v-if="nuxtLink"
+    :to="nuxtLink"
+    class="default-btn rounded-md px-2 focus:outline-none transition-hover text-sm "
+    :class="[
+      disabled ? 'disabled-button py-1' : '',
+      inClass,
+      customTheme ? customTheme : 'button bg-sunglow hover:bg-sunglow-dark py-1',
+      badge && icon ? 'flex items-center justify-between' : '',
+      icon ? 'flex items-center' : ''
+    ]"
+    :style="inStyle"
+    :draggable="draggable"
+  >
+    <p :class="[icon ? 'flex items-center' : 'text-center', labelClass]">
+      <svgicon
+        v-if="icon"
+        :name="icon"
+        :width="iconWidth ? iconWidth : '14'"
+        class="fill-current"
+        :style="rotate ? `transform: rotate(${rotate}deg)` : ''"
+      /> <span :class="icon ? 'hidden md:block mx-2' : 'mx-2'">{{ label }}</span>
+    </p>
+    <span v-if="badge" class="ml-2 md:ml-6 bg-red-600 font-bold text-xs text-white px-1 h-5 flex items-center justify-center">{{ badge > 99 ? '99+' : badge }}</span>
+  </nuxt-link>
   <button
+    v-else
     :disabled="disabled"
     class="default-btn rounded-md px-2 focus:outline-none transition-hover text-sm "
     :class="[
-      disabled ? 'disabled-button' : '',
+      disabled ? 'disabled-button py-1' : '',
       inClass,
       customTheme ? customTheme : 'button bg-sunglow hover:bg-sunglow-dark py-1',
       badge && icon ? 'flex items-center justify-between' : '',
@@ -77,8 +103,18 @@ export default {
     },
 
     customTheme: {
-      type: String,
+      type: [String, Array],
       default: null,
+    },
+
+    nuxtLink: {
+			type: [String, Array, Object],
+      default: () => null,
+    },
+
+    draggable: {
+			type: Boolean,
+			default: true
     },
   },
 }
