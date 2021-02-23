@@ -3,6 +3,3 @@
         <nuxt-child/>
     </div>
 </template>
-<style>
-
-</style>

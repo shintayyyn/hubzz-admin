@@ -1,16 +1,16 @@
 <template>
-  <div ref="modalContainer" class="add-faq-modal shadow-lg">
+  <div ref="modalContainer" class="">
     <!-- <nuxt-child /> -->
-    <div class="p-4 md:p-8 ">
-      <div class="cursor-pointer" @click="goBack()">
+    <div class="p-6">
+      <!-- <div class="cursor-pointer" @click="goBack()">
         <svgicon
           name="arrow-left-solid"
           height="32"
           widht="32"
           class=" hover:text-sunglow fill-current"
         />
-      </div>
-      <div class="mt-4 text-2xl md:text-4xl ">
+      </div> -->
+      <div class="text-xl font-bold">
         Add a FAQ for {{ $route.query.domain }}s
       </div>
       <CreateFaq 

@@ -1,12 +1,12 @@
 <template>
-	<div class="faq-modal p-4 md:p-8 shadow-lg" ref="modalContainer">
-		<svgicon
+	<div class="p-6" ref="modalContainer">
+		<!-- <svgicon
 			name="arrow-left-solid"
 			height="32"
 			widht="32"
 			@click="goBack()"
 			class="cursor-pointer hover:text-sunglow fill-current"
-		/>
+		/> -->
 		<EditFaq :faqs="faqs" @formError="handleError" />
 	</div>
 </template>
