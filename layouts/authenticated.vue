@@ -95,7 +95,7 @@
           'Admin Notification Practice Dormanted',
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Surgery Deleted',
-          'Admin Notification Practice Surgery TerminationRequested',
+          'Admin Notification Practice Surgery Termination Requested',
           'Admin Notification Practice Surgery Updated',
         ],
 
