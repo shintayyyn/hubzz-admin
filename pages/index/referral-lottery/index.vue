@@ -90,12 +90,12 @@
           >
             <template v-slot:actions="slotProps">
               <div class="flex justify-center">
-                <div v-if="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')"
-                    class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer"
+                <button v-if="!$route.query.status || ($route.query.status && $route.query.status.toLowerCase() === 'entries')"
+                    class="px-4 bg-sunglow hover:bg-sunglow-dark rounded focus:outline-none cursor-pointer"
                     @click="$router.push({ path: `/referral-lottery/entries/${slotProps.item.id}`, query: {...$route.query }})"
                 >
                   View
-                </div>
+                </button>
               </div>
             </template>
           </AppTableNew>
@@ -116,14 +116,14 @@
             <template v-slot:actions="slotProps">
               <div class="flex justify-center">
                 <div v-if="($route.query.status && $route.query.status.toLowerCase() === 'winners')"
-                    class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer"
+                    class="px-4 bg-sunglow hover:bg-sunglow-dark rounded focus:outline-none cursor-pointer"
                     @click="$router.push({ path: `/referral-lottery/winners/${slotProps.item.id}`, query: {...$route.query }})"
                 >
                   View
                 </div>
                 <div class="mx-1" />
                 <div v-if="($route.query.status && $route.query.status.toLowerCase() === 'winners') && !slotProps.item.winner_notified"
-                    class="my-1 p-2 bg-yellow-500 hover:bg-yellow-400 font-bold rounded-lg focus:outline-none cursor-pointer"
+                    class="px-4 bg-sunglow hover:bg-sunglow-dark rounded focus:outline-none cursor-pointer"
                     @click="selectUserNotify(slotProps.item.id)"
                 >
                   Notify
@@ -180,7 +180,7 @@
 
         current_page: 1,
         offset: 0,
-        limit: 5,
+        limit: 10,
 
         date_start: null,
         date_end: null,
@@ -328,7 +328,7 @@
           }),
           app.$axios.$get(`${url}`, { params: {
             offset: 0,
-            limit: 5
+            limit: 10
           }}).then(res => {
             let users
             let raffles

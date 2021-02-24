@@ -5,13 +5,13 @@
         v-for="complianceReport in complianceReports"
         :key="`complianceReports-${complianceReport.title}`"
         :to="complianceReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-lg transition-hover my-2"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg shadow-md hover:bg-gray-200 transition-hover my-2"
       >
         <div class="flex flex-no-wrap items-center text-sm  w-full">
           <span class="px-2 whitespace-no-wrap font-semibold">{{ complianceReport.title }}</span>
           <span class="px-2 w-full leading-tight flex items-center">{{ complianceReport.subtitle }}</span>
           <div class="flex items-center px-1 md:px-0">
-            <svgicon name="arrow-right" width="21" height="21" color="white" />
+            <svgicon name="arrow-right" width="21" height="21" class="fill-current" />
           </div>
         </div>
       </nuxt-link>

@@ -3,11 +3,9 @@
     <template v-if="$route.name === 'index-test-script-locum-dormant-status-index'">
       <div class="flex-1 flex flex-col self-end">
         <div class="py-4">
-          <div class="mx-2 md:mx-4 ">
             <div class="text-lg font-bold">
               Active and Dormant Locums
             </div>
-          </div>
 
           <AppTableNew
             v-if="count !== 0"
@@ -57,7 +55,7 @@
       return {
         loading: false,
 				currentPage: 1,
-        limit: 10,
+        limit: 20,
         orderBy: [
           'created_at_in_gb_formatted:desc',
         ],
@@ -148,8 +146,8 @@
 						dataIndex: 'status',
 						class: 'md:text-center',
 						sortable: true,
-						slot: true,
-						slotName: 'status_slot',
+						// slot: true,
+						// slotName: 'status_slot',
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',

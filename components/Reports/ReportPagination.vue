@@ -30,7 +30,7 @@
           :disabled="loading || activePage === 1"
           @click="activePage = 1"
         >
-          <svgicon name="left-chevron" width="12" height="12" class="fill-current"/>
+          <svgicon name="first-track" width="12" height="12" class="fill-current"/>
         </button>
       </div>
 
@@ -89,7 +89,7 @@
           :disabled="loading || activePage === pages"
           @click="activePage = pages"
         >
-          <svgicon name="right-chevron" width="12" height="12" class="fill-current" />
+          <svgicon name="last-track" width="12" height="12" class="fill-current" />
         </button>
       </div>
     </div>

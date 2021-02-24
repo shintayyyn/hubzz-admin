@@ -6,7 +6,7 @@
       </div>
       <input
         v-model="form.question"
-        class="appearance-none block w-full bg-gray-300 text-gray-800 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:text-black"
+        class="bg-transparent border-b-2 focus:outline-none py-3 font-bold text-xs sm:text-sm w-full focus:border-yellow-500"
         type="text"
         placeholder="Please type the question here"
         @blur="CheckEmptyField(form.question, 'question')"
@@ -26,7 +26,7 @@
       <quill-editor
         ref="myTextEditor"
         v-model="form.answer"
-        class="bg-white text-black"
+        class="bg-white border-b"
         :options="editorOption"
         @blur="CheckEmptyField(form.answer, 'answer')"
         @focus="onEditorFocus($event)"

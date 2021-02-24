@@ -10,7 +10,7 @@
       </div>
 
       <div
-        class="flex-wrap justify-start items-center w-full shadow-lg p-3 rounded-lg flex  my-2"
+        class="flex-wrap justify-start items-center w-full border p-3 rounded-lg flex  my-2"
       >
         <div class="flex flex-row w-full">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
@@ -91,18 +91,18 @@
         </div>
       </div>
 
-      <div v-if="true">
-        <div>
+      <div class="flex justify-end mb-1 text-sm" v-if="true">
+        <div class="mx-2">
           <label class="">Limit: </label>
-          <select v-model="limit">
+          <select class="focus:outline-none" v-model="limit">
             <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
               {{ limit }}
             </option>
           </select>
         </div>
-        <div>
+        <div class="mx-2">
           <label class="">Page: </label>
-          <select v-model="activePage">
+          <select class="focus:outline-none" v-model="activePage">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
             </option>

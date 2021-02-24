@@ -10,7 +10,7 @@
           </div>
         </div>
 
-        <div class="mx-2 md:mx-4 flex  my-4 py-2 px-3 shadow rounded-lg text-sm max-w-lg">
+        <div class="mx-2 md:mx-4 flex  my-4 py-2 px-3 border rounded-lg text-sm max-w-lg">
           <div class="w-full  text-sm p-2">
             <AppInput 
               v-model="complianceDocumentId"
