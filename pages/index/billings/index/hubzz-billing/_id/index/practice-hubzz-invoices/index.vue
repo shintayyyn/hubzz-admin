@@ -149,30 +149,36 @@
         </div>
         <!-- PAID OR UNPAID MODAL RED AND BLUE BUTTONS ENDS HERE-->
 
-        <div class="flex flex-col w-full text-white px-8 justify-between">
+        <div class="flex flex-col w-full px-8 justify-between">
           <div v-if="paymentModal === true && modalPaidUnpaid === false">
             <div class="justify-center">
-              <AppDateToggled v-model="paidAt" class="z-50" :name="'paidAt'" :label="'Paid At'" is-before />
+              <AppDateToggled 
+                v-model="paidAt" 
+                class="z-50" 
+                :name="'paidAt'" 
+                :label="'Paid At'" 
+                is-before 
+              />
             </div>
             <div class="flex flex-row mb-4">
               <AppButton
                 :label="'Confirm'"
                 :background="'green'"
-                class="text-white mr-2"
+                class="mr-2"
                 :disabled="paidAt ? false : true"
                 @click="confirm = true"
               />
               <AppButton
                 :label="'Cancel'"
                 :background="'red'"
-                class="text-white mr-2"
+                class="mr-2"
                 @click="cancelPaymentModal()"
               />
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col w-full text-white px-8 justify-between">
+        <div class="flex flex-col w-full px-8 justify-between">
           <div v-if="unpaidModal === true && modalPaidUnpaid === false">
             <div class="justify-center">
               <AppInput
@@ -188,13 +194,13 @@
               <AppButton
                 :label="'Confirm'"
                 :background="'green'"
-                class="text-white mr-2"
+                class="mr-2"
                 @click="confirm = true"
               />
               <AppButton
                 :label="'Cancel'"
                 :background="'red'"
-                class="text-white mr-2"
+                class="mr-2"
                 @click="cancelPaymentModal()"
               />
             </div>
@@ -202,6 +208,12 @@
         </div>
       </div>
     </transition>
+
+    <div 
+      v-if="showPaidModal == true"
+      class="shield" 
+      @click="closeModals()"
+    />
   </div>
 </template>
 <script>
@@ -542,14 +554,17 @@ export default {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 25px;
-	min-width: 600px;
-	min-height: 640px;
+  width: 500px;
 	max-width: 95%;
-	max-height: 80%;
+	max-height: 70%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	background-color: #e9e9e9;
 	z-index: 512;
+}
+@media screen and (min-width: 768px) {
+	.mark-paid-modal {
+		max-height: 60%;
+	}
 }
 </style>

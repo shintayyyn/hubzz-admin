@@ -2450,15 +2450,18 @@ export default {
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	border-radius: 25px;
-	min-width: 600px;
-	min-height: 640px;
+  width: 500px;
 	max-width: 95%;
-	max-height: 80%;
+	max-height: 70%;
 	overflow: auto;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	background-color: #e9e9e9;
 	z-index: 512;
+}
+@media screen and (min-width: 768px) {
+	.mark-paid-modal {
+		max-height: 60%;
+	}
 }
 .message-modal.mini-modal {
 	z-index: 56;
