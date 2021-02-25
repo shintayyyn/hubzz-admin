@@ -1,13 +1,9 @@
 <template>
-	<div>
-		<transition name="slide" mode="out-in">
-			<div class="role-modal shadow-lg" ref="modalContainer">
-				<CreateAdminRole
-					@close="$router.push('/user-management/roles-and-permissions')"
-					@scrollToTop="scrollTop"
-				/>
-			</div>
-		</transition>
+	<div ref="modalContainer">
+		<CreateAdminRole
+			@close="$router.push('/user-management/roles-and-permissions')"
+			@scrollToTop="scrollTop"
+		/>
 	</div>
 </template>
 <script>

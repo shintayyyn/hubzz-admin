@@ -38,9 +38,9 @@
               {{ unseenPracticeNotificationsCount }}
             </span>
 
-            <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+            <!-- <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
               {{ unacknowledgedCount }}
-            </span>
+            </span> -->
 
             <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700"> 
               {{ pendingChangeEmailRequestIds.length }}
@@ -202,14 +202,14 @@ export default {
         })
       }
 
-      if(this.authAdminPermissions.includes('View Inquiries Messages')){
-        addedLists.push({
-          name: "Inquiries",
-          route: "/inquiries",
-          order: 10,
-          active: `/${this.$route.path.split('/')[1]}` === '/inquiries',
-        })
-      }
+      // if(this.authAdminPermissions.includes('View Inquiries Messages')){
+      //   addedLists.push({
+      //     name: "Inquiries",
+      //     route: "/inquiries",
+      //     order: 10,
+      //     active: `/${this.$route.path.split('/')[1]}` === '/inquiries',
+      //   })
+      // }
     
       if(this.authAdminPermissions.includes('View Admin Accounts')
         || this.authAdminPermissions.includes('View Roles')){

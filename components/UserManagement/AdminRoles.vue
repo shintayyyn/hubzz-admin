@@ -45,12 +45,14 @@
         </template>
         <template v-if="authAdminPermissions.includes('Delete Role')" v-slot:actions="slotProps">
           <div class="flex justify-center">
-            <div
-              class="text-white ml-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700"
-              @click.prevent.stop="toDeleteAdminRole(slotProps.item.id)"
-            >
-              Delete
-            </div>
+						<AppButton
+							v-if="authAdminPermissions.includes('Delete Role')"
+							:label="'Delete'"
+							:icon="'garbage'"
+              :iconSize="'16'"
+							:customTheme="'bg-red-600 text-white'"
+							@click="toDeleteAdminRole(slotProps.item.id)"
+						/>
           </div>
         </template>
       </AppTableNew>
@@ -139,14 +141,14 @@ export default {
 		deletingAdminRole (newValue) {
 			if (newValue === true) {
 				this.columns = [
-					...this.defaultColumns,
-					{
+						{
 						name: "Actions",
 						slot: true,
 						slotName: "actions",
 						dataIndex: "",
 						class: "text-center"
-					}
+					},
+					...this.defaultColumns,
 				]
 			} else {
 				this.columns = [...this.defaultColumns]
