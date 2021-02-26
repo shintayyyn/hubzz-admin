@@ -1021,7 +1021,7 @@
       width: 70%;
     }
     .practice-user-modal-small {
-      width: 60%;
+      width: 70%;
     }
   }
 </style>

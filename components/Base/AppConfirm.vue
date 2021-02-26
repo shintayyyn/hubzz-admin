@@ -1,6 +1,6 @@
 <template>
   <div
-    class="wrapper absolute top-0 mx-auto rounded-b-lg py-4 px-6 bg-waterloo-dark text-white shadow-lg"
+    class="wrapper absolute top-0 mx-auto rounded-b-lg py-4 px-6 bg-white shadow-lg"
     :style="inStyle"
     :class="inClass"
   >
@@ -10,7 +10,7 @@
         :label="'Cancel'"
         class="mx-1"
         :background="'transparent'"
-        :class="'border text-white hover:bg-gray-700 hover:border-none'"
+        :class="'border hover:bg-gray-700 hover:border-none'"
         @click="$emit('cancel')"
       />
       <AppButton :label="'Confirm'" class="mx-1" @click="$emit('confirm')" />

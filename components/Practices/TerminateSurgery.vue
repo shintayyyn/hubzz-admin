@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="flex flex-col justify-between w-full h-full text-white pt-4 pb-8 md:py-8 px-4"
+		class="flex flex-col justify-between w-full h-full pt-4 pb-8 md:py-8 px-4"
 		:style="approveTemination || rejectTermination ? 'overflow: hidden' : 'overflow: auto'"
 	>
 		<!-- CONFIRM OR CANCEL MODAL -->
@@ -34,7 +34,7 @@
 		<div class="w-full flex flex-wrap justify-between mb-2">
 			<svgicon
 				name="times-solid"
-				class="text-white hover:text-sunglow fill-current w-6 md:w-8 h-6 md:h-8 cursor-pointer"
+				class="hover:text-sunglow fill-current w-6 md:w-8 h-6 md:h-8 cursor-pointer"
 				@click="$router.go(-1)"
 			/>
 			<div class="py-2 font-bold text-lg leading-tight">
@@ -75,7 +75,7 @@
 			</div>
 			<div class="my-2">
 				<span class="font-bold">Note from Practice Hub:</span>
-				<div class="md:m-2 p-2 bg-charade rounded-lg overflow-y-auto">{{ childSurgery.note }}</div>
+				<div class="md:m-2 p-2 bg-gray-300 rounded-lg overflow-y-auto">{{ childSurgery.note }}</div>
 			</div>
 		</div>
 
