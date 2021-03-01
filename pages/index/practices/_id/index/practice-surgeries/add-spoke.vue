@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="add-practice-modal shadow-lg">
+    <div class=" shadow-lg">
       <AddPracticeSurgery :practice="practice" />
     </div>
   </div>

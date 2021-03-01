@@ -44,7 +44,7 @@
         @cancel="draw_modal = false"
       />
 
-      <div v-if="winner_modal" class="wrapper absolute top-0 mx-auto rounded-b-lg p-4 bg-waterloo-dark shadow-lg">
+      <div v-if="winner_modal" class="wrapper absolute top-0 mx-auto rounded-b-lg p-4 bg-white shadow-lg">
         <div class="flex flex-col justify-center">
           <div class="font-bold text-lg">
             Winner

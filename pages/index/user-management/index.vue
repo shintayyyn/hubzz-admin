@@ -24,7 +24,7 @@
           :label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
           :icon="deleteAdminUser ? 'circle-check' : 'garbage'"
           :iconSize="deleteAdminUser ? '21' : '16'"
-          :customTheme="[deleteAdminUser ? 'bg-green-500' : 'bg-red-600 text-white', 'py-1 px-2']"
+          :customTheme="[deleteAdminUser ? 'bg-green-500' : 'bg-red-600 text-white', 'text-white py-1 px-2']"
           @click="deleteAdminUser = !deleteAdminUser"
         />
       </template>
@@ -43,15 +43,14 @@
     >
       <template v-slot:delete="slotProps">
         <div
-          class="px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+          class="flex px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
         >
-          {{ slotProps.item.id }}
           <AppButton
             v-if="authAdminPermissions.includes('Delete Admin Account')"
             :label="'Delete'"
             :icon="'delete-user'"
             :iconSize="'16'"
-            class="my-1 mr-2"
+						:customTheme="'bg-red-600 text-white'"
             @click="toDeleteAdminUser(slotProps.item.id)"
           />
           <span v-else class="text-sm text-gray-500">You</span>

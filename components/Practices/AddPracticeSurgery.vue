@@ -1,18 +1,5 @@
 <template>
-  <div class="px-4">
-    <!-- HEADER -->
-    <div v-if="practice" class="flex justify-between text-sm py-4">
-      <div class="cursor-pointer" @click="goBack()">
-        <svgicon
-          name="arrow-left-solid"
-          height="32"
-          width="32"
-          class="hover:text-sunglow fill-current"
-        />
-      </div>
-    </div>
-    <!-- HEADER -->
-
+  <div>
     <div class="flex flex-col text-base py-2" style="min-height: 70vh">
       <div class="w-full md:w-1/2">
         <AppInputSmall
@@ -164,7 +151,7 @@
       />
       <!-- </div> -->
       <!-- ===================SET PERMISSIONS OF PRACTICE SPOKE=================== -->
-      <div v-if="setSpokePermissionModal" class="practice-user-modal-small shadow-lg">
+      <div v-if="setSpokePermissionModal" class="practice-user-modal shadow-lg">
         <SetSpokePermissions
           :practice="practice"
           :practiceSpokeId="practiceSpokeId"

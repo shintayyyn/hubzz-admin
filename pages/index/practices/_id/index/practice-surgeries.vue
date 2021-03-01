@@ -51,7 +51,7 @@
                 class="flex items-center w-10 ml-2 md:ml-2 md:ml-0 cursor-pointer text-red-600 hover:text-red-700"
                 @click.prevent.stop="viewTerminationModal(slotProps.item)"
               >
-                <div class="p-1 bg-white rounded-lg">
+                <div class="p-1 bg-white rounded-lg shadow">
                   <svgicon name="exclamation-circle-solid" width="22" height="22" class="fill-current" />
                 </div>
               </div>

@@ -1065,7 +1065,7 @@ export default {
     max-height: 80%;
     overflow: auto;
     transition: all 0.3s ease-in-out;
-    background-color: #505561;
+    background-color: white;
     z-index: 512;
   }
 

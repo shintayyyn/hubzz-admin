@@ -1,14 +1,7 @@
 <template>
-	<div ref="modalContainer" class="shadow-lg">
-		<div class="modal-container max-w-2xl text-white">
-			<div class="p-4 md:p-8">
-				<svgicon
-					name="arrow-left-solid"
-					height="32"
-					width="32"
-					class="cursor-pointer text-white hover:text-sunglow fill-current"
-					@click="$emit('close')"
-				/>
+	<div ref="modalContainer">
+		<div class="max-w-2xl">
+			<div class="p-4">
 				<div class="flex flex-col mt-4">
 					<AppInput
 						v-model="form.name"
@@ -72,7 +65,7 @@
 							</div>
 						</div>
 					</div>-->
-					<div class="masorny-container two">
+					<div class="masonry-container three">
 						<div v-for="(role, roleIndex) in permissions" :key="roleIndex" class="item p-2">
 							<div class="flex flex-col">
 								<div class="w-full flex flex-row items-center pb-1">
@@ -319,39 +312,16 @@ export default {
 					});
 				this.$emit("close");
 			} else {
-				this.$emit("scrollToTop");
+				this.$store.commit("SET_NOTIFICATION", {
+						enabled: true,
+						status: "danger",
+						text: `Something went wrong!`
+					})
+				this.$emit("scrollToTop")
 			}
 		}
 	}
 };
 </script>
 <style scoped>
-.modal-container {
-	z-index: 510;
-}
-
-.role-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: #505561;
-	z-index: 512;
-}
-
-@media screen and (min-width: 1200px) {
-	.role-modal {
-		width: 80%;
-	}
-}
-/* @media screen and (min-width: 1200px) {
-  .modal-container {
-    width: 80%
-  }
-} */
 </style>

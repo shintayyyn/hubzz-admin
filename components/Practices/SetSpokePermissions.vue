@@ -1,12 +1,12 @@
 <template>
-  <div class="text-white w-full">
-    <div class="flex justify-between text-sm text-white py-4 px-4 md:px-8">
+  <div class=" w-full">
+    <div class="flex justify-between text-sm  py-4 px-4 md:px-8">
       <div @click="$emit('close')" class="cursor-pointer">
         <svgicon
           name="arrow-left-solid"
           height="32"
           width="32"
-          class="text-white hover:text-sunglow fill-current"
+          class=" hover:text-sunglow fill-current"
         />
       </div>
     </div>
