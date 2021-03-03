@@ -38,6 +38,7 @@
             </div>
           </div>
         </div>
+
         <div class="pt-12">
           <AppButton
             class="whitespace-no-wrap"
@@ -58,12 +59,14 @@
         @formError="scrollToTop"
         @goBack="goBack"
       />
+
       <div
         v-if="chooseJobPartsModal == true"
         class="issue-hubzz-invoice-shield"
         @click="chooseJobPartsModal = false"
       />
     </section>
+
     <transition name="slide" mode="out-in">
       <div 
         v-if="chooseJobPartsModal" 
@@ -78,21 +81,25 @@
           @close="chooseJobPartsModal = false"
           @chosenJobParts="toProcessInvoiceItems"
         />
+
         <div
           v-if="$route.name.includes('approvedJobPartId')"
           class="issue-hubzz-invoice-shield"
           @click="chooseJobPartsModal = false"
         />
+
         <nuxt-child />
       </div>
     </transition>
   </div>
 </template>
+
 <script>
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
 import HubzzInvoice from "@/components/Billings/HubzzInvoice"
 import ChooseJobParts from "@/components/Billings/ChooseJobParts"
+
 export default {
 	components: {
 		AppButton,
@@ -100,6 +107,7 @@ export default {
 		HubzzInvoice,
 		ChooseJobParts
 	},
+
 	data () {
 		return {
 			loading: false,
@@ -130,6 +138,7 @@ export default {
       }
       this.toFilter.practice_billable_date_start = value
     },
+
     approvedAtDateEnd: function (value) {
       this.toFilter.practice_billable_date_end = value
     }
@@ -158,20 +167,26 @@ export default {
 			console.log("get practice error", err)
 		}
 	},
+
 	methods: {
 		scrollToTop () {
 			this.$nextTick(() => {
 				this.$refs.modalContainer.scrollTop = 0
 			})
 		},
+
 		toProcessInvoiceItems (chosenJobParts) {
 			this.chooseJobPartsModal = false
+
       this.disputedItems = []
+
       this.invoiceItems = []
 
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        const roundedHours = Math.floor((chosenJobParts[i].final_hours)/60)
-        const minutes = Math.round(((chosenJobParts[i].final_hours/60) - roundedHours) * 60)
+        const roundedHours = Math.floor((chosenJobParts[i].final_hours) / 60)
+
+        const minutes = Math.round(((chosenJobParts[i].final_hours / 60) - roundedHours) * 60)
+
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
           job_part_id: chosenJobParts[i].id,
@@ -190,20 +205,25 @@ export default {
 						this.$moment(chosenJobParts[i].date_end).format('DD/MM/YYYY'),
 						// divided by 60 to convert field "final_hours", from minutes to hours
 					total: parseFloat(
-						(chosenJobParts[i].final_hours/60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
+						(chosenJobParts[i].final_hours / 60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
 					).toFixed(2)
         }
 
-				if (chosenJobParts[i].invoice_status === "Invoiced" || chosenJobParts[i].invoice_status === "Approved" || chosenJobParts[i].invoice_status === "To Be Invoiced") {
+				if (
+          chosenJobParts[i].invoice_status === "Invoiced"
+          || chosenJobParts[i].invoice_status === "Approved"
+          || chosenJobParts[i].invoice_status === "To Be Invoiced"
+        ) {
           newItem.id = this.invoiceItems.length + 1
+
 					this.invoiceItems.push(newItem)
-        } 
+        }
+
         if (chosenJobParts[i].invoice_status === "Disputed") {
           newItem.id = this.disputedItems.length + 1
+          
 					this.disputedItems.push(newItem)
         }
-        
-        
       }
 		},
 
@@ -221,39 +241,42 @@ export default {
 </script>
 
 <style>
-.card {
-	min-width: 100px;
-	height: 250px;
-	box-sizing: content-box;
-}
-.issue-hubzz-invoice-shield {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #333;
-	opacity: 0.5;
-	z-index: 511;
-}
-.choose-job-parts-modal,
-.issue-hubzz-invoice-modal {
-	position: fixed;
-	top: 0;
-	right: 0;
-	margin-right: 0%;
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-	border-left: solid 2px #ffc72c;
-	transition: all 0.3s ease-in-out;
-	background-color: white;
-	z-index: 512;
-}
-@media screen and (min-width: 1200px) {
-	
-	.choose-job-parts-modal {
-		width: 80%;
-	}
-}
+  .card {
+    min-width: 100px;
+    height: 250px;
+    box-sizing: content-box;
+  }
+
+  .issue-hubzz-invoice-shield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    opacity: 0.5;
+    z-index: 511;
+  }
+
+  .choose-job-parts-modal,
+  .issue-hubzz-invoice-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+    z-index: 512;
+  }
+
+  @media screen and (min-width: 1200px) {
+    
+    .choose-job-parts-modal {
+      width: 80%;
+    }
+  }
 </style>
