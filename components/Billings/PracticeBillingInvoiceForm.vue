@@ -904,6 +904,26 @@ export default {
     isOOH () {
       return this.propInvoice && this.propInvoice.ooh ? true : false
     },
+    
+    ni_paye_amount () {
+      let ni_amount
+        = this.propInvoice && this.propInvoice.ni
+          ? this.propInvoice.ni_amount
+          : 0
+      let paye_amount
+        = this.propInvoice && this.propInvoice.paye
+          ? this.propInvoice.paye_amount
+          : 0
+      return ni_amount + paye_amount
+    },
+
+    grand_total () {
+      if (this.propInvoice && this.propInvoice.approved) {
+        return this.propInvoice.job_part_gross_rate
+      }
+      return (this.propInvoice.locum_user_vat_registered ? this.taxed_gross_rate : this.total_gross_locum_wages) - this.ni_paye_amount
+    },
+
 	},
 
 	watch: {
