@@ -183,30 +183,33 @@ export default {
       this.invoiceItems = []
 
 			for (let i = 0; i < chosenJobParts.length; i++) {
-        const roundedHours = Math.floor((chosenJobParts[i].final_hours) / 60)
+        const jobPartTotalFinalPaidHoursInMinutes = chosenJobParts[i].job_part_total_final_paid_hours_in_minutes
 
-        const minutes = Math.round(((chosenJobParts[i].final_hours / 60) - roundedHours) * 60)
+        const jobPartTotalFinalPaidHours = parseFloat(jobPartTotalFinalPaidHoursInMinutes / 60).toFixed(2)
+
+        const praticeRate = chosenJobParts[i].practice_rate.toFixed(2)
+
+        const jobPartTotalFinalPaidHourOnly = Math.floor(jobPartTotalFinalPaidHoursInMinutes / 60)
+
+        const jobPartTotalFinalPaidMinuteOnly = jobPartTotalFinalPaidHoursInMinutes % 60
 
 				const newItem = {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
           job_part_id: chosenJobParts[i].id,
-          total_hours: parseFloat((chosenJobParts[i].final_hours)/60).toFixed(2),
+          total_hours: jobPartTotalFinalPaidHours,
 					description:
 						chosenJobParts[i].job_part_number +
 						" for £" +
             chosenJobParts[i].practice_rate +
             " for a total time of " +
-            roundedHours +
-            " hours " + 
-            (minutes > 0 ? " and " + minutes + " minutes " : "") +
+            jobPartTotalFinalPaidHourOnly +
+            (jobPartTotalFinalPaidHourOnly > 1 ? " hours " : " hour ") + 
+            (jobPartTotalFinalPaidMinuteOnly > 0 ? " and " + jobPartTotalFinalPaidMinuteOnly + (jobPartTotalFinalPaidMinuteOnly > 1 ? " minutes " : " minute ") : "") +
 						" from " +
 						this.$moment(chosenJobParts[i].date_start).format('DD/MM/YYYY') +
 						" to " +
 						this.$moment(chosenJobParts[i].date_end).format('DD/MM/YYYY'),
-						// divided by 60 to convert field "final_hours", from minutes to hours
-					total: parseFloat(
-						(chosenJobParts[i].final_hours / 60).toFixed(2) * chosenJobParts[i].practice_rate.toFixed(2)
-					).toFixed(2)
+					total: parseFloat(jobPartTotalFinalPaidHours * praticeRate).toFixed(2),
         }
 
 				if (
