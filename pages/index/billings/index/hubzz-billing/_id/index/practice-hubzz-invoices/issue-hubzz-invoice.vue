@@ -200,7 +200,7 @@ export default {
 					description:
 						chosenJobParts[i].job_part_number +
 						" for £" +
-            chosenJobParts[i].practice_rate +
+            praticeRate +
             " for a total time of " +
             jobPartTotalFinalPaidHourOnly +
             (jobPartTotalFinalPaidHourOnly > 1 ? " hours " : " hour ") + 
