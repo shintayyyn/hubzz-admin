@@ -10,7 +10,7 @@
         label="Email Address"
         type="email"
         class="w-full"
-        :error="formErrors.find(formError => formError.field === 'email')"
+        :error="formError.find(err => err.field === 'email')"
         @blur="CheckEmptyField(email, 'email')"
       />
       <AppInput
@@ -18,7 +18,7 @@
         label="Password"
         type="password"
         class="w-full"
-        :error="formErrors.find(formError => formError.field === 'password')"
+        :error="formError.find(err => err.field === 'password')"
         @blur="CheckEmptyField(password, 'password')"
         @submit="login"
       />
@@ -61,7 +61,7 @@
       return {
         email: '',
         password: '',
-        formErrors: [],
+        formError: [],
         backgroundUrl,
         loggingIn: false,
       }
@@ -69,15 +69,15 @@
 
     watch: {
       email () {
-        const index = this.formErrors.findIndex((formError) => formError.field === 'email')
+        const index = this.formError.findIndex((err) => err.field === 'email')
 
         if (this.email) {
           if (index > -1) {
-            this.formErrors.splice(index, 1)
+            this.formError.splice(index, 1)
           }
         } else {
           if (index === -1) {
-            this.formErrors.push({
+            this.formError.push({
               field: 'email',
               message: 'Email is required.',
               validation: 'required',
@@ -87,15 +87,15 @@
       },
 
       password () {
-        const index = this.formErrors.findIndex((formError) => formError.field === 'password')
+        const index = this.formError.findIndex((err) => err.field === 'password')
 
         if (this.password) {
           if (index > -1) {
-            this.formErrors.splice(index, 1)
+            this.formError.splice(index, 1)
           }
         } else {
           if (index === -1) {
-            this.formErrors.push({
+            this.formError.push({
               field: 'password',
               message: 'Password is required.',
               validation: 'required',
@@ -138,7 +138,7 @@
             password: this.password,
           }
 
-          this.formErrors = await this.$validator(data, {
+          this.formError = await this.$validator(data, {
             email: 'required|email',
             password: 'required|string',
           }, {
@@ -148,7 +148,7 @@
             'password.string': 'Invalid password.',
           }).then(() => []).catch((errors) => errors)
 
-          if (this.formErrors.length) {
+          if (this.formError.length) {
             return
           }
 
@@ -170,7 +170,7 @@
 
           if (err.response) {
             if (err.response.status === 400 && err.response.data.error_messages) {
-              this.formErrors = err.response.data.error_messages
+              this.formError = err.response.data.error_messages
             } else {
               message = err.response.data.message
             }
