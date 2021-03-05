@@ -12,6 +12,7 @@
     <div class="flex flex-col lg:flex-row">
       <form
         class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 border rounded-lg w-full"
+        @submit.prevent
       >
         <div class="flex flex-wrap">
           <!-- VIEW PRIMARY INFORMATION -->
@@ -411,7 +412,7 @@
                     :disabled="authAdminPermissions.includes('Edit Practice Other Information') === false"
                     @click="confirm=true"
                   />
-                    <!-- Deactivate this Practice -->
+                  <!-- Deactivate this Practice -->
                   <button
                     v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
                     class="m-1 text-sm text-white text-center rounded-lg bg-red-600 hover:bg-red-700 px-4 py-1 cursor-pointer transition-hover"
