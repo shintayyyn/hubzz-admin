@@ -6,15 +6,21 @@
     <!-- LINKS WRAPPER -->
     <div class="sidebar-nav pt-8 xl:pt-10">
       <div class="flex flex-row justify-center pb-4">
-        <div class="font-extrabold text-white text-2xl">
-          HUBZZ
+        <div class="flex justify-center">
+          <img src="~/assets/images/hubzz_logo.png" class="w-3/5"/>
         </div>
         
-        <button
+        <!-- <button
           class="close-button cursor-pointer focus:outline-none text-2xl font-bold text-yellow-500 px-4"
           @click="close"
         >
           X
+        </button> -->
+        <button
+            class="absolute top-0 right-0 my-2 mx-3 close-button cursor-pointer focus:outline-none text-2xl font-bold text-sunglow hover:text-sunglow-dark transition-hover"
+            @click="close"
+          >
+            <svgicon name="times-solid" class="fill-current" width="18" />
         </button>
       </div>
 
