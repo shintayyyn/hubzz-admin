@@ -4,7 +4,7 @@
     <div class="flex flex-wrap justify-between items-start w-full shadow-md rounded flex bg-gray-300 my-2">
       <div class="flex flex-col lg:flex-row w-full m-4">
         <div class="flex w-5/6">
-            <div class="md:px-1 w-full lg:w-1/4">
+          <div class="md:px-1 w-full lg:w-1/4">
             <AppDate
               v-model="filter.registered_at_date_start"
               label="Date Start"
@@ -100,6 +100,7 @@
             </div>
           </div>
         </div>
+
         <!-- PRACTICE REGISTRATIONS -->
         <div 
           v-if="authAdminPermissions.includes('View Practices')" 
@@ -146,6 +147,7 @@
             </div>
           </div>
         </div>
+
         <!-- SUCCESSFUL REFERRERS -->
         <div 
           v-if="authAdminPermissions.includes('View Locums') 
@@ -177,6 +179,7 @@
             </div>
           </div>
         </div>
+
         <!-- BILLING TOTALS -->
         <div 
           v-if="authAdminPermissions.includes('View Hubzz Invoices')" 
@@ -185,52 +188,64 @@
           <div class="m-4">
             <div class="flex flex-row text-xs text-gray-800">
               <div>Billing</div>
+
               <div class="-my-2">
-                <svgicon v-if="loadingDashboard" name="loader" color="black" width="30" height="30" />
+                <svgicon v-if="loadingDashboardBillingStats" name="loader" color="black" width="30" height="30" />
               </div> 
             </div>
+
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Total Approved Hours
               </div>
+
               <div class="text-orange-500">
-                {{ billingTotals && billingTotals.approved_total_hours_formatted ? billingTotals.approved_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
+                {{ dashboardBillingStats && dashboardBillingStats.approved_hours ? dashboardBillingStats.approved_hours.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
+
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Completed Hours
               </div>
+
               <div class="text-orange-500">
-                {{ billingTotals && billingTotals.total_completed_final_hours_formatted ? billingTotals.total_completed_final_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
+                {{ dashboardBillingStats && dashboardBillingStats.completed_hours ? dashboardBillingStats.completed_hours.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
+
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Billed Hours
               </div>
+
               <div class="text-orange-500">
-                {{ billingTotals && billingTotals.billed_total_hours_formatted ? billingTotals.billed_total_hours_formatted.toFixed(0) + ' Hours' : 0 | amount }}
+                {{ dashboardBillingStats && dashboardBillingStats.billed_hours ? dashboardBillingStats.billed_hours.toFixed(0) + ' Hours' : 0 | amount }}
               </div>
             </div>
+
             <div class="flex justify-between my-1 font-bold">
               <div>
                 Revenue
               </div>
+
               <div class="text-orange-500">
-                £ {{ billingTotals && billingTotals.total_revenue ? billingTotals.total_revenue : 0 | currency }}
+                £ {{ dashboardBillingStats && dashboardBillingStats.total_amount ? dashboardBillingStats.total_amount : 0 | currency }}
               </div>
             </div>
+
             <div class="flex justify-between my-1 font-bold">
               <div>
                 VAT
               </div>
+
               <div class="text-gray-800">
-                £ {{ billingTotals && billingTotals.total_taxes ? billingTotals.total_taxes : 0 | currency }}
+                £ {{ dashboardBillingStats && dashboardBillingStats.tax_amount ? dashboardBillingStats.tax_amount : 0 | currency }}
               </div>
             </div>
           </div>
         </div>
+        <!-- BILLING TOTALS -->
       </div>
       
       <div class="flex flex-col lg:flex-row w-full ">
@@ -278,6 +293,7 @@
             </div>
           </div>
         </div>
+
         <!-- PRACTICES IN PLATFORM -->
         <div 
           v-if="authAdminPermissions.includes('View Practices')" 
@@ -314,6 +330,7 @@
             </div>
           </div>
         </div>
+
         <!-- JOBS IN PLATFORM -->
         <div 
           v-if="authAdminPermissions.includes('View Locum Jobs') 
@@ -359,6 +376,7 @@
             </div>
           </div>
         </div>
+
         <!-- DISPUTES -->
         <div 
           v-if="authAdminPermissions.includes('View Practice Sessions') 
@@ -408,6 +426,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import AppInput from "@/components/Base/AppInput"
 import AppButton from "@/components/Base/AppButton"
@@ -420,6 +439,7 @@ export default {
     AppDate,
     AppSuggestSelect,
   },
+
   data () {
     return {
       filter: {
@@ -428,6 +448,9 @@ export default {
         post_code: '',
         proximity: '',
       },
+
+      loadingDashboardBillingStats: true,
+      dashboardBillingStats: null,
     }
   },
 
@@ -494,7 +517,7 @@ export default {
   },
 
   methods: {
-    async getEverything () {
+    getEverything () {
       let promises = []
 
       if (this.authAdminPermissions.includes('View Locums')) {
@@ -505,9 +528,9 @@ export default {
         promises.push(this.getPracticeRegistrations(), this.getPracticesInPlatform())
       }
 
-      if (this.authAdminPermissions.includes('View Hubzz Invoices')) {
-        promises.push(this.getBillingTotals())
-      }
+      // if (this.authAdminPermissions.includes('View Hubzz Invoices')) {
+      //   promises.push(this.getBillingTotals())
+      // }
 
       if (this.authAdminPermissions.includes('View Locums') || this.authAdminPermissions.includes('View Practices')) {
         promises.push(this.getSuccessfulReferrals())
@@ -517,15 +540,29 @@ export default {
         promises.push(this.getJobsInPlatform(), this.getDisputes())
       }
 
+      this.$store.commit("dashboard/SET_FILTERS", this.filter)
+      this.$store.commit("dashboard/TOGGLE_LOADING", true)
       Promise.all([
-        this.$store.commit("dashboard/SET_FILTERS", this.filter),
-        this.$store.commit("dashboard/TOGGLE_LOADING", true),
         ...promises,
-      ]).then(() => {
-        this.$store.commit("dashboard/TOGGLE_LOADING", false)
-      }).catch(() => {
+      ]).finally(() => {
         this.$store.commit("dashboard/TOGGLE_LOADING", false)
       })
+
+      if (this.authAdminPermissions.includes('View Hubzz Invoices')) {
+        this.loadingDashboardBillingStats = true
+        this.$axios.get('/api/v2/admin/dashboard-billing-stats', {
+          params: {
+            practice_invoice_issued_at_start: this.filter.registered_at_date_start,
+            practice_invoice_issued_at_end: this.filter.registered_at_date_end,
+            practice_postcode: this.filter.post_code,
+            practice_postcode_miles: this.filter.proximity,
+          },
+        }).then((response) => {
+          this.dashboardBillingStats = response.data.data.dashboard_billing_stats
+        }).finally(() => {
+          this.loadingDashboardBillingStats = false
+        })
+      }
     },
 
     async filterSearch () {

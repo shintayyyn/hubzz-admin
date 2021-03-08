@@ -1,6 +1,7 @@
 <template>
   <div class="text-black">
     <AppLoading :loading="loading" spinner :message="'Processing'" />
+
     <!-- HEADER -->
     <div class="flex flex-wrap overflow-hidden m-4 text-sm">
       <AppButton
@@ -10,6 +11,7 @@
         :icon="'cloud-download'"
         @click="toPDF()"
       />
+
       <AppButton
         v-if="forViewing == true && practiceInvoice && authAdminPermissions.includes('Export Sage Csv')"
         class="mr-2"
@@ -18,6 +20,7 @@
         :disabled="practice && practice.sage_ref && practice.direct_debit ? false : true"
         @click="toSageCSV()"
       />
+
       <div
         v-if="practice && practiceInvoice && practiceInvoice.exported_at"
         class="text-white m-2"
@@ -25,6 +28,7 @@
         *This Invoice has already been exported on {{ practiceInvoice.exported_at_in_gb_formatted }}
       </div>
     </div>
+
     <div
       v-if="practice && practiceInvoice && practice.direct_debit === false"
       class="text-white mx-4 mb-2"
@@ -37,6 +41,7 @@
       <div class="font-bold text-xl mx-3">
         For the Period
       </div>
+
       <div class="w-full flex flex-col items-start md:flex-row md:items-center mx-1">
         <AppDate
           v-model="forPeriodDateStart"
@@ -44,6 +49,7 @@
           :name="'date_start'"
           :label="'From'"
         />
+
         <AppDate
           v-model="forPeriodDateEnd"
           class="w-full md:w-1/2 md:mx-2"
@@ -87,6 +93,7 @@
               <p>{{ locumInvoice ? 'UTR '+locumInvoice.utr_number : '10832559' }}</p>
             </div>
           </div>
+
           <div class="flex">
             <div class="w-full">
               <div
@@ -97,10 +104,12 @@
                   <div class="text-base py-1">
                     To: Accounts Department
                   </div>
+
                   <div class="w-full">
                     <p class="font-bold text-lg mb-2">
                       {{ practice.surgery.name }}
                     </p>
+
                     <div class="text-xs sm:text-sm">
                       <p>{{ practice.surgery.address.line_1 }}</p>
                       <p>{{ practice.surgery.address.line_2 }}</p>
@@ -120,9 +129,11 @@
                 </div>
               </div>
             </div>
+
             <div v-if="practiceInvoice || locumInvoice" class="w-full flex flex-col-reverse">
               <div class="flex justify-end items-center">
                 <div>Invoice Number: </div>
+
                 <div
                   class="pl-1 font-semibold"
                 >
@@ -132,6 +143,7 @@
             </div>
           </div>
         </div>
+
         <!-------------------- FOR INVOICES - INVOICE ITEMS ------------------------>
         <div v-if="invoiceItems && invoiceItems.length > 0" class="flex flex-col overflow-x-auto" :class="doNotShow && 'mx-4'">
           <div
@@ -145,17 +157,19 @@
                   <strong>Description</strong>
                 </div>
               </div>
+
               <div class="w-1/6">
                 <div v-if="!byLocum" class="text-white text-sm text-left ">
                   <strong>Total Hours</strong>
                 </div>
               </div>
-              <!-- this -->
+            
               <div v-if="!byLocum" class="w-1/6"> 
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
                 </div>
               </div>
+
               <div v-if="forViewing == false">
                 <div v-if="doNotShow" class="mr-2">
                   <span
@@ -166,6 +180,7 @@
               </div>
             </div>
           </div>
+
           <div
             v-for="(item, index) in invoiceItems"
             :key="`item-${index}`"
@@ -175,7 +190,7 @@
           > 
             <div class="flex w-full border-b border-gray-500 py-1">
               <!-- DESCRIPTION -->
-              <div v-if="forViewing == false" class="w-4/6 text-sm">
+              <div v-if="!forViewing" class="w-4/6 text-sm">
                 <textarea
                   v-if="doNotShow"
                   v-model="item.description"
@@ -190,25 +205,29 @@
                   {{ item.description ? item.description : "No Description" }}
                 </p>
               </div>
-              <div v-else class="max-w px-2 py-1" :class="!byLocum ? 'w-4/6' : 'w-full'">
+
+              <div v-if="forViewing" class="max-w px-2 py-1" :class="!byLocum ? 'w-4/6' : 'w-full'">
                 {{ item.description }}
               </div>
+
               <!-- TOTAL HOURS -->
-              <div v-if="forViewing == false" class="w-1/6 text-sm">
+              <div v-if="!forViewing" class="w-1/6 text-sm">
                 <p
                   class="w-full text-left px-2 py-1"
                 >
                   {{ item.total_hours | currency }} Hours
                 </p>
               </div>
-              <div v-else class="max-w px-2 py-1 w-1/6">
+
+              <div v-if="forViewing" class="max-w px-2 py-1 w-1/6">
                 <div v-if="!byLocum">
                   {{ item.total_hours | currency }} Hours 
                 </div>
               </div>
+
               <!-- AMOUNT TOTAL -->
               <div v-if="!byLocum" class="w-1/6 text-sm mx-1">
-                <template v-if="forViewing == false">
+                <template v-if="!forViewing">
                   <input
                     v-if="doNotShow"
                     v-model="item.total"
@@ -220,11 +239,13 @@
                     placeholder="Enter Total"
                   >
                 </template>
-                <div v-else class="max-w px-2 py-1 text-right text-black ">
+
+                <div v-if="forViewing" class="max-w px-2 py-1 text-right text-black ">
                   {{ item.total | currency }}
                 </div>
               </div>
-              <template v-if="forViewing == false">
+
+              <template v-if="!forViewing">
                 <div v-if="doNotShow" class="mr-2 flex items-center">
                   <span
                     class="bg-black hover:bg-gray-900 w-6 h-6 cursor-pointer font-semibold flex items-center justify-center rounded-full text-white"
@@ -249,6 +270,7 @@
                   <strong>Disputed Job Description</strong>
                 </div>
               </div>
+
               <div class="w-2/6">
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
@@ -256,6 +278,7 @@
               </div>
             </div>
           </div>
+
           <div
             v-for="(item, index) in disputedItems"
             :key="`item-${index}`"
@@ -280,9 +303,11 @@
                   {{ item.description ? item.description : "No Description" }}
                 </p>
               </div>
+
               <div v-else class="w-full max-w px-2 py-1">
                 {{ item.description }}
               </div>
+
               <!-- TOTAL HOURS -->
               <div v-if="forViewing == false" class="w-1/6 text-sm">
                 <p
@@ -291,11 +316,13 @@
                   {{ item.total_hours | currency }} Hours
                 </p>
               </div>
+
               <div v-else class="max-w px-2 py-1 w-1/6">
                 <div v-if="!byLocum">
                   {{ item.total_hours | currency }} Hours
                 </div>
               </div>
+
               <!-- Amount -->
               <div class="w-1/6 text-sm mx-1">
                 <template v-if="forViewing == false">
@@ -310,10 +337,12 @@
                     placeholder="Enter Total"
                   >
                 </template>
+
                 <p v-else class="px-2 py-1 text-right text-black">
                   {{ item.total | currency }}  
                 </p>
               </div>
+
               <template v-if="forViewing == false">
                 <div v-if="doNotShow" class="mr-2 flex items-center">
                   <span
@@ -339,11 +368,13 @@
                   <strong>Debit Description</strong>
                 </div>
               </div>
+
               <div class="w-2/6">
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
                 </div>
               </div>
+
               <div v-if="forViewing == false">
                 <div v-if="doNotShow" class="mr-2">
                   <span
@@ -354,6 +385,7 @@
               </div>
             </div>
           </div>
+
           <div v-if="createdDebitItems.length > 0">
             <div
               v-for="(item, index) in createdDebitItems"
@@ -372,6 +404,7 @@
                     class="border-b-2 border-gray-300 w-full h-full focus:outline-none resize-none py-1 px-4"
                     placeholder="Enter Description"
                   />
+
                   <p
                     v-else
                     class="text-left px-2 py-1"
@@ -379,9 +412,11 @@
                     {{ item.description ? item.description : "No Description" }}
                   </p>
                 </div>
+
                 <div v-else class="w-full max-w px-2 py-1">
                   {{ item.description }}
                 </div>
+
                 <div class="w-1/3 text-sm mx-1">
                   <template v-if="forViewing == false">
                     <input
@@ -395,10 +430,12 @@
                       placeholder="Enter Total"
                     >
                   </template>
+
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
                     {{ item.total | currency }}
                   </p>
                 </div>
+
                 <template v-if="forViewing == false">
                   <div v-if="doNotShow" class="mr-2 flex items-center">
                     <span
@@ -410,11 +447,13 @@
               </div>
             </div>
           </div>
+
           <div v-else>
             <div class="flex w-full justify-center border-b border-gray-500 py-1">
               <div class="w-full max-w px-2 py-1">
                 {{ '---' }}
               </div>
+
               <div class="w-1/3 text-sm mx-1">
                 <p class="px-2 py-1 text-right text-md">
                   {{ '0.00' }}
@@ -437,11 +476,13 @@
                   <strong>Credit Description</strong>
                 </div>
               </div>
+
               <div class="w-2/6">
                 <div class="text-white text-sm text-right px-4">
                   <strong>£ Amount</strong>
                 </div>
               </div>
+
               <div v-if="forViewing == false">
                 <div v-if="doNotShow" class="mr-2">
                   <span
@@ -452,6 +493,7 @@
               </div>
             </div>
           </div>
+
           <div v-if="createdCreditItems.length > 0">
             <div
               v-for="(item, index) in createdCreditItems"
@@ -476,9 +518,11 @@
                     {{ item.description ? item.description : "No Description" }}
                   </p>
                 </div>
+
                 <div v-else class="w-full max-w px-2 py-1">
                   {{ item.description }}
                 </div>
+
                 <div class="w-1/3 text-sm mx-1">
                   <template v-if="forViewing == false">
                     <input
@@ -496,6 +540,7 @@
                     - {{ item.total | currency }}
                   </p>
                 </div>
+
                 <template v-if="forViewing == false">
                   <div v-if="doNotShow" class="mr-2 flex items-center">
                     <span
@@ -507,11 +552,13 @@
               </div>
             </div>
           </div>
+
           <div v-else>
             <div class="flex w-full justify-center border-b border-gray-500 py-1">
               <div class="w-full max-w px-2 py-1">
                 {{ '---' }}
               </div>
+
               <div class="w-1/3 text-sm mx-1">
                 <p class="px-2 py-1 text-right text-md">
                   {{ '0.00' }}
@@ -531,6 +578,7 @@
               £ {{ forViewing === true ? practiceInvoice.untaxed_total_amount : untaxedAmountTotal | currency }}
             </div>
           </div>
+
           <div class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               VAT Amount
@@ -539,6 +587,7 @@
               £ {{ forViewing === true ? practiceInvoice.tax_amount : taxAmount | currency }}
             </div>
           </div>
+
           <div class="flex flex-row justify-between w-full">
             <div class="my-1 px-1 font-bold">
               Total (with added VAT)
@@ -572,6 +621,7 @@
             </div>
           </div>
         </div>
+
         <div v-if="locumInvoice.paid_under_payroll === true" class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
           <br>Account name: {{ locumInvoice && locumInvoice.payroll_account_name ? locumInvoice.payroll_account_name : 'N/A' }}
@@ -581,6 +631,7 @@
           <br>Payroll reference number: {{ locumInvoice && locumInvoice.payroll_reference_number ? locumInvoice.payroll_reference_number : 'N/A' }}
           <br>
         </div>
+        
         <div v-else class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
           <br>Account name: {{ locumInvoice && locumInvoice.account_name ? locumInvoice.account_name : 'N/A' }}
@@ -965,35 +1016,34 @@ export default {
 		},
 
 		async createInvoice () {
-      this.saveAsDisabled = true
-      this.createdDebitItems = await this.createdDebitItems.filter(disputedItem => disputedItem.total !== 0)
-      this.createdCreditItems = await this.createdCreditItems.filter(creditItem => creditItem.total !== 0)
-      this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
+      this.createdDebitItems = this.createdDebitItems.filter(disputedItem => disputedItem.total !== 0)
+
+      this.createdCreditItems = this.createdCreditItems.filter(creditItem => creditItem.total !== 0)
+
+      this.toPostPracticeInvoice.items = this.invoiceItems.concat(
 				this.disputedItems,
 				this.createdDebitItems,
 				this.createdCreditItems
 			)
       
-			this.toPostPracticeInvoice.date_start = await this.dateStart ? this.dateStart : null
-      this.toPostPracticeInvoice.date_end = await this.dateEnd ? this.dateEnd : null
+			this.toPostPracticeInvoice.date_start = this.dateStart ? this.dateStart : null
+
+      this.toPostPracticeInvoice.date_end = this.dateEnd ? this.dateEnd : null
       
-			this.toPostPracticeInvoice.practice_id = (await this.practice.id)
-				? this.practice.id
-        : null
+			this.toPostPracticeInvoice.practice_id = this.practice ? this.practice.id : null
         
-			this.toPostPracticeInvoice.items = await this.invoiceItems.concat(
-				this.disputedItems,
-				this.createdDebitItems,
-				this.createdCreditItems
-			)
-      this.toPostPracticeInvoice.total_amount = this.practice.vat_registered === true ? await this.taxedAmountTotal : await this.untaxedAmountTotal
-      this.toPostPracticeInvoice.tax_amount = await this.taxAmount
+      this.toPostPracticeInvoice.total_amount = this.practice.vat_registered === true ? this.taxedAmountTotal : this.untaxedAmountTotal
+
+      this.toPostPracticeInvoice.tax_amount = this.taxAmount
+
       this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
+
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
 
       console.log(this.toPostPracticeInvoice)
 
 			if (this.toPostPracticeInvoice.items.length > 0) {
+        this.saveAsDisabled = true
 				await this.$axios
 					.post(`/api/v1/admin/practice-invoices`, this.toPostPracticeInvoice)
 					.then(() => {
@@ -1006,16 +1056,17 @@ export default {
 					})
 					.catch(err => {
             console.log('err', err)
+
 						this.$store.commit("SET_NOTIFICATION", {
 							enabled: true,
 							status: "danger",
 							text: err.response.data.message
             })
-  
-            this.saveAsDisabled = false
 					})
+          .finally(() => {
+            this.saveAsDisabled = false
+          })
 			} else {
-        this.saveAsDisabled = false
 				this.$emit("formError")
 				this.$store.commit("SET_NOTIFICATION", {
 					enabled: true,

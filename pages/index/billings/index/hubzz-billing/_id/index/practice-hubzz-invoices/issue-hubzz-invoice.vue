@@ -197,6 +197,7 @@ export default {
 					type: "Job Part - " + chosenJobParts[i].invoice_status,
           job_part_id: chosenJobParts[i].id,
           total_hours: jobPartTotalFinalPaidHours,
+          billed_hour_in_minutes: jobPartTotalFinalPaidHoursInMinutes,
 					description:
 						chosenJobParts[i].job_part_number +
 						" for £" +

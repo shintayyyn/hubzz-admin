@@ -252,7 +252,7 @@
             title: 'Total Hours Assigned/Completed or Approved',
             key: 'completed_terminated_job_part_total_hours',
             sort_key: 'completed_terminated_job_part_total_hours',
-            column: item => (parseFloat(item.completed_terminated_job_part_total_hours)/60).toFixed(2),
+            column: item => (parseFloat(item.job_part_total_final_paid_hours_in_minutes) / 60).toFixed(2),
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
