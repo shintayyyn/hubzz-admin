@@ -1,41 +1,46 @@
 <template>
-	<div class="items-center text-sm">
-		<div
-			v-if="practiceInvoice.paid_at_in_gb_formatted" 
-			class="mx-4 my-2 font-semibold text-lg"
-		>
-			{{ '* This invoice has been marked as paid on ' + practiceInvoice.paid_at_in_gb_formatted }}
-		</div>
-		<div
-			v-if="practiceInvoice.unpaid_at_in_gb_formatted" 
-			class="mx-4 my-2 font-semibold text-lg"
-		>
-			<div>{{ `* This invoice has been marked Invalid on ${practiceInvoice.unpaid_at_in_gb_formatted}` }}</div>
-			<div v-if="practiceInvoice.unpaid_reason">{{ `For the reason: ${practiceInvoice.unpaid_reason}` }}</div>
-		</div>
+  <div class="items-center text-sm">
+    <div
+      v-if="practiceInvoice.paid_at_in_gb_formatted" 
+      class="mx-4 my-2 font-semibold text-lg"
+    >
+      {{ '* This invoice has been marked as paid on ' + practiceInvoice.paid_at_in_gb_formatted }}
+    </div>
+    <div
+      v-if="practiceInvoice.unpaid_at_in_gb_formatted" 
+      class="mx-4 my-2 font-semibold text-lg"
+    >
+      <div>{{ `* This invoice has been marked Invalid on ${practiceInvoice.unpaid_at_in_gb_formatted}` }}</div>
+      <div v-if="practiceInvoice.unpaid_reason">
+        {{ `For the reason: ${practiceInvoice.unpaid_reason}` }}
+      </div>
+    </div>
 
-		<div class="mb-4">
-			<HubzzInvoice
-				:forViewing="true"
-				:practice="practice"
-				:practiceInvoice="practiceInvoice"
-				:invoiceItems="invoiceItems"
-				:disputedItems="disputedItems"
-				:debitItems="debitItems"
-				:creditItems="creditItems"
-				:dateStart="practiceInvoice.date_start"
-				:dateEnd="practiceInvoice.date_end"
-				:byLocum="false"
-			/>
-		</div>
-	</div>
+    <div class="mb-4">
+      <HubzzInvoice
+        :forViewing="true"
+        :practice="practice"
+        :practiceInvoice="practiceInvoice"
+        :invoiceItems="invoiceItems"
+        :disputedItems="disputedItems"
+        :debitItems="debitItems"
+        :creditItems="creditItems"
+        :dateStart="practiceInvoice.date_start"
+        :dateEnd="practiceInvoice.date_end"
+        :byLocum="false"
+      />
+    </div>
+  </div>
 </template>
+
 <script>
 import HubzzInvoice from "@/components/Billings/HubzzInvoice"
+
 export default {
 	components: {
 		HubzzInvoice
 	},
+
 	data () {
 		return {
 			practiceInvoice: "",
@@ -46,6 +51,7 @@ export default {
 			creditItems: []
 		}
 	},
+
 	async asyncData ({ app, route }) {
 		try {
 			let response = await app.$axios.$get(
@@ -63,24 +69,28 @@ export default {
 				`/api/v1/admin/practices/${route.params.id}`
 			)
 			const practice = response.data.practice
+
       const practiceInvoiceItems = practiceInvoice.practice_invoice_items
+
 			let invoiceItems = []
 			let disputedItems = []
 			let debitItems = []
 			let creditItems = []
 
 			for (let i = 0; i < practiceInvoiceItems.length; i++) {
-      
 				const newItem = {
 					job_part_id: practiceInvoiceItems[i].id,
 					description: practiceInvoiceItems[i].description,
           total: practiceInvoiceItems[i].total.toFixed(2),
-          total_hours: practiceInvoiceItems[i].job_part ? (practiceInvoiceItems[i].job_part.final_hours)/60 : null
+          // total_hours: practiceInvoiceItems[i].job_part ? (practiceInvoiceItems[i].job_part.final_hours) / 60 : null,
+          total_hours: practiceInvoiceItems[i].billed_hour_in_minutes / 60,
+          billed_hour_in_minutes: practiceInvoiceItems[i].billed_hour_in_minutes,
 				}
+
 				if (
 					practiceInvoiceItems[i].type.includes("Job Part - Approved") ||
 					practiceInvoiceItems[i].type.includes("Job Part - Issued") ||
-					practiceInvoiceItems[i].type.includes("Job Part - Invoiced")||
+					practiceInvoiceItems[i].type.includes("Job Part - Invoiced") ||
 					practiceInvoiceItems[i].type.includes("Job Part - To Be Invoiced")
 				) {
 					newItem.id = invoiceItems.length + 1
@@ -98,6 +108,7 @@ export default {
 					creditItems.push(newItem)
 				}
 			}
+
 			return {
 				practiceInvoice,
 				practice,
@@ -110,6 +121,7 @@ export default {
 			console.log("get invoice error", err)
 		}
 	},
+
 	methods: {
 		goBack () {
 			const query = {
@@ -138,11 +150,13 @@ export default {
 	background-color: #505561;
 	z-index: 512;
 }
+
 @media screen and (min-width: 1200px) {
 	.practice-hubzz-invoice-modal {
 		width: 70%;
 	}
 }
+
 .document {
 	width: 100%;
 	min-height: 50vh;
