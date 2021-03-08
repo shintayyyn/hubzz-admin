@@ -14,18 +14,15 @@
             style="width: 320px;"
             @keyup="searchSubmit"
           >
-          <button
+          <AppButton
             v-if="search"
-            class="absolute top-0 right-0 bottom-0 mr-3 md:mr-1"
+            :label="'Search'"
             @click="(search = ''), searchSubmit()"
-          >
-            <svgicon
-              name="times-solid"
-              height="12"
-              width="12"
-              class="text-white hover:text-yellow-500 fill-current -mx-2 md:-mx-6"
-            />
-          </button>
+          />
+          <AppButton
+            :label="'Refresh'"
+            @click="getEmails()"
+          />
         </div>
       </div>
     </div>
@@ -78,12 +75,13 @@
 
 <script>
   import debounce from "lodash.debounce"
-
+  import AppButton from "@/components/Base/AppButton"
   import ContentManagementTable from '@/components/ContentManagement/ContentManagementTable'
   import ContentManagementPagination from '@/components/ContentManagement/ContentManagementPagination'
 
   export default {
     components: {
+      AppButton,
       ContentManagementTable,
       ContentManagementPagination,
     },
