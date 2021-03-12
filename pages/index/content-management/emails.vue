@@ -21,7 +21,7 @@
           />
           <AppButton
             :label="'Refresh'"
-            @click="getEmails()"
+            @click="refresh()"
           />
         </div>
       </div>
@@ -230,6 +230,11 @@
         this.activePage = 1
         this.getEmails()
       }, 500),
+
+      refresh () {
+        this.search = ''
+        this.getEmails()
+      },
 
       getEmails () {
         this.loading = true

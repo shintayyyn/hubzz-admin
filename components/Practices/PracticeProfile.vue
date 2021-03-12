@@ -1021,7 +1021,7 @@ export default {
 
 					this.confirm = false
 
-					this.$router.push("/practices/deactivated-practices")
+					this.$router.push("/practices/?practice_tab=Deactivated")
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {
