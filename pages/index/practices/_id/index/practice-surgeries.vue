@@ -5,7 +5,8 @@
         <div class="flex overflow-x-auto mb-2">
           <div 
             v-if="practice && practice.status === 'Active' && authAdminPermissions.includes('Create New Spoke To Hub')" 
-            class="flex-3 mx-1 whitespace-no-wrap">
+            class="flex-3 mx-1 whitespace-no-wrap"
+          >
             <AppButton
               :label="'Add Spoke for this Hub'"
               :icon="'add-rectangle'"
@@ -237,10 +238,7 @@ export default {
     try {
       this.loadingSurgeries = true
 
-      await this.$axios.$get(`/api/v1/admin/practices/${this.$route.params.id}`).then(res => {
-        const practice = res.data.practice
-        this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
-      })
+      this.$store.commit("practices/SET_SPECIFIC_PRACTICE", this.practice)
 
       const count = await this.$axios
         .get(`/api/v1/admin/practices/${this.$route.params.id}/practice-surgeries/count`)
