@@ -328,8 +328,9 @@ export default {
           class: 'md:text-center',
           sortable: true,
           flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '140px',
+          width: 100,
+          // minWidth: '100px',
+          // maxWidth: '140px',
 				},
 				{
           name: 'Practice Name',
@@ -346,8 +347,9 @@ export default {
           class: 'md:text-center',
           sortable: true,
           flex: '1 0 0',
-          minWidth: '120px',
-          maxWidth: '550px',
+          // minWidth: '120px',
+          // maxWidth: '550px',
+          width: 150
 				},
 				{ 
           name: 'Created',
@@ -355,8 +357,9 @@ export default {
           class: 'md:text-center',
           sortable: true,
           flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
+          // minWidth: '100px',
+          // maxWidth: '170px',
+          width: 120
 				},
 				{
           name: 'Expires',
@@ -366,6 +369,7 @@ export default {
           flex: '1 0 0',
           minWidth: '100px',
           maxWidth: '170px',
+          width: 100
 				},
 				{
           name: 'Status',
@@ -377,6 +381,7 @@ export default {
           flex: '1 0 0',
           minWidth: '150px',
           maxWidth: '170px',
+          width: 100
 				},
 				{
           name: 'Type',
@@ -388,18 +393,20 @@ export default {
           flex: '1 0 0',
           minWidth: '130px',
           maxWidth: '150px',
+          width: 100
         },
         {
-						name: 'Registration Type',
-						dataIndex: 'referrer_domain',
-						class: 'md:text-center',
-						sortable: true,
-						slot: true,
-						slotName: 'registration_type_slot',
-            flex: '1 0 0',
-            minWidth: '150px',
-            maxWidth: '170px',
-					},
+          name: 'Registration Type',
+          dataIndex: 'referrer_domain',
+          class: 'md:text-center',
+          sortable: true,
+          slot: true,
+          slotName: 'registration_type_slot',
+          flex: '1 0 0',
+          minWidth: '150px',
+          maxWidth: '170px',
+          width: 150
+        },
       ]
 
       if (!this.filterPracticeType || this.filterPracticeType === 'Hub') {
@@ -413,6 +420,7 @@ export default {
           flex: '1 0 0',
           minWidth: '150px',
           maxWidth: '170px',
+          width: 100
 				})
       }
 
@@ -437,6 +445,7 @@ export default {
           flex: '1 0 0',
           minWidth: '100px',
           maxWidth: '170px',
+          width: 150
 				})
       }
 
@@ -449,6 +458,7 @@ export default {
           flex: '1 0 0',
           minWidth: '100px',
           maxWidth: '170px',
+          width: 120
         })
         
         columns.push({ 
@@ -459,6 +469,7 @@ export default {
           flex: '1 0 0',
           minWidth: '120px',
           maxWidth: '170px',
+          width: 120
 				})
       }
 
@@ -471,6 +482,7 @@ export default {
           flex: '1 0 0',
           minWidth: '100px',
           maxWidth: '170px',
+          width: 120
         })
 
         columns.push({ 
@@ -481,6 +493,7 @@ export default {
           flex: '1 0 0',
           minWidth: '100px',
           maxWidth: '170px',
+          width: 120
 				})
       }
       

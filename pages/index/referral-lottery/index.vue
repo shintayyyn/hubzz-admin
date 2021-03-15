@@ -180,7 +180,7 @@
 
         current_page: 1,
         offset: 0,
-        limit: 10,
+        limit: 20,
 
         date_start: null,
         date_end: null,
@@ -328,7 +328,7 @@
           }),
           app.$axios.$get(`${url}`, { params: {
             offset: 0,
-            limit: 10
+            limit: 20
           }}).then(res => {
             let users
             let raffles
