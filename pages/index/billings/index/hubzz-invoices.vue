@@ -99,7 +99,7 @@
               <span class="font-bold">{{ slotProps.item.exported_at ? 'Yes' : 'No' }}</span>
             </div>
             <div v-else>
-              <span class="font-bold text-lg text-white">No Sage Reference</span>
+              <span class="font-bold text-gray-500">No Sage Reference</span>
             </div>
           </template>
 
@@ -440,7 +440,8 @@ export default {
 					name: "Invoice Number",
           dataIndex: "invoice_number",
           class: "text-center",
-					sortable: true
+          sortable: true,
+          width: 120
 				},
 				{
 					name: "Practice",
@@ -454,14 +455,16 @@ export default {
 					dataIndex: "period",
           slotName: "period",
           minWidth: "36",
-					class: "text-center truncate pr-24 "
+					class: "text-center truncate pr-24 ",
+          width: 150
 				},
 				{
           name: "Issued At",
           dataIndex: "date_created",
           slotName:"issuedAt",
           class: "text-center",
-					sortable: "true"
+					sortable: "true",
+          width: 120
 				},
 				{
 					name: "£ Amount",
@@ -469,25 +472,29 @@ export default {
 					slotName: "total_amount_slot",
 					class: "text-center",
 					sortable: "false",
+          width: 120
         },
         {
           name: "Due Date",
           dataIndex:"due_date",
           slotName:"due_date",
           class:"text-center",
+          width: 120
         },
 				{
           name: "Paid?",
           dataIndex: "",
           slot: true,
           slotName: "payment_status",
-					class: "text-center"
+          class: "text-center",
+          width: 200
         },
         {
           name: "CSV Exported?",
           dataIndex:"exported_at",
           slotName:"exported_at",
           class:"text-center",
+          width: 100
         },
       ],
 		}
@@ -559,7 +566,7 @@ export default {
         order_by = ["date_created:desc"] 
       } = route.query
 
-			const limit = 10
+			const limit = 15
       const offset = page * limit - limit
       // const exportable = true
 			let params = {
@@ -618,6 +625,7 @@ export default {
         class: "text-center",
         slotName: "checker",
         eventName: "checkClicked",
+        width: 80,
         order: 1
       })
     }
@@ -627,7 +635,8 @@ export default {
         slot: true,
         slotName: "actions",
         dataIndex: "",
-        class: "text-center"
+        class: "text-center",
+        width: 180,
       })
     }
     

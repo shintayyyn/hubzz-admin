@@ -235,6 +235,7 @@
             flex: '1 0 0',
             minWidth: '100px',
             maxWidth: '140px',
+            width: 100
 					},
 					{
 						name: 'Name',
@@ -271,6 +272,7 @@
             flex: '1 0 0',
             minWidth: '100px',
             maxWidth: '170px',
+            width: 130
 					},
 					{
 						name: 'Sign-up verified',
@@ -280,6 +282,7 @@
             flex: '1 0 0',
             minWidth: '100px',
             maxWidth: '170px',
+            width: 130
 					},
 					{
 						name: 'Status',
@@ -291,6 +294,7 @@
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',
+            width: 150
 					},
 					{
 						name: 'Compliance Status',
@@ -302,6 +306,7 @@
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',
+            width: 130
           },
           {
 						name: 'Registration Type',
@@ -313,6 +318,7 @@
             flex: '1 0 0',
             minWidth: '150px',
             maxWidth: '170px',
+            width: 130
 					},
 				]
       },

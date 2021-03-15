@@ -5,7 +5,7 @@
         v-for="practiceComplianceReport in practiceComplianceReports"
         :key="`practiceComplianceReports-${practiceComplianceReport.title}`"
         :to="practiceComplianceReport.url"
-        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg hover:bg-gray-300 transition-hover shadow-lg my-2"
+        class="inline-flex no-underline w-full py-2 md:p-3 rounded-lg hover:bg-gray-300 transition-hover shadow-md my-2"
       >
         <div class="flex flex-no-wrap items-center text-sm  w-full">
           <span class="px-2 whitespace-no-wrap font-semibold">{{ practiceComplianceReport.title }}</span>
