@@ -30,25 +30,25 @@
 
         <nuxt-link :to="navigationTab.route">
           <div
-            class="block no-underline pl-4 py-3 mx-4 transition-hover"
+            class="no-underline pl-4 py-3 ml-4 mr-2 transition-hover flex flex-wrap items-center"
             :class="navigationTab.active ? 'text-white font-bold' : 'text-gray-500 hover:text-white hover:font-bold'"
             @click="close"
           >
-            <span>{{ navigationTab.name }}</span>
+            <span class="mr-2">{{ navigationTab.name }}</span>
 
-            <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+            <span v-if="navigationTab.name === 'Locums' && unseenLocumNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;"> 
               {{ unseenLocumNotificationsCount }}
             </span>
 
-            <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+            <span v-if="navigationTab.name === 'Practices' && unseenPracticeNotificationsCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" :style="unseenPracticeNotificationsCount > 99 ? 'font-size: 10px' :''" style="min-width: 20px; height: 20px;"> 
               {{ unseenPracticeNotificationsCount }}
             </span>
 
-            <!-- <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700"> 
-              {{ unacknowledgedCount }}
+            <!-- <span v-if="navigationTab.name === 'Inquiries' && unacknowledgedCount > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs"> 
+              {{max- unacknowledgedCount }}
             </span> -->
 
-            <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700"> 
+            <span v-if="navigationTab.name === 'Change Email Requests' && pendingChangeEmailRequestIds.length > 0" class="text-white rounded-sm p-1 bg-red-700 text-xs font-bold flex items-center justify-center" style="min-width: 20px; height: 20px;"> 
               {{ pendingChangeEmailRequestIds.length }}
             </span>
           </div>

@@ -11,13 +11,14 @@
         v-if="authAdminPermissions.includes('Create New Role')"
         :label="'Add New Role'"
         :icon="'add-rectangle'"
-        class="my-1 mr-2"
+        class="my-1 mt-3 mr-2"
         @click="$router.push('/user-management/roles-and-permissions/create')"
       />
       <template v-if="authAdminPermissions.includes('Delete Role')">
         <AppButton
           v-if="authAdminPermissions.includes('Create New Role')"
-          class="my-1 text-white"
+          class="my-1 mt-3 text-white"
+					:customTheme="deletingAdminRole ? 'bg-green-600' : 'bg-red-600'"
           :label="deletingAdminRole ? 'Done' : 'Delete Role'"
           :icon="deletingAdminRole ? 'circle-check' : 'garbage'"
           :iconSize="deletingAdminRole ? '21' : '16'"

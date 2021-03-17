@@ -8,19 +8,19 @@
         @confirm="performAction()"
       />
     </transition>
-    <div class="flex flex-wrap items-center text-sm mb-4">
+    <div class="flex flex-wrap items-center text-sm mb-3">
       <AppButton
         v-if="authAdminPermissions.includes('Create Admin Account')"
         :label="'Create Admin Account'"
         :icon="'add-user'"
         :iconSize="'16'"
-        class="my-1 mr-2"
+        class="my-1 mt-3 mr-2"
         @click="modal = true, deleteAdminUser = false"
       />
       <template v-if="authAdminPermissions.includes('Delete Admin Account') && total > 0">
         <AppButton
           v-if="authAdminPermissions.includes('Delete Admin Account')"
-          class="my-1"
+          class="my-1 mt-3"
           :label="deleteAdminUser ? 'Done' : 'Delete Admin User'"
           :icon="deleteAdminUser ? 'circle-check' : 'garbage'"
           :iconSize="deleteAdminUser ? '21' : '16'"
