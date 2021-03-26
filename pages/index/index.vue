@@ -308,7 +308,7 @@
             </div>
             <div class="flex justify-between font-bold">
               <div>
-                Active Practices
+                Activated Practices
               </div>
               <div class="text-orange-500">
                 {{ practicesInPlatform.active_practices }}
