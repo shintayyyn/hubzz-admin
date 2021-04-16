@@ -121,7 +121,7 @@
                 v-else
                 class="text-gray-700"
               >
-                Payment not settled
+                Unpaid
               </div>
             </div>
           </template>
@@ -374,7 +374,6 @@ import AppButton from "@/components/Base/AppButton"
 import AppInput from "@/components/Base/AppInput"
 import AppTableNew from '@/components/Base/AppTableNew'
 import AppInputSmall from '@/components/Base/AppInputSmall'
-import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 import debounce from "lodash.debounce"
 import AppConfirm from "@/components/Base/AppConfirm"
@@ -384,7 +383,6 @@ export default {
     AppButton,
     AppTableNew,
     AppInputSmall,
-		AppTable,
 		AppDateToggled,
 		AppConfirm
 	},
