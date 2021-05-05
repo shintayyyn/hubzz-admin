@@ -20,9 +20,9 @@
       :loading="loadingHubzzInvoices"
       :routerLink="`/billings/hubzz-billing/${$route.params.id}/practice-hubzz-invoices`"
       :order-by="params.order_by"
+      :minHeight="'45vh'"
       @pagechanged="pagechanged"
       @sorted="sorted"
-      :minHeight="'45vh'"
     >
       <template v-slot:total_amount_slot="slotProps">
         <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
@@ -68,7 +68,7 @@
             v-else
             class="text-gray-600"
           >
-            Payment not settled
+            Unpaid
           </div>
         </div>
       </template>
@@ -219,7 +219,6 @@
 <script>
 import AppButton from "@/components/Base/AppButton"
 import AppTableNew from "@/components/Base/AppTableNew"
-import AppTable from "@/components/Base/AppTable"
 import AppDateToggled from "@/components/Base/AppDateToggled"
 // import AppDate from "@/components/Base/AppDate"
 import AppInput from "@/components/Base/AppInput"
@@ -227,7 +226,6 @@ import AppConfirm from "@/components/Base/AppConfirm"
 export default {
 	components: {
 		AppButton,
-		AppTable,
     AppTableNew,
 		AppDateToggled,
 		// AppDate,
