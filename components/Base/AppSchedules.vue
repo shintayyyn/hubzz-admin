@@ -57,7 +57,7 @@
               :name="'dates'"
               :isAfter="jobSeederType === 'Ongoing' ? false : true"
               :isBefore="jobSeederType === 'Completed' ? true : false"
-              :maxYearBefore="1"
+              :maxYearBefore="0"
               multipleSelection
               isDisplay
               class="multiple-date-picker"
@@ -69,13 +69,13 @@
 
             <div v-if="scheduleDates.length">
               <div>
-                <p class="text-white">
+                <p>
                   <span>Selected:</span>
                   <span class="font-bold">{{ scheduleDates.length }}</span>
                   <span class="font-bold">Date{{ scheduleDates.length > 1 ? 's' : '' }}</span>
                 </p>
 
-                <p class="text-white">
+                <p>
                   <span>Job Parts:</span>
                   <span class="font-bold">{{ job_parts.length }}</span>
                   <span class="font-bold">Part{{ job_parts.length > 1 ? 's' : '' }}</span>
@@ -1153,7 +1153,7 @@ export default {
 
     rateLists: {
       type: Array,
-      default: () => null,
+      default: () => [],
     },
 
     schedule: {
@@ -1216,18 +1216,13 @@ export default {
       default: null,
     },
 
-    locum_vat_registered: {
+    locumVatRegistered: {
       type: Boolean,
       default: false,
     },
 
-    tax_rates: {
+    taxRates: {
       type: Object,
-      default: () => null,
-    },
-    
-    rate_lists: {
-      type: Array,
       default: () => null,
     },
 
