@@ -412,7 +412,7 @@
           </div>
           <AppSchedules
             :shifts="shifts"
-            :rate_lists="rate_lists"
+            :rateLists="rateLists"
             :schedule="form.schedules"
             :error="formError.find(err => err.field === 'schedules')"
             :shiftErrors="shiftErrors"
@@ -558,7 +558,7 @@ export default {
 
       // Practice infos to job
       selectedPractice: '',
-      rate_lists: [],
+      rateLists: [],
 			mandatory_training: [],
 			professions: [],
 			session_requirements_lists,
@@ -1052,7 +1052,7 @@ export default {
 
 					console.log('rateLists', rateLists)
 
-					this.rate_lists = rateLists
+					this.rateLists = rateLists
 					this.shifts = shiftLists
 					this.professions = professions.map(profession => ({
 						label: profession.name,

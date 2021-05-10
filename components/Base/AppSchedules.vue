@@ -335,8 +335,8 @@
                           class="w-2/12 flex items-center justify-center text-center"
                         >
                           {{
-                            rate_lists.find(item => item.value === shift.locum_detail_rate_type_id)
-                              ? rate_lists.find(item => item.value === shift.locum_detail_rate_type_id).label
+                            rateLists.find(item => item.value === shift.locum_detail_rate_type_id)
+                              ? rateLists.find(item => item.value === shift.locum_detail_rate_type_id).label
                               : ''
                           }}
                         </div>
@@ -879,7 +879,7 @@
                               v-model="shift.locum_detail_rate_type_id"
                               :name="`locum_detail_rate_type_id-s${index}-${i}`"
                               :type="'select'"
-                              :items="rate_lists"
+                              :items="rateLists"
                               :wrapperClass="'mb-1 py-1'"
                               :inStyle="'font-size: 13px; padding-left: 8px;'"
                               :error="
@@ -2458,8 +2458,8 @@ export default {
     getRate (shift, startTime, endTime, date, type) {
       let rate_type_name
         = this.type === "create"
-          ? this.rate_lists && shift.locum_detail_rate_type_id
-            ? this.rate_lists.find(
+          ? this.rateLists && shift.locum_detail_rate_type_id
+            ? this.rateLists.find(
               item =>
                 item.value.toString()
                   === shift.locum_detail_rate_type_id.toString()
