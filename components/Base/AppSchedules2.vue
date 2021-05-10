@@ -219,7 +219,7 @@
                           :class="[index%2 ? 'bg-lighter-gray' : 'bg-light-gray', item.shifts.length !== 1 ? i === 0 ? 'border-t' : i === item.shifts.length-1 ? 'border-b pb-2' : '' : 'border-t border-b']"
                           class="w-2/12 flex items-center justify-center text-center"
                         >
-                          {{ rate_lists.find(item => item.value === shift.locum_detail_rate_type_id) ? rate_lists.find(item => item.value === shift.locum_detail_rate_type_id).label : '' }}
+                          {{ rateLists.find(item => item.value === shift.locum_detail_rate_type_id) ? rateLists.find(item => item.value === shift.locum_detail_rate_type_id).label : '' }}
                         </div>
                         <div
                           :class="[index%2 ? 'bg-lighter-gray' : 'bg-light-gray', item.shifts.length !== 1 ? i === 0 ? 'border-t rounded-tr-lg' : i === item.shifts.length-1 ? 'border-b rounded-br-lg pb-2' : '' : 'border-t border-b rounded-r-lg']"
@@ -560,7 +560,7 @@
                               v-model="shift.locum_detail_rate_type_id"
                               :name="`locum_detail_rate_type_id-s${index}-${i}`"
                               :type="'select'"
-                              :items="rate_lists"
+                              :items="rateLists"
                               :wrapperClass="'mb-1 py-1'"
                               :inStyle="'font-size: 13px; padding-left: 8px;'"
                               :error="formError.find(err => err.field === `locum_detail_rate_type_id-s${index}-${i}`) ? formError.find(err => err.field === `locum_detail_rate_type_id-s${index}-${i}`) : shiftErrors ? shiftErrors.find(err => err.field === `locum_detail_rate_type_id-s${index}-${i}`) : null"
@@ -1978,8 +1978,8 @@ export default {
 		getRate (shift, startTime, endTime, date, type) {
 			let rate_type_name =
 				this.type === "create"
-					? this.rate_lists && shift.locum_detail_rate_type_id
-						? this.rate_lists.find(
+					? this.rateLists && shift.locum_detail_rate_type_id
+						? this.rateLists.find(
 								item =>
 									item.value.toString() ===
 									shift.locum_detail_rate_type_id.toString()

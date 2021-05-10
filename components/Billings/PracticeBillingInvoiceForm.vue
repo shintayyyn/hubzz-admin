@@ -107,8 +107,8 @@
           :type="'invoice'"
           :invoiceDetails="propInvoice"
           :invoiceStatus="$route.query.status"
-          :tax_rates="tax_rates"
-          :locum_vat_registered="propInvoice.locum_user_vat_registered "
+          :taxRates="tax_rates"
+          :locumVatRegistered="propInvoice.locum_user_vat_registered "
           :toDisplay="['Approved', 'Paid', 'Issued'].includes(propInvoice.status)"
           @getSchedule="getSchedule"
         />
