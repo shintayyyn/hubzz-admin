@@ -78,7 +78,7 @@
       <ReportTable
         :limit="limit"
         :items="locumInvoiceJobParts"
-        :getItemKey="(item) => item.practice_invoice_item_id"
+        :getItemKey="(item) => item.id"
         :columnDetails="columnDetails"
         :orderBy="orderBy"
         :loading="loading"
@@ -236,7 +236,7 @@
             title: 'Job Numbers',
             key: 'job_part_numbers',
             sort_key: 'job_part_numbers',
-            column: (item) => item.job_part_numbers,
+            column: (item) => item.job_part_numbers || 'N/A',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
@@ -272,7 +272,7 @@
             title: 'Profession',
             key: 'profession_names',
             sort_key: 'profession_names',
-            column: (item) => item.profession_names,
+            column: (item) => item.profession_names || 'N/A',
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,

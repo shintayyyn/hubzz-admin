@@ -72,7 +72,7 @@
             </div>
           </template>
           <template v-slot:total_amount_slot="slotProps">
-            <div>{{ '£ '+slotProps.item.total_amount.toFixed(2) }}</div>
+            <div>{{ '£ ' + slotProps.item.taxed_total.toFixed(2) }}</div>
           </template>
 
           <template v-slot:period="slotProps">

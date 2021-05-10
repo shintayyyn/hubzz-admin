@@ -523,7 +523,11 @@
                   {{ item.description }}
                 </div>
 
-                <div class="w-1/3 text-sm mx-1">
+                <div class="w-1/12 flex justify-center items-center text-xl">
+                  <span>-</span>
+                </div>
+
+                <div class="w-4/12 text-sm mx-1">
                   <template v-if="forViewing == false">
                     <input
                       v-if="doNotShow"
@@ -537,7 +541,7 @@
                     >
                   </template>
                   <p v-else class="px-2 py-1 text-right text-md font-semibold">
-                    - {{ item.total | currency }}
+                    {{ item.total | currency }}
                   </p>
                 </div>
 
@@ -575,7 +579,7 @@
               Total
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              £ {{ forViewing === true ? practiceInvoice.untaxed_total_amount : untaxedAmountTotal | currency }}
+              £ {{ forViewing ? practiceInvoice.total : untaxedAmountTotal | currency }}
             </div>
           </div>
 
@@ -584,7 +588,7 @@
               VAT Amount
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              £ {{ forViewing === true ? practiceInvoice.tax_amount : taxAmount | currency }}
+              £ {{ forViewing ? practiceInvoice.tax : taxAmount | currency }}
             </div>
           </div>
 
@@ -593,7 +597,7 @@
               Total (with added VAT)
             </div>
             <div class="my-1 px-1 text-right text-lg font-semibold">
-              £ {{ forViewing === true ? practiceInvoice.total_amount : taxedAmountTotal | currency }}
+              £ {{ forViewing ? practiceInvoice.taxed_total : taxedAmountTotal | currency }}
             </div>
           </div>
           
@@ -622,7 +626,7 @@
           </div>
         </div>
 
-        <div v-if="locumInvoice.paid_under_payroll === true" class="border-2 border-gray-300 rounded-lg p-2 text-sm">
+        <div v-if="locumInvoice.paid_under_payroll" class="border-2 border-gray-300 rounded-lg p-2 text-sm">
           Payment by BACS:
           <br>Account name: {{ locumInvoice && locumInvoice.payroll_account_name ? locumInvoice.payroll_account_name : 'N/A' }}
           <br>Bank: {{ locumInvoice && locumInvoice.payroll_bank_name ? locumInvoice.payroll_bank_name : 'N/A' }}
@@ -644,6 +648,7 @@
     </div>
     <!-- FIRST PAGE ENDS HERE -->
     <!-- BODY ENDS HERE-->
+
     <div class="m-4">
       <AppButton
         v-if="forViewing == false"
@@ -660,35 +665,47 @@
 import AppLoading from "@/components/Base/AppLoading"
 import AppButton from "@/components/Base/AppButton"
 import AppDate from "@/components/Base/AppDate"
+
 export default {
 	components: {
 		AppLoading,
 		AppButton,
 		AppDate,
 	},
+
 	props: {
     forViewing: {
       type: Boolean,
       default: false,
     },
+
     practice: {
       type: Object,
       default: () => null,
     },
+
     practiceInvoice: {
       type: Object,
       default: () => null,
     },
+
 		locumInvoice: {
       type: Object,
       default: () => null,
     },
+
     invoiceItems: Array,
+
     disputedItems: Array,
+
 		debitItems: Array,
+
 		creditItems: Array,
+
 		dateStart: String,
+
     dateEnd: String,
+    
     byLocum: {
       type: Boolean,
     },
@@ -751,12 +768,14 @@ export default {
 			let disputedItemTotal = 0
 			let debitTotal = 0
 			let creditTotal = 0
+
 			const reducer = (accumulator, currentValue) => accumulator + currentValue
 
 			if (this.invoiceItems && this.invoiceItems.length > 0) {
 				let invoiceItems = this.invoiceItems.map(invoiceItem =>
 					parseFloat(invoiceItem.total ? invoiceItem.total : 0)
 				)
+
 				invoiceItemTotal = invoiceItems.reduce(reducer)
 			}
 
@@ -764,6 +783,7 @@ export default {
 				let disputedItems = this.disputedItems.map(disputedItem =>
 					parseFloat(disputedItem.total ? disputedItem.total : 0)
 				)
+
 				disputedItemTotal = disputedItems.reduce(reducer)
 			}
 
@@ -773,6 +793,7 @@ export default {
 				let createdDebitItems = this.createdDebitItems.map(debitItem =>
 					parseFloat(debitItem.total ? debitItem.total : 0)
 				)
+
 				debitTotal = createdDebitItems.reduce(reducer)
 			}
 
@@ -780,6 +801,7 @@ export default {
 				let createdCreditItems = this.createdCreditItems.map(creditItem =>
 					parseFloat(creditItem.total ? creditItem.total : 0)
 				)
+        
 				creditTotal = createdCreditItems.reduce(reducer)
 			}
 
@@ -789,8 +811,9 @@ export default {
     },
 
     taxAmount () {
-      const tax_amount = Math.abs(parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted))
-      return tax_amount
+      const tax_amount = parseFloat(this.untaxedAmountTotal).toFixed(2) * parseFloat(this.practiceTaxRateFormatted)
+
+      return Math.round(tax_amount * 100) / 100
     },
 
 		taxedAmountTotal: function () {
@@ -1032,13 +1055,15 @@ export default {
       
 			this.toPostPracticeInvoice.practice_id = this.practice ? this.practice.id : null
         
-      this.toPostPracticeInvoice.total_amount = this.practice.vat_registered === true ? this.taxedAmountTotal : this.untaxedAmountTotal
+      this.toPostPracticeInvoice.total_amount = this.taxedAmountTotal
 
       this.toPostPracticeInvoice.tax_amount = this.taxAmount
 
       this.toPostPracticeInvoice.date_start = this.forPeriodDateStart
 
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
+
+      this.toPostPracticeInvoice.practice_tax_rate = this.practiceTaxRateFormatted
 
       console.log(this.toPostPracticeInvoice)
 
