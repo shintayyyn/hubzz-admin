@@ -288,8 +288,8 @@
           },
           {
             title: '£ Amount',
-            key: 'practice_invoice_item_amount ? ',
-            sort_key: 'practice_invoice_item_amount ? ',
+            key: 'practice_invoice_item_amount',
+            sort_key: 'practice_invoice_item_amount',
             column: (item) => `£ ${item.practice_invoice_item_amount}`,
             justify: 'start',
             flexGrow: 1,
