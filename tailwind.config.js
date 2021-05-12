@@ -365,7 +365,12 @@ module.exports = {
 
 		minWidth: {
 			"0": "0",
-			full: "100%"
+			full: "100%",
+			xs: "20rem",
+			sm: "30rem",
+			md: "40rem",
+			lg: "50rem",
+			xl: "60rem",
 		},
 
 		minHeight: {
