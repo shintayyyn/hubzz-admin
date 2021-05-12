@@ -445,8 +445,8 @@ export default {
 					name: "Practice",
           dataIndex: "practice.name",
           slotName: "practiceName",
-					class: "text-center",
-					sortable: "true"
+					class: "text-center min-w-xs",
+          sortable: "true",
 				},
 				{
 					name: "Period",
