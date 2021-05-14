@@ -219,33 +219,40 @@
             <p class="mt-2">
               Headline
             </p>
+
             <p
               class="font-bold pl-2"
               :class="!user.locum_detail.headline && 'opacity-75'"
             >
               {{ user.locum_detail.headline?user.locum_detail.headline:'N/A' }}
             </p>
+            
             <p class="mt-2">
               Short Biography
             </p>
+
             <p
               class="font-bold pl-2"
               :class="!user.locum_detail.short_biography && 'opacity-75'"
             >
               {{ user.locum_detail.short_biography?user.locum_detail.short_biography:'N/A' }}
             </p>
+
             <p class="mt-2">
               Special requirements
             </p>
+
             <p
               class="font-bold pl-2"
               :class="!user.locum_detail.special_requirements && 'opacity-75'"
             >
               {{ user.locum_detail.special_requirements?user.locum_detail.special_requirements:'N/A' }}
             </p>
+
             <p class="mt-2">
               Preferred rates
             </p>
+
             <p
               v-for="rate in (user.locum_detail && user.locum_detail.rates ? user.locum_detail.rates : [])"
               :key="`rates-${rate.id}`"
@@ -258,7 +265,9 @@
               <p class="my-2">
                 Compliance Documents
               </p>
+
               <span v-if="!userComplianceDocuments.length" class="opacity-75">No Compliance Documents</span>
+
               <div
                 v-for="(userComplianceDoc, index) in user.locum_detail.compliance_documents"
                 :key="`${index}-${userComplianceDoc.id}-`"
@@ -271,21 +280,25 @@
                   title="Click to download"
                   @click.prevent="downloadItem(userComplianceDoc.file.url,userComplianceDoc.file.filename)"
                 >
-                  <svgicon name="cloud-download" width="21" height="21" color="white" />
+                  <svgicon name="cloud-download" width="21" height="21" />
+
                   <span
                     class="w-full pl-2 leading-tight"
                   >{{ userComplianceDoc.file ? userComplianceDoc.compliance_document.name:null }}</span>
                 </a>
               </div>
             </div>
+
             <div v-if="userMandatoryTrainings">
               <p class="my-2">
                 Mandatory Training Documents
               </p>
+
               <span
                 v-if="!userMandatoryTrainings.length"
                 class="opacity-75 pl-2"
               >No Mandatory Training Documents</span>
+
               <div
                 v-for="(userMandatoryTraining, index) in user.locum_detail.mandatory_trainings"
                 :key="`${index}-${userMandatoryTraining.id}-`"
@@ -298,12 +311,29 @@
                   title="Click to download"
                   @click.prevent="downloadItem(userMandatoryTraining.file.url,userMandatoryTraining.file.filename)"
                 >
-                  <svgicon name="cloud-download" width="21" height="21" color="white" />
+                  <svgicon name="cloud-download" width="21" height="21" />
+                  
                   <span
                     class="w-full pl-2 leading-tight"
                   >{{ userMandatoryTraining.mandatory_training && userMandatoryTraining.file ? userMandatoryTraining.mandatory_training.name:null }}</span>
                 </a>
               </div>
+            </div>
+
+            <br>
+
+            <div>
+              <p class="mt-2">Memorable word category</p>
+              <p class="font-bold pl-2" :class="!user.memorable_word_category_name && 'opacity-75'">{{ user.memorable_word_category_name ? user.memorable_word_category_name : 'N/A' }}</p>
+  
+              <p class="mt-2"> Memorable word</p>
+              <p class="font-bold pl-2" :class="!user.memorable_word && 'opacity-75'">{{ user.memorable_word ? user.memorable_word : 'N/A' }}</p>
+  
+              <p class="mt-2"> Memorable date</p>
+              <p class="font-bold pl-2" :class="!user.memorable_date && 'opacity-75'">{{ user.memorable_date ? $moment(user.memorable_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}</p>
+  
+              <p class="mt-2"> Memorable 6 digit number</p>
+              <p class="font-bold pl-2" :class="!user.memorable_number && 'opacity-75'">{{ user.memorable_number ? user.memorable_number : 'N/A' }}</p>
             </div>
           </div>
         </div>
