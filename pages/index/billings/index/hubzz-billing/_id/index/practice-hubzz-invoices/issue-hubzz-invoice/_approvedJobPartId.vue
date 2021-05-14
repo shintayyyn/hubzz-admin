@@ -115,7 +115,8 @@ export default {
 	overflow: auto;
 	border-left: solid 2px #ffc72c;
 	transition: all 0.3s ease-in-out;
-	background-color: #505561;
+	/* background-color: #505561; */
+	background-color: white;
 	z-index: 512;
 }
 
