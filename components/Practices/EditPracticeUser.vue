@@ -240,9 +240,48 @@
           <div class="flex py-2 font-bold">
             Status
           </div>
+
           <div class="flex px-2 ">
             {{ practiceUser.status ? practiceUser.status : 'N/A' }}
           </div>
+
+          <br>
+
+          <div>
+            <div class="flex py-2 font-bold">
+              Memorable word category
+            </div>
+            
+            <div class="flex px-2 ">
+              {{ practiceUser.memorable_word_category_name ? practiceUser.memorable_word_category_name : 'N/A' }}
+            </div>
+  
+            <div class="flex py-2 font-bold">
+              Memorable word
+            </div>
+            
+            <div class="flex px-2 ">
+              {{ practiceUser.memorable_word ? practiceUser.memorable_word : 'N/A' }}
+            </div>
+  
+            <div class="flex py-2 font-bold">
+              Memorable date
+            </div>
+            
+            <div class="flex px-2 ">
+              {{ practiceUser.memorable_date ? $moment(practiceUser.memorable_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
+            </div>
+  
+            <div class="flex py-2 font-bold">
+              Memorable 6 digit number
+            </div>
+            
+            <div class="flex px-2 ">
+              {{ practiceUser.memorable_number ? practiceUser.memorable_number : 'N/A' }}
+            </div>
+          </div>
+
+          <br>
 
           <div 
             v-if="practiceUser 

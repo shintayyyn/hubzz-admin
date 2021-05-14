@@ -326,13 +326,13 @@
               <p class="mt-2">Memorable word category</p>
               <p class="font-bold pl-2" :class="!user.memorable_word_category_name && 'opacity-75'">{{ user.memorable_word_category_name ? user.memorable_word_category_name : 'N/A' }}</p>
   
-              <p class="mt-2"> Memorable word</p>
+              <p class="mt-2">Memorable word</p>
               <p class="font-bold pl-2" :class="!user.memorable_word && 'opacity-75'">{{ user.memorable_word ? user.memorable_word : 'N/A' }}</p>
   
-              <p class="mt-2"> Memorable date</p>
+              <p class="mt-2">Memorable date</p>
               <p class="font-bold pl-2" :class="!user.memorable_date && 'opacity-75'">{{ user.memorable_date ? $moment(user.memorable_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}</p>
   
-              <p class="mt-2"> Memorable 6 digit number</p>
+              <p class="mt-2">Memorable 6 digit number</p>
               <p class="font-bold pl-2" :class="!user.memorable_number && 'opacity-75'">{{ user.memorable_number ? user.memorable_number : 'N/A' }}</p>
             </div>
           </div>
