@@ -18,11 +18,11 @@
             class="flex-1 flex items-center"
             :class="[
               column.class &&
-                column.class.includes('text-center') &&
-                'justify-center text-center',
+                column.class.split(' ').includes('text-center') ?
+                  `justify-center text-center ${column.class}` : column.class,
               column.sortable && 'cursor-pointer'
             ]"
-            :style="`${column.width ? `min-width: ${column.width}px; max-width: ${column.width}px` : ``}`"
+            :style="`min-width: 100px; ${column.width ? `max-width: ${column.width}px` : ''}`"
             @click="column.sortable && sort(column.dataIndex)"
           >
             <span class="px-2">{{ column.name }}</span>
@@ -53,14 +53,10 @@
               <div
                 v-for="(column, index) in columns"
                 :key="index"
-                class="flex-1 px-1 break-word hyphens h-full"
-                :class="
-                  column.class &&
-                    column.class.includes('text-center') &&
-                    'text-center'
-                "
-                :style="`${column.width ? `min-width: ${column.width}px; max-width: ${column.width}px` : ``}; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : '' }`"
                 :ref="`col${index}`"
+                class="flex-1 px-1 break-word hyphens h-full"
+                :class="column.class"
+                :style="`min-width: 100px; ${column.width ? `max-width: ${column.width}px` : ''}; ${column.dataIndex !== 'actions' ? countLines(index, column.width, rowIndex) : '' }`"
                 style="line-height:20px; "
               >
                 <template v-if="Array.isArray(dataCell(item, column))">
@@ -78,26 +74,28 @@
                   </template>
                   <template v-if="column.dataIndex === 'actions'">
                     <template v-if="column.class.includes('dropdown')">
-                      <div class="relative" @click="dropdownIndex===rowIndex ? dropdownIndex=null : dropdownIndex=rowIndex" >
+                      <div class="relative" @click="dropdownIndex===rowIndex ? dropdownIndex=null : dropdownIndex=rowIndex">
                         <div class="flex items-center w-full">
-                          <div class="flex flex-col relative w-full" >
+                          <div class="flex flex-col relative w-full">
                             <div class="cursor-pointer rounded flex items-center justify-between px-2 text-xs border border-gray-500 bg-white"
-                              :class="dropdownIndex !== null && dropdownIndex===rowIndex ? 'bg-white' : ''">
-                                <span>{{ column.initialDropdown ? column.initialDropdown : 'Select Action' }}</span>
-                                <span v-if="dropdownIndex!==rowIndex"><svgicon name="caret-down" width="8" /></span>
-                              </div>
-                              <div class="absolute bottom-0 "
-                              :class="(items.length > 1 && total > perPage-5) && rowIndex === items.length-1 ? 'dropdown-up' :'dropdown'"
-                                v-if="dropdownIndex !== null && dropdownIndex===rowIndex">
-                                  <slot name="actions" :item="item" @click="$emit('click', item)"/>
-                              </div>
+                                 :class="dropdownIndex !== null && dropdownIndex===rowIndex ? 'bg-white' : ''"
+                            >
+                              <span>{{ column.initialDropdown ? column.initialDropdown : 'Select Action' }}</span>
+                              <span v-if="dropdownIndex!==rowIndex"><svgicon name="caret-down" width="8" /></span>
+                            </div>
+                            <div v-if="dropdownIndex !== null && dropdownIndex===rowIndex"
+                                 class="absolute bottom-0 "
+                                 :class="(items.length > 1 && total > perPage-5) && rowIndex === items.length-1 ? 'dropdown-up' :'dropdown'"
+                            >
+                              <slot name="actions" :item="item" @click="$emit('click', item)" />
+                            </div>
                           </div>
                           <span 
-                              v-if="dropdownIndex !== null && dropdownIndex===rowIndex"
-                              class="p-1 bg-orange-400 ml-1 rounded"
-                            >
+                            v-if="dropdownIndex !== null && dropdownIndex===rowIndex"
+                            class="p-1 bg-orange-400 ml-1 rounded"
+                          >
                             <svgicon name="left-arrow" style="transform:rotate(180deg)" width="8" />
-                            </span>
+                          </span>
                         </div>
                       </div>
                     </template>
@@ -363,7 +361,7 @@ export default {
       }
       return str
     },
-    countLines(index, width, rowIndex) {
+    countLines (index, width, rowIndex) {
       if (this.noTextResize) return
       let el = null
       if (this.$refs[`col${index}`]) {
