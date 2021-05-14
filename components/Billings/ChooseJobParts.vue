@@ -21,6 +21,7 @@
             :columns="columns"
             :loading="loadingSessions"
             :orderBy="params.order_by"
+            noTextResize
             @checkClicked="toggleCheck"
             @pagechanged="pagechanged"
             @sorted="sorted"
