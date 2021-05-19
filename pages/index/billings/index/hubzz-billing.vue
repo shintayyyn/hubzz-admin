@@ -39,7 +39,7 @@
         :orderBy="params.order_by"
         @pagechanged="pagechanged"
         @sorted="sorted"
-        @limitchanged="limitchanged"
+        @limitchanged="limitChangedHandler"
       >
         <template v-slot:status_slot="slotProps">
           <div
@@ -383,7 +383,7 @@ export default {
 			this.getPractices()
     },
 
-    limitchanged (limit) {
+    limitChangedHandler (limit) {
 			this.currentPage = 1
       this.params.limit = limit
 			this.params.offset = this.params.limit * (this.currentPage - 1)

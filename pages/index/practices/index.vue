@@ -148,6 +148,7 @@
         :orderBy="orderBy"
         @pagechanged="pageChangedHandler"
         @sorted="(_orderBy) => orderBy = _orderBy"
+        @limitchanged="limitChangedHandler"
       >
         <template v-slot:status_slot="slotProps">
           <div
@@ -644,6 +645,12 @@ export default {
     pageChangedHandler (page) {
       this.currentPage = page
       this.getPractices()
+    },
+
+    limitChangedHandler (limit) {
+			this.currentPage = 1
+      this.limit = limit
+			this.getPractices()
     },
       
     practiceUpdatedHandler (practice) {
