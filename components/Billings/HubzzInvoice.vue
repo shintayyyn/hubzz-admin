@@ -1063,7 +1063,7 @@ export default {
 
       this.toPostPracticeInvoice.date_end = this.forPeriodDateEnd
 
-      this.toPostPracticeInvoice.practice_tax_rate = this.practiceTaxRateFormatted
+      this.toPostPracticeInvoice.tax_rate = this.practiceTaxRateFormatted
 
       console.log(this.toPostPracticeInvoice)
 
