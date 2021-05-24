@@ -1092,7 +1092,9 @@ export default {
 
         const untaxed_total_amount = items.reduce((total_amount, item) => total_amount + parseFloat(item.total), 0)
 
-        const tax_amount = Math.abs(untaxed_total_amount * parseFloat(this.practiceTaxRateFormatted)) 
+        const taxRate = parseFloat(this.practiceTaxRateFormatted)
+
+        const tax_amount = Math.round(untaxed_total_amount * taxRate * 100) / 100
 
         const total_amount = untaxed_total_amount + tax_amount
 
@@ -1103,7 +1105,8 @@ export default {
           date_end: this.billing_period_date_end,
           total_amount,
           tax_amount,
-          due_date: this.due_date
+          due_date: this.due_date,
+          tax_rate: taxRate,
         }
       })
 

@@ -90,6 +90,7 @@
         :min-height="'55vh'"
         @pagechanged="pageChangedHandler"
         @sorted="(_orderBy) => orderBy = _orderBy"
+        @limitchanged="limitChangedHandler"
       >
         <template v-slot:status_slot="slotProps">
           <div
@@ -439,6 +440,12 @@
     
       pageChangedHandler (page) {
         this.currentPage = page
+        this.getAllLocumUsers()
+      },
+
+      limitChangedHandler (limit) {
+        this.currentPage = 1
+        this.limit = limit
         this.getAllLocumUsers()
       },
       

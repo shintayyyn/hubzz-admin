@@ -26,6 +26,7 @@
           />
         </div>
       </div>
+
       <AppTableNew
         v-if="itemCount > 0 && !$route.path.includes('bulk-billing')"
         :total="itemCount"
@@ -38,6 +39,7 @@
         :orderBy="params.order_by"
         @pagechanged="pagechanged"
         @sorted="sorted"
+        @limitchanged="limitChangedHandler"
       >
         <template v-slot:status_slot="slotProps">
           <div
@@ -52,6 +54,7 @@
             {{ slotProps.item.status }}
           </div>
         </template>
+
         <template v-slot:disputed_slot="slotProps">
           <div
             class="text-xs"
@@ -60,6 +63,7 @@
             {{ slotProps.item.practice_invoiceable_disputed_filtered_job_part_count > 0 ? "Yes, " + slotProps.item.practice_invoiceable_disputed_filtered_job_part_count : "None" }}
           </div>
         </template>
+
         <template v-slot:type_slot="slotProps">
           <div
             class="text-xs"
@@ -68,6 +72,7 @@
             {{ slotProps.item.type }}
           </div>
         </template>
+
         <template v-slot:hub_type_slot="slotProps">
           <div
             class="text-xs"
@@ -77,6 +82,7 @@
           </div>
         </template>
       </AppTableNew>
+
       <div 
         v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
         class="mt-2 w-full text-center text-white"
@@ -374,6 +380,13 @@ export default {
 			// 	order_by
 			// }
 			this.params.order_by = order_by
+			this.getPractices()
+    },
+
+    limitChangedHandler (limit) {
+			this.currentPage = 1
+      this.params.limit = limit
+			this.params.offset = this.params.limit * (this.currentPage - 1)
 			this.getPractices()
     },
     
