@@ -25,7 +25,7 @@
             :style="`min-width: 100px; ${column.width ? `max-width: ${column.width}px` : ''}`"
             @click="column.sortable && sort(column.dataIndex)"
           >
-            <span class="px-2">{{ column.name }}</span>
+            <span class="px-2">{{ column.name || column.title }}</span>
             <svgicon v-if="column.sortable" :name="sortIcon(column.dataIndex)" height="12" width="12" />
           </div>
         </div>
@@ -283,6 +283,10 @@ export default {
       
     },
     dataCell (item, column) {
+      if (column.column instanceof Function) {
+        return column.column(item)
+      }
+
       var dataIndexArr = column.dataIndex.split(".")
       let str = null
       if (Array.isArray(item[dataIndexArr[0]])) {
