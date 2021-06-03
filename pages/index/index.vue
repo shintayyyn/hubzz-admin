@@ -226,11 +226,21 @@
 
             <div class="flex justify-between my-1 font-bold">
               <div>
+                Credits
+              </div>
+
+              <div class="text-orange-500">
+                £ {{ dashboardBillingStats && dashboardBillingStats.total_credit ? dashboardBillingStats.total_credit : 0 | currency }}
+              </div>
+            </div>
+
+            <div class="flex justify-between my-1 font-bold">
+              <div>
                 Revenue
               </div>
 
               <div class="text-orange-500">
-                £ {{ dashboardBillingStats && dashboardBillingStats.total_amount ? dashboardBillingStats.total_amount : 0 | currency }}
+                £ {{ dashboardBillingStats && dashboardBillingStats.taxed_total ? dashboardBillingStats.taxed_total : 0 | currency }}
               </div>
             </div>
 
@@ -240,7 +250,7 @@
               </div>
 
               <div class="text-gray-800">
-                £ {{ dashboardBillingStats && dashboardBillingStats.tax_amount ? dashboardBillingStats.tax_amount : 0 | currency }}
+                £ {{ dashboardBillingStats && dashboardBillingStats.tax ? dashboardBillingStats.tax : 0 | currency }}
               </div>
             </div>
           </div>
@@ -496,18 +506,9 @@ export default {
     },
   },
 
-  created () {
-    Promise.all([
-      this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DDTHH:mm:ss'),
-      this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DDTHH:mm:ss'),
-      this.filter.post_code = '',
-      this.filter.proximity = '',
-    ]).then(() => {
-      this.getEverything()
-    })
-  },
-
   mounted () {
+    this.filterReset()
+
     window.setTimeout(() => {
       this.getEverything()
       window.setInterval(() => {
@@ -571,8 +572,8 @@ export default {
 
     async filterReset () {
       Promise.all([
-        this.filter.registered_at_date_start = this.$moment().startOf('month').format('YYYY-MM-DDTHH:mm:ss'),
-        this.filter.registered_at_date_end = this.$moment().format('YYYY-MM-DDTHH:mm:ss'),
+        this.filter.registered_at_date_start = this.$moment.utc().startOf('month').format('YYYY-MM-DD'),
+        this.filter.registered_at_date_end = this.$moment.utc().format('YYYY-MM-DD'),
         this.filter.post_code = '',
         this.filter.proximity = '',
       ]).then(() => {
