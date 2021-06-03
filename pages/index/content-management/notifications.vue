@@ -30,37 +30,54 @@
       </div>
     </div>
 
-    <ContentManagementTable
-      :limit="limit"
-      :items="notifications"
-      :getItemKey="(item) => item.id"
-      :getItemLink="(item) => `/content-management/notifications/${item.id}`"
-      :columnDetails="columnDetails"
-      :orderBy="orderBy"
-      :loading="loading"
-      @setOrderBy="(value) => orderBy = value"
-    />
-
-    <div class="w-full flex flex-wrap justfify-between items-center">
-      <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
-        <div class="text-gray-500 w-full md:w-auto text-center md:text-left">
-          <div class="whitespace-no-wrap">
-            {{ itemCountInfo }}
-          </div>
-          <div class="whitespace-no-wrap">
-            Page: {{ Math.min(activePage, pages) }} / {{ pages }}
+    <template v-if="false">
+      <ContentManagementTable
+        :limit="limit"
+        :items="notifications"
+        :getItemKey="(item) => item.id"
+        :getItemLink="(item) => `/content-management/notifications/${item.id}`"
+        :columnDetails="columnDetails"
+        :orderBy="orderBy"
+        :loading="loading"
+        @setOrderBy="(value) => orderBy = value"
+      />
+  
+      <div class="w-full flex flex-wrap justfify-between items-center">
+        <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
+          <div class="text-gray-500 w-full md:w-auto text-center md:text-left">
+            <div class="whitespace-no-wrap">
+              {{ itemCountInfo }}
+            </div>
+            <div class="whitespace-no-wrap">
+              Page: {{ Math.min(activePage, pages) }} / {{ pages }}
+            </div>
           </div>
         </div>
+  
+        <ContentManagementPagination
+          :count="count"
+          :pages="pages"
+          :page="activePage"
+          :maxPage="7"
+          @page="(page) => activePage = page"
+        />
       </div>
+    </template>
 
-      <ContentManagementPagination
-        :count="count"
-        :pages="pages"
-        :page="activePage"
-        :maxPage="7"
-        @page="(page) => activePage = page"
-      />
-    </div>
+    <AppTableNew
+      :total="count"
+      :items="notifications"
+      :currentPage="activePage"
+      :perPage="limit"
+      :columns="columnDetails"
+      :loading="loading"
+      :routerLink="(item) => `/content-management/notifications/${item.id}`"
+      :orderBy="orderBy"
+      @pagechanged="(page) => activePage = page"
+      @limitchanged="(_limit) => limit = _limit"
+      @sorted="(_orderBy) => orderBy = _orderBy"
+      :noTextResize="true"
+    />
 
     <nuxt-link
       v-if="$route.name !== 'index-content-management-notifications'"
@@ -79,11 +96,13 @@
 <script>
   import debounce from "lodash.debounce"
 
+  import AppTableNew from "@/components/Base/AppTableNew"
   import ContentManagementTable from '@/components/ContentManagement/ContentManagementTable'
   import ContentManagementPagination from '@/components/ContentManagement/ContentManagementPagination'
 
   export default {
     components: {
+      AppTableNew,
       ContentManagementTable,
       ContentManagementPagination,
     },
@@ -170,6 +189,7 @@
             justify: 'start',
             flexGrow: 1,
             flexShrink: 0,
+            width: '200',
           },
           {
             title: 'Url',

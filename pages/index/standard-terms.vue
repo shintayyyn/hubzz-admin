@@ -4,6 +4,7 @@
       <div class="">
         <span class="text-sm italic">(Note: Only file types .pdf, .jpeg, .jfif, .doc, .docx, .tiff are acccepted)</span>
       </div>
+
       <section>
         <div>
           <!-- TABLE -->
@@ -13,9 +14,11 @@
               <div class="flex-1 flex items-center px-2 justify-center">
                 <span class="pr-1">Filename</span>
               </div>
+
               <div class="flex-1 flex items-center px-2 justify-center">
                 <span class="pr-1">Uploaded At</span>
               </div>
+
               <div class="flex-1 flex items-center px-2 justify-center">
                 <span class="pr-1">Action</span>
               </div>
@@ -27,6 +30,7 @@
               <div class="relative">
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-start shadow rounded-lg py-3  border-l-8 border-sunglow md:border-none transition-hover">
                   <AppLoading :loading="uploading" message="Uploading" :spinner="false" class="rounded-lg" />
+
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Filename</span>
                     <span>{{ standardTerms ? standardTerms.filename : null }}</span>
@@ -39,21 +43,26 @@
 
                   <div class="flex flex-col md:block flex-1 md:truncate px-2 leading-tight py-1 md:py-0 md:text-center md:items-center md:justify-center">
                     <span class="md:hidden pr-1 font-bold">Action</span>
+
                     <div class="w-full flex md:flex-col lg:flex-row items-center lg:justify-center">
                       <div v-if="standardTerms" class=" flex items-center justify-center  text-xs px-1 py-1 xl:py-0">
                         <nuxt-link :to="standardTerms ? `/standard-terms/${standardTerms.file_id}` : '/standard-terms'" class="bg-blue-500 hover:bg-blue-600 text-white flex items-center text-center rounded-full  no-underline px-6 py-2">
                           <svgicon name="folder" width="16" height="16" color="white white" />
+
                           <span class="pl-2">View</span>
                         </nuxt-link>
                       </div>
+
                       <div 
                         v-if="authAdminPermissions.includes('Modify Standard Terms')"
                         class="flex items-center md:justify-center px-1 py-1" :class="standardTerms ? '' : 'w-full'">
                         <div class="flex justify-center  text-sm">
                           <label>
-                            <input ref="inputFile" class="hidden" type="file" @change="handleInputFileChange">
+                            <input ref="inputFile" class="hidden" type="file" @input="handleInputFileChange">
+
                             <button class="cursor-pointer flex items-center text-center rounded-full  px-4 py-2 text-xs text-white" :class="standardTerms ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-600 hover:bg-gray-700'" @click="$refs.inputFile.click()">
                               <svgicon name="cloud-upload" width="16" height="16" color="transparent white" />
+
                               <span class="pl-2">{{ standardTerms ? 'Update' : 'Upload' }}</span>
                             </button>
                           </label>
@@ -191,13 +200,19 @@
             status: 'success',
             text: 'Upload Success',
           })
-        }).catch(err => {
-          console.log('err.response || err', err.response || err)
+        }).catch((err) => {
+          console.log('err', err.response || err)
+
+          let message = 'Something went wrong!'
+
+          if (err.response && err.response.data && err.response.data.message) {
+            message = err.response.data.message
+          }
 
           this.$store.commit('SET_NOTIFICATION', {
             enabled: true,
             status: 'danger',
-            text: (err.response || err).message || 'Something went wrong!',
+            text: message,
           })
         }).finally(() => {
           this.uploading = false
