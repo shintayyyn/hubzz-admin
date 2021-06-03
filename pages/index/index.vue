@@ -226,7 +226,7 @@
 
             <div class="flex justify-between my-1 font-bold">
               <div>
-                Credit
+                Credits
               </div>
 
               <div class="text-orange-500">
