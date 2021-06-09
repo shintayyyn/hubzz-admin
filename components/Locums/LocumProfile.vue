@@ -341,12 +341,13 @@
         <!--COLUMN 3-->
         <div class="flex flex-col order-1 md:order-3 w-full md:w-1/3 overflow-hidden md:mb-2 md:px-4">
           <div class="mx-3 md:my-6 border-b text-center pb-3">
-            <embed
-              class="object-cover w-48 h-48 rounded-full mx-auto"
-              :src="user.avatar ? user.avatar.file.url:null"
-            >
+            <AppAvatar
+              v-if="user.avatar"
+              class="m-auto"
+              :src="user && user.avatar ? user.avatar.file.url:null"
+            />
             <img
-              v-if="!user.avatar"
+              v-else
               class="w-48 rounded-full mx-auto"
               src="~/assets/images/default-user-image.png"
             >
@@ -433,12 +434,13 @@
   import AppButton from "@/components/Base/AppButton"
   import AppConfirm from "@/components/Base/AppConfirm"
   import { mixin as clickaway } from "vue-clickaway"
-
+  import AppAvatar from "@/components/Base/AppAvatar"
   export default {
     components: {
       AppButton,
       AppInput,
-      AppConfirm
+      AppConfirm,
+      AppAvatar,
     },
 
     mixins: [clickaway],

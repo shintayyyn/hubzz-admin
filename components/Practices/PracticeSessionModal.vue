@@ -671,11 +671,22 @@
                   <div class="w-full mx-2">
                     <div class="flex flex-col md:flex-row w-full border-b py-4">
                       <div class="flex items-center pr-4">
-                        <embed
+                        <!-- <embed
                           v-if="locumUser.avatar"
                           class="flex w-26 rounded-full"
                           :src="locumUser && locumUser.avatar ? locumUser.avatar.file.url:null"
                         >
+                        <img
+                          v-else
+                          class="w-26 rounded-full"
+                          src="~/assets/images/default-user-image.png"
+                        > -->
+
+                        <AppAvatar
+                          v-if="locumUser.avatar"
+                          class="m-auto"
+                          :src="locumUser && locumUser.avatar ? locumUser.avatar.file.url:null"
+                        />
                         <img
                           v-else
                           class="w-26 rounded-full"
@@ -954,13 +965,14 @@ import AppPagination from "@/components/Base/AppPagination"
 import { gmapApi } from "vue2-google-maps"
 import AppLoading from "@/components/Base/AppLoading"
 import JobSchedules from "@/components/Base/JobSchedules"
-
+import AppAvatar from "@/components/Base/AppAvatar"
 export default {
   components: {
     JobPartModal,
     AppPagination,
     AppLoading,
-    JobSchedules
+    JobSchedules,
+    AppAvatar
   },
   
   props: {
@@ -1183,7 +1195,7 @@ export default {
 
         const status = this.modalJobPart.status.toLowerCase()
         
-        this.$router.push(`/practices/${practiceId}/practice-sessions/practice-${status}-sessions/${itemId}`)
+        // this.$router.push(`/practices/${practiceId}/practice-sessions/practice-${status}-sessions/${itemId}`)
       })
     },
 
