@@ -152,9 +152,11 @@ export default {
 				autoprefixer: {},
 			},
     },
+    
     extractCSS: {
 			ignoreOrder: true
 		},
+
     // optimization: {
     //   splitChunks: {
     //     cacheGroups: {
@@ -168,6 +170,19 @@ export default {
     //   }
     // },
 		transpile: [/^vue2-google-maps($|\/)/],
+
 		extend () {},
+
+
+    babel: {
+      babelrc: false,
+      cacheDirectory: undefined,
+      presets: [
+        '@nuxt/babel-preset-app',
+      ],
+      plugins: [
+        '@babel/plugin-proposal-object-rest-spread',
+      ],
+    },
 	},
 }
