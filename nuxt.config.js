@@ -181,7 +181,7 @@ export default {
         '@nuxt/babel-preset-app',
       ],
       plugins: [
-        '@babel/plugin-proposal-object-rest-spread',
+        '@babel/plugin-transform-spread',
       ],
     },
 	},
