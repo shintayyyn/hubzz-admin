@@ -10,8 +10,8 @@
           :buttonLabel="'Search'"
           :placeholder="
             !practice || (practice && practice.type == 'Hub')
-              ? 'Search for Surgery by Name, etc....'
-              : 'Search for Hub by Name, etc....'
+              ? 'Search for Surgery by Name, etc...'
+              : 'Search for Hub by Name, etc...'
           "
           @click="searchSubmit()"
         />

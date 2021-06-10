@@ -169,7 +169,10 @@ export default {
     //     }
     //   }
     // },
-		transpile: [/^vue2-google-maps($|\/)/],
+		transpile: [
+      /^vue2-google-maps($|\/)/,
+      '@nuxtjs/axios',
+    ],
 
 		extend () {},
 

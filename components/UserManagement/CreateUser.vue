@@ -30,7 +30,7 @@
               v-model="toPostUser.title"
               :type="'text'"
               :label="'Title'"
-              :placeholder="'Mr. / Mrs. / Dr. / etc.....'"
+              :placeholder="'Mr. / Mrs. / Dr. / etc....'"
             />
             <AppInput 
               v-model="toPostUser.first_name"
