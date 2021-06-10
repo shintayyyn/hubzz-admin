@@ -77,7 +77,7 @@
             :type="'text'"
             :name="'title'"
             :label="'Title'"
-            :placeholder="'Mr. / Mrs. / Dr. / etc....'"
+            :placeholder="'Mr. / Mrs. / Dr. / etc...'"
           />
 
           <AppInput
