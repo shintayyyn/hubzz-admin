@@ -55,10 +55,10 @@ export default {
 			src: '@/plugins/socket-io.js',
 			mode: 'client',
 		},
-		{
-			src: '@/plugins/one-signal.js',
-			mode: 'client',
-		},
+		// {
+		// 	src: '@/plugins/one-signal.js',
+		// 	mode: 'client',
+		// },
 		{
 			src: '@/plugins/vue-svgicon.js',
 			ssr: true,

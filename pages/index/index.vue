@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 flex flex-col overflow-hidden py-2 px-4 md:px-8">
+  <div class="flex-1 flex flex-col overflow-auto py-2 px-4 md:px-8">
     <!-- Filters -->
     <div class="flex flex-wrap justify-between items-start w-full shadow-md rounded flex bg-gray-300 my-2">
       <div class="flex flex-col lg:flex-row w-full m-4">
