@@ -61,30 +61,17 @@
             >
             <label :for="slotProps.item" />
           </template>
+
           <template v-slot:issuedAt="slotProps">
             <div>
-              {{ $moment(slotProps.item.date_created_in_gb).isSame($moment(), 'day') ? slotProps.item.date_created_in_gb_formatted_relative : $moment(slotProps.item.date_created_in_gb).format('DD/MM/YYYY') }}
+              {{ $moment(slotProps.item.issued_at_in_gb).isSame($moment.utc(), 'day') ? slotProps.item.issued_at_in_gb_formatted_relative : $moment(slotProps.item.issued_at_in_gb).format('DD/MM/YYYY') }}
             </div>
-          </template>
-          <template v-slot:practiceName="slotProps">
-            <div>
-              {{ slotProps.item.practice.name }}
-            </div>
-          </template>
-          <template v-slot:total_amount_slot="slotProps">
-            <div>{{ '£ ' + slotProps.item.taxed_total.toFixed(2) }}</div>
           </template>
 
           <template v-slot:period="slotProps">
             <div>
-              {{ $moment(slotProps.item.date_start).format('DD/MM/YYYY') +
-                ' - ' +
-                $moment(slotProps.item.date_end).format('DD/MM/YYYY') }}
+              {{ slotProps.item.period_in_gb_formatted}}
             </div>
-          </template>
-
-          <template v-slot:issued_at="slotProps">
-            <div>{{ $moment(slotProps.item.issued_at).format('DD/MM/YYYY') }}</div>
           </template>
 
           <template v-slot:due_date="slotProps">
@@ -403,7 +390,7 @@ export default {
         // exportable: true,
 				limit: 15,
 				offset: 0,
-				order_by: ["date_created:desc"]
+				order_by: ["issued_at:desc"]
       },
       chosenInvoices: [],
       exportedChosenInvoices: [],
@@ -443,14 +430,13 @@ export default {
 				},
 				{
 					name: "Practice",
-          dataIndex: "practice.name",
-          slotName: "practiceName",
+          dataIndex: "practice_name",
 					class: "text-center min-w-xs",
-          sortable: "true",
+          sortable: true,
 				},
 				{
 					name: "Period",
-					dataIndex: "period",
+					dataIndex: "period_in_gb_formatted",
           slotName: "period",
           minWidth: "36",
 					class: "text-center truncate pr-24 ",
@@ -458,24 +444,22 @@ export default {
 				},
 				{
           name: "Issued At",
-          dataIndex: "date_created",
+          dataIndex: "issued_at",
           slotName:"issuedAt",
           class: "text-center",
-					sortable: "true",
+					sortable: true,
           width: 120
 				},
 				{
 					name: "£ Amount",
-					dataIndex: "total_amount",
-					slotName: "total_amount_slot",
+					dataIndex: "taxed_total_formatted",
 					class: "text-center",
 					sortable: "false",
           width: 120
         },
         {
           name: "Due Date",
-          dataIndex:"due_date",
-          slotName:"due_date",
+          dataIndex:"due_date_in_gb_formatted",
           class:"text-center",
           width: 120
         },
@@ -561,7 +545,7 @@ export default {
 			await store.commit("billings/TOGGLE_LOADING", true)
 			let { 
         page = 1, 
-        order_by = ["date_created:desc"] 
+        order_by = ["issued_at:desc"] 
       } = route.query
 
 			const limit = 15

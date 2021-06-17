@@ -55,10 +55,10 @@ export default {
 			src: '@/plugins/socket-io.js',
 			mode: 'client',
 		},
-		{
-			src: '@/plugins/one-signal.js',
-			mode: 'client',
-		},
+		// {
+		// 	src: '@/plugins/one-signal.js',
+		// 	mode: 'client',
+		// },
 		{
 			src: '@/plugins/vue-svgicon.js',
 			ssr: true,
@@ -83,14 +83,14 @@ export default {
 			src: '@/plugins/filters.js',
 			ssr: true,
 		},
-		{
-			src: '@/plugins/jspdf.js',
-			mode: 'client',
-		},
-		{
-			src: '@/plugins/html2canvas.js',
-			mode: 'client',
-		},
+		// {
+		// 	src: '@/plugins/jspdf.js',
+		// 	mode: 'client',
+		// },
+		// {
+		// 	src: '@/plugins/html2canvas.js',
+		// 	mode: 'client',
+		// },
     {
       src: '@/plugins/broadcast-channel.js',
       mode: 'client',
@@ -146,15 +146,33 @@ export default {
 	},
 
 	build: {
+    babel: {
+      babelrc: false,
+      cacheDirectory: undefined,
+      presets: ['@nuxt/babel-preset-app'],
+      plugins: [
+        '@babel/plugin-proposal-object-rest-spread',
+        '@babel/plugin-transform-spread',
+      ]
+    },
+
+		transpile: [
+      /^vue2-google-maps($|\/)/,
+      '@nuxtjs/axios',
+      'vue-svgicon',
+    ],
+
 		postcss: {
 			plugins: {
 				tailwindcss: path.join(__dirname, 'tailwind.config.js'),
 				autoprefixer: {},
 			},
     },
+    
     extractCSS: {
 			ignoreOrder: true
 		},
+
     // optimization: {
     //   splitChunks: {
     //     cacheGroups: {
@@ -167,7 +185,9 @@ export default {
     //     }
     //   }
     // },
-		transpile: [/^vue2-google-maps($|\/)/],
+
 		extend () {},
 	},
 }
+
+// (?<!ing)(?<!Select)(?<!etc)(?<!ile)(?<!for)\.\.\.
