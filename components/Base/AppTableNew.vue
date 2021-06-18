@@ -17,9 +17,9 @@
             :key="`${column}-${index}`"
             class="flex-1 flex items-center"
             :class="[
-              column.class &&
-                column.class.split(' ').includes('text-center') ?
-                  `justify-center text-center ${column.class}` : column.class,
+              column.class && column.class.split(' ').includes('text-center') && 'justify-center text-center',
+              column.class && column.class.split(' ').includes('md:text-center') && 'md:justify-center md:text-center',
+              column.class && column.class,
               column.sortable && 'cursor-pointer'
             ]"
             :style="`min-width: 100px; ${column.width ? `max-width: ${column.width}px` : ''}`"
