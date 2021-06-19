@@ -91,7 +91,7 @@
           'Admin Notification Practice Invoice Past Due',
 
           'Admin Notification Practice Registration',
-          'Admin Notification Practice Created',
+          // 'Admin Notification Practice Created',
           'Admin Notification Practice Dormanted',
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Surgery Deleted',
@@ -110,7 +110,7 @@
 
         practiceSideBarNotificationsTypeNames: [
           'Admin Notification Practice Registration',
-          'Admin Notification Practice Created',
+          // 'Admin Notification Practice Created',
           'Admin Notification Practice Invoice Detail Updated',
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Dormanted',
