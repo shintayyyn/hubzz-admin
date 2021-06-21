@@ -51,7 +51,7 @@ export default {
 			},
 			setFocus: false,
 			editorOption: {
-				placeholder: "Please type the answer to the FAQ",
+				placeholder: "Please type the Terms and Conditions",
 				modules: {
 					toolbar: [
 						["bold", "italic", "underline", "strike"],
