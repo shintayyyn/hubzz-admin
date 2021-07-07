@@ -75,6 +75,15 @@
           'Admin Notification Locum Profile Updated',
           'Admin Notification Locum Registration',
           'Admin Notification Locum Dormanted',
+
+          'Admin Notification Locum Deactivated',
+          'Admin Notification Locum Deactivated By Admin',
+          'Admin Notification Locum Reactivated',
+          'Admin Notification Locum Reactivated By Admin',
+          'Admin Notification Locum Account Delete Requested',
+          'Admin Notification Locum Account Delete Request Cancelled',
+          'Admin Notification Locum Deleted',
+
           'Admin Notification Locum Invoice Approved Disputed',
           'Admin Notification Completed Ongoing Job 7 Days',
 
@@ -106,6 +115,14 @@
           'Admin Notification Locum Registration',
           'Admin Notification Locum Profile Updated',
           'Admin Notification Locum Dormanted',
+
+          'Admin Notification Locum Deactivated',
+          'Admin Notification Locum Deactivated By Admin',
+          'Admin Notification Locum Reactivated',
+          'Admin Notification Locum Reactivated By Admin',
+          'Admin Notification Locum Account Delete Requested',
+          'Admin Notification Locum Account Delete Request Cancelled',
+          'Admin Notification Locum Deleted',
         ],
 
         practiceSideBarNotificationsTypeNames: [
