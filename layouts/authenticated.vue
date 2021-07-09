@@ -102,6 +102,14 @@
           'Admin Notification Practice Registration',
           // 'Admin Notification Practice Created',
           'Admin Notification Practice Dormanted',
+          'Admin Notification Practice Deactivated',
+          'Admin Notification Practice Deactivated By Admin',
+          'Admin Notification Practice Reactivated',
+          'Admin Notification Practice Reactivated By Admin',
+          'Admin Notification Practice Delete Requested',
+          'Admin Notification Practice Delete Request Cancelled',
+          'Admin Notification Practice Delete Request Rejected',
+
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Surgery Deleted',
           'Admin Notification Practice Surgery Termination Requested',
@@ -131,6 +139,13 @@
           'Admin Notification Practice Invoice Detail Updated',
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Dormanted',
+          'Admin Notification Practice Deactivated',
+          'Admin Notification Practice Deactivated By Admin',
+          'Admin Notification Practice Reactivated',
+          'Admin Notification Practice Reactivated By Admin',
+          'Admin Notification Practice Delete Requested',
+          'Admin Notification Practice Delete Request Cancelled',
+          'Admin Notification Practice Delete Request Rejected',
         ],
 
         billingSideBarNotificationsTypeNames: [

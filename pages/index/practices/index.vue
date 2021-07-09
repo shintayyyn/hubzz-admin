@@ -41,6 +41,14 @@
         >
           Deactivated
         </nuxt-link>
+
+        <nuxt-link
+          :to="{ name: 'index-practices', query: { ...$route.query, practice_tab: 'Deleted' }}"
+          class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wra"
+          :class="practiceTab === 'Deleted' ? 'border-b-4 border-gray-500' : 'text-gray-600'"
+        >
+          Deleted
+        </nuxt-link>
       </div>
       <div>
         <AppButton
@@ -304,6 +312,10 @@ export default {
         return 'Deactivated'
       }
 
+      if (practiceTab && practiceTab.toLowerCase() === 'deleted') {
+        return 'Deleted'
+      }
+
       return 'Verified'
     },
 
@@ -474,7 +486,7 @@ export default {
 				})
       }
 
-      if (this.practiceTab === 'Deactivated') {
+      if (this.practiceTab === 'Deactivated' || this.practiceTab === 'Deleted') {
         columns.push({ 
           name: 'Verified',
           dataIndex: 'first_actived_at_in_gb_formatted',
@@ -485,7 +497,9 @@ export default {
           maxWidth: '170px',
           width: 120
         })
+      }
 
+      if (this.practiceTab === 'Deactivated') {
         columns.push({ 
           name: 'Deactivated',
           dataIndex: 'deactivated_at_in_gb_formatted',
@@ -495,7 +509,20 @@ export default {
           minWidth: '100px',
           maxWidth: '170px',
           width: 120
-				})
+        })
+      }
+
+      if (this.practiceTab === 'Deleted') {
+        columns.push({ 
+          name: 'Deleted',
+          dataIndex: 'deleted_at_in_gb_formatted',
+          class: 'md:text-center',
+          sortable: true,
+          flex: '1 0 0',
+          minWidth: '100px',
+          maxWidth: '170px',
+          width: 120
+        })
       }
       
       return columns

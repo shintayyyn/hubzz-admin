@@ -2,6 +2,7 @@
   <section>
     <div>
       <AppLoading :loading="loading" spinner />
+
       <div v-if="!$route.params.pracUserId && !$route.params.roleId && !$route.params.pracDocId && !$route.params.practiceSessionPartId && !$route.params.invitationId" 
       class="flex flex-row justify-start overflow-x-auto border-b border-yellow-500 pt-1">
         <nuxt-link
@@ -22,7 +23,7 @@
               && practice.type === 'Hub'
               && practice.status !== 'Inactive'
               && practice.status !== 'Bogus'
-              && practice.status !== 'Deactivated'
+              && practice.status !== 'Deleted'
               && practicePermissions.includes('View Surgery Management')
           "
           :to="`/practices/${$route.params.id}/practice-surgeries`"
@@ -41,7 +42,7 @@
               && practice.type === 'Spoke' 
               && (practice.status !== 'Inactive' 
               && practice.status !== 'Bogus' 
-              && practice.status !== 'Deactivated')
+              && practice.status !== 'Deleted')
               && practicePermissions.includes('View Surgery Management')
           "
           :to="`/practices/${$route.params.id}/practice-hub`"
@@ -56,7 +57,7 @@
             practice 
               && practice.status !== 'Inactive' 
               && practice.status !== 'Bogus' 
-              && practice.status !== 'Deactivated'
+              && practice.status !== 'Deleted'
               && practicePermissions.includes('View Surgery Management')
           "
           :to="`/practices/${$route.params.id}/practice-invitations`"
@@ -83,7 +84,7 @@
         <nuxt-link
           v-if="
             practice 
-              && practice.status !== 'Deactivated'
+              && practice.status !== 'Deleted'
               && practicePermissions.includes('View Practice Users')
           "
           :to="`/practices/${$route.params.id}/practice-users`"
@@ -97,7 +98,7 @@
           v-if="
             practice 
               && practice.status !== 'Bogus' 
-              && practice.status !== 'Deactivated'
+              && practice.status !== 'Deleted'
               && practicePermissions.includes('View Practice Documents')
           "
           :to="`/practices/${$route.params.id}/practice-documents` "
@@ -111,7 +112,7 @@
           v-if="
             practice 
               && practice.status !== 'Bogus' 
-              && practice.status !== 'Deactivated'
+              && practice.status !== 'Deleted'
               && practicePermissions.includes('View Practice Rates')
           "
           :to="`/practices/${$route.params.id}/practice-rates`"
@@ -122,6 +123,7 @@
         </nuxt-link>
       </div>
     </div>
+
     <nuxt-child
       :practice="practice"
       :professionComplianceCategories="professionComplianceCategories"
@@ -234,6 +236,7 @@ export default {
   methods: {
     practiceUpdatedHandler (practice) {
       console.log('practiceUpdatedHandler', practice)
+      
       if (practice) {
         this.practice = practice
       } else {
@@ -248,23 +251,6 @@ export default {
         const practice = res.data.practice
         this.$store.commit("practices/SET_SPECIFIC_PRACTICE", practice)
       })
-    },
-
-    goBack () {
-      let url = "/practices"
-      if (this.practice.status === "Inactive") {
-        url = "/practices/pending-practices"
-      }
-      if (this.practice.status === "Bogus") {
-        url = "/practices/bogus-practices"
-      }
-      if (this.practice.status === "Deactivated") {
-        url = "/practices/deactivated-practices"
-      }
-      const query = {
-        ...this.$route.query
-      }
-      this.$router.push({ path: url, query })
     },
   },
 }
