@@ -634,7 +634,7 @@
 
       <!-- TOOLTIPS FOR VERIFICATION -->
       <div
-        v-if="practice.status === 'Inactive' || practice.sage_ref === null"
+        v-if="practice.status === 'Inactive' || (!practice.sage_ref && !['Deleted', 'Deactivated'].includes(practice.status))"
         class="order-1 lg:order-2  rounded-lg px-2 lg:py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6  text-sm"
       >
         <div v-if="practice.status === 'Inactive'">
@@ -765,9 +765,10 @@
     <transition name="drop" mode="in-out">
       <AppConfirm
         v-if="showDeletePracticeModal"
-        :message="'Are you sure you want to delete this practice?'"
+        :message="deletingPractice ? 'Deleting practice...' : 'Are you sure you want to delete this practice?'"
         @cancel="showDeletePracticeModal = false"
         @confirm="deletePractice()"
+        :loading="deletingPractice"
       />
     </transition>
 
@@ -875,6 +876,7 @@ export default {
 			hubzzPracticeNotes: "",
 
 			showDeletePracticeModal: false,
+      deletingPractice: false,
 
       showRejectDeletePracticeModal: false,
       rejectingDeletePractice: false,
@@ -1123,30 +1125,23 @@ export default {
 		},
 
 		deletePractice () {
-			this.$axios
-				.put(`/api/v1/admin/practices/${this.practice.id}/delete`)
-				.then(() => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Practice Successfully Deleted"
-					})
+      this.deletingPractice = true
+			this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/delete`).then((response) => {
+        const practice = response.data.data.practice
 
-					this.$emit("practiceUpdated")
+        const message = response.data.message
 
-					this.showDeletePracticeModal = false
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: message || "Practice Deleted Successfully",
+        })
 
-					this.$router.push("/practices/?practice_tab=Deleted")
-				})
-				.catch(err => {
-          console.log('err', err.response || err)
-
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
+        this.$emit("practiceUpdated", practice)
+      }).catch(this.errorHandler).finally(() => {
+        this.showDeletePracticeModal = false
+        this.deletingPractice = false
+      })
 		},
 
     rejectDeletePractice () {

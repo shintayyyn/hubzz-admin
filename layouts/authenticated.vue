@@ -109,6 +109,7 @@
           'Admin Notification Practice Delete Requested',
           'Admin Notification Practice Delete Request Cancelled',
           'Admin Notification Practice Delete Request Rejected',
+          'Admin Notification Practice Deleted',
 
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Surgery Deleted',
@@ -146,6 +147,7 @@
           'Admin Notification Practice Delete Requested',
           'Admin Notification Practice Delete Request Cancelled',
           'Admin Notification Practice Delete Request Rejected',
+          'Admin Notification Practice Deleted',
         ],
 
         billingSideBarNotificationsTypeNames: [
