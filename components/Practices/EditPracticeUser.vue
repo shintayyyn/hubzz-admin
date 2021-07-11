@@ -1,13 +1,6 @@
 <template>
   <div class="page-overlap flex-1 flex flex-col self-end ">
-    <transition name="drop" mode="in-out">
-      <AppConfirm
-        v-if="confirm"
-        :message="'Are you sure you want to deactivate this practice?'"
-        @cancel="confirm=false"
-        @confirm="toDeactivate()"
-      />
-    </transition>
+
     <!-- TABS -->
     <div class="flex flex-col rounded">
       <div class="w-full overflow-hidden">
@@ -20,8 +13,9 @@
             >
               <strong>General</strong>
             </button>
+
             <button
-              v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User')"
+              v-if="practiceUser && practiceUser.status !== 'Deleted' && authAdminPermissions.includes('Edit Practice User')"
               class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
               :class="tab2 === true ? 'border-b-4 border-gray-500' : 'text-gray-600'"
               @click="tab2=true,tab1=false"
@@ -41,7 +35,7 @@
         class="flex flex-col relative p-4 border rounded-lg text-sm w-full"
       >
         <div
-          v-if="practiceUser && practiceUser.status !== 'Deactivated' && authAdminPermissions.includes('Edit Practice User') && tab1"
+          v-if="practiceUser && practiceUser.status !== 'Deleted' && authAdminPermissions.includes('Edit Practice User') && tab1"
           class="absolute right-0 px-4"
         >
           <button
@@ -51,6 +45,11 @@
             {{ editProfile ? 'Cancel Editing' : 'Edit Profile' }}
           </button>
         </div>
+
+        <div v-if="practiceUser && practiceUser.status === 'Deleted'">
+          <span>User deleted at {{ practiceUser.account_deleted_at_in_gb_formatted }}</span>
+        </div>
+
         <div v-if="editProfile" class="w-full overflow-hidden  text-sm p-2">
           <AppInput
             v-model="toPutPracticeUser.username"
@@ -177,7 +176,7 @@
             E-Mail Address
           </div>
           <div class="flex px-2 ">
-            {{ practiceUser.email }}
+            {{ practiceUser.email ? practiceUser.email : 'N/A' }}
           </div>
 
           <div class="flex py-2 font-bold">
@@ -285,15 +284,16 @@
 
           <div 
             v-if="practiceUser 
-              && practiceUser.status !== 'Deactivated' 
+              && practiceUser.status !== 'Deleted' 
+              && practiceUser.practice_role_name !== 'Practice User Admin' 
               && authAdminPermissions.includes('Delete Practice User')" 
             class="flex my-2"
           >
             <AppButton
-              :label="'Deactivate this Practice User'"
+              :label="'Delete this Practice User'"
               :background="'red'"
               :class="''"
-              @click="confirm = true"
+              @click="showDeletePracticeUserModal = true"
             />
           </div>
         </div>
@@ -329,7 +329,17 @@
       </div>
     </div>
 
-    <div v-if="confirm" class="shield" @click="confirm = false" />
+    <transition name="drop" mode="in-out">
+      <AppConfirm
+        v-if="showDeletePracticeUserModal"
+        :message="deletingPracticeUser ? 'Deleting practice user...' : 'Are you sure you want to delete this practice user?'"
+        @cancel="showDeletePracticeUserModal = false"
+        @confirm="deletePracticeUser()"
+        :loading="deletingPracticeUser"
+      />
+    </transition>
+
+    <div v-if="showDeletePracticeUserModal" class="shield" @click="showDeletePracticeUserModal = false" />
   </div>
 </template>
 
@@ -382,7 +392,8 @@
 
         practice_user_roles: [],
 
-        confirm: false,
+        showDeletePracticeUserModal: false,
+        deletingPracticeUser: false,
       }
     },
 
@@ -472,7 +483,7 @@
           this.toPutPracticeUser.last_name = this.practiceUser.last_name
           this.toPutPracticeUser.suffix = this.practiceUser.suffix
           this.toPutPracticeUser.practice_role = this.practiceUser.practice_detail.practice_role
-          this.toPutPracticeUser.practice_user_roles = this.practiceUser.practice_detail.role.id
+          this.toPutPracticeUser.practice_user_role_id = this.practiceUser.practice_role_id
           this.toPutPracticeUser.status = this.practiceUser.status
         }
       },
@@ -492,13 +503,9 @@
         last_name: this.practiceUser.last_name,
         suffix: this.practiceUser.suffix,
         practice_role: this.practiceUser.practice_detail.practice_role,
-        practice_user_role_id: this.practiceUser.practice_detail.role
-          ? this.practiceUser.practice_detail.role.id
-          : '',
+        practice_user_role_id: this.practiceUser.practice_role_id,
         status: this.practiceUser.status,
       }
-
-      // this.practice_user_roles = {label: this.practiceUser.practice_detail.role.name, value:this.practiceUser.practice_detail.role.id}
 
       this.$axios
         .$get(`/api/v1/admin/practices/${this.practice.id}/practice-roles`)
@@ -613,36 +620,49 @@
         }
       },
 
-      async toDeactivate () {
-        await this.$axios
-          .put(
-            `/api/v1/admin/practice-users/${this.$route.params.pracUserId}/deactivate`
-          )
-          .then((response) => {
-            const practiceUser = response.data.data.user
+      errorHandler (err) {
+        console.log('err', err.response || err)
 
-            this.$emit('setPracticeUser', practiceUser)
+        let message = null
 
-            this.confirm = false
+        if (err.response) {
+          message = err.response.data.message
+        } else if (err.request) {
+          message = 'Something went wrong!'
+        } else {
+          message = err.message
+        }
 
-            this.$router.push({
-              path:`/practices/${this.practice.id}/practice-users`,
-              query: this.$route.query,
-            })
-
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Successfully Deactivated User"
-            })
+        if (message) {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: message,
           })
-          .catch(err => {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "danger",
-              text: err.response.data.message
-            })
+        }
+      },
+
+      deletePracticeUser () {
+        this.deletingPracticeUser = true
+        this.$axios.put(`/api/v1/admin/practice-users/${this.$route.params.pracUserId}/delete`).then((response) => {
+          const practiceUser = response.data.data.user
+
+          this.$emit('setPracticeUser', practiceUser)
+
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Deleted User Successfully "
           })
+
+          this.$router.push({
+            path:`/practices/${this.practice.id}/practice-users`,
+            query: this.$route.query,
+          })
+        }).catch(this.errorHandler).finally(() => {
+          this.showDeletePracticeUserModal = false
+          this.deletingPracticeUser = false
+        })
       },
 
     },
