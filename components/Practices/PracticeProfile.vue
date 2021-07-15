@@ -1,14 +1,5 @@
 <template>
   <div class="flex flex-col rounded-lg">
-    <transition name="drop" mode="in-out">
-      <AppConfirm
-        v-if="confirm"
-        :message="'Are you sure you want to deactivate this practice?'"
-        @cancel="confirm=false"
-        @confirm="toDeactivate()"
-      />
-    </transition>
-
     <div class="flex flex-col lg:flex-row">
       <form
         class="order-2 lg:order-1 flex flex-col  p-4 my-1 lg:my-0 border rounded-lg w-full"
@@ -244,7 +235,7 @@
           </div>
 
           <!-- VIEW / EDIT OTHER INFORMATION / PRACTICE TYPE -->
-          <div v-if="practice.status !== 'Deactivated'" class="w-full flex flex-col md:flex-row text-sm  md:w-2/3">
+          <div v-if="practice.status !== 'Deleted'" class="w-full flex flex-col md:flex-row text-sm  md:w-2/3">
             <div class="md:w-1/2">
               <div class="flex flex-wrap justify-between items-center">
                 <span class="text-lg mr-2 font-bold">Invoicing Details</span>
@@ -405,28 +396,60 @@
                     {{ practice && practice.actived_until ? $moment(practice.actived_until, 'YYYY-MM-DD[T]').utc().format('DD/MM/YYYY') : 'N/A' }}
                   </p>
                 </template>-->
+
+                <div class="flex justify-center" v-if="practice && practice.practice_delete_status === 'Pending'">
+                  <span>Requested to delete practice on {{ practice.practice_delete_requested_at_formatted }}</span>
+                </div>
+
                 <div class="flex flex-wrap items-center md:mb-2">
                   <AppButton
-                    :inClass="''"
-                    :label="'Deactivate this Practice'"
-                    :disabled="authAdminPermissions.includes('Edit Practice Other Information') === false"
-                    @click="confirm=true"
+                    label="Delete this Practice"
+                    class="m-1"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
+                    @click="showDeletePracticeModal = true"
                   />
-                  <!-- Deactivate this Practice -->
-                  <button
-                    v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
-                    class="m-1 text-sm text-white text-center rounded-lg bg-red-600 hover:bg-red-700 px-4 py-1 cursor-pointer transition-hover"
-                    @click="toMarkBogus()"
-                  >
-                    Mark as Bogus
-                  </button>
-                  <button
-                    v-if="practice.status === 'Bogus'"
-                    class="m-1 text-sm text-white text-center rounded-lg bg-yellow-600 hover:bg-yellow-700 px-4 py-1 cursor-pointer transition-hover"
-                    @click="toUnmarkBogus()"
-                  >
-                    Remove Bogus Status
-                  </button>
+
+                  <AppButton
+                    v-if="practice && practice.practice_delete_status === 'Pending'"
+                    label="Reject Delete Request"
+                    class="m-1"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
+                    @click="showRejectDeletePracticeModal = true"
+                  />
+
+                  <AppButton
+                    v-if="practice && practice.status !== 'Deactivated'"
+                    label="Deactivate this Practice"
+                    class="m-1"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
+                    @click="showDeactivatePracticeModal = true"
+                  />
+
+                  <AppButton
+                    v-if="practice && practice.status === 'Deactivated'"
+                    label="Reactivate this Practice"
+                    class="m-1"
+                    :disabled="!authAdminPermissions.includes('Edit Practice Other Information')"
+                    @click="showReactivatePracticeModal = true"
+                  />
+
+                  <template v-if="practice && practice.status !== 'Deactivated' && practice.status !== 'Deleted'">
+                    <button
+                      v-if="practice.status !== 'Bogus' && practice.status !== 'Active' && practice.status !== 'Dormant'"
+                      class="m-1 text-sm text-white text-center rounded-lg bg-red-600 hover:bg-red-700 px-4 py-1 cursor-pointer transition-hover"
+                      @click="toMarkBogus()"
+                    >
+                      Mark as Bogus
+                    </button>
+
+                    <button
+                      v-if="practice.status === 'Bogus'"
+                      class="m-1 text-sm text-white text-center rounded-lg bg-yellow-600 hover:bg-yellow-700 px-4 py-1 cursor-pointer transition-hover"
+                      @click="toUnmarkBogus()"
+                    >
+                      Remove Bogus Status
+                    </button>
+                  </template>
                 </div>
               </div>
 
@@ -611,7 +634,7 @@
 
       <!-- TOOLTIPS FOR VERIFICATION -->
       <div
-        v-if="practice.status === 'Inactive' || practice.sage_ref === null"
+        v-if="practice.status === 'Inactive' || (!practice.sage_ref && !['Deleted', 'Deactivated'].includes(practice.status))"
         class="order-1 lg:order-2  rounded-lg px-2 lg:py-4 my-1 lg:my-0 lg:mx-2 w-full lg:w-2/6  text-sm"
       >
         <div v-if="practice.status === 'Inactive'">
@@ -739,8 +762,60 @@
       </div>
     </div>
 
+    <transition name="drop" mode="in-out">
+      <AppConfirm
+        v-if="showDeletePracticeModal"
+        :message="deletingPractice ? 'Deleting practice...' : 'Are you sure you want to delete this practice?'"
+        @cancel="showDeletePracticeModal = false"
+        @confirm="deletePractice()"
+        :loading="deletingPractice"
+      />
+    </transition>
+
+    <transition name="drop" mode="in-out">
+      <AppConfirm
+        v-if="showRejectDeletePracticeModal"
+        :message="rejectingDeletePractice ? 'Rejecting request...' : 'Are you sure you want to reject this deletion request?'"
+        @cancel="showRejectDeletePracticeModal = false"
+        @confirm="rejectDeletePractice()"
+        :loading="rejectingDeletePractice"
+      />
+    </transition>
+
+    <transition name="drop" mode="in-out">
+      <AppConfirm
+        v-if="showDeactivatePracticeModal"
+        :message="deactivatingPractice ? 'Deactivating practice...' : 'Are you sure you want to deactivate this practice?'"
+        @cancel="showDeactivatePracticeModal = false"
+        @confirm="deactivatePractice()"
+        :loading="deactivatingPractice"
+      />
+    </transition>
+
+    <transition name="drop" mode="in-out">
+      <AppConfirm
+        v-if="showReactivatePracticeModal"
+        :message="reactivatingPractice ? 'Reactivating practice...' : 'Are you sure you want to reactivate this practice?'"
+        @cancel="showReactivatePracticeModal = false"
+        @confirm="reactivatePractice()"
+        :loading="reactivatingPractice"
+      />
+    </transition>
+
     <transition name="fade" mode="in-out">
-      <div v-if="confirm" class="shield" @click="confirm=false" />
+      <div v-if="showDeletePracticeModal" class="shield" @click="showDeletePracticeModal = false" />
+    </transition>
+
+    <transition name="fade" mode="in-out">
+      <div v-if="showRejectDeletePracticeModal" class="shield" @click="showRejectDeletePracticeModal = false" />
+    </transition>
+
+    <transition name="fade" mode="in-out">
+      <div v-if="showDeactivatePracticeModal" class="shield" @click="showDeactivatePracticeModal = false" />
+    </transition>
+
+    <transition name="fade" mode="in-out">
+      <div v-if="showReactivatePracticeModal" class="shield" @click="showReactivatePracticeModal = false" />
     </transition>
   </div>
 </template>
@@ -800,7 +875,17 @@ export default {
 
 			hubzzPracticeNotes: "",
 
-			confirm: false
+			showDeletePracticeModal: false,
+      deletingPractice: false,
+
+      showRejectDeletePracticeModal: false,
+      rejectingDeletePractice: false,
+
+      showDeactivatePracticeModal: false,
+      deactivatingPractice: false,
+
+      showReactivatePracticeModal: false,
+      reactivatingPractice: false,
 		}
 	},
 
@@ -810,30 +895,37 @@ export default {
 		}
 	},
 
-	async mounted () {
-		if (
-			this.practice.complete_rate &&
-			this.practice.complete_document &&
-			this.practice.has_active_user &&
-			(this.practice.sage_ref || this.toPutPractice.sage_ref !== null)
-		) {
-			this.practiceStatusChoices = [
-				{ label: "Active", value: "Active" },
-				{ label: "Inactive", value: "Inactive" },
-				{ label: "Account Suspension", value: "Account Suspension" }
-			]
-		} else {
-			this.toBogus = true
-			this.practiceStatusChoices = [
-				{ label: "Inactive", value: "Inactive" },
-				{ label: "Account Suspension", value: "Account Suspension" }
-			]
-		}
+  watch: {
+    practice() {
+      this.setPracticeStatusChoices()
+    },
+  },
 
-		
+	mounted () {
+    this.setPracticeStatusChoices()
 		
 		console.log("practice", this.practice)
-	},
+
+    this.$socket.on('Admin Notification Practice Deactivated', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Reactivated', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Reactivated By Admin', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Delete Requested', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Delete Request Cancelled', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Delete Request Rejected', this.emitUpdatePractice)
+    this.$socket.on('Admin Notification Practice Deleted', this.emitUpdatePractice)
+  },
+
+  destroyed() {
+    this.$socket.removeListener('Admin Notification Practice Deactivated', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Reactivated', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Reactivated By Admin', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Delete Requested', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Delete Request Cancelled', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Delete Request Rejected', this.emitUpdatePractice)
+    this.$socket.removeListener('Admin Notification Practice Deleted', this.emitUpdatePractice)
+  },
 
 	created () {
 		this.toPutPractice.direct_debit = this.practice.direct_debit
@@ -852,6 +944,39 @@ export default {
 	},
 
 	methods: {
+    setPracticeStatusChoices () {
+      if (
+        this.practice
+        && this.practice.complete_rate
+        && this.practice.complete_document
+        && this.practice.has_active_user
+        && this.practice.sage_ref
+      ) {
+        this.practiceStatusChoices = [
+          { label: "Active", value: "Active" },
+          { label: "Inactive", value: "Inactive" },
+          { label: "Account Suspension", value: "Account Suspension" }
+        ]
+      } else {
+        this.toBogus = true
+        this.practiceStatusChoices = [
+          { label: "Inactive", value: "Inactive" },
+          { label: "Account Suspension", value: "Account Suspension" }
+        ]
+      }
+    },
+
+    emitUpdatePractice ({ notification }) {
+      if (
+        notification
+        && notification.payload_type === 'practice'
+        && this.practice
+        && notification.payload.id === this.practice.id
+      ) {
+        this.$emit('practiceUpdated', notification.payload)
+      }
+    },
+
 		getQuery () {
 			const query = {
 				...this.$route.query
@@ -860,69 +985,67 @@ export default {
 			return offset
 		},
 
-		async toPutPracticeInfo () {
-			try {
-				if (!this.practice.complete_document || !this.practice.complete_rate) {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: "Upload practice documents and set the practice rates first."
-					})
-				} else if (
-					this.practice.status !== this.toPutPractice.status &&
-					this.toPutPractice.status === "Active" &&
-					!this.toPutPractice.actived_until
-				) {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: "Actived Until is Required"
-					})
-				} else {
-					await this.$axios
-						.put(`/api/v1/admin/practices/${this.$route.params.id}`, this.toPutPractice)
-						.then(response => {
-							const practice = response.data.data.practice
+    errorHandler (err) {
+      console.log('err', err.response || err)
 
-							this.$store.commit("SET_NOTIFICATION", {
-								enabled: true,
-								status: "success",
-								text: "Saved"
-							})
+      let message = null
 
-							this.$emit("practiceUpdated", practice)
+      if (err.response) {
+        message = err.response.data.message
+      } else if (err.request) {
+        message = 'Something went wrong!'
+      } else {
+        message = err.message
+      }
 
-							if (
-								practice.complete_rate &&
-								practice.complete_document &&
-								practice.has_active_user &&
-								practice.sage_ref
-							) {
-								this.practiceStatusChoices = [
-									{ label: "Active", value: "Active" },
-									{ label: "Inactive", value: "Inactive" },
-									{ label: "Account Suspension", value: "Account Suspension" }
-								]
-							} else {
-								this.toBogus = true
-								this.practiceStatusChoices = [
-									{ label: "Inactive", value: "Inactive" },
-									{ label: "Account Suspension", value: "Account Suspension" }
-								]
-							}
+      if (message) {
+        this.$store.commit('SET_NOTIFICATION', {
+          enabled: true,
+          status: 'danger',
+          text: message,
+        })
+      }
+    },
 
-							this.toEdit = false
-							this.toEditPracticeStatus = false
-						})
-				}
-			} catch (err) {
-				this.$store.commit("SET_NOTIFICATION", {
-					enabled: true,
-					status: "danger",
-					text: err.response.data.message
-				})
-				console.log("put locum profile info error", err.message)
-			}
+		toPutPracticeInfo () {
+      if (!this.practice.complete_document || !this.practice.complete_rate) {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Upload practice documents and set the practice rates first."
+        })
+
+        return
+      }
+      
+      if (
+        this.practice.status !== this.toPutPractice.status &&
+        this.toPutPractice.status === "Active" &&
+        !this.toPutPractice.actived_until
+      ) {
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "danger",
+          text: "Actived Until is Required"
+        })
+
+        return
+      }
+
+      this.$axios.put(`/api/v1/admin/practices/${this.$route.params.id}`, this.toPutPractice).then((response) => {
+        const practice = response.data.data.practice
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: "Saved"
+        })
+
+        this.$emit("practiceUpdated", practice)
+
+        this.toEdit = false
+        this.toEditPracticeStatus = false
+      }).catch(this.errorHandler)
 		},
 
 		async toChangePracticeType (practiceID) {
@@ -955,8 +1078,8 @@ export default {
 				})
 		},
 
-		async toMarkBogus () {
-			await this.$axios
+		toMarkBogus () {
+			this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/bogus`)
 				.then(response => {
 					const practice = response.data.data.practice
@@ -968,8 +1091,6 @@ export default {
 					})
 
 					this.$emit("practiceUpdated", practice)
-
-					this.confirm = false
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {
@@ -980,8 +1101,8 @@ export default {
 				})
 		},
 
-		async toUnmarkBogus () {
-			await this.$axios
+		toUnmarkBogus () {
+			this.$axios
 				.put(`/api/v1/admin/practices/${this.practice.id}/unbogus`)
 				.then(response => {
 					const practice = response.data.data.practice
@@ -993,8 +1114,6 @@ export default {
 					})
 
 					this.$emit("practiceUpdated", practice)
-
-					this.confirm = false
 				})
 				.catch(err => {
 					this.$store.commit("SET_NOTIFICATION", {
@@ -1005,32 +1124,85 @@ export default {
 				})
 		},
 
-		async toDeactivate () {
-			await this.$axios
-				.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`)
-				.then(response => {
-					const practice = response.data.data.practice
+		deletePractice () {
+      this.deletingPractice = true
+			this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/delete`).then((response) => {
+        const practice = response.data.data.practice
 
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "success",
-						text: "Practice Successfully Deactivated"
-					})
+        const message = response.data.message
 
-					this.$emit("practiceUpdated", practice)
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: message || "Practice Deleted Successfully",
+        })
 
-					this.confirm = false
-
-					this.$router.push("/practices/?practice_tab=Deactivated")
-				})
-				.catch(err => {
-					this.$store.commit("SET_NOTIFICATION", {
-						enabled: true,
-						status: "danger",
-						text: err.response.data.message
-					})
-				})
+        this.$emit("practiceUpdated", practice)
+      }).catch(this.errorHandler).finally(() => {
+        this.showDeletePracticeModal = false
+        this.deletingPractice = false
+      })
 		},
+
+    rejectDeletePractice () {
+      this.rejectingDeletePractice = true
+      this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/reject-delete-request`).then((response) => {
+        const practice = response.data.data.practice
+
+        const message = response.data.message
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: message || "Delete Request Rejected Successfully",
+        })
+
+        this.$emit("practiceUpdated", practice)
+      }).catch(this.errorHandler).finally(() => {
+        this.showRejectDeletePracticeModal = false
+        this.rejectingDeletePractice = false
+      })
+    },
+
+    deactivatePractice () {
+      this.deactivatingPractice = true
+      this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/deactivate`).then((response) => {
+        const practice = response.data.data.practice
+
+        const message = response.data.message
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: message || "Practice Successfully Deactivated",
+        })
+
+        this.$emit("practiceUpdated", practice)
+      }).catch(this.errorHandler).finally(() => {
+        this.showDeactivatePracticeModal = false
+        this.deactivatingPractice = false
+      })
+    },
+
+    reactivatePractice () {
+      this.reactivatingPractice = true
+      this.$axios.put(`/api/v1/admin/practices/${this.practice.id}/reactivate`).then((response) => {
+        const practice = response.data.data.practice
+
+        const message = response.data.message
+
+        this.$store.commit("SET_NOTIFICATION", {
+          enabled: true,
+          status: "success",
+          text: message || "Practice Successfully Reactivated",
+        })
+
+        this.$emit("practiceUpdated", practice)
+      }).catch(this.errorHandler).finally(() => {
+        this.showReactivatePracticeModal = false
+        this.reactivatingPractice = false
+      })
+    },
 
 		async toPutPracticeNotes () {
 			try {

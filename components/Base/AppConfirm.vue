@@ -5,7 +5,12 @@
     :class="inClass"
   >
     <p>{{ message }}</p>
-    <div class="flex justify-center pt-4">
+
+    <div class="flex justify-center" v-if="loading">
+      <svgicon name="loader" width="40" height="40" />
+    </div>
+
+    <div class="flex justify-center pt-4" v-if="!loading">
       <AppButton
         :label="'Cancel'"
         class="mx-1"
@@ -17,8 +22,10 @@
     </div>
   </div>
 </template>
+
 <script>
 import AppButton from "@/components/Base/AppButton"
+
 export default {
 	components: {
 		AppButton
@@ -29,7 +36,12 @@ export default {
 			required: true
 		},
 		inStyle: String,
-		inClass: String
+		inClass: String,
+
+		loading: {
+			type: Boolean,
+			default: false,
+		},
 	}
 };
 </script>

@@ -2,15 +2,46 @@
   <div class="flex xs:flex-col text-sm no-underline">
     <transition name="drop" mode="out-in">
       <AppConfirm
-        v-if="confirm"
-        :message="'Are you sure you want to deactivate this account?'"
-        @cancel="confirm = false"
-        @confirm="toDeactivateLocum()"
+        v-if="showDeleteModal"
+        :message="deletingLocum ? 'Deleting account....' : 'Are you sure you want to delete this account?'"
+        @cancel="showDeleteModal = false"
+        @confirm="deleteLocumAccount()"
+        :loading="deletingLocum"
       />
     </transition>
 
+    <transition name="drop" mode="out-in">
+      <AppConfirm
+        v-if="showRejectDeleteAccountRequestModal"
+        :message="rejectingDeleteLocumAccountRequest ? 'Rejecting delete request....' : 'Are you sure you want to reject this delete account request?'"
+        @cancel="showRejectDeleteAccountRequestModal = false"
+        @confirm="rejectDeleteLocumAccountRequest()"
+        :loading="rejectingDeleteLocumAccountRequest"
+      />
+    </transition>
+    
+    <transition name="drop" mode="out-in">
+      <AppConfirm
+        v-if="showDeactivateModal"
+        :message="deactivatingLocum ? 'Deactivating account...' : 'Are you sure you want to deactivate this account?'"
+        @cancel="showDeactivateModal = false"
+        @confirm="deactivateLocumAccount()"
+        :loading="deactivatingLocum"
+      />
+    </transition>
+    
+    <transition name="drop" mode="out-in">
+      <AppConfirm
+        v-if="showReactivateModal"
+        :message="reactivatingLocum ? 'Reactivating account...' : 'Are you sure you want to reactivate this account?'"
+        @cancel="showReactivateModal = false"
+        @confirm="reactivateLocumAccount()"
+        :loading="reactivatingLocum"
+      />
+    </transition>
+    
     <transition name="fade" mode="out-in">
-      <div v-if="confirm" class="shield" />
+      <div v-if="showDeleteModal || showRejectDeleteAccountRequestModal || showDeactivateModal || showReactivateModal" class="shield" />
     </transition>
 
     <transition name="drop" mode="out-in">
@@ -374,17 +405,50 @@
               @click="confirmBogus = true"
             /> -->
 
+            <div v-if="user && user.account_delete_status === 'Pending'">
+              <span>Requested to delete account on {{ user.account_delete_requested_at_formatted }}</span>
+            </div>
+
             <AppButton
-              v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Deactivate Locum')"
-              :label="'Deactivate this Account'"
+              v-if="user.status !== 'Deleted'"
+              :label="'Delete this Account'"
               class="mx-auto"
               :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
               :background="''"
-              @click="confirm = true"
+              @click="showDeleteModal = true"
             />
+
+            <AppButton
+              v-if="user && user.account_delete_status === 'Pending'"
+              :label="'Reject Delete Account Request'"
+              class="mx-auto"
+              :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
+              :background="''"
+              @click="showRejectDeleteAccountRequestModal = true"
+            />
+
+            <template v-if="user.status !== 'Deleted'">
+              <AppButton
+                v-if="user.status !== 'Deactivated' && authAdminPermissions.includes('Deactivate Locum')"
+                :label="'Deactivate this Account'"
+                class="mx-auto"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
+                :background="''"
+                @click="showDeactivateModal = true"
+              />
+
+              <AppButton
+                v-if="user.status === 'Deactivated' && authAdminPermissions.includes('Deactivate Locum')"
+                :label="'Reactivate this Account'"
+                class="mx-auto"
+                :inClass="'mt-2 bg-gray-800 hover:bg-gray-900 '"
+                :background="''"
+                @click="showReactivateModal = true"
+              />
+            </template>
           </div>
 
-          <div v-if="user.status !== 'Deactivated' && user.first_actived_at && authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
+          <div v-if="user.status !== 'Deleted' && user.first_actived_at && authAdminPermissions.includes('Change Locum Status')" class="mx-3 mt-4">
             <span class="text-lg font-semibold font-semibold">Change Locum Status</span>
             <span
               class="tool inline-block"
@@ -433,6 +497,7 @@
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
   import AppConfirm from "@/components/Base/AppConfirm"
+  import AppConfirmationModal from "@/components/Base/AppConfirmationModal"
   import { mixin as clickaway } from "vue-clickaway"
   import AppAvatar from "@/components/Base/AppAvatar"
   export default {
@@ -440,6 +505,7 @@
       AppButton,
       AppInput,
       AppConfirm,
+      AppConfirmationModal,
       AppAvatar,
     },
 
@@ -456,7 +522,16 @@
       return {
         disabled: "true",
 
-        confirm: false,
+        showDeleteModal: false,
+        showRejectDeleteAccountRequestModal: false,
+        showDeactivateModal: false,
+        showReactivateModal: false,
+
+        deletingLocum: false,
+        rejectingDeleteLocumAccountRequest: false,
+        deactivatingLocum: false,
+        reactivatingLocum: false,
+
         confirmBogus: false,
 
         locumDetails: "",
@@ -483,7 +558,7 @@
       },
 
       locumStatusChoices () {
-        if (!this.user || this.user.status === 'Deactivated') {
+        if (!this.user || this.user.status === 'Deleted') {
           return []
         }
 
@@ -599,7 +674,38 @@
       this.hubzzLocumNotes = this.user.hubzz_locum_notes
     },
 
+    mounted() {
+      this.$socket.on('Admin Notification Locum Deactivated', this.emitUpdateLocumUsers)
+      this.$socket.on('Admin Notification Locum Deactivated By Admin', this.emitUpdateLocumUsers)
+      this.$socket.on('Admin Notification Locum Reactivated', this.emitUpdateLocumUsers)
+      this.$socket.on('Admin Notification Locum Reactivated By Admin', this.emitUpdateLocumUsers)
+      this.$socket.on('Admin Notification Locum Account Delete Requested', this.emitUpdateLocumUsers)
+      this.$socket.on('Admin Notification Locum Account Delete Request Cancelled', this.emitUpdateLocumUsers)
+      this.$socket.on('Admin Notification Locum Deleted', this.emitUpdateLocumUsers)
+    },
+
+    destroyed() {
+      this.$socket.removeListener('Admin Notification Locum Deactivated', this.emitUpdateLocumUsers)
+      this.$socket.removeListener('Admin Notification Locum Deactivated By Admin', this.emitUpdateLocumUsers)
+      this.$socket.removeListener('Admin Notification Locum Reactivated', this.emitUpdateLocumUsers)
+      this.$socket.removeListener('Admin Notification Locum Reactivated By Admin', this.emitUpdateLocumUsers)
+      this.$socket.removeListener('Admin Notification Locum Account Delete Requested', this.emitUpdateLocumUsers)
+      this.$socket.removeListener('Admin Notification Locum Account Delete Request Cancelled', this.emitUpdateLocumUsers)
+      this.$socket.removeListener('Admin Notification Locum Deleted', this.emitUpdateLocumUsers)
+    },
+
     methods: {
+      emitUpdateLocumUsers ({ notification }) {
+        if (
+          notification
+          && notification.payload_type === 'locum_user'
+          && this.user
+          && notification.payload.id === this.user.id
+        ) {
+          this.$emit('updateLocumUsers')
+        }
+      },
+
       getQuery () {
         const query = {
           ...this.$route.query
@@ -628,40 +734,104 @@
         }
       },
 
-      async toDeactivateLocum () {
-        this.confirm = true
-        await this.$axios
-          .$put(
-            `/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`,
-            {}
-          )
-          .then(res => {
-            console.log(res)
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "success",
-              text: "Locum Successfully Deactivated"
-            })
+      deleteLocumAccount () {
+        this.showDeleteModal = true
+        this.deletingLocum = true
+        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/delete`).then(() => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Locum Successfully Deleted"
+          })
 
-            this.$emit('updateLocumUsers')
+          this.$emit('updateLocumUsers')
+        }).catch((err) => {
+          console.log('err', err.response || err)
+
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
           })
-          .catch(err => {
-            this.$store.commit("SET_NOTIFICATION", {
-              enabled: true,
-              status: "danger",
-              text: err.response.data.message
-            })
+        }).finally(() => {
+          this.showDeleteModal = false
+          this.deletingLocum = false
+        })
+      },
+
+      rejectDeleteLocumAccountRequest () {
+        this.showRejectDeleteAccountRequestModal = true
+        this.rejectingDeleteLocumAccountRequest = true
+        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/reject-delete-request`).then(() => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Locum Successfully Deleted"
           })
-        this.confirm = false
+
+          this.$emit('updateLocumUsers')
+        }).catch((err) => {
+          console.log('err', err.response || err)
+
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        }).finally(() => {
+          this.showRejectDeleteAccountRequestModal = false
+          this.rejectingDeleteLocumAccountRequest = false
+        })
+      },
+
+      deactivateLocumAccount () {
+        this.showDeactivateModal = true
+        this.deactivatingLocum = true
+        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/deactivate`).then(() => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Locum Successfully Deactivated"
+          })
+
+          this.$emit('updateLocumUsers')
+        }).catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        }).finally(() => {
+          this.showDeactivateModal = false
+          this.deactivatingLocum = false
+        })
+      },
+
+      reactivateLocumAccount () {
+        this.showReactivateModal = true
+        this.reactivatingLocum = true
+        this.$axios.put(`/api/v1/admin/locum-users/${this.$route.params.id}/reactivate`).then(() => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "success",
+            text: "Locum Successfully Reactivated"
+          })
+
+          this.$emit('updateLocumUsers')
+        }).catch(err => {
+          this.$store.commit("SET_NOTIFICATION", {
+            enabled: true,
+            status: "danger",
+            text: err.response.data.message
+          })
+        }).finally(() => {
+          this.showReactivateModal = false
+          this.reactivatingLocum = false
+        })
       },
 
       async changeLocumUserStatus (locumID, status) {
         try {
-          if (status === 'Deactivate') {
-            this.confirm = true
-            return
-          }
-
           this.$emit('setViewLocumUserLoading', true)
 
           console.log("locum details", status)
@@ -712,6 +882,7 @@
 					case 'Inactive':
 						return 'bg-gray-500 -700'
 					case 'Deactivated':
+					case 'Deleted':
 						return 'bg-red-800 text-red-400'
 					case 'Account Suspension':
 						return 'bg-red-600 '

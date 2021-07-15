@@ -75,6 +75,15 @@
           'Admin Notification Locum Profile Updated',
           'Admin Notification Locum Registration',
           'Admin Notification Locum Dormanted',
+
+          'Admin Notification Locum Deactivated',
+          'Admin Notification Locum Deactivated By Admin',
+          'Admin Notification Locum Reactivated',
+          'Admin Notification Locum Reactivated By Admin',
+          'Admin Notification Locum Account Delete Requested',
+          'Admin Notification Locum Account Delete Request Cancelled',
+          'Admin Notification Locum Deleted',
+
           'Admin Notification Locum Invoice Approved Disputed',
           'Admin Notification Completed Ongoing Job 7 Days',
 
@@ -93,6 +102,15 @@
           'Admin Notification Practice Registration',
           // 'Admin Notification Practice Created',
           'Admin Notification Practice Dormanted',
+          'Admin Notification Practice Deactivated',
+          'Admin Notification Practice Deactivated By Admin',
+          'Admin Notification Practice Reactivated',
+          'Admin Notification Practice Reactivated By Admin',
+          'Admin Notification Practice Delete Requested',
+          'Admin Notification Practice Delete Request Cancelled',
+          'Admin Notification Practice Delete Request Rejected',
+          'Admin Notification Practice Deleted',
+
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Surgery Deleted',
           'Admin Notification Practice Surgery Termination Requested',
@@ -106,6 +124,14 @@
           'Admin Notification Locum Registration',
           'Admin Notification Locum Profile Updated',
           'Admin Notification Locum Dormanted',
+
+          'Admin Notification Locum Deactivated',
+          'Admin Notification Locum Deactivated By Admin',
+          'Admin Notification Locum Reactivated',
+          'Admin Notification Locum Reactivated By Admin',
+          'Admin Notification Locum Account Delete Requested',
+          'Admin Notification Locum Account Delete Request Cancelled',
+          'Admin Notification Locum Deleted',
         ],
 
         practiceSideBarNotificationsTypeNames: [
@@ -114,6 +140,14 @@
           'Admin Notification Practice Invoice Detail Updated',
           'Admin Notification Practice Surgery Created',
           'Admin Notification Practice Dormanted',
+          'Admin Notification Practice Deactivated',
+          'Admin Notification Practice Deactivated By Admin',
+          'Admin Notification Practice Reactivated',
+          'Admin Notification Practice Reactivated By Admin',
+          'Admin Notification Practice Delete Requested',
+          'Admin Notification Practice Delete Request Cancelled',
+          'Admin Notification Practice Delete Request Rejected',
+          'Admin Notification Practice Deleted',
         ],
 
         billingSideBarNotificationsTypeNames: [
