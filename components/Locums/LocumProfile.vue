@@ -766,7 +766,7 @@
           this.$store.commit("SET_NOTIFICATION", {
             enabled: true,
             status: "success",
-            text: "Locum Successfully Deleted"
+            text: "Locum Delete Request Rejected Successfully"
           })
 
           this.$emit('updateLocumUsers')
