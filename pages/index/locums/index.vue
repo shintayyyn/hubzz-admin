@@ -37,7 +37,7 @@
                 <AppButton
                   label="Apply"
                   :customTheme="'bg-orange-400 hover:bg-orange-500 text-gray-700 border border-gray-400 rounded'"
-                  @click="getAllLocumUsers(params)"
+                  @click="submitFilters()"
                 />
               </div>
 
@@ -381,6 +381,11 @@
     },
 
 		methods: {
+      submitFilters() {
+        this.currentPage = 1
+        this.getAllLocumUsers()
+      },
+
 			getAllLocumUsers () {
         const filters = {}
 
