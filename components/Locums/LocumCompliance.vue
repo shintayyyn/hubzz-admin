@@ -305,6 +305,162 @@
           :event="item.file == null ? disabled :'click'" 
           :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
           :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
+          class="bg-yellow-500 flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+          draggable="false"
+        >
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pl-6 py-2 align-middle">
+            <strong class="block md:hidden text-sm uppercase">Title</strong>
+            <span 
+              :class="item && item.file ? 'truncate' : 'break-word'"
+            >
+              {{ item && item.compliance_document_name ? item.compliance_document_name : null }}
+            </span>
+            <span
+              v-if="item && item.compliance_document_name === 'Passport'" 
+              :class="item && item.file ? 'truncate' : 'break-word'"
+            >
+              {{ item && item.country_name ? item.country_name + "("+item.country_code+")" : null }}
+            </span>
+          </div>
+
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+            <strong class="block md:hidden text-sm uppercase">File size</strong>
+            <span>{{ item.file ? (item.file.size / 1048576).toFixed(2) + 'Mb' : null }}
+            </span>
+          </div>
+
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+            <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
+            <span>{{ item && item.file ? item.uploaded_at_in_gb_formatted : null }}
+            </span>
+          </div>
+
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+            <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
+            <span class="break-all">{{ item.expired_at_in_gb_formatted }}</span>
+          </div>
+
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 py-2 align-middle md:text-center">
+            <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
+            <span class="break-all">{{ item.days_to_expire }}</span>
+          </div>
+
+          <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 md:px-4 xl:pr-4 py-2 align-middle md:text-center">
+            <strong class="block md:hidden">Status</strong>
+            <div
+              class="text-center text-black text-sm py-2 border border-gray-500 rounded-full"
+              :class="statusStyle(item && item.status ? item.status:null, true)"
+            >
+              <span>
+                {{ item && item.status ? item.status:null }}
+              </span>
+            </div>
+          </div>
+        </nuxt-link>
+        <div v-if="item.child_locum_compliance_documents && item.child_locum_compliance_documents.length > 0 ">
+          <nuxt-link
+            v-for="(childItem, childIndex) in item.child_locum_compliance_documents" :key="`item-${childIndex}`"
+            :event="childItem.file == null ? disabled :'click'" 
+            :class="childItem.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
+            :to="{path:`/locums/${user.id}/locum-compliance/${childItem ? childItem.id : null }`, query: $route.query}"
+            class="flex flex-col md:flex-row ml-4 px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
+            draggable="false"
+          >
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pl-6 py-2 align-middle">
+              <strong class="block md:hidden text-sm uppercase">Title</strong>
+              <span 
+                :class="childItem && childItem.file ? 'truncate' : 'break-word'"
+              >
+                {{ childItem && childItem.compliance_document_name ? childItem.compliance_document_name : null }}
+              </span>
+              <span
+                v-if="childItem && childItem.compliance_document_name === 'Passport'" 
+                :class="childItem && childItem.file ? 'truncate' : 'break-word'"
+              >
+                {{ childItem && childItem.country_name ? childItem.country_name + "("+childItem.country_code+")" : null }}
+              </span>
+            </div>
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">File size</strong>
+              <span>{{ childItem.file ? (childItem.file.size / 1048576).toFixed(2) + 'Mb' : null }}
+              </span>
+            </div>
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">File uploaded</strong>
+              <span>{{ childItem && childItem.file ? childItem.uploaded_at_in_gb_formatted : null }}
+              </span>
+            </div>
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Expiry Date</strong>
+              <span class="break-all">{{ childItem.expired_at_in_gb_formatted }}</span>
+            </div>
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 py-2 align-middle md:text-center">
+              <strong class="block md:hidden text-sm uppercase">Days to expire</strong>
+              <span class="break-all">{{ childItem.days_to_expire }}</span>
+            </div>
+
+            <div class="flex flex-col md:justify-center sm:w-1/2 md:w-1/6 px-1 xl:px-2 xl:pr-4 py-2 align-middle md:text-center">
+              <strong class="block md:hidden">Status</strong>
+              <div v-if="childItem.file == null"
+                   class="text-center  text-sm py-2 px-8 sm:mx-2 border border-gray-500 bg-transparent rounded-full"
+              >
+                <span>Empty</span>
+              </div>
+              <div
+                v-else
+                class="text-center text-black text-sm py-2 sm:mx-2 border border-gray-500 rounded-full"
+                :class="statusStyle(childItem && childItem.status ? childItem.status:null)"
+              >
+                <span>
+                  {{ childItem && childItem.status ? childItem.status:null }}
+                </span>
+              </div>
+            </div>
+          </nuxt-link>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTHER MANDATORY -->
+    <p class="text-sm  px-4 md:px-8 pt-8 font-semibold">
+      Other Mandatory
+    </p>
+
+    <div class="w-full overflow-x-auto p-4 md:px-8 md:py-2">
+      <!-- HEADER --> 
+      <div class="hidden md:flex items-center  justify-around font-semibold"> 
+        <div class="align-middle pl-6 pr-2 w-1/6">
+          Title
+        </div> 
+        <div class="align-middle px-2 text-center w-1/6">
+          File size
+        </div>
+        <div class="align-middle px-2 text-center w-1/6">
+          File uploaded
+        </div>
+        <div class="align-middle px-2 text-center w-1/6">
+          Expiry Date
+        </div>
+        <div class="align-middle px-2 text-center w-1/6">
+          Days to expire
+        </div>
+        <div class="align-middle px-2 text-center w-1/6">
+          Status
+        </div>
+      </div>
+      <!-- END HEADER -->
+      <!-- BODY -->
+      <div
+        v-for="(item, index) in otherMandatoryCompDocs" :key="`item-${index}`"
+      >
+        <nuxt-link
+          :event="item.file == null ? disabled :'click'" 
+          :class="item.file == null ? 'cursor-auto':' hover:bg-gray-300 transition-hover ' "
+          :to="{path:`/locums/${user.id}/locum-compliance/${item ? item.id : null }`, query: $route.query}"
           class="flex flex-col md:flex-row px-4 md:px-0 py-2 my-2 rounded-lg border-l-8 border-yellow-500 md:border-l-0  no-underline shadow-md " 
           draggable="false"
         >
@@ -620,6 +776,7 @@ export default {
 
       professionCategoryId: null,
       mandatoryCompDocs: null,
+      otherMandatoryCompDocs: null,
       optionalCompDocs: null,
       // mandatoryComplianceDocuments:[],
       optionalComplianceDocuments: [],
@@ -950,6 +1107,7 @@ export default {
         await this.$axios.$get(`/api/v1/admin/locum-user-compliances/${this.user.id}`).then(res => {
           this.referenceCompDocs = res.data.user.reference_locum_compliance_documents
           this.mandatoryCompDocs = res.data.user.mandatory_locum_compliance_documents
+          this.otherMandatoryCompDocs = res.data.user.other_mandatory_locum_compliance_documents
           this.optionalCompDocs = res.data.user.optional_locum_compliance_documents
           this.locumMandatoryTrainings = res.data.user.locum_mandatory_trainings
         })
@@ -1031,19 +1189,28 @@ export default {
       }
     },
 
-    statusStyle (status){
+    statusStyle (status, reverseYellow) {
       switch(status){
         case 'Approved':
           return 'bg-green-500 border-green-500 text-white lg:px-8 sm:px-4'
         case 'Expiring':
+          if (reverseYellow) {
+            return 'bg-white text-black lg:px-8 sm:px-4'
+          }
           return 'bg-yellow-500 border-yellow-500 text-white text-black lg:px-8 sm:px-4'
         case 'Expired':
           return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
         case 'Rejected':
           return 'bg-red-500 border-red-500 text-white lg:px-8 sm:px-4'
         case 'Pending':
+          if (reverseYellow) {
+            return 'bg-white text-black lg:px-8 sm:px-4'
+          }
           return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
         case 'Present':
+          if (reverseYellow) {
+            return 'bg-white text-black lg:px-8 sm:px-4'
+          }
           return 'bg-yellow-500 border-yellow-500 text-black lg:px-8 sm:px-4'
         case 'Empty':
           return 'border-gray-500  lg:px-8 sm:px-4'
