@@ -24,6 +24,19 @@
 export default {
   computed: {
     crumbs () {
+      if (this.$route.name === 'index-survey-survey-questions-surveyQuestionId-edit') {
+        return [
+          {
+            text: 'Survey',
+            to: { name: 'index-survey' },
+          },
+          {
+            text: 'Edit Questionnaire',
+            to: { name: 'index-survey-survey-questions-surveyQuestionId-edit' },
+          },
+        ]
+      }
+
       const routeMatched = this.$route.path.split("/")
       
       routeMatched.shift()
