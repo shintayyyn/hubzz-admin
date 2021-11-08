@@ -65,10 +65,10 @@ export default {
           label: 'Text Box',
           value: 'Text Box',
         },
-        {
-          label: 'Check Box',
-          value: 'Check Box',
-        },
+        // {
+        //   label: 'Check Box',
+        //   value: 'Check Box',
+        // },
       ],
       questionType: null,
       question: '',
