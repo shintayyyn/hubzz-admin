@@ -7,7 +7,7 @@
     <div class="sidebar-nav pt-8 xl:pt-10">
       <div class="flex flex-row justify-center pb-4">
         <div class="flex justify-center">
-          <img src="~/assets/images/hubzz_logo.png" class="w-3/5"/>
+          <img src="~/assets/images/hubzz_logo.png" class="w-3/5">
         </div>
         
         <!-- <button
@@ -17,16 +17,16 @@
           X
         </button> -->
         <button
-            class="absolute top-0 right-0 my-2 mx-3 close-button cursor-pointer focus:outline-none text-2xl font-bold text-sunglow hover:text-sunglow-dark transition-hover"
-            @click="close"
-          >
-            <svgicon name="times-solid" class="fill-current" width="18" />
+          class="absolute top-0 right-0 my-2 mx-3 close-button cursor-pointer focus:outline-none text-2xl font-bold text-sunglow hover:text-sunglow-dark transition-hover"
+          @click="close"
+        >
+          <svgicon name="times-solid" class="fill-current" width="18" />
         </button>
       </div>
 
       <!-- LINKS -->
       <div v-for="(navigationTab, index) in navigationTabs" :key="index" class="text-sm relative">
-        <span v-if="navigationTab.active" class="absolute ml-3 mt-4 p-1.5 h-1.5 rounded-sm bg-sunglow"/>
+        <span v-if="navigationTab.active" class="absolute ml-3 mt-4 p-1.5 h-1.5 rounded-sm bg-sunglow" />
 
         <nuxt-link :to="navigationTab.route">
           <div
@@ -190,7 +190,7 @@ export default {
         })
       }
 
-      if(this.authAdminPermissions.includes('View FAQ')){
+      if (this.authAdminPermissions.includes('View FAQ')) {
         addedLists.push({
           name: "FAQs",
           route: "/faqs",
@@ -199,11 +199,25 @@ export default {
         })
       }
 
+      addedLists.push({
+        name: "Survey",
+        route: "/survey",
+        order: 9,
+        active: `/${this.$route.path.split('/')[1]}` === '/survey',
+      })
+
+      addedLists.push({
+        name: "Survey Responses",
+        route: "/survey-responses",
+        order: 9,
+        active: `/${this.$route.path.split('/')[1]}` === '/survey-responses',
+      })
+
       if(this.authAdminPermissions.includes('View Terms and Conditions & Privacy Policy')){
         addedLists.push({
           name: "Terms and Conditions",
           route: "/terms-and-conditions",
-          order: 9,
+          order: 10,
           active: `/${this.$route.path.split('/')[1]}` === '/terms-and-conditions',
         })
       }
