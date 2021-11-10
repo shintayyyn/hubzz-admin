@@ -95,7 +95,7 @@
 
             <div class="mb-4">
               <h1 class="text-sm">
-                E-Email Address
+                E-Mail Address
               </h1>
               <p class="w-full p-2 border rounded-lg shadow-lg">
                 {{ surveyResponse.user_email }}
