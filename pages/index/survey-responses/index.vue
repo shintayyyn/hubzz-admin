@@ -30,23 +30,23 @@
 
     <section class="flex-1 flex flex-col overflow-y-auto">
       <template>
-        <div class="flex flex-col md:flex-row justify-between md:items-center">
+        <div class="flex flex-col md:flex-row md:items-center">
           <div class="flex flex-col w-full justify-start mb-2">
-            <div class="flex justify-between">
-              <div class="flex">
-                <div class="w-full">
+            <div class="flex">
+              <div class="flex w-full">
+                <div class="md:w-3/12">
                   <AppInputSmall
                     v-model="search"
                     :type="'text'"
                     :name="'search'"
                     :button="true"
                     :buttonLabel="'Search'"
-                    :placeholder="surveyDomain === 'Locum' ? 'Search Locum Name' : 'Search Practice'"
+                    :placeholder="surveyDomain === 'Locum' ? 'Search Locum Name' : 'Search Practice User Name / Practice Name'"
                     @click="searchSubmit()"
                   />
                 </div>
                 
-                <template v-if="false">
+                <template>
                   <div class="mx-1 my-2">
                     <AppButton
                       label="Filters"
@@ -82,25 +82,43 @@
               class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3"
               :class="filterModal ? 'flex' : 'hidden'"
             >
-              <div class="text-gray-800 w-full lg:w-1/4 md:w-1/5">
-                <AppInputSmall
-                  v-model="filterStatus"
-                  :type="'select'"
-                  :name="'locum_status'"
-                  :placeholder="'Locum Status'"
-                  :items="locumStatuses"
+              <div class="text-gray-800">
+                <AppDate
+                  v-model="dateSubmittedStart"
+                  :name="'date_start'"
+                  :label="'Date Submitted Start'"
                 />
               </div>
 
-              <div class="mx-2 text-gray-800 w-full lg:w-1/4 md:w-1/5">
-                <AppInputSmall
-                  v-model="filterCompliances"
-                  :type="'select'"
-                  :name="'compliance_status'"
-                  :placeholder="'Compliance Status'"
-                  :items="complianceStatuses"
+              <div class="mx-2 text-gray-800">
+                <AppDate
+                  v-model="dateSubmittedEnd"
+                  :name="'date_end'"
+                  :label="'Date Submitted End'"
                 />
               </div>
+
+              <template v-if="false">
+                <div class="text-gray-800 w-full lg:w-1/4 md:w-1/5">
+                  <AppInputSmall
+                    v-model="filterStatus"
+                    :type="'select'"
+                    :name="'locum_status'"
+                    :placeholder="'Locum Status'"
+                    :items="locumStatuses"
+                  />
+                </div>
+
+                <div class="mx-2 text-gray-800 w-full lg:w-1/4 md:w-1/5">
+                  <AppInputSmall
+                    v-model="filterCompliances"
+                    :type="'select'"
+                    :name="'compliance_status'"
+                    :placeholder="'Compliance Status'"
+                    :items="complianceStatuses"
+                  />
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -151,6 +169,22 @@
         </div>
       </template>
 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading || count === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="count === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-sunglow hover:bg-sunglow-dark cursor-pointer'"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
       <nuxt-child
         @updateLocumUsers="getAllSurveyResponses"
       />
@@ -162,13 +196,16 @@
 	import debounce from 'lodash.debounce'
   import AppTableNew from '@/components/Base/AppTableNew'
   import AppInputSmall from '@/components/Base/AppInputSmall'
+  import AppDate from '@/components/Base/AppDate'
   import AppButton from '@/components/Base/AppButton'
+
 	export default {
 
 		components: {
       AppTableNew,
       AppInputSmall,
       AppButton,
+      AppDate,
 		},
 
 		data () {
@@ -248,6 +285,11 @@
         ],
 
         filterModal: false,
+
+        dateSubmittedStart: null,
+        dateSubmittedEnd: null,
+
+        downloading: false,
 			}
 		},
 
@@ -255,6 +297,7 @@
       authAdminPermissions () {
         return this.$store.getters["permissions"]
       },
+
       columns () {
         if (this.surveyDomain === 'Locum') {
           return [
@@ -448,6 +491,46 @@
     },
 
 		methods: {
+      downloadCsv () {
+        this.downloading = true
+
+        const filters = {}
+
+        if (this.surveyDomain) {
+          filters.survey_domain = this.surveyDomain
+        }
+
+        if (this.search) {
+          filters.search = this.search
+        }
+
+        if (this.dateSubmittedStart) {
+          filters.date_submitted_start = this.dateSubmittedStart
+        }
+
+        if (this.dateSubmittedEnd) {
+          filters.date_submitted_end = this.dateSubmittedEnd
+        }
+
+        this.$axios.post('/api/v1/admin/survey-responses/generate-key', {
+          filename: `survey_responses.csv`,
+        }, {
+          params: {
+            ...filters,
+          },
+        }).then((responses) => {
+          console.log('responses', responses)
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/survey-responses/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
+        })
+      },
+
       submitFilters () {
         this.currentPage = 1
         this.getAllSurveyResponses()
@@ -462,6 +545,14 @@
 
         if (this.search) {
           filters.search = this.search
+        }
+
+        if (this.dateSubmittedStart) {
+          filters.date_submitted_start = this.dateSubmittedStart
+        }
+
+        if (this.dateSubmittedEnd) {
+          filters.date_submitted_end = this.dateSubmittedEnd
         }
 
         this.gettingSurveyResponses = true
@@ -502,6 +593,8 @@
         this.search = null
         this.filterStatus = null
         this.filterCompliances = null
+        this.dateSubmittedStart = null
+        this.dateSubmittedEnd = null
 
         this.getAllSurveyResponses()
       },
