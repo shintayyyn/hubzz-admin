@@ -169,6 +169,22 @@
         </div>
       </template>
 
+      <div
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
+        <div class="md:px-1 flex flex-wrap w-full justify-end">
+          <button
+            :disabled="downloading || count === 0"
+            class="px-4 py-2 rounded-lg flex items-center text-xs md:text-sm"
+            :class="count === 0 ? 'bg-gray-500 cursor-not-allowed' : 'bg-sunglow hover:bg-sunglow-dark cursor-pointer'"
+            @click="downloadCsv"
+          >
+            <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
+            <span>Download CSV</span>
+          </button>
+        </div>
+      </div>
+
       <nuxt-child
         @updateLocumUsers="getAllSurveyResponses"
       />
@@ -272,6 +288,8 @@
 
         dateSubmittedStart: null,
         dateSubmittedEnd: null,
+
+        downloading: false,
 			}
 		},
 
@@ -473,6 +491,46 @@
     },
 
 		methods: {
+      downloadCsv () {
+        this.downloading = true
+
+        const filters = {}
+
+        if (this.surveyDomain) {
+          filters.survey_domain = this.surveyDomain
+        }
+
+        if (this.search) {
+          filters.search = this.search
+        }
+
+        if (this.dateSubmittedStart) {
+          filters.date_submitted_start = this.dateSubmittedStart
+        }
+
+        if (this.dateSubmittedEnd) {
+          filters.date_submitted_end = this.dateSubmittedEnd
+        }
+
+        this.$axios.post('/api/v1/admin/survey-responses/generate-key', {
+          filename: `survey_responses.csv`,
+        }, {
+          params: {
+            ...filters,
+          },
+        }).then((responses) => {
+          console.log('responses', responses)
+          const token = responses.data.data.token
+
+          window.open(`${process.env.API_URL}/api/v1/admin/survey-responses/csv?token=${token}`)
+        }).catch((err) => {
+          console.log('err', err)
+          this.$nuxt.error(err.response ? err.response.data : err)
+        }).finally(() => {
+          this.downloading = false
+        })
+      },
+
       submitFilters () {
         this.currentPage = 1
         this.getAllSurveyResponses()
