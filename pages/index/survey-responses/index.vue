@@ -512,8 +512,14 @@
           filters.date_submitted_end = this.dateSubmittedEnd
         }
 
+        const filename = this.surveyDomain === 'Locum'
+          ? `survey_locum_responses.csv`
+          : this.surveyDomain === 'Practice'
+            ? `survey_practice_responses.csv`
+            : `survey_responses.csv`
+
         this.$axios.post('/api/v1/admin/survey-responses/generate-key', {
-          filename: `survey_responses.csv`,
+          filename,
         }, {
           params: {
             ...filters,
