@@ -34,14 +34,14 @@
           <div class="flex flex-col w-full justify-start mb-2">
             <div class="flex">
               <div class="flex w-full">
-                <div class="md:w-3/12">
+                <div class="md:w-4/12">
                   <AppInputSmall
                     v-model="search"
                     :type="'text'"
                     :name="'search'"
                     :button="true"
                     :buttonLabel="'Search'"
-                    :placeholder="surveyDomain === 'Locum' ? 'Search Locum Name' : 'Search Practice User Name / Practice Name'"
+                    :placeholder="surveyDomain === 'Locum' ? 'Search Locum ID, Name, Email' : 'Search Practice User ID, Name, Email / Practice ID, Name'"
                     @click="searchSubmit()"
                   />
                 </div>
@@ -79,23 +79,35 @@
             </div>
             
             <div
-              class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3"
+              class="flex flex-col flex-wrap justify-start items-start w-full rounded-lg -mt-3"
               :class="filterModal ? 'flex' : 'hidden'"
             >
-              <div class="text-gray-800">
-                <AppDate
-                  v-model="dateSubmittedStart"
-                  :name="'date_start'"
-                  :label="'Date Submitted Start'"
+              <div class="text-gray-800 w-full lg:w-1/4 md:w-1/5 mr-2">
+                <AppInputSmall
+                  v-model="locumProfessionId"
+                  :type="'select'"
+                  :name="'locum_profession'"
+                  :placeholder="'Locum Profession'"
+                  :items="locumProfessionSelection"
                 />
               </div>
+              
+              <div class="flex items-end mx-2">
+                <div class="text-gray-800">
+                  <AppDate
+                    v-model="dateSubmittedStart"
+                    :name="'date_start'"
+                    :label="'Date Submitted Start'"
+                  />
+                </div>
 
-              <div class="mx-2 text-gray-800">
-                <AppDate
-                  v-model="dateSubmittedEnd"
-                  :name="'date_end'"
-                  :label="'Date Submitted End'"
-                />
+                <div class="mx-2 text-gray-800">
+                  <AppDate
+                    v-model="dateSubmittedEnd"
+                    :name="'date_end'"
+                    :label="'Date Submitted End'"
+                  />
+                </div>
               </div>
 
               <template v-if="false">
@@ -222,6 +234,9 @@
         count: 0,
         surveyResponses: [],
 
+        locumProfessionId: null,
+        professions: [],
+
         locumStatuses: [
           {
             label: "Active",
@@ -294,6 +309,15 @@
 		},
 
 		computed: {
+      locumProfessionSelection () {
+        return this.professions.map((profession) => {
+          return {
+            label: profession.name,
+            value: profession.id,
+          }
+        })
+      },
+
       authAdminPermissions () {
         return this.$store.getters["permissions"]
       },
@@ -488,6 +512,10 @@
       this.count = 0
       this.surveyResponses = []
 			this.getAllSurveyResponses()
+
+      this.$axios.get('/api/v1/admin/professions').then((response) => {
+        this.professions = response.data.data.professions
+      }).catch(this.errorHandler)
     },
 
 		methods: {
@@ -504,6 +532,10 @@
           filters.search = this.search
         }
 
+        if (this.locumProfessionId) {
+          filters.locum_profession_id = this.locumProfessionId
+        }
+
         if (this.dateSubmittedStart) {
           filters.date_submitted_start = this.dateSubmittedStart
         }
@@ -512,8 +544,14 @@
           filters.date_submitted_end = this.dateSubmittedEnd
         }
 
+        const filename = this.surveyDomain === 'Locum'
+          ? `survey_locum_responses.csv`
+          : this.surveyDomain === 'Practice'
+            ? `survey_practice_responses.csv`
+            : `survey_responses.csv`
+
         this.$axios.post('/api/v1/admin/survey-responses/generate-key', {
-          filename: `survey_responses.csv`,
+          filename,
         }, {
           params: {
             ...filters,
@@ -536,6 +574,28 @@
         this.getAllSurveyResponses()
       },
 
+      errorHandler (err) {
+        console.log('err', err.response || err)
+
+        let message = null
+
+        if (err.response?.data?.message) {
+          message = err.response.data.message
+        } else if (err.request) {
+          message = 'Something went wrong!'
+        } else {
+          message = err.message
+        }
+
+        if (message) {
+          this.$store.commit('SET_NOTIFICATION', {
+            enabled: true,
+            status: 'danger',
+            text: message,
+          })
+        }
+      },
+
 			getAllSurveyResponses () {
         const filters = {}
 
@@ -545,6 +605,10 @@
 
         if (this.search) {
           filters.search = this.search
+        }
+
+        if (this.locumProfessionId) {
+          filters.locum_profession_id = this.locumProfessionId
         }
 
         if (this.dateSubmittedStart) {
@@ -579,7 +643,7 @@
 
           this.count = count
           this.surveyResponses = surveyResponses
-				}).finally(() => {
+				}).catch(this.errorHandler).finally(() => {
           this.gettingSurveyResponses = false
 				})
       },
@@ -591,6 +655,7 @@
       
       filterReset () {
         this.search = null
+        this.locumProfessionId = null
         this.filterStatus = null
         this.filterCompliances = null
         this.dateSubmittedStart = null
