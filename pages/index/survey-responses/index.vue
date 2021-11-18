@@ -82,7 +82,7 @@
               class="flex flex-col flex-wrap justify-start items-start w-full rounded-lg -mt-3"
               :class="filterModal ? 'flex' : 'hidden'"
             >
-              <div class="text-gray-800 w-full lg:w-1/3 md:w-1/5 mr-2">
+              <div class="text-gray-800 w-full md:w-4/12 mr-2">
                 <AppInputSmall
                   v-model="locumProfessionId"
                   :type="'select'"
