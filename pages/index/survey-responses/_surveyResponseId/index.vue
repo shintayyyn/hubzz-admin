@@ -199,11 +199,11 @@ export default {
   },
 
   mounted () {
-    this.getSurveyResponsenare()
+    this.getSurveyResponse()
   },
 
   methods: {
-    async getSurveyResponsenare () {
+    async getSurveyResponse () {
       try {
         this.gettingSurveryResponse = true
 
