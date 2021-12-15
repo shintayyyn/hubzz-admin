@@ -1,5 +1,5 @@
 <template>
-  <div v-on-clickaway="toggledOff" class="flex flex-row items-center py-2 leading-normal">
+  <div v-on-clickaway="toggledOff" class="flex flex-row items-center py-2 leading-normal flex-wrap">
     <div v-if="label || required" class="relative flex flex-row flex-no-wrap justify-between pr-2">
       <label :for="name" class="text-xs sm:text-sm py-1 font-bold">
         {{ label }}
@@ -35,8 +35,8 @@
       </div>
     </div>
     <transition name="fade">
-      <div v-if="modal" class="relative md:static z-10 flex justify-start">
-        <div class="absolute rounded-b-lg calendar bg-white shadow-md">
+      <div v-if="modal" class="relative z-10 flex justify-start w-full">
+        <div class="absolute top-0 rounded-b-lg calendar bg-white shadow-md">
           <div
             class="p-1 flex flex-row flex-no-wrap justify-start items-center border-b-2 border-yellow-500"
           >
