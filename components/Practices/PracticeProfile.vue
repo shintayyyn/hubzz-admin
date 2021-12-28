@@ -397,7 +397,7 @@
                   </p>
                 </template>-->
 
-                <div class="flex justify-center" v-if="practice && practice.practice_delete_status === 'Pending'">
+                <div v-if="practice && practice.practice_delete_status === 'Pending'" class="flex justify-center">
                   <span>Requested to delete practice on {{ practice.practice_delete_requested_at_formatted }}</span>
                 </div>
 
@@ -766,9 +766,9 @@
       <AppConfirm
         v-if="showDeletePracticeModal"
         :message="deletingPractice ? 'Deleting practice...' : 'Are you sure you want to delete this practice?'"
+        :loading="deletingPractice"
         @cancel="showDeletePracticeModal = false"
         @confirm="deletePractice()"
-        :loading="deletingPractice"
       />
     </transition>
 
@@ -776,9 +776,9 @@
       <AppConfirm
         v-if="showRejectDeletePracticeModal"
         :message="rejectingDeletePractice ? 'Rejecting request...' : 'Are you sure you want to reject this deletion request?'"
+        :loading="rejectingDeletePractice"
         @cancel="showRejectDeletePracticeModal = false"
         @confirm="rejectDeletePractice()"
-        :loading="rejectingDeletePractice"
       />
     </transition>
 
@@ -786,9 +786,9 @@
       <AppConfirm
         v-if="showDeactivatePracticeModal"
         :message="deactivatingPractice ? 'Deactivating practice...' : 'Are you sure you want to deactivate this practice?'"
+        :loading="deactivatingPractice"
         @cancel="showDeactivatePracticeModal = false"
         @confirm="deactivatePractice()"
-        :loading="deactivatingPractice"
       />
     </transition>
 
@@ -796,9 +796,9 @@
       <AppConfirm
         v-if="showReactivatePracticeModal"
         :message="reactivatingPractice ? 'Reactivating practice...' : 'Are you sure you want to reactivate this practice?'"
+        :loading="reactivatingPractice"
         @cancel="showReactivatePracticeModal = false"
         @confirm="reactivatePractice()"
-        :loading="reactivatingPractice"
       />
     </transition>
 
@@ -896,7 +896,7 @@ export default {
 	},
 
   watch: {
-    practice() {
+    practice () {
       this.setPracticeStatusChoices()
     },
   },
@@ -916,7 +916,7 @@ export default {
     this.$socket.on('Admin Notification Practice Deleted', this.emitUpdatePractice)
   },
 
-  destroyed() {
+  destroyed () {
     this.$socket.removeListener('Admin Notification Practice Deactivated', this.emitUpdatePractice)
     this.$socket.removeListener('Admin Notification Practice Deactivated By Admin', this.emitUpdatePractice)
     this.$socket.removeListener('Admin Notification Practice Reactivated', this.emitUpdatePractice)
@@ -1017,6 +1017,10 @@ export default {
 
         return
       }
+
+      this.toPutPractice.status = this.toPutPractice.status === "Dormant"
+        ? "Active"
+        : this.toPutPractice.status
       
       if (
         this.practice.status !== this.toPutPractice.status &&
