@@ -497,13 +497,15 @@ export default {
         this.locumComplianceDocument.file
       )
 
-      console.log("qweqwe", this.locumComplianceDocument.file, {
+      console.log("qweqwe asdasd", this.locumComplianceDocument.file, {
         url: fileUrl,
         type,
         subtype
       })
 
-      this.$axios
+      const axios = require('axios')
+
+      axios
         .get(fileUrl, {
           responseType: "blob"
         })

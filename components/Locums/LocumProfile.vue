@@ -4,9 +4,9 @@
       <AppConfirm
         v-if="showDeleteModal"
         :message="deletingLocum ? 'Deleting account....' : 'Are you sure you want to delete this account?'"
+        :loading="deletingLocum"
         @cancel="showDeleteModal = false"
         @confirm="deleteLocumAccount()"
-        :loading="deletingLocum"
       />
     </transition>
 
@@ -14,9 +14,9 @@
       <AppConfirm
         v-if="showRejectDeleteAccountRequestModal"
         :message="rejectingDeleteLocumAccountRequest ? 'Rejecting delete request....' : 'Are you sure you want to reject this delete account request?'"
+        :loading="rejectingDeleteLocumAccountRequest"
         @cancel="showRejectDeleteAccountRequestModal = false"
         @confirm="rejectDeleteLocumAccountRequest()"
-        :loading="rejectingDeleteLocumAccountRequest"
       />
     </transition>
     
@@ -24,9 +24,9 @@
       <AppConfirm
         v-if="showDeactivateModal"
         :message="deactivatingLocum ? 'Deactivating account...' : 'Are you sure you want to deactivate this account?'"
+        :loading="deactivatingLocum"
         @cancel="showDeactivateModal = false"
         @confirm="deactivateLocumAccount()"
-        :loading="deactivatingLocum"
       />
     </transition>
     
@@ -34,9 +34,9 @@
       <AppConfirm
         v-if="showReactivateModal"
         :message="reactivatingLocum ? 'Reactivating account...' : 'Are you sure you want to reactivate this account?'"
+        :loading="reactivatingLocum"
         @cancel="showReactivateModal = false"
         @confirm="reactivateLocumAccount()"
-        :loading="reactivatingLocum"
       />
     </transition>
     
@@ -354,17 +354,33 @@
             <br>
 
             <div>
-              <p class="mt-2">Memorable word category</p>
-              <p class="font-bold pl-2" :class="!user.memorable_word_category_name && 'opacity-75'">{{ user.memorable_word_category_name ? user.memorable_word_category_name : 'N/A' }}</p>
+              <p class="mt-2">
+                Memorable word category
+              </p>
+              <p class="font-bold pl-2" :class="!user.memorable_word_category_name && 'opacity-75'">
+                {{ user.memorable_word_category_name ? user.memorable_word_category_name : 'N/A' }}
+              </p>
   
-              <p class="mt-2">Memorable word</p>
-              <p class="font-bold pl-2" :class="!user.memorable_word && 'opacity-75'">{{ user.memorable_word ? user.memorable_word : 'N/A' }}</p>
+              <p class="mt-2">
+                Memorable word
+              </p>
+              <p class="font-bold pl-2" :class="!user.memorable_word && 'opacity-75'">
+                {{ user.memorable_word ? user.memorable_word : 'N/A' }}
+              </p>
   
-              <p class="mt-2">Memorable date</p>
-              <p class="font-bold pl-2" :class="!user.memorable_date && 'opacity-75'">{{ user.memorable_date ? $moment(user.memorable_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}</p>
+              <p class="mt-2">
+                Memorable date
+              </p>
+              <p class="font-bold pl-2" :class="!user.memorable_date && 'opacity-75'">
+                {{ user.memorable_date ? $moment(user.memorable_date, 'YYYY-MM-DD').format('DD/MM/YYYY') : 'N/A' }}
+              </p>
   
-              <p class="mt-2">Memorable 6 digit number</p>
-              <p class="font-bold pl-2" :class="!user.memorable_number && 'opacity-75'">{{ user.memorable_number ? user.memorable_number : 'N/A' }}</p>
+              <p class="mt-2">
+                Memorable 6 digit number
+              </p>
+              <p class="font-bold pl-2" :class="!user.memorable_number && 'opacity-75'">
+                {{ user.memorable_number ? user.memorable_number : 'N/A' }}
+              </p>
             </div>
           </div>
         </div>
@@ -497,19 +513,14 @@
   import AppInput from "@/components/Base/AppInput"
   import AppButton from "@/components/Base/AppButton"
   import AppConfirm from "@/components/Base/AppConfirm"
-  import AppConfirmationModal from "@/components/Base/AppConfirmationModal"
-  import { mixin as clickaway } from "vue-clickaway"
   import AppAvatar from "@/components/Base/AppAvatar"
   export default {
     components: {
       AppButton,
       AppInput,
       AppConfirm,
-      AppConfirmationModal,
       AppAvatar,
     },
-
-    mixins: [clickaway],
 
     props: {
       user: {
@@ -674,7 +685,7 @@
       this.hubzzLocumNotes = this.user.hubzz_locum_notes
     },
 
-    mounted() {
+    mounted () {
       this.$socket.on('Admin Notification Locum Deactivated', this.emitUpdateLocumUsers)
       this.$socket.on('Admin Notification Locum Deactivated By Admin', this.emitUpdateLocumUsers)
       this.$socket.on('Admin Notification Locum Reactivated', this.emitUpdateLocumUsers)
@@ -684,7 +695,7 @@
       this.$socket.on('Admin Notification Locum Deleted', this.emitUpdateLocumUsers)
     },
 
-    destroyed() {
+    destroyed () {
       this.$socket.removeListener('Admin Notification Locum Deactivated', this.emitUpdateLocumUsers)
       this.$socket.removeListener('Admin Notification Locum Deactivated By Admin', this.emitUpdateLocumUsers)
       this.$socket.removeListener('Admin Notification Locum Reactivated', this.emitUpdateLocumUsers)

@@ -128,6 +128,12 @@
       }
     },
 
+    computed:{
+      authAdminPermissions () {
+        return this.$store.getters["permissions"]
+      },
+    },
+
     async mounted () {
       if (this.authAdminPermissions.includes('Download Practice Documents') === false) {
         window.addEventListener('contextmenu', function (e) {
@@ -135,13 +141,17 @@
         }, false)
       }
 
+      const axios = require('axios')
+
+      console.log('axios qweqwe')
+
       const {
           url: fileUrl,
           type,
           subtype,
         } = this.getFileUrl(this.practiceDoc.file)
         this.loadingFile = true
-        await this.$axios.get(fileUrl, {
+        await axios.get(fileUrl, {
           responseType: 'blob',
         }).then((response) => {
           this.fileUrl = window.URL.createObjectURL(new Blob([response.data], {
@@ -171,12 +181,6 @@
             text: message,
           })
         })
-    },
-
-    computed:{
-      authAdminPermissions () {
-        return this.$store.getters["permissions"]
-      },
     },
 
     created () {
