@@ -1,6 +1,5 @@
 <template>
   <div class="page-overlap flex-1 flex flex-col self-end ">
-
     <!-- TABS -->
     <div class="flex flex-col rounded">
       <div class="w-full overflow-hidden">
@@ -291,7 +290,7 @@
           >
             <AppButton
               :label="'Delete this Practice User'"
-              :background="'red'"
+              :custom-theme="'bg-red-500 hover:bg-red-600 text-white py-1'"
               :class="''"
               @click="showDeletePracticeUserModal = true"
             />
@@ -333,9 +332,9 @@
       <AppConfirm
         v-if="showDeletePracticeUserModal"
         :message="deletingPracticeUser ? 'Deleting practice user...' : 'Are you sure you want to delete this practice user?'"
+        :loading="deletingPracticeUser"
         @cancel="showDeletePracticeUserModal = false"
         @confirm="deletePracticeUser()"
-        :loading="deletingPracticeUser"
       />
     </transition>
 
