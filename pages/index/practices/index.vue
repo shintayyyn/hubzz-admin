@@ -83,9 +83,9 @@
                   icon="caret-down"
                   :rotate="filterModal ? 180 : ''"
                   :customTheme="'border-2 border-gray-400 rounded-lg font-bold text-gray-600'"
-                  @click="filterModal = !filterModal"
                   labelClass="flex-row-reverse mr-2"
                   :iconWidth="'10'"
+                  @click="filterModal = !filterModal"
                 />
               </div>
               <div v-if="filterModal" class="mx-1 my-2">
@@ -110,7 +110,7 @@
           class="flex flex-row flex-wrap justify-start items-center w-full rounded-lg -mt-3 mb-2"
           :class="filterModal ? 'flex' : 'hidden'"
         >
-          <div class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
+          <div v-if="practiceTab === 'Verified'" class="mx-1 text-gray-600 w-full lg:w-1/4 md:w-1/5">
             <AppInputSmall
               v-model="filterPracticeStatus"
               :type="'select'"
@@ -211,17 +211,13 @@
 <script>
 import debounce from "lodash.debounce"
 import AppButton from "@/components/Base/AppButton"
-import AppTable from "@/components/Base/AppTable"
 import AppTableNew from '@/components/Base/AppTableNew'
 import AppInputSmall from '@/components/Base/AppInputSmall'
-import AppInput from '@/components/Base/AppInput'
 export default {
 	components: {
 		AppButton,
-    AppTable,
     AppTableNew,
     AppInputSmall,
-    AppInput,
   },
   
 	data () {
