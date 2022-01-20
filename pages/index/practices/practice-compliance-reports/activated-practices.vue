@@ -91,18 +91,18 @@
         </div>
       </div>
 
-      <div class="flex justify-end mb-1 text-sm" v-if="true">
+      <div v-if="true" class="flex justify-end mb-1 text-sm">
         <div class="mx-2">
           <label class="">Limit: </label>
-          <select class="focus:outline-none" v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+          <select v-model="limit" class="focus:outline-none">
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
         <div class="mx-2">
           <label class="">Page: </label>
-          <select class="focus:outline-none" v-model="activePage">
+          <select v-model="activePage" class="focus:outline-none">
             <option v-for="page in pages" :key="`page_${page}`" :value="page">
               {{ page }}
             </option>
@@ -240,7 +240,7 @@ import AppInput from '@/components/Base/AppInput'
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
@@ -357,7 +357,7 @@ import AppInput from '@/components/Base/AppInput'
         registered_at_date_end: registeredDateEnd,
         approved_at_date_start: approvedDateStart,
         approved_at_date_end: approvedDateEnd,
-        order_by: orderBy = [],
+        order_by: orderBy = ['date_registered:desc'],
         page,
       } = this.$route.query
 
