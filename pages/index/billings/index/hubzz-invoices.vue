@@ -14,7 +14,7 @@
             :name="'search'"
             :button="true"
             :buttonLabel="'Search'"
-            :placeholder="'Search Practice by Name'"
+            :placeholder="'Search by Practice Name'"
             @click="searchSubmit()"
           />
         </div>
@@ -150,9 +150,16 @@
             </div>
           </template>
         </AppTableNew>
-        <template v-else>
-          <div class="m-2 w-full text-center text-white">
+
+        <template v-if="hubzzInvoices.length === 0 && !params.search">
+          <div class="m-2 w-full text-center">
             There are no Invoices for HUBZZ
+          </div>
+        </template>
+
+        <template v-if="hubzzInvoices.length === 0 && params.search">
+          <div class="m-2 w-full text-center">
+            No Practices Found.
           </div>
         </template>
       </div>

@@ -29,37 +29,34 @@
         />
       </template>
     </div>
-		<div class="max-w-md">
-			<AppTableNew
-				v-if="total !== 0"
-				:total="itemCount"
-				:items="adminUsers"
-				:currentPage="currentPage"
-				:perPage="limit"
-				:columns="columns"
-				:loading="loading"
-				:routerLink="`/user-management`"
-				:customWidth="'500'"
-				@pagechanged="pagechanged"
-			>
-				<template v-slot:delete="slotProps">
-					<div
-						class="flex px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
-					>
-						<AppButton
-							v-if="authAdminPermissions.includes('Delete Admin Account')"
-							:label="'Delete'"
-							:icon="'delete-user'"
-							:iconSize="'16'"
-							:customTheme="'bg-red-600 text-white'"
-							@click="toDeleteAdminUser(slotProps.item.id)"
-						/>
-						<span v-else class="text-sm text-gray-500">You</span>
-					</div>
-				</template>
-			</AppTableNew>
-		</div>
-    
+    <AppTableNew
+      v-if="total !== 0"
+      :total="itemCount"
+      :items="adminUsers"
+      :currentPage="currentPage"
+      :perPage="limit"
+      :columns="columns"
+      :loading="loading"
+      :customWidth="'500'"
+      :routerLink="`/user-management`"
+      @pagechanged="pagechanged"
+    >
+      <template v-slot:delete="slotProps">
+        <div
+          class="flex px-4 py-1 rounded-full text-center w-32 md:mx-auto mt-1 md:mt-0"
+        >
+          <AppButton
+            v-if="authAdminPermissions.includes('Delete Admin Account')"
+            :label="'Delete'"
+            :icon="'delete-user'"
+            :iconSize="'16'"
+            :customTheme="'bg-red-600 text-white'"
+            @click="toDeleteAdminUser(slotProps.item.id)"
+          />
+          <span v-else class="text-sm text-gray-500">You</span>
+        </div>
+      </template>
+    </AppTableNew>
 
     <div v-if="modal" class="new-user-shield" @click="modal = false" />
     <transition name="slide" mode="out-in">
@@ -105,23 +102,26 @@ export default {
 					name: "E-mail",
 					dataIndex: "email",
 					class: "text-center",
-					flex: '1 0 0',
-          width: 300,
+					// flex: '1 0 0',
+          // width: 300,
 				},
 				{
 					name: "Name",
 					dataIndex: "personal_detail.name",
 					class: "text-center",
-					flex: '1 0 0',
-          width: 200,
+					// flex: '1 0 0',
+          // width: 200,
 				},
-				// {
-				// 	name: "Role/s",
-				// 	dataIndex: "admin_detail.role.name",
-				// 	class: "text-center",
-				// 	flex: '1 0 0',
-        //   width: 500,
-				// }
+				{
+					name: "Role/s",
+					// dataIndex: "admin_detail.role.name",
+					column: (item) => {
+						return item.admin_detail.roles.map(role => role.name).join(', ')
+					},
+					class: "text-center",
+					// flex: '1 0 0',
+          // width: 300,
+				}
 			]
 		}
 	},
