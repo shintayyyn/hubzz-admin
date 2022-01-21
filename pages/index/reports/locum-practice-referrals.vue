@@ -24,7 +24,7 @@
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
             v-model="practiceNameIncludes"
-            placeholder="Search Practice Name"
+            placeholder="Search by Practice Name"
             type="text"
             label="Practice Name"
           />

@@ -17,7 +17,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="practiceNameIncludes"
-              placeholder="Search Practice Name"
+              placeholder="Search by Practice Name"
               type="text"
               label="Practice Name"
             />
@@ -96,8 +96,8 @@
         <div>
           <label class="text-white">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -121,9 +121,17 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
+      <div v-if="locumInvoiceJobParts.length === 0 && !practiceNameIncludes" class="w-full flex justify-center">
+        The are no Hours Approved.
+      </div>
+
+      <div v-if="locumInvoiceJobParts.length === 0 && practiceNameIncludes" class="w-full flex justify-center">
+        No Practices Found.
+      </div>
+
       <div class="w-full flex flex-wrap justfify-between items-center">
         <div class="flex-1 flex flex-wrap justify-between pt-2 md:py-2 text-sm">
-          <div class="text-white w-full md:w-auto text-center md:text-left">
+          <div class="w-full md:w-auto text-center md:text-left">
             <div class="whitespace-no-wrap">
               {{ itemCountInfo }}
             </div>
@@ -238,7 +246,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
