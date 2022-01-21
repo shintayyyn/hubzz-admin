@@ -450,7 +450,7 @@ table thead th {
 }
 
 /* scrollbar */
-@media screen and (min-width: 768px) {
+/* @media screen and (min-width: 768px) { */
 	.masonry-container.two {
 		column-count: 2;
 		column-gap: 0;
@@ -486,7 +486,7 @@ table thead th {
 	::-webkit-scrollbar-thumb:hover {
 		background: #ccc;
 	}
-}
+/* } */
 /* Customized Checkbox */
 input[type="checkbox"] {
 	position: absolute;
@@ -651,7 +651,9 @@ input::placeholder, textarea::placeholder {
 .ql-container.ql-snow {
 	border: 0 !important;
 }
-
+body.activity-stream {
+  overflow-y: auto !important;
+}
 .hyphens {
 	-webkit-hyphens: auto;
 	-moz-hyphens: auto;

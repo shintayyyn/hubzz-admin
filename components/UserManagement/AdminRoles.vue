@@ -27,7 +27,7 @@
         />
       </template>
     </div>
-    <div class="m-2">
+    <div class="xl:max-w-full lg:max-w-sm">
       <AppTableNew
         v-if="total > 0"
         :total="total"

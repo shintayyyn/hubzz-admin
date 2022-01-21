@@ -36,6 +36,7 @@
         :columns="columns"
         :loading="loadingPractices"
         :routerLink="`/billings/hubzz-billing`"
+        :customWidth="'800'"
         :orderBy="params.order_by"
         @pagechanged="pagechanged"
         @sorted="sorted"

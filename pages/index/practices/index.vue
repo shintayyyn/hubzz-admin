@@ -154,6 +154,7 @@
         :loading="loadingPractices"
         :routerLink="routerLink"
         :orderBy="orderBy"
+        :customWidth="'800'"
         @pagechanged="pageChangedHandler"
         @sorted="(_orderBy) => orderBy = _orderBy"
         @limitchanged="limitChangedHandler"

@@ -90,6 +90,7 @@
         :loading="loading"
         :routerLink="changeEmailRequest => ({ name: 'index-change-email-requests-id-index-index', params: { id: changeEmailRequest.id } })"
         :orderBy="orderBy"
+        :customWidth="'800'"
         @pagechanged="(_page) => page = _page"
         @limitchanged="(_limit) => limit = _limit"
         @sorted="(_orderBy) => orderBy = _orderBy"
@@ -164,31 +165,41 @@
             name: "ID",
             dataIndex: "id",
             class: "text-center",
-            sortable: true
+            sortable: true,
+            flex: '1 0 0',
+            width: 100,
           },
           {
             name: "New E-Mail Address",
             dataIndex: "new_email",
             class: "text-center",
             sortable: true,
+            flex: '1 0 0',
+            width: 300,
           },
           {
             name: "User Count",
             dataIndex: "user_count",
             class: "text-center",
             sortable: true,
+            flex: '1 0 0',
+            width: 100,
           },
           {
             name: "Requested At",
             dataIndex: "requested_at_formatted",
             class: "text-center",
             sortable: true,
+            flex: '1 0 0',
+            width: 300,
           },
           {
             name: "Status",
             dataIndex: "status",
             class: "text-center",
             sortable: true,
+            flex: '1 0 0',
+            width: 300,
 						// slot: true,
 						// slotName: 'status_slot',
           },
@@ -197,12 +208,16 @@
             dataIndex: "accepted_at_in_gb_formatted",
             class: "text-center",
             sortable: true,
+            flex: '1 0 0',
+            width: 300,
           },
           {
             name: "Rejected At",
             dataIndex: "rejected_at_in_gb_formatted",
             class: "text-center",
             sortable: true,
+            flex: '1 0 0',
+            width: 300,
           },
         ]
       },

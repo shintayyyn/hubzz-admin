@@ -45,6 +45,7 @@
           :perPage="params.limit"
           :columns="columns"
           :loading="loadingHubzzInvoices"
+          :customWidth="'800'"
           :router-link="`/billings/hubzz-invoices`"
           :order-by="params.order_by"
           @checkClicked="toggleCheck"
@@ -70,7 +71,7 @@
 
           <template v-slot:period="slotProps">
             <div>
-              {{ slotProps.item.period_in_gb_formatted}}
+              {{ slotProps.item.period_in_gb_formatted }}
             </div>
           </template>
 
