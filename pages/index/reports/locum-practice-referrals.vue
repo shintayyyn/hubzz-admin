@@ -296,6 +296,7 @@
         filterReset () {
           this.locumNameIncludes = ''
           this.referralLocumNameIncludes = ''
+          this.practiceNameIncludes = ''
           this.areaPostCode = ''
 
           this.filterSearch()
