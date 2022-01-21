@@ -85,11 +85,11 @@
         @setOrderBy="(value) => orderBy = value"
       />
 
-      <div v-if="locumInvoiceJobParts.length === 0 && !practiceNameIncludes" class="w-full flex justify-center">
+      <div v-if="!loading && locumInvoiceJobParts.length === 0 && !practiceNameIncludes" class="w-full flex justify-center">
         The are no Invoices.
       </div>
 
-      <div v-if="locumInvoiceJobParts.length === 0 && practiceNameIncludes" class="w-full flex justify-center">
+      <div v-if="!loading && locumInvoiceJobParts.length === 0 && practiceNameIncludes" class="w-full flex justify-center">
         No Practices Found.
       </div>
 
