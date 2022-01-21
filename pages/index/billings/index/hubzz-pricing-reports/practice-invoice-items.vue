@@ -358,7 +358,7 @@
         practice_name_includes: practiceNameIncludes,
         date_start: dateStart,
         date_end: dateEnd,
-        order_by: orderBy = [],
+        order_by: orderBy = ['id:desc'],
         page,
       } = this.$route.query
 
