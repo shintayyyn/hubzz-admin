@@ -1,7 +1,7 @@
-import jsPDF from 'jspdf'
+// import jsPDF from 'jspdf'
 
-export default (ctx, inject) => {
-  ctx.$jsPDF = jsPDF
+// export default (ctx, inject) => {
+//   ctx.$jsPDF = jsPDF
 
-  inject('jsPDF', jsPDF)
-}
+//   inject('jsPDF', jsPDF)
+// }
