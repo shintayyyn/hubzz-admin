@@ -50,7 +50,7 @@
             :label="'Delete'"
             :icon="'delete-user'"
             :iconSize="'16'"
-						:customTheme="'bg-red-600 text-white'"
+            :customTheme="'bg-red-600 text-white'"
             @click="toDeleteAdminUser(slotProps.item.id)"
           />
           <span v-else class="text-sm text-gray-500">You</span>
@@ -110,7 +110,10 @@ export default {
 				},
 				{
 					name: "Role/s",
-					dataIndex: "admin_detail.role.name",
+					// dataIndex: "admin_detail.role.name",
+					column: (item) => {
+						return item.admin_detail.roles.map(role => role.name).join(', ')
+					},
 					class: "text-center"
 				}
 			]
