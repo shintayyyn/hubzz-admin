@@ -71,8 +71,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -322,7 +322,7 @@
         date_start: dateStart,
         date_end: dateEnd,
         area_includes: areaPostCode,
-        order_by: orderBy = [],
+        order_by: orderBy = ['job_id:desc',],
         page,
       } = this.$route.query
 
