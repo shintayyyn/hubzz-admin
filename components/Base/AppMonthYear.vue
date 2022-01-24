@@ -39,34 +39,32 @@
           <div
             class="p-2 flex flex-row flex-no-wrap justify-center items-center border-b-2 border-yellow-500"
           >
-            <div class="m-1 w-1/2 flex flex-no-wrap">
-              <select
-                v-model="selectedMonth"
-                class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+            <select
+              v-model="selectedMonth"
+              class="mr-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+            >
+              <option
+                v-for="(month, index) in filteredMonths"
+                :key="index"
+                :value="month.value"
+                class="text-black"
               >
-                <option
-                  v-for="(month, index) in filteredMonths"
-                  :key="index"
-                  :value="month.value"
-                  class="text-black"
-                >
-                  {{ month.label }}
-                </option>
-              </select>
-              <select
-                v-model="selectedYear"
-                class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+                {{ month.label }}
+              </option>
+            </select>
+            <select
+              v-model="selectedYear"
+              class="ml-1 text-xs sm:text-sm py-1 px-1 cursor-pointer bg-transparent border-b-2 focus:outline-none"
+            >
+              <option
+                v-for="(year, index) in yearLists"
+                :key="index"
+                :value="year"
+                class="text-black"
               >
-                <option
-                  v-for="(year, index) in yearLists"
-                  :key="index"
-                  :value="year"
-                  class="text-black"
-                >
-                  {{ year }}
-                </option>
-              </select>
-            </div>
+                {{ year }}
+              </option>
+            </select>
           </div>
         </div>
       </div>
