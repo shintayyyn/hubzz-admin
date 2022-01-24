@@ -133,15 +133,15 @@
 
             <!-- select -->
             <template v-if="type === 'select'">
-              <div class="flex flex-col w-full items-start">
+              <div class="flex flex-col w-full items-start pt-6" style="z-index: 1">
                 <div
-                  class="flex w-full relative customized-select pt-4 pb-5"
+                  class="flex w-full relative "
                   :class="multiple ? 'flex-col' : 'items-center'"
                 >
                   <select
                     ref="inputSelect"
                     :value="value"
-                    class="appearance-none border-b-2 focus:border-yellow-400 focus:outline-none py-2 font-bold text-xs sm:text-sm w-full"
+                    class="appearance-none border-b-2 focus:border-yellow-400 focus:outline-none py-3 font-bold text-xs sm:text-sm w-full"
                     :class="[
                       error && !disabled && 'border-red-500',
                       disabled ? 'border-gray-500 text-gray-500 cursor-not-allowed' : 'cursor-pointer',

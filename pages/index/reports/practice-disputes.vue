@@ -5,7 +5,7 @@
         class="flex-wrap justify-start items-start w-full border p-3 rounded-lg flex my-2"
       >
         <div class="flex flex-row w-full ">
-          <div class="md:px-1 w-full lg:w-1/3 md:w-1/3">
+          <div class=" w-full lg:w-1/3 md:w-1/3">
             <div>
               <label for="start" class="">Filter until Month/Year of Invoice Approval:</label>
             </div>

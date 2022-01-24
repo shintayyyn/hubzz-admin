@@ -31,7 +31,7 @@
             />
           </div>
 
-          <div class="mt-1 md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="areaPostCode"
               placeholder="Search Area Post Code"
