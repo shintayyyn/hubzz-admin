@@ -479,21 +479,24 @@
                 class="-mb-1 ml-2"
               />
             </span>
-            <div class="flex items-center">
-              <AppInput
-                v-model="selectedStatus"
-                class="w-full mr-2"
-                :type="'select'"
-                :name="'status'"
-                :placeholder="'Select...'"
-                :items="locumStatusChoices"
-              />
-              <AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
+            <div class="flex flex-row justify-center items-center">
+              <div class="w-full mx-2">
+                <AppInput
+                  v-model="selectedStatus"
+                  :type="'select'"
+                  :name="'status'"
+                  :placeholder="'Select...'"
+                  :items="locumStatusChoices"
+                />
+              </div>
+              <div class="mt-12 mx-2">
+                <AppButton :label="'Save'" @click="changeLocumUserStatus(user.id,selectedStatus)" />
+              </div>
             </div>
           </div>
 
           <!-- HUBZZ PRACTICE NOTES -->
-          <div class="">
+          <div class="m-4">
             <AppInput
               v-model="hubzzLocumNotes"
               :type="'textarea'"
@@ -889,18 +892,18 @@
       statusStyle (status) {
 				switch (status) {
 					case 'Active':
-						return 'bg-green-500 '
+						return 'bg-green-500 text-white'
 					case 'Inactive':
-						return 'bg-gray-500 -700'
+						return 'bg-gray-500 '
 					case 'Deactivated':
 					case 'Deleted':
 						return 'bg-red-800 text-red-400'
 					case 'Account Suspension':
 						return 'bg-red-600 '
 					case 'Compliance Suspension':
-						return 'bg-red-600 '
+						return 'bg-red-600 text-white'
 					case 'Dormant':
-						return 'bg-orange-500 '
+						return 'bg-orange-500 text-white'
 					default:
 						return
         }
