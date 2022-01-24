@@ -202,7 +202,7 @@
                 <!-- PICK EXPIRATION DATE -->
                 <div
                   v-if="toPutLocumDetailCompliance && toPutLocumDetailCompliance.status !== 'Rejected'"
-                  class="pb-4"
+                  class="my-4"
                 >
                   <!-- IF NOT APPLICABLE -->
                   <div v-if="locumComplianceDocument.compliance_document_type_name === 'Passport' 
