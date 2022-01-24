@@ -114,8 +114,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -261,7 +261,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
@@ -394,7 +394,7 @@
         date_start: dateStart,
         date_end: dateEnd,
         area_includes: areaPostCode,
-        order_by: orderBy = [],
+        order_by: orderBy = ['job_part_id:desc'],
         status,
         min_rate: minRate,
         max_rate: maxRate,
