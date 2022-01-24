@@ -29,7 +29,6 @@
         />
       </template>
     </div>
-
     <AppTableNew
       v-if="total !== 0"
       :total="itemCount"
@@ -38,6 +37,7 @@
       :perPage="limit"
       :columns="columns"
       :loading="loading"
+      :customWidth="'500'"
       :routerLink="`/user-management`"
       @pagechanged="pagechanged"
     >
@@ -50,7 +50,7 @@
             :label="'Delete'"
             :icon="'delete-user'"
             :iconSize="'16'"
-						:customTheme="'bg-red-600 text-white'"
+            :customTheme="'bg-red-600 text-white'"
             @click="toDeleteAdminUser(slotProps.item.id)"
           />
           <span v-else class="text-sm text-gray-500">You</span>
@@ -101,17 +101,26 @@ export default {
 				{
 					name: "E-mail",
 					dataIndex: "email",
-					class: "text-center"
+					class: "text-center",
+					// flex: '1 0 0',
+          // width: 300,
 				},
 				{
 					name: "Name",
 					dataIndex: "personal_detail.name",
-					class: "text-center"
+					class: "text-center",
+					// flex: '1 0 0',
+          // width: 200,
 				},
 				{
 					name: "Role/s",
-					dataIndex: "admin_detail.role.name",
-					class: "text-center"
+					// dataIndex: "admin_detail.role.name",
+					column: (item) => {
+						return item.admin_detail.roles.map(role => role.name).join(', ')
+					},
+					class: "text-center",
+					// flex: '1 0 0',
+          // width: 300,
 				}
 			]
 		}

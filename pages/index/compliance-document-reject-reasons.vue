@@ -15,7 +15,7 @@
         </nuxt-link>
       </div>
 
-      <div class="flex flex-col md:flex-row justify-between md:items-center mb-2">
+      <div class="flex flex-col md:flex-row justify-between md:items-center mb-2 ">
         <div v-if="false" class="flex py-2">
           <div class="relative">
             <input
@@ -72,21 +72,23 @@
           </div>
         </div>
       </div>
-
-      <AppTableNew
-        class="qweqweqwe"
-        :total="count"
-        :items="complianceDocumentRejectReasons"
-        :currentPage="page"
-        :perPage="limit"
-        :columns="columns"
-        :loading="loading"
-        :routerLink="routerLink"
-        :orderBy="orderBy"
-        @pagechanged="(_page) => page = _page"
-        @limitchanged="(_limit) => limit = _limit"
-        @sorted="(_orderBy) => orderBy = _orderBy"
-      />
+      <div>
+        <AppTableNew
+          class="qweqweqwe"
+          :total="count"
+          :items="complianceDocumentRejectReasons"
+          :currentPage="page"
+          :perPage="limit"
+          :columns="columns"
+          :loading="loading"
+          :routerLink="routerLink"
+          :orderBy="orderBy"
+          :customWidth="'800'"
+          @pagechanged="(_page) => page = _page"
+          @limitchanged="(_limit) => limit = _limit"
+          @sorted="(_orderBy) => orderBy = _orderBy"
+        />
+      </div>
       <div v-if="!loading && count === 0" class="mt-2 w-full text-center text-white">
         <span>No compliance document reject reasons.</span>
       </div>
@@ -158,19 +160,22 @@ export default {
           dataIndex: "id",
           class: "text-center",
           sortable: true,
-          flex: '1 0 100px'
+          flex: '1 0 0',
+          width: 100,
         },
         {
           name: "Compliance Document",
           dataIndex: "compliance_document_name",
           sortable: true,
-          flex: '3 1 100px'
+          flex: '1 0 0',
+          width: 300,
         },
         {
           name: "Reject Reason",
           dataIndex: "reject_reason",
           sortable: true,
-          flex: '6 2 100px'
+          flex: '1 0 0',
+          width: 600
         },
       ]
     },

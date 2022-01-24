@@ -145,6 +145,7 @@
           :loading="gettingSurveyResponses"
           :routerLink="`/survey-responses`"
           :orderBy="orderBy"
+          :customWidth="'800'"
           :min-height="'55vh'"
           @pagechanged="pageChangedHandler"
           @sorted="(_orderBy) => orderBy = _orderBy"

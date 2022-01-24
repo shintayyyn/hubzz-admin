@@ -21,7 +21,7 @@
             :name="'search'"
             :button="true"
             :buttonLabel="'Search'"
-            :placeholder="'Search by Name'"
+            :placeholder="'Search by Practice Name'"
             @click="searchSubmit()"
           />
         </div>
@@ -36,6 +36,7 @@
         :columns="columns"
         :loading="loadingPractices"
         :routerLink="`/billings/hubzz-billing`"
+        :customWidth="'800'"
         :orderBy="params.order_by"
         @pagechanged="pagechanged"
         @sorted="sorted"
@@ -84,10 +85,17 @@
       </AppTableNew>
 
       <div 
-        v-else-if="itemCount <= 0 && !$route.path.includes('bulk-billing')" 
-        class="mt-2 w-full text-center text-white"
+        v-if="itemCount === 0 && !$route.path.includes('bulk-billing') && !$route.query.search" 
+        class="mt-2 w-full text-center"
       >
         There are no verified Practices billable.
+      </div>
+
+      <div 
+        v-if="itemCount === 0 && !$route.path.includes('bulk-billing') && $route.query.search" 
+        class="mt-2 w-full text-center"
+      >
+        No Practices Found.
       </div>
     </template>
 		

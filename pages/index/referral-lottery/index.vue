@@ -83,7 +83,7 @@
             :perPage="limit"
             :columns="columns"
             :loading="loading"
-            :custom-width="500"
+            :customWidth="'500'"
             :orderBy="orderBy"
             @pagechanged="pagechanged"
             @sorted="(sort) => orderBy = sort"

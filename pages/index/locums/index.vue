@@ -87,6 +87,7 @@
         :loading="loading"
         :routerLink="`/locums`"
         :orderBy="orderBy"
+        :customWidth="'800'"
         :min-height="'55vh'"
         @pagechanged="pageChangedHandler"
         @sorted="(_orderBy) => orderBy = _orderBy"
