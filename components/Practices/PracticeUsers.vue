@@ -2,7 +2,7 @@
   <div class="">
     <AppLoading :loading="loadingPracticeUsers" :message="'Loading Practice Users'" />
 
-    <div class="mb-5" v-if="authAdminPermissions.includes('Create New Practice User')">
+    <div v-if="authAdminPermissions.includes('Create New Practice User')" class="mb-5">
       <AppButton
         :label="'Add User'"
         :icon="'add-user'"

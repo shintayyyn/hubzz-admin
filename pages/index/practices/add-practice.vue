@@ -1,5 +1,5 @@
 <template>
-  <div >    
+  <div>    
     <div class="flex flex-row justify-start overflow-x-auto border-b border-gray-500 mb-4">
       <div
         class="md:mr-5 px-3 py-2 text-sm font-bold cursor-pointer whitespace-no-wrap"
@@ -36,7 +36,6 @@
         @close="customSurgery = false"
         @updatePractices="updatePractices"
       />
-      
     </transition>
   </div>
 </template>
