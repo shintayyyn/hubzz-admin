@@ -394,7 +394,7 @@
         date_start: dateStart,
         date_end: dateEnd,
         area_includes: areaPostCode,
-        order_by: orderBy = ['job_part_id:desc'],
+        order_by: orderBy = ['date_start:desc'],
         status,
         min_rate: minRate,
         max_rate: maxRate,

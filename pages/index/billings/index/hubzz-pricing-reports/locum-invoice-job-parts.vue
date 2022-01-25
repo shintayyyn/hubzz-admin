@@ -353,7 +353,7 @@
         hubzz_invoice_status: hubzzInvoiceStatus,
         date_start: dateStart,
         date_end: dateEnd,
-        order_by: orderBy = [],
+        order_by: orderBy = ['date_start:desc'],
         page,
       } = this.$route.query
 
