@@ -2,7 +2,7 @@
   <div ref="modalContainer" :class="getStyle(registeeType)">
     <div class="flex flex-col px-4">
       <!-- class="absolute top-0 bottom-0 right-0 left-0 flex flex-col p-4 md:p-8" -->
-      <div v-if="registeeType !== 'customSurgery'" class="flex justify-between text-sm my-4 mx-2">
+      <div class="flex justify-between text-sm my-4 mx-2">
         <div class="cursor-pointer" @click="$emit('close')">
           <svgicon
             name="arrow-left-solid"
@@ -12,6 +12,7 @@
           />
         </div>
       </div>
+
       <div class="">
         <div class="">
           <div class="text-lg font-bold">
@@ -355,7 +356,6 @@
           </div>
         </div>
       </div>
-      <nuxt-child />
     </div>
   </div>
 </template>
@@ -795,9 +795,10 @@
         } else {
           this.showFormError = true
 
-          console.log('formError', this.formError)
+          console.log('formErrorasd ', this.formError)
 
           this.$nextTick(() => { // here
+            console.log('scroll up ', this.formError)
             console.log(this.$refs.modalContainer)
             this.$refs.modalContainer.scrollTop = 0
           })
@@ -967,6 +968,7 @@
       },
 
       getStyle (type) {
+        console.log('style', type)
         switch(type){
           case 'admin':
             return 'new-user-modal'
@@ -974,6 +976,8 @@
             return this.practice ? 'practice-user-modal-small shadow-lg' : 'practice-user-modal shadow-lg'
           case 'practiceUser':
             return 'practice-user-modal'
+          case 'customSurgery':
+            return 'custom-surgery'
           default: 
             return
         }
@@ -997,9 +1001,23 @@
     z-index: 512;
   }
 
-
   .practice-user-modal,
   .practice-user-modal-small {
+    background-color: orange;
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-right: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border-left: solid 2px #ffc72c;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+    z-index: 512;
+  }
+
+  .custom-surgery{
     position: fixed;
     top: 0;
     right: 0;
@@ -1018,6 +1036,9 @@
       width: 70%;
     }
     .practice-user-modal {
+      width: 70%;
+    }
+    .custom-surgery {
       width: 70%;
     }
     .practice-user-modal-small {

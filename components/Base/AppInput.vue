@@ -180,7 +180,7 @@
                 </div>
                 <div
                   v-if="error && (type === 'select' || type.includes('checkbox'))"
-                  class="text-red-700 py-1 text-xs w-full mt-2"
+                  class="text-red-700 py-1 text-xs w-full mt-6"
                 >
                   {{
                     error.message.charAt(0).toUpperCase() +
