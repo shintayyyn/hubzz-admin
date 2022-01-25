@@ -133,7 +133,7 @@
 
             <!-- select -->
             <template v-if="type === 'select'">
-              <div class="flex flex-col w-full items-start pt-6" style="z-index: 1">
+              <div class="flex flex-col w-full items-start py-6" style="z-index: 1">
                 <div
                   class="flex w-full relative "
                   :class="multiple ? 'flex-col' : 'items-center'"
