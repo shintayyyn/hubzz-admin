@@ -173,7 +173,7 @@
             @click="downloadCsv"
           >
             <svgicon name="cloud-download" width="21" height="21" color="fill" class="fill-current mr-2" />
-            <span>Download CSV</span>
+            <span>{{ downloading ? 'Downloading...' : 'Download CSV' }}</span>
           </button>
         </div>
       </div>
@@ -559,7 +559,26 @@
           console.log('responses', responses)
           const token = responses.data.data.token
 
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/job-parts/csv?token=${token}`)
+          const downloadUrl = `${process.env.API_URL}/api/v1/admin/reports/job-parts/csv?token=${token}`
+
+          if (navigator.userAgent.includes('Firefox')) {
+            const axios = require("axios")
+            return axios
+              .get(downloadUrl, {
+                responseType: "blob"
+              })
+              .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement("a")
+                link.setAttribute("href", url)
+                link.setAttribute("download", 'session-notification.csv')
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+              })
+          } else {
+            window.open(downloadUrl)
+          }
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
