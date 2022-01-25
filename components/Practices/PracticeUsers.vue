@@ -20,6 +20,7 @@
         :perPage="perPage"
         :columns="columns"
         :orderBy="orderBy"
+        :customWidth="'800'"
         :router-link="`/practices/${practice.id}/practice-users`"
         @pagechanged="pagechanged"
         @sorted="sorted"
