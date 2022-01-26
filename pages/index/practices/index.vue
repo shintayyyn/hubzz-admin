@@ -175,8 +175,11 @@
         </template>
 
         <template v-slot:hub_type_slot="slotProps">
-          <div class="text-xs" :class="hubTypeStyle(slotProps.item.hub_type)">
+          <div v-if="slotProps.item.type === 'Hub'" class="text-xs" :class="hubTypeStyle(slotProps.item.hub_type)">
             {{ slotProps.item.hub_type }}
+          </div>
+          <div v-else>
+            (none)
           </div>
         </template>
 
@@ -627,7 +630,33 @@ export default {
         this.dynamicColumns = []
         const columns = [...this.defaultColumns]
 
-        if (!this.filterPracticeType || this.filterPracticeType === 'Hub') {
+        if (!this.filterPracticeType) {
+          const updatedColumns = [
+            ...columns,
+            {
+              name: 'Hub Type',
+              dataIndex: 'hub_type',
+              class: 'md:text-center',
+              sortable: true,
+              slot: true,
+              slotName: 'hub_type_slot',
+              flex: '1 0 0',
+              minWidth: '150px',
+              maxWidth: '170px',
+              width: 100
+            },
+            {
+              name: 'Hub',
+              dataIndex: 'parent_practice_name',
+              class: 'md:text-center',
+              sortable: true,
+              flex: '1 0 0',
+              minWidth: '150px',
+              maxWidth: '170px',
+            }
+          ]
+          this.dynamicColumns = updatedColumns
+        } else if (this.filterPracticeType && this.filterPracticeType === 'Hub') {
           const updatedColumns = [
             ...columns,
             {
