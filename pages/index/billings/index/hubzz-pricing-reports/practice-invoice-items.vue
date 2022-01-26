@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="page-overlap flex-1 flex flex-col self-end">
@@ -13,7 +12,7 @@
       <div
         class="flex-col justify-start items-start w-full border p-3 rounded-lg flex my-2"
       >
-        <div class="flex w-full">
+        <div class="flex w-full items-end">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="practiceNameIncludes"
