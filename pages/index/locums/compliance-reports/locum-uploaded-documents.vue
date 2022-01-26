@@ -273,14 +273,14 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
             flexBasis: 'auto',
           },
           {
-            title: 'ID',
+            title: 'Locum ID',
             key: 'locum_user_id',
             sort_key: 'locum_user_id',
             column: item => item.locum_user_id,
@@ -366,7 +366,7 @@
         registered_at_date_end: registeredDateEnd,
         approved_at_date_start: approvedDateStart,
         approved_at_date_end: approvedDateEnd,
-        order_by: orderBy = [],
+        order_by: orderBy = ['date_registered:desc',],
         page,
       } = this.$route.query
 
