@@ -267,6 +267,7 @@
         ],
         minCompliancePercentage: '',
         maxCompliancePercentage: '',
+        downloadToken: null,
       }
     },
 
@@ -523,15 +524,28 @@
             },
           }).then(responses => responses.data.data.locum_completed_compliances),
 
-          new Promise((resolve) => setTimeout(resolve, 500))
+          this.$axios.post('/api/v1/admin/reports/locum-completed-compliances/generate-key', {
+            filename: `locumCompletedComplianceDocumentsReport.csv`,
+          }, {
+            params: {
+              ...params,
+            order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          }),
         ]).then((results) => {
           const [
             count,
             locumCompletedCompliances,
+            downloadToken,
           ] = results
 
           this.count = count
           this.locumCompletedCompliances = locumCompletedCompliances
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err)
@@ -541,37 +555,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          min_compliance_percentage: this.minCompliancePercentage ? this.minCompliancePercentage : undefined,
-          max_compliance_percentage: this.maxCompliancePercentage ? this.maxCompliancePercentage : undefined,
-          compliance_status: this.complianceStatus ? this.complianceStatus : undefined,
-          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
-          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
-          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
-          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/locum-completed-compliances/generate-key', {
-          filename: `locumCompletedComplianceDocumentsReport.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-completed-compliances/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-completed-compliances/csv?token=${this.downloadToken}`)
       },
     },
 
