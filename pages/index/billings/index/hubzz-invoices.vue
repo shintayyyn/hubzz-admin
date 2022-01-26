@@ -762,7 +762,6 @@ export default {
         this.confirm = false
         this.exportedModal = false
         this.chosenInvoices = []
-
       }).catch((err) => {
         console.log('err', err)
         this.$nuxt.error(err.response ? err.response.data : err)
