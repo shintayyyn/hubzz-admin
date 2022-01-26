@@ -791,6 +791,10 @@ export default {
       this.currentPage = 1
       this.chosenInvoices = []
       this.exportedChosenInvoices = []
+      this.showUnpaidInvoiceOnly = false
+      this.showPaidInvoiceOnly = false
+      this.showCsvExportOnly = false
+      this.showExportableInvoicesOnly = false
     },
 
     cancelPaymentModal () {

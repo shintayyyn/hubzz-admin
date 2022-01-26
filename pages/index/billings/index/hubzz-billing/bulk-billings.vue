@@ -1336,6 +1336,8 @@ export default {
       this.due_date = ""
       this.showCompleted = false
       this.showDisputed = false
+      this.showCancelled = false,
+      this.showInvoiced = false,
       this.showIndependentSpokesOnly = false
       this.showDependentSpokesOnly = false
       this.showStandAloneOnly = false

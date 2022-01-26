@@ -12,7 +12,7 @@
       <div
         class="flex-col justify-start items-start w-full border p-3 rounded-lg flex  my-2"
       >
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="areaPostCode"
@@ -25,7 +25,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="status"
-              class="w-full mr-2"
+              class="w-full "
               :type="'select'"
               :name="'status'"
               :placeholder="'Filter By Status'"
@@ -314,7 +314,7 @@
         registered_at_date_end: dateEnd,
         area_includes: areaPostCode,
         status,
-        order_by: orderBy = [],
+        order_by: orderBy = ['date_registered:desc'],
         page,
       } = this.$route.query
 
