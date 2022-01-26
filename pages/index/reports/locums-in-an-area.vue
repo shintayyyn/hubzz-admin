@@ -50,8 +50,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -156,6 +156,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
 
         area: '',
         profession: '',
+        downloadToken: null,
 			}
 		},
 
@@ -337,6 +338,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
           }).then((responses) => {
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/locums-in-an-area', {
             params: {
               ...params,
@@ -347,15 +349,29 @@ import ReportPagination from '@/components/Reports/ReportPagination'
           }).then((responses) => {
             return responses.data.data.locums_in_an_area
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/locums-in-an-area/generate-key', {
+            filename: `locumsInAnArea.csv`,
+          }, {
+            params: {
+              ...params,
+            order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          }),
         ]).then((results) => {
           const [
             count,
             locumsInAnArea,
+            downloadToken,
           ] = results
 
           this.count = count
           this.locumsInAnArea = locumsInAnArea
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err)
@@ -365,32 +381,7 @@ import ReportPagination from '@/components/Reports/ReportPagination'
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          area_includes: this.area ? this.area : undefined,
-          profession: this.profession ? this.profession : undefined,
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/locums-in-an-area/generate-key', {
-          filename: `locumsInAnArea.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/locums-in-an-area/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/locums-in-an-area/csv?token=${this.downloadToken}`)
       },
 		}
 	}

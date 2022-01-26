@@ -54,8 +54,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -102,7 +102,8 @@
       </div>
       <div
         v-if="authAdminPermissions.includes('Generate Reports')"
-        class="flex-wrap justify-start items-center w-full p-3 flex my-2">
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2" 
+      >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
             :disabled="downloading || bogusRegistrations.length === 0"
@@ -168,6 +169,7 @@
 
         nameIncludes: '',
         domain: '',
+        downloadToken: null,
       }
     },
 
@@ -192,7 +194,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
@@ -370,15 +372,29 @@
           }).then((responses) => {
             return responses.data.data.bogus_registrations
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/bogus-registrations/generate-key', {
+            filename: `bogusRegistrations.csv`,
+          }, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             bogusRegistrations,
+            downloadToken,
           ] = results
 
           this.count = count
-          this.bogusRegistrations = bogusRegistrations          
+          this.bogusRegistrations = bogusRegistrations
+          this.downloadToken = downloadToken     
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -388,32 +404,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          name_includes: this.nameIncludes ? this.nameIncludes : undefined,
-          domain: this.domain ? this.domain : undefined,
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/bogus-registrations/generate-key', {
-          filename: `bogusRegistrations.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/bogus-registrations/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/bogus-registrations/csv?token=${this.downloadToken}`)
       },
     },
 
