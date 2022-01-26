@@ -175,8 +175,11 @@
         </template>
 
         <template v-slot:hub_type_slot="slotProps">
-          <div class="text-xs" :class="hubTypeStyle(slotProps.item.hub_type)">
+          <div v-if="slotProps.item.type === 'Hub'" class="text-xs" :class="hubTypeStyle(slotProps.item.hub_type)">
             {{ slotProps.item.hub_type }}
+          </div>
+          <div v-else>
+            (none)
           </div>
         </template>
 
@@ -285,53 +288,7 @@ export default {
         },
       ],
 
-      filterModal: false,
-		}
-	},
-
-	computed: {
-    authAdminPermissions () {
-			return this.$store.getters["permissions"]
-    },
-
-    practiceTab () {
-      const practiceTab = this.$route.query.practice_tab
-
-      if (practiceTab && practiceTab.toLowerCase() === 'pending') {
-        return 'Pending'
-      }
-
-      if (practiceTab && practiceTab.toLowerCase() === 'bogus') {
-        return 'Bogus'
-      }
-
-      if (practiceTab && practiceTab.toLowerCase() === 'deactivated') {
-        return 'Deactivated'
-      }
-
-      if (practiceTab && practiceTab.toLowerCase() === 'deleted') {
-        return 'Deleted'
-      }
-
-      return 'Verified'
-    },
-
-    routerLink () {
-      return (practice) => {
-        return {
-          name: 'index-practices-id-index',
-          params: {
-            id: practice.id,
-          },
-          query: {
-            ...this.$route.query,
-          },
-        }
-      }
-    },
-
-    columns () {
-      const columns = [
+      defaultColumns:  [
 				{
 					name: "Practice ID",
           dataIndex: 'id',
@@ -417,36 +374,59 @@ export default {
           maxWidth: '170px',
           width: 150
         },
-      ]
+      ],
+      dynamicColumns: [],
 
-      if (!this.filterPracticeType || this.filterPracticeType === 'Hub') {
-        columns.push({
-          name: 'Hub Type',
-          dataIndex: 'hub_type',
-          class: 'md:text-center',
-          sortable: true,
-          slot: true,
-          slotName: 'hub_type_slot',
-          flex: '1 0 0',
-          minWidth: '150px',
-          maxWidth: '170px',
-          width: 100
-				})
+      filterModal: false,
+		}
+	},
+
+	computed: {
+    authAdminPermissions () {
+			return this.$store.getters["permissions"]
+    },
+
+    practiceTab () {
+      const practiceTab = this.$route.query.practice_tab
+
+      if (practiceTab && practiceTab.toLowerCase() === 'pending') {
+        return 'Pending'
       }
 
-      if (this.filterPracticeType && this.filterPracticeType === 'Spoke') {
-        columns.push({
-          name: 'Hub',
-          dataIndex: 'parent_practice_name',
-          class: 'md:text-center',
-          sortable: true,
-          flex: '1 0 0',
-          minWidth: '120px',
-          maxWidth: '550px',
-				})
+      if (practiceTab && practiceTab.toLowerCase() === 'bogus') {
+        return 'Bogus'
       }
 
-      if (this.practiceTab === 'Verified') {
+      if (practiceTab && practiceTab.toLowerCase() === 'deactivated') {
+        return 'Deactivated'
+      }
+
+      if (practiceTab && practiceTab.toLowerCase() === 'deleted') {
+        return 'Deleted'
+      }
+
+      return 'Verified'
+    },
+
+    routerLink () {
+      return (practice) => {
+        return {
+          name: 'index-practices-id-index',
+          params: {
+            id: practice.id,
+          },
+          query: {
+            ...this.$route.query,
+          },
+        }
+      }
+    },
+
+    columns () {
+      const columns = [...this.dynamicColumns]
+      console.log('columns', columns)
+
+      if (columns.length > 0 && this.practiceTab === 'Verified') {
         columns.push({ 
           name: 'Verified',
           dataIndex: 'first_actived_at_in_gb_formatted',
@@ -459,7 +439,7 @@ export default {
 				})
       }
 
-      if (this.practiceTab === 'Bogus') {
+      if (columns.length > 0 && this.practiceTab === 'Bogus') {
         columns.push({ 
           name: 'Verified',
           dataIndex: 'first_actived_at_in_gb_formatted',
@@ -483,7 +463,7 @@ export default {
 				})
       }
 
-      if (this.practiceTab === 'Deactivated' || this.practiceTab === 'Deleted') {
+      if (columns.length > 0 && this.practiceTab === 'Deactivated' || this.practiceTab === 'Deleted') {
         columns.push({ 
           name: 'Verified',
           dataIndex: 'first_actived_at_in_gb_formatted',
@@ -496,7 +476,7 @@ export default {
         })
       }
 
-      if (this.practiceTab === 'Deactivated') {
+      if (columns.length > 0 && this.practiceTab === 'Deactivated') {
         columns.push({ 
           name: 'Deactivated',
           dataIndex: 'deactivated_at_in_gb_formatted',
@@ -509,7 +489,7 @@ export default {
         })
       }
 
-      if (this.practiceTab === 'Deleted') {
+      if (columns.length > 0 && this.practiceTab === 'Deleted') {
         columns.push({ 
           name: 'Deleted',
           dataIndex: 'deleted_at_in_gb_formatted',
@@ -647,6 +627,70 @@ export default {
 
         this.count = count
         this.practices = practices
+        this.dynamicColumns = []
+        const columns = [...this.defaultColumns]
+
+        if (!this.filterPracticeType) {
+          const updatedColumns = [
+            ...columns,
+            {
+              name: 'Hub Type',
+              dataIndex: 'hub_type',
+              class: 'md:text-center',
+              sortable: true,
+              slot: true,
+              slotName: 'hub_type_slot',
+              flex: '1 0 0',
+              minWidth: '150px',
+              maxWidth: '170px',
+              width: 100
+            },
+            {
+              name: 'Hub',
+              dataIndex: 'parent_practice_name',
+              class: 'md:text-center',
+              sortable: true,
+              flex: '1 0 0',
+              minWidth: '150px',
+              maxWidth: '170px',
+            }
+          ]
+          this.dynamicColumns = updatedColumns
+        } else if (this.filterPracticeType && this.filterPracticeType === 'Hub') {
+          const updatedColumns = [
+            ...columns,
+            {
+              name: 'Hub Type',
+              dataIndex: 'hub_type',
+              class: 'md:text-center',
+              sortable: true,
+              slot: true,
+              slotName: 'hub_type_slot',
+              flex: '1 0 0',
+              minWidth: '150px',
+              maxWidth: '170px',
+              width: 100
+            }
+          ]
+          this.dynamicColumns = updatedColumns
+        } else if (this.filterPracticeType && this.filterPracticeType === 'Spoke') {
+          const updatedColumns = [
+            ...columns,
+            {
+              name: 'Hub',
+              dataIndex: 'parent_practice_name',
+              class: 'md:text-center',
+              sortable: true,
+              flex: '1 0 0',
+              minWidth: '150px',
+              maxWidth: '170px',
+            }
+          ]
+          this.dynamicColumns = updatedColumns
+        } else {
+          this.dynamicColumns = columns
+        }
+
       }).finally(() => {
         this.loadingPractices = false
       })
