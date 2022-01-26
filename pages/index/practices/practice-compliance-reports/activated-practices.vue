@@ -215,6 +215,7 @@ import AppInput from '@/components/Base/AppInput'
         registeredDateEnd: '',
         approvedDateStart: '',
         approvedDateEnd: '',
+        downloadToken: null,
       }
     },
 
@@ -463,6 +464,7 @@ import AppInput from '@/components/Base/AppInput'
           }).then((responses) => {
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/activated-practices', {
             params: {
               ...params,
@@ -473,15 +475,29 @@ import AppInput from '@/components/Base/AppInput'
           }).then((responses) => {
             return responses.data.data.activated_practices
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/activated-practices/generate-key', {
+            filename: `activatedPractices.csv`,
+          }, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             activatedPractices,
+            downloadToken,
           ] = results
 
           this.count = count
           this.activatedPractices = activatedPractices
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err)
@@ -491,36 +507,7 @@ import AppInput from '@/components/Base/AppInput'
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : undefined,
-          practice_status: this.practiceStatus ? this.practiceStatus : undefined,
-          registered_at_date_start: this.registeredDateStart ? this.registeredDateStart : undefined,
-          registered_at_date_end: this.registeredDateEnd ? this.registeredDateEnd : undefined,
-          approved_at_date_start: this.approvedDateStart ? this.approvedDateStart : undefined,
-          approved_at_date_end: this.approvedDateEnd ? this.approvedDateEnd : undefined,
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/activated-practices/generate-key', {
-          filename: `activatedPractices.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/activated-practices/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/activated-practices/csv?token=${this.downloadToken}`)
       },
     },
   }
