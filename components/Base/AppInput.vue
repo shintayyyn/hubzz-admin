@@ -17,7 +17,8 @@
         ].includes(type)
       "
     >
-      <div class="flex flex-col py-3">
+      <div class="flex flex-col py-3 justify-between">
+        <!-- LABEL -->
         <div
           class="relative flex justify-between flex-wrap leading-none"
         >

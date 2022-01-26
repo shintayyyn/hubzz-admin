@@ -12,7 +12,7 @@
       <div
         class="flex-col justify-start items-start w-full border p-3 rounded-lg flex  my-2"
       >
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="areaPostCode"
@@ -25,7 +25,7 @@
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="status"
-              class="w-full mr-2"
+              class="w-full "
               :type="'select'"
               :name="'status'"
               :placeholder="'Filter By Status'"
@@ -81,8 +81,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -209,6 +209,7 @@
         dateEnd: '',
         areaPostCode: '',
         status: '',
+        downloadToken: null,
       }
     },
 
@@ -234,7 +235,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
@@ -313,7 +314,7 @@
         registered_at_date_end: dateEnd,
         area_includes: areaPostCode,
         status,
-        order_by: orderBy = [],
+        order_by: orderBy = ['date_registered:desc'],
         page,
       } = this.$route.query
 
@@ -411,6 +412,7 @@
           }).then((responses) => {
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/registered-practices', {
             params: {
               ...params,
@@ -421,15 +423,29 @@
           }).then((responses) => {
             return responses.data.data.registered_practices
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/registered-practices/generate-key', {
+            filename: `registeredPractices.csv`,
+          }, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             registeredPractices,
+            downloadToken,
           ] = results
 
           this.count = count
           this.registeredPractices = registeredPractices
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -439,34 +455,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          registered_at_date_start: this.dateStart ? this.dateStart : '',
-          registered_at_date_end: this.dateEnd ? this.dateEnd : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          status: this.status ? this.status : '',
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/registered-practices/generate-key', {
-          filename: `registeredPractices.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/registered-practices/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/registered-practices/csv?token=${this.downloadToken}`)
       },
     },
   }

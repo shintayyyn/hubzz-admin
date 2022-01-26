@@ -306,6 +306,7 @@
         dateSubmittedEnd: null,
 
         downloading: false,
+        downloadToken: null,
 			}
 		},
 
@@ -521,53 +522,7 @@
 
 		methods: {
       downloadCsv () {
-        this.downloading = true
-
-        const filters = {}
-
-        if (this.surveyDomain) {
-          filters.survey_domain = this.surveyDomain
-        }
-
-        if (this.search) {
-          filters.search = this.search
-        }
-
-        if (this.locumProfessionId) {
-          filters.locum_profession_id = this.locumProfessionId
-        }
-
-        if (this.dateSubmittedStart) {
-          filters.date_submitted_start = this.dateSubmittedStart
-        }
-
-        if (this.dateSubmittedEnd) {
-          filters.date_submitted_end = this.dateSubmittedEnd
-        }
-
-        const filename = this.surveyDomain === 'Locum'
-          ? `survey_locum_responses.csv`
-          : this.surveyDomain === 'Practice'
-            ? `survey_practice_responses.csv`
-            : `survey_responses.csv`
-
-        this.$axios.post('/api/v1/admin/survey-responses/generate-key', {
-          filename,
-        }, {
-          params: {
-            ...filters,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/survey-responses/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/survey-responses/csv?token=${this.downloadToken}`)
       },
 
       submitFilters () {
@@ -620,6 +575,12 @@
           filters.date_submitted_end = this.dateSubmittedEnd
         }
 
+        const filename = this.surveyDomain === 'Locum'
+          ? `survey_locum_responses.csv`
+          : this.surveyDomain === 'Practice'
+            ? `survey_practice_responses.csv`
+            : `survey_responses.csv`
+
         this.gettingSurveyResponses = true
 
 				Promise.all([
@@ -628,6 +589,7 @@
 							...filters,
 						},
 					}).then(response => response.data.data.count),
+
 					this.$axios.get('/api/v1/admin/survey-responses', {
 						params: {
               ...filters,
@@ -636,14 +598,28 @@
 							offset: this.offset,
 						},
 					}).then(response => response.data.data.survey_responses),
+
+          this.$axios.post('/api/v1/admin/survey-responses/generate-key', {
+            filename,
+          }, {
+            params: {
+              ...filters,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
 				]).then((responses) => {
 					const [
 						count,
 						surveyResponses,
+            downloadToken,
 					] = responses
 
           this.count = count
           this.surveyResponses = surveyResponses
+          this.downloadToken = downloadToken
 				}).catch(this.errorHandler).finally(() => {
           this.gettingSurveyResponses = false
 				})
