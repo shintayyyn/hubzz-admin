@@ -2,7 +2,7 @@
   <div>
     <div class="page-overlap flex-1 flex flex-col self-end">
       <div
-        class="flex-wrap justify-start items-start w-full border p-3 rounded-lg flex my-2"
+        class="flex-wrap justify-start items-center w-full border p-3 rounded-lg flex my-2"
       >
         <div class="flex flex-row w-full ">
           <div class=" w-full lg:w-1/3 md:w-1/3">
