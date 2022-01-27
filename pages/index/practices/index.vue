@@ -154,7 +154,7 @@
         :loading="loadingPractices"
         :routerLink="routerLink"
         :orderBy="orderBy"
-        :customWidth="'800'"
+        :customWidth="'1200'"
         @pagechanged="pageChangedHandler"
         @sorted="(_orderBy) => orderBy = _orderBy"
         @limitchanged="limitChangedHandler"
@@ -294,49 +294,30 @@ export default {
           dataIndex: 'id',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          width: 100,
-          // minWidth: '100px',
-          // maxWidth: '140px',
 				},
 				{
           name: 'Practice Name',
           dataIndex: 'name',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '120px',
-          maxWidth: '550px',
 				},
 				{
           name: 'Practice Code',
           dataIndex: 'code',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          // minWidth: '120px',
-          // maxWidth: '550px',
-          width: 150
 				},
 				{ 
           name: 'Created',
           dataIndex: 'created_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          // minWidth: '100px',
-          // maxWidth: '170px',
-          width: 120
 				},
 				{
           name: 'Expires',
           dataIndex: 'actived_until_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
-          width: 100
 				},
 				{
           name: 'Status',
@@ -345,10 +326,6 @@ export default {
           sortable: true,
           slot: true,
           slotName: 'status_slot',
-          flex: '1 0 0',
-          minWidth: '150px',
-          maxWidth: '170px',
-          width: 100
 				},
 				{
           name: 'Type',
@@ -357,10 +334,6 @@ export default {
           sortable: true,
           slot: true,
           slotName: 'type_slot',
-          flex: '1 0 0',
-          minWidth: '130px',
-          maxWidth: '150px',
-          width: 100
         },
         {
           name: 'Registration Type',
@@ -369,10 +342,6 @@ export default {
           sortable: true,
           slot: true,
           slotName: 'registration_type_slot',
-          flex: '1 0 0',
-          minWidth: '150px',
-          maxWidth: '170px',
-          width: 150
         },
       ],
       dynamicColumns: [],
@@ -432,10 +401,6 @@ export default {
           dataIndex: 'first_actived_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
-          width: 150
 				})
       }
 
@@ -445,10 +410,6 @@ export default {
           dataIndex: 'first_actived_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
-          width: 120
         })
         
         columns.push({ 
@@ -456,10 +417,6 @@ export default {
           dataIndex: 'marked_bogus_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '120px',
-          maxWidth: '170px',
-          width: 120
 				})
       }
 
@@ -469,10 +426,6 @@ export default {
           dataIndex: 'first_actived_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
-          width: 120
         })
       }
 
@@ -482,10 +435,6 @@ export default {
           dataIndex: 'deactivated_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
-          width: 120
         })
       }
 
@@ -495,10 +444,6 @@ export default {
           dataIndex: 'deleted_at_in_gb_formatted',
           class: 'md:text-center',
           sortable: true,
-          flex: '1 0 0',
-          minWidth: '100px',
-          maxWidth: '170px',
-          width: 120
         })
       }
       
@@ -640,19 +585,12 @@ export default {
               sortable: true,
               slot: true,
               slotName: 'hub_type_slot',
-              flex: '1 0 0',
-              minWidth: '150px',
-              maxWidth: '170px',
-              width: 100
             },
             {
               name: 'Hub',
               dataIndex: 'parent_practice_name',
               class: 'md:text-center',
               sortable: true,
-              flex: '1 0 0',
-              minWidth: '150px',
-              maxWidth: '170px',
             }
           ]
           this.dynamicColumns = updatedColumns
@@ -666,10 +604,6 @@ export default {
               sortable: true,
               slot: true,
               slotName: 'hub_type_slot',
-              flex: '1 0 0',
-              minWidth: '150px',
-              maxWidth: '170px',
-              width: 100
             }
           ]
           this.dynamicColumns = updatedColumns
@@ -681,9 +615,6 @@ export default {
               dataIndex: 'parent_practice_name',
               class: 'md:text-center',
               sortable: true,
-              flex: '1 0 0',
-              minWidth: '150px',
-              maxWidth: '170px',
             }
           ]
           this.dynamicColumns = updatedColumns
