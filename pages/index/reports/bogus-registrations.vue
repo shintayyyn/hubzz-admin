@@ -10,7 +10,7 @@
       </div>
 
       <div
-        class="flex-wrap justify-start items-start w-full border p-3 rounded-lg flex  my-2"
+        class="flex-wrap justify-start items-center w-full border p-3 rounded-lg flex  my-2"
       >
         <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
           <AppInput
@@ -102,7 +102,8 @@
       </div>
       <div
         v-if="authAdminPermissions.includes('Generate Reports')"
-        class="flex-wrap justify-start items-center w-full p-3 flex my-2">
+        class="flex-wrap justify-start items-center w-full p-3 flex my-2"
+      >
         <div class="md:px-1 flex flex-wrap w-full justify-end">
           <button
             :disabled="downloading || bogusRegistrations.length === 0"

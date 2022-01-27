@@ -13,7 +13,7 @@
       <div
         class="flex-col justify-start items-start w-full border p-3 rounded-lg flex  my-2"
       >
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="practiceNameIncludes"
@@ -57,7 +57,7 @@
           </div>
         </div>
         
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppDate
               v-model="dateStart"
@@ -74,7 +74,7 @@
             />
           </div>
         </div>
-        <div class="flex flex-row w-full">
+        <div class="flex flex-row w-full items-center">
           <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
             <AppInput
               v-model="minRate"
