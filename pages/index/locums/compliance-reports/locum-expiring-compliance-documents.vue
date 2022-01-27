@@ -176,6 +176,7 @@
         locumNameIncludes: '',
         expiredAtDateStart: '',
         expiredAtDateEnd: '',
+        downloadToken: null,
       }
     },
 
@@ -379,15 +380,29 @@
           }).then((responses) => {
             return responses.data.data.locum_expiring_compliance_documents
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/locum-expiring-compliance-documents/generate-key', {
+            filename: `locumExpiringComplianceDocumentsReport.csv`,
+          }, {
+            params: {
+              ...params,
+            order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             locumExpiringComplianceDocuments,
+            downloadToken,
           ] = results
 
           this.count = count
           this.locumExpiringComplianceDocuments = locumExpiringComplianceDocuments
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -397,32 +412,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : undefined,
-          expired_at_date_start: this.expiredAtDateStart ? this.expiredAtDateStart : undefined,
-          expired_at_date_end: this.expiredAtDateEnd ? this.expiredAtDateEnd : undefined,
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/locum-expiring-compliance-documents/generate-key', {
-          filename: `locumExpiringComplianceDocumentsReport.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-expiring-compliance-documents/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-expiring-compliance-documents/csv?token=${this.downloadToken}`)
       },
     },
 

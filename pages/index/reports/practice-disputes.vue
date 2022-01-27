@@ -54,8 +54,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -173,6 +173,7 @@
         activePage: 1,
 
         monthYear:'',
+        downloadToken: null,
       }
     },
 
@@ -197,7 +198,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
@@ -352,6 +353,7 @@
             console.log('response', responses.data.data.count)
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/practice-disputes', {
             params: {
               ...params,
@@ -363,15 +365,29 @@
             console.log('response', responses.data.data.practice_disputes)
             return responses.data.data.practice_disputes
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/practice-disputes/generate-key', {
+            filename: `practiceDisputes.csv`,
+          }, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          }),
         ]).then((results) => {
           const [
             count,
             practiceDisputes,
+            downloadToken,
           ] = results
 
           this.count = count
           this.practiceDisputes = practiceDisputes
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -381,29 +397,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          month: this.$moment(this.monthYear).format('MMMM'),
-          year: this.$moment(this.monthYear).format('YYYY'),
-          last_date_of_month:this.$moment(this.monthYear).endOf('month').format('YYYY-MM-DD'),
-        }
-
-        this.$axios.post('/api/v1/admin/reports/practice-disputes/generate-key', {
-          filename: `practiceDisputes.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/practice-disputes/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/practice-disputes/csv?token=${this.downloadToken}`)
       },
     },
 

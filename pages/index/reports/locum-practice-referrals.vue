@@ -176,6 +176,7 @@
           locumNameIncludes: '',
           practiceNameIncludes: '',
           areaPostCode: '',
+          downloadToken: null,
         }
       },
   
@@ -200,7 +201,7 @@
               title: '#',
               key: 'index',
               sort_key: null,
-              column: (item, index) => this.offset + index + 1,
+              column: (_, index) => this.offset + index + 1,
               justify: 'end',
               flexGrow: 0,
               flexShrink: 0,
@@ -371,6 +372,7 @@
             }).then((responses) => {
               return responses.data.data.count
             }),
+
             this.$axios.get('/api/v1/admin/reports/locum-practice-referrals', {
               params: {
                 ...params,
@@ -381,15 +383,29 @@
             }).then((responses) => {
               return responses.data.data.locum_practice_referrals
             }),
-            new Promise((resolve) => setTimeout(resolve, 500))
+            
+            this.$axios.post('/api/v1/admin/reports/locum-practice-referrals/generate-key', {
+              filename: `locumPracticeReferrals.csv`,
+            }, {
+              params: {
+                ...params,
+                order_by: this.orderBy,
+              },
+            }).then((responses) => {
+              const token = responses.data.data.token
+
+              return token
+            }),
           ]).then((results) => {
             const [
               count,
               locumPracticeReferrals,
+              downloadToken,
             ] = results
   
             this.count = count
             this.locumPracticeReferrals = locumPracticeReferrals
+            this.downloadToken = downloadToken
           }).catch((err) => {
             console.log('err', err)
             this.$nuxt.error(err.response ? err.response.data : err)
@@ -399,34 +415,8 @@
         },
 
         downloadCsv () {
-        this.downloading = true
-        const params = {
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/locum-practice-referrals/generate-key', {
-          filename: `locumPracticeReferrals.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-practice-referrals/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
-      },
+          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-practice-referrals/csv?token=${this.downloadToken}`)
+        },
       },
   
     }

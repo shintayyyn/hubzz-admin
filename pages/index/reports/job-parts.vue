@@ -237,6 +237,7 @@
         status: '',
         minRate: '',
         maxRate: '',
+        downloadToken: null,
       }
     },
 
@@ -507,6 +508,7 @@
           }).then((responses) => {
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/job-parts', {
             params: {
               ...params,
@@ -517,15 +519,29 @@
           }).then((responses) => {
             return responses.data.data.job_parts
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/job-parts/generate-key', {
+            filename: `sessionNotification.csv`,
+          }, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             jobParts,
+            downloadToken,
           ] = results
 
           this.count = count
           this.jobParts = jobParts
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -535,56 +551,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          min_rate: this.minRate ? this.minRate : '',
-          max_rate: this.maxRate ? this.maxRate : '',
-          status: this.status ? this.status : '',
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/job-parts/generate-key', {
-          filename: `sessionNotification.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          const downloadUrl = `${process.env.API_URL}/api/v1/admin/reports/job-parts/csv?token=${token}`
-
-          if (navigator.userAgent.includes('Firefox')) {
-            const axios = require("axios")
-            return axios
-              .get(downloadUrl, {
-                responseType: "blob"
-              })
-              .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]))
-                const link = document.createElement("a")
-                link.setAttribute("href", url)
-                link.setAttribute("download", 'session-notification.csv')
-                document.body.appendChild(link)
-                link.click()
-                document.body.removeChild(link)
-              })
-          } else {
-            window.open(downloadUrl)
-          }
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/job-parts/csv?token=${this.downloadToken}`)
       },
     },
   }

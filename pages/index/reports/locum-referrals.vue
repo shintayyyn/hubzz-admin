@@ -59,8 +59,8 @@
         <div>
           <label class="">Limit: </label>
           <select v-model="limit">
-            <option v-for="limit in limits" :key="`limit_${limit}`" :value="limit">
-              {{ limit }}
+            <option v-for="limitOption in limits" :key="`limit_${limitOption}`" :value="limitOption">
+              {{ limitOption }}
             </option>
           </select>
         </div>
@@ -175,6 +175,7 @@
         locumNameIncludes: '',
         referredLocumNameIncludes: '',
         areaPostCode: '',
+        downloadToken: null,
       }
     },
 
@@ -199,7 +200,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'end',
             flexGrow: 0,
             flexShrink: 0,
@@ -381,6 +382,7 @@
           }).then((responses) => {
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/locum-referrals', {
             params: {
               ...params,
@@ -391,15 +393,29 @@
           }).then((responses) => {
             return responses.data.data.locum_referrals
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/locum-referrals/generate-key', {
+            filename: `locumReferrals.csv`,
+          }, {
+            params: {
+              ...params,
+              order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             locumReferrals,
+            downloadToken,
           ] = results
 
           this.count = count
           this.locumReferrals = locumReferrals
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err', err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -409,32 +425,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          referral_locum_name_includes: this.referredLocumNameIncludes ? this.referredLocumNameIncludes : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/locum-referrals/generate-key', {
-          filename: `locumReferrals.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-referrals/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-referrals/csv?token=${this.downloadToken}`)
       },
     },
 

@@ -202,6 +202,7 @@
         areaPostCode: '',
         dateStart: '',
         dateEnd: '',
+        downloadToken: null,
       }
     },
 
@@ -225,7 +226,7 @@
             title: '#',
             key: 'index',
             sort_key: null,
-            column: (item, index) => this.offset + index + 1,
+            column: (_, index) => this.offset + index + 1,
             justify: 'start',
             flexGrow: 0,
             flexShrink: 0,
@@ -452,6 +453,7 @@
           }).then((responses) => {
             return responses.data.data.count
           }),
+
           this.$axios.get('/api/v1/admin/reports/locum-usages', {
             params: {
               ...params,
@@ -462,15 +464,29 @@
           }).then((responses) => {
             return responses.data.data.locum_usages
           }),
-          new Promise((resolve) => setTimeout(resolve, 500))
+
+          this.$axios.post('/api/v1/admin/reports/locum-usages/generate-key', {
+            filename: `locumUsages.csv`,
+          }, {
+            params: {
+              ...params,
+            order_by: this.orderBy,
+            },
+          }).then((responses) => {
+            const token = responses.data.data.token
+
+            return token
+          })
         ]).then((results) => {
           const [
             count,
             locumUsages,
+            downloadToken,
           ] = results
 
           this.count = count
           this.locumUsages = locumUsages
+          this.downloadToken = downloadToken
         }).catch((err) => {
           console.log('err.response ? err.response.data : err', err.response ? err.response.data : err)
           this.$nuxt.error(err.response ? err.response.data : err)
@@ -480,35 +496,7 @@
       },
 
       downloadCsv () {
-        this.downloading = true
-        const params = {
-          practice_name_includes: this.practiceNameIncludes ? this.practiceNameIncludes : '',
-          locum_name_includes: this.locumNameIncludes ? this.locumNameIncludes : '',
-          date_start: this.dateStart ? this.dateStart : '',
-          date_end: this.dateEnd ? this.dateEnd : '',
-          area_includes: this.areaPostCode ? this.areaPostCode : '',
-          order_by: this.orderBy,
-          limit: 999,
-          offset: 0,
-        }
-
-        this.$axios.post('/api/v1/admin/reports/locum-usages/generate-key', {
-          filename: `locumUsages.csv`,
-        }, {
-          params: {
-            ...params,
-          },
-        }).then((responses) => {
-          console.log('responses', responses)
-          const token = responses.data.data.token
-
-          window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-usages/csv?token=${token}`)
-        }).catch((err) => {
-          console.log('err', err)
-          this.$nuxt.error(err.response ? err.response.data : err)
-        }).finally(() => {
-          this.downloading = false
-        })
+        window.open(`${process.env.API_URL}/api/v1/admin/reports/locum-usages/csv?token=${this.downloadToken}`)
       },
     },
   }
