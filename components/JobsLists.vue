@@ -1,50 +1,52 @@
 <template>
   <div class="overflow-x-auto xl:overflow-hidden">
     <div class="flex items-center">
-      <button @click="filterModal = !filterModal" class="flex items-center justify-between text-sm p-1 border rounded mr-1">
-        <p class="mx-2">Filter</p>
+      <button class="flex items-center justify-between text-sm p-1 border rounded mr-1" @click="filterModal = !filterModal">
+        <p class="mx-2">
+          Filter
+        </p>
         <span class="mx-2"><svgicon name="caret-down" width="10" :style="filterModal ? 'transform: rotate(180deg)' : ''" /></span>
       </button>
       <transition name="fade">
-      <div class="flex items-center" v-if="filterModal">
-        <AppButton 
-          :label="'Clear'"
-          class="mx-1"
-          :class="'border  hover:bg-gray-700 hover:border-none'"
-          @click="clearFilters"
-        />
-        <AppButton 
-          :label="'Search'"
-          class="mx-1"
-          :class="'border  hover:bg-gray-700 hover:border-none'"
-          @click="filterJobParts"
-        />
-      </div>
+        <div v-if="filterModal" class="flex items-center">
+          <AppButton 
+            :label="'Clear'"
+            class="mx-1"
+            :class="'border  hover:bg-gray-700 hover:border-none'"
+            @click="clearFilters"
+          />
+          <AppButton 
+            :label="'Search'"
+            class="mx-1"
+            :class="'border  hover:bg-gray-700 hover:border-none'"
+            @click="filterJobParts"
+          />
+        </div>
       </transition>
     </div>
     <transition name="drop-down">
-    <div v-if="filterModal" class="flex">
-      <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-        <AppInput
-          v-model="job_number"
-          class=""
-          :type="'text'"
-          :name="'job_number'"
-          :label="'Job number'"
-        />
+      <div v-if="filterModal" class="flex">
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="job_number"
+            class=""
+            :type="'text'"
+            :name="'job_number'"
+            :label="'Job number'"
+          />
+        </div>
+        <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
+          <AppInput
+            v-model="job_title"
+            class=""
+            :type="'text'"
+            :name="'job_title'"
+            :label="'Job title'"
+          />
+        </div>
       </div>
-      <div class="md:px-1 w-full lg:w-1/4 md:w-1/3">
-        <AppInput
-          v-model="job_title"
-          class=""
-          :type="'text'"
-          :name="'job_title'"
-          :label="'Job title'"
-        />
-      </div>
-    </div>
     </transition>
-    <div class="mt-2" v-if="items.length === 0 && loading === false">
+    <div v-if="items.length === 0 && loading === false" class="mt-2">
       <div 
         v-if="isFiltered"
         class="mt-10  w-full text-center"
@@ -60,7 +62,7 @@
         {{ `No ${status[0]} ${jobDenom} found.` }}
       </div>
     </div>
-    <div class="mt-2" v-else>
+    <div v-else class="mt-2">
       <AppTableNew
         :total="total"
         :items="items"
@@ -70,6 +72,7 @@
         :columns="columns"
         :routerLink="routerLink"
         :orderBy="orderBy"
+        :customWidth="800"
         @pagechanged="pagechanged"
         @sorted="(_orderBy) => orderBy = _orderBy"
       >
