@@ -33,7 +33,7 @@
                   class="hover:text-gray-800 mt-1 cursor-pointer"
                   @click="$emit('seenAllNotifications')"
                 >
-                  Mark All as Read
+                  {{ seeningAllNotifications ? 'Loading...' : 'Mark All as Read' }}
                 </div>
                 <p v-else class="text-xs italic text-gray-400">
                   Click outside to Close
@@ -56,6 +56,12 @@
 
                     <span class="text-xs ">{{ item.created_at_in_gb_formatted }}{{ false ? ` (${item.id})` : '' }}</span>
                   </div>
+                  
+                  <div v-if="true" class="flex justify-center m-4">
+                    <p class="hover:text-gray-500 cursor-pointer px-2" @click="$emit('loadMoreNotifs')">
+                      {{ loadingMoreNotifs ? 'Loading...' : 'Show More' }}
+                    </p>
+                  </div>
                 </div>
 
                 <div v-if="notifications.length === 0">
@@ -63,7 +69,7 @@
                 </div>
               </div>
 
-              <div class="flex justify-center m-4">
+              <div v-if="false" class="flex justify-center m-4">
                 <p class="hover:text-gray-500 cursor-pointer px-2" @click="$emit('loadMoreNotifs')">
                   Show More
                 </p>
@@ -106,18 +112,22 @@ export default {
       type: Array,
       default: () => [],
     },
+
+    seeningAllNotifications: {
+      type: Boolean,
+      default: false,
+    },
+
+    loadingMoreNotifs: {
+      type: Boolean,
+      default: false,
+    },
   },
 
 	data () {
 		return {
 			showDropdownNotifications: false,
 		}
-  },
-  
-  watch: {
-    "$route" (route) {
-      console.log("route", route)
-    }
   },
   
 	computed: {
@@ -147,6 +157,12 @@ export default {
 				return 'Test Script'
 			else return 'Dashboard'
 		}
+  },
+  
+  watch: {
+    "$route" (route) {
+      console.log("route", route)
+    }
   },
 
 	methods: {

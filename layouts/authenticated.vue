@@ -27,6 +27,8 @@
       <AppHeader
         :unseenNotificationsCount="unseenNotificationsCount"
         :notifications="sortedNotifications"
+        :seeningAllNotifications="seeningAllNotifications"
+        :loadingMoreNotifs="loadingMoreNotifs"
         @loadMoreNotifs="loadMoreNotifs"
         @seenAllNotifications="seenAllNotifications"
         @goToNotification="goToNotification"
@@ -66,6 +68,8 @@
       return {
         showLogoutModal: false,
         showSessionExpiringModal: false,
+        seeningAllNotifications: false,
+        loadingMoreNotifs: false,
 
         unseenNotifications: [],
         notifications: [],
@@ -311,6 +315,7 @@
       },
 
       loadMoreNotifs () {
+        this.loadingMoreNotifs = true
         this.$axios.get(`/api/v1/admin/me/notifications`, {
           params: {
             order_by: "created_at:desc",
@@ -321,16 +326,21 @@
           res.data.data.notifications.forEach(item => {
             this.notifications.push(item)
           })
+        }).finally(() => {
+          this.loadingMoreNotifs = false
         })
       },
 
       seenAllNotifications () {
+        this.seeningAllNotifications = true
         this.$axios.$put(`/api/v1/admin/me/notifications/seen-all`).then(() => {
           this.notifications
             .filter(notification => !notification.seen)
             .forEach(notification => (notification.seen = true))
 
           this.unseenNotifications = []
+        }).finally(() => {
+          this.seeningAllNotifications = false
         })
       },
 
